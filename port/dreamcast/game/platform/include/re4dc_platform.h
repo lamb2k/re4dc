@@ -49,7 +49,12 @@ void re4dc_watch_set(const void* addr, unsigned long words);
 // Game-side state report for the scripted input fixture (b < 0: one value).
 void re4dc_fixture_state(const char* name, int a, int b);
 extern int re4dc_diag;  // heavy periodic diagnostics (thread dumps) on
-extern unsigned char re4dc_dvd_buff[0x20000];  // DVD read staging area (GameCube 0x80350000)
+// DVD_BUFF_KB (Makefile, lane heap-margin25): the staging area size; default the GameCube's 128 KB. Each reader
+// chunks its transfer through it (sound pieces: the whole area; the two halves: memory swap, event swap reload).
+#ifndef RE4DC_DVD_BUFF_BYTES
+#define RE4DC_DVD_BUFF_BYTES 0x20000
+#endif
+extern unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES];  // DVD read staging area (GameCube 0x80350000)
 void re4dc_set_stage(unsigned long stage);
 // A symbol the platform does not implement yet was called: log and halt.
 void re4dc_missing(const char* name);

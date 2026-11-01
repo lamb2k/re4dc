@@ -90,6 +90,11 @@ build_release() {
   local O=$ROUTE/out-rr${S7}rP
   grep -q '^rc=0 ' "$W/build-rP.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "release build failed"; return 1; }
   [ ! -s "$O/missing.txt" ] || { echo "missing.txt not empty:"; head "$O/missing.txt"; return 1; }
+  # DROP-PROOF (lane purge-audit26 10-26): every drop / cut / empty the built recipe makes (ETS_MATCH rows, NONE-cut keys,
+  # --etm-empty members, dropping knobs) needs a proof row in rr/drop-proofs.tsv (rr/drop_proofs.py; judged by rr-judge.py).
+  python3 "$TA/port/dreamcast/tools/d367/rr/drop_proofs.py" "$TA" "$O/resolved-knobs.txt" --json "$W/drop-proof.json" \
+    > "$W/drop-proof.txt" 2>&1 || true
+  tail -n 1 "$W/drop-proof.txt"
   $TOOL/sh-elf-objcopy -R .stack -O binary "$O/re4dc-game.elf" "$W/img.bin"
   sha256sum < "$W/img.bin" | cut -c1-64 > "$W/image.sha256"; rm -f "$W/img.bin"
   echo "image $(cut -c1-16 "$W/image.sha256") end $(cat "$O/end.txt")"
@@ -135,6 +140,24 @@ bases() {
   for x in g c; do
     bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/$x" "$ROUTE/out-fprr${S7}${x}W" > "$W/master-$x.txt" 2>&1 || rc=1
   done   # one at a time: each base peaks ~2 GB on C: (ext4 vhdx + disc cache)
+  # MEMBER-CENSUS (lane fix-r100-props26 10-26): every file / room-archive member / tex.pak key that differs from the
+  # last published release tree ($MC_REF_TREE, recipe.conf) must be claimed by a row of $MC_CLAIMS (rr/member_census.py).
+  if [ -n "${MC_REF_TREE:-}" ] && [ -d "$MC_REF_TREE" ]; then
+    python3 "$TA/port/dreamcast/tools/d367/rr/member_census.py" "$MC_REF_TREE" "$W/rel/tree" \
+      "$TA/port/dreamcast/tools/d367/rr/${MC_CLAIMS:-member-claims.tsv}" --json "$W/member-census.json" > "$W/member-census.txt" 2>&1 || true
+    tail -n 1 "$W/member-census.txt"
+  else echo "MEMBER-CENSUS skipped: no reference tree (MC_REF_TREE=${MC_REF_TREE:-})" > "$W/member-census.txt"; fi
+  # MOTION-KEYS (lane cast-ps2-25 10-26): every dc/mot key a live MTC table of the candidate tree names exists in its dc/mot,
+  # and the release fixture's remove list hits none of them (Test 25 r100 house siege: missing motion key halt).
+  python3 "$TA/port/dreamcast/tools/d367/motion/mot_refs.py" "$W/rel/tree" --fixture "$W/pkg/fix/pkg-rr${S7}rP.json" \
+    --json "$W/motion-keys.json" > "$W/motion-keys.txt" 2>&1 || true
+  tail -n 1 "$W/motion-keys.txt"
+  # EFFECT-CENSUS (lane fix-r100-props26 10-26): per route room, the effect sets (EFF sequences / paths / models /
+  # pictures, ETS placements, ETM models) may not drop below the reference ($EC_REF_TREE, Test 23) unless $EC_CLAIMS claims it.
+  if [ -n "${EC_REF_TREE:-}" ] && [ -d "$EC_REF_TREE" ]; then
+    python3 "$TA/port/dreamcast/tools/d367/rr/effect_census.py" "$EC_REF_TREE" "$W/rel/tree"       "$TA/port/dreamcast/tools/d367/rr/${EC_CLAIMS:-effect-claims.tsv}" --json "$W/effect-census.json" > "$W/effect-census.txt" 2>&1 || true
+    tail -n 1 "$W/effect-census.txt"
+  else echo "EFFECT-CENSUS skipped: no reference tree (EC_REF_TREE=${EC_REF_TREE:-})" > "$W/effect-census.txt"; fi
   tail -qn 1 "$W"/master-*.txt | cut -c1-200; rm -rf "${W:?}/rel/tree"; return $rc
 }
 jobs_quick() { bash "$BIN/rr-jobs.sh" quick "$W" "$TA" "$S7" "$EVU" "$EVW"; }
@@ -144,6 +167,8 @@ flycasts() {
   "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "$evg" "${RR_JOBS:-12}"
 }
 judge() { python3 "$BIN/rr-judge.py" "$W" "$TA" "$BIN"; }
+# GC-ASSET gate (cast-ps2-25 10-26): catalog from the recipe + gate-ON twin + base a (rr-gca.sh); RR_GCA=0 skips it
+gca() { bash "$BIN/rr-gca.sh" "$W" "$TA" "$S7" "$EVU"; }
 
 trace_arms() { # full tier: the recipe's trace arm (A) and the reference recipe's (B), then their bases
   local rc=0
@@ -168,17 +193,30 @@ if [ "$TIER" = full ]; then
   # the FULL tier re-checks the last good candidate (no rebuild of the release image)
   LGW=$(sed -n 's/^work=//p' "$RR_HOME/state/last-good")
   for f in cand.txt image.sha256 knobs-diff.txt diff-log.txt; do cp "$LGW/$f" "$W/" 2>/dev/null || true; done
+  # MOTION-KEYS reads the release fixture the quick cycle wrote in package(); the full tier does not package, so carry it
+  mkdir -p "$W/pkg/fix"; cp "$LGW/pkg/fix/pkg-rr${S7}rP.json" "$W/pkg/fix/" 2>/dev/null || echo "full: no release fixture in $LGW"
   [ -s "$ROUTE/out-rr${S7}rP/re4dc-game.elf" ] || { echo "full: release build out-rr${S7}rP is gone"; ok=0; }
   if [ $ok = 1 ] && { ! [ -s "$ROUTE/out-fprr${S7}gW/re4dc-game.elf" ] || ! [ -s "$ROUTE/out-fprr${S7}cW/re4dc-game.elf" ]; }; then
     step build-twins build_twins || ok=0
   fi
   [ $ok = 1 ] && { step bases bases || ok=0; }
   if [ $ok = 1 ] && [ -n "${CH2_REF:-}" ]; then step trace-arms trace_arms || echo "trace arms failed: decisions not run"; fi
+  # SPEED (lane guards28 10-28): candidate vs the live release (recipe.conf RR_SPEED_REF) on the five hwmodel benchmark
+  # scenes, MODELLED; rr/speed/rr-speed.sh writes $W/speed.txt, rr-judge.py rows it. RR_SPEED=0 skips (row SKIP).
+  if [ $ok = 1 ] && [ "${RR_SPEED:-1}" != 0 ] && [ -n "${RR_SPEED_REF:-}" ]; then
+    step speed bash "$BIN/speed/rr-speed.sh" "$RR_SPEED_REF" "$SHA" "$W/speed.txt" "$W/speed" || true
+  else echo "SPEED SKIP: RR_SPEED=${RR_SPEED:-1} RR_SPEED_REF=${RR_SPEED_REF:-unset}" > "$W/speed.txt"; fi
+  # SPEED-GPU (guards28 10-28, coordinator decision): QA discs of both commits on the cache-model Flycast, SQ->TA bytes and
+  # TA list bytes per scene, FAIL above +SPEED_GPU_TOL_PCT (5) %. rr/speed/rr-speed-gpu.sh -> $W/speed-gpu.txt.
+  if [ $ok = 1 ] && [ "${RR_SPEED:-1}" != 0 ] && [ -n "${RR_SPEED_REF:-}" ]; then
+    step speed-gpu bash "$BIN/speed/rr-speed-gpu.sh" "$RR_SPEED_REF" "$SHA" "$W/speed-gpu.txt" "$W/speed" || true
+  else echo "SPEED-GPU SKIP: RR_SPEED=${RR_SPEED:-1} RR_SPEED_REF=${RR_SPEED_REF:-unset}" > "$W/speed-gpu.txt"; fi
 else
   [ $ok = 1 ] && { step build-release build_release || ok=0; }
   [ $ok = 1 ] && { step build-twins build_twins || ok=0; }
   [ $ok = 1 ] && { step package package || ok=0; }
   [ $ok = 1 ] && { step bases bases || ok=0; }
+  if [ $ok = 1 ] && [ "${RR_GCA:-1}" != 0 ]; then step gca gca || echo "gca prep failed: the GC-ASSET check reports it"; fi
 fi
 if [ $ok = 1 ]; then
   if [ "$TIER" = full ]; then step jobs jobs_full || ok=0; else step jobs jobs_quick || ok=0; fi

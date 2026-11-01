@@ -1,3 +1,42 @@
+#ifndef RE4DC_WORLD_PREPARED09
+#define RE4DC_WORLD_PREPARED09 0
+#endif
+#if RE4DC_WORLD_PREPARED09 != 0 && RE4DC_WORLD_PREPARED09 != 1
+#error WORLD_PREPARED09 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PREPARED09 && (!RE4DC_WORLD_PART_PLAN29 || !RE4DC_MOVIE_WORLD_ARENA || !RE4DC_STATIC_OBJ_LIFETIME05)
+#error WORLD_PREPARED09 needs WORLD_PART_PLAN29, MOVIE_WORLD_ARENA and STATIC_OBJ_LIFETIME05 room-cell authority
+#endif
+#ifndef RE4DC_WORLD_PAGES31
+#define RE4DC_WORLD_PAGES31 0
+#endif
+#if RE4DC_WORLD_PAGES31 != 0 && RE4DC_WORLD_PAGES31 != 1
+#error WORLD_PAGES31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PAGES31 && (!RE4DC_SCENERY_CHUNK || !RE4DC_WORLD_PREPARED09)
+#error WORLD_PAGES31 needs SCENERY_CHUNK and WORLD_PREPARED09 source lifetime authority
+#endif
+#if RE4DC_WORLD_PAGES31
+#include "include/world_page31.hpp"
+#endif
+#ifndef RE4DC_WORLD_MUTATION31
+#define RE4DC_WORLD_MUTATION31 0
+#endif
+#if RE4DC_WORLD_MUTATION31 != 0 && RE4DC_WORLD_MUTATION31 != 1
+#error WORLD_MUTATION31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_MUTATION31 && (!RE4DC_WORLD_PREPARED09 || !RE4DC_WORLD_PAGES31 || !RE4DC_MOVIE_WORLD_ARENA)
+#error WORLD_MUTATION31 needs WORLD_PREPARED09, WORLD_PAGES31 and MOVIE_WORLD_ARENA
+#endif
+#if RE4DC_WORLD_MUTATION31
+#include "include/world_mutation31.hpp"
+#endif
+#if defined(RE4DC_ACTOR_LIGHT_FAST_ONLY) && RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.h"
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#include "include/world_part_plan29.hpp"
+#endif
 #include "../world_scratch.h"
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
@@ -18,6 +57,24 @@
 #ifndef RE4DC_PS2_WORLD_MESH
 #define RE4DC_PS2_WORLD_MESH 0
 #endif
+#ifndef RE4DC_ROOT_POSE_CAP_FALLBACK
+#define RE4DC_ROOT_POSE_CAP_FALLBACK 0
+#endif
+#ifndef RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+#define RE4DC_ROOT_POSE_WITNESS_PREFLIGHT 0
+#endif
+#ifndef RE4DC_ROOT_POSE_REFUSAL_DIAG
+#define RE4DC_ROOT_POSE_REFUSAL_DIAG 0
+#endif
+#if (RE4DC_ROOT_POSE_CAP_FALLBACK != 0 && RE4DC_ROOT_POSE_CAP_FALLBACK != 1) || \
+    (RE4DC_ROOT_POSE_WITNESS_PREFLIGHT != 0 && RE4DC_ROOT_POSE_WITNESS_PREFLIGHT != 1) || \
+    (RE4DC_ROOT_POSE_REFUSAL_DIAG != 0 && RE4DC_ROOT_POSE_REFUSAL_DIAG != 1)
+#error Root-pose refusal controls must be 0 or 1
+#endif
+#if (RE4DC_ROOT_POSE_CAP_FALLBACK || RE4DC_ROOT_POSE_WITNESS_PREFLIGHT || RE4DC_ROOT_POSE_REFUSAL_DIAG) && \
+    (!RE4DC_PS2_WORLD_ROOT_POSE || !RE4DC_PS2_WORLD_PARTS || !RE4DC_PS2_WORLD_DYNAMIC || !RE4DC_PS2_WORLD_ROOMS)
+#error Root-pose refusal controls need the room root-pose adapter
+#endif
 #ifndef RE4DC_SCENERY_SELECT_ONLY
 #define RE4DC_SCENERY_SELECT_ONLY 0
 #endif
@@ -26,6 +83,45 @@
 #endif
 #if RE4DC_SCENERY_SELECT_ONLY && !RE4DC_SCENERY_CHUNK
 #error SCENERY_SELECT_ONLY needs SCENERY_CHUNK
+#endif
+#ifndef RE4DC_SCENERY_STREAM
+#define RE4DC_SCENERY_STREAM 0
+#endif
+#ifndef RE4DC_SCENERY_CLIP_GATHER
+#define RE4DC_SCENERY_CLIP_GATHER 0
+#endif
+#if RE4DC_SCENERY_CLIP_GATHER != 0 && RE4DC_SCENERY_CLIP_GATHER != 1
+#error SCENERY_CLIP_GATHER must be 0 or 1
+#endif
+#if RE4DC_SCENERY_CLIP_GATHER
+#if !RE4DC_SCENERY_STREAM || !RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH || \
+    RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_DEDUP==3 || (RE4DC_CPU_BACKFACE != 0 && RE4DC_CPU_BACKFACE != 2)
+#error SCENERY_CLIP_GATHER needs streamed direct chunks, EMIT_PREFETCH=0, DEDUP!=3 and CPU_BACKFACE=0 or 2
+#endif
+#include "include/scenery_clip_gather.hpp"
+#endif
+#ifndef RE4DC_SCENERY_CLIP_INDEXED26
+#define RE4DC_SCENERY_CLIP_INDEXED26 0
+#endif
+#if RE4DC_SCENERY_CLIP_INDEXED26 != 0 && RE4DC_SCENERY_CLIP_INDEXED26 != 1
+#error SCENERY_CLIP_INDEXED26 must be 0 or 1
+#endif
+#if RE4DC_SCENERY_CLIP_INDEXED26
+#if !RE4DC_SCENERY_STREAM || !RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH || \
+    RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_DEDUP==3 || (RE4DC_CPU_BACKFACE != 0 && RE4DC_CPU_BACKFACE != 2)
+#error SCENERY_CLIP_INDEXED26 needs streamed direct chunks, MESH_FASTPATH, EMIT_PREFETCH=0, DEDUP!=3 and CPU_BACKFACE=0 or 2
+#endif
+#include "include/scenery_clip_indexed26.hpp"
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+struct Re4dcModelPart;
+extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
+#endif
 #endif
 #ifndef RE4DC_SCENERY_REPLAY_LEAN
 #define RE4DC_SCENERY_REPLAY_LEAN 0
@@ -48,6 +144,36 @@
 #if RE4DC_SCENERY_UV_SNAPSHOT && !RE4DC_SCENERY_CHUNK
 #error SCENERY_UV_SNAPSHOT needs SCENERY_CHUNK
 #endif
+#ifndef RE4DC_WORLD_PORTAL_COMPLETION
+#define RE4DC_WORLD_PORTAL_COMPLETION 0
+#endif
+#ifndef RE4DC_WORLD_PORTAL_STREAM31
+#define RE4DC_WORLD_PORTAL_STREAM31 0
+#endif
+#ifndef RE4DC_WORLD_PORTAL_CLIP_GATHER31
+#define RE4DC_WORLD_PORTAL_CLIP_GATHER31 0
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION != 0 && RE4DC_WORLD_PORTAL_COMPLETION != 1
+#error WORLD_PORTAL_COMPLETION must be 0 or 1
+#endif
+#if RE4DC_WORLD_PORTAL_STREAM31 != 0 && RE4DC_WORLD_PORTAL_STREAM31 != 1
+#error WORLD_PORTAL_STREAM31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31 != 0 && RE4DC_WORLD_PORTAL_CLIP_GATHER31 != 1
+#error WORLD_PORTAL_CLIP_GATHER31 must be 0 or 1
+#endif
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31 && (!RE4DC_WORLD_PORTAL_STREAM31 || !RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_CPU_BACKFACE || RE4DC_MESH_CLIP_LEAN || RE4DC_MESH_CLIP_ACCEPT)
+#error WORLD_PORTAL_CLIP_GATHER31 needs qualified stream and basic gather clipper with indexed clip and CPU backface off
+#endif
+#if RE4DC_WORLD_PORTAL_STREAM31 && (RE4DC_WORLD_PORTAL_COMPLETION != 1 || RE4DC_SCENERY_STREAM != 1 || RE4DC_PS2_PVS != 1 || RE4DC_PS2_PVS_BATCH_COMPOSE != 1 || RE4DC_SCENERY_EMIT_PREFETCH || (RE4DC_SCENERY_CLIP_GATHER && !RE4DC_WORLD_PORTAL_CLIP_GATHER31) || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_TA_HASH)
+#error WORLD_PORTAL_STREAM31 needs streamed PVS/portal completion without prefetch, alternate records, direct strips or unqualified clip extensions
+#endif
+#if RE4DC_SCENERY_STREAM && RE4DC_PS2_PVS && !RE4DC_WORLD_PORTAL_STREAM31
+#error SCENERY_STREAM with PS2_PVS needs WORLD_PORTAL_STREAM31
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION && (!RE4DC_WORLD_PORTAL29 || !RE4DC_PS2_PVS_BATCH_COMPOSE || !RE4DC_SCENERY_SUBMIT_BATCH || (RE4DC_SCENERY_STREAM && !RE4DC_WORLD_PORTAL_STREAM31) || (RE4DC_SCENERY_CLIP_GATHER && !RE4DC_WORLD_PORTAL_CLIP_GATHER31) || RE4DC_SCENERY_CLIP_INDEXED26)
+#error WORLD_PORTAL_COMPLETION needs portal + qualified queued batching; stream and gather clip need their scoped controls
+#endif
 #ifndef RE4DC_SCENERY_SUBMIT_BATCH
 #define RE4DC_SCENERY_SUBMIT_BATCH 0
 #endif
@@ -57,7 +183,7 @@
 #if RE4DC_SCENERY_SUBMIT_BATCH && (!RE4DC_SCENERY_CHUNK || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH)
 #error SCENERY_SUBMIT_BATCH needs the direct PS2 scenery chunk path
 #endif
-#if RE4DC_SCENERY_SUBMIT_BATCH && (RE4DC_PS2_PVS || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
+#if RE4DC_SCENERY_SUBMIT_BATCH && ((RE4DC_PS2_PVS && !(RE4DC_WORLD_PORTAL_COMPLETION && RE4DC_WORLD_PORTAL29 && RE4DC_PS2_PVS_BATCH_COMPOSE)) || RE4DC_WORLD_SCRATCH || RE4DC_TA_GUARD)
 #error SCENERY_SUBMIT_BATCH does not yet qualify PS2_PVS, WORLD_SCRATCH or TA_GUARD
 #endif
 #ifndef RE4DC_SCENERY_EMIT_PREFETCH
@@ -173,7 +299,13 @@
 #include <stdio.h>
 #include <cstring>
 #include <cstdlib>
+#if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
+#include "include/scn21_validate34.hpp"
+#endif
 #include "native_static.h"
+#if RE4DC_WORLD_PORTAL29
+#include "include/world_portal29.hpp"
+#endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 #include "include/pvs23_format.hpp"
 #include "include/pvs23_proof.hpp"
@@ -265,6 +397,9 @@ extern "C" unsigned re4dc_coarse_world_room();   // coarse.cpp: coarse_world.h k
 // the per-strip-corner Emitter path for every meshlet (A/B reference).
 #ifndef RE4DC_MESH_FASTPATH
 #define RE4DC_MESH_FASTPATH 1
+#endif
+#if RE4DC_SCENERY_CLIP_INDEXED26 && !RE4DC_MESH_FASTPATH
+#error SCENERY_CLIP_INDEXED26 needs MESH_FASTPATH=1
 #endif
 #ifndef RE4DC_MESH_CLASSIFY
 #define RE4DC_MESH_CLASSIFY 0 // 1: skip outcodes in wholly visible meshlets (+1.5 KiB image)
@@ -498,7 +633,13 @@ extern "C" const char* re4dc_fx_level_osd_text(void); // esp_sub.cpp: the FX lev
 #if defined(RE4DC_LEON_LIGHT_TOGGLE) && RE4DC_LEON_LIGHT_TOGGLE
 extern "C" const char* re4dc_leon_light_osd_text(void); // native_actor_fast.cpp: the Leon lighting mode, 3 s after a change
 #endif
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+extern "C" const char* re4dc_qa_drive_osd_text(void); // qa_menu.cpp: "PC DRIVING" while the QA link drives Leon
+#endif
 extern "C" const char* re4dc_look_osd_text(void){
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+    if(const char* dv=re4dc_qa_drive_osd_text())return dv;
+#endif
 #if defined(RE4DC_FX_LEVEL_TOGGLE) && RE4DC_FX_LEVEL_TOGGLE
     if(const char* fl=re4dc_fx_level_osd_text())return fl;
 #endif
@@ -1070,11 +1211,35 @@ void load_screen(const float* mv,const float* p,const float* v){
     if(have && !std::memcmp(in,last,sizeof(in))){mat_load(&screen);return;}
     std::memcpy(last,in,sizeof(in));have=true;
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldScreenRebuild);
+#endif
+#if RE4DC_SCENERY_STREAM
+    // SCENERY_STREAM: the same per-element chain (start value, then += row[k] * mv[4k + c] for k = 0, 1, 2) written out
+    // without the -Os loops.
+#define RE4DC_LS_EL(r,c,start) {float value=(start);value+=rows[r][0]*mv[c];value+=rows[r][1]*mv[4+c];value+=rows[r][2]*mv[8+c];screen[c][r]=value;}
+#define RE4DC_LS_ROW(r) RE4DC_LS_EL(r,0,0.0f) RE4DC_LS_EL(r,1,0.0f) RE4DC_LS_EL(r,2,0.0f) RE4DC_LS_EL(r,3,rows[r][3])
+    RE4DC_LS_ROW(0) RE4DC_LS_ROW(1) RE4DC_LS_ROW(2) RE4DC_LS_ROW(3)
+#undef RE4DC_LS_ROW
+#undef RE4DC_LS_EL
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+    {   // check build: the loop form must give the same words
+        float ref[4][4];
+        for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
+            float value=c==3?rows[r][3]:0.0f;
+            for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
+            ref[c][r]=value;
+        }
+        extern unsigned stream_ls[2];++stream_ls[0];if(std::memcmp(ref,screen,sizeof(ref)))++stream_ls[1];
+    }
+#endif
+#else
     for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
         float value=c==3?rows[r][3]:0.0f;
         for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
         screen[c][r]=value; // KOS matrix_t is column-major for ftrv
     }
+#endif
     mat_load(&screen);
 }
 
@@ -1137,6 +1302,34 @@ struct Wc24PassResult {
 #endif
 };
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+// Part totals are accumulated once, on every exit; counters never read clocks.
+struct DsaStaticPart {
+    const unsigned& input;const unsigned& output;
+    unsigned in0,out0;bool translucent,complete=false;
+    DsaStaticPart(const unsigned& i,const unsigned& o,bool tr):input(i),output(o),in0(i),out0(o),translucent(tr){
+        re4dc::dsa24::count(re4dc::dsa24::Parts);
+    }
+    ~DsaStaticPart(){
+        const unsigned ni=input-in0,no=output-out0;
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesIn,ni);
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesOut,no);
+        if(translucent)re4dc::dsa24::count(re4dc::dsa24::XluSubmitted,no);
+        if(!complete && (ni || no))re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+    }
+};
+struct DsaStaticCount {
+    re4dc::dsa24::Counter counter;unsigned n=0;
+    explicit DsaStaticCount(re4dc::dsa24::Counter c):counter(c){}
+    ~DsaStaticCount(){re4dc::dsa24::count(counter,n);}
+};
+// View overlap means a conservative projected triangle bounding-box overlap,
+// not depth visibility, coverage, or a rasterized-pixel measurement.
+static bool dsa_triangle_overlap(const pvr_vertex_t& a,const pvr_vertex_t& b,const pvr_vertex_t& c){
+    return !((a.x<0 && b.x<0 && c.x<0) || (a.x>RE4DC_SCREEN_WF && b.x>RE4DC_SCREEN_WF && c.x>RE4DC_SCREEN_WF) ||
+             (a.y<0 && b.y<0 && c.y<0) || (a.y>RE4DC_SCREEN_HF && b.y>RE4DC_SCREEN_HF && c.y>RE4DC_SCREEN_HF));
+}
+#endif
 struct Emitter {
     const Re4dcModelPart& p;
     float mv[12];  // package -> view: group bounds
@@ -1148,6 +1341,43 @@ struct Emitter {
     unsigned limit=0; // packet slots strips may use: packet.capacity less any borrowed tail
     bool streaming=false,bound=false,submitted=false;
     bool vertex_alpha=false; // corner alpha from the colour palette (source vertex alpha)
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+    // The clipper lives in Emitter; the receipt reads this across every pick
+    // in the derived MeshDraw and folds it across page restarts.
+    bool portal_depth_safe_clip=true;
+    // Only MeshDraw::borrow can bind authenticated transformed depth codes.
+    // Plain compact emitters have no cache and must decline this proof.
+    const std::uint8_t* portal_depth_outcodes=nullptr;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    bool dsa_xlu()const{
+#if RE4DC_PS2_WORLD_MESH
+        return ps2 && ps2[4]==2U;
+#else
+        return false;
+#endif
+    }
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    unsigned dsa28_cls()const{
+#if RE4DC_PS2_WORLD_MESH
+        if(ps2)return ps2[4]<=2U?ps2[4]:0U;
+#endif
+        return re4dc_dsa28_model_class(&p);
+    }
+#endif
+    void dsa_packet_overlap(const pvr_vertex_t* vertices,unsigned n)const{
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if(re4dc::dsa24::x28::sample)re4dc::dsa24::x28::packet(dsa28_cls(),p.cull,vertices,n,PVR_CMD_VERTEX_EOL);
+#endif
+        if(!dsa_xlu())return;
+        unsigned run=0,overlap=0;
+        for(unsigned i=0;i<n;++i){
+            if(++run>=3U && dsa_triangle_overlap(vertices[i-2],vertices[i-1],vertices[i]))++overlap;
+            if(vertices[i].flags==PVR_CMD_VERTEX_EOL)run=0;
+        }
+        re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap,overlap);
+    }
+#endif
 #if RE4DC_SCENERY_DEDUP==3
     const re4dc::room::CompactVertex12* dd_base=nullptr;
     unsigned dd_unique=0,dd_count=0; // borrowed meshlet context, no allocation or retained mask
@@ -1223,7 +1453,14 @@ struct Emitter {
 #else
 #define RE4DC_WC24_PUT_SCOPE()
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    void put(unsigned n){RE4DC_WC24_PUT_SCOPE()
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        dsa_packet_overlap(dst+used,n);
+        sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#else
     void put(unsigned n){RE4DC_WC24_PUT_SCOPE()sq=re4dc_ta_put(sq,dst+used,n);slots+=n;}
+#endif
 #undef RE4DC_WC24_PUT_SCOPE
 #endif
     bool bind(){
@@ -1264,6 +1501,13 @@ struct Emitter {
 #if RE4DC_MESH_DIRECT
         if(direct){
             Re4dcModelDirect out{};
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT && RE4DC_PS2_WORLD_MESH
+#if RE4DC_SCENERY_SUBMIT_BATCH
+            if(ps2 && !submit_batch)re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitUnbatched);
+#else
+            if(ps2)re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitUnbatched);
+#endif
+#endif
 #if RE4DC_PS2_WORLD_MESH
 #if RE4DC_SCENERY_PIECE_STATE
             re4dc_ps2_piece_slot=ps2?piece_slot:nullptr;
@@ -1328,6 +1572,12 @@ struct Emitter {
         return true;
     }
     bool flush(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        // The packet path may stage output before a later refusal; its part
+        // scope marks incomplete totals unsupported on that exit.
+        if(streaming && used)dsa_packet_overlap(dst,used);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_submit(re4dc::wc24::Submit);
 #endif
@@ -1432,6 +1682,13 @@ struct Emitter {
                 else if(sq){put(count);output+=count-2;++stats.strips;}
 #endif
                 else {used+=count;output+=count-2;++stats.strips;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                if(!outside
+#if RE4DC_MESH_DIRECT
+                    && !sq
+#endif
+                  )re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitBuffered);
+#endif
                 return 1;
             }
         }
@@ -1440,9 +1697,41 @@ struct Emitter {
     // Near/far crossing or oversize: the shared clipper, triangle by triangle,
     // keeping strip winding (odd triangles swap their first two corners).
     // input was already counted by the caller.
+#if RE4DC_SCENERY_CLIP_INDEXED26
+    template<class Source,class Index>
+    int clip_strip(Source base,const re4dc::room::CompactBatch& batch,
+#else
     template<class Vertex,class Index>
     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
+#endif
                    const Index* index,unsigned count){
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+        // The existing input==output receipt is a coverage proof only while
+        // each input triangle can produce at most one output triangle. A long
+        // depth-inside strip takes this clipper for capacity, not near clipping.
+        if(!ps2 || !portal_depth_outcodes || count<=limit)portal_depth_safe_clip=false;
+        else {
+            constexpr unsigned depth=re4dc::vp::depth_mask(re4dc::vp::kChecksAll);
+            for(unsigned i=0;i<count;++i)
+                if(portal_depth_outcodes[index[i]]&depth){portal_depth_safe_clip=false;break;}
+        }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(count>limit?re4dc::dfa26::WorldClipCapacity:re4dc::dfa26::WorldClipDepth);
+        struct ClipAudit {
+            unsigned rebuilt=0,projected=0;
+            ~ClipAudit(){
+                re4dc::dfa26::hit(re4dc::dfa26::WorldClipRebuild,rebuilt);
+                re4dc::dfa26::hit(re4dc::dfa26::WorldClipProject,projected);
+            }
+        } clip_audit;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+        re4dc::dsa24::count(re4dc::dsa24::ClipStrips);
+        re4dc::dsa24::count(re4dc::dsa24::ClipTriangles,count-2U);
+        DsaStaticCount dsa_rebuild(re4dc::dsa24::ClipRebuilds);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_clip(re4dc::wc24::Clip);
         Wc24Count wc_transformed(re4dc::wc24::Transformed);
@@ -1460,6 +1749,12 @@ struct Emitter {
             const float screen_w=RE4DC_SCREEN_WF,screen_h=RE4DC_SCREEN_HF,half_w=RE4DC_SCREEN_HALF_WF,half_h=RE4DC_SCREEN_HALF_HF;
             unsigned all=0x3fU;
             for(unsigned i=0;i<count && all;++i){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                ++clip_audit.rebuilt;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                ++dsa_rebuild.n;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 ++wc_transformed.n;
 #endif
@@ -1504,6 +1799,12 @@ struct Emitter {
                 {const unsigned t=s2;s2=s1;s1=s0;s0=t;}
                 const re4dc::render::StaticCorner c=corner(base[index[i]]);
                 re4dc::render::RenderVertex& v=ring[s0];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                ++clip_audit.rebuilt;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                ++dsa_rebuild.n;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 ++wc_transformed.n;
 #endif
@@ -1528,6 +1829,9 @@ struct Emitter {
                 }else if(inside){
                     const re4dc::render::RenderVertex tri[3]={va,vb,v};
                     const float ta[3]={ring_alpha[ia],ring_alpha[ib],ring_alpha[s0]};
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                    ++clip_audit.projected;
+#endif
                     emitted=re4dc::render::clip_projected_triangle(tri,dst+used,p.cull,clip,nullptr,ta);
                 }
 #if RE4DC_MESH_CLIP_ACCEPT==2
@@ -1552,6 +1856,12 @@ struct Emitter {
 #endif
         if(count<=kClipOnce){
             re4dc::render::RenderVertex once[kClipOnce];float once_alpha[kClipOnce];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            clip_audit.rebuilt+=count;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_rebuild.n+=count;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             wc_transformed.n+=count;
 #endif
@@ -1565,6 +1875,9 @@ struct Emitter {
                 const re4dc::render::RenderVertex tri[3]={once[ia],once[ib],once[i]};
                 const float ta[3]={once_alpha[ia],once_alpha[ib],once_alpha[i]};
                 if(limit-used<6 && !flush())return submitted?-1:0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                ++clip_audit.projected;
+#endif
                 const unsigned emitted=re4dc::render::clip_projected_triangle(tri,dst+used,p.cull,clip,nullptr,ta);
 #if RE4DC_MESH_DIRECT
                 if(sq){if(emitted)put(emitted*3);output+=emitted;stats.triangles_clipped+=emitted;continue;}
@@ -1576,6 +1889,12 @@ struct Emitter {
 #endif
         for(unsigned i=2;i<count;++i){
             re4dc::render::RenderVertex tri[3];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            clip_audit.rebuilt+=3U;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_rebuild.n+=3U;
+#endif
             const re4dc::render::StaticCorner corners[3]={corner(base[index[i-2+(i&1)]]),
                 corner(base[index[i-1-(i&1)]]),corner(base[index[i]])};
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
@@ -1586,6 +1905,9 @@ struct Emitter {
                 if(vertex_alpha)alphas[k]=float(corners[k].argb>>24)RE4DC_INV255;
             }
             if(limit-used<6 && !flush())return submitted?-1:0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            ++clip_audit.projected;
+#endif
             const unsigned emitted=re4dc::render::clip_projected_triangle(tri,dst+used,p.cull,clip,nullptr,alphas);
 #if RE4DC_MESH_DIRECT
             if(sq){if(emitted)put(emitted*3);output+=emitted;stats.triangles_clipped+=emitted;continue;}
@@ -1599,8 +1921,15 @@ struct Draw : Emitter {
     View& view; unsigned material;
     // 1 drawn (possibly nothing visible), 0 fallback allowed, -1 frame aborted.
     int run(const re4dc::room::CompactSourceRange& range){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        DsaStaticPart dsa_part(input,output,dsa_xlu());
+#endif
         const auto& package=view.package;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!re4dc_model_packet_reserve(&p,&packet)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcReserve);++stats.reserve_rejects;return 0;}
+#else
         if(!re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
+#endif
         streaming=re4dc_model_packet_streaming()!=0;
 #if RE4DC_HW_LEAN
         set_clip();
@@ -1644,8 +1973,19 @@ struct Draw : Emitter {
                 if(result<=0)return result;
             }
         }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(used){
+            dsa_packet_overlap(dst,used);
+            const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+            re4dc_model_packet_commit(used);
+        }
+#else
         if(used)re4dc_model_packet_commit(used);
+#endif
         re4dc_model_result(0,input,output);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_part.complete=true;
+#endif
         return 1;
     }
 };
@@ -1961,9 +2301,14 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
 #endif
     auto* vertices=reinterpret_cast<re4dc::room::CompactVertex12*>(v.storage+v.package.header().vertex_offset);
     const std::uint32_t* palette=v.package.palette();
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    Re4dcActorLight25Colour light25_colour;
+    re4dc_actor_light25_part_colour(&p,nullptr,&light25_colour);
+#else
     re4dc::render::PreparedSourceLights lights;
     if(p.lighting)lights=re4dc::render::prepare_actor_lights(*p.lighting);
     const float* m=p.modelview;
+#endif
     const auto* lets=v.package.meshlets()+part.first_meshlet;
     // v3 indexed meshlets share their part's pool: light the pool [lo, hi)
     // once (adopt() proved pools disjoint) instead of each meshlet's corners.
@@ -1981,6 +2326,15 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
 #endif
             const std::uint8_t color[4]={std::uint8_t(argb>>16),std::uint8_t(argb>>8),std::uint8_t(argb),std::uint8_t(argb>>24)};
             float rgb[3]={1.0f,1.0f,1.0f};
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+            if(p.lighting){
+                const unsigned value=(p.lighting->ambient_vertex || p.lighting->material_vertex)
+                    ? re4dc_actor_light25_multiply(light25_colour,color) : light25_colour.rgb;
+                rgb[0]=float((value>>16)&255U)/255.0f;
+                rgb[1]=float((value>>8)&255U)/255.0f;
+                rgb[2]=float(value&255U)/255.0f;
+            }
+#else
             if(p.lighting){
                 const float x=mesh.origin[0]+float(corner.x)*mesh.step[0];
                 const float y=mesh.origin[1]+float(corner.y)*mesh.step[1];
@@ -2004,6 +2358,7 @@ void light_part(MeshView& v,const re4dc::room::MeshRecord& mesh,re4dc::room::Mes
                     *p.lighting,lights,color,rgb);
 #endif
             }
+#endif
             corner.color=pack1555(rgb,color[3]);
         }
     }
@@ -2122,7 +2477,7 @@ struct State {
     float eye[3]{};
     int cell=-1; unsigned nfr=0; Frustum* fr=nullptr; // kMaxFr frustums in the cell block (null: not loaded)
     unsigned frame=~0U,setup_frame=~0U,done_frame=~0U;float corner=0; // done_frame: the frame the cell was last set up for
-    unsigned placements=0,clusters=0,meshlets=0,tests=0,active_frames=0,frames=0; // culled (=1/=3) or checked (=2)
+    unsigned placements=0,clusters=0,meshlets=0,tests=0,active_frames=0,frames=0; PC_STATE_EXTRA // culled (=1/=3) or checked (=2)
 } st;
 // The disc cell (r100 only): one heap-4 block = file (header, cells, portals) + both states' frustum arrays.
 struct Data {
@@ -2149,6 +2504,11 @@ inline State& trans_state(){static State none;return none;}
 // render state (pc::st) or the Trans-time actor state.
 inline void setup_state(State& st,const float* view,const float* P,float near){
     st.active=false;st.cell=-1;st.nfr=0;
+#if RE4DC_WORLD_PORTAL29
+    // Actor Trans occurs before any current-image wall receipt. It cannot
+    // borrow portal authority; only the world Render state may select a cell.
+    if(&st!=&pc::st)return;
+#endif
 #if RE4DC_PS2_INTERIOR_CULL==3
     if(select_word!=2U)return;
 #endif
@@ -2163,7 +2523,7 @@ inline void setup_state(State& st,const float* view,const float* P,float near){
         const Cell& c=data.cells[i];
         if(e[0]>=c.lo[0] && e[0]<=c.hi[0] && e[1]>=c.lo[1] && e[1]<=c.hi[1] && e[2]>=c.lo[2] && e[2]<=c.hi[2]){st.cell=int(i);break;}
     }
-    if(st.cell<0)return;
+    if(st.cell<0)return; PC_PICK_HOUSE(st)
     const Cell& c=data.cells[st.cell];
     if(c.count>kMaxFr)return;
     for(unsigned k=0;k<3;++k)st.eye[k]=e[k];
@@ -2190,7 +2550,7 @@ inline void setup_state(State& st,const float* view,const float* P,float near){
 inline void setup(const float* view,const float* P,float near){setup_state(st,view,P,near);}
 // World box (centre / half extents): 1 hidden, 0 drawn (seen through a portal), -1 meets the house box.
 inline int hidden_state(State& st,const float c[3],const float h[3]){
-    ++st.tests;
+    ++st.tests; PC_OUTER_DECL(st)
     float lo[3],hi[3];
     for(unsigned a=0;a<3;++a){lo[a]=c[a]-h[a]-kSlack;hi[a]=c[a]+h[a]+kSlack;}
     if(hi[0]>kPcOuter[0] && lo[0]<kPcOuter[3] && hi[1]>kPcOuter[1] && lo[1]<kPcOuter[4] && hi[2]>kPcOuter[2] && lo[2]<kPcOuter[5])return -1;
@@ -2229,6 +2589,9 @@ inline int grid_hidden(const float* wq,const std::uint16_t lo[3],const std::uint
 State& trans_state();
 // Frees the cell block (both states inactive: nothing is culled until it is read again).
 inline unsigned unload(){
+#if RE4DC_WORLD_PORTAL29
+    wp29_clear();
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_static_invalidate_all();
     if(data.asset_proof.owner)re4dc_gcasset::payload_invalidate(data.asset_proof,&data);
@@ -2241,7 +2604,7 @@ inline unsigned unload(){
     return kPcFileBytes+2U*kFrBytes;
 }
 // Reads /cd/dc/native/r100/interior.cell into a heap-4 block (the r100 package open, and after a route movie).
-inline bool load(){
+inline bool load(){ PC_LOAD_HOOK
     if(data.block)return true;
     if(!st.ok)return false;
 #if RE4DC_GC_ASSET_GATE
@@ -2465,6 +2828,9 @@ inline void sg_coef(const float* m,float near_distance,float* out){
 // visible groups' strip ranges r0..r1, their corner range lo..hi and how many are left; counts culled.
 __attribute__((noinline)) unsigned sg_select(const std::uint16_t* g,unsigned n,const float* coef,unsigned mask,
         std::uint16_t* r0,std::uint16_t* r1,unsigned& lo,unsigned& hi,unsigned& culled){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldSgRanges);
+#endif
     unsigned prev=0,nr=0,vlo=255,vhi=0,cut=0;
     // the crossed planes, once per meshlet (not a 5-step skip loop per group)
     const float* pl[5];unsigned np=0;
@@ -2533,6 +2899,9 @@ inline void sg_coef_lean(const float* m,float near_distance,SgPlane* out){
 // the plane records read in order.
 __attribute__((noinline)) unsigned sg_select_lean(const std::uint16_t* g,unsigned n,const SgPlane* planes,unsigned mask,
         std::uint16_t* r0,std::uint16_t* r1,unsigned& lo,unsigned& hi,unsigned& culled){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldSgRanges);
+#endif
     const SgPlane* pl[5];unsigned np=0;
     if(mask&1U)pl[np++]=planes;
     if(mask&2U)pl[np++]=planes+1;
@@ -2701,7 +3070,44 @@ extern "C" void re4dc_world_scratch_prime_reset(){
 #endif
 }
 #endif
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+unsigned stream_ls[2]; // SCENERY_STREAM check build: load_screen memo misses compared, mismatches
+unsigned stream_ck[3]; // SCENERY_STREAM check build: indexed picks compared, corners, mismatching picks
+#endif
+#if RE4DC_WORLD_MUTATION31
+extern unsigned sourceWorldPackageGeneration;
+bool worldPackageSelectionCurrent(unsigned);
+#endif
 struct MeshDraw : Emitter {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT && RE4DC_MESH_FASTPATH
+    void dsa_index_overlap(const std::uint8_t* indices,unsigned n)const{
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if(re4dc::dsa24::x28::sample)re4dc::dsa24::x28::strip(dsa28_cls(),p.cull,cache,indices,n,0xffU);
+#endif
+        if(!dsa_xlu())return;
+        unsigned overlap=0;
+        for(unsigned i=2;i<n;++i)
+            if(dsa_triangle_overlap(cache[indices[i-2]],cache[indices[i-1]],cache[indices[i]]))++overlap;
+        re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap,overlap);
+    }
+    void dsa_lean_overlap(const std::uint8_t* begin,const std::uint8_t* end)const{
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if(!dsa_xlu() && !re4dc::dsa24::x28::sample)return;  // XLU28 replays every pass on its sampled ticks
+#else
+        if(!dsa_xlu())return;
+#endif
+        // walk_lean stops before a depth-crossing strip. Replay only its
+        // inexpensive integer admission predicates; do not emit or transform.
+        constexpr unsigned mask=re4dc::vp::depth_mask(re4dc::vp::kChecksAll)|
+                                re4dc::vp::screen_mask(re4dc::vp::kChecksAll);
+        for(const std::uint8_t* s=begin;s<end;){
+            const unsigned n=*s++;
+            const auto c=re4dc::vp::codes(outcodes,s,n);
+            if(!(c.all&mask))dsa_index_overlap(s,n);
+            s+=n;
+        }
+    }
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     const re4dc::record_split::RecordView package; const re4dc::room::MeshPart& part;
 #else
@@ -2709,6 +3115,12 @@ struct MeshDraw : Emitter {
 #endif
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
     re4dc::room::CompactVertex12* gather_pool; // mesh view's v3 gather buffer (nullptr: v1/v2)
+#if RE4DC_WORLD_MUTATION31
+    unsigned mutation_epoch=0; // zero for non-world MeshDraw callers
+    bool mutation_current()const{
+        return !mutation_epoch || worldPackageSelectionCurrent(mutation_epoch);
+    }
+#endif
 #if RE4DC_PS2_PVS
     // (after the four members MeshDraw{...} initializes by position) PS2_PVS: this frame's visible set (nullptr: no
     // set) and the instance number of this part's first cluster in it (pvs::base + pvs::poff)
@@ -2734,6 +3146,9 @@ struct MeshDraw : Emitter {
     // pc_wq: placement affine x grid (world box of a cluster / meshlet); pc_all: the whole placement is hidden.
     unsigned pc_mode=0; const float* pc_wq=nullptr; bool pc_all=false,pc_check=false;
 #endif
+#if RE4DC_WORLD_PORTAL29
+    const float* wp29_wq=nullptr;
+#endif
     // Cluster/meshlet rejection distance: min(projection far, source View far)
     // with RE4DC_NATIVE_FOG, else the projection far. Vertices still clip
     // against the projection far, so a straddling strip is drawn whole (fully
@@ -2743,6 +3158,9 @@ struct MeshDraw : Emitter {
 #if RE4DC_PS2_PVS
     unsigned pvs_placement=~0U,pvs_pending[3]={~0U,~0U,0};
     void pvs_finish(bool success){
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())success=false;
+#endif
         if(success && pvs_pending[2] && ps2)re4dc_pvs23_commit(pvs_placement,part_index,pvs_pending,ps2);
         pvs_pending[2]=0;
     }
@@ -2761,6 +3179,67 @@ struct MeshDraw : Emitter {
         gathered=gather_pool;
         return gathered!=nullptr;
     }
+#if RE4DC_SCENERY_STREAM
+    // SCENERY_STREAM: the indexed meshlet whose gather is still owed (emit_pick transformed it from its pool). The
+    // clipper reads corners by meshlet index, so the gather runs (once, the same copy as corners()) before its first
+    // clip strip.
+    const RE4DC_SCENERY_RECORD* stream_l=nullptr;
+#if RE4DC_SCENERY_CLIP_INDEXED26
+    int clip_stream_strip(const re4dc::room::CompactVertex12* base,
+                          const re4dc::room::CompactBatch& batch,
+                          const std::uint8_t* indices,unsigned count){
+        if(stream_l){
+            const auto& l=*stream_l;
+            const re4dc::scenery_clip26::Indexed<re4dc::room::CompactVertex12> source{
+                package.vertices()+l.first_vertex,package.pool_offsets(l)};
+            return clip_strip(source,batch,indices,count);
+        }
+        return clip_strip(base,batch,indices,count);
+    }
+#endif
+#if RE4DC_SCENERY_CLIP_GATHER
+    re4dc::scenery_clip24::Gather stream_clip_gather;
+    __attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(
+        const re4dc::room::CompactVertex12* base,const std::uint8_t* indices,unsigned count){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+#endif
+        if(!stream_l)return base;
+        const auto& l=*stream_l;
+        const unsigned copied=stream_clip_gather.fill(package.vertices()+l.first_vertex,
+            package.pool_offsets(l),gathered,indices,count);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGatherPartial,copied);
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,copied);
+#else
+        (void)copied;
+#endif
+        return gathered;
+    }
+#else
+    __attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+#endif
+        if(stream_l){const auto* l=stream_l;stream_l=nullptr;return corners(*l);}
+        return gathered;
+    }
+#endif
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+    // Check build: the gathered copy through transform_sched must give the same cache words and outcode bits 5..0.
+    __attribute__((noinline)) void stream_check(const RE4DC_SCENERY_RECORD& l,unsigned lo,unsigned n){
+        static pvr_vertex_t ref[256] __attribute__((aligned(32)));static std::uint8_t roc[256];
+        const auto* g=corners(l);
+        re4dc::vp::prime(ref,256);
+        re4dc::vp::transform_sched<re4dc::vp::kChecksAll>(reinterpret_cast<const re4dc::vp::Vertex12*>(g)+lo,n,ref,roc,k);
+        ++stream_ck[0];stream_ck[1]+=n;
+        for(unsigned i=0;i<n;++i)
+            if(std::memcmp(&ref[i].x,&cache[lo+i].x,24) || ((roc[i]^outcodes[lo+i])&0x3fU)){++stream_ck[2];break;}
+    }
+#endif
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     template<class EmitRecord>
     const re4dc::room::CompactVertex12* corners(const EmitRecord& l){
@@ -2773,6 +3252,12 @@ struct MeshDraw : Emitter {
         dd_base=rep?base:nullptr;dd_unique=l.vertex_count-rep;dd_count=l.vertex_count;
 #endif
         if(!package.indexed(l))return base;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGatherFull,l.vertex_count);
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,l.vertex_count);
+#endif
         // Three word moves per corner: R4IM vertices are 4-byte aligned.
         typedef std::uint32_t __attribute__((may_alias)) Word;
         const std::uint16_t* offsets=package.pool_offsets(l);
@@ -2846,6 +3331,10 @@ struct MeshDraw : Emitter {
 #endif
     bool borrow(){
         if(cache)return true;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!lut)re4dc::dfa26::hit(re4dc::dfa26::WorldCacheNoLut);
+        else if(limit<re4dc::vp::kCacheSlots+64U)re4dc::dfa26::hit(re4dc::dfa26::WorldCacheCapacity);
+#endif
         if(!lut || limit<re4dc::vp::kCacheSlots+64U)return false; // small slab: per-corner path
         limit-=re4dc::vp::kCacheSlots;
         cache=dst+limit;outcodes=reinterpret_cast<std::uint8_t*>(cache+re4dc::vp::kCacheEntries);
@@ -2882,6 +3371,9 @@ struct MeshDraw : Emitter {
         if(pc_check){k.and_mask=0;k.or_bits=0xffff00ffU;} // the check run: every corner opaque magenta
 #endif
         k.finish();
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+        portal_depth_outcodes=outcodes;
+#endif
         return true;
     }
 #if RE4DC_SCENERY_DIRECT_STRIPS
@@ -2896,15 +3388,29 @@ struct MeshDraw : Emitter {
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
 #endif
         namespace data=re4dc::scenery_data;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!ps2 || !direct || !sq || data::kind(package)!=data::Kind::DirectStrips)
+            re4dc::dfa26::hit(re4dc::dfa26::WorldDirectKind);
+#endif
         if(!ps2 || !direct || !sq || data::kind(package)!=data::Kind::DirectStrips)return false;
         const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
         const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        const unsigned direct_class=re4dc::vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far);
+        if(direct_class!=re4dc::vp::kChecksNone){re4dc::dfa26::hit(re4dc::dfa26::WorldDirectBoundary);return false;}
+#else
         if(re4dc::vp::classify(bmin,bmax,mvq,p.projection,p.viewport,near,far)!=re4dc::vp::kChecksNone)return false;
+#endif
         const auto source=data::payload(package,l);
         const auto* end=source.strips+source.strip_bytes;
         // The old path sends oversize strips through its clipper even inside.
         // Keep that exact fallback and decide it before any irreversible SQ burst.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        for(const auto* s=source.strips;s<end;){const unsigned n=*s++;
+            if(n>limit){re4dc::dfa26::hit(re4dc::dfa26::WorldDirectCapacity);return false;}s+=n;}
+#else
         for(const auto* s=source.strips;s<end;){const unsigned n=*s++;if(n>limit)return false;s+=n;}
+#endif
         const auto* in=reinterpret_cast<const re4dc::vp::Vertex12*>(source.vertices);
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         // Fused work has no separate cached-submit interval. Charge the whole
@@ -2928,6 +3434,9 @@ struct MeshDraw : Emitter {
 #endif
         return true;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldDirectDiagnostic);
+#endif
         (void)l;return false;
 #endif
     }
@@ -2977,7 +3486,7 @@ struct MeshDraw : Emitter {
         // PS2_STRIP_GROUPS: a straddling meshlet tests its strip groups' grid boxes (outside one screen edge or nearer
         // than near: every strip of the group would be culled after the transform), transforms only the corner
         // range of the groups left and walks only their strips (in stored order). All groups left: the whole path.
-        if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
+        RE4DC_WO26_SG_CELL if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             re4dc::wc24::Scope wc_groups(re4dc::wc24::Selection);
 #endif
@@ -3125,6 +3634,9 @@ struct MeshDraw : Emitter {
 #endif
                 if(!s)return result;}
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(s<end)re4dc::dfa26::hit(re4dc::dfa26::WorldStripGeneral);
+#endif
         while(s<end){
             const unsigned n=*s++;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
@@ -3149,10 +3661,17 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
                 else if(sq && bf_on()){bf_send(s,n);output+=n-2;++stats.strips;}
 #endif
-                else if(sq){sq=vp::emit_sq(sq,cache,s,n);slots+=n;output+=n-2;++stats.strips;}
+                else if(sq){
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+                    if(re4dc::dsa24::x28::sample)re4dc::dsa24::x28::strip(dsa28_cls(),p.cull,cache,s,n,0xffU);
+#endif
+                    sq=vp::emit_sq(sq,cache,s,n);slots+=n;output+=n-2;++stats.strips;}
 #endif
                 else {
                     if(n>limit-used && !flush())return submitted?-1:0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                    re4dc::dfa26::hit(re4dc::dfa26::WorldSubmitBuffered);
+#endif
                     vp::emit(dst+used,cache,s,n);
                     used+=n;output+=n-2;++stats.strips;
                 }
@@ -3226,6 +3745,12 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
     const std::uint8_t* strips_bf_sq(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                      const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        // This diagnostic does not replay CPU2's determinant/run splitting.
+        // Triangle output is exact; translucent viewport overlap is unqualified.
+        if(dsa_xlu())re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         Wc24Count wc_strip_inputs(re4dc::wc24::StripInputs);
 #endif
@@ -3251,7 +3776,18 @@ struct MeshDraw : Emitter {
 #endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
+#if RE4DC_SCENERY_CLIP_INDEXED26
+            result=clip_stream_strip(base,batch,s,n);
+#else
+#if RE4DC_SCENERY_STREAM
+#if RE4DC_SCENERY_CLIP_GATHER
+            base=stream_gather(base,s,n);
+#else
+            if(!base)base=stream_gather();   // backface26: the owed gather before a clip strip, as strips_lean
+#endif
+#endif
             result=clip_strip(base,batch,s,n);
+#endif
             if(result<=0)return nullptr;
             s+=n;
         }
@@ -3268,6 +3804,9 @@ struct MeshDraw : Emitter {
     }
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
         if(bf_on())return strips_bf_sq(s,end,base,batch,result);
 #elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
@@ -3277,6 +3816,9 @@ struct MeshDraw : Emitter {
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0;
             s=re4dc::vp::walk_lean(s,end,outcodes,cache,limit,q,culled,emitted);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_lean_overlap(mark,s);
+#endif
 #if defined(RE4DC_TA_HASH) && RE4DC_TA_HASH && RE4DC_TA_HASH != 4
             // TA_HASH (test builds): walk_lean writes the store queues itself, so the run is walked again here
             // and every emitted strip's words are hashed as emit_sq() hashes them (EOL in the last flags word).
@@ -3300,7 +3842,18 @@ struct MeshDraw : Emitter {
 #endif
             input+=n-2;
             if(n<=limit)stats.vertices+=n;
+#if RE4DC_SCENERY_CLIP_INDEXED26
+            result=clip_stream_strip(base,batch,s,n);
+#else
+#if RE4DC_SCENERY_STREAM
+#if RE4DC_SCENERY_CLIP_GATHER
+            base=stream_gather(base,s,n);
+#else
+            if(!base)base=stream_gather();
+#endif
+#endif
             result=clip_strip(base,batch,s,n);
+#endif
             if(result<=0)return nullptr;
             s+=n;
         }
@@ -3356,6 +3909,9 @@ struct MeshDraw : Emitter {
              ,bool known=false // PS2_WORLD_LEAN bit 2: the meshlet's cluster (or placement) is inside every plane
 #endif
             ){
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Selection);
 #endif
@@ -3411,15 +3967,24 @@ struct MeshDraw : Emitter {
         wc_phase.phase(re4dc::wc24::Other);
 #endif
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
         ++stats.batches;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
 #endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if RE4DC_MESH_FASTPATH
         // A slab too small to lend the cache behaves like any other
         // capacity failure: generic fallback, or abort once published.
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if RE4DC_PS2_STRIP_GROUPS
         sg_whole=known || !sg_mask;
         if(known)sg_mask=0;
@@ -3429,10 +3994,16 @@ struct MeshDraw : Emitter {
         const auto* base=corners(l);
         const std::uint8_t* s=package.strip_begin(l);
         const std::uint8_t* const end=s+l.strip_bytes;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(s<end)re4dc::dfa26::hit(re4dc::dfa26::WorldStripGeneral);
+#endif
         while(s<end){
             const unsigned n=*s++;
             const int result=strip(base,batch,s,n);
             if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1;
+#endif
             s+=n;
         }
         return 1;
@@ -3448,6 +4019,9 @@ struct MeshDraw : Emitter {
         const auto& lod=package.part_lods()[part_index];
         const auto* clusters=package.clusters();const auto* levels=package.levels();
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1;
+#endif
 #if RE4DC_QUALITY_ASSETS
             if(skip_clusters && c-lod.first_cluster<64U && ((skip_clusters>>(c-lod.first_cluster))&1U))continue;
 #endif
@@ -3501,6 +4075,9 @@ struct MeshDraw : Emitter {
             const auto* lets=package.meshlets()+lv.first_meshlet;
 #endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
+#if RE4DC_WORLD_MUTATION31
+                if(!mutation_current())return -1;
+#endif
 #if RE4DC_PS2_INTERIOR_CULL
                 if(pc_state<0){
                     const bool hid=pc::grid_hidden(pc_wq,lets[i].bounds_min,lets[i].bounds_max)>0;
@@ -3513,7 +4090,13 @@ struct MeshDraw : Emitter {
                 const int result=draw(lets[i]);
 #endif
                 if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+                if(!mutation_current())return -1; // before the retained level's next loop condition
+#endif
             }
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1; // before the retained LOD's next loop condition
+#endif
         }
         return 1;
     }
@@ -3600,6 +4183,12 @@ struct MeshDraw : Emitter {
         // and DEDUP's fill can read corners outside that interval. Hoist the
         // immutable count before may-alias stores instead of rereading it.
         const unsigned count=l.vertex_count;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGatherFull,count);
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::count(re4dc::dsa24::StreamGatherVertices,count);
+#endif
         typedef std::uint32_t __attribute__((may_alias)) Word;
         const std::uint16_t* offsets=package.pool_offsets(l);
         const Word* in=reinterpret_cast<const Word*>(base);
@@ -3613,18 +4202,27 @@ struct MeshDraw : Emitter {
     // SCENERY_EMIT_PREFETCH_MEMBERS_END
 #endif
     int emit_pick(const Pick& pk){
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
         namespace vp=re4dc::vp;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::Scope wc_phase(re4dc::wc24::Other);
 #endif
         ++stats.groups_visible;
         if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1; // texture bind may yield before package reads
+#endif
         ++stats.batches;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         wc_phase.phase(re4dc::wc24::Transform);
 #endif
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1; // scratch borrow may yield too
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
         const auto& l=package.emit(pk.let);
 #else
@@ -3645,6 +4243,17 @@ struct MeshDraw : Emitter {
 #endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
         const auto* base=emit_corners(l,pk);
+#elif RE4DC_SCENERY_STREAM
+        // SCENERY_STREAM: an indexed pick is transformed from its pool (no gather); base stays null until a strip
+        // reaches the clipper (strips_lean gathers then, stream_gather()).
+        const bool ix=package.indexed(l);
+        stream_l=ix?&l:nullptr;
+#if RE4DC_SCENERY_CLIP_GATHER
+        stream_clip_gather.begin();
+#endif
+        const auto* base=ix?nullptr:corners(l);
+        const auto* pool=reinterpret_cast<const vp::Vertex12*>(package.vertices()+l.first_vertex);
+        const std::uint16_t* offs=ix?package.pool_offsets(l):nullptr;
 #else
         const auto* base=corners(l);
 #endif
@@ -3662,11 +4271,22 @@ struct MeshDraw : Emitter {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
             re4dc::wc24::count(re4dc::wc24::Transformed,vn);
 #endif
+#if RE4DC_SCENERY_STREAM && !RE4DC_SCENERY_EMIT_PREFETCH
+            if(ix){
+                vp::transform_sched_ix(pool,offs+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+                stream_check(l,pk.lo,vn);
+#endif
+            }else
+#endif
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
             if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
 #endif
 #if RE4DC_SCENERY_DEDUP
+#if RE4DC_SCENERY_STREAM && !RE4DC_SCENERY_EMIT_PREFETCH
+            if(!ix)   // the SCDD tables never cover an indexed meshlet (scdd_compile.py; the loader refuses one)
+#endif
             if(const std::uint32_t dw=dd_word(l);dd_active(dw))
                 dedup::fill(in,cache,outcodes,dd_unique_count(l,dw),l.vertex_count,dd_source(l,dw),k,pk.lo,pk.hi);
 #endif
@@ -3693,6 +4313,14 @@ struct MeshDraw : Emitter {
         if(const std::uint32_t dw=dd_word(l);dd_active(dw))wc_vertices=dd_unique_count(l,dw);
 #endif
         re4dc::wc24::count(re4dc::wc24::Transformed,wc_vertices);
+#endif
+#if RE4DC_SCENERY_STREAM && !RE4DC_SCENERY_EMIT_PREFETCH
+        if(ix){
+            vp::transform_sched_ix(pool,offs,l.vertex_count,cache,outcodes,k);
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+            stream_check(l,0,l.vertex_count);
+#endif
+        }else
 #endif
 #if RE4DC_SCENERY_DEDUP
         if(const std::uint32_t dw=dd_word(l);dd_active(dw)){
@@ -3730,6 +4358,10 @@ struct MeshDraw : Emitter {
         used=input=output=slots=0;
         bound=submitted=false;
         cache=nullptr;primed=0;
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+        portal_depth_safe_clip=true;
+        portal_depth_outcodes=nullptr;
+#endif
 #if RE4DC_PS2_PVS
         pvs_pending[0]=pvs_pending[1]=~0U;pvs_pending[2]=0;
 #endif
@@ -3741,6 +4373,17 @@ struct MeshDraw : Emitter {
 #else
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
 #endif
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        DsaStaticPart dsa_part(input,output,dsa_xlu());
+#if RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_MESH_CLASSIFY
+        // Fused direct strips and classified non-All legacy walks do not
+        // expose a complete separate submit/viewport-overlap measurement.
+        re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
 #endif
@@ -3749,6 +4392,9 @@ struct MeshDraw : Emitter {
         else if(n && following)prefetch_emit_header(*following);
 #endif
 #if !RE4DC_SCENERY_REPLAY_LEAN
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldReplayLegacy);
+#endif
         streaming=re4dc_model_packet_streaming()!=0;
         set_clip();
         palette=nullptr;
@@ -3756,6 +4402,9 @@ struct MeshDraw : Emitter {
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
         for(unsigned i=0;i<n;++i){
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1; // before next package prefetch
+#endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
             // Two selected headers ahead; one payload ahead. The current
             // transform plus its strips supplies the lead time. following is
@@ -3776,22 +4425,56 @@ struct MeshDraw : Emitter {
             }
 #endif
             const int r=emit_pick(pk[i]);if(r<=0)return r;}
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(used){
+            const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+            dsa_packet_overlap(dst,used);
+            re4dc_model_packet_commit(used);
+        }
+#else
         if(used)re4dc_model_packet_commit(used);
+#endif
         re4dc_model_result(0,input,output);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_part.complete=true;
+#endif
         return 1;
     }
 #endif
     int run(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        DsaStaticPart dsa_part(input,output,dsa_xlu());
+#if RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_MESH_CLASSIFY
+        re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+#if !RE4DC_MESH_FASTPATH || RE4DC_MESH_STRIP_LEAN!=1 || RE4DC_CPU_BACKFACE==1
+        if(dsa_xlu())re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
 #endif
 #if RE4DC_PS2_WORLD_MESH
         // A PS2 part has no source image to reserve against; its direct bind checks the frame state.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcReserve);++stats.reserve_rejects;return 0;}
+#else
         if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
+#endif
+#else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!re4dc_model_packet_reserve(&p,&packet)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcReserve);++stats.reserve_rejects;return 0;}
 #else
         if(!re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
 #endif
+#endif
         streaming=re4dc_model_packet_streaming()!=0;
+#if RE4DC_WORLD_MUTATION31
+        if(!mutation_current())return -1;
+#endif
 #if RE4DC_HW_LEAN
         set_clip();
 #else
@@ -3807,9 +4490,15 @@ struct MeshDraw : Emitter {
         if(package.lod()){
             const int result=draw_clusters();
             if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+            if(!mutation_current())return -1;
+#endif
         }else
 #endif
         {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(part.meshlet_count)re4dc::dfa26::hit(re4dc::dfa26::WorldMeshNoLod);
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
             const auto lets=package.meshlets()+part.first_meshlet;
 #else
@@ -3818,10 +4507,24 @@ struct MeshDraw : Emitter {
             for(unsigned i=0;i<part.meshlet_count;++i){
                 const int result=draw(lets[i]);
                 if(result<=0)return result;
+#if RE4DC_WORLD_MUTATION31
+                if(!mutation_current())return -1; // before the retained part's next loop condition
+#endif
             }
         }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        if(used){
+            const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+            dsa_packet_overlap(dst,used);
+            re4dc_model_packet_commit(used);
+        }
+#else
         if(used)re4dc_model_packet_commit(used);
+#endif
         re4dc_model_result(0,input,output);
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_part.complete=true;
+#endif
         return 1;
     }
 };
@@ -3833,6 +4536,9 @@ struct MeshDraw : Emitter {
 // arrays uninitialized; their guards are false until chunk_select fills them.
 struct ScenerySelector {
     using Pick=MeshDraw::Pick;
+#if RE4DC_WORLD_PORTAL29
+    const float* wp29_wq=nullptr;
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     const re4dc::record_split::RecordView package;
 #else
@@ -4761,10 +5467,16 @@ int tree_quad(MeshView& v,const re4dc::room::MeshRecord& mesh,StdImpt& t,const R
 }
 #endif
 int mesh_submit(const Re4dcModelPart& p){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.static_geometry && (!p.info || !p.part || !stats.owners_open))re4dc::dfa26::hit(re4dc::dfa26::WorldGcOwner);
+#endif
     if(!p.static_geometry || !p.info || !p.part || !stats.owners_open)return 0;
     unsigned owner=0;
     const MeshEntry* e=find_entry(p.model,owner);
     if(!e){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcLocate);
+#endif
         ++stats.locate_misses;
         if(stats.locate_misses<=32)re4dc_log("native mesh: unbound part model=%p\n",p.model);
         return 0;
@@ -4772,6 +5484,9 @@ int mesh_submit(const Re4dcModelPart& p){
     MeshView& v=e->common?mesh_views[kCommonView]:mesh_views[owner];
 #if RE4DC_GC_ASSET_GATE
     GcStaticSourceScope gcasset_source_scope(v.asset_proof,&v,&p);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!v.package.valid() || e->mesh>=v.package.header().mesh_count)re4dc::dfa26::hit(re4dc::dfa26::WorldGcPackage);
 #endif
     if(!v.package.valid() || e->mesh>=v.package.header().mesh_count){++stats.stale_bindings;return 0;}
     const auto& mesh=v.package.meshes()[e->mesh];
@@ -4788,6 +5503,9 @@ int mesh_submit(const Re4dcModelPart& p){
     const auto* part=(data && offset<0x100000U)?
         v.package.source_part(e->mesh,vertices,parts,std::uint32_t(offset),p.stream_bytes):nullptr;
     if(!part){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcMaterial);
+#endif
         ++stats.key_misses;
         if(stats.key_misses<=32)re4dc_log("native mesh: part mismatch bin=%u common=%u vertices=%u/%u parts=%u/%u offset=%u size=%u\n",
             mesh.bin,mesh.common,vertices,mesh.source_vertices,parts,mesh.source_parts,unsigned(offset),p.stream_bytes);
@@ -4826,8 +5544,15 @@ int mesh_submit(const Re4dcModelPart& p){
         }
     }
     if(p.cull==3)return 1;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0)re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0)return 0;
     const float near=p.projection[6]/(p.projection[5]-1),far=p.projection[6]/p.projection[5];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)return 0;
 #if RE4DC_QUALITY_ASSETS
     // Standard clutter cull (s16.3): the mesh's bounds centre at view depth >= mm draws nothing.
@@ -4954,6 +5679,9 @@ int mesh_submit(const Re4dcModelPart& p){
 #endif
     if(result>0){++stats.parts_native;return 1;}
     if(result<0){re4dc_model_packet_abort();++stats.aborts;return 1;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
+#endif
     ++stats.parts_fallback;return 0;
 }
 #endif
@@ -4975,9 +5703,15 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
 #endif
     return mesh_submit(p);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.static_geometry && (!p.world || !p.view || !stats.owners_open))re4dc::dfa26::hit(re4dc::dfa26::WorldGcOwner);
+#endif
     if(!p.world || !p.view || !p.static_geometry || !stats.owners_open)return 0;
     Located at;
     if(!locate(p,at)){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcLocate);
+#endif
         ++stats.locate_misses;
         if(stats.locate_misses<=32)re4dc_log("native static: unlocated part model=%p serial=%u key=%u/%u\n",p.model,p.serial,p.source_key[0],p.source_key[1]);
         return 0;
@@ -4991,10 +5725,16 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
     unsigned material=header.material_count;
     for(unsigned m=0;m<header.material_count;++m)
         if(v.keys[m].texture==p.source_key[0] && v.keys[m].alpha==p.source_key[1]){material=m;break;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(material==header.material_count)re4dc::dfa26::hit(re4dc::dfa26::WorldGcMaterial);
+#endif
     if(material==header.material_count){++stats.key_misses;return 0;}
     const unsigned long long bit=1ULL<<material;
     // One part per key draws all of that key's batches; its twins either skip
     // (drawn) or follow it to the generic path, never both.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(b.fallback&bit)re4dc::dfa26::hit(re4dc::dfa26::WorldGcCachedDecline);
+#endif
     if(b.fallback&bit){++stats.parts_fallback;return 0;}
     if(b.drawn&bit){++stats.parts_skipped;return 1;}
     // Per-vertex source alpha: the prelit package is opaque, which is exact only
@@ -5008,13 +5748,23 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
         // test. An opaque (blend 0), unmasked, non-alpha-texture material draws
         // the same whatever its vertex alpha, so it is native opaque too.
         const bool alpha_unused=p.blend==0 && !(p.material_flags&4) && p.mask_ref>255;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(low<255 && !alpha_unused)re4dc::dfa26::hit(re4dc::dfa26::WorldGcVertexAlpha);
+#endif
         if(low<255 && !alpha_unused){b.fallback|=bit;++stats.parts_fallback;++stats.vertex_alpha;return 0;}
         opaque=p;opaque.alpha_state=255;drawn=&opaque;
         if(low<255)++stats.vertex_alpha_unused;else ++stats.vertex_opaque;
     }
     if(p.cull==3){b.drawn|=bit;return 1;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0)re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(p.projection[0]!=0 || p.viewport[2]<=0 || p.viewport[3]<=0){b.fallback|=bit;return 0;}
     const float near=p.projection[6]/(p.projection[5]-1),far=p.projection[6]/p.projection[5];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)
+        re4dc::dfa26::hit(re4dc::dfa26::WorldGcProjection);
+#endif
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near){b.fallback|=bit;return 0;}
     // Queued translucent parts replay through this function in pass order.
     if(re4dc_model_defer_part(drawn))return 1;
@@ -5026,7 +5776,11 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
     float to_world[12]={kPackageToSource,0,0,0, 0,kPackageToSource,0,0, 0,0,kPackageToSource,0};
     if(std::memcmp(p.world,b.world,sizeof(b.world))){
         float inv[12],delta[12],moved[12];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(!inverse(b.world,inv)){re4dc::dfa26::hit(re4dc::dfa26::WorldGcTransform);b.fallback|=bit;return 0;}
+#else
         if(!inverse(b.world,inv)){b.fallback|=bit;return 0;}
+#endif
         concat(p.world,inv,delta);concat(delta,to_world,moved);
         std::memcpy(to_world,moved,sizeof(moved));++stats.moved_objects;
     }
@@ -5039,6 +5793,9 @@ extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
     const int result=d.run({at.source,b.first_group,b.group_count});
     if(result>0){b.drawn|=bit;++stats.parts_native;return 1;}
     if(result<0){re4dc_model_packet_abort();b.drawn|=bit;++stats.aborts;return 1;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
+#endif
     b.fallback|=bit;++stats.parts_fallback;return 0;
 #else
     (void)part;return 0;
@@ -5090,8 +5847,45 @@ struct Ps2World {
     unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
 #endif
 } ps2w;
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#include "include/world_part_plan29_runtime.inc"
+#endif
 #if RE4DC_GC_ASSET_GATE
 void gcasset_invalidate_world(){if(ps2w.asset_proof.owner)re4dc_gcasset::payload_invalidate(ps2w.asset_proof,&ps2w);}
+// cast-ps2-25 r16 item 5: the world's sealed manifest as captured at open (gate builds only). A route movie lends the
+// interior cell (pc::unload invalidates the world proof) or the whole package (movie arena); when the same bytes come
+// back (the cell's digest equal to the one the manifest sealed, the package at the same storage, crc/fnv checked by the
+// reload) the world proof is captured again from this manifest instead of faulting every later draw.
+struct GcWorldSeal {
+    re4dc_gcasset::StaticManifest manifest; const unsigned char* base=nullptr; unsigned bytes=0,layout_bytes=0;
+    const unsigned char* layout=nullptr; re4dc_gcasset::Digest cell{}; bool cell_sealed=false,have=false;
+} gcasset_world_seal;
+bool gcasset_world_cell_digest(re4dc_gcasset::Digest& d){
+#if RE4DC_PS2_INTERIOR_CULL
+    re4dc_gcasset::AssetDescription desc;
+    if(!pc::data.block || pc::data.asset_proof.owner!=&pc::data || !pc::data.asset_proof.serial ||
+       !re4dc_gcasset::describe_checked(pc::data.asset_proof.asset,&desc))return false;
+    d=desc.digest;return true;
+#else
+    (void)d;return false;
+#endif
+}
+void gcasset_world_seal_keep(const re4dc_gcasset::StaticManifest& m,const unsigned char* s,unsigned msize,const unsigned char* layout,unsigned psize){
+    auto& k=gcasset_world_seal;
+    k.have=ps2w.asset_proof.owner==&ps2w && ps2w.asset_proof.serial;
+    k.manifest=m;k.base=s;k.bytes=msize;k.layout=layout;k.layout_bytes=psize;
+    k.cell_sealed=gcasset_world_cell_digest(k.cell);
+}
+void gcasset_world_reseal(){
+    auto& k=gcasset_world_seal;
+    if(!k.have || !ps2w.storage || ps2w.storage!=k.base || (ps2w.asset_proof.owner==&ps2w && ps2w.asset_proof.serial))return;
+    if(k.cell_sealed){
+        re4dc_gcasset::Digest now{};
+        if(!gcasset_world_cell_digest(now) || std::memcmp(now.bytes,k.cell.bytes,sizeof now.bytes))return; // stays unproven
+    }
+    re4dc_gcasset::payload_retire(ps2w.asset_proof);
+    re4dc_gcasset::payload_capture_composite(ps2w.asset_proof,&ps2w,k.base,k.bytes,k.layout,k.layout_bytes,k.manifest);
+}
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
 unsigned r11fPackageGeneration=1,r11fSidecarCrc;
@@ -5106,6 +5900,21 @@ movie_world::Ledger ps2_movie;
 struct MovieWorldFiles { unsigned mesh=0,side=0,mesh_crc=0,mesh_fnv=0,side_crc=0,side_fnv=0; } ps2_movie_files;
 bool ps2_movie_layout(unsigned room){
     const auto& f=ps2_movie_files;
+#if RE4DC_MOVIE_LAYOUT_GUARD
+    // guards28: the layout ps2_movie_reload reads back (mesh, sidecar, LUT, gather; 32-byte aligned) must fill the
+    // captured extent exactly. The sizes come from the package opened at room entry, so a reconverted world keeps
+    // working without a new row; reload still checks the files' sizes against these before it reads them.
+    const bool room_ok=room==0x11f
+#if RE4DC_MOVIE_WORLD_ARENA_S30
+        || room==0x100
+#endif
+        ;
+    return room_ok && f.mesh && f.side &&
+        ((f.mesh+31u)&~31u)+((f.side+31u)&~31u)+kLutBytes+kGatherBytes==ps2_movie.capacity;
+#endif
+    // n256b26 (SCENERY_N256, 256-vertex meshlets, 10-26): the same r11f sidecar, LUT and gather after a 759,648 B mesh.
+    // Without this row the s10/s11 movie arena refused the smaller package (terminal=3, 0/265; no heap fallback).
+    if(room==0x11f && f.mesh==759648)return f.side==9076 && ps2_movie.capacity==759648U+(811264U-797056U);
     if(room==0x11f)return f.mesh==797056 && f.side==9076 && ps2_movie.capacity==811264;
 #if RE4DC_MOVIE_WORLD_ARENA_S30
     // The current r100 SMX/TR4 package, with its LUT and gather storage.
@@ -5116,12 +5925,17 @@ bool ps2_movie_layout(unsigned room){
        ps2w.package.header().bytes==1488192)
         return f.mesh==1488192 && f.side==19612 && ps2_movie.capacity==1512928;
 #endif
+    // n256r100 (SCENERY_N256, 256-vertex meshlets): the same sidecar, LUT and gather after a 1,461,184 B mesh.
+    if(room==0x100 && f.mesh==1461184)return f.side==19612 && ps2_movie.capacity==1461184U+(1562656U-1537920U);
     if(room==0x100)return f.mesh==1537920 && f.side==19612 && ps2_movie.capacity==1562656;
 #endif
     return false;
 }
 struct MovieWorldRead { MovieWorldRead(){++ps2_movie.readers;} ~MovieWorldRead(){--ps2_movie.readers;} };
 bool ps2_movie_blocked(){if(!ps2_movie.unavailable())return false;++ps2_movie.blocked;return true;}
+#if RE4DC_WORLD_MUTATION31
+void worldPackageRevoke();
+#endif
 bool ps2_movie_current(){
     unsigned gen=0;
     return re4dc_room4_live_generation(&gen) && gen==ps2_movie.generation &&
@@ -5129,11 +5943,18 @@ bool ps2_movie_current(){
         re4dc_room4_cell_valid(ps2_movie.base,ps2_movie.capacity,gen);
 }
 void ps2_movie_unpublish(){
+#if RE4DC_WORLD_MUTATION31
+    // The movie may reuse this exact address immediately after unpublication.
+    worldPackageRevoke();
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_invalidate_world();
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    wplan29::close();
 #endif
     ps2w.package.close();ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;
     ps2w.lut=nullptr;ps2w.gather=nullptr;ps2w.camera=false;
@@ -5145,8 +5966,73 @@ void ps2_movie_unpublish(){
 #endif
 }
 #endif
-#if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_WORLD_MUTATION31
 unsigned sourceWorldPackageGeneration=1,sourceWorldSidecarCrc;
+#endif
+#if RE4DC_WORLD_MUTATION31
+bool sourceWorldPackagePublished=false;
+const void* sourceWorldPackageStorage=nullptr;
+unsigned sourceWorldPackageBytes=0,sourceWorldPackageRoomGeneration=0,sourceWorldPackageCell=0;
+#if RE4DC_WORLD_VALID_MEMO31
+// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): the draw loops ask worldPackageSelectionCurrent per part and chunk, thousands
+// of times a frame (room4_cell_valid / live_generation / worldPackageCurrent ~2 ms a frame MODELLED, r100). The full
+// check can only change its answer after a room-4 open, close or cell free or any heap create / destroy / suspend /
+// resume (room4 epoch), a package publish / revoke or a world package load / unload (these clear the memo), so its
+// answer is kept under the epoch and the package generation: two compares per call.
+struct WorldPackageMemo { unsigned epoch,generation; bool valid,ok; };
+WorldPackageMemo worldPackageMemo{};
+#endif
+#if RE4DC_WORLD_VALID_MEMO31
+bool worldPackageCurrentFull() __attribute__((noinline));
+// The memo test is inlined into the ~15 draw-loop sites; only a miss calls the full check.
+__attribute__((always_inline)) inline bool worldPackageCurrent(){
+    const WorldPackageMemo& m=worldPackageMemo;
+    if(m.valid && m.epoch==*re4dc_room4_epoch_ptr && m.generation==sourceWorldPackageGeneration)return m.ok;
+    return worldPackageCurrentFull();
+}
+bool worldPackageCurrentFull(){
+#else
+inline bool worldPackageCurrent(){
+#endif
+    unsigned generation=0;
+    const bool ok=re4dc::world_mutation31::live(sourceWorldPackageGeneration,sourceWorldPackagePublished) &&
+        sourceWorldPackageStorage==ps2w.storage && sourceWorldPackageBytes==ps2w.bytes &&
+        sourceWorldPackageCell && re4dc_room4_live_generation(&generation) &&
+        generation==sourceWorldPackageRoomGeneration &&
+        re4dc_room4_cell_incarnation(sourceWorldPackageStorage,sourceWorldPackageBytes,generation)==sourceWorldPackageCell;
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo={*re4dc_room4_epoch_ptr,sourceWorldPackageGeneration,true,ok};
+#endif
+    return ok;
+}
+inline bool worldPackageSelectionCurrent(unsigned selected){
+    return selected && selected==sourceWorldPackageGeneration && worldPackageCurrent();
+}
+inline void worldPackageRevoke(){
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.valid=false;
+#endif
+    re4dc::world_mutation31::revoke(sourceWorldPackageGeneration,sourceWorldPackagePublished);
+    sourceWorldPackageStorage=nullptr;sourceWorldPackageBytes=sourceWorldPackageRoomGeneration=sourceWorldPackageCell=0;
+    sourceWorldSidecarCrc=0;
+}
+inline bool worldPackagePublish(){
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.valid=false;
+#endif
+    unsigned generation=0;
+    sourceWorldPackageStorage=ps2w.storage;sourceWorldPackageBytes=ps2w.bytes;
+    sourceWorldPackageRoomGeneration=0;sourceWorldPackageCell=0;
+    if(re4dc_room4_live_generation(&generation)){
+        sourceWorldPackageRoomGeneration=generation;
+        sourceWorldPackageCell=re4dc_room4_cell_incarnation(ps2w.storage,ps2w.bytes,generation);
+    }
+    if(!sourceWorldPackageCell){sourceWorldPackagePublished=false;sourceWorldSidecarCrc=0;return false;}
+    if(!re4dc::world_mutation31::publish(sourceWorldPackageGeneration,sourceWorldPackagePublished)){
+        sourceWorldSidecarCrc=0;return false;
+    }
+    return true;
+}
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
 // PS2_VERTEX_ALPHA (game30.mk): the ARGB4444 halves of a marked part's corner colour, laid out as vp::build_lut's
@@ -5319,6 +6205,18 @@ constexpr unsigned part_cell_bytes(unsigned count){
         ;
 }
 #endif
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+// Stored after the unique-ID Slot array in its one Room4 cell. The existing
+// root reader's PartPose + two matrices layout is retained byte for byte.
+struct RootWitness { PartPose part; float root[24]; };
+static_assert(__builtin_offsetof(RootWitness,root)==sizeof(PartPose));
+static_assert(sizeof(RootWitness)==part_cell_bytes(1));
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+struct RootDiag { std::uint64_t refused,spill; unsigned reasons,dirty; };
+enum RootReason : unsigned { RootFlags=1,RootSerial=2,RootMissing=4,RootInvalid=8,
+    RootCapacity=16,RootHeap=32,RootChain=64 };
+#endif
 struct Slot {
     const unsigned char* obj; std::uint32_t serial; float rest[12];
 #if RE4DC_PS2_WORLD_PARTS
@@ -5327,11 +6225,65 @@ struct Slot {
     unsigned root_matrix_offset; // offset plus one; ~0U invalid; nonzero records a refused root witness
 #endif
 #endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    RootDiag diag;
+#endif
 };
 unsigned char* block=nullptr;                      // heap-4 block: the ids file
 const std::uint8_t* ids=nullptr; unsigned nids=0; // placement field -> id
 Slot* slots=nullptr; unsigned nslots=0;
 std::uint8_t slot_of[kIds];                        // id -> slot (kNone: baked)
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+static_assert(alignof(Slot)>=alignof(RootWitness));
+constexpr unsigned slot_cell_bytes(unsigned count){
+    constexpr unsigned stride=sizeof(Slot)+sizeof(RootWitness);
+    return count && count<=kIds && count<=~0U/stride?count*stride:0U;
+}
+Slot* reserve_slots(unsigned count){
+    const unsigned bytes=slot_cell_bytes(count);
+    return bytes?static_cast<Slot*>(re4dc_static_alloc(bytes)):nullptr;
+}
+PartPose* reserved_pose(const Slot& s){
+    if(!slots)return nullptr;
+    const auto at=reinterpret_cast<std::uintptr_t>(&s),base_slot=reinterpret_cast<std::uintptr_t>(slots);
+    if(at<base_slot || (at-base_slot)%sizeof(Slot) || (at-base_slot)/sizeof(Slot)>=nslots)return nullptr;
+    auto* base=reinterpret_cast<RootWitness*>(slots+nslots);
+    return &base[(at-base_slot)/sizeof(Slot)].part;
+}
+void release_parts(Slot& s){
+    if(s.parts && s.parts!=reserved_pose(s))re4dc_static_free(s.parts);
+}
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+unsigned diag_cursor=0,diag_frame=~0U;
+void root_note(Slot& s,unsigned reason,bool spill=false){
+    if(spill)++s.diag.spill;else ++s.diag.refused;
+    s.diag.reasons|=reason;s.diag.dirty=1;
+}
+void root_report(unsigned id,Slot& s,const char* when){
+    if(!s.diag.dirty)return;
+    re4dc_log("ROOTPOSE room=%03x id=%02x serial=%u object=%p when=%s refused=%llu spill=%llu reasons=%02x frame=%u\n",
+        ps2w.room,id,s.serial,static_cast<const void*>(s.obj),when,
+        static_cast<unsigned long long>(s.diag.refused),static_cast<unsigned long long>(s.diag.spill),
+        s.diag.reasons,re4dc_ui_frame());
+    s.diag.dirty=0;
+}
+// At pass entry, before any chunk/SQ ownership. At most four dirty owners per
+// 120 native frames; totals are never sampled or cleared by periodic emission.
+void root_reports(bool final=false){
+    if(!slots)return;
+    const unsigned now=re4dc_ui_frame();
+    if(!final && diag_frame!=~0U && now-diag_frame<120U)return;
+    diag_frame=now;
+    unsigned budget=final?kIds:4U;
+    for(unsigned walked=0;walked<kIds && budget;++walked){
+        const unsigned id=diag_cursor++;if(diag_cursor==kIds)diag_cursor=0;
+        const unsigned slot=slot_of[id];
+        if(slot==kNone || slot>=nslots || !slots[slot].diag.dirty)continue;
+        root_report(id,slots[slot],final?"retire":"periodic");--budget;
+    }
+}
+#endif
 #if RE4DC_PS2_WORLD_PARTS
 std::uint8_t object_order[kIds]; unsigned nobjects=0;
 #if RE4DC_PS2_WORLD_LEAN
@@ -5372,9 +6324,16 @@ void reset(){
 #if RE4DC_GC_ASSET_GATE
     gcasset_invalidate_world();
 #endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    root_reports(true);diag_cursor=0;diag_frame=~0U;
+#endif
     if(block)re4dc_static_free(block);
 #if RE4DC_PS2_WORLD_PARTS
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    if(slots)for(unsigned i=0;i<nslots;++i)release_parts(slots[i]);
+#else
     if(slots)for(unsigned i=0;i<nslots;++i)if(slots[i].parts)re4dc_static_free(slots[i].parts);
+#endif
     nobjects=0;
 #if RE4DC_PS2_WORLD_LEAN
     lean_mask[0]=lean_mask[1]=0;
@@ -5403,6 +6362,10 @@ unsigned query(unsigned id){
     // source BIN, whose geometry may have been released by offline staging.
     if(s.root_matrix_offset){
         if(!s.obj || (flag&7U)!=7U || serial!=s.serial || !s.parts || s.root_matrix_offset==~0U){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+            root_note(s,!s.obj || serial!=s.serial?RootSerial:(flag&7U)!=7U?RootFlags:
+                !s.parts?RootMissing:RootInvalid);
+#endif
             state[id]=2;++hidden;return 1;
         }
         const auto* now=reinterpret_cast<const float*>(s.parts[0].part+s.root_matrix_offset-1U);
@@ -5410,6 +6373,9 @@ unsigned query(unsigned id){
         const float* inv=rest+12; // computed once at bind, before any changed tick
         float change[12];
         bool valid=true;
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        bool capacity=false;
+#endif
         for(unsigned i=0;i<12;++i)valid=valid && std::isfinite(now[i]);
         if(valid && std::memcmp(now,rest,12U*sizeof(float))){
             concat(now,inv,change);
@@ -5418,9 +6384,25 @@ unsigned query(unsigned id){
                 std::memcpy(delta[nmoved],change,sizeof(change));moved_of[id]=std::uint8_t(nmoved++);
                 state[id]=3;++moved;return 2;
             }
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+            capacity=valid;
+#endif
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+            if(valid){
+                ++overflow;++moved;
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+                root_note(s,RootCapacity,true);
+#endif
+                state[id]=5;return 4; // valid root, recomputed in this placement's draw scratch
+            }
+#else
             if(valid)++overflow;
+#endif
             valid=false;
         }
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(!valid)root_note(s,capacity?RootCapacity:RootInvalid);
+#endif
         if(!valid){state[id]=2;++hidden;return 1;} // never display stale baked geometry on refusal
         state[id]=1;return 0;
     }
@@ -5450,6 +6432,43 @@ unsigned query(unsigned id){
     state[id]=std::uint8_t(r+1U);
     return r;
 }
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+// 0 refusal, 1 exact bind pose (use the baked affine directly), 2 moved.
+// Revalidate before touching the borrowed part: eligibility and native drawing
+// are separate callers, and a reused/hidden owner must never inherit a spill.
+// The output belongs to one placement, never to the 16-entry frame cache.
+int root_affine(unsigned id,const float* baked,float* out){
+    if(id>=kIds || !slots || slot_of[id]==kNone || slot_of[id]>=nslots)return 0;
+    Slot& s=slots[slot_of[id]];
+    std::uint32_t flag=0,serial=0;
+    if(s.obj){std::memcpy(&flag,s.obj+off_flag,4);std::memcpy(&serial,s.obj+off_serial,4);}
+    if(!s.obj || (flag&7U)!=7U || serial!=s.serial || !s.parts || !s.root_matrix_offset || s.root_matrix_offset==~0U){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        root_note(s,!s.obj || serial!=s.serial?RootSerial:(flag&7U)!=7U?RootFlags:
+            !s.parts?RootMissing:RootInvalid);
+#endif
+        state[id]=2;++hidden;return 0;
+    }
+    const auto* now=reinterpret_cast<const float*>(s.parts[0].part+s.root_matrix_offset-1U);
+    const auto* rest=reinterpret_cast<const float*>(s.parts+1);
+    float change[12];
+    bool valid=true;
+    for(unsigned i=0;i<12;++i)valid=valid && std::isfinite(now[i]);
+    if(valid && !std::memcmp(now,rest,12U*sizeof(float)))return 1;
+    if(valid){
+        concat(now,rest+12,change);
+        for(float v:change)valid=valid && std::isfinite(v);
+    }
+    if(!valid){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        root_note(s,RootInvalid);
+#endif
+        state[id]=2;++hidden;return 0;
+    }
+    concat(change,baked,out);
+    return 2;
+}
+#endif
 }
 #endif
 #if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
@@ -5688,6 +6707,9 @@ extern "C" void re4dc_ps2_pvs_set(unsigned on){
 extern "C" void re4dc_ps2_pvs_state(unsigned out[4]){
     out[0]=re4dc_ps2_pvs_on;out[1]=pvs::block?1U:0U;out[2]=pvs::cur?1U:0U;out[3]=pvs::bytes;
 }
+#endif
+#if RE4DC_WORLD_PORTAL29
+#include "include/world_portal29_runtime.inc"
 #endif
 #if RE4DC_FAR_SHELL
 #define RE4DC_FAR_SHELL_PART 1
@@ -5950,11 +6972,7 @@ void scn21_open(GCASSET_STATIC_ONLY_PARAM){
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
         else if(!ps2w.sg)why="no strip groups";
-        else{
-            std::memcpy(w,sec,16);
-            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.meshlet_count || w[3]!=ps2w.sg_groups ||
-               len<16U+256U+8U*w[2]*w[3])why="package";
-        }
+        else why=re4dc_scn21::cone(sec,len,ver,h.crc,h.bytes,h.meshlet_count,ps2w.sg_groups,w);
 #if RE4DC_GC_ASSET_GATE
         if(!sec)gcasset_static_state(gcmanifest,re4dc_gcasset::SCCN,re4dc_gcasset::Absent);
         else if(!why && re4dc_gcasset_room_span(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCCN,sec,len,ver,fl);
@@ -5971,10 +6989,7 @@ void scn21_open(GCASSET_STATIC_ONLY_PARAM){
         const char* why=nullptr;std::uint32_t w[4]={};
         if(!sec)why="no section";
         else if(re4dc_room_file_room()!=ps2w.room)why="room";
-        else{
-            std::memcpy(w,sec,16);
-            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.part_count || len<16U+4U*w[2])why="package";
-        }
+        else why=re4dc_scn21::piece(sec,len,ver,h.crc,h.bytes,h.part_count,w);
         if(!why){
 #if RE4DC_GC_ASSET_GATE
             if(re4dc_gcasset_room_original(sec,len,ver,fl,source_header))gcasset_static_bytes(gcmanifest,re4dc_gcasset::SCPS,sec,len,ver,fl);
@@ -6263,9 +7278,14 @@ bool ps2_open(){
     if(ps2w.storage)return true;
 #endif
     if(ps2w.attempted)return false;
+#if RE4DC_WORLD_MUTATION31
+    // Revoke before an allocator can return the former package address and
+    // before any attempted read into it, including a subsequently failed open.
+    worldPackageRevoke();
+#endif
     ps2w.attempted=true;
 #if RE4DC_GC_ASSET_GATE
-    re4dc_gcasset::payload_retire(ps2w.asset_proof);
+    re4dc_gcasset::payload_retire(ps2w.asset_proof);gcasset_world_seal.have=false;
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fPackageAdvance();
@@ -6517,6 +7537,9 @@ bool ps2_open(){
         return false;
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.valid=false;
+#endif
 #if RE4DC_GC_ASSET_GATE
     if(gcasset_source.geometry_base==s)static_manifest_bytes(gcasset_source,R4PW,s+mbytes,psize,h.version);
     else static_manifest_note(gcasset_source,R4PW,Unproven);
@@ -6548,7 +7571,9 @@ bool ps2_open(){
     r11fSidecarCrc=h.crc;
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if !RE4DC_WORLD_MUTATION31
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
+#endif
     sourceWorldSidecarCrc=h.crc;
 #endif
 #if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
@@ -6583,7 +7608,24 @@ bool ps2_open(){
                 for(unsigned i=0;i<ih.count;++i)if(idv[i]<dyn::kIds && count[idv[i]]<2)++count[idv[i]];
                 unsigned n=0;
                 for(unsigned id=0;id<dyn::kIds;++id)if(count[id]==1)++n;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+                // R4ID has placement IDs, not part counts: any unique ID can
+                // become a one-root owner at setObj. Reserve every original
+                // witness now, in the same cell as its Slot, before publication.
+                auto* sb=dyn::reserve_slots(n);
+                if(n && !sb){
+                    re4dc_log("ROOTPOSE_PREFLIGHT room=%03x unique=%u bytes=%u heap=%d refused\n",
+                        ps2w.room,n,dyn::slot_cell_bytes(n),re4dc_static_heap_free());
+                    re4dc_static_free(ib);ib=nullptr;
+                    // Only the newly opened package is live here. The old
+                    // room was retired at the existing room-mismatch boundary;
+                    // no dyn owner or movie borrower has been published.
+                    ps2_free();
+                    re4dc_missing("root-pose witness preflight");return false;
+                }
+#else
                 auto* sb=n?static_cast<dyn::Slot*>(re4dc_static_alloc(n*sizeof(dyn::Slot))):nullptr;
+#endif
                 iwhy="no heap";
                 if(sb){
 #if RE4DC_GC_ASSET_GATE
@@ -6591,7 +7633,11 @@ bool ps2_open(){
 #endif
                     unsigned k=0;
                     for(unsigned id=0;id<dyn::kIds;++id)if(count[id]==1)dyn::slot_of[id]=std::uint8_t(k++);
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+                    std::memset(static_cast<void*>(sb),0,dyn::slot_cell_bytes(n));
+#else
                     std::memset(static_cast<void*>(sb),0,n*sizeof(dyn::Slot));
+#endif
                     dyn::block=ib;dyn::ids=idv;dyn::nids=ih.count;dyn::slots=sb;dyn::nslots=n;ib=nullptr;
                     iwhy=nullptr;
                 }
@@ -6641,9 +7687,13 @@ bool ps2_open(){
 #if RE4DC_PS2_INTERIOR_CULL
     // The cell's portals hold for the package it was built from only.
 #if RE4DC_SCENERY_DEDUP==3
-    pc::st.ok=ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && ps2w.package.source_bytes()==pc::kPcMeshBytesUse;
+    pc::st.ok=PC_ADOPT_PRE(ps2w.room,ps2w.package.source_crc(),policySourceCrc,ps2w.package.source_bytes()) ps2w.room==pc::kPcRoom && ps2w.package.source_crc()==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && ps2w.package.source_bytes()==pc::kPcMeshBytesUse;
 #else
-    pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+    pc::st.ok=PC_ADOPT_PRE(ps2w.room,mh.crc,policySourceCrc,mh.bytes) ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+#endif
+#if RE4DC_WORLD_PORTAL29
+    // WP29 binds the physical policy and mesh, never a provenance alias.
+    pc::adopt_live(ps2w.room,mh.crc,h.crc,mh.bytes);
 #endif
     re4dc_log("PCCULL cell room=%03x mesh_crc=%08x sidecar_crc=%08x %s cells=%u portals=%u mode=%d\n",ps2w.room,unsigned(mh.crc),unsigned(h.crc),
         pc::st.ok?"adopted":"not this package",pc::kPcCellCount,pc::kPcPortalCount,int(RE4DC_PS2_INTERIOR_CULL));
@@ -6760,6 +7810,7 @@ bool ps2_open(){
     // unproven data, never an inferred absence or geometry-only ancestry.
     for(unsigned r=0;r<StaticRoleCount;++r)if(!(gcasset_source.seen&(1U<<r)))static_manifest_note(gcasset_source,StaticRole(r),Unproven);
     payload_capture_composite(ps2w.asset_proof,&ps2w,s,msize,s+mbytes,psize,gcasset_source);
+    gcasset_world_seal_keep(gcasset_source,s,msize,s+mbytes,psize);
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
@@ -6782,10 +7833,21 @@ bool ps2_open(){
     {unsigned marked=0;for(unsigned i=0;i<h.parts;++i)marked+=ps2w.parts[i].reserved&1U;
      re4dc_log("PS2VA marked_parts=%u of %u (ARGB4444 vertex alpha, translucent pass)\n",marked,unsigned(h.parts));}
 #endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackagePublish()){ps2_free();return false;}
+#endif
+    wplan29::open();
+#endif
     return true;
 }
 #if RE4DC_MOVIE_WORLD_ARENA
 bool ps2_movie_reload(){
+#if RE4DC_WORLD_MUTATION31
+    // This call may overwrite either retained file and then fail. Revoke even
+    // when the subsequent layout/open/read/CRC check refuses restoration.
+    worldPackageRevoke();
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_invalidate_world(); // mesh/R4PW alone cannot renew prepared sidecars
 #endif
@@ -6867,10 +7929,19 @@ bool ps2_movie_reload(){
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fSidecarCrc=h.crc;
 #endif
+#if RE4DC_PS2_WORLD_SOURCE_OWNER && RE4DC_WORLD_MUTATION31
+    sourceWorldSidecarCrc=h.crc;
+#endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     // Preserve ids, slots, source flags, object/serials, original rest matrices,
     // part witnesses and ordering. Same UI frame can contain source S11 edits.
     dyn::frame=~0u;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackagePublish())return false;
+#endif
+    wplan29::open();
 #endif
     return true;
 }
@@ -6886,10 +7957,20 @@ bool ps2_movie_dyn_valid(){
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     if(dyn::block && !re4dc_room4_cell_valid(dyn::block,0,ps2_movie.generation))return false;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    if(dyn::slots && !re4dc_room4_cell_valid(dyn::slots,dyn::slot_cell_bytes(dyn::nslots),ps2_movie.generation))return false;
+    if(dyn::slots)for(unsigned i=0;i<dyn::nslots;++i){
+        const dyn::Slot& s=dyn::slots[i];
+        if(!s.parts)continue;
+        if(s.nparts==1){if(s.parts!=dyn::reserved_pose(s))return false;}
+        else if(!re4dc_room4_cell_valid(s.parts,dyn::part_cell_bytes(s.nparts),ps2_movie.generation))return false;
+    }
+#else
     if(dyn::slots && !re4dc_room4_cell_valid(dyn::slots,dyn::nslots*sizeof(dyn::Slot),ps2_movie.generation))return false;
 #if RE4DC_PS2_WORLD_PARTS
     if(dyn::slots)for(unsigned i=0;i<dyn::nslots;++i)if(dyn::slots[i].parts &&
         !re4dc_room4_cell_valid(dyn::slots[i].parts,dyn::part_cell_bytes(dyn::slots[i].nparts),ps2_movie.generation))return false;
+#endif
 #endif
 #endif
     return true;
@@ -7068,6 +8149,15 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if RE4DC_WORLD_MUTATION31
+    // A failed in-place reload can leave the old package object's pointers
+    // intact until unpublication. Never enter a prepared or ordinary read.
+    if(!worldPackageCurrent()){re4dc_model_packet_abort();return -1;}
+    const unsigned draw_package_generation=sourceWorldPackageGeneration;
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    dyn::root_reports(); // bounded emission before any direct/chunk/SQ ownership
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_selection(re4dc::wc24::Selection);
     Wc24PassResult wc_result;
@@ -7103,6 +8193,9 @@ int ps2_pass(unsigned pass,float zfar){
     re4dc_ps2_sky_header=0;
 #endif
     const float* P=ps2w.projection;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)re4dc::dfa26::hit(re4dc::dfa26::WorldPs2Projection);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0){
         wc_result.why.first(re4dc::wc24::ErrorProjection,pass,
@@ -7112,6 +8205,10 @@ int ps2_pass(unsigned pass,float zfar){
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)return 0;
 #endif
     const float near=P[6]/(P[5]-1),far=P[6]/P[5];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near)
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPs2Projection);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     if(!re4dc::render::is_finite(near)||!re4dc::render::is_finite(far)||near<=0||far<=near){
         uint32_t a,b;std::memcpy(&a,&near,4);std::memcpy(&b,&far,4);
@@ -7190,7 +8287,7 @@ int ps2_pass(unsigned pass,float zfar){
             if(pcact::have && pcact::near==near && !std::memcmp(pcact::view,ps2w.view,sizeof(pcact::view)) &&
                !std::memcmp(pcact::P,P,sizeof(pcact::P))){
                 const pc::State& t=pc::st_trans;pc::State& s=pc::st;
-                s.active=t.active;s.cell=t.cell;s.nfr=t.nfr;s.corner=t.corner;
+                s.active=t.active;s.cell=t.cell;s.nfr=t.nfr;s.corner=t.corner; PC_COPY_EXTRA(s,t)
                 for(unsigned a=0;a<3;++a)s.eye[a]=t.eye[a];
                 if(s.fr && t.fr)for(unsigned i=0;i<t.nfr;++i)s.fr[i]=t.fr[i];else s.active=false;
                 if(s.active)s.setup_frame=sf;
@@ -7242,6 +8339,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     }
 #endif
+#if RE4DC_WORLD_PORTAL29
+    wp29::begin(pass,P,near,cull_far);
+#endif
 #if RE4DC_PS2_PVS
     pvs::frame(ps2w.view,P,ps2w.viewport,near,cull_far);
     if(!pass){
@@ -7262,6 +8362,14 @@ int ps2_pass(unsigned pass,float zfar){
             w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
     }
 #endif
+#if defined(RE4DC_SCENERY_STREAM_CHECK) && RE4DC_SCENERY_STREAM_CHECK
+    if(!pass){
+        static unsigned logged=0;const unsigned f=re4dc_ui_frame();
+        if(f-logged>=300U){logged=f;
+            re4dc_log("SCNSTREAM check frame=%u room=%03x picks=%u corners=%u bad=%u screens=%u screen_bad=%u\n",f,ps2w.room,stream_ck[0],stream_ck[1],
+                      stream_ck[2],stream_ls[0],stream_ls[1]);}
+    }
+#endif
 #if RE4DC_SCENERY_CONE
     if(!pass){
         const unsigned f=re4dc_ui_frame();
@@ -7276,20 +8384,88 @@ int ps2_pass(unsigned pass,float zfar){
     std::memcpy(part.projection,P,sizeof(part.projection));std::memcpy(part.viewport,ps2w.viewport,sizeof(part.viewport));
     part.alpha_state=255;part.source_key[2]=1;
 #if RE4DC_SCENERY_CHUNK
+    // A page flush may bind or yield. Keep the source/view/material inputs for
+    // this one logical part; a changed input aborts rather than replaying a
+    // prefix that may already have reached the TA.
+#if RE4DC_WORLD_PAGES31
+    // PAGE31_INPUTS_BEGIN
+    struct ChunkPageInputs {
+        float view[12],projection[7],viewport[6],affine[12];
+        Ps2Part meta;
+        const void* lut;const void* gather;
+#if RE4DC_PS2_STRIP_GROUPS
+        const void* sg;unsigned groups;
+#if RE4DC_SG_SELECT_LEAN
+        unsigned lean_on;
+#endif
+#endif
+        unsigned frame;
+        void capture(const Ps2Part& source,const float* matrix){
+            meta=source;lut=ps2w.lut;gather=ps2w.gather;
+#if RE4DC_PS2_STRIP_GROUPS
+            sg=ps2w.sg;groups=ps2w.sg_groups;
+#if RE4DC_SG_SELECT_LEAN
+            lean_on=re4dc_sg_lean_on;
+#endif
+#endif
+            frame=re4dc_ui_frame();
+            std::memcpy(view,ps2w.view,sizeof(view));
+            std::memcpy(projection,ps2w.projection,sizeof(projection));
+            std::memcpy(viewport,ps2w.viewport,sizeof(viewport));
+            std::memcpy(affine,matrix,sizeof(affine));
+        }
+        bool current(const Ps2Part& source,const float* matrix)const{
+            return frame==re4dc_ui_frame() && !std::memcmp(&meta,&source,sizeof(meta)) &&
+                !std::memcmp(view,ps2w.view,sizeof(view)) &&
+                !std::memcmp(projection,ps2w.projection,sizeof(projection)) &&
+                !std::memcmp(viewport,ps2w.viewport,sizeof(viewport)) &&
+                !std::memcmp(affine,matrix,sizeof(affine)) && lut==ps2w.lut && gather==ps2w.gather
+#if RE4DC_PS2_STRIP_GROUPS
+                && sg==ps2w.sg && groups==ps2w.sg_groups
+#if RE4DC_SG_SELECT_LEAN
+                && lean_on==re4dc_sg_lean_on
+#endif
+#endif
+                ;
+        }
+    };
+    // PAGE31_INPUTS_END
+#endif
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
+#if RE4DC_WORLD_PORTAL29
+                       unsigned wp29_placement;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                       re4dc::portal29::Ticket wp29_ticket;
+#endif
+#endif
 #if RE4DC_SCENERY_UV_SNAPSHOT
                        float uv_offset[2];
 #endif
 #if RE4DC_PS2_PVS
                        unsigned placement;
 #endif
+#if RE4DC_WORLD_MUTATION31
+                       std::uint8_t source_pass,source_texture,source_flags;
+#endif
                        std::uint8_t cull; bool marked; std::uint8_t sky; };
     static constexpr unsigned kChunkParts=48,kChunkPicks=320;
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
     const auto& cpkg=ps2w.package;
+#if RE4DC_WORLD_PAGES31
+    re4dc::page31::Part* active_page=nullptr;
+    bool active_page_last=false;
+    const ChunkPageInputs* active_page_inputs=nullptr;
+    const float* active_page_affine=nullptr;
+    unsigned active_page_index=0,active_page_plan=0;
+#endif
     auto chunk_flush=[&]()->int{
+#if RE4DC_WORLD_MUTATION31
+        if(!worldPackageSelectionCurrent(draw_package_generation)){
+            re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+        }
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         const re4dc::wc24::Scope wc_replay(re4dc::wc24::Other);
 #endif
@@ -7330,6 +8506,9 @@ int ps2_pass(unsigned pass,float zfar){
         // changing the shared renderer's part-reference layout or hot methods.
         re4dc::room::MeshPart replay_part{};
         MeshDraw e{{part,{},near,far},cpkg,replay_part,ps2w.lut,ps2w.gather};
+#if RE4DC_WORLD_MUTATION31
+        e.mutation_epoch=draw_package_generation;
+#endif
         e.alpha=0xff000000U;e.direct=true;e.lean_part=true;
         e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
         e.streaming=re4dc_model_packet_streaming()!=0;e.set_clip();
@@ -7339,6 +8518,20 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
         for(unsigned j=0;j<nctx;++j){
             const ChunkPart& x=cctx[j];
+#if RE4DC_WORLD_MUTATION31
+            // A queued part can outlive a bind/flush callback. Verify the
+            // package cell and every live material field before package or
+            // cached-key dereference. Unknown edits refuse this queued run.
+            if(!worldPackageSelectionCurrent(draw_package_generation) || x.index>=cpkg.header().part_count){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+            const auto& live=ps2w.parts[x.index];
+            if(live.crc!=x.key[0] || live.fnv!=x.key[1] || live.width!=x.key[2] ||
+               live.height!=x.key[3] || live.cull!=x.key[5] || live.pass!=x.source_pass ||
+               live.texture!=x.source_texture || live.reserved!=x.source_flags){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+#endif
             part.cull=x.cull;
 #if RE4DC_SCENERY_UV_SNAPSHOT
             part.uv_offset[0]=x.uv_offset[0];part.uv_offset[1]=x.uv_offset[1];
@@ -7364,6 +8557,9 @@ int ps2_pass(unsigned pass,float zfar){
             MeshDraw e{{part,{},near,far},cpkg,cpkg.parts()[x.index],ps2w.lut,ps2w.gather};
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
 #endif
+#if RE4DC_WORLD_MUTATION31
+            e.mutation_epoch=draw_package_generation;
+#endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
 #endif
 #if RE4DC_SCENERY_SUBMIT_BATCH && !RE4DC_SCENERY_REPLAY_LEAN
@@ -7383,6 +8579,17 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SCENERY_PIECE_STATE
             e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
 #endif
+#if RE4DC_WORLD_PAGES31
+            if(active_page)active_page->selected(cpk+x.first,x.count);
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+#if !RE4DC_WORLD_PORTAL_CLIP_GATHER31
+            const unsigned wp29_clipped=stats.strips_clipped,wp29_culled=stats.strips_culled;
+#endif
+            const auto& wp29_source=cpkg.parts()[x.index];
+            const bool wp29_whole=re4dc::portal29::whole_source(cpk+x.first,x.count,
+                wp29_source.first_meshlet,wp29_source.meshlet_count);
+#endif
 #if RE4DC_SCENERY_EMIT_PREFETCH
             // Picks are packed even when an intervening part has no picks.
             // Never look beyond this flush or change the selected draw order.
@@ -7391,7 +8598,117 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             const int result=e.chunk_emit(cpk+x.first,x.count);
 #endif
+            // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+#endif
+#if RE4DC_WORLD_PAGES31
+            // PAGE31_POST_EMIT_BEGIN
+            if(active_page){
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                // end_direct can leave the borrowed batch SQ held. Unlocking it
+                // may run a source callback, so validate only after this close.
+                re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
+                bool current=
+#if RE4DC_WORLD_MUTATION31
+                    worldPackageSelectionCurrent(draw_package_generation) &&
+#endif
+                    wplan29::current(active_page_plan) &&
+                    active_page_inputs->current(ps2w.parts[active_page_index],active_page_affine);
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+                if(!re4dc_source_world_binding_valid()){
+                    re4dc_source_world_binding_failed();current=false;
+                }
+#endif
+                if(!current){
+                    re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+                }
+                // Each page restarts MeshDraw, so a later bind/borrow refusal
+                // can return zero even after an earlier page reached the TA.
+                // A paged source cannot fall back or continue after that gap.
+                if(result<=0){
+                    re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+                }
+            }
+            // PAGE31_POST_EMIT_END
+#endif
+#if RE4DC_WORLD_PAGES31
+            if(active_page && x.count)active_page->emitted(result,e.submitted,e.input,e.output);
+#endif
+#if RE4DC_WORLD_PORTAL29
+#if RE4DC_WORLD_PREPARED09 && RE4DC_WORLD_PORTAL_COMPLETION
+            // capture already resolved membership. The exact ticket is checked
+            // again by finish after direct/batch release; no second search.
+            if(x.wp29_ticket.serial){
+#else
+            if(wp29::witness(x.wp29_placement,x.index)){
+#endif
+#if RE4DC_SCENERY_SUBMIT_BATCH
+                re4dc_ps2_world_batch_close(&submit_scope.batch);
+#endif
+#if RE4DC_WORLD_MUTATION31
+                // Batch release may run a named package writer. Recheck
+                // before completion reads the retained source part below.
+                if(!worldPackageSelectionCurrent(draw_package_generation)){
+                    re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+                }
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_PAGES31
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+                if(active_page && !e.portal_depth_safe_clip)active_page->whole=false;
+#else
+                if(active_page && (stats.strips_clipped!=wp29_clipped || stats.strips_culled!=wp29_culled))
+                    active_page->whole=false;
+#endif
+                if(!active_page || active_page_last){
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+                    const auto completion=re4dc::portal29::Completion::emitted(
+                        active_page?active_page->result():result,
+                        active_page?active_page->published:e.submitted,
+                        active_page?active_page->input:e.input,
+                        active_page?active_page->output:e.output,
+                        active_page?active_page->complete(wp29_source.first_meshlet):
+                            wp29_whole && e.portal_depth_safe_clip);
+#else
+                    const auto completion=re4dc::portal29::Completion::emitted(
+                        active_page?active_page->result():result,
+                        active_page?active_page->published:e.submitted,
+                        active_page?active_page->input:e.input,
+                        active_page?active_page->output:e.output,
+                        active_page?active_page->complete(wp29_source.first_meshlet):
+                            wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
+#endif
+                    wp29::finish(x.wp29_ticket,completion,x.key);
+                }
+#else
+#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
+                const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
+                    wp29_whole && e.portal_depth_safe_clip);
+#else
+                const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
+                    wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
+#endif
+                wp29::finish(x.wp29_ticket,completion,x.key);
+#endif
+#else
+#if RE4DC_WORLD_PAGES31
+                if(!active_page || active_page_last)
+                    wp29::finish(x.wp29_placement,x.index,
+                        active_page?active_page->positive && active_page->published && active_page->input &&
+                            active_page->input==active_page->output &&
+                            active_page->complete(cpkg.parts()[x.index].first_meshlet):result>0,x.key);
+#else
+                wp29::finish(x.wp29_placement,x.index,result>0,x.key);
+#endif
+#endif
+            }
+#endif
+            // PORTAL_COMPLETION_FLUSH_END
 #if RE4DC_SCENERY_SUBMIT_BATCH
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
             // Logical completion/accounting precedes release. Only actual
@@ -7403,6 +8720,14 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_PVS
             e.pvs_finish(result>0);
+#endif
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;
+            }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(result==0)re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
 #endif
             if(result>0)++c.native;
             else if(result<0){re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;}
@@ -7435,6 +8760,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#if RE4DC_WORLD_MUTATION31
+        if(!worldPackageSelectionCurrent(draw_package_generation)){re4dc_model_packet_abort();++c.aborts;return -1;}
+#endif
 #if RE4DC_PS2_PVS
 #if RE4DC_PS2_PVS_BATCH_COMPOSE
         // Qualification mode ONLY: internal pvs::cur still authenticates source
@@ -7518,6 +8846,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                 )continue;   // hidden, or drawn with its source part hierarchy
                 if(st==2){concat(dyn::delta[dyn::moved_of[id]],pl.affine,moved_affine);affine=moved_affine;}
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+                else if(st==4){
+                    const int result=dyn::root_affine(id,pl.affine,moved_affine);
+                    if(!result)continue;
+                    if(result==2)affine=moved_affine;
+                }
+#endif
             }
         }
 #if RE4DC_PS2_WORLD_LEAN
@@ -7525,12 +8860,18 @@ int ps2_pass(unsigned pass,float zfar){
 #define RE4DC_PS2_AFFINE affine
 #else
         ++c.placements;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);
+#endif
         float mv[12];concat(ps2w.view,affine,mv);
 #define RE4DC_PS2_AFFINE affine
 #endif
 #else
         ++c.placements;
 #if !RE4DC_PS2_WORLD_LEAN
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);
+#endif
         float mv[12];concat(ps2w.view,pl.affine,mv);
 #endif
 #define RE4DC_PS2_AFFINE pl.affine
@@ -7540,6 +8881,33 @@ int ps2_pass(unsigned pass,float zfar){
         // Capture this with mvq; fresh source state can change before queued replay.
         const unsigned pvs_source_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
 #endif
+// WORLD_PREPARED09_EARLY_BEGIN
+#if RE4DC_WORLD_PREPARED09 && RE4DC_WORLD_PORTAL29 && RE4DC_PS2_INTERIOR_CULL==1 && RE4DC_PS2_WORLD_DYNAMIC
+        {
+            const auto* early=wplan29::bounds(i,wplan29::bound_incarnation);
+            bool immutable=early && RE4DC_PS2_AFFINE==pl.affine && dyn::ids && dyn::nids==ps2w.nplacements && pl.placement<dyn::nids;
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+            immutable=immutable && !re4dc_source_world_group_claimed();
+#endif
+#if RE4DC_PS2_WORLD_R11F_OWNER
+            immutable=immutable && !r11fNativeClaimed();
+#endif
+            if(immutable){
+                const unsigned id=dyn::ids[pl.placement];
+                immutable=id>=dyn::kIds || dyn::slot_of[id]==dyn::kNone;
+            }
+            if(immutable){
+                wp29::activate();
+                if(pc::st.active){
+                    bool inside=true;
+                    for(unsigned a=0;a<3;++a)inside=inside && early->center[a]-early->half[a]>=PC_OUTER_RENDER[a] &&
+                        early->center[a]+early->half[a]<=PC_OUTER_RENDER[3+a];
+                    if(!inside && pc::hidden(early->center,early->half)>0){++pc::st.placements;continue;}
+                }
+            }
+        }
+#endif
+// WORLD_PREPARED09_EARLY_END
 #if RE4DC_PS2_WORLD_LEAN
 #if RE4DC_SKY_ANY
         const bool lean_sky=re4dc_sky_mode() && ps2_sky_row(ps2w.room,pl.placement); // sky rows: their own far, no pretest
@@ -7560,9 +8928,16 @@ int ps2_pass(unsigned pass,float zfar){
                     mv[4*r]=a[4*r]+0.0f;mv[4*r+1]=a[4*r+1]+0.0f;mv[4*r+2]=a[4*r+2]+0.0f;
                     mv[4*r+3]=a[4*r]*b[3]+a[4*r+1]*b[7]+a[4*r+2]*b[11]+a[4*r+3];
                 }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            }else {re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);lean::concat_u(a,b,mv);}
+#else
             }else lean::concat_u(a,b,mv);
+#endif
         }
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPlacementMatrix);
+#endif
         float mv[12];lean::concat_u(ps2w.view,RE4DC_PS2_AFFINE,mv);
 #endif
         if(lean::kMode&8U){float r[12];concat(ps2w.view,RE4DC_PS2_AFFINE,r);if(std::memcmp(r,mv,sizeof(r)))++lean::st.check_bad;}
@@ -7590,6 +8965,9 @@ int ps2_pass(unsigned pass,float zfar){
         if(!re4dc::render::group_visible(bounds,mv,P,ps2w.viewport,near,cull_far,0)){++c.culled;continue;}
 #endif
         const float grid[12]={mesh.step[0],0,0,mesh.origin[0], 0,mesh.step[1],0,mesh.origin[1], 0,0,mesh.step[2],mesh.origin[2]};
+#if RE4DC_WORLD_PORTAL29
+        wp29::activate();
+#endif
 #if RE4DC_PS2_INTERIOR_CULL
         // 0 no test (no cell, or the placement is inside the house box), 1 test its clusters, 2 wholly hidden.
         unsigned pc_state=0;float pc_wq[21];
@@ -7598,7 +8976,7 @@ int ps2_pass(unsigned pass,float zfar){
             const float blo[3]={mesh.bounds_min[0],mesh.bounds_min[1],mesh.bounds_min[2]},bhi[3]={mesh.bounds_max[0],mesh.bounds_max[1],mesh.bounds_max[2]};
             pc::world_box(RE4DC_PS2_AFFINE,blo,bhi,wc,wh);
             bool inside=true; // the placement box inside the house box: nothing in it can be outside
-            for(unsigned a=0;a<3;++a)inside=inside && wc[a]-wh[a]>=pc::kPcOuter[a] && wc[a]+wh[a]<=pc::kPcOuter[3+a];
+            for(unsigned a=0;a<3;++a)inside=inside && wc[a]-wh[a]>=PC_OUTER_RENDER[a] && wc[a]+wh[a]<=PC_OUTER_RENDER[3+a];
             if(!inside){
                 pc_state=pc::hidden(wc,wh)>0?2U:1U;
                 concat(RE4DC_PS2_AFFINE,grid,pc_wq);pc::abs_rows(pc_wq);
@@ -7621,11 +8999,47 @@ int ps2_pass(unsigned pass,float zfar){
             if(n>scale)scale=n;
         }
         const float lod_scale=std::sqrt(scale)*px/lod_div;
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+        unsigned plan_count=mesh.part_count;
+        const auto* plan=wplan29::run(pl.mesh,pass,plan_count);
+#if RE4DC_WORLD_PREPARED09
+        const unsigned plan_incarnation=wplan29::bound_incarnation;
+#endif
+        for(unsigned k=0;k<plan_count;++k){
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
+#else
         for(unsigned k=0;k<mesh.part_count;++k){
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
+            const auto* plan_part=plan?plan+k:nullptr;
+            const unsigned index=plan_part?plan_part->index:mesh.first_part+k;
+#if RE4DC_WORLD_MUTATION31
+            if(plan_part && (index>=pk.header().part_count ||
+                !re4dc::wp29::matches(*plan_part,ps2w.parts[index],pass))){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
+#if RE4DC_WORLD_PREPARED09
+            const auto& meta=ps2w.parts[index];
+#else
+            const Ps2Part meta=plan_part?re4dc::wp29::metadata<Ps2Part>(*plan_part):ps2w.parts[index];
+#endif
+            if(plan_part)++wplan29::planned;else ++wplan29::legacy;
+#else
             const unsigned index=mesh.first_part+k;const auto& meta=ps2w.parts[index];
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
             R11fUvScope uvScope(part,pl.placement,pl.mesh,index,pass);
 #endif
@@ -7656,6 +9070,11 @@ int ps2_pass(unsigned pass,float zfar){
             if(!re4dc_source_world_uv(pl.placement,pl.mesh,index,pass,part.uv_offset)){
                 re4dc_source_world_binding_failed();++c.aborts;return -1;
             }
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #endif
 #if RE4DC_SCENERY_SELECT_ONLY
             {
@@ -7669,8 +9088,33 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_INTERIOR_CULL
                 d.pc_mode=pc_state?1U:0U;
 #endif
+#if RE4DC_WORLD_PORTAL29
+                d.wp29_wq=pc_state?pc_wq:nullptr;
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+                const unsigned selected_meshlets=plan_part?plan_part->meshlets:pk.parts()[index].meshlet_count;
+#define WP29_MESHLET_COUNT selected_meshlets
+#else
                 const auto& selected_part=pk.parts()[index];
-                if(d.chunk_ok() && selected_part.meshlet_count<=kChunkPicks){
+#define WP29_MESHLET_COUNT selected_part.meshlet_count
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_WORLD_PAGES31
+                if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
+                    (plan && re4dc::page31::indexable(pk.parts()[index].first_meshlet,WP29_MESHLET_COUNT)) ||
+                    (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#else
+                if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
+                    (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#endif
+#else
+#if RE4DC_WORLD_PAGES31
+                if(d.chunk_ok() && (WP29_MESHLET_COUNT<=kChunkPicks ||
+                    (plan && re4dc::page31::indexable(pk.parts()[index].first_meshlet,WP29_MESHLET_COUNT)))){
+#else
+                if(d.chunk_ok() && WP29_MESHLET_COUNT<=kChunkPicks){
+#endif
+#endif
 #if RE4DC_PS2_VERTEX_ALPHA
                     const bool marked=(meta.reserved&1U)!=0;
                     // Keep the original lazy LUT preparation at selection.
@@ -7682,12 +9126,42 @@ int ps2_pass(unsigned pass,float zfar){
                     const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
 #endif
 #include "include/scenery_part_far.inc"
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+                    unsigned key_storage[6];const unsigned (&key)[6]=plan_part?plan_part->key:key_storage;
+                    if(!plan_part){key_storage[0]=meta.crc;key_storage[1]=meta.fnv;key_storage[2]=meta.width;key_storage[3]=meta.height;key_storage[4]=pass;key_storage[5]=meta.cull;}
+                    d.ps2=key;
+#else
                     const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#endif
 #if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
                     if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
 #endif
                     // Preserve the original capacity flush and queue snapshot.
-                    if(nctx==kChunkParts || npk+selected_part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+#if RE4DC_WORLD_PAGES31
+                    const bool paged=WP29_MESHLET_COUNT>kChunkPicks;
+                    if(nctx==kChunkParts || npk==kChunkPicks || npk+(paged?kChunkPicks:WP29_MESHLET_COUNT)>kChunkPicks || (paged && nctx)){
+                        if(chunk_flush()<0)return -1;
+                    }
+                    if(paged && !wplan29::current(plan_incarnation)){
+                        re4dc_model_packet_abort();++c.aborts;return -1;
+                    }
+                    ChunkPageInputs page_inputs;
+                    if(paged)page_inputs.capture(meta,RE4DC_PS2_AFFINE);
+                    re4dc::page31::Cursor page_cursor{};
+                    re4dc::page31::Part page_part(pk.parts()[index].first_meshlet,pk.parts()[index].meshlet_count);
+                    bool page_done=false;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                    re4dc::portal29::Ticket page_ticket{};
+#endif
+                    do {
+#else
+                    if(nctx==kChunkParts || npk+WP29_MESHLET_COUNT>kChunkPicks){if(chunk_flush()<0)return -1;}
+#endif
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
                     ChunkPart& x=cctx[nctx++];
                     std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
 #if RE4DC_SCENERY_UV_SNAPSHOT
@@ -7698,13 +9172,64 @@ int ps2_pass(unsigned pass,float zfar){
                     x.placement=pvs_source_placement;
 #endif
                     x.marked=marked;x.first=npk;
+#if RE4DC_WORLD_MUTATION31
+                    x.source_pass=meta.pass;x.source_texture=meta.texture;x.source_flags=meta.reserved;
+#endif
 #if RE4DC_SKY_ANY
                     x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
+#if RE4DC_WORLD_PORTAL29
+                    x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_PAGES31
+                    if(paged && page_cursor.started)x.wp29_ticket=page_ticket;
+                    else {x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);if(paged)page_ticket=x.wp29_ticket;}
+#else
+                    x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);
+#endif
+#endif
+#endif
+#if RE4DC_WORLD_PAGES31
+                    const auto page=d.chunk_select(cpk+npk,kChunkPicks-npk,page_cursor);
+                    x.count=page.count;npk+=x.count;page_done=page.done;
+                    if(paged){
+                        active_page=&page_part;active_page_last=page_done;
+                        active_page_inputs=&page_inputs;active_page_affine=RE4DC_PS2_AFFINE;
+                        active_page_index=index;active_page_plan=plan_incarnation;
+                        if(chunk_flush()<0)return -1; // never retry a published prefix
+                        active_page=nullptr;
+                        if(
+#if RE4DC_WORLD_MUTATION31
+                           !worldPackageSelectionCurrent(draw_package_generation) ||
+#endif
+                           !wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
+                            re4dc_model_packet_abort();++c.aborts;return -1;
+                        }
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+                        if(!re4dc_source_world_binding_valid()){
+                            re4dc_source_world_binding_failed();++c.aborts;return -1;
+                        }
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                        if(!page_done && page_ticket.serial){
+                            const auto now=wp29::capture(page_ticket.placement,index,key);
+                            if(now.serial!=page_ticket.serial || now.witness!=page_ticket.witness){
+                                re4dc_model_packet_abort();++c.aborts;return -1;
+                            }
+                        }
+#endif
+                    }
+                    } while(paged && !page_done);
+#else
                     x.count=d.chunk_select(cpk+npk);npk+=x.count;
+#endif
                     continue;
                 }
+#undef WP29_MESHLET_COUNT
             }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            re4dc::dfa26::hit(re4dc::dfa26::WorldSelectorLegacy);
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
             const bool marked=(meta.reserved&1U)!=0; // a --vertex-alpha tr4 part: ARGB4444 corners, alpha kept
@@ -7714,6 +9239,9 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             MeshDraw d{{part,{},near,far},pk,pk.parts()[index],ps2w.lut,ps2w.gather};
             d.alpha=0xff000000U;d.vertex_alpha=false;d.cull_far=cull_far;d.direct=true;
+#endif
+#if RE4DC_WORLD_MUTATION31
+            d.mutation_epoch=draw_package_generation;
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
 #if RE4DC_PS2_PVS
@@ -7733,7 +9261,13 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #include "include/scenery_part_far.inc"
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+            unsigned key_storage[6];const unsigned (&key)[6]=plan_part?plan_part->key:key_storage;
+            if(!plan_part){key_storage[0]=meta.crc;key_storage[1]=meta.fnv;key_storage[2]=meta.width;key_storage[3]=meta.height;key_storage[4]=pass;key_storage[5]=meta.cull;}
+            d.ps2=key;
+#else
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#endif
 #if RE4DC_SCENERY_PIECE_STATE
             d.piece_slot=piece::pkg==static_cast<const void*>(&pk)?piece::table+index:nullptr;
 #endif
@@ -7743,11 +9277,54 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_INTERIOR_CULL
             d.pc_mode=pc_state?1U:0U;d.pc_wq=pc_wq;
 #endif
+#if RE4DC_WORLD_PORTAL29
+            d.wp29_wq=pc_state?pc_wq:nullptr;
+#endif
 #if RE4DC_SCENERY_CHUNK
             // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
 #if !RE4DC_SCENERY_SELECT_ONLY
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_WORLD_PAGES31
+            if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
+                (plan && re4dc::page31::indexable(d.part.first_meshlet,d.part.meshlet_count)) ||
+                (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#else
+            if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
+                (re4dc::dfa26::hit(re4dc::dfa26::WorldChunkCapacity),false))){
+#endif
+#else
+#if RE4DC_WORLD_PAGES31
+            if(d.chunk_ok() && (d.part.meshlet_count<=kChunkPicks ||
+                (plan && re4dc::page31::indexable(d.part.first_meshlet,d.part.meshlet_count)))){
+#else
             if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
+#endif
+#endif
+#if RE4DC_WORLD_PAGES31
+                const bool paged=d.part.meshlet_count>kChunkPicks;
+                if(nctx==kChunkParts || npk==kChunkPicks || npk+(paged?kChunkPicks:d.part.meshlet_count)>kChunkPicks || (paged && nctx)){
+                    if(chunk_flush()<0)return -1;
+                }
+                if(paged && !wplan29::current(plan_incarnation)){
+                    re4dc_model_packet_abort();++c.aborts;return -1;
+                }
+                ChunkPageInputs page_inputs;
+                if(paged)page_inputs.capture(meta,RE4DC_PS2_AFFINE);
+                re4dc::page31::Cursor page_cursor{};
+                re4dc::page31::Part page_part(d.part.first_meshlet,d.part.meshlet_count);
+                bool page_done=false;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                re4dc::portal29::Ticket page_ticket{};
+#endif
+                do {
+#else
                 if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+#endif
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
 #if RE4DC_SCENERY_UV_SNAPSHOT
@@ -7758,14 +9335,66 @@ int ps2_pass(unsigned pass,float zfar){
                 x.placement=pvs_source_placement;
 #endif
                 x.marked=d.vertex_alpha;x.first=npk;
+#if RE4DC_WORLD_MUTATION31
+                x.source_pass=meta.pass;x.source_texture=meta.texture;x.source_flags=meta.reserved;
+#endif
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
 #endif
+#if RE4DC_WORLD_PORTAL29
+                x.wp29_placement=(RE4DC_PS2_AFFINE==pl.affine)?i:~0U;
+#if RE4DC_WORLD_PORTAL_COMPLETION
+#if RE4DC_WORLD_PAGES31
+                if(paged && page_cursor.started)x.wp29_ticket=page_ticket;
+                else {x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);if(paged)page_ticket=x.wp29_ticket;}
+#else
+                x.wp29_ticket=wp29::capture(x.wp29_placement,index,key);
+#endif
+#endif
+#endif
+#if RE4DC_WORLD_PAGES31
+                const auto page=d.chunk_select(cpk+npk,kChunkPicks-npk,page_cursor);
+                x.count=page.count;npk+=x.count;page_done=page.done;
+                if(paged){
+                    active_page=&page_part;active_page_last=page_done;
+                    active_page_inputs=&page_inputs;active_page_affine=RE4DC_PS2_AFFINE;
+                    active_page_index=index;active_page_plan=plan_incarnation;
+                    if(chunk_flush()<0)return -1; // no replay after a submitted page
+                    active_page=nullptr;
+                    if(
+#if RE4DC_WORLD_MUTATION31
+                       !worldPackageSelectionCurrent(draw_package_generation) ||
+#endif
+                       !wplan29::current(plan_incarnation) || !page_inputs.current(ps2w.parts[index],RE4DC_PS2_AFFINE)){
+                        re4dc_model_packet_abort();++c.aborts;return -1;
+                    }
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+                    if(!re4dc_source_world_binding_valid()){
+                        re4dc_source_world_binding_failed();++c.aborts;return -1;
+                    }
+#endif
+#if RE4DC_WORLD_PORTAL_COMPLETION
+                    if(!page_done && page_ticket.serial){
+                        const auto now=wp29::capture(page_ticket.placement,index,key);
+                        if(now.serial!=page_ticket.serial || now.witness!=page_ticket.witness){
+                            re4dc_model_packet_abort();++c.aborts;return -1;
+                        }
+                    }
+#endif
+                }
+                } while(paged && !page_done);
+#else
                 x.count=d.chunk_select(cpk+npk);npk+=x.count;
+#endif
                 continue;
             }
 #endif
             if(chunk_flush()<0)return -1;
+#if RE4DC_WORLD_PREPARED09
+            if(plan && !wplan29::current(plan_incarnation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
 #if RE4DC_PS2_INTERIOR_CULL==2
@@ -7780,6 +9409,20 @@ int ps2_pass(unsigned pass,float zfar){
             const int result=d.run();
             d.end_direct(); // before any abort: releases the store queues
 #endif
+#if RE4DC_WORLD_MUTATION31
+            if(!worldPackageSelectionCurrent(draw_package_generation)){
+                re4dc_model_packet_abort();++c.aborts;return -1;
+            }
+#endif
+#if RE4DC_WORLD_PORTAL29
+#if RE4DC_WORLD_PORTAL_COMPLETION
+            // This first completion class proves whole queued source spans.
+            // The legacy immediate producer still draws, but grants no witness.
+            wp29::finish({},re4dc::portal29::Completion::emitted(result,d.submitted,d.input,d.output,false),key);
+#else
+            wp29::finish((RE4DC_PS2_AFFINE==pl.affine)?i:~0U,index,result>0,key);
+#endif
+#endif
 #if RE4DC_PS2_PVS
             d.pvs_finish(result>0);
 #endif
@@ -7792,6 +9435,9 @@ int ps2_pass(unsigned pass,float zfar){
                 re4dc_r11f_binding_failed();++c.aborts;return -1;
             }
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if(result==0)re4dc::dfa26::hit(re4dc::dfa26::WorldNativeDecline);
+#endif
             if(result>0)++c.native;
             else if(result<0){re4dc_model_packet_abort();++c.aborts;return -1;}
 #if RE4DC_WORLD_HOLE_DIAG
@@ -7801,9 +9447,17 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2
             if(pc_state){
+#if RE4DC_WORLD_MUTATION31
+                if(!worldPackageSelectionCurrent(draw_package_generation)){
+                    re4dc_model_packet_abort();++c.aborts;return -1;
+                }
+#endif
                 // The check run: only the hidden clusters / meshlets, opaque magenta, untextured and unfogged.
                 MeshDraw k{{part,{},near,far},pk,pk.parts()[index],ps2w.lut,ps2w.gather};
                 k.alpha=0xff000000U;k.vertex_alpha=false;k.cull_far=cull_far;k.direct=true;
+#if RE4DC_WORLD_MUTATION31
+                k.mutation_epoch=draw_package_generation;
+#endif
                 k.part_index=index;k.lod_scale=lod_scale;
                 std::memcpy(k.mvq,mvq,sizeof(mvq));std::memcpy(k.mv,mvq,sizeof(mvq));
                 k.ps2=key;k.pc_mode=2;k.pc_wq=pc_wq;k.pc_all=pc_state==2;k.pc_check=true;
@@ -7909,6 +9563,23 @@ extern "C" unsigned re4dc_ps2_mesh_movie_borrow(unsigned id){
         || (ps2w.room==0x100 && id==0x10030)
 #endif
         ;
+#if RE4DC_MOVIE_LAYOUT_GUARD
+    // guards28: one line per refused eligible borrow (once per movie id, arena generation and reason), with the sizes, so a
+    // package the arena can't take shows in every log instead of a silent movie stop.
+    if(supported){
+        const char* why=ps2w.room!=ps2w.want?"room-not-loaded":!ps2_movie_layout(ps2w.room)?"layout":
+            ps2_movie.phase!=movie_world::Phase::ready?"phase":ps2_movie.readers?"readers":!ps2_movie_current()?"not-current":
+            (!ps2w.parts || !ps2w.placements)?"no-world":!ps2_movie_dyn_valid()?"dyn":nullptr;
+        static unsigned last_id,last_gen;static const char* last_why;
+        if(why && (id!=last_id || ps2_movie.generation!=last_gen || why!=last_why)){
+            last_id=id;last_gen=ps2_movie.generation;last_why=why;
+            re4dc_log("MOVIEARENA refuse id=%05x room=%03x why=%s mesh=%u side=%u capacity=%u need=%u gen=%u\n",id,ps2w.room,why,
+                ps2_movie_files.mesh,ps2_movie_files.side,ps2_movie.capacity,
+                ((ps2_movie_files.mesh+31u)&~31u)+((ps2_movie_files.side+31u)&~31u)+kLutBytes+kGatherBytes,ps2_movie.generation);
+        }
+        if(why)return 0;
+    }
+#endif
     if(!supported || ps2w.room!=ps2w.want || !ps2_movie_layout(ps2w.room) ||
        ps2_movie.phase!=movie_world::Phase::ready || ps2_movie.readers || !ps2_movie_current() ||
        !ps2w.parts || !ps2w.placements || !ps2_movie_dyn_valid())return 0;
@@ -7941,6 +9612,9 @@ extern "C" int re4dc_ps2_mesh_movie_return(unsigned token,int retiring){
         restored=ps2_movie_reload();
         if(!restored)ps2_movie_unpublish();
     }
+#if RE4DC_GC_ASSET_GATE
+    if(restored)gcasset_world_reseal();
+#endif
     const bool ok=ps2_movie.restored(token,ps2_movie_current(),restored);
     re4dc_log("MOVIEARENA return token=%u used=%u slots=%u blocked=%u attempts=%u restored=%u\n",
         token,used,slots,blocked,attempt,unsigned(ok));
@@ -8084,6 +9758,10 @@ extern "C" int re4dc_wm_shell_draw(float cut,float full){
 }
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(pass==2U?re4dc::dsa24::WorldTranslucent:re4dc::dsa24::WorldOpaque);
+    if(pass>2U)re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(pass<3U?static_cast<re4dc::wc24::Path>(pass):re4dc::wc24::PathCount,
                                      re4dc::wc24::Other);
@@ -8133,12 +9811,35 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
 #endif
 #if defined(RE4DC_FOLIAGE_TRIM)
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(pass>2){
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        wc_result.why.first(re4dc::wc24::ErrorInvalidPass,pass);
+#endif
+        return 0;
+    }
+    if(!ps2w.camera){
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPs2NoCamera);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,pass);
+#endif
+        return 0;
+    }
+    if(!ps2_open()){
+        re4dc::dfa26::hit(re4dc::dfa26::WorldPs2NoPackage);
+#if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
+        wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,ps2w.room,ps2w.want);
+#endif
+        return 0;
+    }
+#else
 #if defined(RE4DC_WORLD_CENSUS24_ERRORS) && RE4DC_WORLD_CENSUS24_ERRORS
     if(pass>2){wc_result.why.first(re4dc::wc24::ErrorInvalidPass,pass);return 0;}
     if(!ps2w.camera){wc_result.why.first(re4dc::wc24::ErrorCameraUnavailable,pass);return 0;}
     if(!ps2_open()){wc_result.why.first(re4dc::wc24::ErrorPackageUnavailable,ps2w.room,ps2w.want);return 0;}
 #else
     if(pass>2 || !ps2w.camera || !ps2_open())return 0;
+#endif
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
     MovieWorldRead read;
@@ -8169,11 +9870,19 @@ extern "C" void re4dc_ps2_interior_movie_restore(){
     if(!pc::data.lent)return;
     pc::data.lent=false;
     if(pc::st.ok)pc::load();
+#if RE4DC_GC_ASSET_GATE
+    gcasset_world_reseal();
+#endif
 }
 // The cell's test for any world box, e.g. an actor's (lane iv's CROWD_INVIS_SKIP could call it after the game's own
 // view test): 1 when this frame's cell hides the box. 0 unless the PS2 world's pass 0 set the cell up in this same
 // frame (the camera is then this frame's), and 0 for a box touching the house box.
 extern "C" int re4dc_ps2_interior_hidden(const float lo[3],const float hi[3]){
+#if RE4DC_WORLD_PORTAL29
+    // This export can be queried outside the witnessed world pass. Build 31
+    // grants no actor/source-owner culling authority from its Render receipts.
+    (void)lo;(void)hi;return 0;
+#endif
     if(!pc::st.active || pc::st.setup_frame!=re4dc_ui_frame())return 0;
     float c[3],h[3];
     for(unsigned a=0;a<3;++a){c[a]=(lo[a]+hi[a])*0.5f;h[a]=std::fabs(hi[a]-lo[a])*0.5f;}
@@ -8252,6 +9961,17 @@ extern "C" int re4dc_ps2_interior_owner_hidden(const float lo[3],const float hi[
 #endif
 #endif
 extern "C" void re4dc_ps2_mesh_log(unsigned frame){
+#if RE4DC_WORLD_PORTAL29
+    // Cold/periodic observer, including loaded cells that never gain current
+    // source authority. No per-placement logging or hidden early-return gap.
+    re4dc_log("WP29 frame=%u room=%03x loaded=%u candidate=%u active=%u witnesses=%u committed=%u admits=%u declines=%u source=%u scene=%u waits=%u commits=%u loads=%u fails=%u\n",
+        frame,ps2w.room,unsigned(pc::data.block!=nullptr),unsigned(wp29::candidate),unsigned(pc::st.active),
+        pc::wp29_count,wp29::receipts.count,wp29::admitted,wp29::declined,wp29::source_declines,wp29::scene_declines,
+        wp29::waits,wp29::commits,pc::data.loads,pc::data.fails);
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    re4dc_log("WPLAN29 frame=%u bytes=%u planned=%u legacy=%u loads=%u declines=%u\n",frame,wplan29::bytes,wplan29::planned,wplan29::legacy,wplan29::loads,wplan29::declines);
+#endif
     for(unsigned p=0;p<3;++p){
         const auto& c=ps2w.count[p];
         re4dc_log("PS2MESH frame=%u pass=%u placements=%u culled=%u parts=%u native=%u fallback=%u aborts=%u near=%d far=%d cull_far=%d\n",
@@ -8269,6 +9989,9 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if RE4DC_WORLD_MUTATION31
+    worldPackageRevoke();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     ++wc24_generation;
 #endif
@@ -8291,7 +10014,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
     r11fPackageAdvance();
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
+#if !RE4DC_WORLD_MUTATION31
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
+#endif
     sourceWorldSidecarCrc=0;
 #endif
 #if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
@@ -8309,9 +10034,15 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #if defined(RE4DC_TRANS_POLICY)
     trans::close();
 #endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+    wplan29::close();
+#endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
     ps2w.storage=nullptr;ps2w.bytes=0;ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;
+#if RE4DC_WORLD_VALID_MEMO31
+    worldPackageMemo.valid=false;
+#endif
     ps2w.lut=nullptr;ps2w.gather=nullptr;ps2w.attempted=false;
 #if RE4DC_PS2_PASS_MASK
     ps2w.masked=false;
@@ -8345,8 +10076,15 @@ extern "C" void re4dc_ps2_dyn_bind(unsigned room,unsigned id,const void* object,
     dyn::off_serial=unsigned(static_cast<const unsigned char*>(serial)-o);
     dyn::off_mat=unsigned(reinterpret_cast<const unsigned char*>(mat)-o);
     dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    dyn::root_report(id,s,"rebind");s.diag={};
+#endif
 #if RE4DC_PS2_WORLD_PARTS
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    dyn::release_parts(s);
+#else
     if(s.parts)re4dc_static_free(s.parts);
+#endif
     s.parts=nullptr;s.nparts=0;s.source=false;
 #if RE4DC_PS2_WORLD_ROOT_POSE
     s.root_matrix_offset=0;
@@ -8368,15 +10106,50 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
     if(!dyn::ids || ps2w.room!=room || id>=dyn::kIds || dyn::slot_of[id]==dyn::kNone || !count || count>255)return;
     dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
     if(s.obj!=object || s.parts)return;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    // Register once at the original setObj bind. In particular, a refused
+    // chain/owner must never retry with an animated matrix as its bind pose.
+    if(count==1 && s.root_matrix_offset)return;
+    if(count==1)s.root_matrix_offset=matrix_offset<~0U-1U && !(matrix_offset%alignof(float))?matrix_offset+1U:~0U;
+    std::uint32_t serial=0;
+    if(object)std::memcpy(&serial,s.obj+dyn::off_serial,sizeof(serial));
+    if(!object || serial!=s.serial || (count==1 && s.root_matrix_offset==~0U)){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(count==1)dyn::root_note(s,!object || serial!=s.serial?dyn::RootSerial:dyn::RootInvalid);
+#endif
+        return;
+    }
+#else
 #if RE4DC_PS2_WORLD_ROOT_POSE
     if(count==1)s.root_matrix_offset=matrix_offset+1U;
 #endif
+#endif
     const unsigned part_bytes=dyn::part_cell_bytes(count);
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    auto* poses=count==1?dyn::reserved_pose(s):static_cast<dyn::PartPose*>(re4dc_static_alloc(part_bytes));
+#else
     auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(part_bytes));
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    if(!poses && count==1)dyn::root_note(s,dyn::RootHeap);
+#endif
     if(!poses){re4dc_log("PS2PART no heap id=%02x parts=%u\n",id,count);return;}
     const auto* p=static_cast<const unsigned char*>(first);
     for(unsigned i=0;i<count;++i){
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT || RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(!p){
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+            if(count!=1)re4dc_static_free(poses);
+#else
+            re4dc_static_free(poses);
+#endif
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+            if(count==1)dyn::root_note(s,dyn::RootChain);
+#endif
+            re4dc_log("PS2PART short chain id=%02x part=%u/%u\n",id,i,count);return;}
+#else
         if(!p){re4dc_static_free(poses);re4dc_log("PS2PART short chain id=%02x part=%u/%u\n",id,i,count);return;}
+#endif
         poses[i].part=p;std::memcpy(poses[i].pose,p+pose_offset,sizeof(poses[i].pose));
         std::memcpy(&p,p+next_offset,sizeof(p));
     }
@@ -8386,6 +10159,9 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
         std::memcpy(root,static_cast<const unsigned char*>(first)+matrix_offset,12U*sizeof(float));
         bool valid=inverse(root,root+12);
         for(unsigned i=0;i<24;++i)valid=valid && std::isfinite(root[i]);
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+        if(!valid)dyn::root_note(s,dyn::RootInvalid);
+#endif
         if(!valid)s.root_matrix_offset=~0U;
     }
 #endif

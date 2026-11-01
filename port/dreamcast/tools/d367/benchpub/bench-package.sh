@@ -41,6 +41,8 @@ while [ -s $here/scene$n-warp.txt ]; do
   n=$((n+1))
 done
 [ $(stat -c %s $D/fix/warp.txt) -lt 2048 ]
+# QA_LINK=1 programs (lane link28): dial the DreamPi at the first tick (no QA menu on this disc); harmless without a line
+echo 'auto 1' > $D/fix/link.txt
 TITLE="RE4DC BENCHMARK (NOT THE GAME)" PRODUCT=T0002 bash $here/../mkgdi.sh $O/re4dc-game.elf $D/pkgtree $D/gdemu $D/fix | tail -2
 head -c 256 $D/gdemu/IP.BIN | grep -aq "RE4DC BENCHMARK (NOT THE GAME)" || { echo "IP.BIN title missing" >&2; exit 1; }
 rm -f $D/gdemu/IP.BIN

@@ -11,6 +11,10 @@ unsigned bounded_profile(const unsigned char* a,unsigned bytes,unsigned rel,cons
         {47u,32768u,61u,411744u,0x3913017bu,0xeb2fce03u,0u},
         // pl11-walk: additive source ARC22/23/37 retention for the confirmed r202 follow working set.
         {47u,32768u,58u,423136u,0x99957b47u,0xe0461bb7u,0u},
+#if RE4DC_MOTION_PS2_PL11
+        // pl11-hot with its motion from PS2 pl11.dat (purge-motion25, data set pmash25): same rows and body size.
+        {47u,32768u,61u,411744u,0x70063c28u,0xdd1db0cdu,0u},
+#endif
     };
     for(const auto& p:profiles) {
         if(bytes!=p.bytes || word(mtc+28)!=p.cap || word(mtc+12)!=p.count || word(mtc+20)!=p.table_crc ||

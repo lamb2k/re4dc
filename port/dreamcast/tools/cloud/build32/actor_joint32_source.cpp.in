@@ -1,0 +1,20 @@
+// Only the old target-address -> host primitive storage conversion is adapted.
+// Credit/admission, producer, materialization and primitive retirement below
+// are extracted unchanged. Matrix arithmetic remains the existing named SDK
+// boundary: identity + translated fixture skeleton.
+struct Weight{};struct WeightExt{};
+cModel* g_skinLazyMtx=nullptr;u32 g_skinLazyMtxFrame=~0u;
+cModel* source_palette_model=nullptr;unsigned source_palette_builds=0;
+alignas(32) float lc_palette[256*12];
+#define RE4DC_LC_PALETTE lc_palette
+void calcWeightMat(cModel*m){source_palette_model=m;}
+void source_fill_palette(unsigned n){
+    ++source_palette_builds;
+    for(unsigned i=0;i<n;++i){auto* p=lc_palette+12*i;std::memset(p,0,48);
+        p[0]=p[4]=p[8]=1;p[9]=source_palette_model==pPL?99:source_palette_model->pParts[1].mat[0][3];}
+}
+void MakeWeightPalette(Weight*,unsigned n){source_fill_palette(n);}
+void MakeWeightPaletteExt(WeightExt*,unsigned n){source_fill_palette(n);}
+int re4dc_model_diagnostic_enabled(){return 1;}
+// @HEAD@
+// @FUNCTIONS@

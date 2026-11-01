@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/trans_ot: the draw ordering tables (OT) — 23 tables (OT_MAX) of depth-bucketed linked
 // lists of OtData {func, data, kind}; each frame the draw code adds callbacks into a table (by
 // camera depth for the world / model tables 17 / 13, or a fixed bucket with AddOtDirect) and the
@@ -133,6 +137,10 @@ OtData* MakeOtData(void* data)
     OtPrim* p = (OtPrim*) GetPrimBuff(sizeof(OtPrim));
 
     if ((u32) p < RE4_MEM_LO || (u32) p > RE4_MEM_HI) {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::OtPoolFull);
+#endif
+#line 99
         return 0;
     }
     p->data = data;

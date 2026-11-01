@@ -1,0 +1,121 @@
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <cstdarg>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <vector>
+#include "static_obj_lifetime05.hpp"
+#define DFA26_MODEL_HIT(reason,n)
+namespace re4dc { namespace render {
+struct SourceLighting { unsigned enable,ambient_vertex,material_vertex,diffuse,mask; };
+}}
+struct ModelPart { unsigned char pad[24];unsigned size,reserved; };
+struct ModelData { unsigned displist_num; };
+struct cModelInfo { const ModelData* pData; };
+struct cModel { unsigned kindid,id; };
+struct Re4dcModelPart {
+    const unsigned char* stream;unsigned stream_bytes;const ModelPart* part;
+    const re4dc::render::SourceLighting* lighting;unsigned blend;
+};
+struct Global { unsigned Frame_cnt; } global{};
+Global* pG=&global;
+struct HeapInfo { int handle;std::uintptr_t start,end; } Heap[5]{};
+struct Block { void* base;unsigned capacity;bool allocated; };
+std::vector<Block> blocks;
+bool refuse=false,reset_on_alloc=false;unsigned frees=0,submits=0;int submit_action=0;
+unsigned observed=0;
+std::vector<unsigned> output;
+void reset_heap();
+void reenter_after_reset();
+int memCheckHeapActive(int){return Heap[4].handle>=0;}
+void re4dc_log(const char*,...){}
+void* mem_alloc(unsigned bytes,const char*,int,int,int){
+    if(refuse)return nullptr;
+    if(reset_on_alloc){reset_on_alloc=false;reset_heap();}
+    unsigned capacity=(bytes+4095U)&~4095U;
+    for(auto& b:blocks)if(!b.allocated && b.capacity>=capacity){
+        assert(!mprotect(b.base,b.capacity,PROT_READ|PROT_WRITE));b.allocated=true;return b.base;
+    }
+    void* p=mmap(nullptr,capacity,PROT_READ|PROT_WRITE,MAP_ANONYMOUS|MAP_PRIVATE,-1,0);
+    assert(p!=MAP_FAILED);blocks.push_back({p,capacity,true});
+    auto address=(std::uintptr_t)p;
+    if(!Heap[4].start || address<Heap[4].start)Heap[4].start=address;
+    if(address+capacity>Heap[4].end)Heap[4].end=address+capacity;
+    return p;
+}
+void* mem_calloc(unsigned n,const char* tag,int a,int b,int h){void* p=mem_alloc(n,tag,a,b,h);if(p)memset(p,0,n);return p;}
+extern "C" void OSFreeToHeap(int,void* p){
+    for(auto& b:blocks)if(b.base==p){assert(b.allocated);b.allocated=false;++frees;assert(!mprotect(p,b.capacity,PROT_NONE));return;}
+    assert(false);
+}
+@ROOM@
+void reset_heap(){
+    re4dc_room4_close();
+    for(auto& b:blocks){b.allocated=false;assert(!mprotect(b.base,b.capacity,PROT_NONE));}
+    re4dc_room4_open();
+}
+extern "C" void* re4dc_static_alloc(unsigned n){return room_alloc4(n,"fixture",false);}
+extern "C" void re4dc_static_free(void* p){room_free4(p,"fixture");}
+extern "C" int re4dc_actor_stream_encoded(const unsigned char*,unsigned){return 0;}
+void re4dc_model_submit(const Re4dcModelPart* p){
+    assert(p && p->lighting);observed=p->stream[12];output.push_back(observed);++submits;
+    if(submit_action==1){submit_action=0;reset_heap();}
+    else if(submit_action==2){submit_action=0;re4dc_static_free((void*)p->stream);}
+    else if(submit_action==3){submit_action=0;reenter_after_reset();}
+}
+@SOB@
+struct PartBlob { ModelPart part;unsigned char list[64]; };
+PartBlob blob[2]{};
+cModel model{0,0x41};ModelData data{2};cModelInfo info{&data};
+re4dc::render::SourceLighting light{};
+Re4dcModelPart record(unsigned i){return {blob[i].list,blob[i].part.size,&blob[i].part,&light,0};}
+bool take(unsigned i){return sob::take(&model,&info,&data,&blob[i].part,record(i));}
+void reenter_after_reset(){reset_heap();assert(take(0));}
+void clean(){re4dc_sob_room_leave();reset_heap();++global.Frame_cnt;refuse=false;}
+int main(){
+    Heap[4].handle=1;re4dc_room4_open();
+    for(auto& b:blob){b.part.size=64;memset(b.list,7,sizeof b.list);}
+    volatile std::uintptr_t invalid_address=32;
+    assert(!re4dc_room4_cell_incarnation((void*)invalid_address,32,room4.generation));
+    assert(!re4dc_room4_cell_incarnation((void*)invalid_address,32,room4.generation-1));
+    puts("PASS range/epoch refusal before cell header access");
+    assert(take(0));auto* old=sob::S;unsigned token=sob::owner.incarnation;
+    reset_heap(); // protected old State, unchanged frame; take must not read it
+    assert(take(0));assert(sob::S==old && sob::owner.incarnation!=token);
+    assert(sob::S->pend.n==1);assert(take(1));assert(submits==2);
+    puts("PASS same-frame heap reset, reused address, pending discard");
+    unsigned g=room4.generation;Heap[4].handle=-1;
+    assert(!re4dc_room4_cell_incarnation(old,sizeof(sob::State),g));
+    sob::flush();assert(!sob::S);Heap[4].handle=1;
+    puts("PASS inactive heap handle refuses pending consumption");
+    clean();assert(take(0));old=sob::S;token=sob::owner.incarnation;
+    re4dc_static_free(old);void* replacement=re4dc_static_alloc(sizeof(sob::State));
+    assert(replacement==old);memset(replacement,0xA5,sizeof(sob::State));
+    assert(re4dc_room4_cell_incarnation(replacement,sizeof(sob::State),room4.generation)!=token);
+    unsigned before=frees;re4dc_sob_room_leave();assert(frees==before);
+    assert(((unsigned char*)replacement)[0]==0xA5);re4dc_static_free(replacement);
+    puts("PASS same-generation allocation reuse and stale leave");
+    clean();assert(take(0));reset_heap();before=frees;re4dc_sob_room_leave();assert(frees==before);
+    sob::flush();puts("PASS reset without leave and stale flush");
+    clean();refuse=true;assert(!take(0));assert(!sob::S);refuse=false;
+    reset_on_alloc=true;assert(!take(0));assert(!sob::S); // publication changed epoch
+    puts("PASS OOM/refusal and reset during allocation publication");
+    clean();assert(take(0));before=submits;submit_action=1;assert(take(1));assert(submits==before+1);
+    assert(!sob::S);puts("PASS retirement during submit drops remaining pending references");
+    clean();assert(take(0));cModel other{0,0x43};submit_action=3;
+    assert(!sob::take(&other,&info,&data,&blob[0].part,record(0)));
+    assert(sob::S && sob::S->pend.n==1 && sob::S->pend.model==&model);
+    puts("PASS split flush reentry cannot append into replacement State");
+    clean();assert(take(0));assert(take(1));before=submits;
+    blob[0].list[12]=91;assert(take(0));assert(take(1));
+    assert(submits==before+2 && sob::st.built==0 && sob::S->count==0);
+    assert(output[before]==91 && output[before+1]==7);puts("PASS mutation beyond byte eight remains uncached/raw");
+    clean();room4_incarnation=~0U-1;assert(take(0));assert(sob::owner.incarnation==~0U);
+    re4dc_sob_room_leave();before=frees;assert(!take(0));assert(!sob::S && frees==before+1);
+    void* ordinary=re4dc_static_alloc(32);assert(ordinary);re4dc_static_free(ordinary);
+    puts("PASS token exhaustion refuses retained reuse, ordinary allocation survives");
+    re4dc_sob_room_leave();
+    for(auto& b:blocks)assert(!munmap(b.base,b.capacity));
+}

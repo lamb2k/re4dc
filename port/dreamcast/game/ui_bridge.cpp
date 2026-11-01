@@ -691,6 +691,24 @@ struct Room4 {
     unsigned live_cells,live_bytes,stale_frees,refused;
 };
 Room4 room4{};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+// Never recycle a token, even across heap rebuilds. Exhaustion refuses reuse,
+// while unrelated room allocations and gameplay continue with token zero.
+unsigned room4_incarnation=0;
+unsigned room4_next_incarnation(){
+    return room4_incarnation==~0U?0U:++room4_incarnation;
+}
+#endif
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+// WORLD_VALID_MEMO31 (K45-FIX-PLAN F4): bumped by every event that can end a cell's validity (room-4 open, close,
+// cell free; any heap create / destroy / suspend / resume, main_mem.cpp). The validity memo (native_static
+// worldPackageCurrent) keys on it.
+unsigned room4_epoch=1;
+}
+extern "C" const unsigned* const re4dc_room4_epoch_ptr=&room4_epoch;
+extern "C" void re4dc_world_heap_changed(void){++room4_epoch;}
+namespace {
+#endif
 #if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
 }
 // GC_CENSUS_TRIM (lane t2exact): sourceActorIdentity (trans.cpp, ~110-170 calls a frame) reads the two words it uses
@@ -710,6 +728,9 @@ void* room_alloc4(unsigned bytes,const char* tag,bool clear){
                                            :mem_alloc(bytes+sizeof(Room4Cell),tag,0,0,4));
     if(!cell)return nullptr;
     *cell={kRoom4Magic,room4.generation,bytes,{}};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    cell->reserved[0]=room4_next_incarnation();
+#endif
     ++room4.live_cells;room4.live_bytes+=bytes;
     return cell+1;
 }
@@ -729,6 +750,9 @@ void room_free4(void* p,const char* who){
         return;
     }
     cell->magic=0;--room4.live_cells;room4.live_bytes-=cell->bytes;
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+    ++room4_epoch;
+#endif
     OSFreeToHeap(Heap[4].handle,cell);
 }
 #if RE4DC_NATIVE_STATIC && RE4DC_NATIVE_PKG_HIGH
@@ -779,12 +803,15 @@ void* room_alloc4_high(unsigned bytes,const char* tag){
     snprintf(reinterpret_cast<char*>(t)+4,0x1C,"%s(0)",tag);
     auto* rc=reinterpret_cast<Room4Cell*>(p);
     *rc={kRoom4Magic,room4.generation,bytes,{}};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    rc->reserved[0]=room4_next_incarnation();
+#endif
     ++room4.live_cells;room4.live_bytes+=bytes;
     return rc+1;
 }
 #endif
 }
-#if RE4DC_MOVIE_WORLD_ARENA
+#if RE4DC_MOVIE_WORLD_ARENA || (defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05)
 extern "C" int re4dc_room4_live_generation(unsigned* generation){
     *generation=room4.generation;
     return room4.live && memCheckHeapActive(4) && Heap[4].handle>=0;
@@ -799,10 +826,24 @@ extern "C" int re4dc_room4_cell_valid(const void* p,unsigned bytes,unsigned gene
     return c->magic==kRoom4Magic && c->generation==generation && c->bytes<=hi-a && (!bytes || c->bytes==bytes);
 }
 #endif
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+extern "C" unsigned re4dc_room4_cell_incarnation(const void* p,unsigned bytes,unsigned generation){
+    if(!re4dc_room4_cell_valid(p,bytes,generation))return 0;
+    return (static_cast<const Room4Cell*>(p)-1)->reserved[0];
+}
+#endif
 // gameRoomMemInit rebuilt heap 4: a new generation of native cells may start.
-extern "C" void re4dc_room4_open(){++room4.generation;room4.live_cells=0;room4.live_bytes=0;room4.live=true;}
+extern "C" void re4dc_room4_open(){++room4.generation;room4.live_cells=0;room4.live_bytes=0;room4.live=true;
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+    ++room4_epoch;
+#endif
+}
 // StageSet entry, after the native owners retired: no new cells until the rebuild.
-extern "C" void re4dc_room4_close(){room4.live=false;}
+extern "C" void re4dc_room4_close(){room4.live=false;
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+    ++room4_epoch;
+#endif
+}
 extern "C" int re4dc_room4_state(unsigned* generation,unsigned* cells,unsigned* bytes,unsigned* stale,unsigned* refused){
     *generation=room4.generation;*cells=room4.live_cells;*bytes=room4.live_bytes;
     *stale=room4.stale_frees;*refused=room4.refused;return room4.live;
@@ -879,6 +920,11 @@ extern "C" void* re4dc_model_retained_storage(unsigned* bytes){
     if(preparation_lent){++lent_requests;return nullptr;}   // the movie holds it; no attempt is latched
 #endif
     if(!preparation_owner || MemGetCurrentHeap()!=4 || !memCheckHeapActive(4))return nullptr;
+#if defined(RE4DC_MODEL_PREP_SKIP_R11E) && RE4DC_MODEL_PREP_SKIP_R11E
+    // MODEL_PREP_SKIP_R11E (game30.mk): r11e (El Gigante) keeps its 128 KB of heap 4 for the PS2 pickup pack; models
+    // prepare without the retained cache there (acquire_batch tolerates a null cache).
+    if(pG && ((unsigned(pG->stage_no)<<8)|pG->room_no)==0x11eU)return nullptr;
+#endif
     if(!preparation_attempted){
         preparation_attempted=true;
 #if RE4DC_NATIVE_STATIC
@@ -929,7 +975,7 @@ extern "C" int re4dc_model_return_retained(unsigned* bytes,unsigned* requests){
 // their owner, which precedes the lazy retained allocation at first draw.
 #if RE4DC_NATIVE_STATIC
 #include "native_static.h"
-#if (defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE) || (defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS)
+#if (defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE) || (defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS) || (defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP) || (defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG)
 extern "C" unsigned re4dc_room_id_now(){return pG?unsigned(pG->room_id):0u;}   // native_motion.cpp
 #endif
 extern "C" int re4dc_static_heap_free(){
@@ -970,6 +1016,39 @@ extern "C" void* re4dc_static_alloc(unsigned bytes){
 }
 #endif
 extern "C" void re4dc_static_free(void* data){room_free4(data,"native static package");}
+#if defined(RE4DC_WORLD_PORTAL29) && RE4DC_WORLD_PORTAL29
+// A missing/stale/invalid optional cell must leave all existing backing intact.
+extern "C" void* re4dc_world_portal29_alloc(unsigned bytes){
+    constexpr unsigned floor=96U*1024U;
+    if(bytes>512U*1024U+8192U)return nullptr;
+    const int before=re4dc_static_heap_free();
+    if(before<0 || unsigned(before)<bytes+kAllocationOverhead+sizeof(Room4Cell)+floor)return nullptr;
+#if RE4DC_NATIVE_PKG_HIGH
+    void* p=room_alloc4_high(bytes,"world portal29");
+    if(p && re4dc_static_heap_free()<int(floor)){room_free4(p,"world portal29");return nullptr;}
+    return p;
+#else
+    return nullptr;
+#endif
+}
+#endif
+#if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
+// An optional setup cache must never evict a far shell to find a contiguous
+// block. Use the same room-cell lifetime with a side-effect-free refusal.
+extern "C" void* re4dc_world_part_plan29_alloc(unsigned bytes){
+    constexpr unsigned floor=96U*1024U;
+    if(bytes>64U*1024U+31U)return nullptr;
+    const int before=re4dc_static_heap_free();
+    if(before<0 || unsigned(before)<bytes+kAllocationOverhead+sizeof(Room4Cell)+floor)return nullptr;
+#if RE4DC_NATIVE_PKG_HIGH
+    void* p=room_alloc4_high(bytes,"world part plan29");
+    if(p && re4dc_static_heap_free()<int(floor)){room_free4(p,"world part plan29");return nullptr;}
+    return p;
+#else
+    return nullptr; // mem_alloc's low allocator can evict shell/motion backing.
+#endif
+}
+#endif
 #endif
 
 

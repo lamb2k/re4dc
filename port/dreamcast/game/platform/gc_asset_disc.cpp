@@ -50,10 +50,25 @@ unsigned disc_read(void*,unsigned offset,void* destination,unsigned bytes){
     Re4dcIoScope io;
     if(fs_seek(source,offset,SEEK_SET)!=off_t(offset)){disc_failed();return 0;}
     if(disc_state.load()!=state)return 0;
-    const ssize_t count=fs_read(source,destination,bytes);
-    if(disc_state.load()!=state)return 0;
-    if(count<0 || unsigned(count)!=bytes){disc_failed();return 0;}
-    return unsigned(count);
+    // gc-catalog24b r8: never let a row read take KOS iso9660's stream path.
+    // That path runs for a 32-byte aligned destination at a 32-byte file
+    // offset and keeps per-fd stream state that another GD user can leave
+    // behind: r101/r103 row 1372 came back 16 bytes shifted (kind missing, the
+    // next row's kind at the end) when the stack buffer happened to be aligned.
+    // A deliberately misaligned bounce keeps every catalog read on the sector
+    // cache path (bdread + copy), which is exact.
+    unsigned char bounce_store[112+36];   // stack: one row per fs_read, no static KOS cost
+    unsigned char* const bounce=bounce_store+((36U-(unsigned(reinterpret_cast<std::uintptr_t>(bounce_store))&31U))&31U)+4;   // 8 mod 32
+    auto* out=static_cast<unsigned char*>(destination);
+    for(unsigned done=0;done<bytes;){
+        const unsigned n=bytes-done<112U?bytes-done:112U;
+        const ssize_t count=fs_read(source,bounce,n);
+        if(disc_state.load()!=state)return 0;
+        if(count<0 || unsigned(count)!=n){disc_failed();return 0;}
+        std::memcpy(out+done,bounce,n);
+        done+=n;
+    }
+    return bytes;
 }
 // Whole-catalog sequential read at install through the shared 16 KiB storage
 // bounce (room_storage read_chunks): ~55 aligned reads instead of ~250.

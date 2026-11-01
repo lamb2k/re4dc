@@ -77,6 +77,9 @@ inline unsigned sg_pick_ranges(const std::uint16_t* g,unsigned n,const std::uint
 // sequence by rerunning the original helper before publishing any result.
 __attribute__((noinline)) unsigned sg_pick_fallback_lean(const std::uint16_t* g,unsigned n,
         const SgPlane* planes,unsigned mask){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if(mask)re4dc::dfa26::hit(re4dc::dfa26::WorldSgMalformed);
+#endif
     std::uint16_t r0[8],r1[8];unsigned lo,hi,cut;
     const unsigned nr=sg_select_lean(g,n,planes,mask,r0,r1,lo,hi,cut);
     return sg_pick_ranges(g,n,r0,r1,lo,hi,cut,nr);

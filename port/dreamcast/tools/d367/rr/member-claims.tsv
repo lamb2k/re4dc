@@ -1,0 +1,99 @@
+# rr MEMBER-CENSUS claims (tools/d367/rr/member_census.py; lane fix-r100-props26 2026-10-26).
+# Reference: Test 24 (test-608abf36-20261025) release tree. One row per claimed difference of the candidate:
+# <glob over the census item names>	<data set / knob / commit>	<reason>. Rows are reviewed; an unclaimed difference fails rr.
+# When a new test ships: re-point MC_REF_TREE (recipe.conf) and empty this list down to the header.
+# Program (code changes every commit)
+1ST_READ.BIN:changed	code	release program
+dc/*.ovl:changed	code	room / enemy overlays built with the program
+dc/wep04.ovl:added	WEAPON_WEP04_OVL=1	heap-margin25: Blacktail as a room overlay
+# Test 25 data sets
+dc/texlow/*:removed	nostd103,nostd25	GC-derived low-detail pictures dropped (PS2 world only)
+dc/native/r10[013]/low/*:removed	nostd103,nostd25	GC-derived low-detail world (PS2 world only)
+dc/native/r10d/ps2-world.*:changed	r10dbake23	r10d baked PS2 world
+dc/native/r1*/ps2-world.re4mesh:changed	n256w25,n256x25,n256z25	worlds at 256-vertex meshlets (SCENERY_N256)
+dc/native/r1*/ps2-world.r4sg:*	n256w25,n256x25,n256z25	strip groups of the 256-vertex worlds
+dc/mot/*	pmrest25,pmash25,pmr113-25,pmcodec25	PS2 motion keys
+em/*.drs:changed	pmash25,pl08n25,gvar25	PS2 cast / motion packages
+st1/r10[036].dar:0x* FCV	pmrest25	PS2 motion in the room archive
+st1/r10[036].arc:changed	pmrest25	PS2 motion room archive
+st1/r113.dar:0x* FCV	pmr113-25	PS2 motion in the room archive
+st1/r113.arc:changed	pmr113-25	PS2 motion room archive
+st1/r1*.dar:0x* NTR	ps2snd24 regen	sound table regenerated on the composed disc
+st1/r1*.dar:0x* ESQ	ps2snd24 regen	sound sequence regenerated on the composed disc
+st1/r11e.dar:0x0d ITM	pick25	r11e PS2 pickups
+ss/cmn/*:changed	pics25c,pics25d,pics25e,pics25f	PS2 sub screen pictures
+ss/eng/*:changed	pics25e,pics25f	PS2 sub screen pictures (English)
+font/*:changed	fontps2x25,dcglyph26	PS2 fonts (dcglyph26: PS2 pad glyph cells 173-191 blank)
+dc/tex.pak:~*	pl08n25,gvar25,codec25,pics25c-f,pada25,pui26,pfx26,fxc26,fxc26b,dcglyph26	re-derived pack chain (size / format of a picture)
+# windows26 (2026-10-26): window panes back (GC et0000 / et2500; PS2 draws no intact pane; user requires glass and bars)
+st1/r100.dar:0x0f ETM	windows26	GC window pane et0000 restored (GC-ASSET allowlist)
+st1/r10[157].dar:0x0e ETM	windows26	GC window panes et0000 / et2500 (+ GC et0000.tpl record in r105 / r107)
+st1/r11[1cf].dar:0x0e ETM	windows26	GC window panes et0000 / et2500 + GC et0000.tpl record
+st1/r100.dar:0x* ESQ	windows26	rebased after the ETM size change
+dc/native/r100/ps2-world.re4mesh:changed	n256r100	r100 world at 256-vertex meshlets (SCENERY_N256)
+dc/native/r100/ps2-world.r4sg:*	n256r100	strip groups of the r100 256-vertex world
+dc/native/r100/room.r4rc:*	n256r100	r100 room record of the 256-vertex world
+dc/native/r100/interior.cell:changed	icells26	r100 house cell as PCL2 for the n256r100 package (PS2_INTERIOR_CELLS=1)
+# lane fix-r100-props26 10-26 (graft26): the n256 sets' room records, and the windows26 pane graft
+dc/native/r102/room.r4rc:changed	n256a26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r104/room.r4rc:changed	n256c26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r105/room.r4rc:changed	n256a26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r107/room.r4rc:changed	n256e26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r108/room.r4rc:changed	n256b26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r10a/room.r4rc:changed	n256c26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r10b/room.r4rc:changed	n256a26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r10c/room.r4rc:changed	n256d26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r10d/room.r4rc:changed	n256d26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r10f/room.r4rc:changed	n256d26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r112/room.r4rc:changed	n256c26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r113/room.r4rc:changed	n256e26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r118/room.r4rc:changed	n256e26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r11a/room.r4rc:changed	n256c26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r11b/room.r4rc:changed	n256e26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r11c/room.r4rc:changed	n256b26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r11d/room.r4rc:changed	n256a26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r11e/room.r4rc:changed	n256b26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+dc/native/r11f/room.r4rc:changed	n256b26	256-vertex meshlet room record (staged file = the set's, checked 10-26)
+st1/r1??.dar:ETM/et0000.bin	windows26	GC window pane grafted back (user 10-26: glass and bars; PS2 draws no intact pane)
+st1/r1??.dar:ETM/et2500.bin	windows26	GC window pane grafted back (user 10-26)
+st1/r1??.dar:ETM/et0000.tpl	windows26	the pane picture record grafted with the pane (user 10-26)
+st1/r100.dar:0x?? NTR	windows26	NTR texture-identity table rebased by the r100 pane graft (offsets only; dar_graft checks every row)
+st1/r100.dar:0x?? ESQ	windows26	ESQ effect-sequence table rebased by the r100 pane graft (offsets only)
+st1/r1[01][0-9a-f].dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire SST sets (purge-audit26)
+st2/r200.dar:ETM/et14.eff	pfire26	et14.eff = PS2 room EFF torch fire SST sets (purge-audit26)
+st[12]/r[12][01][0-9a-f].dar:0x* ESQ	pfire26	rebased after the ETM size change
+st[12]/r[12][01][0-9a-f].dar:0x* NTR	pfire26	rebased after the ETM size change
+dc/native/pl00/leon_hands_pl00.re4hp:changed	hand26	Leon hands pack rebuilt from the PS2 hand BINs (wep19-26, 0a944f36)
+# props26 (lane props-ps2-26 2026-10-26): room objects shipped larger than GC (keep-larger) reconverted, reduced (graft members)
+st1/r1*.dar:ETM/et0[4579d]00.bin*	props26	PS2 racks / frames / doors reduced (mesh_lod + UV guard) to at most the GC model
+st1/r1*.dar:ETM/et1[67]00.bin*	props26	PS2 doors reduced to at most the GC model
+st1/r1*.dar:ETM/et2b00.bin*	props26	PS2 door reduced to at most the GC model
+st1/r106.dar:0x34 BIN*	props26	PS2 room object reduced to at most the GC model
+st1/r10f.dar:0x23 BIN*	props26	PS2 room object reduced to at most the GC model
+# lane worldopt26 10-26: spatial strip groups (corner order only; WORLD_SG26=1)
+dc/native/r1*/ps2-world.re4mesh:changed	wsg26	256-vertex worlds with corners renumbered in strip-group order (same bytes; WORLD_SG26)
+dc/native/r1*/ps2-world.r4sg:*	wsg26	spatial strip groups of the 256-vertex worlds (r103 gains its first)
+dc/native/r100/interior.cell:changed	wsg26	r100 house cell rebound to the wsg26 r100 mesh crc (cells unchanged)
+dc/native/r11d/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+dc/native/r108/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+dc/native/r111/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+dc/native/r113/registry.re4nmr:changed	lod26b	NMR_POOL_LOD: g50 numbered pool level of the pool Ganado added to the shipped package (control rebuild byte-identical)
+st1/r102.dar:ETM/et13.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+st1/r103.dar:ETM/et05.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+st1/r105.dar:ETM/et22.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+st1/r11b.dar:ETM/et03.eff	efm26	debris effect model picture record -> PS2 key (gcleft26, e88ba626)
+# smdrel26 (lane arcuse26 2026-10-26): r11f SMD BINs released (room_smd.py contract; NTR rebased)
+st1/r11f.dar:0x08 SMD	smdrel26	r11f SMD BIN GX payload released (header, joints, box, part headers kept); PS2 world draws the barn
+st1/r11f.dar:0x* NTR	smdrel26	NTR rows rebased by the SMD release
+# smdrel26b (lane arcuse26 2026-10-26): r200 SMD BINs released (room_smd.py contract; NTR / ESQ rebased)
+st2/r200.dar:0x* SMD	smdrel26b	r200 SMD BIN GX payload released (header, joints, box, part headers kept); PS2 world draws the room
+st2/r200.dar:0x* NTR	smdrel26b	NTR rows rebased by the SMD release
+st2/r200.dar:0x* ESQ	smdrel26b	ESQ rows rebased by the SMD release
+bgm/doorse.dat:changed	snd26	door sounds: block 11 PS2 PCM in place (blocks 0-10 GC, reviewed in gc_port23/sound-kept-gc.tsv)
+ss/eng/title.snd:removed	dropeng26	unread GameCube title sound file off the disc (drop-proofs.tsv file row)
+# title27 10-27 (lane fix-title27): user custom title art restored (Test 24 lost it to pui24s)
+dc/tex.pak:~c67f5c01-63e0879e	title27	user custom title art (not GC), Test 23 package
+# font22 10-27 (lane font22-27): Test 22 A pad label (user 10-27, Test 22 buttons and icons)
+dc/tex.pak:~d17e9c56-fa23c229	font22	Test 22 A pad label (GC-derived Dreamcast button set), user 10-27
+# font22b 10-27 (lane font22-27 round 2): Test 22 controller glyph set (user 10-27)
+dc/tex.pak:~e42a7628-c166970d	font22b	Test 22 HUD d-pad (etc/core.das 0x1b2c60#0), user 10-27

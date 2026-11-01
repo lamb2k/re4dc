@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "scope": "Complete wep12 entry/object and shared machine source with synthetic host services; not real ABI, assets, sound or gameplay acceptance.",
+  "sanitizer": "address,undefined",
+  "result": "PASS wep12 actual-source callback/object/machine contracts: 24 cases",
+  "host_adaptations": [
+    "u32 is uintptr_t in the synthetic header; pointer-admission range accepts live host objects.",
+    "One (int) this effect-owner cast becomes intptr_t in a temporary source copy.",
+    "All external game services and class layout are synthetic; real source headers/ABI are qualified separately on SH-4."
+  ],
+  "source_sha256": {
+    "src/wep12/wep12.cpp": "2a2b690c5bd8af91ee023b89a854ca4ab82782968df00e275232df8f93a44e18",
+    "src/wep12/objTompson.cpp": "46c49f0a4355295d4f471fae8cf9200ffe06098a934d4ca019cc93885b0589c3",
+    "src/wep/pl_machine.cpp": "2d768e31cb69832c6b1882ef54b969352a1c55b50014f2a604cb96789241c6bc",
+    "port/dreamcast/tools/cloud/build27/weapon_fixture_prefix.hpp": "4cabdd57867e5dee6c5a9204b2ce3a127ecd4d305e086ca658bfabcbb1514177",
+    "port/dreamcast/tools/cloud/build27/wep12_fixture.cpp.in": "01f0ba83b8e5229578de311b3ddc5367ee4994d879f67b9ccbe69d016e60762d",
+    "port/dreamcast/tools/cloud/build27/wep12_host.py": "0629b8328f30839ae4f74a03063572803c618f9b66460524d0ba54167c48f5dd",
+    "config/G4BE08/modules.py": "ea3d9b0259d79c26691fcdb1cd4afb01c327b55a6c27d92026bf2e5eeea43aa5"
+  }
+}

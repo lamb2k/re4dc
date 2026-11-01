@@ -187,6 +187,9 @@ first re-encodes the original through the same path and must reproduce the stage
 way under the original key; a size or name mismatch fails. The disc's title.dat is unchanged
 (the runtime keys packages by the unmodified source texels). `stage-inputs.txt` and
 `<disc>/ui-overrides-report.json` record each override's sha256. Unset: staging is unchanged.
+Release recipe (10-27): the user title art ships as data set `title27` (the Test 23 package under
+`c67f5c01-63e0879e`), the last `dc/tex.pak` set; `t11-fix.py` title27_gate fails a fixture whose final pack holds
+other bytes under that key (Test 24 lost the art to pui24s re-making it).
 
 `UI_HANDLES=1 TEX_RESIDENT=1` (texture hitch fix; Flycast r100 camera tour, frames 2400+):
 - The hitch was the first-sight texture load: ~0.2 s per package at r100 (~0.3-0.4 s at r101),

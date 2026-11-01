@@ -27,6 +27,9 @@ void owned_skin_clear() {
     owned_skin_high=0;
 }
 extern "C" int re4dc_actor_skin_acquire(unsigned source_frame,const Re4dcActorSkinBinding* in,unsigned n,Re4dcActorSkinLease* out) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial)return 0;
+#endif
     if(!out || out->serial || out->count || !in || !n || n>kRe4dcActorRoles ||
        source_frame!=skin_frame || owned_skin_serial==UINT32_MAX)return 0;
     unsigned index[kRe4dcActorRoles],high=owned_skin_high;
@@ -75,6 +78,9 @@ extern "C" int re4dc_actor_skin_validate(const Re4dcActorSkinLease* lease) {
 extern "C" int re4dc_actor_skin_release(Re4dcActorSkinLease* lease) {
     if(!lease)return 0;
     if(!lease->serial){*lease={};return 1;}
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial)return 0;
+#endif
     const unsigned serial=lease->serial;
     const int okay=re4dc_actor_skin_validate(lease);
     if(okay){lease->serial=0;lease->count=0;}else *lease={};

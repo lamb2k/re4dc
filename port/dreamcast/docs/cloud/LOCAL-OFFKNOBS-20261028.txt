@@ -1,0 +1,21 @@
+# Local fast-path switches at 0 in the release recipe with no recorded reason (Build 29 sweep, 2026-10-28).
+# switch<TAB>sweep groups. SCENERY_N256 is excluded (parked by the user 10-27).
+ACTOR_BACKFACE_CONE	actor-vertex-colour-uv
+CHAR_CHUNK	actor-chunk-decline
+CHAR_CHUNK_BACKEND	actor-chunk-decline
+FRONT_TEXOBJ	front-texture-object-cache
+GAME_HF_ASM	hermite-layout
+GAME_TRIG_FSCA	rotation-cache
+LEON_HAND_PACK	hand-pose-miss
+LEON_HAND_RETAIN	hand-pose-miss
+MOTION_PRESSURE_GROW	motion-capacity-pressure
+MOTION_RESUME	motion-resident-miss
+NATIVE_ACTOR_UV16	actor-vertex-colour-uv
+SCENERY_CONE	world-data-variants
+SCENERY_DEDUP	world-data-variants
+SCENERY_PIECE_STATE	world-data-variants
+SKIN_SH4ZAM	palette-extended,skin-scalar-compile
+STORAGE_BOUNCE_ALIGNED	storage-bounce-contention
+TEX_PACK_WINDOW	texpack-lookup
+TEX_PAL32	texture-palette
+UI_POLY_ORDER	translucent-sort

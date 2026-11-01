@@ -1,0 +1,253 @@
+// Synthetic owners, heap and filesystem around extracted production bodies.
+#include <cassert>
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <cstdarg>
+#include <cstdlib>
+#include <cstring>
+#include <limits>
+#include <stdexcept>
+#include <string>
+#include <vector>
+#define RE4DC_PS2_WORLD_DYNAMIC 1
+#define RE4DC_PS2_WORLD_PARTS 1
+#define RE4DC_PS2_WORLD_ROOT_POSE 1
+#define RE4DC_PS2_WORLD_ROOMS 2
+#define RE4DC_PS2_WORLD_LEAN 1
+#define RE4DC_MOVIE_WORLD_ARENA 1
+#include "movie_world_arena_lifecycle.inc"
+namespace lean { constexpr unsigned kMode=16;struct {unsigned dyn_fast;} st; }
+static unsigned frame_no=0,allocation_calls=0,free_calls=0,generation=1,missing_calls=0,normal_draws=0;
+static bool fail_alloc=false,return_from_missing=false;
+static unsigned fail_bytes=0;
+struct Cell {void* p;unsigned bytes,generation;};
+static std::vector<Cell> cells;
+static std::vector<std::string> logs;
+unsigned re4dc_ui_frame(){return frame_no;}
+void* re4dc_static_alloc(unsigned bytes){
+    ++allocation_calls;
+    if(fail_alloc || (fail_bytes && bytes==fail_bytes))return nullptr;
+    void* p=std::aligned_alloc(32,(bytes+31U)&~31U);assert(p);
+    std::memset(p,0xa5,(bytes+31U)&~31U);cells.push_back({p,bytes,generation});return p;
+}
+void re4dc_static_free(void* p){
+    for(auto i=cells.begin();i!=cells.end();++i)if(i->p==p){++free_calls;std::free(p);cells.erase(i);return;}
+    assert(false && "free of an interior, stale or already freed pointer");
+}
+int re4dc_static_heap_free(){return 123456;}
+int re4dc_room4_cell_valid(const void* p,unsigned bytes,unsigned gen){
+    if(gen!=generation)return 0;
+    for(const auto& c:cells)if(c.p==p)return c.generation==gen && (!bytes || bytes==c.bytes);
+    return 0;
+}
+int re4dc_room4_live_generation(unsigned* out){*out=generation;return 1;}
+void re4dc_log(const char* fmt,...){
+    char line[512];va_list ap;va_start(ap,fmt);std::vsnprintf(line,sizeof(line),fmt,ap);va_end(ap);logs.emplace_back(line);
+}
+void re4dc_missing(const char* name){++missing_calls;if(!return_from_missing)throw std::runtime_error(name);}
+struct Package {bool live=false;void close(){live=false;}};
+struct {Package package;unsigned char* storage=nullptr;unsigned bytes=0;
+    const void* parts=nullptr;const void* placements=nullptr;unsigned nplacements=0;
+    const void* lut=nullptr;void* gather=nullptr;bool attempted=false;unsigned room=0x104,want=0x104;
+} ps2w;
+movie_world::Ledger ps2_movie;
+struct {unsigned unused=0;} ps2_movie_files;
+@HELPERS@
+@STATE@
+@BINDING@
+@MOVIE@
+void ps2_free(){re4dc_ps2_mesh_retire();}
+@PRELUDE@
+using file_t=int;
+constexpr file_t FILEHND_INVALID=-1;
+constexpr int O_RDONLY=0;
+static std::vector<unsigned char> file_bytes;
+static bool file_present=true;
+static unsigned file_opens=0,file_closes=0;
+file_t fs_open(const char*,int){++file_opens;return file_present?1:FILEHND_INVALID;}
+unsigned fs_total(file_t){return unsigned(file_bytes.size());}
+std::ptrdiff_t fs_read(file_t,void* p,unsigned n){assert(n==file_bytes.size());std::memcpy(p,file_bytes.data(),n);return n;}
+void fs_close(file_t){++file_closes;}
+bool fixture_admit(unsigned placements){
+    const unsigned policySourceCrc=0x12345678;
+    struct {unsigned placements;}h{placements};
+@ADMISSION@
+    ++normal_draws;return true;
+}
+struct Part {Part* next=nullptr;float pose[9]={};float mat[12]={1,0,0,0,0,1,0,0,0,0,1,0};};
+struct Object {unsigned flag=7,serial=10;float mat[12]={1,0,0,0,0,1,0,0,0,0,1,0};};
+bool draw(unsigned ordinal,const float* baked,float* out){
+    struct {unsigned placement;float affine[12];}pl{ordinal,{}};
+    std::memcpy(pl.affine,baked,sizeof(pl.affine));
+    for(unsigned once=0;once<1;++once){
+@DRAW@
+        std::memcpy(out,affine,12*sizeof(float));return true;
+    }
+    return false;
+}
+unsigned log_count(const char* needle){unsigned n=0;for(const auto& l:logs)n+=l.find(needle)!=std::string::npos;return n;}
+void original_part(unsigned id,Object& o,const void* part,unsigned count=1,unsigned matrix_offset=offsetof(Part,mat)){
+    re4dc_ps2_dyn_parts(ps2w.room,id,&o,part,count,offsetof(Part,next),offsetof(Part,pose),matrix_offset);
+}
+void bind(unsigned id,Object& o,Part& p,unsigned count=1){
+    re4dc_ps2_dyn_bind(ps2w.room,id,&o,&o.flag,&o.serial,o.mat);original_part(id,o,&p,count);
+}
+void ids(const std::vector<unsigned char>& values){
+    file_bytes.assign((sizeof(dyn::Head)+values.size()+31U)&~31U,0);
+    const dyn::Head h{{'R','4','I','D'},1,unsigned(values.size()),0x12345678};
+    std::memcpy(file_bytes.data(),&h,sizeof(h));std::memcpy(file_bytes.data()+sizeof(h),values.data(),values.size());
+}
+void clean(){
+    fail_alloc=false;fail_bytes=0;return_from_missing=false;
+    if(ps2_movie.unavailable())ps2_movie={};
+    re4dc_ps2_mesh_retire();assert(cells.empty());++frame_no;
+    logs.clear();normal_draws=0;ps2w.room=ps2w.want=0x104;file_present=true;
+}
+void world(unsigned bytes=movie_world::arena_bytes){
+    ps2w.storage=static_cast<unsigned char*>(re4dc_static_alloc(bytes));ps2w.bytes=bytes;
+    ps2w.package.live=true;ps2w.parts=ps2w.placements=ps2w.storage;ps2w.nplacements=250;
+}
+void setup(unsigned n){
+    clean();world();std::vector<unsigned char> v(n);for(unsigned i=0;i<n;++i)v[i]=i;
+    ids(v);assert(fixture_admit(n));assert(dyn::nslots==n && normal_draws==1);
+}
+void point(const float* m,const float* p,float* out){for(unsigned r=0;r<3;++r)out[r]=m[4*r]*p[0]+m[4*r+1]*p[1]+m[4*r+2]*p[2]+m[4*r+3];}
+void close(float a,float b){assert(std::fabs(a-b)<0.002f);}
+void cap_cases(){
+    setup(17);Object owners[17];Part parts[17];float baked[17][12];
+    const float rest[12]={0,0,-2,17,0,3,0,-5,-4,0,0,31};
+    const float now[12]={2,0,0,-30,0,-5,0,40,0,0,3,50};
+    for(unsigned i=0;i<17;++i){std::memcpy(parts[i].mat,rest,sizeof(rest));bind(i,owners[i],parts[i]);std::memcpy(baked[i],rest,sizeof(rest));}
+    for(unsigned i=0;i<17;++i)assert(dyn::query(i)==0);
+    assert(dyn::nmoved==0);
+    for(auto& p:parts)std::memcpy(p.mat,now,sizeof(now));++frame_no;
+    for(unsigned i=0;i<16;++i)assert(dyn::query(i)==2);
+    assert(dyn::query(16)==(RE4DC_ROOT_POSE_CAP_FALLBACK?4U:1U));
+    assert(dyn::nmoved==16 && !re4dc_ps2_dyn_source(ps2w.room,&owners[16],owners[16].serial));
+    float result[12],local[3]={2,-3,5},expected[3],actual[3];point(now,local,expected);
+    const unsigned calls=allocation_calls;
+    for(unsigned i=0;i<17;++i){
+        const bool visible=draw(i,baked[i],result);assert(visible==(i<16 || RE4DC_ROOT_POSE_CAP_FALLBACK));
+        if(visible){point(result,local,actual);for(unsigned a=0;a<3;++a)close(actual[a],expected[a]);}
+    }
+    assert(allocation_calls==calls);
+#if RE4DC_ROOT_POSE_CAP_FALLBACK
+    // Cached eligibility precedes draw; owner death/reuse is checked again.
+    auto* saved=dyn::slots[16].parts[0].part;dyn::slots[16].parts[0].part=reinterpret_cast<unsigned char*>(1);
+    ++owners[16].serial;assert(!draw(16,baked[16],result));dyn::slots[16].parts[0].part=saved;--owners[16].serial;
+    ++frame_no;for(unsigned i=0;i<16;++i)assert(dyn::query(i)==2);assert(dyn::query(16)==4);
+    owners[16].flag=1;assert(!draw(16,baked[16],result));owners[16].flag=7;
+    ++frame_no;for(unsigned i=0;i<16;++i)assert(dyn::query(i)==2);assert(dyn::query(16)==4);
+    std::memcpy(parts[16].mat,rest,sizeof(rest));assert(draw(16,baked[16],result));assert(!std::memcmp(result,rest,sizeof(rest)));
+    assert(dyn::root_affine(250,rest,result)==0);
+#endif
+    ++frame_no;assert(dyn::query(16)==(RE4DC_ROOT_POSE_CAP_FALLBACK?0U:2U));
+    for(auto& p:parts)std::memcpy(p.mat,rest,sizeof(rest));++frame_no;
+    for(unsigned i=0;i<17;++i)assert(dyn::query(i)==0);assert(!dyn::nmoved);
+    std::puts("PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations");
+}
+void witness_cases(){
+    setup(2);Object o;Part p;
+    re4dc_ps2_dyn_bind(ps2w.room,0,&o,&o.flag,&o.serial,o.mat);
+    const unsigned calls=allocation_calls;fail_alloc=true;original_part(0,o,&p);fail_alloc=false;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    assert(allocation_calls==calls && dyn::slots[0].parts==dyn::reserved_pose(dyn::slots[0]));assert(dyn::query(0)==0);
+    const auto* root=reinterpret_cast<const float*>(dyn::slots[0].parts+1);float original[12];std::memcpy(original,root,sizeof(original));
+    p.mat[3]=42;original_part(0,o,&p);assert(!std::memcmp(root,original,sizeof(original)));++frame_no;assert(dyn::query(0)==2);
+    ++o.serial;bind(0,o,p);assert(dyn::query(0)==0); // explicit new owner/bind captures its own pose
+    re4dc_ps2_dyn_bind(ps2w.room,1,&o,&o.flag,&o.serial,o.mat);original_part(1,o,nullptr);assert(!dyn::slots[1].parts);
+    p.mat[3]=99;original_part(1,o,&p);assert(!dyn::slots[1].parts);++frame_no;assert(dyn::query(1)==1); // never fabricate late bind
+    bind(1,o,p);assert(dyn::slots[1].parts && dyn::query(1)==0);
+    re4dc_ps2_dyn_bind(ps2w.room,1,&o,&o.flag,&o.serial,o.mat);++o.serial;
+    original_part(1,o,reinterpret_cast<void*>(1));assert(!dyn::slots[1].parts);++frame_no;assert(dyn::query(1)==1);
+    bind(1,o,p);re4dc_ps2_dyn_bind(ps2w.room,1,&o,&o.flag,&o.serial,o.mat);original_part(1,o,&p,1,~0U);
+    assert(dyn::slots[1].root_matrix_offset==~0U);++frame_no;assert(dyn::query(1)==1);
+#else
+    assert(allocation_calls==calls+1 && !dyn::slots[0].parts);assert(dyn::query(0)==1);++frame_no;assert(dyn::query(0)==1);
+#endif
+    p=Part{};bind(1,o,p);p.mat[0]=std::numeric_limits<float>::quiet_NaN();++frame_no;assert(dyn::query(1)==1);
+    p=Part{};p.mat[0]=0;bind(1,o,p);++frame_no;assert(dyn::query(1)==1);
+    Part tail;p=Part{};p.next=&tail;bind(1,o,p,2);tail.pose[0]=3;++frame_no;
+    assert(dyn::query(1)==3 && re4dc_ps2_dyn_source(ps2w.room,&o,o.serial));
+    bind(1,o,tail,2);assert(!dyn::slots[1].parts);
+    std::puts("PASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart");
+}
+void full_table_cases(){
+    setup(250);Object owners[250];Part parts[250];const unsigned calls=allocation_calls;
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    fail_alloc=true;
+#endif
+    for(unsigned i=0;i<250;++i)bind(i,owners[i],parts[i]);fail_alloc=false;
+    assert(allocation_calls==calls+(RE4DC_ROOT_POSE_WITNESS_PREFLIGHT?0U:250U));
+    for(auto& p:parts)p.mat[3]=1;++frame_no;
+    for(unsigned i=0;i<250;++i){assert(dyn::query(i)==(i<16?2U:RE4DC_ROOT_POSE_CAP_FALLBACK?4U:1U));assert(!re4dc_ps2_dyn_source(ps2w.room,&owners[i],owners[i].serial));}
+    assert(dyn::nmoved==16);
+    for(auto& p:parts)p.mat[3]=0;++frame_no;for(unsigned i=0;i<250;++i)assert(dyn::query(i)==0);
+    clean();std::puts("PASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback");
+}
+void admission_cases(){
+    clean();world();ids({0,0,1,249,250,255});assert(fixture_admit(6));assert(dyn::nslots==2 && dyn::slot_of[0]==dyn::kNone && dyn::slot_of[1]==0 && dyn::slot_of[249]==1);
+    const unsigned calls=allocation_calls;const auto* storage=ps2w.storage;const auto* slots=dyn::slots;
+    assert(fixture_open_existing());assert(allocation_calls==calls && ps2w.storage==storage && dyn::slots==slots);
+    ps2w.want=0x105;assert(!fixture_open_existing());assert(!ps2w.storage && !dyn::slots && cells.empty());
+    clean();world();ids({4});file_bytes[0]='X';assert(fixture_admit(1));assert(!dyn::slots && missing_calls==0);
+    clean();world();ids({4});file_present=false;assert(fixture_admit(1));assert(!dyn::slots && missing_calls==0);
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    assert(!dyn::slot_cell_bytes(0) && !dyn::slot_cell_bytes(251) && !dyn::slot_cell_bytes(~0U));
+    assert(dyn::slot_cell_bytes(250)==250*(sizeof(dyn::Slot)+sizeof(dyn::RootWitness)));
+    for(bool returns:{false,true}){
+        clean();world();ids({1,2,3});fail_bytes=dyn::slot_cell_bytes(3);return_from_missing=returns;
+        const unsigned failures=missing_calls,closed=file_closes;bool accepted=false;
+        try{accepted=fixture_admit(3);assert(returns);}catch(const std::runtime_error& e){assert(!returns && std::string(e.what())=="root-pose witness preflight");}
+        assert(!accepted && normal_draws==0 && missing_calls==failures+1 && file_closes==closed+1);
+        assert(!ps2w.storage && !ps2w.package.live && !dyn::ids && !dyn::slots && cells.empty());
+        assert(log_count("ROOTPOSE_PREFLIGHT room=104 unique=3 bytes=" )==1 && log_count("heap=123456 refused")==1);
+    }
+#endif
+    clean();std::puts("PASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication");
+}
+void movie_cases(){
+    setup(2);Object o;Part p;bind(0,o,p);Part tail;p.next=&tail;bind(1,o,p,2);
+    assert(ps2_movie.capture(ps2w.storage,ps2w.bytes,generation));assert(ps2_movie_dyn_valid());
+    auto* saved_slots=dyn::slots;auto* saved_parts=dyn::slots[0].parts;
+    const float* root=reinterpret_cast<float*>(saved_parts+1);float original[12];std::memcpy(original,root,sizeof(original));
+    const unsigned token=ps2_movie.borrow(ps2_movie_current() && ps2_movie_dyn_valid(),true);assert(token);
+    const auto* old=ps2w.storage;ps2w.want=0x105;assert(!fixture_open_existing());assert(ps2w.storage==old && dyn::slots==saved_slots);
+    p.mat[3]=55;assert(ps2_movie.begin_return(token,ps2_movie_current()));assert(ps2_movie.restored(token,ps2_movie_current(),true));
+    dyn::frame=~0U;dyn::nmoved=0;std::memset(dyn::state,0,sizeof(dyn::state));
+    assert(ps2_movie_dyn_valid() && dyn::slots==saved_slots && dyn::slots[0].parts==saved_parts && !std::memcmp(root,original,sizeof(original)));
+    assert(dyn::query(0)==2);
+    ++generation;assert(!ps2_movie_dyn_valid());--generation;
+    // Exact payload size and embedded root ownership are required, not merely
+    // an address somewhere inside the current room's allocation.
+    for(auto& cell:cells)if(cell.p==dyn::slots){++cell.bytes;assert(!ps2_movie_dyn_valid());--cell.bytes;}
+#if RE4DC_ROOT_POSE_WITNESS_PREFLIGHT
+    dyn::slots[0].parts=dyn::reserved_pose(dyn::slots[1]);assert(!ps2_movie_dyn_valid());dyn::slots[0].parts=saved_parts;
+#endif
+    assert(ps2_movie_dyn_valid());clean();assert(!dyn::ids && !dyn::nobjects);
+    setup(1);bind(0,o,p);assert(dyn::query(0)==0);clean();
+    std::puts("PASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees");
+}
+void diag_cases(){
+#if RE4DC_ROOT_POSE_REFUSAL_DIAG
+    setup(6);Object owners[6];Part parts[6];for(unsigned i=0;i<6;++i){bind(i,owners[i],parts[i]);owners[i].flag=1;}
+    logs.clear();
+    for(unsigned f=0;f<5;++f){++frame_no;for(unsigned i=0;i<6;++i){assert(dyn::query(i)==1);assert(dyn::query(i)==1);}}
+    assert(logs.empty());for(unsigned i=0;i<6;++i)assert(dyn::slots[i].diag.refused==5 && dyn::slots[i].diag.reasons==dyn::RootFlags);
+    dyn::root_reports();assert(log_count("when=periodic")==4);dyn::root_reports();assert(log_count("when=periodic")==4);
+    for(unsigned i=0;i<6;++i)assert(dyn::slots[i].diag.refused==5);
+    dyn::slots[0].diag.refused=(1ULL<<32)-1;++frame_no;assert(dyn::query(0)==1);assert(dyn::slots[0].diag.refused==(1ULL<<32));
+    re4dc_ps2_dyn_bind(ps2w.room,0,&owners[0],&owners[0].flag,&owners[0].serial,owners[0].mat);
+    assert(log_count("room=104 id=00 serial=10 object=")==2 && log_count("when=rebind refused=4294967296")==1);
+    dyn::reset();assert(log_count("when=retire")==2);assert(!dyn::slots);clean();
+    std::puts("PASS diagnostics: exact per-owner/frame totals, 64-bit carry, bounded periodic reports, final/rebind totals before reset");
+#else
+    assert(!log_count("ROOTPOSE room="));
+#endif
+}
+int main(){
+    cap_cases();witness_cases();full_table_cases();admission_cases();movie_cases();diag_cases();clean();
+    assert(cells.empty());std::printf("PASS controls cap=%d preflight=%d diag=%d\n",RE4DC_ROOT_POSE_CAP_FALLBACK,RE4DC_ROOT_POSE_WITNESS_PREFLIGHT,RE4DC_ROOT_POSE_REFUSAL_DIAG);
+}

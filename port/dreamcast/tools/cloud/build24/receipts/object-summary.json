@@ -1,0 +1,1504 @@
+{
+  "status": "PASS",
+  "scope": "Summarize matched relocatable SH4 groups and relevant compiler stack frames.\n\nThis consumes successful full-TU receipts, verifies input object/source hashes,\nand creates matching baseline relocatable groups. Sizes include the entire\ncompiled diagnostic/renderer group before final executable garbage collection;\nthey are not final image sizes or whole-program peak-stack measurements.\n",
+  "groups": {
+    "qa-baseline": {
+      "object_sha256": "f52bb4e60d0f389e6b8e0d4b4ce89870dab2222ed50ff4cab8b0322dd2a6afb0",
+      "executable_bytes": 297968,
+      "allocated_bytes": 739338,
+      "zero_fill_bytes": 248440,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": []
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9008,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1532:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1486:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 560,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3843:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 152,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3567:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+              "bytes": 556,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6136,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        }
+      }
+    },
+    "pmu-baseline": {
+      "object_sha256": "a6fa2224cafd1429f1530f7ad8bc76c371f4808fa04457efe2f3673282cf07eb",
+      "executable_bytes": 311362,
+      "allocated_bytes": 759142,
+      "zero_fill_bytes": 251902,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": []
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9008,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1532:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1486:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 568,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:3843:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 96,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3567:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+              "bytes": 556,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6136,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        },
+        "perf_phase_miss": {
+          "max_function_frame_bytes": 360,
+          "relevant_frames": []
+        },
+        "world_census24": {
+          "max_function_frame_bytes": 340,
+          "relevant_frames": []
+        }
+      }
+    },
+    "audit": {
+      "object_sha256": "e30e3392abb57caeb3c24b3619ccd2f57e2c2756bba729a2bcf9e23c877174b1",
+      "executable_bytes": 305824,
+      "allocated_bytes": 756966,
+      "zero_fill_bytes": 256895,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:10717:21:unsigned int re4dc_dsa24_model_translucent(const Re4dcModelPart*)",
+              "bytes": 4,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9008,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1616:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1561:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 568,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:4024:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 104,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3630:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+              "bytes": 552,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6140,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        },
+        "draw_setup_audit": {
+          "max_function_frame_bytes": 320,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:173:6:void re4dc::dsa24::end_tick()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:174:6:void re4dc::dsa24::decision(bool)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:175:6:void re4dc::dsa24::scene_finished()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:176:6:void re4dc::dsa24::pause()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:177:6:void re4dc::dsa24::resume()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:178:6:void re4dc::dsa24::reset()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:187:6:void re4dc::dsa24::leave(uint32_t)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:205:6:void re4dc::dsa24::fault(Error)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:194:6:void re4dc::dsa24::set_phase(Phase)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:206:6:void re4dc::dsa24::begin_setup()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:211:6:void re4dc::dsa24::end_setup()",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:218:10:uint64_t re4dc::dsa24::render_begin()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:219:6:void re4dc::dsa24::render_end(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+              "bytes": 100,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+              "bytes": 320,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:235:10:unsigned int re4dc::dsa24::line_count()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "compared_to": "qa-baseline",
+      "delta_bytes": {
+        "executable_bytes": 7856,
+        "allocated_bytes": 17628,
+        "zero_fill_bytes": 8455
+      }
+    },
+    "actor-fix": {
+      "object_sha256": "c7e71cd47de24035062b77d5a411e7184a4132727153c04ad857b05c589f0756",
+      "executable_bytes": 298124,
+      "allocated_bytes": 739494,
+      "zero_fill_bytes": 248440,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": []
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9008,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1616:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1561:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 560,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:4024:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 152,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3638:13:{anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "include/actor_clip_reuse.hpp:11:6:bool re4dc::actor_clip::reuse_strip(unsigned int, Prepare&&, Emit&&) [with Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; Emit = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>]",
+              "bytes": 460,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6136,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        }
+      },
+      "compared_to": "qa-baseline",
+      "delta_bytes": {
+        "executable_bytes": 156,
+        "allocated_bytes": 156,
+        "zero_fill_bytes": 0
+      }
+    },
+    "world-fix": {
+      "object_sha256": "88bac4081e7ef2522435eb42c3c452caf6fc3b7b71c5ee345ed4c7603a9252ed",
+      "executable_bytes": 298232,
+      "allocated_bytes": 739602,
+      "zero_fill_bytes": 248440,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": []
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9040,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1616:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1561:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 560,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:4024:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 148,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3630:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+              "bytes": 556,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6136,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        }
+      },
+      "compared_to": "qa-baseline",
+      "delta_bytes": {
+        "executable_bytes": 264,
+        "allocated_bytes": 264,
+        "zero_fill_bytes": 0
+      }
+    },
+    "audit-fixes": {
+      "object_sha256": "063ad1fe4feefa55e67070a36b24659699ef24737552fa5ac71ac823d70cae7d",
+      "executable_bytes": 305896,
+      "allocated_bytes": 757038,
+      "zero_fill_bytes": 256895,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:10717:21:unsigned int re4dc_dsa24_model_translucent(const Re4dcModelPart*)",
+              "bytes": 4,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9040,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1616:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1561:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 568,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:4024:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 104,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3638:13:{anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "include/actor_clip_reuse.hpp:11:6:bool re4dc::actor_clip::reuse_strip(unsigned int, Prepare&&, Emit&&) [with Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; Emit = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>]",
+              "bytes": 468,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6140,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        },
+        "draw_setup_audit": {
+          "max_function_frame_bytes": 320,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:173:6:void re4dc::dsa24::end_tick()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:174:6:void re4dc::dsa24::decision(bool)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:175:6:void re4dc::dsa24::scene_finished()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:176:6:void re4dc::dsa24::pause()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:177:6:void re4dc::dsa24::resume()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:178:6:void re4dc::dsa24::reset()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:187:6:void re4dc::dsa24::leave(uint32_t)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:205:6:void re4dc::dsa24::fault(Error)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:194:6:void re4dc::dsa24::set_phase(Phase)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:206:6:void re4dc::dsa24::begin_setup()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:211:6:void re4dc::dsa24::end_setup()",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:218:10:uint64_t re4dc::dsa24::render_begin()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:219:6:void re4dc::dsa24::render_end(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+              "bytes": 100,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+              "bytes": 320,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:235:10:unsigned int re4dc::dsa24::line_count()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "compared_to": "qa-baseline",
+      "delta_bytes": {
+        "executable_bytes": 7928,
+        "allocated_bytes": 17700,
+        "zero_fill_bytes": 8455
+      }
+    },
+    "audit-pmu15": {
+      "object_sha256": "d367f079efd48cf739383cd15b0fd78b72226a7db09db76da65488f2090896a3",
+      "executable_bytes": 320806,
+      "allocated_bytes": 778380,
+      "zero_fill_bytes": 260382,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:10717:21:unsigned int re4dc_dsa24_model_translucent(const Re4dcModelPart*)",
+              "bytes": 4,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9008,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1616:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1561:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 576,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:4024:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 112,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3630:10:bool {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)",
+              "bytes": 552,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6140,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        },
+        "draw_setup_audit": {
+          "max_function_frame_bytes": 320,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:72:6:void re4dc::dsa24::{anonymous}::sample_pm(uint64_t)",
+              "bytes": 48,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:173:6:void re4dc::dsa24::end_tick()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:174:6:void re4dc::dsa24::decision(bool)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:175:6:void re4dc::dsa24::scene_finished()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:176:6:void re4dc::dsa24::pause()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:177:6:void re4dc::dsa24::resume()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:178:6:void re4dc::dsa24::reset()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:187:6:void re4dc::dsa24::leave(uint32_t)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:205:6:void re4dc::dsa24::fault(Error)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:194:6:void re4dc::dsa24::set_phase(Phase)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:206:6:void re4dc::dsa24::begin_setup()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:211:6:void re4dc::dsa24::end_setup()",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:218:10:uint64_t re4dc::dsa24::render_begin()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:219:6:void re4dc::dsa24::render_end(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+              "bytes": 100,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+              "bytes": 320,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:235:10:unsigned int re4dc::dsa24::line_count()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        },
+        "perf_phase_miss": {
+          "max_function_frame_bytes": 360,
+          "relevant_frames": []
+        },
+        "world_census24": {
+          "max_function_frame_bytes": 340,
+          "relevant_frames": []
+        }
+      },
+      "compared_to": "pmu-baseline",
+      "delta_bytes": {
+        "executable_bytes": 9444,
+        "allocated_bytes": 19238,
+        "zero_fill_bytes": 8480
+      }
+    },
+    "audit-pmu37-fixes": {
+      "object_sha256": "4fdc36c4a0e164fe9d00b531315ba94b135b78686b865914a505330624a0bc69",
+      "executable_bytes": 320766,
+      "allocated_bytes": 778348,
+      "zero_fill_bytes": 260382,
+      "stack": {
+        "main": {
+          "max_function_frame_bytes": 36,
+          "relevant_frames": []
+        },
+        "trans": {
+          "max_function_frame_bytes": 1176,
+          "relevant_frames": []
+        },
+        "native_ui": {
+          "max_function_frame_bytes": 7200,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:10717:21:unsigned int re4dc_dsa24_model_translucent(const Re4dcModelPart*)",
+              "bytes": 4,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_static": {
+          "max_function_frame_bytes": 9040,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:1616:29:{anonymous}::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(const re4dc::room::CompactVertex12*, const re4dc::room::CompactBatch&, const unsigned char*, unsigned int)::<lambda(unsigned int)>",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1561:9:int {anonymous}::Emitter::clip_strip(const Vertex*, const re4dc::room::CompactBatch&, const Index*, unsigned int) [with Vertex = re4dc::room::CompactVertex12; Index = unsigned char]",
+              "bytes": 576,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:4024:35:int {anonymous}::MeshDraw::chunk_emit(const Pick*, unsigned int)",
+              "bytes": 116,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_actor_fast": {
+          "max_function_frame_bytes": 2388,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:3638:13:{anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>",
+              "bytes": 108,
+              "kind": "static"
+            },
+            {
+              "function": "include/actor_clip_reuse.hpp:11:6:bool re4dc::actor_clip::reuse_strip(unsigned int, Prepare&&, Emit&&) [with Prepare = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(unsigned int, re4dc::render::RenderVertex&, float&)>; Emit = {anonymous}::Part::clip_strip(const {anonymous}::Records&, const {anonymous}::u8*, unsigned int)::<lambda(const re4dc::render::RenderVertex*, const float*)>]",
+              "bytes": 468,
+              "kind": "static"
+            }
+          ]
+        },
+        "native_model": {
+          "max_function_frame_bytes": 6140,
+          "relevant_frames": []
+        },
+        "native_ps2_world": {
+          "max_function_frame_bytes": 152,
+          "relevant_frames": []
+        },
+        "qa_menu": {
+          "max_function_frame_bytes": 2280,
+          "relevant_frames": []
+        },
+        "draw_setup_audit": {
+          "max_function_frame_bytes": 320,
+          "relevant_frames": [
+            {
+              "function": "<stdin>:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:72:6:void re4dc::dsa24::{anonymous}::sample_pm(uint64_t)",
+              "bytes": 48,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:173:6:void re4dc::dsa24::end_tick()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:174:6:void re4dc::dsa24::decision(bool)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:175:6:void re4dc::dsa24::scene_finished()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:176:6:void re4dc::dsa24::pause()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:177:6:void re4dc::dsa24::resume()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:178:6:void re4dc::dsa24::reset()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:187:6:void re4dc::dsa24::leave(uint32_t)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:205:6:void re4dc::dsa24::fault(Error)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:194:6:void re4dc::dsa24::set_phase(Phase)",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:206:6:void re4dc::dsa24::begin_setup()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:211:6:void re4dc::dsa24::end_setup()",
+              "bytes": 8,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:218:10:uint64_t re4dc::dsa24::render_begin()",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:219:6:void re4dc::dsa24::render_end(uint64_t)",
+              "bytes": 12,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+              "bytes": 4,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+              "bytes": 100,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+              "bytes": 320,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:235:10:unsigned int re4dc::dsa24::line_count()",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+              "bytes": 108,
+              "kind": "static"
+            }
+          ]
+        },
+        "perf_phase_miss": {
+          "max_function_frame_bytes": 360,
+          "relevant_frames": []
+        },
+        "world_census24": {
+          "max_function_frame_bytes": 340,
+          "relevant_frames": []
+        }
+      },
+      "compared_to": "pmu-baseline",
+      "delta_bytes": {
+        "executable_bytes": 9404,
+        "allocated_bytes": 19206,
+        "zero_fill_bytes": 8480
+      }
+    }
+  },
+  "baseline": "a9fa0b8850f762acbf3ce49e86d7c24394df894b",
+  "raw_target_receipt_sha256": "6672310165e223d72189954f64ecc77a327494f0a9dca658f7bd5385adc2ccee",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build24/object_summary.py": "c369e841709001094f8a669fc0a2756b9b290c2955b09b96a3eff0212b4ff3bf",
+    "src/game/main.cpp": "7fc5667cc9b58657b11c668c9c0b9dbcd4acf9beca1b92c056966c72fd332b78",
+    "src/game/trans.cpp": "bb2a97ae84a02c6743c730f9cb5ccafdd380d2c23b86f3d79a2488d3edeafd8e",
+    "port/dreamcast/game/platform/native_ui.cpp": "477e73ed8cc57ba0b4a38f17e1ae79b3e0ee05819851473a73e41fcc9d7a84cc",
+    "port/dreamcast/game/platform/native_static.cpp": "3e0b6fd8980f8489ada135e1f41fd3a834f844f8ee40e51e1f872a7b413577d7",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "7f0f308a41d79b3958c65b08cb4ac06593123fff576de621543e19fec12f9ba2",
+    "port/dreamcast/game/platform/native_model.cpp": "6cdd551057a18b2c66ddcf24465d87411403ff977b454c07953b2433c52cb79d",
+    "port/dreamcast/game/platform/native_ps2_world.cpp": "a4d572e3db5020b9d48c3b6a5a0e73fa9c1988264bb92b9611dc2b379d6b3f7e",
+    "port/dreamcast/game/qa_menu.cpp": "a88946d6d2c3c30577a0910959ed1e81bf52a29aa876f5ac3fd1cd41c87aa8d9",
+    "port/dreamcast/game/perf_phase_miss.cpp": "670ac90f210310abb85806a3383aa0ecd170eac64b457258fc6de262407c7610",
+    "port/dreamcast/game/world_census24.cpp": "65d1d9bbab76d69d0276a88607a04ecda60654e37f496178445830ff2ccf7cdc",
+    "port/dreamcast/game/draw_setup_audit.cpp": "03ba3d2961c39494cfacfac81eb0e2aff3171bba147579a59f1955e8c32697fb",
+    "port/dreamcast/tools/cloud/build24/build_controls.py": "7b9185a3b8f0ce980a1f9f2f31b5e0fe3c8ec3b285eb64ab45afd3c5c8575a7c",
+    "port/dreamcast/game/Makefile": "376fb810281e6637af281d59ada778a6a99d442799046049b382278b5584f3f4",
+    "port/dreamcast/build-public.sh": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f",
+    "port/dreamcast/tools/d367/rr/recipe.conf": "d61db571ab880e046d5e19640f845e320a600a4acdc2f05cd3cc497f5c5c9ab0",
+    "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+    "port/dreamcast/game/actor_ganado_ps2_stump.mk": "f435e94c76cc2ea57bf64bef82033f79520f8f1a5cd8b56b19788d14f6ddea4a",
+    "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+    "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+    "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+    "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+    "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+    "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+    "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+    "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+    "port/dreamcast/game/crowd.mk": "db5dcfb0e9ec85d116c222cb266badff62a90df275c50e2a33f0eeb4bbb68fca",
+    "port/dreamcast/game/dbgwarp.mk": "7dabc7487167c8c0ec2d3f583278b650bb1619decf7f8abc663ec74533ed98d1",
+    "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+    "port/dreamcast/game/draw_setup_audit.mk": "22f1900a9695c0b3e89ec8924c8da51509c31bb99e2b9fc29b031e19a135c25e",
+    "port/dreamcast/game/effects30.mk": "c1905dc5f3594178e0f7a421ecbb869f154da26085ed1b6ea575acaf53517f6a",
+    "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+    "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+    "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+    "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+    "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+    "port/dreamcast/game/game30.mk": "c94d7823374b21cacb40b2a8949cfe54223d3ac868252432f752a0aa831e03a6",
+    "port/dreamcast/game/gc_asset_gate.mk": "ef1f3c564abece94fdf4b7c60a1f738b11f4fedafd11e71230af0264f4b76ecd",
+    "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+    "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+    "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+    "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+    "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+    "port/dreamcast/game/mendezfx.mk": "c56892f8607f838dff36a52d8189445b299208c87e6f07461b4d06325d03a167",
+    "port/dreamcast/game/native_model_registry.mk": "b83bf9dde04fc4f75c41f86509ac0bbc6fc505c0ab26b12a3f68ef122db32737",
+    "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+    "port/dreamcast/game/partdump.mk": "abd44d97992217788371885a60c9898d2e00429f0d0e5ef6bfe255abf6773416",
+    "port/dreamcast/game/perf_phase_miss.mk": "5ba2d007fd5cc2829b8225fab8ecd9fd83edc9a9f9df027f8f5e8589b618aea6",
+    "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+    "port/dreamcast/game/ps2leon.mk": "011f39130ca3329c57148417e10b4a372c1f8dddaa735e38cbd0bb00f9aa4137",
+    "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+    "port/dreamcast/game/qamenu.mk": "8278906026e8836d4027e48f99292fbc0b47eac2f59bbe76dda96dc38f33ba56",
+    "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+    "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+    "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+    "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+    "port/dreamcast/game/scenery19.mk": "155ab311f4161cff82ed453190b840fe2102c561a676f3fe710c52a5731e5eb2",
+    "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+    "port/dreamcast/game/scenery_data_variants.mk": "98b8c8c9c945a899170943b161926c47307b204d1e47f021a9d40e4fbfef7af4",
+    "port/dreamcast/game/scenery_n256.mk": "bee85b66ccc26887a7295405d8d5507425010268b7b0fc1bc5f98387b10a8be8",
+    "port/dreamcast/game/scenery_record_split.mk": "0de971619bd764a69a4fc2b400347828ea660a1ce1a923f083b5be6af5f22a6c",
+    "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+    "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+    "port/dreamcast/game/t2exact.mk": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2",
+    "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+    "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+    "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+    "port/dreamcast/game/world_census24.mk": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52",
+    "port/dreamcast/game/world_census24_errors.mk": "0b1f8fda7459246404f88d1f0d3b5a94d56396019759201d21dae820094f3874",
+    "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+    "port/dreamcast/game/worldopt26.mk": "290b454a0b075fb097b21d9c8566282204dd93e21c7c7e5109e77447261a26e9",
+    "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057",
+    "port/dreamcast/game/platform/include/re4dc_prelude.h": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f",
+    "port/dreamcast/game/platform/include/door_probe.h": "de5eb2a0b6865d87b17b67a4bbc1a9f94dae4b61ae7b737b99ac8aab2cef2c32",
+    "port/dreamcast/game/platform/include/re4dc_vmu.h": "ffb89121935c8eabe3ef3dbccc8fc5032ad5618a8de4cc4e6973b1e459304ebc",
+    "include/types.h": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d",
+    "include/global.h": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a",
+    "include/vec.h": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d",
+    "include/camera.h": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b",
+    "include/joy.h": "e20bab477cf784375a20ae7c46a116acb000d31a0705976e252e8582be181330",
+    "include/main.h": "515e9281589e10154f273aa82c8503f4648b489eca2933ebf22674439c2eda58",
+    "include/main_sub.h": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6",
+    "include/gx.h": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8",
+    "port/dreamcast/game/gx_fast.h": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959",
+    "include/main_mem.h": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7",
+    "include/view.h": "e6b81450a954e524146261cda5703302d055afd58108fd85df4c9781efdc9087",
+    "include/atari.h": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+    "include/db_log.h": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1",
+    "include/va_ppc.h": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129",
+    "include/cManager.h": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+    "include/at_sub.h": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679",
+    "include/at_sub2.h": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d",
+    "include/light.h": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c",
+    "include/lightPath.h": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d",
+    "include/ctrl.h": "938832700d8a652c49f0fa739b4eca902ee3b51a96a207bfddd6d37c8d5a71b3",
+    "include/map_obj.h": "cf307cfc063cfc3da8b01c223f06ffc17b955db7acc7ba4bcfe12f73d6fa6905",
+    "include/model.h": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+    "port/dreamcast/game/platform/include/actor_lifetime.h": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc",
+    "port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": "6d77e23c0668904e3dee5feef000a60dadcf0cf9288f5340fa967c6f2208d736",
+    "include/atariInfo.h": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8",
+    "include/widget.h": "a03750eda5b62386941fe2df836c12eeac96f447a14ff0ab36e3d8485bba303e",
+    "include/card.h": "249fdd3bdd8a1eab776ebde14a2610a925a23f55528fb3f6aba2ac624ab0451a",
+    "include/cDataSwap.h": "b5b1b3091ded279f3757c750579df545a27946f1290c823973a977fcd382f8a3",
+    "include/event.h": "8d9acb9b41db86dc14c9a31ea045cea16ee9082ca0e8044be5211b96909bb1ac",
+    "include/sofdec.h": "5e4ac96ded3ad48d29c1af94a9fc46c0f728dd8a9e30d8dcc0c54f17d210e68f",
+    "include/mwply.h": "497fb0c44ea46f704591685ce15e4b3f2e4a01ce41517e3145ae9ea31e988b4c",
+    "include/cString.h": "d9702f93063014f8bdcac39db5d983ef5c540ece889187cee31505e78a877e5d",
+    "include/dvd.h": "2487625b2040a7b45e11e1b5c758555274e750e0c88fc19394d52367e5cdddda",
+    "include/dolphin/dvd.h": "2683974fd9e078eda23d6860d1054a85cffa35d317c3c5e7304915565eb75fbf",
+    "include/dolphin/types.h": "a86d1c92f8e6e6d1ce990caacbcbf3b5ae3ac55dafd0b2c7357258e27fdb8f04",
+    "include/dolphin/ar.h": "ac6948054f6b4b25e33c0989346e229dabd5bb478f0baf9275b7601e52aedd37",
+    "include/mes.h": "bb4600519f38ca2fb989f5074cbae1dd3630dd3f3499024d83c10b7770c0adc6",
+    "include/tpl.h": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35",
+    "include/id_sys.h": "25dc142236e80043d83c9432de3148fb09916336bf5d3f9070fc7ce8ca9be2e0",
+    "include/hermite.h": "9fd7cfd6151b2106560a4b4b46f678153b16d0193f5867c37dfb845d4f032b69",
+    "include/block.h": "351f1c42a820144d5803f7b4572002ca661291a53cefe0a3baba1b33f193a89e",
+    "include/area.h": "85d5328f053cd74add90a82ec77743e037802d6c097afd94a8ff0ff652c82c1b",
+    "include/datactrl.h": "dbe0a9709611a900c08b317a446aa23bd905be85db4b6e06f6a27e800d4f4026",
+    "include/em.h": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+    "include/obj.h": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768",
+    "include/pendulum.h": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4",
+    "include/cockpit.h": "ea444b696d7867e2679d40133f85567983af5c871942090374827197a3b7b8d3",
+    "include/room_data.h": "48216d410f3e998f6709cba7cc265e83f630d9b730bd264cb9dd64fc766e6fd7",
+    "include/scheduler.h": "85af29294a35315b47be5d14e42b1c479a0dcc273846f0a1e3dd839a2b06a826",
+    "include/dolphin/os/OSThread.h": "89412c8c5743645053fa008cf954733615992e56ef088f7ef77ab84da42805b0",
+    "include/dolphin/os/OSContext.h": "e0e5ba0d504ebd85877c1a93a02f530eca85d08ade5e65370356deb54e3c12aa",
+    "include/dolphin/os/OSSemaphore.h": "536b1f20c3f228455279dff2018c453bacb7692fbfda487c03a141af84a2f989",
+    "include/fade.h": "48cf881e6d9e57b5c8be2dfa4ba7ef80a463ea344a548328dad33aa153d81359",
+    "include/cinesco.h": "fb7500b707af60045ca9b13ca243abbd419134dd0c46b28d2b8d7aa29fee8808",
+    "include/libgpu.h": "bb463f4c79a2bb875347f652dfe2b20dd4567a3f9eb3ac1da5d4a9a173c7cc82",
+    "include/trans_ot.h": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48",
+    "include/pad.h": "73fe4cb2c17b73fb8104463e1258d0cd11e9b6f412b68a341f51d39505da376f",
+    "include/file.h": "44bad1babd07741a68babf3227fbcb64a793436dd79351d419402694cc511193",
+    "include/snd.h": "e320fbc2967785694b3f4daad2acbee7c3842c20e28d5a480b1bd50753a46432",
+    "include/dbmodule.h": "5e9d18698a93f993e4b3205ffb339fe3aa29ff6f2290bde565d2965eaeb289ed",
+    "include/cloth.h": "870eeef769185b185d145cfd64b933e1cf77b48a061e2939c5599d75673fd463",
+    "include/filter.h": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4",
+    "include/room_tex.h": "7f0555ce6cf99c94b4172a32f1f8f75ac9e6506647aa190e29c6c539c81b04dc",
+    "include/texture.h": "9f2d2feef84556f763967af35b247f1e247d6384938af249daa0f477edbbb7eb",
+    "include/TexRender.h": "ce680f2b5d731d10c5b7267d4cae0e5cd8645ef3d3afff5c94beebcd82512b44",
+    "include/cam_motion.h": "6cb34db02486f3c20388484c7211bc6835405e27f21bef9eea8ed5dce20bf711",
+    "include/cam_extra.h": "4f7ea1e32200b074e1d72a302e245d02637da678da756a7d5c498868efca02d9",
+    "include/motion.h": "4bdf10720065d691e0f20a493082399f8650811b1358eef6fa856206e4b23857",
+    "include/cam_ctrl.h": "2ac891e596fb1bde591f7a11929ebcfe538f8c2767dd77c842abad7dfec80436",
+    "include/cam_qfps.h": "bfdc8492b68f17e7588c7a64c08b4d4162a96400fb0f949ffc366c169aee6c72",
+    "include/gx_sub.h": "7fb208200f98c6d8c0551c3029974962ce5a13c8a1935a2cc1a62262a39d53e4",
+    "include/os_vi.h": "f57d34dab8ab4614e26d48fb28af8f4d7ff4b582c9dc7c72b4d13bd7705cb170",
+    "include/rnd.h": "720a81ce6f22cd5edbb6a2762dd8b9d31f89c6f1476163a6dc165fae5ffce383",
+    "include/sscrn.h": "247493f212c5daf84312d860cde9fef3346dfb8e3a3e617581955e61ea5a236d",
+    "port/dreamcast/game/platform/include/native_primitive.h": "9cf7bd89c3fab26f0806d74ce3e97ff9b6eee12d1ff99ef83b3020cfbd080e7f",
+    "port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "port/dreamcast/game/platform/include/native_ui.h": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+    "port/dreamcast/room/source_lighting.hpp": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45",
+    "port/dreamcast/game/platform/include/coarse_actor_transaction.h": "ea4a2c3f00ac08f6b4b7c1acb5dbbfe98fbc1ea39ee864ae92ca5e10ac3aa304",
+    "port/dreamcast/game/platform/include/coarse_source_frame.h": "8c5c81bc00286293b3c623b1bdd0ffbb05c4881fcd0e30edc66a0d21468ca746",
+    "port/dreamcast/game/platform/include/source_actor_owner_ledger.inc": "41daf70a383413cf1db2869f3e19d20c9a554185c64e6fedc15e544364db6d49",
+    "port/dreamcast/game/platform/include/coarse_actor_preflight.h": "238c507a5df66357ffb59ac3f16a1ed226778d88ec48f5c7aa24df772eb41679",
+    "port/dreamcast/game/platform/include/actor_native_owner.h": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a",
+    "port/dreamcast/game/platform/include/native_actor.hpp": "2c2e225a7184f3b5842409641e0554c1d58229c4f63e7ac035b40fe329cb7dee",
+    "port/dreamcast/game/platform/include/actor_resource_lease.h": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9",
+    "port/dreamcast/game/platform/include/coarse_actor_geometry_once.h": "71855740daa83974fb3db00fd91fc32384de1b0b1e8f9db3991ec96aab372118",
+    "port/dreamcast/game/platform/include/cache20.h": "0477e8c84785b9c242c96363c371327380e460e0693245284a4ab0a7d45b3bfd",
+    "include/math_sub.h": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507",
+    "include/trans.h": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4",
+    "include/shadow.h": "4b10031d0c5dfe2e1804b1c3fcf265e4a20261f7256300b7d2c04f1e38e416c5",
+    "include/examine.h": "d0105d808d3e8964b3a8b067070f35327d9a6b06723edc3b5d5a5642f6eef732",
+    "include/debug.h": "26a1c33ca387718513794d8365cbc32e3852342b919d7a6952fd6abd79ddea2f",
+    "include/foot_shadow.h": "01bdb1833e0c0584880bd62617b364b1710a106b435fa7ba6930266c5de6135d",
+    "include/db_cam.h": "74f1e72cf17a14445dce0a748c9ba97a1dc7663366928f396c107abb5d81fc9e",
+    "port/dreamcast/game/platform/include/source_actor_owner_hooks.inc": "24c358a9e7055147c3255ca3a64514acf7514036c248b817d569941552d5d41e",
+    "port/dreamcast/game/platform/include/ps2_source_world.h": "5881716a958f0bc6dff045e45bc660b57884c0050cdfd306b8c490528f0ca029",
+    "port/dreamcast/game/platform/include/source_world_frame.inc": "abe2a711f66d0b95cf9ae0056db933433d2a6b4d508377517226ff3d61a931ec",
+    "port/dreamcast/game/platform/include/re4dc_platform.h": "a3d43b28fd78980cb50ac508b6aa816d1efabdc8b62c4c296fa414b71e36524b",
+    "port/dreamcast/game/platform/include/source_world_memory.inc": "29c0dfead79cd74ce078662486193f6669caa8ee5a9ea993042e2329e461aac5",
+    "port/dreamcast/game/platform/include/native_event_file.h": "9b03201ec028db70f1b699acaae090ca0f952038d786f81157a887d5271872fd",
+    "port/dreamcast/game/platform/preload_skip_gcidle.h": "e4282e3055458aad8f968a06cb6e8483967a0c19f7b15838de093435279f0c69",
+    "port/dreamcast/game/platform/preload_skip_gcidle.inc": "c36963537dd7c2339293103288d83a7cb1ee6f551e8f9d912545bc783141e121",
+    "port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67",
+    "port/dreamcast/game/platform/include/gc_asset_gate.h": "4dfbee21becd264b55b249fef6f09bddf654d3168d59501482d82bd8685f64a1",
+    "port/dreamcast/game/platform/include/gc_asset_packet_cursor.h": "b44c680240b624492b5a62f6ff22c181b8cdac684cac8cc8300b74a0ee59cc98",
+    "port/dreamcast/game/platform/include/gc_asset_members.h": "558c2baf0d82768e7225d85ca73cc404e493a877910667bf5c082ee9964eec3b",
+    "port/dreamcast/game/platform/include/gc_asset_payloads.h": "04be6fb54668d397982ef545c3464e84b96e222b8faabfa7e4c82851c7369b34",
+    "port/dreamcast/game/platform/include/gc_asset_audio.h": "d4df30b1f478edc25d570ba4f4c70d9be89305a0d0b2d3df13fc7f0f96656985",
+    "port/dreamcast/game/platform/include/gc_asset_movie.h": "0755ba58aaffac5f9a563a6e2f3bb7c8f2604b965d83a2b5d822a1e50eaecf0e",
+    "port/dreamcast/game/platform/include/gc_asset_movie_stream.h": "bee23b0136fab7a844f498bf18567fae73597f29c2c45d4da2741d3ad95eb913",
+    "port/dreamcast/game/platform/include/gc_asset_lifecycle.h": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff",
+    "port/dreamcast/game/platform/include/gc_asset_actor.h": "e601e026a611e339d6caf233d02e932885a4b8163d970471dd88cf6f7315e849",
+    "port/dreamcast/game/world_scratch.h": "6e6b0f1f2b2d9f5762708a21a2c6c0f5ba0308c04b4332534d80b6456934d5b6",
+    "port/dreamcast/game/platform/include/movie_world_arena.h": "8d0427cde56a4556c0a098cd17fbc9bbdcc04b475f3f6358110501b8eeaa4815",
+    "port/dreamcast/game/platform/include/actor_visibility_diag.h": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d",
+    "port/dreamcast/game/platform/include/actor_transaction_diag.h": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca",
+    "port/dreamcast/game/platform/include/native_cabin.h": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660",
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": "a77de47c842bbc8281b205c7883a42680eabe664f7435c8501f61c94bdae9905",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_representations_fol24.inc": "175a027ce9f3d3a09b0cfde1fe2e8fab87e92c3a05043229c88c1b259079dbad",
+    "port/dreamcast/game/platform/include/re4dc_screen.h": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f",
+    "port/dreamcast/game/platform/include/native_ps2_world.h": "8ab8b3421b9ce095d86cb86f3e0e918a09ef47d0e7d6be9ef77f01950e56e411",
+    "port/dreamcast/game/platform/include/re4dc_pad_prompts.h": "906323853612ac1ec2de506376ccb4f8c280b4c8f0740efcbe6b051720120b59",
+    "port/dreamcast/game/platform/include/re4dc_manual_pages.h": "39a0e46e3e068b49e1d53d38f77a035db99c6c09df3976b702aaa7122cc659ee",
+    "port/dreamcast/game/platform/include/binocular_art_keys.h": "3c9f896170e0c8ac034facf7aff49588e7c64ba5ceb493f185f763f9249f9206",
+    "port/dreamcast/game/platform/include/scenery_submit_batch.h": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106",
+    "port/dreamcast/game/platform/include/hud_source_mask.h": "9960a824f2300100ad6ace4fe1271da552b46ff960e24c392a324ae76979fc6b",
+    "port/dreamcast/game/platform/include/native_static.h": "d5ab6ca8a55c124b6474b70e0f9ac5724d9aca5e77de0547009b786cbcb667ef",
+    "port/dreamcast/game/platform/include/native_render_profile.hpp": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3",
+    "port/dreamcast/game/platform/include/pc_sampler.h": "fd921feb0d82c2bd0d58134c85d963c7ca12646604421377a2481d85e92d85f0",
+    "port/dreamcast/room/texture_package.hpp": "a9335e1d04672ad2d6054910391320215b5dc920c3661eb3d4bab7b76bf801c3",
+    "port/dreamcast/room/room_storage.hpp": "7d501f89e0d551ab17da30a432f234b7b165c5a2c5de500e7abf64c5168b24c0",
+    "port/dreamcast/room/gpu_lifecycle.hpp": "af53be33ac070625425b5afeaf56955151507e16533ee2feab294ebd4c74ed91",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/native_draw_plan.hpp": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405",
+    "port/dreamcast/game/platform/include/texpack_payload_retry.inc": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38",
+    "port/dreamcast/game/platform/include/texpack_index.inc": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d",
+    "port/dreamcast/game/platform/include/manual_pages_keys.inc": "6aa4cef86c0ff36c322f99dc4eccb3ee42cb92b571721e7f2bc15bd1565cd6e8",
+    "port/dreamcast/game/platform/include/hud_source_mask_keys.inc": "f4bed90d8c872592adce9a34c11670868e67c58f676cd15e0d4997cbc3c1ef68",
+    "port/dreamcast/game/platform/fx_none_cut_pack.inc": "502ae15ece814ebf10435c0891d3d3f80273f907879f2f3129c17b06b610a7b4",
+    "port/dreamcast/game/platform/include/native_effect_stage1_prepare.inc": "645160ffccbe0c2e5c976c96e7cc82c3f134bc5fc5ad602bdd652650a7b68d17",
+    "port/dreamcast/game/platform/include/manual_pages_native.inc": "c30e4c36e0ea4d2caaaae7ed47b79470bc026a7f904fd7687ca629b9cc876921",
+    "port/dreamcast/game/platform/include/native_ui_source_world.inc": "b3a12a69f1d0216c348502441bb8d2b866bb3a5952d04d6c73a5260ce8a355c3",
+    "port/dreamcast/game/platform/include/hud_source_mask_native.inc": "ec6622706bdbee729919997756f226ad5959ddfe511fe73b02049bf9957bf755",
+    "port/dreamcast/game/platform/include/native_ui_actor_material.inc": "20d37e8f49ef98289e691593061dbf53bbed7d0ad686f423fab46416d67b328b",
+    "port/dreamcast/game/platform/include/fx_sprite_trim.inc": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2",
+    "port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93",
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "dd9431c1aaa4f12f8a72c7c9ec894e45c7cee5079d3dc3e4100fcf4e8dd7df04",
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": "0f2727427f75a7bf25142bf74cfba3eee88140a4ab119e47150f59f411f61bee",
+    "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481",
+    "port/dreamcast/game/platform/include/native_flashlight_pool.inc": "cc56e2984902582ebf523f648ccbcb608708a1a057bd92af81c8247cf22d527b",
+    "port/dreamcast/game/platform/include/subscreen_quad_geometry.hpp": "062db0e9535002d4dd7728265b88da76d537d2ce73d03414a52fbe7e4876a512",
+    "port/dreamcast/game/platform/include/native_water_ps2.inc": "f9bf5c6e9ac778d0a9ed7813ac4ff7f0eedf1e8150ddc3f90f37ba83081ad11a",
+    "port/dreamcast/game/charbake_variants.h": "0aecf29a5a24092f87e7c8c1971d421b0b47d09cde269858828a011b07a70b29",
+    "port/dreamcast/game/platform/include/bfc_class.h": "cce7ba975a27c9ccc2d18ffa22548a8aee085bfd52f6933f97cf9cbea1a41107",
+    "port/dreamcast/game/platform/include/native_io.h": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86",
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_provenance.h": "afa345958e441ce801169ad0d0763652f5749f6c8e67825ed9a15afde1a56b43",
+    "port/dreamcast/tools/d367/texture_rect21/provenance_certificates.inc": "371206a9784a86359208fff95925f7d11d8360c33c0a8ab983d097923ecc9cde",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_origin.h": "31908e1cd70769f164e19199853c27997d24efcee85657fcae4efa23ea205c55",
+    "port/dreamcast/tools/d367/texture_rect21/scoped_origins.inc": "93d44d4ff4b22aad124237a487c2c1c9be529106250477c07d830453b9ac44d1",
+    "port/dreamcast/game/platform/include/pvs23_meter.hpp": "0dd6282122b93d543f4105920f16f2106047c4a1d9a080efdaf4e1da7751f349",
+    "port/dreamcast/game/platform/quality.h": "f781f8d36cb5b7017346bb6ae12acd47d34b31762de560a767da5850d8209270",
+    "port/dreamcast/game/platform/include/gc_asset_static.h": "1d78c81c8c1096b622374dfc477f60ad2fe64fc6365195dd4877445434679bd4",
+    "port/dreamcast/game/platform/include/gc_asset_static_source.inc": "27b94d5b44bfd139fc606891d62125e20e42f993f0541e218d7888a5b1864e37",
+    "port/dreamcast/room/room_package.hpp": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe",
+    "port/dreamcast/room/static_room_prepare.hpp": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329",
+    "port/dreamcast/room/nonempty_lod.hpp": "75c7a9a591827257e81e0681ce3a5c1e6947ac9a2657d68deef37f828ad01061",
+    "port/dreamcast/room/instanced_mesh.hpp": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019",
+    "port/dreamcast/room/mesh_fastpath.hpp": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd",
+    "port/dreamcast/room/mesh_fastpath_sched.hpp": "17d7d74994c696ceaddaf30d323d7c64bb131782f05f11423b8454305e73f1b0",
+    "port/dreamcast/room/mesh_strip_lean.hpp": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c",
+    "port/dreamcast/game/platform/include/ta_direct.hpp": "737faccbe29bdbd8c6a24fec0d5217f1ee992369f1405a4359ece947b8348cbe",
+    "port/dreamcast/game/platform/include/ps2_interior_cell.inc": "5c60f422aaf9789dde7dfac03bc19cb3b3685a3d15d1ccc3ae1ec3b6f947d848",
+    "port/dreamcast/game/platform/include/worldopt26_sg_cell.inc": "f7732f558e7bb49518747f7b269fe9dbdc7449178ec211070a73547a2d89383b",
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": "e8522f1633d0c4d7d76cd3ec3ac1e83d965293f69219e311754a084213a61a62",
+    "port/dreamcast/game/platform/include/movie_world_arena_lifecycle.inc": "e137da9d61c8c8a6929ed13412a063028fb8cf173f56a114d52164efe1de27ef",
+    "port/dreamcast/game/platform/far_shell.inc": "0b9d2e0b36aca1b85353a73f3104cb0990ef94ff394d9954753bade20a3ea7df",
+    "port/dreamcast/game/platform/include/foliage_keys.inc": "b3db418a40a6d44151a3f969faba3b12ee13010b75e68507c1c24180a870b4a4",
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c",
+    "port/dreamcast/game/platform/include/ps2_world_rooms.inc": "ed4779f8c71b8e9c0044cbd38b49b6b942ce767f78ccb898a30e45dae0828731",
+    "port/dreamcast/game/platform/include/native_source_world.inc": "c5ab3def7f3a6647ddbc84bf6e9893c748a8ff10b906d8d087cc2f8a2be1d7ab",
+    "port/dreamcast/game/platform/include/actor_prof.h": "22d0b2ddae99e16b978c5bd6049bda4dcc24d96adb3436a8eefd79a2053395bf",
+    "port/dreamcast/game/platform/include/actor_plan.h": "1907a3fa4516d12c624d0d2f18ea3687106d0da3efa83b3413c2381b3d64b626",
+    "port/dreamcast/game/platform/include/actor_light_probe.h": "de18656c46a5a008aec55e0d7ff48b195724076b95a5c65a3f1a48b3a724040b",
+    "port/dreamcast/game/platform/include/warp_late.h": "b4189647177075921b64c7fd383349c7d31778292c9b21d68764441f3bf59b56",
+    "port/dreamcast/game/platform/include/native_actor_owner_registry.inc": "702c915b1667de9502c298e60d08c1b3b008d31db0d71079511c92faddba068f",
+    "port/dreamcast/game/platform/include/native_actor_owner_workspace.inc": "4c758d18c1641af7f2524b163f7ec1ef1e8a680e5557aa0f05ad26fcac4da035",
+    "port/dreamcast/game/platform/native_actor_rigid.inc": "868437ecdab75d6ed5bbf03ae363520ee2a203543920fa1f2bf6a16e48448eda",
+    "port/dreamcast/game/platform/chunk_submit.h": "5257805131e6b5222e002a2a72053f5c33b03ef88790d370748c08e24fd53e5a",
+    "port/dreamcast/game/platform/include/native_actor_owner_submit.inc": "78081db9815549382f80c1321a41b6d116c8dbff32ad36f2ecfc85b73bd2ec23",
+    "port/dreamcast/game/platform/include/native_actor_owner_runs.inc": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5",
+    "port/dreamcast/game/platform/include/native_reuse_audit.hpp": "2153c5e10ff49e851a6d1a31e65c8fc99bf0bf3d77d73d7bd1b26306f9d0f21c",
+    "port/dreamcast/room/ps2_source_owner.hpp": "8df7e744b96a76409c14de40b2de016e02aecce6154225757e4bffd6db2ec29e",
+    "port/dreamcast/room/ps2_source_package.hpp": "1e965d6b3e74a965761308ee93d177b93679067408d11c10c76f4ffab3eee852",
+    "port/dreamcast/room/ps2_source_tables.hpp": "65962f966a21f294940c11f13bd776800e7fb04f7821568bae5b3bb9ecd96a63",
+    "port/dreamcast/room/ps2_source_view.hpp": "255ae5d177a1a80fafd34622f0ae65273c4a9e11b746e5c1b3af344ae698cebc",
+    "port/dreamcast/game/platform/include/ps2_world_data.inc": "461fd3e8e7b96d8df70f5c639a75cf8ef845ef185d300f3d38cd94b13f4e7a9f",
+    "port/dreamcast/game/third_party/qrcodegen/qrcodegen.h": "e82df4bff37d18b5863b9e7486fe6bda1b6cda8c3b9ecebfec473907265cb589",
+    "port/dreamcast/game/platform/include/world_census24.h": "2838a3c27f49b695eaf33152e3923f340ba386b1664184efce7f29bc55bc95e7",
+    "port/dreamcast/game/platform/include/perf_phase_miss.h": "f90c4a51e4454c63dad25b5ba2533961ea765b0c4b4389cb58faa4a6eeb43bf5",
+    "port/dreamcast/game/platform/include/perf_phase_accounting.hpp": "95bd9c90c31959c7677f818fa6182b60cd4140609fd76b6f95ba291e75557144",
+    "port/dreamcast/game/platform/include/draw_setup_audit.h": "8f9724ad32da75fe96ea61ee1e7b9f639977f8c8c373600f0c9d2877191b6e22",
+    "port/dreamcast/game/platform/include/actor_clip_reuse.hpp": "b3e7d71e817a672164458762805af4d967c5b78f75c9041c3f34c9a0ad5d7e69",
+    "port/dreamcast/game/platform/include/scenery_clip_gather.hpp": "7bdb262721e66fd06c6128229b8456d8d4f46cf6211be8ece2ff83a0876ebe09"
+  },
+  "off_identity_comparisons": 72,
+  "rejected_make_configurations": 11,
+  "enabled_compositions": [
+    "audit",
+    "actor-fix",
+    "world-fix",
+    "audit-fixes",
+    "audit-pmu15",
+    "audit-pmu37-fixes"
+  ],
+  "limitations": "No full game link/image or hardware frame. Static function frames cannot be added without call-graph analysis; dynamic synthetic peaks are in the separate cost receipts. The PMU37 group compares against event15 baseline, so its total also includes the event-selector difference."
+}

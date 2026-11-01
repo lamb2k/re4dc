@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "scope": "Reproduce the Build29 whole-source coverage manifest and reviewed split table.\n\nEvery tracked/unignored C/C++/assembly/include/definition source below src/ and\nport/dreamcast/ is read. Candidate keyword/dispatch matches are discovery aids,\nnot proof that every semantic fallback is recognized or reachable. The reviewed\ncatalogue supplies classification, costs, counter gaps and chapter uncertainty.\n",
+  "corpus_sha256": "cf27e865b5d048db0e4aad8eb89771d00b62dbf9d04a346b5f11a50e63db2064",
+  "files_walked": 1643,
+  "bytes_walked": 26946395,
+  "lines_walked": 777164,
+  "candidate_lines": 6257,
+  "candidate_files": 801,
+  "reviewed_split_groups": 72,
+  "reviewed_categories": {
+    "actor/skin": 5,
+    "motion": 8,
+    "cloth": 2,
+    "collision": 5,
+    "gameplay/HUD": 2,
+    "effects": 4,
+    "effects/provenance": 1,
+    "textures": 7,
+    "textures/I/O": 2,
+    "textures/movie": 1,
+    "disc": 3,
+    "disc/gameplay": 1,
+    "sound": 5,
+    "legacy/provenance": 1,
+    "legacy/model": 2,
+    "actor/light": 1,
+    "actor/frame caches": 1,
+    "actor/data": 2,
+    "actor/clipping": 1,
+    "model/frame caches": 2,
+    "model/data": 1,
+    "world/provenance": 1,
+    "world/data": 2,
+    "matrix/frame caches": 3,
+    "world/clipping": 1,
+    "translucent/submit": 3,
+    "model/gameplay allocation": 1,
+    "storage/subscreen": 2,
+    "movie/storage": 1,
+    "provenance": 1
+  },
+  "reason_counts": {
+    "DFA26": 133,
+    "FA29": 33
+  },
+  "dispositions": {
+    "standalone-demo/probe/engine-source; not presumed game runtime": 17,
+    "port-game-runtime; knob/recipe-dependent": 407,
+    "public-generated-placeholder; not private game data": 7,
+    "runtime-vendor; recipe-dependent": 3,
+    "shared-native-runtime; recipe-dependent": 39,
+    "test-source; not game recipe": 25,
+    "tool-or-fixture-source; not game recipe": 89,
+    "recovered-game-source; module selection recipe-dependent": 664,
+    "recovered-library; runtime selection recipe-dependent": 392
+  },
+  "patterns": {
+    "decline/recovery": "fallback|fall[ -]back|slow[ _-]?path|legacy|generic[ _-]?path|\\bdeclin\\w*|\\bretr(?:y|ies)|\\breload\\w*|\\bthrash\\w*|\\brefus\\w*|no[ -](?:block|slot|contig)",
+    "cache/admission": "\\b(?:cache|memo|miss|evict|overflow|capacity|guard|rebuild)\\w*",
+    "dispatch": "\\b(?:GXBegin|GXCallDisplayList|MeshDraw|CalcSk1_\\w+|hermiteFast|re4dc_\\w*(?:native|fast|submit|decode|materialize)\\w*)\\s*\\("
+  },
+  "source_sha256": {
+    "port/dreamcast/tools/d367/fallback_scan/source_sweep29.py": "f7229bbdb6187b9953ccc97c4081098c956e0b89bfe53cf57f4a68c033df0dae",
+    "port/dreamcast/tools/d367/fallback_scan/source_catalog29.py": "efdcb68f53f80a6571425996e95a6046b2902b4e1fb2d6eecc747e17e219f735"
+  },
+  "recipe_scope": "actual public-game and public-qa-audit29 Make values; 1088 queried knobs in recorded run; private staged package admission unobserved",
+  "limitations": [
+    "A whole-source read/candidate manifest is not a proof of all dynamic or semantically unnamed fallback branches.",
+    "Reviewed groups are explicit classifications, not blanket validation of every candidate in their source file.",
+    "False-positive examples: em_sub.cpp random-item fallback changes gameplay outcomes, not fast-vs-slow implementation; source assert/abort is not successful fallback; src/lib MPEG lookahead is not proof the native movie path uses that decoder.",
+    "Source-level reachability is distinct from actual chapter 1-2 data, live visibility, input sequence, device errors and private provenance acceptance.",
+    "MODELLED structural work/bytes are not hardware cycles. Numeric Build29 observer/data-fixture receipts are separate."
+  ]
+}

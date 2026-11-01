@@ -50,7 +50,7 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
         re4dc_log("char chunk: frame=%u chunks=%u records=%u points=%u\n", frame_serial, chunk_stats.chunks,
                   chunk_stats.records, chunk_stats.points);
     }
-    if (u == n) { pass_positions(e, r, n, k, s16_uv, all, any); return; }
+    if (u == n) { DFA26_MODEL_HIT(ActorChunkPositionUnique, n) pass_positions(e, r, n, k, s16_uv, all, any); return; }
     for (unsigned j = 0; j < kChunkRecPad * 3U; ++j) chunk_rec[u * 3U + j] = chunk_rec[(u - 1U) * 3U + j % 3U];
     const Records c{chunk_rec, 3U, r.color, false};
     pass_positions(e, c, u, k, s16_uv, all, any);
@@ -98,6 +98,7 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
 #endif
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Light once per distinct normal: pass_lights (fast fold) over the chunk's distinct normal indices into a side
 // cache, then each record takes its normal's colour word. A record's lit colour is a function of its normal (and
 // the normal's palette entry) and the part's alpha only, unless the part has per-vertex alpha (e.colors), which
@@ -105,10 +106,12 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
 u8 chunk_nsrc[kMaxVertices];
 u16 chunk_nkey[256];   // open-address table: normal index + 1 (0 = empty)
 u8 chunk_nval[256];
+#endif
 unsigned chunk_backend_meshlets, chunk_backend_fallbacks;
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 struct ChunkLightStats { unsigned records, normals; } chunk_light_stats;
 void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
-    if (e.colors || !n) { pass_lights(e, L, r, n); return; }
+    if (e.colors || !n) { DFA26_MODEL_HIT(ActorChunkLightColour, n) pass_lights(e, L, r, n); return; }
     std::memset(chunk_nkey, 0, sizeof chunk_nkey);
     unsigned u = 0;
     for (unsigned i = 0; i < n; ++i) {
@@ -124,13 +127,13 @@ void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
         chunk_nsrc[i] = chunk_nval[h];
     }
     chunk_light_stats.records += n; chunk_light_stats.normals += u;
-    if (u == n) { pass_lights(e, L, r, n); return; }
+    if (u == n) { DFA26_MODEL_HIT(ActorChunkLightUnique, n) pass_lights(e, L, r, n); return; }
     for (unsigned j = 0; j < kChunkRecPad * 3U; ++j) chunk_rec[u * 3U + j] = chunk_rec[(u - 1U) * 3U + j % 3U];
     const Records c{chunk_rec, 3U, r.color, false};
     // Side cache from the frame workspace (per submit scratch, released here): no static buffer, KOS untouched.
     const unsigned mark = workspace_top;
     pvr_vertex_t* const lit = static_cast<pvr_vertex_t*>(scratch((u + 4U) * unsigned(sizeof(pvr_vertex_t))));
-    if (!lit) { pass_lights(e, L, r, n); return; }
+    if (!lit) { DFA26_MODEL_HIT(ActorChunkLightScratch, n) pass_lights(e, L, r, n); return; }
     pvr_vertex_t* const keep = e.cache.v;
     e.cache.v = lit;
     pass_lights(e, L, c, u);
@@ -158,6 +161,8 @@ void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     }
 #endif
 }
+
+#endif
 
 // The chunk sink: today's store-queue window (adapter) or, with CHUNK_SUBMIT, the shared back end (chunk_submit.h v1).
 #if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND
@@ -220,10 +225,19 @@ inline bool chunk_sink_strips(ChunkSink& s, const Records& r, const u8* index, u
 #if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND
     bool ok = true;
     if (chunk_backend(e, r, index, nv, ni, nt, ok)) return ok;
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    ++chunk_backend_fallbacks;
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorChunkBackend, 1)
+#endif
 #else
     (void)nv;
 #endif
     if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; return e.whole(index, ni, nt); }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorStripScan, 1)
+#endif
     return e.strips(r, index, ni);
 }
 inline void chunk_sink_end(ChunkSink&) {}

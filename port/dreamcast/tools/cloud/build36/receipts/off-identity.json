@@ -1,0 +1,756 @@
+{
+  "base": "bb5f18e0e3b3fac4c76bd42d0c9d8107385c568c",
+  "baseline_archive_sha256": "f194dcb886ef912bc9037669071baaeaf625069e344582f4bddf96427266347a",
+  "baseline_fixture_source_sha256": {
+    "port/dreamcast/tests/test_room_bins.py": "10645b97d9751f73acdd5e0290043b9dd1b5ad118542df97f7ad75b13d9a19e4",
+    "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+    "port/dreamcast/tools/d367/fallback_scan/formats.py": "3e9e390741b5fa1ace847780d6e2c4a5314d24d279e0453f8f70e30874ad042f",
+    "port/dreamcast/tools/d367/fallback_scan/scan.py": "8bfb5a083400728bc03ff9ab85651f6c0bcbdd1ad6e5ee94122ad90fb59f6aca",
+    "port/dreamcast/tools/d367/fallback_scan/test_scan.py": "63e8fa85a4e9856f4a526baf0554b419c7971216c01f1d5b84437f16f5986c5a",
+    "port/dreamcast/tools/d367/leonlod/glod_pack.py": "3787ffff5277bc713b3a795ddf6f27ae4c9c6cba068e99c5aa132a8c0b1215ac",
+    "port/dreamcast/tools/d367/texpack.py": "199fb53bc3855ba3c831e4f9013c1e8fd4383cf36615803cbc29acacedcf5bbf",
+    "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/fixtures.py": "3abad324ab613832dc63df7e455019c5e3dfa3fc21c3fecfb852762949807622",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/package.py": "975d69e7b012c7dd81f89f7fb2b0f44bb76faa22fd8def5dac896de0d0eef501"
+  },
+  "candidate_head": "a803b1d1746fd9864d7b40e04a1e1d02026b3d90",
+  "candidate_source_sha256": {
+    "port/dreamcast/tests/test_room_bins.py": "10645b97d9751f73acdd5e0290043b9dd1b5ad118542df97f7ad75b13d9a19e4",
+    "port/dreamcast/tools/cloud/build36/verify_identity.py": "3c92b0a2657ac9789d272e76e75d71c09a2982e4d231d3719b1141c14a43b066",
+    "port/dreamcast/tools/convert_room_bins.py": "ae36a661041e39078f51f18401ed3c7c840b792e147460967238b0abd838280b",
+    "port/dreamcast/tools/d367/fallback_scan/compact_audit29.py": "a14c6c9a09fa4855234891e2d3721e163893ebc1d89420cb219fad2ac02acbb5",
+    "port/dreamcast/tools/d367/fallback_scan/convert.py": "703f9d713182a2c73320596dcd58d63b6c3b1ad718ff77322fd2d548b3f654ec",
+    "port/dreamcast/tools/d367/fallback_scan/counter_cost29.py": "dac9882f9547e2489f7fd85182ada7b7f9b7d542f77f5efb68bcdefb8ba57b9e",
+    "port/dreamcast/tools/d367/fallback_scan/formats.py": "3e9e390741b5fa1ace847780d6e2c4a5314d24d279e0453f8f70e30874ad042f",
+    "port/dreamcast/tools/d367/fallback_scan/package.py": "f11c301459363a0b99c4aae2a5cd8bfba71839e9a50291f2a33d26298bbad1f4",
+    "port/dreamcast/tools/d367/fallback_scan/recipe_values29.py": "52ef014e07e09b82491545ffef6c372fbed3b3d048d159c2d4969c320635f4dd",
+    "port/dreamcast/tools/d367/fallback_scan/room_lists36.py": "c6801686ae7fa76b771358f49e1cc025f3232a60247d4caa5283b5e2fc01548e",
+    "port/dreamcast/tools/d367/fallback_scan/scan.py": "b7779305d8961c97eac58b752fb43bba2bff6a1e03aa36df520935a5a0807344",
+    "port/dreamcast/tools/d367/fallback_scan/source_catalog29.py": "efdcb68f53f80a6571425996e95a6046b2902b4e1fb2d6eecc747e17e219f735",
+    "port/dreamcast/tools/d367/fallback_scan/source_sweep29.py": "f7229bbdb6187b9953ccc97c4081098c956e0b89bfe53cf57f4a68c033df0dae",
+    "port/dreamcast/tools/d367/fallback_scan/test_audit29.py": "be6ee7f24b5808ced71f68f9a036ebb871308fb396142298fa761c9bd78d6d44",
+    "port/dreamcast/tools/d367/fallback_scan/test_convert.py": "3c5a3febb05333edb940cfc836c403a6790817e5d87207717d7dc24d99c8e437",
+    "port/dreamcast/tools/d367/fallback_scan/test_package.py": "10a66151a10c102a3ccbea484e0b43b00e5d38487de27ac2f327ba4a240fb77d",
+    "port/dreamcast/tools/d367/fallback_scan/test_qa29.py": "2f040897679a50e124a74a4ea4d215b9e47dc15dbef6b63a667848c6678e3014",
+    "port/dreamcast/tools/d367/fallback_scan/test_rooms36.py": "3c0934ddc716029e2e9affc02a196e1d14f236860d05bb6b17495afebc8083f8",
+    "port/dreamcast/tools/d367/fallback_scan/test_runtime.py": "e906781ead65b8cbc8093b217b5c67b87f9f1ca1c2255375459f2136b3cc574e",
+    "port/dreamcast/tools/d367/fallback_scan/test_scan.py": "63e8fa85a4e9856f4a526baf0554b419c7971216c01f1d5b84437f16f5986c5a",
+    "port/dreamcast/tools/d367/fallback_scan/test_scan36.py": "3e374fbf035732263bf0ad4c2234a2c5733e449394fab2fbe77f77e28c9314b9",
+    "port/dreamcast/tools/d367/fallback_scan/test_textures36.py": "43399809bc45d1a561e3ccf3d711fc0ab7e185bbb1d2b0aa7938052d2cb3cf65",
+    "port/dreamcast/tools/d367/fallback_scan/test_world36.py": "5ec4f934cc48d7a8f44a261788e4d9efd0972dd3efaa02c733c9bdb64f10b33e",
+    "port/dreamcast/tools/d367/fallback_scan/textures36.py": "c182bac6f0bca55a5f1105a058d8a963ff4868357af931f4d7b35546a62fb2c4",
+    "port/dreamcast/tools/d367/fallback_scan/world36.py": "4f4baa73ae59ee3fce44ff52a9a24f44ffcc4146d33096b3cc0781a35faa3313",
+    "port/dreamcast/tools/d367/leonlod/glod_pack.py": "3787ffff5277bc713b3a795ddf6f27ae4c9c6cba068e99c5aa132a8c0b1215ac",
+    "port/dreamcast/tools/d367/texpack.py": "199fb53bc3855ba3c831e4f9013c1e8fd4383cf36615803cbc29acacedcf5bbf",
+    "port/dreamcast/tools/d367/visibility23/metadata.py": "7dbfa66ce850f16b208cd5a23fabf4cdb79ff36d0f98dc6941ab7412a881fd96",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/fixtures.py": "3abad324ab613832dc63df7e455019c5e3dfa3fc21c3fecfb852762949807622",
+    "port/dreamcast/tools/d367/world_blender_roundtrip/package.py": "975d69e7b012c7dd81f89f7fb2b0f44bb76faa22fd8def5dac896de0d0eef501"
+  },
+  "cli_runs": 21,
+  "comparison": "Exact bytes; same relative output path out for every sequential invocation; no normalization.",
+  "git_version": "git version 2.51.1",
+  "input_bytes_unchanged": true,
+  "input_files": {
+    "context-list-extra/disc/dc/native/r103/ps2-world.r4pw": {
+      "bytes": 236,
+      "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+    },
+    "context-list-extra/disc/dc/native/r103/ps2-world.re4mesh": {
+      "bytes": 1184,
+      "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+    },
+    "context-list-extra/disc/dc/resident.bin": {
+      "bytes": 512,
+      "sha256": "1392baf544d03421f9f024ca74c885b332e44530ffbba0ee729e6a727da91ac3"
+    },
+    "context-list-extra/disc/dc/tex.pak": {
+      "bytes": 10240,
+      "sha256": "bf597fd76929ca5e6ad6c124f1522062cc7082a892732ffb9f007cc49cad4d1f"
+    },
+    "context-list-extra/disc/em/em12.drs": {
+      "bytes": 1344,
+      "sha256": "159ace23d01816b4127365607c32e4768b5b4a202189ae1f0bcbc862bc31a0de"
+    },
+    "context-list-extra/disc/st1/r103.dar": {
+      "bytes": 1344,
+      "sha256": "48aa1b72d33483d14e489d7263993ba67c5f07489a84198f9425b58bb7f81406"
+    },
+    "context-list-extra/support/context.json": {
+      "bytes": 4249,
+      "sha256": "89da03eb8eb3e1f60b137f19508f7cf711736624f252c95b4e1d1d997595ad7d"
+    },
+    "context-list-extra/support/ganado.re4gl": {
+      "bytes": 608,
+      "sha256": "38215335dd191a215c4cb26ad677979e2e035e0e04c6e227064586f3b3df9fcf"
+    },
+    "context-list-extra/support/ganado_runtime.h": {
+      "bytes": 2508,
+      "sha256": "3462e0fed6ea5161ee2bfa6968c974e047eb919b31541dff683d974125de1a44"
+    },
+    "context-list-extra/support/resolved-knobs.txt": {
+      "bytes": 157,
+      "sha256": "f7ee440696eca40f03860275aa1740f6854352fd78ecd65ab137a73bc66c2b2b"
+    },
+    "context-list-extra/support/rooms.json": {
+      "bytes": 256,
+      "sha256": "6fd41fafb95a72d72ea4b25cace639ced25a64a5dc9cfb254d1e139ff7ab0d63"
+    },
+    "global-esl-drs/disc/em/em12.drs": {
+      "bytes": 1344,
+      "sha256": "159ace23d01816b4127365607c32e4768b5b4a202189ae1f0bcbc862bc31a0de"
+    },
+    "global-esl-drs/disc/etc/emleon00.esl": {
+      "bytes": 64,
+      "sha256": "caa84b526fd7ff6ed84d37440cfc33926240b5e9cf511fff18b073393c39c927"
+    },
+    "legacy-without-policy/disc/dc/native/r103/legacy.re4mesh": {
+      "bytes": 576,
+      "sha256": "ae58c22df385d991943d54f84740764d0b8ef87b2d034c565c287f45c1d3415a"
+    },
+    "legacy-without-policy/disc/dc/native/r103/ps2-world.r4pw": {
+      "bytes": 236,
+      "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+    },
+    "legacy-without-policy/disc/dc/native/r103/ps2-world.re4mesh": {
+      "bytes": 1184,
+      "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+    },
+    "legacy-without-policy/disc/dc/resident.bin": {
+      "bytes": 512,
+      "sha256": "1392baf544d03421f9f024ca74c885b332e44530ffbba0ee729e6a727da91ac3"
+    },
+    "legacy-without-policy/disc/dc/tex.pak": {
+      "bytes": 10240,
+      "sha256": "bf597fd76929ca5e6ad6c124f1522062cc7082a892732ffb9f007cc49cad4d1f"
+    },
+    "legacy-without-policy/disc/st1/r103.dar": {
+      "bytes": 1344,
+      "sha256": "48aa1b72d33483d14e489d7263993ba67c5f07489a84198f9425b58bb7f81406"
+    },
+    "malformed-present-policy/disc/dc/native/r103/ps2-world.r4pw": {
+      "bytes": 236,
+      "sha256": "aee64e5023380cd24277e2e4834884a422be6c6ff33bc07aa38612e8b4c747fe"
+    },
+    "malformed-present-policy/disc/dc/native/r103/ps2-world.re4mesh": {
+      "bytes": 1184,
+      "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+    },
+    "malformed-present-policy/disc/dc/resident.bin": {
+      "bytes": 512,
+      "sha256": "1392baf544d03421f9f024ca74c885b332e44530ffbba0ee729e6a727da91ac3"
+    },
+    "malformed-present-policy/disc/dc/tex.pak": {
+      "bytes": 10240,
+      "sha256": "bf597fd76929ca5e6ad6c124f1522062cc7082a892732ffb9f007cc49cad4d1f"
+    },
+    "malformed-present-policy/disc/st1/r103.dar": {
+      "bytes": 1344,
+      "sha256": "48aa1b72d33483d14e489d7263993ba67c5f07489a84198f9425b58bb7f81406"
+    },
+    "missing-modern-policy/disc/dc/native/r103/ps2-world.re4mesh": {
+      "bytes": 1184,
+      "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+    },
+    "missing-modern-policy/disc/dc/resident.bin": {
+      "bytes": 512,
+      "sha256": "1392baf544d03421f9f024ca74c885b332e44530ffbba0ee729e6a727da91ac3"
+    },
+    "missing-modern-policy/disc/dc/tex.pak": {
+      "bytes": 10240,
+      "sha256": "bf597fd76929ca5e6ad6c124f1522062cc7082a892732ffb9f007cc49cad4d1f"
+    },
+    "missing-modern-policy/disc/st1/r103.dar": {
+      "bytes": 1344,
+      "sha256": "48aa1b72d33483d14e489d7263993ba67c5f07489a84198f9425b58bb7f81406"
+    },
+    "mixed/disc/dc/native/r103/ps2-world.r4pw": {
+      "bytes": 236,
+      "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+    },
+    "mixed/disc/dc/native/r103/ps2-world.re4mesh": {
+      "bytes": 1184,
+      "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+    },
+    "mixed/disc/dc/resident.bin": {
+      "bytes": 512,
+      "sha256": "1392baf544d03421f9f024ca74c885b332e44530ffbba0ee729e6a727da91ac3"
+    },
+    "mixed/disc/dc/tex.pak": {
+      "bytes": 10240,
+      "sha256": "bf597fd76929ca5e6ad6c124f1522062cc7082a892732ffb9f007cc49cad4d1f"
+    },
+    "mixed/disc/st1/r103.dar": {
+      "bytes": 1344,
+      "sha256": "48aa1b72d33483d14e489d7263993ba67c5f07489a84198f9425b58bb7f81406"
+    },
+    "pack-loose-conflict/disc/dc/native/r103/ps2-world.r4pw": {
+      "bytes": 236,
+      "sha256": "c4811a73fcee9c941c723b55cf1f6469e67a824faae31d5a789b69d47fd39eda"
+    },
+    "pack-loose-conflict/disc/dc/native/r103/ps2-world.re4mesh": {
+      "bytes": 1184,
+      "sha256": "f77f1ebd8f5293ec89f8df5d1a1189e6af1a47fba97aa6d2ceb8367df70162d2"
+    },
+    "pack-loose-conflict/disc/dc/resident.bin": {
+      "bytes": 512,
+      "sha256": "1392baf544d03421f9f024ca74c885b332e44530ffbba0ee729e6a727da91ac3"
+    },
+    "pack-loose-conflict/disc/dc/tex.pak": {
+      "bytes": 10240,
+      "sha256": "bf597fd76929ca5e6ad6c124f1522062cc7082a892732ffb9f007cc49cad4d1f"
+    },
+    "pack-loose-conflict/disc/dc/tex/0/11223344-99aabbcc.re4tex": {
+      "bytes": 272,
+      "sha256": "08a0e403e19ff87ec322cb5b63a232aef92a7bb99e263db101d410a817ec4119"
+    },
+    "pack-loose-conflict/disc/st1/r103.dar": {
+      "bytes": 1344,
+      "sha256": "48aa1b72d33483d14e489d7263993ba67c5f07489a84198f9425b58bb7f81406"
+    }
+  },
+  "limits": [
+    "Public synthetic files only; no private assets or complete-disc scanner census.",
+    "No target runtime, ELF, overlays or ISO was built; their zero delta is a source-scope deduction.",
+    "Only absent and explicit-zero behavior is qualified here; enabled behavior has separate tests."
+  ],
+  "process_result_comparisons": 14,
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "raw_artifact_comparisons": 126,
+  "repository_scope": {
+    "allowed_handback": "port/dreamcast/docs/cloud/handbacks/build-36.md",
+    "allowed_prefixes": [
+      "port/dreamcast/tools/d367/fallback_scan/",
+      "port/dreamcast/tools/cloud/build36/"
+    ],
+    "checkpoint_scope": "scanner-and-documentation",
+    "committed_since_base": [
+      "port/dreamcast/docs/cloud/handbacks/build-36.md",
+      "port/dreamcast/tools/d367/fallback_scan/room_lists36.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_rooms36.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_textures36.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_world36.py",
+      "port/dreamcast/tools/d367/fallback_scan/textures36.py",
+      "port/dreamcast/tools/d367/fallback_scan/world36.py"
+    ],
+    "production_build_inputs_changed": false,
+    "production_identity_scope": "Tracked diff scope contains only offline scanner/checker files and the Build36 handback; no target rebuild or binary comparison.",
+    "tracked_changed_paths": [
+      "port/dreamcast/docs/cloud/handbacks/build-36.md",
+      "port/dreamcast/tools/d367/fallback_scan/README.md",
+      "port/dreamcast/tools/d367/fallback_scan/room_lists36.py",
+      "port/dreamcast/tools/d367/fallback_scan/scan.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_rooms36.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_textures36.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_world36.py",
+      "port/dreamcast/tools/d367/fallback_scan/textures36.py",
+      "port/dreamcast/tools/d367/fallback_scan/world36.py"
+    ],
+    "untracked_paths": [
+      "port/dreamcast/tools/cloud/build36/verify_identity.py",
+      "port/dreamcast/tools/d367/fallback_scan/test_scan36.py"
+    ]
+  },
+  "scenarios": [
+    {
+      "argv": [
+        "inputs/mixed/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 3102,
+          "sha256": "55cea345f9ea2012c0bf0334411eb4df7870857202965f4989e6de2ccf18d427"
+        },
+        "barn.tsv": {
+          "bytes": 2786,
+          "sha256": "0aef5376e010a1601d9f4e6264be3c2710d798aee7745906f3e6398bfb8a557b"
+        },
+        "by-model.tsv": {
+          "bytes": 872,
+          "sha256": "0ebc988d49d8580c63c17b77f687b64d7b4dce9992c2c7daac36332ec1ae9b4d"
+        },
+        "by-room.tsv": {
+          "bytes": 313,
+          "sha256": "a45cd492a4497b0342bdc8e17cf9e7c57bca4790ef98f61aa70799bbf67849f9"
+        },
+        "context-template.json": {
+          "bytes": 3580,
+          "sha256": "2e58a70c592e6c01ca7208c271229282254ad53bd9651ed251ce798ea5deacec"
+        },
+        "coverage.tsv": {
+          "bytes": 188,
+          "sha256": "0935c1f711141f469639b17606a90c7a3fb3e6fdf58346ce1f064b4b99adceb1"
+        },
+        "details.tsv": {
+          "bytes": 20450,
+          "sha256": "0dab9fb11e8349b9ebd496903ac3aa41bc3203fe13cc2253259a79214bb5857f"
+        },
+        "report.json": {
+          "bytes": 56534,
+          "sha256": "a2b33256a2175e88503f425dea5e9c692aa8bdb76cf4dde1a0e1ff017dc35ff7"
+        },
+        "spawns.tsv": {
+          "bytes": 135,
+          "sha256": "8046175645665746379cc222c949d991d94c9429a10fb320d0c0ab7d0dc4b610"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 0,
+      "models": 3,
+      "name": "mixed",
+      "result_status": "SCANNED",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "SCANNED: 3 models, 3 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "cccc825adf1c67fb539ed363c8a9f0154089f468a15c4444a155390e099a8b90",
+      "texture_keys": 3
+    },
+    {
+      "argv": [
+        "inputs/pack-loose-conflict/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 3134,
+          "sha256": "6ea1b73c37b6a41f43b25411a880999136d209b2e2a4eb2816e008a7910279a9"
+        },
+        "barn.tsv": {
+          "bytes": 2786,
+          "sha256": "0aef5376e010a1601d9f4e6264be3c2710d798aee7745906f3e6398bfb8a557b"
+        },
+        "by-model.tsv": {
+          "bytes": 962,
+          "sha256": "d068775eb358a9139b48334ece2fc1c423f2d84aae531f300ae9ccb94e2f5026"
+        },
+        "by-room.tsv": {
+          "bytes": 315,
+          "sha256": "d1fe5d0f17fdf805291e376bc8d8fcb3a638ada924d75afac197259a0d7510ff"
+        },
+        "context-template.json": {
+          "bytes": 3580,
+          "sha256": "2e58a70c592e6c01ca7208c271229282254ad53bd9651ed251ce798ea5deacec"
+        },
+        "coverage.tsv": {
+          "bytes": 286,
+          "sha256": "9d4af6be5bfe7aaada9453e13950c22b0935a5885a4b1267caccfba951309b26"
+        },
+        "details.tsv": {
+          "bytes": 20455,
+          "sha256": "8f8051402e284217dc51d6a8451302a3a9e2360ef53624474e606190031471cb"
+        },
+        "report.json": {
+          "bytes": 56940,
+          "sha256": "0ab19fe24fa31debc0edcb7f4efdd6cae5a40330f62f74d45231e07026d435ba"
+        },
+        "spawns.tsv": {
+          "bytes": 135,
+          "sha256": "8046175645665746379cc222c949d991d94c9429a10fb320d0c0ab7d0dc4b610"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 1,
+      "models": 3,
+      "name": "pack-loose-conflict",
+      "result_status": "INCOMPLETE",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "INCOMPLETE: 3 models, 1 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "737e770b4534dc1f2f38c3faa2967123333cb5d9901ed805b9c5e0c952fd836e",
+      "texture_keys": 1
+    },
+    {
+      "argv": [
+        "inputs/missing-modern-policy/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 2599,
+          "sha256": "e211a8f47c6d4c1e7a4d7a50d3c6f575ae6cc89633594e7dcb760c829c3badbf"
+        },
+        "barn.tsv": {
+          "bytes": 2786,
+          "sha256": "0aef5376e010a1601d9f4e6264be3c2710d798aee7745906f3e6398bfb8a557b"
+        },
+        "by-model.tsv": {
+          "bytes": 399,
+          "sha256": "845ffcf51c4e376b91e466cc38bfb45a602ff09d079a2b2744aad0fe1b050be8"
+        },
+        "by-room.tsv": {
+          "bytes": 167,
+          "sha256": "fce1350752733ce5bdec9d764cc9624185003c23465422f8ff4fac9bcc105fd6"
+        },
+        "context-template.json": {
+          "bytes": 1467,
+          "sha256": "6b59fc0fa1e35dbfd23fd9c4c741513c7903eaac23ddc015d58f8dcfde1991ee"
+        },
+        "coverage.tsv": {
+          "bytes": 218,
+          "sha256": "74e8985448bdc13965f2f59cd2cf9a8dd13ee898c7e2a7b8e750f9ba2e31b99d"
+        },
+        "details.tsv": {
+          "bytes": 9078,
+          "sha256": "97019f56fea5d0548693138e7241d9e8bf5f68c9ad61ae0d42aa4e9745d0bdf3"
+        },
+        "report.json": {
+          "bytes": 22613,
+          "sha256": "257720912929824372c2dd2e532721e9c622ed649e9e46d7d2a989e360aa753f"
+        },
+        "spawns.tsv": {
+          "bytes": 135,
+          "sha256": "8046175645665746379cc222c949d991d94c9429a10fb320d0c0ab7d0dc4b610"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 1,
+      "models": 1,
+      "name": "missing-modern-policy",
+      "result_status": "INCOMPLETE",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "INCOMPLETE: 1 models, 3 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "26dc11d0ddd8ad3325adbbd506149542e36fbf8ce638a39c19b241fae8aebb4f",
+      "texture_keys": 3
+    },
+    {
+      "argv": [
+        "inputs/malformed-present-policy/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 2583,
+          "sha256": "515c29abc5a33a93bba04469e6e13302fc5ba1fe32a6596149c1df265adf71d1"
+        },
+        "barn.tsv": {
+          "bytes": 2786,
+          "sha256": "0aef5376e010a1601d9f4e6264be3c2710d798aee7745906f3e6398bfb8a557b"
+        },
+        "by-model.tsv": {
+          "bytes": 399,
+          "sha256": "845ffcf51c4e376b91e466cc38bfb45a602ff09d079a2b2744aad0fe1b050be8"
+        },
+        "by-room.tsv": {
+          "bytes": 167,
+          "sha256": "fce1350752733ce5bdec9d764cc9624185003c23465422f8ff4fac9bcc105fd6"
+        },
+        "context-template.json": {
+          "bytes": 1467,
+          "sha256": "6b59fc0fa1e35dbfd23fd9c4c741513c7903eaac23ddc015d58f8dcfde1991ee"
+        },
+        "coverage.tsv": {
+          "bytes": 202,
+          "sha256": "1aeb9aabd6f240d70ae75d34711bd5d93d120323890a62812aa674c70ab95e99"
+        },
+        "details.tsv": {
+          "bytes": 9078,
+          "sha256": "97019f56fea5d0548693138e7241d9e8bf5f68c9ad61ae0d42aa4e9745d0bdf3"
+        },
+        "report.json": {
+          "bytes": 22784,
+          "sha256": "61acf31efe9295d66ccb7cd2ae2a9df2097b09412d1cf5b04d45f95bd1b12ac5"
+        },
+        "spawns.tsv": {
+          "bytes": 135,
+          "sha256": "8046175645665746379cc222c949d991d94c9429a10fb320d0c0ab7d0dc4b610"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 1,
+      "models": 1,
+      "name": "malformed-present-policy",
+      "result_status": "INCOMPLETE",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "INCOMPLETE: 1 models, 3 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "26dc11d0ddd8ad3325adbbd506149542e36fbf8ce638a39c19b241fae8aebb4f",
+      "texture_keys": 3
+    },
+    {
+      "argv": [
+        "inputs/global-esl-drs/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 2599,
+          "sha256": "89fa04aac078e2b8d138e8f85e287b6eb12caf1e500425c386f27916d8127e8f"
+        },
+        "barn.tsv": {
+          "bytes": 190,
+          "sha256": "4e503f36bc74b89d9d7c12a812f1b83c578c0610444313c155e46554298c385f"
+        },
+        "by-model.tsv": {
+          "bytes": 408,
+          "sha256": "b1523fbb01005687be332fc7f2ee18d069580f610e9f6f623965aead8608cac0"
+        },
+        "by-room.tsv": {
+          "bytes": 185,
+          "sha256": "4dbb9b79aa588a3feef6306baa537202990bc5a7daaf8bd865b9818c41ceb782"
+        },
+        "context-template.json": {
+          "bytes": 1434,
+          "sha256": "709503ad48b46bdb7196702af7b3e8b2c93c33dc30849da951cd210ba39500dc"
+        },
+        "coverage.tsv": {
+          "bytes": 171,
+          "sha256": "90462beb6e85f586000ad247b5254db8d077c7cefd72187dc15d4056e7ca7873"
+        },
+        "details.tsv": {
+          "bytes": 8850,
+          "sha256": "61fe4dafcaa1c14119f683310159999ac98d808f171e15c4fc67c876922f6427"
+        },
+        "report.json": {
+          "bytes": 22040,
+          "sha256": "2a1c2a289fd33179b5d117e13c7ec65ce6f922b1208228a8cfee4fda38458bd4"
+        },
+        "spawns.tsv": {
+          "bytes": 361,
+          "sha256": "552f3f64987e53871ede16d2295ac29c619126e916942d5cee82249a030b3f15"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 1,
+      "models": 1,
+      "name": "global-esl-drs",
+      "result_status": "INCOMPLETE",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "INCOMPLETE: 1 models, 0 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "7ac51ed8e748133cc0a4f133e13bfb602a6584099294b3840b33cc175f5d4dbd",
+      "texture_keys": 0
+    },
+    {
+      "argv": [
+        "inputs/context-list-extra/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict",
+        "--knobs",
+        "inputs/context-list-extra/support/resolved-knobs.txt",
+        "--context",
+        "inputs/context-list-extra/support/context.json",
+        "--room-list",
+        "inputs/context-list-extra/support/rooms.json",
+        "--input",
+        "inputs/context-list-extra/support/ganado_runtime.h"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 3853,
+          "sha256": "f1ceb09d74800f73aa3a430ef57481e7e975eebe59eb33df8975f87487b74274"
+        },
+        "barn.tsv": {
+          "bytes": 5256,
+          "sha256": "e9913d3c10bafd88c425ace721365e8e098bcba93aa47cd39949bbdf5d17e2be"
+        },
+        "by-model.tsv": {
+          "bytes": 1740,
+          "sha256": "a551b8e75d495023580c2b22897c9c59ba15fd7f17d21510191d9af4acd157eb"
+        },
+        "by-room.tsv": {
+          "bytes": 510,
+          "sha256": "8b684023f926c19892aab41641608bcc87cf6efe3ec41bcf24ca159f89747a29"
+        },
+        "context-template.json": {
+          "bytes": 6737,
+          "sha256": "1a9aa192c9ee38210aed510ea60e645da64b91cc7947112fc7c24963cb4688ca"
+        },
+        "coverage.tsv": {
+          "bytes": 275,
+          "sha256": "cfb506cd5c02480bb768568357577a72738de0efbe3e880245e091353570f53a"
+        },
+        "details.tsv": {
+          "bytes": 62272,
+          "sha256": "db459c4d72ade0ac6059fb3aacc3a7ea02b0d098bb642476d374893ae8a589ab"
+        },
+        "report.json": {
+          "bytes": 157486,
+          "sha256": "3ffac8f67f78e4d38a6fe50c9788153f02be9e04be651a7dcd034968b8b08de0"
+        },
+        "spawns.tsv": {
+          "bytes": 135,
+          "sha256": "8046175645665746379cc222c949d991d94c9429a10fb320d0c0ab7d0dc4b610"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 0,
+      "models": 5,
+      "name": "context-list-extra",
+      "result_status": "SCANNED",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "SCANNED: 5 models, 3 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "104fe09e988b14a3a3b05d5bf34fcf7fd04cf7bb224e9ca965a7e47620f6b5c5",
+      "texture_keys": 3
+    },
+    {
+      "argv": [
+        "inputs/legacy-without-policy/disc",
+        "--out",
+        "out",
+        "--rooms",
+        "r103",
+        "--strict"
+      ],
+      "artifacts": {
+        "REPORT.md": {
+          "bytes": 3053,
+          "sha256": "ddd03b27cb8f0bab1a69373f3cc935d03068ff803b55fa2396de25cdff869f48"
+        },
+        "barn.tsv": {
+          "bytes": 2786,
+          "sha256": "0aef5376e010a1601d9f4e6264be3c2710d798aee7745906f3e6398bfb8a557b"
+        },
+        "by-model.tsv": {
+          "bytes": 872,
+          "sha256": "0ebc988d49d8580c63c17b77f687b64d7b4dce9992c2c7daac36332ec1ae9b4d"
+        },
+        "by-room.tsv": {
+          "bytes": 313,
+          "sha256": "a45cd492a4497b0342bdc8e17cf9e7c57bca4790ef98f61aa70799bbf67849f9"
+        },
+        "context-template.json": {
+          "bytes": 3580,
+          "sha256": "2e58a70c592e6c01ca7208c271229282254ad53bd9651ed251ce798ea5deacec"
+        },
+        "coverage.tsv": {
+          "bytes": 269,
+          "sha256": "c0cdc4a9d3af1cb675f7704179ec0d98598d3d41a10e19b5603b0c3d6a5490a2"
+        },
+        "details.tsv": {
+          "bytes": 20450,
+          "sha256": "0dab9fb11e8349b9ebd496903ac3aa41bc3203fe13cc2253259a79214bb5857f"
+        },
+        "report.json": {
+          "bytes": 56916,
+          "sha256": "f1dbdf6f7bfcb10dd9604905bb66c932acf9c6a324d03e68349e39cf6d467676"
+        },
+        "spawns.tsv": {
+          "bytes": 135,
+          "sha256": "8046175645665746379cc222c949d991d94c9429a10fb320d0c0ab7d0dc4b610"
+        }
+      },
+      "comparisons": [
+        {
+          "artifacts": 9,
+          "control": "absent",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        },
+        {
+          "artifacts": 9,
+          "control": "zero",
+          "process_equal": true,
+          "raw_artifacts_equal": true
+        }
+      ],
+      "expected_exit": 1,
+      "models": 3,
+      "name": "legacy-without-policy",
+      "result_status": "INCOMPLETE",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "INCOMPLETE: 3 models, 3 texture keys; out/REPORT.md\n",
+      "stdout_sha256": "34077b9f5037a80c56d6c70c31e0774c141711ddd6585c902c73f56a87546189",
+      "texture_keys": 3
+    }
+  ],
+  "schema": "re4dc.scan36.off-identity/1",
+  "scope": "Compare the real baseline scanner CLI with absent/zero Build36 controls.\n\nOnly standard-library Python and Git are needed. Public fixture writers and\nthe baseline CLI are extracted from the requested Git commit into temporary\nstorage. Each CLI runs against identical inputs and the same output pathname;\nall nine artifact bytes, exit status, stdout and stderr must match exactly.\nInput bytes and candidate source hashes must remain unchanged. No runtime,\nrecipe, game data, target executable or disc image is built or modified.\n",
+  "status": "PASS"
+}

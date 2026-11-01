@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "reasons": 133,
+  "row_bytes": 3424,
+  "max_row_bytes": 110,
+  "framing_cases": 14,
+  "backpressure_cases": 21,
+  "bulk_attempts": 593,
+  "bulk_refusals": 518,
+  "max_queued_bytes": 2263,
+  "max_datagram_bytes": 1130,
+  "snapshot_bytes": 552,
+  "sanitized": false,
+  "scope": "Compile production counters, QA rows, framing and bounded telemetry on the host.",
+  "source_sha256": {
+    "port/dreamcast/game/qa_menu.cpp": "8419e70961d2687ab06d7b04eabcbe164c713c1687f0b7e27906d150b4cc2736",
+    "port/dreamcast/game/draw_fallback_audit.cpp": "fd83c67dc0e701863ab33dbd870407554ad10ce284ed63fa44ce49ab023b1819",
+    "port/dreamcast/game/platform/include/draw_fallback_audit.h": "91f0289f1291e8cc64e88d63ef0c7764e4b90fbf606ce33e569b68ef11829749",
+    "port/dreamcast/game/platform/include/draw_fallback_link26.hpp": "713c6f7d4a8b921d39c1538804d9db8b33a84ef6e3738aaf6587ee388223a41a",
+    "port/dreamcast/tools/cloud/build26/qa_contract.py": "2c25c71276500c6b5c482eba4625dd9cd4b4e314ef0e9342e0eb769fd028d88f",
+    "port/dreamcast/game/platform/include/draw_fallback_model.def": "887311c6449585101111ddebda48696e6137e6841fb9d9b188ee4b4d264330b1",
+    "port/dreamcast/game/platform/include/draw_fallback_other.def": "9dd56aaa649009f98d9a2bdf7e3e78fd7a9eb31e804f5596db0fcab3c3731c15",
+    "port/dreamcast/game/platform/include/draw_fallback_world.def": "a75ff3edf352b357f54039d3ddc2c2306d21d8d43d3b292be49d35269cecc5cd"
+  }
+}

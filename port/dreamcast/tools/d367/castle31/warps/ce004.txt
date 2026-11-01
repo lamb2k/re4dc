@@ -1,0 +1,13 @@
+name castle31-ce-r208-crank-exit004
+room 0x208
+jp 0
+chapter 6
+status 3 0x04000000
+pos 0 4000 -1185
+ang 3.14159265359
+trg 0 60 0x208
+goto 240 73.5272 10583.5 -106833.4434 3.14159265359 sub
+act 280 a 10
+entry 2
+alivelog 30
+dump

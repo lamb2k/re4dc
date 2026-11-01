@@ -73,7 +73,13 @@ bool rigid_strips(Part& e, const Records& r, const u8* index, unsigned nv, unsig
         return res > 0;
     }
     ++rigid_stats.fallback;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::ActorRigidBackend);
+#endif
     if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; return e.whole(index, ni, nt); }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::ActorStripScan);
+#endif
     return e.strips(r, index, ni);
 }
 void rigid_log() {

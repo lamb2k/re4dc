@@ -1,0 +1,65 @@
+// Exact production gather bodies. The package adapter exposes already-resolved
+// pool/offset pointers so loader/header lookup is deliberately not priced.
+#include "@DC@/game/platform/include/scenery_clip_gather.hpp"
+#include "@DC@/room/instanced_mesh.hpp"
+#include <cstddef>
+using Vertex=re4dc::room::CompactVertex12;
+using Record=re4dc::room::Meshlet;
+#define RE4DC_SCENERY_RECORD Record
+struct PackageAdapter {
+    const Vertex* pool;
+    const std::uint16_t* offsets;
+    const Vertex* vertices()const{return pool;}
+    const std::uint16_t* pool_offsets(const Record&)const{return offsets;}
+    bool indexed(const Record&)const{return true;}
+};
+// Production MeshDraw methods are inside this SCENERY_CHUNK pragma; helper
+// header definitions above retain native_static's Make-derived -Os context.
+#pragma GCC push_options
+#pragma GCC optimize("O2")
+struct Baseline {
+    PackageAdapter package;
+    Vertex* gathered;
+    const Record* stream_l;
+@CORNERS@
+@BASELINE@
+};
+struct Candidate {
+    PackageAdapter package;
+    Vertex* gathered;
+    const Record* stream_l;
+    re4dc::scenery_clip24::Gather stream_clip_gather;
+@CANDIDATE@
+};
+struct Arguments {
+    Baseline baseline;
+    Candidate candidate;
+    Record record;
+    const std::uint8_t* strips;
+    unsigned strip_bytes;
+};
+extern "C" unsigned fixture_baseline(Arguments* a){
+    a->baseline.stream_l=&a->record;
+    const Vertex* base=nullptr;
+    const auto* s=a->strips;const auto* end=s+a->strip_bytes;
+    while(s<end){const unsigned n=*s++;if(!base)base=a->baseline.stream_gather();s+=n;}
+    return base!=nullptr;
+}
+extern "C" unsigned fixture_candidate(Arguments* a){
+    a->candidate.stream_l=&a->record;
+    a->candidate.stream_clip_gather.begin();
+    const Vertex* base=nullptr;
+    const auto* s=a->strips;const auto* end=s+a->strip_bytes;
+    while(s<end){const unsigned n=*s++;base=a->candidate.stream_gather(base,s,n);s+=n;}
+    return base!=nullptr;
+}
+#pragma GCC pop_options
+#define A(field) offsetof(Arguments,field)
+#define B(field) offsetof(Baseline,field)
+#define C(field) offsetof(Candidate,field)
+extern "C" const unsigned fixture_layout[]={
+    sizeof(Arguments),A(baseline),A(candidate),A(record),A(strips),A(strip_bytes),
+    B(package),B(gathered),B(stream_l),C(package),C(gathered),C(stream_l),C(stream_clip_gather),
+    sizeof(Baseline),sizeof(Candidate),sizeof(re4dc::scenery_clip24::Gather),
+    offsetof(Record,vertex_count),sizeof(Record),offsetof(PackageAdapter,pool),offsetof(PackageAdapter,offsets)
+};

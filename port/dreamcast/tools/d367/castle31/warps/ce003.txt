@@ -1,0 +1,14 @@
+name castle31-ce-r201-secondary-exit003
+room 0x201
+jp 0
+chapter 6
+status 3 0x04000000
+rsf 0x201 0 5
+pos 16188.0103 2000 -30606.2778
+ang 0
+goto 60 41415.876 2000 -33254.6636 0 sub
+goto 320 41220.2207 2001 -65377.5879 3.14159265359 sub
+act 360 a 10
+entry 2
+alivelog 30
+dump

@@ -1,0 +1,358 @@
+// Actual extracted admission/ownership control, with recorded service boundaries.
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <map>
+#include <new>
+#include <stdexcept>
+#include <string>
+#include <sys/mman.h>
+using u8=std::uint8_t;using u16=std::uint16_t;using u32=std::uint32_t;
+using BOOL=int;
+struct cModel {};
+struct cPlayer: cModel {
+    u8 r_no_0=0,r_no_1=0,r_no_2=0,r_no_3=0;
+    void weaponLoad(int no,int type);
+    void weaponRelease();
+    void weaponInit();
+};
+struct Global {
+    u8 pl_type=0,weapon_no=0,weapon_type=0,weapon_no_old=0xff,bullet_type=0;
+    u8 weapon_lv_power=0,weapon_lv_speed=0,weapon_lv_reload=0,weapon_lv_blt=0;
+    void* pWep=nullptr;
+} global,*pG=&global;
+static cPlayer fixture_player,*pPL=&fixture_player;
+struct Task { u8 cursor=0;u8 rno[4]{}; };
+struct ItemWork { u16 id=0,num=0,lv=0,bullet=0;u8 flags=1,type=0; };
+struct ItemInfo { unsigned type=0; };
+struct cItemMgr {
+    ItemWork* pItems=nullptr;int nItems=0,type=0;
+    ItemWork* pArm=nullptr;ItemWork* pLast=nullptr;u16 m_wep_id=0x800;
+    u16 weaponId(ItemWork* p);
+    int arm(ItemWork* p);
+    void debugWeapon(int id);
+    int searchAt(ItemWork* p) { return int(p-pItems); }
+    ItemWork* searchI(int id);
+    void get(int id,int);
+} ItemMgr;
+static std::array<ItemWork,16> inventory;
+static unsigned searches,gets;
+static void itemInfo(u16 id,ItemInfo* info) { info->type=(id==0xbeef)?0:1; }
+static void itemCombine(u16,u16,u16*) { assert(false && "attachment service outside this fixture"); }
+#define ITEM_TYPE(id) (itemInfo((id), &info), info.type)
+#define LV_EX(p) ((u8)(p)->lv&0xf)
+#define BULLET(p) ((p)->bullet&0x1fff)
+#define BitChk16(f,b) ((f)&(b))
+#define BitOn16(f,b) ((f)|=(b))
+#define SET_DRS_NAME(name) ((void)(name))
+#define WEP_DATA_MAX 0x100000u
+#define DLL_BSS_MAX 0x10000u
+#define HALT() throw std::runtime_error("unexpected production HALT")
+static void U8Set(u8& d,int v) { d=u8(v); }
+struct Logger { void err(int,int,const char*,...) {} } logger,*pLog=&logger;
+static void OSReport(const char*,...) {}
+static void eprintf(int,int,int,int,const char*,...) { assert(false); }
+static void TaskSleep(int) { assert(false && "unexpected polling/failure loop"); }
+struct OSModuleHeader { u32 id=0,bssSize=0;void(*prolog)()=nullptr; };
+struct ReadModule {
+    u16 id=0,flag=0;void* pArc=nullptr;OSModuleHeader* pModule=nullptr;u32 size=0,bssSize=0;
+} WepReadModule;
+struct ReadFile { u16 file,dll;u32 flag; };
+struct FileTblEntry { const char* name;int entrynum; };
+@ITEM_TYPES@
+@ITEM_TABLE@
+@FILE_TABLE@
+@TABLES@
+struct Re4dcModule { u32 id;const char* name; };
+static const Re4dcModule original_modules[]={@ROSTER@};
+static Re4dcModule g_modules[std::size(original_modules)];
+static constexpr unsigned kModules=std::size(g_modules);
+static u8 oldWepId=0xff;
+#if RE4DC_WEAPON_ARCHIVE_REUSE
+static u16 wepResidentFile=0;
+#endif
+int re4dc_wep27_failed=0,re4dc_wep_reverted=0,re4dc_wep_heap4_failed=0;
+static void* wepHeap4=nullptr;
+static struct { void* pWepBuf=nullptr; } Game;
+static struct { u32 heap=4096,weapon=3072; } re4dc_mem;
+static struct { int handle=4; } Heap[5];
+static u8* resident;
+static u8* overflow;
+#define WEP_DATA_ADDR resident
+static void (*WeaponInitFunc)(cModel*)=nullptr;
+static void (*WeaponMoveFunc)(cPlayer*)=nullptr;
+static void* PlWepMot[3]{};
+struct Counts {
+    unsigned reads=0,links=0,prologs=0,unlinks=0,binds=0,unbinds=0,allocs=0,frees=0;
+    unsigned weapon_releases=0,weapon_inits=0,init_calls=0,motion_unbinds=0,effect_unbinds=0;
+} counts;
+struct Plan { int descriptor=-1;bool link_fail=false,alloc_fail=false;u32 need=256; };
+static std::map<std::string,Plan> plans;
+static Plan active_plan,next_alloc_plan;
+static u8* last_read=nullptr;
+static u32 last_native_id=0,linked_id=0;
+static bool bound=false,heap_owned=false;
+static unsigned cases=0,selector_cases=0;
+
+static void stub_weapon_init(cModel*) { ++counts.init_calls; }
+static void stub_weapon_move(cPlayer*) { assert(false && "gameplay frame outside fixture"); }
+static void forbidden_prolog() { assert(false && "unbound descriptor prolog executed"); }
+static void native_prolog() {
+    ++counts.prologs;linked_id=last_native_id;
+    WeaponInitFunc=stub_weapon_init;WeaponMoveFunc=stub_weapon_move;
+    for(unsigned i=0;i<3;++i)PlWepMot[i]=resident+128+i*4;
+}
+static void DLL_Link(OSModuleHeader*,void*) { assert(false && "halting wrapper must be bypassed"); }
+static BOOL OSLink(OSModuleHeader* module,void*) {
+    ++counts.links;last_native_id=module->id;
+    if(active_plan.link_fail)return 0;
+    module->prolog=native_prolog;return 1;
+}
+static void DLL_Unlink(OSModuleHeader* module) { assert(module && module->prolog==native_prolog);++counts.unlinks; }
+static void re4dc_motion_unbind(void*) { ++counts.motion_unbinds; }
+static void re4dc_effect_unbind(void*) { ++counts.effect_unbinds; }
+static void re4dc_ui_unbind_enemy(void*) {}
+static void memclr_asm(void* p,unsigned n) { std::memset(p,0,n); }
+static void Mem_free(void*) { assert(false && "unexpected separate archive allocation"); }
+static void Debug_free(void*) { assert(false); }
+static void re4dc_ui_unbind_weapon() { ++counts.unbinds;bound=false; }
+static int re4dc_ui_bind_weapon(void*,u32) { ++counts.binds;bound=true;return 1; }
+static void re4dc_missing(const char*) { assert(false); }
+static u32 re4dc_dvd_mram_parts(const char* name) { next_alloc_plan=plans[name];return next_alloc_plan.need; }
+static void* wepHeap4Alloc(u32) {
+    ++counts.allocs;
+    if(next_alloc_plan.alloc_fail)return nullptr;
+    assert(!heap_owned);heap_owned=true;return overflow;
+}
+static void OSFreeToHeap(int,void* p) { assert(p==overflow && heap_owned);++counts.frees;heap_owned=false; }
+struct DvdReadInfo { u32 size[1][2]{};void* addr[1][2]{}; };
+static unsigned descriptor_for(const char* name) {
+    const std::string s(name),stem=s.substr(3,s.find('.',3)-3);
+    for(const auto& m:original_modules)if(stem==m.name)return m.id;
+    assert(false && "fixture read escaped explicit roster");return 0;
+}
+static int dvd_read(const char* name,u8* data,...) {
+    ++counts.reads;active_plan=plans[name];last_read=data;
+    std::memset(data,0,256);*reinterpret_cast<u32*>(data+4)=64;
+    auto* module=new(data+64) OSModuleHeader;
+    module->id=active_plan.descriptor<0?descriptor_for(name):unsigned(active_plan.descriptor);
+    module->prolog=forbidden_prolog;return int(counts.reads);
+}
+#define DVD_READ_N dvd_read
+struct DvdService {
+    int ReadCheckInfo(int,DvdReadInfo* info) {
+        info->size[0][0]=256;info->size[0][1]=0;info->addr[0][0]=last_read;return 1;
+    }
+} Dvd;
+void InitModule(ReadModule*);
+void ReleaseWepData();
+void ReadWepData(u32,u32);
+extern "C" int re4dc_weapon27_available(unsigned,unsigned);
+void re4dc_weapon27_revert(int,int,int,int);
+@MODULE_HELPERS@
+@SELECTOR@
+@ORIGINAL_SELECTOR@
+@AVAILABLE@
+@ITEM_METHODS@
+@READ_METHODS@
+@WEAPON_LOAD@
+@SSCRN_RESTORE@
+@DEBUG_CALLER@
+
+void cPlayer::weaponRelease() { ++counts.weapon_releases; }
+void cPlayer::weaponInit() { ++counts.weapon_inits;if(WeaponInitFunc)WeaponInitFunc(this); }
+ItemWork* cItemMgr::searchI(int id) {
+    ++searches;for(int i=0;i<nItems;++i)if(pItems[i].num && pItems[i].id==id)return pItems+i;
+    return nullptr;
+}
+void cItemMgr::get(int id,int) {
+    ++gets;assert(nItems<int(inventory.size()));
+    pLast=pItems+nItems++;*pLast={u16(id),1,0,3,1,0};
+}
+static void reset() {
+    global={};pG=&global;fixture_player={};pPL=&fixture_player;inventory={};
+    ItemMgr={};ItemMgr.pItems=inventory.data();counts={};searches=gets=0;
+    std::memcpy(g_modules,original_modules,sizeof(g_modules));
+    WepReadModule={};oldWepId=0xff;
+#if RE4DC_WEAPON_ARCHIVE_REUSE
+    wepResidentFile=0;
+#endif
+    re4dc_wep27_failed=re4dc_wep_reverted=re4dc_wep_heap4_failed=0;
+    WeaponInitFunc=nullptr;WeaponMoveFunc=nullptr;for(auto& p:PlWepMot)p=nullptr;
+    wepHeap4=nullptr;heap_owned=bound=false;Game.pWepBuf=resident;
+    plans.clear();active_plan={};next_alloc_plan={};last_read=nullptr;linked_id=last_native_id=0;
+}
+static void exclude(const char* name) {
+    for(auto& m:g_modules)if(std::strcmp(m.name,name)==0){m.name="not_in_image";m.id=0xffffffff;return;}
+    assert(false);
+}
+static ItemWork* own(u16 id,u16 bullet=3) {
+    assert(ItemMgr.nItems<int(inventory.size()));
+    auto* p=inventory.data()+ItemMgr.nItems++;*p={id,1,0x1232,bullet,1,0};return p;
+}
+static const char* archive(unsigned no,unsigned type=0) {
+    auto* e=wep27_read_file(no,type);assert(e&&e->file);return FileTbl[e->file].name;
+}
+static void loaded_old() {
+    auto* old=own(0x23,0x4005);assert(ItemMgr.arm(old));
+    pPL->weaponLoad(2,0);assert(!re4dc_wep27_failed && linked_id==4 && bound);
+    assert(WepReadModule.flag&2);counts={};
+}
+static void expect_empty() {
+    assert(ItemMgr.pArm==nullptr && ItemMgr.m_wep_id==0x800);
+    assert(pG->weapon_no==0 && pG->weapon_type==0 && pG->bullet_type==0 && pG->pWep==nullptr);
+    assert(WeaponInitFunc==nullptr && WeaponMoveFunc==nullptr);
+    for(void* p:PlWepMot)assert(p==nullptr);
+    assert(WepReadModule.pArc==nullptr && WepReadModule.pModule==nullptr && !(WepReadModule.flag&2));
+    assert(!bound && !heap_owned && wepHeap4==nullptr && oldWepId==0xff && pG->weapon_no_old==0xff);
+    assert(re4dc_wep_reverted && re4dc_wep27_failed);
+}
+
+static void selector_and_lookup() {
+    reset();
+    for(unsigned character:{0U,1U,2U,3U,4U,5U,255U}) {
+        pG->pl_type=u8(character);
+        for(unsigned no=0;no<46;++no)for(unsigned type:{0U,1U,2U,3U,255U,0xffffffffU}) {
+            assert(wep27_read_file(no,type)==original_selector(no,type));++selector_cases;
+        }
+        for(unsigned no:{46U,47U,255U,0xffffffffU}) {
+            assert(!wep27_read_file(no,0) && !re4dc_weapon27_available(no,0));++selector_cases;
+        }
+    }
+    assert(!counts.reads && !counts.links && !counts.allocs);
+    pG=nullptr;assert(!re4dc_weapon27_available(5,0));pG=&global;pG->pl_type=0;++cases;
+    assert(wep27_read_file(0x0c,0)->dll==0x72); // Thompson, decimal weapon 12.
+    assert(wep27_read_file(3,2)==&wep_data_leon[0x12] && wep27_read_file(3,2)->dll==0x0a);
+    for(const auto& m:original_modules) {
+        const std::string rel=std::string("rel/")+m.name+".rel";
+        assert(re4dc_weapon27_module_id_present(m.id) && re4dc_weapon27_module_file_present(rel.c_str()));
+        for(const std::string wrong:{rel+"x",rel+"/",rel.substr(0,rel.size()-1),std::string("/")+rel})
+            assert(!re4dc_weapon27_module_file_present(wrong.c_str()));
+        ++cases;
+    }
+    for(const char* short_name:{"","r","re","rel","rel/","rel/wep05","REL/wep05.rel","rel/wep99.rel"})
+        assert(!re4dc_weapon27_module_file_present(short_name));
+    assert(!re4dc_weapon27_module_file_present(nullptr) && !re4dc_weapon27_module_id_present(999));++cases;
+}
+
+static void preflight() {
+    for(u16 id:{u16(0x29),u16(0x2a),u16(0x34),u16(0x23)}) {
+        reset();auto* p=own(id,0x6007);assert(ItemMgr.arm(p));
+        assert(ItemMgr.pArm==p && ItemMgr.m_wep_id==id && p->bullet==7);
+        assert(pG->weapon_lv_power==1 && pG->weapon_lv_speed==2 && pG->weapon_lv_reload==3 && pG->weapon_lv_blt==2);
+        assert(!counts.reads && !counts.links);++cases;
+    }
+    reset();loaded_old();auto* bad=own(0x2d,0x6007); // wep08 deliberately absent.
+    const auto before=global;const auto old_item=inventory[0],bad_item=*bad;
+    auto* old_arm=ItemMgr.pArm;const auto old_id=ItemMgr.m_wep_id;
+    assert(!ItemMgr.arm(bad));
+    assert(ItemMgr.pArm==old_arm && ItemMgr.m_wep_id==old_id && !std::memcmp(&before,&global,sizeof(before)));
+    assert(!std::memcmp(&old_item,&inventory[0],sizeof(old_item)) && !std::memcmp(&bad_item,bad,sizeof(bad_item)));
+    assert(!counts.reads && !counts.links && !counts.unlinks && bound);++cases;
+    ItemMgr.debugWeapon(0x2d);
+    assert(searches==0 && gets==0 && ItemMgr.pArm==old_arm && ItemMgr.m_wep_id==old_id);
+    assert(!std::memcmp(&before,&global,sizeof(before)));++cases;
+    ReadWepData(8,0);
+    assert(re4dc_wep27_failed && !counts.reads && !counts.unlinks && bound);
+    assert(pG->pWep==before.pWep && WeaponInitFunc==stub_weapon_init);++cases;
+    reset();ItemMgr.debugWeapon(0x29);
+    assert(searches==1 && gets==1 && ItemMgr.pArm==ItemMgr.pLast && ItemMgr.m_wep_id==0x29);++cases;
+    searches=gets=0;ItemMgr.debugWeapon(0x29);
+    assert(searches==1 && gets==0);++cases;
+}
+
+static void successful_loads() {
+    for(unsigned no:{5U,6U,12U}) {
+        reset();pPL->weaponLoad(int(no),0);
+        const unsigned id=no==5?67:no==6?50:56;
+        assert(!re4dc_wep27_failed && !re4dc_wep_reverted && linked_id==id);
+        assert(counts.reads==1 && counts.links==1 && counts.prologs==1 && bound);
+        assert(WepReadModule.pModule && WepReadModule.pModule->id==id && (WepReadModule.flag&2));
+        assert(pG->pWep==resident && pG->weapon_no_old==no);
+        pPL->weaponInit();assert(counts.init_calls==1);
+        ReadWepData(no,0);assert(counts.reads==1 && counts.prologs==1);
+        ReleaseWepData();assert(!bound && counts.unlinks==1);++cases;
+    }
+}
+
+static void failures_and_restore() {
+    // Descriptor absence and native bind refusal do not execute an unbound prolog.
+    for(bool native_fail:{false,true}) {
+        reset();pG->weapon_no=6;
+        Plan& p=plans[archive(6)];p.descriptor=native_fail?-1:999;p.link_fail=native_fail;
+#if RE4DC_WEAPON_HEAP4
+        p.need=2048;
+#endif
+        ReadWepData(6,0);
+        assert(re4dc_wep27_failed && counts.reads==1 && counts.links==unsigned(native_fail));
+        assert(counts.prologs==0 && counts.unlinks==0 && !bound && !heap_owned);
+        assert(pG->pWep==nullptr && WeaponInitFunc==nullptr && WeaponMoveFunc==nullptr);
+        assert(WepReadModule.flag==0 && WepReadModule.pModule==nullptr);
+#if RE4DC_WEAPON_HEAP4
+        assert(counts.allocs==1 && counts.frees==1);
+#endif
+        ++cases;
+        reset();loaded_old();auto* requested=own(0x2a);assert(ItemMgr.arm(requested));
+        Plan& fail=plans[archive(6)];fail.descriptor=native_fail?-1:999;fail.link_fail=native_fail;
+        pPL->weaponLoad(6,0);
+        assert(re4dc_wep_reverted && !re4dc_wep27_failed && pG->weapon_no==2);
+        assert(ItemMgr.pArm==&inventory[0] && ItemMgr.m_wep_id==0x23 && linked_id==4);
+        assert(counts.reads==2 && counts.links==unsigned(native_fail)+1 && counts.prologs==1 && bound);
+        assert(counts.unlinks==1 && pG->pWep==resident);++cases;
+    }
+    // Direct missing request keeps and restores the already resident owned weapon.
+    reset();loaded_old();exclude("wep06");pPL->weaponLoad(6,0);
+    assert(re4dc_wep_reverted && !re4dc_wep27_failed && pG->weapon_no==2 && ItemMgr.m_wep_id==0x23);
+    assert(!counts.reads && !counts.links && !counts.unlinks && bound);++cases;
+    // No previous owned item: a genuinely available bare-hand module may load.
+    reset();loaded_old();inventory[0].num=0;exclude("wep06");pPL->weaponLoad(6,0);
+    assert(re4dc_wep_reverted && !re4dc_wep27_failed && ItemMgr.pArm==nullptr && ItemMgr.m_wep_id==0x800);
+    assert(pG->weapon_no==0 && linked_id==84 && counts.prologs==1 && bound);++cases;
+    // Bare hands unavailable: publish an explicit no-weapon state, retire old ownership.
+    reset();loaded_old();inventory[0].num=0;exclude("wep00");exclude("wep06");pPL->weaponLoad(6,0);
+    expect_empty();assert(counts.reads==0 && counts.prologs==0 && counts.unlinks==1);++cases;
+    // Old item exists but its module is absent: it cannot be selected as recovery.
+    reset();loaded_old();exclude("wep02");exclude("wep00");exclude("wep06");pPL->weaponLoad(6,0);
+    expect_empty();assert(counts.reads==0 && counts.prologs==0 && counts.unlinks==1);++cases;
+    // Recovery's descriptor may itself refuse; do not run either rejected prolog.
+    reset();loaded_old();plans[archive(6)].link_fail=true;plans[archive(2)].descriptor=999;
+    exclude("wep00");pPL->weaponLoad(6,0);
+    expect_empty();assert(counts.reads==2 && counts.prologs==0 && counts.links==1);++cases;
+#if RE4DC_WEAPON_HEAP4
+    reset();loaded_old();plans[archive(6)].need=2048;plans[archive(6)].alloc_fail=true;
+    pPL->weaponLoad(6,0);
+    assert(re4dc_wep_reverted && !re4dc_wep27_failed && !re4dc_wep_heap4_failed);
+    assert(pG->weapon_no==2 && ItemMgr.m_wep_id==0x23 && counts.reads==1 && counts.prologs==1 && !heap_owned);++cases;
+#endif
+}
+
+static void caller_lifecycle() {
+    reset();pG->bullet_type=2;
+    for(bool reverted:{false,true})for(unsigned caller=0;caller<2;++caller) {
+        re4dc_wep_reverted=reverted;int level=7;
+        if(caller==0)sscrn_restore_0(level);else sscrn_restore_1(level);
+        assert(level==(reverted?2:7));++cases;
+    }
+    reset();loaded_old();plans[archive(6)].link_fail=true;
+    Task task;task.cursor=6;task.rno[3]=0;
+    debug_caller(&task);
+    assert(re4dc_wep_reverted && pG->weapon_no==2 && ItemMgr.m_wep_id==0x23 && ItemMgr.pArm==&inventory[0]);
+    assert(counts.weapon_releases==1 && counts.weapon_inits==1 && counts.init_calls==1);
+    assert(searches==0 && gets==0);++cases;
+    reset();task.cursor=12;debug_caller(&task);
+    assert(!re4dc_wep_reverted && pG->weapon_no==12 && ItemMgr.m_wep_id==0x34 && linked_id==56);
+    assert(searches==1 && gets==1 && counts.init_calls==1);++cases;
+}
+
+int main() {
+    resident=static_cast<u8*>(mmap(nullptr,0x10000,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT,-1,0));
+    overflow=static_cast<u8*>(mmap(nullptr,0x10000,PROT_READ|PROT_WRITE,MAP_PRIVATE|MAP_ANONYMOUS|MAP_32BIT,-1,0));
+    assert(resident!=MAP_FAILED && overflow!=MAP_FAILED);
+    assert(std::uintptr_t(resident)<UINT32_MAX && std::uintptr_t(overflow)<UINT32_MAX);
+    selector_and_lookup();preflight();successful_loads();failures_and_restore();caller_lifecycle();
+    std::printf("{\"status\":\"PASS\",\"heap4\":%u,\"reuse\":%u,\"selector_cases\":%u,\"flow_cases\":%u}\n",
+        unsigned(RE4DC_WEAPON_HEAP4),unsigned(RE4DC_WEAPON_ARCHIVE_REUSE),selector_cases,cases);
+    munmap(resident,0x10000);munmap(overflow,0x10000);
+}

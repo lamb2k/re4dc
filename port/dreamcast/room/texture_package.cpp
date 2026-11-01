@@ -619,8 +619,16 @@ bool Package::validate() {
 #endif
             pal4_vq ? 2048U + pixels / 16U + 32U :
             texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
+#if RE4DC_TEX_PAL32
+        // TEX_PAL32: an ARGB8888 palette tail doubles the palette bytes (16 -> 32 / 256 -> 512 extra).
+        const std::uint64_t pal32_extra = (texture.flags & kPalette8888) && (pal4_alpha || pal8_alpha)
+            ? (pal8_alpha ? 512U : 32U) : 0U;
+#define RE4DC_PAL32_EXTRA + pal32_extra
+#else
+#define RE4DC_PAL32_EXTRA
+#endif
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
-           texture.data_size != expected ||
+           texture.data_size != expected RE4DC_PAL32_EXTRA ||
             (texture.format > kArgb4444 && !pal4_alpha && !pal4_vq
 #if RE4DC_TEX_PAL8_ALPHA
              && !pal8_alpha
@@ -650,6 +658,7 @@ bool Package::validate() {
         }
 #undef RE4DC_VQ_INDICES
 #undef RE4DC_RAW_BYTES
+#undef RE4DC_PAL32_EXTRA
     }
     error_ = nullptr;
     return true;
@@ -663,11 +672,20 @@ std::uint64_t palette_reserved, palette_banks;
 // palette words are identical (an effect flipbook's frames carry their group's palette), counted per bank; the bank
 // is freed with its last texture. Banks outside palette_reserved only.
 std::uint8_t palette_refs[64];
-std::uint16_t palette_words[64][16];
+#if RE4DC_TEX_PAL32
+// TEX_PAL32: room for an ARGB8888 palette as pairs of 16-bit words (low half first).
+constexpr unsigned kPalWordScale = 2U;
+#else
+constexpr unsigned kPalWordScale = 1U;
+#endif
+std::uint16_t palette_words[64][16 * kPalWordScale];
 #if RE4DC_TEX_PAL8_ALPHA
 std::uint32_t palette8_refs[4];
-std::uint16_t palette8_words[4][256];
+std::uint16_t palette8_words[4][256 * kPalWordScale];
 std::uint8_t palette4_formats[64];
+#if RE4DC_TEX_PAL32
+std::uint8_t palette8_kinds[4];   // 1: ARGB8888 tail (TEX_PAL32); never shared with a 4444 palette
+#endif
 #endif
 bool uses_palette(const Texture& texture) {
     return texture.format == kPal4Argb4444 ||
@@ -717,6 +735,9 @@ struct PalettePlan {
     std::uint32_t refs8[4];
     const volatile std::uint16_t* words4[64];
     const volatile std::uint16_t* words8[4];
+#if RE4DC_TEX_PAL32
+    std::uint8_t kinds8[4];
+#endif
 };
 std::uint64_t palette8_mask(unsigned block) {
     return std::uint64_t(0xffffU) << (block * 16U);
@@ -734,67 +755,114 @@ bool plan_palettes(Package& package, bool commit) {
     std::memcpy(plan.refs8, palette8_refs, sizeof(plan.refs8));
     for(unsigned b = 0; b < 64U; ++b) plan.words4[b] = palette_words[b];
     for(unsigned b = 0; b < 4U; ++b) plan.words8[b] = palette8_words[b];
+#if RE4DC_TEX_PAL32
+    std::memcpy(plan.kinds8, palette8_kinds, sizeof(plan.kinds8));
+#endif
     for(std::uint32_t i = 0; i < package.header().texture_count; ++i) {
         auto& texture = const_cast<Texture&>(package.textures()[i]);
         if(!uses_palette(texture)) continue;
         const bool pal8 = texture.format == kPal8Argb4444;
         const unsigned count = pal8 ? 256U : 16U;
+#if RE4DC_TEX_PAL32
+        const bool p32 = (texture.flags & kPalette8888) != 0U;   // ARGB8888 tail: count pairs of 16-bit words
+        const unsigned count16 = p32 ? count * 2U : count;
+#define RE4DC_PAL_WORDS count16
+#else
+#define RE4DC_PAL_WORDS count
+#endif
         const auto* words = reinterpret_cast<const volatile std::uint16_t*>(
             static_cast<const std::uint8_t*>(package.pvr_texture(i)) +
-            texture.data_size - count * 2U);
+            texture.data_size - RE4DC_PAL_WORDS * 2U);
         unsigned bank = 64U;
         bool fresh = false;
         if(pal8) {
             unsigned block = 4U;
             for(unsigned b = 0; b < 4U; ++b)
                 if(plan.refs8[b] && plan.refs8[b] != 0xffffffffU &&
+#if RE4DC_TEX_PAL32
+                   plan.kinds8[b] == std::uint8_t(p32) &&
+#endif
+#if RE4DC_TEX_PAL32
+                   equal_palette(plan.words8[b], words, count16)) { block = b; break; }
+#else
                    equal_palette(plan.words8[b], words, 256U)) { block = b; break; }
+#endif
             if(block == 4U) {
                 for(unsigned b = 0; b < 4U; ++b)
                     if(!(plan.occupied & palette8_mask(b))) { block = b; break; }
                 if(block == 4U) return false;
                 plan.occupied |= palette8_mask(block);
                 plan.words8[block] = words;
+#if RE4DC_TEX_PAL32
+                plan.kinds8[block] = std::uint8_t(p32);
+#endif
                 fresh = true;
             }
             ++plan.refs8[block];
             bank = block * 16U;
             if(commit && fresh)
+#if RE4DC_TEX_PAL32
+                for(unsigned k = 0; k < count16; ++k) palette8_words[block][k] = words[k];
+#else
                 for(unsigned k = 0; k < 256U; ++k) palette8_words[block][k] = words[k];
+#endif
         } else {
             // Legacy ARGB1555 impostors retain separate banks. ARGB4444 shares
             // only with the same palette interpretation, never a PAL8 sub-bank.
             if(texture.format == kPal4Argb4444)
                 for(unsigned b = 0; b < 64U; ++b)
                     if(plan.refs4[b] && plan.refs4[b] < 255U &&
+#if RE4DC_TEX_PAL32
+                       plan.formats4[b] == (texture.format | (p32 ? 0x80U : 0U)) &&
+                       equal_palette(plan.words4[b], words, count16)) { bank = b; break; }
+#else
                        plan.formats4[b] == texture.format &&
                        equal_palette(plan.words4[b], words, 16U)) { bank = b; break; }
+#endif
             if(bank == 64U) {
                 for(unsigned b = 0; b < 64U; ++b)
                     if(!(plan.occupied & (std::uint64_t(1) << b))) { bank = b; break; }
                 if(bank == 64U) return false;
                 plan.occupied |= std::uint64_t(1) << bank;
                 plan.words4[bank] = words;
+#if RE4DC_TEX_PAL32
+                plan.formats4[bank] = static_cast<std::uint8_t>(texture.format | (p32 ? 0x80U : 0U));
+#else
                 plan.formats4[bank] = static_cast<std::uint8_t>(texture.format);
+#endif
                 fresh = true;
             }
             ++plan.refs4[bank];
             if(commit && fresh)
+#if RE4DC_TEX_PAL32
+                for(unsigned k = 0; k < count16; ++k) palette_words[bank][k] = words[k];
+#else
                 for(unsigned k = 0; k < 16U; ++k) palette_words[bank][k] = words[k];
+#endif
         }
         if(commit) {
             texture.reserved_0 = bank + 1U;
             if(fresh)
                 for(unsigned k = 0; k < count; ++k)
+#if RE4DC_TEX_PAL32
+                    pvr_set_pal_entry(bank * 16U + k, p32
+                        ? std::uint32_t(words[2U * k]) | std::uint32_t(words[2U * k + 1U]) << 16U
+                        : palette_argb8888(words[k], texture.format != kPal4));
+#else
                     pvr_set_pal_entry(bank * 16U + k,
                         palette_argb8888(words[k], texture.format != kPal4));
+#endif
         }
     }
+#undef RE4DC_PAL_WORDS
     if(commit) {
         palette_banks = plan.occupied;
         std::memcpy(palette_refs, plan.refs4, sizeof(palette_refs));
         std::memcpy(palette4_formats, plan.formats4, sizeof(palette4_formats));
         std::memcpy(palette8_refs, plan.refs8, sizeof(palette8_refs));
+#if RE4DC_TEX_PAL32
+        std::memcpy(palette8_kinds, plan.kinds8, sizeof(palette8_kinds));
+#endif
     }
     return true;
 }

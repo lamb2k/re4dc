@@ -18,6 +18,10 @@
 #include "puzzle.h"
 #include "mercenaries.h"
 #include "eprintf.h"
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+#include "re4dc_wep27.h"
+extern "C" void OSReport(const char* fmt, ...);
+#endif
 
 extern "C" {
 void qsort(void* base, u32 n, u32 size, int (*cmp)(const void*, const void*));
@@ -1181,6 +1185,43 @@ void cItemMgr::gameInit()
                 if (ItemWork* w = search(qwKit[i])) {
                     CHARGE(w);
                 }
+            }
+            arm(search(0x23));
+        }
+#endif
+#if RE4DC_QA_START_KIT
+        // QA_START_KIT=1 (lane qakit26, user 10-26; QA disc only, qamenu.mk turns it on with QA_MENU=1): Leon keeps
+        // set_game's handgun, ammo and spray and also gets the largest case (15x8), the TMP and the shotgun (both
+        // loaded), 300 TMP rounds, 50 shells, 5 hand, 3 incendiary and 3 flash grenades. Every piece goes in through
+        // PutInCase (the pickup path: stacks to the item's own max, then finds a free spot).
+        if (pG->pl_type == 0) {
+            static const struct { u16 id; u16 num; } qaKit[] = {
+                {0x2C, 1}, {0x30, 1}, {0x20, 300}, {0x18, 50}, {0x01, 5}, {0x02, 3}, {0x0E, 3}};
+            int i;
+            dump(0x7C);
+            dump(0x7D);
+            dump(0x7E);
+            dump(0x7F);
+            get(0x7F, 0);
+            for (i = 0; i < (int) (sizeof(qaKit) / sizeof(qaKit[0])); i++) {
+                ItemInfo info;
+                int left = qaKit[i].num;
+                int max;
+                itemInfo(qaKit[i].id, &info);
+                max = (info.type == 1 || info.type == 9 || info.maxNum == 0) ? 1 : info.maxNum;
+                while (left > 0) {
+                    int n = left < max ? left : max;
+                    if (!PutInCase(qaKit[i].id, (u16) n, 3)) {
+                        break;
+                    }
+                    left -= n;
+                }
+            }
+            if (ItemWork* w = search(0x2C)) {
+                CHARGE(w);
+            }
+            if (ItemWork* w = search(0x30)) {
+                CHARGE(w);
             }
             arm(search(0x23));
         }
@@ -2537,6 +2578,13 @@ int cItemMgr::arm(ItemWork* p)
         goto ng;
     }
     if (ITEM_TYPE(p->id) == 1 || ITEM_TYPE(p->id) == 3 || ITEM_TYPE(p->id) == 6) {
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+        const u16 id=weaponId(p);
+        if (!re4dc_weapon27_available(WeaponId2WeaponNo(id),WeaponId2WeaponType(id))) {
+            OSReport("weapon module: item %x cannot equip (module unavailable)\n",id);
+            return 0;
+        }
+#endif
         pArm = p;
         m_wep_id = weaponId(p);
         pArm->bullet = BULLET(pArm);
@@ -3270,6 +3318,12 @@ void cItemMgr::debugNumDisp(int print_page)
 // Debug: arms weapon `id`, picking one up first when it is not owned (levels untouched).
 void cItemMgr::debugWeapon(int id)
 {
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    if (!re4dc_weapon27_available(WeaponId2WeaponNo(id),WeaponId2WeaponType(id))) {
+        OSReport("weapon module: debug item %x refused (module unavailable)\n",id);
+        return;
+    }
+#endif
     ItemWork* p = searchI(id);
 
     if (p != 0) {

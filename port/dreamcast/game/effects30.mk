@@ -247,6 +247,36 @@ $(error FX_PS2_NONE_CUT is 0 or 1 and needs FX_PS2_PACK=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_PS2_NONE_CUT=1
 endif
+# FX_NONE_CUT_PACK=1 (lane heap-margin25 2026-10-25, default 0: no effect; needs FX_PS2_NONE_CUT=1): the same cut table
+#                    packed (platform/fx_none_cut_pack.inc from fx_none_cut.inc by tools/d367/purge-fx24/fx_none_cut_pack.py,
+#                    which proves every (room, key) answer equal): each key once, rows as one-byte key indices per room, the
+#                    per-entry decision in one u16. Same cuts, same log lines; the image (and so r100 s30 heap 4) ~4 KB smaller.
+FX_NONE_CUT_PACK ?= 0
+ifneq ($(FX_NONE_CUT_PACK),0)
+ifneq ($(FX_NONE_CUT_PACK)$(FX_PS2_NONE_CUT),11)
+$(error FX_NONE_CUT_PACK is 0 or 1 and needs FX_PS2_NONE_CUT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_NONE_CUT_PACK=1
+endif
+# FX_EARLY_CUT=1 (lane fxcut28 2026-10-28; render only, default 0): the effect cuts decide before the work they skip.
+#                    FX_PS2_NONE_CUT declines a dropped picture inside load() before eviction / budget / file I/O (no
+#                    upload of a picture it then discards) and remembers the image descriptor, so later frames skip the
+#                    resolve; the Essential filter (FX_LEVEL=3) declines its unconditional cuts before the matrix and
+#                    projection (the early half of ESP_SETUP_LEAN, without its header sharing). Same sprites drawn.
+# FX_CUT_LOG=1 (test only, default 0): "fx cut log:" every 120 effect frames: sprites drawn, PS2-none cuts, early
+#                    skips, texture package opens, missing / resident-only declines (both arms of an FX_EARLY_CUT A/B).
+FX_EARLY_CUT ?= 0
+ifneq ($(FX_EARLY_CUT),0)
+ifneq ($(filter-out 1 2,$(FX_EARLY_CUT)),)
+$(error FX_EARLY_CUT is 0, 1 or 2 (test only: the texture half without the Essential half))
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_EARLY_CUT=$(FX_EARLY_CUT)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_EARLY_CUT=1
+endif
+FX_CUT_LOG ?= 0
+ifneq ($(FX_CUT_LOG),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_CUT_LOG=1
+endif
 # ITEMS_CENSUS=1 (lane items 2026-10-14; diagnostic, test builds only, default 0; log only): "itemcen:" lines, the
 #                    ModelData signature of every item model (cItmSys::DataLoad) and effect model (EspDataLoad) the game
 #                    registers; tools/d367/items_census.py counts the GameCube fallbacks against the PS2 library.
@@ -330,6 +360,23 @@ ifeq ($(FX_TRIM_LOG),1)
 ifneq ($(FX_TRIM),1)
 $(error FX_TRIM_LOG=1 needs FX_TRIM=1)
 endif
+endif
+# R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
+# PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
+# frame, effect pool and live room generation. Successful replacement still suppresses the
+# copies. Ordinary sprite/texture/queue limits remain. No room-wide or texture-wide exemption.
+R117_FX_QUALIFIED_FALLBACK ?= 0
+ifneq ($(words $(R117_FX_QUALIFIED_FALLBACK)),1)
+$(error R117_FX_QUALIFIED_FALLBACK is 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(R117_FX_QUALIFIED_FALLBACK)),)
+$(error R117_FX_QUALIFIED_FALLBACK is 0 or 1)
+endif
+ifeq ($(R117_FX_QUALIFIED_FALLBACK),1)
+ifneq ($(FX_TRIM)$(PS2_FX_ADDITIONS),11)
+$(error R117_FX_QUALIFIED_FALLBACK needs FX_TRIM=1 and PS2_FX_ADDITIONS=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_R117_FX_QUALIFIED_FALLBACK=1
 endif
 # FX_FLIPBOOK=N (test 12 fx lane, render only, default 0): an effect flipbook (a TPL of >= FX_FLIPBOOK_MIN pictures: the
 #                    r101 pyre fire, smoke) draws every Nth picture only (picture p - p % N), so N times fewer distinct
@@ -706,4 +753,115 @@ $(error RAIN_R10C_DIAG requires strict RAIN_R10C_DC=0 or 1)
 endif
 endif
 $(OBJDIR)/src/game/filter06.o $(OBJDIR)/src/game/espgen44.o: GAME_CPPFLAGS += -DRE4DC_RAIN_R10C_DIAG=1
+endif
+
+# EF03: internal native strip/cloth outcomes. Public int entrypoints retain ABI.
+NATIVE_DRAW_OUTCOMES ?= 0
+ifneq ($(filter-out 0 1,$(NATIVE_DRAW_OUTCOMES)),)
+$(error NATIVE_DRAW_OUTCOMES is 0 or 1)
+endif
+ifeq ($(NATIVE_DRAW_OUTCOMES),1)
+ifneq ($(FX_STRIP21),1)
+$(error NATIVE_DRAW_OUTCOMES needs FX_STRIP21=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/cloth.o $(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NATIVE_DRAW_OUTCOMES=1
+endif
+
+# EF03: bounded unmasked Esp1b source cells through the existing quad FIFO.
+ESP1B_GRID03 ?= 0
+ifneq ("$(ESP1B_GRID03)","0")
+ifneq ("$(ESP1B_GRID03)","1")
+$(error ESP1B_GRID03 must be exactly 0 or 1)
+endif
+endif
+ifeq ("$(ESP1B_GRID03)","1")
+ifneq ($(EFFECT_SPRITES)$(EFFECT_LEAN)$(FX_STRIP21)$(NATIVE_DRAW_OUTCOMES),1111)
+$(error ESP1B_GRID03 needs EFFECT_SPRITES=1 EFFECT_LEAN=1 FX_STRIP21=1 NATIVE_DRAW_OUTCOMES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP1B_GRID03=1
+endif
+
+# EF12: RGB565 mask TEXA=1 through the existing sprite Entry/header/FIFO.
+EFFECT_MASK12 ?= 0
+ifneq ("$(EFFECT_MASK12)","0")
+ifneq ("$(EFFECT_MASK12)","1")
+$(error EFFECT_MASK12 must be exactly 0 or 1)
+endif
+endif
+ifeq ("$(EFFECT_MASK12)","1")
+ifneq ($(EFFECT_SPRITES)$(EFFECT_LEAN)$(NATIVE_DRAW_OUTCOMES)$(D349_RENDERER_STACK)$(PVR_STREAM)$(UI_HANDLES),111111)
+$(error EFFECT_MASK12 needs EFFECT_SPRITES=1 EFFECT_LEAN=1 NATIVE_DRAW_OUTCOMES=1 D349_RENDERER_STACK=1 PVR_STREAM=1 UI_HANDLES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_MASK12=1
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_EFFECT_MASK12=1
+endif
+
+# EF11 consumed single-texture cloth sheet; material gaps remain explicit.
+CLOTH_SHEET11 ?= 0
+ifneq ($(filter-out 0 1,$(CLOTH_SHEET11)),)
+$(error CLOTH_SHEET11 must be 0 or 1)
+endif
+ifeq ($(CLOTH_SHEET11),1)
+ifneq ($(CLOTH_NATIVE)$(NATIVE_DRAW_OUTCOMES)$(PS2_UPLOAD_INCARNATION),111)
+$(error CLOTH_SHEET11 needs CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1 PS2_UPLOAD_INCARNATION=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_SHEET11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_SHEET11=1
+endif
+
+# EF11 horizontal cloth tiles. Keep the prepared two-row workspace and emit
+# tiles in source row/column order, sharing one seam column (default off).
+CLOTH_TILES11 ?= 0
+ifneq ($(words $(CLOTH_TILES11)),1)
+$(error CLOTH_TILES11 must be exactly 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(CLOTH_TILES11)),)
+$(error CLOTH_TILES11 must be 0 or 1)
+endif
+ifeq ($(CLOTH_TILES11),1)
+ifneq ($(CLOTH_SHEET11),1)
+$(error CLOTH_TILES11 needs CLOTH_SHEET11=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_TILES11=1
+endif
+
+# EF11 bounded pTobjA and real Esp4e single-white source classes:
+# captured non-mip linear/clamp samplers,
+# current 8x8 RGB565 source spans and exact current uploaded texels. All other
+# secondary materials remain refused. Runtime/readback/look/cost gates are open.
+CLOTH_MATERIAL11 ?= 0
+# Preserve the expanded value: word/filter checks would accept trailing space
+# even though the enablement comparison below would silently leave it off.
+ifneq ("$(CLOTH_MATERIAL11)","0")
+ifneq ("$(CLOTH_MATERIAL11)","1")
+$(error CLOTH_MATERIAL11 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(CLOTH_MATERIAL11),1)
+ifneq ($(CLOTH_SHEET11)$(PLAN_OWNER_SCOPED)$(CLOTH_LIGHT_ABI_FIX),111)
+$(error CLOTH_MATERIAL11 needs CLOTH_SHEET11=1 PLAN_OWNER_SCOPED=1 CLOTH_LIGHT_ABI_FIX=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp4e.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+$(OBJDIR)/platform/native_effect.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
+# The existing platform rule consumes this target-specific variable too.
+$(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_MATERIAL11=1
+endif
+
+# CF11-PUB-01 bounded diagnostic only; opt in separately from timing profiles.
+CLOTH_PUBLICATION11 ?= 0
+ifneq ("$(CLOTH_PUBLICATION11)","0")
+ifneq ("$(CLOTH_PUBLICATION11)","1")
+$(error CLOTH_PUBLICATION11 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(CLOTH_PUBLICATION11),1)
+ifneq ("$(CLOTH_SHEET11)","1")
+$(error CLOTH_PUBLICATION11 needs CLOTH_SHEET11=1)
+endif
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_PUBLICATION11=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_CLOTH_PUBLICATION11=1
 endif

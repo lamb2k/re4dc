@@ -14,7 +14,7 @@ FPD=$WT/fullplay
 wpath() { echo "\\\\wsl.localhost\\Ubuntu-24.04$(echo "$1" | tr / '\\')"; }
 for x in g c; do cp "$ROUTE/out-fprr${S7}${x}W/syms.txt" "$J/syms-$x.txt"; done
 cp "$ROUTE/out-rr${S7}rP/syms.txt" "$J/syms-rel.txt"
-ALL_ROOMS="r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e r11f r200"
+ALL_ROOMS="r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10d r10e r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e r11f r200"
 job() { # job <slots> <name> <script body>
   printf '%s %s\n' "$1" "$2" >> "$J/list.txt"
   { echo 'set -uo pipefail'; echo "J=/c/${J#/mnt/c/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "$3"; } > "$J/$2.sh"; }
@@ -56,6 +56,38 @@ for r in $(census_rooms); do
   job 1 cg-$r "$(run cg-$r c c 60 --warp "\"\$EVW\\fixtures\\cg-$r.txt\"")"
 done
 echo "$(census_rooms)" > "$W/census-rooms.txt"
+# siege (lane cast-ps2-25 10-26): the r100 house siege (bench-r100-house: rsf 0x100 13, scenario 0x10, the village
+# alerted, Ganados close in) on every tier. It halted Test 25 candidates on a dc/mot key a stale enemy archive streamed;
+# rr-judge.py fails on HALT / FAULT / RE4DC MISSING in its log.
+tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/siege-r100-warp.txt" > "$EVU/fixtures/siege-r100.txt"
+job 1 siege-r100 "$(run siege-r100 c c 60 --warp "\"\$EVW\\fixtures\\siege-r100.txt\"")"
+# GC-ASSET gate (cast-ps2-25 10-26): h2 + the gate rooms on the gate-ON twin's base a (rr-gca.sh), judged by rr-judge.py
+if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fprr${S7}aW/syms.txt" ]; then
+  cp "$ROUTE/out-fprr${S7}aW/syms.txt" "$J/syms-a.txt"
+  job 1 gca-h2 "$(run gca-h2 a a 300 --warp "'$SEG\\h2-warp.txt'" --pad "'$SEG\\h2-pad.txt'" --stop "'route movie terminal=. id=10030'" --grace 10)"
+  # gca-title (castle-ps2-26 10-26): the other gca jobs warp in at frame ~171 and never draw the title or the save screen,
+  # so @startup was judged empty. Power-on through the title, its menus and the load / card screens (castle31's gca-load
+  # pad), stock boot; the VMU (RR_GCA_TITLE_VMU, default castle31's ch2-3 end save) lists save slots for the save pictures.
+  V=${RR_GCA_TITLE_VMU:-/mnt/c/Flycast-Evidence/re4-dreamcast/castle31/vmu/handoff-ch23end-A1.bin}
+  VA=; if [ -s "$V" ]; then VW="C:/${V#/mnt/c/}"; VW=${VW//\//\\}; VA="--vmu '$VW'"; fi
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-title-warp.txt" > "$EVU/fixtures/gca-title-warp.txt"
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-title-pad.txt" > "$EVU/fixtures/gca-title-pad.txt"
+  job 1 gca-title "$(run gca-title a a 60 --warp "\"\$EVW\\fixtures\\gca-title-warp.txt\"" --pad "\"\$EVW\\fixtures\\gca-title-pad.txt\"" $VA)"
+  for r in r100 r101 r103 r11e r11f; do
+    tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/gca-$r.txt"
+    job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
+  done
+  # gca-grenade (lane wep19-26 10-26): no other gca job equips a thrown weapon, so the grenade models (em/pl00.drs 0x6A
+  # + its three pictures), the wep19 module and its motion were never judged. r101: equip, aim and throw the hand,
+  # incendiary and flash grenades (warp `arm` + `act`), then the rocket launcher.
+  tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-grenade-warp.txt" > "$EVU/fixtures/gca-grenade.txt"
+  # Two runs of <= 60 s each in one job (user rule: every Flycast check <= 60 s): the gate twin boots slowly (room frame
+  # 40 at ~53 s wall, ~250 room frames a minute), so gca-grenade-boot runs to the r101 room entry and saves a state
+  # bundle (fp_run.py --state-out, castle31 m3), and gca-grenade resumes it (--state-in) for the whole equip / throw
+  # schedule. The bundle is keyed to this image (track03 sha256 + syms): a state of another build is refused. Only
+  # gca-grenade is judged (the boot run is gca-r101's path).
+  job 1 gca-grenade "$(run gca-grenade-boot a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --stop "'phase=enter room=101'" --grace 2 --state-out "\"\$EVW\\gca-grenade-state\"") && $(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --state-in "\"\$EVW\\gca-grenade-state\"")"
+fi
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fprr${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
   job 1 gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rr \"\$EVW\\gdemu\" \"\$EVW\\_discs\\g\" \"\$(cat \$J/syms-g.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"

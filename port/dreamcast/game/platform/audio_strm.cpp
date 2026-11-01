@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // Disc stream plumbing shared by every audio build (audio_stub.cpp and
 // audio_aica.cpp): the recovered stream player (src/game/snd_str*.cpp) must run
 // through ready -> playing -> ended whether or not a stream can be heard, since
@@ -53,6 +57,10 @@ void pend_push(const Pend& p)
     if (ok) g_pend[g_pendN++] = p;
     irq_restore(old);
     if (!ok) {   // cannot happen with 4 stream works (one read + one DMA each): complete now
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::SoundPendingFull);
+#endif
+#line 56
         if (p.dvd) p.dvd(p.res, p.obj);
         else p.arq((u32) p.obj);
     }

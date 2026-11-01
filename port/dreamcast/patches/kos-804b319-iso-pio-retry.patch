@@ -1,0 +1,17 @@
+RE4DC Build17 / DISC_PIO_FALLBACK=1 only. Apply after the existing ISO mutex fix.
+Invalidate cached FILE DATA before a complete validated PIO reread. Unlike
+iso_reset(), this neither breaks handles nor resets directory/disc state.
+The caller must not hold G1: the normal lock order is ISO then G1.
+
+--- a/kernel/arch/dreamcast/fs/fs_iso9660.c
++++ b/kernel/arch/dreamcast/fs/fs_iso9660.c
+@@ -234,3 +234,9 @@
++void re4dc_iso_retry_invalidate(void) {
++    mutex_lock_scoped(&iso_mutex);
++    bclear_cache(dcache);
++}
++
++
+ /* Graduate a block from its current position to the MRU end of the cache */
+ static void bgrad_cache(cache_block_t **cache, int block) {
+     cache_block_t   *tmp;

@@ -839,6 +839,80 @@ def lostpart_gate(k, v, rec):
     rec.append('LOSTPART PASS %s %s' % (k, h[:16]))
 
 
+def motion_key_gate(r, rm, rec):
+    """MOTION-KEYS (lane cast-ps2-25 10-26, Test 25 r100 house siege halted on "RE4DC MISSING: motion key read"): every
+    dc/mot key the live MTC table of a staged archive names must not be on the fixture's remove list (a data set took a
+    key off the disc that a later-staged archive still streams, e.g. a stale em/em1X.drs with GameCube Ganado motion over
+    pmgan24's). The whole-tree check (keys present on the final disc) is rr's MOTION-KEYS row (motion/mot_refs.py)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'motion'))
+    import mot_refs
+    bad, n = {}, 0
+    for k, v in sorted(r.items()):
+        if not (isinstance(v, str) and k.endswith(('.drs', '.dar', '.arc', '.das')) and os.path.isfile(v)):
+            continue
+        b = open(v, 'rb').read()
+        if mot_refs.MAGIC not in b:
+            continue
+        for _p, keys in mot_refs.tables(b):
+            for key in keys:
+                n += 1
+                if 'dc/mot/%s.fcv' % key in rm and 'dc/mot/%s.fcv' % key not in r:
+                    bad.setdefault(key, []).append(k)
+    assert not bad, ('MOTION-KEYS: staged archives stream dc/mot keys the fixture removes (check the order of the '
+                     'motion sets and stale stores, e.g. PS2SND24D)', {k: sorted(set(v)) for k, v in bad.items()})
+    rec.append('motion keys gate: %d MTC rows of staged archives, none removed' % n)
+
+
+def graft_all(grafts, r, out, rec):
+    """GRAFT (lane fix-r100-props26 10-26): a set's {'graft': {dest: (source .dar, [ETM sub-file names])}} copies only
+    those members, byte for byte, into the archive ALL sets composed (r[dest] after the last set), so its place in DATA
+    no longer matters and no later set is undone. tools/d367/graft/dar_graft.py proves member identity for every other
+    member (NTR / ESQ rebased only); a failed proof stops the fixture. Output beside OUT.json in graft/."""
+    if not grafts:
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'graft'))
+    import dar_graft
+    gd = os.path.join(os.path.dirname(os.path.abspath(out)), 'graft')
+    os.makedirs(gd, exist_ok=True)
+    for nm, dest, src, members in grafts:
+        cur = r.get(dest)
+        assert isinstance(cur, str) and os.path.exists(cur), ('graft %s: no composed %s' % (nm, dest), cur)
+        comp, sb = Path(cur).read_bytes(), Path(src).read_bytes()
+        res, rep = dar_graft.graft(comp, sb, members)
+        bad = dar_graft.verify(comp, res, members, sb)
+        assert not bad, ('graft %s %s: member identity' % (nm, dest), bad)
+        o = os.path.join(gd, '%s-%s' % (nm, dest.replace('/', '_')))
+        Path(o).write_bytes(res)
+        r[dest] = o
+        rec.append('%s graft %s %s onto %s -> %s' % (nm, dest, '+'.join(members), sha(cur), sha(o)))
+
+
+def smdrel_all(smdrels, r, out, rec):
+    """SMDREL (lane arcuse26 10-26): a set's {'smdrel': {dest: convert_room_bins.py summary}} releases the composed
+    archive's SMD BINs (tools/room_smd.py release contract: header, joints, box corners and part headers stay, the GX
+    payload leaves the loaded room payload; NTR / ESQ rebased), after every set and graft, so no later set is undone.
+    room_smd.diff_release proves the output differs from the composed archive only by that contract."""
+    if not smdrels:
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+    import room_smd
+    gd = os.path.join(os.path.dirname(os.path.abspath(out)), 'graft')
+    os.makedirs(gd, exist_ok=True)
+    for nm, dest, summary in smdrels:
+        cur = r.get(dest)
+        assert isinstance(cur, str) and os.path.exists(cur), ('smdrel %s: no composed %s' % (nm, dest), cur)
+        comp = Path(cur).read_bytes()
+        own, skipped = room_smd.load_identities([summary])
+        assert not skipped, ('smdrel %s %s: BINs the summary does not cover' % (nm, dest), skipped)
+        res, rep = room_smd.release_container(comp, own)
+        chk = room_smd.diff_release(comp, res)
+        o = os.path.join(gd, '%s-%s' % (nm, dest.replace('/', '_')))
+        Path(o).write_bytes(res)
+        r[dest] = o
+        rec.append('%s smdrel %s %d BINs released, payload -%d B, onto %s -> %s' % (
+            nm, dest, chk['released_bins'], chk['saved'], sha(cur), sha(o)))
+
+
 def main():
     a = sys.argv[1:]
     new, out = a[:2]
@@ -859,6 +933,8 @@ def main():
     rm = set(d.get('remove', []))
     rec = []
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
+    grafts = []
+    smdrels = []
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
@@ -876,6 +952,16 @@ def main():
                     assert os.path.exists(f_), f_
                     r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
                 continue
+            if k == 'graft':   # member-level grafts, applied after every set (graft_all)
+                for dest, (src, members) in v.items():
+                    assert os.path.exists(src), (nm, dest, src)
+                    grafts.append((nm, dest, src, list(members)))
+                continue
+            if k == 'smdrel':   # SMD BIN release on the composed archive, after every set and graft (smdrel_all)
+                for dest, summary in v.items():
+                    assert os.path.exists(summary), (nm, dest, summary)
+                    smdrels.append((nm, dest, summary))
+                continue
             if k == 'remove':   # paths the set takes off the disc (nostd20)
                 for p_ in v:
                     r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
@@ -889,6 +975,8 @@ def main():
             assert os.path.exists(v), (nm, k, v)
             lostpart_gate(k, v, rec)
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
+    graft_all(grafts, r, out, rec)
+    smdrel_all(smdrels, r, out, rec)
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
@@ -899,6 +987,7 @@ def main():
     for t in opt.get('--texdir', []):
         texdir(t, r, rec)
     drop_loose(names, r, rm, rec)
+    title27_gate(names, r, rec)
     if '--warp' in opt:
         kept = rm & media_paths()
         if kept:
@@ -910,6 +999,7 @@ def main():
         if k in opt:
             r[f] = opt[k][0]
             rm.discard(f)
+    motion_key_gate(r, rm, rec)
     d['remove'] = sorted(rm)
     d.setdefault('provenance', {})['t11'] = {'base': base, 'label': [old, new], 'data': names, 'staged': rec,
                                              'opts': {k: v for k, v in opt.items()}}
@@ -995,6 +1085,186 @@ if os.path.isdir(PROPS24LD):
     DATA['props24l'] = {'dc/tex.pak': PROPS24LD + '/dc/tex.pak', 'st1/r105.dar': PROPS24LD + '/st1/r105.dar',
                         'st1/r107.dar': PROPS24LD + '/st1/r107.dar', 'st1/r11e.dar': PROPS24LD + '/st1/r11e.dar'}
     PAK_DERIVED['props24l'] = PROPS24LD + '/pak-derived.json'
+# pick25 (lane purge-pics25 10-25): r11e.dar = props24l's + the PS2 pickups (ps2_items.py pack --classes items: the 18
+# r11e ITM ids; their pictures are already in the release tex.pak). Goes with MODEL_PREP_SKIP_R11E=1 (the model
+# preparation cache would take 131,072 B of heap 4 there). Order: after props24l. Store RECIPE.txt + SHA256SUMS.txt.
+PICK25D = os.environ.get('PICK25D', '/root/re4data/private/pick25-20261025')
+if os.path.isdir(PICK25D):
+    DATA['pick25'] = {'st1/r11e.dar': PICK25D + '/st1/r11e.dar'}
+# pfire26 (lane purge-audit26 10-26): the PS2 torch flames. A GRAFT (graft26): each torch room's ETM et14.eff (unread:
+# PS2_ETS_MATCH=2 drops every et1400) is replaced by the PS2 rNNN.dat EFF fire SST sets (texture-less EFF;
+# tools/d367/purge-audit26/pfire26.py), onto the archive every set composed; dar_graft rebases NTR / ESQ and proves every
+# other member byte-identical. Needs PS2_FIRE_SST=1. 13 rooms. Store RECIPE.txt + SHA256SUMS.
+PFIRE26D = os.environ.get('PFIRE26D', '/root/re4data/private/pfire26-20261026')
+if os.path.isdir(PFIRE26D):
+    DATA['pfire26'] = {'graft': {'st2/r200.dar': (PFIRE26D + '/st2/r200.dar', ['et14.eff'])}}
+    for _r in 'r10c r10d r10e r10f r111 r113 r118 r11a r11b r11c r11d r11e'.split():
+        DATA['pfire26']['graft']['st1/%s.dar' % _r] = ('%s/st1/%s.dar' % (PFIRE26D, _r), ['et14.eff'])
+# props26 (lane props-ps2-26 10-26, user: room props still GameCube / unreduced): the 27 room objects earlier sets shipped
+# as PS2 meshes LARGER than the GC model (--keep-larger: racks et0400/et0500, frames et0700, doors et0d00/et1600/et1700/
+# et2b00, r106 BIN 0x34, r10f BIN 0x23) reconverted with ps2_objects.py v4 (mesh_lod + UV guard in the convert step,
+# strips, uv-fold, self-check: no more triangles / bytes than GC). A GRAFT of those members only (store graft.json),
+# so it composes with pfire26 (et14.eff) and windows26 (panes) in the same archives. Pictures unchanged. Data only.
+PROPS26D = os.environ.get('PROPS26D', '/root/re4data/private/props26-20261026')
+if os.path.isfile(PROPS26D + '/graft.json'):
+    DATA['props26'] = {'graft': {_d: ('%s/%s' % (PROPS26D, _d), _m)
+                                 for _d, _m in json.load(open(PROPS26D + '/graft.json')).items()}}
+# pl08n25 (lane purge-pics25 10-25, user pick N): Leon's pl08 atlas 7506e95f-68cf2211 with its two GameCube tiles (15f7e18c
+# shirt, 878b23c0 sleeves) re-indexed to the nearest PS2 pl08 pictures in leonatl24's VQ codebook; every other texel is
+# identical. dc/tex.pak = cand-bc9585e8's pack + this atlas, so it goes after every other tex.pak set of the line
+# (src/build_pl08n25.py rebuilds it from any pack whose pl08 atlas is leonatl24's). Store RECIPE.txt + SHA256SUMS.txt.
+PL08N25D = os.environ.get('PL08N25D', '/root/re4data/private/pl08n25-20261025')
+if os.path.isdir(PL08N25D):
+    DATA['pl08n25'] = {'dc/tex.pak': PL08N25D + '/dc/tex.pak'}
+    PAK_DERIVED['pl08n25'] = PL08N25D + '/pak-derived.json'
+# gvar25 (lane cast-ps2-25 10-25, no-GameCube-assets rule): the variant (source-path) Ganados' 9 GameCube VQ textures
+# re-keyed to their PS2 em16.dat / em17.dat pictures; same keys, sizes, RGB565 VQ format and flags. dc/tex.pak =
+# cand-cb094d99's pack + these 9 keys, so it goes after every other tex.pak set (src/gvar_build.py rebuilds it from the
+# final pack). The GC variant geometry stays until heap 4 frees 24 KB. Store RECIPE.txt + SHA256SUMS.txt.
+GVAR25D = os.environ.get('GVAR25D', '/root/re4data/private/gvar25-20261025')
+if os.path.isdir(GVAR25D):
+    DATA['gvar25'] = {'dc/tex.pak': GVAR25D + '/dc/tex.pak'}
+    PAK_DERIVED['gvar25'] = GVAR25D + '/pak-derived.json'
+# codec25 (lane cast-ps2-25 10-25, no-GameCube-assets rule): the radio-call (codec) portraits and the terminal face from
+# the PS2 disc: ss/cmn/ss_ocNNN.dat entries 2..7 and ss/eng/ss_term.dat entries 6 / 8 are the PS2 BINs (the morph faces
+# re-laid from the PS2 GX layout, the VIF parts rebuilt; src/gxbin.py, src/vif2gx.py, src/codec_dat.py), and gvar25's
+# tex.pak + 15 portrait / codec-Leon pictures re-keyed to the PS2 picture at the same TPL index (src/codec_tex.py). Data
+# only, no knob. tex.pak derives from gvar25's: after gvar25 (AFTER). Store RECIPE.txt + SHA256SUMS.txt.
+CODEC25D = os.environ.get('CODEC25D', '/root/re4data/private/codec25-20261025')
+if os.path.isdir(CODEC25D):
+    DATA['codec25'] = {'dc/tex.pak': CODEC25D + '/dc/tex.pak', 'ss/eng/ss_term.dat': CODEC25D + '/ss/eng/ss_term.dat'}
+    DATA['codec25'].update({'ss/cmn/' + _f: CODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(CODEC25D + '/ss/cmn'))})
+    PAK_DERIVED['codec25'] = CODEC25D + '/pak-derived.json'
+    AFTER += [('codec25', 'gvar25')]
+# pmcodec25 (same lane, 10-25, animation counts as asset): provenance-only motion store for the codec files: the codec25
+# ss files unchanged, whose FCV entries are already the PS2 bytes (119 of 121; the DC FCV layout is the PS2 / GC one).
+# ss_oc305.dat (its entries 8 / 9 are GC clips the PS2 revised) is left out; pmcodec305 stages it. After codec25.
+PMCODEC25D = os.environ.get('PMCODEC25D', '/root/re4data/private/pmcodec25-20261025')
+if os.path.isdir(PMCODEC25D):
+    DATA['pmcodec25'] = {'ss/eng/ss_term.dat': PMCODEC25D + '/ss/eng/ss_term.dat'}
+    DATA['pmcodec25'].update({'ss/cmn/' + _f: PMCODEC25D + '/ss/cmn/' + _f for _f in sorted(os.listdir(PMCODEC25D + '/ss/cmn'))})
+    AFTER += [('pmcodec25', 'codec25')]
+# pmcodec305 (same lane): ss_oc305.dat with FCV entries 8 / 9 swapped to the PS2 clips (86,976 -> 86,784 B, 6,656 -> 6,752 B).
+# Not in the recipe until a fixture reaches the ss_oc305 radio call; ships with that chapter's checks. After pmcodec25.
+PMCODEC305D = os.environ.get('PMCODEC305D', '/root/re4data/private/pmcodec305-20261025')
+if os.path.isdir(PMCODEC305D):
+    DATA['pmcodec305'] = {'ss/cmn/ss_oc305.dat': PMCODEC305D + '/ss/cmn/ss_oc305.dat'}
+    AFTER += [('pmcodec305', 'pmcodec25')]
+# pics25c (same lane, 10-25, no-GameCube-assets rule): 12 GC tex.pak pictures (r100 room / event, em3b, em10, pl00, r103 fx)
+# re-keyed to their PS2 twins (same name, size, format, flags; texels = the PS2 picture, signature NCC 1.0). Last tex.pak set.
+PICS25CD = os.environ.get('PICS25CD', '/root/re4data/private/pics25c-20261025')
+if os.path.isdir(PICS25CD):
+    DATA['pics25c'] = {'dc/tex.pak': PICS25CD + '/dc/tex.pak'}
+    PAK_DERIVED['pics25c'] = PICS25CD + '/pak-derived.json'
+    AFTER += [('pics25c', 'codec25')]
+# pics25d (same lane, round 14): the last GC etc/core.das HUD pictures (ammo gauge frame, save bar, HUD digits 0 / 1 / 2,
+# title noise x2) re-keyed to the PS2 Core.dat HUD pictures (alpha box fitted, ps2_hud_pak way). After pics25c.
+PICS25DD = os.environ.get('PICS25DD', '/root/re4data/private/pics25d-20261025')
+if os.path.isdir(PICS25DD):
+    DATA['pics25d'] = {'dc/tex.pak': PICS25DD + '/dc/tex.pak'}
+    PAK_DERIVED['pics25d'] = PICS25DD + '/pak-derived.json'
+    AFTER += [('pics25d', 'pics25c')]
+# pada25 (same lane): the GameCube green A button (d17e9c56) recoloured to the Dreamcast A colour from the kept B pad
+# label (our pad-label art; reviewed exception like 755e1575 / 803499f2 / 3acc7fea). After pics25d.
+PADA25D = os.environ.get('PADA25D', '/root/re4data/private/pada25-20261025')
+if os.path.isdir(PADA25D):
+    DATA['pada25'] = {'dc/tex.pak': PADA25D + '/dc/tex.pak'}
+    PAK_DERIVED['pada25'] = PADA25D + '/pak-derived.json'
+    AFTER += [('pada25', 'pics25d')]
+# pada25b (same lane, round 15): the A pad-label key d17e9c56 = our own Dreamcast pad-label art (an A drawn on our B label
+# 3acc7fea), replacing pada25's recolour. After pada25.
+PADA25BD = os.environ.get('PADA25BD', '/root/re4data/private/pada25b-20261025')
+if os.path.isdir(PADA25BD):
+    DATA['pada25b'] = {'dc/tex.pak': PADA25BD + '/dc/tex.pak'}
+    PAK_DERIVED['pada25b'] = PADA25BD + '/pak-derived.json'
+    AFTER += [('pada25b', 'pada25')]
+# pics25e (same lane, round 15): 7 DC keys to PS2 pictures: six colour+mask pair packages (r100 events s03 / s20 / s40,
+# ss_oc101 radio-call hair) and the r11f foliage b3c2a412. After pada25b.
+PICS25ED = os.environ.get('PICS25ED', '/root/re4data/private/pics25e-20261025')
+if os.path.isdir(PICS25ED):
+    DATA['pics25e'] = {'dc/tex.pak': PICS25ED + '/dc/tex.pak'}
+    PAK_DERIVED['pics25e'] = PICS25ED + '/pak-derived.json'
+    AFTER += [('pics25e', 'pada25b')]
+# pics25f (same lane, round 16): the last two unattributed tex.pak keys to PS2 texels: 64712c31 (r100 tyre) <- PS2
+# r100.dat@40d2a0#8; 2c9c252a (Ashley hair-mask pair) <- the castle21 PS2 Ashley pair (ps2_mask_runs over the PS2 pl01
+# ashley01 atlas). After pics25e.
+PICS25FD = os.environ.get('PICS25FD', '/root/re4data/private/pics25f-20261026')
+if os.path.isdir(PICS25FD):
+    DATA['pics25f'] = {'dc/tex.pak': PICS25FD + '/dc/tex.pak'}
+    PAK_DERIVED['pics25f'] = PICS25FD + '/pak-derived.json'
+    AFTER += [('pics25f', 'pics25e')]
+# pui26 (lane castle-ps2-26 10-26, GC asset purge): the 24 title + save screen pictures purge-ui24's matcher left (no
+# unique PS2 match: ss/eng/title.dat logos/notices, ss/cmn/save_*.dat labels + frame parts, the result.dat pill) re-made
+# from the PS2 BIO4DAT ss members by a reviewed hand map (purgeui24/ps2_ui_map_pak.py + ps2_ui_map.tsv; PS2 pixels under
+# the GC keys, base package size/format kept). They were the @startup "unknown" GC-ASSET rows. After pics25f.
+PUI26D = os.environ.get('PUI26D', '/root/re4data/private/pui26-20261026')
+if os.path.isdir(PUI26D):
+    DATA['pui26'] = {'dc/tex.pak': PUI26D + '/dc/tex.pak'}
+    PAK_DERIVED['pui26'] = PUI26D + '/pak-derived.json'
+    AFTER += [('pui26', 'pics25f')]
+# pfx26 (lane castle-ps2-26 10-26, GC asset purge): the r202 castle candle flames (GC st2/r202 EFF #7 0x85, 16 x 64x128)
+# as the PS2 r10e.dat EFF #7 0x86 flipbook (the PS2 castle .dat EFFs carry no textures), purge-fx24/fx_cross_room.py
+# FXX_ROOMS=r202 pack on pui26's pack. After pui26.
+PFX26D = os.environ.get('PFX26D', '/root/re4data/private/pfx26-20261026')
+if os.path.isdir(PFX26D):
+    DATA['pfx26'] = {'dc/tex.pak': PFX26D + '/dc/tex.pak'}
+    PAK_DERIVED['pfx26'] = PFX26D + '/pak-derived.json'
+    AFTER += [('pfx26', 'pui26')]
+# fxp26 (lane fxproof26 10-26, GC asset purge content proof): pfx26's tex.pak with two FX_PS2_NONE_CUT keys the PS2 does
+# draw, as PS2 pictures under the GC keys (purge-fx24/fx_cross_room.py FXX_ROOMS=r100,r206 pack): the window-break glass
+# crack 212e55c1 (GC ETM et00.eff / et2c.eff 0x14) <- PS2 r100.dat ETM et00.eff 0x14, and the r206 candle glow fef62a48
+# (GC EFF 0xe6, added: pfx26's pack lacks it) <- PS2 r50c.dat EFF #7 0xe6. fx_none_cut.inc no longer cuts them. After pfx26.
+FXP26D = os.environ.get('FXP26D', '/root/re4data/private/fxp26-20261026')
+if os.path.isdir(FXP26D):
+    DATA['fxp26'] = {'dc/tex.pak': FXP26D + '/dc/tex.pak'}
+    PAK_DERIVED['fxp26'] = FXP26D + '/pak-derived.json'
+    AFTER += [('fxp26', 'pfx26')]
+# fxc26 (lane cast-ps2-25 10-26, GC asset purge: the r106 census row ef2f7909): fxp26's tex.pak with the 15 frames of GC
+# etc/core.das EFF #25 id 0x27 (seven-segment digits 0-9 M : . - X, 16x24) as PS2 Core.dat EFF entry 25 id 0x27 (16x32,
+# same frames), PAL4 under the GC keys (tools/d367/castps2-26/fx_core_id.py = fx_ps2_pack.convert_set; fx_ps2_pack lib
+# converts only core EFF #1). Needs FX_PS2_PACK=1 (cover flags). After fxp26. Store: re4-assets-private/fxc26-20261026.
+FXC26D = os.environ.get('FXC26D', '/root/re4data/private/fxc26-20261026')
+if os.path.isdir(FXC26D):
+    DATA['fxc26'] = {'dc/tex.pak': FXC26D + '/dc/tex.pak'}
+    PAK_DERIVED['fxc26'] = FXC26D + '/pak-derived.json'
+    AFTER += [('fxc26', 'fxp26')]
+# fxc26b (lane cast-ps2-25 10-26): fxc26's tex.pak with the last three GC etc/core.das EFF #25 ids route rooms load (0x0e
+# strip, 0x31 bulb, 0x61 panel) as PS2 Core.dat EFF entry 25 pictures under the GC keys (castps2-26/fx_core_id.py). Every
+# other EFF #25 id is already PS2 or loaded by no route room; EFF #16 is empty. After fxc26. Store: re4-assets-private/fxc26b-20261026.
+FXC26BD = os.environ.get('FXC26BD', '/root/re4data/private/fxc26b-20261026')
+if os.path.isdir(FXC26BD):
+    DATA['fxc26b'] = {'dc/tex.pak': FXC26BD + '/dc/tex.pak'}
+    PAK_DERIVED['fxc26b'] = FXC26BD + '/pak-derived.json'
+    AFTER += [('fxc26b', 'fxc26')]
+# wep26g (lane wep19-26 10-26, user: "all weapon models should be ps2"): the weapon models wep24 left GameCube.
+#   em/pl00.drs, em/pl08.drs  the grenade body 0x6A (hand / incendiary / flash pictures 0x6B / 0x6D / 0x6F: wep19.cpp,
+#                             objSubWep.cpp), the launcher / mine thrower 0x70 + 0x71 and the rocket 0x76 + 0x75
+#                             (objRocket.cpp, wep28.cpp) rebuilt in place from PS2 pl00.dat / pl08.dat
+#                             (ps2_weapons.py convert-pl on ps2snd24-t24's files: their sound banks, REL and motion kept)
+#   em/wep05.drs, ss/cmn/ss_wep05.dat  the Broken Butterfly fitted to the GC skeleton (wep05fit25's files, ps2_weapons.py
+#                             --fit-skeleton; motion already PS2-identical)
+#   dc/tex.pak                fxc26b's pack + the 6 PS2 picture keys (ch2rooms/pack_add.py; pak-derived.json: base fxc26b)
+# Left GC: the egg 0x7D (PS2 BIN 32 B over its slot; needs an archive relayout). Last of the em / tex.pak sets.
+# Store: re4-assets-private/wep26g-20261026 (RECIPE.txt, SHA256SUMS, provenance.tsv).
+WEP26GD = os.environ.get('WEP26GD', '/root/re4data/private/wep26g-20261026')
+if os.path.isdir(WEP26GD):
+    DATA['wep26g'] = {'em/pl00.drs': WEP26GD + '/em/pl00.drs', 'em/pl08.drs': WEP26GD + '/em/pl08.drs',
+                      'em/wep05.drs': WEP26GD + '/em/wep05.drs',
+                      'ss/cmn/ss_wep05.dat': WEP26GD + '/ss/cmn/ss_wep05.dat', 'dc/tex.pak': WEP26GD + '/dc/tex.pak'}
+    PAK_DERIVED['wep26g'] = WEP26GD + '/pak-derived.json'
+    AFTER += [('wep26g', 'fxc26b'), ('wep26g', 'ps2snd24'), ('wep26g', 'wep24'), ('wep26g', 'wep24ss'),
+              ('wep26g', 'pmwep24b'), ('wep26g', 'pmleon24b')]
+    if 'wep05fit25' in DATA:
+        CLASH += [('wep05fit25', 'wep26g')]
+# pmwep26 (same lane): weapon motion from PS2 for the archives pmwep24b left (motion/ps2_motion_prepared.py rewrite + verify,
+# all PASS): em/wep19.drs (grenades: 4 aim clips changed; the hand BIN 0x7 stays the LEON_HAND_PACK key, drawn as PS2 hand
+# blob 15), em/wep00.drs, em/wep05.drs (wep26g's), em/wep13.drs (ps2snd24's) whose clips were already PS2-identical (same
+# bytes; staged so GC-ASSET provenance, which takes motion only from pm* sets, attributes them). After wep26g.
+# Store: re4-assets-private/pmwep26-20261026.
+PMWEP26D = os.environ.get('PMWEP26D', '/root/re4data/private/pmwep26-20261026')
+if os.path.isdir(PMWEP26D):
+    DATA['pmwep26'] = {'em/' + _f: '%s/em/%s' % (PMWEP26D, _f) for _f in sorted(os.listdir(PMWEP26D + '/em'))}
+    AFTER += [('pmwep26', 'wep26g'), ('pmwep26', 'ps2snd24')]
 # props24x (same lane, after props24l): r10c room BIN 0x1f (extended-weights ModelData) to PS2 geometry + picture.
 PROPS24XD = os.environ.get('PROPS24XD', '/root/re4data/private/props24x-20261024')
 if os.path.isdir(PROPS24XD):
@@ -1034,6 +1304,248 @@ if os.path.isdir(PUI24SD):
 PUI24FD = os.environ.get('PUI24FD', '/root/re4data/private/pui24f-20261024')
 if os.path.isdir(PUI24FD):
     DATA['pui24f'] = {'font/' + _n: PUI24FD + '/font/' + _n for _n in sorted(os.listdir(PUI24FD + '/font'))}
+# fontps2x25 (lane gc-audit25 10-25, no GameCube assets: fonts): common_p.fnt as the exact PS2 sheet (PS2 4-bit indices
+# and the PS2 CLUT as the TLUT, PS2 width bytes) instead of pui24f's nearest-entry re-encode into the GameCube palette.
+# Use after pui24f. Visible (palette): look call before a recipe. Store re4-assets-private/fontps2x25-20261025 (RECIPE.txt).
+FONTPS2XD = os.environ.get('FONTPS2XD', '/root/re4data/private/fontps2x25-20261025')
+if os.path.isdir(FONTPS2XD):
+    DATA['fontps2x25'] = {'font/common_p.fnt': FONTPS2XD + '/font/common_p.fnt'}
+    AFTER += [('fontps2x25', 'pui24f')]
+# dcglyph26 (lane dcglyph26 10-26; user: controller glyphs = the Dreamcast set, "dreamcast dpad"): wep26g's tex.pak with
+# the 9 Playing Manual pages (ss/Eng f01b-e f03b-d f09b-c) given our Dreamcast pad panel (lane manual19's companion art,
+# callouts per platform/pad.cpp; f09b / f09c made from it) and the HUD d-pad e42a7628 as a Dreamcast d-pad (same keys,
+# sizes and formats), and fontps2x25's common_p.fnt with the PS2 pad glyph cells 173-191 blank again (as Test 23 / the
+# GameCube English sheet; the shipped message tables never draw them). Data only. After wep26g (pack chain end) and fontps2x25.
+# Store: re4-assets-private/dcglyph26-20261026 (RECIPE.txt + SHA256SUMS + provenance.tsv).
+DCGLYPH26D = os.environ.get('DCGLYPH26D', '/root/re4data/private/dcglyph26-20261026')
+if os.path.isdir(DCGLYPH26D):
+    DATA['dcglyph26'] = {'dc/tex.pak': DCGLYPH26D + '/dc/tex.pak', 'font/common_p.fnt': DCGLYPH26D + '/font/common_p.fnt'}
+    PAK_DERIVED['dcglyph26'] = DCGLYPH26D + '/pak-derived.json'
+    AFTER += [('dcglyph26', 'wep26g'), ('dcglyph26', 'fontps2x25')]
+# wep26e (lane wep19-26 10-26, coordinator: the egg PS2, no allowlist row): wep26g's em/pl00.drs + pl08.drs with the egg
+# BIN 0x7D PS2 as well (PS2 BIN 2272 B > 2240 B slot: ps2_weapons.py convert-pl --relayout lays the body out again; every
+# other member byte-identical to wep26g's) and its 3 PS2 pictures (TPL 0x7E-0x80, VQ). dc/tex.pak = dcglyph26's pack + 3
+# keys (pak-derived.json). After dcglyph26 (the chain end). Store: re4-assets-private/wep26e-20261026.
+WEP26ED = os.environ.get('WEP26ED', '/root/re4data/private/wep26e-20261026')
+if os.path.isdir(WEP26ED):
+    DATA['wep26e'] = {'em/pl00.drs': WEP26ED + '/em/pl00.drs', 'em/pl08.drs': WEP26ED + '/em/pl08.drs',
+                      'dc/tex.pak': WEP26ED + '/dc/tex.pak'}
+    PAK_DERIVED['wep26e'] = WEP26ED + '/pak-derived.json'
+    AFTER += [('wep26e', 'dcglyph26'), ('wep26e', 'wep26g')]
+# gcl26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): what PROVENANCE_FOLLOW_BYTES=1 showed the
+# whole-file credit hid. em/em11..em17.drs = the release's final archives with every GameCube BIN member that has a PS2
+# BIN at the same ARC rebuilt with the PS2 geometry (ps2cast/ps2_ganado_bins.py: GC header / joints / part headers kept,
+# PS2 positions, normals, UVs and triangles; in place, or a small window re-laid out; archive size and every other member
+# unchanged). The pictures are set gcl26p. Made from the FINAL disc files (ps2cast/gcl26-regen.sh), so it stages after
+# every set writing these paths; regenerate it when one of them changes. Store: re4-assets-private/gcl26-20261026.
+GCL26D = os.environ.get('GCL26D', '/root/re4data/private/gcl26-20261026b')
+if os.path.isdir(GCL26D):
+    DATA['gcl26'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26D, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
+    AFTER += [('gcl26', 'ps2snd24'), ('gcl26', 'wep26e')]
+# pic26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = the final pack (gcl26p's) with
+# r101's 5d59dae9 (a 64x64 VQ package set v101 added under a GameCube picture key) as PS2 pixels: PS2 r101.dat TPL
+# 0x3e7f40 image 1, NCC 1.000 against the package itself (ps2cast/em_eff_pics.py --pair - r101.dat; size and format kept).
+# Stages after gcl26p (last tex.pak set). Store: re4-assets-private/pic26-20261026.
+PIC26D = os.environ.get('PIC26D', '/root/re4data/private/pic26-20261026')
+if os.path.isdir(PIC26D):
+    DATA['pic26'] = {'dc/tex.pak': PIC26D + '/dc/tex.pak'}
+    PAK_DERIVED['pic26'] = PIC26D + '/pak-derived.json'
+    AFTER += [('pic26', 'gcl26p')]
+# pic26b (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = pic26's pack with 9160de78
+# (128x128 VQ in vram/resident/r101.tsv, loaded at boot, drawn in r101 visit 3; no data-set provenance, no GC disc twin)
+# as PS2 pixels: the Ganado archive picture PS2 em12.dat TPL 0x2b0100 image 0 (the same picture in em13/15/16/17.dat),
+# NCC 1.000 against the package itself (ps2cast/em_eff_pics.py --pair - em12.dat 9160de78-c705d4ae:67; size and format
+# kept). Not Dreamcast-made menu art. Stages after pic26 (last tex.pak set). Store: re4-assets-private/pic26b-20261026.
+PIC26BD = os.environ.get('PIC26BD', '/root/re4data/private/pic26b-20261026')
+if os.path.isdir(PIC26BD):
+    DATA['pic26b'] = {'dc/tex.pak': PIC26BD + '/dc/tex.pak'}
+    PAK_DERIVED['pic26b'] = PIC26BD + '/pak-derived.json'
+    AFTER += [('pic26b', 'pic26')]
+# title27 (lane fix-title27 10-27, user: "missing the custom title image"): dc/tex.pak = pic26b's pack with the title
+# background c67f5c01-63e0879e (ss/eng/title.dat EFF 0, TPL 31, texture 0) back to the user's 2026 title art (credit
+# top-middle; the package Test 23 shipped, from the UI_OVERRIDES PNG sha256 182f26ae). pui24s (Test 24) re-made that key
+# as the PS2 title picture. The user's own art, not a GameCube asset. Must be the LAST tex.pak set: title27_gate fails a
+# fixture whose final dc/tex.pak holds other bytes under the key. Store: re4-assets-private/title27-20261027.
+TITLE27D = os.environ.get('TITLE27D', '/root/re4data/private/title27-20261027')
+TITLE27_KEY = (0xc67f5c01, 0x63e0879e)
+if os.path.isdir(TITLE27D):
+    DATA['title27'] = {'dc/tex.pak': TITLE27D + '/dc/tex.pak'}
+    PAK_DERIVED['title27'] = TITLE27D + '/pak-derived.json'
+    AFTER += [('title27', 'pic26b')]
+# font22 (lane font22-27 10-27, user: "bring back the glyph and typography set used in build 22", narrowed to the in-game
+# buttons and icons, HUD and fonts kept): dc/tex.pak = title27's pack with the A pad label d17e9c56-fa23c229 (etc/core.das
+# 0x1e4d60#0, 32x32 ARGB4444; action prompts and menu help rows) back to the package Test 22 shipped (GC-derived Dreamcast
+# button set; replaces pada25 / pada25b). The only button picture outside the HUD that differs Test 22 vs Test 24b (B / L / R
+# are identical). Built on title27's pack, so the title art stays; title27_gate checks both keys on the final pack.
+# GC-ASSET reviewed rows (user 10-27, owner font22-27). Store: re4-assets-private/font22-20261027.
+FONT22D = os.environ.get('FONT22D', '/root/re4data/private/font22-20261027')
+FONT22_KEYS = [(0xd17e9c56, 0xfa23c229)]
+if os.path.isdir(FONT22D):
+    DATA['font22'] = {'dc/tex.pak': FONT22D + '/dc/tex.pak'}
+    PAK_DERIVED['font22'] = FONT22D + '/pak-derived.json'
+    AFTER += [('font22', 'title27')]
+# font22b (lane font22-27 round 2, 10-27, user: "regardless I want to restore the set from T22"): the whole Test 22
+# controller glyph set. dc/tex.pak = font22's pack with the HUD d-pad e42a7628-c166970d back to the Test 22 package
+# (dcglyph26's Dreamcast d-pad -> Test 22's GameCube-derived cross; same size / format). The rest of the set already
+# matches Test 22 on screen: A (font22), B / L / R (identical bytes), fonts (no controller glyph cells), the Playing
+# Manual pad panel (both builds draw manual19's Dreamcast companion pages over the base pages; pixel-identical, so the
+# 9 GameCube base pages are not brought back). Built on font22's pack; title27_gate checks the key too. GC-ASSET
+# reviewed rows (owner font22-27). Store: re4-assets-private/font22b-20261027 (pkg/ = the package).
+FONT22BD = os.environ.get('FONT22BD', '/root/re4data/private/font22b-20261027')
+if os.path.isdir(FONT22BD):
+    DATA['font22b'] = {'dc/tex.pak': FONT22BD + '/dc/tex.pak'}
+    PAK_DERIVED['font22b'] = FONT22BD + '/pak-derived.json'
+    AFTER += [('font22b', 'font22')]
+# leon28 (lane look28 10-28, user "fix it asap": Leon's black wardrobe looked crushed): dc/tex.pak = font22b's pack with
+# Leon's two LEON_LIGHT_HEADROOM atlases rebuilt from the 8-bit PS2 pictures at x2 (rounded, one k-means VQ):
+# ec255e66-76812316 (jacket) and 7506e95f-68cf2211 (no jacket; pl08n25 had pasted the shirt / sleeves at x1, so they drew
+# at half brightness). Same keys, sizes, formats and bytes. Rides with LEON_LIGHT_FILL=100. The LAST tex.pak set;
+# title27_gate checks both keys on the final pack. Store: re4data/private/leon28-20261028 (pkg/ = the packages).
+LEON28D = os.environ.get('LEON28D', '/root/re4data/private/leon28-20261028')
+LEON28_KEYS = ['ec255e66-76812316', '7506e95f-68cf2211']
+if os.path.isdir(LEON28D):
+    DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
+    PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
+    AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
+
+
+def title27_gate(names, r, rec):
+    # a set after title27 that stages dc/tex.pak would silently undo the user's title art (Test 24: pui24s did)
+    if 'title27' not in names:
+        return
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+    import tex_merge
+    want = open(TITLE27D + '/c67f5c01-63e0879e.re4tex', 'rb').read()
+    got = tex_merge.read(r['dc/tex.pak']).get(TITLE27_KEY)
+    if got != want:
+        raise SystemExit('title27: the staged dc/tex.pak (%s) does not hold the user title art under c67f5c01-63e0879e; '
+                         'a set after title27 replaced it: rebuild that set on title27 or put title27 last' % r['dc/tex.pak'])
+    rec.append('title27 gate: c67f5c01-63e0879e = user title art')
+    if 'font22' in names:
+        pak = tex_merge.read(r['dc/tex.pak'])
+        for k in FONT22_KEYS:
+            n_ = '%08x-%08x' % k
+            if pak.get(k) != open('%s/%s.re4tex' % (FONT22D, n_), 'rb').read():
+                raise SystemExit('font22: the staged dc/tex.pak (%s) does not hold the Test 22 button picture under %s; '
+                                 'a set after font22 replaced it: rebuild that set on font22 or put font22 last'
+                                 % (r['dc/tex.pak'], n_))
+        rec.append('font22 gate: %d Test 22 button pictures' % len(FONT22_KEYS))
+    if 'font22b' in names:
+        pak = tex_merge.read(r['dc/tex.pak'])
+        pk = sorted(f_ for f_ in os.listdir(FONT22BD + '/pkg') if f_.endswith('.re4tex'))
+        for f_ in pk:
+            k = tuple(int(x, 16) for x in f_[:17].split('-'))
+            if pak.get(k) != open(FONT22BD + '/pkg/' + f_, 'rb').read():
+                raise SystemExit('font22b: the staged dc/tex.pak (%s) does not hold the Test 22 controller glyph under %s; '
+                                 'a set after font22b replaced it: rebuild that set on font22b or put font22b last'
+                                 % (r['dc/tex.pak'], f_[:17]))
+        rec.append('font22b gate: %d Test 22 controller glyph pictures' % len(pk))
+    if 'leon28' in names:
+        pak = tex_merge.read(r['dc/tex.pak'])
+        for n_ in LEON28_KEYS:
+            if pak.get(tuple(int(x, 16) for x in n_.split('-'))) != open('%s/pkg/%s.re4tex' % (LEON28D, n_), 'rb').read():
+                raise SystemExit('leon28: the staged dc/tex.pak (%s) does not hold the leon28 Leon atlas under %s; a set '
+                                 'after leon28 replaced it: rebuild that set on leon28 or put leon28 last' % (r['dc/tex.pak'], n_))
+        rec.append('leon28 gate: %d Leon atlases' % len(LEON28_KEYS))
+# snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
+# ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
+# its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
+#   em/pl14.drs      chapter 2 overlay bank: 19 of 20 samples from PS2 pl14.snd (1 kept GC, no PS2 match)
+#   bgm/doorse.dat   door sounds: the PS2 has no door-sound bank (doorse.hed is an offset table only); ps2_audio.py now
+#                    matches them by sound against pl00 / core / the chapter-1 room banks: block 11's 2 samples from PS2;
+#                    blocks 0-10 (18 samples) keep GC (no PS2 match at the matcher's floor).
+# Neither file is written by another set. Store: re4-assets-private/snd26-20261027 (RECIPE.txt, SHA256SUMS, _map/).
+SND26D = os.environ.get('SND26D', '/root/re4data/private/snd26-20261027')
+if os.path.isdir(SND26D + '/em'):
+    DATA['snd26'] = {'em/pl14.drs': SND26D + '/em/pl14.drs', 'bgm/doorse.dat': SND26D + '/bgm/doorse.dat'}
+# snd28 (lane snd28 10-28, OPT-TRACK row 28; data only, no knob): the partner / costume / crow sound banks the runtime
+# converts at load (not prebuilt AIC1: em/pl01 pl02 pl06 pl07 pl0a pl0b pl0d pl0e pl12, em/em2a) carry PS2 PCM,
+# re-encoded IN PLACE as GC DSP-ADPCM with each sample's own coefficients (tools/ps2_audio.py banks --dsp): same sizes,
+# same AICA path and layout, no RAM / ARAM change. 333 of 405 samples PS2; 72 keep GC (no PS2 match, or a silent PS2
+# placeholder VAG; em/pl04.drs unchanged), listed in gc_port23/sound-kept-gc.tsv.
+# Made from the 92cec32f release disc's final files: after cast15 (em2a.drs); regenerate if a later set writes them.
+# Store: re4-assets-private/snd28-20261028 (README-snd28.txt, provenance.tsv by tools/d367/snd28_store.py, _map/).
+SND28D = os.environ.get('SND28D', '/root/re4data/private/snd28-20261028')
+if os.path.isdir(SND28D + '/em'):
+    DATA['snd28'] = {'em/%s.drs' % n: SND28D + '/em/%s.drs' % n for n in (
+        'pl01', 'pl02', 'pl06', 'pl07', 'pl0a', 'pl0b', 'pl0d', 'pl0e', 'pl12', 'em2a')}
+# snd28b (lane snd28 round 2, 10-28; data only, no knob): the same --dsp treatment for the remaining runtime-converted
+# banks: em/pl05 pl09 pl0c pl10 pl15, em/em14 and the weapon banks em/wep03-06 08 10 12 14-18 (514 of 542 samples PS2;
+# 28 keep GC, rows in gc_port23/sound-kept-gc.tsv). Files are the 92cec32f release disc's final copies, i.e. after ch2
+# (em14) and wep24 / wep26g / wep05fit25 (wepNN): keep snd28b after them in the DATA line; regenerate if a later set
+# writes one. Store: re4-assets-private/snd28b-20261028 (README-snd28b.txt, provenance.tsv, _map/).
+SND28BD = os.environ.get('SND28BD', '/root/re4data/private/snd28b-20261028')
+if os.path.isdir(SND28BD + '/em'):
+    DATA['snd28b'] = {'em/%s.drs' % n: SND28BD + '/em/%s.drs' % n for n in (
+        'pl05', 'pl09', 'pl0c', 'pl10', 'pl15', 'em14')}   # its wepNN copies are superseded by snd28c (round 3)
+# snd28c (lane snd28 round 3, 10-28, issue #1: silent weapons; data only, no knob): em/wep03-06 08 10 12 14-18 carried
+# their WEP sound block as GC data the runtime converts at load, which never fits ("blk 2 ... does not fit": every equip
+# silent). Each is prebuilt AIC1 into the frozen WEP slot (72,544 B) at the highest rate that fits (aica_banks.py fitwep,
+# the WEAPONS rule; 8000-22050 Hz), then gets PS2 PCM (ps2_audio.py banks): 134 of 146 samples PS2. Made from the 92cec32f
+# release disc's final files (after wep24 / wep26g / wep05fit25): keep snd28c after them. Store: re4-assets-private/
+# snd28c-20261028 (README-snd28c.txt, provenance.tsv, _map/ incl. fitwep/*.json rates).
+SND28CD = os.environ.get('SND28CD', '/root/re4data/private/snd28c-20261028')
+if os.path.isdir(SND28CD + '/em'):
+    DATA['snd28c'] = {'em/%s.drs' % n: SND28CD + '/em/%s.drs' % n for n in (
+        'wep03', 'wep04', 'wep05', 'wep06', 'wep08', 'wep10', 'wep12', 'wep14', 'wep15', 'wep16', 'wep17', 'wep18')}
+# dropeng26 (lane gcleft26 10-27, no-GameCube-assets rule; data only, no knob): ss/eng/title.snd off the disc. It is a
+# GameCube sound archive the game never reads: src/game/title.cpp:174 reads SS/cmn/title.snd (PS2 PCM since ps2snd24)
+# and nothing names SS/eng/title.snd (sscrn / read.cpp language paths are option.dat / title.dat / ss_*.dat). Proof: the
+# loader's own "DVD: Read File:" log over all 41 runs of rr cycle 1026-2000-7832fcdb (boot, gca-title through the title,
+# menus and card screens, h2 into r100, every census room, siege, KOS): SS/cmn/title.snd 41 times, SS/eng/title.snd 0.
+# rr/drop-proofs.tsv row: file - ss/eng/title.snd.
+DATA['dropeng26'] = {'remove': ['ss/eng/title.snd']}
+# efm26 (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): the breakable debris effect models whose
+# picture record still named the GameCube package (ps2_items census GC): r102 et13 efm 0c, r103 et05 efm 03, r105 et22
+# efm 2c, r11b et03 efm 0a. Their geometry was already PS2; the TPL image is an R4NREF record no NTR row lists (later
+# sets moved the table), so ps2_items.py pack now treats it as a record and writes the PS2 key the lib holds (65a31923 /
+# f60c0cef / 6ca072ca / c1bcca73, all in tex.pak); 8 bytes per file. A GRAFT of the ETM member only (dar_graft proves
+# every other member). Store: re4-assets-private/efm26-20261026.
+EFM26D = os.environ.get('EFM26D', '/root/re4data/private/efm26-20261026')
+if os.path.isdir(EFM26D):
+    DATA['efm26'] = {'graft': {'st1/%s.dar' % _r: ('%s/st1/%s.dar' % (EFM26D, _r), [_m])
+                               for _r, _m in (('r102', 'et13.eff'), ('r103', 'et05.eff'), ('r105', 'et22.eff'), ('r11b', 'et03.eff'))}}
+# gcl26z (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): em/em11..em17.drs = set gcl26's archives
+# with the bytes no header entry reads zero-filled (ps2cast/drs_dead_fill.py): the original GameCube archive body the
+# prepare step left between the 0x400-byte header and the nested sound entry (em11 0x400..0x3962c0). dvd.cpp reads only
+# the header and each entry's [ofs, ofs + size) (nested rows relative to their entry, checked in range), so every read
+# byte, offset and size is unchanged. Store: re4-assets-private/gcl26z-20261026; regenerate after gcl26.
+GCL26ZD = os.environ.get('GCL26ZD', '/root/re4data/private/gcl26z-20261026b')
+if os.path.isdir(GCL26ZD):
+    DATA['gcl26z'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (GCL26ZD, _e) for _e in ('em11', 'em12', 'em13', 'em15', 'em16', 'em17')}
+    AFTER += [('gcl26z', 'gcl26')]
+# gcl26p (lane gcleft26 10-26, no-GameCube-assets rule; data only, no knob): dc/tex.pak = the final pack with 6 pictures
+# as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes and formats kept, no package grows): the Ganado EFF
+# pictures of every emNN archive 03d1e9a5 / 195b4634 / 41e0ece4 <- PS2 em12.dat TPL images 5 / 6 / 32; core.das entry 25
+# 89f1808c <- PS2 core.dat image 288, c703f665 <- image 306 (transposed: PS2 rotate flag); 2ea4d2ec (r101, loaded with the
+# grenade; no GC disc twin: its package matches PS2 core.dat TPL 0xd2140 image 0 at NCC 1.000) <- that picture. Made from
+# the final pack, so it stages after every tex.pak set (last: wep26e). Store: re4-assets-private/gcl26p-20261026.
+GCL26PD = os.environ.get('GCL26PD', '/root/re4data/private/gcl26p-20261026')
+if os.path.isdir(GCL26PD):
+    DATA['gcl26p'] = {'dc/tex.pak': GCL26PD + '/dc/tex.pak'}
+    PAK_DERIVED['gcl26p'] = GCL26PD + '/pak-derived.json'
+    AFTER += [('gcl26p', 'wep26e')]
+# snd26w (same lane): em/wep19.drs = pmwep26's file with its one sound-bank sample re-encoded in place from PS2 audio
+# (ps2_audio.py banks; PS2 wep19.snd is a stub, the sound is r11d.snd block 6 VAG 25; frozen AICA layout, same size).
+# After pmwep26. Store: re4-assets-private/snd26w-20261026.
+SND26WD = os.environ.get('SND26WD', '/root/re4data/private/snd26w-20261026')
+if os.path.isdir(SND26WD):
+    DATA['snd26w'] = {'em/wep19.drs': SND26WD + '/em/wep19.drs'}
+    AFTER += [('snd26w', 'pmwep26')]
+# pmss26 (same lane): ss/cmn/ss_wep00 / 05 / 13 / 19.dat with PS2 motion (ps2_motion_prepared.py rewrite --bare + verify;
+# every clip already PS2-identical, same bytes; staged so GC-ASSET provenance attributes them). After wep26g / wep24ss.
+PMSS26D = os.environ.get('PMSS26D', '/root/re4data/private/pmss26-20261026')
+if os.path.isdir(PMSS26D):
+    DATA['pmss26'] = {'ss/cmn/' + _f: '%s/ss/cmn/%s' % (PMSS26D, _f) for _f in sorted(os.listdir(PMSS26D + '/ss/cmn'))}
+    AFTER += [('pmss26', 'wep26g'), ('pmss26', 'wep24ss')]
+# hand26 (same lane, round 3): Leon's last GameCube hand BINs as PS2 geometry (ps2_weapons.py --hands): em/wep19.drs 0x7
+# (grenade hand; its new LEON_HAND_PACK key added to leon_hands_pl00.re4hp on the same PS2 blob 15, hands_pack.py addkey)
+# and ss/cmn/ss_wep13.dat / ss_wep19.dat BIN 0 (sub screen hands). After snd26w (wep19.drs) and pmss26 (ss_wep13.dat): it rewrites their files.
+HAND26D = os.environ.get('HAND26D', '/root/re4data/private/hand26-20261026')
+if os.path.isdir(HAND26D):
+    DATA['hand26'] = {'em/wep19.drs': HAND26D + '/em/wep19.drs', 'ss/cmn/ss_wep13.dat': HAND26D + '/ss/cmn/ss_wep13.dat', 'ss/cmn/ss_wep19.dat': HAND26D + '/ss/cmn/ss_wep19.dat',
+                      'dc/native/pl00/leon_hands_pl00.re4hp': HAND26D + '/dc/native/pl00/leon_hands_pl00.re4hp'}
+    AFTER += [('hand26', 'snd26w'), ('hand26', 'pmss26')]
 # leonhair24 (lane purge-cast24 10-24, GC purge; data only, no knob): fol24's tex.pak with Leon's hair from the PS2 disc
 # (pl08.dat TPL 3 image 0, transposed to the GC layout) under the GC keys: pairs fc24a99c / 9cf7f055 (what the hair
 # materials draw; graded per channel to the shipping pair's mean), colours ac381b1a / 7a9de1fd, mask 94e9dc56. Same
@@ -1087,7 +1599,10 @@ DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/nati
 # 65 files (wep19 and em2a unchanged: no PS2 or no prebuilt bank), every one the size of the release file it replaces. Made from the RELEASE disc's final files (cand-590b8f5f),
 # so it must be the LAST set touching these paths (after objs13d, snd16, ch21r, ash21, ...); regenerate if a later set
 # changes one of them. RECIPE.txt and the maps (_map/) are in the store.
-PS2SND24D = os.environ.get('PS2SND24D', '/root/re4data/private/ps2snd24-20261024')
+# Default = the regenerated store the release recipe exports (rr/recipe.conf; lane cast-ps2-25 10-26): the older
+# ps2snd24-20261024 em/em1[1-7].drs carry the GameCube Ganado motion pmgan24 replaced, whose keys pmgan24 removes; staged
+# after pmgan24 (worldopt26's arms, no recipe export) they halted the r100 house siege on a missing dc/mot key.
+PS2SND24D = os.environ.get('PS2SND24D', '/root/re4data/private/ps2snd24-t24-20261024')
 DATA['ps2snd24'] = {p: PS2SND24D + '/' + p for p in (
     'bgm/aica_str.dat', 'bgm/bio4midi.dat', 'etc/core.das', 'ss/cmn/title.snd',
     'em/em11.drs', 'em/em12.drs', 'em/em13.drs', 'em/em15.drs', 'em/em16.drs', 'em/em17.drs', 'em/em18.drs',
@@ -1120,6 +1635,16 @@ WEP24SSD = os.environ.get('WEP24SSD', '/root/re4data/private/wep24ssb-20261025')
 DATA['wep24ss'] = {'ss/cmn/ss_wep%s.dat' % n: WEP24SSD + '/ss/cmn/ss_wep%s.dat' % n
                    for n in ('00', '01', '02', '03', '04', '06', '07', '08', '09', '10', '11', '12', '14', '15', '16', '17')}
 DATA['wep24ss']['tex'] = WEP24SSD + '/tex'
+# wep05fit25 (lane gc-audit25 10-25, no GameCube assets): the Broken Butterfly (em/wep05.drs + ss/cmn/ss_wep05.dat) as the
+# PS2 model fitted to the GC skeleton (ps2_weapons.py --fit-skeleton: the PS2 root children share one 15 mm translation,
+# every deeper bone equal, so the mesh moves by that vector and no pivot changes). Use after wep24 / wep24ss. Its tex/
+# picture (17245f5d-f6746277) must be pack_added to the chain pack and t24prune rebuilt (drop-loose). Not in a recipe yet.
+WEP05FITD = os.environ.get('WEP05FITD', '/root/re4data/private/wep05fit25-20261025')
+if os.path.isdir(WEP05FITD):
+    DATA['wep05fit25'] = {'em/wep05.drs': WEP05FITD + '/em/wep05.drs',
+                          'ss/cmn/ss_wep05.dat': WEP05FITD + '/ss/cmn/ss_wep05.dat',
+                          'tex': WEP05FITD + '/tex'}
+    AFTER += [('wep05fit25', 'wep24'), ('wep05fit25', 'wep24ss')]
 # pmwep24 (lane purge-motion24 10-24, GC purge, data only): wep24's weapon archives with their FCV/SEQ motion from PS2
 # BIO4DAT.AFS wepNN.dat (tools/d367/motion/ps2_motion_prepared.py rewrite + verify, bodies laid out again; models, pictures,
 # REL and sound banks kept). Only the 10 archives whose motion changed (wep02 07 09 10 12 16 17 18 21 24); wep04
@@ -1142,6 +1667,29 @@ if os.path.isdir(PMWEP24BD):
 DATA['evdmv24'] = {'remove': ['evd/%s.evd%s' % (n, x) for n in (
     'r100s03', 'r100s20', 'r100s40', 'r100s41', 'r100s43', 'r100s44', 'r101s00', 'r101s21', 'r101s30',
     'r11fs01', 'r11fs10') for x in ('', '.evq')]}
+# windows26 (lane windows26 10-26, user: windows must show glass and bars): the GC et0000/et2500 panes and et0000.tpl
+# image 0 restored byte-identical to Test 23, member by member on the Test 24 archives, in r100 r101 r105 r107 r111 r11c
+# r11f (PS2 draws no intact pane). tools/d367/windows26/gen26.sh reproduces it. Last of the st1 .dar sets.
+WINDOWS26D = os.environ.get('WINDOWS26D', '/root/re4data/private/windows26-20261026')
+# Since 10-26 (lane fix-r100-props26) it is a GRAFT, not a whole-archive copy: the store's archives were rebuilt from the
+# Test 24 tree, so copying them threw away later sets (pmrest25's r100 motions) and changed sound banks / models (GC-ASSET
+# 3 -> 37). Only the pane members are copied, onto the archive every set composed (see 'graft' below).
+if os.path.isdir(WINDOWS26D):
+    DATA['windows26'] = {'graft': {}}
+    for _r in 'r100 r101 r105 r107 r111 r11c r11f'.split():
+        _m = ['et0000.bin'] + (['et2500.bin'] if _r in ('r101', 'r105', 'r111') else []) +              (['et0000.tpl'] if _r in ('r105', 'r107', 'r111', 'r11c', 'r11f') else [])
+        DATA['windows26']['graft']['st1/%s.dar' % _r] = ('%s/st1/%s.dar' % (WINDOWS26D, _r), _m)
+# smdrel26 (lane arcuse26 10-26): r11f's 69 SMD BINs (1,219,008 B of GX payload in the loaded room payload; the PS2 world
+# draws the barn) released through the room_smd.py contract like every other route room. Applied on the composed
+# archive after all sets and grafts (smdrel_all). Store: summary of convert_room_bins.py on the GC r11f.das (the
+# ch2 prep-room.sh options); the package itself is not staged (PS2 world room, as r11e).
+SMDREL26D = os.environ.get('SMDREL26D', '/root/re4data/private/arcuse26-20261026')
+if os.path.isdir(SMDREL26D):
+    DATA['smdrel26'] = {'smdrel': {'st1/r11f.dar': SMDREL26D + '/r11f/MAINSCENARIO.re4mesh.json'}}
+# smdrel26b (lane arcuse26 10-26): the same release for st2/r200 (57 SMD BINs, 1,151,008 B; PS2 world room), on the
+# composed st2/r200.dar as the recipe stands. Summary of convert_room_bins.py on the GC r200.das, same options.
+if os.path.isfile(SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'):
+    DATA['smdrel26b'] = {'smdrel': {'st2/r200.dar': SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'}}
 
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
@@ -1169,6 +1717,190 @@ if os.path.isfile(T24PRUNED + '/tex.pak'):
     PAK_DERIVED['t24prune'] = T24PRUNED + '/pak-derived.json'
 # Mendez door-demo knob + data set: from lane fix-mendez-door24 (placeholder; not in Test 24 recipe yet).
 
+# nostd103 (lane t25-fixes 10-25, Test 25 item 2; coordinator: no GameCube assets wins): takes r103's Standard set off the
+# disc. Its index (4,280 B) is over the reader limit (native_static.cpp kStdText=4096) and was rejected on every disc
+# since 10-19, and accepting it would bring in GC-derived scenery (low/MAINSCENARIO, a LOD of the GC package) and 19
+# texlow pictures made from GC textures (shared with no other room). r103 keeps Original packages + the PS2 world; the
+# log line becomes "index.txt missing: Original packages". Remove-only: no store.
+DATA['nostd103'] = {'remove': ['dc/native/r103/low/%s' % f for f in ('index.txt', 'MAINSCENARIO.re4mesh', 'plan.json')] + [
+    'dc/texlow/%s/%s.re4tex' % (k[0], k) for k in (
+        '255f85b3-495d7d69 3628abf0-44e6d158 3a43023f-cf202672 570e2032-fcc53f7c 589a31e5-8ef2a5cd 5c900ef9-0eeea1a0 '
+        '6836912e-e089be7e 73aed70b-db3cc2dc 79faed7d-de7a1023 86c0121b-841ef8be 8c58ec0d-96eacb5f 9ec02924-b15bf85a '
+        'a3943bb1-eec75484 b2372831-53c12477 b52b2722-ad9a1eff c1eb66a7-93b9292b e831a98f-ace53a55 f47bd095-ec43c743 '
+        'fd3d8794-bb70f519').split()]}
+# nostd25 (lane purge-pics25 10-25, Test 25, no GameCube assets; nostd103's pattern for r100 / r101): takes the r100 and
+# r101 Standard sets off the disc. Both indexes were accepted, but every record in them (mesh views, cull, imp / impt
+# tree impostors, ptex) keys off the GC scenery packages (MAINSCENARIO, r100 FILE_0x / COMMON), which the PS2 world
+# replaces: SOURCE_OBJECTS scenery_skipped 184 (r100) / 209 (r101), so nothing draws them. What still ran was the room
+# preload of the index's texlow pictures (GC-derived impostor atlases and part textures): r100 7, r101 21, the last 28
+# files of dc/texlow (shared with no other room). The rooms log "index.txt missing: Original packages". Remove-only.
+DATA['nostd25'] = {'remove': ['dc/native/%s/low/%s' % (_r, f) for _r, fs in (
+    ('r100', 'COMMON FILE_00 FILE_01 FILE_02 FILE_03 FILE_04 MAINSCENARIO'),
+    ('r101', 'MAINSCENARIO')) for f in ['%s.re4mesh' % m for m in fs.split()] + ['index.txt', 'plan.json']] + [
+    'dc/texlow/%s/%s.re4tex' % (k[0], k) for k in (
+        # r100
+        '20554644-9100e6e3 31188b11-c17ef9b4 4163e909-11fb0185 4db31258-f3377366 b2ccaaa3-79ec5b06 dd2c1c57-26585c5a '
+        'fc58c9a8-e7a08670 '
+        # r101
+        '0cefe1fe-65cb497f 0f22c146-e845149f 2d5a9317-0e1e1a1e 33fcc410-c215ac41 43d869dc-e6de0e9e 4a31369a-f0dd9700 '
+        '5119ab6b-af6cf246 5bb6cc3f-11d151a0 5e1f34ef-bc16c9e3 82f78534-df80de25 875b4430-5428fac4 a024d424-eebb15d6 '
+        'af040e00-9c2ae0f5 b0810ada-e2994a70 b4b6940a-0b0c01cb c63541b7-937b388d ceb4070a-b81f5b19 d5558c72-9668d80d '
+        'ea4b493a-dcd2aec4 eaaf4961-556f130e fc9c61df-f5aa959f').split()]}
+
+# pmrest25 (lane purge-motion25 10-25, GC asset purge: the last motion clips the round-8 census lists): em21 (dog), em23
+# (crow), em2a, pl01 and the room archives r100 / r103 / r106 / r11e with every FCV / SEQ member from the PS2 version
+# (BIO4DAT.AFS emNN.dat / pl01.dat / rNNN.dat; tools/d367/motion/ps2_motion_prepared.py rewrite --bare for room archives,
+# --map for r100's shifted PS2 order). em23 / em2a / r11e are byte-identical to the release (their clips already equal the
+# PS2 entries; staged so the motion store proves it). Data only. Built from the RR candidate tree of t15/int 9c2c83db:
+# LAST in the data line (after nostd103). Store: re4-assets-private/pmrest25-20261025 (RECIPE.txt, SHA256SUMS).
+PMREST25D = os.environ.get('PMREST25D', '/root/re4data/private/pmrest25-20261025')
+if os.path.isdir(PMREST25D):
+    DATA['pmrest25'] = {'em/%s.drs' % _e: '%s/em/%s.drs' % (PMREST25D, _e) for _e in ('em21', 'em23', 'em2a', 'pl01')}
+    DATA['pmrest25'].update({'st1/%s.arc' % _r: '%s/st1/%s.arc' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106', 'r11e')})
+    # the room archive the game reads is the .dar's type-0 record (the .arc copies are staged for consistency)
+    DATA['pmrest25'].update({'st1/%s.dar' % _r: '%s/st1/%s.dar' % (PMREST25D, _r) for _r in ('r100', 'r103', 'r106')})
+# pmem29-26 (lane cast-ps2-25 10-26, GC asset purge: the r106 census motion rows of em/em29.drs): em29.drs whose 18 FCV
+# clips and SEQ are byte-identical to PS2 em29.dat (ps2_motion_prepared.py rewrite: 0 changed, VERIFY PASS); staged so the
+# motion store proves them PS2. Data only, unchanged bytes. Store: re4-assets-private/pmem29-26-20261026.
+PMEM29D = os.environ.get('PMEM29D', '/root/re4data/private/pmem29-26-20261026')
+if os.path.isdir(PMEM29D):
+    DATA['pmem29-26'] = {'em/em29.drs': PMEM29D + '/em/em29.drs'}
+# pmash25 (same lane): Ashley em/pl11.drs (the release's pl11-hot bounded archive) with its motion from PS2 pl11.dat, the
+# one new dc/mot key it streams, and the GC key no archive references any more off the disc (remove.txt). ONLY with
+# MOTION_PS2_PL11=1 (its pl11-hot profile row); a program without it refuses the archive. After pmrest25.
+# Store: re4-assets-private/pmash25-20261025.
+PMASH25D = os.environ.get('PMASH25D', '/root/re4data/private/pmash25-20261025')
+if os.path.isdir(PMASH25D):
+    DATA['pmash25'] = {'em/pl11.drs': PMASH25D + '/em/pl11.drs'}
+    DATA['pmash25'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMASH25D, _k) for _k in sorted(os.listdir(PMASH25D + '/dc/mot'))})
+    DATA['pmash25']['remove'] = [_l.strip() for _l in open(PMASH25D + '/remove.txt') if _l.strip()]
+# n256w25 (lane scenery-cut25 10-25, Test 25 "less scenery drawn"): the r101 / r103 PS2 worlds re-exported with meshlets of up
+# to 256 vertices (shipped 64): r101 by the hook -> append -> strip-groups chain, r103 by ps2_room_r4im.py
+# --meshlet-vertices 256 (both reproduce the shipped 64 files byte-identically at 64). R4PW / ids / r4tc unchanged. Needs
+# SCENERY_N256=1 (the two packages' rect21 certificates); release line only, never KSETS. Store: re4-assets-private/n256w25-20261025.
+N256W25D = os.environ.get('N256W25D', '/root/re4data/private/n256w25-20261025')
+DATA['n256w25'] = {'dc/native/r101/ps2-world.re4mesh': N256W25D + '/dc/native/r101/ps2-world.re4mesh',
+                   'dc/native/r101/ps2-world.r4sg': N256W25D + '/dc/native/r101/ps2-world.r4sg',
+                   'dc/native/r103/ps2-world.re4mesh': N256W25D + '/dc/native/r103/ps2-world.re4mesh'}
+# pmr113-25 (same lane, 10-25): st1/r113.arc + st1/r113.dar with their FCV / SEQ motion from PS2 r113.dat (the same ten
+# one-frame Ganado poses as r103, plus two 316-frame clips, frame counts unchanged). Data only. After pmash25.
+# Store: re4-assets-private/pmr113-25-20261025.
+PMR113D = os.environ.get('PMR113D', '/root/re4data/private/pmr113-25-20261025')
+if os.path.isdir(PMR113D):
+    DATA['pmr113-25'] = {'st1/r113.%s' % _x: '%s/st1/r113.%s' % (PMR113D, _x) for _x in ('arc', 'dar')}
+
+# n256x25 (lane world-blender25 10-25, Test 25 bang for buck after n256w25): the three chapter 1 worlds with the most world
+# ms after r101 in the census ranking (Flycast WORLD_CENSUS24, ctl twin: r109 16.4, r117 15.1, r106 12.9 ms per drawn tick)
+# re-exported at 256-vertex meshlets by ps2_room_r4im.py from each room's recorded blackps2 recipe (64 reproduces the
+# shipped mesh byte-identically). r109 also gets its sg109 strip groups regenerated (ps2_strip_groups.py --preserve-order;
+# 64 reproduces sg109 byte-identically). R4PW / ids / r4tc unchanged. Needs SCENERY_N256=1 (swapped certificate rows);
+# goes with n256w25 and after sg109 in the data line; release line only, never KSETS. Store:
+# re4-assets-private/n256x25-20261025.
+N256X25D = os.environ.get('N256X25D', '/root/re4data/private/n256x25-20261025')
+DATA['n256x25'] = {'dc/native/r106/ps2-world.re4mesh': N256X25D + '/dc/native/r106/ps2-world.re4mesh',
+                   'dc/native/r109/ps2-world.re4mesh': N256X25D + '/dc/native/r109/ps2-world.re4mesh',
+                   'dc/native/r109/ps2-world.r4sg': N256X25D + '/dc/native/r109/ps2-world.r4sg',
+                   'dc/native/r117/ps2-world.re4mesh': N256X25D + '/dc/native/r117/ps2-world.re4mesh'}
+
+# n256z25 (lane world-blender25 10-25): r111 / r119 worlds at 256-vertex meshlets (ps2_room_r4im.py from their recorded
+# recipes: ch2regen-20261018 worlds/t-fed4122a/r111-ps2 and corpus-uvg r119-ps2-uvg, both reproducing the shipped 64 mesh
+# byte-identically) plus strip groups (ps2_strip_groups.py --preserve-order, as sg109) for r111 / r119 / r117 / r106, each
+# r4sg bound to its room's certified policy source crc. Without strip groups 256 alone made r119 slower (+2.7 ms). Census
+# (Flycast WORLD_CENSUS24, castgc warps, world ms per drawn tick): r111 15.60 -> 13.60, r119 14.80 -> 14.20, r117 (n256x25)
+# 14.21 -> 13.33, r106 (n256x25) 12.20 -> 11.29. R4PW / ids / r4tc unchanged. Needs SCENERY_N256=1 and goes after n256x25
+# in the data line; release line only, never KSETS. Store: re4-assets-private/n256z25-20261025.
+N256Z25D = os.environ.get('N256Z25D', '/root/re4data/private/n256z25-20261025')
+DATA['n256z25'] = {'dc/native/%s/ps2-world.%s' % (r, x): N256Z25D + '/dc/native/%s/ps2-world.%s' % (r, x)
+                   for r in ('r111', 'r119') for x in ('re4mesh', 'r4sg')}
+DATA['n256z25'].update({'dc/native/%s/ps2-world.r4sg' % r: N256Z25D + '/dc/native/%s/ps2-world.r4sg' % r
+                        for r in ('r106', 'r117')})
+
+# n256a26 (lane world-n256all 10-26, user "covering all rooms for consistency starting with the most expensive"): r10b /
+# r11d / r102 / r105 worlds at 256-vertex meshlets (ps2_room_r4im.py from each room's recorded recipe: blackps2 for r10b /
+# r102 / r105, ch2regen t-fed4122a for r11d; each reproduces the shipped 64 mesh byte-identically), strip groups
+# (ps2_strip_groups.py --preserve-order, bound to the certified policy source crc) and the room file with its SCDD section
+# rebuilt for the new mesh (scenery19/scdd_compile.py over the shipped room.r4rc). Census (Flycast WORLD_CENSUS24, castgc
+# warps, world ms per drawn tick): r10b 11.81 -> 10.80, r11d 10.62 -> 9.83, r102 10.02 -> 8.70, r105 9.11 -> 8.20. R4PW /
+# ids / r4tc unchanged; TEXCHK 0, PS2DYN ids=ok, trans classes=ok. Needs SCENERY_N256=1; after n256z25 in the data line;
+# release line only, never KSETS. Store: re4-assets-private/n256a26-20261026.
+N256A26D = os.environ.get('N256A26D', '/root/re4data/private/n256a26-20261026')
+DATA['n256a26'] = {'dc/native/%s/%s' % (r, f): N256A26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r10b', 'r11d', 'r102', 'r105') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# n256b26 (lane world-n256all 10-26, batch 2): r108 / r11e / r11c / r11f the same way as n256a26 (recipes: blackps2 r108,
+# ch2regen t-fed4122a r11e / r11c / r11f; 64 byte-identical to shipped). r11f has no rect21 certificate row: its policy
+# binds the actual R4PW crc, so its strip groups bind that and no row is swapped. Census (Flycast WORLD_CENSUS24, world ms
+# per drawn tick): r108 8.94 -> 8.03, r11e 8.78 -> 8.04, r11c 8.02 -> 7.03, r11f 7.11 -> 6.47. Needs SCENERY_N256=1; after
+# n256a26; release line only, never KSETS. Store: re4-assets-private/n256b26-20261026.
+N256B26D = os.environ.get('N256B26D', '/root/re4data/private/n256b26-20261026')
+DATA['n256b26'] = {'dc/native/%s/%s' % (r, f): N256B26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r108', 'r11e', 'r11c', 'r11f') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# n256c26 (lane world-n256all 10-26, batch 3): r10a / r11a / r112 / r104 the same way as n256a26 (recipes: blackps2 r10a /
+# r11a / r104, ch2regen t-fed4122a r112; 64 byte-identical to shipped). Census (Flycast WORLD_CENSUS24, world ms per drawn
+# tick): r10a 6.81 -> 6.23, r11a 6.72 -> 6.29, r112 5.70 -> 4.53, r104 5.63 -> 5.23. Needs SCENERY_N256=1; after n256b26;
+# release line only, never KSETS. Store: re4-assets-private/n256c26-20261026.
+N256C26D = os.environ.get('N256C26D', '/root/re4data/private/n256c26-20261026')
+DATA['n256c26'] = {'dc/native/%s/%s' % (r, f): N256C26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r10a', 'r11a', 'r112', 'r104') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# n256d26 (lane world-n256all 10-26, batch 4): r10d / r10f / r10c the same way as n256a26 (recipes: r10dbake23's own
+# ps2-world.json for r10d (the approved static bake, --bake-static), ch2regen t-fed4122a r10f, ch21l r10c; 64 byte-identical
+# to shipped). r10d's certificate row does not certify its bake (actual R4PW crc in use): no row swap, strip groups bind
+# the shipped R4PW crc. Census (Flycast WORLD_CENSUS24, world ms per drawn tick): r10d 5.26 -> 3.78, r10f 5.32 -> 5.07,
+# r10c 5.17 -> 4.11. r10e stays on 64 (5.47 -> 5.87 at 256, slower). Needs SCENERY_N256=1; after n256c26; release line
+# only, never KSETS. Store: re4-assets-private/n256d26-20261026.
+N256D26D = os.environ.get('N256D26D', '/root/re4data/private/n256d26-20261026')
+DATA['n256d26'] = {'dc/native/%s/%s' % (r, f): N256D26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r10d', 'r10f', 'r10c') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# n256e26 (lane world-n256all 10-26, batch 5): r118 / r107 / r113 / r11b the same way as n256a26 (recipes: blackps2 r118 /
+# r107 / r11b, ch2regen t-fed4122a r113; 64 byte-identical to shipped). Census (Flycast WORLD_CENSUS24, world ms per drawn
+# tick): r118 5.05 -> 4.53, r107 4.23 -> 4.12, r113 9.41 -> 8.98 (q=2), r11b 10.50 -> 9.45 (q=2, rr st-r11b warp).
+# Needs SCENERY_N256=1; after n256d26; release line only, never KSETS. Store: re4-assets-private/n256e26-20261026.
+N256E26D = os.environ.get('N256E26D', '/root/re4data/private/n256e26-20261026')
+DATA['n256e26'] = {'dc/native/%s/%s' % (r, f): N256E26D + '/dc/native/%s/%s' % (r, f)
+    for r in ('r118', 'r107', 'r113', 'r11b') for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# n256r100 (lane world-n256all 10-26, landed by interior-cells26): r100 at 256-vertex meshlets (mesh crc 45c5e14e,
+# 1,461,184 B; r4sg bound to source crc 14118acd; fresh room.r4rc). The occluder triangles are bit-identical to the 64
+# package, so the interior cell keeps its 170 sub-cells / 1,186 portals (icells26 carries it for this package). Pairs
+# with the r100 row of texture_rect21/provenance_certificates_n256.inc. Needs SCENERY_N256=1; release line only.
+N256R100D = os.environ.get('N256R100D', '/root/re4data/private/n256r100-20261026')
+DATA['n256r100'] = {'dc/native/r100/%s' % f: N256R100D + '/dc/native/r100/%s' % f
+    for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
+
+# icells26 (lane interior-cells26 10-26): PS2_INTERIOR_CELLS=1 per-room interior cells (PCL2, build_cell.py emit --pcl2 /
+# cell_file.py): the r100 house for the n256r100 package. (r101 siege house / r11c siege cabin cells were built and
+# measured on Flycast: r101 world 13.48 -> 15.87 ms, r11c 0 hidden at the siege view; not shipped.) Each file carries
+# its package's mesh / sidecar CRC and bytes; a stale one is refused at load (cull off for that room). Needs
+# PS2_INTERIOR_CELLS=1 (the r100 file is PCL2: a knob-off program refuses it). After n256r100. Store:
+# re4-assets-private/icells26-20261026.
+ICELLS26D = os.environ.get('ICELLS26D', '/root/re4data/private/icells26-20261026')
+DATA['icells26'] = {'dc/native/%s/interior.cell' % r: ICELLS26D + '/dc/native/%s/interior.cell' % r
+    for r in ('r100',)}
+# lod26b (lane lod26b 10-26, NMR_POOL_LOD=1 only: an image without the knob refuses a numbered level): the r11d / r108 /
+# r111 / r113 registry packages + a g50 numbered pool level (word 44 bits 26..29 = 3) of the chapter 2 pool Ganado
+# (ganado-em16-0bp r11d, ganado-em17-0cp r108 / r111 / r113), drawn while GANADO_LOD draws level >= 3. Each package is
+# its shipped spec rebuilt byte-identically (cast16 1446f422 / r108p cd46d46c / trap24 4227608a / 795eb168) + the level
+# (model-registry/ps2-*-lod26b.json). No texture (the level binds the full model's atlas). After cast16, r108p, trap24.
+# Store: re4-assets-private/lod26b-20261026 (RECIPE.txt, SHA256SUMS.txt).
+LOD26BD = os.environ.get('LOD26BD', '/root/re4data/private/lod26b-20261026')
+DATA['lod26b'] = {'dc/native/%s/registry.re4nmr' % r: LOD26BD + '/dc/native/%s/registry.re4nmr' % r
+    for r in ('r11d', 'r108', 'r111', 'r113')}
+
+# wsg26 (lane worldopt26 10-26, user 10-26 "yes extend the strip"): spatial strip groups for the 256-vertex meshlet
+# route rooms (tools/ps2_strip_groups.py default mode, 4 groups, on each room's shipped n256 package: corners renumbered in
+# group order, same bytes; r4sg policy word = the shipped r4sg's / the certificate source crc for r103, which had none).
+# r101 is already spatial (not in the set). r100 carries interior.cell with the new mesh crc (icells26's file otherwise).
+# Pairs with WORLD_SG26=1 (provenance_certificates_sg26.inc). After n256r100 and icells26. Release line only, never KSETS.
+# Store: re4-assets-private/wsg26-20261026 (RECIPE.txt).
+WSG26D = os.environ.get('WSG26D', '/root/re4data/private/wsg26-20261026')
+WSG26_ROOMS = ('r100', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d',
+               'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f')
+DATA['wsg26'] = {'dc/native/%s/%s' % (r, f): WSG26D + '/dc/native/%s/%s' % (r, f)
+    for r in WSG26_ROOMS for f in ('ps2-world.re4mesh', 'ps2-world.r4sg')}
+DATA['wsg26']['dc/native/r100/interior.cell'] = WSG26D + '/dc/native/r100/interior.cell'
 
 if __name__ == '__main__':
     main()

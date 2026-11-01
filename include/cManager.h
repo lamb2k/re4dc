@@ -91,6 +91,22 @@ template <> struct re4dcAliveSlot<cObj> { enum { v = 2 }; };
 #define RE4DC_ALIVE_BUMP() ((void) 0)
 #endif
 
+// EfmDelete indexes mapped object slots by class, including dead slots. Its token must change
+// when a slot is (re)constructed or its mapping changes, not when an alive-list link changes.
+// Keep this separate from re4dc_alive_gen: collision and other list readers still need every
+// add/delete notification. The object lives in esp_efm.cpp; no manager layout or ABI changes.
+#if !defined(__PPC__) && defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY
+extern "C" u32 re4dc_obj_class_gen;
+class cObj;
+template <class T> struct re4dcEfmClassSlot { static void bump() {} };
+template <> struct re4dcEfmClassSlot<cObj> {
+    static void bump() { if (re4dc_obj_class_gen != ~u32(0)) ++re4dc_obj_class_gen; }
+};
+#define RE4DC_EFM_CLASS_BUMP() re4dcEfmClassSlot<T>::bump();
+#else
+#define RE4DC_EFM_CLASS_BUMP()
+#endif
+
 // Fixed array work manager. Element stride is the runtime field `size`
 // (derived work classes share the manager of their base type).
 template <class T>
@@ -287,6 +303,9 @@ void cManager<T>::setName(const char* n)
 template <class T>
 int cManager<T>::roomInit()
 {
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
     pArray = 0;
     nArray = 0;
@@ -309,6 +328,9 @@ template <class T>
 int cManager<T>::arrayFree()
 {
     int ret;
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
 
     if (pArray) {
@@ -324,6 +346,9 @@ int cManager<T>::arrayFree()
 template <class T>
 int cManager<T>::arrayAlloc(u32 n)
 {
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
     arrayFree();
     pArray = (T*) memAlloc(size * n);
@@ -403,8 +428,19 @@ T* cManager<T>::create(int id)
 #else
         if (!(RE4DC_MANAGER_FLAG_LOAD(p) & 0x601)) {
 #endif
+            #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            RE4DC_EFM_CLASS_BUMP()
+            #endif
             memClear(p, size);
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            const int built = construct(p, id);
+            #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            RE4DC_EFM_CLASS_BUMP()
+            #endif
+            if (built == 0) {
+#else
             if (construct(p, id) == 0) {
+#endif
                 log("create()->construct() failed. %s id:%d", name, id);
                 return 0;
             }
@@ -440,8 +476,14 @@ T* cManager<T>::create(int id, u32 no)
         log("create() failed %s id:%d", name, id);
         return 0;
     }
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     memClear(p, size);
     construct(p, id);
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     addListFront(p);
     countActiveWork();
     return p;
@@ -455,6 +497,9 @@ int cManager<T>::arrayPush(int n)
     if (pArrayPush != 0) {
         return 0;
     }
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
     pArrayPush = (u32) pArray;
     pArray = (T*) Debug_alloc(size * n, 1);
@@ -471,6 +516,9 @@ int cManager<T>::arrayPop()
     if (pArrayPush == 0) {
         return 0;
     }
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
     Debug_free(pArray);
     // statement order found by brute force (zero stores last in the schedule, pAlive restored last)
@@ -578,8 +626,19 @@ T* cManager<T>::createBack(int id)
 #else
         if (!(RE4DC_MANAGER_FLAG_LOAD(p) & 0x601)) {
 #endif
+            #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            RE4DC_EFM_CLASS_BUMP()
+            #endif
             memClear(p, size);
+#if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            const int built = construct(p, id);
+            #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+            RE4DC_EFM_CLASS_BUMP()
+            #endif
+            if (built == 0) {
+#else
             if (construct(p, id) == 0) {
+#endif
                 log("create()->construct() failed. %s id:%d", name, id);
                 return 0;
             }

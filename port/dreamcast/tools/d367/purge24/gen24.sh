@@ -5,10 +5,10 @@ O=/root/work/lanes/purge-props24-scratch/${OUTD:-g}
 mkdir -p "$O"
 BRK="et0100.bin et0200.bin et1100.bin et1200.bin et1e00.bin et1f00.bin et2d00.bin et2e00.bin et2e01.bin et2f00.bin et2f01.bin et3c00.bin et0000.bin et2500.bin et1400.bin"
 declare -A ETM PAIRS SRC EMP
-EMP[r111]=et0000.bin,et2500.bin; EMP[r11c]=et0000.bin; EMP[r11f]=et0000.bin
+# EMP (window panes et0000 / et2500 emptied) retired 2026-10-26 (lane windows26): the user requires glass and bars;
+# the panes stay GC (GC-ASSET allowlist). Already emptied dars: ps2_objects.py --etm-restore-gc (windows26/gen26.sh).
 REL=/root/work/lanes/purge-props24-scratch/rel/tree
 for r in r100 r101 r105 r107; do SRC[$r]=$REL/st1/$r.dar; ETM[$r]=""; PAIRS[$r]=""; done
-EMP[r100]=et0000.bin,et2500.bin; EMP[r101]=et0000.bin,et2500.bin; EMP[r105]=et0000.bin,et2500.bin; EMP[r107]=et0000.bin,et2500.bin
 ETM[r10c]=""; PAIRS[r10c]=""  # BIN 0x1f extended weights: converter refuses
 ETM[r10d]="et1000.bin,et1500.bin"; PAIRS[r10d]=""
 ETM[r10e]="et1000.bin"; PAIRS[r10e]=""

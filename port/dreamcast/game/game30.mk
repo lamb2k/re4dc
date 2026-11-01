@@ -240,6 +240,12 @@ MOVIE_HEAP_EVICT ?= 0
 #   failed (terminal=3) when the PCM and callback pieces split the lent model-cache hole and the second luma plane met
 #   219,520 B free in holes of at most 47,808 B. Same pieces, same bytes; only the request order changes.
 #   MOVIE_BALLAST_TEST=<bytes> (test only, default 0): holds that much heap 4 from r100 s30's open to its end (margin probe).
+# MODEL_PREP_SKIP_R11E=1 (lane purge-pics25 10-25, default 0; ui_bridge.cpp): no retained model preparation cache
+# (131,072 B of heap 4) in r11e, so its PS2 pickup pack fits heap 4 as before. Render only; models re-prepare per frame.
+MODEL_PREP_SKIP_R11E ?= 0
+ifneq ($(MODEL_PREP_SKIP_R11E),0)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MODEL_PREP_SKIP_R11E=1
+endif
 MOVIE_LOAN_TEST ?= 0
 MOVIE_STAGE_ORDER ?= 0
 MOVIE_BALLAST_TEST ?= 0
@@ -1717,6 +1723,55 @@ ifeq ($(GAME_COL_PREFETCH),1)
 $(OBJDIR)/src/game/atari.o: GAME_CPPFLAGS += -DRE4DC_COL_PREFETCH=1
 endif
 
+# LOG_ATOMIC16: independently select the existing whole-append publication guard.
+# Default 0; no truncation/chunking or raw-reader/cache contract change. Arbitrary
+# dbgio chunk length still determines masked work; target IRQ-latency gate open.
+LOG_ATOMIC16 ?= 0
+ifneq ($(words $(LOG_ATOMIC16)),1)
+$(error LOG_ATOMIC16 must be 0 or 1)
+endif
+ifeq ($(filter $(LOG_ATOMIC16),0 1),)
+$(error LOG_ATOMIC16 must be 0 or 1)
+endif
+ifeq ($(LOG_ATOMIC16),1)
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_ATOMIC16=1
+endif
+
+# LOG_RECORD16: source-ordered publication of re4dc_log's <=255-byte record.
+# Formatting/length scan precede masking; raw/device appends retain their
+# arbitrary-length whole-call guard. No latency, cache or NMI-safety claim.
+LOG_RECORD16 ?= 0
+ifneq ($(LOG_RECORD16),0)
+ifneq ($(LOG_RECORD16),1)
+$(error LOG_RECORD16 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(LOG_RECORD16),1)
+ifneq ($(LOG_ATOMIC16),1)
+$(error LOG_RECORD16 requires LOG_ATOMIC16=1)
+endif
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_RECORD16=1
+endif
+
+# LOG_PUBLICATION16: nonblocking whole-call writer lease, <=255-byte copy
+# windows, explicit device refusal, and two immutable copied terminal records.
+# External KOS formatting before write_buffer is outside the formatter lease.
+LOG_PUBLICATION16 ?= 0
+ifneq ($(LOG_PUBLICATION16),0)
+ifneq ($(LOG_PUBLICATION16),1)
+$(error LOG_PUBLICATION16 must be exactly 0 or 1)
+endif
+endif
+ifeq ($(LOG_PUBLICATION16),1)
+ifneq ($(LOG_ATOMIC16),1)
+$(error LOG_PUBLICATION16 requires LOG_ATOMIC16=1)
+endif
+ifneq ($(OT_WALK_CHECK),0)
+$(error LOG_PUBLICATION16 requires OT_WALK_CHECK=0)
+endif
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_PUBLICATION16=1
+endif
+
 ifeq ($(LOGIC_TRACE),1)
 PLATFORM_OBJS += $(OBJDIR)/logic_trace.o
 # One uninterruptible append per re4dc_log call (platform/mem.cpp), so other threads' log lines
@@ -2732,6 +2787,21 @@ endif
 # (perf-20261004 candidate 4).
 # =2 (diagnostic): every hit also runs the uncached lookup + compile and counts a different Entry or header word
 # (PS2HDR log line: checked / mismatched).
+# EF06: exact texture-upload identity, independent of UI_HANDLES. At token
+# exhaustion that Entry uses ordinary recompilation permanently. No promotion.
+PS2_UPLOAD_INCARNATION ?= 0
+ifneq ($(words $(PS2_UPLOAD_INCARNATION)),1)
+$(error PS2_UPLOAD_INCARNATION must be exactly 0 or 1)
+endif
+ifneq ($(PS2_UPLOAD_INCARNATION),$(filter 0 1,$(PS2_UPLOAD_INCARNATION)))
+$(error PS2_UPLOAD_INCARNATION must be exactly 0 or 1)
+endif
+ifeq ($(PS2_UPLOAD_INCARNATION),)
+$(error PS2_UPLOAD_INCARNATION must be exactly 0 or 1)
+endif
+ifeq ($(PS2_UPLOAD_INCARNATION),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_UPLOAD_INCARNATION=1
+endif
 PS2_WORLD_HDR_CACHE ?= 0
 ifneq ($(PS2_WORLD_HDR_CACHE),0)
 ifeq ($(PS2_WORLD_MESH),0)
@@ -2894,6 +2964,21 @@ endif
 # re4dc_actor_crowd_note under its settled-parts rule) and skips the submission. With PS2_INTERIOR_CULL=2 nothing is
 # skipped: the box is drawn magenta and the crowd entry the submission left is compared with the replay's
 # (INVISPCO checked / check_mis, must stay 0).
+# PS2_INTERIOR_CELLS=1 (lane interior-cells26 2026-10-26; render only; default 0: no effect; needs PS2_INTERIOR_CULL
+# 1/2/3): the interior cell becomes per room and data driven. No package constants are compiled in: the room's package
+# open reads /cd/dc/native/rXXX/interior.cell (PCL2 header: room, mesh CRC, sidecar CRC, mesh bytes, counts, file
+# bytes, near margin, house box; tools/d367/ps2world/interior/cell_file.py pack2) and adopts it only when every
+# identity word equals the open package's. A room without a file, or with a stale one, draws as with the knob off.
+PS2_INTERIOR_CELLS ?= 0
+ifneq ($(filter-out 0 1,$(PS2_INTERIOR_CELLS)),)
+$(error PS2_INTERIOR_CELLS must be 0 or 1)
+endif
+ifeq ($(PS2_INTERIOR_CELLS),1)
+ifeq ($(filter 1 2 3,$(PS2_INTERIOR_CULL)),)
+$(error PS2_INTERIOR_CELLS=1 needs PS2_INTERIOR_CULL=1, 2 or 3)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_INTERIOR_CELLS=1
+endif
 PS2_INTERIOR_ACTORS ?= 0
 ifneq ($(PS2_INTERIOR_ACTORS),0)
 ifeq ($(filter $(PS2_INTERIOR_ACTORS),1 2),)
@@ -3024,6 +3109,45 @@ $(error PS2_WORLD_ROOT_POSE needs PS2_WORLD_PARTS=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
 $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
+endif
+# Root-pose refusal repairs (2026-10-26): independent, default-off controls.
+# CAP_FALLBACK recomputes a valid overflowing root in bounded draw scratch.
+# WITNESS_PREFLIGHT reserves bind witnesses with the room's unique-ID slots;
+# one-part registration never needs a later allocation or a recaptured pose.
+# If required reservation fails, log and stop at the named missing-resource
+# failure before gameplay; unavailable source geometry is not a fallback.
+# REFUSAL_DIAG buffers exact per-owner totals; emission is bounded and outside SQ.
+ROOT_POSE_CAP_FALLBACK ?= 0
+ROOT_POSE_WITNESS_PREFLIGHT ?= 0
+ROOT_POSE_REFUSAL_DIAG ?= 0
+ifneq ($(words $(ROOT_POSE_CAP_FALLBACK)),1)
+$(error ROOT_POSE_CAP_FALLBACK must be exactly one literal 0 or 1)
+endif
+ifneq ($(words $(ROOT_POSE_WITNESS_PREFLIGHT)),1)
+$(error ROOT_POSE_WITNESS_PREFLIGHT must be exactly one literal 0 or 1)
+endif
+ifneq ($(words $(ROOT_POSE_REFUSAL_DIAG)),1)
+$(error ROOT_POSE_REFUSAL_DIAG must be exactly one literal 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ROOT_POSE_CAP_FALLBACK) $(ROOT_POSE_WITNESS_PREFLIGHT) $(ROOT_POSE_REFUSAL_DIAG)),)
+$(error ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1)
+endif
+ifneq ($(filter 1,$(ROOT_POSE_CAP_FALLBACK) $(ROOT_POSE_WITNESS_PREFLIGHT) $(ROOT_POSE_REFUSAL_DIAG)),)
+ifneq ($(PS2_WORLD_ROOT_POSE)$(PS2_WORLD_PARTS)$(PS2_WORLD_DYNAMIC),111)
+$(error Root-pose refusal controls need PS2_WORLD_ROOT_POSE=1 PS2_WORLD_PARTS=1 PS2_WORLD_DYNAMIC=1)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error Root-pose refusal controls need PS2_WORLD_ROOMS=1 or 2)
+endif
+endif
+ifeq ($(ROOT_POSE_CAP_FALLBACK),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOT_POSE_CAP_FALLBACK=1
+endif
+ifeq ($(ROOT_POSE_WITNESS_PREFLIGHT),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOT_POSE_WITNESS_PREFLIGHT=1
+endif
+ifeq ($(ROOT_POSE_REFUSAL_DIAG),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOT_POSE_REFUSAL_DIAG=1
 endif
 # PS2_WORLD_SOURCE_OWNER=1: bounded r200 noncoarse event-image ownership at
 # original model callbacks. Source OTs, callbacks and model postludes remain.
@@ -3701,6 +3825,21 @@ endif
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_MIPMAP=1
 endif
 
+# TEX_PAL32=1 (colour27, 2026-10-27; default 0: no definition, the image is unchanged): PAL4 / PAL8 descriptors flagged
+# kPalette8888 carry an ARGB8888 palette tail (texture_package.hpp), uploaded to the ARGB8888 palette RAM as is, so
+# effect colours and faint alpha keep the PS2 CLUT's 8 bits (tools/d367/colour27/fx_pal32.py writes them). Unflagged
+# packages load exactly as before. +32 B of VRAM per PAL4 package (+512 per PAL8), 0 palette RAM, no per-frame work.
+TEX_PAL32 ?= 0
+ifeq ($(filter $(TEX_PAL32),0 1),)
+$(error TEX_PAL32 must be 0 or 1)
+endif
+ifeq ($(TEX_PAL32),1)
+ifneq ($(TEX_PAL8_ALPHA),1)
+$(error TEX_PAL32=1 requires TEX_PAL8_ALPHA=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL32=1
+endif
+
 # Native square 16-bit twiddled mip chains, with unchanged base texels.
 # Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
 TEX_TWIDDLED_MIPMAP ?= 0
@@ -3747,6 +3886,20 @@ ifneq ($(MOTION_USAGE_LOG),0)
 $(error MOTION_BOUNDED_R11F needs MOTION_USAGE_LOG=0)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_BOUNDED_R11F=1
+endif
+
+# MOTION_PS2_PL11=1 (lane purge-motion25 2026-10-25, default 0 = the previous image): admit the pl11-hot profile of
+# the PS2-motion Ashley archive (data set pmash25: em/pl11.drs with its FCV/SEQ from PS2 pl11.dat, same 61 MTC rows,
+# same 411,744-byte body). Only adds one exact-source row to native_motion_r11f_profiles.inc; needs MOTION_BOUNDED_R11F=1.
+MOTION_PS2_PL11 ?= 0
+ifeq ($(filter $(MOTION_PS2_PL11),0 1),)
+$(error MOTION_PS2_PL11 must be 0 or 1)
+endif
+ifeq ($(MOTION_PS2_PL11),1)
+ifneq ($(MOTION_BOUNDED_R11F),1)
+$(error MOTION_PS2_PL11 needs MOTION_BOUNDED_R11F=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PS2_PL11=1
 endif
 
 # SH4_APPROX_RENDER=1 / SH4_APPROX_LOGIC=1 (lane approx 2026-10-15; NOT bit-exact; default 0 = the previous image). The
@@ -4001,4 +4154,39 @@ $(error PS2_ETS_MATCH is 0, 1 or 2)
 endif
 ifneq ($(PS2_ETS_MATCH),0)
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_MATCH=$(PS2_ETS_MATCH)
+endif
+# PS2_ETS_LIGHT=1 (lane fix-r111-27 2026-10-27; render only, default 0; needs PS2_ETS_MATCH=2): room lights whose etc
+# parent PS2_ETS_MATCH=2 dropped (the torches) are placed from the dropped entry's position + yaw instead of staying
+# at a stale position with a "Lit:calcPos() ETCMODEL PARENT NOT FOUND" log line per light per frame (r111: 10 lights,
+# em17 villagers unlit).
+PS2_ETS_LIGHT ?= 0
+ifneq ($(filter-out 0 1,$(PS2_ETS_LIGHT)),)
+$(error PS2_ETS_LIGHT is 0 or 1)
+endif
+ifeq ($(PS2_ETS_LIGHT),1)
+ifneq ($(PS2_ETS_MATCH),2)
+$(error PS2_ETS_LIGHT=1 needs PS2_ETS_MATCH=2)
+endif
+$(OBJDIR)/src/game/EtcModel.o $(OBJDIR)/src/game/light.o: GAME_CPPFLAGS += -DRE4DC_PS2_ETS_LIGHT=1
+endif
+# PS2_FIRE_SST=1 (lane purge-audit26 2026-10-26; render only, default 0; needs PS2_ETS_MATCH=2 and DATA pfire26): the
+# torches PS2_ETS_MATCH=2 drops get their PS2 flames back the way PS2 draws them: the PS2 room EFF's fire SST sets
+# (pfire26 writes them into each torch room's ETM et14.eff), registered under owner 0x68 at room entry and started like
+# the room's own sets (area-bound ones with their effect area). Proofs: tools/d367/rr/drop-proofs.tsv.
+PS2_FIRE_SST ?= 0
+ifneq ($(PS2_FIRE_SST),0)
+$(OBJDIR)/src/game/EtcModel.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_PS2_FIRE_SST=$(PS2_FIRE_SST)
+endif
+# PS2_FIRE_HALO_CUT=1 (lane fix-r111-27 2026-10-27; render only, default 0; needs PS2_FIRE_SST=1): drop the pfire26
+# torch halo records (esp 0x0B, texture 0x79, 2400..4600-unit sprites): on our core texture they drew as a fire tens
+# of metres wide over the view (r111 "terrible fps": several near-full-screen translucent layers per torch in view).
+PS2_FIRE_HALO_CUT ?= 0
+ifneq ($(filter-out 0 1,$(PS2_FIRE_HALO_CUT)),)
+$(error PS2_FIRE_HALO_CUT is 0 or 1)
+endif
+ifeq ($(PS2_FIRE_HALO_CUT),1)
+ifeq ($(PS2_FIRE_SST),0)
+$(error PS2_FIRE_HALO_CUT=1 needs PS2_FIRE_SST=1)
+endif
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_PS2_FIRE_HALO_CUT=1
 endif

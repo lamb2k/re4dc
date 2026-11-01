@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "test_methods": 5,
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build34/scps_only.py": "1c29a5ca661595fbe334913fa857ea1ce367f9b5340121a921c8178943072878",
+    "port/dreamcast/tools/cloud/build34/test_scps_only.py": "b7205d34af9088d2b749462287ee366d572a7c8a6aaed975a4171c0b6ad07cb6"
+  },
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "port/dreamcast/tools/cloud/build34",
+    "-p",
+    "test_scps_only.py",
+    "-v"
+  ],
+  "log": "test_all_mesh_versions_and_counts (test_scps_only.ScpsOnly.test_all_mesh_versions_and_counts) ... ok\ntest_cli_default_no_io_and_no_overwrite (test_scps_only.ScpsOnly.test_cli_default_no_io_and_no_overwrite) ... ok\ntest_deterministic_replace_preserves_other_metadata (test_scps_only.ScpsOnly.test_deterministic_replace_preserves_other_metadata) ... ok\ntest_mesh_rejections (test_scps_only.ScpsOnly.test_mesh_rejections) ... ok\ntest_room_rejections (test_scps_only.ScpsOnly.test_room_rejections) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.101s\n\nOK\n",
+  "scope": "Synthetic R4IM v1/v2/v3 metadata/count, R4RC preservation/CRC/extent/overlap/limits, deterministic replacement, default0 no I/O and no overwrite. No private geometry or console qualification."
+}

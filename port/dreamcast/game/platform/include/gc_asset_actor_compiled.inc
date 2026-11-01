@@ -33,23 +33,26 @@ extern "C" void re4dc_gcasset_actor_startup(){
     leon_hand_pack::gcasset_hand_startup();
 #endif
 #if RE4DC_ACTOR_TRANSACTION && !(defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD)
-    PayloadSpan spans[48];unsigned count=0,metadata[8][6]{};
+    // Two identities (gc-audit25): the drawn mesh (chunk arrays, counts, hair UV and runs: PS2_LEON's PS2 pl00 mesh)
+    // and the skeleton data it is bound with (leon4k::bind and each chunk's source_info: the GameCube skeleton).
+    PayloadSpan spans[48];unsigned count=0,metadata[8][5]{},skeleton[8]{};
     for(unsigned k=0;k<8;++k){const auto in=gcasset_compiled_input(k);if(!in.positions.data)continue;
         const auto& c=leon4k::chunks[k];
-        metadata[k][0]=c.source_info;metadata[k][1]=c.position_count;metadata[k][2]=c.normal_count;
-        metadata[k][3]=c.palette_count;metadata[k][4]=c.triangles;metadata[k][5]=c.stream_bytes;
+        skeleton[k]=c.source_info;metadata[k][0]=c.position_count;metadata[k][1]=c.normal_count;
+        metadata[k][2]=c.palette_count;metadata[k][3]=c.triangles;metadata[k][4]=c.stream_bytes;
         for(const auto span:{in.positions,in.normals,in.uv,in.stream,in.weights}){
             if(!span.data || !span.size || span.size>40U*1024*1024){unresolved(SourceGeometry,"compiled-span-bounds");return;}
             spans[count++]={span.data,unsigned(span.size)};
         }
     }
-    spans[count++]={metadata,sizeof metadata};spans[count++]={leon4k::bind,sizeof(leon4k::bind)};
+    spans[count++]={metadata,sizeof metadata};
     spans[count++]={RE4DC_LEON_HAIR_UV_DATA,RE4DC_LEON_HAIR_UV_SIZE};
     for(const auto& run:leon_hair_runs::runs){
         if(count==48){unresolved(SourceGeometry,"compiled-span-capacity");return;}
         spans[count++]={run.stream,run.bytes};
     }
-    if(ensure_disc_catalog())(void)payload_capture_fragments(gcasset_compiled_actor,&gcasset_compiled_actor,spans,count);
+    const PayloadSpan side[2]={{skeleton,sizeof skeleton},{leon4k::bind,sizeof(leon4k::bind)}};
+    if(ensure_disc_catalog())(void)payload_capture_fragments_split(gcasset_compiled_actor,&gcasset_compiled_actor,spans,count,side,2);
 #else
     unresolved(SourceGeometry,"compiled-actor-profile");
 #endif

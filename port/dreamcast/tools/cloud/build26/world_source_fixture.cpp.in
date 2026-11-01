@@ -1,0 +1,84 @@
+// Production whole/subset gathers and production Indexed accessor, followed
+// by the SAME six-word synthetic consumer. This isolates source acquisition;
+// it deliberately does not pretend to execute projection or clipping maths.
+#include "@DC@/game/platform/include/scenery_clip_gather.hpp"
+#include "@DC@/game/platform/include/scenery_clip_indexed26.hpp"
+#include "@DC@/room/instanced_mesh.hpp"
+#include <cstddef>
+using Vertex = re4dc::room::CompactVertex12;
+using Record = re4dc::room::Meshlet;
+#define RE4DC_SCENERY_RECORD Record
+struct PackageAdapter {
+    const Vertex* pool;
+    const std::uint16_t* offsets;
+    const Vertex* vertices() const { return pool; }
+    const std::uint16_t* pool_offsets(const Record&) const { return offsets; }
+    bool indexed(const Record&) const { return true; }
+};
+#pragma GCC push_options
+#pragma GCC optimize("O2")
+struct Whole {
+    PackageAdapter package;
+    Vertex* gathered;
+    const Record* stream_l;
+@CORNERS@
+@WHOLE@
+};
+struct Partial {
+    PackageAdapter package;
+    Vertex* gathered;
+    const Record* stream_l;
+    re4dc::scenery_clip24::Gather stream_clip_gather;
+@PARTIAL@
+};
+struct Arguments {
+    Whole whole;
+    Partial partial;
+    PackageAdapter indexed;
+    Record record;
+    const std::uint8_t* strips;
+    unsigned strip_bytes;
+    std::uint32_t* output;
+};
+template<class Source>
+inline void consume(Source source, const std::uint8_t* indices, unsigned n, std::uint32_t*& output) {
+    for (unsigned i=0; i<n; ++i) {
+        const Vertex& v=source[indices[i]];
+        *output++=unsigned(v.x)+unsigned(v.y)+unsigned(v.z)+unsigned(v.u)+unsigned(v.v)+unsigned(v.color);
+    }
+}
+extern "C" unsigned fixture_whole(Arguments* a) {
+    a->whole.stream_l=&a->record;
+    const Vertex* base=nullptr;
+    const auto* s=a->strips; const auto* end=s+a->strip_bytes; auto* output=a->output;
+    while (s<end) { const unsigned n=*s++; if (!base) base=a->whole.stream_gather(); consume(base,s,n,output); s+=n; }
+    return unsigned(output-a->output);
+}
+extern "C" unsigned fixture_partial(Arguments* a) {
+    a->partial.stream_l=&a->record;
+    a->partial.stream_clip_gather.begin();
+    const Vertex* base=nullptr;
+    const auto* s=a->strips; const auto* end=s+a->strip_bytes; auto* output=a->output;
+    while (s<end) { const unsigned n=*s++; base=a->partial.stream_gather(base,s,n); consume(base,s,n,output); s+=n; }
+    return unsigned(output-a->output);
+}
+extern "C" unsigned fixture_indexed(Arguments* a) {
+    const auto* s=a->strips; const auto* end=s+a->strip_bytes; auto* output=a->output;
+    while (s<end) {
+        const unsigned n=*s++;
+        const re4dc::scenery_clip26::Indexed<Vertex> source{a->indexed.vertices()+a->record.first_vertex,
+                                                         a->indexed.pool_offsets(a->record)};
+        consume(source,s,n,output); s+=n;
+    }
+    return unsigned(output-a->output);
+}
+#pragma GCC pop_options
+#define A(field) offsetof(Arguments,field)
+#define W(field) offsetof(Whole,field)
+#define P(field) offsetof(Partial,field)
+extern "C" const unsigned fixture_layout[]={
+    1,sizeof(Arguments),A(whole),A(partial),A(indexed),A(record),A(strips),A(strip_bytes),A(output),
+    W(package),W(gathered),W(stream_l),P(package),P(gathered),P(stream_l),P(stream_clip_gather),
+    sizeof(Whole),sizeof(Partial),sizeof(re4dc::scenery_clip24::Gather),
+    offsetof(Record,vertex_count),sizeof(Record),offsetof(PackageAdapter,pool),offsetof(PackageAdapter,offsets)
+};

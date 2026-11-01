@@ -1,0 +1,2759 @@
+{
+  "status": "PASS",
+  "scope": "Actual SH4 Build24 observer instructions on bounded synthetic states.\n\nProduction accounting is unchanged. Clock, thread, identity and PMU-read hooks\nare deterministic fixture functions; real timer/PMU/OS work is unpriced. Model\ncycles use perfect D-cache and both warm and initially cold I-cache. Memory\ntraffic is architectural accesses/32-byte lines, not hardware cache misses.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build24/target_cost.py": "c9a4e1464187849c5b6127cfa19159f24110cde4efc76b1a8ae887acde2a3a98",
+    "port/dreamcast/tools/cloud/build24/cost_fixture.cpp.in": "30c8691cb3bf950bc006a4f0200344afaf469ac95fad426833c03a75bcb1b3b9",
+    "port/dreamcast/tools/cloud/build24/cost_hooks.cpp.in": "40ea1b4395853f47a0e44e268f801c2d18cd2212a0eae329c80b06a6b55ca37e",
+    "port/dreamcast/tools/cloud/build24/build_controls.py": "7b9185a3b8f0ce980a1f9f2f31b5e0fe3c8ec3b285eb64ab45afd3c5c8575a7c",
+    "port/dreamcast/game/draw_setup_audit.cpp": "03ba3d2961c39494cfacfac81eb0e2aff3171bba147579a59f1955e8c32697fb",
+    "port/dreamcast/game/platform/include/draw_setup_audit.h": "8f9724ad32da75fe96ea61ee1e7b9f639977f8c8c373600f0c9d2877191b6e22",
+    "port/dreamcast/game/platform/include/perf_phase_miss.h": "f90c4a51e4454c63dad25b5ba2533961ea765b0c4b4389cb58faa4a6eeb43bf5",
+    "port/dreamcast/game/platform/include/perf_phase_accounting.hpp": "95bd9c90c31959c7677f818fa6182b60cd4140609fd76b6f95ba291e75557144",
+    "port/dreamcast/tools/d367/actor_bytes_lean/kernel_audit.py": "5bf8a55f177af0485b6ba15bc6b4c9858ea7ec3aa4f17d3a38499c02d3de1e57",
+    "port/dreamcast/tools/d367/world_replay_lean/target_machine.py": "256416fd8ef5b45c46824c05bae40afb55156417395c8d9fa4769f462b66c62d",
+    "port/dreamcast/tools/d367/world_replay_lean/sh4_machine.py": "45838692bd4938e8e9960adbd4eb4efb2cf5daab90afd196ebe8da3a611dbcfd",
+    "port/dreamcast/tools/d367/world_replay_lean/memory_trace.py": "74d6f8f2f549eccc514f117a4ba96462744649b097dc1a0272fa8806a1fbdad4",
+    "port/dreamcast/tools/d367/world_replay_lean/pipeline_cost.py": "a7327c31ad09a923520b63c53c19f0ddf433ddeeaa535f3ea3fa259680a2571e",
+    "port/dreamcast/tools/d367/world_replay_lean/target_run.py": "519937b2c950be305c9c6bc609a7d6d646d9cac8e768a1575f6a72d988715756"
+  },
+  "configurations": {
+    "time": {
+      "flags": [
+        "/tmp/re4dc-build24-toolchain/restored/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/tmp/re4dc-build24-toolchain/kos/include",
+        "-isystem",
+        "/tmp/re4dc-build24-toolchain/kos/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/tmp/re4dc-build24-toolchain/kos/addons/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/platform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_WORLD_METER=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-ffp-contract=off",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_DVD_BUFF_BYTES=64*1024",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_DRAW_SETUP_AUDIT=1",
+        "-DRE4DC_DRAW_SETUP_AUDIT_WINDOW=300",
+        "-I/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/third_party/sh4zam/include",
+        "-I/tmp/re4dc-build24-toolchain/kos/kernel/arch/dreamcast/include"
+      ],
+      "fixture_elf_sha256": "acd4fcb881b7a54509318506749fa7b009c6aee565d50aa31fc9da873ee59fee",
+      "fixture_sections": {
+        "executable_bytes": 3460,
+        "allocated_bytes": 7552,
+        "zero_fill_bytes": 3376
+      },
+      "production_object": {
+        "sha256": "8cc2b2a6ee51c40faf56cf35f3dcf8fefafb4c4fe504ee5d3f87a6919f79675d",
+        "executable_bytes": 4508,
+        "allocated_bytes": 9196,
+        "zero_fill_bytes": 3335,
+        "stack_usage": [
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:31:17:uint64_t clock_us()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:173:6:void re4dc::dsa24::end_tick()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:174:6:void re4dc::dsa24::decision(bool)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:175:6:void re4dc::dsa24::scene_finished()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:176:6:void re4dc::dsa24::pause()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:177:6:void re4dc::dsa24::resume()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:178:6:void re4dc::dsa24::reset()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:187:6:void re4dc::dsa24::leave(uint32_t)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:205:6:void re4dc::dsa24::fault(Error)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:194:6:void re4dc::dsa24::set_phase(Phase)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:206:6:void re4dc::dsa24::begin_setup()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:211:6:void re4dc::dsa24::end_setup()",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:218:10:uint64_t re4dc::dsa24::render_begin()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:219:6:void re4dc::dsa24::render_end(uint64_t)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+            "bytes": 100,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+            "bytes": 320,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:235:10:unsigned int re4dc::dsa24::line_count()",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "fixture_stack_usage": [
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:173:6:void re4dc::dsa24::end_tick()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:174:6:void re4dc::dsa24::decision(bool)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:175:6:void re4dc::dsa24::scene_finished()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:176:6:void re4dc::dsa24::pause()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:177:6:void re4dc::dsa24::resume()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:178:6:void re4dc::dsa24::reset()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:187:6:void re4dc::dsa24::leave(uint32_t)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:205:6:void re4dc::dsa24::fault(Error)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:194:6:void re4dc::dsa24::set_phase(Phase)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:206:6:void re4dc::dsa24::begin_setup()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:211:6:void re4dc::dsa24::end_setup()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:218:10:uint64_t re4dc::dsa24::render_begin()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:219:6:void re4dc::dsa24::render_end(uint64_t)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+          "bytes": 100,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+          "bytes": 320,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:235:10:unsigned int re4dc::dsa24::line_count()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+          "bytes": 108,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time/fixture.cpp:19:36:unsigned int fixture_enter(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time/fixture.cpp:22:36:unsigned int fixture_nested(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time/fixture.cpp:25:32:void fixture_leave(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time/fixture.cpp:26:32:void fixture_phase(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time/fixture.cpp:27:32:void fixture_count(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time/fixture.cpp:28:32:void fixture_next_tick(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        }
+      ],
+      "target_layout": {
+        "argument_bytes": 28,
+        "snapshot_bytes": 1084,
+        "frame_bytes": 1124,
+        "current": 1055004,
+        "window": 1053920,
+        "state": 1052800,
+        "epoch": 1052748,
+        "owner": 1052796,
+        "paused": 1052792,
+        "have_key": 1052794,
+        "have_sealed": 1052793,
+        "key": 1052808,
+        "clock": 1052784,
+        "thread": 1052780,
+        "identity": 1052752,
+        "begin_at": 1084,
+        "last_at": 1092,
+        "tick_at": 1108,
+        "active_at": 1116,
+        "complete_at": 1117,
+        "attempt_at": 1118,
+        "finished_at": 1119,
+        "phase_us_at": 116,
+        "phase_events_at": 284,
+        "counters_at": 452,
+        "outside_us_at": 1068,
+        "wall_us_at": 84,
+        "ticks_at": 40,
+        "drawn_at": 44,
+        "errors_at": 60,
+        "pm_samples_at": 72,
+        "pm_gaps_at": 76,
+        "pm_wraps_at": 80
+      },
+      "model": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "/tmp/re4dc-build24-cost-final3/time/model/hwsim",
+          "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "compile_profile": {
+        "overrides": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "DRAW_SETUP_AUDIT=1"
+        ],
+        "generated_headers": {},
+        "make_command_sha256": "d2286a8aa6f8aeaa8c729fb19b65bdf3a3877efe7e33a2eef44d6ad5bfa00b24",
+        "recipe": "recipe-d1d9555e730bc7f4"
+      }
+    },
+    "time-pmu": {
+      "flags": [
+        "/tmp/re4dc-build24-toolchain/restored/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+        "-O2",
+        "-fno-PIC",
+        "-fno-PIE",
+        "-fomit-frame-pointer",
+        "-m4-single",
+        "-ml",
+        "-mfsrra",
+        "-mfsca",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-matomic-model=soft-gusa",
+        "-ftls-model=local-exec",
+        "-D__DREAMCAST__",
+        "-isystem",
+        "/tmp/re4dc-build24-toolchain/kos/include",
+        "-isystem",
+        "/tmp/re4dc-build24-toolchain/kos/kernel/arch/dreamcast/include",
+        "-isystem",
+        "/tmp/re4dc-build24-toolchain/kos/addons/include",
+        "-D_arch_dreamcast=1",
+        "-D_arch_sub_pristine=1",
+        "-Wall",
+        "-std=gnu++20",
+        "-Wall",
+        "-Wextra",
+        "-O1",
+        "-I/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/platform/include",
+        "-DRE4DC_GAME",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-fno-threadsafe-statics",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-DRE4DC_RENDER_FSAA=1",
+        "-DRE4DC_RENDER_OPTION=1",
+        "-DRE4DC_VIEW_DIST_OPTION=1",
+        "-DRE4DC_FAR_SHELL=1",
+        "-DRE4DC_WORLD_METER=1",
+        "-DRE4DC_FOLIAGE_OPTION=1",
+        "-DRE4DC_RES_ALTERNATE=1",
+        "-DRE4DC_RES_MODES=9",
+        "-DRE4DC_RES_MODE=0",
+        "-DRE4DC_RES_CYCLE_FRAMES=0",
+        "-DRE4DC_MV_SHADOWS=1",
+        "-DRE4DC_MV_OPB_BINS=8",
+        "-DRE4DC_MV_SCALE=50",
+        "-DRE4DC_MV_SIDES=8",
+        "-DRE4DC_MV_RADIUS=420",
+        "-DRE4DC_MV_TOP=250",
+        "-DRE4DC_MV_DEPTH=1200",
+        "-DRE4DC_MV_RANGE_M=15",
+        "-DRE4DC_MV_MAX=12",
+        "-DRE4DC_MV_BODY=1700",
+        "-DRE4DC_MV_LEN_MAX=1800",
+        "-DRE4DC_ATCHK_LIST=1",
+        "-DRE4DC_ATCHK_CACHE=1",
+        "-DRE4DC_WORKAT_INLINE=1",
+        "-DRE4DC_FX_SCAN=1",
+        "-DRE4DC_FX_MOVE=1",
+        "-DRE4DC_OT_MASK=1",
+        "-DRE4DC_MANUAL_PACK_PROBE=1",
+        "-DRE4DC_PAD_PROMPTS=1",
+        "-DRE4DC_PAD_PROMPT_MANUAL_ART=1",
+        "-ffp-contract=off",
+        "-DRE4DC_SH4ZAM_RENDER=1",
+        "-DRE4DC_DVD_BUFF_BYTES=64*1024",
+        "-DRE4DC_ACTOR_TRANSACTION=1",
+        "-DRE4DC_ACTOR_LEON_NATIVE_LOOK=1",
+        "-DRE4DC_VMU_DIALOG=1",
+        "-DRE4DC_ACTOR_PL08=1",
+        "-DRE4DC_ACTOR_LIGHT_PROBE_API=1",
+        "-DRE4DC_NMR_POOL=1",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_ACTOR_MATERIALS=4",
+        "-DRE4DC_TEX_PKG_SKIP=1",
+        "-DRE4DC_GC_CENSUS_TRIM=1",
+        "-DRE4DC_GXF_JITTER=1",
+        "-DRE4DC_DRAW_SETUP_AUDIT=1",
+        "-DRE4DC_DRAW_SETUP_AUDIT_WINDOW=300",
+        "-DRE4DC_PERF_PHASE_MISS=1",
+        "-I/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/third_party/sh4zam/include",
+        "-I/tmp/re4dc-build24-toolchain/kos/kernel/arch/dreamcast/include"
+      ],
+      "fixture_elf_sha256": "743a2fb2170e22a5ec336db3cc1ad8f86d28b3ba64b911e75b1e71e0fdc0d945",
+      "fixture_sections": {
+        "executable_bytes": 3940,
+        "allocated_bytes": 8096,
+        "zero_fill_bytes": 3424
+      },
+      "production_object": {
+        "sha256": "9bcad9d94d0302ed047e6a2f1d523070e8cb35314ead613f38a83655a60d5a6e",
+        "executable_bytes": 4952,
+        "allocated_bytes": 9661,
+        "zero_fill_bytes": 3356,
+        "stack_usage": [
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:31:17:uint64_t clock_us()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:72:6:void re4dc::dsa24::{anonymous}::sample_pm(uint64_t)",
+            "bytes": 48,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:173:6:void re4dc::dsa24::end_tick()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:174:6:void re4dc::dsa24::decision(bool)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:175:6:void re4dc::dsa24::scene_finished()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:176:6:void re4dc::dsa24::pause()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:177:6:void re4dc::dsa24::resume()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:178:6:void re4dc::dsa24::reset()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:187:6:void re4dc::dsa24::leave(uint32_t)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:205:6:void re4dc::dsa24::fault(Error)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:194:6:void re4dc::dsa24::set_phase(Phase)",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:206:6:void re4dc::dsa24::begin_setup()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:211:6:void re4dc::dsa24::end_setup()",
+            "bytes": 8,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:218:10:uint64_t re4dc::dsa24::render_begin()",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:219:6:void re4dc::dsa24::render_end(uint64_t)",
+            "bytes": 12,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+            "bytes": 4,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+            "bytes": 100,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+            "bytes": 320,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:235:10:unsigned int re4dc::dsa24::line_count()",
+            "bytes": 0,
+            "kind": "static"
+          },
+          {
+            "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+            "bytes": 108,
+            "kind": "static"
+          }
+        ]
+      },
+      "fixture_stack_usage": [
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:60:6:void re4dc::dsa24::{anonymous}::advance_epoch()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:61:6:void re4dc::dsa24::{anonymous}::add(uint64_t&, uint64_t)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:65:6:void re4dc::dsa24::{anonymous}::clear(bool)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:102:10:unsigned int re4dc::dsa24::{anonymous}::mean(uint64_t, unsigned int)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:106:10:uint64_t re4dc::dsa24::{anonymous}::named_us(const re4dc::dsa24::Snapshot&)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:59:6:bool re4dc::dsa24::{anonymous}::ours()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:72:6:void re4dc::dsa24::{anonymous}::sample_pm(uint64_t)",
+          "bytes": 48,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:94:6:void re4dc::dsa24::{anonymous}::charge(uint64_t)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:148:10:uint32_t re4dc::dsa24::{anonymous}::enter_state(unsigned int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:173:6:void re4dc::dsa24::end_tick()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:174:6:void re4dc::dsa24::decision(bool)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:175:6:void re4dc::dsa24::scene_finished()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:176:6:void re4dc::dsa24::pause()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:177:6:void re4dc::dsa24::resume()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:178:6:void re4dc::dsa24::reset()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:187:6:void re4dc::dsa24::leave(uint32_t)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:205:6:void re4dc::dsa24::fault(Error)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:179:10:uint32_t re4dc::dsa24::enter(Path, Phase)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:183:10:uint32_t re4dc::dsa24::enter(Phase)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:194:6:void re4dc::dsa24::set_phase(Phase)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:200:6:void re4dc::dsa24::count(Counter, uint32_t)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:206:6:void re4dc::dsa24::begin_setup()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:211:6:void re4dc::dsa24::end_setup()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:218:10:uint64_t re4dc::dsa24::render_begin()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:219:6:void re4dc::dsa24::render_end(uint64_t)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:224:5:int re4dc::dsa24::snapshot(Snapshot*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:225:5:int re4dc::dsa24::summary(char*, unsigned int)",
+          "bytes": 100,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:157:6:void re4dc::dsa24::begin_tick(uint32_t, uint32_t)",
+          "bytes": 320,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:235:10:unsigned int re4dc::dsa24::line_count()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/draw_setup_audit.cpp:236:5:int re4dc::dsa24::format_line(unsigned int, char*, unsigned int)",
+          "bytes": 108,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time-pmu/fixture.cpp:19:36:unsigned int fixture_enter(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time-pmu/fixture.cpp:22:36:unsigned int fixture_nested(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time-pmu/fixture.cpp:25:32:void fixture_leave(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time-pmu/fixture.cpp:26:32:void fixture_phase(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time-pmu/fixture.cpp:27:32:void fixture_count(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "function": "/tmp/re4dc-build24-cost-final3/time-pmu/fixture.cpp:28:32:void fixture_next_tick(const Arguments*)",
+          "bytes": 4,
+          "kind": "static"
+        }
+      ],
+      "target_layout": {
+        "argument_bytes": 28,
+        "snapshot_bytes": 1084,
+        "frame_bytes": 1124,
+        "current": 1055548,
+        "window": 1054464,
+        "state": 1053344,
+        "epoch": 1053244,
+        "owner": 1053340,
+        "paused": 1053336,
+        "have_key": 1053338,
+        "have_sealed": 1053337,
+        "key": 1053352,
+        "clock": 1053304,
+        "thread": 1053300,
+        "identity": 1053272,
+        "begin_at": 1084,
+        "last_at": 1092,
+        "tick_at": 1108,
+        "active_at": 1116,
+        "complete_at": 1117,
+        "attempt_at": 1118,
+        "finished_at": 1119,
+        "phase_us_at": 116,
+        "phase_events_at": 284,
+        "counters_at": 452,
+        "outside_us_at": 1068,
+        "wall_us_at": 84,
+        "ticks_at": 40,
+        "drawn_at": 44,
+        "errors_at": 60,
+        "pm_samples_at": 72,
+        "pm_gaps_at": 76,
+        "pm_wraps_at": 80,
+        "previous_pm": 1053316,
+        "have_pm": 1053312,
+        "sample": 1053252,
+        "sample_valid": 1053248
+      },
+      "model": {
+        "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+        "source": "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+        "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+        "compile_command": [
+          "gcc",
+          "-O2",
+          "-o",
+          "/tmp/re4dc-build24-cost-final3/time-pmu/model/hwsim",
+          "/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+          "-lm"
+        ],
+        "flags": [
+          "--perfect-ic",
+          "--perfect-dc",
+          "--no-dma",
+          "--sq-cost",
+          "0"
+        ],
+        "exact_dynamic_instruction_and_delay_slot_counts": true,
+        "no_hardware_time_or_frame_speedup_claim": true
+      },
+      "compile_profile": {
+        "overrides": [
+          "DBG_WARP=1",
+          "WARP_AFTER_RESET=1",
+          "QA_MENU=1",
+          "BENCHMARK=0",
+          "PMC_ROW=0",
+          "WORLD_METER=1",
+          "NMR_POOL_LOD=0",
+          "DRAW_SETUP_AUDIT=1",
+          "WORLD_CENSUS24=1",
+          "PERF_PHASE_MISS=1",
+          "PERF_PHASE_MISS_EVENT=15"
+        ],
+        "generated_headers": {},
+        "make_command_sha256": "653de2dc0a7a6c83235f45dad2d0c1e01b58471632b8bea0e88615252ef1d648",
+        "recipe": "recipe-d1d9555e730bc7f4"
+      }
+    }
+  },
+  "cases": [
+    {
+      "configuration": "time",
+      "case": "enter-path",
+      "entry": "fixture_enter",
+      "instructions": 149,
+      "peak_stack_bytes": 28,
+      "traffic": {
+        "load_instructions": 44,
+        "store_instructions": 13,
+        "load_accesses": 44,
+        "store_accesses": 13,
+        "load_bytes": 168,
+        "store_bytes": 52,
+        "unique_read_lines": 15,
+        "unique_write_lines": 4,
+        "unique_data_lines": 15,
+        "unique_line_bytes": 480,
+        "demand_line_visits": 57,
+        "repeated_demand_line_visits": 42,
+        "regions": {
+          "stack": {
+            "load_instructions": 8,
+            "store_instructions": 8,
+            "load_accesses": 8,
+            "store_accesses": 8,
+            "load_bytes": 32,
+            "store_bytes": 32,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 34,
+            "store_instructions": 5,
+            "load_accesses": 34,
+            "store_accesses": 5,
+            "load_bytes": 128,
+            "store_bytes": 20,
+            "unique_read_lines": 13,
+            "unique_write_lines": 3,
+            "unique_data_lines": 13,
+            "unique_line_bytes": 416
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0
+      },
+      "model_cycles": 188,
+      "instruction_runs": 22,
+      "categories": {
+        "base": 152.0,
+        "dep_load": 29.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 7.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "30c881123ffe726b1075144d48edc8d05f794557d9868e68c82428f991e35794",
+      "cold_icache": {
+        "model_cycles": 418,
+        "instruction_fills": 18.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "enter-nested-clip",
+      "entry": "fixture_nested",
+      "instructions": 162,
+      "peak_stack_bytes": 28,
+      "traffic": {
+        "load_instructions": 45,
+        "store_instructions": 13,
+        "load_accesses": 45,
+        "store_accesses": 13,
+        "load_bytes": 172,
+        "store_bytes": 52,
+        "unique_read_lines": 15,
+        "unique_write_lines": 4,
+        "unique_data_lines": 15,
+        "unique_line_bytes": 480,
+        "demand_line_visits": 58,
+        "repeated_demand_line_visits": 43,
+        "regions": {
+          "stack": {
+            "load_instructions": 8,
+            "store_instructions": 8,
+            "load_accesses": 8,
+            "store_accesses": 8,
+            "load_bytes": 32,
+            "store_bytes": 32,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 36,
+            "store_instructions": 5,
+            "load_accesses": 36,
+            "store_accesses": 5,
+            "load_bytes": 136,
+            "store_bytes": 20,
+            "unique_read_lines": 13,
+            "unique_write_lines": 3,
+            "unique_data_lines": 13,
+            "unique_line_bytes": 416
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0
+      },
+      "model_cycles": 201,
+      "instruction_runs": 22,
+      "categories": {
+        "base": 162.0,
+        "dep_load": 32.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 7.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "f9d02a71039ccfa309752d998982f9bf0bb594639396d544c221286f68395460",
+      "cold_icache": {
+        "model_cycles": 445,
+        "instruction_fills": 19.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "leave-path",
+      "entry": "fixture_leave",
+      "instructions": 146,
+      "peak_stack_bytes": 24,
+      "traffic": {
+        "load_instructions": 39,
+        "store_instructions": 12,
+        "load_accesses": 39,
+        "store_accesses": 12,
+        "load_bytes": 150,
+        "store_bytes": 48,
+        "unique_read_lines": 13,
+        "unique_write_lines": 4,
+        "unique_data_lines": 13,
+        "unique_line_bytes": 416,
+        "demand_line_visits": 51,
+        "repeated_demand_line_visits": 38,
+        "regions": {
+          "stack": {
+            "load_instructions": 7,
+            "store_instructions": 7,
+            "load_accesses": 7,
+            "store_accesses": 7,
+            "load_bytes": 28,
+            "store_bytes": 28,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 31,
+            "store_instructions": 5,
+            "load_accesses": 31,
+            "store_accesses": 5,
+            "load_bytes": 118,
+            "store_bytes": 20,
+            "unique_read_lines": 11,
+            "unique_write_lines": 3,
+            "unique_data_lines": 11,
+            "unique_line_bytes": 352
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0
+      },
+      "model_cycles": 175,
+      "instruction_runs": 21,
+      "categories": {
+        "base": 140.0,
+        "dep_load": 28.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 7.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "1c31e25b05a27830a6ae72cb0451f7319826f280eb624f9b1c21381abf74630e",
+      "cold_icache": {
+        "model_cycles": 385,
+        "instruction_fills": 16.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "same-phase",
+      "entry": "fixture_phase",
+      "instructions": 53,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "load_instructions": 18,
+        "store_instructions": 4,
+        "load_accesses": 18,
+        "store_accesses": 4,
+        "load_bytes": 66,
+        "store_bytes": 16,
+        "unique_read_lines": 10,
+        "unique_write_lines": 1,
+        "unique_data_lines": 10,
+        "unique_line_bytes": 320,
+        "demand_line_visits": 22,
+        "repeated_demand_line_visits": 12,
+        "regions": {
+          "stack": {
+            "load_instructions": 4,
+            "store_instructions": 4,
+            "load_accesses": 4,
+            "store_accesses": 4,
+            "load_bytes": 16,
+            "store_bytes": 16,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 13,
+            "store_instructions": 0,
+            "load_accesses": 13,
+            "store_accesses": 0,
+            "load_bytes": 46,
+            "store_bytes": 0,
+            "unique_read_lines": 8,
+            "unique_write_lines": 0,
+            "unique_data_lines": 8,
+            "unique_line_bytes": 256
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 0,
+        "thread": 1,
+        "identity": 0
+      },
+      "model_cycles": 77,
+      "instruction_runs": 9,
+      "categories": {
+        "base": 61.0,
+        "dep_load": 14.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 2.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "35869d8559bcab8667c270898063079ee509bc8db45a8bf7c297b7749cd4e8ba",
+      "cold_icache": {
+        "model_cycles": 178,
+        "instruction_fills": 7.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "change-phase",
+      "entry": "fixture_phase",
+      "instructions": 133,
+      "peak_stack_bytes": 24,
+      "traffic": {
+        "load_instructions": 38,
+        "store_instructions": 12,
+        "load_accesses": 38,
+        "store_accesses": 12,
+        "load_bytes": 146,
+        "store_bytes": 48,
+        "unique_read_lines": 12,
+        "unique_write_lines": 4,
+        "unique_data_lines": 12,
+        "unique_line_bytes": 384,
+        "demand_line_visits": 50,
+        "repeated_demand_line_visits": 38,
+        "regions": {
+          "stack": {
+            "load_instructions": 7,
+            "store_instructions": 7,
+            "load_accesses": 7,
+            "store_accesses": 7,
+            "load_bytes": 28,
+            "store_bytes": 28,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 30,
+            "store_instructions": 5,
+            "load_accesses": 30,
+            "store_accesses": 5,
+            "load_bytes": 114,
+            "store_bytes": 20,
+            "unique_read_lines": 10,
+            "unique_write_lines": 3,
+            "unique_data_lines": 10,
+            "unique_line_bytes": 320
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0
+      },
+      "model_cycles": 163,
+      "instruction_runs": 18,
+      "categories": {
+        "base": 131.0,
+        "dep_load": 28.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 4.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "084b0e504508ce4d1bf994c17951b39fd21ade24a93a33411c8a1edd0641106a",
+      "cold_icache": {
+        "model_cycles": 379,
+        "instruction_fills": 16.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "count-24-triangles",
+      "entry": "fixture_count",
+      "instructions": 85,
+      "peak_stack_bytes": 20,
+      "traffic": {
+        "load_instructions": 24,
+        "store_instructions": 7,
+        "load_accesses": 24,
+        "store_accesses": 7,
+        "load_bytes": 90,
+        "store_bytes": 28,
+        "unique_read_lines": 12,
+        "unique_write_lines": 2,
+        "unique_data_lines": 12,
+        "unique_line_bytes": 384,
+        "demand_line_visits": 31,
+        "repeated_demand_line_visits": 19,
+        "regions": {
+          "stack": {
+            "load_instructions": 5,
+            "store_instructions": 5,
+            "load_accesses": 5,
+            "store_accesses": 5,
+            "load_bytes": 20,
+            "store_bytes": 20,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 17,
+            "store_instructions": 2,
+            "load_accesses": 17,
+            "store_accesses": 2,
+            "load_bytes": 62,
+            "store_bytes": 8,
+            "unique_read_lines": 10,
+            "unique_write_lines": 1,
+            "unique_data_lines": 10,
+            "unique_line_bytes": 320
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 0,
+        "thread": 1,
+        "identity": 0
+      },
+      "model_cycles": 108,
+      "instruction_runs": 11,
+      "categories": {
+        "base": 89.0,
+        "dep_load": 17.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 2.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "fead2368a50500bed2fe946cdefdaf884c3e8cba0750da6cacf04b4a7d3d413b",
+      "cold_icache": {
+        "model_cycles": 272,
+        "instruction_fills": 12.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "inactive-enter",
+      "entry": "fixture_enter",
+      "instructions": 44,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "load_instructions": 11,
+        "store_instructions": 4,
+        "load_accesses": 11,
+        "store_accesses": 4,
+        "load_bytes": 41,
+        "store_bytes": 16,
+        "unique_read_lines": 7,
+        "unique_write_lines": 1,
+        "unique_data_lines": 7,
+        "unique_line_bytes": 224,
+        "demand_line_visits": 15,
+        "repeated_demand_line_visits": 8,
+        "regions": {
+          "stack": {
+            "load_instructions": 4,
+            "store_instructions": 4,
+            "load_accesses": 4,
+            "store_accesses": 4,
+            "load_bytes": 16,
+            "store_bytes": 16,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_accesses": 5,
+            "store_accesses": 0,
+            "load_bytes": 17,
+            "store_bytes": 0,
+            "unique_read_lines": 5,
+            "unique_write_lines": 0,
+            "unique_data_lines": 5,
+            "unique_line_bytes": 160
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 0,
+        "thread": 0,
+        "identity": 0
+      },
+      "model_cycles": 65,
+      "instruction_runs": 10,
+      "categories": {
+        "base": 54.0,
+        "dep_load": 8.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 3.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "7084f6222d0e5967ef9611997a722c42c77a41a47beb48ec7dc770d1922b1f76",
+      "cold_icache": {
+        "model_cycles": 176,
+        "instruction_fills": 8.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time",
+      "case": "next-completed-tick",
+      "entry": "fixture_next_tick",
+      "instructions": 3749,
+      "peak_stack_bytes": 336,
+      "traffic": {
+        "load_instructions": 750,
+        "store_instructions": 643,
+        "load_accesses": 750,
+        "store_accesses": 643,
+        "load_bytes": 2880,
+        "store_bytes": 2554,
+        "unique_read_lines": 87,
+        "unique_write_lines": 75,
+        "unique_data_lines": 88,
+        "unique_line_bytes": 2816,
+        "demand_line_visits": 1393,
+        "repeated_demand_line_visits": 1305,
+        "regions": {
+          "stack": {
+            "load_instructions": 92,
+            "store_instructions": 81,
+            "load_accesses": 92,
+            "store_accesses": 81,
+            "load_bytes": 368,
+            "store_bytes": 324,
+            "unique_read_lines": 4,
+            "unique_write_lines": 4,
+            "unique_data_lines": 4,
+            "unique_line_bytes": 128
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 656,
+            "store_instructions": 562,
+            "load_accesses": 656,
+            "store_accesses": 562,
+            "load_bytes": 2504,
+            "store_bytes": 2230,
+            "unique_read_lines": 82,
+            "unique_write_lines": 71,
+            "unique_data_lines": 83,
+            "unique_line_bytes": 2656
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 2,
+        "identity": 1
+      },
+      "model_cycles": 3771,
+      "instruction_runs": 657,
+      "categories": {
+        "base": 3244.0,
+        "dep_load": 284.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 243.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "387319d39c244e42d9c7e1b2c704fb6689c2983d31b99c9d962f9113344d56b4",
+      "cold_icache": {
+        "model_cycles": 4237,
+        "instruction_fills": 39.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "enter-path",
+      "entry": "fixture_enter",
+      "instructions": 336,
+      "peak_stack_bytes": 76,
+      "traffic": {
+        "load_instructions": 102,
+        "store_instructions": 48,
+        "load_accesses": 102,
+        "store_accesses": 48,
+        "load_bytes": 392,
+        "store_bytes": 189,
+        "unique_read_lines": 23,
+        "unique_write_lines": 9,
+        "unique_data_lines": 24,
+        "unique_line_bytes": 768,
+        "demand_line_visits": 150,
+        "repeated_demand_line_visits": 126,
+        "regions": {
+          "stack": {
+            "load_instructions": 31,
+            "store_instructions": 31,
+            "load_accesses": 31,
+            "store_accesses": 31,
+            "load_bytes": 124,
+            "store_bytes": 124,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 69,
+            "store_instructions": 17,
+            "load_accesses": 69,
+            "store_accesses": 17,
+            "load_bytes": 260,
+            "store_bytes": 65,
+            "unique_read_lines": 19,
+            "unique_write_lines": 6,
+            "unique_data_lines": 20,
+            "unique_line_bytes": 640
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0,
+        "pmu_sample": 1
+      },
+      "model_cycles": 379,
+      "instruction_runs": 35,
+      "categories": {
+        "base": 308.0,
+        "dep_load": 58.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 13.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "519efaa135eff8e11a85ef53ba7bf404112582e729e94bef1eb703b2a493055d",
+      "cold_icache": {
+        "model_cycles": 785,
+        "instruction_fills": 33.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "enter-nested-clip",
+      "entry": "fixture_nested",
+      "instructions": 358,
+      "peak_stack_bytes": 76,
+      "traffic": {
+        "load_instructions": 103,
+        "store_instructions": 48,
+        "load_accesses": 103,
+        "store_accesses": 48,
+        "load_bytes": 396,
+        "store_bytes": 189,
+        "unique_read_lines": 24,
+        "unique_write_lines": 10,
+        "unique_data_lines": 25,
+        "unique_line_bytes": 800,
+        "demand_line_visits": 151,
+        "repeated_demand_line_visits": 126,
+        "regions": {
+          "stack": {
+            "load_instructions": 31,
+            "store_instructions": 31,
+            "load_accesses": 31,
+            "store_accesses": 31,
+            "load_bytes": 124,
+            "store_bytes": 124,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "observer-and-literals": {
+            "load_instructions": 71,
+            "store_instructions": 17,
+            "load_accesses": 71,
+            "store_accesses": 17,
+            "load_bytes": 268,
+            "store_bytes": 65,
+            "unique_read_lines": 20,
+            "unique_write_lines": 7,
+            "unique_data_lines": 21,
+            "unique_line_bytes": 672
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0,
+        "pmu_sample": 1
+      },
+      "model_cycles": 399,
+      "instruction_runs": 33,
+      "categories": {
+        "base": 326.0,
+        "dep_load": 62.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 11.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "5429bfb359f88b3ffd12e059fbbd6c732c230414a804ed3bc2a74625ba476dcc",
+      "cold_icache": {
+        "model_cycles": 803,
+        "instruction_fills": 33.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "leave-path",
+      "entry": "fixture_leave",
+      "instructions": 342,
+      "peak_stack_bytes": 72,
+      "traffic": {
+        "load_instructions": 97,
+        "store_instructions": 47,
+        "load_accesses": 97,
+        "store_accesses": 47,
+        "load_bytes": 374,
+        "store_bytes": 185,
+        "unique_read_lines": 24,
+        "unique_write_lines": 10,
+        "unique_data_lines": 25,
+        "unique_line_bytes": 800,
+        "demand_line_visits": 144,
+        "repeated_demand_line_visits": 119,
+        "regions": {
+          "stack": {
+            "load_instructions": 30,
+            "store_instructions": 30,
+            "load_accesses": 30,
+            "store_accesses": 30,
+            "load_bytes": 120,
+            "store_bytes": 120,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "observer-and-literals": {
+            "load_instructions": 66,
+            "store_instructions": 17,
+            "load_accesses": 66,
+            "store_accesses": 17,
+            "load_bytes": 250,
+            "store_bytes": 65,
+            "unique_read_lines": 20,
+            "unique_write_lines": 7,
+            "unique_data_lines": 21,
+            "unique_line_bytes": 672
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0,
+        "pmu_sample": 1
+      },
+      "model_cycles": 373,
+      "instruction_runs": 32,
+      "categories": {
+        "base": 304.0,
+        "dep_load": 58.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 11.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "6973607b9aaf0d11a81e29f111c145b17ef7a21bee9f7b6c33ac58fb49379366",
+      "cold_icache": {
+        "model_cycles": 758,
+        "instruction_fills": 31.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "same-phase",
+      "entry": "fixture_phase",
+      "instructions": 53,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "load_instructions": 18,
+        "store_instructions": 4,
+        "load_accesses": 18,
+        "store_accesses": 4,
+        "load_bytes": 66,
+        "store_bytes": 16,
+        "unique_read_lines": 11,
+        "unique_write_lines": 1,
+        "unique_data_lines": 11,
+        "unique_line_bytes": 352,
+        "demand_line_visits": 22,
+        "repeated_demand_line_visits": 11,
+        "regions": {
+          "stack": {
+            "load_instructions": 4,
+            "store_instructions": 4,
+            "load_accesses": 4,
+            "store_accesses": 4,
+            "load_bytes": 16,
+            "store_bytes": 16,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 13,
+            "store_instructions": 0,
+            "load_accesses": 13,
+            "store_accesses": 0,
+            "load_bytes": 46,
+            "store_bytes": 0,
+            "unique_read_lines": 9,
+            "unique_write_lines": 0,
+            "unique_data_lines": 9,
+            "unique_line_bytes": 288
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 0,
+        "thread": 1,
+        "identity": 0,
+        "pmu_sample": 0
+      },
+      "model_cycles": 77,
+      "instruction_runs": 9,
+      "categories": {
+        "base": 61.0,
+        "dep_load": 14.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 2.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "73ab7b18eaed585fad7e721716c1360945be760d8639bedfeb7289a4b3867241",
+      "cold_icache": {
+        "model_cycles": 198,
+        "instruction_fills": 8.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "change-phase",
+      "entry": "fixture_phase",
+      "instructions": 329,
+      "peak_stack_bytes": 72,
+      "traffic": {
+        "load_instructions": 96,
+        "store_instructions": 47,
+        "load_accesses": 96,
+        "store_accesses": 47,
+        "load_bytes": 370,
+        "store_bytes": 185,
+        "unique_read_lines": 22,
+        "unique_write_lines": 10,
+        "unique_data_lines": 23,
+        "unique_line_bytes": 736,
+        "demand_line_visits": 143,
+        "repeated_demand_line_visits": 120,
+        "regions": {
+          "stack": {
+            "load_instructions": 30,
+            "store_instructions": 30,
+            "load_accesses": 30,
+            "store_accesses": 30,
+            "load_bytes": 120,
+            "store_bytes": 120,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "observer-and-literals": {
+            "load_instructions": 65,
+            "store_instructions": 17,
+            "load_accesses": 65,
+            "store_accesses": 17,
+            "load_bytes": 246,
+            "store_bytes": 65,
+            "unique_read_lines": 18,
+            "unique_write_lines": 7,
+            "unique_data_lines": 19,
+            "unique_line_bytes": 608
+          },
+          "fixture-arguments": {
+            "load_instructions": 1,
+            "store_instructions": 0,
+            "load_accesses": 1,
+            "store_accesses": 0,
+            "load_bytes": 4,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 1,
+        "identity": 0,
+        "pmu_sample": 1
+      },
+      "model_cycles": 361,
+      "instruction_runs": 29,
+      "categories": {
+        "base": 295.0,
+        "dep_load": 58.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 8.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "49ee2367f6b56d9290e10d1212bc028d3bc7a297b7e29f20f447f10c915bf911",
+      "cold_icache": {
+        "model_cycles": 735,
+        "instruction_fills": 30.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "count-24-triangles",
+      "entry": "fixture_count",
+      "instructions": 85,
+      "peak_stack_bytes": 20,
+      "traffic": {
+        "load_instructions": 24,
+        "store_instructions": 7,
+        "load_accesses": 24,
+        "store_accesses": 7,
+        "load_bytes": 90,
+        "store_bytes": 28,
+        "unique_read_lines": 12,
+        "unique_write_lines": 2,
+        "unique_data_lines": 12,
+        "unique_line_bytes": 384,
+        "demand_line_visits": 31,
+        "repeated_demand_line_visits": 19,
+        "regions": {
+          "stack": {
+            "load_instructions": 5,
+            "store_instructions": 5,
+            "load_accesses": 5,
+            "store_accesses": 5,
+            "load_bytes": 20,
+            "store_bytes": 20,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 17,
+            "store_instructions": 2,
+            "load_accesses": 17,
+            "store_accesses": 2,
+            "load_bytes": 62,
+            "store_bytes": 8,
+            "unique_read_lines": 10,
+            "unique_write_lines": 1,
+            "unique_data_lines": 10,
+            "unique_line_bytes": 320
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 0,
+        "thread": 1,
+        "identity": 0,
+        "pmu_sample": 0
+      },
+      "model_cycles": 108,
+      "instruction_runs": 11,
+      "categories": {
+        "base": 89.0,
+        "dep_load": 17.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 2.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "dbf8c5fb2503579cd9189670fc8121fe594194f82840d15b79f1c242852af881",
+      "cold_icache": {
+        "model_cycles": 247,
+        "instruction_fills": 10.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "inactive-enter",
+      "entry": "fixture_enter",
+      "instructions": 44,
+      "peak_stack_bytes": 16,
+      "traffic": {
+        "load_instructions": 11,
+        "store_instructions": 4,
+        "load_accesses": 11,
+        "store_accesses": 4,
+        "load_bytes": 41,
+        "store_bytes": 16,
+        "unique_read_lines": 7,
+        "unique_write_lines": 1,
+        "unique_data_lines": 7,
+        "unique_line_bytes": 224,
+        "demand_line_visits": 15,
+        "repeated_demand_line_visits": 8,
+        "regions": {
+          "stack": {
+            "load_instructions": 4,
+            "store_instructions": 4,
+            "load_accesses": 4,
+            "store_accesses": 4,
+            "load_bytes": 16,
+            "store_bytes": 16,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_accesses": 5,
+            "store_accesses": 0,
+            "load_bytes": 17,
+            "store_bytes": 0,
+            "unique_read_lines": 5,
+            "unique_write_lines": 0,
+            "unique_data_lines": 5,
+            "unique_line_bytes": 160
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 0,
+        "thread": 0,
+        "identity": 0,
+        "pmu_sample": 0
+      },
+      "model_cycles": 65,
+      "instruction_runs": 10,
+      "categories": {
+        "base": 54.0,
+        "dep_load": 8.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 3.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "250fa7795d69270ce07ad9b65c6cabaa53be82ccdef7361cb72d7c49ff15620e",
+      "cold_icache": {
+        "model_cycles": 204,
+        "instruction_fills": 9.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "configuration": "time-pmu",
+      "case": "next-completed-tick",
+      "entry": "fixture_next_tick",
+      "instructions": 4007,
+      "peak_stack_bytes": 384,
+      "traffic": {
+        "load_instructions": 835,
+        "store_instructions": 702,
+        "load_accesses": 835,
+        "store_accesses": 702,
+        "load_bytes": 3206,
+        "store_bytes": 2781,
+        "unique_read_lines": 94,
+        "unique_write_lines": 76,
+        "unique_data_lines": 95,
+        "unique_line_bytes": 3040,
+        "demand_line_visits": 1537,
+        "repeated_demand_line_visits": 1442,
+        "regions": {
+          "stack": {
+            "load_instructions": 126,
+            "store_instructions": 119,
+            "load_accesses": 126,
+            "store_accesses": 119,
+            "load_bytes": 504,
+            "store_bytes": 476,
+            "unique_read_lines": 5,
+            "unique_write_lines": 5,
+            "unique_data_lines": 5,
+            "unique_line_bytes": 160
+          },
+          "fixture-arguments": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 1,
+            "unique_write_lines": 0,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "observer-and-literals": {
+            "load_instructions": 707,
+            "store_instructions": 583,
+            "load_accesses": 707,
+            "store_accesses": 583,
+            "load_bytes": 2694,
+            "store_bytes": 2305,
+            "unique_read_lines": 88,
+            "unique_write_lines": 71,
+            "unique_data_lines": 89,
+            "unique_line_bytes": 2848
+          }
+        }
+      },
+      "synthetic_hook_calls": {
+        "clock": 1,
+        "thread": 2,
+        "identity": 1,
+        "pmu_sample": 2
+      },
+      "model_cycles": 4042,
+      "instruction_runs": 675,
+      "categories": {
+        "base": 3467.0,
+        "dep_load": 325.0,
+        "dep_fpu": 0.0,
+        "dep_fdiv": 0.0,
+        "dep_other": 0.0,
+        "flock": 0.0,
+        "branch": 250.0,
+        "imiss": 0.0,
+        "dmiss": 0.0,
+        "pfwait": 0.0,
+        "sq": 0.0,
+        "uncached": 0.0
+      },
+      "trace_sha256": "ce49dcebc12d245aa717883416a76f0c5de0cb990cc9d9f0b63386363d88b6c6",
+      "cold_icache": {
+        "model_cycles": 4687,
+        "instruction_fills": 54.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    }
+  ],
+  "modelled_frame_scenarios": [
+    {
+      "configuration": "time",
+      "assumed_calls_per_drawn_frame": {
+        "enter-path": 1000,
+        "leave-path": 1000,
+        "change-phase": 200,
+        "count-24-triangles": 2000,
+        "next-completed-tick": 1
+      },
+      "assumed_cpu_mhz": 200,
+      "modelled_core_ms": 3.076855,
+      "synthetic_hook_calls": {
+        "clock": 2201,
+        "thread": 4202,
+        "identity": 1,
+        "pmu_sample": 0
+      },
+      "scope": "MODELLED synthetic counts, one completed tick per draw. Includes stub instructions. Add real timer/PMU/identity/thread costs, adapter bookkeeping, window seal/format and cache/bus/interrupt costs; not a complete observer or farm-frame estimate."
+    },
+    {
+      "configuration": "time",
+      "assumed_calls_per_drawn_frame": {
+        "enter-path": 5000,
+        "leave-path": 5000,
+        "change-phase": 1000,
+        "count-24-triangles": 10000,
+        "next-completed-tick": 1
+      },
+      "assumed_cpu_mhz": 200,
+      "modelled_core_ms": 15.308855,
+      "synthetic_hook_calls": {
+        "clock": 11001,
+        "thread": 21002,
+        "identity": 1,
+        "pmu_sample": 0
+      },
+      "scope": "MODELLED synthetic counts, one completed tick per draw. Includes stub instructions. Add real timer/PMU/identity/thread costs, adapter bookkeeping, window seal/format and cache/bus/interrupt costs; not a complete observer or farm-frame estimate."
+    },
+    {
+      "configuration": "time-pmu",
+      "assumed_calls_per_drawn_frame": {
+        "enter-path": 1000,
+        "leave-path": 1000,
+        "change-phase": 200,
+        "count-24-triangles": 2000,
+        "next-completed-tick": 1
+      },
+      "assumed_cpu_mhz": 200,
+      "modelled_core_ms": 5.22121,
+      "synthetic_hook_calls": {
+        "clock": 2201,
+        "thread": 4202,
+        "identity": 1,
+        "pmu_sample": 2202
+      },
+      "scope": "MODELLED synthetic counts, one completed tick per draw. Includes stub instructions. Add real timer/PMU/identity/thread costs, adapter bookkeeping, window seal/format and cache/bus/interrupt costs; not a complete observer or farm-frame estimate."
+    },
+    {
+      "configuration": "time-pmu",
+      "assumed_calls_per_drawn_frame": {
+        "enter-path": 5000,
+        "leave-path": 5000,
+        "change-phase": 1000,
+        "count-24-triangles": 10000,
+        "next-completed-tick": 1
+      },
+      "assumed_cpu_mhz": 200,
+      "modelled_core_ms": 26.02521,
+      "synthetic_hook_calls": {
+        "clock": 11001,
+        "thread": 21002,
+        "identity": 1,
+        "pmu_sample": 11002
+      },
+      "scope": "MODELLED synthetic counts, one completed tick per draw. Includes stub instructions. Add real timer/PMU/identity/thread costs, adapter bookkeeping, window seal/format and cache/bus/interrupt costs; not a complete observer or farm-frame estimate."
+    }
+  ],
+  "memory_controls": {
+    "status": "PASS",
+    "controls": [
+      "fetches excluded; scalar load/store retained",
+      "PC-relative literal classified as data",
+      "data read of current opcode word retained",
+      "delay slot attributed exactly once",
+      "double-register move counted as one 8-byte load",
+      "32-bit effective address wrap",
+      "store queues excluded from cached footprint",
+      "cached PREF counted separately from demand loads"
+    ]
+  },
+  "scalar_controls": [
+    "XOR immediate zero-extends eight-bit operand, preserves T, and creates no data access"
+  ],
+  "limitations": "No private assets, scene/emulator/console capture or measured cache/PMU miss counts. Production core is compiled separately for real code/static-stack sizes. Execution uses the documented host hooks and a never-executed snprintf link stub. Window sealing/formatting, timer/PMU/OS hook implementations and surrounding renderer/PM14 overhead remain unpriced.",
+  "recipe_inputs": {
+    "recipe-d1d9555e730bc7f4": {
+      "release": "port/dreamcast/tools/d367/test24/release-knobs.txt",
+      "ordered_ch2_assignments": [
+        "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_CH21_FULL=1 RESET_MEM_FIX=1 GANADO_ROUTINE_BYTES=1 CLOTH_LIGHT_ABI_FIX=1 AICA_LAYOUT_RECOVER=1 PAUSE_NATIVE_PRESENTATION=1 CAST_MIPMAP=1 TEX_TWIDDLED_MIPMAP=1 TEX_PAL4_ALPHA=1 TEX_PAL4_MIPMAP=1 TEX_PAL8_ALPHA=1 TEX_PAL8_MIPMAP=1 WORLD_RECT21=1 FOLIAGE_MIP24=1 TEX_MIP_DADJ=3 VRAM_ROOM_ARENA=1 EVD_ADMISSION_TXN=1 EVD_START_CLEANUP=1 EVD_START_ROLLBACK=1 EVD_DEBUG_READ_CLEANUP=1 EVD_EXEC_FAILURE_CLEANUP=1 EVD_READ_RELEASE_REFS=1 EVD_READ_ADMISSION_PREFLIGHT=1 EVD_MODULE_VALIDATE_FIRST=1 EVENT_MANAGER_STORAGE_FLAGS=1 EFFECT_ADMISSION_GUARD=1 EFFECT_CONTROLLER_VALIDATE_FIRST=1 EM_ADMISSION_DISP_FIX=1 RESET_RETIRE_BEFORE_HEAPS=1 MOTION_RETIRE_PREFLIGHT=1 SS_RESTORE_VALIDATE_FIRST=1 SS_ACTOR_LIFETIME=1 SS_MSG_FIELDS=1 SS_CERT_PARTNER_CAPACITY=1 PARTS_LINKED_FLAG=1 TEX_PAYLOAD_RETRY=1 PS2_WORLD_NONEMPTY_LOD=1 MOTION_CAPACITY=1 FX_STRIP21=1 GANADO_EVENT_KEEP_LOD=1 SS_DATA_LZ=1 CPU_BACKFACE=0 ACTOR_BACKFACE=0 PS2_WORLD_SOURCE_TEX_MIP=1 PS2_WORLD_ROOT_POSE=1 WATER_PS2_EXT=1 TRAP_FX=1 LIGHT_CUT_HOLD=1 FX_ROOM_SPILL_KB=24 DISC_DMA_WAIT_TIMEOUT=1 EM35_ROUTINE_BYTES=1 FX_LEVEL=3 FX_TRIM=1 SCENERY_SELECT_ONLY=1 SCENERY_REPLAY_LEAN=1 SCENERY_SUBMIT_BATCH=1 STAT_ROUTINE_BYTES=1 ESP_POOL_RECYCLE=1 R117_EFFECT_FAILURE_SAFE=1 KOS_CACHE_P2=1 R10C_SPAWN_LIVE_GUARD=1 EM_READ_RETRY=1\"",
+        "CH2=\"$CH2 FX_PS2_NONE_CUT=1 FX_PS2_PACK=1 PS2_ETS_MATCH=2 ACTOR_GANADO_PS2_GRIP=1 ACTOR_GANADO_PS2_STUMP_DIR=/root/re4data/private/grip24-20261024 PRELOAD_SKIP_GCIDLE=1 EVD_MOVIE_NO_READ=1 WEAPON_WEP04=1\"",
+        "CH2=\"$CH2 NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1\"   # lane fix-mendez-door24 (t15/int e09c4b1c): Mendez PS2 model in the barn door demo",
+        "CH2=\"$CH2 CLOTH_NATIVE=1 FLASHLIGHT_POOL=1\"   # user look calls 10-25: hanging cloth drawn (#55), Leon's flashlight pool in the night rooms (#55)",
+        "CH2=\"$CH2 MOTION_PS2_PL11=1\"   # purge-motion25: pl11 PS2 motion profile row (pmash25 needs it)",
+        "CH2=\"$CH2 LEON_NO_GC_FRONT=2\"   # cast-ps2-25: player Leon drawn PS2 on the post-s20 ledger-less frames (needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)",
+        "CH2=\"$CH2 WEAPON_WEP04_OVL=1 FX_NONE_CUT_PACK=1\"   # heap-margin25: Blacktail as a room overlay + packed FX cut table (s30 heap_before +8,192 B)",
+        "CH2=\"$CH2 DVD_BUFF_KB=64 DVD_BORROW=1 LOG_PLAY_KB=16\"   # heap-margin25 r3: 64 KB disc staging + boot/title borrow, 16 KB play log ring (s30 heap_before +72,736 B)",
+        "CH2=\"$CH2 SCENERY_STREAM=1\"",
+        "CH2=\"$CH2 LEON_PS2_RIG=1\"   # cast-ps2-25 r18: Leon on the PS2 pl00 rig (PS2 bind + weights; GC cloth/hair sim drives PS2 jacket/hair bones); PS2_LEON_DIR = the rig arm (t15-build.sh)   # scenery-rewrite25 M1: exact; MODELLED scenery cross 11.49 -> 10.94, bell 11.19 -> 10.86, farm 7.92 -> 7.80, house 8.69 -> 8.58",
+        "CH2=\"$CH2 LEON_PS2_PORTRAIT_HAIR=1\"   # cast-ps2-25 r19: the radio-call portrait draws the PS2 hair (the GC hair info is no longer drawn)",
+        "CH2=\"$CH2 ACTOR_REPLAY_SKIN=1\"   # cast-ps2-25 r20: replayed skinned parts (h2 room model after the codec screen) stay on the actor path",
+        "CH2=\"$CH2 TEX_ARENA_CURRENT_KEY=1 ROOT_POSE_CAP_FALLBACK=1 ROOT_POSE_WITNESS_PREFLIGHT=1 R117_FX_QUALIFIED_FALLBACK=1\"   # cloud fixes (tex-arena / root-pose / r117), console D3 10-26: windows, barrels, no missing objects",
+        "CH2=\"$CH2 PS2_FIRE_SST=1\"   # purge-audit26: register + start the pfire26 sets (rr/drop-proofs.tsv torch rows)",
+        "CH2=\"$CH2 GANADO_LOD_LEVEL=3\"",
+        "CH2=\"$CH2 NMR_POOL_LOD=1\"",
+        "CH2=\"$CH2 PS2_FIRE_HALO_CUT=1 PS2_ETS_LIGHT=1\""
+      ],
+      "public_ch2": [
+        "ROUTE_CH22=1",
+        "ROUTE_CH23=1",
+        "PS2_CH2_ENEMY=1",
+        "MOTION_BOUNDED_R11F=1",
+        "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1",
+        "PS2_WORLD_SOURCE_OWNER=1",
+        "PS2_WORLD_SOURCE_TEX_PREP=1",
+        "AICA_STR_ENT_MAX=56",
+        "AICA_SPILL=1",
+        "NATIVE_MODEL_REGISTRY_FIRST=1",
+        "NATIVE_MODEL_REGISTRY_LOD=1",
+        "ROUTE_SOON_RETURN=1",
+        "MOVIE_AUDIO_PRIME=1",
+        "ROOM_LEFTOVER_FIT=1",
+        "PS2_WORLD_SOURCE_TEX_VQ=1",
+        "LEON_SKIN_SLOTS=2",
+        "LEON_HEADLESS=1",
+        "LEON_CLOTH_DRAWN=1",
+        "HAZE_SPRITE_CUT=1",
+        "FX_MIST_PS2=1",
+        "PS2_HDR_SETS=128",
+        "ROUTE_CH21_FULL=1",
+        "RESET_MEM_FIX=1",
+        "GANADO_ROUTINE_BYTES=1",
+        "CLOTH_LIGHT_ABI_FIX=1",
+        "AICA_LAYOUT_RECOVER=1",
+        "PAUSE_NATIVE_PRESENTATION=1",
+        "CAST_MIPMAP=1",
+        "TEX_TWIDDLED_MIPMAP=1",
+        "TEX_PAL4_ALPHA=1",
+        "TEX_PAL4_MIPMAP=1",
+        "TEX_PAL8_ALPHA=1",
+        "TEX_PAL8_MIPMAP=1",
+        "WORLD_RECT21=1",
+        "FOLIAGE_MIP24=1",
+        "TEX_MIP_DADJ=3",
+        "VRAM_ROOM_ARENA=1",
+        "EVD_ADMISSION_TXN=1",
+        "EVD_START_CLEANUP=1",
+        "EVD_START_ROLLBACK=1",
+        "EVD_DEBUG_READ_CLEANUP=1",
+        "EVD_EXEC_FAILURE_CLEANUP=1",
+        "EVD_READ_RELEASE_REFS=1",
+        "EVD_READ_ADMISSION_PREFLIGHT=1",
+        "EVD_MODULE_VALIDATE_FIRST=1",
+        "EVENT_MANAGER_STORAGE_FLAGS=1",
+        "EFFECT_ADMISSION_GUARD=1",
+        "EFFECT_CONTROLLER_VALIDATE_FIRST=1",
+        "EM_ADMISSION_DISP_FIX=1",
+        "RESET_RETIRE_BEFORE_HEAPS=1",
+        "MOTION_RETIRE_PREFLIGHT=1",
+        "SS_RESTORE_VALIDATE_FIRST=1",
+        "SS_ACTOR_LIFETIME=1",
+        "SS_MSG_FIELDS=1",
+        "SS_CERT_PARTNER_CAPACITY=1",
+        "PARTS_LINKED_FLAG=1",
+        "TEX_PAYLOAD_RETRY=1",
+        "PS2_WORLD_NONEMPTY_LOD=1",
+        "MOTION_CAPACITY=1",
+        "FX_STRIP21=1",
+        "GANADO_EVENT_KEEP_LOD=1",
+        "SS_DATA_LZ=1",
+        "CPU_BACKFACE=0",
+        "ACTOR_BACKFACE=0",
+        "PS2_WORLD_SOURCE_TEX_MIP=1",
+        "PS2_WORLD_ROOT_POSE=1",
+        "WATER_PS2_EXT=1",
+        "TRAP_FX=1",
+        "LIGHT_CUT_HOLD=1",
+        "FX_ROOM_SPILL_KB=24",
+        "DISC_DMA_WAIT_TIMEOUT=1",
+        "EM35_ROUTINE_BYTES=1",
+        "FX_LEVEL=3",
+        "FX_TRIM=1",
+        "SCENERY_SELECT_ONLY=1",
+        "SCENERY_REPLAY_LEAN=1",
+        "SCENERY_SUBMIT_BATCH=1",
+        "STAT_ROUTINE_BYTES=1",
+        "ESP_POOL_RECYCLE=1",
+        "R117_EFFECT_FAILURE_SAFE=1",
+        "KOS_CACHE_P2=1",
+        "R10C_SPAWN_LIVE_GUARD=1",
+        "EM_READ_RETRY=1",
+        "FX_PS2_NONE_CUT=1",
+        "FX_PS2_PACK=1",
+        "PS2_ETS_MATCH=2",
+        "ACTOR_GANADO_PS2_GRIP=1",
+        "PRELOAD_SKIP_GCIDLE=1",
+        "EVD_MOVIE_NO_READ=1",
+        "WEAPON_WEP04=1",
+        "NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1",
+        "CLOTH_NATIVE=1",
+        "FLASHLIGHT_POOL=1",
+        "MOTION_PS2_PL11=1",
+        "LEON_NO_GC_FRONT=2",
+        "WEAPON_WEP04_OVL=1",
+        "FX_NONE_CUT_PACK=1",
+        "DVD_BUFF_KB=64",
+        "DVD_BORROW=1",
+        "LOG_PLAY_KB=16",
+        "SCENERY_STREAM=1",
+        "LEON_PS2_RIG=1",
+        "LEON_PS2_PORTRAIT_HAIR=1",
+        "ACTOR_REPLAY_SKIN=1",
+        "TEX_ARENA_CURRENT_KEY=1",
+        "ROOT_POSE_CAP_FALLBACK=1",
+        "ROOT_POSE_WITNESS_PREFLIGHT=1",
+        "R117_FX_QUALIFIED_FALLBACK=1",
+        "PS2_FIRE_SST=1",
+        "GANADO_LOD_LEVEL=3",
+        "NMR_POOL_LOD=1",
+        "PS2_FIRE_HALO_CUT=1",
+        "PS2_ETS_LIGHT=1"
+      ],
+      "removed_asset_path_assignments": [
+        "PS2_LEON_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2leon",
+        "PS2_GANADO_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2ganado",
+        "GANADO_LOD_PACK=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/glod/ganado_lod.re4gl",
+        "ACTOR_GANADO_PS2_STUMP_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2stump",
+        "PS2_ENEMY_CH22_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2enemych2",
+        "PS2_ENEMY_CH23_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2enemych2",
+        "LEON_HEADLESS_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2leonhead",
+        "ACTOR_GANADO_PS2_STUMP_DIR=/workspace/scratch/88e1fefc0862/re4dc/port/dreamcast/game/public-assets/ps2stump",
+        "PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+        "PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+        "LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019",
+        "ACTOR_GANADO_PS2_STUMP_DIR=/root/re4data/private/grip24-20261024"
+      ],
+      "missing_asset_overrides": [
+        "PS2_LEON=0",
+        "LEON_PS2_RIG=0",
+        "LEON_PS2_PORTRAIT_HAIR=0",
+        "LEON_HAND_PACK=0",
+        "PS2_GANADO=0",
+        "PS2_GANADO_LIT=0",
+        "GANADO_LOD=0",
+        "GANADO_EVENT_KEEP_LOD=0",
+        "ACTOR_PROBE_LIGHT=1",
+        "GANADO_LIT=0",
+        "NATIVE_MODEL_REGISTRY_DYING=0",
+        "LEON_HEADLESS=0",
+        "PS2_CH2_ENEMY=0",
+        "ACTOR_GANADO_PS2_STUMP=0",
+        "ACTOR_GANADO_PS2_GRIP=0"
+      ],
+      "source_sha256": {
+        "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+        "port/dreamcast/tools/d367/test24/release-knobs.txt": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b",
+        "port/dreamcast/tools/d367/rr/recipe.conf": "d61db571ab880e046d5e19640f845e320a600a4acdc2f05cd3cc497f5c5c9ab0",
+        "port/dreamcast/build-public.sh": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f",
+        "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+        "port/dreamcast/game/Makefile": "376fb810281e6637af281d59ada778a6a99d442799046049b382278b5584f3f4",
+        "port/dreamcast/game/actor_ganado_ps2_stump.mk": "f435e94c76cc2ea57bf64bef82033f79520f8f1a5cd8b56b19788d14f6ddea4a",
+        "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+        "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+        "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+        "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+        "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+        "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+        "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+        "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+        "port/dreamcast/game/crowd.mk": "db5dcfb0e9ec85d116c222cb266badff62a90df275c50e2a33f0eeb4bbb68fca",
+        "port/dreamcast/game/dbgwarp.mk": "7dabc7487167c8c0ec2d3f583278b650bb1619decf7f8abc663ec74533ed98d1",
+        "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+        "port/dreamcast/game/draw_setup_audit.mk": "22f1900a9695c0b3e89ec8924c8da51509c31bb99e2b9fc29b031e19a135c25e",
+        "port/dreamcast/game/effects30.mk": "c1905dc5f3594178e0f7a421ecbb869f154da26085ed1b6ea575acaf53517f6a",
+        "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+        "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+        "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+        "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+        "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+        "port/dreamcast/game/game30.mk": "c94d7823374b21cacb40b2a8949cfe54223d3ac868252432f752a0aa831e03a6",
+        "port/dreamcast/game/gc_asset_gate.mk": "ef1f3c564abece94fdf4b7c60a1f738b11f4fedafd11e71230af0264f4b76ecd",
+        "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+        "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+        "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+        "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+        "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+        "port/dreamcast/game/mendezfx.mk": "c56892f8607f838dff36a52d8189445b299208c87e6f07461b4d06325d03a167",
+        "port/dreamcast/game/native_model_registry.mk": "b83bf9dde04fc4f75c41f86509ac0bbc6fc505c0ab26b12a3f68ef122db32737",
+        "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+        "port/dreamcast/game/partdump.mk": "abd44d97992217788371885a60c9898d2e00429f0d0e5ef6bfe255abf6773416",
+        "port/dreamcast/game/perf_phase_miss.mk": "5ba2d007fd5cc2829b8225fab8ecd9fd83edc9a9f9df027f8f5e8589b618aea6",
+        "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+        "port/dreamcast/game/ps2leon.mk": "011f39130ca3329c57148417e10b4a372c1f8dddaa735e38cbd0bb00f9aa4137",
+        "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+        "port/dreamcast/game/qamenu.mk": "8278906026e8836d4027e48f99292fbc0b47eac2f59bbe76dda96dc38f33ba56",
+        "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+        "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+        "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+        "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+        "port/dreamcast/game/scenery19.mk": "155ab311f4161cff82ed453190b840fe2102c561a676f3fe710c52a5731e5eb2",
+        "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+        "port/dreamcast/game/scenery_data_variants.mk": "98b8c8c9c945a899170943b161926c47307b204d1e47f021a9d40e4fbfef7af4",
+        "port/dreamcast/game/scenery_n256.mk": "bee85b66ccc26887a7295405d8d5507425010268b7b0fc1bc5f98387b10a8be8",
+        "port/dreamcast/game/scenery_record_split.mk": "0de971619bd764a69a4fc2b400347828ea660a1ce1a923f083b5be6af5f22a6c",
+        "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+        "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+        "port/dreamcast/game/t2exact.mk": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2",
+        "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+        "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+        "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+        "port/dreamcast/game/world_census24.mk": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52",
+        "port/dreamcast/game/world_census24_errors.mk": "0b1f8fda7459246404f88d1f0d3b5a94d56396019759201d21dae820094f3874",
+        "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+        "port/dreamcast/game/worldopt26.mk": "290b454a0b075fb097b21d9c8566282204dd93e21c7c7e5109e77447261a26e9",
+        "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+      }
+    }
+  },
+  "traffic_scope": "All accesses are synthetic cached RAM; zero uncached/SQ/prefetch accesses were asserted. Literal reads included, opcode fetches excluded. Demand lines are not cache misses.",
+  "model_commands": {
+    "warm": "hwsim --elf <model-address-view.elf> --out <case> --perfect-ic --perfect-dc --no-dma --sq-cost 0 <case.bin>",
+    "cold_i": "hwsim --elf <model-address-view.elf> --out <case> --perfect-dc --no-dma --sq-cost 0 <case.bin>"
+  },
+  "raw_receipt_sha256": "17b08e867b148d931026cfc1f737b8ce9641ddbb4a9c8a3371fd25910e602988",
+  "compactor_sha256": "05f27a01e62e6f39057b8b982b6ee0e911b48531d9f2ea9b5d12ac08e6c3a0e4"
+}

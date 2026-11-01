@@ -1,0 +1,34 @@
+// Appended to the complete production native_static TU; only synthetic inputs.
+extern "C" {
+pc::Frustum fixture_fr[24];
+float fixture_outer[6]={-1000,-1000,-1000,1000,1000,1000};
+float fixture_wq[21];std::uint16_t fixture_lo[3],fixture_hi[3];
+re4dc::portal29::Receipts fixture_receipts;
+float fixture_key[27];
+void fixture_prepare(unsigned config){
+    pc::st=pc::State{};pc::st.active=true;pc::st.outer=fixture_outer;
+    pc::st.fr=fixture_fr;pc::st.nfr=(config&1U)?24U:1U;
+    const float nx=0.980580687f,nz=0.196116135f;
+    for(unsigned i=0;i<24;++i){
+        auto& f=fixture_fr[i];f=pc::Frustum{};f.axis=2;f.plane=1000;f.beyond_high=true;
+        const float normals[4][3]={{nx,0,nz},{-nx,0,nz},{0,nx,nz},{0,-nx,nz}};
+        for(unsigned e=0;e<4;++e)for(unsigned a=0;a<3;++a){f.edge[e].n[a]=normals[e][a];f.an[e][a]=std::fabs(normals[e][a]);}
+    }
+    std::memset(fixture_wq,0,sizeof(fixture_wq));
+    fixture_wq[0]=fixture_wq[5]=fixture_wq[10]=1;pc::abs_rows(fixture_wq);
+    for(unsigned a=0;a<3;++a){fixture_lo[a]=0;fixture_hi[a]=100;}
+    const unsigned shape=(config>>1)&3U;
+    if(shape!=2U){fixture_lo[2]=2000;fixture_hi[2]=2100;}
+    if(shape==1U)fixture_wq[3]=2000;
+    fixture_receipts.clear();std::memset(fixture_key,0,sizeof(fixture_key));
+    fixture_receipts.sync(1,2,3,fixture_key);
+    const unsigned n=(config>>4)&511U;
+    for(unsigned q=0;q<n;++q)fixture_receipts.commit(q);
+}
+__attribute__((noinline)) int fixture_grid(unsigned){return pc::grid_hidden(fixture_wq,fixture_lo,fixture_hi);}
+__attribute__((noinline)) unsigned fixture_commit(unsigned n){fixture_receipts.commit(n);return fixture_receipts.count;}
+__attribute__((noinline)) unsigned fixture_sync_same(unsigned){fixture_receipts.sync(1,2,3,fixture_key);return fixture_receipts.count;}
+__attribute__((noinline)) unsigned fixture_sync_new(unsigned){fixture_receipts.sync(2,2,3,fixture_key);return fixture_receipts.count;}
+extern const std::uintptr_t fixture_layout[]={1,sizeof(pc::Frustum),sizeof(pc::State),sizeof(re4dc::portal29::Receipts),
+    std::uintptr_t(&fixture_receipts.count),std::uintptr_t(&pc::st.tests),std::uintptr_t(fixture_fr)};
+}

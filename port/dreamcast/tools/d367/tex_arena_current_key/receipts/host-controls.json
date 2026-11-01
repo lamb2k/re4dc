@@ -1,0 +1,254 @@
+{
+  "status": "PASS",
+  "scope": "Source-based texture arena and terminal-refusal host checks.\n\nThe classifier, complete load(), logging helper/macros, and allocator are read\nfrom the checkout. Filesystem/package operations are controlled substitutes;\nno game assets, full renderer, SH-4 cache behavior, or console result is implied.\n",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "sanitizer": "UBSan; -fno-sanitize-recover=all",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_ui.cpp": "6fccb2d689b4d728c84c84004efbb89550bda0b6e31e532bb34a99ec86ae2f3e",
+    "port/dreamcast/game/platform/vram_pages.cpp": "5c25b0b5c0c10f6959cfb0df5fefd9a85ae67b4b1ae61cb150a9432f9f04ba36"
+  },
+  "gate_sha256": {
+    "host_checks.py": "e36c587edcfca614852221460e2844071e48a55af0dc5667b4e6e90716bf66df",
+    "arena_fixture.cpp.in": "4c7b1b84bdec8477d0ab27a7cce594d845083c6b69717f97d57dc5da24e6192f",
+    "load_fixture.cpp.in": "c8c91f350b9b035389afadca6653aef310a7221287df4fa1bfc4396c0c8f6df7"
+  },
+  "extracted_sha256": {
+    "KEY": "3073dd60e913b23d28bdc6f2883ae1b1a9bb32c6f3e9de88b6401d5475930ef1",
+    "CLASSIFIER": "e5fed6cc8b2b96dd744429044c616a7495228ef4439951ee37dfcd6d613d201a",
+    "LOGGING": "351d932b2398c4642d6ddc765f65adb28c088a4fb86e1f8b68bb510c7572a130",
+    "LOAD": "412188a2cbbc1b56e08bd16c2787e65b6193981a7fa87994d2a06c4ef7f18b02"
+  },
+  "unit_test_sha256": "65c0fe168df58164ae9cf95fa09344306f56bdd1f9d9865084c906e2b5bdf244",
+  "variants": [
+    {
+      "name": "arena-f0-c2-t0",
+      "kind": "arena",
+      "fix": 0,
+      "log": 0,
+      "core_pin": 2,
+      "no_top": 0,
+      "cases": [
+        "PASS arena fresh core slot",
+        "PASS arena recycled core slot receives room texture",
+        "PASS arena ordinary room placement preserved",
+        "PASS arena retirement fragmentation free=917504 largest=458752 allocated=0"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "arena-f0-c0-t0",
+      "kind": "arena",
+      "fix": 0,
+      "log": 0,
+      "core_pin": 0,
+      "no_top": 0,
+      "cases": [
+        "PASS arena fresh core slot",
+        "PASS arena recycled core slot receives room texture",
+        "PASS arena ordinary room placement preserved",
+        "PASS arena CORE_PIN=0 remains all-room placement"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "arena-f0-c2-t1",
+      "kind": "arena",
+      "fix": 0,
+      "log": 0,
+      "core_pin": 2,
+      "no_top": 1,
+      "cases": [
+        "PASS arena fresh core slot",
+        "PASS arena recycled core slot receives room texture",
+        "PASS arena ordinary room placement preserved",
+        "PASS arena NO_TOP exclusion preserved"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "load-f0-l0",
+      "kind": "load",
+      "fix": 0,
+      "log": 0,
+      "core_pin": 2,
+      "no_top": 0,
+      "cases": [
+        "PASS load invalid image",
+        "PASS load identity unavailable",
+        "PASS load effect admission guard",
+        "PASS load minimum budget guard",
+        "PASS load remembered missing key",
+        "PASS load fragmentation latch",
+        "PASS load no reusable slot",
+        "PASS load pack lookup error",
+        "PASS load payload retry guard",
+        "PASS load loose file absent before eviction",
+        "PASS load package open error before close",
+        "PASS load package texture count",
+        "PASS load package exceeds budget",
+        "PASS load budget exhausted after header",
+        "PASS load upload error retains request identity",
+        "PASS load release payload error before close",
+        "PASS load final fragmented allocation failure",
+        "PASS load recovered upload retry emits no refusal",
+        "PASS load recovered metadata retry emits no refusal",
+        "PASS load success and cache hit emit no refusal",
+        "PASS load incoming key publication and optional ring identity"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "load-f0-l1",
+      "kind": "load",
+      "fix": 0,
+      "log": 1,
+      "core_pin": 2,
+      "no_top": 0,
+      "cases": [
+        "PASS load invalid image",
+        "PASS load identity unavailable",
+        "PASS load effect admission guard",
+        "PASS load minimum budget guard",
+        "PASS load remembered missing key",
+        "PASS load fragmentation latch",
+        "PASS load no reusable slot",
+        "PASS load pack lookup error",
+        "PASS load payload retry guard",
+        "PASS load loose file absent before eviction",
+        "PASS load package open error before close",
+        "PASS load package texture count",
+        "PASS load package exceeds budget",
+        "PASS load budget exhausted after header",
+        "PASS load upload error retains request identity",
+        "PASS load release payload error before close",
+        "PASS load final fragmented allocation failure",
+        "PASS load recovered upload retry emits no refusal",
+        "PASS load recovered metadata retry emits no refusal",
+        "PASS load success and cache hit emit no refusal",
+        "PASS load incoming key publication and optional ring identity"
+      ],
+      "terminal_refusals": 17,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "arena-f1-c2-t0",
+      "kind": "arena",
+      "fix": 1,
+      "log": 0,
+      "core_pin": 2,
+      "no_top": 0,
+      "cases": [
+        "PASS arena fresh core slot",
+        "PASS arena recycled core slot receives room texture",
+        "PASS arena ordinary room placement preserved",
+        "PASS arena retirement fragmentation free=917504 largest=917504 allocated=1"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "arena-f1-c0-t0",
+      "kind": "arena",
+      "fix": 1,
+      "log": 0,
+      "core_pin": 0,
+      "no_top": 0,
+      "cases": [
+        "PASS arena fresh core slot",
+        "PASS arena recycled core slot receives room texture",
+        "PASS arena ordinary room placement preserved",
+        "PASS arena CORE_PIN=0 remains all-room placement"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "arena-f1-c2-t1",
+      "kind": "arena",
+      "fix": 1,
+      "log": 0,
+      "core_pin": 2,
+      "no_top": 1,
+      "cases": [
+        "PASS arena fresh core slot",
+        "PASS arena recycled core slot receives room texture",
+        "PASS arena ordinary room placement preserved",
+        "PASS arena NO_TOP exclusion preserved"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "load-f1-l0",
+      "kind": "load",
+      "fix": 1,
+      "log": 0,
+      "core_pin": 2,
+      "no_top": 0,
+      "cases": [
+        "PASS load invalid image",
+        "PASS load identity unavailable",
+        "PASS load effect admission guard",
+        "PASS load minimum budget guard",
+        "PASS load remembered missing key",
+        "PASS load fragmentation latch",
+        "PASS load no reusable slot",
+        "PASS load pack lookup error",
+        "PASS load payload retry guard",
+        "PASS load loose file absent before eviction",
+        "PASS load package open error before close",
+        "PASS load package texture count",
+        "PASS load package exceeds budget",
+        "PASS load budget exhausted after header",
+        "PASS load upload error retains request identity",
+        "PASS load release payload error before close",
+        "PASS load final fragmented allocation failure",
+        "PASS load recovered upload retry emits no refusal",
+        "PASS load recovered metadata retry emits no refusal",
+        "PASS load success and cache hit emit no refusal",
+        "PASS load incoming key publication and optional ring identity"
+      ],
+      "terminal_refusals": 0,
+      "sanitizer_diagnostics": false
+    },
+    {
+      "name": "load-f1-l1",
+      "kind": "load",
+      "fix": 1,
+      "log": 1,
+      "core_pin": 2,
+      "no_top": 0,
+      "cases": [
+        "PASS load invalid image",
+        "PASS load identity unavailable",
+        "PASS load effect admission guard",
+        "PASS load minimum budget guard",
+        "PASS load remembered missing key",
+        "PASS load fragmentation latch",
+        "PASS load no reusable slot",
+        "PASS load pack lookup error",
+        "PASS load payload retry guard",
+        "PASS load loose file absent before eviction",
+        "PASS load package open error before close",
+        "PASS load package texture count",
+        "PASS load package exceeds budget",
+        "PASS load budget exhausted after header",
+        "PASS load upload error retains request identity",
+        "PASS load release payload error before close",
+        "PASS load final fragmented allocation failure",
+        "PASS load recovered upload retry emits no refusal",
+        "PASS load recovered metadata retry emits no refusal",
+        "PASS load success and cache hit emit no refusal",
+        "PASS load incoming key publication and optional ring identity"
+      ],
+      "terminal_refusals": 17,
+      "sanitizer_diagnostics": false
+    }
+  ],
+  "case_executions": 108,
+  "limitations": "Synthetic package/filesystem operations; actual classifier/load()/allocator. No release assets, renderer output, hardware timing, or complete console regression proof."
+}

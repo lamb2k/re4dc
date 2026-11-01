@@ -2022,6 +2022,13 @@ int LifeDownSet2(cEm* em, int dmg, int rnd, int flag)
         rate = (f32) dmg;
     }
     if (em->id == 0) {
+#if defined(RE4DC_WARP_GOD_HOOK) && RE4DC_WARP_GOD_HOOK
+        // Warp builds only (dbgwarp.mk): the `god` line (castle31 no-warp chain) takes no damage off the player.
+        extern int re4dc_warp_god;
+        if (re4dc_warp_god) {
+            return (s16) pG->pl_life;
+        }
+#endif
         if ((s16) pG->pl_life <= 0) {
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
             deathTracePlayer("life.early_dead", dmg, rnd, flag, -1, death_caller);
@@ -2069,6 +2076,18 @@ int LifeDownSet2(cEm* em, int dmg, int rnd, int flag)
         if ((s16) pG->ashley_life <= 0) {
             return 0;
         }
+#if defined(RE4DC_WARP_GOD_HOOK) && RE4DC_WARP_GOD_HOOK
+        // Warp builds only (dbgwarp.mk): the `ashley` line keeps a lethal hit at 1 point (logged by the rig as
+        // ashley-fail cause hp lethal-hit); a per-frame refill comes too late once her death routine has started.
+        extern int re4dc_warp_ashley;
+        extern unsigned re4dc_warp_ashley_saves;
+        if (re4dc_warp_ashley) {
+            flag |= 1;
+            if ((s16) pG->ashley_life <= (s16) dmg) {
+                ++re4dc_warp_ashley_saves;
+            }
+        }
+#endif
         rate = (f32) pG->Game_level * 0.1f + 0.5f;
         dmg = (int) ((f32) dmg * rate);
         if (dmg > 100) {

@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // DVD_READ_SAFE=1 (Phase 2 D4, default 0) and its test hook DVD_STUCK_TEST (default 0); built only with one of them.
 //
 // With the full test 7 data and the GC-bake r119 package, r119 after the boss logged "cdrom_stream_request: Previous
@@ -70,6 +74,14 @@
 #include <dc/cdrom.h>
 
 #include "re4dc_platform.h"
+
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+#include <dc/asic.h>
+#include "disc_pio_fallback.h"
+#if !defined(RE4DC_DISC_READ_FALLBACK) || RE4DC_DISC_READ_FALLBACK < 2
+#error DISC_PIO_FALLBACK requires DISC_READ_FALLBACK 2 or 3
+#endif
+#endif
 
 #ifndef RE4DC_DVD_READ_SAFE
 #define RE4DC_DVD_READ_SAFE 0
@@ -459,6 +471,10 @@ int pio_fill(uint8_t* dst, int lba, size_t pos, size_t size)
 // its stream too) and fill the request from where the stream stood.
 int stream_fallback(void* buffer, size_t size, const char* why)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::DiscStreamRetry,unsigned(size));
+#endif
+#line 470
     latch(why);
     ++g_fb_reads;
     __real_cdrom_stream_stop(false);
@@ -828,9 +844,14 @@ bool landed(void* buf, size_t size, const char* what, uint32_t lba)
         if (marker_gone(buf, size)) {
             ++g_late;
             // line by line: dcache_purge_range of >= 39 KB would pull in KOS's 16 KB static purge-all buffer
+#if defined(RE4DC_CACHE_COHERENT_DMA) && RE4DC_CACHE_COHERENT_DMA
+            // the destination is 32-byte aligned and whole lines (aligned32): drop, never write back over the DMA
+            if (cached(buf)) dcache_inval_range((uintptr_t) buf, size);
+#else
             if (cached(buf))
                 for (uintptr_t a = (uintptr_t) buf & ~(uintptr_t) 31; a < (uintptr_t) buf + size; a += 32)
                     arch_dcache_purge_line((void*) a);
+#endif
             re4dc_disc_note(2, "disc: %s landed late (%u ms) lba=%u", what, (unsigned) (ms() - t0), (unsigned) lba);
             return true;
         }
@@ -903,11 +924,18 @@ int read_dma(void* buf, uint32_t lba, size_t cnt, const char* what)
         re4dc_disc_note(3, "disc: %s lba=%u n=%u did not land", what, (unsigned) lba, (unsigned) cnt);
         return ERR_SYS;
     }
+#if defined(RE4DC_CACHE_COHERENT_DMA) && RE4DC_CACHE_COHERENT_DMA
+    if (cached(buf)) dcache_inval_range((uintptr_t) buf, size);  // lines refetched while the DMA ran
+#endif
     return ERR_OK;
 }
 
 int read_pio(void* buf, uint32_t lba, size_t cnt)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::DiscPioRetry,unsigned(cnt)*2048U);
+#endif
+#line 927
     const size_t size = cnt * 2048;
     if ((uintptr_t) buf & 1) return ERR_SYS;
     const bool check = aligned32(buf, size);
@@ -984,7 +1012,22 @@ int stream_refused()
     }
     return ERR_SYS;
 }
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+#include "disc_pio_native.inc"
+#endif
 }  // namespace v2
+
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+extern "C" void re4dc_iso_retry_invalidate(void);  // knob-gated KOS ISO patch
+extern "C" void re4dc_disc_pio_validation_begin(void) { v2::pio_validation_begin(); }
+extern "C" void re4dc_disc_pio_validation_reject(void) {
+    v2::pio_validation_reject();
+    // Never acquire ISO while G1 is held: normal reads lock ISO then G1.
+    // Drop only cached data tags, not handles, directory state or ownership.
+    re4dc_iso_retry_invalidate();
+}
+extern "C" void re4dc_disc_pio_validation_end(void) { v2::pio_validation_end(); }
+#endif
 
 // fs_iso9660's init_percd (first /cd access and after a disc change): the bounded drive init.
 extern "C" int __wrap_cdrom_reinit(void)
@@ -1000,11 +1043,18 @@ extern "C" int __wrap_cdrom_reinit(void)
 #if RE4DC_DISC_READ_FALLBACK || RE4DC_DISC_FAIL_TEST || RE4DC_DISC_READ_VERIFY || RE4DC_DISC_READ_METER
 extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_t cnt, bool dma)
 {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::DiscSectorBytes,unsigned(cnt)*2048U);
+#endif
+#line 1034
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(cnt * 2048, true);
 #endif
 #if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG
     re4dc_log("DRL: S sec=%u n=%u thr=%s\n", (unsigned) sector, (unsigned) cnt, thd_current ? thd_current->label : "-");
+#endif
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+    return v2::pio_read(buffer, sector, cnt, dma);
 #endif
 #if RE4DC_DISC_READ_FALLBACK == 2
     return v2::read(buffer, sector, cnt, dma);
@@ -1037,6 +1087,12 @@ extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
     if (rv != ERR_OK || !landed(buffer, cnt * 2048)) {
         latch(rv == ERR_OK ? "a DMA sector read reported OK but did not land" : "a DMA sector read failed");
         ++g_fb_dma;
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if RE4DC_DISC_READ_FALLBACK != 3
+        re4dc::fa29::hit(re4dc::fa29::DiscPioRetry,unsigned(cnt)*2048U);
+#endif
+#endif
+#line 1074
 #if RE4DC_DISC_READ_FALLBACK == 3
         rv = v2::read(buffer, sector, cnt, true);
 #else
@@ -1053,6 +1109,10 @@ extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
 #if RE4DC_DISC_READ_FALLBACK || RE4DC_DISC_FAIL_TEST || RE4DC_DISC_READ_VERIFY
 extern "C" int __wrap_cdrom_stream_stop(bool abort_dma)
 {
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+    (void) abort_dma;
+    return ERR_NO_ACTIVE;  // every stream start was refused; no owner to stop
+#endif
     const int rv = __real_cdrom_stream_stop(abort_dma);
 #if RE4DC_FB_V1
     if (rv == ERR_TIMEOUT) latch("a stream stop timed out (the drive was reset)");
@@ -1103,6 +1163,11 @@ extern "C" int __wrap_cdrom_stream_start(int sector, int cnt, bool dma)
 #if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG
     re4dc_log("DRL: T sec=%d n=%d thr=%s\n", sector, cnt, thd_current ? thd_current->label : "-");
 #endif
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+    // ISO falls back to sector reads. No stream DMA callback/wait is installed.
+    (void) sector; (void) cnt; (void) dma;
+    return ERR_SYS;
+#endif
 #if RE4DC_DVD_STUCK_TEST
     stuck_test();
 #endif
@@ -1126,6 +1191,11 @@ extern "C" int __wrap_cdrom_stream_request(void* buffer, size_t size, bool block
 {
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(size, true);
+#endif
+#if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
+    // A caller ignoring the refused stream start must not enter an untimed wait.
+    (void) buffer; (void) size; (void) block;
+    return ERR_SYS;
 #endif
 #if RE4DC_FB_V1
     // fs_iso9660's one non-blocking request (32 bytes) polls for completion right after: blocking here is the same.

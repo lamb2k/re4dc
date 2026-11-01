@@ -1,0 +1,130 @@
+#include "@ROOT@/port/dreamcast/game/qa_link_bench.cpp"
+
+namespace bench_fixture {
+bool accept = true;
+unsigned queued;
+std::vector<std::string> attempted;
+}
+extern "C" {
+volatile unsigned long re4dc_log_head;
+char re4dc_logbuf[0x10000 - RE4DC_LOG_TRIM];
+int re4dc_fixture_read(const char*, char*, unsigned) { return 0; }
+int re4dc_bench_scene_no() { return 1; }
+void re4dc_qalink_config(const char*, const char*, unsigned, unsigned) {}
+int re4dc_qalink_start() { return 0; }
+int re4dc_qalink_up() { return 1; }
+void re4dc_qalink_state_text(char* out, unsigned n) { std::snprintf(out, n, "UP"); }
+void re4dc_qalink_counters(unsigned* tx, unsigned* rx, unsigned* drops, unsigned* queued) {
+    *tx = *rx = *drops = 0; *queued = bench_fixture::queued;
+}
+int re4dc_qalink_send(const void* p, unsigned n) {
+    assert(n <= 1200);
+    bench_fixture::attempted.emplace_back((const char*) p, n);
+    if (!bench_fixture::accept) return 0;
+    fixture::sent.emplace_back((const char*) p, n); return 1;
+}
+int re4dc_qalink_send_bulk(const void* p, unsigned n) { return re4dc_qalink_send(p, n); }
+unsigned re4dc_qalink_bulk_skips() { return 0; }
+int re4dc_qalink_recv(char*, unsigned) { return -1; }
+}
+
+void reset() {
+    fixture::reset(); g_bl = {}; g_scan28 = {}; g_log_started28 = false;
+    re4dc_log_head = 0; std::memset(re4dc_logbuf, 0, sizeof(re4dc_logbuf));
+    bench_fixture::accept = true; bench_fixture::queued = 0; bench_fixture::attempted.clear();
+}
+void append(const std::string& text) {
+    for (char c : text) re4dc_logbuf[re4dc_log_head++ % kLog] = c;
+}
+std::string payload(const std::string& packet) { return packet.substr(packet.find('\n') + 1); }
+unsigned long drops(const std::string& packet) {
+    char kind; unsigned seq; unsigned long n;
+    assert(std::sscanf(packet.c_str(), "%c %u %lu", &kind, &seq, &n) == 3); return n;
+}
+void drain() {
+    for (unsigned i = 0; i < 200 && g_bl.b_sent != re4dc_log_head; ++i) send_results();
+}
+
+int main() {
+    unsigned cases = 0;
+    reset(); append("small log\n"); bench_fixture::accept = false;
+    send_log(); assert(g_bl.log_sent == 0 && g_bl.log_seq == 0 && fixture::sent.empty());
+    const auto first = bench_fixture::attempted.back(); bench_fixture::accept = true;
+    send_log(); assert(fixture::sent.size() == 1 && fixture::sent.back() == first && g_bl.log_seq == 1);
+    assert(g_bl.log_sent == re4dc_log_head); ++cases;
+
+    reset(); append(std::string(1000, 'l')); bench_fixture::accept = false; send_log();
+    append(std::string(100, 'm')); bench_fixture::accept = true; send_log();
+    assert(drops(fixture::sent[0]) == 460 && payload(fixture::sent[0]) == std::string(540, 'l') + std::string(100, 'm'));
+    assert(g_bl.log_sent == 1100 && g_bl.log_seq == 1); ++cases;
+
+    reset(); append("ignored\nbench: a\nPACE b\nordinary\nbench: c\n"); send_results();
+    assert(fixture::sent.size() == 1 && payload(fixture::sent[0]) == "bench: a\nPACE b\nbench: c\n");
+    assert(g_bl.b_sent == re4dc_log_head && g_bl.b_seq == 1); ++cases;
+
+    reset(); append("bench: partial"); send_results();
+    assert(g_scan28.scan == re4dc_log_head && g_bl.b_sent == 0 && fixture::sent.empty());
+    for (unsigned i = 0; i < 8; ++i) send_results();
+    assert(g_scan28.scan == re4dc_log_head && fixture::sent.empty());
+    append(" completed\n"); send_results();
+    assert(fixture::sent.size() == 1 && payload(fixture::sent[0]) == "bench: partial completed\n"); ++cases;
+
+    reset(); append("bench: " + std::string(9993, 'x'));
+    for (unsigned i = 1; i <= 5; ++i) {
+        send_results(); assert(g_scan28.scan == std::min<unsigned long>(i * 2048, (unsigned long) re4dc_log_head));
+        assert(g_bl.b_sent == 0 && fixture::sent.empty());
+    }
+    for (unsigned i = 0; i < 8; ++i) send_results();
+    assert(g_scan28.scan == 10000);
+    append("\nbench: next\n"); send_results();
+    assert(fixture::sent.size() == 1 && drops(fixture::sent[0]) == 10001 && payload(fixture::sent[0]) == "bench: next\n"); ++cases;
+
+    reset(); append("bench: " + std::string(1193, 'x') + "\n"); send_results();
+    assert(fixture::sent.size() == 1 && drops(fixture::sent[0]) == 1201 && payload(fixture::sent[0]).empty());
+    assert(g_bl.b_sent == 1201 && !g_bl.b_dropped); ++cases;
+
+    reset(); append(std::string(9999, 'x') + "\nbench: valid\n");
+    send_results(); assert(g_scan28.scan == 2048 && fixture::sent.empty()); drain();
+    assert(fixture::sent.size() == 1 && drops(fixture::sent[0]) == 0 && payload(fixture::sent[0]) == "bench: valid\n"); ++cases;
+
+    reset(); append("bench: retry\nbench: same\n"); bench_fixture::accept = false;
+    send_results(); assert(g_bl.b_sent == 0 && g_scan28.scan == 0 && !g_bl.b_seq);
+    const auto retry = bench_fixture::attempted[0]; bench_fixture::accept = true;
+    send_results(); assert(fixture::sent.size() == 1 && fixture::sent[0] == retry && g_bl.b_seq == 1); ++cases;
+
+    reset(); append("bench: wait\n"); bench_fixture::queued = 1025;
+    send_results(); assert(g_scan28.scan == 0 && fixture::sent.empty());
+    bench_fixture::queued = 1024; send_results();
+    assert(fixture::sent.size() == 1 && payload(fixture::sent[0]) == "bench: wait\n"); ++cases;
+
+    reset(); append(std::string(kLog + 20, 'x') + "\nbench: after overwrite\n");
+    send_results(); assert(g_scan28.scan - g_bl.b_sent <= 2048); drain();
+    std::string all; unsigned long lost = 0;
+    for (const auto& p : fixture::sent) { all += payload(p); lost += drops(p); }
+    assert(all == "bench: after overwrite\n" && lost == kLog + 21); ++cases;
+
+    reset(); append("bench: " + std::string(2993, 'x')); send_results();
+    assert(g_scan28.scan == 2048 && g_bl.b_sent == 0);
+    append(std::string(kLog, 'y') + "\nbench: survived\n"); send_results(); drain();
+    all.clear(); lost = 0;
+    for (const auto& p : fixture::sent) { all += payload(p); lost += drops(p); }
+    assert(all == "bench: survived\n" && lost == 3000 + kLog + 1); ++cases;
+
+    reset(); const std::string line = "bench: " + std::string(1077, 'z') + "\n";
+    append(line + line + line + line); send_results();
+    assert(g_scan28.scan <= 2048 && fixture::sent.size() == 1);
+    drain(); all.clear();
+    for (const auto& p : fixture::sent) { assert(p.size() <= 1200); all += payload(p); }
+    assert(all == line + line + line + line && fixture::sent.size() == 4); ++cases;
+
+    reset(); append(std::string(kLog, 'x'));
+    send_results(); assert(g_scan28.scan == 2048 && fixture::sent.empty());
+    send_results(); assert(g_scan28.scan == 4096 && fixture::sent.empty()); ++cases;
+
+    reset(); append("bench: " + std::string(1193, 'x') + "\n"); bench_fixture::accept = false;
+    send_results(); assert(g_bl.b_sent == 0 && g_scan28.scan == 0 && !g_bl.b_dropped);
+    bench_fixture::accept = true; send_results();
+    assert(fixture::sent.size() == 1 && drops(fixture::sent[0]) == 1201); ++cases;
+
+    std::printf("PASS benchmark actual-TU bounded log contracts: %u cases\n", cases);
+}

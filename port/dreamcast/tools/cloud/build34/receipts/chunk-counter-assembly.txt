@@ -1,0 +1,29 @@
+SH-4 GCC15.2.0, ACTOR_LIGHT_FAST_ONLY=0 CHAR_CHUNK=2 CHAR_CHUNK_BACKEND=1.
+Actual chunk_sink_strips excerpt; instructions interleaved with unchanged outcode logic.
+The 0x234 literal relocates to chunk_backend_fallbacks.
+
+  3a:	0b 40       	jsr	@r0
+  3c:	82 2f       	mov.l	r8,@r15
+  3e:	08 20       	tst	r0,r0
+  40:	02 8d       	bt.s	48 <(anonymous namespace)::chunk_sink_strips((anonymous namespace)::ChunkSink&, (anonymous namespace)::Records const&, unsigned char const*, unsigned int, unsigned int, unsigned int, unsigned int) [clone .isra.0]+0x48>
+  42:	05 1f       	mov.l	r0,@(20,r15)
+  44:	2b a1       	bra	29e <(anonymous namespace)::chunk_sink_strips((anonymous namespace)::ChunkSink&, (anonymous namespace)::Records const&, unsigned char const*, unsigned int, unsigned int, unsigned int, unsigned int) [clone .isra.0]+0x29e>
+  46:	af 84       	mov.b	@(15,r10),r0
+  48:	7a d2       	mov.l	234 <(anonymous namespace)::chunk_sink_strips((anonymous namespace)::ChunkSink&, (anonymous namespace)::Records const&, unsigned char const*, unsigned int, unsigned int, unsigned int, unsigned int) [clone .isra.0]+0x234>,r2	! 0 <(anonymous namespace)::chunk_sink_strips((anonymous namespace)::ChunkSink&, (anonymous namespace)::Records const&, unsigned char const*, unsigned int, unsigned int, unsigned int, unsigned int) [clone .isra.0]>
+  4a:	54 e0       	mov	#84,r0
+  4c:	fe 00       	mov.l	@(r0,r15),r0
+  4e:	22 61       	mov.l	@r2,r1
+  50:	3f c8       	tst	#63,r0
+  52:	01 71       	add	#1,r1
+  54:	7a 8f       	bf.s	14c <(anonymous namespace)::chunk_sink_strips((anonymous namespace)::ChunkSink&, (anonymous namespace)::Records const&, unsigned char const*, unsigned int, unsigned int, unsigned int, unsigned int) [clone .isra.0]+0x14c>
+  56:	12 22       	mov.l	r1,@r2
+  58:	d3 6c       	mov	r13,r12
+  5a:	50 7c       	add	#80,r12
+  5c:	c2 84       	mov.b	@(2,r12),r0
+  5e:	0c 6e       	extu.b	r0,r14
+...
+ 22e:	e0 0f       	.word 0x0fe0
+	...
+			230: R_SH_DIR32	.text._ZN12_GLOBAL__N_1L13chunk_backendERNS_4PartERKNS_7RecordsEPKhjjjRb.constprop.0
+			234: R_SH_DIR32	.bss._ZN12_GLOBAL__N_1L23chunk_backend_fallbacksE
+ 238:	00 00       	.word 0x0000

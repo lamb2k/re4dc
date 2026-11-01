@@ -1,0 +1,574 @@
+{
+  "status": "PASS",
+  "baseline": "db222fc618045fc1da2bb3c7222743f83612ed1b",
+  "scope": "Source-extracted host semantics and complete Make-derived SH4 translation-unit controls; no full game link, engine STRICT trace, visual, emulator, physical hardware or milliseconds claim.",
+  "runtime_source_sha256": {
+    "src/game/esp_sub.cpp": "3efe99e31bf8b720223ca388b8a3fb220c9734feceafd3052d457694e4a73bb3",
+    "port/dreamcast/game/platform/native_ui.cpp": "062b1f5d25de151e3bb55a76d73e78546426bcd0f51492722efd5c8e6e0a9c17",
+    "port/dreamcast/game/effects30.mk": "c1905dc5f3594178e0f7a421ecbb869f154da26085ed1b6ea575acaf53517f6a",
+    "src/game/ps2_fx_population.h": "d70f2f329bfb62adbdedc2e4a98b83673227989bf3ea6dc966f9b1e8d5b569b7",
+    "port/dreamcast/tools/d367/rr/recipe.conf": "2a1dfab9b26f21513a44eb81c264e71569d7f06d7d09eaa423f50885f1cb1485",
+    "port/dreamcast/build-public.sh": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f",
+    "port/dreamcast/tools/d367/r117_fx_fallback/build_controls.py": "fd71742dc3f464ebc149123740a42b29aa65cdfdce3b48e62b61bedd723f276a"
+  },
+  "target": {
+    "compiler": "sh-elf-g++ (GCC) 15.2.0",
+    "compiler_sha256": "0cdda7aca357d1d9d88a7fe639bad330c7e2183e1d3e823123cd47aaf9ba1b17",
+    "selected_release": "port/dreamcast/tools/d367/test24/release-knobs.txt",
+    "selected_release_sha256": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b",
+    "recipe_inputs": {
+      "release": "port/dreamcast/tools/d367/test24/release-knobs.txt",
+      "release_sha256": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b",
+      "recipe": "port/dreamcast/tools/d367/rr/recipe.conf",
+      "recipe_sha256": "2a1dfab9b26f21513a44eb81c264e71569d7f06d7d09eaa423f50885f1cb1485",
+      "ordered_ch2_assignments": [
+        "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_CH21_FULL=1 RESET_MEM_FIX=1 GANADO_ROUTINE_BYTES=1 CLOTH_LIGHT_ABI_FIX=1 AICA_LAYOUT_RECOVER=1 PAUSE_NATIVE_PRESENTATION=1 CAST_MIPMAP=1 TEX_TWIDDLED_MIPMAP=1 TEX_PAL4_ALPHA=1 TEX_PAL4_MIPMAP=1 TEX_PAL8_ALPHA=1 TEX_PAL8_MIPMAP=1 WORLD_RECT21=1 FOLIAGE_MIP24=1 TEX_MIP_DADJ=3 VRAM_ROOM_ARENA=1 EVD_ADMISSION_TXN=1 EVD_START_CLEANUP=1 EVD_START_ROLLBACK=1 EVD_DEBUG_READ_CLEANUP=1 EVD_EXEC_FAILURE_CLEANUP=1 EVD_READ_RELEASE_REFS=1 EVD_READ_ADMISSION_PREFLIGHT=1 EVD_MODULE_VALIDATE_FIRST=1 EVENT_MANAGER_STORAGE_FLAGS=1 EFFECT_ADMISSION_GUARD=1 EFFECT_CONTROLLER_VALIDATE_FIRST=1 EM_ADMISSION_DISP_FIX=1 RESET_RETIRE_BEFORE_HEAPS=1 MOTION_RETIRE_PREFLIGHT=1 SS_RESTORE_VALIDATE_FIRST=1 SS_ACTOR_LIFETIME=1 SS_MSG_FIELDS=1 SS_CERT_PARTNER_CAPACITY=1 PARTS_LINKED_FLAG=1 TEX_PAYLOAD_RETRY=1 PS2_WORLD_NONEMPTY_LOD=1 MOTION_CAPACITY=1 FX_STRIP21=1 GANADO_EVENT_KEEP_LOD=1 SS_DATA_LZ=1 CPU_BACKFACE=0 ACTOR_BACKFACE=0 PS2_WORLD_SOURCE_TEX_MIP=1 PS2_WORLD_ROOT_POSE=1 WATER_PS2_EXT=1 TRAP_FX=1 LIGHT_CUT_HOLD=1 FX_ROOM_SPILL_KB=24 DISC_DMA_WAIT_TIMEOUT=1 EM35_ROUTINE_BYTES=1 FX_LEVEL=3 FX_TRIM=1 SCENERY_SELECT_ONLY=1 SCENERY_REPLAY_LEAN=1 SCENERY_SUBMIT_BATCH=1 STAT_ROUTINE_BYTES=1 ESP_POOL_RECYCLE=1 R117_EFFECT_FAILURE_SAFE=1 KOS_CACHE_P2=1 R10C_SPAWN_LIVE_GUARD=1 EM_READ_RETRY=1\"",
+        "CH2=\"$CH2 FX_PS2_NONE_CUT=1 FX_PS2_PACK=1 PS2_ETS_MATCH=2 ACTOR_GANADO_PS2_GRIP=1 ACTOR_GANADO_PS2_STUMP_DIR=/root/re4data/private/grip24-20261024 PRELOAD_SKIP_GCIDLE=1 EVD_MOVIE_NO_READ=1 WEAPON_WEP04=1\"",
+        "CH2=\"$CH2 NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1\"   # lane fix-mendez-door24 (t15/int e09c4b1c): Mendez PS2 model in the barn door demo",
+        "CH2=\"$CH2 CLOTH_NATIVE=1 FLASHLIGHT_POOL=1\"   # user look calls 10-25: hanging cloth drawn (#55), Leon's flashlight pool in the night rooms (#55)",
+        "CH2=\"$CH2 MOTION_PS2_PL11=1\"   # purge-motion25: pl11 PS2 motion profile row (pmash25 needs it)",
+        "CH2=\"$CH2 SCENERY_N256=1\"   # scenery-cut25: r101/r103 worlds at 256-vertex meshlets; pairs with DATA n256w25 (never KSETS)",
+        "CH2=\"$CH2 LEON_NO_GC_FRONT=2\"   # cast-ps2-25: player Leon drawn PS2 on the post-s20 ledger-less frames (needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)",
+        "CH2=\"$CH2 WEAPON_WEP04_OVL=1 FX_NONE_CUT_PACK=1\"   # heap-margin25: Blacktail as a room overlay + packed FX cut table (s30 heap_before +8,192 B)",
+        "CH2=\"$CH2 DVD_BUFF_KB=64 DVD_BORROW=1 LOG_PLAY_KB=16\"   # heap-margin25 r3: 64 KB disc staging + boot/title borrow, 16 KB play log ring (s30 heap_before +72,736 B)",
+        "CH2=\"$CH2 SCENERY_STREAM=1\"",
+        "CH2=\"$CH2 LEON_PS2_RIG=1\"   # cast-ps2-25 r18: Leon on the PS2 pl00 rig (PS2 bind + weights; GC cloth/hair sim drives PS2 jacket/hair bones); PS2_LEON_DIR = the rig arm (t15-build.sh)   # scenery-rewrite25 M1: exact; MODELLED scenery cross 11.49 -> 10.94, bell 11.19 -> 10.86, farm 7.92 -> 7.80, house 8.69 -> 8.58",
+        "CH2=\"$CH2 LEON_PS2_PORTRAIT_HAIR=1\"   # cast-ps2-25 r19: the radio-call portrait draws the PS2 hair (the GC hair info is no longer drawn)"
+      ],
+      "missing_asset_overrides": [
+        "PS2_LEON=0",
+        "LEON_HAND_PACK=0",
+        "PS2_GANADO=0",
+        "PS2_GANADO_LIT=0",
+        "GANADO_LOD=0",
+        "GANADO_EVENT_KEEP_LOD=0",
+        "ACTOR_PROBE_LIGHT=1",
+        "GANADO_LIT=0",
+        "NATIVE_MODEL_REGISTRY_DYING=0",
+        "LEON_HEADLESS=0",
+        "PS2_CH2_ENEMY=0",
+        "ACTOR_GANADO_PS2_STUMP=0",
+        "LEON_PS2_RIG=0",
+        "LEON_PS2_PORTRAIT_HAIR=0",
+        "ACTOR_GANADO_PS2_GRIP=0"
+      ]
+    },
+    "off_identity_comparisons": 12,
+    "profiles": {
+      "fx3-lean0": {
+        "executable_delta": 368,
+        "allocated_delta": 376,
+        "zero_fill_delta": 8,
+        "artifacts": {
+          "baseline": {
+            "ii": {
+              "bytes": 278121,
+              "sha256": "619de0f82154c7d17d66ae830b9865fce5eba604726bb94ed587a7f389ba8523"
+            },
+            "o": {
+              "bytes": 80880,
+              "sha256": "7527c4b72b256f0b713fc9f0aedea4fcd1406031c5b4886fe2017003ddd3d5b6"
+            }
+          },
+          "absent": {
+            "ii": {
+              "bytes": 278121,
+              "sha256": "619de0f82154c7d17d66ae830b9865fce5eba604726bb94ed587a7f389ba8523"
+            },
+            "o": {
+              "bytes": 80880,
+              "sha256": "7527c4b72b256f0b713fc9f0aedea4fcd1406031c5b4886fe2017003ddd3d5b6"
+            }
+          },
+          "zero": {
+            "ii": {
+              "bytes": 278121,
+              "sha256": "619de0f82154c7d17d66ae830b9865fce5eba604726bb94ed587a7f389ba8523"
+            },
+            "o": {
+              "bytes": 80880,
+              "sha256": "7527c4b72b256f0b713fc9f0aedea4fcd1406031c5b4886fe2017003ddd3d5b6"
+            }
+          },
+          "on": {
+            "ii": {
+              "bytes": 278875,
+              "sha256": "67a34b5d4ace87d90096cb0ef99206c65427800164f8a7d57a24884732f419b1"
+            },
+            "o": {
+              "bytes": 81852,
+              "sha256": "a5954688918ff975292b1cae16ea0b4b0a7d66ce2a9a81d53418a026671e11a3"
+            }
+          }
+        },
+        "relevant_stack_frames": {
+          "baseline": [
+            {
+              "function": "<stdin>:1689:12:int Ps2fxPuzzleColour(const cEsp*)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1729:13:void Ps2fxPuzzleDraw()",
+              "bytes": 1064,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1879:17:void re4dc_ps2_fx_stage1_render(int, int)",
+              "bytes": 284,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:2239:6:0(cEsp*)",
+              "bytes": 408,
+              "kind": "static"
+            }
+          ],
+          "on": [
+            {
+              "function": "<stdin>:1694:12:int Ps2fxPuzzleColour(const cEsp*)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1758:13:void Ps2fxPuzzleDraw()",
+              "bytes": 1064,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1715:12:int Ps2fxPuzzleSourceMatches(const cEsp*, unsigned int)",
+              "bytes": 16,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1921:17:void re4dc_ps2_fx_stage1_render(int, int)",
+              "bytes": 284,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:2284:6:0(cEsp*)",
+              "bytes": 424,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "fx3-lean1": {
+        "executable_delta": 360,
+        "allocated_delta": 368,
+        "zero_fill_delta": 8,
+        "artifacts": {
+          "baseline": {
+            "ii": {
+              "bytes": 279019,
+              "sha256": "4f77588dd94e5a5232e0549158dc272637d8d210e3fd5daf4c41b6d79ed1b214"
+            },
+            "o": {
+              "bytes": 81016,
+              "sha256": "06ac4184f0dc692c95f9abd5d7043f21f738cd42f942095e30e595f4be959afb"
+            }
+          },
+          "absent": {
+            "ii": {
+              "bytes": 279019,
+              "sha256": "4f77588dd94e5a5232e0549158dc272637d8d210e3fd5daf4c41b6d79ed1b214"
+            },
+            "o": {
+              "bytes": 81016,
+              "sha256": "06ac4184f0dc692c95f9abd5d7043f21f738cd42f942095e30e595f4be959afb"
+            }
+          },
+          "zero": {
+            "ii": {
+              "bytes": 279019,
+              "sha256": "4f77588dd94e5a5232e0549158dc272637d8d210e3fd5daf4c41b6d79ed1b214"
+            },
+            "o": {
+              "bytes": 81016,
+              "sha256": "06ac4184f0dc692c95f9abd5d7043f21f738cd42f942095e30e595f4be959afb"
+            }
+          },
+          "on": {
+            "ii": {
+              "bytes": 279817,
+              "sha256": "fbc82bfee70f6dd15e7c0f5659ac09930b9514f87a4e1beed986a05f1bdab59a"
+            },
+            "o": {
+              "bytes": 82228,
+              "sha256": "25a7206dc8954c0c17e29bd41cb0524fa1d23a9b269fe9370bfaa15d3280b61d"
+            }
+          }
+        },
+        "relevant_stack_frames": {
+          "baseline": [
+            {
+              "function": "<stdin>:1689:12:int Ps2fxPuzzleColour(const cEsp*)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1729:13:void Ps2fxPuzzleDraw()",
+              "bytes": 1064,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1879:17:void re4dc_ps2_fx_stage1_render(int, int)",
+              "bytes": 284,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:2239:6:0(cEsp*)",
+              "bytes": 404,
+              "kind": "static"
+            }
+          ],
+          "on": [
+            {
+              "function": "<stdin>:1694:12:int Ps2fxPuzzleColour(const cEsp*)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1758:13:void Ps2fxPuzzleDraw()",
+              "bytes": 1064,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1715:12:int Ps2fxPuzzleSourceMatches(const cEsp*, unsigned int)",
+              "bytes": 16,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1725:12:int Ps2fxPuzzleFallback(const cEsp*)",
+              "bytes": 32,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1921:17:void re4dc_ps2_fx_stage1_render(int, int)",
+              "bytes": 284,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:2284:6:0(cEsp*)",
+              "bytes": 404,
+              "kind": "static"
+            }
+          ]
+        }
+      },
+      "fx0-lean1": {
+        "executable_delta": 360,
+        "allocated_delta": 368,
+        "zero_fill_delta": 8,
+        "artifacts": {
+          "baseline": {
+            "ii": {
+              "bytes": 279019,
+              "sha256": "a211174993aa36d7e799283316ece2754b411dcccc1d132cef7ea0cc0c22a9f2"
+            },
+            "o": {
+              "bytes": 81008,
+              "sha256": "7ae55232aca1f7ef69e985e87d5454328e8c34e2da78c8cb8ab167c3bfddae29"
+            }
+          },
+          "absent": {
+            "ii": {
+              "bytes": 279019,
+              "sha256": "a211174993aa36d7e799283316ece2754b411dcccc1d132cef7ea0cc0c22a9f2"
+            },
+            "o": {
+              "bytes": 81008,
+              "sha256": "7ae55232aca1f7ef69e985e87d5454328e8c34e2da78c8cb8ab167c3bfddae29"
+            }
+          },
+          "zero": {
+            "ii": {
+              "bytes": 279019,
+              "sha256": "a211174993aa36d7e799283316ece2754b411dcccc1d132cef7ea0cc0c22a9f2"
+            },
+            "o": {
+              "bytes": 81008,
+              "sha256": "7ae55232aca1f7ef69e985e87d5454328e8c34e2da78c8cb8ab167c3bfddae29"
+            }
+          },
+          "on": {
+            "ii": {
+              "bytes": 279817,
+              "sha256": "dfb8acb31f6889b4f77c1f0665d214ca277d184785563660ba4e1f2886e32308"
+            },
+            "o": {
+              "bytes": 82220,
+              "sha256": "d366dd8e5ab8f1f89f36266db9904d9548c0555b9486e493b6c3505929db9b7c"
+            }
+          }
+        },
+        "relevant_stack_frames": {
+          "baseline": [
+            {
+              "function": "<stdin>:1689:12:int Ps2fxPuzzleColour(const cEsp*)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1729:13:void Ps2fxPuzzleDraw()",
+              "bytes": 1064,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1879:17:void re4dc_ps2_fx_stage1_render(int, int)",
+              "bytes": 284,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:2239:6:0(cEsp*)",
+              "bytes": 404,
+              "kind": "static"
+            }
+          ],
+          "on": [
+            {
+              "function": "<stdin>:1694:12:int Ps2fxPuzzleColour(const cEsp*)",
+              "bytes": 0,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1758:13:void Ps2fxPuzzleDraw()",
+              "bytes": 1064,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1715:12:int Ps2fxPuzzleSourceMatches(const cEsp*, unsigned int)",
+              "bytes": 16,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1725:12:int Ps2fxPuzzleFallback(const cEsp*)",
+              "bytes": 32,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:1921:17:void re4dc_ps2_fx_stage1_render(int, int)",
+              "bytes": 284,
+              "kind": "static"
+            },
+            {
+              "function": "<stdin>:2284:6:0(cEsp*)",
+              "bytes": 404,
+              "kind": "static"
+            }
+          ]
+        }
+      }
+    },
+    "r200_composition": {
+      "esp_sub": {
+        "sha256": "25a7206dc8954c0c17e29bd41cb0524fa1d23a9b269fe9370bfaa15d3280b61d",
+        "executable_bytes": 39024,
+        "allocated_bytes": 54321,
+        "zero_fill_bytes": 11482
+      },
+      "native_ui": {
+        "sha256": "589ad54f143d68edb5ff97dbcd9660fd24c255f0f48aa022cc6fa3975dd7f39f",
+        "executable_bytes": 82654,
+        "allocated_bytes": 395004,
+        "zero_fill_bytes": 153395
+      }
+    }
+  },
+  "host": {
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "source_hook_order_checked": true,
+    "source_sha256": {
+      "src/game/esp_sub.cpp": "3efe99e31bf8b720223ca388b8a3fb220c9734feceafd3052d457694e4a73bb3",
+      "port/dreamcast/game/platform/native_ui.cpp": "062b1f5d25de151e3bb55a76d73e78546426bcd0f51492722efd5c8e6e0a9c17",
+      "src/game/ps2_fx_population.h": "d70f2f329bfb62adbdedc2e4a98b83673227989bf3ea6dc966f9b1e8d5b569b7",
+      "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "dd9431c1aaa4f12f8a72c7c9ec894e45c7cee5079d3dc3e4100fcf4e8dd7df04",
+      "port/dreamcast/game/platform/include/fx_r200_entry_cap.h": "1c9f23a5161a707fdb114139d36d927a9429e60d742bc987733f6f3add646267",
+      "port/dreamcast/tools/d367/r117_fx_fallback/runtime.cpp.in": "54259f35ede759c71bb475135077c98e2900b0946a3ad585f02eaa16d2e851ee",
+      "port/dreamcast/tools/d367/r117_fx_fallback/check_runtime.py": "57c9a09ac8c1d1927edd7b739f47b3873a988a73fe22249c0c199cae967cc4f6"
+    },
+    "arms": [
+      {
+        "status": "PASS",
+        "knob": 0,
+        "early": 0,
+        "r200": 0,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 0,
+        "early": 0,
+        "r200": 1,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 0,
+        "early": 1,
+        "r200": 0,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 0,
+        "early": 1,
+        "r200": 1,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 1,
+        "early": 0,
+        "r200": 0,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 1,
+        "early": 0,
+        "r200": 1,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 1,
+        "early": 1,
+        "r200": 0,
+        "frames": 30
+      },
+      {
+        "status": "PASS",
+        "knob": 1,
+        "early": 1,
+        "r200": 1,
+        "frames": 30
+      }
+    ]
+  },
+  "make": {
+    "status": "PASS",
+    "cases": [
+      {
+        "name": "valid0",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=0"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "valid1",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=1"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "invalid0",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK="
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid1",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=0 1"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid2",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=1 1"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid3",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=%"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid4",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=0%"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid5",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=2"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid6",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=-1"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid7",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=01"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "invalid8",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=x"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "needs_trim",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=1",
+          "FX_LEVEL=0",
+          "FX_TRIM=0"
+        ],
+        "returncode": 2
+      },
+      {
+        "name": "needs_additions",
+        "overrides": [
+          "R117_FX_QUALIFIED_FALLBACK=1",
+          "PS2_FX_ADDITIONS=0"
+        ],
+        "returncode": 2
+      }
+    ],
+    "guards": [
+      {
+        "name": "native",
+        "enabled": true,
+        "scope": "actual guard only; no PPC compiler/run claim"
+      },
+      {
+        "name": "ppc",
+        "enabled": false,
+        "scope": "actual guard only; no PPC compiler/run claim"
+      },
+      {
+        "name": "other",
+        "enabled": false,
+        "scope": "actual guard only; no PPC compiler/run claim"
+      }
+    ]
+  },
+  "retained_receipts": {
+    "target_sha256": "87a3370ee9bfe5df3718bdf9379af96652420d2f00c03d30cdabb606272c28e5",
+    "host_sha256": "d64530fdcb48a854671aba315a960d81bce5ed3d7206e24566b6e72d4f6a5617",
+    "make_sha256": "29697ad8d0d6875e337ec04c6de9dd046dac50dcc9ef603053468bb12d018432"
+  }
+}

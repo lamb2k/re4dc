@@ -4,6 +4,8 @@
 
 - **Working on the Dreamcast port?** Read [port/dreamcast/CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md)
   instead. Clone with `--recurse-submodules` (the port's SH4ZAM maths library is a submodule).
+- **Art or model-reduction help for Dreamcast?** Start with the
+  [artist contribution guide](port/dreamcast/docs/CONTRIBUTING-ART.md).
 - **Your own program on a test disc:** test releases ship a standard GD-ROM image (section 8 of that page), and
   `port/dreamcast/tools/swap-program.py` puts your program on it.
 - **State of the tree:** complete. Every unit compiles to the original bytes. Work now is readability (names,

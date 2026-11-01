@@ -1,0 +1,1842 @@
+{
+  "status": "PASS",
+  "scope": "Bounded SH-4 costs for current-source UV validation, admission and packing.\n\nThe complete production actor TU uses Make-derived flags, and the fixture\nretains its actual checked_certificate, pack_uv16 and uv_decide helpers. Costs are added\nCPU work relative to UV32, which has no pack loop. Cold-I is one isolated\ninitially cold 8 KiB instruction cache with perfect D-cache. Reported 32-byte\ndata lines are address footprints, not measured cache misses. No GPU saving\nor whole-actor gain is inferred from PVR internal 24-to-20-byte vertex fields.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build32/uv16_cost.py": "5248d39b885abd117b2c3dfa6ce9694f78ec8dd8543621631fe321064d25cb24",
+    "port/dreamcast/tools/cloud/build32/uv16_cost_fixture.cpp.in": "ddd71582c2f13986c4116f193f173d0e3fdde89a127209e8c7d03462bdc38ef3",
+    "port/dreamcast/game/platform/include/actor_format32_uv.hpp": "af9466d0e0b8a0e2c4f6affb991de49cc5f8f1f5b8ec09d4bfd08280051ae8d6",
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "213d5c175fcd39f214d4cc2126df9c11568c6b43b1e8a932df961a950459927f",
+    "port/dreamcast/game/platform/include/actor_format32_uv_source.inc": "f5a2097fb22b39a9c32bb275e1294041f3966d4d0204de167cf1f2f3519f3be5"
+  },
+  "options": [
+    "DBG_WARP=1",
+    "WARP_AFTER_RESET=1",
+    "QA_MENU=1",
+    "BENCHMARK=0",
+    "PMC_ROW=0",
+    "WORLD_METER=1",
+    "NMR_POOL_LOD=0",
+    "QA_LINK=1",
+    "QA_LINK_REVIEW28=1",
+    "ACTOR_LIGHT_FAST_ONLY=1",
+    "ACTOR_BACKFACE=0",
+    "ACTOR_BACKFACE_CONE=1",
+    "ACTOR_FORMAT32=1",
+    "NATIVE_ACTOR_UV16=1",
+    "ACTOR_MOVCA=0",
+    "LEON_NATIVE_PIPE=0",
+    "COARSE_ONE_SUBMIT=1",
+    "DRAW_FALLBACK_AUDIT=0",
+    "DRAW_SETUP_AUDIT=0",
+    "QA_LINK=0"
+  ],
+  "division_controls": {
+    "status": "PASS",
+    "cases": 8,
+    "opcode": "DIV0U 0x0019",
+    "reused_from": "port/dreamcast/tools/cloud/build13/target_cost.py",
+    "scope": "All M/Q/T inputs; preserves remaining state; one instruction; no data traffic; DIV1 unsupported."
+  },
+  "layout": {
+    "version": 2,
+    "cache": 2349864000,
+    "vertex_bytes": 32,
+    "binding_fixture_bytes": 32,
+    "stream": 2349859904,
+    "source_uv": 2349859392,
+    "scanned_records": 2349868160
+  },
+  "fixture_sections": {
+    "executable_bytes": 4212,
+    "allocated_bytes": 13940,
+    "zero_fill_bytes": 9412
+  },
+  "fixture_sha256": "e3331a9f1bc910d567d7e2bc12c6b1a9e26928948cbb789d8c3357fbd35469ef",
+  "local_frames": [
+    {
+      "function": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/game/platform/include/actor_format32_uv_source.inc:4:10:unsigned int {anonymous}::uv32::checked_certificate(const Re4dcModelPart&, const {anonymous}::BlobHeader&)",
+      "bytes": 80,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-uv-cost-final5/fixture.cpp:19:6:void fixture_prepare(unsigned int)",
+      "bytes": 32,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-uv-cost-final5/fixture.cpp:53:36:unsigned int fixture_decide(unsigned int)",
+      "bytes": 36,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-uv-cost-final5/fixture.cpp:57:36:unsigned int fixture_source(unsigned int)",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-uv-cost-final5/fixture.cpp:60:36:unsigned int fixture_checked_decide(unsigned int)",
+      "bytes": 40,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-uv-cost-final5/fixture.cpp:65:36:unsigned int fixture_pack_cache(unsigned int)",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build32-uv-cost-final5/fixture.cpp:66:36:unsigned int fixture_pack_clip(unsigned int)",
+      "bytes": 0,
+      "kind": "static"
+    }
+  ],
+  "kernel_symbols": {
+    "fixture_prepare": {
+      "address": 1049276,
+      "bytes": 604
+    },
+    "fixture_decide": {
+      "address": 1049880,
+      "bytes": 596
+    },
+    "fixture_source": {
+      "address": 1050476,
+      "bytes": 24
+    },
+    "fixture_checked_decide": {
+      "address": 1050500,
+      "bytes": 620
+    },
+    "fixture_pack_cache": {
+      "address": 1051120,
+      "bytes": 68
+    },
+    "fixture_pack_clip": {
+      "address": 1051188,
+      "bytes": 64
+    },
+    "fixture_layout": {
+      "address": 1052788,
+      "bytes": 28
+    }
+  },
+  "source_helper_symbols": {
+    "__ZN12_GLOBAL__N_14uv32L19checked_certificateERK14Re4dcModelPartRKNS_10BlobHeaderE": {
+      "address": 1048576,
+      "bytes": 700
+    }
+  },
+  "model": {
+    "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+    "source": "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+    "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+    "compile_command": [
+      "gcc",
+      "-O2",
+      "-o",
+      "/workspace/scratch/8f775e996324/build32-uv-cost-final5/model/hwsim",
+      "/workspace/scratch/8f775e996324/re4dc/port/dreamcast/tools/hwmodel/hwsim.c",
+      "-lm"
+    ],
+    "flags": [
+      "--perfect-ic",
+      "--perfect-dc",
+      "--no-dma",
+      "--sq-cost",
+      "0"
+    ],
+    "exact_dynamic_instruction_and_delay_slot_counts": true,
+    "no_hardware_time_or_frame_speedup_claim": true
+  },
+  "scenario": {
+    "label": "MODELLED",
+    "cpu_mhz": 200,
+    "assumed_other_ms": 30,
+    "assumed_parts": 40,
+    "assumed_vertices_per_part": 128,
+    "whole_frame_ms": 31.3118,
+    "note": "Added current-source validation, admission and cache-pack CPU work only; ignores all GPU benefit and any saved geometry."
+  },
+  "limitations": "Excludes conversion-time certificates, UI binding/handshake, counter logging, window splits and new headers, clipper interpolation, source transforms/lights, D-cache misses and GPU. Cache and SQ packet remain 32 bytes/vertex. The PVR internal relevant vertex fields change 24 to 20 bytes; no hardware throughput gain is claimed.",
+  "raw_sha256": "8b2f2053b6f34482aa30a4cd5dc94145c47139b0e9b3848975ac4a872d5fdb15",
+  "profile_receipt_sha256": "e5292815f25b3520eb1709d8474c75e7f9104b0a1ec954a244a4520b71e299f4",
+  "cases": [
+    {
+      "case": "admit-256",
+      "result": 0,
+      "instructions": 390,
+      "peak_stack_bytes": 56,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 91,
+          "store_instructions": 26,
+          "load_accesses": 91,
+          "store_accesses": 26,
+          "load_bytes": 353,
+          "store_bytes": 104,
+          "unique_read_lines": 11,
+          "unique_write_lines": 2,
+          "unique_data_lines": 11,
+          "unique_line_bytes": 352
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 117,
+        "repeated_demand_line_visits": 106,
+        "regions": {
+          "stack": {
+            "load_instructions": 35,
+            "store_instructions": 26,
+            "load_accesses": 35,
+            "store_accesses": 26,
+            "load_bytes": 140,
+            "store_bytes": 104,
+            "unique_read_lines": 2,
+            "unique_write_lines": 2,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 56,
+            "store_instructions": 0,
+            "load_accesses": 56,
+            "store_accesses": 0,
+            "load_bytes": 213,
+            "store_bytes": 0,
+            "unique_read_lines": 9,
+            "unique_write_lines": 0,
+            "unique_data_lines": 9,
+            "unique_line_bytes": 288
+          }
+        }
+      },
+      "model_cycles": 412,
+      "trace_sha256": "3d662935b8ff2ef29326895af92be766cfb40634306bfa31e59b956b8b760032",
+      "cold_icache": {
+        "model_cycles": 744,
+        "instruction_fills": 27.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "decline-1024",
+      "result": 3,
+      "instructions": 220,
+      "peak_stack_bytes": 56,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 52,
+          "store_instructions": 16,
+          "load_accesses": 52,
+          "store_accesses": 16,
+          "load_bytes": 201,
+          "store_bytes": 64,
+          "unique_read_lines": 11,
+          "unique_write_lines": 2,
+          "unique_data_lines": 11,
+          "unique_line_bytes": 352
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 68,
+        "repeated_demand_line_visits": 57,
+        "regions": {
+          "stack": {
+            "load_instructions": 19,
+            "store_instructions": 16,
+            "load_accesses": 19,
+            "store_accesses": 16,
+            "load_bytes": 76,
+            "store_bytes": 64,
+            "unique_read_lines": 2,
+            "unique_write_lines": 2,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 33,
+            "store_instructions": 0,
+            "load_accesses": 33,
+            "store_accesses": 0,
+            "load_bytes": 125,
+            "store_bytes": 0,
+            "unique_read_lines": 9,
+            "unique_write_lines": 0,
+            "unique_data_lines": 9,
+            "unique_line_bytes": 288
+          }
+        }
+      },
+      "model_cycles": 230,
+      "trace_sha256": "25e83a576544db56eb44f6f457b266b24d9565d52ca4b5d1b80547daab07ae36",
+      "cold_icache": {
+        "model_cycles": 497,
+        "instruction_fills": 21.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "decline-legacy",
+      "result": 1,
+      "instructions": 19,
+      "peak_stack_bytes": 36,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 3,
+          "store_instructions": 1,
+          "load_accesses": 3,
+          "store_accesses": 1,
+          "load_bytes": 12,
+          "store_bytes": 4,
+          "unique_read_lines": 3,
+          "unique_write_lines": 1,
+          "unique_data_lines": 3,
+          "unique_line_bytes": 96
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 4,
+        "repeated_demand_line_visits": 1,
+        "regions": {
+          "stack": {
+            "load_instructions": 1,
+            "store_instructions": 1,
+            "load_accesses": 1,
+            "store_accesses": 1,
+            "load_bytes": 4,
+            "store_bytes": 4,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 2,
+            "store_instructions": 0,
+            "load_accesses": 2,
+            "store_accesses": 0,
+            "load_bytes": 8,
+            "store_bytes": 0,
+            "unique_read_lines": 2,
+            "unique_write_lines": 0,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          }
+        }
+      },
+      "model_cycles": 22,
+      "trace_sha256": "ed25e1e496e9fa17827cafcad2a9a35b0433d4951c3a301bfaffd5ac9547c555",
+      "cold_icache": {
+        "model_cycles": 65,
+        "instruction_fills": 3.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "decline-binding",
+      "result": 2,
+      "instructions": 35,
+      "peak_stack_bytes": 36,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 6,
+          "store_instructions": 2,
+          "load_accesses": 6,
+          "store_accesses": 2,
+          "load_bytes": 19,
+          "store_bytes": 8,
+          "unique_read_lines": 3,
+          "unique_write_lines": 1,
+          "unique_data_lines": 3,
+          "unique_line_bytes": 96
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 8,
+        "repeated_demand_line_visits": 5,
+        "regions": {
+          "stack": {
+            "load_instructions": 1,
+            "store_instructions": 2,
+            "load_accesses": 1,
+            "store_accesses": 2,
+            "load_bytes": 4,
+            "store_bytes": 8,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 5,
+            "store_instructions": 0,
+            "load_accesses": 5,
+            "store_accesses": 0,
+            "load_bytes": 15,
+            "store_bytes": 0,
+            "unique_read_lines": 2,
+            "unique_write_lines": 0,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          }
+        }
+      },
+      "model_cycles": 36,
+      "trace_sha256": "b26aee998376f689ba3d9a2561b679ccc33971d61847d6d01e624cf0e849291c",
+      "cold_icache": {
+        "model_cycles": 120,
+        "instruction_fills": 6.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "decline-nonfinite",
+      "result": 4,
+      "instructions": 53,
+      "peak_stack_bytes": 36,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 12,
+          "store_instructions": 4,
+          "load_accesses": 12,
+          "store_accesses": 4,
+          "load_bytes": 43,
+          "store_bytes": 16,
+          "unique_read_lines": 4,
+          "unique_write_lines": 1,
+          "unique_data_lines": 4,
+          "unique_line_bytes": 128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 16,
+        "repeated_demand_line_visits": 12,
+        "regions": {
+          "stack": {
+            "load_instructions": 3,
+            "store_instructions": 4,
+            "load_accesses": 3,
+            "store_accesses": 4,
+            "load_bytes": 12,
+            "store_bytes": 16,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 9,
+            "store_instructions": 0,
+            "load_accesses": 9,
+            "store_accesses": 0,
+            "load_bytes": 31,
+            "store_bytes": 0,
+            "unique_read_lines": 3,
+            "unique_write_lines": 0,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          }
+        }
+      },
+      "model_cycles": 54,
+      "trace_sha256": "39b4fad7c96f05585661efae8125a7a72fc1a4258960fff2b469b86fb452f3c1",
+      "cold_icache": {
+        "model_cycles": 138,
+        "instruction_fills": 6.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "admit-native-scale",
+      "result": 0,
+      "instructions": 390,
+      "peak_stack_bytes": 56,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 91,
+          "store_instructions": 26,
+          "load_accesses": 91,
+          "store_accesses": 26,
+          "load_bytes": 353,
+          "store_bytes": 104,
+          "unique_read_lines": 11,
+          "unique_write_lines": 2,
+          "unique_data_lines": 11,
+          "unique_line_bytes": 352
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 117,
+        "repeated_demand_line_visits": 106,
+        "regions": {
+          "stack": {
+            "load_instructions": 35,
+            "store_instructions": 26,
+            "load_accesses": 35,
+            "store_accesses": 26,
+            "load_bytes": 140,
+            "store_bytes": 104,
+            "unique_read_lines": 2,
+            "unique_write_lines": 2,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 56,
+            "store_instructions": 0,
+            "load_accesses": 56,
+            "store_accesses": 0,
+            "load_bytes": 213,
+            "store_bytes": 0,
+            "unique_read_lines": 9,
+            "unique_write_lines": 0,
+            "unique_data_lines": 9,
+            "unique_line_bytes": 288
+          }
+        }
+      },
+      "model_cycles": 412,
+      "trace_sha256": "3d662935b8ff2ef29326895af92be766cfb40634306bfa31e59b956b8b760032",
+      "cold_icache": {
+        "model_cycles": 744,
+        "instruction_fills": 27.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "admit-scroll-64",
+      "result": 0,
+      "instructions": 389,
+      "peak_stack_bytes": 56,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 92,
+          "store_instructions": 26,
+          "load_accesses": 92,
+          "store_accesses": 26,
+          "load_bytes": 357,
+          "store_bytes": 104,
+          "unique_read_lines": 11,
+          "unique_write_lines": 2,
+          "unique_data_lines": 11,
+          "unique_line_bytes": 352
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 118,
+        "repeated_demand_line_visits": 107,
+        "regions": {
+          "stack": {
+            "load_instructions": 35,
+            "store_instructions": 26,
+            "load_accesses": 35,
+            "store_accesses": 26,
+            "load_bytes": 140,
+            "store_bytes": 104,
+            "unique_read_lines": 2,
+            "unique_write_lines": 2,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 57,
+            "store_instructions": 0,
+            "load_accesses": 57,
+            "store_accesses": 0,
+            "load_bytes": 217,
+            "store_bytes": 0,
+            "unique_read_lines": 9,
+            "unique_write_lines": 0,
+            "unique_data_lines": 9,
+            "unique_line_bytes": 288
+          }
+        }
+      },
+      "model_cycles": 411,
+      "trace_sha256": "45e27edb2adea29671ef27d36489438c1ba9dabb40ae7e0e8a30127857a9f520",
+      "cold_icache": {
+        "model_cycles": 743,
+        "instruction_fills": 27.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "decline-raw1036",
+      "result": 3,
+      "instructions": 220,
+      "peak_stack_bytes": 56,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 52,
+          "store_instructions": 16,
+          "load_accesses": 52,
+          "store_accesses": 16,
+          "load_bytes": 201,
+          "store_bytes": 64,
+          "unique_read_lines": 11,
+          "unique_write_lines": 2,
+          "unique_data_lines": 11,
+          "unique_line_bytes": 352
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 68,
+        "repeated_demand_line_visits": 57,
+        "regions": {
+          "stack": {
+            "load_instructions": 19,
+            "store_instructions": 16,
+            "load_accesses": 19,
+            "store_accesses": 16,
+            "load_bytes": 76,
+            "store_bytes": 64,
+            "unique_read_lines": 2,
+            "unique_write_lines": 2,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 33,
+            "store_instructions": 0,
+            "load_accesses": 33,
+            "store_accesses": 0,
+            "load_bytes": 125,
+            "store_bytes": 0,
+            "unique_read_lines": 9,
+            "unique_write_lines": 0,
+            "unique_data_lines": 9,
+            "unique_line_bytes": 288
+          }
+        }
+      },
+      "model_cycles": 230,
+      "trace_sha256": "25e83a576544db56eb44f6f457b266b24d9565d52ca4b5d1b80547daab07ae36",
+      "cold_icache": {
+        "model_cycles": 497,
+        "instruction_fills": 21.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "pack-cache-1",
+      "result": 1,
+      "instructions": 27,
+      "peak_stack_bytes": 0,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 5,
+          "store_instructions": 2,
+          "load_accesses": 5,
+          "store_accesses": 2,
+          "load_bytes": 20,
+          "store_bytes": 8,
+          "unique_read_lines": 2,
+          "unique_write_lines": 1,
+          "unique_data_lines": 2,
+          "unique_line_bytes": 64
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 7,
+        "repeated_demand_line_visits": 5,
+        "regions": {
+          "source_cache_globals_or_literals": {
+            "load_instructions": 5,
+            "store_instructions": 2,
+            "load_accesses": 5,
+            "store_accesses": 2,
+            "load_bytes": 20,
+            "store_bytes": 8,
+            "unique_read_lines": 2,
+            "unique_write_lines": 1,
+            "unique_data_lines": 2,
+            "unique_line_bytes": 64
+          }
+        }
+      },
+      "model_cycles": 22,
+      "trace_sha256": "cb88de3c8c68d55a6bb858dc004a11d1e9c1218c25b61b6933f572171d42bef3",
+      "cold_icache": {
+        "model_cycles": 67,
+        "instruction_fills": 3.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "pack-cache-32",
+      "result": 32,
+      "instructions": 430,
+      "peak_stack_bytes": 0,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 98,
+          "store_instructions": 64,
+          "load_accesses": 98,
+          "store_accesses": 64,
+          "load_bytes": 392,
+          "store_bytes": 256,
+          "unique_read_lines": 33,
+          "unique_write_lines": 32,
+          "unique_data_lines": 33,
+          "unique_line_bytes": 1056
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 162,
+        "repeated_demand_line_visits": 129,
+        "regions": {
+          "source_cache_globals_or_literals": {
+            "load_instructions": 98,
+            "store_instructions": 64,
+            "load_accesses": 98,
+            "store_accesses": 64,
+            "load_bytes": 392,
+            "store_bytes": 256,
+            "unique_read_lines": 33,
+            "unique_write_lines": 32,
+            "unique_data_lines": 33,
+            "unique_line_bytes": 1056
+          }
+        }
+      },
+      "model_cycles": 363,
+      "trace_sha256": "d7f39cad4015df260a4932e554cd51409cac2b01bf7fd9b01aed26755f1a7d86",
+      "cold_icache": {
+        "model_cycles": 408,
+        "instruction_fills": 3.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "pack-cache-128",
+      "result": 128,
+      "instructions": 1678,
+      "peak_stack_bytes": 0,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 386,
+          "store_instructions": 256,
+          "load_accesses": 386,
+          "store_accesses": 256,
+          "load_bytes": 1544,
+          "store_bytes": 1024,
+          "unique_read_lines": 129,
+          "unique_write_lines": 128,
+          "unique_data_lines": 129,
+          "unique_line_bytes": 4128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 642,
+        "repeated_demand_line_visits": 513,
+        "regions": {
+          "source_cache_globals_or_literals": {
+            "load_instructions": 386,
+            "store_instructions": 256,
+            "load_accesses": 386,
+            "store_accesses": 256,
+            "load_bytes": 1544,
+            "store_bytes": 1024,
+            "unique_read_lines": 129,
+            "unique_write_lines": 128,
+            "unique_data_lines": 129,
+            "unique_line_bytes": 4128
+          }
+        }
+      },
+      "model_cycles": 1419,
+      "trace_sha256": "1d7c26dcd516b4787dff8d311ec04299e0a41a2217d9459ff0f70e68a304aae9",
+      "cold_icache": {
+        "model_cycles": 1464,
+        "instruction_fills": 3.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "pack-clip-3",
+      "result": 3,
+      "instructions": 50,
+      "peak_stack_bytes": 0,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 11,
+          "store_instructions": 3,
+          "load_accesses": 11,
+          "store_accesses": 3,
+          "load_bytes": 44,
+          "store_bytes": 12,
+          "unique_read_lines": 4,
+          "unique_write_lines": 3,
+          "unique_data_lines": 4,
+          "unique_line_bytes": 128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 14,
+        "repeated_demand_line_visits": 10,
+        "regions": {
+          "source_cache_globals_or_literals": {
+            "load_instructions": 11,
+            "store_instructions": 3,
+            "load_accesses": 11,
+            "store_accesses": 3,
+            "load_bytes": 44,
+            "store_bytes": 12,
+            "unique_read_lines": 4,
+            "unique_write_lines": 3,
+            "unique_data_lines": 4,
+            "unique_line_bytes": 128
+          }
+        }
+      },
+      "model_cycles": 41,
+      "trace_sha256": "387048363148f48488a43384524a719beb6ef4c3c23b05601a5cb48367124289",
+      "cold_icache": {
+        "model_cycles": 88,
+        "instruction_fills": 3.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "pack-clip-6",
+      "result": 6,
+      "instructions": 86,
+      "peak_stack_bytes": 0,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 20,
+          "store_instructions": 6,
+          "load_accesses": 20,
+          "store_accesses": 6,
+          "load_bytes": 80,
+          "store_bytes": 24,
+          "unique_read_lines": 7,
+          "unique_write_lines": 6,
+          "unique_data_lines": 7,
+          "unique_line_bytes": 224
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 26,
+        "repeated_demand_line_visits": 19,
+        "regions": {
+          "source_cache_globals_or_literals": {
+            "load_instructions": 20,
+            "store_instructions": 6,
+            "load_accesses": 20,
+            "store_accesses": 6,
+            "load_bytes": 80,
+            "store_bytes": 24,
+            "unique_read_lines": 7,
+            "unique_write_lines": 6,
+            "unique_data_lines": 7,
+            "unique_line_bytes": 224
+          }
+        }
+      },
+      "model_cycles": 71,
+      "trace_sha256": "2ec6d7614597eeba801d23f9edfbe5303275be2c214385a8671261f1d30a9371",
+      "cold_icache": {
+        "model_cycles": 118,
+        "instruction_fills": 3.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-1",
+      "result": 23,
+      "instructions": 251,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 1,
+      "traffic": {
+        "cached": {
+          "load_instructions": 60,
+          "store_instructions": 28,
+          "load_accesses": 60,
+          "store_accesses": 28,
+          "load_bytes": 210,
+          "store_bytes": 110,
+          "unique_read_lines": 16,
+          "unique_write_lines": 4,
+          "unique_data_lines": 16,
+          "unique_line_bytes": 512
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 88,
+        "repeated_demand_line_visits": 72,
+        "regions": {
+          "stack": {
+            "load_instructions": 32,
+            "store_instructions": 27,
+            "load_accesses": 32,
+            "store_accesses": 27,
+            "load_bytes": 126,
+            "store_bytes": 106,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 28,
+            "store_instructions": 1,
+            "load_accesses": 28,
+            "store_accesses": 1,
+            "load_bytes": 84,
+            "store_bytes": 4,
+            "unique_read_lines": 13,
+            "unique_write_lines": 1,
+            "unique_data_lines": 13,
+            "unique_line_bytes": 416
+          }
+        }
+      },
+      "model_cycles": 223,
+      "trace_sha256": "e9c1cbe740f5fffe763b2473b6b2c993d426d4871bfe2abc14441ce39d9b1fee",
+      "cold_icache": {
+        "model_cycles": 525,
+        "instruction_fills": 23.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-32",
+      "result": 23,
+      "instructions": 1429,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 32,
+      "traffic": {
+        "cached": {
+          "load_instructions": 370,
+          "store_instructions": 90,
+          "load_accesses": 370,
+          "store_accesses": 90,
+          "load_bytes": 1202,
+          "store_bytes": 296,
+          "unique_read_lines": 25,
+          "unique_write_lines": 4,
+          "unique_data_lines": 25,
+          "unique_line_bytes": 800
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 460,
+        "repeated_demand_line_visits": 435,
+        "regions": {
+          "stack": {
+            "load_instructions": 249,
+            "store_instructions": 89,
+            "load_accesses": 249,
+            "store_accesses": 89,
+            "load_bytes": 932,
+            "store_bytes": 292,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 121,
+            "store_instructions": 1,
+            "load_accesses": 121,
+            "store_accesses": 1,
+            "load_bytes": 270,
+            "store_bytes": 4,
+            "unique_read_lines": 22,
+            "unique_write_lines": 1,
+            "unique_data_lines": 22,
+            "unique_line_bytes": 704
+          }
+        }
+      },
+      "model_cycles": 1308,
+      "trace_sha256": "aec301063d31c6391f208ddb83216b630c29bc04f62c7ae00c65a10151d867fa",
+      "cold_icache": {
+        "model_cycles": 1610,
+        "instruction_fills": 23.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-128",
+      "result": 23,
+      "instructions": 5013,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 128,
+      "traffic": {
+        "cached": {
+          "load_instructions": 1330,
+          "store_instructions": 282,
+          "load_accesses": 1330,
+          "store_accesses": 282,
+          "load_bytes": 4274,
+          "store_bytes": 872,
+          "unique_read_lines": 55,
+          "unique_write_lines": 4,
+          "unique_data_lines": 55,
+          "unique_line_bytes": 1760
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 1612,
+        "repeated_demand_line_visits": 1557,
+        "regions": {
+          "stack": {
+            "load_instructions": 921,
+            "store_instructions": 281,
+            "load_accesses": 921,
+            "store_accesses": 281,
+            "load_bytes": 3428,
+            "store_bytes": 868,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 409,
+            "store_instructions": 1,
+            "load_accesses": 409,
+            "store_accesses": 1,
+            "load_bytes": 846,
+            "store_bytes": 4,
+            "unique_read_lines": 52,
+            "unique_write_lines": 1,
+            "unique_data_lines": 52,
+            "unique_line_bytes": 1664
+          }
+        }
+      },
+      "model_cycles": 4732,
+      "trace_sha256": "c7d55d666dd65614b98adaa29c4b4467cbd0f06e8be8098f7d4c5ca3f1899984",
+      "cold_icache": {
+        "model_cycles": 5034,
+        "instruction_fills": 23.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-legacy",
+      "result": 1,
+      "instructions": 29,
+      "peak_stack_bytes": 80,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 7,
+          "store_instructions": 3,
+          "load_accesses": 7,
+          "store_accesses": 3,
+          "load_bytes": 25,
+          "store_bytes": 12,
+          "unique_read_lines": 4,
+          "unique_write_lines": 1,
+          "unique_data_lines": 4,
+          "unique_line_bytes": 128
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 10,
+        "repeated_demand_line_visits": 6,
+        "regions": {
+          "stack": {
+            "load_instructions": 3,
+            "store_instructions": 3,
+            "load_accesses": 3,
+            "store_accesses": 3,
+            "load_bytes": 12,
+            "store_bytes": 12,
+            "unique_read_lines": 1,
+            "unique_write_lines": 1,
+            "unique_data_lines": 1,
+            "unique_line_bytes": 32
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 4,
+            "store_instructions": 0,
+            "load_accesses": 4,
+            "store_accesses": 0,
+            "load_bytes": 13,
+            "store_bytes": 0,
+            "unique_read_lines": 3,
+            "unique_write_lines": 0,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          }
+        }
+      },
+      "model_cycles": 30,
+      "trace_sha256": "b8db1b8cc86ca2ba26a58d50e77078a82d85ac44ae9422cd93863519a1aad3f5",
+      "cold_icache": {
+        "model_cycles": 99,
+        "instruction_fills": 5.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-mutated-first",
+      "result": 32,
+      "instructions": 235,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 1,
+      "traffic": {
+        "cached": {
+          "load_instructions": 57,
+          "store_instructions": 25,
+          "load_accesses": 57,
+          "store_accesses": 25,
+          "load_bytes": 198,
+          "store_bytes": 98,
+          "unique_read_lines": 16,
+          "unique_write_lines": 4,
+          "unique_data_lines": 16,
+          "unique_line_bytes": 512
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 82,
+        "repeated_demand_line_visits": 66,
+        "regions": {
+          "stack": {
+            "load_instructions": 29,
+            "store_instructions": 24,
+            "load_accesses": 29,
+            "store_accesses": 24,
+            "load_bytes": 114,
+            "store_bytes": 94,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 28,
+            "store_instructions": 1,
+            "load_accesses": 28,
+            "store_accesses": 1,
+            "load_bytes": 84,
+            "store_bytes": 4,
+            "unique_read_lines": 13,
+            "unique_write_lines": 1,
+            "unique_data_lines": 13,
+            "unique_line_bytes": 416
+          }
+        }
+      },
+      "model_cycles": 216,
+      "trace_sha256": "8539430cd200970d9ff8b9babd575c3be61a612297b531826ddd551eca088412",
+      "cold_icache": {
+        "model_cycles": 487,
+        "instruction_fills": 21.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-mutated-last",
+      "result": 32,
+      "instructions": 4999,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 128,
+      "traffic": {
+        "cached": {
+          "load_instructions": 1327,
+          "store_instructions": 279,
+          "load_accesses": 1327,
+          "store_accesses": 279,
+          "load_bytes": 4262,
+          "store_bytes": 860,
+          "unique_read_lines": 55,
+          "unique_write_lines": 4,
+          "unique_data_lines": 55,
+          "unique_line_bytes": 1760
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 1606,
+        "repeated_demand_line_visits": 1551,
+        "regions": {
+          "stack": {
+            "load_instructions": 918,
+            "store_instructions": 278,
+            "load_accesses": 918,
+            "store_accesses": 278,
+            "load_bytes": 3416,
+            "store_bytes": 856,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 409,
+            "store_instructions": 1,
+            "load_accesses": 409,
+            "store_accesses": 1,
+            "load_bytes": 846,
+            "store_bytes": 4,
+            "unique_read_lines": 52,
+            "unique_write_lines": 1,
+            "unique_data_lines": 52,
+            "unique_line_bytes": 1664
+          }
+        }
+      },
+      "model_cycles": 4723,
+      "trace_sha256": "abed4e6155674d4c2f900c56116d7d5010e81c9fbd67714019eb4ec0a732d3b2",
+      "cold_icache": {
+        "model_cycles": 4989,
+        "instruction_fills": 21.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-signedness-flip",
+      "result": 32,
+      "instructions": 235,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 1,
+      "traffic": {
+        "cached": {
+          "load_instructions": 57,
+          "store_instructions": 25,
+          "load_accesses": 57,
+          "store_accesses": 25,
+          "load_bytes": 198,
+          "store_bytes": 98,
+          "unique_read_lines": 16,
+          "unique_write_lines": 4,
+          "unique_data_lines": 16,
+          "unique_line_bytes": 512
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 82,
+        "repeated_demand_line_visits": 66,
+        "regions": {
+          "stack": {
+            "load_instructions": 29,
+            "store_instructions": 24,
+            "load_accesses": 29,
+            "store_accesses": 24,
+            "load_bytes": 114,
+            "store_bytes": 94,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 28,
+            "store_instructions": 1,
+            "load_accesses": 28,
+            "store_accesses": 1,
+            "load_bytes": 84,
+            "store_bytes": 4,
+            "unique_read_lines": 13,
+            "unique_write_lines": 1,
+            "unique_data_lines": 13,
+            "unique_line_bytes": 416
+          }
+        }
+      },
+      "model_cycles": 216,
+      "trace_sha256": "8539430cd200970d9ff8b9babd575c3be61a612297b531826ddd551eca088412",
+      "cold_icache": {
+        "model_cycles": 487,
+        "instruction_fills": 21.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-record-range",
+      "result": 32,
+      "instructions": 170,
+      "peak_stack_bytes": 88,
+      "source_records_scanned": 0,
+      "traffic": {
+        "cached": {
+          "load_instructions": 36,
+          "store_instructions": 20,
+          "load_accesses": 36,
+          "store_accesses": 20,
+          "load_bytes": 122,
+          "store_bytes": 80,
+          "unique_read_lines": 15,
+          "unique_write_lines": 3,
+          "unique_data_lines": 15,
+          "unique_line_bytes": 480
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 56,
+        "repeated_demand_line_visits": 41,
+        "regions": {
+          "stack": {
+            "load_instructions": 13,
+            "store_instructions": 20,
+            "load_accesses": 13,
+            "store_accesses": 20,
+            "load_bytes": 52,
+            "store_bytes": 80,
+            "unique_read_lines": 3,
+            "unique_write_lines": 3,
+            "unique_data_lines": 3,
+            "unique_line_bytes": 96
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 23,
+            "store_instructions": 0,
+            "load_accesses": 23,
+            "store_accesses": 0,
+            "load_bytes": 70,
+            "store_bytes": 0,
+            "unique_read_lines": 12,
+            "unique_write_lines": 0,
+            "unique_data_lines": 12,
+            "unique_line_bytes": 384
+          }
+        }
+      },
+      "model_cycles": 156,
+      "trace_sha256": "5b1ac03aa442b298a28639a4d27ff2c0aef28e3158544c96bb748641fd38680c",
+      "cold_icache": {
+        "model_cycles": 366,
+        "instruction_fills": 16.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    },
+    {
+      "case": "source-admit-128",
+      "result": 0,
+      "instructions": 5400,
+      "peak_stack_bytes": 128,
+      "source_records_scanned": 128,
+      "traffic": {
+        "cached": {
+          "load_instructions": 1418,
+          "store_instructions": 307,
+          "load_accesses": 1418,
+          "store_accesses": 307,
+          "load_bytes": 4618,
+          "store_bytes": 972,
+          "unique_read_lines": 63,
+          "unique_write_lines": 5,
+          "unique_data_lines": 63,
+          "unique_line_bytes": 2016
+        },
+        "store_queue": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "uncached": {
+          "load_instructions": 0,
+          "store_instructions": 0,
+          "load_accesses": 0,
+          "store_accesses": 0,
+          "load_bytes": 0,
+          "store_bytes": 0
+        },
+        "scope": "Actual opcode operand accesses; source/cache/globals use cached SH-4 RAM addresses, code/literals and the interpreter stack use the established low synthetic map. Instruction fetches are excluded; PC-relative literals count as data. Distinct 32-byte lines are address footprints, not measured cache fills or hardware bus transactions.",
+        "prefetch": {
+          "requests": 0,
+          "unique_requested_lines": 0,
+          "sq_flush_requests": 0,
+          "scope": "PREF requests observed separately; not demand loads, fills or guaranteed useful transfers"
+        },
+        "demand_line_visits": 1725,
+        "repeated_demand_line_visits": 1662,
+        "regions": {
+          "stack": {
+            "load_instructions": 954,
+            "store_instructions": 306,
+            "load_accesses": 954,
+            "store_accesses": 306,
+            "load_bytes": 3560,
+            "store_bytes": 968,
+            "unique_read_lines": 4,
+            "unique_write_lines": 4,
+            "unique_data_lines": 4,
+            "unique_line_bytes": 128
+          },
+          "source_cache_globals_or_literals": {
+            "load_instructions": 464,
+            "store_instructions": 1,
+            "load_accesses": 464,
+            "store_accesses": 1,
+            "load_bytes": 1058,
+            "store_bytes": 4,
+            "unique_read_lines": 59,
+            "unique_write_lines": 1,
+            "unique_data_lines": 59,
+            "unique_line_bytes": 1888
+          }
+        }
+      },
+      "model_cycles": 5140,
+      "trace_sha256": "2ab0b1be3bc2902139a9173c9f761d47c203ab6d4df5a4faf13816b43d9704b0",
+      "cold_icache": {
+        "model_cycles": 5754,
+        "instruction_fills": 50.0,
+        "scope": "Initially cold 8KB I-cache, once per complete sequence; synthetic ELF layout"
+      }
+    }
+  ]
+}

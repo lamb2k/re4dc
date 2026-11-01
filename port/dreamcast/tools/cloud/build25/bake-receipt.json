@@ -1,0 +1,137 @@
+{
+  "base": "7acd7d8fd6a828d4e596fdb57516a0655b4dc032",
+  "bvh_full_scan_ray_comparisons": 250,
+  "command": "python3 -B port/dreamcast/tools/cloud/build25/test_character_light_bake.py -v",
+  "examples": {
+    "em12": {
+      "ao_range": [
+        0.4,
+        1.0
+      ],
+      "corner_index_bytes": 18,
+      "corners": 9,
+      "dataset_sha256": {
+        "corner-indices.u16le": "66d7f0a445fdfa933137afd0544180ba3e09e40a2c62b7f68636177517f90b87",
+        "light-colours.json": "3b913f2a47fee1c47a4c54499045e22a3da5305e8369a0222861476b576cf484",
+        "manifest.json": "0186ad99b58fe49ca56e030526127197eeeaa92907354d8c728efaff7c8c325f",
+        "mesh.json": "b75d5b1e1d1504246010f679129e747b5234fca70ca6d4ee46e540b6e13763e0",
+        "palette.rgb8": "49c96f521247193c483edae4455834d4901003ca5267170daf8b5dd389d9c44a",
+        "settings.json": "fc61d2ed9e52f3eb3d97fdd5244d4a1b5ac21417079345f137dc54a8297ab73d",
+        "source.json": "3fcbfa714b3b31e1420e06c5879e05d3968f91c9c4d963b71d61eaaa057664cf"
+      },
+      "geometry_and_rig_sha256": "9450fe6fefee64dcfd5ce85f7ab9bbea1d2cc7717a2925e7775f496e4fd5f8b0",
+      "mesh_sha256": "b75d5b1e1d1504246010f679129e747b5234fca70ca6d4ee46e540b6e13763e0",
+      "offline_ray_counts": {
+        "box_tests": 224,
+        "rays": 224,
+        "triangle_tests": 622
+      },
+      "palette_rgb8": [
+        [
+          80,
+          60,
+          40
+        ],
+        [
+          102,
+          102,
+          102
+        ],
+        [
+          128,
+          115,
+          102
+        ]
+      ],
+      "rgb_palette_bytes": 9,
+      "rig_sha256": "6564b76fb94f52911faf9f523bcbe133145f445d1f34bde5c01d7c29b3c005d4",
+      "source_mesh_identical": true,
+      "source_rig_identical": true,
+      "synthetic_fixture": true,
+      "triangles": 3,
+      "unique_light_samples": 7,
+      "vertices": 7
+    },
+    "leon": {
+      "ao_range": [
+        1.0,
+        1.0
+      ],
+      "corner_index_bytes": 18,
+      "corners": 9,
+      "dataset_sha256": {
+        "corner-indices.u16le": "66d7f0a445fdfa933137afd0544180ba3e09e40a2c62b7f68636177517f90b87",
+        "light-colours.json": "4ae8acb2ccaadc337d8d2d6710df9f9ec2d7ba0ede43d0710c8adb8af37861c4",
+        "manifest.json": "282243a5b09db1daa695640b68c8d24c3be8143bb964adeb7a0394c7b41c3394",
+        "mesh.json": "11eed31275942e6cb41ba58bea3d51e900921a0bad7d90bf3116b43f7af2f9a6",
+        "palette.rgb8": "98b60500aeba1471ad11810e9b538aa4d7af6efdb4a8ba8ba4dcb9e5944c57ee",
+        "settings.json": "3b42e9a9cd6d382258fc84ee4ff28afa59a892b3f739174492962d0facc4d3de",
+        "source.json": "c5fb2a83554c9f57644959808649935bef8efede8888a847651fcca27d4ace30"
+      },
+      "geometry_and_rig_sha256": "32fa389044fd76bacc5d61c031c2603ae89ea57c1178ee842c206974dcac348c",
+      "mesh_sha256": "11eed31275942e6cb41ba58bea3d51e900921a0bad7d90bf3116b43f7af2f9a6",
+      "offline_ray_counts": {
+        "box_tests": 224,
+        "rays": 224,
+        "triangle_tests": 0
+      },
+      "palette_rgb8": [
+        [
+          200,
+          150,
+          100
+        ],
+        [
+          255,
+          255,
+          255
+        ],
+        [
+          128,
+          115,
+          102
+        ]
+      ],
+      "rgb_palette_bytes": 9,
+      "rig_sha256": "6564b76fb94f52911faf9f523bcbe133145f445d1f34bde5c01d7c29b3c005d4",
+      "source_mesh_identical": true,
+      "source_rig_identical": true,
+      "synthetic_fixture": true,
+      "triangles": 3,
+      "unique_light_samples": 7,
+      "vertices": 7
+    }
+  },
+  "invalid_mesh_controls": 15,
+  "invalid_setting_controls": 11,
+  "limits": [
+    "No private PS2 assets or packer executed",
+    "No console or appearance acceptance",
+    "Runtime packed RGB/alpha index footprint must be measured by the local owner",
+    "Local packer must retain source alpha and replace static source lamps with room tint plus flash/fire"
+  ],
+  "off_identity": "input bytes == absent/mesh.json == zero/mesh.json; absent and zero manifests identical",
+  "runtime_tool_delta": {
+    "code_bytes": 0,
+    "cold_I_cycles": 0,
+    "data_lines_32": 0,
+    "label": "MODELLED",
+    "loads": 0,
+    "scope": "offline tool only, before local assets are repacked; no game object changes from these files",
+    "stack_bytes": 0,
+    "stores": 0,
+    "warm_cycles": 0,
+    "whole_frame_ms": 0
+  },
+  "source_sha256": {
+    "CHARACTER_LIGHT_BAKE.md": "ce2c73a0f1a0dad6601ad5fab2832a869d64d35e642edf00eb4ede1a59bd7e3c",
+    "bake_examples.py": "f4b915e06d828d9c8ea4e75e58591a43b3d0436c1dd702bfff4293236ae3d36d",
+    "character_light_bake.py": "04cb07aef1024e6fc7a2549585eed18b3d837c115f4f6a48089f36c772f25c72",
+    "examples/em12-light.json": "714c00289d9f6fa3e87b4fe1a7105152d6a0cc348d3dd7e759c0af9fee93b8c2",
+    "examples/leon-light.json": "238aa6154e970b0df486317f68f5cfb4985a469617ad372371b13e9e3a624177",
+    "test_character_light_bake.py": "562af99a4dd92058efbec481a1927ae82cf5d5f25dbd13d8bc3e3df222ce6c16"
+  },
+  "status": "PASS_PUBLIC_BAKE_DATASET_ONLY",
+  "tests": 14,
+  "validation_scope": "Revalidated 14 offline bake tests on this refreshed integration base; all six tool/docs/settings source hashes and both synthetic dataset hash sets are unchanged. Runtime validation is separate."
+}

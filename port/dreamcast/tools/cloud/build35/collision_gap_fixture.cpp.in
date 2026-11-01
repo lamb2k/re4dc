@@ -1,0 +1,91 @@
+@COMMON@
+struct Vec {float x,y,z;};
+struct cEm;
+struct cAtariInfo {unsigned m_flag,m_stat;float m_radius2;Vec m_Pos,m_oldPos;void(*getPos)(cEm*,Vec*);};
+struct cEm {cEm*pNext;unsigned id;Vec pos;cAtariInfo atari;};
+static struct Manager {cEm*pAlive;} EmMgr,ObjMgr;
+// The source dirty-note range cache uses target u32 addresses. Static no-PIE
+// fixture objects retain that exact low-address arithmetic on the host.
+static cEm nodes[1200],actor;
+static std::vector<unsigned> trace;
+static void get_pos(cEm*m,Vec*out){trace.push_back(0x10000U+m->id);*out=m->pos;}
+static void __em_at_core(cEm*em,cEm*m){trace.push_back(0x20000U+m->id);em->pos.x+=float(m->id%5)*0.125f;}
+static void PartsWorldPosCalc(cEm*m){trace.push_back(0x30000U+m->id);}
+@COLLISION@
+
+static void setup(unsigned enemies,unsigned eactive,unsigned objects,unsigned oactive){
+    CHECK(reinterpret_cast<std::uintptr_t>(nodes)+sizeof nodes<=0xffffffffULL);
+    std::memset(nodes,0,sizeof nodes);std::memset(&actor,0,sizeof actor);trace.clear();
+    for(unsigned i=0;i<enemies+objects;++i){
+        auto&m=nodes[i];m.id=i+1;m.pos={float(i),float(i%3),-float(i%7)};m.atari.getPos=get_pos;
+        bool live=i<enemies?i<eactive:i-enemies<oactive;
+        m.atari.m_flag=live?0x200:0;m.atari.m_radius2=live?2.0f:0.0f;
+        m.pNext=(i+1<enemies||i>=enemies&&i+1<enemies+objects)?nodes+i+1:nullptr;
+    }
+    EmMgr.pAlive=enemies?nodes:nullptr;ObjMgr.pAlive=objects?nodes+enemies:nullptr;
+    actor.id=1200;actor.atari.m_flag=0x200;actor.atari.m_stat=1;actor.atari.m_radius2=3;actor.atari.getPos=get_pos;
+#if RE4DC_ATCHK && RE4DC_ATCHK_LIST
+    atListEm={};atListObj={};atListEm.n=atListObj.n=-1;
+    re4dc_alive_gen[1]=re4dc_alive_gen[2]=1;
+#if RE4DC_ATCHK_CACHE
+    atCandEm={};atCandObj={};atCandEm.n=atCandObj.n=-1;
+    re4dc_atari_seq=0;std::fill(re4dc_atari_dirty,re4dc_atari_dirty+64,nullptr);
+#endif
+#endif
+}
+static unsigned result(unsigned total){
+    unsigned h=2166136261U;
+    for(auto t:trace)h=hash_word(h,t);
+    for(unsigned i=0;i<total;++i){h=hash_word(h,hash_bytes(&nodes[i].atari.m_Pos,sizeof(Vec)));h=hash_word(h,hash_bytes(&nodes[i].atari.m_oldPos,sizeof(Vec)));}
+    h=hash_word(h,hash_bytes(&actor.pos,sizeof actor.pos));return hash_word(h,actor.atari.m_stat);
+}
+static void check_order(unsigned enemies,unsigned ea,unsigned oa){
+    std::vector<unsigned> expected{0x10000U+actor.id};
+    for(unsigned i=0;i<ea;++i)expected.push_back(0x10000U+nodes[i].id);
+    for(unsigned i=0;i<ea;++i)expected.push_back(0x20000U+nodes[i].id);
+    for(unsigned i=0;i<oa;++i)expected.push_back(0x10000U+nodes[enemies+i].id);
+    for(unsigned i=0;i<oa;++i)expected.push_back(0x20000U+nodes[enemies+i].id);
+    expected.push_back(0x30000U+actor.id);CHECK(trace==expected);
+    for(unsigned i=0;i<ea;++i)CHECK(std::memcmp(&nodes[i].atari.m_Pos,&nodes[i].atari.m_oldPos,sizeof(Vec))==0);
+    for(unsigned i=0;i<oa;++i)CHECK(std::memcmp(&nodes[enemies+i].atari.m_Pos,&nodes[enemies+i].atari.m_oldPos,sizeof(Vec))==0);
+    CHECK(!(actor.atari.m_stat&1));
+}
+int main(){
+    char name[96];
+    for(auto c:{std::array<unsigned,4>{0,0,0,0},{8,4,7,3},{96,96,96,96},{97,97,4,4},{4,4,97,97},
+                {320,12,320,17},{321,12,321,17},{512,12,512,17},{513,12,513,17}}){
+        std::snprintf(name,sizeof(name),"pipeline-%u-%u-%u-%u",c[0],c[1],c[2],c[3]);begin(name);setup(c[0],c[1],c[2],c[3]);
+        EmAtCheck(&actor);check_order(c[0],c[1],c[3]);
+        unsigned fast=RE4DC_ATCHK?(c[1]<=96?(c[3]<=96?2:1):0):0;
+        EXPECT(CollisionFast,fast);EXPECT(CollisionSource,2-fast);
+        EXPECT(CollisionCandidateOverflow,RE4DC_ATCHK&&(c[1]>96||c[3]>96));
+#if RE4DC_ATCHK && RE4DC_ATCHK_LIST
+        unsigned builds=c[1]>96?1:2;EXPECT(CollisionAliveBuild,builds);
+        unsigned ovf=(c[0]>ATLIST_MAX)+(c[1]<=96&&c[2]>ATLIST_MAX);EXPECT(CollisionAliveOverflow,ovf);EXPECT(CollisionCollectSource,ovf);
+#elif RE4DC_ATCHK
+        EXPECT(CollisionCollectSource,c[1]>96?1:2);
+#else
+        EXPECT(CollisionCollectSource,0);
+#endif
+        done(result(c[0]+c[2]));
+    }
+    for(unsigned mode:{0U,1U}){
+        begin(mode?"actor-zero-radius":"actor-no-collision");setup(8,8,8,8);actor.atari.m_stat=0;
+        if(mode)actor.atari.m_radius2=0;else actor.atari.m_flag=0;
+        EmAtCheck(&actor);CHECK(trace.empty());CHECK(actor.atari.m_stat&1);EXPECT(CollisionSource,0);EXPECT(CollisionFast,0);done(result(16));
+    }
+#if RE4DC_ATCHK && RE4DC_ATCHK_LIST
+    begin("negative-cache-setup");setup(ATLIST_MAX+1,8,0,0);
+    CHECK(atListSync(&atListEm,EmMgr.pAlive,1)==-1);
+    begin("negative-cache-repeat");CHECK(atListSync(&atListEm,EmMgr.pAlive,1)==-1);
+    EXPECT(CollisionCachedOverflow,RE4DC_ATLIST_OVERFLOW!=0);EXPECT(CollisionAliveBuild,!RE4DC_ATLIST_OVERFLOW);EXPECT(CollisionAliveOverflow,!RE4DC_ATLIST_OVERFLOW);
+    done(unsigned(atListEm.n));
+#if RE4DC_ATCHK_CACHE
+    begin("dirty-ring-setup");setup(8,8,0,0);cEm*out[96];CHECK(atchkCollectEm(out)==8);re4dc_atari_seq=65;
+    begin("dirty-ring-overflow");CHECK(atchkNotedApply(&atCandEm,&atListEm)==0);EXPECT(CollisionDirtyOverflow,1);EXPECT(CollisionCandidateOverflow,0);done(atCandEm.seq);
+    begin("candidate-insertion-setup");setup(97,96,0,0);CHECK(atchkCollectEm(out)==96);
+    nodes[96].atari.m_flag=0x200;nodes[96].atari.m_radius2=1;re4dc_atari_dirty[0]=&nodes[96].atari;re4dc_atari_seq=1;
+    begin("candidate-insertion-overflow");CHECK(atchkNotedApply(&atCandEm,&atListEm)==0);EXPECT(CollisionCandidateOverflow,1);EXPECT(CollisionDirtyOverflow,0);done(unsigned(atCandEm.n));
+#endif
+#endif
+}

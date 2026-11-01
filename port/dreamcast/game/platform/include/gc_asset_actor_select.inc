@@ -86,6 +86,23 @@ re4dc_gcasset::SourceUse gcasset_actor_current_select(const Re4dcModelPart* part
         if(gcasset_actor_chunk(c,c.uv_bytes,*part,*source))
             for(auto& proof:gcasset_registry)if(gcasset_actor_bound(proof,c,c.uv_bytes))accept(proof);
     }
+#if RE4DC_NMR_MASK
+    // cast-ps2-25: a masked section draws two runs (coarse_actor_owner_registry.inc plan): the section's own
+    // positions / normals / palettes with the UV + stream of its run geometry mask_geometry[0] (opaque) or [1]
+    // (alpha-masked cards: the PS2 Ashley's head, hair and skirt). Without this the run matched no view and was
+    // reported as the GameCube member of its source info (pl11 BINs 6 / 7 / 9), though the PS2 package drew it.
+    // Every consumed array must still lie inside the same package proof.
+    for(unsigned k=0;k<registry.chunk_count;++k){
+        const auto& s=registry.chunks[k];
+        for(unsigned h=0;h<2;++h){
+            if(s.mask_geometry[h]==~0u || s.mask_geometry[h]>=registry.geometry_count)continue;
+            const auto base=registry_gview(s.geometry),run=registry_gview(s.mask_geometry[h]);
+            auto c=base;c.uv=run.uv;c.uv_bytes=run.uv_bytes;c.stream=run.stream;c.stream_bytes=run.stream_bytes;
+            if(gcasset_actor_chunk(c,c.uv_bytes,*part,*source))
+                for(auto& proof:gcasset_registry)if(gcasset_actor_bound(proof,c,c.uv_bytes))accept(proof);
+        }
+    }
+#endif
 #endif
 #if RE4DC_ACTOR_PL08 && RE4DC_ACTOR_PL08_PACK
     if(pl08_pack.published)for(unsigned k=0;k<3;++k){const auto& c=pl08_pack_chunks[k];const unsigned uv_bytes=pl08_pack.view[k].bytes[2];

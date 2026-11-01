@@ -1,0 +1,222 @@
+// Source-extracted stream producer, PVS observation and portal receipt.
+// The package and SQ are synthetic; transform_sched_ix, emit_pick, strip walk
+// caller, deferred gather and the receipt decision are production source.
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <cstring>
+#include <vector>
+#define RE4DC_SCENERY_STREAM 1
+#define RE4DC_SCENERY_EMIT_PREFETCH 0
+#define RE4DC_SCENERY_CLIP_GATHER 0
+#define RE4DC_SCENERY_CLIP_INDEXED26 0
+#define RE4DC_SCENERY_RECORD_SPLIT 0
+#define RE4DC_SCENERY_DIRECT_STRIPS 0
+#define RE4DC_SCENERY_DEDUP 0
+#define RE4DC_SCENERY_REPLAY_LEAN 1
+#define RE4DC_MESH_DIRECT 1
+#define RE4DC_MESH_FASTPATH 1
+#define RE4DC_PS2_PVS 1
+#define RE4DC_WORLD_PORTAL29 1
+#define RE4DC_WORLD_PREPARED09 1
+#define RE4DC_WORLD_PORTAL_COMPLETION 1
+#define RE4DC_SCENERY_SUBMIT_BATCH 1
+#define RE4DC_PS2_PVS_BATCH_COMPOSE 1
+#define RE4DC_WORLD_PAGES31 0
+#define RE4DC_PS2_STRIP_GROUPS 1
+#define RE4DC_SG_SELECT_LEAN 0
+#define RE4DC_CPU_BACKFACE 0
+#define RE4DC_WORLD_CENSUS24 0
+#define RE4DC_SCN_CENSUS 0
+#define RE4DC_WORLD_METER 0
+#define RE4DC_DRAW_SETUP_AUDIT 0
+#define RE4DC_DRAW_FALLBACK_AUDIT 0
+#define RE4DC_MESH_PRIME_LAZY 1
+#define RE4DC_TA_HASH 0
+#define RE4DC_MESH_STRIP_LEAN 1
+#define RE4DC_SCENERY_PIECE_STATE 0
+#define RE4DC_PS2_VERTEX_ALPHA 0
+#define RE4DC_PREF_WALK 0
+#define RE4DC_QUALITY_ASSETS 0
+#include "@ROOT@/port/dreamcast/room/instanced_mesh.hpp"
+#include "@ROOT@/port/dreamcast/room/mesh_fastpath_sched.hpp"
+#include "@ROOT@/port/dreamcast/game/platform/include/world_portal29.hpp"
+#define RE4DC_SCENERY_RECORD re4dc::room::Meshlet
+
+float vp_host_xmtrx[4][4]={{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
+using Vertex=re4dc::room::CompactVertex12;
+using Record=re4dc::room::Meshlet;
+struct PickRecord {std::uint16_t let;std::uint8_t nr,gmask,lo,hi,pad[2];};
+struct Package {
+    Record record{};re4dc::room::MeshPart part{};
+    std::array<Vertex,4> pool{};
+    std::array<std::uint16_t,4> offsets{{2,0,3,1}};
+    std::array<std::uint8_t,5> strips{{4,0,1,2,3}};
+    const Record* meshlets()const{return &record;}
+    const re4dc::room::MeshPart* parts()const{return &part;}
+    const Vertex* vertices()const{return pool.data();}
+    static bool indexed(const Record& r){return (r.strip_count&re4dc::room::kIndexedMeshlet)!=0;}
+    const std::uint16_t* pool_offsets(const Record&)const{return offsets.data();}
+    const std::uint8_t* strip_begin(const Record&)const{return strips.data();}
+};
+struct {unsigned groups_visible=0,bind_rejects=0,batches=0,reserve_rejects=0,
+                 vertices=0,strips=0,strips_clipped=0,strips_culled=0;} stats;
+namespace lean {pvr_vertex_t* prime_at=nullptr;unsigned primed=0;}
+static unsigned observed=0,committed=0,receipts=0,closes=0,model_results=0;
+static bool sq_held=false;
+static std::vector<unsigned> events;
+void re4dc_pvs23_observe(unsigned placement,unsigned part,unsigned meshlet,const pvr_vertex_t* cache,
+    const std::uint8_t* oc,unsigned count,const std::uint8_t* strips,unsigned bytes,
+    unsigned cull,unsigned limit,unsigned* pending){
+    assert(sq_held && placement==7 && part==0 && meshlet==0 && count==4 && bytes==5);
+    assert(strips[0]==4 && cull==0 && limit>=3 && cache[0].flags==PVR_CMD_VERTEX);
+    for(unsigned i=0;i<count;++i)assert((oc[i]&0x03U)==0); // no depth clip
+    pending[2]=1;++observed;events.push_back(1);
+}
+void re4dc_pvs23_commit(unsigned placement,unsigned part,unsigned* pending,bool ps2){
+    assert(placement==7 && part==0 && pending[2] && ps2 && !sq_held);
+    ++committed;events.push_back(4);
+}
+void re4dc_model_packet_commit(unsigned){assert(false);}
+void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+    assert(reason==0 && input>=output);++model_results;
+}
+
+// Portable host counterpart of the production SH-4 walk_lean assembly. It
+// calls the real codes() and emit() kernels and preserves stop-before-clip.
+namespace re4dc::vp {
+inline const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* end,
+    const std::uint8_t* oc,const pvr_vertex_t* cache,unsigned limit,std::uint32_t*& q,
+    unsigned& culled,unsigned& emitted){
+    while(s<end){
+        const unsigned n=*s;const auto code=codes(oc,s+1,n);
+        if(code.all&depth_mask(kChecksAll)){++culled;s+=n+1;continue;}
+        if((code.any&depth_mask(kChecksAll))||n>limit)return s;
+        if(code.all&screen_mask(kChecksAll))++culled;
+        else {auto* dst=reinterpret_cast<pvr_vertex_t*>(q);auto* last=emit(dst,cache,s+1,n);
+            q=reinterpret_cast<std::uint32_t*>(last);++emitted;}
+        s+=n+1;
+    }
+    return s;
+}
+}
+
+struct Batch {bool held=true;};
+void re4dc_ps2_world_batch_close(Batch* b){assert(b->held);b->held=false;sq_held=false;++closes;events.push_back(2);}
+namespace wp29 {
+void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Completion& c,const unsigned*){
+    assert(!sq_held && ticket.serial==1);if(c.witnessed())++receipts;events.push_back(3);
+}
+}
+
+struct StreamEmitter {
+    using Pick=PickRecord;
+    Package package{};
+    re4dc::room::MeshPart part{};
+    re4dc::room::CompactBatch batch{};
+    std::array<Vertex,4> gather_storage{};
+    std::array<pvr_vertex_t,256> cache_storage{};
+    std::array<std::uint8_t,256> code_storage{};
+    std::array<std::uint32_t,256*8> sq_storage{};
+    std::array<std::uint32_t,512> lut_storage{};
+    Vertex* gathered=gather_storage.data();
+    const Record* stream_l=nullptr;
+    pvr_vertex_t* cache=cache_storage.data();std::uint8_t* outcodes=code_storage.data();
+    std::uint32_t* sq=sq_storage.data();
+    re4dc::vp::Constants k{};
+    unsigned primed=0,limit=64,used=0,input=0,output=0,slots=0,part_index=0;
+    unsigned pvs_placement=7,pvs_pending[3]{};
+    bool ps2=true,direct=true,submitted=false,bound=false,lean_part=false;
+    bool bind_ok=true,borrow_ok=true,gather_ok=true;int clip_result=1;
+    const std::uint8_t* sg=nullptr;unsigned sg_groups=0;
+    struct {unsigned cull=0;} p;
+    bool bind(){if(!bind_ok)return false;submitted=true;sq_held=true;return true;}
+    bool borrow_gather(){return gather_ok;}
+    bool borrow(){return borrow_ok;}
+    int clip_strip(const Vertex* base,const re4dc::room::CompactBatch&,
+                   const std::uint8_t*,unsigned n){
+        assert(base==(package.indexed(package.record)?gathered:package.vertices()));
+        ++stats.strips_clipped;if(clip_result>0)output+=n-2;return clip_result;
+    }
+    void end_direct(){}
+@PVS_FINISH@
+@PVS_OBSERVED@
+@CORNERS@
+@STREAM_GATHER@
+@LEAN_FLUSH@
+@STRIPS_LEAN@
+@EMIT_PICK@
+@CHUNK_EMIT@
+};
+
+int run_case(bool indexed,unsigned limit,bool bind_ok,bool borrow_ok,int clip_result,
+             bool broken_order=false,bool screen_cull=false,bool empty=false){
+    stats={};observed=committed=receipts=closes=model_results=0;sq_held=false;events.clear();
+    vp_host_xmtrx[3][0]=screen_cull?1000.0f:0.0f;
+    StreamEmitter e;
+    e.limit=limit;e.bind_ok=bind_ok;e.borrow_ok=borrow_ok;e.clip_result=clip_result;
+    e.package.record.vertex_count=4;e.package.record.strip_bytes=5;
+    e.package.record.strip_count=1|(indexed?re4dc::room::kIndexedMeshlet:0);
+    e.package.part.first_meshlet=0;e.package.part.meshlet_count=1;
+    e.part.uv_scale[0]=e.part.uv_scale[1]=1;
+    for(unsigned i=0;i<4;++i)e.package.pool[i]={std::uint16_t(i+1),std::uint16_t(i+2),0,
+        std::uint16_t(i*8),std::uint16_t(i*4),0xffff};
+    re4dc::vp::build_lut(e.lut_storage.data());
+    e.k.lut=e.lut_storage.data();e.k.su=e.k.sv=e.k.scale_u=e.k.scale_v=1;
+    e.k.near_distance=.5f;e.k.far_distance=2.f;e.k.and_mask=~0U;e.k.finish();
+    PickRecord pick{0,255,0,0,0,{0,0}};if(broken_order)pick.nr=0;
+    const unsigned pick_count=empty?0U:1U;
+    const unsigned wp29_clipped=stats.strips_clipped,wp29_culled=stats.strips_culled;
+    const bool wp29_whole=re4dc::portal29::whole_source(&pick,pick_count,0,1);
+    const int result=e.chunk_emit(&pick,pick_count);
+    if(!broken_order && !empty && result>0){
+        std::array<re4dc::vp::Vertex12,4> gathered_reference{};
+        std::array<pvr_vertex_t,4> expected{};
+        std::array<std::uint8_t,4> expected_codes{};
+        for(unsigned i=0;i<4;++i){
+            const auto& source=e.package.pool[indexed?e.package.offsets[i]:i];
+            std::memcpy(&gathered_reference[i],&source,sizeof(source));
+        }
+        re4dc::vp::prime(expected.data(),4);
+        re4dc::vp::transform_sched<re4dc::vp::kChecksAll>(
+            gathered_reference.data(),4,expected.data(),expected_codes.data(),e.k);
+        for(unsigned i=0;i<4;++i){
+            assert(std::memcmp(&e.cache[i],&expected[i],sizeof(pvr_vertex_t))==0);
+            assert((e.outcodes[i]&0x3fU)==(expected_codes[i]&0x3fU));
+        }
+        if(indexed && limit>=4)
+            for(const auto& v:e.gather_storage)assert(v.x==0 && v.y==0);
+    }
+    if(indexed && limit<4 && clip_result>0)
+        for(unsigned i=0;i<4;++i)assert(e.gather_storage[i].x==e.package.pool[e.package.offsets[i]].x);
+    const auto& cpkg=e.package;const auto& wp29_source=cpkg.parts()[0];
+    struct X {unsigned index=0;unsigned key[6]{};re4dc::portal29::Ticket wp29_ticket{1,0,7,0};} x;
+    struct {Batch batch;} submit_scope;
+@RECEIPT@
+    e.pvs_finish(result>0);
+    assert(!sq_held && closes==1);
+    return result;
+}
+int main(){
+    assert(run_case(true,64,true,true,1)>0);
+    assert(receipts==1 && observed==1 && committed==1 && model_results==1);
+    assert((events==std::vector<unsigned>{1,2,3,4}));
+    assert(run_case(false,64,true,true,1)>0);
+    assert(receipts==1 && observed==1 && committed==1);
+    assert(run_case(true,3,true,true,1)>0); // actual deferred gather, clip disqualifies witness
+    assert(receipts==0 && observed==1 && committed==1 && stats.strips_clipped==1);
+    assert(run_case(true,3,true,true,0)==0);
+    assert(receipts==0 && observed==0 && committed==0);
+    assert(run_case(true,3,true,true,-1)<0);
+    assert(receipts==0 && observed==0 && committed==0);
+    assert(run_case(true,64,false,true,1)==0);
+    assert(receipts==0 && observed==0 && committed==0);
+    assert(run_case(true,64,true,false,1)<0);
+    assert(receipts==0 && observed==0 && committed==0);
+    assert(run_case(true,64,true,true,1,true)>0);
+    assert(receipts==0 && observed==0 && committed==0);
+    assert(run_case(true,64,true,true,1,false,true)>0);
+    assert(receipts==0 && observed==1 && committed==1 && stats.strips_culled==1);
+    assert(run_case(true,64,true,true,1,false,false,true)>0);
+    assert(receipts==0 && observed==0 && committed==0 && model_results==1);
+}

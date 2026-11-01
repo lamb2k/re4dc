@@ -44,6 +44,13 @@ endif
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_QA_MENU=1
 $(OBJDIR)/platform/pad.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_MENU=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_BANNER=1
+# QA_START_KIT (lane qakit26, user 10-26; default = QA_MENU, so only QA discs): a new game starts with the 15x8 case, the
+# TMP + 300 rounds, the shotgun + 50 shells, 5 hand / 3 incendiary / 3 flash grenades (item.cpp cItemMgr::gameInit).
+# QA_START_KIT=0 on a QA build turns it off.
+QA_START_KIT ?= 1
+ifeq ($(QA_START_KIT),1)
+$(OBJDIR)/src/game/item.o: GAME_CPPFLAGS += -DRE4DC_QA_START_KIT=1
+endif
 .PHONY: qamenu-force
 $(OBJDIR)/qa_menu.h: qamenu-force
 	@mkdir -p $(dir $@)

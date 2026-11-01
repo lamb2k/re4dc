@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "runtime_commit": "f5383c0dca4bfdc2fbcd019c0f3bcb361aadec87",
+  "baseline": "77461a84ef85e978e44aab5d936a1b80a2cd93a4",
+  "scope": "Full current release absent/zero and explicit queued portal validation ON builds; actual OFF raw programme/overlays/allocated sections; release/solo-portal OFF TU identity; ON actual macro readback. No private data, emulator, GPU completion, look/STRICT, memory headroom or hardware timing acceptance.",
+  "compiler": "SH-4 GCC15.2.0",
+  "kos": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sh4zam": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "4c025235eeb58b26eb8849aa8101ae014907710590332220c840f3919e989a13",
+    "port/dreamcast/game/platform/include/world_portal29.hpp": "8de21545620ed93a3d6462df62c9daaf428e83e783a95280a2a66304a5c4a9a9",
+    "port/dreamcast/game/platform/include/world_portal29_runtime.inc": "3f0243ef9ea25277fbf24e93bc57a34c17ba4b73c97673981db9e5b8fefc27d9",
+    "port/dreamcast/game/world_plan29.mk": "01db47667ce7e1c81857b8486b00f1c74cd6a8b51ceb06f2febee0d10621e4b8",
+    "port/dreamcast/tools/cloud/build31/portal_completion_profiles.json": "50d1370952f55829ec18f9033800a362dc3ffdcee2015b8a12b08c2db5431fa0"
+  },
+  "recipe_sha256": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0",
+  "arms": {
+    "baseline": {
+      "directory": "/root/probe/lanes/route/out-enginewave1oct29rP",
+      "elf_sha256": "49f12668242e722acfa0fee89514323c4aa7892e64014dcb970eb0473fbee0c3",
+      "build_log_sha256": "57f6f0c5535f8bdc82b90461d178231b1de13832954d660b03e25260113a7a1a",
+      "resolved_knobs_sha256": "7f626ee753ff56b11ad5dff3d81c51c2670b57a6ea3a01210c774697309d8720",
+      "source_stack": "77461a84ef85e978e44aab5d936a1b80a2cd93a4\n"
+    },
+    "absent": {
+      "directory": "/root/probe/lanes/route/out-ef08oct29v1absentrP",
+      "elf_sha256": "362702f7cbe2ffe1c6c299e7376be119144b1f8d026d18617e4117c541a35f04",
+      "build_log_sha256": "042a4a3739d8177ad51016addf50600c29d0aebd0114a59f1a3a3162805fc772",
+      "resolved_knobs_sha256": "216712de655b47a127f6651d96364bfae7cb52f251902a1e602e98fbb6c7736b",
+      "source_stack": "ec1855b4294fa1531d254e4476951f7c374b6adc\n"
+    },
+    "zero": {
+      "directory": "/root/probe/lanes/route/out-ef08oct29v1zerorP",
+      "elf_sha256": "d393eb7adb3f0df6ef95a7989fb2396cfd7cf81def8351d18954db85c519e1e3",
+      "build_log_sha256": "ac7bc4d6c034242ed13f3366a99d686d1f94038251b9db79b1e3217f49d4f70a",
+      "resolved_knobs_sha256": "5e0d77905bf15c0ae41139fc07fe89a3e2ba5142b04bc781b3ed7773533447ce",
+      "source_stack": "ec1855b4294fa1531d254e4476951f7c374b6adc\n"
+    },
+    "on": {
+      "directory": "/root/probe/lanes/route/out-ef08oct29v2onrP",
+      "elf_sha256": "e8720c97ab5bb073c961ec92670a470261bea7b718bb66aa2a63fc77d3776d64",
+      "build_log_sha256": "96c35b2ab906c27ded1512a3309d126596bb9bc5c495cd5b0ce16c308711f974",
+      "resolved_knobs_sha256": "5e10817f7777e59037f3234f844fb498eac4ef3846a5e983720cc1b8b3947ffa",
+      "source_stack": "f5383c0dca4bfdc2fbcd019c0f3bcb361aadec87\n M port/dreamcast/tools/cloud/build31/portal_completion_host.py\n?? port/dreamcast/tools/cloud/build31/PORTAL-COMPLETION.md\n"
+    }
+  },
+  "completion_storage_symbols": [
+    "8c3e0c40 00001800 b (anonymous namespace)::wp29::completion_keys",
+    "8c2b85d8 00000004 d (anonymous namespace)::wp29::completion_room",
+    "8c3e2440 00000004 b (anonymous namespace)::wp29::completion_count",
+    "8c3e2448 00000004 b (anonymous namespace)::wp29::completion_parts",
+    "8c3e2450 00000004 b (anonymous namespace)::wp29::completion_serial",
+    "8c3e244c 00000004 b (anonymous namespace)::wp29::completion_storage",
+    "8c2b85dc 00000004 d (anonymous namespace)::wp29::completion_generation",
+    "8c3e2444 00000004 b (anonymous namespace)::wp29::completion_placements",
+    "8c3e0c3c 00000001 b (anonymous namespace)::wp29::completion_begin()::exhausted"
+  ],
+  "local_stack_frames": {
+    "release-baseline": [
+      "platform/native_static.cpp:7899:5:int {anonymous}::ps2_pass(unsigned int, float)\t9008\tstatic"
+    ],
+    "solo-portal-baseline": [
+      "platform/include/world_portal29_runtime.inc:88:6:bool {anonymous}::wp29::same_scene()\t16\tstatic",
+      "platform/include/world_portal29_runtime.inc:11:6:bool {anonymous}::wp29::sources()\t48\tstatic",
+      "platform/include/world_portal29_runtime.inc:100:6:void {anonymous}::wp29::finish(unsigned int, unsigned int, bool, const unsigned int*)\t16\tstatic",
+      "platform/native_static.cpp:7899:5:int {anonymous}::ps2_pass(unsigned int, float)\t9476\tstatic"
+    ],
+    "on": [
+      "platform/include/world_portal29_runtime.inc:18:6:bool {anonymous}::wp29::material_matches(unsigned int, const unsigned int*)\t0\tstatic",
+      "platform/include/world_portal29_runtime.inc:24:6:bool {anonymous}::wp29::completion_sources_current()\t28\tstatic",
+      "platform/include/world_portal29_runtime.inc:134:6:bool {anonymous}::wp29::same_scene()\t20\tstatic",
+      "platform/include/world_portal29_runtime.inc:49:6:bool {anonymous}::wp29::sources()\t48\tstatic",
+      "platform/include/world_portal29_runtime.inc:162:6:void {anonymous}::wp29::finish(const re4dc::portal29::Ticket&, const re4dc::portal29::Completion&, const unsigned int*)\t16\tstatic",
+      "platform/native_static.cpp:7908:5:int {anonymous}::ps2_pass(unsigned int, float)\t10256\tstatic"
+    ]
+  },
+  "queue_ticket_bytes": 16,
+  "queue_context_cap": 48,
+  "source_material_snapshot_bytes": 6144,
+  "failed_profile": "ec1855b42 v1ON failed before ELF at retained early PVS guards; missing Make-propagated TA_DIRECT/HDR_CACHE/MESH_FASTPATH/PVR_STREAM facts. f5383c0dc fixes scoped propagation; newv2ONpasses. Initial solo-portal TU harness omitted explicit PS2_PVS_DEFAULT0; tu2 corrected fixture-only profile and passed. All failed artifacts retained.",
+  "remaining": "Actual geometry-authored PKG+CFG/interior.cell/portal-proof.json, real queued witness admission, eviction/reentry/movie loans, magenta/look/STRICT/memory/net console cost. Stream/clip/indexed, subset/multi-LOD and legacy immediate witness qualification remain unaccepted."
+}

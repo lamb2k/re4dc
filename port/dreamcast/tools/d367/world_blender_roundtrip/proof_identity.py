@@ -46,7 +46,8 @@ class Records:
 
 
 def bindings(mesh,side):
-    return struct.unpack_from('<I',mesh,12)[0],len(mesh),struct.unpack_from('<I',side,20)[0]
+    import provenance
+    return struct.unpack_from('<I',mesh,12)[0],len(mesh),provenance.policy_crc(mesh,side)[0]
 
 
 def pvs(data,doc,mesh,side):

@@ -1,0 +1,145 @@
+{
+  "status": "PASS",
+  "scope": "Price ordered metadata/key preparation, not a complete world draw.\n\nThe fixture uses the production plan compiler and layout and exact baseline\nR4PW16/R4IM36 records. It compares a pass scan/key build with its precompiled\npass span. Allocation/build-once cost, other live predicates, vertex work and\nsubmission are excluded. Perfect D-cache; reported lines are address touches,\nnot observed cache misses. Cold-I is an isolated helper experiment.\n",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build31/part_plan_cost.py": "e2a4c0a1142b019900bf50aa59fcb78b454fd747d0e08a3b5b2fbe3ed280301f",
+    "port/dreamcast/tools/cloud/build31/part_plan_cost.cpp.in": "58967420d1e97ca0d799d8c0e6fd4483c0107f7fe933b4804669f4bb49239598",
+    "port/dreamcast/game/platform/include/world_part_plan29.hpp": "ebb628b6b3a1e31bcf21993dfe89729c2a22fa2b1d249d41749c303c632c24a4"
+  },
+  "cases": [
+    {
+      "source_parts": 1,
+      "arms": {
+        "before": {
+          "selected": 1,
+          "warm_cycles": 101,
+          "cold_i_cycles": 217,
+          "loads": 24,
+          "stores": 20,
+          "data_lines32": 7,
+          "stack_bytes": 52,
+          "helper_code_bytes": 140
+        },
+        "after": {
+          "selected": 1,
+          "warm_cycles": 91,
+          "cold_i_cycles": 193,
+          "loads": 21,
+          "stores": 13,
+          "data_lines32": 7,
+          "stack_bytes": 24,
+          "helper_code_bytes": 96
+        }
+      }
+    },
+    {
+      "source_parts": 16,
+      "arms": {
+        "before": {
+          "selected": 6,
+          "warm_cycles": 596,
+          "cold_i_cycles": 712,
+          "loads": 99,
+          "stores": 85,
+          "data_lines32": 24,
+          "stack_bytes": 52,
+          "helper_code_bytes": 140
+        },
+        "after": {
+          "selected": 6,
+          "warm_cycles": 421,
+          "cold_i_cycles": 523,
+          "loads": 66,
+          "stores": 48,
+          "data_lines32": 17,
+          "stack_bytes": 24,
+          "helper_code_bytes": 96
+        }
+      }
+    },
+    {
+      "source_parts": 64,
+      "arms": {
+        "before": {
+          "selected": 22,
+          "warm_cycles": 2180,
+          "cold_i_cycles": 2296,
+          "loads": 339,
+          "stores": 293,
+          "data_lines32": 78,
+          "stack_bytes": 52,
+          "helper_code_bytes": 140
+        },
+        "after": {
+          "selected": 22,
+          "warm_cycles": 1477,
+          "cold_i_cycles": 1579,
+          "loads": 210,
+          "stores": 160,
+          "data_lines32": 47,
+          "stack_bytes": 24,
+          "helper_code_bytes": 96
+        }
+      }
+    },
+    {
+      "source_parts": 128,
+      "arms": {
+        "before": {
+          "selected": 43,
+          "warm_cycles": 4270,
+          "cold_i_cycles": 4386,
+          "loads": 655,
+          "stores": 566,
+          "data_lines32": 149,
+          "stack_bytes": 52,
+          "helper_code_bytes": 140
+        },
+        "after": {
+          "selected": 43,
+          "warm_cycles": 2863,
+          "cold_i_cycles": 2965,
+          "loads": 399,
+          "stores": 307,
+          "data_lines32": 86,
+          "stack_bytes": 24,
+          "helper_code_bytes": 96
+        }
+      }
+    }
+  ],
+  "scenario": {
+    "label": "MODELLED",
+    "cpu_mhz": 200,
+    "assumed_other_work_ms": 30,
+    "assumed_meshes_of64_parts": 20,
+    "whole_frame_ms": {
+      "before": 30.218,
+      "after": 30.1477
+    },
+    "limitation": "Synthetic metadata-only sensitivity; no real room/console frame or D-cache saving claimed."
+  },
+  "local_frames": [
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-part-cost/fixture.cpp:20:21:unsigned int fixture_prepare(unsigned int)",
+      "bytes": 44,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-part-cost/fixture.cpp:30:47:unsigned int fixture_before(unsigned int)",
+      "bytes": 52,
+      "kind": "static"
+    },
+    {
+      "function": "/workspace/scratch/8f775e996324/build31-part-cost/fixture.cpp:40:47:unsigned int fixture_after(unsigned int)",
+      "bytes": 24,
+      "kind": "static"
+    }
+  ],
+  "fixture_sections": {
+    "executable_bytes": 932,
+    "allocated_bytes": 27600,
+    "zero_fill_bytes": 26656
+  },
+  "raw_sha256": "394d3e5177134de0124b5af9bba2c9c934a7396f6b6e95176abcc8579dcbd6cf"
+}

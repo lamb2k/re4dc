@@ -860,6 +860,10 @@ void SsTermInit::init(SUB_SCREEN* wk)
 // Loads the codec screen with blocking reads (mode 5): state 2 drops the HUD/models/lights and
 // reads SS/<lang>/ss_term.dat (-> pTerm, at the puzzle area offset), 4 op/op<stage>.das (-> pOpData),
 // 5 the partner data of wk->opeMdtNo (-> pPartner), 6 fade in and transit to SsTermMain.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_block_adopt(const void*, void*, unsigned);  // gc_asset_members.cpp
+#endif
+#line 863
 void SsTermInit::move(SUB_SCREEN* wk)
 {
     // .bss order: the read request is the unit's first .bss word, before the file-scope
@@ -887,7 +891,16 @@ void SsTermInit::move(SUB_SCREEN* wk)
         IdFreeBuffer();
         state++;
     case 3:
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        {   // GC-ASSET (gate builds only): the codec archive is adopted as loaded, before its models relocate
+            int gca_bytes = 0;
+            Dvd.ReadCheck(term_read_req, &gca_bytes, 0, &term);   // result = the MRAM bytes read
+            re4dc_gcasset_block_adopt(&wk->pTerm, term, (unsigned) gca_bytes);
+        }
+#else
         Dvd.ReadCheck(term_read_req, 0, 0, &term);
+#endif
+#line 1108 "D:/Bio4/Prog/ss_term.cpp"
         wk->pTerm = (SsArc*) term;
         state++;
     case 4: {
@@ -904,7 +917,16 @@ void SsTermInit::move(SUB_SCREEN* wk)
         partnerDataName(name, wk->opeMdtNo);
 #line 1156 "D:/Bio4/Prog/ss_term.cpp"
         term_read_req = DVD_READ_N(name, 0, 0, 0, 0, 5);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        {   // GC-ASSET (gate builds only): the partner's codec archive, adopted as loaded
+            int gca_bytes = 0;
+            Dvd.ReadCheck(term_read_req, &gca_bytes, 0, &partner);
+            re4dc_gcasset_block_adopt(&wk->pPartner, partner, (unsigned) gca_bytes);
+        }
+#else
         Dvd.ReadCheck(term_read_req, 0, 0, &partner);
+#endif
+#line 1158 "D:/Bio4/Prog/ss_term.cpp"
         wk->pPartner = partner;
         state++;
     }

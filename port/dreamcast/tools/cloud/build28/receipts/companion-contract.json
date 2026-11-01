@@ -1,0 +1,34 @@
+{
+  "base": "568c357656efbec468db06a282c1f79caebaa725",
+  "scope": "Actual companion Python functions plus loopback TCP/UDP and child-process fixtures; no modem, console, SSH-server or hardware run",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "tests": 31,
+  "failures": 0,
+  "errors": 0,
+  "pass": true,
+  "host_elapsed_seconds": 2.607,
+  "identity": "All pre-existing non-main class/function ASTs and marshalled code objects exactly equal the named base; CLI main/help intentionally add default-off dispatch",
+  "source_sha256": {
+    "port/dreamcast/tools/qalink/qalink.py": "b381c6d96dadd7103aabe6a58e9afed8fff6b3d292a60ad5382835e2e166095f",
+    "port/dreamcast/tools/qalink/qalink_pi.py": "b344a0971458d18c29e36a710c43b6bb5744df8faadb629930512a631beb0cb9",
+    "port/dreamcast/tools/qalink/qalink_review28.py": "c258b64ed4bd828765ab0db9bcc2c8cebdd837c3a9fcd494e3fe3e6000701f64",
+    "port/dreamcast/tools/qalink/README.md": "d5f56338742ccc060f99c9218a4a688940da45398be022428bb6b54654821a36",
+    "port/dreamcast/tools/cloud/build28/companion_contract.py": "232f62518b3a1a1455ed1b54c6d5941b044ed41835dd23eaaa1248561f35b494"
+  },
+  "bounds": {
+    "MAX_DATAGRAM": 1200,
+    "MAX_COMMAND": 1184,
+    "MAX_PARTS": 16,
+    "MAX_PART_BYTES": 1100,
+    "MAX_CLIENTS": 8,
+    "MAX_WAITERS": 8,
+    "MAX_REPLY_BYTES": 131072,
+    "MAX_REPLY_PACKETS": 128,
+    "LOG_BYTES": 16777216,
+    "CAPTURE_BYTES": 8388608,
+    "CAPTURE_LINES": 65536,
+    "MAX_SNAPSHOTS": 8,
+    "SNAPSHOT_SECONDS": 30.0,
+    "MAX_FIELDS": 512
+  }
+}

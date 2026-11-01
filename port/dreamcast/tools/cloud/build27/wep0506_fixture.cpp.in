@@ -1,0 +1,249 @@
+// Complete recovered module bodies; services and archives are synthetic.
+#include "weapon_fixture_prefix.hpp"
+
+void PlHandgunMove(cPlayer*) { fixture::record("handgun.move"); }
+
+#include "@CIVILIAN@"
+#define _prolog wep05_prolog
+#define _epilog wep05_epilog
+#define _unresolved wep05_unresolved
+#include "@WEP05@"
+#undef _prolog
+#undef _epilog
+#undef _unresolved
+#define _prolog wep06_prolog
+#define _epilog wep06_epilog
+#define _unresolved wep06_unresolved
+#include "@WEP06@"
+#undef _prolog
+#undef _epilog
+#undef _unresolved
+
+namespace {
+unsigned cases;
+using fixture::call;
+using fixture::count;
+using fixture::word;
+void* weapon(unsigned slot) { return fixture_weapon_archive.entries.at(slot); }
+void* player(unsigned slot) { return fixture_player_archive.entries.at(slot); }
+void close(float a,float b) { assert(std::fabs(a-b)<0.0001f); }
+void marker(cObj*) {}
+
+template<class Gun>
+void motion_map() {
+    fixture::reset();Gun gun;cPlayer pl;
+    void* untouched=reinterpret_cast<void*>(0x55aa00U);
+    pl.pMotTbl.fill(untouched);
+    gun.setMotion(&pl);
+    const std::pair<unsigned,unsigned> mapping[] = {
+        {0x00,0x0b},{0x01,0x0c},{0x02,0x11},{0x03,0x12},
+        {0x06,0x15},{0x07,0x16},{0x08,0x13},{0x09,0x14},
+        {0x0a,0x13},{0x0b,0x17},{0x0c,0x18},{0x0d,0x0d},
+        {0x0e,0x0e},{0x0f,0x0f},{0x10,0x10},{0x39,0x19},
+        {0x3a,0x1a},{0x41,0x1b},{0x42,0x1c},{0x3f,0x1d},
+        {0x40,0x1e},{0x5d,0x1f},{0x5e,0x20},{0x5b,0x30},{0x57,0x31},
+    };
+    std::array<void*,128> expected;expected.fill(untouched);
+    for(const auto& m:mapping)expected[m.first]=weapon(m.second);
+    expected[0x3d]=player(0x5d);
+    assert(pl.pMotTbl==expected);
+    assert(count("body.hand")==1 && call("body.hand").args[0]==word(weapon(8)));
+    assert(count("hand.right")==1 && call("hand.right").args[0]==1);
+    assert(count("hand.left")==1 && call("hand.left").args[0]==word(weapon(9)));
+    ++cases;
+}
+
+void registration() {
+    fixture::reset();ObjInitFunc[7]=marker;
+    wep05_prolog();
+    assert(WeaponInitFunc==Wep05_init && WeaponMoveFunc==PlHandgunMove);
+    assert(ObjInitFunc[0x2e]==ObjCivilian_init && ObjInitFunc[7]==marker);
+    wep05_epilog();
+    assert(ObjInitFunc[0x2e]==nullptr && ObjInitFunc[7]==marker);
+    ++cases;
+    fixture::reset();ObjInitFunc[7]=marker;
+    wep06_prolog();
+    assert(WeaponInitFunc==Wep06_init && WeaponMoveFunc==PlHandgunMove);
+    assert(ObjInitFunc[0x31]==ObjGovernment_init && ObjInitFunc[7]==marker);
+    wep06_epilog();
+    assert(ObjInitFunc[0x31]==nullptr && ObjInitFunc[7]==marker);
+    ++cases;
+
+    // Real placement-constructor callbacks create the correct dynamic class.
+    fixture::reset();
+    alignas(cObjCivilian) unsigned char civilian_storage[sizeof(cObjCivilian)];
+    ObjCivilian_init(reinterpret_cast<cObj*>(civilian_storage));
+    auto* civilian=std::launder(reinterpret_cast<cObjCivilian*>(civilian_storage));
+    cObjWep* base=civilian;base->moveFire();
+    assert(count("effect.set")==1 && call("effect.set").args[4]==0x39);
+    civilian->~cObjCivilian();++cases;
+    fixture::reset();cPlayer pl;pPL=&pl;
+    alignas(cObjGovernment) unsigned char government_storage[sizeof(cObjGovernment)];
+    ObjGovernment_init(reinterpret_cast<cObj*>(government_storage));
+    auto* government=std::launder(reinterpret_cast<cObjGovernment*>(government_storage));
+    base=government;base->moveFire();
+    assert(count("effect.set")==1 && call("effect.set").args[4]==0x3a);
+    government->~cObjGovernment();pPL=nullptr;++cases;
+}
+
+template<class Gun>
+void module_init(void (*init)(cModel*),unsigned object,unsigned group) {
+    fixture::reset();Gun gun;cPlayer pl;fixture::created=&gun;pPL=&pl;
+    init(&pl);
+    assert(fixture::create_id==object && pl.Wep->m_pWep==&gun);
+    assert(gun.wep.parent==&pl && gun.pParts->pParent==&fixture_bones[10]);
+    assert(count("model.init")==1 && count("effect.load")==1);
+    const auto& effect=call("effect.load");
+    assert(effect.args==std::vector<std::intptr_t>({word(weapon(4)),std::intptr_t(group),1}));
+    for(unsigned i=0;i<3;++i)assert(PlWepMot[i]==weapon(0x26+i));
+    assert(count("body.hand")==1 && count("hand.right")==1 && count("hand.left")==1);
+    ++cases;
+    fixture::reset();cPlayer failed;fixture::create_ok=false;
+    init(&failed);
+    assert(fixture::create_id==object && failed.Wep->m_pWep==nullptr);
+    assert(count("model.init")==0 && count("effect.load")==0 && count("body.hand")==0);
+    for(void* m:PlWepMot)assert(m==nullptr);
+    pPL=nullptr;
+    ++cases;
+}
+
+void object_init() {
+    fixture::reset();cObjCivilian gun;cPlayer pl;
+    gun.init(&pl);
+    assert(call("model.init").args==std::vector<std::intptr_t>({word(weapon(6)),word(weapon(5))}));
+    assert(gun.wep.parent==&pl && gun.wep.x24==0x29 && gun.wep.pMotNormal==weapon(0x34));
+    assert(gun.pParts->pParent==&fixture_bones[10]);
+    assert((gun.sub2B4.atari.m_flag&0x300)==0 && count("atari.init")==1);
+    assert(gun.wep.x18==0x14 && gun.wep.x19==0x14 && gun.wep.x1A==0x14);
+    assert(count("light.init2")==1 && count("motion.reset")==1);
+    const auto& ability=call("weapon.ability").values;
+    close(ability[0],5.73f);close(ability[1],2.86f);close(ability[2],.2864f);close(ability[3],.2864f);
+    ++cases;
+    fixture::reset();cObjCivilian failed;fixture::model_ok=false;
+    failed.init(&pl);
+    assert(count("model.init")==1 && count("atari.init")==0 && count("light.init2")==0);
+    assert(failed.wep.parent==nullptr && count("motion.reset")==0);++cases;
+
+    for(unsigned type:{0U,1U}) {
+        fixture::reset();cObjGovernment gov;pG->weapon_type=type;
+        gov.init(&pl);
+        assert(call("model.init").args==std::vector<std::intptr_t>({word(weapon(type?7:6)),word(weapon(5))}));
+        assert(gov.wep.parent==&pl && gov.wep.x24==(type?0x2b:0x2a));
+        assert(gov.wep.pMotNormal==weapon(type?0x39:0x34) && gov.wep.pMotEmpty==weapon(0x3a));
+        assert(gov.pParts->pParent==&fixture_bones[10] && (gov.sub2B4.atari.m_flag&0x300)==0);
+        assert(gov.wep.x18==0x14 && gov.wep.x19==0x14 && gov.wep.x1A==0x14);
+        assert(count("light.init2")==1 && count("motion.reset")==1 && count("weapon.ability")==1);
+        ++cases;
+        fixture::reset();cObjGovernment no_model;pG->weapon_type=type;fixture::model_ok=false;
+        no_model.init(&pl);
+        assert(no_model.wep.parent==nullptr && count("motion.reset")==0 && count("light.init2")==0);
+        ++cases;
+    }
+}
+
+void civilian_fire() {
+    fixture::reset();cObjCivilian gun;gun.wep.mode=2;
+    gun.moveFire();
+    assert(gun.wep.step==1 && gun.wep.mode==2);
+    assert(count("motion.core")==1 && call("motion.core").args[2]==word(weapon(0x32)));
+    assert(count("sound")==2 && call("sound",0).args[1]==0 && call("sound",1).args[1]==2);
+    assert(count("effect.set")==1 && call("effect.set").args[0]==word(&gun));
+    assert(call("effect.set").args[4]==0x39 && call("effect.set").args[7]==10);
+    assert((pG->Status_flg[0]&0x00800000)!=0 && count("cartridge")==0 && fixture::bullets==3);
+    fixture::clear_calls();gun.moveFire();
+    assert(gun.wep.step==1 && count("motion.core")==0 && count("sound")==0 && count("effect.set")==0);
+    fixture::motion_done=true;gun.moveFire();
+    assert(gun.wep.mode==0 && gun.wep.step==0 && count("effect.set")==0);
+    ++cases;
+    fixture::reset();cObjCivilian finished;finished.wep.mode=2;fixture::motion_done=true;
+    finished.moveFire();
+    assert(finished.wep.mode==0 && finished.wep.step==0 && count("effect.set")==1);++cases;
+}
+
+void government_fire() {
+    for(int rounds:{0,1,3}) {
+        fixture::reset();cObjGovernment gun;cPlayer pl;pPL=&pl;
+        fixture::bullets=rounds;gun.wep.mode=2;gun.moveFire();
+        assert(gun.wep.mode==2 && gun.wep.step==1 && fixture::bullets==rounds);
+        assert(count("motion.core")==1 && call("motion.core").args[2]==word(weapon(rounds?0x32:0x35)));
+        assert(count("sound")==2 && call("sound",0).args[1]==2 && call("sound",1).args[1]==0);
+        assert(count("effect.set")==1 && call("effect.set").args[0]==word(&gun));
+        assert(call("effect.set").args[4]==0x3a && (pG->Status_flg[0]&0x00800000));
+        assert(count("cartridge")==1 && count("cartridge.effect")==1 && fixture_cartridge.type==1);
+        assert(count("vibration")==1 && fixture::random_index==3);
+        const auto& vib=call("vibration").args;
+        assert(vib[0]==word(pG->pArc)+std::intptr_t(pG->pArc->ofs_1C) && vib[1]==0 && vib[2]==1);
+        fixture::clear_calls();fixture::motion_done=true;gun.moveFire();
+        assert(fixture::calls.empty() && gun.wep.mode==2 && gun.wep.step==1);
+        pPL=nullptr;
+        ++cases;
+    }
+    fixture::reset();cObjGovernment gun;cPlayer pl;pPL=&pl;fixture::cartridge_ok=false;
+    gun.moveFire();
+    assert(count("effect.set")==1 && count("cartridge")==1 && count("cartridge.effect")==0);
+    assert(fixture_cartridge.type==0 && count("vibration")==1 && gun.wep.step==1);pPL=nullptr;++cases;
+}
+
+void reloads() {
+    const unsigned civilian_motion[3]={0x33,0x35,0x36},sound[3]={0x16,0x20,0x21};
+    const float civilian_end[3]={75,48,28},government_end[3]={44,37,22};
+    const unsigned loaded[3]={0x36,0x3d,0x3e},empty[3]={0x33,0x3b,0x3c};
+    for(unsigned level=0;level<3;++level) {
+        fixture::reset();cObjCivilian gun;pG->weapon_lv_reload=level;gun.wep.mode=4;
+        fixture::cross_frame=true;gun.moveReload();
+        assert(gun.wep.mode==4 && gun.wep.step==1 && gun.wep.seHandle==fixture::snd_result);
+        assert(call("motion.set").args[0]==word(weapon(civilian_motion[level])));
+        assert(call("sound").args[1]==sound[level]);
+        assert(count("motion.cross")==0 && count("item.reload")==0); // retained else-if
+        fixture::clear_calls();fixture::cross_frame=false;gun.moveReload();
+        assert(count("motion.set")==0 && count("sound")==0 && count("item.reload")==0);
+        close(call("motion.cross").values[0],civilian_end[level]);
+        fixture::clear_calls();fixture::cross_frame=true;gun.moveReload();
+        assert(count("item.reload")==1 && fixture::bullets==fixture::reload_capacity);
+        ++cases;
+        for(bool has_rounds:{false,true}) {
+            fixture::reset();cObjGovernment gov;pG->weapon_lv_reload=level;
+            fixture::bullets=has_rounds?3:0;gov.wep.mode=4;gov.moveReload();
+            assert(gov.wep.step==1 && gov.wep.mode==4 && gov.wep.seHandle==fixture::snd_result);
+            assert(call("motion.set").args[0]==word(weapon(has_rounds?loaded[level]:empty[level])));
+            assert(call("sound").args[1]==sound[level] && count("item.reload")==0);
+            close(call("motion.cross").values[0],government_end[level]);
+            fixture::clear_calls();fixture::cross_frame=true;gov.moveReload();
+            assert(count("motion.set")==0 && count("sound")==0 && count("item.reload")==1);
+            ++cases;
+            fixture::reset();cObjGovernment crossing;pG->weapon_lv_reload=level;
+            fixture::bullets=has_rounds?3:0;fixture::cross_frame=true;crossing.moveReload();
+            assert(count("motion.set")==1 && count("motion.cross")==1 && count("item.reload")==1);
+            ++cases;
+        }
+    }
+}
+
+void cartridge_transform() {
+    fixture::reset();cObjGovernment gun;cPlayer pl;pPL=&pl;
+    fixture::random_values={-1,0,1,0,0,0,0,0};
+    const float m[3][4]={{0,-1,0,10},{1,0,0,20},{0,0,1,30}};
+    std::memcpy(fixture_bones[10].mat,m,sizeof(m));
+    gun.setCartridge();
+    const auto& c=call("cartridge");
+    assert(c.args==std::vector<std::intptr_t>({word(weapon(0x3f)),word(weapon(0x40)),30,3}));
+    const float expected[]={173,-143,130,0,0,0,-60,-12,75,10,50};
+    assert(c.values.size()==std::size(expected));
+    for(unsigned i=0;i<std::size(expected);++i)close(c.values[i],expected[i]);
+    assert(fixture::random_index==3 && fixture_cartridge.type==1);
+    assert(call("cartridge.effect").args[7]==0x13);pPL=nullptr;++cases;
+}
+} // namespace
+
+int main() {
+    registration();
+    module_init<cObjCivilian>(Wep05_init,0x2e,0x39);
+    module_init<cObjGovernment>(Wep06_init,0x31,0x3a);
+    object_init();motion_map<cObjCivilian>();motion_map<cObjGovernment>();
+    civilian_fire();government_fire();reloads();cartridge_transform();
+    std::printf("{\"status\":\"PASS\",\"cases\":%u,\"coverage\":["
+        "\"real registration and placement callbacks\",\"weapon/model allocation boundaries\","
+        "\"both Government model types\",\"26 motion mappings and untouched slots\","
+        "\"first shot, last round and repeat-step suppression\",\"all reload tuning branches and crossing timing\","
+        "\"cartridge transform, random order and allocation refusal\"]}\n",cases);
+}

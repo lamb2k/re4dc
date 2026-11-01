@@ -1,0 +1,187 @@
+@TYPES@
+#include <array>
+#include <cstdio>
+#include <cstdlib>
+#include <memory>
+#include <string>
+#include <vector>
+
+static const char* case_name;
+static unsigned checks;
+static void check(bool ok,const char* why) {
+    ++checks;
+    if(!ok){std::fprintf(stderr,"FAIL %s: %s\n",case_name,why);std::exit(31);}
+}
+struct Set {
+    std::array<TEXHeader,248> h{};
+    std::array<TEXDescriptor,248> desc{};
+    TEXPalette tpl{};cModelInfo info{};ModelData data{};cModelExt model{};cTexChg change{};
+    Set(unsigned count,unsigned seed=1) {
+        for(unsigned i=0;i<248;++i){
+            h[i].data=reinterpret_cast<void*>(std::uintptr_t(0x8c100000+seed*0x4000+i*32));
+            h[i].width=64;h[i].height=32;h[i].format=5;h[i].wrapS=2;h[i].wrapT=0;
+            desc[i].textureHeader=&h[i];
+        }
+        tpl.numDescriptors=count;tpl.descriptorArray=desc.data();info.tpl_addr=&tpl;
+    }
+    cModel* m(){return reinterpret_cast<cModel*>(&model);}
+    void swaps(std::initializer_list<u8> list) {
+        check(list.size()%2==0 && list.size()<=510,"swap table bounds");
+        change.num=list.size()/2;unsigned i=0;for(u8 v:list)change.tbl[i++]=v;
+        model.pTexChg=&change;
+    }
+};
+static GxWork expected;
+
+static void reset(const char* name) {
+    case_name=name;checks=0;
+    std::memset(&game,0,sizeof(game));std::memset(&expected,0,sizeof(expected));
+    for(unsigned i=0;i<248;++i)for(unsigned j=0;j<8;++j)
+        expected.texObj[i].w[j]=game.gxStage.texObj[i].w[j]=0x12300000+i*8+j;
+    std::memset(ft_keys,0,sizeof(ft_keys));std::memset(ft_recs,0,sizeof(ft_recs));
+    std::memset(ft_remap,0,sizeof(ft_remap));
+    ft_nkeys=ft_nrecs=0;ft_room=~0U;ft_cur=nullptr;ft_swapped=0;
+    ft_hits=ft_builds=ft_fallbacks=ft_flushes=ft_resets=0;ft_block=0;
+    game.Frame_cnt=10;game.stage_no=1;game.room_no=3;
+}
+static void objects() {
+    for(unsigned i=0;i<248;++i){
+        const u32* words=static_cast<const u32*>(frontTexObj(GXWORK(),i));
+        for(unsigned j=0;j<8;++j){
+            const u32 got=ft_cur && i<ft_cur->count && j>=4 ? 0 : words[j];
+            check(got==expected.texObj[i].w[j],"GX word mismatch");
+        }
+    }
+    check(frontTexObj(GXWORK(),248)==nullptr,"render texture id must decline");
+    check(frontTexObj(GXWORK(),~0U)==nullptr,"large texture id must decline");
+}
+static void flush() {
+    frontTexFlush();check(ft_cur==nullptr,"flush clears symbolic current");
+    check(std::memcmp(GXWORK()->texObj,expected.texObj,sizeof(expected.texObj))==0,"materialized GX words mismatch");
+}
+static bool draw(Set& s) {
+    TEXPalette primary=*static_cast<TEXPalette*>(s.info.tpl_addr),added{};
+    if(s.info.pAddTpl)added=*s.info.pAddTpl;
+    const unsigned n=primary.numDescriptors+s.info.nAddTex;
+    check(n<=248,"test descriptor capacity");
+    std::array<TEXHeader,248> old{};
+    std::array<TEXDescriptor,248> primary_desc{},added_desc{};
+    for(unsigned i=0;i<n;++i){
+        TEXDescriptor* d=ftDesc(&s.info,i);old[i]=*d->textureHeader;
+        if(i<primary.numDescriptors)primary_desc[i].textureHeader=&old[i];
+        else added_desc[i-primary.numDescriptors].textureHeader=&old[i];
+    }
+    primary.descriptorArray=primary_desc.data();added.descriptorArray=added_desc.data();
+    cModelInfo copied=s.info;copied.tpl_addr=&primary;copied.pAddTpl=s.info.pAddTpl?&added:nullptr;
+    source_init(s.m(),&copied,&s.data,&expected);
+    const bool accepted=frontTexInit(s.m(),&s.info,&s.data)!=0;
+    if(!accepted)source_init(s.m(),&s.info,&s.data,GXWORK());
+    for(unsigned i=0;i<n;++i)
+        check(std::memcmp(&old[i],ftDesc(&s.info,i)->textureHeader,sizeof(TEXHeader))==0,"source descriptor side effects mismatch");
+    objects();return accepted;
+}
+static void done(){
+    flush();
+    std::printf("{\"case\":\"%s\",\"checks\":%u,\"hits\":%u,\"builds\":%u,\"fallbacks\":%u,\"flushes\":%u,\"resets\":%u}\n",
+        case_name,checks,ft_hits,ft_builds,ft_fallbacks,ft_flushes,ft_resets);
+}
+static void mutation(unsigned kind) {
+    const char* names[]={"secondary-data","same-pointer-width","first-height","secondary-format","secondary-wrap","mip-relation","header-pointer-reuse"};
+    reset(names[kind]);Set a(3);draw(a);const auto before=ft_builds;
+    TEXHeader replacement=a.h[1];
+    switch(kind){
+      case 0:a.h[1].data=reinterpret_cast<void*>(std::uintptr_t(0x8c700000));break;
+      case 1:a.h[1].width=128;break;
+      case 2:a.h[0].height=128;break;
+      case 3:a.h[1].format=8;break;
+      case 4:a.h[1].wrapS=0;a.h[1].wrapT=2;break;
+      case 5:a.h[1].maxLOD=3;break;
+      case 6:replacement.width=256;a.desc[1].textureHeader=&replacement;break;
+    }
+    draw(a);check(ft_builds==before+1,"changed packed words must rebuild");
+    check(ft_nkeys==1 && ft_nrecs==3,"descriptor refresh preserves key/record range");done();
+}
+static void ordinary_cases() {
+    reset("stable-hits-and-ignored-fields");{
+        Set a(3);draw(a);draw(a);check(ft_hits==1,"stable hit");
+        a.h[1].minFilter=7;a.h[1].magFilter=4;a.h[1].LODBias=1.25f;a.h[1].edgeLODEnable=1;
+        a.h[1].minLOD=a.h[1].maxLOD=3;draw(a);check(ft_hits==2,"only packed words determine reuse");
+        a.h[1].maxLOD=4;draw(a);const auto builds=ft_builds;
+        a.h[1].minLOD=5;a.h[1].maxLOD=6;draw(a);check(ft_builds==builds,"unequal LOD relation stays same");
+        done();
+    }
+    reset("forced-wrap-hit-side-effects");{
+        Set a(3);a.data.flags=0x80000000U;draw(a);const auto builds=ft_builds;
+        for(auto& h:a.h){h.wrapS=0;h.wrapT=2;}
+        draw(a);check(ft_hits==1 && ft_builds==builds,"effective forced-wrap words stay reusable");
+        done();
+    }
+    reset("shared-added-wrap-alias");{
+        Set add(2,3),a(1,1),b(1,2);
+        a.info.pAddTpl=b.info.pAddTpl=&add.tpl;a.info.nAddTex=b.info.nAddTex=2;
+        draw(a);b.data.flags=0x80000000U;draw(b);const auto builds=ft_builds;
+        draw(a);check(ft_builds==builds+1,"shared added TPL mutation detected across primary keys");done();
+    }
+    reset("primary-empty-added-mutations");{
+        Set add(3,3),a(0,1);a.info.pAddTpl=&add.tpl;a.info.nAddTex=3;draw(a);
+        add.h[2].data=reinterpret_cast<void*>(std::uintptr_t(0x8c770000));draw(a);
+        check(ft_builds==2,"added-only later descriptor refresh");done();
+    }
+    reset("first-data-new-key");{
+        Set a(3);draw(a);a.h[0].data=reinterpret_cast<void*>(std::uintptr_t(0x8c780000));draw(a);
+        check(ft_nkeys==2 && ft_nrecs==6,"first data change retains existing new-key policy");done();
+    }
+    reset("sequential-swaps-refresh");{
+        Set a(4);a.swaps({0,1,2,0,1,3});draw(a);
+        a.h[1].width=128;draw(a);a.swaps({0,2,3,0});draw(a);done();
+    }
+    reset("smaller-set-preserves-swapped-tail");{
+        Set a(5,1),b(2,2);a.swaps({4,1,3,4,0,2});draw(a);
+        b.swaps({0,1});draw(b);check(ft_flushes==1,"smaller set flushes old tail");done();
+    }
+    reset("dirty-prior-key-then-smaller-tail");{
+        Set a(5,1),b(2,2);a.swaps({4,1,3,4});draw(a);a.h[1].width=128;draw(a);
+        draw(b);done();
+    }
+    reset("count-shrink-and-grow");{
+        Set a(5);draw(a);a.tpl.numDescriptors=2;draw(a);a.tpl.numDescriptors=5;draw(a);
+        check(ft_nkeys==2 && ft_hits==1,"count is still part of key");done();
+    }
+    reset("out-of-set-swap-source-fallback");{
+        Set a(5,1),b(2,2);draw(a);b.swaps({0,4,4,1});check(!draw(b),"out-of-set swap fallback");
+        check(ft_fallbacks==1 && !ft_cur,"source fallback state current");done();
+    }
+    reset("zero-count-and-invalid-lookup");{
+        Set a(3,1),b(0,2);draw(a);check(!draw(b),"zero count source fallback");
+        check(ftLookup(&a.info,&a.data,249)==nullptr,"oversize decline before descriptor read");done();
+    }
+    reset("room-stage-and-return-reset");{
+        Set a(5,1),b(2,2);draw(a);++game.room_no;draw(b);
+        check(ft_nkeys==1 && ft_nrecs==2,"room clears keys");
+        --game.room_no;++game.stage_no;draw(a);check(ft_nkeys==1,"stage clears keys");done();
+    }
+    reset("key-capacity-reset");{
+        std::vector<std::unique_ptr<Set>> sets;
+        for(unsigned i=0;i<34;++i){sets.emplace_back(new Set(2,i+1));draw(*sets.back());}
+        check(ft_resets==1 && ft_nkeys==2,"key reset bound");done();
+    }
+    reset("record-capacity-reset");{
+        Set a(248,1),b(248,2),c(20,3);draw(a);draw(b);draw(c);
+        check(ft_resets==1 && ft_nrecs==20,"record reset bound");done();
+    }
+    reset("snapshot-flush-and-reuse");{
+        Set a(5);a.swaps({0,3,1,0});draw(a);flush();flush();
+        const auto builds=ft_builds;draw(a);check(ft_builds==builds && ft_hits==1,"flush retains valid cache");done();
+    }
+    reset("same-storage-recycled-descriptors");{
+        Set a(6);draw(a);void* first=a.h[0].data;
+        for(unsigned i=0;i<6;++i){a.h[i].data=reinterpret_cast<void*>(std::uintptr_t(0x8c900000+i*512));a.h[i].width=128;a.h[i].format=3;}
+        a.h[0].data=first;draw(a);check(ft_builds==2 && ft_nkeys==1,"same storage fully revalidated");done();
+    }
+}
+int main(int argc,char** argv) {
+    if(argc==2){const unsigned kind=std::strtoul(argv[1],nullptr,10);check(kind<7,"mutation case");mutation(kind);return 0;}
+    for(unsigned kind=0;kind<7;++kind)mutation(kind);
+    ordinary_cases();
+    return 0;
+}

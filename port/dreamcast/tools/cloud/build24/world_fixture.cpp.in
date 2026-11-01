@@ -1,0 +1,171 @@
+// Synthetic R4IM reader + exact production world clipping consumer. All data
+// is generated here; the package includes aliased/scattered source offsets.
+#include "@DC@/game/platform/include/scenery_clip_gather.hpp"
+#include "instanced_mesh.hpp"
+#include "static_room_prepare.hpp"
+#include <array>
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+#include <random>
+#include <vector>
+#define RE4DC_INV255 *(1.0f/255.0f)
+#define RE4DC_SCREEN_WF 640.0f
+#define RE4DC_SCREEN_HF 480.0f
+#define RE4DC_SCREEN_HALF_WF 320.0f
+#define RE4DC_SCREEN_HALF_HF 240.0f
+#define RE4DC_CLIP_ACCEPT_ON 1
+using re4dc::room::CompactVertex12;
+using re4dc::scenery_clip24::Gather;
+int pvr_prim(const void*,std::size_t){assert(false);return 0;}
+
+struct Emitter {
+    struct Part {float projection[7]={0,1,0,1,0,0,0};float uv_offset[2]={.03125f,-.0625f};unsigned cull=0;} p;
+    struct Packet {float u_scale=2.0f,v_scale=.5f;} packet;
+    float mvq[12]={.01f,0,0,-10,0,.01f,0,-10,0,0,-.1f,2};
+    const std::uint32_t* palette=nullptr;
+    float near=1,far=1000,proj_bx=320,proj_by=240;
+    unsigned alpha=0x7f000000,used=0,output=0,limit=4096;
+    bool vertex_alpha=false,submitted=false;
+    struct Stats {unsigned strips_clipped=0,strips_culled=0,triangles_clipped=0;} stats;
+    std::array<pvr_vertex_t,4096> storage;
+    pvr_vertex_t* dst=storage.data();
+    re4dc::render::ClipParameters clip{near,far,640,480,project,this};
+    static constexpr unsigned kClipOnce=16;
+    Emitter(){std::memset(storage.data(),0xcd,sizeof(storage));}
+    bool flush(){return false;}
+    static void project(float& x,float& y,float& z,void* context){
+        const auto& d=*static_cast<Emitter*>(context);
+        const float inv=1.0f/std::fabs(z);
+        x=320.0f*(d.p.projection[1]*x+d.p.projection[2]*z)*inv+d.proj_bx;
+        y=-240.0f*(d.p.projection[3]*y+d.p.projection[4]*z)*inv+d.proj_by;
+        z=inv;
+    }
+@DECODE@
+@CLIP@
+};
+
+struct Package {
+    std::vector<std::uint32_t> words;
+    re4dc::room::MeshPackage adopted;
+    re4dc::room::MeshHeader h{};
+    re4dc::room::MeshLodHeader lod{};
+    template<class T> static void store(std::vector<std::uint8_t>& b,unsigned at,const T& t){
+        assert(at+sizeof(t)<=b.size());std::memcpy(b.data()+at,&t,sizeof(t));
+    }
+    Package(const std::vector<CompactVertex12>& pool,const std::array<std::uint16_t,256>& offsets,
+            const std::vector<std::vector<std::uint8_t>>& strips){
+        using namespace re4dc::room;
+        unsigned at=sizeof(MeshHeader)+sizeof(MeshLodHeader);
+        const auto section=[&](unsigned bytes){unsigned pos=at;at=(at+bytes+3U)&~3U;return pos;};
+        std::memcpy(h.magic,"R4IM",4);h.version=3;
+        h.mesh_count=h.part_count=h.meshlet_count=h.palette_count=1;h.vertex_count=pool.size();
+        h.strip_bytes=512;for(const auto& s:strips)h.strip_bytes+=1+s.size();
+        h.mesh_offset=section(sizeof(MeshRecord));h.part_offset=section(sizeof(MeshPart));
+        h.meshlet_offset=section(sizeof(Meshlet));h.vertex_offset=section(pool.size()*sizeof(CompactVertex12));
+        h.strip_offset=section(h.strip_bytes);h.palette_offset=section(4);h.reserved[0]=kColorArgb1555;
+        lod.part_lod_offset=section(sizeof(MeshPartLod));lod.cluster_offset=lod.level_offset=at;h.bytes=at;
+        std::vector<std::uint8_t> b(at,0);store(b,0,h);store(b,sizeof(h),lod);
+        MeshRecord mesh{};mesh.part_count=1;mesh.step[0]=mesh.step[1]=mesh.step[2]=1;store(b,h.mesh_offset,mesh);
+        MeshPart part{};part.meshlet_count=1;store(b,h.part_offset,part);
+        Meshlet let{};let.vertex_count=256;let.strip_count=kIndexedMeshlet|strips.size();let.strip_bytes=h.strip_bytes-512;
+        store(b,h.meshlet_offset,let);
+        std::memcpy(b.data()+h.vertex_offset,pool.data(),pool.size()*sizeof(CompactVertex12));
+        std::memcpy(b.data()+h.strip_offset,offsets.data(),512);
+        unsigned cursor=h.strip_offset+512;
+        for(const auto& s:strips){b[cursor++]=s.size();std::memcpy(b.data()+cursor,s.data(),s.size());cursor+=s.size();}
+        words.resize(b.size()/4);std::memcpy(words.data(),b.data(),b.size());
+        assert(adopted.adopt(reinterpret_cast<const std::uint8_t*>(words.data()),b.size(),true,true));
+    }
+};
+struct Guarded {std::uint32_t before;alignas(4) CompactVertex12 corners[256];std::uint32_t after;};
+
+int main(){
+    static_assert(sizeof(Gather)==36);
+    std::mt19937 rng(240027);
+    unsigned packages=0,comparisons=0,emitted=0,refusals=0,unique_copies=0;
+    std::vector<CompactVertex12> pool(2048);
+    std::array<std::uint16_t,256> offsets;
+    const unsigned lengths[]={3,4,5,15,16,17,63,255};
+    for(unsigned trial=0;trial<320;++trial){
+        for(auto& v:pool){
+            v={std::uint16_t(rng()%2001),std::uint16_t(rng()%2001),std::uint16_t(rng()%12001),
+               std::uint16_t(rng()),std::uint16_t(rng()),std::uint16_t(rng())};
+            if(trial%8==0)v.z=30; // exact near
+            if(trial%8==1)v.z=29; // all behind near
+            if(trial%8==2)v.z=10021; // beyond far
+            if(trial%8==3)v.z=102; // accepted depth
+            if(trial%8==4)v.z=20; // projection z==0
+        }
+        for(unsigned i=0;i<256;++i)offsets[i]=(i*37+trial*17)%pool.size();
+        if(trial%3==0)offsets[255]=offsets[0]; // distinct local IDs alias source
+        std::vector<std::vector<std::uint8_t>> strips(4);
+        for(unsigned g=0;g<strips.size();++g){
+            strips[g].resize(lengths[(trial+g)%8]);
+            for(auto& i:strips[g])i=std::uint8_t(rng());
+            strips[g][0]=255;strips[g][1]=0;
+            if(trial%7==0)for(auto& i:strips[g])i=255; // degenerate repeated corner
+        }
+        if(trial%16==0){
+            strips[0].resize(255);for(unsigned i=0;i<255;++i)strips[0][i]=i;
+            strips[1]={253,254,255}; // full 256 local corners across strips
+        }
+        Package pkg(pool,offsets,strips);++packages;
+        const auto& let=pkg.adopted.meshlets()[0];
+        const auto* src=pkg.adopted.vertices()+let.first_vertex;
+        const auto* off=pkg.adopted.pool_offsets(let);
+        alignas(4) CompactVertex12 full[256];
+        for(unsigned i=0;i<256;++i)full[i]=src[off[i]];
+        for(unsigned cull=0;cull<4;++cull)for(unsigned alpha=0;alpha<2;++alpha)for(unsigned short_packet=0;short_packet<2;++short_packet){
+            Guarded local;std::memset(&local,0xa5,sizeof(local));Gather gather;
+            // No-clip pick begins without touching scratch or its mask.
+            std::memset(gather.seen,0x96,sizeof(gather.seen));gather.begin();
+            for(auto word:gather.seen)assert(word==0x96969696U);
+            std::array<bool,256> seen{};unsigned copied_total=0;
+            for(const auto& strip:strips){
+                unsigned fresh=0;for(auto index:strip)if(!seen[index]){seen[index]=true;++fresh;}
+                const unsigned copied=gather.fill(src,off,local.corners,strip.data(),strip.size());
+                assert(copied==fresh);copied_total+=copied;unique_copies+=copied;
+                assert(gather.fill(src,off,local.corners,strip.data(),strip.size())==0);
+                assert(local.before==0xa5a5a5a5U && local.after==0xa5a5a5a5U);
+                for(unsigned i=0;i<256;++i){
+                    if(seen[i])assert(!std::memcmp(full+i,local.corners+i,sizeof(*full)));
+                    else {
+                        const auto* bytes=reinterpret_cast<const unsigned char*>(local.corners+i);
+                        for(unsigned k=0;k<12;++k)assert(bytes[k]==0xa5);
+                    }
+                }
+                Emitter a,b;a.p.cull=b.p.cull=cull;a.vertex_alpha=b.vertex_alpha=alpha;
+                a.c4444=b.c4444=trial&1;
+                if(short_packet){a.limit=b.limit=6;a.submitted=b.submitted=trial&1;}
+                re4dc::room::CompactBatch batch{};batch.uv_bias[0]=.25f;batch.uv_bias[1]=-.125f;
+                batch.uv_scale[0]=1.0f/65535;batch.uv_scale[1]=1.0f/65535;
+                const int ra=a.clip_strip(full,batch,strip.data(),strip.size());
+                const int rb=b.clip_strip(local.corners,batch,strip.data(),strip.size());
+                assert(ra==rb && a.used==b.used && a.output==b.output);
+                assert(!std::memcmp(&a.stats,&b.stats,sizeof(a.stats)));
+                assert(!std::memcmp(a.storage.data(),b.storage.data(),sizeof(a.storage)));
+                emitted+=a.output;refusals+=ra<=0;++comparisons;
+            }
+            unsigned expected=0;for(bool x:seen)expected+=x;assert(copied_total==expected);
+            // A new pick must refresh previously seen local IDs from its pool.
+            auto changed=pool;changed[off[255]].color^=0xffff;gather.begin();
+            const std::uint8_t one[]={255,255,255};
+            assert(gather.fill(changed.data(),off,local.corners,one,3)==1);
+            assert(local.corners[255].color==changed[off[255]].color);
+        }
+        // Adopt remains the trust boundary for source/index/alignment checks.
+        if(trial==0){
+            auto rejected=pkg.words;auto* h=reinterpret_cast<re4dc::room::MeshHeader*>(rejected.data());
+            auto* l=reinterpret_cast<re4dc::room::Meshlet*>(reinterpret_cast<char*>(rejected.data())+h->meshlet_offset);
+            l->first_strip=1;re4dc::room::MeshPackage invalid;
+            assert(!invalid.adopt(reinterpret_cast<const std::uint8_t*>(rejected.data()),h->bytes,true,true));
+            rejected=pkg.words;h=reinterpret_cast<re4dc::room::MeshHeader*>(rejected.data());
+            auto* o=reinterpret_cast<std::uint16_t*>(reinterpret_cast<char*>(rejected.data())+h->strip_offset);o[255]=65535;
+            assert(!invalid.adopt(reinterpret_cast<const std::uint8_t*>(rejected.data()),h->bytes,true,true));
+        }
+    }
+    assert(emitted && refusals);
+    std::printf("{\"packages\":%u,\"clip_comparisons\":%u,\"emitted_triangles\":%u,\"capacity_refusals\":%u,\"unique_copies\":%u}\n",
+        packages,comparisons,emitted,refusals,unique_copies);
+}

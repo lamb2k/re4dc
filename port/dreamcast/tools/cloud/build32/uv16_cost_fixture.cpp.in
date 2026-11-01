@@ -1,0 +1,66 @@
+// Included after the complete production actor TU. pack_uv16 is the actual
+// cache/clip packing routine; admission calls the production helper.
+struct Uv32Fixture {
+    unsigned certificate;
+    bool signed_uv;
+    float offsets[2];
+    unsigned width,height;
+    float u_scale,v_scale;
+};
+alignas(32) static Uv32Fixture fixture_uv;
+alignas(32) static pvr_vertex_t fixture_cache[128];
+alignas(32) static unsigned char fixture_stream[4096];
+alignas(32) static std::uint16_t fixture_source_uv[128 * 2];
+static Re4dcModelPart fixture_part;
+extern "C" {
+extern const std::uintptr_t fixture_layout[]={2,std::uintptr_t(fixture_cache),sizeof(pvr_vertex_t),sizeof(fixture_uv),
+    std::uintptr_t(fixture_stream),std::uintptr_t(fixture_source_uv),std::uintptr_t(&uv32::counters.scanned_records)};
+void fixture_prepare(unsigned mode){
+    const unsigned count=(mode>>8)?mode>>8:128U;
+    mode&=255U;
+    fixture_uv={23U,true,{0,0},256,256,1,1}; // |raw|<=256, Q8, 0..1 UV
+    if(mode==1){fixture_uv.width=fixture_uv.height=1024;}
+    if(mode==2){fixture_uv.certificate=1;}
+    if(mode==3){fixture_uv.width=257;}
+    if(mode==4){fixture_uv.offsets[0]=re4dc::format32::uv_float(0x7fc00000U);}
+    if(mode==5){fixture_uv.width=fixture_uv.height=512;fixture_uv.u_scale=fixture_uv.v_scale=.5f;}
+    if(mode==6){fixture_uv.width=fixture_uv.height=64;fixture_uv.offsets[0]=.125f;}
+    if(mode==7){fixture_uv.certificate=26;fixture_uv.width=fixture_uv.height=64;}
+    for(unsigned i=0;i<128;++i){
+        fixture_cache[i]={PVR_CMD_VERTEX,float(i),float(i+1),1,
+            float(i)/128.0f,float(127U-i)/128.0f,0x7f112233U,0U};
+        fixture_source_uv[i*2]=std::uint16_t(i*2);
+        fixture_source_uv[i*2+1]=std::uint16_t((127U-i)*2);
+    }
+    std::memset(fixture_stream,0,sizeof(fixture_stream));
+    auto& header=*reinterpret_cast<BlobHeader*>(fixture_stream);
+    header.magic=kMagic;header.version=kVersion;header.flags=23U<<2;
+    header.meshlets=1;header.rec4=10;header.idx4=(40+128*6)/4;
+    auto& meshlet=*reinterpret_cast<MeshletInfo*>(fixture_stream+sizeof(BlobHeader));
+    meshlet.n=Counts::of(count,3,1);meshlet.first=0;meshlet.index=0;
+    auto* records=reinterpret_cast<std::uint16_t*>(fixture_stream+40);
+    for(unsigned i=0;i<128;++i){records[i*3]=i;records[i*3+1]=i;records[i*3+2]=i;}
+    fixture_part={};fixture_part.stream=fixture_stream;fixture_part.stream_bytes=sizeof(fixture_stream);
+    fixture_part.uv=reinterpret_cast<const unsigned char*>(fixture_source_uv);fixture_part.flags=0x80000000U;
+    if(mode==2)header.flags=1U<<2;
+    if(mode==8)fixture_source_uv[0]=1036;
+    if(mode==9)fixture_source_uv[127U*2+1]=1036;
+    if(mode==10){fixture_source_uv[0]=65408;header.flags=22U<<2;fixture_part.flags=0;}
+    if(mode==11)meshlet.first=65535;
+    uv32::counters={};
+}
+__attribute__((noinline)) unsigned fixture_decide(unsigned){
+    return re4dc::format32::uv_decide(fixture_uv.certificate,fixture_uv.signed_uv,
+        fixture_uv.offsets,fixture_uv.width,fixture_uv.height,fixture_uv.u_scale,fixture_uv.v_scale);
+}
+__attribute__((noinline)) unsigned fixture_source(unsigned){
+    return uv32::checked_certificate(fixture_part,*reinterpret_cast<const BlobHeader*>(fixture_stream));
+}
+__attribute__((noinline)) unsigned fixture_checked_decide(unsigned){
+    const unsigned certificate=uv32::checked_certificate(fixture_part,*reinterpret_cast<const BlobHeader*>(fixture_stream));
+    return re4dc::format32::uv_decide(certificate,(fixture_part.flags&0x80000000U)!=0,
+        fixture_uv.offsets,fixture_uv.width,fixture_uv.height,fixture_uv.u_scale,fixture_uv.v_scale);
+}
+__attribute__((noinline)) unsigned fixture_pack_cache(unsigned n){pack_uv16(fixture_cache,n,true);return n;}
+__attribute__((noinline)) unsigned fixture_pack_clip(unsigned n){pack_uv16(fixture_cache,n,false);return n;}
+}

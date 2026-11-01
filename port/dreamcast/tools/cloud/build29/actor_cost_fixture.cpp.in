@@ -1,0 +1,38 @@
+// Appended to the complete unchanged actor TU. Identity callbacks come from
+// the actual separately compiled model_bridge.cpp, not a successful stub.
+extern "C" {
+Re4dcModelPart fixture_part;
+SourceLighting fixture_source;
+Lights fixture_lights;
+void fixture_prepare(unsigned config) {
+    re4dc::fa29::reset();
+    re4dc::fa29::begin_tick(17,0x103);
+    fixture_part=Re4dcModelPart{};
+    fixture_source=SourceLighting{};
+    fixture_lights=Lights{};
+    fixture_source.enable=1;
+    fixture_part.lighting=&fixture_source;
+    fixture_part.position_count=128; fixture_part.normal_count=128;
+    fixture_part.stream_bytes=4096;
+    // A null model deliberately measures the real unknown-owner callback.
+    // Valid asset-table traversal is not covered by this synthetic fixture.
+    const unsigned fill=config&63U, target=(config>>6)&63U;
+    for(unsigned i=0;i<fill;++i) {
+        fixture_part.part=reinterpret_cast<void*>(0x1000+i*64);
+        fa29_actor_note(fixture_part,fixture_lights);
+    }
+    fixture_part.part=reinterpret_cast<void*>(0x1000+target*64);
+    if(config&(1U<<12))re4dc::fa29::pause();
+    if(config&(1U<<13))fixture_lights.fast=true;
+    if(config&(1U<<14))fixture_lights.probe=true;
+    if(config&(1U<<15))fixture_source.tev_scale=0.5f;
+}
+__attribute__((noinline)) void fixture_note(unsigned) { fa29_actor_note(fixture_part,fixture_lights); }
+__attribute__((noinline)) void fixture_vertices(unsigned n) { fa29_actor_exact_vertices(fixture_part,n); }
+extern const uintptr_t fixture_layout[]={
+    1,sizeof(fa29_actor_rows),sizeof(re4dc::fa29actor::Row),
+    uintptr_t(&fa29_actor_rows.used),uintptr_t(&fa29_actor_rows.spill),
+    uintptr_t(fa29_actor_rows.rows),offsetof(re4dc::fa29actor::Row,setups),
+    offsetof(re4dc::fa29actor::Row,exact_vertices),offsetof(re4dc::fa29actor::Row,context_changes)
+};
+}

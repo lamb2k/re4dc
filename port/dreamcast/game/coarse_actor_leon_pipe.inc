@@ -42,7 +42,7 @@ bool leon_bind(cModel* m) {
         for(unsigned i=0;i<119;++i) {
             if(!part)return false;parts[i]=part;
             for(unsigned j=0;j<12;++j)if(!coarse_finite((&part->lt_inv_mat[0][0])[j]) ||
-                __builtin_fabsf((&part->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f)return false;
+                (!RE4DC_LEON_RIG_SIM(i) && __builtin_fabsf((&part->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f))return false;
             part=part->pList;
         }
         if(part)return false;
@@ -134,7 +134,7 @@ int leon_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
     alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
     for(unsigned u=0;u<skin_used;++u) {
         const unsigned b=skin_bone[u];
-        skin_jobs[u]={&parts[b]->mat[0][0],&parts[b]->lt_inv_mat[0][0],bone_T[b]};
+        skin_jobs[u]={&parts[b]->mat[0][0],RE4DC_LEON_BIND_ROW(b,parts[b]),bone_T[b]};
     }
     re4dc_coarse_skin_bones(invx,skin_jobs,skin_used);
     unsigned big=0;
@@ -267,7 +267,12 @@ int leon_pass(cModel* m,ActorOwnedRecord& r,bool admitting) {
     if(result!=1){actor_release(r);actor_fail();return -1;}
     ATD(m,n?(pass==1?18u:19u):17u,n,r.plan.appearance);
     r.submitted|=n!=0;r.done|=pass;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(r.done==r.passes &&
+       (!re4dc_actor_skin_finish_owner(&r.skin) || !actor_release(r)))return -1;
+#else
     if(r.done==r.passes && !actor_release(r))return -1;
+#endif
     return 1;
 }
 

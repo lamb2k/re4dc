@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "sanitized": false,
+  "leak_sanitizer": false,
+  "scope": "Actual QA protocol block and driving entry points, synthetic bounded transport/clock/diagnostic/disc providers; no KOS, hardware or real assets.",
+  "source_sha256": {
+    "port/dreamcast/game/qa_menu.cpp": "6a47be60d85b10265e79bc35d6ea8834212d952964493c18be50e9742170bc05",
+    "port/dreamcast/game/platform/include/qa_link_review28.hpp": "4d8257a21e84f16bdf17d12e8ee918daa031863071504bd42f8d36174fb6e200",
+    "port/dreamcast/tools/cloud/build28/menu_contract.py": "8d869c7b3e6e76283b67e15a5d20bcb7c366c4d982de52d5c902bd8112727736"
+  },
+  "profiles": [
+    {
+      "status": "PASS",
+      "cases": 166,
+      "snapshot_retry_cases": 54,
+      "attempts": 1652,
+      "refusals": 1436,
+      "sort_cases": 80,
+      "max_datagram": 1130,
+      "diag_capacity": 3072,
+      "profile": "plain"
+    },
+    {
+      "status": "PASS",
+      "cases": 166,
+      "snapshot_retry_cases": 54,
+      "attempts": 1652,
+      "refusals": 1436,
+      "sort_cases": 80,
+      "max_datagram": 1130,
+      "diag_capacity": 4096,
+      "profile": "light"
+    },
+    {
+      "status": "PASS",
+      "cases": 166,
+      "snapshot_retry_cases": 54,
+      "attempts": 1652,
+      "refusals": 1436,
+      "sort_cases": 80,
+      "max_datagram": 1130,
+      "diag_capacity": 7168,
+      "profile": "fallback"
+    },
+    {
+      "status": "PASS",
+      "cases": 166,
+      "snapshot_retry_cases": 54,
+      "attempts": 1652,
+      "refusals": 1436,
+      "sort_cases": 80,
+      "max_datagram": 1130,
+      "diag_capacity": 8192,
+      "profile": "setup"
+    },
+    {
+      "status": "PASS",
+      "cases": 166,
+      "snapshot_retry_cases": 54,
+      "attempts": 1652,
+      "refusals": 1436,
+      "sort_cases": 80,
+      "max_datagram": 1130,
+      "diag_capacity": 12288,
+      "profile": "both"
+    }
+  ]
+}

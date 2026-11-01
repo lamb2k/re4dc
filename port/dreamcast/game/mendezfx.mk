@@ -82,3 +82,21 @@ FX_ROOM_SPILL_FORCE ?= 0
 ifeq ($(FX_ROOM_SPILL_FORCE),1)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_ROOM_SPILL_FORCE=1
 endif
+# FX_R200_ENTRY_CAP=1 (render only, #41): after a distinct room spill fills in live r200, reuse the already allocated
+#   8 KiB model-slab tail for effects. No new heap cell, unchanged UI/world margins and effect cap. The tail is never
+#   reused when it is the active fallback spill, and its cursor follows the existing frame-queue retirement.
+FX_R200_ENTRY_CAP ?= 0
+ifeq ($(filter $(FX_R200_ENTRY_CAP),0 1),)
+$(error FX_R200_ENTRY_CAP must be 0 or 1)
+endif
+ifeq ($(FX_R200_ENTRY_CAP),1)
+ifeq ($(FX_ROOM_SPILL_KB),0)
+$(error FX_R200_ENTRY_CAP needs FX_ROOM_SPILL_KB greater than 0)
+endif
+ifneq ($(NATIVE_STATIC)$(EFFECT_SPRITES)$(D349_RENDERER_STACK)$(PVR_STREAM),1111)
+$(error FX_R200_ENTRY_CAP needs NATIVE_STATIC=1 EFFECT_SPRITES=1 D349_RENDERER_STACK=1 PVR_STREAM=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FX_R200_ENTRY_CAP=1
+$(OBJDIR)/platform/native_ui.o: platform/include/fx_r200_entry_cap.h
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_FX_R200_ENTRY_CAP=1
+endif

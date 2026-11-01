@@ -1,0 +1,32 @@
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <initializer_list>
+#include <vector>
+using u8=std::uint8_t;using u16=std::uint16_t;using u32=std::uint32_t;using f32=float;
+static unsigned checks;
+static const char* case_name;
+#define CHECK(x) do{++checks;if(!(x)){std::fprintf(stderr,"FAIL %s:%d: %s\n",case_name,__LINE__,#x);std::abort();}}while(0)
+namespace re4dc { namespace fa35 {
+enum Reason {
+#define FA35_REASON(symbol,label,unit) symbol,
+#include "fallback_audit35.def"
+#undef FA35_REASON
+ReasonCount };
+static std::uint32_t counts[ReasonCount];
+static void hit(Reason r,std::uint32_t n=1){CHECK(unsigned(r)<ReasonCount);counts[r]+=n;}
+} }
+#define EXPECT(reason,n) CHECK(re4dc::fa35::counts[re4dc::fa35::reason]==(RE4DC_FALLBACK_AUDIT35?unsigned(n):0U))
+static void begin(const char* name){case_name=name;checks=0;std::fill(re4dc::fa35::counts,re4dc::fa35::counts+re4dc::fa35::ReasonCount,0);}
+static unsigned hash_word(unsigned h,unsigned value){return (h^value)*16777619U;}
+static unsigned hash_bytes(const void* ptr,unsigned n){unsigned h=2166136261U;const auto* p=static_cast<const u8*>(ptr);for(unsigned i=0;i<n;++i)h=hash_word(h,p[i]);return h;}
+static void done(unsigned semantic){
+    std::printf("{\"case\":\"%s\",\"checks\":%u,\"semantic\":%u,\"events\":[",case_name,checks,semantic);
+    for(unsigned i=0;i<re4dc::fa35::ReasonCount;++i)std::printf("%s%u",i?",":"",re4dc::fa35::counts[i]);
+    std::puts("]}");
+}
+extern "C" void re4dc_log(const char*,...){}

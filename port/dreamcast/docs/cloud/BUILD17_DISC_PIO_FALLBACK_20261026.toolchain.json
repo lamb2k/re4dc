@@ -1,0 +1,129 @@
+{
+  "archives": {
+    "kos/utils/kos-chain/binutils-2.45.1.tar.xz": {
+      "bytes": 27962312,
+      "sha256": "5fe101e6fe9d18fdec95962d81ed670fdee5f37e3f48f0bef87bddf862513aa5"
+    },
+    "kos/utils/kos-chain/gcc-15.2.0.tar.xz": {
+      "bytes": 101056276,
+      "sha256": "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e"
+    },
+    "kos/utils/kos-chain/gcc-15.2.0/gettext-0.22.tar.gz": {
+      "bytes": 26105696,
+      "sha256": "49f089be11b490170bbf09ed2f51e5f5177f55be4cc66504a5861820e0fb06ab"
+    },
+    "kos/utils/kos-chain/gcc-15.2.0/gmp-6.2.1.tar.bz2": {
+      "bytes": 2493916,
+      "sha256": "eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c"
+    },
+    "kos/utils/kos-chain/gcc-15.2.0/isl-0.24.tar.bz2": {
+      "bytes": 2261594,
+      "sha256": "fcf78dd9656c10eb8cf9fbd5f59a0b6b01386205fe1934b3b287a0a1898145c0"
+    },
+    "kos/utils/kos-chain/gcc-15.2.0/mpc-1.2.1.tar.gz": {
+      "bytes": 838731,
+      "sha256": "17503d2c395dfcf106b622dc142683c1199431d095367c6aacba6eec30340459"
+    },
+    "kos/utils/kos-chain/gcc-15.2.0/mpfr-4.1.0.tar.bz2": {
+      "bytes": 1747243,
+      "sha256": "feced2d430dd5a97805fa289fed3fc8ff2b094c02d05287fd6133e7f1f0ec926"
+    },
+    "kos/utils/kos-chain/newlib-4.6.0.20260123.tar.gz": {
+      "bytes": 9208322,
+      "sha256": "6ff27e3bf022666f43f7802255be680eeff722ac181b1725d21e2e8318604ee3"
+    }
+  },
+  "build_command": "make build platform=dreamcast toolchain_profile=stable toolchain_path=/tmp/re4dc-triage-toolchain-20261026/sh-elf makejobs=7 verbose=0 install_mode=install-strip gnu_mirror=ftp.gnu.org",
+  "compiler_executable_sha256": {
+    "sh-elf/bin/sh-elf-addr2line": "9a16d49f9c96bfc624df5f7d7966c1a23f987129b8bf18c856f7fae1328355f2",
+    "sh-elf/bin/sh-elf-ar": "78245e751a8e0adc2d0fd5897e823ce23d7bd4b5f088319e01e675ba2495d007",
+    "sh-elf/bin/sh-elf-as": "6694a478e800484ecd6d67f8dd6f5a0c60395d7ea9e1947f0a328e6c4403d007",
+    "sh-elf/bin/sh-elf-c++": "0cdda7aca357d1d9d88a7fe639bad330c7e2183e1d3e823123cd47aaf9ba1b17",
+    "sh-elf/bin/sh-elf-c++filt": "65393c3a00af92e6a89c00c2cddf8a070156a9b498a1e611a614235c2125f3a3",
+    "sh-elf/bin/sh-elf-cpp": "ce0b03c345a89c5b66218da5d7ccdc28a70230cc6d8439029abc400ad7f1fb6d",
+    "sh-elf/bin/sh-elf-elfedit": "33b57f557f86d2dd60d2758a360c4d1eca198f2ef0ab2250252b79be58db3c5a",
+    "sh-elf/bin/sh-elf-g++": "0cdda7aca357d1d9d88a7fe639bad330c7e2183e1d3e823123cd47aaf9ba1b17",
+    "sh-elf/bin/sh-elf-gcc": "37c2797b63e6dcc86d761bfb7657c96fe1089daa9dadac525a7eb3b12b07544f",
+    "sh-elf/bin/sh-elf-gcc-15.2.0": "37c2797b63e6dcc86d761bfb7657c96fe1089daa9dadac525a7eb3b12b07544f",
+    "sh-elf/bin/sh-elf-gcc-ar": "73cefd15c2cdda0961da26549d65375a3ea8eb199724863617678bfa67c1e18c",
+    "sh-elf/bin/sh-elf-gcc-nm": "0748a4f6586a279350d792d2d841c5d9732c70e51fc415282ac03f126756f3c1",
+    "sh-elf/bin/sh-elf-gcc-ranlib": "2bfd4e67ed8dd6bc9142c4cad5e8b7ea111b948b69451be87633677c5d5ec198",
+    "sh-elf/bin/sh-elf-gcov": "a0b961ccab6802f16f2f555c96ddc596f700090a16227bd741ab3a00fdf9afc3",
+    "sh-elf/bin/sh-elf-gcov-dump": "e33e2d2ba0957f7368c1a1df3f7d466b8baed8539a08072561274c7eaa8099ae",
+    "sh-elf/bin/sh-elf-gcov-tool": "dcfae35fcbff18c47bf9d700780ab034ecf07a79fe421a7effe0c09cd849ee30",
+    "sh-elf/bin/sh-elf-gprof": "42086be59292e1585020233cbfe519718e5e8fe8d44ed2adde94bdf0f57b4fc5",
+    "sh-elf/bin/sh-elf-ld": "a221f90ac550c0ec8e0d369201fde0635776eec4378437c4aa2c4b026a61e73f",
+    "sh-elf/bin/sh-elf-ld.bfd": "a221f90ac550c0ec8e0d369201fde0635776eec4378437c4aa2c4b026a61e73f",
+    "sh-elf/bin/sh-elf-lto-dump": "b2130c89185580f76e17fdac17d791d9af89147aa3ae454e41829b2027e5be9b",
+    "sh-elf/bin/sh-elf-nm": "a553257188c44092f457ad552e2a429b0923879e8cdeeee6435c7dbf26733ccb",
+    "sh-elf/bin/sh-elf-objcopy": "528373efb927bbf9b3f911cf1a40b7b7c1368021f2099c417fc5147935f08b8a",
+    "sh-elf/bin/sh-elf-objdump": "2325b9fefe689b9e949171f833c38ee3d476932871dbed8b2bda1626c729029b",
+    "sh-elf/bin/sh-elf-ranlib": "89812979b9574926953f9051104f37e7815f44ce92248ee148d19e5d2a3170f7",
+    "sh-elf/bin/sh-elf-readelf": "2eaa7c482e7f3d0babac71dbcc13ff8cff66c2e1963b2b69e2ad0817728bd11f",
+    "sh-elf/bin/sh-elf-size": "4db815a81ecb5afe88a4d756210de8c7aeaf20707146932a3235c7a93dd33483",
+    "sh-elf/bin/sh-elf-strings": "88fa04b157ed460faf8a69fc77fd7be1721dfeeca5facfc07510457a844eb22d",
+    "sh-elf/bin/sh-elf-strip": "22574b15c9cd1e4dfd11b95b3d4702ec3b90bab0d809057b2fc6dc0aaf0e4450",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/cc1": "0e9a2b8422b2bd20c4548cf6396d41afd2eec9673f76f4fe69abbde567dea6d6",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/cc1obj": "d623eefce384ae3c8a49a506388df5a20c7d8f5694569c90acd6d2cb1f6e9da5",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/cc1objplus": "b1a615ccaf4773f8e4b58fcb8c5501cd2586c74738f3b17547b533d821899f2b",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus": "6eea6c90a53b17fe454105c1a26960d695729a5ca500be428704213f575536ae",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/collect2": "5538d375d6c481f4e6bab5da836c07d7eb06573b2f07c08a3a9d3213a7e11c4b",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/g++-mapper-server": "64084bdcd6e63feb550b9db48f2a714db5d8b5ae5658fb3115e7bcc1a899d7f7",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/liblto_plugin.la": "4bfa756deb41d86662bd4064857a4090a1b3b9e893feea587675d7314fa841dd",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/liblto_plugin.so": "27c809cf8c6c598f823dcd3b4388768becf2994acc7a08b79f13156cfcae3b4f",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/lto-wrapper": "4996ac2f0230f8dd45899af2c0031d43e47651b6f2b6bc4cc38f5e48cc679557",
+    "sh-elf/libexec/gcc/sh-elf/15.2.0/lto1": "c3268980e5c7b5f1d285f2a40a45e776adb67eb92b0afd3c7689bb917464f43a"
+  },
+  "gcc_bundled_prerequisite_checksum_file_sha256": "498d2b0d97fc3304305d3b8130cbe6f479c9acccc7fff81f0ce957fa85b62be2",
+  "gcc_configuration": "Using built-in specs.\nCOLLECT_GCC=/tmp/re4dc-triage-toolchain-20261026/sh-elf/bin/sh-elf-gcc\nCOLLECT_LTO_WRAPPER=/tmp/re4dc-triage-toolchain-20261026/sh-elf/libexec/gcc/sh-elf/15.2.0/lto-wrapper\nTarget: sh-elf\nConfigured with: ../gcc-15.2.0/configure --target=sh-elf --prefix=/tmp/re4dc-triage-toolchain-20261026/sh-elf --with-gnu-as --with-gnu-ld --with-newlib --disable-libssp --enable-threads=kos --enable-languages=c,c++,objc,obj-c++ --enable-checking=release --with-multilib-list=m4-single,m4-single-only --with-endian=little --with-cpu=m4-single MAKEINFO=missing CC='cc -std=gnu17' CXX='g++ -std=gnu++14'\nThread model: kos\nSupported LTO compression algorithms: zlib\ngcc version 15.2.0 (GCC)",
+  "gxx_configuration": "Using built-in specs.\nCOLLECT_GCC=/tmp/re4dc-triage-toolchain-20261026/sh-elf/bin/sh-elf-g++\nCOLLECT_LTO_WRAPPER=/tmp/re4dc-triage-toolchain-20261026/sh-elf/libexec/gcc/sh-elf/15.2.0/lto-wrapper\nTarget: sh-elf\nConfigured with: ../gcc-15.2.0/configure --target=sh-elf --prefix=/tmp/re4dc-triage-toolchain-20261026/sh-elf --with-gnu-as --with-gnu-ld --with-newlib --disable-libssp --enable-threads=kos --enable-languages=c,c++,objc,obj-c++ --enable-checking=release --with-multilib-list=m4-single,m4-single-only --with-endian=little --with-cpu=m4-single MAKEINFO=missing CC='cc -std=gnu17' CXX='g++ -std=gnu++14'\nThread model: kos\nSupported LTO compression algorithms: zlib\ngcc version 15.2.0 (GCC)",
+  "host_config_guess_sha256": "7d1e3c79b86de601c3a0457855ab854dffd15163f53c91edac54a7be2e9c931b",
+  "host_config_sub_sha256": "71b8d73e46e0c31b1dc91ba5306f5ef0af009273b3bb283f31d8dad69666fa9e",
+  "host_package_method": "signed Ubuntu snapshot package indexes; local dpkg-deb extraction; no global package install",
+  "host_packages": {
+    "bison_2%3a3.8.2+dfsg-1build2_amd64.deb": "18f487c400da3e968a44ecb3783a443641bcd14e2b080ed9ed1167f4aa2c1612",
+    "flex_2.6.4-8.2build1_amd64.deb": "c5604f55827b50e3f568b4731b7799f86b147454c867be02bc141d9d8ce561ff",
+    "libgmp-dev_2%3a6.3.0+dfsg-2ubuntu6.1_amd64.deb": "a9847b5ecfff791a46cb198f29a06d9d23a20afdfdd434812f2b44ccfb61d46a",
+    "libgmp10_2%3a6.3.0+dfsg-2ubuntu6.1_amd64.deb": "285f8a505dfa8e1b33f357a9d8d3477ad35bf18c0b34771a6df4c25923f3ae0d",
+    "libmpc-dev_1.3.1-1build1.1_amd64.deb": "42a911f2771637dc830f08c0e3b79d20107fa07498af2b49dc44821de94a209e",
+    "libmpc3_1.3.1-1build1.1_amd64.deb": "cebe6098bb3d66fdacac9dc6fe406a651216d9c00f27c3f9c159d15d96cdf864",
+    "libmpfr-dev_4.2.1-1build1.1_amd64.deb": "362fcdeb7dff545af83e65a3a972519185efd4a231c23e13d519cf97a5c8e3e4",
+    "libmpfr6_4.2.1-1build1.1_amd64.deb": "aebc1c8b69a1f98bb43dfc268daecd181116dbf40b13ee4e822eb4bdd52b493a",
+    "libtext-unidecode-perl_1.30-3_all.deb": "6595aa8edd7f2de116acd4043652697346fa8e157e9fdf14ada152a0ce04f0b2",
+    "libxml-libxml-perl_2.0207+dfsg+really+2.0134-1build4_amd64.deb": "9fb537ee60e15fd709b3315fcf963ce501d11894938e0e732108a410042bbba6",
+    "libxml-namespacesupport-perl_1.12-2_all.deb": "fa5c5ba9beb445220d9c73282f0845bfc3a0e1481e324175792b07155276807b",
+    "libxml-sax-base-perl_1.09-3_all.deb": "08ed3ee24927c53638871d2be63d5dd9c0f1f42a58124b4b28c776bb8f0b5888",
+    "libxml-sax-perl_1.02+dfsg-3_all.deb": "c75639a373b5873248e03c53ae204e0832e5b9addc22b6484e3851141868af65",
+    "texinfo_7.1-3build2_all.deb": "d45be908b080a764422bf8dc337381b7ba697e4dae0fd59a862f97588a9ef71a"
+  },
+  "kos_applied_patch_sha256": {
+    "kos-804b319-async-present.patch": "d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442",
+    "kos-804b319-manual-flip.patch": "c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df",
+    "kos-804b319-vbuf-switch.patch": "52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7"
+  },
+  "kos_commit": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "kos_patches": [
+    "manual-flip",
+    "async-present",
+    "vbuf-switch"
+  ],
+  "kos_source_remote": "https://github.com/KallistiOS/KallistiOS.git",
+  "newlib_version_macros": [
+    "#define _NEWLIB_VERSION_H__ 1",
+    "#define _NEWLIB_VERSION \"4.6.0\""
+  ],
+  "scope": "SH4 C/C++ object compilation with pinned KOS headers; no ARM toolchain, KOS library build, full game link, hardware, or game data.",
+  "smoke-c.o_sha256": "8738e4bf51e265bdc2c351ed2f27a6edfbdd6dc13c0b46284ed97c8062edeeee",
+  "smoke-cxx.o_sha256": "b1b23d1fab2d6a7e3f81afeaae4d45a52febe4c2c0b81c91179b9cfa9f93c2e1",
+  "smoke_source_sha256": "d53f41d832851ea508a252f6ce0d71805ff0d64ca2c2dfb6798abde861f55658",
+  "source": "repository-pinned KOS stable profile",
+  "source_archive_transport": "GCC/binutils/newlib source archives fetched from official GNU/Sourceware HTTPS; SHA256 recorded locally, not compared to a separately published checksum list. GCC prerequisites fetched by bundled contrib/download_prerequisites (HTTP/HTTPS) and verified successfully against the bundled prerequisites.sha512.",
+  "status": "COMPLETE",
+  "versions": {
+    "sh-elf-as": "GNU assembler (GNU Binutils) 2.45.1",
+    "sh-elf-g++": "sh-elf-g++ (GCC) 15.2.0",
+    "sh-elf-gcc": "sh-elf-gcc (GCC) 15.2.0",
+    "sh-elf-ld": "GNU ld (GNU Binutils) 2.45.1",
+    "sh-elf-objdump": "GNU objdump (GNU Binutils) 2.45.1"
+  }
+}

@@ -350,6 +350,14 @@ def main():
     if keepf.exists():
         keep_lines = [x.strip() for x in keepf.read_text().splitlines() if x.strip() and not x.startswith('#')]
     extra += keep_lines
+    # the rr release candidate (rr/README.md): its objdirs (out-rr<sha7>*, out-fprr<sha7>*) sit idle for hours while
+    # the full tier, packaging and the release read them; 11-01 a prune took the Test 25 release ELF mid-package.
+    try:
+        lg = Path('/root/rr/state/last-good').read_text()
+        s7 = next(l.split('=', 1)[1].strip() for l in lg.splitlines() if l.startswith('sha='))[:7]
+        PROTECT_NAMES.extend(['out-rr%s*' % s7, 'out-fprr%s*' % s7])
+    except (OSError, StopIteration):
+        pass
     keep_prefixes = [e.rstrip('/') for e in extra if '/' in e]
     keep_tokens = set(KEEP_TOKENS) | {e for e in extra if '/' not in e}
 

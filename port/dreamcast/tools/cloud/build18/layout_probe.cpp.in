@@ -1,0 +1,28 @@
+// Appended to unchanged production native_ui.cpp in a separate layout object.
+extern "C" const unsigned fixture_fx18_layout[] = {
+    sizeof(re4dc::fx_r200::Tail), sizeof(re4dc::fx_r200::Context),
+    sizeof(DeferredPart), kSpriteNode, kSpritePacket,
+#if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
+    kLinePacket,
+#else
+    0,
+#endif
+#if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 4)
+    kOctPacket,
+#else
+    0,
+#endif
+#if RE4DC_FX_SPRITE_TRIM
+    kFxOctPacket,
+#else
+    0,
+#endif
+    sizeof(Re4dcUiQuad), sizeof(frame_storage), kModelSlabBytes, kModelDeferredSpillBytes,
+    kModelPacketBytes, kModelPreparationBytes, kModelMetadataBytes, kModelStaticLightBytes,
+    RE4DC_EFFECT_SPRITE_MAX, RE4DC_FX_QUEUE_MARGIN,
+#if defined(RE4DC_FX_ROOM_SPILL_KB)
+    RE4DC_FX_ROOM_SPILL_KB
+#else
+    0
+#endif
+};

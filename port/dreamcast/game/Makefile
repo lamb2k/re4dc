@@ -937,9 +937,39 @@ ifneq ($(WEAPON_WEP04),0)
 ifneq ($(WEAPON_WEP04),1)
 $(error WEAPON_WEP04 must be 0 or 1)
 endif
+ifeq ($(WEAPON_WEP04_OVL),1)
+MODULES += wep04:ovl
+else
 MODULES += wep04
+endif
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_WEP04=1
 endif
+# WEAPON_WEP04_OVL=1 (lane heap-margin25 2026-10-25, default 0: no effect; needs WEAPON_WEP04=1 and ROUTE_OVL=1): the
+# Blacktail module is a room overlay (/cd/dc/wep04.ovl, platform/modules.cpp weapon slot) instead of resident code: the
+# weapon load's DLL_Link reads it into heap 4, the weapon release's unlink frees it. The image loses its ~7.4 KB (heap 4
+# couples to the image size: r100 s30 heap_before). A room reset with the Blacktail linked releases the weapon data first
+# (read.cpp re4dc_weapon_ovl_room_reset), so the next room's player constructor reads and links it again. The section is
+# appended last to RE4DC_LINK_OVERLAY (end of this file) so every other overlay keeps its link address.
+WEAPON_WEP04_OVL ?= 0
+ifneq ($(WEAPON_WEP04_OVL),0)
+ifneq ($(WEAPON_WEP04_OVL)$(WEAPON_WEP04)$(ROUTE_OVL),111)
+$(error WEAPON_WEP04_OVL must be 0 or 1 and needs WEAPON_WEP04=1 ROUTE_OVL=1)
+endif
+$(OBJDIR)/platform/modules.o $(OBJDIR)/src/game/read.o $(OBJDIR)/src/game/game.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_WEP04_OVL=1
+$(OBJDIR)/src/game/read.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_WEP04_OVL=1
+endif
+# WEAPON_WEP05=1 (lane gc-audit25 2026-10-25, default 0: no effect): weapon 5 (item 0x29, archive em/wep05.drs, module
+# 67, src/wep05) links statically like WEAPON_WEP04. Without it the equip (SubScreenExit / ItemMgr.debugWeapon ->
+# weaponLoad -> DLL_Link) finds no module 67 entry and halts "DLL link/unlink failed" (rel/wep05.rel is not on the disc).
+WEAPON_WEP05 ?= 0
+ifneq ($(WEAPON_WEP05),0)
+ifneq ($(WEAPON_WEP05),1)
+$(error WEAPON_WEP05 must be 0 or 1)
+endif
+MODULES += wep05
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_WEP05=1
+endif
+include wep_modules27.mk
 # EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
 # succeed; roll back only this attempt's bin references on admission failure.
 EVD_ADMISSION_TXN ?= 1
@@ -1359,6 +1389,22 @@ CROWD_FLAT ?= 0
 # ACTOR_SKIN_FTRV=1: skinned palette matrices (screen x [R*q | t]) built with FTRV instead of
 # scalar maths (render only, native_actor_fast.cpp skin_position_matrix).
 ACTOR_SKIN_FTRV ?= 0
+# ACTOR_LIGHT_FAST_ONLY=1 (Build 25, render approximation): one live part colour
+# for every native/generic model path; static RGB only multiplies it. No vertex
+# lighting evaluator or runtime relight is compiled. Default 0 preserves source/objects.
+ACTOR_LIGHT_FAST_ONLY ?= 0
+ifneq ($(words $(ACTOR_LIGHT_FAST_ONLY)),1)
+$(error ACTOR_LIGHT_FAST_ONLY must be 0 or 1)
+endif
+ifeq ($(filter $(ACTOR_LIGHT_FAST_ONLY),0 1),)
+$(error ACTOR_LIGHT_FAST_ONLY must be 0 or 1)
+endif
+ifeq ($(ACTOR_LIGHT_FAST_ONLY),1)
+ifneq ($(NATIVE_ACTOR)$(NATIVE_ACTOR_FAST),11)
+$(error ACTOR_LIGHT_FAST_ONLY needs NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_model.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_LIGHT_FAST_ONLY=1
+endif
 # ACTOR_EXACT_FAST=1 (render only; default 1 with ROUTE_CH21=1, else 0: no effect): the actor path's exact per-vertex
 # lighting (parts whose lights do not fold into three directions, e.g. r119's trees under up to eight flickering torch
 # lights: ~46 hw ms a frame) with the per-light constants out of the vertex loop and fsrra for the light distance
@@ -1840,6 +1886,41 @@ KOS_DISC_FIX ?= 0
 ifneq ($(filter $(KOS_DISC_FIX),0 1),$(KOS_DISC_FIX))
 $(error KOS_DISC_FIX must be 0 or 1)
 endif
+# Build17 / issue28: opt-in bounded direct-sector DMA, same-sector PIO retry,
+# and permanent session PIO after two consecutive failed DMA attempts. Streams
+# are refused from startup so their untimed KOS waits cannot block the retry.
+# No source/object change when absent or 0; the release recipe is unchanged.
+DISC_PIO_FALLBACK ?= 0
+ifneq ($(filter $(DISC_PIO_FALLBACK),0 1),$(DISC_PIO_FALLBACK))
+$(error DISC_PIO_FALLBACK must be 0 or 1)
+endif
+ifeq ($(DISC_PIO_FALLBACK),1)
+ifneq ($(KOS_DISC_FIX),1)
+$(error DISC_PIO_FALLBACK=1 needs KOS_DISC_FIX=1)
+endif
+ifeq ($(filter 2 3,$(DISC_READ_FALLBACK)),)
+$(error DISC_PIO_FALLBACK=1 needs DISC_READ_FALLBACK=2 or 3)
+endif
+ifneq ($(filter-out 0,$(DISC_FAIL_TEST) $(DVD_STUCK_TEST) $(DISC_DMA_DROP_TEST)),)
+$(error DISC_PIO_FALLBACK uses its synthetic fake-driver gate; legacy disc fault hooks must be 0)
+endif
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_PIO_FALLBACK=1
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_DISC_PIO_FALLBACK=1 -I$(CURDIR)/platform
+$(OBJDIR)/platform/dvd_read_safe.o: platform/disc_pio_fallback.h platform/disc_pio_native.inc
+$(OBJDIR)/src/game/snd.o: platform/disc_stream_table_check.h
+endif
+# CACHE_COHERENT_DMA=1 (lane fix-r100-props26 2026-10-26, default 0 = image unchanged): operand-cache maintenance on
+# disc reads. cdrom_read_toc fills a 32-byte aligned private TOC (purged before, invalidated after the call); a
+# dvd_read_safe DMA read invalidates its whole destination after it lands (the fast path only invalidated before the
+# DMA, so a line refetched while the GD DMA ran stayed stale), and a late landing invalidates instead of purging.
+# Found under flycast-console's SH-4 cache model (RE4DC_CONSOLE_DYNAREC=no), where T24 lost its TOC at boot.
+CACHE_COHERENT_DMA ?= 0
+ifneq ($(filter $(CACHE_COHERENT_DMA),0 1),$(CACHE_COHERENT_DMA))
+$(error CACHE_COHERENT_DMA must be 0 or 1)
+endif
+ifeq ($(CACHE_COHERENT_DMA),1)
+$(OBJDIR)/platform/gdrom_mount.o $(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_CACHE_COHERENT_DMA=1
+endif
 # DISC_DMA_WAIT_TIMEOUT=1 (issue #28 DreamShell, lane fix-dreamshell23 2026-10-23, default 0 = image unchanged; needs
 # KOS_DISC_FIX=1): KOS waited on a GD DMA completion with no limit (sector reads and stream requests), so a loader that
 # never completes a DMA (DreamShell's ISO loader, first read bgm/bio4str.hed) hung the boot before DISC_READ_FALLBACK=3's
@@ -1870,7 +1951,13 @@ $(KOSFIX)/fs_iso9660.c: $(KOS_BASE)/kernel/arch/dreamcast/fs/fs_iso9660.c $(KOS_
 	@rm -rf $(KOSFIX)/p-fs && mkdir -p $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs
 	cp $< $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs/
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-fs < $(KOS_PATCHES)/kos-804b319-fs-iso9660-aeee10d9.patch
+ifeq ($(DISC_PIO_FALLBACK),1)
+	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-fs < $(KOS_PATCHES)/kos-804b319-iso-pio-retry.patch
+endif
 	cp $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs/fs_iso9660.c $@
+ifeq ($(DISC_PIO_FALLBACK),1)
+$(KOSFIX)/fs_iso9660.c: $(KOS_PATCHES)/kos-804b319-iso-pio-retry.patch
+endif
 # kos-804b319-cdrom-dma-done.patch (lane discread 10-15, the LinkOrder console stops): a GD DMA read that the BIOS
 # reported completed straight away left a DMA completion to be signalled later, which ended the NEXT DMA wait before its
 # data landed (console only). Stale completions are drained before every DMA and a DMA read returns with the GD-DMA
@@ -2257,11 +2344,16 @@ $(CABIN_SOURCE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/cabin-source.h -includ
 MOVIE_WORLD_ARENA ?= 0
 # Bounded Chapter 1 extension: full r100s30 borrows the same retained owner.
 MOVIE_WORLD_ARENA_S30 ?= 0
+# guards28 (10-28): 1 = derive the borrow layout from the opened package (mesh + sidecar + LUT + gather == the captured
+# extent) instead of the hard-coded package sizes, and log every refused eligible borrow (MOVIEARENA refuse ...), so a
+# reconverted world can't silently stop the r100 s30 / r11f Mendez movies. 0 = the hard-coded rows (identical image).
+MOVIE_LAYOUT_GUARD ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA %s\n' '$(MOVIE_WORLD_ARENA)' > $@.tmp
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
@@ -2365,6 +2457,8 @@ SDK_CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
 endif
 # Opt-in game-side CPU knobs and the determinism trace (default off: no effect).
 include game30.mk
+# Default-off Build29 distinct collision notes; all header consumers share the control.
+include atchk_distinct29.mk
 # BACKFACE_CONE=1 (backface.mk, lane backface-cone23): the world back-face cone is SCENERY_CONE=1 (scenery19.mk).
 ifeq ($(BACKFACE_CONE),1)
 override SCENERY_CONE := 1
@@ -2651,7 +2745,7 @@ BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
 CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep04:ovl wep05 wep07 wep09 wep11 wep13 wep19 $(WEP27_AUDITED_MODULES) $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
@@ -2833,6 +2927,41 @@ VRAM_PAGES_VQ_ONLY ?= 0
 # room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
 # so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
 VRAM_ROOM_ARENA ?= 0
+# TEX_ARENA_CURRENT_KEY=1 (console regression fix, default 0): classify a texture
+# by its incoming key, not the previous occupant of its cache slot. Requires the
+# room arena; also corrects the optional arena upload ring's texture identity.
+TEX_ARENA_CURRENT_KEY ?= 0
+# TEX_FINAL_REFUSAL_LOG=1 (diagnostic, default 0): one TEX-REFUSE line for every
+# final load() refusal, including early guards, with incoming key (kv=0 when no
+# key is available), reason, room/frame and free/largest VRAM. Successful retries
+# are not refusals. Independent of the fix for matching A/B diagnostics; this
+# can produce many lines and is intended for short console reproduction runs.
+TEX_FINAL_REFUSAL_LOG ?= 0
+ifneq ($(words $(TEX_ARENA_CURRENT_KEY)),1)
+$(error TEX_ARENA_CURRENT_KEY must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(TEX_ARENA_CURRENT_KEY)),)
+$(error TEX_ARENA_CURRENT_KEY must be 0 or 1)
+endif
+ifneq ($(words $(TEX_FINAL_REFUSAL_LOG)),1)
+$(error TEX_FINAL_REFUSAL_LOG must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(TEX_FINAL_REFUSAL_LOG)),)
+$(error TEX_FINAL_REFUSAL_LOG must be 0 or 1)
+endif
+ifeq ($(TEX_ARENA_CURRENT_KEY),1)
+ifneq ($(VRAM_ROOM_ARENA)$(VRAM_PAGES)$(UI_VRAM),111)
+$(error TEX_ARENA_CURRENT_KEY=1 needs VRAM_ROOM_ARENA=1 VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_ARENA_CURRENT_KEY=1
+endif
+ifeq ($(TEX_FINAL_REFUSAL_LOG),1)
+ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
+$(error TEX_FINAL_REFUSAL_LOG=1 needs VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_FINAL_REFUSAL_LOG=1
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_TEX_FINAL_REFUSAL_LOG=1   # defines re4dc_room_id_now (build-d3)
+endif
 # VRAM_ROOM_ARENA_NO_TOP=1 (arena23 console experiment, default 0): long-lived
 # class 2 allocations use best fit below a47f2000 instead of top placement. The
 # final 56 KiB stays available to room/dynamic allocations. Room residency stays on.
@@ -2886,9 +3015,56 @@ ARENA_RING ?= 0
 ifneq ($(filter 3,$(OVL_GUARD))$(filter-out 0,$(ARENA_RING)),)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ARENA_RING=1
 endif
+# DVD_BUFF_KB=N (lane heap-margin25 2026-10-25, default 0 = the GameCube's 128 KB; N = 16..64, a power of two):
+# the DVD staging area (platform mem.cpp re4dc_dvd_buff) is N KB. src/game/dvd.cpp chunks every transfer through it:
+# sound / archive pieces of N KB (was 128 KB), memory swap and event swap reload through the N/2 halves. No read is
+# refused; smaller pieces only mean more disc requests during loads. The image (heap 4 at r100 s30) is 128-N KB smaller.
+DVD_BUFF_KB ?= 0
+ifneq ($(DVD_BUFF_KB),0)
+ifeq ($(filter 16 32 64,$(DVD_BUFF_KB)),)
+$(error DVD_BUFF_KB must be 0, 16, 32 or 64)
+endif
+GAME_CPPFLAGS += -DRE4DC_DVD_BUFF_BYTES=$(DVD_BUFF_KB)*1024
+PLATFORM_CPPFLAGS += -DRE4DC_DVD_BUFF_BYTES=$(DVD_BUFF_KB)*1024
+endif
+# DVD_BORROW=1 (lane heap-margin25, default 0; needs DVD_BUFF_KB): load-time staging borrow (src/game/dvd.cpp): during
+# boot / new game / room loads a transfer larger than the static area reads through DVD_BORROW_KB (default 128) carved
+# from the top of heap 4, only while DVD_BORROW_SPARE_KB (default 512) more stays free; returned at the transfer's end.
+DVD_BORROW ?= 0
+DVD_BORROW_KB ?= 128
+DVD_BORROW_SPARE_KB ?= 512
+ifneq ($(DVD_BORROW),0)
+ifneq ($(DVD_BORROW),1)
+$(error DVD_BORROW must be 0 or 1)
+endif
+ifeq ($(DVD_BUFF_KB),0)
+$(error DVD_BORROW=1 needs DVD_BUFF_KB)
+endif
+$(OBJDIR)/src/game/dvd.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_DVD_BORROW=1 -DRE4DC_DVD_BORROW_BYTES=$(DVD_BORROW_KB)*1024U -DRE4DC_DVD_BORROW_SPARE=$(DVD_BORROW_SPARE_KB)*1024U
+endif
+# LOG_PLAY_KB=N (lane heap-margin25 2026-10-25, default 0: no effect): in a play image (DBG_WARP=0 and QA_MENU=0 only)
+# the RAM log ring is N KB (LOG_TRIM = 64 KB - N KB) with a 32-byte size header before it (mem.cpp RE4DC_LOG_RING_HDR;
+# read_log.py reads it, 64 KB when absent). The crash screen shows the ring's newest lines, which N >= 8 covers. Test,
+# warp and QA images keep 64 KB. The image (heap 4 at r100 s30) is 64 - N KB smaller, less the 32-byte header.
+LOG_PLAY_KB ?= 0
+# LOG_CRASH_TEST=N (test only, default 0): fault after the N-th log append (platform/mem.cpp), for the crash screen check.
+LOG_CRASH_TEST ?= 0
+ifneq ($(LOG_CRASH_TEST),0)
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_CRASH_TEST=$(LOG_CRASH_TEST)
+endif
+ifneq ($(LOG_PLAY_KB),0)
+ifeq ($(filter 8 16 32,$(LOG_PLAY_KB)),)
+$(error LOG_PLAY_KB must be 0, 8, 16 or 32)
+endif
+ifeq ($(filter-out 0,$(DBG_WARP))$(filter-out 0,$(QA_MENU)),)
+LOG_TRIM := $(shell echo $$((65536 - $(LOG_PLAY_KB) * 1024)))
+$(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_RING_HDR=1
+endif
+endif
 LOG_TRIM ?= 0
 ifneq ($(LOG_TRIM),0)
 $(OBJDIR)/platform/mem.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
+$(OBJDIR)/qa_menu.o: GAME_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
 endif
 ifneq ($(OVL_GUARD),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)
@@ -3398,10 +3574,15 @@ include dbgwarp.mk
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).
 include effects30.mk
+include effect_uv12.mk
+# Default-off bounded SH4ZAM point batch in the prepared cloth row consumer.
+include cloth_xm_batch14.mk
 # PVR_RTT (lane castlerender19 2026-10-19): PVR render-to-texture for TexRenderMng targets (default off: no effect).
 include pvr_rtt.mk
 # HW_FOG_HAZE (lane hwfog 2026-10-14): the distant camera haze as PVR table fog
 include hwfog.mk
+# gcleft26 (MODEL_PART_DUMP diagnostic; default 0: no effect).
+include partdump.mk
 # D367 scenery30 (PLAN_ADMIT_LEAN, SCENERY_GATE, MODEL_SLAB_LATCH; default off: no effect).
 include scenery30.mk
 # D367 records30 (FRONT_TEXOBJ; default off: no effect).
@@ -3413,6 +3594,8 @@ include tahash.mk
 # D367 machine checks (MCHECK_PT, MCHECK_SAFE; test builds; default off: no effect).
 include mcheck.mk
 include backface.mk
+# D367 lane barn28 (r103 barn model cost; default off: no effect).
+include barn28.mk
 # D367 PS2 world holes (WORLD_HOLE_DIAG; test 11 item E; default off: no effect).
 include worldhole.mk
 # D367 effect sprite trimming (FX_SPRITE_TRIM; test 11; default off: no effect).
@@ -3444,6 +3627,8 @@ include t2exact.mk
 include scenery19.mk
 include scenery_data_variants.mk
 include scenery_record_split.mk
+include scenery_n256.mk
+include worldopt26.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
@@ -3479,6 +3664,8 @@ endif
 include bench.mk
 # QA_MENU=1: the tester QA disc menu (qamenu.mk; default 0: nothing compiled, image unchanged)
 include qamenu.mk
+# QA_LINK=1 (lane qalink27; QA discs only): the QA remote link over the modem (qalink.mk)
+include qalink.mk
 
 # Isolated bounded A/B/C memory experiment; default 0.
 include worldscratch.mk
@@ -3490,5 +3677,30 @@ include kos_cache_p2.mk
 include world_census24.mk
 include world_census24_errors.mk
 include perf_phase_miss.mk
+include draw_setup_audit.mk
+include draw_fallback_audit.mk
+include fallback_audit29.mk
+# Default-off bounded continuation for the existing ordered line collision walk.
+include line_resume29.mk
+include fallback_audit35.mk
+# Default-off EFM class/mapping epoch, shared by all manager-header consumers.
+include efm_class_identity.mk
+include fallback_scan29.mk
+include water_layer29.mk
+include world_plan29.mk
+include actor_format32.mk
+# K45 fix plan repairs (default off): needs the world/actor switch values above.
+include k45fix31.mk
+include actor_presentation32.mk
+include skin_admit32.mk
+include prepared_binding34.mk
+include static_obj_batch33.mk
+include static_obj_spans10.mk
+include skin_recipe32.mk
+include skin_table_reuse14.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
+# WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).
+ifeq ($(WEAPON_WEP04_OVL),1)
+export RE4DC_LINK_OVERLAY += .ovl_wep04
+endif

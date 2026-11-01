@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "reasons": 33,
+  "concurrent_hits": 160000,
+  "max_rows_bytes": 1701,
+  "snapshot_bytes": 300,
+  "sanitized": true,
+  "leak_sanitizer": false,
+  "scope": "Compile the actual Build29 counter core against a serialized host IRQ shim.\n\nThis proves counting/snapshot/formatting behavior, including concurrent worker\nwriters. It does not model the Dreamcast IRQ latency, game frames or device I/O.\n",
+  "limitations": "Host mutex substitutes only IRQ exclusion; target instructions, device and game behavior are separate gates. LSan is disabled because sandbox /proc task traversal is unavailable.",
+  "source_sha256": {
+    "port/dreamcast/tools/d367/fallback_scan/test_audit29.py": "be6ee7f24b5808ced71f68f9a036ebb871308fb396142298fa761c9bd78d6d44",
+    "port/dreamcast/game/fallback_audit29.cpp": "ba1fc6c36cc04a5543e60837dd44edc4f7078cdb73d6e2f67ec91d12a59a76ad",
+    "port/dreamcast/game/platform/include/fallback_audit29.h": "996ae3891e6a864d92bb44ed877179d25efdd98ab47cdfd6ec3628f020724a2e",
+    "port/dreamcast/game/platform/include/fallback_audit29.def": "35ea6b525c146d19aa63ca406ff00f1efccd4cf367e22de353ca35d7ccc34eb8"
+  },
+  "raw_receipt_sha256": "eba9a6a2a5971df8c250a8903ca8f98652c57747846bfaa9cc52bc327080efb3",
+  "compactor_sha256": "a14c6c9a09fa4855234891e2d3721e163893ebc1d89420cb219fad2ac02acbb5",
+  "compaction": "Numeric fields and source/object hashes unchanged; repeated command arrays omitted; local path prefixes substituted only in receipt text. No normalization of production source or objects."
+}

@@ -1,0 +1,16 @@
+# Build34 prepared material binding for resident rigid static parts.
+# Default zero contributes no flags, objects or source-layout changes.
+PREPARED_BINDING34 ?= 0
+ifneq ($(words $(PREPARED_BINDING34)),1)
+$(error PREPARED_BINDING34 must be exactly 0 or 1)
+endif
+ifneq ($(PREPARED_BINDING34),$(filter 0 1,$(PREPARED_BINDING34)))
+$(error PREPARED_BINDING34 must be exactly 0 or 1)
+endif
+ifeq ($(PREPARED_BINDING34),1)
+ifneq ($(ACTOR_TRANSACTION)$(PLAN_OWNER_SCOPED)$(D349_RENDERER_STACK)$(MODEL_DRAW_PLANS)$(UI_HANDLES)$(PS2_UPLOAD_INCARNATION)$(PVR_STREAM),1111111)
+$(error PREPARED_BINDING34 needs ACTOR_TRANSACTION/PLAN_OWNER_SCOPED/D349_RENDERER_STACK/MODEL_DRAW_PLANS/UI_HANDLES/PS2_UPLOAD_INCARNATION/PVR_STREAM=1)
+endif
+$(OBJDIR)/platform/native_model.o: PLATFORM_CPPFLAGS += -DRE4DC_PREPARED_BINDING34=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PREPARED_BINDING34=1 -DRE4DC_PLAN_OWNER_SCOPED=1
+endif

@@ -1,0 +1,203 @@
+{
+  "status": "PASS",
+  "scope": "Four full current-recipe release builds; raw/allocated/overlay OFF identity, enabled release link, additional actual release-derived TU compiles. No emulator/console or live movie/eviction proof.",
+  "runtime_commit": "0efa52fe8",
+  "baseline_commit": "9ee386e3ef8d46bcd7ae8586d2064cd1ae22864e",
+  "source_sha256": "03c7ea8955339ef4cfd96b28b2b914d37d4c6ff876ba02a33c29b1647d66c501",
+  "recipe_sha256": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0",
+  "compiler": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++ 15.2.0",
+  "kos": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+  "sh4zam": "33fa4850cacb30dd0ad35485ef035526ec4ce782",
+  "release_arms": {
+    "baseline": {
+      "command_sha256": "addfec20219a1c45c8f4c3d164183f982d5281452b1a25e272527f5262e45a6b",
+      "directory": "/root/probe/lanes/route/out-ef06oct29v2baselinerP",
+      "elf_sha256": "6c5210fdb400926df5ad5412e5767315b2a620f1b0d67787561171649e0b53d8",
+      "stack": "9ee386e3ef8d46bcd7ae8586d2064cd1ae22864e\n",
+      "build_log_sha256": "7293756ecfd2a51435add86ea6e156c26ce36b9f6e7fa3023c4a75f8f78e463e",
+      "resolved_knobs_sha256": "47495ab40e3932bb743fffc498d3b278fa58420458e34ee35657b8f0ab29cee7"
+    },
+    "absent": {
+      "command_sha256": "1c1496f798c91b38c8633c459aab3ff3a4bbb6a3fba584f238d5df4510c2b949",
+      "directory": "/root/probe/lanes/route/out-ef06oct29v2absentrP",
+      "elf_sha256": "f4a55191057393875f9fb50b043328b534e3021f2e156126f3e14d91038cca81",
+      "stack": "0efa52fe8b237ad2a43a7ffc21e2807eae8db30f\n M port/dreamcast/tools/cloud/build34/upload_host.py\n",
+      "build_log_sha256": "8c3c92712e0b304b8a4a5398506c55721551b32e4068c4644f08dd7a06c00684",
+      "resolved_knobs_sha256": "edef4e27535b2ad0639f197086e2f65b272be6a05fdbc88971b6a8a955b1e80c"
+    },
+    "zero": {
+      "command_sha256": "0f34d8ad5c598ed8390439710bb7573d582333815127e46667b2e83c662a13ab",
+      "directory": "/root/probe/lanes/route/out-ef06oct29v2zerorP",
+      "elf_sha256": "72bfe274ac8437a5429841b6a7af4b561e782d75809d5b44e1f5be04a1ced10f",
+      "stack": "0efa52fe8b237ad2a43a7ffc21e2807eae8db30f\n M port/dreamcast/tools/cloud/build34/upload_host.py\n",
+      "build_log_sha256": "47e9548f41e8e78f03f9ad44759c55b251eb732ee1313d90df339bde330fed6e",
+      "resolved_knobs_sha256": "d9db58e05f27d4f40756aa10e842b1417555a484df7f1d08ea198b925fbadcc8"
+    },
+    "on": {
+      "command_sha256": "713039c3c90c9f2e4d1a7cd5e9d1aea44a25f5df54e7e58d512963f73249c705",
+      "directory": "/root/probe/lanes/route/out-ef06oct29v2onrP",
+      "elf_sha256": "7cf91d567aa9318bd8dcf546c914d385b2b2e54d06429232ce872fd34e968835",
+      "stack": "0efa52fe8b237ad2a43a7ffc21e2807eae8db30f\n M port/dreamcast/tools/cloud/build34/upload_host.py\n",
+      "build_log_sha256": "c87254381839bcd9108a67cafd467904e001621e027743b66ad6ca742f308f23",
+      "resolved_knobs_sha256": "7495bf645b4101334cf60e382f79d0efc23e8accf9a450662c4366faeced5615"
+    }
+  },
+  "disabled_tu_identity": [
+    {
+      "artifact": "ii",
+      "bytes": 1491094,
+      "sha256": "fe83cdc89ed5480db0ffbfa4ad5ad2c611b9f9094801c504d1ac9abdfcb7eed2",
+      "baseline_absent_zero_equal": true
+    },
+    {
+      "artifact": "o",
+      "bytes": 416832,
+      "sha256": "f891233532b0701ee3eb617747052724b4857dc7544f1b9ff4b3117b5b42e6e4",
+      "baseline_absent_zero_equal": true
+    }
+  ],
+  "on_target_tu_profiles": [
+    {
+      "profile": "header-handles0",
+      "object_sha256": "6e3d73408697a2a147f8277402e67a66507c105cbb0876826cfcc79a350f4ddc",
+      "override_header_sha256": "f1fcc0e0a5025eab9f772f7e37c8ef0989cf734710c273a63803ce4f5cc65d5e",
+      "bytes": 411752
+    },
+    {
+      "profile": "scps-check",
+      "object_sha256": "7e7c3ac4a2b7e5a21d79f46fcc2103210ba722350c211d74a5b1c7300ad6e442",
+      "override_header_sha256": "c2d65ad1bdb3575880e8f93aca23581eb51eddd9e6f77f17ff03c888296df90a",
+      "bytes": 417044
+    },
+    {
+      "profile": "readiness-batch0",
+      "object_sha256": "84e32fc9f0493030501008a1a35a8954e3910eb7cbf3dfada3d9f98bd5423aa3",
+      "override_header_sha256": "14a3b5e42fa50affbc3ebeb403439aebb03d5bb4d15b9fd819a15bc60dd5de81",
+      "bytes": 417684
+    }
+  ],
+  "on_allocated_section_changes": {
+    ".rodata": {
+      "before": {
+        "type": 1,
+        "flags": 2,
+        "address": 2351294272,
+        "bytes": 275160,
+        "alignment": 32,
+        "sha256": "dc1ddc2dad47406bed3767745dab0ccde0e2ccb09dd4edc337fed2d789edeacd"
+      },
+      "after": {
+        "type": 1,
+        "flags": 2,
+        "address": 2351294272,
+        "bytes": 275160,
+        "alignment": 32,
+        "sha256": "cdafb4ffde80d429c077b6f6e2035d8b5039d26e4867f4f8c3fb585b2e47444c"
+      }
+    },
+    ".text": {
+      "before": {
+        "type": 1,
+        "flags": 6,
+        "address": 2348875776,
+        "bytes": 2418368,
+        "alignment": 32,
+        "sha256": "493bd6bd73b7f4ade71d667e55b0d74ea811f510b27fee2e7debc1e6132c4471"
+      },
+      "after": {
+        "type": 1,
+        "flags": 6,
+        "address": 2348875776,
+        "bytes": 2418368,
+        "alignment": 32,
+        "sha256": "57bcddb6547c31e511183be8c6179148f6d662618be517bd80233328d8e06f50"
+      }
+    },
+    ".eh_frame": {
+      "before": {
+        "type": 1,
+        "flags": 2,
+        "address": 2351569432,
+        "bytes": 1340,
+        "alignment": 4,
+        "sha256": "822d881aa1726acf9b91e654d4bc86028c1e892ea47ac019226fdf0511072b58"
+      },
+      "after": {
+        "type": 1,
+        "flags": 2,
+        "address": 2351569432,
+        "bytes": 1340,
+        "alignment": 4,
+        "sha256": "607fc7f1f7ac92db9e7e89f235d57cdfcf08f1951435d76f9e7665c91da2b9c7"
+      }
+    },
+    ".bss": {
+      "before": {
+        "type": 8,
+        "flags": 3,
+        "address": 2352247840,
+        "bytes": 851124,
+        "alignment": 32,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "after": {
+        "type": 8,
+        "flags": 3,
+        "address": 2352247840,
+        "bytes": 853172,
+        "alignment": 32,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    ".data": {
+      "before": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351571040,
+        "bytes": 185240,
+        "alignment": 32,
+        "sha256": "6d6e20a5047f3a83d80e584c9477771f2a27b56a0034cdebd3895719081fd9bc"
+      },
+      "after": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351571040,
+        "bytes": 185240,
+        "alignment": 32,
+        "sha256": "dc0d3fea112bdc6080de7248fa8f94a016bbef8cc4c225c1e73b5d565aa91aeb"
+      }
+    },
+    ".ctors": {
+      "before": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351570900,
+        "bytes": 120,
+        "alignment": 4,
+        "sha256": "1f5cf343348dbe6517702daf476bd918952d28d9129cd5d23975665730aa57ea"
+      },
+      "after": {
+        "type": 1,
+        "flags": 3,
+        "address": 2351570900,
+        "bytes": 120,
+        "alignment": 4,
+        "sha256": "2f1a3252eec2b5bf5aeba5494b74225518dccc990f2e69e3cde34ac17e73dd70"
+      }
+    }
+  },
+  "symbols": {
+    "baseline": [
+      "8c3d9d0c 00000004 b (anonymous namespace)::entries",
+      "8c2b52c0 00018800 d (anonymous namespace)::entries",
+      "8c3e0ee8 00005000 b (anonymous namespace)::ps2_hdr"
+    ],
+    "on": [
+      "8c3d9d0c 00000004 b (anonymous namespace)::entries",
+      "8c2b52c0 00018800 d (anonymous namespace)::entries",
+      "8c3e0ee8 00005800 b (anonymous namespace)::ps2_hdr"
+    ]
+  },
+  "remaining": "Live eviction/reentry/movie restore, hardware/GPU lifetime, look/STRICT/memory, physical-console acceptance and net cost. Full EF06 acceptance remains pending.",
+  "rejected": "Inherited batch1/PVS1 target TU correctly rejected existing guard; batch0 readiness profile passed. First fresh baseline rejected empty pinned submodule before compile; initialized pinned commit only. Wrapper-only standalone TU command lacked compiler env; direct bound sh-elf-g++ command passed."
+}

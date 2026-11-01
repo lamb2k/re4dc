@@ -77,6 +77,9 @@ unsigned bin = Residual;
 bool owned, running, active, have_sealed;
 bool paused = true, lost;
 volatile uint32_t control_sink;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+uint32_t audit_generation;
+#endif
 
 bool ours() { return !owner || owner == thread_id(); }
 const char* status_name(unsigned q) {
@@ -107,6 +110,9 @@ bool start_owned() {
         }
     }
     start_counter();
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    if(!++audit_generation)++audit_generation;
+#endif
     owned = true;
     if (!matches(true)) { lose_counter(); unlock_irq(irq); return false; }
     running = true; unlock_irq(irq); return true;
@@ -260,6 +266,18 @@ bool run_controls() {
     return control.qualification==Qualified || control.qualification==Simulated;
 }
 int snapshot(Snapshot* out) { if(!have_sealed)return 0;if(out)*out=sealed;return 1; }
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+bool read_audit_sample(AuditSample* out) {
+    if(!out)return false;
+    *out=AuditSample{};out->generation=audit_generation;
+    out->event=RE4DC_PERF_PHASE_MISS_EVENT;out->qualification=control.qualification;
+    if(!ours()||paused||!active||control.errors||
+       (control.qualification!=Qualified&&control.qualification!=Simulated))return false;
+    const bool ok=read_owned(out->value);
+    out->qualification=control.qualification; // a lost counter is sticky
+    return ok;
+}
+#endif
 Control controls() { return control; }
 int summary(char* out,unsigned cap) {
     if(!cap)return 0;

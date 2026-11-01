@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""Real source entry/bridge -> hair producer -> deferred queue -> native emitter.
+
+Source structs, presentation-required/transaction results, current GX state,
+primitive allocation and texture/SQ/SH4 transport are host adapters. Queue/view/lighting snapshots,
+portrait pose calculation, immutable proof and the complete actor TU are
+extracted from current sources.
+Source transaction admission and visibility/OT selection execute extracted
+production branches. Source shader callbacks are outside this bounded fixture;
+the bridge consumes explicitly supplied current state. Synthetic arrays are the
+only asset input; no private artwork is embedded.
+"""
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+sys.dont_write_bytecode = True
+
+HERE = Path(__file__).resolve().parent
+spec = importlib.util.spec_from_file_location('runtime', HERE / 'actor_runtime_host.py')
+runtime = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(runtime)
+DC = runtime.DC
+GAME = DC / 'game'
+PLATFORM = GAME / 'platform'
+
+
+def make_policy():
+    text = 'OBJDIR := fixture\ninclude '+str(GAME / 'actor_format32.mk')+'\nprint:;@echo $(GAME_CPPFLAGS):$(PLATFORM_CPPFLAGS)\n'
+    def run(*options):
+        return subprocess.run(['make', '--no-print-directory', '-f', '-', 'print', *options],
+                              input=text.encode(), capture_output=True)
+    absent, zero = run(), run('NATIVE_FE_CONTINUATION=0')
+    assert absent.returncode == zero.returncode == 0 and absent.stdout == zero.stdout == b':\n'
+    profile = ['ACTOR_FORMAT32=1', 'NATIVE_ACTOR=1', 'NATIVE_ACTOR_FAST=1', 'NATIVE_ACTOR_UV16=1',
+               'ACTOR_TRANSACTION=1', 'NATIVE_ACTOR_SKIN_LAZY=1', 'ACTOR_SOURCE_SPAN=1',
+               'LEON_PS2_PORTRAIT_HAIR=1', 'PS2_LEON=1', 'LEON_LOD=0']
+    enabled = run(*profile, 'NATIVE_FE_CONTINUATION=1')
+    assert enabled.returncode == 0 and enabled.stdout.count(b'-DRE4DC_NATIVE_FE_CONTINUATION=1') == 2
+    for bad in ('', '2', '0 1'):
+        assert run(*profile, 'NATIVE_FE_CONTINUATION='+bad).returncode != 0
+    for name in ('ACTOR_SOURCE_SPAN', 'ACTOR_TRANSACTION', 'NATIVE_ACTOR_FAST', 'LEON_PS2_PORTRAIT_HAIR', 'PS2_LEON'):
+        assert run(*profile, name+'=0', 'NATIVE_FE_CONTINUATION=1').returncode != 0
+    for lod in (1, 2, 3):
+        assert run(*profile, 'LEON_LOD='+str(lod), 'NATIVE_FE_CONTINUATION=1').returncode != 0
+    return dict(absent_zero_flags=absent.stdout.decode().strip(), enabled_flags=enabled.stdout.decode().strip(),
+                rejected_profiles=11)
+
+
+def fixture():
+    ui = (PLATFORM / 'native_ui.cpp').read_text()
+    coarse = (GAME / 'coarse_actor.cpp').read_text()
+    proof = (GAME / 'coarse_actor_geometry_once.inc').read_text()
+    text = runtime.fixture().split('void cone_admission(){')[0] + '\n}\n'
+    # These platform hooks keep actual publication/failure order observable.
+    text = 'void continuation_abort();\nvoid continuation_begin();\n' + text
+    text = runtime.replace_once(text, 'check::event(6);', 'check::event(6);continuation_abort();')
+    text = runtime.replace_once(text, 'check::binding(p,check::begin_ok);',
+                                'continuation_begin();check::binding(p,check::begin_ok);')
+    text = runtime.replace_once(text, 'check::binding(p,true);', 'continuation_begin();check::binding(p,true);')
+    text += '\nnamespace {\n' + runtime.adapter.body(proof, 'struct ActorImmutableChunk') + ';\n'
+    text += 'ActorImmutableChunk actor_immutable_chunks[64];\n#define RE4DC_IMMUTABLE_CHUNK_COUNT 64\n'
+    text += runtime.adapter.body(proof, 'bool actor_same_span(') + '\n'
+    text += runtime.adapter.body(proof, 'bool actor_same_chunk(') + '\n}\n'
+    text += runtime.adapter.body(proof, 'extern "C" re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(')
+    text += '\n' + (HERE / 'actor_continuation_platform.cpp.in').read_text()
+    text += '\nnamespace queue {\n'
+    text += ui[ui.index('using SourceLighting=re4dc::render::SourceLighting;'):ui.index('DeferredPart* deferred_first=nullptr;')]
+    text += ui[ui.index('DeferredPart* deferred_first=nullptr;'):ui.index('\n#endif\nunsigned dropped,unsupported,missing,drawn,culled,loads,reclaimed;')]
+    text += '\n' + runtime.adapter.body(ui, 'int defer_part(') + '\n'
+    text += runtime.adapter.body(ui, 'extern "C" void re4dc_model_finish_source_draws(){').replace('extern "C" ', '')
+    cases = (HERE / 'actor_continuation_cases.cpp.in').read_text()
+    model = (PLATFORM / 'native_model.cpp').read_text()
+    dispatch = runtime.adapter.body(model, '    if(p && p->native_pose)')
+    dispatch = dispatch.replace('re4dc_actor_native_submit_result(p,1);',
+                                'host::last=re4dc_actor_native_submit_result(p,1);++host::emissions;')
+    cases = cases.replace('// ACTUAL_MODEL_DISPATCH', dispatch)
+    text += '\n}\n' + cases.split('// ACTUAL_PORTRAIT')[0]
+    start = coarse.index('namespace {\nconst void* portrait_hair_info;')
+    end = coarse.index('extern "C" int re4dc_portrait_hair(', start)
+    text += coarse[start:end]
+    text += runtime.adapter.body(coarse, 'extern "C" int re4dc_portrait_hair(')
+    text += '\n' + cases.split('// ACTUAL_PORTRAIT')[1]
+    entry, _ = source_entry()
+    text = runtime.replace_once(text, 'int main(){test::Portrait portrait;',
+                                entry + '\nint main(){test::Portrait portrait;entry::cases(portrait);')
+    return text
+
+
+def source_entry():
+    """Extract the real nomination boundaries, not copies of their predicates."""
+    trans = (runtime.ROOT / 'src/game/trans.cpp').read_text()
+    common = runtime.adapter.body(trans, 'void commonModelTrans(')
+    # The source boundary can contain presentation capture/guards around the
+    # transaction. Extract its complete guarded region, not a once-contiguous
+    # pair of statements which loses that contract after integration.
+    admission_begin = '#if RE4DC_ACTOR_TRANSACTION\n    if(!flag) {'
+    admission_end = '    while (info != 0) {'
+    assert common.count(admission_begin) == common.count(admission_end) == 1
+    admission = common[common.index(admission_begin):common.index(admission_end)]
+    ot = runtime.adapter.body(common, '        if (!(pG->Status_flg[1] & 0x100) && m->ot_type == 7) {')
+    visible = runtime.adapter.body(common, '        if (!(info->be_flag & 8)) {')
+    bridge = runtime.adapter.body((GAME / 'model_bridge.cpp').read_text(),
+                                  'extern "C" void re4dc_draw_model_part(')
+    begin = bridge.index('#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR)')
+    end = bridge.index('\n#endif', begin) + len('\n#endif')
+    # Full actual bridge setup up to the hair nomination; its generic tail is
+    # an explicit counted sink when this identified replacement is unsupported.
+    nomination = bridge[:end] + '\n    ++entry_generic;\n}\n'
+    dispatch = '            re4dc_draw_model_part(m, info, part, mv, flag);'
+    completion = '    if(token==0xADEB)re4dc_model_finish_source_draws();'
+    barrier = '    GXSetDrawSync(0xADEB);'
+    assert common.count(dispatch) == 1
+    assert (GAME / 'platform/gx_stub.cpp').read_text().count(completion) == 1
+    assert trans.count(barrier) == 1
+    parts = dict(admission=admission, source_ot=ot, source_visibility=visible,
+                 bridge_nomination=nomination, source_dispatch=dispatch,
+                 source_completion=completion, source_barrier=barrier)
+    text = (HERE / 'actor_continuation_entry.cpp.in').read_text()
+    for name, body in parts.items():
+        text = runtime.replace_once(text, '// ACTUAL_' + name.upper(), body)
+    return text, {name: hashlib.sha256(body.encode()).hexdigest() for name, body in parts.items()}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--sanitize', action='store_true')
+    args = parser.parse_args()
+    policy = make_policy()
+    out = args.output.resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    (out / 'host/dc').mkdir(parents=True)
+    (out / 'host/dc/pvr.h').write_text(runtime.adapter.PVR)
+    (out / 'host/dc/sq.h').write_text(runtime.adapter.SQ)
+    source, adaptations = runtime.adapter.host_source(runtime.adapter.ACTOR.read_text())
+    (out / 'native_actor_host.inc').write_text(source)
+    (out / 'fixture.cpp').write_text(fixture())
+    rows = []
+    for owner_pool, presentation in ((0, 0), (1, 0), (0, 1)):
+        for fast_only in (0, 1):
+            defs = dict(RE4DC_NATIVE_FE_CONTINUATION=1, RE4DC_ACTOR_SOURCE_SPAN=1,
+                        RE4DC_ACTOR_TRANSACTION=1, RE4DC_ACTOR_SKIN_OWNER_POOL=owner_pool,
+                        RE4DC_ACTOR_PRESENTATION32=presentation,
+                        RE4DC_ACTOR_FORMAT32=1, RE4DC_ACTOR_LIGHT_FAST_ONLY=fast_only,
+                        RE4DC_ACTOR_UV16=1, RE4DC_ACTOR_DIRECT=1, RE4DC_ACTOR_BACKFACE_CONE=0,
+                        RE4DC_COARSE_ONE_SUBMIT=0, RE4DC_ACTOR_VTX_KERNEL=1, RE4DC_ACTOR_ASM=0,
+                        RE4DC_AVK_RIGID6=1, RE4DC_ACTOR_LIGHT_N16=0, RE4DC_ACTOR_NO_CLEAR=1,
+                        RE4DC_ACTOR_MOVCA=0, RE4DC_ACTOR_LOD_BUDGET=0, RE4DC_NATIVE_ACTOR_SKIN=1,
+                        RE4DC_NATIVE_ACTOR_SKIN_LAZY=1, RE4DC_ACTOR_PRELIT=1,
+                        RE4DC_ACTOR_SETUP_LEAN=1, RE4DC_COARSE_GATE_ONCE=0,
+                        RE4DC_COPY_LEAN=1, RE4DC_D349_RENDERER_STACK=1, RE4DC_PVR_STREAM=1,
+                        RE4DC_WORLD_HOLE_FIX=1, RE4DC_BRIDGE_LEAN=0,
+                        RE4DC_LEON_LIGHT_HEADROOM=1, RE4DC_LEON_PS2_PORTRAIT_HAIR=1,
+                        RE4DC_NATIVE_ACTOR=1)
+            exe = out / ('pool%d-fast%d-presentation%d' % (owner_pool, fast_only, presentation))
+            command = ['g++', '-std=c++20', '-O2', '-fno-fast-math', '-ffp-contract=off',
+                       '-ffunction-sections', '-fdata-sections', '-Wall', '-Wextra',
+                       *['-D'+k+'='+str(v) for k,v in defs.items()],
+                       '-I'+str(out / 'host'), '-I'+str(PLATFORM), '-I'+str(PLATFORM / 'include'),
+                       '-I'+str(DC / 'room'), str(out / 'fixture.cpp'),
+                       str(DC / 'room/pvr_geometry.cpp'), str(DC / 'room/source_lighting.cpp'),
+                       '-Wl,--gc-sections', '-o', str(exe)]
+            if args.sanitize:
+                command[1:1] = ['-fsanitize=address,undefined', '-fno-sanitize-recover=all', '-fno-omit-frame-pointer']
+            built = subprocess.run(command, capture_output=True)
+            (out / (exe.name+'.compile.log')).write_bytes(built.stdout+built.stderr)
+            if built.returncode:
+                raise RuntimeError(built.stderr.decode()[-18000:])
+            env = dict(os.environ, ASAN_OPTIONS='detect_leaks=0')
+            run = subprocess.run([str(exe)], capture_output=True, env=env)
+            (out / (exe.name+'.stdout')).write_bytes(run.stdout)
+            (out / (exe.name+'.stderr')).write_bytes(run.stderr)
+            if run.returncode:
+                raise RuntimeError(run.stderr.decode()[-12000:])
+            result = json.loads(run.stdout)
+            assert result['source_entry_checks'] >= (50 if presentation else 43) and result['gx_attempts'] == 0
+            assert result['producer'] == 'source-bridge-119-bone-hair'
+            rows.append(dict(owner_pool=owner_pool, fast_only=fast_only, source_presentation_guard=presentation,
+                             result=result, command=command))
+            print(json.dumps(rows[-1]['result']), flush=True)
+    inputs = [Path(__file__), HERE / 'actor_continuation_platform.cpp.in', HERE / 'actor_continuation_cases.cpp.in',
+              HERE / 'actor_continuation_entry.cpp.in', runtime.ROOT / 'src/game/trans.cpp', GAME / 'model_bridge.cpp',
+              PLATFORM / 'gx_stub.cpp',
+              PLATFORM / 'native_actor_fast.cpp', PLATFORM / 'native_ui.cpp', PLATFORM / 'native_model.cpp',
+              GAME / 'coarse_actor.cpp', GAME / 'coarse_actor_geometry_once.inc']
+    inputs += list((PLATFORM / 'include').glob('native_actor_*continuation*'))
+    inputs += [PLATFORM / 'include/native_actor_pose_snapshot.inc']
+    report = dict(status='PASS', scope=__doc__, profiles=rows, adaptations=adaptations, make_policy=policy,
+                  source_entry_fragments_sha256=source_entry()[1],
+                  source_entry_limits=['nomination branches, not full source rendering or actor transaction',
+                      'presentation-required result is a context adapter; actual class/identity has separate fixtures',
+                      'presentation-enabled arms exercise the source consumer boundary, not a full Make target profile',
+                      'synthetic current material state; source shader callbacks not executed',
+                      'same-info renomination after reset at unchanged source Frame_cnt not assumed legal',
+                      'hosted transport; no target execution or live producer incidence'],
+                  sanitizer='address,undefined' if args.sanitize else None,
+                  sha256={str(p.relative_to(runtime.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs})
+    (out / 'actor-continuation.json').write_text(json.dumps(report, indent=2)+'\n')
+
+
+if __name__ == '__main__':
+    main()

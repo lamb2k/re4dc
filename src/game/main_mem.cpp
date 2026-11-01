@@ -26,6 +26,13 @@
 #endif
 #endif
 
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+// WORLD_VALID_MEMO31 (k45fix31.mk): any heap create / destroy / suspend / resume moves the world validity epoch.
+extern "C" void re4dc_world_heap_changed(void);
+#define RE4DC_WORLD_HEAP_CHANGED() re4dc_world_heap_changed()
+#else
+#define RE4DC_WORLD_HEAP_CHANGED() ((void)0)
+#endif
 extern "C" {
 void OSReport(const char* fmt, ...);
 void* OSGetArenaLo();
@@ -222,6 +229,7 @@ void memInitHeapTbl()
         Heap[i].end = 0;
         Heap[i].status = 0;
     }
+    RE4DC_WORLD_HEAP_CHANGED();
     memclr_asm(heap_backup, sizeof(heap_backup));
 }
 
@@ -250,6 +258,7 @@ void MemSuspendHeap(int no)
         HeapHead[h].free = NULL;
         HeapHead[h].allocated = NULL;
         Heap[no].status = 1;
+        RE4DC_WORLD_HEAP_CHANGED();
     }
 }
 
@@ -268,6 +277,7 @@ void MemSignalHeap(int no)
         *(OSHeapDescriptor*) (h * sizeof(OSHeapDescriptor) + (u32) hh) =
             *(OSHeapDescriptor*) (h * sizeof(OSHeapDescriptor) + (u32) bk);
         Heap[no].status = 0;
+        RE4DC_WORLD_HEAP_CHANGED();
     }
 }
 
@@ -383,6 +393,7 @@ int MemCreateHeap(int no, u32 start, u32 end)
     }
     OSReport("-- MemCreateHeap %d %08x - %08x  ", no, start, end);
     Heap[no].handle = OSCreateHeap((void*) start, (void*) end);
+    RE4DC_WORLD_HEAP_CHANGED();
     if (Heap[no].handle >= 0) {
         Heap[no].start = start;
         Heap[no].end = end;
@@ -425,6 +436,7 @@ int MemDestroyHeap(int no)
 #endif
         OSDestroyHeap(Heap[no].handle);
         Heap[no].handle = -1;
+        RE4DC_WORLD_HEAP_CHANGED();
         OSReport("succeed!!\n");
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_SS11_PRELOAD) && RE4DC_SS11_PRELOAD
         // SS11_PRELOAD: the chapter title / results / save screens (SS heap 11) closed: the room preload runs again.

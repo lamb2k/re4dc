@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
 // game/est: the effect set ("EST") front end (D:/Bio4/Prog/est.cpp). EstSet(owner, id) is how
 // game code starts an effect: it looks the est table up in the loaded effect data
 // (EspGetEstAddr) and starts a controller 10 sequence player on it. Also the room "SST" effects
@@ -317,6 +321,11 @@ static void fxChkDelSkip(cEspSystem* sys, u32 from, u32 to, int a, int b, u32 c,
 // when the bucket is empty, as GAME_ESP_OWNER did.
 void EspDelete(int a, int b, u32 c, cModel* model)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    bool fa35_stale = false;
+#endif
+#line 320
     cEspSystem* sys = g_pEspSys;
     const unsigned long* row = NULL;
     unsigned long gen = 0;
@@ -329,6 +338,10 @@ void EspDelete(int a, int b, u32 c, cModel* model)
 #if RE4DC_FX_SCAN == 2
             fxChkDelSkip(sys, 0, sys->nEsp, a, b, c, model);
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::EspDeleteEmpty, 1);
+#endif
+#line 332
             return;
         }
         if (ok) {
@@ -339,6 +352,11 @@ void EspDelete(int a, int b, u32 c, cModel* model)
 #endif
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (!c) re4dc::fa35::hit(re4dc::fa35::EspDeleteOwnerZero, 1);
+    else re4dc::fa35::hit(row ? re4dc::fa35::EspDeleteMapped : re4dc::fa35::EspDeleteMiss);
+#endif
+#line 342
     for (i = 0; i < sys->nEsp; i++) {
         cEsp* esp;
         if (row != NULL && re4dc_fx_esp_gen == gen) {
@@ -356,11 +374,23 @@ void EspDelete(int a, int b, u32 c, cModel* model)
 #endif
             i += m;
         }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        if (!row || re4dc_fx_esp_gen != gen) {
+            ++fa35_scan;
+            if (row) fa35_stale = true;
+        }
+#endif
+#line 359
         esp = (cEsp*) (sys->pEspBuf + i * 0x150);
         if (fxEspDelHit(esp, a, b, c, model)) {
             PushEsp(esp);
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EspDeleteScan, fa35_scan);
+    if (fa35_stale) re4dc::fa35::hit(re4dc::fa35::EspDeleteStale, 1);
+#endif
+#line 364
 #if RE4DC_FX_SCAN == 2
     if (row != NULL && re4dc_fx_esp_gen != gen) {
         re4dc_fx_chk[FXC_FALLBACK]++;
@@ -370,6 +400,12 @@ void EspDelete(int a, int b, u32 c, cModel* model)
 #else
 void EspDelete(int a, int b, u32 c, cModel* model)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    u32 fa35_scan = 0;
+    re4dc::fa35::hit(re4dc::fa35::EspDeleteOff, 1);
+    if (!c) re4dc::fa35::hit(re4dc::fa35::EspDeleteOwnerZero, 1);
+#endif
+#line 373
     cEspSystem* sys = g_pEspSys;
     u32 i;
 
@@ -391,17 +427,26 @@ void EspDelete(int a, int b, u32 c, cModel* model)
 #if RE4DC_ESP_OWNER == 2
             espOwnSkips++;
             for (i = 0; i < sys->nEsp; i++) {
+#line 394
                 cEsp* esp = (cEsp*) (sys->pEspBuf + i * 0x150);
                 if ((esp->m_Be_flg & 1) && esp->info.Core_pEm == c) {
                     espOwnMis++;
                 }
             }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::EspDeleteEmpty, 1);
+#endif
+#line 400
             return;
         }
     }
 #endif
     for (i = 0; i < sys->nEsp; i++) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        ++fa35_scan;
+#endif
+#line 405
         cEsp* esp = (cEsp*) (sys->pEspBuf + i * 0x150);
 
         if ((esp->m_Be_flg & 1) == 0) {
@@ -426,6 +471,10 @@ void EspDelete(int a, int b, u32 c, cModel* model)
         }
         PushEsp(esp);
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::EspDeleteScan, fa35_scan);
+#endif
+#line 429
 }
 #endif
 

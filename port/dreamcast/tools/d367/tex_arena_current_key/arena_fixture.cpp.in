@@ -1,0 +1,82 @@
+// Includes the actual allocator and exact classifier extracted from native_ui.
+#include <cassert>
+#include <cstdint>
+#include <cstdarg>
+#include <cstdio>
+#include "actual_allocator.inc"
+extern "C" void re4dc_log(const char* format, ...) {
+    va_list args;va_start(args,format);vfprintf(stderr,format,args);va_end(args);
+}
+@KEY@
+struct Entry { Key key; };
+constexpr Key core_key{0x01234567,0x89abcdef}, room_key{0x76543210,0xfedcba98};
+Key core_keys[]{core_key};unsigned core_nkeys=1;
+constexpr unsigned KiB=1024;
+constexpr std::uintptr_t fake_base=RE4DC_VRAM_ROOM_ARENA_NO_TOP?0xa4700000U:0xa4000000U;
+unsigned observed_class;
+void initialize() {
+    re4dc_vram_arena_class=0;
+    pvr_mem_initialize(reinterpret_cast<void*>(fake_base),1024*KiB);pvr_mem_reset();
+}
+unsigned offset(void* pointer) {
+    return static_cast<unsigned>(reinterpret_cast<std::uintptr_t>(pointer)-fake_base);
+}
+void* allocate(Entry* slot,const Key& key,unsigned bytes) {
+@CLASSIFIER@
+    observed_class=re4dc_vram_arena_class;
+    return pvr_mem_malloc(bytes);
+}
+int main() {
+    initialize();Entry fresh{};
+    void* first=allocate(&fresh,core_key,64*KiB);
+    const bool corrected=RE4DC_TEX_ARENA_CURRENT_KEY && RE4DC_CORE_PIN;
+    assert(first);
+    assert(observed_class==(corrected?2U:1U));
+    assert(offset(first)==(corrected && !RE4DC_VRAM_ROOM_ARENA_NO_TOP?960*KiB:0));
+    assert(re4dc_vram_arena_class==0);
+    assert(fresh.key==Key{}); // Classification must not publish a key early.
+    puts("PASS arena fresh core slot");
+
+    initialize();Entry recycled{core_key};
+    void* second=allocate(&recycled,room_key,64*KiB);
+    const bool stale_core=!RE4DC_TEX_ARENA_CURRENT_KEY && RE4DC_CORE_PIN;
+    assert(second && observed_class==(stale_core?2U:1U));
+    assert(offset(second)==(stale_core && !RE4DC_VRAM_ROOM_ARENA_NO_TOP?960*KiB:0));
+    assert(recycled.key==core_key && re4dc_vram_arena_class==0);
+    puts("PASS arena recycled core slot receives room texture");
+
+    initialize();Entry ordinary{room_key};
+    void* third=allocate(&ordinary,room_key,64*KiB);
+    assert(third && observed_class==1 && offset(third)==0);
+    puts("PASS arena ordinary room placement preserved");
+
+#if RE4DC_VRAM_ROOM_ARENA_NO_TOP && RE4DC_CORE_PIN
+    initialize();Entry known_core{core_key};
+    // The pool extends to a4800000. Existing NO_TOP must still exclude the
+    // final 56 KiB for class 2; class 1 may use the complete pool.
+    assert(!allocate(&known_core,core_key,1024*KiB));
+    assert(observed_class==2 && pvr_mem_available()==1024*KiB);
+    Entry known_room{room_key};
+    assert(allocate(&known_room,room_key,1024*KiB));
+    assert(observed_class==1);
+    puts("PASS arena NO_TOP exclusion preserved");
+#elif !RE4DC_CORE_PIN
+    puts("PASS arena CORE_PIN=0 remains all-room placement");
+#else
+    initialize();Entry slots[5]{};
+    void* a=allocate(&slots[0],room_key,256*KiB);
+    void* b=allocate(&slots[1],room_key,128*KiB);
+    void* c=allocate(&slots[2],room_key,64*KiB);
+    void* core=allocate(&slots[3],core_key,128*KiB);
+    void* d=allocate(&slots[4],room_key,256*KiB);
+    assert(a && b && c && core && d);
+    pvr_mem_free(a);pvr_mem_free(b);pvr_mem_free(c);pvr_mem_free(d);
+    unsigned census[13]{};re4dc_vram_pages_census(census);
+    assert(census[3]==896*KiB);
+    assert(census[4]==(corrected?896*KiB:448*KiB));
+    void* large=allocate(&slots[0],room_key,512*KiB);
+    assert(bool(large)==corrected);
+    printf("PASS arena retirement fragmentation free=%u largest=%u allocated=%u\n",
+           census[3],census[4],large?1U:0U);
+#endif
+}

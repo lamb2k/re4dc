@@ -1,0 +1,69 @@
+// Actual production controller with deterministic synthetic device callbacks.
+// No sectors are transferred here. Callback bookkeeping is included in cost;
+// BIOS, semaphore/timer calls, cache maintenance, polling intervals and PIO/DMA
+// transfer work remain unpriced. Host fake-driver tests verify payload bytes.
+#include "@DC@/game/platform/disc_pio_fallback.h"
+#include <stddef.h>
+using namespace re4dc::disc_pio;
+
+struct Script {
+    uint64_t clock;
+    uint32_t fault, dma, retiring, reset_done, acquired, released;
+    uint32_t submissions, pio_submissions, first_sector, first_count;
+    uint32_t last_sector, last_count, switches, session_switches;
+    uint32_t disables, enables, aborts, resets, inits, clears, pauses;
+};
+struct Arguments { State state; Request request; uint32_t requested_dma; Script io; };
+struct Driver {
+    Script& io;
+    uint64_t now() const { return io.clock; }
+    bool acquire() { ++io.acquired; return true; }
+    void release() { ++io.released; }
+    void pause(uint64_t, unsigned, bool) { io.clock += 1000; ++io.pauses; }
+    void prepare(const Request&, bool dma) { io.dma = dma; io.retiring = 0; }
+    int submit(const Request& r, bool dma) {
+        if (!io.submissions) { io.first_sector = r.sector; io.first_count = r.count; }
+        ++io.submissions;
+        if (!dma) ++io.pio_submissions;
+        io.last_sector = r.sector; io.last_count = r.count;
+        return 1;
+    }
+    Command check(int) const {
+        if (io.retiring) return io.fault == 4 && !io.reset_done ? Command::pending : Command::done;
+        if (!io.dma) return Command::done;
+        if (io.fault == 1 || io.fault == 4) return Command::pending;
+        if (io.fault == 3) return Command::failed;
+        return Command::done;
+    }
+    bool engine_busy() const { return false; }
+    bool landed(const Request&) const { return !(io.dma && io.fault == 2); }
+    void disable_dma() { ++io.disables; }
+    void enable_dma() { ++io.enables; }
+    void abort(int) { io.retiring = 1; ++io.aborts; }
+    void reset() { io.reset_done = 1; ++io.resets; }
+    int submit_init() { ++io.inits; return 2; }
+    bool sector_mode_2048() const { return true; }
+    void clear_events() { ++io.clears; }
+    void switched(Result, bool session, unsigned) { ++io.switches; io.session_switches += session; }
+};
+extern "C" int fixture_read(Arguments* a) {
+    Driver driver{a->io};
+    return static_cast<int>(read(driver, a->state, a->request, a->requested_dma != 0));
+}
+extern "C" int fixture_begin(Arguments* a) { a->state.validation_begin(); return 0; }
+extern "C" int fixture_dma_ok(Arguments* a) { a->state.dma_succeeded(); return 0; }
+extern "C" int fixture_reject(Arguments* a) { return a->state.validation_reject(); }
+extern "C" int fixture_end(Arguments* a) { a->state.validation_end(); return 0; }
+#define IO_OFF(name) offsetof(Script, name)
+extern "C" const uint32_t fixture_controller_layout[] = {
+    sizeof(Arguments), offsetof(Arguments, state), offsetof(Arguments, request),
+    offsetof(Arguments, requested_dma), offsetof(Arguments, io), sizeof(State), sizeof(Script),
+    IO_OFF(clock), IO_OFF(fault), IO_OFF(dma), IO_OFF(retiring), IO_OFF(reset_done),
+    IO_OFF(acquired), IO_OFF(released), IO_OFF(submissions), IO_OFF(pio_submissions),
+    IO_OFF(first_sector), IO_OFF(first_count), IO_OFF(last_sector), IO_OFF(last_count),
+    IO_OFF(switches), IO_OFF(session_switches), IO_OFF(disables), IO_OFF(enables),
+    IO_OFF(aborts), IO_OFF(resets), IO_OFF(inits), IO_OFF(clears), IO_OFF(pauses),
+    offsetof(State, failures), offsetof(State, session_pio), offsetof(State, retry_pio),
+    offsetof(State, poisoned), offsetof(State, validating), offsetof(State, validation_dma),
+    offsetof(State, validation_fault), offsetof(State, validation_rejected)
+};

@@ -102,6 +102,16 @@ extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role);
 #define RE4DC_ACTOR_SHAPE_ROLE(p,i) RE4DC_LEON_FACE_ROLE(p,i)
 #endif
 namespace re4dc_actor {
+#if RE4DC_ACTOR_SOURCE_SPAN
+// Called only after the plan's immutable chunk proof. Preserve the parser's
+// logical allocations, including unreferenced records and padding.
+inline bool source_span(const re4dc_source::ChunkInput& c,Re4dcActorSourceSpan& a) {
+    if(c.positions.size>UINT32_MAX || c.normals.size>UINT32_MAX || c.uv.size>UINT32_MAX || c.stream.size>UINT32_MAX)return false;
+    a={c.positions.data,c.normals.data,unsigned(c.positions.size),unsigned(c.normals.size),unsigned(c.uv.size),
+       Re4dcActorSourceSpan::U16Q15,0,0};
+    return true;
+}
+#endif
 inline bool exact_infos(cModelInfo* first,cModelInfo* const* roles,unsigned n) {
     unsigned seen=0,count=0;
     for(auto* p=first;p;p=p->pList) {

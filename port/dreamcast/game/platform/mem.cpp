@@ -14,6 +14,21 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+#if !defined(RE4DC_LOG_ATOMIC16) || !RE4DC_LOG_ATOMIC16
+#error LOG_PUBLICATION16 requires LOG_ATOMIC16
+#endif
+#include "include/log_publication16.hpp"
+#endif
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+#if !defined(RE4DC_LOG_ATOMIC16) || !RE4DC_LOG_ATOMIC16
+#error LOG_RECORD16 requires LOG_ATOMIC16
+#endif
+#include "include/log_record16.hpp"
+#endif
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+extern "C" void re4dc_halt(const char*, int);
+#endif
 
 struct Re4dcMemLayout re4dc_mem;
 
@@ -75,7 +90,10 @@ void re4dc_mem_init(void)
         const unsigned long limit = (unsigned long) _arch_mem_top - THD_KERNEL_STACK_SIZE;
         const unsigned long brk = (unsigned long) sbrk(0);
         const unsigned long room = (brk < limit ? limit - brk : 0) + (unsigned long) mi.keepcost;
-        const unsigned long reserve = RE4DC_ARENA_FIT_KOS_BYTES + 64;  // + chunk header, alignment
+#ifndef RE4DC_QA_LINK_KOS_BYTES
+#define RE4DC_QA_LINK_KOS_BYTES 0   // qalink.mk (QA_LINK=1): the remote link's own KOS use, given to KOS here
+#endif
+        const unsigned long reserve = RE4DC_ARENA_FIT_KOS_BYTES + RE4DC_QA_LINK_KOS_BYTES + 64;  // + chunk header, alignment
         const unsigned long fit = room > reserve ? (room - reserve) & ~0xFFFUL : 0;
         if (fit < want) {
             want = fit;
@@ -164,34 +182,119 @@ void* re4dc_gx_fifo(void)
 volatile unsigned long re4dc_log_magic __attribute__((aligned(32))) = 0x52453444;  // "RE4D"
 volatile unsigned long re4dc_log_head;   // bytes written so far (wraps in the ring)
 volatile unsigned long re4dc_stage;      // last platform stage reached (re4dc_set_stage)
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+// LOG_PLAY_KB (Makefile, play images only): the ring is shorter than the harness's 64 KB default, so 32 bytes before it
+// say how long it is: "LGSZ", its complement, the size (read_log.py reads them; written with the first log byte).
+struct Re4dcLogRing { unsigned long magic, nmagic, size, pad[5]; char buf[RE4DC_LOG_SIZE]; };
+extern "C" { Re4dcLogRing re4dc_logring __attribute__((aligned(32))); }
+#define RE4DC_LOG_STR2(x) #x
+#define RE4DC_LOG_STR(x) RE4DC_LOG_STR2(x)
+// a sized object symbol, so sh-elf-nm -S lists it like the plain array (route-build.sh syms.txt)
+asm(".global _re4dc_logbuf\n\t.type _re4dc_logbuf, @object\n\t.set _re4dc_logbuf, _re4dc_logring+32\n\t"
+    ".size _re4dc_logbuf, 65536-" RE4DC_LOG_STR(RE4DC_LOG_TRIM));
+#define re4dc_logbuf re4dc_logring.buf
+#else
 char re4dc_logbuf[RE4DC_LOG_SIZE] __attribute__((aligned(32)));
+#endif
 
 // 1 while stdout is a separate device; 0 once fault.cpp routes the KOS
 // debug output into this ring (printing would then loop back here).
 int re4dc_log_console = 1;
-unsigned char re4dc_dvd_buff[0x20000] __attribute__((aligned(32)));
+unsigned char re4dc_dvd_buff[RE4DC_DVD_BUFF_BYTES] __attribute__((aligned(32)));
+
+#if ((defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16) || (defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16)) && defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+// Both entry points still count as one append for the existing crash test.
+static void logCrashAppend16()
+{
+    static unsigned long calls;
+    if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
+}
+#endif
+
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+#include "include/source_log_publication16.inc"
+#endif
 
 // RE4DC_LOG_ATOMIC (LOGIC_TRACE=1 or TA_MATERIAL_DIAG=1): each call appends with interrupts off, so a
 // preemptive thread (the aica sequencer's "aica: t=... note" lines) cannot splice its text into the
-// middle of a trace line (LT/LU/LX/LP are one re4dc_log call each). Release builds keep the plain loop.
+// middle of a trace line (LT/LU/LX/LP are one re4dc_log call each). LOG_ATOMIC16 independently
+// selects the same guard. Raw debug chunks are not bounded by re4dc_log's formatting buffer:
+// the whole supplied length remains inside the mask, pending a target IRQ-duration qualification.
 void re4dc_log_raw(const char* data, unsigned long len)
 {
-#if RE4DC_LOG_ATOMIC
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    (void) re4dc_log_write16(data, len);
+#else
+#if RE4DC_LOG_ATOMIC || (defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16)
     const int irq = irq_disable();
+#endif
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+    if (!re4dc_logring.magic) {
+        re4dc_logring.size = RE4DC_LOG_SIZE;
+        re4dc_logring.nmagic = ~0x5A53474CUL;
+        re4dc_logring.magic = 0x5A53474CUL;  // "LGSZ"
+    }
 #endif
     while (len--) {
         re4dc_logbuf[re4dc_log_head % RE4DC_LOG_SIZE] = *data++;
         re4dc_log_head++;
     }
-#if RE4DC_LOG_ATOMIC
+#if RE4DC_LOG_ATOMIC || (defined(RE4DC_LOG_ATOMIC16) && RE4DC_LOG_ATOMIC16)
     irq_restore(irq);
 #endif
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+    // LOG_CRASH_TEST=N (test arm only): halt to the crash screen after the N-th log append, so its log rows can be
+    // checked on a play image (LOG_PLAY_KB). (A misaligned store does not fault under Flycast.)
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+    logCrashAppend16();
+#else
+    static unsigned long calls;
+    if (++calls == (unsigned long) RE4DC_LOG_CRASH_TEST) re4dc_halt("LOG_CRASH_TEST", RE4DC_LOG_CRASH_TEST);
+#endif
+#endif
+#endif // LOG_PUBLICATION16
 }
 
+#if !defined(RE4DC_LOG_PUBLICATION16) || !RE4DC_LOG_PUBLICATION16
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+// Only the formatter's automatic array can enter this path. Formatting and
+// this bounded length scan finish before masking. The record remains contiguous
+// with respect to maskable writers because LOG_ATOMIC16 also guards raw writes.
+static void logAppendRecord16(const char (&line)[re4dc::log_record16::capacity])
+{
+    unsigned long len = 0;
+    while (len < re4dc::log_record16::max_bytes && line[len]) ++len;
+    // Complete the length dependency before KOS's inline IRQ-mask assembly.
+    __asm__ __volatile__("" : : "r"(len) : "memory");
+    const int irq = irq_disable();
+#if defined(RE4DC_LOG_RING_HDR) && RE4DC_LOG_RING_HDR
+    if (!re4dc_logring.magic) {
+        re4dc_logring.size = RE4DC_LOG_SIZE;
+        re4dc_logring.nmagic = ~0x5A53474CUL;
+        re4dc_logring.magic = 0x5A53474CUL;
+    }
+#endif
+    for (unsigned long i = 0; i < len; ++i) {
+        re4dc_logbuf[re4dc_log_head % RE4DC_LOG_SIZE] = line[i];
+        // Compiler publication only: do not move this byte after its head, or
+        // a later byte before the preceding publication. Cache/raw-RAM and
+        // returning synchronous-fault/NMI safety are separate unresolved gates.
+        __asm__ __volatile__("" ::: "memory");
+        re4dc_log_head++;
+        __asm__ __volatile__("" ::: "memory");
+    }
+    irq_restore(irq);
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+    logCrashAppend16();
+#endif
+}
+#else
 static void logAppend(const char* s)
 {
     re4dc_log_raw(s, strlen(s));
 }
+#endif
+#endif // legacy append helpers
 
 void re4dc_set_stage(unsigned long stage)
 {
@@ -200,12 +303,46 @@ void re4dc_set_stage(unsigned long stage)
 
 void re4dc_log(const char* fmt, ...)
 {
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    using namespace re4dc::log_publication16;
+    auto& state = re4dc_log_publication16_state;
+    // Claim before touching libc. Reentry never formats or waits for an owner.
+    Result result = state.claim();
+    if (result != accepted) { state.report(result); return; }
+    const int sr = logEntrySr16();
+    if ((sr & 0xf0) || irq_inside_int() || !fmt) {
+        state.release();
+        state.report(fmt ? context : invalid);
+        return;
+    }
+#endif
     char line[256];
     va_list ap;
     va_start(ap, fmt);
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    const int formatted = vsnprintf(line, sizeof(line), fmt, ap);
+#else
     vsnprintf(line, sizeof(line), fmt, ap);
+#endif
     va_end(ap);
+#if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
+    if (formatted < 0) { state.release(); state.report(invalid); return; }
+    unsigned long len = 0;
+    while (len < window && line[len]) ++len;
+    result = logCopyOwned16(line, len, false);
+    state.release();
+    state.report(result);
+    if (result != accepted) return;
+#if defined(RE4DC_LOG_CRASH_TEST) && RE4DC_LOG_CRASH_TEST
+    logCrashAppend16();
+#endif
+#else
+#if defined(RE4DC_LOG_RECORD16) && RE4DC_LOG_RECORD16
+    logAppendRecord16(line);
+#else
     logAppend(line);
+#endif
+#endif // LOG_PUBLICATION16
     if (re4dc_log_console) {
         fputs(line, stdout);
     }

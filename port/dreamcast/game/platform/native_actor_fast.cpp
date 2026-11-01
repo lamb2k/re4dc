@@ -1,3 +1,19 @@
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+#include "include/actor_format32_uv.hpp"
+extern "C" void re4dc_log(const char*, ...);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
+#define DFA26_MODEL_SLOW(reason, n, ...) { DFA26_MODEL_HIT(reason, n) __VA_ARGS__ }
+#else
+#define DFA26_MODEL_HIT(reason, n)
+#define DFA26_MODEL_SLOW(reason, n, ...) __VA_ARGS__
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#include "include/fallback_actor_audit29.hpp"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_actor.h"
 // D367 actors30: meshlet actor path (NATIVE_ACTOR=1 NATIVE_ACTOR_FAST=1).
@@ -42,6 +58,34 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29
+#include "include/fallback_scan29.hpp"
+#endif
+#ifndef RE4DC_ACTOR_LIGHT_FAST_ONLY
+#define RE4DC_ACTOR_LIGHT_FAST_ONLY 0
+#endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.h"
+#endif
+#ifndef RE4DC_ACTOR_CLIP_FRONT26
+#define RE4DC_ACTOR_CLIP_FRONT26 0
+#endif
+#if RE4DC_ACTOR_CLIP_FRONT26
+#include "include/actor_clip_front26.hpp"
+#endif
+#ifndef RE4DC_ACTOR_CLIP_REUSE
+#define RE4DC_ACTOR_CLIP_REUSE 0
+#endif
+#if RE4DC_ACTOR_CLIP_REUSE
+#include "include/actor_clip_reuse.hpp"
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+extern "C" unsigned re4dc_dsa24_model_translucent(const Re4dcModelPart*);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
+#endif
+#endif
 // ACTOR_BACKFACE_CONE (backface.mk, lane backface-cone23; render only; default 0: no code). For the models
 // coarse_actor_transaction.inc marks (Leon, Ganados, El Gigante, Ashley: re4dc_abc_mark), the converter splits each
 // opaque part's strips by (palette entry, facing) before clustering, so a meshlet's triangles share one skinning matrix
@@ -52,6 +96,9 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 // rule (room/backface_emit.hpp); "bad" counts triangles a rejected meshlet would have drawn (must stay 0).
 #ifndef RE4DC_ACTOR_BACKFACE_CONE
 #define RE4DC_ACTOR_BACKFACE_CONE 0
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+#include "include/actor_cone32.hpp"
 #endif
 #if RE4DC_ACTOR_BACKFACE_CONE
 extern "C" void re4dc_log(const char* fmt, ...);
@@ -80,6 +127,17 @@ static unsigned abc_class_of(const void* model) {
 #include "actor_native_owner.h"
 #include "actor_prof.h"
 #include "actor_plan.h"
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "include/native_actor_continuation.h"
+#include <new>
+#if defined(__sh__) && !defined(PLACEMENT_NEW_DEFINED)
+// This platform TU uses libstdc++ <new>, unlike the recovered game's shim.
+// Its placement overload already exists; honor the shared compatibility guard.
+#define PLACEMENT_NEW_DEFINED
+#endif
+#include "include/coarse_actor_geometry_once.h"
+extern "C" void* re4dc_prim_tail(unsigned,unsigned);
 #endif
 #if defined(RE4DC_ACTOR_PROBE_LIGHT) && RE4DC_ACTOR_PROBE_LIGHT
 #include "actor_light_probe.h"
@@ -553,6 +611,14 @@ unsigned stripify(const u8* tri, unsigned count, u8* out, unsigned cap, u8* used
 // 4 Ashley: meshlets tested / rejected, vertices / triangles skipped, vertices of the tested parts' meshlets.
 unsigned abc_splits = 0, abc_built = 0, abc_noroom = 0, abc_cones = 0, abc_nocone = 0, abc_bad = 0, abc_log = 0;
 unsigned abc_tests[5], abc_rej[5], abc_vskip[5], abc_tskip[5], abc_verts[5];
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+re4dc::cone32::Counters abc32_stats;
+#endif
+#endif
+#if defined(RE4DC_ACTOR_CONE_GAIN31) && RE4DC_ACTOR_CONE_GAIN31
+// ACTOR_CONE_GAIN31 counters ("ACG31" with the ABFC line): split parts kept / declined, records and meshlets of the
+// split and plain builds of every part that was compared.
+struct { unsigned kept, declined, split_records, plain_records, split_meshlets, plain_meshlets; } acg31;
 #endif
 class Converter {
 public:
@@ -565,6 +631,15 @@ public:
         if (!parse()) return false;
 #if RE4DC_ACTOR_BACKFACE_CONE
         ++abc_conv; if (p.blend == 0) ++abc_conv_op; if (abc_class_of(p.model)) ++abc_conv_mk;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+        // An uncullable or mutable rigid part cannot use a persistent cone.
+        // Keep its original clustering instead of paying split/tail overhead.
+        if (!abc_no_split && p.blend == 0 &&
+            ((p.cull != 1 && p.cull != 2) || (p.material_flags & 4U) || p.depth_mode != 0 ||
+             (p.position_stride == 8 && !p.static_geometry))) {
+            abc_no_split = true; ++abc32_stats.split_skipped;
+        }
+#endif
         if (p.blend == 0 && !abc_no_split) abc_split();  // every opaque actor part (cones are used where the draw culls)
 #endif
         rs = 3U + (constant_color ? 0U : 1U);
@@ -616,7 +691,12 @@ private:
     u8* idx_all = nullptr;
     unsigned idx_used = 0, records = 0;
     u16* rec_tuple = nullptr;  // whole-part LOD windows: record ordinal -> tuple
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    unsigned used = 0, size = 0, meshlets = 0, triangles = 0;
+    unsigned uv_excess = re4dc::format32::kUvCertificateEmpty;
+#else
     unsigned used = 0, size = 0, meshlets = 0, triangles = 0, uv_excess = 0;
+#endif
     float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
     bool any_bounds = false;
     // LOD result (level data written at level_start.. in `out`, relative offsets)
@@ -1006,11 +1086,15 @@ private:
         const bool s16 = (p.flags & 0x80000000U) != 0;
         for (unsigned k = 0; k < 2; ++k) {
             const int x = s16 ? int(*reinterpret_cast<const short*>(t + k * 2)) : int(*reinterpret_cast<const u16*>(t + k * 2));
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv_excess = re4dc::format32::uv_certificate_add(uv_excess, x);
+#else
             unsigned a = unsigned(x < 0 ? -x : x), bits = 0;
             if (!a) continue;
             while (!(a & 1U)) a >>= 1;  // significant bits: trailing zeros dropped
             while (a >> bits) ++bits;
             if (bits > 8 && bits - 8 > uv_excess) uv_excess = bits - 8;
+#endif
         }
     }
     void bounds(BlobHeader& h) const {
@@ -1553,6 +1637,10 @@ struct AbcCone { short c[3]; u16 r; short a[3]; u8 k, pal; };
 static_assert(sizeof(AbcCone) == 16, "abc cone");
 struct AbcTail { u32 tag, meshlets, check, bytes; };  // bytes: stream bytes | class << 24
 constexpr u32 kAbcTag = 0x31434241U;  // "ABC1"
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+constexpr u32 kAbcTag32 = 0x32434241U; // "ABC2": current source identity follows the tail
+static_assert(sizeof(void*) != 4 || sizeof(re4dc::cone32::SourceIdentity) == 16, "SH4 cone source identity");
+#endif
 constexpr float kAbcStep = 1.5707963f / 63.0f;
 u32 abc_check(const u8* stream, unsigned bytes) {
     u32 h = 2166136261U ^ bytes;
@@ -1560,18 +1648,33 @@ u32 abc_check(const u8* stream, unsigned bytes) {
     return h;
 }
 unsigned abc_tail_at(unsigned bytes, unsigned meshlets) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    const unsigned header = sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity);
+    if (!meshlets || bytes < header || meshlets > (bytes-header)/sizeof(AbcCone)) return 0;
+    return (bytes-header-meshlets*sizeof(AbcCone)) & ~3U;
+#endif
     const unsigned need = sizeof(AbcTail) + meshlets * sizeof(AbcCone);
     return bytes >= need ? (bytes - need) & ~3U : 0U;
 }
 const AbcCone* abc_table(const u8* stream, unsigned bytes, unsigned* cls = nullptr) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    if (!stream || bytes < sizeof(BlobHeader)) return nullptr;
+#endif
     const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
     const unsigned at = abc_tail_at(bytes, h.meshlets);
     if (!at) return nullptr;
     const AbcTail& t = *reinterpret_cast<const AbcTail*>(stream + at);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    if (t.tag != kAbcTag32 || t.meshlets != h.meshlets || (t.bytes & 0xFFFFFFU) != bytes ||
+        (t.bytes >> 24) > 4U || t.check != abc_check(stream, bytes)) return nullptr;
+    if (cls) *cls = t.bytes >> 24;
+    return reinterpret_cast<const AbcCone*>(stream + at + sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity));
+#else
     if (t.tag != kAbcTag || t.meshlets != h.meshlets || (t.bytes & 0xFFFFFFU) != bytes || t.check != abc_check(stream, bytes))
         return nullptr;
     if (cls) *cls = t.bytes >> 24;
     return reinterpret_cast<const AbcCone*>(stream + at + sizeof(AbcTail));
+#endif
 }
 // After a conversion (or a LOD rebuild) in place: size = the blob's bytes. Builds the cones of a split part.
 void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
@@ -1579,6 +1682,11 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     const BlobHeader& h = *reinterpret_cast<const BlobHeader*>(stream);
     const unsigned at = abc_tail_at(p.stream_bytes, h.meshlets);
     if (!at || at < ((size + 3U) & ~3U)) { ++abc_noroom; return; }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    // No earlier table survives an unsuccessful rebuild at this location.
+    std::memset(stream + at, 0, sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity));
+    if (p.position_stride == 8 && !p.static_geometry) return;
+#endif
     const u8* pos = nullptr; unsigned count = 0; bool skinned = false;
     if (p.position_stride == 6) {
         Re4dcActorSource src{};
@@ -1590,7 +1698,11 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     const auto* table = reinterpret_cast<const MeshletInfo*>(stream + sizeof(BlobHeader));
     const u16* records = reinterpret_cast<const u16*>(stream + h.rec4 * 4U);
     const LevelInfo* lv = h.levels && h.lod4 ? reinterpret_cast<const LevelInfo*>(stream + h.lod4 * 4U) : nullptr;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    AbcCone* out = reinterpret_cast<AbcCone*>(stream + at + sizeof(AbcTail) + sizeof(re4dc::cone32::SourceIdentity));
+#else
     AbcCone* out = reinterpret_cast<AbcCone*>(stream + at + sizeof(AbcTail));
+#endif
     for (unsigned mi = 0; mi < h.meshlets; ++mi) {
         AbcCone& cone = out[mi];
         cone = AbcCone{};
@@ -1624,6 +1736,9 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
                     for (unsigned j = s0; j + 2 <= s1; ++j) {
                         unsigned ia = idx[j] & 127U, ib = idx[j + 1] & 127U;
                         const unsigned ic = idx[j + 2] & 127U;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+                        if (ia >= nv || ib >= nv || ic >= nv) { ok = false; break; }
+#endif
                         if ((j - s0) & 1U) std::swap(ia, ib);
                         float v[3][3];
                         const unsigned ii[3] = {ia, ib, ic};
@@ -1669,12 +1784,24 @@ void abc_build(const Re4dcModelPart& p, unsigned size, unsigned cls) {
     }
     AbcTail& t = *reinterpret_cast<AbcTail*>(stream + at);
     t = {kAbcTag, h.meshlets, abc_check(stream, p.stream_bytes), p.stream_bytes | (std::min(cls, 4U) << 24)};
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    const re4dc::cone32::SourceIdentity identity{reinterpret_cast<std::uintptr_t>(p.info),
+        reinterpret_cast<std::uintptr_t>(pos), count, p.position_stride};
+    std::memcpy(stream + at + sizeof(AbcTail), &identity, sizeof(identity));
+    t.tag = kAbcTag32;
+#endif
     ++abc_built;
 }
 #endif
 
 // ----------------------------------------------------------- skin registry --
 struct SkinEntry { const void* info; const void* positions; const float* palette; unsigned entries, materialized; };
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+enum : unsigned {
+    kSkinRecipePending=2, kSkinRecipeNominee=3,
+    kSkinRecipeDone=4, kSkinRecipeReady=5
+};
+#endif
 #if defined(RE4DC_LEON_SKIN_SLOTS) && RE4DC_LEON_SKIN_SLOTS
 // LEON_SKIN_SLOTS=1 (crowd.mk): r119 after movie 11900 registers 64 skins before Leon's transaction asks for its 9
 // (MCHECK_LEONGC: SKINACQ why=4, registry full), which left Leon to the GameCube path.
@@ -1686,6 +1813,17 @@ constexpr unsigned kSkins = 64;
 #endif
 SkinEntry skins[kSkins];
 unsigned skin_count = 0, skin_frame = ~0U;
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+Re4dcActorSkinAdmission skin_admission_pending{};
+unsigned skin_admission_serial;
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+extern bool skin_recipe_building;
+bool skin_recipe_drop(SkinEntry&,unsigned);
+bool skin_recipe_nominated(const SkinEntry&);
+unsigned skin_recipe_registration_state(const SkinEntry&);
+void skin_recipe_frame_retire();
+#endif
 #if RE4DC_ACTOR_SKIN_OWNER_POOL
 SkinEntry* find_owned_skin(const void* info);
 SkinEntry* find_ordinary_skin(const void* info, const void* positions) {
@@ -1718,6 +1856,12 @@ SkinEntry* find_skin(const void* info, const void* positions) {
 #endif
 #endif
 #endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+#include "include/native_actor_skin_admit32.inc"
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+#include "include/native_actor_skin_recipe32.inc"
+#endif
 
 // ---------------------------------------------------------- info context --
 enum Mode : unsigned { kRigid = 0, kSource = 1, kSkin = 2 };
@@ -1736,6 +1880,9 @@ struct Frame {  // per (info, matrices) per frame
     u8* skin_ready = nullptr;         // per entry: skin_positions entry built this frame
     u8* dirs_ready = nullptr;         // per entry: skin_dirs entry built for dirs_fold
     float dirs_fold[12]{};            // the light directions skin_dirs were built from
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    unsigned table_owner14=0,table_source_frame14=~0u;
+#endif
 #if RE4DC_AVK
     bool avk_all = false;             // ACTOR_VTX_KERNEL: every skin_positions entry built (avk_build_all)
 #endif
@@ -1793,6 +1940,12 @@ void* frame_table(unsigned bytes) {  // until the next re4dc_actor_frame
     workspace_end -= bytes;
     return workspace + workspace_end;
 }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+#include "include/native_actor_table_reuse14.inc"
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "include/native_actor_pose_snapshot.inc"
+#endif
 
 // Rows of the combined projection (see native_actor.cpp): X'/W and Y'/W are
 // the generic path's project() screen coordinates, W = -Zcamera.
@@ -1812,13 +1965,23 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
     for (Frame& f : frames)
         if (f.frame == frame_serial && f.info == p.info &&
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            same_words(f.viewport, p.viewport, 6) && table14_current(f,p)) {
+#else
             same_words(f.viewport, p.viewport, 6)) {
+#endif
             // Mode is a function of (info, positions) within a frame.
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            table14_enter(f);
+#endif
 #if RE4DC_GC_ASSET_GATE
             gcasset_frame_check(f);
 #endif
             return &f;
         }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorFramePrepare, 1)
+#endif
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
 #if RE4DC_GC_ASSET_GATE
@@ -1844,6 +2007,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
             f.mode = kSkin; f.palette = palette; f.palette_entries = entries;
             f.positions = src.positions; f.position_stride = 8;
             f.normals = src.normals; f.normal_stride = src.small_normals ? 4U : 8U;
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            table14_prepare(f,p,entries);
+#else
             // One skin table at a time (parts arrive info by info): an older
             // skinned Frame is dropped from the cache and its table reused.
             for (Frame& o : frames)
@@ -1851,18 +2017,31 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
                     o.frame = ~0U; o.skin_positions = o.skin_dirs = nullptr; o.skin_ready = o.dirs_ready = nullptr;
                 }
             workspace_end = workspace_bytes;
+#endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+            f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
+            if (f.skin_positions) {
+                f.skin_ready = reinterpret_cast<u8*>(f.skin_positions + entries * 16U);
+                std::memset(f.skin_ready, 0, entries);
+#else
             f.skin_positions = static_cast<float*>(frame_table(entries * (28U * 4U + 2U)));
             if (f.skin_positions) {
                 f.skin_dirs = f.skin_positions + entries * 16U;
                 f.skin_ready = reinterpret_cast<u8*>(f.skin_dirs + entries * 12U);
                 f.dirs_ready = f.skin_ready + entries;
                 std::memset(f.skin_ready, 0, entries * 2U);
+#endif
 #if RE4DC_AVK
                 f.avk_all = false;
 #endif
                 f.dirs_fold[0] = NAN;  // no directions built yet
             }
             ++stats.skinned_parts;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            if (!f.skin_positions) re4dc::dfa26::hit(re4dc::dfa26::ActorSkinTable);
+        } else {
+            re4dc::dfa26::hit(re4dc::dfa26::ActorSkinSource);
+#endif
         }
     }
     float M[3][4];
@@ -1873,6 +2052,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
         f.screen[c * 4 + 0] = M[0][c] * k; f.screen[c * 4 + 1] = M[1][c] * k;
         f.screen[c * 4 + 2] = M[2][c] * k; f.screen[c * 4 + 3] = M[2][c] * k;
     }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_enter(f);
+#endif
     ++stats.info_preparations;
     return &f;
 }
@@ -1968,6 +2150,13 @@ const float* position_matrix(Frame& f, unsigned i, float* fallback) {
 // in columns 0..2 and ambient x scale in column 3. Same per-object
 // approximation (evaluated at the part centre) as native_actor.cpp.
 struct Lights {
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29
+    const re4dc::fallback29::Bake* scan29_bake = nullptr;
+    unsigned scan29_gain[3]{};
+#endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    Re4dcActorLight25Colour colour25;
+#endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
     // Every successful fold (including the constant/probe paths) calls lights_reset before reading these.
     // Probe declines fall through to build_lights, which also resets. Keep the fields not reset below initialized.
@@ -1986,19 +2175,21 @@ struct Lights {
     alignas(8) float color[16]{};
     const SourceLighting* source = nullptr;
 #endif
-#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS && !RE4DC_ACTOR_EXACT_FAST
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS && !RE4DC_ACTOR_EXACT_FAST && !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #error STATUE_LIGHTS=2 needs ACTOR_EXACT_FAST (the exact evaluator adds the ambient share)
 #endif
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
     bool exact_ready = false;  // STATUE_LIGHTS=2: build_lights already filled the prepared set (strongest 3)
     float extra[3]{};          // STATUE_LIGHTS=2: the dropped lights' share, added to the ambient start
 #endif
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #if RE4DC_ACTOR_NO_CLEAR
     // ACTOR_NO_CLEAR: the exact path's prepared lights are not default-initialised (~0.4 KB per Lights): they are
     // read only by pass_lights_exact, after a fold that returned false, and the callers assign them on that return.
     union PreparedSlot { re4dc::render::PreparedSourceLights v; PreparedSlot() {} } prepared_slot;
 #else
     re4dc::render::PreparedSourceLights prepared;
+#endif
 #endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_ACTOR_NO_CLEAR
     float view_dot[3];
@@ -2075,6 +2266,12 @@ inline float leon_gain(const SourceLighting& S) {
 #ifndef RE4DC_GIGANTE_LIGHTS
 #define RE4DC_GIGANTE_LIGHTS 0
 #endif
+#ifndef RE4DC_ACTOR_LIGHT_CAP
+#define RE4DC_ACTOR_LIGHT_CAP 0
+#endif
+#if RE4DC_ACTOR_LIGHT_CAP && !RE4DC_GIGANTE_LIGHTS && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#error ACTOR_LIGHT_CAP needs GIGANTE_LIGHTS (the light fold)
+#endif
 #ifndef RE4DC_LEON_LIGHT_FILL
 #define RE4DC_LEON_LIGHT_FILL 0
 #endif
@@ -2103,6 +2300,10 @@ unsigned gigante_keep(const Re4dcModelPart& p) {
     // STATUE_LIGHTS=2: the r226 statue (cObjRobo, object 0x37) takes the exact 3-light evaluator in build_lights.
     if (id < 0 && re4dc_actor_obj_id(p.model) == 0x37) return 3U;
 #endif
+#if RE4DC_ACTOR_LIGHT_CAP
+    // ACTOR_LIGHT_CAP (barn28.mk): every other model folds the same way (3 strongest lights + ambient share).
+    return 3U;
+#endif
     return 0U;
 }
 #endif
@@ -2123,8 +2324,58 @@ bool leon_part_normal(const float m[12], float N[12]) {
     return true;
 }
 #endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+// BARN28_DIAG (barn28.mk; diagnostic, default 0): parts that leave the fast light fold, by model (enemy id / object
+// id), reason (1 per-vertex colour, 2 diffuse/scale, 3 fourth light) and significant lights; the exact pass adds its
+// vertices. One B28L line per row every 300 actor frames.
+}  // namespace
+extern "C" int re4dc_b28_model_kind(const void* model);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
+namespace {
+namespace b28 {
+struct Row { int id, obj; unsigned reason, parts, verts, lights_max, fast_parts; };
+Row rows[48]; unsigned nrows, reason, nlights, cur = 0xffffffffU, last;
+unsigned key(const Re4dcModelPart& p) {
+    const int id = re4dc_b28_model_kind(p.model), obj = 0;
+    for (unsigned i = 0; i < nrows; ++i) if (rows[i].id == id && rows[i].obj == obj && rows[i].reason == reason) return i;
+    if (nrows == 48) return 47;
+    rows[nrows] = Row{id, obj, reason, 0, 0, 0, 0};
+    return nrows++;
+}
+void note(const Re4dcModelPart& p, bool fast) {
+    if (fast) { reason = 0; nlights = 0; }
+    const unsigned i = key(p);
+    if (fast) { ++rows[i].fast_parts; cur = 0xffffffffU; return; }
+    ++rows[i].parts; if (nlights > rows[i].lights_max) rows[i].lights_max = nlights;
+    cur = i;
+}
+void verts(unsigned n) { if (cur < 48) rows[cur].verts += n; }
+bool note_ret(const Re4dcModelPart& p, bool fast) { note(p, fast); return fast; }
+void window(unsigned frame) {
+    if (frame - last < 300) return;
+    for (unsigned i = 0; i < nrows; ++i) {
+        const Row& r = rows[i];
+        re4dc_log("B28L f=%u frames=%u id=%d obj=%d why=%u slow_parts=%u verts=%u lights_max=%u fast_parts=%u\n", frame,
+                  frame - last, r.id, r.obj, r.reason, r.parts, r.verts, r.lights_max, r.fast_parts);
+    }
+    nrows = 0; last = frame;
+}
+}  // namespace b28
+#define B28_WHY(x) (b28::reason = (x))
+#define B28_NOTE(p, v) b28::note_ret((p), (v))
+#else
+#define B28_WHY(x) ((void) 0)
+#define B28_NOTE(p, v) (v)
+#endif
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3], Lights& L) {
     const SourceLighting& S = *p.lighting;
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    b28::reason = 0; b28::nlights = 0;
+    for (unsigned i = 0; i < 8; ++i) if (S.mask & (1U << i)) ++b28::nlights;
+#endif
 #if RE4DC_GIGANTE_LIGHTS
     const unsigned keep = gigante_keep(p);
 #endif
@@ -2150,14 +2401,24 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
         caps255 &= scale[c] >= 255.0f;
     }
 #endif
-    if (S.ambient_vertex || S.material_vertex) return false;  // per-vertex colour: slow path
+#if RE4DC_ACTOR_LIGHT_CAP
+    // ACTOR_LIGHT_CAP (user 10-28, no per-vertex fallback): a per-vertex colour record folds with its constant
+    // ambient/material (approximation); B28_WHY still records it.
+    if (S.ambient_vertex || S.material_vertex) B28_WHY(1);
+#else
+    if (S.ambient_vertex || S.material_vertex) { DFA26_MODEL_HIT(ActorLightVertex, 1) B28_WHY(1); return false; }  // per-vertex colour: slow path
+#endif
     if (!S.enable) {
         L.constant = true;
         L.constant_rgb = (channel(std::min(ambient[0], 1.0f) * scale[0]) << 16) |
                          (channel(std::min(ambient[1], 1.0f) * scale[1]) << 8) | channel(std::min(ambient[2], 1.0f) * scale[2]);
         return true;
     }
-    if (S.diffuse != 2 || !caps255) return false;
+#if RE4DC_ACTOR_LIGHT_CAP
+    if (S.diffuse != 2 || !caps255) B28_WHY(2);  // folds anyway (clamped diffuse, the fast kernel's 1.0x cap)
+#else
+    if (S.diffuse != 2 || !caps255) { DFA26_MODEL_HIT(ActorLightScale, 1) B28_WHY(2); return false; }
+#endif
 #if RE4DC_LEON_LIGHT_HEADROOM
     { const float g = leon_gain(S); for (unsigned c = 0; c < 3; ++c) scale[c] *= g; }
     if (hr_half) { for (unsigned c = 0; c < 3; ++c) scale[c] *= 2.0f; L.half_post = true; }
@@ -2172,7 +2433,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
     // part's own normal matrix, (modelview 3x3)^-T, since Leon's roles do not share one rotation.
     float Np[12];
     if (N[3] == 1.0e30f) {
-        if (!leon_part_normal(m, Np)) return false;
+        if (!leon_part_normal(m, Np)) DFA26_MODEL_SLOW(ActorLightBasis, 1, return false;)
         N = Np;
     }
 #endif
@@ -2221,7 +2482,7 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
             continue;
         }
 #endif
-        if (L.count == 3) return false;  // fourth significant light: slow path
+        if (L.count == 3) { DFA26_MODEL_HIT(ActorLightOverflow, 1) B28_WHY(3); return false; }  // fourth significant light: slow path
         float* o = L.dir[L.count];
         o[0] = (N[0] * lx + N[4] * ly + N[8] * lz) * f.nq;
         o[1] = (N[1] * lx + N[5] * ly + N[9] * lz) * f.nq;
@@ -2284,6 +2545,31 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
     return true;
 }
 
+#if RE4DC_ACTOR_LIGHT_CAP
+// ACTOR_LIGHT_CAP=1 (barn28.mk; render only, approximation, default 0; user 10-28 "simple lighting that doesn't fall
+// back to per-vertex lighting at all"): no actor part reaches the exact per-vertex evaluator. More than three
+// significant lights fold the three strongest + ambient share (gigante_keep: every model); per-vertex colour records
+// fold with their constant ambient/material; a diffuse/scale record outside the fold's exact conditions folds anyway.
+// Anything still unfolded (no invertible normal basis, ...) draws one flat colour: never the exact evaluator.
+void flat_fallback(const Re4dcModelPart& p, Lights& L) {
+    const SourceLighting& S = *p.lighting;
+    lights_reset(L);
+    L.source = &S;
+    L.constant = true;
+    float rgb[3];
+    for (unsigned c = 0; c < 3; ++c) {
+        float a = S.enable ? S.ambient[c] / 255.0f : 1.0f;
+        if (S.enable) for (unsigned i = 0; i < 8; ++i) if (S.mask & (1U << i)) a += 0.25f * S.lights[i].color[c] / 255.0f;
+        rgb[c] = S.material[c] * std::min(a, 1.0f) * S.tev_scale;
+    }
+    L.constant_rgb = (channel(rgb[0]) << 16) | (channel(rgb[1]) << 8) | channel(rgb[2]);
+}
+#define RE4DC_CAP_EXACT(p, c, L) flat_fallback((p), (L))
+#else
+#define RE4DC_CAP_EXACT(p, c, L) ((void) 0)
+#endif
+
+#endif
 #if RE4DC_ACTOR_PROBE_LIGHT
 // ACTOR_PROBE_LIGHT=1/2 (crowd.mk; render only; default 0): one light probe per actor per frame. The GX light set that
 // LightSetModel selected for the actor (the record LEON_SOURCE_LIGHT / PS2_GANADO_LIT capture, dynamic lights
@@ -2383,12 +2669,12 @@ const ProbeEntry& probe_of(const Re4dcModelPart& p) {
 }
 // The part's Lights from its actor's probe; false: not eligible / not representable (build_lights then runs).
 bool probe_lights(const Re4dcModelPart& p, const Frame& f, Lights& L) {
-    if (!probe_eligible(p)) return false;
+    if (!probe_eligible(p)) DFA26_MODEL_SLOW(ActorProbeDecline, 1, return false;)
     const SourceLighting& S = *p.lighting;
     float scale[3];
     for (unsigned c = 0; c < 3; ++c) {
         scale[c] = S.material[c] * S.tev_scale;
-        if (!(scale[c] >= 255.0f)) { ++probe_stats.declined; return false; }  // build_lights' caps255 condition
+        if (!(scale[c] >= 255.0f)) { DFA26_MODEL_HIT(ActorProbeDecline, 1) ++probe_stats.declined; return false; }  // build_lights' caps255 condition
     }
 #if RE4DC_LEON_LIGHT_HEADROOM
     { const float g = leon_gain(S); for (unsigned c = 0; c < 3; ++c) scale[c] *= g; }
@@ -2397,11 +2683,11 @@ bool probe_lights(const Re4dcModelPart& p, const Frame& f, Lights& L) {
     float Np[12];
     const bool leon = N[3] == 1.0e30f;
     if (leon) {
-        if (!leon_part_normal(p.modelview, Np)) { ++probe_stats.declined; return false; }
+        if (!leon_part_normal(p.modelview, Np)) { DFA26_MODEL_HIT(ActorProbeDecline, 1) ++probe_stats.declined; return false; }
         N = Np;
     }
     const ProbeEntry& e = probe_of(p);
-    if (!e.ok) { ++probe_stats.declined; return false; }
+    if (!e.ok) { DFA26_MODEL_HIT(ActorProbeDecline, 1) ++probe_stats.declined; return false; }
     lights_reset(L);
     L.source = &S;
     L.probe = true;
@@ -2508,6 +2794,7 @@ extern "C" int re4dc_actor_light_probe(const void* model, Re4dcLightProbe* out) 
     return 1;
 }
 namespace {
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // The part's light fold: the actor's probe when it applies, else build_lights.
 bool part_lights(const Re4dcModelPart& p, const Frame& f, const float center[3], Lights& L) {
 #if RE4DC_LEON_LIGHT_TOGGLE
@@ -2534,10 +2821,36 @@ bool part_lights(const Re4dcModelPart& p, const Frame& f, const float center[3],
     return build_lights(p, f, center, L);
 }
 #define RE4DC_PART_LIGHTS part_lights
+#endif
 #else
 #define RE4DC_PART_LIGHTS build_lights
 #endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+// XM rows: 0 probe, 1 build_lights fold (fast kernel), 2 exact per-vertex evaluator, 3 constant (flat).
+inline unsigned dsa28_light_path(const Lights& L) {
+    if (L.constant) return 3;
+#if RE4DC_ACTOR_PROBE_LIGHT
+    if (L.probe) return 0;
+#endif
+    return L.fast ? 1 : 2;
+}
+#endif
 
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/actor_light_fast_only.inc"
+#undef RE4DC_PART_LIGHTS
+#define RE4DC_PART_LIGHTS fast_only_lights
+#endif
+
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/fallback_scan29_lights.inc"
+#endif
+
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_actor_audit29.inc"
+#endif
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Light directions of palette entry i (skinned normals): R_i^T l, w = 0,
 // cached per entry for the current part's light set.
 const float* skin_light_dirs(Frame& f, const Lights& L, unsigned i, float* fallback) {
@@ -2583,6 +2896,7 @@ void probe_dirs_all(Frame& f, const Lights& L) {
 }
 #endif
 
+#endif
 // ----------------------------------------------------------- the meshlet --
 // Outcode bits, built MSB-first by the SH4 kernel's rotcl chain (ACTOR_VTX_KERNEL: the order of
 // avk_sh4.S's chain, near first; ACTOR_POS_ASM combines its two chains to match).
@@ -2655,6 +2969,7 @@ unsigned positions_c(const u8* rec, unsigned rs, unsigned n, const u8* pos, unsi
     return i;
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Pass 2 (fast lights), portable. XMTRX holds the colour matrix. Small (s8)
 // normals only; with check, stops at the first record whose normal palette
 // index (byte 3) != palette.
@@ -2677,6 +2992,7 @@ unsigned lights_c(const u8* rec, unsigned rs, unsigned n, const u8* nrm, unsigne
     return i;
 }
 
+#endif
 #if defined(__sh__) && RE4DC_ACTOR_ASM
 // SH4 pass 1: one dynarec block per record (no calls, no spills), constants
 // resident in fr7..fr15, stores through one pre-decrementing pointer.
@@ -2774,6 +3090,7 @@ unsigned positions_asm(const u8* rec, unsigned rs, unsigned n, const u8* pos, in
     return n - left;
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // SH4 pass 2 (fast lights): fipr per light (fv8, fv12 resident; direction 2
 // reloaded into fv0), m = d + |d|, colour by ftrv, clamp, pack.
 #define ACTOR_NRM_ADDR4 "shll2   r0\n\t"
@@ -2850,6 +3167,7 @@ unsigned lights_asm(const u8* rec, unsigned rs, unsigned n, const u8* nrm, unsig
         __asm__ __volatile__(ACTOR_LIGHT_ASM(ACTOR_NRM_ADDR3, "") ACTOR_LIGHT_OPERANDS);
     return n - left;
 }
+#endif
 #endif
 
 // One strip starting at index: corner count and AND/OR of its outcodes.
@@ -3245,13 +3563,41 @@ inline void pack_uv16(pvr_vertex_t* v, unsigned n, bool keep_u) {
         vertex_word* w = reinterpret_cast<vertex_word*>(v + i);
         const u32 u = w[4], t = w[5];
         if (keep_u) w[7] = u;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        w[4] = re4dc::format32::uv_pack(u, t);
+#else
         w[4] = ((u + 0x8000U) & 0xFFFF0000U) | ((t + 0x8000U) >> 16);
+#endif
     }
 }
 // With no scroll and a power-of-two image (u_scale 1), u = raw x 2^-k: its
 // bf16 is exact when raw has <= 8 significant bits and otherwise off by up to
 // 2^(excess-1) raw units = 2^(excess-1) x uv_scale x size texels, which must
 // stay within half a texel. Scrolled or padded textures keep 32-bit UV.
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+namespace uv32 {
+re4dc::format32::UvCounters counters;
+#if RE4DC_ACTOR_SOURCE_SPAN
+#include "include/actor_source_span.inc"
+#endif
+#include "include/actor_format32_uv_source.inc"
+void log(unsigned frame) {
+    if (frame % 120U) return;
+    const auto& s=counters;
+    re4dc_log("AF32UV frame=%u parts=%u admitted=%u declined=%u why=legacy:%u,binding:%u,precision:%u,nonfinite:%u,begin:%u,source:%u scanned_records=%u splits=%u path=packet:%u,direct:%u,shared:%u\n",
+        frame,s.parts,s.admitted,s.parts-s.admitted,s.legacy,s.binding,s.precision,s.nonfinite,
+        s.begin_failed,s.source,s.scanned_records,s.splits,s.packet,s.direct,s.shared);
+#if RE4DC_ACTOR_SOURCE_SPAN
+    re4dc_log("ASPAN f=%u preparations=%u hits=%u geometry_records=%u cache_bytes=%u span_bytes=%u\n",
+        frame,span_preparations,span_hits,span_records,unsigned(sizeof(span_entries)),unsigned(sizeof(Re4dcActorSourceSpan)));
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+    re4dc_log("ASPAN31 f=%u content_hits=%u epoch=%u memo_bytes=%u unowned=%u/%u/%u/%u\n",frame,content_hits,
+        re4dc_actor_span_epoch,unsigned(sizeof(content_entries)),unowned_calls,unowned_hits,unowned_stores,unowned_other);
+#endif
+#endif
+}
+}
+#endif
 [[maybe_unused]] bool uv16_safe(const Re4dcModelPart& p, const BlobHeader& b) {
     const float uv_scale = (p.flags & 0x80000000U) ? 1.0f / 256.0f : 1.0f / 32768.0f;
     const unsigned excess = uv_excess_bits(b);
@@ -3308,7 +3654,11 @@ void one_tap_put(const pvr_vertex_t* cache, const pvr_vertex_t* v, unsigned n) {
 // The TA rejects area >= 0 for cull 2 (CW) and <= 0 for cull 1, so with s = (cull 2 ? 1 : -1) sign(det A) a meshlet is
 // rejected when s dot(n, p - e) > 0 for every normal n of its cone and every point p of its sphere: with w = c - e and
 // dw = s dot(axis, w), dw cos(theta) - r > sin(theta) sqrt(|w|^2 - dw^2).
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+struct AbcEye { unsigned pal = ~0U; bool ok = false; float e[3] = {0, 0, 0}, s = 0.0f; re4dc::cone32::Guard guard; };
+#else
 struct AbcEye { unsigned pal = ~0U; bool ok = false; float e[3] = {0, 0, 0}, s = 0.0f; };
+#endif
 float abc_tab[128];  // cos(theta_k), sin^2(theta_k)
 bool abc_tab_ready = false;
 bool abc_eye(const Frame& f, unsigned cull, unsigned pal, AbcEye& out) {
@@ -3345,10 +3695,26 @@ bool abc_eye(const Frame& f, unsigned cull, unsigned pal, AbcEye& out) {
     if (!re4dc::render::is_finite(out.e[0]) || !re4dc::render::is_finite(out.e[1]) || !re4dc::render::is_finite(out.e[2]))
         return false;
     out.s = ((cull == 2U) == (det > 0.0f)) ? 1.0f : -1.0f;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    const float adj[9] = {c00,c01,c02,c10,c11,c12,c20,c21,c22};
+    if (!re4dc::cone32::prepare(&A[0][0], t, adj, det, out.e, f.near_distance, out.guard)) {
+        ++abc32_stats.numeric; return false;
+    }
+#endif
     out.ok = true;
     return true;
 }
 inline bool abc_reject(const AbcCone& c, const AbcEye& eye) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    ++abc32_stats.tested;
+    const auto result = c.k <= 56U ? re4dc::cone32::test(c, eye, eye.guard, abc_tab[c.k], abc_tab[64+c.k])
+                                  : re4dc::cone32::Empty;
+    if (result == re4dc::cone32::Near) ++abc32_stats.near;
+    else if (result == re4dc::cone32::Numeric) ++abc32_stats.numeric;
+    else if (result == re4dc::cone32::Empty) ++abc32_stats.empty;
+    else if (result == re4dc::cone32::Reject) { ++abc32_stats.rejected; return true; }
+    return false;
+#endif
     const float wx = float(c.c[0]) - eye.e[0], wy = float(c.c[1]) - eye.e[1], wz = float(c.c[2]) - eye.e[2];
     const float dw = eye.s * (float(c.a[0]) * wx + float(c.a[1]) * wy + float(c.a[2]) * wz) * (1.0f / 32767.0f);
     const float t = dw * abc_tab[c.k] - float(c.r);
@@ -3359,6 +3725,27 @@ inline bool abc_reject(const AbcCone& c, const AbcEye& eye) {
 // The part's cone table when this draw can use it (culling part, skinned or rigid frame, converted in place).
 const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f, unsigned& cls) {
     cls = 0; ++abc_part_calls; if (p.cull == 1 || p.cull == 2) ++abc_part_cull;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    using namespace re4dc::cone32;
+    if ((p.cull != 1 && p.cull != 2) || p.blend != 0 || (p.material_flags & 4U) || p.depth_mode != 0) {
+        abc32_stats.decline(Cull); return nullptr;
+    }
+    if (base != p.stream) { abc32_stats.decline(Transient); return nullptr; }
+    if (f.mode != kSkin && f.mode != kRigid) { abc32_stats.decline(re4dc::cone32::Mode); return nullptr; }
+    const AbcCone* certified = abc_table(base, p.stream_bytes, &cls);
+    if (!certified) { abc32_stats.decline(Table); return nullptr; }
+    SourceIdentity identity;
+    const auto& h = *reinterpret_cast<const BlobHeader*>(base);
+    std::memcpy(&identity, base + abc_tail_at(p.stream_bytes, h.meshlets) + sizeof(AbcTail), sizeof(identity));
+    Re4dcActorSource current{};
+    if ((f.mode == kRigid && (!p.static_geometry || p.position_stride != 8 || p.positions != f.positions)) ||
+        (f.mode == kSkin && p.position_stride != 6) || f.position_stride != 8 ||
+        !re4dc_actor_model_source(p.info, &current) || current.positions != f.positions ||
+        current.position_count != f.position_count || current.position_count != p.position_count ||
+        !identity.matches(p.info, current.positions, current.position_count, p.position_stride)) {
+        abc32_stats.decline(Source); return nullptr;
+    }
+#endif
     if ((p.cull != 1 && p.cull != 2) || base != p.stream || (f.mode != kSkin && f.mode != kRigid)) return nullptr;
     if (!abc_tab_ready) {
         for (unsigned k = 0; k < 64; ++k) {
@@ -3367,7 +3754,12 @@ const AbcCone* abc_part(const Re4dcModelPart& p, const u8* base, const Frame& f,
         }
         abc_tab_ready = true;
     }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+    ++abc32_stats.admitted;
+    return certified;
+#else
     return abc_table(base, p.stream_bytes, &cls);
+#endif
 }
 #endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_AVK
@@ -3388,11 +3780,17 @@ struct Part {
     Re4dcModelPacket packet{};
     Cache cache{};
     unsigned used = 0, input = 0, output = 0, primed = 0;
+#if RE4DC_ACTOR_CLIP_FRONT26
+    unsigned clip_vertices = 0; // current meshlet, validates cached clip indices
+#endif
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
     // Unlike flags/oargb, this must start fresh for each Part even when a OneWindow reuses its cache.
     unsigned flat_primed = 0;
 #endif
     bool streaming = false, committed = false;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    struct NativeContinuationProgress* continuation=nullptr;
+#endif
 #if RE4DC_ACTOR_DIRECT
     bool direct = false;
     std::uint32_t* sq = nullptr;
@@ -3404,18 +3802,69 @@ struct Part {
     unsigned rs = 6, color_index = 0;
     const u8* colors = nullptr;
     u32 alpha = 0;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    bool dsa_xlu = re4dc_dsa24_model_translucent(&p) != 0;
+    unsigned dsa_classified = 0, dsa_overlap = 0;
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    unsigned dsa28_cls = re4dc_dsa28_model_class(&p);
+#endif
+    void dsa_strip_overlap(const u8* index, unsigned n) {
+        if (!dsa_xlu || n < 3) return;
+        dsa_classified += n - 2;
+        for (unsigned t = 0; t < n - 2; ++t) {
+            const unsigned common = cache.oc[index[t] & 127U] &
+                cache.oc[index[t + 1] & 127U] & cache.oc[index[t + 2] & 127U];
+            if (!(common & kOcScreen)) ++dsa_overlap;
+        }
+    }
+    void dsa_known_overlap(unsigned n) {
+        if (dsa_xlu) { dsa_classified += n; dsa_overlap += n; }
+    }
+    // Existing topology totals cover the ordinary and shared chunk backends.
+    // Output is CPU-emitted topology, not pixel/depth visibility on the PVR.
+    ~Part() {
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesIn, input);
+        re4dc::dsa24::count(re4dc::dsa24::TrianglesOut, output);
+        if (dsa_xlu) {
+            re4dc::dsa24::count(re4dc::dsa24::XluSubmitted, output);
+            re4dc::dsa24::count(re4dc::dsa24::XluViewOverlap, dsa_overlap);
+            // Alternate chunk backends can emit outside Part's strip sinks.
+            // Keep their submitted count; never invent their overlap count.
+            if (dsa_classified != output)
+                re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+        }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+        // The optional backface path retains pre-backface output accounting.
+        re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
+    }
+#endif
 #if RE4DC_ACTOR_SETUP_LEAN && RE4DC_AVK
     AvkSetup<AvkPos> position_setup;
     AvkSetup<AvkLight> light_setup;
 #endif
 
     bool flush() {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
         if (!streaming) return false;
         re4dc_model_packet_commit(used); committed = true;
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(continuation && used) {
+            ++continuation->result.submitted;
+            continuation->result.outcome=re4dc::NativeDrawOutcome::Submitted;
+            Re4dcActorStreamState state{};
+            if(!re4dc_actor_stream_state(&state))return false;
+        }
+#endif
         used = 0; ++stats.flushes;
         return true;
     }
     bool room(unsigned n) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if RE4DC_ACTOR_DIRECT
         if (direct) return slots + n <= 32767U;
 #endif
@@ -3423,6 +3872,12 @@ struct Part {
     }
     pvr_vertex_t* at() { return static_cast<pvr_vertex_t*>(packet.vertices) + used; }
     void put(const pvr_vertex_t* v, unsigned n) {  // prepared vertices (clipped triangles)
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if (re4dc::dsa24::x28::sample) re4dc::dsa24::x28::packet(dsa28_cls, p.cull, v, n, PVR_CMD_VERTEX_EOL);
+#endif
+#endif
 #if RE4DC_ACTOR_DIRECT
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         if (direct) one_tap_put(cache.v, v, n);
@@ -3432,6 +3887,13 @@ struct Part {
         std::memcpy(at(), v, n * sizeof(pvr_vertex_t)); used += n;
     }
     void strip(const u8* index, unsigned n) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+        dsa_strip_overlap(index, n);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if (re4dc::dsa24::x28::sample) re4dc::dsa24::x28::strip(dsa28_cls, p.cull, cache.v, index, n, 127U);
+#endif
+#endif
 #if RE4DC_ACTOR_DIRECT
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         if (direct) one_tap_strip(cache.v, index, n);
@@ -3493,7 +3955,16 @@ struct Part {
         return packet.capacity - used >= n || (streaming && packet.capacity >= n);
     }
     bool whole(const u8* index, unsigned count, unsigned triangles) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
         if (!room(count)) return false;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        dsa_known_overlap(triangles);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        if (re4dc::dsa24::x28::sample) re4dc::dsa24::x28::meshlet(dsa28_cls, p.cull, cache.v, index, count);
+#endif
+#endif
 #if RE4DC_ACTOR_DIRECT
         if (direct) {
 #if RE4DC_COARSE_ONE_SUBMIT == 2
@@ -3565,14 +4036,124 @@ struct Part {
         return true;
     }
     bool clip_strip(const Records& r, const u8* index, unsigned n) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        re4dc::dsa24::Scope dsa_clip(re4dc::dsa24::Clip);
+        re4dc::dsa24::count(re4dc::dsa24::ClipStrips);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ActorClipStrip, 1)
+#endif
         ++stats.fallback_runs;
+#if RE4DC_ACTOR_CLIP_FRONT26
+        return re4dc::actor_clip26::walk_strip<RE4DC_ACTOR_CLIP_REUSE != 0, kOcNear | kOcFar>(
+            index, n, cache.v, cache.oc, clip_vertices, p.cull, clip.width, clip.height,
+            [&](unsigned corner, re4dc::render::RenderVertex& v, float& opacity) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipRebuild, 1)
+#endif
+                const unsigned li = index[corner] & 127U;
+                float w[3], nn[3];
+                world_of(f, p, r, li, w, nn);
+                v = {};
+                float x = w[0], y = w[1], z = w[2];
+                v.position.world_x = x; v.position.world_y = y; v.position.world_z = z;
+                v.position.depth = -z;
+                if (z != 0.0f) project(x, y, z, &projection);
+                v.position.x = x; v.position.y = y; v.position.z = z;
+                v.u = uv16 ? unpacked_u(cache.v[li]) : cache.v[li].u; v.v = cache.v[li].v;
+                const u32 rgb = cache.v[li].argb;
+                v.light_red = float((rgb >> 16) & 255) * (1.0f / 255.0f);
+                v.light_green = float((rgb >> 8) & 255) * (1.0f / 255.0f);
+                v.light_blue = float(rgb & 255) * (1.0f / 255.0f);
+                opacity = float(colors ? colors[r.ci(li) * 4 + 3] : (p.alpha_state & 255)) * (1.0f / 255.0f);
+            },
+            [&](const re4dc::render::RenderVertex* in, const float* opacity) {
+                pvr_vertex_t triangles[6];
+                const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipTriangle, 1)
+#endif
+            ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
+#endif
+                if (uv16) pack_uv16(triangles, 3 * m, false);
+                if (m && !room(3 * m)) return false;
+                put(triangles, 3 * m); output += m;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_known_overlap(m);
+#endif
+                return true;
+            },
+            [&](const pvr_vertex_t* triangles) {
+                if (!room(3)) return false;
+                put(triangles, 3); ++output;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_known_overlap(1);
+#endif
+                return true;
+            });
+#elif RE4DC_ACTOR_CLIP_REUSE
+        return re4dc::actor_clip::reuse_strip(n,
+            [&](unsigned corner, re4dc::render::RenderVertex& v, float& opacity) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
+                const unsigned li = index[corner] & 127U;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipRebuild, 1)
+#endif
+                float w[3], nn[3];
+                world_of(f, p, r, li, w, nn);
+                v = {};
+                float x = w[0], y = w[1], z = w[2];
+                v.position.world_x = x; v.position.world_y = y; v.position.world_z = z;
+                v.position.depth = -z;
+                if (z != 0.0f) project(x, y, z, &projection);
+                v.position.x = x; v.position.y = y; v.position.z = z;
+                v.u = uv16 ? unpacked_u(cache.v[li]) : cache.v[li].u; v.v = cache.v[li].v;
+                const u32 rgb = cache.v[li].argb;
+                v.light_red = float((rgb >> 16) & 255) * (1.0f / 255.0f);
+                v.light_green = float((rgb >> 8) & 255) * (1.0f / 255.0f);
+                v.light_blue = float(rgb & 255) * (1.0f / 255.0f);
+                opacity = float(colors ? colors[r.ci(li) * 4 + 3] : (p.alpha_state & 255)) * (1.0f / 255.0f);
+            },
+            [&](const re4dc::render::RenderVertex* in, const float* opacity) {
+                pvr_vertex_t triangles[6];
+                const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipTriangle, 1)
+#endif
+            ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
+#endif
+                if (uv16) pack_uv16(triangles, 3 * m, false);
+                if (m && !room(3 * m)) return false;
+                put(triangles, 3 * m);
+                output += m;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                dsa_known_overlap(m);
+#endif
+                return true;
+            });
+#else
         for (unsigned t = 0; t + 2 < n; ++t) {
             unsigned tri[3] = {t, t + 1, t + 2};
             if (t & 1) std::swap(tri[0], tri[1]);  // strip parity
             re4dc::render::RenderVertex in[3];
             float opacity[3];
             for (unsigned k = 0; k < 3; ++k) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+                re4dc::dsa24::count(re4dc::dsa24::ClipRebuilds);
+#endif
                 const unsigned li = index[tri[k]] & 127U;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                DFA26_MODEL_HIT(ActorClipRebuild, 1)
+#endif
                 float w[3], nn[3];
                 world_of(f, p, r, li, w, nn);
                 auto& v = in[k];
@@ -3591,13 +4172,23 @@ struct Part {
             }
             pvr_vertex_t triangles[6];
             const unsigned m = re4dc::render::clip_projected_triangle(in, triangles, u8(p.cull), clip, nullptr, opacity);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            DFA26_MODEL_HIT(ActorClipTriangle, 1)
+#endif
             ++stats.fallback_triangles;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            re4dc::dsa24::count(re4dc::dsa24::ClipTriangles);
+#endif
             if (uv16) pack_uv16(triangles, 3 * m, false);
             if (m && !room(3 * m)) return false;
             put(triangles, 3 * m);
             output += m;
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+            dsa_known_overlap(m);
+#endif
         }
         return true;
+#endif
     }
 };
 
@@ -3864,6 +4455,7 @@ void avk_build_all(Frame& f) {
     for (unsigned j = 0; j < entries; ++j)
         if (!f.skin_ready[j]) { skin_position_matrix(f, j, f.skin_positions + j * 16U); f.skin_ready[j] = 1; }
 }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Skinned light directions used by records [i, n) and not built yet (skin_light_dirs).
 void avk_build_dirs(Frame& f, const Lights& L, const Records& r, unsigned i, unsigned n) {
     alignas(8) float temp[12];
@@ -3875,6 +4467,7 @@ void avk_build_dirs(Frame& f, const Lights& L, const Records& r, unsigned i, uns
         if (!f.dirs_ready[palette < f.palette_entries ? palette : 0U]) skin_light_dirs(f, L, palette, temp);
     }
 }
+#endif
 unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv) {
     Frame& f = e.f;
     const bool skin = f.mode == kSkin;
@@ -3896,6 +4489,9 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
     AvkPos& a = setup.args;
     a.pos = f.positions; a.uv = e.p.uv;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSetupRepeat, 1)
+#endif
     AvkPos a;
     a.pos = f.positions; a.uv = e.p.uv; a.rs = r.stride * 2U;
 #endif
@@ -3944,6 +4540,7 @@ inline void avk_fold(const u8* oc, unsigned n, unsigned& all, unsigned& any) {
     for (; j < n; ++j) { a &= oc[j]; o |= oc[j]; }
     all &= a & 255U; any |= o & 255U;
 }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #if RE4DC_ACTOR_LIGHT_N16
 // ACTOR_LIGHT_N16: pass 2 for s16 normals (normal_shift 14: the owner path's parts, skinned stride 8, rigid
 // stride 8 or 6) on the n16 kernels, with the s8 kernels' contract: the same fold (L.dir / skin_dirs, built by
@@ -4017,6 +4614,9 @@ unsigned avk_lights_n16(Part& e, const Lights& L, const Records& r, unsigned n) 
     const auto kernel = setup.kernel;
     a.rs = r.stride * 2U;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSetupRepeat, 1)
+#endif
     AvkLight a;
     a.nrm = f.normals; a.rs = r.stride * 2U; a.color = L.color; a.alpha = e.alpha;
     a.dirs = skin ? f.skin_dirs : &L.dir[0][0]; a.ready = f.dirs_ready; a.entries = f.palette_entries;
@@ -4101,6 +4701,9 @@ unsigned avk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     AvkLight& a = setup.args;
     a.nrm = f.normals; a.color = L.color; a.alpha = e.alpha;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSetupRepeat, 1)
+#endif
     AvkLight a;
     a.nrm = f.normals; a.rs = r.stride * 2U; a.color = L.color; a.alpha = e.alpha;
 #endif
@@ -4133,6 +4736,7 @@ unsigned avk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
         avk_build_dirs(f, L, r, i, n);
     }
 }
+#endif
 #if RE4DC_AVK == 2
 // Check build: the kernels run first, then the previous path (positions_asm / positions_c,
 // lights_asm) recomputes the same records into the arrays below and every word is compared before
@@ -4182,7 +4786,9 @@ void avk_check_emit(const pvr_vertex_t* cache, const u8* index, unsigned n) {
 }
 void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv, unsigned& all,
                     unsigned& any);
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n);
+#endif
 void avk_check_positions(Part& e, const Records& r, unsigned n, unsigned done, const PosConst& k, bool s16_uv,
                          unsigned all, unsigned any) {
     AvkCheck& c = avk_chk;
@@ -4250,6 +4856,7 @@ void avk_check_positions(Part& e, const Records& r, unsigned n, unsigned done, c
                   avk_build_mc);
     }
 }
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 void avk_check_lights(Part& e, const Lights& L, const Records& r, unsigned n, unsigned done) {
     AvkCheck& c = avk_chk;
     if (!done) { ++c.light_other; return; }
@@ -4275,6 +4882,7 @@ void avk_check_lights(Part& e, const Lights& L, const Records& r, unsigned n, un
 }
 #endif
 #endif
+#endif
 
 // Pass 1 over a meshlet: every record's position/uv/outcode into the cache.
 void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv, unsigned& all,
@@ -4296,6 +4904,9 @@ void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bo
     }
 #endif
     if (i == n) { stats.position_transforms += n; return; }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorPositionFallback, n - i)
 #endif
     if (f.mode != kSkin) load_xmtrx(f.screen);
     while (i < n) {
@@ -4326,6 +4937,32 @@ void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bo
     stats.position_transforms += n;
 }
 
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+// Each part's RGB was computed once. This loop never reads normal/light/palette
+// data. The invariant guard is live, and catches any future nonconstant dispatch.
+void pass_fast_only(Part& e, const Lights& L, const Records& r, unsigned n) {
+    if (!L.constant || !L.fast) light25_add(light25_stats.fallback_parts);
+    const bool multiply = e.p.colors && (L.source->ambient_vertex || L.source->material_vertex);
+    light25_add(multiply ? light25_stats.multiply_vertices : light25_stats.flat_vertices, n);
+    const u32 rgb = L.constant_rgb;
+    if (!multiply && !e.colors) {
+        const u32 argb = e.alpha | rgb;
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+        e.flat_colors(n, argb);
+#else
+        for (unsigned i = 0; i < n; ++i) e.cache.v[i].argb = argb;
+#endif
+        return;
+    }
+    for (unsigned i = 0; i < n; ++i) {
+        const unsigned ci = r.ci(i);
+        const u32 alpha = e.colors ? u32(e.colors[ci * 4U + 3U]) << 24 : e.alpha;
+        e.cache.v[i].argb = alpha | (multiply ? re4dc_actor_light25_multiply(L.colour25, e.p.colors + ci * 4U) : rgb);
+    }
+}
+#endif
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Pass 2 (fast directional fold) over a meshlet.
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     Frame& f = e.f;
@@ -4345,6 +4982,9 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     if (!f.small_normals && done) n16_check(e, L, r, done);
 #endif
     if (done == n) return;
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorLightFallback, n - done)
 #endif
     LightConst k{};
     k.cap = 255.0f;
@@ -4407,6 +5047,15 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
 #endif
 // Pass 2 (exact, slow): the generic path's per-vertex evaluator.
 void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    fa29_actor_exact_vertices(e.p,n);
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorLightExact, n)
+#endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    b28::verts(n);
+#endif
     static const u8 white[4] = {255, 255, 255, 255};
 #if defined(RE4DC_LEON_SOURCE_LIGHT) && RE4DC_LEON_SOURCE_LIGHT
     float Np[12];
@@ -4521,6 +5170,7 @@ void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
     stats.slow_light_vertices += n;
 }
 
+#endif
 // ------------------------------------------------------------- prelit --
 // Records of a kHasBake part carry an RGB565 colour lit with BakeBlock's
 // fold. A draw whose fold matches (within kBakeTolerance of each light's
@@ -4557,6 +5207,7 @@ bool near_vec(const float* a, const float* b, unsigned n, float scale) {
     return true;
 }
 
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 // Returns the use for this draw; scale[c] = 8.8 fixed per channel (kBakeScaled).
 BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs, unsigned scale[3]) {
     u8* base = reinterpret_cast<u8*>(const_cast<BlobHeader*>(&b));
@@ -4589,6 +5240,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
     re4dc_gcasset::HandDerivationScope gcasset_mutation(&b,e.p.stream_bytes);
 #endif
     // Rebake: light every level-0 record into its colour field.
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::ActorBakeRelight);
+#endif
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     u16* records = reinterpret_cast<u16*>(base + b.rec4 * 4U);
     u32 clamped = 0;
@@ -4637,6 +5291,10 @@ void pass_baked(Part& e, const Records& r, unsigned n, const unsigned* scale) {
     }
 }
 
+#endif
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#include "include/fallback_scan29_bake.inc"
+#endif
 // LOD: the coarsest level whose error, projected at the bind-pose bounding
 // sphere's nearest depth, is at most lod_tau pixels (0: always level 0).
 #ifndef RE4DC_ACTOR_LOD_PX
@@ -4866,8 +5524,13 @@ unsigned add_bake_field(u8* blob, unsigned size, unsigned capacity) {
 // compares the fold (and a skinned part's pose) with the one they were baked
 // with and rebakes when it moved, so a later motion stays correct.
 bool prelit_candidate(const Re4dcModelPart& p) {
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    (void)p;
+    return false;
+#else
     return kPrelit && p.blend == 0 && !(p.alpha_state & 256) && p.lighting->enable && !p.lighting->ambient_vertex &&
            !p.lighting->material_vertex && re4dc_actor_model_prelit(p.model, p.info) != 0;
+#endif
 }
 
 // A part of a lazily deferred info (no arrays yet) qualifies only if it will
@@ -4876,12 +5539,25 @@ bool lazy_skin(const Re4dcModelPart& p) {
     if (!RE4DC_NATIVE_ACTOR_SKIN_LAZY || p.positions || p.position_stride != 6) return false;
     const SkinEntry* e = find_skin(p.info, nullptr);
     Re4dcActorSource src{};
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    return skin_recipe_eligible(e) && re4dc_actor_model_source(p.info, &src) &&
+#else
     return e && !e->materialized && e->palette && e->entries && re4dc_actor_model_source(p.info, &src) &&
+#endif
            src.positions && src.normals && src.position_count == p.position_count &&
            src.normal_count == p.normal_count && bool(src.small_normals) == (p.normal_shift == 6);
 }
 
-bool qualifies(const Re4dcModelPart& p) {
+bool qualifies(const Re4dcModelPart& p
+#if RE4DC_NATIVE_FE_CONTINUATION
+    ,bool explicit_pose=false
+#endif
+) {
+#if RE4DC_ACTOR_SOURCE_SPAN
+    // A published bounded view must never fall through to an unbounded FE
+    // transform. Unknown views retain the existing conservative route.
+    if(p.source_span.owner_serial && !uv32::prepare_owned(p))return false;
+#endif
     return p.lighting && p.alpha_state <= 511 &&
            (!(p.alpha_state & 256) || ((p.flags & 0x80000000U) && p.colors)) &&
            ((!p.lighting->ambient_vertex && !p.lighting->material_vertex) || ((p.flags & 0x80000000U) && p.colors)) &&
@@ -4889,11 +5565,164 @@ bool qualifies(const Re4dcModelPart& p) {
            p.shift <= 30 && (p.position_stride == 6 || p.position_stride == 8) &&
            (p.normal_shift == 6 || p.normal_shift == 14) && p.normal_stride >= 3 &&
            p.position_count && p.normal_count && p.stream_bytes <= 1024 * 1024 && p.stream_bytes >= 32 &&
-           ((ram(p.positions, p.position_count * p.position_stride) &&
+           (
+#if RE4DC_NATIVE_FE_CONTINUATION
+            explicit_pose ||
+#endif
+            (ram(p.positions, p.position_count * p.position_stride) &&
              ram(p.normals, p.normal_count * p.normal_stride)) || lazy_skin(p)) &&
            ram(p.stream, p.stream_bytes) && p.uv &&
            p.projection[0] == 0 && p.viewport[2] > 0 && p.viewport[3] > 0;
 }
+
+#if defined(RE4DC_K45DIAG31) && RE4DC_K45DIAG31
+// K45DIAG31 (k45fix31.mk; diagnostic, no draw change): why actor parts are converted again. "K45D" every 120
+// actor frames: in-place conversions (repeats of a stream already converted in place = its GX list came back),
+// per-submit blobs (larger than the GX list: rebuilt every draw), rejects; then the most frequent offenders.
+struct K45dEntry { const void* stream; const void* model; const void* info; unsigned stream_bytes, blob_bytes, count; };
+K45dEntry k45d_inplace[256], k45d_transient[256];
+unsigned k45d_n_inplace, k45d_n_idistinct, k45d_n_reconv, k45d_n_transient, k45d_n_tdistinct, k45d_n_fail, k45d_log;
+K45dEntry* k45d_slot(K45dEntry* t, const void* s) {
+    const unsigned h = unsigned(reinterpret_cast<std::uintptr_t>(s) >> 5) & 255U;
+    for (unsigned k = 0; k < 16; ++k) { K45dEntry& e = t[(h + k) & 255U]; if (e.stream == s || !e.stream) return &e; }
+    return &t[h];
+}
+void k45d_hit(K45dEntry* t, const Re4dcModelPart& p, unsigned size, unsigned& distinct, unsigned* repeat) {
+    K45dEntry* e = k45d_slot(t, p.stream);
+    if (e->stream == p.stream) { ++e->count; if (repeat) ++*repeat; e->blob_bytes = size; return; }
+    *e = {p.stream, p.model, p.info, p.stream_bytes, size, 1}; ++distinct;
+}
+void k45d_top(const char* kind, const K45dEntry* t) {
+    unsigned floor = ~0U;
+    for (unsigned n = 0; n < 6; ++n) {
+        const K45dEntry* best = nullptr;
+        for (unsigned i = 0; i < 256; ++i)
+            if (t[i].stream && t[i].count > 1 && t[i].count < floor && (!best || t[i].count > best->count)) best = &t[i];
+        if (!best) break;
+        floor = best->count;
+        re4dc_log("K45D top %s stream=%p model=%p info=%p gx=%u blob=%u n=%u\n", kind, best->stream, best->model,
+                  best->info, best->stream_bytes, best->blob_bytes, best->count);
+    }
+}
+unsigned k45d_bump_line[8], k45d_bump_n[8];
+void k45d_census() {
+    const unsigned f = frame_serial;
+    if (f - k45d_log < 120U) return;
+    k45d_log = f;
+    re4dc_log("K45D bumps %u:%u %u:%u %u:%u %u:%u %u:%u %u:%u %u:%u %u:%u\n", k45d_bump_line[0], k45d_bump_n[0],
+              k45d_bump_line[1], k45d_bump_n[1], k45d_bump_line[2], k45d_bump_n[2], k45d_bump_line[3], k45d_bump_n[3],
+              k45d_bump_line[4], k45d_bump_n[4], k45d_bump_line[5], k45d_bump_n[5], k45d_bump_line[6], k45d_bump_n[6],
+              k45d_bump_line[7], k45d_bump_n[7]);
+    unsigned rparts = 0, rbytes = 0, tbytes = 0, tgx = 0;
+    for (const K45dEntry& e : k45d_inplace) if (e.stream && e.count > 1) { ++rparts; rbytes += e.stream_bytes; }
+    for (const K45dEntry& e : k45d_transient) if (e.stream) { tbytes += e.blob_bytes; tgx += e.stream_bytes; }
+    re4dc_log("K45D frame=%u inplace=%u distinct=%u repeat=%u repeat_parts=%u repeat_gx=%u transient=%u tparts=%u "
+              "tgx=%u tblob=%u rejects=%u\n", f, k45d_n_inplace, k45d_n_idistinct, k45d_n_reconv, rparts, rbytes,
+              k45d_n_transient, k45d_n_tdistinct, tgx, tbytes, k45d_n_fail);
+    k45d_top("inplace", k45d_inplace); k45d_top("transient", k45d_transient);
+}
+#define K45D_INPLACE(p, size) k45d_hit(k45d_inplace, p, size, k45d_n_idistinct, &k45d_n_reconv), ++k45d_n_inplace;
+#define K45D_TRANSIENT(p, size) k45d_hit(k45d_transient, p, size, k45d_n_tdistinct, nullptr), ++k45d_n_transient;
+#define K45D_REJECT() ++k45d_n_fail;
+#define K45D_CENSUS() k45d_census();
+#else
+#define K45D_INPLACE(p, size)
+#define K45D_TRANSIENT(p, size)
+#define K45D_REJECT()
+#define K45D_CENSUS()
+#endif
+
+#if defined(RE4DC_ACTOR_TINY_KEEP31) && RE4DC_ACTOR_TINY_KEEP31
+// ACTOR_TINY_KEEP31 (K45-FIX-PLAN F1; k45fix31.mk): a part whose GX list is too small to hold its blob in place
+// (32-64 byte lists, 52-92 byte blobs: the 32-byte header alone) was converted again on every draw as a per-submit
+// blob (r100: 23 parts, ~43 conversions a frame, with or without K45). The blob is kept here once, keyed by the
+// whole GX list and every input the conversion reads, and copied to scratch on later draws: the same bytes as a
+// fresh conversion. Only parts whose positions are model data (source arrays, or static rigid geometry) are kept;
+// the store clears on the model lifetime epoch and when full.
+namespace tiny31 {
+constexpr unsigned kGx = 128, kBlob = 256, kSlots = 64, kPool = 4096;
+struct Key {
+    const void* stream; const void* info; const void* uv; const void* positions; const void* normals;
+    unsigned gx, flags, shift, stride, cull, blend, depth, material, positions_n, normals_n, epoch;
+};
+struct Slot { Key k; unsigned off, blob_bytes; };
+Slot slots[kSlots];
+alignas(32) u8 pool[kPool];
+unsigned top, epoch_seen, hits, kept, clears, skipped, log_frame;
+void clear() { std::memset(slots, 0, sizeof slots); top = 0; ++clears; }
+bool key_of(const Re4dcModelPart& p, const SortSource& s, Key& k) {
+    if (p.stream_bytes > kGx) return false;
+    if (!((p.position_stride == 6 && s.positions) || (p.position_stride == 8 && p.static_geometry && p.positions))) {
+        ++skipped; return false;
+    }
+    if (epoch_seen != re4dc_actor_span_epoch) { clear(); epoch_seen = re4dc_actor_span_epoch; }
+    std::memset(&k, 0, sizeof k);
+    k.stream = p.stream; k.info = p.info; k.uv = p.uv; k.normals = s.normals;
+    k.positions = s.positions ? static_cast<const void*>(s.positions) : static_cast<const void*>(p.positions);
+    k.gx = p.stream_bytes; k.flags = p.flags; k.shift = p.shift; k.stride = p.position_stride; k.cull = p.cull;
+    k.blend = p.blend; k.depth = p.depth_mode; k.material = p.material_flags;
+    k.positions_n = s.positions ? s.position_count : p.position_count;
+    k.normals_n = s.normal_count | (s.small_normals ? 0x80000000U : 0U); k.epoch = epoch_seen;
+    return true;
+}
+Slot* slot_of(const Key& k, bool insert) {
+    const unsigned h = unsigned(reinterpret_cast<std::uintptr_t>(k.stream) >> 5) % kSlots;
+    for (unsigned i = 0; i < 4; ++i) {
+        Slot& e = slots[(h + i) % kSlots];
+        if (e.k.stream && !std::memcmp(&e.k, &k, sizeof k)) return &e;
+        if (!e.k.stream) return insert ? &e : nullptr;
+    }
+    return nullptr;
+}
+// A kept blob for p in fresh scratch, or nullptr (convert as before).
+const BlobHeader* find(const Re4dcModelPart& p, const SortSource& s) {
+    Key k;
+    if (!key_of(p, s, k)) return nullptr;
+    const Slot* e = slot_of(k, false);
+    if (!e || std::memcmp(pool + e->off, p.stream, p.stream_bytes)) return nullptr;
+    u8* out = static_cast<u8*>(scratch(e->blob_bytes));
+    if (!out) return nullptr;
+    std::memcpy(out, pool + e->off + ((p.stream_bytes + 31U) & ~31U), e->blob_bytes);
+    ++hits;
+    return reinterpret_cast<const BlobHeader*>(out);
+}
+void keep(const Re4dcModelPart& p, const SortSource& s, const u8* blob, unsigned blob_bytes) {
+    Key k;
+    if (blob_bytes > kBlob || !key_of(p, s, k)) return;
+    const unsigned need = ((p.stream_bytes + 31U) & ~31U) + ((blob_bytes + 31U) & ~31U);
+    Slot* e = slot_of(k, true);
+    if (!e || top + need > kPool) { clear(); e = slot_of(k, true); }
+    e->k = k; e->off = top; e->blob_bytes = blob_bytes;
+    std::memcpy(pool + top, p.stream, p.stream_bytes);
+    std::memcpy(pool + top + ((p.stream_bytes + 31U) & ~31U), blob, blob_bytes);
+    top += need; ++kept;
+}
+void census(unsigned frame) {
+    if (frame - log_frame < 120U) return;
+    log_frame = frame;
+    re4dc_log("ATK31 frame=%u hits=%u kept=%u clears=%u skipped=%u pool=%u/%u\n", frame, hits, kept, clears, skipped,
+              top, kPool);
+}
+}  // namespace tiny31
+#if defined(RE4DC_K45DIAG31) && RE4DC_K45DIAG31
+// Diagnostic proof: a hit still converts, and the kept blob is compared with the fresh one ("ATK31V same/differ").
+namespace tiny31 { unsigned verify_same, verify_differ; }
+#define TINY31_FIND(p, sort) const BlobHeader* const tiny_check = tiny31::find(p, sort);
+#define TINY31_KEEP(p, sort, out, bytes) \
+    if (tiny_check) { if (!std::memcmp(tiny_check, out, bytes)) ++tiny31::verify_same; else ++tiny31::verify_differ; } \
+    else tiny31::keep(p, sort, out, bytes);
+#define TINY31_CENSUS() tiny31::census(frame_serial); \
+    if (!(frame_serial % 120U)) re4dc_log("ATK31V same=%u differ=%u\n", tiny31::verify_same, tiny31::verify_differ);
+#else
+#define TINY31_FIND(p, sort) if (const BlobHeader* kept_blob = tiny31::find(p, sort)) return kept_blob;
+#define TINY31_KEEP(p, sort, out, bytes) tiny31::keep(p, sort, out, bytes);
+#define TINY31_CENSUS() tiny31::census(frame_serial);
+#endif
+#else
+#define TINY31_FIND(p, sort)
+#define TINY31_KEEP(p, sort, out, bytes)
+#define TINY31_CENSUS()
+#endif
 
 const BlobHeader* convert(const Re4dcModelPart& p) {
     SortSource sort;
@@ -4904,6 +5733,7 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             sort.normals = src.normals; sort.normal_count = src.normal_count; sort.small_normals = src.small_normals != 0;
         }
     }
+    TINY31_FIND(p, sort)
     const unsigned mark = workspace_top;
     // In place: built in scratch with the GX list's size as the limit.
     {
@@ -4916,10 +5746,20 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #endif
         ) & ~31U;
         u8* work = out && room ? static_cast<u8*>(scratch(room)) : nullptr;
-        if (!work) { ++stats.workspace_misses; workspace_top = mark; return nullptr; }
+        if (!work) { DFA26_MODEL_HIT(ActorWorkspace, 1) ++stats.workspace_misses; workspace_top = mark; return nullptr; }
         const bool opaque = p.blend == 0;
 #if defined(RE4DC_ACTOR_TEST)
         const double t0 = test_now_us();
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_BACKFACE_CONE == 2
+        // The comparison must parse the GX source before the in-place publish.
+        // Both scratch buffers are then reused by the actual conversion.
+        unsigned abc32_plain_records = 0, abc32_plain_meshlets = 0;
+        {
+            Converter plain(p, sort, out, p.stream_bytes, Arena{work, room}, false);
+            plain.abc_no_split = true;
+            if (plain.run()) { abc32_plain_records = plain.record_count(); abc32_plain_meshlets = plain.meshlet_count(); }
+        }
 #endif
         Converter c(p, sort, out, p.stream_bytes, Arena{work, room}, false);
 #if !RE4DC_ACTOR_BACKFACE_CONE
@@ -4931,6 +5771,24 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
         // ACTOR_BACKFACE_CONE: a split blob that no longer fits in place is built again unsplit (no cones).
         Converter c2(p, sort, out, p.stream_bytes, Arena{work, room}, false);
         if (!ok && c.split()) { c2.abc_no_split = true; ok = c2.run(); cp = &c2; ++abc_unsplit; }
+#if defined(RE4DC_ACTOR_CONE_GAIN31) && RE4DC_ACTOR_CONE_GAIN31
+        // ACTOR_CONE_GAIN31=N (K45-FIX-PLAN F2; k45fix31.mk): the cone split re-partitions strips per bone and facing,
+        // which copies shared vertices into more meshlets; at the barn it added more skinned vertices than the cones
+        // reject (~12%). Once per part, the plain blob is built too and the split kept only when its records grow
+        // by at most N%. Same triangles either way; a declined part draws as without BACKFACE_CONE.
+        const unsigned gain_gx = (p.stream_bytes + 31U) & ~31U;
+        Converter cg(p, sort, work, p.stream_bytes, Arena{work + gain_gx, room > gain_gx ? room - gain_gx : 0U}, false);
+        if (ok && cp->split() && room > 2U * gain_gx) {
+            cg.abc_no_split = true;
+            if (cg.run()) {
+                acg31.split_records += cp->record_count(); acg31.plain_records += cg.record_count();
+                acg31.split_meshlets += cp->meshlet_count(); acg31.plain_meshlets += cg.meshlet_count();
+                if (cp->record_count() * 100U > cg.record_count() * (100U + RE4DC_ACTOR_CONE_GAIN31)) {
+                    std::memcpy(out, work, cg.bytes()); cp = &cg; ++acg31.declined;
+                } else ++acg31.kept;
+            }
+        }
+#endif
 #endif
 #if defined(RE4DC_ACTOR_TEST)
         const double dt = test_now_us() - t0;
@@ -4949,6 +5807,12 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #if RE4DC_ACTOR_BACKFACE_CONE
             if (cp->split()) abc_build(p, size, abc_class_of(p.model));
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+            if (cp->split() && abc32_plain_meshlets) {
+                abc_rec_split += cp->record_count(); abc_rec_plain += abc32_plain_records;
+                abc_ml_split += cp->meshlet_count(); abc_ml_plain += abc32_plain_meshlets;
+            }
+#else
             if (cp->split()) {  // check build: the same part unsplit, for the record / meshlet growth
                 Converter c3(p, sort, out, p.stream_bytes, Arena{work, room}, false);
                 c3.abc_no_split = true;
@@ -4959,10 +5823,12 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             }
 #endif
 #endif
+#endif
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
             gcasset_mutation.complete();
 #endif
             ++stats.conversions;
+            K45D_INPLACE(p, size)
             if (cp->level_count()) ++stats.lod_parts;
             return reinterpret_cast<const BlobHeader*>(p.stream);
         }
@@ -4985,14 +5851,19 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 #endif
         ) & ~31U;
     u8* work = out && rest ? static_cast<u8*>(scratch(rest)) : nullptr;
-    if (!work) { ++stats.workspace_misses; workspace_top = mark; return nullptr; }
+    if (!work) { DFA26_MODEL_HIT(ActorWorkspace, 1) ++stats.workspace_misses; workspace_top = mark; return nullptr; }
     Converter c(p, sort, out, want, Arena{work, rest}, false);  // per submit: no LOD, unbaked
 #if RE4DC_ACTOR_BACKFACE_CONE
     c.abc_no_split = true;
 #endif
-    if (!c.run()) { ++stats.conversion_rejects; workspace_top = mark; return nullptr; }
+    if (!c.run()) { ++stats.conversion_rejects; K45D_REJECT() workspace_top = mark; return nullptr; }
     workspace_top = unsigned(out - workspace) + ((c.bytes() + 31U) & ~31U);
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorTransient, 1)
+#endif
     ++stats.transient_conversions;
+    TINY31_KEEP(p, sort, out, c.bytes())
+    K45D_TRANSIENT(p, c.bytes())
     return reinterpret_cast<const BlobHeader*>(out);
 }
 
@@ -5056,7 +5927,7 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 #if RE4DC_GC_ASSET_GATE && RE4DC_GC_ASSET_LEON_HAND_PACK
     if(!work)gcasset_mutation.complete(); // the only owned write was the completed flag clear
 #endif
-    if (!work) { ++stats.workspace_misses; workspace_top = mark; return; }
+    if (!work) { DFA26_MODEL_HIT(ActorWorkspace, 1) ++stats.workspace_misses; workspace_top = mark; return; }
     u8* w = gx;
     auto put16 = [&](unsigned v) { *w++ = u8(v >> 8); *w++ = u8(v); };
     const u16* records = reinterpret_cast<const u16*>(stream + b.rec4 * 4U);
@@ -5124,7 +5995,15 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     workspace_bytes = memory ? bytes & ~31U : 0;
     workspace_top = 0; workspace_end = workspace_bytes;
     ++frame_serial;
+    K45D_CENSUS()
+    TINY31_CENSUS()
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    uv32::log(frame_serial);
+#endif
     lod_budget = lod_budget_frame;
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+    b28::window(frame_serial);
+#endif
 #if defined(RE4DC_ACTOR_LOD_ENTRY) && RE4DC_ACTOR_LOD_ENTRY
     {   // ACTOR_LOD_ENTRY=K (shotfx20.mk; render only, exact triangles): for the first K frames of a room every part
         // drawn has its detail levels built at once (no per-frame budget), so the builds land in the room-entry
@@ -5244,9 +6123,18 @@ extern "C" void re4dc_actor_test_lod_ladder(const float* f) {
 
 extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const void* position_buffer,
                                          const float* palette, unsigned entries) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if (skin_admission_pending.serial) return 0;
+#endif
     if (frame != skin_frame) {
 #if RE4DC_ACTOR_TRANSACTION
         owned_skin_clear();owned_skin_invalidate_frames();
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+        skin_recipe_frame_retire();
 #endif
         skin_frame = frame; skin_count = 0;
     }
@@ -5270,7 +6158,13 @@ extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const
 #if RE4DC_ACTOR_TRANSACTION && !RE4DC_ACTOR_SKIN_OWNER_POOL
             if(owned_skins[unsigned(e-skins)].serial)return 0;
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+            if(skin_recipe_building || !skin_recipe_drop(*e,unsigned(e-skins)))return 0;
+            const unsigned state=skin_recipe_nominated(*e)?kSkinRecipeReady:0u;
+            *e = {info, nullptr, palette, entries, state}; ++stats.skin_registered; return 1;
+#else
             *e = {info, nullptr, palette, entries, 0}; ++stats.skin_registered; return 1;
+#endif
         }
 #if RE4DC_ACTOR_TRANSACTION
     for(unsigned i=0;i<skin_count;++i)if(!skins[i].info
@@ -5281,7 +6175,7 @@ extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const
         skins[i]={info,position_buffer,palette,entries,0};++stats.skin_registered;return 1;
     }
 #endif
-    if (skin_count == kSkins) return 0;
+    if (skin_count == kSkins) DFA26_MODEL_SLOW(ActorSkinRegistry, 1, return 0;)
     skins[skin_count++] = {info, position_buffer, palette, entries, 0};
     ++stats.skin_registered;
     return 1;
@@ -5294,8 +6188,14 @@ namespace { unsigned* census_mat_row; }  // ACTOR_CENSUS: the current part's row
 extern "C" void re4dc_skin_palette_resolve(const float* palette);  // trans.cpp SKIN_PALETTE_LAZY
 #endif
 extern "C" const float* re4dc_actor_skin_palette(const void* info, const void* position_buffer, unsigned* entries) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    SkinEntry* e = find_skin(info, position_buffer);
+    if (!e || !skin_recipe_readable(*e) ||
+        (e->materialized==kSkinRecipePending && !skin_recipe_materialize(*e))) {*entries=0;return nullptr;}
+#else
     const SkinEntry* e = find_skin(info, position_buffer);
     if (!e || e->materialized) { *entries = 0; return nullptr; }
+#endif
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries){*entries=0;return nullptr;} // inert reservation
 #endif
@@ -5311,7 +6211,11 @@ extern "C" const float* re4dc_actor_skin_palette(const void* info, const void* p
 // materialized, so its parts can only draw through the skinned frame (lazy_skin / prepare_frame kSkin) and its gate.
 extern "C" int re4dc_actor_skin_lazy_known(const void* info) {
     const SkinEntry* e = find_skin(info, nullptr);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    return skin_recipe_eligible(e);
+#else
     return e && !e->materialized && e->palette && e->entries;
+#endif
 }
 #if RE4DC_PROP_GATE == 2
 extern "C" { unsigned re4dc_pg_expect, re4dc_pg_fogged; }  // =2 check: parts of a gated model culled at the fog gate
@@ -5320,18 +6224,64 @@ extern "C" { unsigned re4dc_pg_expect, re4dc_pg_fogged; }  // =2 check: parts of
 extern "C" void re4dc_actor_materialize(const Re4dcModelPart* p) {
     if (!p) return;
     SkinEntry* e = find_skin(p->info, p->positions);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (!e || !skin_recipe_readable(*e) ||
+        (e->materialized==kSkinRecipePending && !skin_recipe_materialize(*e)))return;
+#else
     if (!e || e->materialized) return;
+#endif
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries)return; // no source palette was deferred
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorSkinMaterialize, 1)
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (!re4dc_skin_materialize(e->info, e->palette))return;
+#else
     re4dc_skin_materialize(e->info, e->palette);
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    e->materialized=skin_recipe_nominated(*e)?kSkinRecipeDone:1u;
+#else
     e->materialized = 1;
+#endif
     ++stats.materialized_infos;
 #if RE4DC_ACTOR_CENSUS
     if (census_mat_row) *census_mat_row += 1;
 #endif
 }
 
+#if defined(RE4DC_ACTOR_REPLAY_SKIN) && RE4DC_ACTOR_REPLAY_SKIN
+// ACTOR_REPLAY_SKIN (crowd.mk): a part whose info's lazily skinned palette this frame was already materialized for the
+// generic path (a queued / replayed part, e.g. h2's translucent room model drawn after the codec screen) declines
+// here: lazy_skin needs an unmaterialized entry and the part's own arrays have no entry of their own. Re-register the
+// same palette for the info's current arrays (the ordinary non-lazy registration Trans() makes), so the skinned
+// frame takes the part. Ordinary entries only (an owned entry never switches back to source data); 1 = *p now
+// carries the arrays and the entry exists.
+extern "C" int re4dc_actor_skin_rearm(Re4dcModelPart* p) {
+    if (!p || !p->info) return 0;
+    const SkinEntry* e =
+#if RE4DC_ACTOR_SKIN_OWNER_POOL
+        find_ordinary_skin(p->info, nullptr);
+    if (find_owned_skin(p->info)) return 0;
+#else
+        find_skin(p->info, nullptr);
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (!e || (e->materialized!=1 && e->materialized!=kSkinRecipeDone) || !e->palette || !e->entries)return 0;
+#else
+    if (!e || !e->materialized || !e->palette || !e->entries) return 0;
+#endif
+#if RE4DC_ACTOR_TRANSACTION && !RE4DC_ACTOR_SKIN_OWNER_POOL
+    if (owned_skins[unsigned(e - skins)].serial) return 0;
+#endif
+    const float* palette = e->palette; const unsigned entries = e->entries;
+    if (!p->positions && !re4dc_actor_model_buffers(p)) return 0;
+    if (const SkinEntry* own = find_skin(p->info, p->positions)) return !own->materialized && own->palette == palette;
+    return re4dc_actor_skin_register(skin_frame, p->info, p->positions, palette, entries);
+}
+#endif
 #if RE4DC_NATIVE_ACTOR_SKIN_LAZY
 extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p) {
     if (!p || p->positions) return 1;
@@ -5340,9 +6290,23 @@ extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart* p) {
 #if RE4DC_ACTOR_SKIN_RESERVE
     if(!e->palette || !e->entries)return 0; // never materialize a placeholder
 #endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (e->materialized==kSkinRecipePending && !skin_recipe_materialize(*e))return 0;
+    if (!skin_recipe_readable(*e) && e->materialized!=1 &&
+        e->materialized!=kSkinRecipeDone)return 0;
+    if (skin_recipe_readable(*e)) {
+#else
     if (!e->materialized) {
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ActorSkinMaterialize, 1)
+#endif
         if (!re4dc_skin_materialize(e->info, e->palette)) return 0;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+        e->materialized=skin_recipe_nominated(*e)?kSkinRecipeDone:1u;
+#else
         e->materialized = 1;
+#endif
         ++stats.materialized_infos;
 #if RE4DC_ACTOR_CENSUS
         if (census_mat_row) *census_mat_row += 1;
@@ -5423,6 +6387,26 @@ extern "C" const void* re4dc_actor_accessory_parent(const void* model);  // mode
 #endif
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
 extern "C" void re4dc_callprof_part(const void* model, unsigned path);  // model_bridge.cpp
+#endif
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+extern "C" void re4dc_actor_light25_snapshot(Re4dcActorLight25Stats* out) {
+    if (out) *out = light25_stats;
+}
+extern "C" void re4dc_actor_light25_part_colour(const Re4dcModelPart* p, const float center[3], Re4dcActorLight25Colour* out) {
+    if (!out) return;
+    if (!p || !p->lighting) { *out = {0xFFFFFFU, {65536U, 65536U, 65536U}}; return; }
+    static const float origin[3] = {0.0f, 0.0f, 0.0f};
+    const Frame unused{};
+    Lights lights;
+    fast_only_lights(*p, unused, center ? center : origin, lights);
+    if (!lights.constant || !lights.fast) light25_add(light25_stats.fallback_parts);
+    *out = lights.colour25;
+}
+extern "C" unsigned re4dc_actor_light25_part_rgb(const Re4dcModelPart* p, const float center[3]) {
+    Re4dcActorLight25Colour colour;
+    re4dc_actor_light25_part_colour(p, center, &colour);
+    return colour.rgb;
+}
 #endif
 extern "C" int re4dc_actor_stream_encoded(const unsigned char* stream,unsigned bytes) {
     return stream && bytes>=sizeof(BlobHeader) && stream[0]==kMagic && stream[1]==kVersion;
@@ -5538,10 +6522,21 @@ void abc_census() {
         // per class (other, Leon, Ganado, El Gigante, Ashley): meshlets tested/rejected, vertices skipped/of tested parts,
         // triangles skipped; totals since the last line
         abc_log = frame_serial;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+        re4dc_log("AC32C frame=%u parts=%u/%u why=%u/%u/%u/%u/%u tested=%u reject=%u near=%u numeric=%u empty=%u split_skipped=%u\n",
+            frame_serial,abc32_stats.admitted,abc32_stats.declined,abc32_stats.why[0],abc32_stats.why[1],
+            abc32_stats.why[2],abc32_stats.why[3],abc32_stats.why[4],abc32_stats.tested,abc32_stats.rejected,
+            abc32_stats.near,abc32_stats.numeric,abc32_stats.empty,abc32_stats.split_skipped);
+#endif
         re4dc_log("ABFC frame=%u splits=%u built=%u noroom=%u cones=%u nocone=%u bad=%u marks=%u conv=%u/%u/%u parts=%u/%u unsplit=%u rec=%u/%u ml=%u/%u\n",
                   frame_serial, abc_splits, abc_built, abc_noroom, abc_cones, abc_nocone, abc_bad, abc_nmarks, abc_conv,
                   abc_conv_op, abc_conv_mk, abc_part_calls, abc_part_cull, abc_unsplit,
                   abc_rec_split, abc_rec_plain, abc_ml_split, abc_ml_plain);
+#if defined(RE4DC_ACTOR_CONE_GAIN31) && RE4DC_ACTOR_CONE_GAIN31
+        re4dc_log("ACG31 frame=%u limit=%u kept=%u declined=%u records=%u/%u meshlets=%u/%u\n", frame_serial,
+                  unsigned(RE4DC_ACTOR_CONE_GAIN31), acg31.kept, acg31.declined, acg31.split_records,
+                  acg31.plain_records, acg31.split_meshlets, acg31.plain_meshlets);
+#endif
         re4dc_log("ABFC2 frame=%u other=%u/%u/%u/%u/%u leon=%u/%u/%u/%u/%u ganado=%u/%u/%u/%u/%u gigante=%u/%u/%u/%u/%u "
                   "ashley=%u/%u/%u/%u/%u\n", frame_serial,
                   abc_tests[0], abc_rej[0], abc_vskip[0], abc_verts[0], abc_tskip[0],
@@ -5580,7 +6575,18 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }
 }  // namespace
 #endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+static int actor_submit_impl(const Re4dcModelPart* part,Frame* explicit_frame,NativeContinuationProgress* progress) {
+#else
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(part ? part->model : nullptr);
+#endif
+    re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
@@ -5615,7 +6621,22 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     if (part && re4dc_actor_census_key(part->model) == 0x00010000U) { re4dc_model_result(0, 0, 0); return 1; }
 #endif
 #endif
-    if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+#if defined(RE4DC_ACTOR_REPLAY_SKIN) && RE4DC_ACTOR_REPLAY_SKIN
+    // ACTOR_REPLAY_SKIN: a GX list of padding only (no primitive; the converter rejects it: no strips) draws nothing
+    // on any path. Consumed here as drawn-nothing, so the generic walker does not accept it (h2: the room model's
+    // empty 32-byte lists replayed after the codec screen took the generic path, which carries no member proof, and
+    // the re-registered palette of their info was then materialized for the generic walker).
+    if (part && part->stream && part->stream_bytes >= 32 && part->stream_bytes <= 256 && ram(part->stream, part->stream_bytes)) {
+        unsigned any = 0;
+        for (unsigned i = 0; i < part->stream_bytes; ++i) any |= part->stream[i];
+        if (!any) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; }
+    }
+#endif
+    if (!part || !qualifies(*part
+#if RE4DC_NATIVE_FE_CONTINUATION
+        ,explicit_frame!=nullptr
+#endif
+    )) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorMainSourceScope gcasset_main_scope(&p);
@@ -5634,7 +6655,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||
-        near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+        near_distance <= 0.0f || far_distance <= near_distance) { DFA26_MODEL_HIT(ActorProjection, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
     const BlobHeader* blob = blob_of(p);
@@ -5644,18 +6665,29 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     PXF_SPAN(cls_us, pxt);
 #endif
     if (kLodBuild && blob && (blob->flags & kLodPending)) relod(p, crowd_class > 0);
-    if (!blob && !(blob = convert(p))) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
+    if (!blob && !(blob = convert(p))) { DFA26_MODEL_HIT(ActorConvert, 1) ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const u8* base = reinterpret_cast<const u8*>(blob);
     ++stats.handled;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(progress)progress->result.outcome=re4dc::NativeDrawOutcome::Culled;
+#endif
     if (p.cull == 3) { re4dc_model_result(0, 0, 0); PXF_EXIT(kCull3); return 1; }
     // Translucent parts keep the existing bounded drain; its replay re-enters
     // re4dc_model_submit and lands here again with draining set.
-    if (re4dc_model_defer_part(&p)) { ++stats.deferred; PXF_EXIT(kDefer); return 1; }
+    if (
+#if RE4DC_NATIVE_FE_CONTINUATION
+        !progress &&
+#endif
+        re4dc_model_defer_part(&p)) { ++stats.deferred; PXF_EXIT(kDefer); return 1; }
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     PXF_SPAN(def_us, pxt);
 #endif
 
-    Frame& f = *prepare_frame(p, near_distance, far_distance);
+    Frame& f =
+#if RE4DC_NATIVE_FE_CONTINUATION
+        explicit_frame?*explicit_frame:
+#endif
+        *prepare_frame(p, near_distance, far_distance);
 #if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
     // RIGID_CENSUS=2 (benchmark census discs, lane cache20): every rigid part is counted (re4dc_rigid_census: parts,
     // meshlets, vertices of the parts that reached here this frame; the biggest part's model) and is not drawn only while
@@ -5881,11 +6913,35 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         }
     }
     const bool rigid_flat = rigid && rigid_px < RE4DC_RIGID_FLAT_PX;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (rigid && !rigid_flat) re4dc::dfa26::hit(re4dc::dfa26::ActorRigidFull);
+#endif
 #endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    e.continuation=progress;
+#endif
     e.streaming = re4dc_model_packet_streaming() != 0;
-    if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    if (!re4dc_model_packet_reserve(&p, &e.packet)) {
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+            RE4DC_DROP_ACTOR(&p, 0, 0);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
+            re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+#else
+    if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
+            re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    const unsigned uv32_certificate = uv32::checked_certificate(p, *blob);
+    re4dc_model_uv16_request32(uv32_certificate);
+#else
 #if RE4DC_ACTOR_UV16
     // Consumed by the begin call below (direct or packet), whatever its result.
     e.uv16 = uv16_safe(p, *blob);
@@ -5893,12 +6949,23 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const u32 pcw_set = kPcwStripLength6 | (e.uv16 ? kPcwUv16 : 0U), pcw_clear = kPcwStripLength6 | kPcwUv16;
     re4dc_model_next_header_pcw(pcw_set, pcw_clear);
 #endif
+#endif
 #if RE4DC_ACTOR_DIRECT
     Re4dcModelDirect direct{};
     if (re4dc_model_direct_enabled() && re4dc_model_direct_begin(&p, &direct)) {
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(progress)progress->header=true;
+#endif
         if (direct.scratch_capacity < kCacheSlots) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
             // Nothing sent yet beyond the header: an empty part.
-            re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0); re4dc_model_result(2, 0, 0); return 1;
+            re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
+            re4dc_model_result(2, 0, 0); return 1;
         }
         e.direct = true; e.sq = direct.sq;
         e.packet.u_scale = direct.u_scale; e.packet.v_scale = direct.v_scale;
@@ -5906,11 +6973,30 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     } else
 #endif
     {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        re4dc_model_uv16_request32(uv32_certificate);
+#else
 #if RE4DC_ACTOR_UV16
         re4dc_model_next_header_pcw(pcw_set, pcw_clear);
 #endif
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ActorPacketPath, 1)
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+        const bool packet_begun=re4dc_model_packet_begin(&p,&e.packet)!=0;
+        if(progress && packet_begun)progress->header=true;
+        if (!packet_begun || e.packet.capacity < kCacheSlots + 64U) {
+#else
         if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
             RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
+#if RE4DC_NATIVE_FE_CONTINUATION
+            native_refused(progress);
+#endif
             re4dc_model_result(2, 0, 0);
             return 1;
         }
@@ -5918,17 +7004,45 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         e.cache.v = static_cast<pvr_vertex_t*>(e.packet.vertices) + e.packet.capacity;
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    const unsigned uv32_reason = re4dc_model_uv16_result32();
+    e.uv16 = uv32_reason == re4dc::format32::Uv16;
+    if (e.uv16) ++stats.uv16_parts;
+#if RE4DC_ACTOR_DIRECT
+    uv32::counters.note(uv32_reason, e.direct ? 1U : 0U);
+#else
+    uv32::counters.note(uv32_reason, 0U);
+#endif
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!e.uv16) re4dc::dfa26::hit(re4dc::dfa26::ActorUv32);
+#endif
 
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     const unsigned long long pxf_l0 = re4dc_otp_now_us();
 #endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(progress && !native_pose_of(p)) {
+        native_refused(progress);
+#if RE4DC_ACTOR_DIRECT
+        if(e.direct)re4dc_model_direct_end(0);
+#endif
+        return 1;
+    }
+#endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
-    if (!RE4DC_PART_LIGHTS(p, f, blob->center, lights))
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    B28_NOTE(p, fast_only_lights(p, f, blob->center, lights));
+#else
+    if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, lights))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
         if (!lights.exact_ready)
 #endif
         RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
+        RE4DC_CAP_EXACT(p, blob->center, lights);
+    }
+#endif
 #if !RE4DC_ACTOR_SETUP_LEAN
     lights.source = p.lighting;
 #endif
@@ -5951,9 +7065,20 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         lights.constant_rgb = part_colour(lights);
     }
 #endif
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    // The offline per-record colours supersede the crowd/rigid flat-colour approximation.
+    if (lights.scan29_bake) lights.constant = false;
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    fa29_actor_note(p,lights);
+#endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
+#endif
     // Skinned directions follow the part's light fold; parts of one info whose
     // folds agree within kDirTolerance of the largest direction (light
     // directions from nearby part centres) keep the entries already built.
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));
@@ -5966,6 +7091,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         }
     }
+#endif
     const bool s16_uv = (p.flags & 0x80000000U) != 0;
     const float uv_scale = s16_uv ? 1.0f / 256.0f : 1.0f / 32768.0f;
     const PosConst k{0.0f, uv_scale * e.packet.u_scale, p.uv_offset[0] * e.packet.u_scale,
@@ -5973,7 +7099,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                      near_distance, far_distance};
     e.colors = (p.alpha_state & 256) ? p.colors : nullptr;
     e.alpha = u32(p.alpha_state & 255) << 24;
-#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA && !RE4DC_ACTOR_LIGHT_FAST_ONLY
     const bool retain_flat = lights.constant && !e.colors;
     u32 flat_argb = 0;
     if (retain_flat) {
@@ -5996,9 +7122,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
     const u8* lists = li ? base + li->lists4 * 4U : base + blob->idx4 * 4U;
     const u8* records = base + blob->rec4 * 4U;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    constexpr BakeUse bake = kBakeNone;
+#else
     unsigned bake_scale[3];
     const BakeUse bake = kPrelit && (blob->flags & kHasBake) && blob->bake4 && lights.fast && !lights.constant && !e.colors
         ? bake_prepare(e, lights, *blob, rs, bake_scale) : kBakeNone;
+#endif
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
@@ -6009,6 +7139,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     AbcEye abc_e;
 #endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(progress && !native_pose_of(p)){ok=false;break;}
+#endif
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
         const unsigned nv = c.vertices(), ni = c.indices(), nt = c.triangles();
@@ -6021,6 +7154,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (abc) {
             ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
             const AbcCone& cn = abc[mi];
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+            if (!cn.k) ++abc32_stats.empty;
+#endif
             if (cn.k && abc_eye(f, p.cull, cn.pal, abc_e) && abc_reject(cn, abc_e)) {
                 ++abc_rej[abc_cls]; abc_vskip[abc_cls] += nv; abc_tskip[abc_cls] += nt;
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
@@ -6033,6 +7169,16 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
 #if RE4DC_ACTOR_CENSUS
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (!abc || !abc[mi].k) re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#else
+        re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#endif
+#endif
+#if RE4DC_ACTOR_CLIP_FRONT26
+        e.clip_vertices = nv;
 #endif
         unsigned all, any;
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
@@ -6053,7 +7199,17 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         }
         e.prime(nv);
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        pass_fast_only(e, lights, r, nv);
+#else
         if (lights.constant) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+            if (e.colors) re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#else
+            re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#endif
+#endif
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
             if (!e.colors) e.flat_colors(nv, flat_argb);
             else
@@ -6105,7 +7261,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
             }
 #endif
+#endif
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
         if (bake == kBakeNone) stats.normals_lit += nv;
+#endif
         if (any & kOcNear) ++stats.meshlets_clipped;
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
         {
@@ -6119,13 +7279,20 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (rigid) { ok = rigid_strips(e, r, index, nv, ni, nt, any); continue; }
 #endif
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
-        else ok = e.strips(r, index, ni);
+        else DFA26_MODEL_SLOW(ActorStripScan, 1, ok = e.strips(r, index, ni);)
 #endif
     }
 #if RE4DC_ACTOR_DIRECT
     if (e.direct) {
         if (!ok) re4dc_model_packet_abort();
         re4dc_model_direct_end(e.slots);
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(progress) {
+            Re4dcActorStreamState state{};
+            if(!ok || !re4dc_actor_stream_state(&state))native_refused(progress);
+            else if(e.slots){progress->result.outcome=re4dc::NativeDrawOutcome::Submitted;progress->result.submitted=1;}
+        }
+#endif
         re4dc_model_result(ok ? 0 : 3, e.input, ok ? e.output : 0);
         PXF_EXIT(kDraw);
         return 1;
@@ -6133,14 +7300,44 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     if (!ok) {
         if (e.committed) re4dc_model_packet_abort();
+#if RE4DC_NATIVE_FE_CONTINUATION
+        native_refused(progress);
+#endif
         re4dc_model_result(3, e.input, 0);
         return 1;
     }
     re4dc_model_packet_commit(e.used);
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(progress) {
+        if(e.used){++progress->result.submitted;progress->result.outcome=re4dc::NativeDrawOutcome::Submitted;}
+        Re4dcActorStreamState state{};
+        if(!re4dc_actor_stream_state(&state))native_refused(progress);
+    }
+#endif
     re4dc_model_result(0, e.input, e.output);
     PXF_EXIT(kDraw);
     return 1;
 }
+
+#if RE4DC_NATIVE_FE_CONTINUATION
+extern "C" int re4dc_actor_submit(const Re4dcModelPart* part){return actor_submit_impl(part,nullptr,nullptr);}
+#include "include/native_actor_continuation.inc"
+#endif
+#if (defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31) || (defined(RE4DC_ACTOR_TINY_KEEP31) && RE4DC_ACTOR_TINY_KEEP31)
+// ACTOR_SPAN_MEMO31 (K45-FIX-PLAN F3) / ACTOR_TINY_KEEP31 (F1): model lifetime epoch of their memos.
+extern "C" { unsigned re4dc_actor_span_epoch=1; }
+#if defined(RE4DC_K45DIAG31) && RE4DC_K45DIAG31
+extern "C" void re4dc_k45d_bump(unsigned line) {
+    ++re4dc_actor_span_epoch;
+    for (unsigned i = 0; i < 8; ++i)
+        if (k45d_bump_line[i] == line || !k45d_bump_line[i]) { k45d_bump_line[i] = line; ++k45d_bump_n[i]; return; }
+}
+#endif
+#endif
+#if defined(RE4DC_ACTOR_SPAN_MEMO31) && RE4DC_ACTOR_SPAN_MEMO31
+// ACTOR_SPAN_MEMO31 (F3): per-stream forget of uv32's source-span content memo.
+extern "C" void re4dc_actor_span_forget(const void* stream,unsigned bytes){uv32::content_forget(stream,bytes);}
+#endif
 
 #if RE4DC_COARSE_ONE_SUBMIT
 // ------------------------------------------------- one submission per actor --
@@ -6160,8 +7357,14 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 // screen rows; once per repeated translation: crowd_tier (the same distance again changes nothing).
 // =2 (check build): every chunk first goes through re4dc_actor_submit, and the TA words both paths emit
 // (headers included) are compared chunk by chunk ("C3CHK" lines); the image draws each chunk twice.
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+#if !RE4DC_ACTOR_DIRECT || !RE4DC_NATIVE_ACTOR_SKIN_LAZY || (defined(RE4DC_TA_GUARD) && RE4DC_TA_GUARD)
+#error "ACTOR_FORMAT32 coarse windows need DIRECT=1 SKIN_LAZY=1 TA_GUARD=0"
+#endif
+#else
 #if !RE4DC_ACTOR_DIRECT || RE4DC_ACTOR_UV16 || !RE4DC_NATIVE_ACTOR_SKIN_LAZY || (defined(RE4DC_TA_GUARD) && RE4DC_TA_GUARD)
 #error "COARSE_ONE_SUBMIT needs NATIVE_ACTOR_DIRECT=1 NATIVE_ACTOR_SKIN_LAZY=1 NATIVE_ACTOR_UV16=0 TA_GUARD=0 (a window is one guarded part)"
+#endif
 #endif
 #if RE4DC_COARSE_GATE_ONCE && (!RE4DC_AVK || !RE4DC_ACTOR_FOG_GATE)
 #error "COARSE_GATE_ONCE needs ACTOR_VTX_KERNEL=1 and ACTOR_FOG_GATE=1 (the kernel's fog gate loop)"
@@ -6173,6 +7376,9 @@ namespace {
 // qualifies() for a part without arrays (positions == nullptr: its array term is lazy_skin()), keeping
 // lazy_skin()'s registry entry and source for one_frame().
 bool one_qualifies(const Re4dcModelPart& p, const SkinEntry*& se, Re4dcActorSource& src) {
+#if RE4DC_ACTOR_SOURCE_SPAN
+    if(p.source_span.owner_serial && !uv32::prepare_owned(p))return false;
+#endif
     if (!(p.lighting && p.alpha_state <= 511 &&
           (!(p.alpha_state & 256) || ((p.flags & 0x80000000U) && p.colors)) &&
           ((!p.lighting->ambient_vertex && !p.lighting->material_vertex) || ((p.flags & 0x80000000U) && p.colors)) &&
@@ -6185,7 +7391,11 @@ bool one_qualifies(const Re4dcModelPart& p, const SkinEntry*& se, Re4dcActorSour
         return false;
     if (p.positions || p.position_stride != 6) return false;
     se = find_skin(p.info, nullptr);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    return skin_recipe_eligible(se) && re4dc_actor_model_source(p.info, &src) &&
+#else
     return se && !se->materialized && se->palette && se->entries && re4dc_actor_model_source(p.info, &src) &&
+#endif
            src.positions && src.normals && src.position_count == p.position_count &&
            src.normal_count == p.normal_count && bool(src.small_normals) == (p.normal_shift == 6);
 }
@@ -6241,11 +7451,28 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
     for (Frame& f : frames)
         if (f.frame == frame_serial && f.info == p.info &&
             same_words(f.modelview, p.modelview, 12) && same_words(f.projection, p.projection, 7) &&
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            same_words(f.viewport, p.viewport, 6) && table14_current(f,p))
+#else
             same_words(f.viewport, p.viewport, 6))
+#endif
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+            {
+                table14_enter(f);
+#if RE4DC_GC_ASSET_GATE
+                gcasset_frame_check(f);
+#endif
+                return f;
+            }
+#else
 #if RE4DC_GC_ASSET_GATE
             {gcasset_frame_check(f);return f;}
 #else
             return f;
+#endif
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_MODEL_HIT(ActorFramePrepare, 1)
 #endif
     Frame& f = frames[frame_victim]; frame_victim = (frame_victim + 1) % kFrames;
     f = Frame{};
@@ -6266,23 +7493,37 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
     f.mode = kSkin; f.palette = se.palette; f.palette_entries = se.entries;
     f.positions = src.positions; f.position_stride = 8;
     f.normals = src.normals; f.normal_stride = src.small_normals ? 4U : 8U;
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_prepare(f,p,se.entries);
+#else
     for (Frame& o : frames)
         if (&o != &f && o.skin_positions) {
             o.frame = ~0U; o.skin_positions = o.skin_dirs = nullptr; o.skin_ready = o.dirs_ready = nullptr;
         }
     workspace_end = workspace_bytes;
+#endif
     const unsigned entries = se.entries;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
+    if (f.skin_positions) {
+        f.skin_ready = reinterpret_cast<u8*>(f.skin_positions + entries * 16U);
+        std::memset(f.skin_ready, 0, entries);
+#else
     f.skin_positions = static_cast<float*>(frame_table(entries * (28U * 4U + 2U)));
     if (f.skin_positions) {
         f.skin_dirs = f.skin_positions + entries * 16U;
         f.skin_ready = reinterpret_cast<u8*>(f.skin_dirs + entries * 12U);
         f.dirs_ready = f.skin_ready + entries;
         std::memset(f.skin_ready, 0, entries * 2U);
+#endif
 #if RE4DC_AVK
         f.avk_all = false;
 #endif
         f.dirs_fold[0] = NAN;  // no directions built yet
     }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!f.skin_positions) re4dc::dfa26::hit(re4dc::dfa26::ActorSkinTable);
+#endif
     ++stats.skinned_parts;
     if (!memo.valid || !same_words(memo.modelview, p.modelview, 12) || !same_words(memo.projection, p.projection, 7) ||
         !same_words(memo.viewport, p.viewport, 6)) {
@@ -6298,6 +7539,9 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
         f.screen[c * 4 + 0] = memo.M[0][c] * k; f.screen[c * 4 + 1] = memo.M[1][c] * k;
         f.screen[c * 4 + 2] = memo.M[2][c] * k; f.screen[c * 4 + 3] = memo.M[2][c] * k;
     }
+#if defined(RE4DC_ACTOR_TABLE_REUSE14) && RE4DC_ACTOR_TABLE_REUSE14
+    table14_enter(f);
+#endif
     ++stats.info_preparations;
     return f;
 }
@@ -6307,6 +7551,9 @@ struct OneWindow {
     unsigned motion_accounted=0; // local only; chunks own their accepted records
 #endif
     bool open = false;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    bool uv16 = false;
+#endif
     Re4dcModelDirect direct{};
     std::uint32_t* sq = nullptr;
     unsigned slots = 0, primed = 0;  // the window's slots so far; cache entries whose flags / oargb are primed
@@ -6326,6 +7573,9 @@ void one_close(OneWindow& w) {
 #endif
     re4dc_model_direct_end(w.slots);
     w.open = false; w.slots = 0; w.primed = 0;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    w.uv16 = false;
+#endif
 }
 
 // re4dc_actor_submit() for one chunk, sent into the window (opened here when closed): 1 / 0 as that call
@@ -6334,6 +7584,13 @@ void one_close(OneWindow& w) {
 // LEON_NATIVE_PIPE (native_actor_leon_pipe.inc): known != nullptr hands in one_qualifies' result (its registry entry
 // and source), which the caller's preflight proved for this part; one_chunk(p, w) below is the unchanged call.
 int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, const Re4dcActorSource* known_src) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(p.model);
+#endif
+    re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(p.model, 1);
 #endif
@@ -6342,9 +7599,16 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
     if (known) { se = known; src = *known_src; }
-    else if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
+    else if (!one_qualifies(p, se, src)) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; return 0; }
 #else
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::Scope dsa_part(re4dc::dsa24::ModelList);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    const re4dc::dsa24::x28::ModelScope dsa28_model(p.model);
+#endif
+    re4dc::dsa24::count(re4dc::dsa24::Parts);
+#endif
     if (p.positions) return -1;
     APROF_SPAN(aprof_chunk, APROF_CHUNK);
     APROF_COUNT(APROF_N_CHUNKS, 1);
@@ -6354,7 +7618,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
-    if (!one_qualifies(p, se, src)) { ++stats.declined; return 0; }
+    if (!one_qualifies(p, se, src)) { DFA26_MODEL_HIT(ActorQualify, 1) ++stats.declined; return 0; }
 #endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::ActorSourceScope gcasset_actor_scope(&p,&src);
@@ -6365,14 +7629,14 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||
-        near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; return 0; }
+        near_distance <= 0.0f || far_distance <= near_distance) { DFA26_MODEL_HIT(ActorProjection, 1) ++stats.declined; return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
     const BlobHeader* blob = blob_of(p);
     int crowd_class = 0;
     if constexpr (kCrowd) crowd_class = re4dc_actor_model_class(p.model, p.info);
     if (kLodBuild && blob && (blob->flags & kLodPending)) relod(p, crowd_class > 0);
-    if (!blob && !(blob = convert(p))) { ++stats.declined; return 0; }
+    if (!blob && !(blob = convert(p))) { DFA26_MODEL_HIT(ActorConvert, 1) ++stats.declined; return 0; }
     const u8* base = reinterpret_cast<const u8*>(blob);
     ++stats.handled;
     if (p.cull == 3) { re4dc_model_result(0, 0, 0); return 1; }
@@ -6382,6 +7646,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (re4dc_model_defer_part(&p)) { ++stats.deferred; return 1; }
 #endif
 
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(se->materialized==kSkinRecipePending) {
+        SkinEntry* live=find_skin(p.info,nullptr);
+        if(live!=se || !skin_recipe_materialize(*live)) {++stats.declined;return 0;}
+    }
+#endif
     Frame& f = one_frame(p, near_distance, far_distance, *se, src, w.screen);
 #if RE4DC_ACTOR_FOG_GATE
     if (blob->radius > 0.0f || blob->center[0] != 0.0f || blob->center[1] != 0.0f || blob->center[2] != 0.0f) {
@@ -6567,18 +7837,52 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         for (unsigned mi = 0; mi < blob->meshlets; ++mi) bound += table[mi].n.triangles();
         if (w.slots + 6U * bound > 32767U) one_close(w);
     }
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    const unsigned uv32_certificate = uv32::checked_certificate(p, *blob);
+    unsigned uv32_reason = re4dc::format32::BeginFailed;
+    if (w.open) {
+        uv32_reason = re4dc_model_uv16_live32(&p, uv32_certificate);
+        const bool uv32_want = uv32_reason == re4dc::format32::Uv16;
+        if (w.uv16 != uv32_want) { one_close(w); ++uv32::counters.splits; }
+    }
+    const bool uv32_shared = w.open;
+#endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
     e.streaming = re4dc_model_packet_streaming() != 0;
     if (!w.open) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        if (!re4dc_model_packet_reserve(&p, &e.packet)) {
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+            RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); return 1; }
+#else
         if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); return 1; }
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        re4dc_model_uv16_request32(uv32_certificate);
+#endif
         if (re4dc_model_direct_enabled() && re4dc_model_direct_begin_reserved(&p, &e.packet, &w.direct)) {
             if (w.direct.scratch_capacity < kCacheSlots) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
                 re4dc_model_direct_end(0); RE4DC_DROP_ACTOR(&p, 'd', 0); re4dc_model_result(2, 0, 0); return 1;
             }
             w.open = true; w.sq = w.direct.sq; w.slots = 0; w.primed = 0;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            w.uv16 = re4dc_model_uv16_result32() == re4dc::format32::Uv16;
+#endif
         } else {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+            DFA26_MODEL_HIT(ActorPacketPath, 1)
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            re4dc_model_uv16_request32(uv32_certificate);
+#endif
             if (!re4dc_model_packet_begin(&p, &e.packet) || e.packet.capacity < kCacheSlots + 64U) {
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+            uv32::counters.note(re4dc::format32::BeginFailed, 3U);
+#endif
                 RE4DC_DROP_ACTOR(&p, 0, e.packet.capacity);
                 re4dc_model_result(2, 0, 0);
                 return 1;
@@ -6593,6 +7897,15 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         e.cache.v = static_cast<pvr_vertex_t*>(w.direct.scratch);
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    if (!uv32_shared) uv32_reason = re4dc_model_uv16_result32();
+    e.uv16 = uv32_reason == re4dc::format32::Uv16;
+    if (e.uv16) ++stats.uv16_parts;
+    uv32::counters.note(uv32_reason, uv32_shared ? 2U : (e.direct ? 1U : 0U));
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    if (!e.uv16) re4dc::dfa26::hit(re4dc::dfa26::ActorUv32);
+#endif
 
     APROF_SPAN(aprof_lit0, APROF_LIT);
     const SourceLighting& S = *p.lighting;
@@ -6601,11 +7914,17 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     G1PC_PART(p, true);
     if (!constant_source || !w.lights_ready || w.lights.source != p.lighting) {
         G1PC_LIGHT(p, f, blob->center);
-        if (!RE4DC_PART_LIGHTS(p, f, blob->center, *lp))
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        B28_NOTE(p, fast_only_lights(p, f, blob->center, *lp));
+#else
+        if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, *lp))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
         if (!lp->exact_ready)
 #endif
         RE4DC_PREPARED(*lp) = re4dc::render::prepare_actor_lights(*p.lighting);
+        RE4DC_CAP_EXACT(p, blob->center, *lp);
+        }
+#endif
 #if !RE4DC_ACTOR_SETUP_LEAN
         lp->source = p.lighting;
 #endif
@@ -6632,6 +7951,17 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         lights.constant = true;  // never the window's record: lights.fast is false for constant lighting
         lights.constant_rgb = part_colour(lights);
     }
+#if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    // The offline per-record colours supersede the crowd/rigid flat-colour approximation.
+    if (lights.scan29_bake) lights.constant = false;
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    fa29_actor_note(p,lights);
+#endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+    re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
+#endif
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));
@@ -6644,6 +7974,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
         }
     }
+#endif
     APROF_STOP(aprof_lit0);
     const bool s16_uv = (p.flags & 0x80000000U) != 0;
     const float uv_scale = s16_uv ? 1.0f / 256.0f : 1.0f / 32768.0f;
@@ -6652,7 +7983,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                      near_distance, far_distance};
     e.colors = (p.alpha_state & 256) ? p.colors : nullptr;
     e.alpha = u32(p.alpha_state & 255) << 24;
-#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA && !RE4DC_ACTOR_LIGHT_FAST_ONLY
     const bool retain_flat = lights.constant && !e.colors;
     u32 flat_argb = 0;
     if (retain_flat) {
@@ -6671,9 +8002,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
     const u8* lists = li ? base + li->lists4 * 4U : base + blob->idx4 * 4U;
     const u8* records = base + blob->rec4 * 4U;
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+    constexpr BakeUse bake = kBakeNone;
+#else
     unsigned bake_scale[3];
     const BakeUse bake = kPrelit && (blob->flags & kHasBake) && blob->bake4 && lights.fast && !lights.constant && !e.colors
         ? bake_prepare(e, lights, *blob, rs, bake_scale) : kBakeNone;
+#endif
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
@@ -6716,6 +8051,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         if (abc) {
             ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
             const AbcCone& cn = abc[mi];
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32
+            if (!cn.k) ++abc32_stats.empty;
+#endif
             if (cn.k && abc_eye(f, p.cull, cn.pal, abc_e) && abc_reject(cn, abc_e)) {
                 ++abc_rej[abc_cls]; abc_vskip[abc_cls] += nv; abc_tskip[abc_cls] += nt;
 #if RE4DC_ACTOR_BACKFACE_CONE == 2
@@ -6725,6 +8063,16 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 continue;
             }
         }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BACKFACE_CONE
+        if (!abc || !abc[mi].k) re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#else
+        re4dc::dfa26::hit(re4dc::dfa26::ActorConeUnavailable);
+#endif
+#endif
+#if RE4DC_ACTOR_CLIP_FRONT26
+        e.clip_vertices = nv;
 #endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
@@ -6741,8 +8089,21 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             continue;
         }
         e.prime(nv);
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+        if (e.uv16) pack_uv16(e.cache.v, nv, true);
+#endif
         APROF_SPAN(aprof_lit, APROF_LIT);
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+        pass_fast_only(e, lights, r, nv);
+#else
         if (lights.constant) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
+            if (e.colors) re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#else
+            re4dc::dfa26::hit(re4dc::dfa26::ActorFlatRewrite, nv);
+#endif
+#endif
 #if RE4DC_ACTOR_BYTES_LEAN && !RE4DC_ACTOR_MOVCA
             if (!e.colors) e.flat_colors(nv, flat_argb);
             else
@@ -6792,8 +8153,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
             }
 #endif
+
+#endif
         APROF_STOP(aprof_lit);
+
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
         if (bake == kBakeNone) stats.normals_lit += nv;
+#endif
         if (any & kOcNear) ++stats.meshlets_clipped;
         APROF_SPAN(aprof_pack, APROF_PACK);
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
@@ -6805,7 +8171,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         }
 #else
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
-        else ok = e.strips(r, index, ni);
+        else DFA26_MODEL_SLOW(ActorStripScan, 1, ok = e.strips(r, index, ni);)
 #endif
         APROF_STOP(aprof_pack);
     }
@@ -6868,6 +8234,9 @@ extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* part, const Re4dcA
         const Re4dcActorChunk& c = chunks[i];
         p.info = c.info; p.part = c.info; p.stream = c.stream; p.stream_bytes = c.stream_bytes; p.uv = c.uv;
         p.position_count = c.position_count; p.normal_count = c.normal_count;
+#if RE4DC_ACTOR_SOURCE_SPAN
+        p.source_span=c.source_span;
+#endif
         std::memcpy(p.modelview, c.modelview, sizeof(p.modelview));
     };
 #if RE4DC_COARSE_ONE_SUBMIT == 2
@@ -7050,6 +8419,11 @@ unsigned re4dc_actor_plan_on = 1;
 alignas(32) unsigned char re4dc_actor_plan_store[RE4DC_ACTOR_PLAN_STORE];
 void re4dc_actor_plan_note(unsigned kind, int hit, int bad) {
     if (kind >= APLAN_KINDS) return;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    static_assert(re4dc::dfa26::ActorPlanMat - re4dc::dfa26::ActorPlanBind + 1 == APLAN_KINDS,
+                  "Build 26 plan reasons retain the APLAN kind order");
+    if (!hit) re4dc::dfa26::hit(static_cast<re4dc::dfa26::Reason>(re4dc::dfa26::ActorPlanBind + kind));
+#endif
     ++aplan_checks[kind]; aplan_hits[kind] += hit != 0; aplan_bad[kind] += bad != 0;
     if (frame_serial - aplan_log_frame < 600U) return;
     aplan_log_frame = frame_serial;

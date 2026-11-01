@@ -1,0 +1,13 @@
+# compare.txt (10-28): the same spots on any disc. farm-quiet = user spot on ALL ON (drv pos); barn-ganado = user spot next to the hay-forking Ganado (CLIPFRONT drv pos). Teleport, settle 4 s, record 20 s.
+teleport r103
+wait 22
+teleport pos -44074 -9 5598 -1.211
+wait 4
+capture start cmp-farmquiet
+wait 20
+capture stop cmp-farmquiet
+teleport pos -30717 32 -13585 2.784
+wait 4
+capture start cmp-barnganado
+wait 20
+capture stop cmp-barnganado

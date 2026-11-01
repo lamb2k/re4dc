@@ -1,0 +1,156 @@
+// Actual production actor TU + room clipper. Every input is synthetic.
+#include <array>
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+#include <limits>
+#include <vector>
+#include "include/actor_plan.h"
+#include "ACTOR_IMPLEMENTATION"
+#include "include/actor_clip_front26.hpp"
+extern "C" void re4dc_model_packet_commit(unsigned) { assert(false && "fixture is non-streaming"); }
+extern "C" void re4dc_log(const char*, ...) {}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+namespace re4dc::dfa26 { bool active=true; uint32_t live[ReasonCount]{}, overflow=0; }
+#endif
+
+static void controls() {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT && RE4DC_ACTOR_PLAN
+    // Exercise every hook kind synthetically, including reserved kinds with no
+    // current source callers. This proves mapping, not chapter occurrences.
+    const re4dc::dfa26::Reason reasons[]={re4dc::dfa26::ActorPlanBind,re4dc::dfa26::ActorPlanPre,
+        re4dc::dfa26::ActorPlanRoles,re4dc::dfa26::ActorPlanRow,re4dc::dfa26::ActorPlanHand,
+        re4dc::dfa26::ActorPlanSem,re4dc::dfa26::ActorPlanMat};
+    for(unsigned kind=0;kind<APLAN_KINDS;++kind) {
+        re4dc_actor_plan_note(kind,0,0);assert(re4dc::dfa26::live[reasons[kind]]==1);
+        re4dc_actor_plan_note(kind,1,0);assert(re4dc::dfa26::live[reasons[kind]]==1);
+    }
+    re4dc_actor_plan_note(APLAN_KINDS,0,0); // invalid kinds cannot index the DFA table
+#endif
+    using namespace re4dc::actor_clip26;
+    pvr_vertex_t cache[4]={{PVR_CMD_VERTEX,10,10,.1f,0,0,0x05060708U,0},
+                          {PVR_CMD_VERTEX,30,10,.1f,0,0,0x10203040U,0},
+                          {PVR_CMD_VERTEX,10,30,.1f,0,0,0xabcdef12U,0},
+                          {PVR_CMD_VERTEX,50,20,.1f,0,0,0x12345678U,0}};
+    unsigned char oc[4]{}; unsigned li[3]={0,1,2}; pvr_vertex_t out[3];
+    assert(front_triangle(cache,oc,4,li,0,640,480,out)==Front);
+    assert(out[0].argb==cache[0].argb && out[2].flags==PVR_CMD_VERTEX_EOL);
+    oc[1]=32; assert(front_triangle(cache,oc,4,li,0,640,480,out)==Slow);
+    oc[1]=16; assert(front_triangle(cache,oc,4,li,0,640,480,out)==Slow);
+    oc[1]=0; cache[1].z=std::numeric_limits<float>::infinity();
+    assert(front_triangle(cache,oc,4,li,0,640,480,out)==Slow); cache[1].z=.1f;
+    li[2]=4; assert(front_triangle(cache,oc,4,li,0,640,480,out)==Invalid);
+    li[2]=127; assert(front_triangle(cache,oc,4,li,0,640,480,out)==Invalid);
+    assert(front_triangle(nullptr,nullptr,0,li,0,640,480,nullptr)==Invalid);
+    li[2]=2;
+    for(unsigned a=0;a<256;++a) {
+        cache[0].argb=a*0x01010101U;
+        assert(front_triangle(cache,oc,4,li,0,640,480,out)==Front);
+        assert(out[0].argb==cache[0].argb);
+        const float u=float(a)*(1.0f/255.0f);
+        assert(unsigned(u*255.0f)==a); // old clipper's byte -> float -> byte
+    }
+    // Stop on the first emitter refusal; malformed indices never prepare a
+    // source vertex or read outside the cache.
+    unsigned char idx[5]={0,1,2,3,0}; unsigned prepares=0,emits=0;
+    auto prep=[&](unsigned,re4dc::render::RenderVertex&,float&){++prepares;};
+    auto slow=[&](const re4dc::render::RenderVertex*,const float*){assert(false);return true;};
+    assert(!walk_strip<true>(idx,5,cache,oc,4,0,640,480,prep,slow,
+                            [&](const pvr_vertex_t*){++emits;return false;}));
+    assert(emits==1 && prepares==0);
+    idx[2]=127; emits=0;
+    assert(!walk_strip<false>(idx,5,cache,oc,4,0,640,480,prep,slow,
+                             [&](const pvr_vertex_t*){++emits;return true;}));
+    assert(emits==0 && prepares==0);
+    assert(walk_strip<true>(nullptr,2,nullptr,nullptr,0,0,640,480,prep,slow,
+                            [&](const pvr_vertex_t*){assert(false);return true;}));
+}
+
+static void run(unsigned id,unsigned kind,unsigned n,unsigned style,unsigned cull,bool alpha,bool uv16,unsigned cap) {
+    std::array<short,128*4> pos{};
+    std::array<short,128*4> normal16{};
+    std::array<signed char,128*4> normal8{};
+    std::array<unsigned char,128*4> color{};
+    std::array<u16,128*4> records{};
+    std::array<unsigned char,128> idx{},oc{};
+    std::array<pvr_vertex_t,128> cache{};
+    std::array<pvr_vertex_t,768> packet{};
+    std::array<float,4*12> palette{};
+    const unsigned ps=kind==2?6:8;
+    for(unsigned j=0;j<n;++j) {
+        short* v=reinterpret_cast<short*>(reinterpret_cast<unsigned char*>(pos.data())+j*ps);
+        v[0]=short(j%3==0?-2:j%3==1?2:0); v[1]=short(j%3==2?2:-2);
+        switch(style) {
+        case 0: v[2]=-15; break;
+        case 1: v[2]=short(j==0?-3:-15); break;
+        case 2: v[2]=short(j+1==n?-3:-15); break;
+        case 3: v[2]=short(j%3==0?-3:-15); break;
+        case 4: v[2]=-3; break;
+        case 5: v[2]=-5; break;
+        case 6: v[2]=short(j%3==0?-3000:-15); break;
+        case 7: v[2]=-15; v[0]=-3000; break;
+        case 8: v[2]=short(j%3==0?-3:-15); v[0]=short(j%3==0?-3000:0); break;
+        default:v[2]=-15; v[0]=0;v[1]=0;break;
+        }
+        if(ps==8)v[3]=short(j%4);
+        normal8[j*4]=normal8[j*4+1]=0;normal8[j*4+2]=64;normal8[j*4+3]=j%4;
+        normal16[j*4+2]=16384;normal16[j*4+3]=j%4;
+        for(unsigned c=0;c<4;++c)color[j*4+c]=static_cast<unsigned char>(j*31+c*57);
+        records[j*4]=(j*17+3)%n; records[j*4+1]=(j*7+5)%n;
+        records[j*4+2]=j;records[j*4+3]=(j*5+1)%n;
+        idx[j]=static_cast<unsigned char>((j*13+1)%n);
+    }
+    idx[n-1]|=128;
+    for(unsigned j=0;j<4;++j){palette[j*12]=palette[j*12+4]=palette[j*12+8]=1;palette[j*12+9]=float(j)*.125f;}
+    SourceLighting light{};light.normal_matrix[0]=light.normal_matrix[5]=light.normal_matrix[10]=1;
+    Re4dcModelPart p{};p.lighting=&light;p.cull=cull;p.flags=0x80000000U;p.colors=color.data();
+    p.alpha_state=alpha?256U|173U:201U;
+    p.modelview[0]=p.modelview[5]=p.modelview[10]=1;
+    p.projection[1]=p.projection[3]=1;p.viewport[2]=640;p.viewport[3]=480;
+    Frame f{}; f.mode=kind==1||kind==3?kSkin:kind==2?kSource:kRigid;
+    f.positions=reinterpret_cast<const u8*>(pos.data());f.position_stride=ps;f.position_count=n;f.q=1;
+    f.small_normals=kind!=3;f.normals=kind==3?reinterpret_cast<const u8*>(normal16.data()):reinterpret_cast<const u8*>(normal8.data());
+    f.normal_stride=kind==3?8:4;f.normal_count=n;f.nq=kind==3?1.0f/16384:1.0f/64;
+    f.palette=palette.data();f.palette_entries=4;
+    const Records r{records.data(),4,0,true};
+    Part e{p,f,{p.projection,p.viewport},{5,2000,640,480,project,nullptr}};
+    e.clip.context=&e.projection;e.packet={packet.data(),cap,1,1};e.cache.v=cache.data();e.cache.oc=oc.data();
+    e.colors=alpha?color.data():nullptr;e.uv16=uv16;
+#if RE4DC_ACTOR_CLIP_FRONT26
+    e.clip_vertices=n;
+#endif
+    for(unsigned j=0;j<n;++j) {
+        float w[3],nn[3];world_of(f,p,r,j,w,nn);const float depth=-w[2];
+        oc[j]=depth<5?kOcNear:depth>2000?kOcFar:0U;
+        float x=w[0],y=w[1],z=w[2];if(z!=0)project(x,y,z,&e.projection);
+        const unsigned ci=r.ci(j);
+        const u32 a=alpha?u32(color[ci*4+3])<<24:201U<<24;
+        cache[j]={PVR_CMD_VERTEX,x,y,z,float(j)*.03125f-.5f,.75f-float(j)*.015625f,
+                  a|u32(color[ci*4])<<16|u32(color[ci*4+1])<<8|u32(color[ci*4+2]),0};
+    }
+    if(uv16)pack_uv16(cache.data(),n,true);
+    const unsigned before=stats.fallback_triangles;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    const unsigned rebuild_before=re4dc::dfa26::live[re4dc::dfa26::ActorClipRebuild];
+#endif
+    const bool ok=e.clip_strip(r,idx.data(),n);
+    assert(e.used<=cap && e.used<=packet.size());
+    const unsigned clipped=unsigned(stats.fallback_triangles)-before;
+    unsigned rebuilt=0;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    rebuilt=re4dc::dfa26::live[re4dc::dfa26::ActorClipRebuild]-rebuild_before;
+#endif
+    const unsigned header[7]={id,unsigned(ok),e.output,e.used,clipped,rebuilt,style};
+    assert(std::fwrite(header,sizeof(header),1,stdout)==1);
+    if(e.used)assert(std::fwrite(packet.data(),sizeof(pvr_vertex_t),e.used,stdout)==e.used);
+}
+
+int main() {
+    controls();unsigned id=0;
+    for(unsigned kind=0;kind<4;++kind)for(unsigned n:{3U,4U,8U,16U,64U,128U})
+    for(unsigned style=0;style<10;++style)for(unsigned cull=0;cull<4;++cull)
+    for(bool alpha:{false,true})for(bool uv:{false,true})run(id++,kind,n,style,cull,alpha,uv,768);
+    for(unsigned cap:{0U,3U,6U,9U,12U})for(unsigned style:{0U,1U,3U,4U,8U})
+    for(unsigned kind=0;kind<4;++kind)run(id++,kind,64,style,0,true,true,cap);
+    std::fprintf(stderr,"PASS actual actor clip cases=%u; bounds/parity/planes/cull/alpha/UV16/capacity controls\n",id);
+}

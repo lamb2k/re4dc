@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "scope": "Actual DFA/FA29/window collectors plus exact bounded-ring lifecycle oracle.\n\nThe host IRQ shim serializes worker writers but does not model KOS latency.\nSnapshots and last-N drawn-attempt sums are exercised without private data,\ngameplay, rendering or GPU-presentation claims.\n",
+  "sanitize": true,
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build35/window_host.py": "6e70956f01516f72e292926b4843ec9922ca400861ceee8d5b317909a8b0a3d5",
+    "port/dreamcast/tools/cloud/build35/window_fixture.cpp.in": "910e58b3e5a9f12fcae181b39967ca5c8ffba5993c5e23d5399073bb471d07d2",
+    "port/dreamcast/game/draw_fallback_audit.cpp": "5dab2e15999024b4fda1da7ceb3a5cbb443c823c086b4bcf209ece422085e2c7",
+    "port/dreamcast/game/fallback_audit29.cpp": "dab88dac2beb5e68164ff6ec0faaca32c6b12d633709f53b448da495d8c6741f",
+    "port/dreamcast/game/fallback_window35.cpp": "f0bd1fc09bc5b3b951121a083312ab1f2ce59f70c794c65bd25b658a060a1dff",
+    "port/dreamcast/game/platform/include/fallback_window35.h": "930a1c6b3df662f9e68c831e128a6c76864f3b21ba732395644c47c62e59766d",
+    "port/dreamcast/game/platform/include/fallback_window35_core.hpp": "627fe5cecb3ac15e620a8fff12bed745b1e73dc9b1bb1a96550e229aa86f3602",
+    "port/dreamcast/game/platform/include/fallback_audit29.h": "046a42677062dc64b6aeda8e38e4ec3fc3354f3007ce0f5dca814f64e5c23b33",
+    "port/dreamcast/game/platform/include/fallback_audit35.h": "67f6c09e62643b850606714cf57887a704a8ad6e1b3a9553734b5295a88bac51",
+    "port/dreamcast/game/platform/include/draw_fallback_audit.h": "91f0289f1291e8cc64e88d63ef0c7764e4b90fbf606ce33e569b68ef11829749",
+    "port/dreamcast/game/platform/include/draw_fallback_model.def": "887311c6449585101111ddebda48696e6137e6841fb9d9b188ee4b4d264330b1",
+    "port/dreamcast/game/platform/include/draw_fallback_other.def": "9dd56aaa649009f98d9a2bdf7e3e78fd7a9eb31e804f5596db0fcab3c3731c15",
+    "port/dreamcast/game/platform/include/draw_fallback_world.def": "a75ff3edf352b357f54039d3ddc2c2306d21d8d43d3b292be49d35269cecc5cd",
+    "port/dreamcast/game/platform/include/fallback_audit29.def": "35ea6b525c146d19aa63ca406ff00f1efccd4cf367e22de353ca35d7ccc34eb8",
+    "port/dreamcast/game/platform/include/fallback_audit35.def": "17ca00f5e0253ac81eb8d20567771f748c91896d3b4fa40e8d632f2f4f83946e"
+  },
+  "profiles": [
+    {
+      "profile": "gap0-n1",
+      "status": "PASS",
+      "checks": 60878,
+      "N": 1,
+      "dfa_reasons": 133,
+      "fa_reasons": 33,
+      "window_bytes": 2080,
+      "row_bytes": 680,
+      "actor_resets": 14,
+      "worker_hits": 16000
+    },
+    {
+      "profile": "gap0-n64",
+      "status": "PASS",
+      "checks": 61004,
+      "N": 64,
+      "dfa_reasons": 133,
+      "fa_reasons": 33,
+      "window_bytes": 44920,
+      "row_bytes": 680,
+      "actor_resets": 14,
+      "worker_hits": 16000
+    },
+    {
+      "profile": "gap1-n1",
+      "status": "PASS",
+      "checks": 61220,
+      "N": 1,
+      "dfa_reasons": 133,
+      "fa_reasons": 91,
+      "window_bytes": 2776,
+      "row_bytes": 912,
+      "actor_resets": 14,
+      "worker_hits": 16000
+    },
+    {
+      "profile": "gap1-n3",
+      "status": "PASS",
+      "checks": 61224,
+      "N": 3,
+      "dfa_reasons": 133,
+      "fa_reasons": 91,
+      "window_bytes": 4600,
+      "row_bytes": 912,
+      "actor_resets": 14,
+      "worker_hits": 16000
+    },
+    {
+      "profile": "gap1-n32",
+      "status": "PASS",
+      "checks": 61282,
+      "N": 32,
+      "dfa_reasons": 133,
+      "fa_reasons": 91,
+      "window_bytes": 31048,
+      "row_bytes": 912,
+      "actor_resets": 14,
+      "worker_hits": 16000
+    },
+    {
+      "profile": "gap1-n64",
+      "status": "PASS",
+      "checks": 61346,
+      "N": 64,
+      "dfa_reasons": 133,
+      "fa_reasons": 91,
+      "window_bytes": 60232,
+      "row_bytes": 912,
+      "actor_resets": 14,
+      "worker_hits": 16000
+    }
+  ],
+  "checks": 366954,
+  "sanitizer_scope": "ASan/UBSan; leak inspection disabled for sandbox /proc restrictions",
+  "coverage": [
+    "every DFA/FA29/FA35 reason",
+    "skipped current vs retained lastdraw",
+    "outside-active worker events",
+    "interrupt/pause/resume/room/restart",
+    "tick32 wrap",
+    "ring expiry1/3/32/64",
+    "per-tick overflow expiry",
+    "room-only saturation does not poison window",
+    "u64 denominator saturation",
+    "max sums and192-byte rows"
+  ]
+}

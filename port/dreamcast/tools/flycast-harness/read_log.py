@@ -36,6 +36,15 @@ def read(offset, count):
     return b.raw if ok else None
 
 buf_off = int(sys.argv[1], 0)
+# LOG_PLAY_KB play images (platform/mem.cpp RE4DC_LOG_RING_HDR): 32 bytes before the ring hold "LGSZ", its complement
+# and the ring size, written with the first log byte. Absent (older images, test builds): the 64 KB ring.
+def ring_size():
+    w = read(buf_off - 32, 12)
+    if w:
+        m, nm, size = struct.unpack("<III", w)
+        if m == 0x5A53474C and nm == (~m & 0xFFFFFFFF) and 0 < size <= 0x10000:
+            return size
+    return 0x10000
 head_off = int(sys.argv[2], 0)
 stage_off = int(sys.argv[3], 0)
 poll = float(sys.argv[4]) if len(sys.argv) > 4 else 20.0
@@ -60,6 +69,7 @@ pending = ""
 # complete (the LT line of tick N+1 was read), so every run covers the same emulated window under any host load.
 stop_tick = int(os.environ["RE4DC_LOG_STOP_TICK"]) if os.environ.get("RE4DC_LOG_STOP_TICK") else None
 overruns = 0
+ring_known = False
 while time.time() < end:
     h = read(head_off, 4)
     if h is None:
@@ -77,6 +87,10 @@ while time.time() < end:
         print("[log head decreased: reset or process teardown; not proof of guest reboot]")
         shown = 0
         pending = ""
+    if head and not ring_known:
+        LOG_SIZE = ring_size(); ring_known = True
+        if LOG_SIZE != 0x10000:
+            print("[log ring %d bytes]" % LOG_SIZE, flush=True)
     if head > shown:
         if head - shown > LOG_SIZE:
             # The guest lapped the ring before it was read: text is lost and a trace run is invalid.

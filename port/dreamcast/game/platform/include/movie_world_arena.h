@@ -36,3 +36,23 @@ int re4dc_movie_world_active(void);
 }
 #endif
 #endif
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+#ifdef __cplusplus
+extern "C" {
+#endif
+unsigned re4dc_room4_cell_incarnation(const void*, unsigned bytes, unsigned generation);
+#ifdef __cplusplus
+}
+#endif
+#endif
+#if defined(RE4DC_WORLD_VALID_MEMO31) && RE4DC_WORLD_VALID_MEMO31
+#include <stdint.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+// WORLD_VALID_MEMO31 (ui_bridge.cpp): room-4 validity epoch (room-4 open / close / cell free, heap changes).
+extern const unsigned* const re4dc_room4_epoch_ptr;
+#ifdef __cplusplus
+}
+#endif
+#endif

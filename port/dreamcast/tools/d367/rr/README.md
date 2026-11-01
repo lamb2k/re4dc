@@ -48,3 +48,34 @@ Edit `recipe.conf` (CH2, DATA, KSETS, data dirs, CH2_REF) in the same landing, t
 - The kit job exports `RC19D` (recipe.conf) for kit-check.sh's zipcheck.
 - QA disc per candidate (standing rule 8, rr-qa.sh): the full tier builds it (QA_MENU=1 warp build of the same recipe,
   dc/qa presets, mkgdi, disc_lint, zip test) and runs QA boot keys, a QA-menu warp to r103 and a GDEMU door103 seed.
+
+## 2026-10-28 (lane guards28)
+
+- **SPEED row (full tier):** `speed/rr-speed.sh <ref> <cand> <out>` builds each commit's own release recipe as a cost arm
+  (rW + PACE_MODE=off PC_SAMPLER_BYTES=8192), runs the five hwmodel benchmark scenes (`speed/warps`: r101 cross, r101 bell,
+  r103 farm mid-fight, r100 house siege, r11c cabin siege; global frames 700:759, 20 traced frames, the perf-24b method),
+  at most 2 Flycasts at once, and judges with `speed/rr_speed.py`: FAIL when any scene is slower than
+  max(1 ms, 3%) (SPEED_TOL_MS / SPEED_TOL_PCT). Reference = `RR_SPEED_REF` in recipe.conf (the live release; cached once
+  per sha in /root/rr/speed/<sha8>). RR_SPEED=0 skips. Numbers are MODELLED CPU only: a GPU-side regression with the CPU
+  flat (Test 24: n256 sent ~23% more vertices, CPU 1-2 ms faster) does not show here; that needs a cache-model Flycast or
+  console row.
+- **MOVIEARENA row (every tier):** with MOVIE_LAYOUT_GUARD=1 (recipe T15_M) the game logs `MOVIEARENA refuse id=.. room=..
+  why=.. mesh=.. side=.. capacity=.. need=..` for every refused eligible movie arena borrow; any such line in any job log fails.
+
+## 2026-10-28 (lane guards28, round 2)
+
+- **SPEED-GPU row (full tier, coordinator decision):** `speed/rr-speed-gpu.sh <ref> <cand> <out>` builds each commit's
+  QA disc (rr-qa.sh, RR_QA_KEEP_GDEMU=1), then per scene `speed/gpu-scene.sh` on the cache-model Flycast (flycast-console
+  cstat build, SPEED_GPU_EXE; emulator patch f06da2d8): fast run with the QA teleporter keys (`speed/gpu-keys`) saving a
+  state, a cache-model warm run, then a 60 s measured run (RE4DC_CACHE_STATS + RE4DC_TA_STATS). Every run <= 60 s, at most
+  2 Flycasts. `speed/rr_speed_gpu.py` compares SQ->TA bytes per frame (sq_flush x 32) and the TA display-list bytes
+  (vertex/poly load; the emulator has no separate vertex counter); FAIL above +SPEED_GPU_TOL_PCT (5) % or when the fast
+  run did not reach the scene's room. Numbers are labelled cache-model Flycast.
+- **RR_SPEED_REF** = the commit the live release's tag points at. The release lane bumps it at publish (next: 92cec32f).
+
+## 2026-10-28 (lane guards28, round 3; coordinator decision (a))
+
+- SPEED-GPU cross runs with no enemies: the QA disc of each commit is built with `speed/gpu-presets/r101x.txt`
+  (RR_QA_PRESET_DIR in rr-qa.sh replaces the same-named mkqa preset), r101x plus every r101 Ganado `dead`
+  (warp.py R101_BELL_DEAD), so the cross compares rendering only. Crowd cost stays in the CPU row's cross and in bell/farm.
+- Cache key = commit sha8 + a hash of speed/gpu-presets (`g<sha8>p<hash6>`): cached discs and stats rebuild from the key.

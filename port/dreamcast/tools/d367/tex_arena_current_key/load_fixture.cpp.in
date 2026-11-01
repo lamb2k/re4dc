@@ -1,0 +1,254 @@
+// The complete production load() and refusal helper are extracted unchanged.
+// File/package I/O is injected; VRAM allocation uses the actual allocator.
+#include <algorithm>
+#include <cassert>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <vector>
+#define RE4DC_TEX_PACK 1
+#define RE4DC_TEX_RESIDENT 1
+#define RE4DC_TEX_PAYLOAD_RETRY 1
+#define RE4DC_TEX_META_EVICT 1
+#define RE4DC_UI_VRAM 1
+#define RE4DC_UI_FRAG_LATCH 1
+#define RE4DC_UI_FRAG_RESERVE 1
+#define RE4DC_UI_FRAG_WINDOW 3
+#define RE4DC_EFFECT_ROOM 7
+#define RE4DC_PROFILE_SCOPE(x)
+#define RE4DC_PROFILE_COUNT(x,n)
+#define RE4DC_TEXCHK_FAIL(k,w)
+#define RE4DC_TEXCHK_SKIP(k,w)
+#define RE4DC_TEXCHK_BIND(e)
+#define RE4DC_FX_EVICTED() (fx_evict_frame=frame)
+#define RE4DC_HOLD_EVICTED(e) ((void)0)
+#define RE4DC_ENTRY_PINNED(e) ((e).pinned || (e).frame==frame)
+#define RE4DC_CORE_PINNED(e) (!core_yield && core_room_on && (e).key==core_key)
+#define RE4DC_TEX_PATH(p,k) std::strcpy(p,"member")
+#define RE4DC_TOUCH(e) ((e).frame=frame)
+#define RE4DC_GAD_HIT(k) ((void)0)
+#define OVLW(x) ((void)0)
+#define OVLG(x) ((void)0)
+#include "actual_allocator.inc"
+std::vector<std::string> lines;
+extern "C" void re4dc_log(const char* format,...) {
+    char text[512];va_list args;va_start(args,format);
+    vsnprintf(text,sizeof(text),format,args);va_end(args);lines.emplace_back(text);
+}
+extern "C" unsigned re4dc_room_id_now() { return 0x101; }
+@KEY@
+constexpr Key request_key{0x01020304,0x50607080},core_key{0x11223344,0x55667788};
+Key core_keys[]{core_key};unsigned core_nkeys=1;
+struct Re4dcUiImage { void* pixels;unsigned width,height,format; };
+bool identity_ok=true;
+unsigned image_size(const Re4dcUiImage& image) { return image.width*image.height*2; }
+bool image_key(const Re4dcUiImage&,Key& key) { key=request_key;return identity_ok; }
+using file_t=int;
+constexpr int FILEHND_INVALID=-1,O_RDONLY=0;
+bool loose_exists=true;
+file_t fs_open(const char*,int) { return loose_exists?1:FILEHND_INVALID; }
+void fs_close(file_t) {}
+constexpr unsigned KiB=1024,pool_bytes=1024*KiB;
+constexpr std::uintptr_t fake_base=0xa4000000;
+unsigned frame=100,used,peak,reclaimed,vram_rejects,vram_retries,loads,pack_error_skips;
+unsigned load_opens,fx_evict_frame,fx_resident_skips;
+bool fx_resident_only,core_room_on=true,core_yield;
+unsigned core_yields,vram_claims=1;
+constexpr unsigned kCoreYieldBytes=128*KiB,kFragRetryFrames=120,kFragMinAge=30,kFragDropBytes=128*KiB;
+Key frag_key{};
+unsigned frag_frame,frag_latched,frag_handoffs,frag_min_age,frag_win_bytes,frag_win_ok,frag_win_none,frag_want;
+void* frag_held;
+unsigned movie_window_release(unsigned,bool,unsigned& bytes) { bytes=0;return 0; }
+unsigned vram_budget=pool_bytes,vram_meta_evicts;
+constexpr unsigned kKosReserve=8192;
+unsigned kos_headroom() { return 1024*KiB; }
+int re4dc_ui_heap_free() { return 1024*KiB; }
+unsigned opens,uploads,package_closes,metadata_failures;
+unsigned next_bytes=16,next_count=1;
+const char* open_error;
+const char* upload_error;
+bool payload_release_ok=true;
+namespace re4dc { namespace texture { constexpr unsigned kPayloadVq=1; } }
+struct Package {
+    struct Header { unsigned texture_count=1,data_size=16; } head;
+    struct Texture { unsigned payload=0,data_size=16,width=8,height=8; } texture;
+    const char* error_text=nullptr;
+    void* allocation=nullptr;
+    bool open_streamed_at(const char*,unsigned,unsigned) { return open(); }
+    bool open_streamed(const char*) { return open(); }
+    bool open() {
+        ++opens;
+        if(allocation) { pvr_mem_free(allocation);allocation=nullptr; }
+        error_text=nullptr;head={next_count,next_bytes};texture.data_size=next_bytes;
+        if(metadata_failures) { --metadata_failures;error_text="streamed metadata allocation failed";return false; }
+        if(open_error) { error_text=open_error;return false; }
+        return true;
+    }
+    const Header& header() const { return head; }
+    const Texture* textures() const { return &texture; }
+    const char* error() const { return error_text; }
+    bool upload() {
+        ++uploads;
+        if(upload_error) { error_text=upload_error;return false; }
+        allocation=pvr_mem_malloc(head.data_size);
+        if(!allocation) { error_text="PVR texture allocation failed";return false; }
+        return true;
+    }
+    bool release_payload() {
+        if(!payload_release_ok) { error_text="release failure sentinel";return false; }
+        return true;
+    }
+    unsigned vram_bytes() const { return allocation?head.data_size:0; }
+    unsigned metadata_bytes() const { return 16; }
+    void close() {
+        ++package_closes;
+        if(allocation) pvr_mem_free(allocation);
+        allocation=nullptr;error_text=nullptr; // The diagnostic must precede this.
+    }
+};
+struct Entry { Package package;Key key{};unsigned frame=0;bool valid=false,pinned=false; } entries[8];
+Key missing_keys[16]{};unsigned nmissing;
+void close_entry(Entry& entry) {
+    if(entry.valid) used-=entry.package.vram_bytes();
+    entry.package.close();entry.valid=false;
+}
+namespace texpack {
+    constexpr const char* kPath="pack";
+    enum Result { kFound,kNotInPack,kError };
+    Result selected=kFound;bool blocked=false;
+    Result find(const Key&,unsigned& offset,unsigned& size,unsigned,unsigned* member,unsigned* epoch) {
+        offset=2048;size=next_bytes+144;*member=0;*epoch=1;return selected;
+    }
+    bool payload_blocked(unsigned,unsigned,unsigned) { return blocked; }
+    void payload_failed(unsigned,unsigned,unsigned) {}
+    void payload_succeeded(unsigned,unsigned) {}
+}
+#include "texpack_payload_retry.inc"
+@LOGGING@
+@LOAD@
+std::vector<std::string> refusals() {
+    std::vector<std::string> result;
+    for(const auto& line:lines) if(line.rfind("TEX-REFUSE ",0)==0) result.push_back(line);
+    return result;
+}
+void reset() {
+    for(auto& entry:entries) entry.package.close();
+    for(auto& entry:entries) entry=Entry{};
+    pvr_mem_initialize(reinterpret_cast<void*>(fake_base),pool_bytes);pvr_mem_reset();
+    re4dc_vram_arena_class=0;
+    frame=100;used=peak=reclaimed=vram_rejects=vram_retries=loads=pack_error_skips=0;
+    load_opens=fx_evict_frame=fx_resident_skips=core_yields=vram_meta_evicts=0;
+    opens=uploads=package_closes=metadata_failures=0;
+    identity_ok=loose_exists=payload_release_ok=core_room_on=true;
+    fx_resident_only=core_yield=false;vram_claims=1;
+    frag_key={};frag_frame=frag_latched=frag_handoffs=frag_min_age=frag_win_bytes=frag_win_ok=frag_win_none=frag_want=0;
+    frag_held=nullptr;
+    for(auto& missing:missing_keys) missing={};nmissing=0;
+    next_bytes=16;next_count=1;vram_budget=pool_bytes;open_error=upload_error=nullptr;
+    texpack::selected=texpack::kFound;texpack::blocked=false;
+    lines.clear();
+}
+void expect_refusal(const char* name,const char* stage,const char* reason,bool key_valid=true,unsigned need=0) {
+    const auto output=refusals();
+#if RE4DC_TEX_FINAL_REFUSAL_LOG
+    assert(output.size()==1);
+    const std::string& line=output.front();
+    assert(line.find("r=101 f=100 ")!=std::string::npos);
+    assert(line.find(key_valid?"k=01020304-50607080 kv=1 ":"k=00000000-00000000 kv=0 ")!=std::string::npos);
+    assert(line.find(std::string("s=")+stage+" ")!=std::string::npos);
+    assert(line.find(std::string("why=")+reason+" ")!=std::string::npos);
+    assert(line.find("need="+std::to_string(need)+" ")!=std::string::npos);
+    assert(line.find(" free=")!=std::string::npos && line.find(" max=")!=std::string::npos);
+    printf("REFUSAL %s",line.c_str());
+#else
+    assert(output.empty());
+    (void)stage;(void)reason;(void)key_valid;(void)need;
+#endif
+    printf("PASS load %s\n",name);
+}
+void resident(unsigned index,Key key,unsigned bytes,bool pinned=false) {
+    Entry& entry=entries[index];entry.key=key;entry.valid=true;entry.pinned=pinned;
+    entry.package.head={1,bytes};entry.package.allocation=pvr_mem_malloc(bytes);
+    assert(entry.package.allocation);used+=bytes;
+}
+void fill_slots(bool pinned) {
+    for(unsigned i=0;i<8;++i) { entries[i].valid=true;entries[i].key={200+i,200};entries[i].pinned=pinned; }
+}
+void fragmentation(bool evictable) {
+    void* first=pvr_mem_malloc(256*KiB);assert(first);
+    resident(0,core_key,128*KiB);
+    resident(1,Key{99,99},256*KiB,!evictable);
+    pvr_mem_free(first);next_bytes=512*KiB;
+}
+int main() {
+    setvbuf(stdout,nullptr,_IONBF,0);
+    const Re4dcUiImage image{reinterpret_cast<void*>(1),8,8,1};
+    reset();Re4dcUiImage invalid=image;invalid.pixels=nullptr;
+    assert(!load(invalid));expect_refusal("invalid image","input","invalid-image",false);
+    reset();identity_ok=false;assert(!load(image));expect_refusal("identity unavailable","identity","identity",false);
+    reset();fx_resident_only=true;assert(!load(image,false,&request_key));
+    expect_refusal("effect admission guard","guard","fx-resident-only");
+    reset();resident(0,Key{9,9},pool_bytes,true);assert(!load(image,false,&request_key));
+    expect_refusal("minimum budget guard","budget","vram-budget",true,128);
+    reset();missing_keys[0]=request_key;assert(!load(image,false,&request_key));
+    expect_refusal("remembered missing key","lookup","missing");
+    reset();frag_key=request_key;frag_frame=99;assert(!load(image,false,&request_key));
+    expect_refusal("fragmentation latch","guard","frag-latched");
+    reset();fill_slots(true);assert(!load(image,false,&request_key));
+    expect_refusal("no reusable slot","slot","no-slot");
+    reset();texpack::selected=texpack::kError;assert(!load(image,false,&request_key));
+    expect_refusal("pack lookup error","lookup","pack-error");
+    reset();texpack::blocked=true;assert(!load(image,false,&request_key));
+    expect_refusal("payload retry guard","guard","pack-payload-retry");
+    reset();fill_slots(false);texpack::selected=texpack::kNotInPack;loose_exists=false;
+    assert(!load(image,false,&request_key));assert(entries[0].valid && nmissing==1 && !opens);
+    expect_refusal("loose file absent before eviction","lookup","absent");
+    reset();open_error="streamed header read failed";assert(!load(image,false,&request_key));
+    assert(entries[0].package.error()==nullptr);
+    expect_refusal("package open error before close","open","streamed header read failed");
+    reset();next_count=2;assert(!load(image,false,&request_key));
+    expect_refusal("package texture count","budget","texture-count",true,16);
+    reset();next_bytes=pool_bytes+32;assert(!load(image,false,&request_key));
+    expect_refusal("package exceeds budget","budget","vram-budget",true,pool_bytes+32);
+    reset();resident(0,Key{9,9},128,true);vram_budget=256;next_bytes=256;
+    assert(!load(image,false,&request_key));
+    expect_refusal("budget exhausted after header","budget","vram-budget",true,256);
+    reset();upload_error="streamed texture upload read failed";entries[0].key=core_key;
+    assert(!load(image,false,&request_key));assert(entries[0].key==core_key && !entries[0].valid);
+    assert(entries[0].package.error()==nullptr);
+    expect_refusal("upload error retains request identity","upload","streamed texture upload read failed",true,16);
+    reset();payload_release_ok=false;assert(!load(image,false,&request_key));
+    assert(pvr_mem_available()==pool_bytes && entries[0].package.error()==nullptr);
+    expect_refusal("release payload error before close","payload","release failure sentinel",true,16);
+#if RE4DC_TEX_FINAL_REFUSAL_LOG
+    assert(refusals()[0].find("free="+std::to_string(pool_bytes-32)+" ")!=std::string::npos);
+#endif
+    reset();fragmentation(false);assert(!load(image,false,&request_key));
+    assert(pvr_mem_available()==640*KiB && frag_key==request_key);
+    expect_refusal("final fragmented allocation failure","upload","PVR texture allocation failed",true,512*KiB);
+#if RE4DC_TEX_FINAL_REFUSAL_LOG
+    assert(refusals()[0].find("free=655360 max=393216")!=std::string::npos);
+#endif
+
+    reset();fragmentation(true);Entry* recovered=load(image,false,&request_key);
+    assert(recovered && recovered->key==request_key && vram_retries==1 && opens==2);
+    assert(refusals().empty());puts("PASS load recovered upload retry emits no refusal");
+    reset();resident(0,Key{9,9},32);metadata_failures=1;
+    assert(load(image,false,&request_key));assert(opens==2 && vram_meta_evicts==1);
+    assert(refusals().empty());puts("PASS load recovered metadata retry emits no refusal");
+    reset();Entry* cached=load(image,false,&request_key);assert(cached && cached->key==request_key);
+    fx_resident_only=true;assert(load(image,false,&request_key)==cached && opens==1 && uploads==1);
+    assert(refusals().empty());puts("PASS load success and cache hit emit no refusal");
+
+    reset();Entry* core=load(image,false,&core_key);assert(core && core->key==core_key);
+    const unsigned at=unsigned(reinterpret_cast<std::uintptr_t>(core->package.allocation)-fake_base);
+    // A 16-byte texture rounds to the allocator's 32-byte granularity.
+    assert(at==(RE4DC_TEX_ARENA_CURRENT_KEY?pool_bytes-32:0));
+    char ring_line[128]{};assert(re4dc_vram_ring_line(0,ring_line,sizeof(ring_line)));
+    char expected[32];snprintf(expected,sizeof(expected),"U0 %08lx ",RE4DC_TEX_ARENA_CURRENT_KEY?static_cast<unsigned long>(core_key.crc):0UL);
+    assert(std::string(ring_line).rfind(expected,0)==0);
+    assert(refusals().empty());puts("PASS load incoming key publication and optional ring identity");
+    for(auto& entry:entries) entry.package.close();
+}

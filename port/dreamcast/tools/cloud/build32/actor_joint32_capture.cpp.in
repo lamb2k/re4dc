@@ -1,0 +1,24 @@
+// The production transaction's output boundary is captured in source order.
+// No pointer/padding normalization or rendering implementation is involved.
+std::vector<unsigned char> wire;unsigned joint_partial=0;
+void capture_bytes(const void*p,unsigned n){const auto*b=static_cast<const unsigned char*>(p);wire.insert(wire.end(),b,b+n);}
+void capture_inputs(const Re4dcModelPart* base,const Re4dcActorDrawRun*r,unsigned n,
+                    const Re4dcActorOwnedMaterial*m,unsigned count){
+    capture_bytes(&n,4);capture_bytes(&count,4);capture_bytes(&base->alpha_state,4);capture_bytes(&base->depth_mode,4);
+    for(unsigned i=0;i<count;++i){
+        const auto&a=m[i];const unsigned words[]={a.crc,a.fnv,a.material_flags,a.blend,a.depth_mode,
+            a.mask_ref,a.mask_same_uv,a.wrap_s,a.wrap_t,a.image.width,a.image.height,a.image.format};
+        capture_bytes(words,sizeof words);
+    }
+    for(unsigned i=0;i<n;++i){
+        const auto& c=r[i].chunk;const auto* info=static_cast<const cModelInfo*>(c.info);
+        const auto* skin=find_skin(info,nullptr);Re4dcActorSource source{};
+        if(!skin || !re4dc_actor_owned_source(info,skin_frame,&source))std::abort();
+        const unsigned words[]={info->tag,r[i].material,c.stream_bytes,c.position_count,c.normal_count,
+            source.position_count,source.normal_count,source.palette_entries,source.small_normals};
+        capture_bytes(words,sizeof words);capture_bytes(c.modelview,48);capture_bytes(c.stream,c.stream_bytes);
+        capture_bytes(c.uv,c.position_count*4);capture_bytes(source.positions,source.position_count*8);
+        capture_bytes(source.normals,source.normal_count*(source.small_normals?4:8));
+        capture_bytes(skin->palette,skin->entries*48);
+    }
+}

@@ -57,6 +57,12 @@ void* g_pToolCamData = NULL;
 
 #define CAMERA_MOTION_BUFFER_SIZE 0x440
 static u8 CameraMotionBuffer[CAMERA_MOTION_BUFFER_SIZE];
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+// GC-ASSET Motion: this FCV is generated here (HermiteExport of the room camera
+// spline), not a disc clip; the gate skips it instead of reporting it unbound.
+extern "C" void re4dc_gcasset_motion_generated(const void*);
+__attribute__((unused)) static const int gcasset_camera_buffer_marked =(re4dc_gcasset_motion_generated(CameraMotionBuffer), 1);
+#endif
 extern CameraBSpline CamBSpline;
 
 // internal linkage: the table is deferred behind the cManager template strings in .rodata

@@ -3,6 +3,12 @@
 // reserve keys; every palette/materialization reader must reject them.
 static_assert(kSkins>=kRe4dcActorSkinKeys && kSkins<=256,"reservation indices must fit the existing skin table");
 extern "C" int re4dc_actor_skin_reserve(unsigned source_frame,const void* const* infos,unsigned n) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(skin_recipe_building)return 0;
+#endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if(skin_admission_pending.serial)return 0;
+#endif
     if(!infos || !n || n>kRe4dcActorSkinKeys)return 0;
     for(unsigned k=0;k<n;++k){
         if(!infos[k])return 0;
@@ -29,11 +35,32 @@ extern "C" int re4dc_actor_skin_reserve(unsigned source_frame,const void* const*
     }
     // Validate the entire batch before starting a source frame or changing a
     // slot. Frame replacement revokes old owners exactly as source register.
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(!current){owned_skin_clear();owned_skin_invalidate_frames();
+        skin_recipe_frame_retire();
+        skin_frame=source_frame;skin_count=0;}
+#else
     if(!current){owned_skin_clear();owned_skin_invalidate_frames();skin_frame=source_frame;skin_count=0;}
+#endif
     for(unsigned k=0;k<n;++k){
         const unsigned i=index[k];
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+        if(i>=skin_count || !skins[i].info)skins[i]={infos[k],nullptr,nullptr,0,kSkinRecipeNominee};
+#else
         if(i>=skin_count || !skins[i].info)skins[i]={infos[k],nullptr,nullptr,0,0};
+#endif
     }
     skin_count=high;
     return 1;
 }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+#if RE4DC_ACTOR_SKIN_OWNER_POOL
+#error ACTOR_PRESENTATION32 currently requires the existing shared skin table
+#endif
+extern "C" int re4dc_actor_skin_presentation32_frame(unsigned frame,const void* const* infos,unsigned n) {
+    // The ordinary atomic acquisition can add this actor alongside a live
+    // two-pass owner. A new numeric frame uses reserve's existing retirement.
+    if(frame==skin_frame)return 1;
+    return re4dc_actor_skin_reserve(frame,infos,n);
+}
+#endif

@@ -35,7 +35,7 @@ void gcasset_hand_slot_revoke(unsigned side){
 HandCopyProof gcasset_hand_origin(const void* from,int b){
     const unsigned source=gcasset_hand_parent();
     for(unsigned side=0;side<2;++side)if(from==slot[side] && re4dc_gcasset::hand_copy_valid(gcasset_hand_copy[side],source,unsigned(b)))return gcasset_hand_copy[side];
-    if(from==re4dc_dvd_buff+0x10000 && re4dc_gcasset::hand_copy_valid(gcasset_hand_scratch,source,unsigned(b)))return gcasset_hand_scratch;
+    if(from==re4dc_dvd_buff+RE4DC_DVD_BUFF_BYTES/2 && re4dc_gcasset::hand_copy_valid(gcasset_hand_scratch,source,unsigned(b)))return gcasset_hand_scratch;
     if(gcasset_hand_job.complete && from==gcasset_hand_job.data && gcasset_hand_job.blob==b &&
        re4dc_gcasset::hand_copy_valid(gcasset_hand_job.proof,source,unsigned(b)))return gcasset_hand_job.proof;
     return {};

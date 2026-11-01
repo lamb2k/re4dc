@@ -1,0 +1,148 @@
+namespace check {
+struct Owner {
+    Asset a{3,1,12};
+    std::array<unsigned char,48> weights{};
+    Re4dcActorSkinLease lease{};
+    re4dc_source::ChunkInput input{};
+    Owner() {
+        start();certificate(a);a.p.flags=0;a.p.stream_bytes=a.used;bind_asset(a);
+        for(unsigned i=0;i<3;++i) {weights[i*16]=i;weights[i*16+3]=1;const float w=1;std::memcpy(weights.data()+i*16+4,&w,4);}
+        input={{reinterpret_cast<const u8*>(a.positions.data()),a.positions.size()*2},
+            {reinterpret_cast<const u8*>(a.wide_normals.data()),a.wide_normals.size()*2},
+            {a.p.uv,a.uv.size()*2},{a.p.stream,a.p.stream_bytes},{weights.data(),weights.size()},
+            a.p.position_count,a.p.normal_count,3,4,3};
+        re4dc_source::ChunkProof proof{};
+        require(re4dc_source::preflight_chunk(input,proof)==re4dc_source::BlobError::None);
+        renew();
+    }
+    void renew() {
+        if(lease.serial)require(re4dc_actor_skin_release(&lease));
+        Re4dcActorSource src{input.positions.data,input.normals.data,input.position_count,input.normal_count,3,0};
+        const Re4dcActorSkinBinding binding{a.p.info,src,a.palette.data(),3};
+        require(re4dc_actor_skin_acquire(serial,&binding,1,&lease));
+        require(re4dc_actor::source_span(input,a.p.source_span));
+        a.p.source_span.owner_frame=lease.frame;a.p.source_span.owner_serial=lease.serial;
+    }
+    ~Owner(){require(re4dc_actor_skin_release(&lease));}
+    BlobHeader& header(){return *reinterpret_cast<BlobHeader*>(a.stream.data());}
+    bool prepare(){return uv32::prepare_owned(a.p);}
+};
+void exact_and_reuse() {
+    Owner o;require(o.prepare());const unsigned scanned=uv32::counters.scanned_records,hits=uv32::span_hits;
+    require(o.prepare());require(uv32::span_hits==hits+1 && uv32::counters.scanned_records==scanned);
+    // Actual chunk -> owned run -> part consumer, with current material scales.
+    Re4dcActorDrawRun run{};run.chunk={o.a.p.info,o.a.p.stream,o.a.p.uv,o.a.p.modelview,o.a.p.stream_bytes,
+        o.a.p.position_count,o.a.p.normal_count};run.chunk.source_span=o.a.p.source_span;
+    Re4dcActorOwnedMaterial material{};material.image=o.a.p.image;
+    Re4dcModelPart p=o.a.p;owned_run_load(p,run,material);
+    require(p.source_span.uv_bytes==o.input.uv.size && uv32::prepare_owned(p));
+    const unsigned code=uv32::checked_certificate(p,o.header());
+    require(re4dc::format32::uv_decide(code,false,p.uv_offset,128,64,1,1)==re4dc::format32::Uv16);
+    require(re4dc::format32::uv_decide(code,false,p.uv_offset,1024,1024,128,128)==re4dc::format32::Precision);
+    require(uv32::counters.scanned_records==scanned);
+    require(re4dc_actor_submit(&p)==1 && !headers.empty() && (headers.back()&kPcwUv16));
+    require(locks==unlocks);
+}
+void truncated_and_geometry() {
+    for(unsigned what=0;what<13;++what) {
+        Owner o;
+        if(what==0)--o.a.p.source_span.uv_bytes;
+        if(what==1)o.a.p.source_span.uv_bytes-=4;
+        if(what==2)--o.a.p.source_span.position_bytes;
+        if(what==3)--o.a.p.source_span.normal_bytes;
+        if(what==4)o.a.p.stream_bytes=sizeof(BlobHeader)-1;
+        auto* r=reinterpret_cast<u16*>(reinterpret_cast<u8*>(o.a.stream.data())+o.header().rec4*4U);
+        if(what==5)r[0]=o.a.p.position_count;
+        if(what==6)r[1]=o.a.p.normal_count;
+        if(what==7)r[2]=o.a.p.source_span.uv_bytes/4;
+        if(what==8)o.a.p.source_span.positions=o.a.p.source_span.normals;
+        if(what==9)o.a.p.source_span.owner_serial=UINT32_MAX;
+        if(what==10)o.header().rec4=8;
+        if(what==11)o.header().idx4=u16((o.a.p.stream_bytes+4)/4);
+        if(what==12)o.header().radius=std::numeric_limits<float>::quiet_NaN();
+        require(!o.prepare());require(!qualifies(o.a.p));require(headers.empty());
+    }
+}
+void retired_storage() {
+    Owner o;require(o.prepare());require(re4dc_actor_skin_release(&o.lease));
+    o.a.uv.clear();o.a.uv.shrink_to_fit();o.a.stream.clear();o.a.stream.shrink_to_fit();
+    o.a.positions.clear();o.a.positions.shrink_to_fit();o.a.wide_normals.clear();o.a.wide_normals.shrink_to_fit();
+    // ASan makes the owner-before-dereference order meaningful here.
+    require(!o.prepare());
+}
+void incarnations_and_mutation() {
+    Owner o;require(o.prepare());const auto stale=o.a.p.source_span;const unsigned before=uv32::span_preparations;
+    // Same pointers, changed UV content after owner release: fresh incarnation
+    // forces a rescan and a dishonest small tag declines only UV16.
+    require(re4dc_actor_skin_release(&o.lease));require(!o.prepare());
+    for(auto& v:o.a.uv)v=65535;
+    o.renew();require(o.prepare());require(uv32::span_preparations==before+1);
+    require(uv32::checked_certificate(o.a.p,o.header())==re4dc::format32::kUvSourceDeclined);
+    require(re4dc_actor_submit(&o.a.p)==1 && !headers.empty() && !(headers.back()&kPcwUv16));
+    const auto fresh=o.a.p.source_span;o.a.p.source_span=stale;require(!o.prepare());
+    o.a.p.source_span=fresh;
+    ++skin_frame;require(!o.prepare());--skin_frame;
+    // Mutable/unowned inputs never acquire reusable authority. Their current
+    // values are checked each draw by the existing production certificate path.
+    o.a.p.source_span={};for(auto& v:o.a.uv)v=1;
+    const unsigned scans=uv32::counters.scanned_records;
+    require(uv32::checked_certificate(o.a.p,o.header())!=re4dc::format32::kUvSourceDeclined);
+    for(auto& v:o.a.uv)v=65535;
+    require(uv32::checked_certificate(o.a.p,o.header())==re4dc::format32::kUvSourceDeclined);
+    require(uv32::counters.scanned_records>scans);
+}
+void signedness_and_formats() {
+    Owner o;for(auto& v:o.a.uv)v=u16(-1);o.header().flags=16U<<2;
+    o.a.p.flags=0x80000000U;o.a.p.source_span.uv_encoding=Re4dcActorSourceSpan::S16Q8;
+    require(o.prepare());require(uv32::checked_certificate(o.a.p,o.header())==16);
+    o.a.p.flags=0;require(!o.prepare());
+    o.a.p.source_span.uv_encoding=Re4dcActorSourceSpan::U16Q15;
+    require(o.prepare());require(uv32::checked_certificate(o.a.p,o.header())==re4dc::format32::kUvSourceDeclined);
+    o.a.p.source_span.uv_encoding=Re4dcActorSourceSpan::Unknown;require(!o.prepare());
+    for(unsigned flag:{unsigned(kHasCi),unsigned(kHasBake),unsigned(kLodPending)}) {
+        o.renew();o.header().flags=flag;require(!o.prepare());
+    }
+    // A distinct legacy incarnation keeps UV32 while bounded geometry is valid.
+    o.renew();o.header().flags=0;require(o.prepare());require(uv32::checked_certificate(o.a.p,o.header())==0);
+}
+void logical_extents() {
+    Owner o;auto* bytes=reinterpret_cast<u8*>(o.a.stream.data());
+    auto* r=reinterpret_cast<u16*>(bytes+o.header().rec4*4U);
+    for(unsigned i=0;i<o.a.p.position_count;++i)r[i*3+2]=0;
+    Re4dcActorSourceSpan span{};require(re4dc_actor::source_span(o.input,span));
+    // Largest reference is zero; the producer still publishes the entire
+    // parser allocation, rather than manufacturing a four-byte UV span.
+    require(span.uv_bytes==o.a.uv.size()*2 && span.uv_bytes>4);
+    require(o.prepare());
+    const auto saved=o.input.uv.size;o.input.uv.size=std::size_t(UINT32_MAX)+1;
+    require(!re4dc_actor::source_span(o.input,span));o.input.uv.size=saved;
+}
+void lods() {
+    for(unsigned broken=0;broken<10;++broken) {
+        Owner o;auto& h=o.header();h.levels=kMaxLevels;
+        const unsigned at=(o.a.used+3U)&~3U;h.lod4=at/4;
+        auto* bytes=reinterpret_cast<u8*>(o.a.stream.data());auto* levels=reinterpret_cast<LevelInfo*>(bytes+at);
+        unsigned next=at+sizeof(LevelInfo)*kMaxLevels;
+        for(unsigned l=0;l<kMaxLevels;++l) {
+            levels[l]={float(l),u16(next/4),u16((next+8)/4)};
+            auto* t=reinterpret_cast<MeshletLevel*>(bytes+next);*t={Counts::of(3,3,1),0,0};
+            bytes[next+8]=0;bytes[next+9]=1;bytes[next+10]=130;next+=12;
+        }
+        o.a.p.stream_bytes=next;
+        if(broken) {
+            const unsigned l=(broken-1)%kMaxLevels;
+            auto* t=reinterpret_cast<MeshletLevel*>(bytes+levels[l].table4*4U);
+            if(broken<=3)t->n=Counts::of(13,3,1);
+            else if(broken<=6)bytes[levels[l].lists4*4U+2]=131;
+            else levels[l].table4=u16(next/4);
+        }
+        require(o.prepare()==!broken);
+    }
+}
+} // namespace check
+int main() {
+    check::exact_and_reuse();check::truncated_and_geometry();check::incarnations_and_mutation();
+    check::signedness_and_formats();check::lods();check::retired_storage();check::logical_extents();
+    std::printf("{\"checks\":%u,\"prepared\":%u,\"reuse\":%u,\"bounded_records\":%u,\"cache_bytes\":%zu,\"span_bytes\":%zu}\n",
+        check::assertions,uv32::span_preparations,uv32::span_hits,uv32::span_records,sizeof(uv32::span_entries),sizeof(Re4dcActorSourceSpan));
+}

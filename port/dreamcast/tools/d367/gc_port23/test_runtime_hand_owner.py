@@ -104,7 +104,7 @@ int main(){using namespace leon_hand_pack;
  mutex_lock(&lh_mutex);partial=true;assert(!load_now(0,2));partial=false;assert(!gcasset_hand_slot[0].serial);assert(load_now(0,0));mutex_unlock(&lh_mutex);
  // Actual AICA issued-store/readback chain selects a fresh copy generation.
  mutex_lock(&lh_mutex);prefetch(2);assert(load(0,2));mutex_unlock(&lh_mutex);assert(gcasset_hand_chunk_current(0) && gcasset_hand_slot[0].serial!=original);
- p=part();s=source_for();logs.clear();{ReplayScope replay(original,1U<<SourceGeometry,&gcasset_hand_slot[0]);ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;scope.accepted();sq=false;}payload_flush_all();assert(logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
+ p=part();s=source_for();logs.clear();{ReplayScope replay(original,1U<<SourceGeometry,&gcasset_hand_slot[0]);ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;scope.accepted();sq=false;}payload_flush_all();member_flush();assert(logs.find("unbound-accepted-")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
  // Real job allocation/range/thread, joined before cache and slot publication.
  mutex_lock(&lh_mutex);want[0]=3;assert(job_start(3));mutex_unlock(&lh_mutex);run_job(job_thd);
  mutex_lock(&lh_mutex);job_poll();mutex_unlock(&lh_mutex);assert(slot_blob[0]==3 && gcasset_hand_chunk_current(0));

@@ -25,6 +25,12 @@
 #include <cmath>
 #include "native_render_profile.hpp"
 #include "include/native_ps2_world.h"
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "include/draw_setup_audit.h"
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "include/world_census24.h"
 #endif
@@ -107,6 +113,15 @@ struct Frame {
     Counters count[3];
 } state;
 int fallback(unsigned reason){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    // This returns control to the caller. It does not certify that the source
+    // fallback subsequently ran, and reason 4 can follow partial publication.
+    using namespace re4dc::dfa26;
+    if(reason==1)hit(WorldR4pOwner);
+    else if(reason==2)hit(WorldR4pUnqualified);
+    else if(reason==3)hit(WorldR4pProjection);
+    else if(reason==4)hit(WorldR4pIncomplete);
+#endif
     ++state.fallbacks;const unsigned frame=re4dc_ui_frame();
     if(state.fallbacks<=4 || !(frame%120))re4dc_log("PS2WORLD fallback frame=%u reason=%u count=%u collision_piece0=kept\n",frame,reason,state.fallbacks);
     return 0;
@@ -209,12 +224,18 @@ class WorldDraw {
         v.x=xyz[0];v.y=xyz[1];v.w=xyz[2];
         v.u=i16(uv)*(1.0f/256);v.v=i16(uv+2)*(1.0f/256);
         float rgb[3];
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        if(t.attribute_kind)re4dc::dfa26::hit(re4dc::dfa26::WorldR4pNormal);
+#endif
         if(t.attribute_kind){std::int16_t n[3]={i16(attr),i16(attr+2),i16(attr+4)};normal_light(p.placement,p,q,n,t.factor,rgb);v.a=1;}
         else {for(unsigned j=0;j<3;++j)rgb[j]=attr[j]*(1.0f/128);v.a=attr[3]*(1.0f/128);}
         v.r=clamp(rgb[0]*texture.gain[0]);v.g=clamp(rgb[1]*texture.gain[1]);v.b=clamp(rgb[2]*texture.gain[2]);
         return v;
     }
     static unsigned triangle(const Vertex& a,const Vertex& b,const Vertex& c,unsigned cull,pvr_vertex_t* output,Counters& stats){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldR4pSixClip);
+#endif
         ++stats.input;Vertex aa[12]={a,b,c},bb[12];Vertex* in=aa;Vertex* out=bb;unsigned count=3;
         for(unsigned plane=0;plane<6 && count;++plane){
             unsigned next=0;Vertex prev=in[count-1];float pd=distance(prev,plane);
@@ -260,6 +281,9 @@ public:
             for(unsigned gi=0;gi<r.group_count && !failed;++gi){
                 const auto g=record<OrderedBoundRecord>(ordered_bounds,r.first_group+gi);++stats.groups;
                 if(reject(g,screen)){++stats.reject_groups;continue;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                re4dc::dfa26::hit(re4dc::dfa26::WorldR4pGeneralGroup);
+#endif
                 Vertex ring[3];unsigned length=0;
                 for(unsigned ci=g.first_corner;ci<g.first_corner+g.corner_count;++ci){
                     ring[length%3]=vertex(t,p,screen,tex,ci);
@@ -435,6 +459,9 @@ public:
     // triangle() limited to the near/far planes (screen edges are left to the PVR); a triangle
     // wholly past one screen edge is dropped as the clipper would drop it. No array value-init.
     static unsigned triangle_nf(const Vertex* const tri[3],unsigned cull,pvr_vertex_t* output,Counters& stats){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        re4dc::dfa26::hit(re4dc::dfa26::WorldR4pNearClip);
+#endif
         ++stats.input;
         Vertex aa[12],bb[12];Vertex* in=aa;Vertex* out=bb;unsigned count=3;
         aa[0]=*tri[0];aa[1]=*tri[1];aa[2]=*tri[2];
@@ -524,6 +551,9 @@ public:
             };
             auto argb_of=[&](unsigned ci)->unsigned{
                 const unsigned local=ci-r.first_corner;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                if(!(lit && local<r.corner_count))re4dc::dfa26::hit(re4dc::dfa26::WorldR4pUncached);
+#endif
                 return lit && local<r.corner_count?lit[local]:corner_argb(t,p,tex,ci);
             };
             for(unsigned gc=0;gc<r.group_count && !failed;gc+=kCluster){
@@ -544,6 +574,9 @@ public:
                     continue;
                 }
             for(unsigned gi=gc;gi<gc+gn && !failed;++gi){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                if(!fast_groups)re4dc::dfa26::hit(re4dc::dfa26::WorldR4pCheckedGroup);
+#endif
                 const auto g=fast_groups?group(r.first_group+gi):record<OrderedBoundRecord>(ordered_bounds,r.first_group+gi);++stats.groups;
 #if RE4DC_PS2_WORLD_KERNEL==2
                 const unsigned kind=classify(g,screen,state.far);
@@ -622,6 +655,9 @@ public:
                         used+=n;++ks.strips;ks.strip_vertices+=n;
                     }
                     else if(n>kMaxStrip){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+                        re4dc::dfa26::hit(re4dc::dfa26::WorldR4pLongStrip);
+#endif
                         ++ks.long_strips;Projected ring[3];unsigned length=0;
                         for(unsigned k=ci;k<se;++k){
                             ring[length%3]=project(t,screen,k,argb_of(k));
@@ -692,6 +728,9 @@ extern "C" int re4dc_ps2_world_covers(unsigned room){
 extern "C" int re4dc_ps2_world_covers(unsigned room){return room==0x101;}
 #endif
 extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float far){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     re4dc::room::ps2::Wc24WorldResult wc_result;
@@ -752,6 +791,11 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #endif
     return drawn?1:fallback(4);
 #endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    // Historical R4P renderer: time is covered, detailed geometry counters
+    // describe only the shipping R4IM path and cannot certify this fallback.
+    re4dc::dsa24::count(re4dc::dsa24::Unsupported);
+#endif
     state.pending=false;auto& owner=storage();Owner now{};
     if(room!=0x101 || !current(nullptr,now) || now.room!=room){owner.retire();return 0;}
     if(!owner.live()){
@@ -781,6 +825,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 // PS2_WORLD_ROOMS=2, an image the coarse path does not draw (native_static.cpp re4dc_ps2_mesh_source, camera
 // already set): pass 0 now; re4dc_ps2_world_flush draws PT / TR as for a coarse image.
 extern "C" int re4dc_ps2_world_source_draw(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     const re4dc::wc24::Scope wc_world(re4dc::wc24::NearOP,re4dc::wc24::Other);
     re4dc::room::ps2::Wc24WorldResult wc_result;
@@ -836,6 +883,9 @@ extern "C" int re4dc_ps2_world_pending(){
     return state.pending && state.frame==re4dc_ui_frame() && state.flushed!=state.frame;
 }
 extern "C" void re4dc_ps2_world_flush(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldTranslucent);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     // Shared deferred-pass dispatch/receipt work is charged to NearPT Other;
     // each actual PT/TR pass supplies its own nested path and phases.

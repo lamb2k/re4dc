@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
 // game/pendulum.cpp: pendulum / cloth chain physics. A chain is a set of model parts (links)
 // with neighbour tables; every link keeps its world position, speed and rest length in the
 // parts' cModel work area (PenParts). PenClothMove/Move2/Move3 are three variants of the same
@@ -268,6 +272,11 @@ void PenClothMove(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothChainMove, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothChainLinks, c->Num);
+#endif
+#line 200
     floorY = -100000.0f;
     parts = m->getPartsPtr(0);
     if (!(c->Flag & 0x100)) {
@@ -577,6 +586,11 @@ void PenClothMove2(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothChainMove, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothChainLinks, c->Num);
+#endif
+#line 937
     floorY = -100000.0f;
     parts = m->getPartsPtr(0);
     if (!(c->Flag & 0x100)) {
@@ -871,6 +885,11 @@ void PenClothMove3(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothChainMove, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothChainLinks, c->Num);
+#endif
+#line 1672
     floorY = -100000.0f;
     parts = m->getPartsPtr(0);
     if (!(c->Flag & 0x100)) {
@@ -1635,6 +1654,10 @@ void PenClothSkipTick(PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothChainSkip, 1);
+#endif
+#line 3320
     if (!(c->Flag & 0x40)) {
         c->WindSin += fRand0_1() * GlobalWindAdd;
         c->WindSin = LIMIT_ANGLE(c->WindSin);

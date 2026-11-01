@@ -4,14 +4,21 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 25, 2026.
+**Last updated:** November 1, 2026.
 
-**Current build: Test 23** ([download](https://github.com/lamb2k/re4dc/releases/tag/test-d5b678df-20261024)). **Test 24 is pulled**: the first area is missing a door, house windows, a house and the explosives in the tree. Test 24 was PS2 weapons, HUD,
-inventory screens and fonts, PS2 animation for Leon, the Ganados and the weapons, PS2 sounds and music in chapter 1,
-PS2 props in chapter 2, Leon's PS2 textures, the PS2 church candles, Mendez's PS2 model in the barn door animation
-(#57) and the Blacktail can be equipped (#58). A QA build for testers is the second download.
+**Current build: Test 25** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). Faster fights (one
+fast lighting path for every character, drawing speedups), Leon's dark clothes no longer crushed, PS2 sounds for the
+partners, crows and weapons, and everything from the unreleased Test 24b. A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
+
+- **Test 24b (not published):** the first area's scenery back, window glass and bars, the custom title screen, PS2
+torch flames, explosions and candle effects, PS2 weapons, Leon on the PS2 skeleton, PS2 radio call portraits, Test 22's
+button and icon set, and torch rooms without the screen-filling fire. All of it is in Test 25.
+
+- **Test 24 (pulled):** PS2 weapons, HUD, inventory screens and fonts, PS2 animation, chapter 1 sounds and music,
+chapter 2 props, Leon's PS2 textures, church candles, Mendez's PS2 model in the barn door animation (#57) and the
+Blacktail can be equipped (#58). The first area was missing scenery; fixed in Test 24b.
 
 - **Test 23:** PS2 river water, trap explosions, Mendez no longer freezes (#55), steady barn lights, no hang on slow
 disc reads (#28), mipmaps on bushes and cut-outs, fewer see-through effects, faster inventory and a better El Gigante
@@ -63,9 +70,9 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 | Fixed and checked in our tests; the problem was not console-only | 61 |
-| 🛠️ In progress | Being fixed now | 0 |
-| 🔍 Investigating | Being reproduced or traced | 4 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b | Fixed and checked in our tests; the problem was not console-only | 63 |
+| 🛠️ In progress | Being fixed now | 1 |
+| 🔍 Investigating | Being reproduced or traced | 5 |
 | ⏸️ Open | Known, not yet worked on | 15 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
@@ -114,6 +121,15 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| First area (r100) on a real console: some textures look white or mismatched up to the village gate, the path back from the dog trap and the two wooden cabins by the bridge show without textures, and the village gate is missing | test 23 | 🔍 Investigating, not blocking: we are checking each on Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
+| In the village, the wooden box under the grenade on the shelf by the shotgun is not drawn | test 23 | 🔍 Investigating, not blocking | [#60](https://github.com/lamb2k/re4dc/issues/60) |
+| Radio calls run slowly, and a white background shows as Leon lifts the radio | test 23 and earlier | 🔍 Investigating, not blocking: the call portraits are PS2 since Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
+| The picture looks softer on a CRT than in early tests (Test 9 / 10) | test 10 and later | 🔍 Investigating, not blocking | [#61](https://github.com/lamb2k/re4dc/issues/61) |
+| The torch flames in the dam side room (r10d) look blue in our Flycast captures | test 24b | 🔍 Investigating: found in our release captures; please tell us their colour on a real console | |
+| The night road (r111) looks darker than in Test 22 | test 24b | 🛠️ In progress, not blocking | |
+| The first house windows (the "JUMP OUT" window in the forest, and the windows in the village and farm houses) have no glass | test 24 | 🟢 Fixed in test 24b: the window panes (glass and bars) are back | |
+| The first area (r100) is missing scenery: a door, house windows, a house and the explosives in the tree | test 24 | 🟢 Fixed in test 24b; test 24 was pulled for it | |
+| Some candle flames (r102, r105, r108) and the r103 flipbook effect were not drawn | test 24 | 🟢 Fixed in test 24b: the PS2 has these pictures in another file, so they are no longer cut | |
 | After the Mendez fight (chapter 2-3 barn, r11f), the short door animation out of the barn draws Mendez with his GameCube model, and one of its pictures is missing. Play goes on | test 23 | 🟢 Fixed in test 24: the animation draws Mendez with his PS2 model | [#57](https://github.com/lamb2k/re4dc/issues/57) |
 | River and waterfall water is missing or drawn with the wrong picture: the cave river, the dam river by the water wheel, the merchant cave pool | test 22 and earlier | 🟢 Fixed in test 23: they draw their PS2 water planes | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | Tree and door traps do not explode | test 22 and earlier | 🟢 Fixed in test 23: the trap explosion sprites are drawn | [#55](https://github.com/lamb2k/re4dc/issues/55) |

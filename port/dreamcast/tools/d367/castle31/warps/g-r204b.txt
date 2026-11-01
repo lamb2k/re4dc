@@ -1,0 +1,11 @@
+name castle31-r204-end
+room 0x204
+jp 0
+chapter 6
+status 3 0x04000000
+inv default
+god
+area 2
+alivelog 60
+census 200
+dump

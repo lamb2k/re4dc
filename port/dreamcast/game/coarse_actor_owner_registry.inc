@@ -19,11 +19,22 @@
 // immutable chunk ID; texture and source identity stay per descriptor.
 #include "coarse_skin.h"
 #include "actor_ganado_ps2_stump.h"
+#if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
+#include "ashley_ps2_rig27.h"
+static_assert(ashley_ps2_rig27::version==1,"ASHLEY_PS2_RIG needs its PS2 rig build assets");
+#endif
+#if defined(RE4DC_ASHLEY_PLAYABLE_PS2_RIG) && RE4DC_ASHLEY_PLAYABLE_PS2_RIG
+#include "ashley_playable_ps2_rig27.h"
+static_assert(ashley_playable_ps2_rig27::version==1,"ASHLEY_PLAYABLE_PS2_RIG needs its own PS2 rig build assets");
+#endif
 #if RE4DC_COARSE_SKIN_FTRV != 1
 #error NATIVE_MODEL_REGISTRY builds its palettes with COARSE_SKIN_FTRV=1
 #endif
 #if RE4DC_NMR_SLOTS && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #error PS2_ASHLEY (RE4DC_NMR_SLOTS, draw-slot descriptors) needs NATIVE_MODEL_REGISTRY_PACK=1
+#endif
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+extern "C" unsigned re4dc_ganado_lod_level();  // coarse_ganado_lod.inc (GANADO_LOD=1): the level loaded now, ~0u none
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY_PACK
 namespace nmr {
@@ -59,6 +70,9 @@ struct Descriptor { char name[16]; unsigned appearance, model_id, bones, section
 #endif
 #if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
     unsigned lod_of;  // NATIVE_MODEL_REGISTRY_LOD: 0, or a gameplay level of descriptor lod_of - 1 (word 44 bit 25)
+#endif
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+    unsigned lod_level;  // NMR_POOL_LOD: a numbered pool level (word 44 bits 26..29, GANADO_LOD level order); 0 = none
 #endif
 };
 constexpr unsigned appearance_first=0x200u;
@@ -379,6 +393,19 @@ constexpr float kRegistryBindMm=0.1f;
 __attribute__((noinline)) bool registry_skeleton_slots(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc,float* dev) {
     cParts* src[kRegSourceBones];
     const unsigned joints=desc.source_bones;const unsigned char* const up=desc.source_parents;
+#if defined(RE4DC_ASHLEY_PLAYABLE_PS2_RIG) && RE4DC_ASHLEY_PLAYABLE_PS2_RIG
+    // registry_bind has already reproved every adopted player-family role.
+    // Shape alone never authorizes mapping: Leon and unrelated model0 owners
+    // cannot use this adapter, even if a descriptor resembles playable Ashley.
+    if(ashley_playable_ps2_rig27::shape(desc.model_id,joints,desc.sections) &&
+       ((const cModel*)pPL!=m || m->ot_type!=7u ||
+        !ashley_playable_ps2_rig27::slots_match(up+joints,desc.bones)))return false;
+#endif
+#if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
+    // A PS2 rig arm must not silently skin an old surface-transferred package.
+    if(ashley_ps2_rig27::applies(desc.model_id,joints,desc.sections) &&
+       !ashley_ps2_rig27::slots_match(up+joints,desc.bones))return false;
+#endif
     cParts* part=m->pList;
     for(unsigned k=0;k<joints;++k){if(!part)return false;src[k]=part;part=part->pList;}
     if(part)return false;
@@ -471,6 +498,24 @@ bool registry_skeleton(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc)
 unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
     if(d>=registry.descriptor_count)return d;
     const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
+#if defined(RE4DC_NMR_POOL_LOD) && RE4DC_NMR_POOL_LOD
+    // NMR_POOL_LOD (lane lod26b): a pool Ganado follows the level the cast Ganados draw now (GANADO_LOD level_cur:
+    // its own event rule and GANADO_EVENT_KEEP_LOD apply): the numbered pool level with the highest number not above
+    // it, else the full descriptor. One knob (GANADO_LOD_LEVEL) covers every Ganado.
+    if(registry.descriptors[full].pool) {
+        unsigned want=re4dc_ganado_lod_level();
+        if(want==~0u)want=0;
+        unsigned best=full,best_level=0;
+        cModelInfo* probe[8]{};unsigned char psec[8]{};
+        for(unsigned l=0;l<registry.descriptor_count;++l) {
+            const auto& ld=registry.descriptors[l];
+            if(ld.lod_of!=full+1u || !ld.pool || !ld.lod_level || ld.lod_level>want || ld.lod_level<=best_level)continue;
+            if(!re4dc_actor_pool_bindings(m,ld.appearance,ld.sections,probe,psec,count))continue;
+            best=l;best_level=ld.lod_level;
+        }
+        return best;
+    }
+#endif
     if(pG && (pG->Status_flg[1]&0x10000000u))return full;
 #if defined(RE4DC_NMR_GRAB_FULL) && RE4DC_NMR_GRAB_FULL
     // NATIVE_MODEL_REGISTRY_GRAB_FULL: the player's custom damage routine (SetPlDamage: routine 4) that this actor
@@ -614,7 +659,22 @@ int registry_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
 #if RE4DC_NMR_SLOTS
         // A draw-slot descriptor's bind run holds one inverse per SOURCE joint: slot b skins with its joint's
         // (source_parents[source_bones + b], the joint registry_skeleton_slots bound to parts[b]).
-        const float* const bind=desc->source_bones?desc->bind[desc->source_parents[desc->source_bones+b]]:desc->bind[b];
+        const float* bind=desc->source_bones?desc->bind[desc->source_parents[desc->source_bones+b]]:desc->bind[b];
+#if defined(RE4DC_ASHLEY_PLAYABLE_PS2_RIG) && RE4DC_ASHLEY_PLAYABLE_PS2_RIG
+        // The full source/owner/slot proof above remains required on every bind.
+        // Read the existing solver's bind for garment links; never advance it.
+        if((const cModel*)pPL==m && m->ot_type==7u &&
+           ashley_playable_ps2_rig27::shape(desc->model_id,desc->source_bones,desc->sections) &&
+           desc->source_parents[desc->source_bones+b]>=64u)
+            bind=&registry_bound->parts[b]->lt_inv_mat[0][0];
+#endif
+#if defined(RE4DC_ASHLEY_PS2_RIG) && RE4DC_ASHLEY_PS2_RIG
+        // PS2 shared bones use the package's PS2 bind. Garments use the existing
+        // solver's skin delta; no extra solver call, animation tick or RNG.
+        if(ashley_ps2_rig27::applies(desc->model_id,desc->source_bones,desc->sections) &&
+           desc->source_parents[desc->source_bones+b]>=64u)
+            bind=&registry_bound->parts[b]->lt_inv_mat[0][0];
+#endif
         registry_jobs[u]={&registry_bound->parts[b]->mat[0][0],bind,registry_T[b]};
 #else
         registry_jobs[u]={&registry_bound->parts[b]->mat[0][0],desc->bind[b],registry_T[b]};
@@ -1100,6 +1160,24 @@ extern "C" int re4dc_registry_candidate(const cModel* m) {
 #endif
     return 0;
 }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+// Nomination only: the existing bind, skeleton, material certificate and
+// palette builders remain required. The source partner is Luis, not an
+// arbitrary model reusing id4 or a matching address from an earlier image.
+extern "C" int re4dc_registry_presentation32_class(const cModel* m) {
+    if(!m || m!=(const cModel*)pSUB || m->id!=4u || m->nParts!=90u || m->ot_type ||
+       !registry.generation || !registry_id(4u))return 0;
+    for(unsigned i=0;i<registry.descriptor_count;++i) {
+        const auto& d=registry.descriptors[i];
+        if(d.model_id==4u && d.bones==90u && d.sections==6u
+#if RE4DC_NMR_SLOTS
+           && registry_source_bones(d)==90u
+#endif
+           )return 1;
+    }
+    return 0;
+}
+#endif
 #if RE4DC_NMR_ASHLEY >= 2
 // PS2_ASHLEY=2 (user look decision pending): Ashley's head info carries the GC shape (morph) data (ModInfoMgr.create
 // sets be_flag 2 when shapeOfs != 0; cSubAshley::setFace blends shapes 0x6C / 0x6D on it). The PS2 head has no shapes,

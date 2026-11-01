@@ -1,0 +1,1401 @@
+{
+  "schema": "re4dc-root-pose-refusal-v1",
+  "date": "2026-10-26",
+  "status": "PASS_SCOPED_HOST_TARGET",
+  "base": "db222fc618045fc1da2bb3c7222743f83612ed1b",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "b06fcb3aab86de6dbfb4f5d932e046efcef5c18c2c7e06ae2752c954c1f4ffd0",
+    "port/dreamcast/game/game30.mk": "ccee11aee8af4d5c9267d7940a38078a951d76789c84f47c2794c7473a057b94",
+    "port/dreamcast/tools/d367/root_pose_refusal/build_controls.py": "034b789bafe78fe0d745fe855cdb8399820c07b140bb65488d68eeb703e3a4be",
+    "port/dreamcast/tools/d367/root_pose_refusal/extract.py": "24525b45f283ead0db5bfefe1c01cf060e09a172c958f93b39cf61526849d454",
+    "port/dreamcast/tools/d367/root_pose_refusal/target_cost.py": "8bb7ad1e1410f760fe62c2b987a9e29ff2f14ead9be001447faf976f7f8c70ac",
+    "port/dreamcast/tools/d367/root_pose_refusal/test_host.py": "eaa689da6857069b4630c4967b28a7d4ed121ead2af09336affa229a34b7da6d",
+    "port/dreamcast/tools/d367/root_pose_refusal/host_fixture.cpp.in": "6345b6c9d578a684082271d6ed08c136fc2f2a65472deab842730a2766416568",
+    "port/dreamcast/tools/d367/root_pose_refusal/target_fixture.cpp.in": "824212f4a12d3226cae6e8a003370eee4b1eb26fe318a880e9774c82062a80f0",
+    "port/dreamcast/tools/d367/root_pose_refusal/README.md": "03979163bb800ae9dcf8ea73501d1c05c3e2dda34e425b95bb8d929d313e3fd6"
+  },
+  "host": {
+    "source_sha256": "b06fcb3aab86de6dbfb4f5d932e046efcef5c18c2c7e06ae2752c954c1f4ffd0",
+    "fixture_sha256": "8e9951f20b678b091abe73123a408767d699dda64c12cb4448962ef039d32f07",
+    "arms": [
+      {
+        "cap": 0,
+        "preflight": 0,
+        "diag": 0,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS controls cap=0 preflight=0 diag=0\n"
+      },
+      {
+        "cap": 0,
+        "preflight": 0,
+        "diag": 1,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS diagnostics: exact per-owner/frame totals, 64-bit carry, bounded periodic reports, final/rebind totals before reset\nPASS controls cap=0 preflight=0 diag=1\n"
+      },
+      {
+        "cap": 0,
+        "preflight": 1,
+        "diag": 0,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS controls cap=0 preflight=1 diag=0\n"
+      },
+      {
+        "cap": 0,
+        "preflight": 1,
+        "diag": 1,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS diagnostics: exact per-owner/frame totals, 64-bit carry, bounded periodic reports, final/rebind totals before reset\nPASS controls cap=0 preflight=1 diag=1\n"
+      },
+      {
+        "cap": 1,
+        "preflight": 0,
+        "diag": 0,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS controls cap=1 preflight=0 diag=0\n"
+      },
+      {
+        "cap": 1,
+        "preflight": 0,
+        "diag": 1,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS diagnostics: exact per-owner/frame totals, 64-bit carry, bounded periodic reports, final/rebind totals before reset\nPASS controls cap=1 preflight=0 diag=1\n"
+      },
+      {
+        "cap": 1,
+        "preflight": 1,
+        "diag": 0,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS controls cap=1 preflight=1 diag=0\n"
+      },
+      {
+        "cap": 1,
+        "preflight": 1,
+        "diag": 1,
+        "status": "PASS",
+        "stdout": "PASS cap: 16 + overflow, current affine, re-entry, bind return, hidden/serial checks, no draw allocations\nPASS witness: admission reserve, late allocator failure, original bind, serial reuse, invalid/short chain, multipart\nPASS bound: all 250 unique IDs reserve/register, 234 overflowing roots, no late allocation or source fallback\nPASS admission: unique IDs, same room retention, original retire boundary, named refusal cleanup/no publication\nPASS lifetime: movie borrow/return retains original witnesses, generation/size/interior rejection, room re-entry, balanced frees\nPASS diagnostics: exact per-owner/frame totals, 64-bit carry, bounded periodic reports, final/rebind totals before reset\nPASS controls cap=1 preflight=1 diag=1\n"
+      }
+    ],
+    "limits": "Host ASan/UBSan source-extracted control/data-flow tests; synthetic heap/filesystem/owner records. LeakSanitizer disabled because the cloud /proc scan is unavailable; fixture allocation ledger must be empty. No game assets, GPU, target execution or physical console."
+  },
+  "target": {
+    "compiler": "sh-elf-g++ (GCC) 15.2.0",
+    "kos_commit": "804b3195ebd1a06a27cc2b3a5eacf7a2429040a3",
+    "recipe_inputs": {
+      "release": "port/dreamcast/tools/d367/test24/release-knobs.txt",
+      "ordered_ch2_assignments": [
+        "CH2=\"ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016 PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016 MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 ROUTE_SOON_RETURN=1 MOVIE_AUDIO_PRIME=1 ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1 LEON_SKIN_SLOTS=2 LEON_HEADLESS=1 LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019 LEON_CLOTH_DRAWN=1 HAZE_SPRITE_CUT=1 FX_MIST_PS2=1 PS2_HDR_SETS=128 ROUTE_CH21_FULL=1 RESET_MEM_FIX=1 GANADO_ROUTINE_BYTES=1 CLOTH_LIGHT_ABI_FIX=1 AICA_LAYOUT_RECOVER=1 PAUSE_NATIVE_PRESENTATION=1 CAST_MIPMAP=1 TEX_TWIDDLED_MIPMAP=1 TEX_PAL4_ALPHA=1 TEX_PAL4_MIPMAP=1 TEX_PAL8_ALPHA=1 TEX_PAL8_MIPMAP=1 WORLD_RECT21=1 FOLIAGE_MIP24=1 TEX_MIP_DADJ=3 VRAM_ROOM_ARENA=1 EVD_ADMISSION_TXN=1 EVD_START_CLEANUP=1 EVD_START_ROLLBACK=1 EVD_DEBUG_READ_CLEANUP=1 EVD_EXEC_FAILURE_CLEANUP=1 EVD_READ_RELEASE_REFS=1 EVD_READ_ADMISSION_PREFLIGHT=1 EVD_MODULE_VALIDATE_FIRST=1 EVENT_MANAGER_STORAGE_FLAGS=1 EFFECT_ADMISSION_GUARD=1 EFFECT_CONTROLLER_VALIDATE_FIRST=1 EM_ADMISSION_DISP_FIX=1 RESET_RETIRE_BEFORE_HEAPS=1 MOTION_RETIRE_PREFLIGHT=1 SS_RESTORE_VALIDATE_FIRST=1 SS_ACTOR_LIFETIME=1 SS_MSG_FIELDS=1 SS_CERT_PARTNER_CAPACITY=1 PARTS_LINKED_FLAG=1 TEX_PAYLOAD_RETRY=1 PS2_WORLD_NONEMPTY_LOD=1 MOTION_CAPACITY=1 FX_STRIP21=1 GANADO_EVENT_KEEP_LOD=1 SS_DATA_LZ=1 CPU_BACKFACE=0 ACTOR_BACKFACE=0 PS2_WORLD_SOURCE_TEX_MIP=1 PS2_WORLD_ROOT_POSE=1 WATER_PS2_EXT=1 TRAP_FX=1 LIGHT_CUT_HOLD=1 FX_ROOM_SPILL_KB=24 DISC_DMA_WAIT_TIMEOUT=1 EM35_ROUTINE_BYTES=1 FX_LEVEL=3 FX_TRIM=1 SCENERY_SELECT_ONLY=1 SCENERY_REPLAY_LEAN=1 SCENERY_SUBMIT_BATCH=1 STAT_ROUTINE_BYTES=1 ESP_POOL_RECYCLE=1 R117_EFFECT_FAILURE_SAFE=1 KOS_CACHE_P2=1 R10C_SPAWN_LIVE_GUARD=1 EM_READ_RETRY=1\"",
+        "CH2=\"$CH2 FX_PS2_NONE_CUT=1 FX_PS2_PACK=1 PS2_ETS_MATCH=2 ACTOR_GANADO_PS2_GRIP=1 ACTOR_GANADO_PS2_STUMP_DIR=/root/re4data/private/grip24-20261024 PRELOAD_SKIP_GCIDLE=1 EVD_MOVIE_NO_READ=1 WEAPON_WEP04=1\"",
+        "CH2=\"$CH2 NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1\"   # lane fix-mendez-door24 (t15/int e09c4b1c): Mendez PS2 model in the barn door demo",
+        "CH2=\"$CH2 CLOTH_NATIVE=1 FLASHLIGHT_POOL=1\"   # user look calls 10-25: hanging cloth drawn (#55), Leon's flashlight pool in the night rooms (#55)",
+        "CH2=\"$CH2 MOTION_PS2_PL11=1\"   # purge-motion25: pl11 PS2 motion profile row (pmash25 needs it)",
+        "CH2=\"$CH2 SCENERY_N256=1\"   # scenery-cut25: r101/r103 worlds at 256-vertex meshlets; pairs with DATA n256w25 (never KSETS)",
+        "CH2=\"$CH2 LEON_NO_GC_FRONT=2\"   # cast-ps2-25: player Leon drawn PS2 on the post-s20 ledger-less frames (needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)",
+        "CH2=\"$CH2 WEAPON_WEP04_OVL=1 FX_NONE_CUT_PACK=1\"   # heap-margin25: Blacktail as a room overlay + packed FX cut table (s30 heap_before +8,192 B)",
+        "CH2=\"$CH2 DVD_BUFF_KB=64 DVD_BORROW=1 LOG_PLAY_KB=16\"   # heap-margin25 r3: 64 KB disc staging + boot/title borrow, 16 KB play log ring (s30 heap_before +72,736 B)",
+        "CH2=\"$CH2 SCENERY_STREAM=1\"",
+        "CH2=\"$CH2 LEON_PS2_RIG=1\"   # cast-ps2-25 r18: Leon on the PS2 pl00 rig (PS2 bind + weights; GC cloth/hair sim drives PS2 jacket/hair bones); PS2_LEON_DIR = the rig arm (t15-build.sh)   # scenery-rewrite25 M1: exact; MODELLED scenery cross 11.49 -> 10.94, bell 11.19 -> 10.86, farm 7.92 -> 7.80, house 8.69 -> 8.58",
+        "CH2=\"$CH2 LEON_PS2_PORTRAIT_HAIR=1\"   # cast-ps2-25 r19: the radio-call portrait draws the PS2 hair (the GC hair info is no longer drawn)"
+      ],
+      "public_ch2": [
+        "ROUTE_CH22=1",
+        "ROUTE_CH23=1",
+        "PS2_CH2_ENEMY=1",
+        "MOTION_BOUNDED_R11F=1",
+        "NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1",
+        "PS2_WORLD_SOURCE_OWNER=1",
+        "PS2_WORLD_SOURCE_TEX_PREP=1",
+        "AICA_STR_ENT_MAX=56",
+        "AICA_SPILL=1",
+        "NATIVE_MODEL_REGISTRY_FIRST=1",
+        "NATIVE_MODEL_REGISTRY_LOD=1",
+        "ROUTE_SOON_RETURN=1",
+        "MOVIE_AUDIO_PRIME=1",
+        "ROOM_LEFTOVER_FIT=1",
+        "PS2_WORLD_SOURCE_TEX_VQ=1",
+        "LEON_SKIN_SLOTS=2",
+        "LEON_HEADLESS=1",
+        "LEON_CLOTH_DRAWN=1",
+        "HAZE_SPRITE_CUT=1",
+        "FX_MIST_PS2=1",
+        "PS2_HDR_SETS=128",
+        "ROUTE_CH21_FULL=1",
+        "RESET_MEM_FIX=1",
+        "GANADO_ROUTINE_BYTES=1",
+        "CLOTH_LIGHT_ABI_FIX=1",
+        "AICA_LAYOUT_RECOVER=1",
+        "PAUSE_NATIVE_PRESENTATION=1",
+        "CAST_MIPMAP=1",
+        "TEX_TWIDDLED_MIPMAP=1",
+        "TEX_PAL4_ALPHA=1",
+        "TEX_PAL4_MIPMAP=1",
+        "TEX_PAL8_ALPHA=1",
+        "TEX_PAL8_MIPMAP=1",
+        "WORLD_RECT21=1",
+        "FOLIAGE_MIP24=1",
+        "TEX_MIP_DADJ=3",
+        "VRAM_ROOM_ARENA=1",
+        "EVD_ADMISSION_TXN=1",
+        "EVD_START_CLEANUP=1",
+        "EVD_START_ROLLBACK=1",
+        "EVD_DEBUG_READ_CLEANUP=1",
+        "EVD_EXEC_FAILURE_CLEANUP=1",
+        "EVD_READ_RELEASE_REFS=1",
+        "EVD_READ_ADMISSION_PREFLIGHT=1",
+        "EVD_MODULE_VALIDATE_FIRST=1",
+        "EVENT_MANAGER_STORAGE_FLAGS=1",
+        "EFFECT_ADMISSION_GUARD=1",
+        "EFFECT_CONTROLLER_VALIDATE_FIRST=1",
+        "EM_ADMISSION_DISP_FIX=1",
+        "RESET_RETIRE_BEFORE_HEAPS=1",
+        "MOTION_RETIRE_PREFLIGHT=1",
+        "SS_RESTORE_VALIDATE_FIRST=1",
+        "SS_ACTOR_LIFETIME=1",
+        "SS_MSG_FIELDS=1",
+        "SS_CERT_PARTNER_CAPACITY=1",
+        "PARTS_LINKED_FLAG=1",
+        "TEX_PAYLOAD_RETRY=1",
+        "PS2_WORLD_NONEMPTY_LOD=1",
+        "MOTION_CAPACITY=1",
+        "FX_STRIP21=1",
+        "GANADO_EVENT_KEEP_LOD=1",
+        "SS_DATA_LZ=1",
+        "CPU_BACKFACE=0",
+        "ACTOR_BACKFACE=0",
+        "PS2_WORLD_SOURCE_TEX_MIP=1",
+        "PS2_WORLD_ROOT_POSE=1",
+        "WATER_PS2_EXT=1",
+        "TRAP_FX=1",
+        "LIGHT_CUT_HOLD=1",
+        "FX_ROOM_SPILL_KB=24",
+        "DISC_DMA_WAIT_TIMEOUT=1",
+        "EM35_ROUTINE_BYTES=1",
+        "FX_LEVEL=3",
+        "FX_TRIM=1",
+        "SCENERY_SELECT_ONLY=1",
+        "SCENERY_REPLAY_LEAN=1",
+        "SCENERY_SUBMIT_BATCH=1",
+        "STAT_ROUTINE_BYTES=1",
+        "ESP_POOL_RECYCLE=1",
+        "R117_EFFECT_FAILURE_SAFE=1",
+        "KOS_CACHE_P2=1",
+        "R10C_SPAWN_LIVE_GUARD=1",
+        "EM_READ_RETRY=1",
+        "FX_PS2_NONE_CUT=1",
+        "FX_PS2_PACK=1",
+        "PS2_ETS_MATCH=2",
+        "ACTOR_GANADO_PS2_GRIP=1",
+        "PRELOAD_SKIP_GCIDLE=1",
+        "EVD_MOVIE_NO_READ=1",
+        "WEAPON_WEP04=1",
+        "NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1",
+        "CLOTH_NATIVE=1",
+        "FLASHLIGHT_POOL=1",
+        "MOTION_PS2_PL11=1",
+        "SCENERY_N256=1",
+        "LEON_NO_GC_FRONT=2",
+        "WEAPON_WEP04_OVL=1",
+        "FX_NONE_CUT_PACK=1",
+        "DVD_BUFF_KB=64",
+        "DVD_BORROW=1",
+        "LOG_PLAY_KB=16",
+        "SCENERY_STREAM=1",
+        "LEON_PS2_RIG=1",
+        "LEON_PS2_PORTRAIT_HAIR=1"
+      ],
+      "removed_asset_path_assignments": [
+        "PS2_LEON_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2leon",
+        "PS2_GANADO_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2ganado",
+        "GANADO_LOD_PACK=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/glod/ganado_lod.re4gl",
+        "ACTOR_GANADO_PS2_STUMP_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2stump",
+        "PS2_ENEMY_CH22_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2enemych2",
+        "PS2_ENEMY_CH23_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2enemych2",
+        "LEON_HEADLESS_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2leonhead",
+        "ACTOR_GANADO_PS2_STUMP_DIR=/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/game/public-assets/ps2stump",
+        "PS2_ENEMY_CH22_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+        "PS2_ENEMY_CH23_DIR=/root/re4data/private/ps2enemy-ch2-20261016",
+        "LEON_HEADLESS_DIR=/root/re4data/private/garr18-head-20261019",
+        "ACTOR_GANADO_PS2_STUMP_DIR=/root/re4data/private/grip24-20261024"
+      ],
+      "missing_asset_overrides": [
+        "PS2_LEON=0",
+        "LEON_PS2_RIG=0",
+        "LEON_PS2_PORTRAIT_HAIR=0",
+        "LEON_HAND_PACK=0",
+        "PS2_GANADO=0",
+        "PS2_GANADO_LIT=0",
+        "GANADO_LOD=0",
+        "GANADO_EVENT_KEEP_LOD=0",
+        "ACTOR_PROBE_LIGHT=1",
+        "GANADO_LIT=0",
+        "NATIVE_MODEL_REGISTRY_DYING=0",
+        "LEON_HEADLESS=0",
+        "PS2_CH2_ENEMY=0",
+        "ACTOR_GANADO_PS2_STUMP=0",
+        "ACTOR_GANADO_PS2_GRIP=0"
+      ],
+      "source_sha256": {
+        "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93",
+        "port/dreamcast/tools/d367/test24/release-knobs.txt": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b",
+        "port/dreamcast/tools/d367/rr/recipe.conf": "2a1dfab9b26f21513a44eb81c264e71569d7f06d7d09eaa423f50885f1cb1485",
+        "port/dreamcast/build-public.sh": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f",
+        "port/dreamcast/kos-env.sh": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
+        "port/dreamcast/game/Makefile": "1449d154b0c52c63d58eab239a0fa4b643ef61bac63b2c52bcef79def5332ca6",
+        "port/dreamcast/game/actor_ganado_ps2_stump.mk": "f435e94c76cc2ea57bf64bef82033f79520f8f1a5cd8b56b19788d14f6ddea4a",
+        "port/dreamcast/game/actorplan.mk": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce",
+        "port/dreamcast/game/backface.mk": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f",
+        "port/dreamcast/game/bench.mk": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d",
+        "port/dreamcast/game/blender30.mk": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d",
+        "port/dreamcast/game/bodysvc20.mk": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453",
+        "port/dreamcast/game/cache20.mk": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c",
+        "port/dreamcast/game/charbake.mk": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3",
+        "port/dreamcast/game/chardraw19.mk": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f",
+        "port/dreamcast/game/crowd.mk": "3b41a6951044114518ec24ad74da2d91cf8c333ae2a7e1c0d2d2f4c553875fca",
+        "port/dreamcast/game/dbgwarp.mk": "e0530c3591858f3c2ee5227e06571f0375f50831df1b80bf8b08a475062e83f0",
+        "port/dreamcast/game/demo_candidate.mk": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4",
+        "port/dreamcast/game/effects30.mk": "c44fc0860751cb46d660ebd2656cf2d906a4b83fa919ac84848fb86229732949",
+        "port/dreamcast/game/engine_preview.mk": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18",
+        "port/dreamcast/game/esppool.mk": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d",
+        "port/dreamcast/game/frontend30.mk": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614",
+        "port/dreamcast/game/fxtrim.mk": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4",
+        "port/dreamcast/game/g1parts.mk": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50",
+        "port/dreamcast/game/game30.mk": "ccee11aee8af4d5c9267d7940a38078a951d76789c84f47c2794c7473a057b94",
+        "port/dreamcast/game/gc_asset_gate.mk": "ef1f3c564abece94fdf4b7c60a1f738b11f4fedafd11e71230af0264f4b76ecd",
+        "port/dreamcast/game/hwfog.mk": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25",
+        "port/dreamcast/game/knobs.mk": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863",
+        "port/dreamcast/game/kos_cache_p2.mk": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae",
+        "port/dreamcast/game/logiclod20.mk": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969",
+        "port/dreamcast/game/mcheck.mk": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba",
+        "port/dreamcast/game/mendezfx.mk": "c56892f8607f838dff36a52d8189445b299208c87e6f07461b4d06325d03a167",
+        "port/dreamcast/game/native_model_registry.mk": "4c8eae4d2489999bf1a7b2588b5cadcde0d9d574b2fab2099bf3a1f2065430fb",
+        "port/dreamcast/game/pace.mk": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710",
+        "port/dreamcast/game/perf_phase_miss.mk": "5ba2d007fd5cc2829b8225fab8ecd9fd83edc9a9f9df027f8f5e8589b618aea6",
+        "port/dreamcast/game/post30.mk": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5",
+        "port/dreamcast/game/ps2leon.mk": "011f39130ca3329c57148417e10b4a372c1f8dddaa735e38cbd0bb00f9aa4137",
+        "port/dreamcast/game/pvr_rtt.mk": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3",
+        "port/dreamcast/game/qamenu.mk": "9f4f57e42c0e3f2fb21df320e4badb9295b375cf856a5d44410203a11b607558",
+        "port/dreamcast/game/quickweapon.mk": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0",
+        "port/dreamcast/game/records30.mk": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c",
+        "port/dreamcast/game/rigid20.mk": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63",
+        "port/dreamcast/game/safecuts.mk": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe",
+        "port/dreamcast/game/scenery19.mk": "4bb642cc89d41e272806b39315b70784319ca1f685a941d86116db2f1dcc412d",
+        "port/dreamcast/game/scenery30.mk": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec",
+        "port/dreamcast/game/scenery_data_variants.mk": "98b8c8c9c945a899170943b161926c47307b204d1e47f021a9d40e4fbfef7af4",
+        "port/dreamcast/game/scenery_n256.mk": "bee85b66ccc26887a7295405d8d5507425010268b7b0fc1bc5f98387b10a8be8",
+        "port/dreamcast/game/scenery_record_split.mk": "0de971619bd764a69a4fc2b400347828ea660a1ce1a923f083b5be6af5f22a6c",
+        "port/dreamcast/game/shotfx20.mk": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6",
+        "port/dreamcast/game/subscreen.mk": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c",
+        "port/dreamcast/game/t2exact.mk": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2",
+        "port/dreamcast/game/tahash.mk": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184",
+        "port/dreamcast/game/vmu_context.mk": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4",
+        "port/dreamcast/game/vmusave.mk": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb",
+        "port/dreamcast/game/world_census24.mk": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52",
+        "port/dreamcast/game/world_census24_errors.mk": "0b1f8fda7459246404f88d1f0d3b5a94d56396019759201d21dae820094f3874",
+        "port/dreamcast/game/worldhole.mk": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c",
+        "port/dreamcast/game/worldscratch.mk": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+      }
+    },
+    "debug_records": false,
+    "off_pp_and_raw_object_identity": true,
+    "production": {
+      "baseline": {
+        "preprocessed": {
+          "bytes": 1063141,
+          "sha256": "f561e17693361a6c5f9788feb0a5e53840b91ad0676941e8de6ba05e42604ff2"
+        },
+        "object": {
+          "bytes": 178008,
+          "sha256": "fef6ca130347281d972f2da7b89810ac8e95a5ad33bec6e86682804d7739db98",
+          "executable_bytes": 68736,
+          "allocated_bytes": 112323,
+          "zero_fill_bytes": 17212
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5501:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6367:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8491:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7185:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9000,
+            "kind": "static"
+          }
+        ]
+      },
+      "absent": {
+        "preprocessed": {
+          "bytes": 1063141,
+          "sha256": "f561e17693361a6c5f9788feb0a5e53840b91ad0676941e8de6ba05e42604ff2"
+        },
+        "object": {
+          "bytes": 178008,
+          "sha256": "fef6ca130347281d972f2da7b89810ac8e95a5ad33bec6e86682804d7739db98",
+          "executable_bytes": 68736,
+          "allocated_bytes": 112323,
+          "zero_fill_bytes": 17212
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9000,
+            "kind": "static"
+          }
+        ]
+      },
+      "zero": {
+        "preprocessed": {
+          "bytes": 1063141,
+          "sha256": "f561e17693361a6c5f9788feb0a5e53840b91ad0676941e8de6ba05e42604ff2"
+        },
+        "object": {
+          "bytes": 178008,
+          "sha256": "fef6ca130347281d972f2da7b89810ac8e95a5ad33bec6e86682804d7739db98",
+          "executable_bytes": 68736,
+          "allocated_bytes": 112323,
+          "zero_fill_bytes": 17212
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9000,
+            "kind": "static"
+          }
+        ]
+      },
+      "c0-p0-d1": {
+        "preprocessed": {
+          "bytes": 1065132,
+          "sha256": "edacf5a03f1b1cda6533353f50cc8b7e7c7cc2c1453fa6fe9b37c5acacaaed5d"
+        },
+        "object": {
+          "bytes": 180140,
+          "sha256": "dea5134539d6d2fcdae4baf69c5a7e510d4d1dbd2a38b8a1e689b23a5c591fde",
+          "executable_bytes": 69368,
+          "allocated_bytes": 113089,
+          "zero_fill_bytes": 17216
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9000,
+            "kind": "static"
+          }
+        ]
+      },
+      "c0-p1-d0": {
+        "preprocessed": {
+          "bytes": 1065024,
+          "sha256": "06ae0d7840d347343ad70a6e3a1732bb4e438a67dcc3898ce131a5dfd21411c1"
+        },
+        "object": {
+          "bytes": 179112,
+          "sha256": "7a03c083dd06660e109706c8b4ce87fbb2daae03e84f2c2654c358b6f30e15d6",
+          "executable_bytes": 69080,
+          "allocated_bytes": 112765,
+          "zero_fill_bytes": 17212
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9000,
+            "kind": "static"
+          }
+        ]
+      },
+      "c0-p1-d1": {
+        "preprocessed": {
+          "bytes": 1067089,
+          "sha256": "c838d57c3eb7cbac85d75a8b8b955a1aab33ea08daba617ca9a16f7d427f077c"
+        },
+        "object": {
+          "bytes": 181292,
+          "sha256": "cd297a3e6fd582af84b506fedb38dedbd029fc5fb1f2a44c4ee4f6961fe808c3",
+          "executable_bytes": 69772,
+          "allocated_bytes": 113591,
+          "zero_fill_bytes": 17216
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9000,
+            "kind": "static"
+          }
+        ]
+      },
+      "c1-p0-d0": {
+        "preprocessed": {
+          "bytes": 1064469,
+          "sha256": "11f91d8240181667056f1f7ea76e42e608fb6ed96e03473621cf036ae956589d"
+        },
+        "object": {
+          "bytes": 178600,
+          "sha256": "dcb5b56910dd451c2ca3108106ab018c4793ccaec7823f3a732e617a42a6ad0c",
+          "executable_bytes": 69208,
+          "allocated_bytes": 112795,
+          "zero_fill_bytes": 17212
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9008,
+            "kind": "static"
+          }
+        ]
+      },
+      "c1-p0-d1": {
+        "preprocessed": {
+          "bytes": 1066672,
+          "sha256": "edab3f33cb21615075e2c8ac61e01d28f0988b329683d36fc09b06d57795ef03"
+        },
+        "object": {
+          "bytes": 180984,
+          "sha256": "1ed2a1f078b4f9c44bd107808e322d91e607cae3f9539eb5409a52cac0cc22cb",
+          "executable_bytes": 69858,
+          "allocated_bytes": 113579,
+          "zero_fill_bytes": 17216
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 68,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9008,
+            "kind": "static"
+          }
+        ]
+      },
+      "c1-p1-d0": {
+        "preprocessed": {
+          "bytes": 1066352,
+          "sha256": "bc67d9561ab8b2568a772fab1769054f3355f310c2d95489828f04e2d1481d57"
+        },
+        "object": {
+          "bytes": 179704,
+          "sha256": "54e811c806aa5f8ea41af1948e464ed35abd1bdc2d848fc19c9c9a2134a9ebac",
+          "executable_bytes": 69552,
+          "allocated_bytes": 113237,
+          "zero_fill_bytes": 17212
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9008,
+            "kind": "static"
+          }
+        ]
+      },
+      "c1-p1-d1": {
+        "preprocessed": {
+          "bytes": 1068629,
+          "sha256": "ceeae6b42056d82030ff0bef2c7253ebc96ec26f5154fe8e671a551a54d07e7e"
+        },
+        "object": {
+          "bytes": 182144,
+          "sha256": "d7c7e15314060e1b0cc02310c1034d01ed63e321859bf8aa7595e417c64c8e07",
+          "executable_bytes": 70266,
+          "allocated_bytes": 114085,
+          "zero_fill_bytes": 17216
+        },
+        "selected_stack_usage": [
+          {
+            "function": "<stdin>:5592:10:unsigned int {anonymous}::dyn::query(unsigned int)",
+            "bytes": 120,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:6518:6:bool {anonymous}::ps2_open()",
+            "bytes": 596,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:8690:17:void re4dc_ps2_dyn_parts(unsigned int, unsigned int, const void*, const void*, unsigned int, unsigned int, unsigned int, unsigned int)",
+            "bytes": 72,
+            "kind": "static"
+          },
+          {
+            "function": "<stdin>:7367:5:int {anonymous}::ps2_pass(unsigned int, float)",
+            "bytes": 9008,
+            "kind": "static"
+          }
+        ]
+      }
+    },
+    "make_negative_guards": [
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "value": "",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3045: *** ROOT_POSE_CAP_FALLBACK must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "value": "0 1",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3045: *** ROOT_POSE_CAP_FALLBACK must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "value": "1 1",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3045: *** ROOT_POSE_CAP_FALLBACK must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "value": "2",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "value": "yes",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "value": "01",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_CAP_FALLBACK",
+        "missing": "PS2_WORLD_ROOT_POSE",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3058: *** Root-pose refusal controls need PS2_WORLD_ROOT_POSE=1 PS2_WORLD_PARTS=1 PS2_WORLD_DYNAMIC=1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "value": "",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3048: *** ROOT_POSE_WITNESS_PREFLIGHT must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "value": "0 1",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3048: *** ROOT_POSE_WITNESS_PREFLIGHT must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "value": "1 1",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3048: *** ROOT_POSE_WITNESS_PREFLIGHT must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "value": "2",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "value": "yes",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "value": "01",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_WITNESS_PREFLIGHT",
+        "missing": "PS2_WORLD_ROOT_POSE",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3058: *** Root-pose refusal controls need PS2_WORLD_ROOT_POSE=1 PS2_WORLD_PARTS=1 PS2_WORLD_DYNAMIC=1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "value": "",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3051: *** ROOT_POSE_REFUSAL_DIAG must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "value": "0 1",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3051: *** ROOT_POSE_REFUSAL_DIAG must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "value": "1 1",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3051: *** ROOT_POSE_REFUSAL_DIAG must be exactly one literal 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "value": "2",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "value": "yes",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "value": "01",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3054: *** ROOT_POSE_CAP_FALLBACK, ROOT_POSE_WITNESS_PREFLIGHT and ROOT_POSE_REFUSAL_DIAG must be 0 or 1.  Stop.\n"
+      },
+      {
+        "knob": "ROOT_POSE_REFUSAL_DIAG",
+        "missing": "PS2_WORLD_ROOT_POSE",
+        "status": "rejected",
+        "stderr": "Makefile:1511: warning: overriding recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\nMakefile:1497: warning: ignoring old recipe for target '/tmp/re4dc-root-pose-target-current-20261026-a/release-profile/native_static/obj/aica-audio.h'\ngame30.mk:3058: *** Root-pose refusal controls need PS2_WORLD_ROOT_POSE=1 PS2_WORLD_PARTS=1 PS2_WORLD_DYNAMIC=1.  Stop.\n"
+      }
+    ]
+  },
+  "diagnostic_layout": {
+    "slot_bytes": 100,
+    "slot_alignment": 4,
+    "witness_bytes": 136,
+    "diagnostic_bytes": 24,
+    "diagnostic_offset": 76,
+    "method": "same target compiler/Make-derived flags, actual extracted production type definitions; .rodata.root_pose_layout",
+    "object_sha256": "1815b48b958f211a84881d151c0ff037d5b7191ef515788418d615dcf28e6e76"
+  },
+  "synthetic_sh4": {
+    "scope": "Execute compiled SH4 root decisions/transforms and model their CPU cost.\n\nSynthetic objects; no geometry submission, GPU, full room, bus contention,\nDMA/interrupts or whole-frame measurement. Data line counts are observed\n32-byte address sets, not cache misses. Uses the existing qualified interpreter\nand hwsim pipeline model; XOR #imm,R0 is checked for all 256 immediates, and\nthe existing ESP fixture's ROTR interpretation is checked on boundary inputs.\n",
+    "source_sha256": "b06fcb3aab86de6dbfb4f5d932e046efcef5c18c2c7e06ae2752c954c1f4ffd0",
+    "fixture_sha256": "a63a3429be506d0d81b75a0068a3210d90a0d49b8cb5715016af6d377cd86842",
+    "arms": {
+      "cap0": {
+        "target_layout": [
+          1,
+          76,
+          40,
+          136,
+          136,
+          53000,
+          56,
+          72
+        ],
+        "model": {
+          "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+          "source": "/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/tools/hwmodel/hwsim.c",
+          "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+          "compile_command": [
+            "gcc",
+            "-O2",
+            "-o",
+            "/tmp/re4dc-root-pose-cost-current-20261026-a/cap0-model/hwsim",
+            "/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/tools/hwmodel/hwsim.c",
+            "-lm"
+          ],
+          "flags": [
+            "--perfect-ic",
+            "--perfect-dc",
+            "--no-dma",
+            "--sq-cost",
+            "0"
+          ],
+          "exact_dynamic_instruction_and_delay_slot_counts": true,
+          "no_hardware_time_or_frame_speedup_claim": true
+        },
+        "cases": {
+          "unchanged": {
+            "fixture_query": {
+              "result": 0,
+              "instructions": 1116,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 922,
+              "cold_icache_cycles": 1180,
+              "data_traffic": {
+                "load_instructions": 144,
+                "store_instructions": 99,
+                "load_accesses": 144,
+                "store_accesses": 99,
+                "load_bytes": 496,
+                "store_bytes": 363,
+                "unique_read_lines": 26,
+                "unique_write_lines": 14,
+                "unique_data_lines": 33,
+                "unique_line_bytes": 1056
+              },
+              "trace_sha256": "6fec922c8514e72c7d3957d94ebff4dddf399876601dcded73c35d46037a6dc4"
+            },
+            "fixture_draw": {
+              "result": 1,
+              "instructions": 247,
+              "peak_stack_bytes": 232,
+              "warm_cycles": 245,
+              "cold_icache_cycles": 431,
+              "data_traffic": {
+                "load_instructions": 57,
+                "store_instructions": 39,
+                "load_accesses": 57,
+                "store_accesses": 39,
+                "load_bytes": 215,
+                "store_bytes": 156,
+                "unique_read_lines": 17,
+                "unique_write_lines": 7,
+                "unique_data_lines": 20,
+                "unique_line_bytes": 640
+              },
+              "trace_sha256": "148d41ca907f020a25e442e55e8a38740a200e96ab0669501c52beff8d80dacf"
+            }
+          },
+          "cached-moved": {
+            "fixture_query": {
+              "result": 2,
+              "instructions": 2005,
+              "peak_stack_bytes": 140,
+              "warm_cycles": 1693,
+              "cold_icache_cycles": 2099,
+              "data_traffic": {
+                "load_instructions": 295,
+                "store_instructions": 132,
+                "load_accesses": 295,
+                "store_accesses": 132,
+                "load_bytes": 1028,
+                "store_bytes": 492,
+                "unique_read_lines": 29,
+                "unique_write_lines": 19,
+                "unique_data_lines": 39,
+                "unique_line_bytes": 1248
+              },
+              "trace_sha256": "89b68cbbd615196d636c1d8b44112d84f90b98e119dbc47a000ca2bf6a78ef9e"
+            },
+            "fixture_draw": {
+              "result": 1,
+              "instructions": 573,
+              "peak_stack_bytes": 232,
+              "warm_cycles": 511,
+              "cold_icache_cycles": 772,
+              "data_traffic": {
+                "load_instructions": 144,
+                "store_instructions": 57,
+                "load_accesses": 144,
+                "store_accesses": 57,
+                "load_bytes": 560,
+                "store_bytes": 228,
+                "unique_read_lines": 21,
+                "unique_write_lines": 7,
+                "unique_data_lines": 23,
+                "unique_line_bytes": 736
+              },
+              "trace_sha256": "2546c871fc2a6e896d333265386f83c8a67722641db3192f2321b1db7961927c"
+            }
+          },
+          "overflow": {
+            "fixture_query": {
+              "result": 1,
+              "instructions": 1732,
+              "peak_stack_bytes": 140,
+              "warm_cycles": 1493,
+              "cold_icache_cycles": 1870,
+              "data_traffic": {
+                "load_instructions": 279,
+                "store_instructions": 53,
+                "load_accesses": 279,
+                "store_accesses": 53,
+                "load_bytes": 966,
+                "store_bytes": 185,
+                "unique_read_lines": 30,
+                "unique_write_lines": 8,
+                "unique_data_lines": 30,
+                "unique_line_bytes": 960
+              },
+              "trace_sha256": "c0345738007bf47716704f1f44c1c169d1bfc778ac00c8f61aa02dcf5d891d1f"
+            },
+            "fixture_draw": {
+              "result": 0,
+              "instructions": 164,
+              "peak_stack_bytes": 232,
+              "warm_cycles": 168,
+              "cold_icache_cycles": 354,
+              "data_traffic": {
+                "load_instructions": 44,
+                "store_instructions": 27,
+                "load_accesses": 44,
+                "store_accesses": 27,
+                "load_bytes": 163,
+                "store_bytes": 108,
+                "unique_read_lines": 16,
+                "unique_write_lines": 5,
+                "unique_data_lines": 18,
+                "unique_line_bytes": 576
+              },
+              "trace_sha256": "3c29cb4709b43ecdf3e1273783acc2301091edb0f2277f46dbd9233942cd1dee"
+            }
+          },
+          "hidden": {
+            "fixture_query": {
+              "result": 1,
+              "instructions": 148,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 151,
+              "cold_icache_cycles": 297,
+              "data_traffic": {
+                "load_instructions": 40,
+                "store_instructions": 22,
+                "load_accesses": 40,
+                "store_accesses": 22,
+                "load_bytes": 130,
+                "store_bytes": 61,
+                "unique_read_lines": 17,
+                "unique_write_lines": 5,
+                "unique_data_lines": 17,
+                "unique_line_bytes": 544
+              },
+              "trace_sha256": "c5814378565ee3c78ef02f3b6e0f406aa080d9031f529b2bfa9cf1772fbbb8cd"
+            },
+            "fixture_draw": {
+              "result": 0,
+              "instructions": 164,
+              "peak_stack_bytes": 232,
+              "warm_cycles": 168,
+              "cold_icache_cycles": 354,
+              "data_traffic": {
+                "load_instructions": 44,
+                "store_instructions": 27,
+                "load_accesses": 44,
+                "store_accesses": 27,
+                "load_bytes": 163,
+                "store_bytes": 108,
+                "unique_read_lines": 16,
+                "unique_write_lines": 5,
+                "unique_data_lines": 18,
+                "unique_line_bytes": 576
+              },
+              "trace_sha256": "3c29cb4709b43ecdf3e1273783acc2301091edb0f2277f46dbd9233942cd1dee"
+            }
+          },
+          "returned-bind": {
+            "fixture_query": {
+              "result": 1,
+              "instructions": 42,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 48,
+              "cold_icache_cycles": 124,
+              "data_traffic": {
+                "load_instructions": 17,
+                "store_instructions": 10,
+                "load_accesses": 17,
+                "store_accesses": 10,
+                "load_bytes": 65,
+                "store_bytes": 40,
+                "unique_read_lines": 8,
+                "unique_write_lines": 2,
+                "unique_data_lines": 8,
+                "unique_line_bytes": 256
+              },
+              "trace_sha256": "92ca0b2fb56a6192c5b73455e64fd61c503d84cbd39c0035098c07df87e5a701"
+            },
+            "fixture_draw": {
+              "result": 0,
+              "instructions": 164,
+              "peak_stack_bytes": 232,
+              "warm_cycles": 168,
+              "cold_icache_cycles": 354,
+              "data_traffic": {
+                "load_instructions": 44,
+                "store_instructions": 27,
+                "load_accesses": 44,
+                "store_accesses": 27,
+                "load_bytes": 163,
+                "store_bytes": 108,
+                "unique_read_lines": 16,
+                "unique_write_lines": 5,
+                "unique_data_lines": 18,
+                "unique_line_bytes": 576
+              },
+              "trace_sha256": "3c29cb4709b43ecdf3e1273783acc2301091edb0f2277f46dbd9233942cd1dee"
+            }
+          },
+          "serial-reused": {
+            "fixture_query": {
+              "result": 1,
+              "instructions": 42,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 48,
+              "cold_icache_cycles": 124,
+              "data_traffic": {
+                "load_instructions": 17,
+                "store_instructions": 10,
+                "load_accesses": 17,
+                "store_accesses": 10,
+                "load_bytes": 65,
+                "store_bytes": 40,
+                "unique_read_lines": 8,
+                "unique_write_lines": 2,
+                "unique_data_lines": 8,
+                "unique_line_bytes": 256
+              },
+              "trace_sha256": "92ca0b2fb56a6192c5b73455e64fd61c503d84cbd39c0035098c07df87e5a701"
+            },
+            "fixture_draw": {
+              "result": 0,
+              "instructions": 164,
+              "peak_stack_bytes": 232,
+              "warm_cycles": 168,
+              "cold_icache_cycles": 354,
+              "data_traffic": {
+                "load_instructions": 44,
+                "store_instructions": 27,
+                "load_accesses": 44,
+                "store_accesses": 27,
+                "load_bytes": 163,
+                "store_bytes": 108,
+                "unique_read_lines": 16,
+                "unique_write_lines": 5,
+                "unique_data_lines": 18,
+                "unique_line_bytes": 576
+              },
+              "trace_sha256": "3c29cb4709b43ecdf3e1273783acc2301091edb0f2277f46dbd9233942cd1dee"
+            }
+          }
+        }
+      },
+      "cap1": {
+        "target_layout": [
+          1,
+          76,
+          40,
+          136,
+          136,
+          53000,
+          56,
+          72
+        ],
+        "model": {
+          "scope": "Price actual dynamic instruction traces with the repository's hwsim model.\n\nPerfect caches, no memory/bus/SQ/DMA events and no final completion drain.\nThis is a synthetic CPU scheduling comparison, never hardware time or FPS.\n",
+          "source": "/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/tools/hwmodel/hwsim.c",
+          "source_sha256": "f5d288f81e7f6656614ff9d36f346c0bf7834df41dd23d37d7cc7b79672fb674",
+          "compile_command": [
+            "gcc",
+            "-O2",
+            "-o",
+            "/tmp/re4dc-root-pose-cost-current-20261026-a/cap1-model/hwsim",
+            "/workspace/scratch/2180b3490399/fixes/root-pose/port/dreamcast/tools/hwmodel/hwsim.c",
+            "-lm"
+          ],
+          "flags": [
+            "--perfect-ic",
+            "--perfect-dc",
+            "--no-dma",
+            "--sq-cost",
+            "0"
+          ],
+          "exact_dynamic_instruction_and_delay_slot_counts": true,
+          "no_hardware_time_or_frame_speedup_claim": true
+        },
+        "cases": {
+          "unchanged": {
+            "fixture_query": {
+              "result": 0,
+              "instructions": 1116,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 922,
+              "cold_icache_cycles": 1199,
+              "data_traffic": {
+                "load_instructions": 144,
+                "store_instructions": 99,
+                "load_accesses": 144,
+                "store_accesses": 99,
+                "load_bytes": 496,
+                "store_bytes": 363,
+                "unique_read_lines": 26,
+                "unique_write_lines": 14,
+                "unique_data_lines": 33,
+                "unique_line_bytes": 1056
+              },
+              "trace_sha256": "e00d8614b31113f27e7d61b1fd36600a54ada382b793a5ea2a766c8cd7ce3352"
+            },
+            "fixture_draw": {
+              "result": 1,
+              "instructions": 260,
+              "peak_stack_bytes": 320,
+              "warm_cycles": 258,
+              "cold_icache_cycles": 458,
+              "data_traffic": {
+                "load_instructions": 63,
+                "store_instructions": 45,
+                "load_accesses": 63,
+                "store_accesses": 45,
+                "load_bytes": 239,
+                "store_bytes": 180,
+                "unique_read_lines": 18,
+                "unique_write_lines": 7,
+                "unique_data_lines": 20,
+                "unique_line_bytes": 640
+              },
+              "trace_sha256": "d1d4d40f71c6e73f28873e595070e12fac1e619a710ea75b9468e8c38d42ffef"
+            }
+          },
+          "cached-moved": {
+            "fixture_query": {
+              "result": 2,
+              "instructions": 2005,
+              "peak_stack_bytes": 140,
+              "warm_cycles": 1691,
+              "cold_icache_cycles": 2127,
+              "data_traffic": {
+                "load_instructions": 295,
+                "store_instructions": 132,
+                "load_accesses": 295,
+                "store_accesses": 132,
+                "load_bytes": 1028,
+                "store_bytes": 492,
+                "unique_read_lines": 28,
+                "unique_write_lines": 19,
+                "unique_data_lines": 38,
+                "unique_line_bytes": 1216
+              },
+              "trace_sha256": "ce256e5f4fd58fc0a2e92657a78e5077af6ecf932e2c31e313d0f2306dc0dfe0"
+            },
+            "fixture_draw": {
+              "result": 1,
+              "instructions": 595,
+              "peak_stack_bytes": 320,
+              "warm_cycles": 533,
+              "cold_icache_cycles": 842,
+              "data_traffic": {
+                "load_instructions": 151,
+                "store_instructions": 63,
+                "load_accesses": 151,
+                "store_accesses": 63,
+                "load_bytes": 586,
+                "store_bytes": 252,
+                "unique_read_lines": 25,
+                "unique_write_lines": 9,
+                "unique_data_lines": 27,
+                "unique_line_bytes": 864
+              },
+              "trace_sha256": "593611fb8412e16e5f0f578d9b20644b03d4b2ac8b517a4e12cc06966debd853"
+            }
+          },
+          "overflow": {
+            "fixture_query": {
+              "result": 4,
+              "instructions": 1729,
+              "peak_stack_bytes": 140,
+              "warm_cycles": 1488,
+              "cold_icache_cycles": 1867,
+              "data_traffic": {
+                "load_instructions": 278,
+                "store_instructions": 53,
+                "load_accesses": 278,
+                "store_accesses": 53,
+                "load_bytes": 962,
+                "store_bytes": 185,
+                "unique_read_lines": 28,
+                "unique_write_lines": 7,
+                "unique_data_lines": 28,
+                "unique_line_bytes": 896
+              },
+              "trace_sha256": "9d47aaf39315d4ad45c265849a6159d6a622e13bd2356b0f8427062014b64243"
+            },
+            "fixture_draw": {
+              "result": 1,
+              "instructions": 2280,
+              "peak_stack_bytes": 320,
+              "warm_cycles": 1963,
+              "cold_icache_cycles": 2400,
+              "data_traffic": {
+                "load_instructions": 415,
+                "store_instructions": 113,
+                "load_accesses": 415,
+                "store_accesses": 113,
+                "load_bytes": 1496,
+                "store_bytes": 428,
+                "unique_read_lines": 37,
+                "unique_write_lines": 10,
+                "unique_data_lines": 39,
+                "unique_line_bytes": 1248
+              },
+              "trace_sha256": "64d372595260e90bef0777906127482f0a65356ef7664686be5370a27670d099"
+            }
+          },
+          "hidden": {
+            "fixture_query": {
+              "result": 1,
+              "instructions": 148,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 151,
+              "cold_icache_cycles": 315,
+              "data_traffic": {
+                "load_instructions": 40,
+                "store_instructions": 22,
+                "load_accesses": 40,
+                "store_accesses": 22,
+                "load_bytes": 130,
+                "store_bytes": 61,
+                "unique_read_lines": 17,
+                "unique_write_lines": 5,
+                "unique_data_lines": 17,
+                "unique_line_bytes": 544
+              },
+              "trace_sha256": "edae0d973795b9041b307e8225d858328bb0675f0ed9d031224d5406bab58aa6"
+            },
+            "fixture_draw": {
+              "result": 0,
+              "instructions": 186,
+              "peak_stack_bytes": 320,
+              "warm_cycles": 189,
+              "cold_icache_cycles": 380,
+              "data_traffic": {
+                "load_instructions": 51,
+                "store_instructions": 33,
+                "load_accesses": 51,
+                "store_accesses": 33,
+                "load_bytes": 189,
+                "store_bytes": 132,
+                "unique_read_lines": 18,
+                "unique_write_lines": 5,
+                "unique_data_lines": 19,
+                "unique_line_bytes": 608
+              },
+              "trace_sha256": "b44aa835fbfac839e09914b262a9bca849d214d4f546775c3c676d4c6ec43218"
+            }
+          },
+          "returned-bind": {
+            "fixture_query": {
+              "result": 4,
+              "instructions": 42,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 48,
+              "cold_icache_cycles": 142,
+              "data_traffic": {
+                "load_instructions": 17,
+                "store_instructions": 10,
+                "load_accesses": 17,
+                "store_accesses": 10,
+                "load_bytes": 65,
+                "store_bytes": 40,
+                "unique_read_lines": 8,
+                "unique_write_lines": 2,
+                "unique_data_lines": 8,
+                "unique_line_bytes": 256
+              },
+              "trace_sha256": "13726f31413da7fe3e6ef56abe767288b4788e8578e6a8bf921104145d23d765"
+            },
+            "fixture_draw": {
+              "result": 1,
+              "instructions": 1183,
+              "peak_stack_bytes": 320,
+              "warm_cycles": 1042,
+              "cold_icache_cycles": 1402,
+              "data_traffic": {
+                "load_instructions": 200,
+                "store_instructions": 77,
+                "load_accesses": 200,
+                "store_accesses": 77,
+                "load_bytes": 708,
+                "store_bytes": 284,
+                "unique_read_lines": 35,
+                "unique_write_lines": 8,
+                "unique_data_lines": 37,
+                "unique_line_bytes": 1184
+              },
+              "trace_sha256": "4d38172c257ddba70024fdf00288a6f08ff7280d1de1a575155fde556d2ce0d0"
+            }
+          },
+          "serial-reused": {
+            "fixture_query": {
+              "result": 4,
+              "instructions": 42,
+              "peak_stack_bytes": 116,
+              "warm_cycles": 48,
+              "cold_icache_cycles": 142,
+              "data_traffic": {
+                "load_instructions": 17,
+                "store_instructions": 10,
+                "load_accesses": 17,
+                "store_accesses": 10,
+                "load_bytes": 65,
+                "store_bytes": 40,
+                "unique_read_lines": 8,
+                "unique_write_lines": 2,
+                "unique_data_lines": 8,
+                "unique_line_bytes": 256
+              },
+              "trace_sha256": "13726f31413da7fe3e6ef56abe767288b4788e8578e6a8bf921104145d23d765"
+            },
+            "fixture_draw": {
+              "result": 0,
+              "instructions": 295,
+              "peak_stack_bytes": 320,
+              "warm_cycles": 300,
+              "cold_icache_cycles": 534,
+              "data_traffic": {
+                "load_instructions": 76,
+                "store_instructions": 43,
+                "load_accesses": 76,
+                "store_accesses": 43,
+                "load_bytes": 260,
+                "store_bytes": 145,
+                "unique_read_lines": 25,
+                "unique_write_lines": 8,
+                "unique_data_lines": 26,
+                "unique_line_bytes": 832
+              },
+              "trace_sha256": "55bd3237a8e10ed009bdb6f787dea8a0083b0161c1ab97d1f243653cc9ecde3f"
+            }
+          }
+        }
+      }
+    },
+    "scalar_opcode_controls": {
+      "xor_immediate_checks": 1280,
+      "rotr_checks": 80,
+      "status": "PASS"
+    },
+    "memory_controls": {
+      "status": "PASS",
+      "controls": [
+        "fetches excluded; scalar load/store retained",
+        "PC-relative literal classified as data",
+        "data read of current opcode word retained",
+        "delay slot attributed exactly once",
+        "double-register move counted as one 8-byte load",
+        "32-bit effective address wrap",
+        "store queues excluded from cached footprint",
+        "cached PREF counted separately from demand loads"
+      ]
+    },
+    "whole_frame": "NOT MEASURED. Any transform-only projection uses these synthetic instruction-model cycles at nominal 200 MHz; geometry/GPU work and memory stalls are additional."
+  },
+  "existing_legacy_movie_contract": {
+    "baseline": "BLOCKED_EXISTING_CONTRACT",
+    "assertion": "re4dc_ps2_mesh_camera"
+  },
+  "limits": [
+    "No private assets, whole-game link, Flycast route, STRICT gameplay comparison, or physical Dreamcast run.",
+    "No shipped room has been shown to hit either limit.",
+    "Enabled preflight intentionally halts at the named resource failure if a valid required reservation cannot be made.",
+    "Raw full logs/fixtures were retained in isolated /tmp output; the lane scripts reproduce them."
+  ]
+}

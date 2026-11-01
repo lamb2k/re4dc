@@ -1,0 +1,46 @@
+// The production selector, with a small caller shaped like real admission.
+// Accepted calls decrement the selected cursor once; no packet, node or TA
+// data is written, and no room lookup or allocation is simulated here.
+#include "@DC@/game/platform/include/fx_r200_entry_cap.h"
+#include <cstddef>
+using re4dc::fx_r200::Context;
+using re4dc::fx_r200::Tail;
+using re4dc::fx_r200::Result;
+struct Arguments {
+    Tail state;
+    Context context;
+    unsigned required;
+    unsigned char* storage;
+    unsigned* cursor;
+    unsigned admitted;
+    unsigned limit;
+};
+extern "C" unsigned fixture_select(Arguments* a) {
+    return unsigned(a->state.select(a->context,a->required,a->storage,a->cursor));
+}
+extern "C" unsigned fixture_admit(Arguments* a) {
+    const auto result=a->state.select(a->context,a->required,a->storage,a->cursor);
+    if(result==Result::Accepted){*a->cursor-=a->required;++a->admitted;}
+    return unsigned(result);
+}
+extern "C" unsigned fixture_fill(Arguments* a) {
+    for(unsigned i=0;i<a->limit;++i){
+        const auto result=a->state.select(a->context,a->required,a->storage,a->cursor);
+        if(result!=Result::Accepted)return unsigned(result);
+        *a->cursor-=a->required;++a->admitted;
+    }
+    return unsigned(Result::Accepted);
+}
+extern "C" unsigned fixture_reset(Arguments* a){a->state.reset();return 0;}
+#define A(name) offsetof(Arguments,name)
+#define S(name) offsetof(Tail,name)
+#define C(name) offsetof(Context,name)
+#define R(name) unsigned(Result::name)
+extern "C" const unsigned fixture_layout[]={
+    sizeof(Arguments),A(state),A(context),A(required),A(storage),A(cursor),A(admitted),A(limit),
+    sizeof(Tail),sizeof(Context),S(data),S(owner),S(generation),S(top),S(poisoned),
+    C(room),C(room_live),C(generation),C(room_cell),C(room_generation),C(room_bytes),
+    C(spill),C(spill_top),C(spill_bytes),C(tail),C(tail_bytes),
+    R(Accepted),R(OtherRoom),R(RoomClosed),R(NoRoomSpill),R(StaleGeneration),R(WrongSpill),
+    R(NoTail),R(InvalidStorage),R(Overlap),R(BadRequest),R(SpillAvailable),R(Exhausted),R(OwnerChanged)
+};

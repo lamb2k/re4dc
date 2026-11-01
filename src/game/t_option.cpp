@@ -17,6 +17,9 @@
 #include "file.h"
 #include "main_mem.h"
 #include "t_util.h"
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+#include "re4dc_wep27.h"
+#endif
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 
@@ -576,6 +579,9 @@ void tp_pl_weapon()
                 pl->r_no_1 = 0;
                 pl->r_no_2 = 0;
                 pl->r_no_3 = 0;
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+                if (!re4dc_wep_reverted)
+#endif
                 ItemMgr.debugWeapon(WeaponNo2WeaponId(pT->cursor, pT->rno[3]));
             } else {
                 pT->cursor = 0;

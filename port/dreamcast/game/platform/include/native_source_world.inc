@@ -1,6 +1,9 @@
 // Read-only access to the already adopted r200 world. Package publication and
 // retirement advance a token; a same-address reload never revives an old frame.
 extern "C" int re4dc_ps2_source_package(unsigned* generation) {
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackageCurrent())return 0;
+#endif
     if(!generation || !sourceWorldPackageGeneration || sourceWorldPackageGeneration==~0U ||
        !ps2w.storage || !ps2w.parts || !ps2w.placements || !ps2w.lut || !ps2w.gather ||
        ps2w.room!=0x200 || ps2w.want!=0x200 || ps2w.nplacements!=90 ||
@@ -27,6 +30,9 @@ unsigned sourceWorldNativeHash(const void* data,unsigned bytes){
 }
 }
 extern "C" int re4dc_ps2_source_group_package(unsigned* generation,int deep){
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackageCurrent())return 0;
+#endif
     namespace profile=source_world_r200_profile;
     constexpr unsigned mbytes=(profile::mesh_bytes+31U)&~31U,pbytes=(profile::side_bytes+31U)&~31U;
     constexpr unsigned bytes=mbytes+pbytes+kLutBytes+kGatherBytes;
@@ -59,6 +65,9 @@ extern "C" int re4dc_ps2_source_group_package(unsigned* generation,int deep){
 }
 #if RE4DC_TRANSITION_GATE_DIAG
 extern "C" void re4dc_ps2_source_group_package_diag(){
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackageCurrent())return;
+#endif
     namespace profile=source_world_r200_profile;
     constexpr unsigned mbytes=(profile::mesh_bytes+31U)&~31U,pbytes=(profile::side_bytes+31U)&~31U;
     constexpr unsigned bytes=mbytes+pbytes+kLutBytes+kGatherBytes;
@@ -206,6 +215,9 @@ extern "C" int re4dc_ps2_source_draw(unsigned generation) {
     return sourceWorldImageResult;
 }
 extern "C" int re4dc_ps2_source_passes_complete() {
+#if RE4DC_WORLD_MUTATION31
+    if(!worldPackageCurrent())return 0;
+#endif
     for(const auto& count:ps2w.count)if(count.fallback || count.aborts)return 0;
     return 1;
 }

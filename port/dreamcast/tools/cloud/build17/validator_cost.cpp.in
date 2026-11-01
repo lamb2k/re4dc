@@ -1,0 +1,15 @@
+// The unchanged enabled validator, compiled with Snd's real Make flags.
+#include "types.h"
+#define SND_SDK_NO_GX
+#define SND_DRV_GAME_API
+#include "snd_drv.h"
+#include "@DC@/game/platform/disc_stream_table_check.h"
+#include <stddef.h>
+struct ValidationArguments { const void* buffer; int length; };
+extern "C" int fixture_validate(ValidationArguments* a) {
+    return re4dc::disc_pio::stream_table_valid(a->buffer, a->length, __alignof__(SND_RIT));
+}
+extern "C" const uint32_t fixture_validator_layout[] = {
+    sizeof(ValidationArguments), offsetof(ValidationArguments, buffer),
+    offsetof(ValidationArguments, length), __alignof__(SND_RIT)
+};

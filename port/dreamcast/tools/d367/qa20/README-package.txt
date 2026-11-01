@@ -1,7 +1,7 @@
-RE4DC QA TEST 22 - QA build for testers (source: see SHA256SUMS.txt)
+RE4DC QA TEST TN_PLACEHOLDER - QA build for testers (source: see SHA256SUMS.txt)
 =====================================================================
 
-This is a test tool, not the game release. It is the Test 22 release program plus a QA menu that
+This is a test tool, not the game release. It is the Test TN_PLACEHOLDER release program plus a QA menu that
 teleports you to places in the story, puts the main guns in your case, and shows diagnostics.
 Use the normal Test release for real play.
 

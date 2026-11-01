@@ -40,7 +40,7 @@ bool owner_pl08_bind(cModel* m) {
         for(unsigned i=0;i<119;++i) {
             if(!part)return false;pl08_parts[i]=part;
             for(unsigned j=0;j<12;++j)if(!coarse_finite((&part->lt_inv_mat[0][0])[j]) ||
-                __builtin_fabsf((&part->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f)return false;
+                (!RE4DC_LEON_RIG_SIM(i) && __builtin_fabsf((&part->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f))return false;
             part=part->pList;
         }
         if(part)return false;
@@ -61,7 +61,7 @@ int owner_pl08_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) 
     alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
     for(unsigned u=0;u<skin_used;++u) {
         const unsigned b=skin_bone[u];
-        skin_jobs[u]={&pl08_parts[b]->mat[0][0],&pl08_parts[b]->lt_inv_mat[0][0],bone_T[b]};
+        skin_jobs[u]={&pl08_parts[b]->mat[0][0],RE4DC_LEON_BIND_ROW(b,pl08_parts[b]),bone_T[b]};
     }
     re4dc_coarse_skin_bones(invx,skin_jobs,skin_used);
     for(unsigned i=0;i<9;++i) {
@@ -91,7 +91,7 @@ bool owner_pl08h_bind(cModel* m) {
         for(unsigned i=0;i<119;++i) {
             if(!part)return false;pl08_parts[i]=part;
             for(unsigned j=0;j<12;++j)if(!coarse_finite((&part->lt_inv_mat[0][0])[j]) ||
-                __builtin_fabsf((&part->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f)return false;
+                (!RE4DC_LEON_RIG_SIM(i) && __builtin_fabsf((&part->lt_inv_mat[0][0])[j]-leon4k::bind[i][j])>.01f))return false;
             part=part->pList;
         }
         if(part)return false;
@@ -112,7 +112,7 @@ int owner_pl08h_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output)
     alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
     for(unsigned u=0;u<skin_used;++u) {
         const unsigned b=skin_bone[u];
-        skin_jobs[u]={&pl08_parts[b]->mat[0][0],&pl08_parts[b]->lt_inv_mat[0][0],bone_T[b]};
+        skin_jobs[u]={&pl08_parts[b]->mat[0][0],RE4DC_LEON_BIND_ROW(b,pl08_parts[b]),bone_T[b]};
     }
     re4dc_coarse_skin_bones(invx,skin_jobs,skin_used);
     for(unsigned i=0;i<7;++i) {

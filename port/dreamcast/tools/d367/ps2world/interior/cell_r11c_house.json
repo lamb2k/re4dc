@@ -1,0 +1,96 @@
+{
+ "comment": "PS2_INTERIOR_CELLS cell for the r11c siege cabin (chapter 2-3 Luis siege; lane interior-cells26 2026-10-26). Boxes from survey.py ray maps of the n256b26 package and the Flycast siege camera (eye 108204,1768,-46860). Eye boxes are rough; the =2 magenta scan is the proof. Dynamic placements never occlude.",
+ "room": 284,
+ "package": {
+  "mesh": "ps2-world.re4mesh",
+  "sidecar": "ps2-world.r4pw",
+  "mesh_sha256": "a0b5087e5338c5e24ce3c5918d981fe220c4385d9dc08b24adeb06dfd77e0b77",
+  "sidecar_sha256": "49e235323ef6d58ac6be0225a5428757b172169dc2de349748e70c2efcf3174c"
+ },
+ "exclude_dynamic": true,
+ "occluder_box": [
+  [
+   105100,
+   -1800,
+   -56200
+  ],
+  [
+   118900,
+   9300,
+   -43900
+  ]
+ ],
+ "outer": [
+  [
+   106600,
+   -300,
+   -54700
+  ],
+  [
+   117400,
+   7800,
+   -45400
+  ]
+ ],
+ "eye_boxes": [
+  [
+   [
+    107200,
+    150,
+    -54100
+   ],
+   [
+    116800,
+    2900,
+    -46000
+   ]
+  ],
+  [
+   [
+    107200,
+    3600,
+    -54100
+   ],
+   [
+    116800,
+    6300,
+    -46000
+   ]
+  ]
+ ],
+ "hull": [
+  [
+   [
+    106600,
+    -300,
+    -54700
+   ],
+   [
+    117400,
+    3300,
+    -45400
+   ]
+  ],
+  [
+   [
+    106600,
+    3300,
+    -54700
+   ],
+   [
+    117400,
+    7800,
+    -45400
+   ]
+  ]
+ ],
+ "near_max": 150,
+ "subcell_size": 1500,
+ "camera_step": 350,
+ "target_step": 150,
+ "exit_cell": 100,
+ "dilate_cells": 2,
+ "margin": 400,
+ "edge_step": 40,
+ "edge_eps": 2.0, "edge_rays": false
+}

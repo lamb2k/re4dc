@@ -29,10 +29,29 @@ std::vector<unsigned char> named(bool duplicate=false,bool malformed=false) {
     if(malformed)word(bytes,256,9999);
     return bytes;
 }
+// gc_asset_disc.cpp (KOS fs) is not host-built: block_adopt's catalog check passes here.
+namespace re4dc_gcasset { bool ensure_disc_catalog() { return true; } }
 bool same(const Digest& a,const Digest& b) { return !std::memcmp(a.bytes,b.bytes,32); }
 Digest digest(const ModelMember& member){AssetDescription row;assert(describe_checked(member.asset,&row));return row.digest;}
 int main() {
     install(nullptr,0);begin(0x111,1,Required);
+    // Sub screen swap (cast-ps2-25 r16): an archive inside the parked area drops its members and binds nothing while
+    // parked; unpark restores it with its adopt-time digests (the relocated bytes are not hashed again).
+    {auto parked_archive=indexed();ModelMember before{},after_unpark{};int park_owner=0;
+     assert(member_adopt(&park_owner,parked_archive.data(),parked_archive.size(),true));
+     assert(member_capture(parked_archive.data()+64));assert(member_lookup(parked_archive.data()+64,&before));
+     const Digest kept=digest(before);parked_archive[72]=7;
+     member_park(parked_archive.data()+8,16);assert(!member_lookup(parked_archive.data()+64,&after_unpark));
+     assert(!member_capture(parked_archive.data()+64));
+     member_unpark();assert(member_lookup(parked_archive.data()+64,&after_unpark));assert(after_unpark.serial==before.serial);
+     assert(member_capture(parked_archive.data()+64));
+     assert(member_lookup(parked_archive.data()+64,&after_unpark));assert(same(kept,digest(after_unpark)));
+     {auto screen=indexed();int screen_owner=0;member_park(parked_archive.data(),parked_archive.size());
+      assert(member_adopt(&screen_owner,parked_archive.data(),parked_archive.size(),true));member_unpark(); // screen's own: retired
+      (void)screen;}
+     assert(member_lookup(parked_archive.data()+64,&after_unpark));assert(after_unpark.serial==before.serial);
+     member_park(parked_archive.data()+256,64);assert(member_lookup(parked_archive.data()+64,&after_unpark)); // outside
+     member_unpark();member_retire(&park_owner);}
     auto archive=indexed();int owner=0;ModelMember original{},later{};
     assert(member_adopt(&owner,archive.data(),archive.size(),true));
     assert(member_capture(archive.data()+64));assert(member_lookup(archive.data()+64,&original));assert(original.arc==4);
@@ -89,12 +108,12 @@ int main() {
     assert(!member_lookup(many_archives[0].data()+64,&later)); // overlap revokes even at full capacity
     assert(!member_capture(many_archives[0].data()+64));
     member_retire_transient();
-    constexpr unsigned count=130,directory=16+8*count;
+    constexpr unsigned count=258,directory=16+8*count;
     std::vector<unsigned char> many_members(directory+count*64,0);word(many_members,0,count);
     for(unsigned i=0;i<count;++i) { word(many_members,16+4*i,directory+i*64);std::memcpy(many_members.data()+16+4*count+4*i,"BIN",3); }
     assert(member_adopt(&owner,many_members.data(),many_members.size(),true));
-    for(unsigned i=0;i<128;++i)assert(member_capture(many_members.data()+directory+64*i));
-    assert(!member_capture(many_members.data()+directory+64*128));member_retire(&owner);
+    for(unsigned i=0;i<256;++i)assert(member_capture(many_members.data()+directory+64*i));
+    assert(!member_capture(many_members.data()+directory+64*256));   // MemberCount 256 (gc-catalog24b)member_retire(&owner);
     assert(logs.find("GC-ASSET v=")==std::string::npos); // binding/preparation is not drawing
     auto accepted=indexed();assert(member_adopt(&owner,accepted.data(),accepted.size(),true));
     assert(member_capture(accepted.data()+64));assert(member_lookup(accepted.data()+64,&original));

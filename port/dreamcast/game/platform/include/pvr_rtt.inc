@@ -25,20 +25,27 @@ unsigned captured,dropped,renders,log_frame,seen_mask,peak;
 int override_slot=-1;
 bool wanted(int slot){return targets[slot].want_frame && frame-targets[slot].want_frame<=2U;}
 unsigned pow2(unsigned v){unsigned p=8;while(p<v)p<<=1;return p;}
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#define RE4DC_RTTOUT03_RETURN(state,legacy,sent,queued) return {re4dc::NativeDrawOutcome::state,sent,queued}
+re4dc::NativeDrawResult capture_result03(const Re4dcEffectSprite* s){
+    if(!s)RE4DC_RTTOUT03_RETURN(UnsupportedBeforePublication,0,0,0);
+#else
+#define RE4DC_RTTOUT03_RETURN(state,legacy,sent,queued) return legacy
 int capture(const Re4dcEffectSprite* s){
+#endif
     Target& t=targets[capture_slot];
     if(!t.tex){
-        if(t.w<8 || t.w>256 || t.h<8 || t.h>256 || pow2(t.w)!=t.w || pow2(t.h)!=t.h){++dropped;return 0;}
+        if(t.w<8 || t.w>256 || t.h<8 || t.h>256 || pow2(t.w)!=t.w || pow2(t.h)!=t.h){++dropped;RE4DC_RTTOUT03_RETURN(UnsupportedBeforePublication,0,0,0);}
         t.tex=pvr_mem_malloc(t.w*t.h*2);
-        if(!t.tex){++dropped;return 0;}
+        if(!t.tex){++dropped;RE4DC_RTTOUT03_RETURN(Refused,0,0,0);}
         std::memset(t.tex,0,t.w*t.h*2);
         re4dc_log("PVR_RTT target slot=%d %ux%u vram=%08x bytes=%u\n",capture_slot,t.w,t.h,unsigned(uintptr_t(t.tex)),t.w*t.h*2);
     }
-    if((s->color>>24)==0)return 0;
-    if(packet_count>=kMaxSprites){++dropped;return 0;}
+    if((s->color>>24)==0)RE4DC_RTTOUT03_RETURN(PolicySkip,0,0,0);
+    if(packet_count>=kMaxSprites){++dropped;RE4DC_RTTOUT03_RETURN(Refused,0,0,0);}
     Re4dcEffectSprite m=*s;
     for(unsigned i=0;i<4;++i){
-        if(!std::isfinite(m.x[i]) || !std::isfinite(m.y[i])){++dropped;return 0;}
+        if(!std::isfinite(m.x[i]) || !std::isfinite(m.y[i])){++dropped;RE4DC_RTTOUT03_RETURN(UnsupportedBeforePublication,0,0,0);}
         m.x[i]=m.x[i]*cap_kx-cap_ox;m.y[i]=m.y[i]*cap_ky;
     }
     m.screen=1;
@@ -47,12 +54,17 @@ int capture(const Re4dcEffectSprite* s){
 #else
     Entry* e=load(m.image);
 #endif
-    if(!e){++dropped;return 0;}
+    if(!e){++dropped;RE4DC_RTTOUT03_RETURN(Refused,0,0,0);}
     fx_packet(m,e,packets[packet_count]);
     packet_slot[packet_count++]=(unsigned char)capture_slot;if(packet_count>peak)peak=packet_count;
     ++captured;
-    return 1;
+    // Copied capture ownership is queued even if this frame later aborts.
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    if(stream_aborted)RE4DC_RTTOUT03_RETURN(PartialAbort,1,0,1);
+#endif
+    RE4DC_RTTOUT03_RETURN(Queued,1,0,1);
 }
+#undef RE4DC_RTTOUT03_RETURN
 #if defined(RE4DC_PVR_RTT_STATS) && RE4DC_PVR_RTT_STATS
 // PVR_RTT_STATS (test builds): every rendered target shown as a 128 x 128 screen sprite at the top left (slot s at
 // x = 16 + 136 s), through the effect sprite queue, so a still shows the texture the PVR rendered.

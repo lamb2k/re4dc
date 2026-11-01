@@ -105,12 +105,60 @@ for prof in ('loader', 'standard'):
     if t:   # t16-package.sh stops on any disc_lint violation, so a finished package step means both passed
         add('disc_lint ' + prof, 'package' in srt and srt['package'][3] == 0, t[-1][:120])
 
+# MEMBER-CENSUS (lane fix-r100-props26 10-26): rr-cycle.sh bases() diffs the candidate tree against the last published
+# release member by member; an unclaimed difference (a set that undid or dropped another set's work) fails.
+mc = rd(W / 'member-census.txt').strip().splitlines()
+if mc:
+    add('MEMBER-CENSUS', mc[-1].startswith('MEMBER-CENSUS PASS') or 'skipped' in mc[-1],
+        '; '.join([l for l in mc if l.startswith('UNCLAIMED')][:8] + [mc[-1]])[:600])
+
+# MOTION-KEYS (lane cast-ps2-25 10-26): rr-cycle.sh bases() runs motion/mot_refs.py over the candidate tree: a dc/mot key
+# a live MTC table names but the disc lacks (or the fixture removes) halts the game on first use ("motion key read").
+mk = rd(W / 'motion-keys.txt').strip().splitlines()
+if mk:
+    add('MOTION-KEYS', mk[-1].startswith('MOTION-KEYS PASS'),
+        '; '.join([l for l in mk if not l.startswith(('MOTION-KEYS PASS', 'MOTION-KEYS note'))][:8] + [mk[-1]])[:600])
+
+# EFFECT-CENSUS (lane fix-r100-props26 10-26): per-room effect-set counts against Test 23; an unclaimed drop fails.
+ec = rd(W / 'effect-census.txt').strip().splitlines()
+if ec:
+    add('EFFECT-CENSUS', ec[-1].startswith('EFFECT-CENSUS PASS') or 'skipped' in ec[-1],
+        '; '.join([l for l in ec if l.startswith('UNCLAIMED')][:8] + [ec[-1]])[:600])
+# DROP-PROOF (lane purge-audit26 10-26): rr-cycle.sh build_release runs rr/drop_proofs.py on the built knob list; a drop
+# with no proof row in rr/drop-proofs.tsv, a "wrong" row, or a "fixed:K=V" row whose knob is not in the recipe fails.
+dpp = rd(W / 'drop-proof.txt').strip().splitlines()
+if dpp:
+    add('DROP-PROOF', dpp[-1].startswith('DROP-PROOF PASS'),
+        '; '.join([l for l in dpp if not l.startswith(('UNPROVEN', 'DROP-PROOF'))][:8] + [dpp[-1]])[:600])
+
+# SPEED (lane guards28 10-28, full tier): rr/speed/rr-speed.sh, the candidate vs the live release, hwmodel MODELLED ms on
+# cross / bell / farm / house / r11c; FAIL when a scene is slower than max(1 ms, 3%).
+sp = rd(W / 'speed.txt').strip().splitlines()
+if sp:
+    if sp[-1].startswith('SPEED SKIP'):
+        checks.append(('SPEED vs live release', 'SKIP', sp[-1][:200]))
+    else:
+        add('SPEED vs live release', sp[-1].startswith('SPEED PASS'), sp[-1][:400])
+# SPEED-GPU (guards28 10-28): rr/speed/rr-speed-gpu.sh, cache-model Flycast SQ->TA bytes + TA list bytes vs the live release
+sg = rd(W / 'speed-gpu.txt').strip().splitlines()
+if sg:
+    if sg[-1].startswith('SPEED-GPU SKIP'):
+        checks.append(('SPEED-GPU vs live release', 'SKIP', sg[-1][:200]))
+    else:
+        add('SPEED-GPU vs live release', sg[-1].startswith('SPEED-GPU PASS'), sg[-1][:400])
+
 extra = {}
 if build_ok and jobs:
     bad = re.compile(r'HALT|FAULT|RE4DC MISSING|Out of memory')
     # boot
     o = runlog('boot')
     add('boot to title', 'state title=' in o and not bad.search(o), 'title reached' if 'state title=' in o else 'no title line')
+    # MOVIEARENA (lane guards28 10-28): MOVIE_LAYOUT_GUARD=1 logs every refused eligible movie arena borrow (r100 s30,
+    # r11f 11f10/11f11); one such line in any job log means a world package the arena can't take (silent movie stop).
+    ma = []
+    for p in sorted(EVU.glob('*/run-output.txt')):
+        ma += ['%s: %s' % (p.parent.name, l.strip()) for l in rd(p).replace('\x00', '').splitlines() if 'MOVIEARENA refuse' in l]
+    add('MOVIEARENA refused 0', not ma, 'none' if not ma else '; '.join(ma[:4])[:400])
     # h2: s30 cliff movie
     o = runlog('h2')
     m = re.findall(r'route movie terminal=(\d) id=10030 frames=(\d+)/(\d+)[^\n]*', o)
@@ -137,6 +185,54 @@ if build_ok and jobs:
             g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
             add('GDEMU race ' + n, bool(g) and 'PASS' in g[-1], g[-1] if g else lg.strip()[-120:])
     # census
+    # GC-ASSET gate (cast-ps2-25 10-26): gca-* jobs on the gate-ON twin, gc_port23/judge.py against allowlist.json (the
+    # last good candidate's allowlist is the shrink-only baseline) and unwired-baseline.json. RR_GCA_MODE=report (the
+    # default until the coordinator flips it to gate) reports a failure as KNOWN.
+    gl = [EVU / n / 'run-output.txt' for n in ('gca-title', 'gca-h2', 'gca-r100', 'gca-r101', 'gca-r103', 'gca-r11e', 'gca-r11f', 'gca-grenade')]
+    if any(p.exists() for p in gl) or 'gca' in srt:
+        G = D367 / 'gc_port23'
+        lgs = dict(l.split('=', 1) for l in rd(RR_HOME / 'state/last-good').splitlines() if '=' in l)
+        base = W / 'gca-allow-base.json'
+        b = subprocess.run(['git', '-C', str(T), 'show', '%s:port/dreamcast/tools/d367/gc_port23/allowlist.json' % lgs.get('sha', 'HEAD')],
+                           capture_output=True, text=True)
+        base.write_text(b.stdout if b.returncode == 0 and b.stdout.strip() else rd(G / 'allowlist.json'))
+        # coordinator-accepted rows (gc_port23/allowlist-accepted.json, 10-26) join the shrink-only baseline: a growth the
+        # coordinator or user decided (e.g. windows26 panes) must not wait for a last-good candidate that cannot pass without it
+        acc = G / 'allowlist-accepted.json'
+        if acc.exists():
+            bj, aj = json.loads(base.read_text()), json.loads(acc.read_text())
+            kk = lambda r: (r.get('room') or r.get('phase'), r['kind'], r['id'], r['sha256'], r['provenance'])
+            have = {kk(r) for r in bj['entries']}
+            bj['entries'] += [r for r in aj['entries'] if kk(r) not in have]
+            base.write_text(json.dumps(bj, indent=1))
+        jj = W / 'gca-judge.json'
+        if all(p.exists() for p in gl):
+            subprocess.run(['python3', str(G / 'judge.py'), *map(str, gl), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(base),
+                            '--unwired-baseline', str(G / 'unwired-baseline.json'), '--room', '0100', '--room', '0101', '--room', '0103',
+                            '--room', '011e', '--room', '011f', '--json', str(jj)], capture_output=True, text=True)
+        try:
+            j = json.loads(jj.read_text())
+        except (OSError, ValueError):
+            j = {'pass': False, 'failures': ['gca prep or jobs did not run (%d/%d logs)' % (sum(p.exists() for p in gl), len(gl))]}
+        nc = j.get('not_covered_errors') or {}
+        detail = 'rows used %s (allowlist %d); not covered: %s' % (
+            j.get('allowed_used', '?'), len(json.loads(rd(G / 'allowlist.json') or '[]') if rd(G / 'allowlist.json').lstrip().startswith('[') else
+                                            next(v for v in json.loads(rd(G / 'allowlist.json')).values() if isinstance(v, list))),
+            '; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items()))) for r, c in sorted(nc.items())) or 'none')
+        if not j.get('pass'):
+            detail += ' | ' + ' / '.join(j.get('failures', [])[:3])
+        add('GC-ASSET gate', bool(j.get('pass')), detail[:600], knownrow=os.environ.get('RR_GCA_MODE', 'gate') == 'report')
+    # GC-ASSET (bytes) (lane gcleft26 10-26): report only, never FAIL; rr-gca.sh's byte-following catalog (gca_bytes.py)
+    if 'gca' in srt:
+        try:
+            gb = json.loads(rd(W / 'gca-bytes.json'))
+            rk = sorted(gb['rooms'].items(), key=lambda kv: -kv[1].get('gc', 0))
+            add('GC-ASSET (bytes)', gb['gc'] == 0, ('gc %d unknown %d; reviewed GC sound samples %d; kinds %s; rooms %s' % (
+                gb['gc'], gb['unknown'], gb.get('sound_samples_reviewed', {}).get('total', 0),
+                ' '.join('%s=%d' % kv for kv in gb['kinds'].items()),
+                ' '.join('%s=%d' % (k, v['gc']) for k, v in rk if v.get('gc'))))[:600], knownrow=True)
+        except (ValueError, KeyError):
+            add('GC-ASSET (bytes)', False, 'bytes catalog did not run', knownrow=True)
     rooms = rd(W / 'census-rooms.txt').split()
     logs = [EVU / ('cg-' + r) / 'run-output.txt' for r in rooms if (EVU / ('cg-' + r) / 'run-output.txt').exists()]
     if rooms:
@@ -184,6 +280,13 @@ if build_ok and jobs:
                 halts.append(n)
         add('VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
         add('census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
+    # siege (lane cast-ps2-25 10-26): r100 house siege, Ganados streaming their motion (rr-jobs.sh siege-r100)
+    sg = EVU / 'siege-r100' / 'run-output.txt'
+    if 'siege-r100' in [j[0] for j in jobs] or sg.exists():
+        so = sg.read_text(errors='replace').replace('\x00', '') if sg.exists() else ''
+        sb = sorted(set(m.group(0)[:80] for m in re.finditer(r'(HALT|FAULT|RE4DC MISSING|Out of memory)[^\n]*', so)))
+        add('siege r100 HALT/FAULT/MISSING 0', bool(so) and 'warp: placed room=100' in so and not sb,
+            ('no log' if not so else ('not placed' if 'warp: placed room=100' not in so else ('none' if not sb else '; '.join(sb[:4])))))
     for n, _, _, rc in jobs:
         if n.startswith('cap-'):
             o = runlog(n)

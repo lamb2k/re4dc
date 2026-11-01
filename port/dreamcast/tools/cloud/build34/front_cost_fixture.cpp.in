@@ -1,0 +1,42 @@
+@TYPES@
+static TEXHeader headers[248];
+static TEXDescriptor descriptors[248];
+static TEXPalette palette;
+static cModelInfo info;
+static ModelData data;
+static cModelExt model;
+static GxWork reference;
+static unsigned count;
+extern "C" {
+extern const unsigned fixture_layout[]={1,sizeof(FtKey),sizeof(FtRec),sizeof(ft_keys),sizeof(ft_recs),
+    sizeof(TEXHeader),sizeof(TEXDescriptor),sizeof(cModelInfo),sizeof(FixtureGame)};
+void fixture_prepare(unsigned packed) {
+    count=packed&255U;const unsigned mode=packed>>8;
+    ft_nkeys=ft_nrecs=0;ft_room=~0U;ft_cur=nullptr;ft_swapped=0;
+    ft_hits=ft_builds=ft_fallbacks=ft_flushes=ft_resets=0;ft_block=0;
+    game.Frame_cnt=10;game.stage_no=1;game.room_no=3;
+    for(unsigned i=0;i<248;++i){
+        headers[i]={};headers[i].height=32;headers[i].width=64;headers[i].format=5;
+        headers[i].data=reinterpret_cast<void*>(0x8c200000+i*1024);headers[i].wrapS=2;
+        descriptors[i].textureHeader=&headers[i];descriptors[i].CLUTHeader=nullptr;
+        for(unsigned k=0;k<8;++k)game.gxStage.texObj[i].w[k]=reference.texObj[i].w[k]=0;
+    }
+    palette.version=1;palette.numDescriptors=count;palette.descriptorArray=descriptors;
+    info.tpl_addr=&palette;info.nAddTex=0;info.pAddTpl=nullptr;
+    data.flags=mode==2?0x80000000U:0;model.pTexChg=nullptr;
+    if(mode)frontTexInit(reinterpret_cast<cModel*>(&model),&info,&data);
+    if(mode==3)headers[count-1].width=128;
+}
+unsigned fixture_run(unsigned uncached) {
+    if(uncached){source_init(reinterpret_cast<cModel*>(&model),&info,&data,GXWORK());return 1;}
+    return frontTexInit(reinterpret_cast<cModel*>(&model),&info,&data);
+}
+unsigned fixture_check(unsigned) {
+    source_init(reinterpret_cast<cModel*>(&model),&info,&data,&reference);
+    for(unsigned i=0;i<count;++i){
+        const u32* words=static_cast<const u32*>(frontTexObj(GXWORK(),i));
+        for(unsigned k=0;k<4;++k)if(words[k]!=reference.texObj[i].w[k])return 0;
+    }
+    return 1;
+}
+}

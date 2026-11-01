@@ -15,9 +15,61 @@ struct Certificate {
     unsigned mesh_bytes;
     std::uint32_t source_crc;
 };
+#if defined(RE4DC_SCENERY_N256) && RE4DC_SCENERY_N256
+// SCENERY_N256=1 (scenery-cut25): the same 27 rows with the r101 / r103 package crc + bytes of the 256-vertex meshlet
+// re-exports (data set n256w25). Swapped, not added: no static growth (the r100 s30 heap-4 floor).
+inline constexpr Certificate certificates_base[] = {
+#include "provenance_certificates.inc"
+};
+#if defined(RE4DC_WORLD_SG26) && RE4DC_WORLD_SG26
+// WORLD_SG26=1 (lane worldopt26 2026-10-26): data set wsg26 renumbers the corners of 24 certified n256 packages
+// (spatial strip groups, same bytes): only their mesh crc differs from the n256 table (sg26_rows_match below).
+inline constexpr Certificate certificates_n256[] = {
+#include "provenance_certificates_n256.inc"
+};
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_sg26.inc"
+};
+static_assert(sizeof(certificates)==sizeof(certificates_n256));
+constexpr bool sg26_rows_match() {
+    for(unsigned i=0;i<sizeof(certificates)/sizeof(certificates[0]);++i){
+        const auto& a=certificates_n256[i];const auto& b=certificates[i];
+        if(a.room!=b.room || a.world_bytes!=b.world_bytes || a.placements!=b.placements || a.parts!=b.parts ||
+           a.meshes!=b.meshes || a.physical_body_crc!=b.physical_body_crc || a.physical_file_fnv!=b.physical_file_fnv ||
+           a.mesh_bytes!=b.mesh_bytes || a.source_crc!=b.source_crc)return false;
+    }
+    return true;
+}
+static_assert(sg26_rows_match());
+#else
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_n256.inc"
+};
+#endif
+static_assert(sizeof(certificates)==sizeof(certificates_base));
+constexpr bool n256_rows_match() {
+    unsigned swapped=0;
+    for(unsigned i=0;i<sizeof(certificates)/sizeof(certificates[0]);++i){
+        const auto& a=certificates_base[i];const auto& b=certificates[i];
+        if(a.room!=b.room || a.world_bytes!=b.world_bytes || a.placements!=b.placements || a.parts!=b.parts ||
+           a.meshes!=b.meshes || a.physical_body_crc!=b.physical_body_crc || a.physical_file_fnv!=b.physical_file_fnv ||
+           a.source_crc!=b.source_crc)return false;
+        if(a.mesh_crc!=b.mesh_crc || a.mesh_bytes!=b.mesh_bytes){
+            if(a.room!=0x100U && a.room!=0x101U && a.room!=0x102U && a.room!=0x103U && a.room!=0x104U && a.room!=0x105U && a.room!=0x106U &&
+               a.room!=0x107U && a.room!=0x108U && a.room!=0x109U && a.room!=0x10aU && a.room!=0x10bU && a.room!=0x10cU &&
+               a.room!=0x10fU && a.room!=0x111U && a.room!=0x112U && a.room!=0x113U && a.room!=0x117U && a.room!=0x118U &&
+               a.room!=0x119U && a.room!=0x11aU && a.room!=0x11bU && a.room!=0x11cU && a.room!=0x11dU && a.room!=0x11eU)return false;
+            ++swapped;
+        }
+    }
+    return swapped==25U;  // n256w25 + n256x25 + n256z25 + world-n256all + n256r100: r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e
+}
+static_assert(n256_rows_match());
+#else
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"
 };
+#endif
 static_assert(sizeof(certificates)/sizeof(certificates[0])==27U);
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|

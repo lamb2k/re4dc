@@ -1,3 +1,11 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#line 1
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/cloth.cpp: grid cloth simulation (esp4e sheets): a nx*ny grid of points joined by springs,
 // pulled down by gravity, drawn as triangle strips with the lights of the room.
 
@@ -23,6 +31,19 @@ void OSReport(const char* fmt, ...);
 }
 
 Cloth ClothWk[8];
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+#include <cstdint>
+// Render-only publication identity for the existing fixed cloth pool. Retiring
+// or replacing the same cell during texture I/O cannot revive its old view.
+static unsigned cloth11_incarnation[8]={1,1,1,1,1,1,1,1};
+static unsigned cloth11_slot(const Cloth* p){
+    const auto a=reinterpret_cast<std::uintptr_t>(p),base=reinterpret_cast<std::uintptr_t>(ClothWk);
+    if(a<base || a-base>=sizeof ClothWk || (a-base)%sizeof(Cloth))return 8;
+    return unsigned((a-base)/sizeof(Cloth));
+}
+static unsigned cloth11_epoch(const Cloth* p){const unsigned slot=cloth11_slot(p);return slot<8?cloth11_incarnation[slot]:0;}
+static void cloth11_replace(Cloth* p){const unsigned slot=cloth11_slot(p);if(slot<8 && cloth11_incarnation[slot])++cloth11_incarnation[slot];}
+#endif
 
 #if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
 // CLOTH_NATIVE=1 (effects30.mk; render only, approximation): clothTrans draws through immediate GX, which the Dreamcast
@@ -35,6 +56,28 @@ Cloth ClothWk[8];
 #include <string.h>
 extern "C" void re4dc_log(const char* fmt, ...);
 #include "native_ui.h"
+#include "native_cloth_sheet11.hpp"
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+#if !defined(RE4DC_CLOTH_LIGHT_ABI_FIX) || !RE4DC_CLOTH_LIGHT_ABI_FIX
+#error CLOTH_MATERIAL11 requires CLOTH_LIGHT_ABI_FIX=1 for the real clothTrans caller
+#endif
+#include "cloth_material11_source.hpp"
+extern "C" void re4dc_cloth_material_retire11(){
+    re4dc::cloth_material11::open_slots=0;
+    for(auto& cloth:ClothWk)cloth11_replace(&cloth);
+}
+extern "C" void re4dc_cloth_material_retire_one11(Cloth* cloth){
+    const unsigned slot=cloth11_slot(cloth);
+    re4dc::cloth_material11::close(slot);
+    if(slot<8)cloth11_replace(cloth);
+}
+#endif
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+#include "re4dc_xm.h"
+#endif
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#include "native_draw_result.hpp"
+#endif
 // Conservative view test of a sheet's bounding sphere (top-row centre, width + hanging height) in view space:
 // behind the camera, beyond 40 m, or outside a 1.6 / 1.3 slope frustum (wider than the game's 4:3 view).
 static int re4dc_cloth_visible(const Cloth* pCL)
@@ -53,12 +96,88 @@ static int re4dc_cloth_visible(const Cloth* pCL)
     }
     return 1;
 }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+static re4dc::NativeDrawResult re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
+#else
 static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
+#endif
 {
-    const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
-    if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
-        return 0;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    const unsigned observed_slot=cloth11_slot(pCL);
+    const unsigned observation=re4dc_cloth_observe_begin11({observed_slot,
+        cloth11_epoch(pCL),pG->Frame_cnt,
+        observed_slot<8?re4dc::cloth_pub11::grid_generation[observed_slot]:0,
+        observed_slot<8?unsigned(pCL->pTobjA!=nullptr):0});
+    const auto observed_draw=[&]()->re4dc::NativeDrawResult {
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    bool single_selected11=false,single_started11=false;
+    const auto material_draw11=[&]()->re4dc::NativeDrawResult {
+#endif
+#if RE4DC_CLOTH_SHEET11
+    if(cloth11_slot(pCL)>=8)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!re4dc::cloth_material11::admitted(cloth11_slot(pCL)) || !re4dc_cloth_frame_open11())return {re4dc::NativeDrawOutcome::PartialAbort};
+#endif
+    // A queued callback may arrive after Destroy/Init. Do not dereference its
+    // texture/grid or enter the recovered GX fallback for a retired pool cell.
+    if(!(pCL->be_flag&1))return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(!(pCL->be_flag&0x20))return {re4dc::NativeDrawOutcome::PolicySkip};
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    unsigned copied_words[8];const unsigned* to=nullptr;
+    const bool second_material=pCL->pTobjA!=0;
+    re4dc::cloth_material11::Source material_source;
+    const u32 source_color=(u32(pCL->color.r)<<24)|(u32(pCL->color.g)<<16)|(u32(pCL->color.b)<<8)|pCL->color.a;
+    const auto saturated_source=[&](){
+        const auto& ambient=LightMgr.getEnvPtr()->AmbientScr;
+        if(pCL->x74 || pCL->color.r<64 || pCL->color.g<64 || pCL->color.b<64 || pCL->color.a<64 ||
+            ambient.r!=255 || ambient.g!=255 || ambient.b!=255)return false;
+        // commonClothLightSet installs its black light when this list is empty:
+        // full ambient leaves the source material channels unchanged. Refuse
+        // direct/per-vertex and local-ambient light lifetimes in this slice.
+        for(unsigned i=0;i<8;++i)if(list[i])return false;
+        return true;
+    };
+    if(second_material){
+        if(!saturated_source() || !material_source.capture(pCL->tex,pCL->pTobjA))
+            return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+        to=material_source.primary.words;
+    }else if(saturated_source() && re4dc_cloth_esp4e_words11(pCL,copied_words) &&
+             material_source.capture_single(pCL->tex,copied_words)){
+        // Real Esp4e has no secondary. White TEXA/TEXC and full ambient make
+        // source SCALE4/clamp constant white for every channel>=64.
+        single_selected11=true;to=material_source.primary.words;
+    }else if(pCL->tex){
+        // Keep the old ordinary material path before an exact selection.
+        std::memcpy(copied_words,pCL->tex,sizeof copied_words);to=copied_words;
     }
+#else
+    const u32* to = (const u32*) pCL->tex;   // gx_stub.cpp GXTexObj: w[0] image, w[1] w<<16|h, w[2] format, w[3] wrap
+#endif
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if (to == 0 || to[0] == 0 || pCL->divH < 2 || pCL->divV < 2) {
+#else
+    if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2) {
+#endif
+#else
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if (to == 0 || to[0] == 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
+#else
+    if (to == 0 || to[0] == 0 || pCL->pTobjA != 0 || pCL->divH < 2 || pCL->divV < 2 || pCL->divH > 100) {
+#endif
+#endif
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#else
+        return 0;
+#endif
+    }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    if(!pCL->pVer)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    re4dc::NativeDrawProgress progress;
+#endif
     Re4dcEffectMesh21 m;
     memset(&m, 0, sizeof(m));
     m.image.pixels = (const void*) to[0];
@@ -109,6 +228,16 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     const f32 cg = pCL->color.g * (lg > 255.0f ? 255.0f : lg) * (1.0f / 255.0f);
     const f32 cb = pCL->color.b * (lb > 255.0f ? 255.0f : lb) * (1.0f / 255.0f);
     m.color = ((u32) pCL->color.a << 24) | ((u32) cr << 16) | ((u32) cg << 8) | (u32) cb;
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(second_material || single_selected11){
+        // Source stage0 is white RGB565 * raster, SCALE4/clamp. Every source
+        // material channel>=64 saturates to255 under the admitted lighting.
+        // Stage1 modulates by the opaque secondary, leaving it unchanged;
+        // alpha255 always passes the source >4 test. Keep source4/5 blend,
+        // two-sided geometry and the normal Z-write policy in preparation.
+        m.image=single_selected11?material_source.primary.image:material_source.secondary.image;m.color=0xffffffffU;
+    }
+#endif
     RE4DC_GXF_GET_PROJECTION(m.projection);
     RE4DC_GXF_GET_VIEWPORT(m.viewport);
     Mtx sc, tmp, mv;
@@ -116,6 +245,149 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
     PSMTXConcat(pCL->mat, sc, tmp);
     PSMTXConcat(pG->Cam.v_mat, tmp, mv);
     const u32 cols = pCL->divH;
+#if RE4DC_CLOTH_SHEET11
+    if(pCL->divV>50)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    // No simulation writes: preflight source finiteness before the first packet.
+    for(unsigned i=0;i<3;++i)for(unsigned j=0;j<4;++j)if(!__builtin_isfinite(mv[i][j]))return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    const Vec* source=pCL->pVer;const unsigned rows=pCL->divV,source_frame=pG->Frame_cnt,source_epoch=cloth11_epoch(pCL);
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    const unsigned source_grid=re4dc::cloth_pub11::grid_generation[cloth11_slot(pCL)];
+    if((second_material || single_selected11) && !source_grid)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#endif
+    if(!source_epoch)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    for(unsigned i=0;i<cols*rows;++i)if(!__builtin_isfinite(source[i].x) || !__builtin_isfinite(source[i].y) || !__builtin_isfinite(source[i].z))
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    m.cols=cols;m.rows=rows;
+    Re4dcClothMaterial11 material;re4dc::NativeDrawResult stop{re4dc::NativeDrawOutcome::Refused};
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
+        pCL->pVer==source && pCL->divH==cols && pCL->divV==rows
+        && (!(second_material || single_selected11) || source_grid==re4dc::cloth_pub11::grid_generation[cloth11_slot(pCL)])
+        ;};
+#else
+    const auto source_current=[&](){return cloth11_epoch(pCL)==source_epoch && pG->Frame_cnt==source_frame &&
+        pCL->pVer==source && pCL->divH==cols && pCL->divV==rows;};
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    const auto material_current=[&](){
+        // Room/pool retirement and grid mutation reject the old view before
+        // any embedded source object or archive pixel may be read again.
+        if(!source_current())return false;
+        unsigned current_words[8];
+        if(single_selected11 && (!re4dc_cloth_esp4e_words11(pCL,current_words) ||
+            std::memcmp(current_words,material_source.primary.words,sizeof current_words)))return false;
+        return (!(second_material || single_selected11) ||
+        (pCL->tex==material_source.primary.object && pCL->pTobjA==material_source.secondary.object &&
+         source_color==((u32(pCL->color.r)<<24)|(u32(pCL->color.g)<<16)|(u32(pCL->color.b)<<8)|pCL->color.a) &&
+         saturated_source() && material_source.current()));};
+    const Re4dcClothCheck11 check{&material_current,[](const void* p){
+        return (*static_cast<const decltype(material_current)*>(p))();}};
+    single_started11=single_selected11;
+    const int prepared=(second_material || single_selected11)?re4dc_cloth_material11(&m,&material_source,check,&material,&stop):
+        re4dc_cloth_prepare11(&m,&material,&stop);
+    if(!prepared && stop.outcome==re4dc::NativeDrawOutcome::PartialAbort)return stop;
+    if(!material_current())return {re4dc::NativeDrawOutcome::PartialAbort};
+#else
+    const int prepared=re4dc_cloth_prepare11(&m,&material,&stop);
+#endif
+    // Even failed texture I/O may retire/reuse the source. This is terminal,
+    // including zero publication: the source GX fallback must not read it.
+    if(!source_current())return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(!prepared)return stop;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc_cloth_observe_bind11(&material,observation);
+#endif
+    f32 band[2][100][3];float* top=&band[0][0][0];float* bottom=&band[1][0][0];
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+    // Preparation can yield. Check source ownership before and after each
+    // callback-free XMTRX batch. The tile start/count bound both row buffers.
+    auto transform_batch=[&](unsigned source_row,unsigned first,unsigned count,float* dst)->int{
+        if(!source_current())return -1;
+        const Vec* input=source+source_row*cols+first;
+        if(!re4dc_zam_xm_points14(mv,input,count*sizeof(Vec),sizeof(Vec),
+                                   dst,count*3*sizeof(float),3*sizeof(float),count))return 0;
+        return source_current()?1:-1;
+    };
+#endif
+#if defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+    if(cols>100){
+    // Source draws row-major strips. Split each row into at most 100-column
+    // strips, sharing the seam column; never finish a whole column tile's rows
+    // before moving to the next tile. The same source cell diagonal survives.
+    for(unsigned row=0;row+1<rows;++row){
+        for(unsigned first=0;first+1<cols;){
+            if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+            const unsigned columns=cols-first<100?cols-first:100;
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+            int transformed=transform_batch(row,first,columns,top);
+            if(transformed==1)transformed=transform_batch(row+1,first,columns,bottom);
+            if(transformed!=1){progress.add({transformed<0?re4dc::NativeDrawOutcome::PartialAbort:
+                re4dc::NativeDrawOutcome::UnsupportedBeforePublication});return progress.result;}
+#else
+            auto transform_tile=[&](unsigned source_row,float* dst){
+                for(unsigned i=0;i<columns;++i){
+                    if(!source_current())return false;
+                    Vec v;PSMTXMultVec(mv,source+source_row*cols+first+i,&v);
+                    dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;
+                }
+                return source_current();
+            };
+            if(!transform_tile(row,top) || !transform_tile(row+1,bottom)){
+                progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;
+            }
+#endif
+            const Re4dcClothBand11 view{top,bottom,columns,first,row};
+            const auto result=re4dc_cloth_band11(&material,&view);
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+            if(result.outcome==re4dc::NativeDrawOutcome::PartialAbort){progress.add(result);return progress.result;}
+#endif
+            if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
+            if(!progress.add(result))return progress.result;
+            first+=columns-1;
+        }
+    }
+    return progress.result;
+    }
+#endif
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+    auto transform=[&](unsigned row,float* dst)->int{return transform_batch(row,0,cols,dst);};
+    int transformed=transform(0,top);
+    if(transformed!=1){progress.add({transformed<0?re4dc::NativeDrawOutcome::PartialAbort:
+        re4dc::NativeDrawOutcome::UnsupportedBeforePublication});return progress.result;}
+#elif defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+    auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){
+        if(!source_current())return false;
+        Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);
+        dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;
+    }return source_current();};
+    if(!transform(0,top)){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+#else
+    auto transform=[&](unsigned row,float* dst){for(unsigned i=0;i<cols;++i){Vec v;PSMTXMultVec(mv,source+row*cols+i,&v);dst[3*i]=v.x;dst[3*i+1]=v.y;dst[3*i+2]=v.z;}};
+    transform(0,top);
+#endif
+    for(unsigned row=0;row+1<rows;++row){
+        if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+#if defined(RE4DC_CLOTH_XM_BATCH14) && RE4DC_CLOTH_XM_BATCH14
+        transformed=transform(row+1,bottom);
+        if(transformed!=1){progress.add({transformed<0?re4dc::NativeDrawOutcome::PartialAbort:
+            re4dc::NativeDrawOutcome::UnsupportedBeforePublication});return progress.result;}
+        const Re4dcClothBand11 view{top,bottom,cols,0,row};
+#elif defined(RE4DC_CLOTH_TILES11) && RE4DC_CLOTH_TILES11
+        if(!transform(row+1,bottom)){progress.add({re4dc::NativeDrawOutcome::PartialAbort});return progress.result;}
+        const Re4dcClothBand11 view{top,bottom,cols,0,row};
+#else
+        transform(row+1,bottom);const Re4dcClothBand11 view{top,bottom,cols,0,row};
+#endif
+        const auto result=re4dc_cloth_band11(&material,&view);
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+        if(result.outcome==re4dc::NativeDrawOutcome::PartialAbort){progress.add(result);return progress.result;}
+#endif
+        if(!source_current()){progress.add({re4dc::NativeDrawOutcome::PartialAbort,result.submitted,result.queued});return progress.result;}
+        if(!progress.add(result))return progress.result;
+        float* previous=top;top=bottom;bottom=previous;
+    }
+    return progress.result;
+#else
     f32 band[2 * 100 * 3];
     m.positions = band;
     m.cols = cols;
@@ -134,9 +406,33 @@ static int re4dc_cloth_native(Cloth* pCL, cLight** list, Vec* pos, f32 size)
             }
         }
         m.v_top = row * m.v_step;
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+        if(!progress.add(re4dc_effect_mesh21_result(&m)))return progress.result;
+#else
         re4dc_effect_mesh21(&m);
+#endif
     }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    return progress.result;
+#else
     return 1;
+#endif
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    };
+    const auto material_result11=material_draw11();
+    // This selected producer owns the result. A failed cold acquisition or
+    // later band cannot replay the previous approximate ordinary producer.
+    if(single_started11 && material_result11.fallback_allowed())return {re4dc::NativeDrawOutcome::PartialAbort};
+    return material_result11;
+#endif
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    };
+    const auto result=observed_draw();
+    re4dc_cloth_observe_finish11(observation,result,cloth11_epoch(pCL),pG->Frame_cnt,
+        observed_slot<8?re4dc::cloth_pub11::grid_generation[observed_slot]:0);
+    return result;
+#endif
 }
 #endif
 
@@ -152,6 +448,12 @@ static f32 D_PARAM = 0.006f;  // unused (the 0.006 word after T_PARAM in .sdata;
 // Boot: marks the 8 cloth works free.
 void ClothInit()
 {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    re4dc::cloth_material11::open_slots=0;
+#endif
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+    for(auto& cloth:ClothWk)cloth11_replace(&cloth);
+#endif
     int i;
 
     for (i = 0; i < 8; i++) {
@@ -183,6 +485,13 @@ static Vec* clothAllocNormal(Vec* dir)
 void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h, void* p_, f32 d, GXTlutObj* tlut_,
                 int flag_)
 {
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+    cloth11_replace(this);
+#endif
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    re4dc::cloth_material11::close(cloth11_slot(this));
+    const unsigned material_set_epoch11=cloth11_epoch(this);
+#endif
     Vec zero = {0.0f, 0.0f, 0.0f};
     Vec n = {0.0f, 0.0f, 1.0f};
     Vec* pp;
@@ -206,6 +515,12 @@ void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h,
     if (m_pMem == 0) {
         OSReport("ClothSet(): Can't allocate memory.\n");
         be_flag = 0;
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+        // mem_alloc can return null. Stay closed and let Esp4e report its
+        // ordinary creation failure instead of touching a missing grid.
+        pVer=pNor=pSpd=nullptr;
+        return;
+#endif
     }
     pp = (Vec*) m_pMem;
     pVer = pp;
@@ -248,11 +563,18 @@ void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h,
     colB = 0xFF;
     colA = 0xFF;
     x74 = 0;
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(cloth11_epoch(this)==material_set_epoch11)
+        re4dc::cloth_material11::reopen(cloth11_slot(this),material_set_epoch11);
+#endif
 }
 
 // Moves the cloth's hanging matrix.
 void Cloth::SetPosAng(Vec ang, Vec pos_)
 {
+#if (defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11) || (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11)
+    re4dc::cloth_pub11::grid_write(cloth11_slot(this));
+#endif
     RotMatrix(mat, &ang);
     TransMatrix(mat, &pos_);
 }
@@ -260,6 +582,12 @@ void Cloth::SetPosAng(Vec ang, Vec pos_)
 // Frees the grid memory and the work.
 void Cloth::Destroy()
 {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    re4dc::cloth_material11::close(cloth11_slot(this));
+#endif
+#if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
+    cloth11_replace(this);
+#endif
     Mem_free(m_pMem);
     be_flag = 0;
 }
@@ -331,6 +659,11 @@ static u8 clothDnOk[256];   // the spring below row i-1's point j: 0 not compute
 #if !(defined(RE4DC_CLOTH_SPRING) && RE4DC_CLOTH_SPRING == 1)
 void Cloth::calcSpeed(f32 damping)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothSpringSource, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothPoints, unsigned(divH) * unsigned(divV));
+#endif
+#line 341
     Vec v;
     Vec* p = pVer;
     Vec* s = pSpd;
@@ -422,6 +755,11 @@ static u32 clothChkCalls, clothChkMis, clothChkBig;
 #endif
 void Cloth::calcSpeed(f32 damping)
 {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::ClothSpringFast, 1);
+    re4dc::fa35::hit(re4dc::fa35::ClothPoints, unsigned(divH) * unsigned(divV));
+#endif
+#line 432
 #if RE4DC_CLOTH_SPRING == 2
     const u32 npt = (u32) divH * divV;
     const int chk = npt <= 2048;
@@ -529,6 +867,9 @@ int PullCloth(Cloth** out)
 // row(s).
 void Cloth::move()
 {
+#if (defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11) || (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11)
+    re4dc::cloth_pub11::grid_write(cloth11_slot(this));
+#endif
     Vec v;
     int i;
     int j;
@@ -590,6 +931,9 @@ void Cloth::disturbance(f32 power, u32 x, u32 y)
 #if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
 static void ClothDraw_log_room()
 {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!re4dc::cloth_material11::open_slots || !re4dc_cloth_frame_open11())return;
+#endif
     int i;
     {   // CLOTH_NATIVE: one line per room with live cloth sheets (proof of coverage)
         static u16 s_room = 0xFFFF;
@@ -601,7 +945,12 @@ static void ClothDraw_log_room()
             s_room = G_ROOM_ID;
             re4dc_log("cloth native: room=%03x sheets=%d grid0=%ux%u tex=%08x\n", (unsigned) G_ROOM_ID, n,
                       (unsigned) ClothWk[0].divH, (unsigned) ClothWk[0].divV,
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+                      ClothWk[0].tex && re4dc::cloth_material11::admitted(0)
+                      ? (unsigned) ((const u32*) ClothWk[0].tex)[0] : 0U);
+#else
                       ClothWk[0].tex ? (unsigned) ((const u32*) ClothWk[0].tex)[0] : 0U);
+#endif
             for (i = 0; i < 8; i++) {
                 if (ClothWk[i].m_pMem) {
                     re4dc_log("cloth native: sheet %d be=%02x grid=%ux%u center=%d,%d,%d\n", i,
@@ -618,6 +967,9 @@ static void ClothDraw_log_room()
 // Draw registration: queues clothTrans in OT 13 for every cloth flagged drawn (be_flag 0x20).
 void ClothDraw()
 {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!re4dc_cloth_frame_open11())return;
+#endif
     Cloth* c = ClothWk;
     int i;
 
@@ -625,6 +977,9 @@ void ClothDraw()
     ClothDraw_log_room();
 #endif
     for (i = 0; i < 8; i++, c++) {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+        if(!re4dc::cloth_material11::admitted(unsigned(i)))continue;
+#endif
         if (c->be_flag & 0x20) {
             AddOtDirect(0xD, c, (void (*)()) clothTrans, 0, 0x1000, 0, 0.0f);
         }
@@ -635,8 +990,14 @@ void ClothDraw()
 // CLOTH_NATIVE on a drawn coarse image (trans.cpp): no world OT runs, so every drawn sheet is queued now.
 void ClothDrawNow()
 {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!re4dc_cloth_frame_open11())return;
+#endif
     ClothDraw_log_room();
     for (int i = 0; i < 8; i++) {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+        if(!re4dc::cloth_material11::admitted(unsigned(i)))continue;
+#endif
         if (ClothWk[i].be_flag & 0x20) {
             clothTrans(&ClothWk[i]);
         }
@@ -648,6 +1009,9 @@ void ClothDrawNow()
 // two-sided textured triangle strip per row with the vertex normals.
 void clothTrans(Cloth* pCL)
 {
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!re4dc::cloth_material11::admitted(cloth11_slot(pCL)) || !re4dc_cloth_frame_open11())return;
+#endif
     Mtx texMtx;
     GXTexObj* tex = pCL->tex;
     void* tex2 = pCL->pTobjA;
@@ -696,10 +1060,19 @@ void clothTrans(Cloth* pCL)
 #endif
     GXSetChanMatColor(4, pCL->color);
 #if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    const auto native_result=re4dc_cloth_native(pCL, model.LightInfo.pLight, &model.pos, r);
+    if (!native_result.fallback_allowed()) {
+#else
     if (re4dc_cloth_native(pCL, model.LightInfo.pLight, &model.pos, r)) {
+#endif
         return;
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::ClothLegacy);
+#endif
+#line 750
     GXSetNumTexGens(1);
     GXLoadTexObj(tex, 0);
     if (tlut != 0) {

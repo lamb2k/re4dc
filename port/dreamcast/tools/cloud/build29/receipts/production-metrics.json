@@ -1,0 +1,1588 @@
+{
+  "baseline": "5f104e301f328c56a07ce9f57e3fb94d758d4999",
+  "profiles": [
+    {
+      "baseline_profile": "audit",
+      "profile": "audit",
+      "total_delta": {
+        "allocated_bytes": 26406,
+        "executable_bytes": 3988,
+        "zero_fill_bytes": 20836
+      },
+      "units": [
+        {
+          "after": {
+            "allocated_bytes": 41562,
+            "executable_bytes": 4044,
+            "zero_fill_bytes": 37235
+          },
+          "before": {
+            "allocated_bytes": 41514,
+            "executable_bytes": 3996,
+            "zero_fill_bytes": 37235
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 48,
+            "executable_bytes": 48,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 36,
+            "before": 36
+          },
+          "unit": "main"
+        },
+        {
+          "after": {
+            "allocated_bytes": 17120,
+            "executable_bytes": 16656,
+            "zero_fill_bytes": 0
+          },
+          "before": {
+            "allocated_bytes": 17084,
+            "executable_bytes": 16620,
+            "zero_fill_bytes": 0
+          },
+          "changed_local_frames": [
+            {
+              "after": 16,
+              "before": 0,
+              "function": "int {anonymous}::hermiteReg(HermitePrm*, Vec*, u16*)"
+            },
+            {
+              "after": 72,
+              "before": 68,
+              "function": "int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]"
+            },
+            {
+              "after": 72,
+              "before": 68,
+              "function": "int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]"
+            },
+            {
+              "after": 60,
+              "before": 56,
+              "function": "int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 36,
+            "executable_bytes": 36,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 360,
+            "before": 360
+          },
+          "unit": "motion"
+        },
+        {
+          "after": {
+            "allocated_bytes": 19786,
+            "executable_bytes": 16208,
+            "zero_fill_bytes": 2212
+          },
+          "before": {
+            "allocated_bytes": 19706,
+            "executable_bytes": 16128,
+            "zero_fill_bytes": 2212
+          },
+          "changed_local_frames": [
+            {
+              "after": 460,
+              "before": 464,
+              "function": "int cSatMgr::hitCheck2(Vec*, Vec*, Vec*, u32*, int, int)"
+            },
+            {
+              "after": 232,
+              "before": 224,
+              "function": "int spwRun(u8*, u32, u32, u32, Vec*, Vec*, f32, int, Vec*, int, SpwRec*)"
+            },
+            {
+              "after": 352,
+              "before": 348,
+              "function": "void cSatMgr::wallAdjust(Vec*, Vec*, Vec*, f32, int, int)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 80,
+            "executable_bytes": 80,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 460,
+            "before": 464
+          },
+          "unit": "atari"
+        },
+        {
+          "after": {
+            "allocated_bytes": 10250,
+            "executable_bytes": 5728,
+            "zero_fill_bytes": 4288
+          },
+          "before": {
+            "allocated_bytes": 10238,
+            "executable_bytes": 5716,
+            "zero_fill_bytes": 4288
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 12,
+            "executable_bytes": 12,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 3600,
+            "before": 3600
+          },
+          "unit": "cloth"
+        },
+        {
+          "after": {
+            "allocated_bytes": 17118,
+            "executable_bytes": 5560,
+            "zero_fill_bytes": 11282
+          },
+          "before": {
+            "allocated_bytes": 17118,
+            "executable_bytes": 5560,
+            "zero_fill_bytes": 11282
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 100,
+            "before": 100
+          },
+          "unit": "esp"
+        },
+        {
+          "after": {
+            "allocated_bytes": 9137,
+            "executable_bytes": 8296,
+            "zero_fill_bytes": 179
+          },
+          "before": {
+            "allocated_bytes": 9117,
+            "executable_bytes": 8276,
+            "zero_fill_bytes": 179
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 20,
+            "executable_bytes": 20,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 144,
+            "before": 144
+          },
+          "unit": "esp_efm"
+        },
+        {
+          "after": {
+            "allocated_bytes": 2791,
+            "executable_bytes": 2260,
+            "zero_fill_bytes": 252
+          },
+          "before": {
+            "allocated_bytes": 2743,
+            "executable_bytes": 2212,
+            "zero_fill_bytes": 252
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 48,
+            "executable_bytes": 48,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 76,
+            "before": 76
+          },
+          "unit": "trans_ot"
+        },
+        {
+          "after": {
+            "allocated_bytes": 71655,
+            "executable_bytes": 53876,
+            "zero_fill_bytes": 15855
+          },
+          "before": {
+            "allocated_bytes": 67176,
+            "executable_bytes": 52488,
+            "zero_fill_bytes": 13027
+          },
+          "changed_local_frames": [
+            {
+              "after": 644,
+              "before": 640,
+              "function": "0(Re4dcModelPart&, OneWindow&)"
+            },
+            {
+              "after": 56,
+              "before": null,
+              "function": "int re4dc_fa29_actor_format_line(unsigned int, char*, unsigned int)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "unsigned int re4dc_fa29_actor_line_count()"
+            },
+            {
+              "after": 4,
+              "before": null,
+              "function": "void re4dc_fa29_actor_reset()"
+            },
+            {
+              "after": 72,
+              "before": null,
+              "function": "void {anonymous}::fa29_actor_note(const Re4dcModelPart&, const Lights&)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 4479,
+            "executable_bytes": 1388,
+            "zero_fill_bytes": 2828
+          },
+          "max_compiler_local_frame": {
+            "after": 2388,
+            "before": 2388
+          },
+          "unit": "native_actor_fast"
+        },
+        {
+          "after": {
+            "allocated_bytes": 12306,
+            "executable_bytes": 10146,
+            "zero_fill_bytes": 710
+          },
+          "before": {
+            "allocated_bytes": 12250,
+            "executable_bytes": 10090,
+            "zero_fill_bytes": 710
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 56,
+            "executable_bytes": 56,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 304,
+            "before": 304
+          },
+          "unit": "native_motion"
+        },
+        {
+          "after": {
+            "allocated_bytes": 395752,
+            "executable_bytes": 83174,
+            "zero_fill_bytes": 153384
+          },
+          "before": {
+            "allocated_bytes": 395181,
+            "executable_bytes": 82782,
+            "zero_fill_bytes": 153384
+          },
+          "changed_local_frames": [
+            {
+              "after": 20,
+              "before": null,
+              "function": "void {anonymous}::fa29_tex_refusal(const Re4dcUiImage&, const Key&, bool, const char*, const char*, unsigned int)"
+            },
+            {
+              "after": 48,
+              "before": 44,
+              "function": "{anonymous}::load(const Re4dcUiImage&, bool, const Key*)::<lambda()>"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 571,
+            "executable_bytes": 392,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 7200,
+            "before": 7200
+          },
+          "unit": "native_ui"
+        },
+        {
+          "after": {
+            "allocated_bytes": 12727,
+            "executable_bytes": 6624,
+            "zero_fill_bytes": 3412
+          },
+          "before": {
+            "allocated_bytes": 12675,
+            "executable_bytes": 6572,
+            "zero_fill_bytes": 3412
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 52,
+            "executable_bytes": 52,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 200,
+            "before": 200
+          },
+          "unit": "dvd_read_safe"
+        },
+        {
+          "after": {
+            "allocated_bytes": 93756,
+            "executable_bytes": 19072,
+            "zero_fill_bytes": 71215
+          },
+          "before": {
+            "allocated_bytes": 93656,
+            "executable_bytes": 18972,
+            "zero_fill_bytes": 71215
+          },
+          "changed_local_frames": [
+            {
+              "after": 256,
+              "before": 252,
+              "function": "void re4dc_audio_arq(u32, u32, u32)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 100,
+            "executable_bytes": 100,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 256,
+            "before": 252
+          },
+          "unit": "audio_aica"
+        },
+        {
+          "after": {
+            "allocated_bytes": 1180,
+            "executable_bytes": 856,
+            "zero_fill_bytes": 141
+          },
+          "before": {
+            "allocated_bytes": 1164,
+            "executable_bytes": 840,
+            "zero_fill_bytes": 141
+          },
+          "changed_local_frames": [
+            {
+              "after": 8,
+              "before": 4,
+              "function": "void {anonymous}::pend_push(const Pend&)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 16,
+            "executable_bytes": 16,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 148,
+            "before": 148
+          },
+          "unit": "audio_strm"
+        },
+        {
+          "after": {
+            "allocated_bytes": 3026,
+            "executable_bytes": 2412,
+            "zero_fill_bytes": 44
+          },
+          "before": {
+            "allocated_bytes": 2990,
+            "executable_bytes": 2376,
+            "zero_fill_bytes": 44
+          },
+          "changed_local_frames": [
+            {
+              "after": 8,
+              "before": 0,
+              "function": "void GXBegin(int, int, u16)"
+            },
+            {
+              "after": 4,
+              "before": 0,
+              "function": "void GXCallDisplayList(void*, u32)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 36,
+            "executable_bytes": 36,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 24,
+            "before": 24
+          },
+          "unit": "gx_stub"
+        },
+        {
+          "after": {
+            "allocated_bytes": 7475,
+            "executable_bytes": 6814,
+            "zero_fill_bytes": 138
+          },
+          "before": {
+            "allocated_bytes": 7275,
+            "executable_bytes": 6614,
+            "zero_fill_bytes": 138
+          },
+          "changed_local_frames": [
+            {
+              "after": 8,
+              "before": null,
+              "function": "void re4dc_fa29_actor_identity(const Re4dcModelPart*, unsigned int*, unsigned int*, unsigned int*)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 200,
+            "executable_bytes": 200,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 324,
+            "before": 324
+          },
+          "unit": "model_bridge"
+        },
+        {
+          "after": {
+            "allocated_bytes": 62060,
+            "executable_bytes": 13206,
+            "zero_fill_bytes": 45372
+          },
+          "before": {
+            "allocated_bytes": 44468,
+            "executable_bytes": 13022,
+            "zero_fill_bytes": 27964
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 17592,
+            "executable_bytes": 184,
+            "zero_fill_bytes": 17408
+          },
+          "max_compiler_local_frame": {
+            "after": 2280,
+            "before": 2280
+          },
+          "unit": "qa_menu"
+        },
+        {
+          "after": {
+            "allocated_bytes": 3060,
+            "executable_bytes": 1320,
+            "zero_fill_bytes": 600
+          },
+          "before": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "changed_local_frames": [
+            {
+              "after": 0,
+              "before": null,
+              "function": "bool re4dc::fa29::collecting()"
+            },
+            {
+              "after": 12,
+              "before": null,
+              "function": "bool re4dc::fa29::snapshot(Snapshot*)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "const char* re4dc::fa29::label(Reason)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "const char* re4dc::fa29::unit(Reason)"
+            },
+            {
+              "after": 60,
+              "before": null,
+              "function": "int re4dc::fa29::format_line(unsigned int, char*, unsigned int)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "unsigned int re4dc::fa29::line_count()"
+            },
+            {
+              "after": 24,
+              "before": null,
+              "function": "void re4dc::fa29::begin_tick(uint32_t, uint32_t)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::decision(bool)"
+            },
+            {
+              "after": 8,
+              "before": null,
+              "function": "void re4dc::fa29::end_tick()"
+            },
+            {
+              "after": 16,
+              "before": null,
+              "function": "void re4dc::fa29::hit(Reason, uint32_t)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::pause()"
+            },
+            {
+              "after": 8,
+              "before": null,
+              "function": "void re4dc::fa29::reset()"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::resume()"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::{anonymous}::add(uint32_t&, uint32_t)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 3060,
+            "executable_bytes": 1320,
+            "zero_fill_bytes": 600
+          },
+          "max_compiler_local_frame": {
+            "after": 60,
+            "before": 0
+          },
+          "unit": "fallback_audit29"
+        }
+      ]
+    },
+    {
+      "baseline_profile": "plain",
+      "profile": "scan",
+      "total_delta": {
+        "allocated_bytes": 112,
+        "executable_bytes": 112,
+        "zero_fill_bytes": 0
+      },
+      "units": [
+        {
+          "after": {
+            "allocated_bytes": 41462,
+            "executable_bytes": 3944,
+            "zero_fill_bytes": 37235
+          },
+          "before": {
+            "allocated_bytes": 41462,
+            "executable_bytes": 3944,
+            "zero_fill_bytes": 37235
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 36,
+            "before": 36
+          },
+          "unit": "main"
+        },
+        {
+          "after": {
+            "allocated_bytes": 17084,
+            "executable_bytes": 16620,
+            "zero_fill_bytes": 0
+          },
+          "before": {
+            "allocated_bytes": 17084,
+            "executable_bytes": 16620,
+            "zero_fill_bytes": 0
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 360,
+            "before": 360
+          },
+          "unit": "motion"
+        },
+        {
+          "after": {
+            "allocated_bytes": 19706,
+            "executable_bytes": 16128,
+            "zero_fill_bytes": 2212
+          },
+          "before": {
+            "allocated_bytes": 19706,
+            "executable_bytes": 16128,
+            "zero_fill_bytes": 2212
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 464,
+            "before": 464
+          },
+          "unit": "atari"
+        },
+        {
+          "after": {
+            "allocated_bytes": 10238,
+            "executable_bytes": 5716,
+            "zero_fill_bytes": 4288
+          },
+          "before": {
+            "allocated_bytes": 10238,
+            "executable_bytes": 5716,
+            "zero_fill_bytes": 4288
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 3600,
+            "before": 3600
+          },
+          "unit": "cloth"
+        },
+        {
+          "after": {
+            "allocated_bytes": 17118,
+            "executable_bytes": 5560,
+            "zero_fill_bytes": 11282
+          },
+          "before": {
+            "allocated_bytes": 17118,
+            "executable_bytes": 5560,
+            "zero_fill_bytes": 11282
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 100,
+            "before": 100
+          },
+          "unit": "esp"
+        },
+        {
+          "after": {
+            "allocated_bytes": 9117,
+            "executable_bytes": 8276,
+            "zero_fill_bytes": 179
+          },
+          "before": {
+            "allocated_bytes": 9117,
+            "executable_bytes": 8276,
+            "zero_fill_bytes": 179
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 144,
+            "before": 144
+          },
+          "unit": "esp_efm"
+        },
+        {
+          "after": {
+            "allocated_bytes": 2743,
+            "executable_bytes": 2212,
+            "zero_fill_bytes": 252
+          },
+          "before": {
+            "allocated_bytes": 2743,
+            "executable_bytes": 2212,
+            "zero_fill_bytes": 252
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 76,
+            "before": 76
+          },
+          "unit": "trans_ot"
+        },
+        {
+          "after": {
+            "allocated_bytes": 65340,
+            "executable_bytes": 50652,
+            "zero_fill_bytes": 13027
+          },
+          "before": {
+            "allocated_bytes": 65228,
+            "executable_bytes": 50540,
+            "zero_fill_bytes": 13027
+          },
+          "changed_local_frames": [
+            {
+              "after": 204,
+              "before": 184,
+              "function": "0(const Re4dcModelPart*, const float*, Re4dcActorLight25Colour*)"
+            },
+            {
+              "after": 272,
+              "before": 268,
+              "function": "bool {anonymous}::fast_only_lights(const Re4dcModelPart&, const Frame&, const float*, Lights&)"
+            },
+            {
+              "after": 688,
+              "before": 656,
+              "function": "int owned_submit_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*, bool)"
+            },
+            {
+              "after": 624,
+              "before": 592,
+              "function": "unsigned int re4dc_actor_submit_chunks(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 112,
+            "executable_bytes": 112,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 2388,
+            "before": 2388
+          },
+          "unit": "native_actor_fast"
+        },
+        {
+          "after": {
+            "allocated_bytes": 12250,
+            "executable_bytes": 10090,
+            "zero_fill_bytes": 710
+          },
+          "before": {
+            "allocated_bytes": 12250,
+            "executable_bytes": 10090,
+            "zero_fill_bytes": 710
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 304,
+            "before": 304
+          },
+          "unit": "native_motion"
+        },
+        {
+          "after": {
+            "allocated_bytes": 394805,
+            "executable_bytes": 82406,
+            "zero_fill_bytes": 153384
+          },
+          "before": {
+            "allocated_bytes": 394805,
+            "executable_bytes": 82406,
+            "zero_fill_bytes": 153384
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 7200,
+            "before": 7200
+          },
+          "unit": "native_ui"
+        },
+        {
+          "after": {
+            "allocated_bytes": 12675,
+            "executable_bytes": 6572,
+            "zero_fill_bytes": 3412
+          },
+          "before": {
+            "allocated_bytes": 12675,
+            "executable_bytes": 6572,
+            "zero_fill_bytes": 3412
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 200,
+            "before": 200
+          },
+          "unit": "dvd_read_safe"
+        },
+        {
+          "after": {
+            "allocated_bytes": 93656,
+            "executable_bytes": 18972,
+            "zero_fill_bytes": 71215
+          },
+          "before": {
+            "allocated_bytes": 93656,
+            "executable_bytes": 18972,
+            "zero_fill_bytes": 71215
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 252,
+            "before": 252
+          },
+          "unit": "audio_aica"
+        },
+        {
+          "after": {
+            "allocated_bytes": 1164,
+            "executable_bytes": 840,
+            "zero_fill_bytes": 141
+          },
+          "before": {
+            "allocated_bytes": 1164,
+            "executable_bytes": 840,
+            "zero_fill_bytes": 141
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 148,
+            "before": 148
+          },
+          "unit": "audio_strm"
+        },
+        {
+          "after": {
+            "allocated_bytes": 2990,
+            "executable_bytes": 2376,
+            "zero_fill_bytes": 44
+          },
+          "before": {
+            "allocated_bytes": 2990,
+            "executable_bytes": 2376,
+            "zero_fill_bytes": 44
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 24,
+            "before": 24
+          },
+          "unit": "gx_stub"
+        },
+        {
+          "after": {
+            "allocated_bytes": 7167,
+            "executable_bytes": 6506,
+            "zero_fill_bytes": 138
+          },
+          "before": {
+            "allocated_bytes": 7167,
+            "executable_bytes": 6506,
+            "zero_fill_bytes": 138
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 324,
+            "before": 324
+          },
+          "unit": "model_bridge"
+        },
+        {
+          "after": {
+            "allocated_bytes": 41288,
+            "executable_bytes": 12918,
+            "zero_fill_bytes": 24892
+          },
+          "before": {
+            "allocated_bytes": 41288,
+            "executable_bytes": 12918,
+            "zero_fill_bytes": 24892
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 2280,
+            "before": 2280
+          },
+          "unit": "qa_menu"
+        }
+      ]
+    },
+    {
+      "baseline_profile": "composed",
+      "profile": "all",
+      "total_delta": {
+        "allocated_bytes": 33674,
+        "executable_bytes": 4088,
+        "zero_fill_bytes": 28004
+      },
+      "units": [
+        {
+          "after": {
+            "allocated_bytes": 41658,
+            "executable_bytes": 4140,
+            "zero_fill_bytes": 37235
+          },
+          "before": {
+            "allocated_bytes": 41610,
+            "executable_bytes": 4092,
+            "zero_fill_bytes": 37235
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 48,
+            "executable_bytes": 48,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 36,
+            "before": 36
+          },
+          "unit": "main"
+        },
+        {
+          "after": {
+            "allocated_bytes": 17120,
+            "executable_bytes": 16656,
+            "zero_fill_bytes": 0
+          },
+          "before": {
+            "allocated_bytes": 17084,
+            "executable_bytes": 16620,
+            "zero_fill_bytes": 0
+          },
+          "changed_local_frames": [
+            {
+              "after": 16,
+              "before": 0,
+              "function": "int {anonymous}::hermiteReg(HermitePrm*, Vec*, u16*)"
+            },
+            {
+              "after": 72,
+              "before": 68,
+              "function": "int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 0]"
+            },
+            {
+              "after": 72,
+              "before": 68,
+              "function": "int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 5]"
+            },
+            {
+              "after": 60,
+              "before": 56,
+              "function": "int {anonymous}::hfReg(HermitePrm*, Vec*, u16*) [with int T = 6]"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 36,
+            "executable_bytes": 36,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 360,
+            "before": 360
+          },
+          "unit": "motion"
+        },
+        {
+          "after": {
+            "allocated_bytes": 19786,
+            "executable_bytes": 16208,
+            "zero_fill_bytes": 2212
+          },
+          "before": {
+            "allocated_bytes": 19706,
+            "executable_bytes": 16128,
+            "zero_fill_bytes": 2212
+          },
+          "changed_local_frames": [
+            {
+              "after": 460,
+              "before": 464,
+              "function": "int cSatMgr::hitCheck2(Vec*, Vec*, Vec*, u32*, int, int)"
+            },
+            {
+              "after": 232,
+              "before": 224,
+              "function": "int spwRun(u8*, u32, u32, u32, Vec*, Vec*, f32, int, Vec*, int, SpwRec*)"
+            },
+            {
+              "after": 352,
+              "before": 348,
+              "function": "void cSatMgr::wallAdjust(Vec*, Vec*, Vec*, f32, int, int)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 80,
+            "executable_bytes": 80,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 460,
+            "before": 464
+          },
+          "unit": "atari"
+        },
+        {
+          "after": {
+            "allocated_bytes": 10250,
+            "executable_bytes": 5728,
+            "zero_fill_bytes": 4288
+          },
+          "before": {
+            "allocated_bytes": 10238,
+            "executable_bytes": 5716,
+            "zero_fill_bytes": 4288
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 12,
+            "executable_bytes": 12,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 3600,
+            "before": 3600
+          },
+          "unit": "cloth"
+        },
+        {
+          "after": {
+            "allocated_bytes": 17118,
+            "executable_bytes": 5560,
+            "zero_fill_bytes": 11282
+          },
+          "before": {
+            "allocated_bytes": 17118,
+            "executable_bytes": 5560,
+            "zero_fill_bytes": 11282
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 100,
+            "before": 100
+          },
+          "unit": "esp"
+        },
+        {
+          "after": {
+            "allocated_bytes": 9137,
+            "executable_bytes": 8296,
+            "zero_fill_bytes": 179
+          },
+          "before": {
+            "allocated_bytes": 9117,
+            "executable_bytes": 8276,
+            "zero_fill_bytes": 179
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 20,
+            "executable_bytes": 20,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 144,
+            "before": 144
+          },
+          "unit": "esp_efm"
+        },
+        {
+          "after": {
+            "allocated_bytes": 2791,
+            "executable_bytes": 2260,
+            "zero_fill_bytes": 252
+          },
+          "before": {
+            "allocated_bytes": 2743,
+            "executable_bytes": 2212,
+            "zero_fill_bytes": 252
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 48,
+            "executable_bytes": 48,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 76,
+            "before": 76
+          },
+          "unit": "trans_ot"
+        },
+        {
+          "after": {
+            "allocated_bytes": 75222,
+            "executable_bytes": 57440,
+            "zero_fill_bytes": 15855
+          },
+          "before": {
+            "allocated_bytes": 70635,
+            "executable_bytes": 55944,
+            "zero_fill_bytes": 13027
+          },
+          "changed_local_frames": [
+            {
+              "after": 204,
+              "before": 184,
+              "function": "0(const Re4dcModelPart*, const float*, Re4dcActorLight25Colour*)"
+            },
+            {
+              "after": 272,
+              "before": 268,
+              "function": "bool {anonymous}::fast_only_lights(const Re4dcModelPart&, const Frame&, const float*, Lights&)"
+            },
+            {
+              "after": 688,
+              "before": 656,
+              "function": "int owned_submit_runs(Re4dcModelPart*, const Re4dcActorDrawRun*, unsigned int, const Re4dcActorOwnedMaterial*, unsigned int, const Re4dcActorWorkspaceLease*, const Re4dcActorSkinLease*, const Re4dcActorTextureLease*, bool)"
+            },
+            {
+              "after": 1008,
+              "before": 1016,
+              "function": "int re4dc_actor_submit(const Re4dcModelPart*)"
+            },
+            {
+              "after": 56,
+              "before": null,
+              "function": "int re4dc_fa29_actor_format_line(unsigned int, char*, unsigned int)"
+            },
+            {
+              "after": 680,
+              "before": 684,
+              "function": "int {anonymous}::one_chunk(Re4dcModelPart&, OneWindow&)"
+            },
+            {
+              "after": 624,
+              "before": 592,
+              "function": "unsigned int re4dc_actor_submit_chunks(Re4dcModelPart*, const Re4dcActorChunk*, unsigned int)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "unsigned int re4dc_fa29_actor_line_count()"
+            },
+            {
+              "after": 4,
+              "before": null,
+              "function": "void re4dc_fa29_actor_reset()"
+            },
+            {
+              "after": 72,
+              "before": null,
+              "function": "void {anonymous}::fa29_actor_note(const Re4dcModelPart&, const Lights&)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 4587,
+            "executable_bytes": 1496,
+            "zero_fill_bytes": 2828
+          },
+          "max_compiler_local_frame": {
+            "after": 2388,
+            "before": 2388
+          },
+          "unit": "native_actor_fast"
+        },
+        {
+          "after": {
+            "allocated_bytes": 12306,
+            "executable_bytes": 10146,
+            "zero_fill_bytes": 710
+          },
+          "before": {
+            "allocated_bytes": 12250,
+            "executable_bytes": 10090,
+            "zero_fill_bytes": 710
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 56,
+            "executable_bytes": 56,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 304,
+            "before": 304
+          },
+          "unit": "native_motion"
+        },
+        {
+          "after": {
+            "allocated_bytes": 396056,
+            "executable_bytes": 83478,
+            "zero_fill_bytes": 153384
+          },
+          "before": {
+            "allocated_bytes": 395485,
+            "executable_bytes": 83086,
+            "zero_fill_bytes": 153384
+          },
+          "changed_local_frames": [
+            {
+              "after": 20,
+              "before": null,
+              "function": "void {anonymous}::fa29_tex_refusal(const Re4dcUiImage&, const Key&, bool, const char*, const char*, unsigned int)"
+            },
+            {
+              "after": 48,
+              "before": 44,
+              "function": "{anonymous}::load(const Re4dcUiImage&, bool, const Key*)::<lambda()>"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 571,
+            "executable_bytes": 392,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 7200,
+            "before": 7200
+          },
+          "unit": "native_ui"
+        },
+        {
+          "after": {
+            "allocated_bytes": 12727,
+            "executable_bytes": 6624,
+            "zero_fill_bytes": 3412
+          },
+          "before": {
+            "allocated_bytes": 12675,
+            "executable_bytes": 6572,
+            "zero_fill_bytes": 3412
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 52,
+            "executable_bytes": 52,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 200,
+            "before": 200
+          },
+          "unit": "dvd_read_safe"
+        },
+        {
+          "after": {
+            "allocated_bytes": 93756,
+            "executable_bytes": 19072,
+            "zero_fill_bytes": 71215
+          },
+          "before": {
+            "allocated_bytes": 93656,
+            "executable_bytes": 18972,
+            "zero_fill_bytes": 71215
+          },
+          "changed_local_frames": [
+            {
+              "after": 256,
+              "before": 252,
+              "function": "void re4dc_audio_arq(u32, u32, u32)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 100,
+            "executable_bytes": 100,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 256,
+            "before": 252
+          },
+          "unit": "audio_aica"
+        },
+        {
+          "after": {
+            "allocated_bytes": 1180,
+            "executable_bytes": 856,
+            "zero_fill_bytes": 141
+          },
+          "before": {
+            "allocated_bytes": 1164,
+            "executable_bytes": 840,
+            "zero_fill_bytes": 141
+          },
+          "changed_local_frames": [
+            {
+              "after": 8,
+              "before": 4,
+              "function": "void {anonymous}::pend_push(const Pend&)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 16,
+            "executable_bytes": 16,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 148,
+            "before": 148
+          },
+          "unit": "audio_strm"
+        },
+        {
+          "after": {
+            "allocated_bytes": 3026,
+            "executable_bytes": 2412,
+            "zero_fill_bytes": 44
+          },
+          "before": {
+            "allocated_bytes": 2990,
+            "executable_bytes": 2376,
+            "zero_fill_bytes": 44
+          },
+          "changed_local_frames": [
+            {
+              "after": 8,
+              "before": 0,
+              "function": "void GXBegin(int, int, u16)"
+            },
+            {
+              "after": 4,
+              "before": 0,
+              "function": "void GXCallDisplayList(void*, u32)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 36,
+            "executable_bytes": 36,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 24,
+            "before": 24
+          },
+          "unit": "gx_stub"
+        },
+        {
+          "after": {
+            "allocated_bytes": 7567,
+            "executable_bytes": 6906,
+            "zero_fill_bytes": 138
+          },
+          "before": {
+            "allocated_bytes": 7367,
+            "executable_bytes": 6706,
+            "zero_fill_bytes": 138
+          },
+          "changed_local_frames": [
+            {
+              "after": 8,
+              "before": null,
+              "function": "void re4dc_fa29_actor_identity(const Re4dcModelPart*, unsigned int*, unsigned int*, unsigned int*)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 200,
+            "executable_bytes": 200,
+            "zero_fill_bytes": 0
+          },
+          "max_compiler_local_frame": {
+            "after": 324,
+            "before": 324
+          },
+          "unit": "model_bridge"
+        },
+        {
+          "after": {
+            "allocated_bytes": 121932,
+            "executable_bytes": 28058,
+            "zero_fill_bytes": 87233
+          },
+          "before": {
+            "allocated_bytes": 97180,
+            "executable_bytes": 27882,
+            "zero_fill_bytes": 62657
+          },
+          "changed_local_frames": [],
+          "delta": {
+            "allocated_bytes": 24752,
+            "executable_bytes": 176,
+            "zero_fill_bytes": 24576
+          },
+          "max_compiler_local_frame": {
+            "after": 3092,
+            "before": 3092
+          },
+          "unit": "qa_menu"
+        },
+        {
+          "after": {
+            "allocated_bytes": 3060,
+            "executable_bytes": 1320,
+            "zero_fill_bytes": 600
+          },
+          "before": {
+            "allocated_bytes": 0,
+            "executable_bytes": 0,
+            "zero_fill_bytes": 0
+          },
+          "changed_local_frames": [
+            {
+              "after": 0,
+              "before": null,
+              "function": "bool re4dc::fa29::collecting()"
+            },
+            {
+              "after": 12,
+              "before": null,
+              "function": "bool re4dc::fa29::snapshot(Snapshot*)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "const char* re4dc::fa29::label(Reason)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "const char* re4dc::fa29::unit(Reason)"
+            },
+            {
+              "after": 60,
+              "before": null,
+              "function": "int re4dc::fa29::format_line(unsigned int, char*, unsigned int)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "unsigned int re4dc::fa29::line_count()"
+            },
+            {
+              "after": 24,
+              "before": null,
+              "function": "void re4dc::fa29::begin_tick(uint32_t, uint32_t)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::decision(bool)"
+            },
+            {
+              "after": 8,
+              "before": null,
+              "function": "void re4dc::fa29::end_tick()"
+            },
+            {
+              "after": 16,
+              "before": null,
+              "function": "void re4dc::fa29::hit(Reason, uint32_t)"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::pause()"
+            },
+            {
+              "after": 8,
+              "before": null,
+              "function": "void re4dc::fa29::reset()"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::resume()"
+            },
+            {
+              "after": 0,
+              "before": null,
+              "function": "void re4dc::fa29::{anonymous}::add(uint32_t&, uint32_t)"
+            }
+          ],
+          "delta": {
+            "allocated_bytes": 3060,
+            "executable_bytes": 1320,
+            "zero_fill_bytes": 600
+          },
+          "max_compiler_local_frame": {
+            "after": 60,
+            "before": 0
+          },
+          "unit": "fallback_audit29"
+        }
+      ]
+    }
+  ],
+  "raw_target_sha256": {
+    "off": "917c3cfc5dd3fae3a8bacae4f19951d3c2d472f2b9271ed4b77d4140e4ecfa41",
+    "on": "c28a55db5ca505fcd8db25c1a439ffc0bc836f02156722e893edf54bf67b6fa9"
+  },
+  "scope": "Complete selected production TU sections before final link/GC. Allocated includes code/rodata/data/BSS; do not add BSS again. Local compiler frames are not call-chain or IRQ watermarks.",
+  "status": "PASS"
+}

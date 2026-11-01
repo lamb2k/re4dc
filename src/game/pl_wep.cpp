@@ -18,6 +18,9 @@
 #include "cam_ctrl.h"
 #include "rnd.h"
 #include "math_sub.h"
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+#include "re4dc_wep27.h"
+#endif
 
 // GetWepTargetList entry (em_sub.cpp).
 struct WepTarget {
@@ -184,7 +187,7 @@ void re4dc_weapon_revert(int oldNo, int oldType, int no, int type);
 #endif
 void cPlayer::weaponLoad(int no, int type)
 {
-#if RE4DC_WEAPON_HEAP4
+#if RE4DC_WEAPON_HEAP4 || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
     const int oldNo = pG->weapon_no;
     const int oldType = pG->weapon_type;
     re4dc_wep_reverted = 0;
@@ -192,10 +195,21 @@ void cPlayer::weaponLoad(int no, int type)
     U8Set(pG->weapon_no, no);
     U8Set(pG->weapon_type, type);
     ReadWepData(no, type);
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    if (re4dc_wep27_failed
+#if RE4DC_WEAPON_HEAP4
+        || re4dc_wep_heap4_failed
+#endif
+    ) {
+        re4dc_weapon27_revert(oldNo,oldType,no,type);
+        return;
+    }
+#else
 #if RE4DC_WEAPON_HEAP4
     if (re4dc_wep_heap4_failed) {
         re4dc_weapon_revert(oldNo, oldType, no, type);
     }
+#endif
 #endif
 }
 

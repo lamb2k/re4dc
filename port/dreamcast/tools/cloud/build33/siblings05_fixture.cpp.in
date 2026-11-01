@@ -1,0 +1,178 @@
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <cstdarg>
+#include <string>
+#include <vector>
+#include <sys/mman.h>
+#include "static_obj_siblings05.hpp"
+using Mtx=float[3][4];
+struct cParts {Mtx mat; cParts* pList;};
+struct ModelPart {unsigned char pad[24];unsigned size,reserved;};
+struct ModelData {ModelPart* pParts;unsigned displist_num;};
+struct cModelInfo {ModelData* pData;cModelInfo* pList;unsigned be_flag;};
+struct cModel {unsigned kindid,id;Mtx mat;cParts* pParts;unsigned nParts;
+    cModelInfo* pModelInfo;float invisible_factor=1,invisible_factor2=1;
+    float pos[3],ang[3];unsigned be_flag;};
+struct Re4dcModelPart {
+    const void* part;const unsigned char* stream;unsigned stream_bytes,flags,material_flags;
+    unsigned position_count,normal_count,position_stride,normal_stride,shift,normal_shift;
+    unsigned blend,cull,depth_mode,alpha_state;Mtx modelview;
+    const void* lighting;const void* positions;const void* normals;const void* uv;const void* colors;
+};
+namespace re4dc {namespace render {struct SourceLighting {unsigned words[8];};}}
+struct Global {unsigned Frame_cnt=1,room_id=0x101;struct {Mtx v_mat;} Cam;} global;
+Global* pG=&global;
+constexpr unsigned OT_MAX=1;
+struct Node {void* data;void (*func)(void*);Node* next;};
+struct Ot {Node* list;unsigned max;} g_OtWork[OT_MAX]{};
+void ModelRender(void*){}
+struct HeapInfo {int handle=1;std::uintptr_t start=0,end=0;} Heap[5];
+struct Block {void* map;void* base;unsigned capacity;bool allocated;};
+std::vector<Block> blocks;
+std::string hook_site;
+void (*hook)()=nullptr;
+bool refuse=false;
+unsigned frees=0,logs=0,gates=0,own_calls=0,ready_calls=0,ui_frame=1;
+unsigned wants[512]{};
+void (*prepare)(unsigned)=nullptr;
+void edge(const char* site){if(hook && hook_site==site){auto fn=hook;hook=nullptr;fn();}}
+int memCheckHeapActive(int){return Heap[4].handle>=0;}
+extern "C" void re4dc_log(const char*,...){++logs;edge("log");}
+void reset_heap();
+void* mem_alloc(unsigned bytes,const char*,int,int,int){
+    if(refuse)return nullptr;
+    edge("alloc");
+    // Keep the room allocator's 32-byte metadata in the preceding page. A
+    // same-epoch free revokes its magic while protecting all consumer payload;
+    // a heap reset protects metadata too, which must be rejected by epoch first.
+    unsigned capacity=((bytes+4095U)&~4095U)+4096;
+    for(auto& b:blocks)if(!b.allocated && b.capacity>=capacity){
+        assert(!mprotect(b.map,b.capacity,PROT_READ|PROT_WRITE));b.allocated=true;return b.base;
+    }
+    void* p=mmap(nullptr,capacity,PROT_READ|PROT_WRITE,MAP_ANONYMOUS|MAP_PRIVATE,-1,0);
+    assert(p!=MAP_FAILED);void* base=(unsigned char*)p+4096-32;blocks.push_back({p,base,capacity,true});
+    auto addr=(std::uintptr_t)base;
+    if(!Heap[4].start || addr<Heap[4].start)Heap[4].start=addr;
+    if((std::uintptr_t)p+capacity>Heap[4].end)Heap[4].end=(std::uintptr_t)p+capacity;
+    return base;
+}
+void* mem_calloc(unsigned n,const char* tag,int a,int b,int h){void* p=mem_alloc(n,tag,a,b,h);if(p)memset(p,0,n);return p;}
+extern "C" void OSFreeToHeap(int,void* p){
+    for(auto& b:blocks)if(b.base==p){assert(b.allocated);b.allocated=false;++frees;
+        assert(!mprotect((unsigned char*)b.map+4096,b.capacity-4096,PROT_NONE));edge("free");return;}
+    assert(false);
+}
+@ROOM@
+void reset_heap(){
+    re4dc_room4_close();
+    for(auto& b:blocks){b.allocated=false;assert(!mprotect(b.map,b.capacity,PROT_NONE));}
+    re4dc_room4_open();
+}
+extern "C" void* re4dc_static_alloc(unsigned n){return room_alloc4(n,"fixture",false);}
+extern "C" void re4dc_static_free(void* p){room_free4(p,"fixture");}
+extern "C" int re4dc_actor_stream_encoded(const unsigned char*,unsigned){return 0;}
+extern "C" int re4dc_ui_part_key(const Re4dcModelPart*,unsigned* crc,unsigned* fnv){*crc=1;*fnv=2;edge("key");return 1;}
+extern "C" int re4dc_actor_materialize_lazy(Re4dcModelPart*){edge("materialize");return 0;}
+extern "C" unsigned re4dc_ui_frame(){return ui_frame;}
+extern "C" void re4dc_ps2_place_own(unsigned,unsigned){++own_calls;edge("own");}
+extern "C" void re4dc_ps2_place_gate(unsigned,unsigned p,int draw){assert(p<512);wants[p]=draw;++gates;edge("gate");}
+extern "C" int re4dc_ps2_place_ready(unsigned,unsigned){++ready_calls;edge("ready");return 1;}
+extern "C" void re4dc_ps2_place_prepare_fn(unsigned,void (*fn)(unsigned)){prepare=fn;edge("prepare");}
+@SIBLINGS@
+void clean(){hook=nullptr;re4dc_sob_bake_room_leave();reset_heap();
+    sobdump::S=nullptr;
+#if RE4DC_SIBLING05_FIXTURE_CURRENT
+    sobdump::owner.clear();sobake::owner.clear();
+#endif
+    sobake::S=nullptr;refuse=false;prepare=nullptr;++global.Frame_cnt;++ui_frame;
+    memset(wants,0,sizeof wants);g_OtWork[0]={};
+}
+void arm(const char* site,void (*fn)()){hook_site=site;hook=fn;}
+void bake(){re4dc_sob_bake_frame();assert(sobake::S && prepare==sobake::decide);}
+void dump(){assert(sobdump::ensure());}
+cModel model{0,0x41,{},nullptr,0,nullptr,1,1,{},{},0};
+Node node{&model,ModelRender,nullptr};
+void install_model(){
+    bake();auto& o=sobake::S->obj[0];o.m=&model;o.words=sobake::words_of(&model);
+    auto* rest=(unsigned*)re4dc_static_alloc(o.words*4);assert(rest);sobake::fill(&model,rest);o.rest=rest;
+#if RE4DC_SIBLING05_FIXTURE_CURRENT
+    o.rest_incarnation=re4dc_room4_cell_incarnation(rest,o.words*4,room4.generation);
+#endif
+    g_OtWork[0]={&node,1};
+}
+void replace_dump(){reset_heap();dump();sobdump::S->used=7;sobdump::S->sent=3;}
+void replace_bake(){reset_heap();bake();sobake::S->frames=123;}
+void free_reenter(){reset_heap();bake();}
+void room_reenter(){global.room_id=0x101;replace_bake();}
+void matched_model(){const unsigned word=@REST_WORD@;memcpy(&model.mat[2][3],&word,4);
+    assert(sobake::fnv((unsigned*)model.mat,12)==0x00ed2644U);g_OtWork[0]={&node,1};}
+void dump_part(const char* site){
+    struct Blob {ModelPart part;unsigned char stream[32];} blob{};blob.part.size=32;
+    ModelData data{&blob.part,1};cModelInfo info{&data,nullptr,0};Re4dcModelPart p{};
+    p.part=&blob.part;p.stream=blob.stream;p.stream_bytes=32;
+    sobdump::part(&model,&info,&data,&blob.part,p);global.Frame_cnt+=60;
+    arm(site,reset_heap);sobdump::part(&model,&info,&data,&blob.part,p);assert(!sobdump::S);
+}
+void check(const char* name){std::printf("PASS %s\n",name);std::fflush(stdout);}
+int main(int argc,char** argv){
+    const std::string selected=argc>1?argv[1]:"all";
+    unsigned tests=0;
+    auto test=[&](const char* name,auto fn){if(selected=="all" || selected==name){clean();fn();check(name);++tests;}};
+    re4dc_room4_open();
+    test("dump-frame-stale",[]{dump();reset_heap();sobdump::frame();assert(!sobdump::S);});
+    test("dump-ensure-stale",[]{dump();reset_heap();dump();assert(sobdump::S->used==0);});
+    test("bake-frame-stale",[]{bake();reset_heap();re4dc_sob_bake_frame();assert(sobake::S);});
+    test("bake-callback-stale",[]{bake();reset_heap();sobake::decide(0x101);assert(!sobake::S && !wants[209]);});
+    test("bake-skip-stale",[]{bake();reset_heap();assert(!re4dc_sob_bake_skip(&model));});
+    test("bake-leave-stale",[]{bake();reset_heap();unsigned before=frees;re4dc_sob_bake_room_leave();assert(frees==before);});
+    test("dump-freed-state",[]{dump();re4dc_static_free(sobdump::S);sobdump::frame();assert(!sobdump::S);});
+    test("bake-freed-state",[]{bake();re4dc_static_free(sobake::S);assert(!re4dc_sob_bake_skip(&model));});
+    test("dump-log-reentry",[]{dump();sobdump::S->used=8;arm("log",replace_dump);sobdump::frame();
+        assert(sobdump::S && sobdump::S->used==7 && sobdump::S->sent==3);});
+    test("dump-allocation-reset",[]{arm("alloc",reset_heap);assert(!sobdump::ensure() && !sobdump::S);});
+    test("dump-allocation-reentry",[]{arm("alloc",replace_dump);assert(!sobdump::ensure());
+        assert(sobdump::S && sobdump::S->used==7 && room4.live_cells==1);});
+    test("dump-publication-reentry",[]{arm("log",replace_dump);assert(!sobdump::ensure());
+        assert(sobdump::S && sobdump::S->used==7);});
+    test("bake-allocation-reset",[]{arm("alloc",reset_heap);re4dc_sob_bake_frame();assert(!sobake::S && !prepare);});
+    test("bake-allocation-reentry",[]{arm("alloc",replace_bake);re4dc_sob_bake_frame();
+        assert(sobake::S && sobake::S->frames==123 && room4.live_cells==1);});
+    test("bake-own-reentry",[]{arm("own",replace_bake);re4dc_sob_bake_frame();assert(sobake::S && sobake::S->frames==123);});
+    test("bake-ready-reentry",[]{install_model();arm("ready",replace_bake);sobake::decide(0x101);
+        assert(sobake::S && sobake::S->frames==123 && !wants[209]);});
+    test("bake-gate-reentry",[]{install_model();arm("gate",replace_bake);sobake::decide(0x101);
+        assert(sobake::S && sobake::S->frames==123 && !wants[209]);});
+    test("dump-key-reentry",[]{dump_part("key");});
+    test("dump-materialize-reentry",[]{dump_part("materialize");});
+    test("actual-rest-bind",[]{bake();matched_model();sobake::decide(0x101);
+        assert(sobake::S->obj[1].m==&model && wants[210] && re4dc_sob_bake_skip(&model));
+        model.mat[2][3]=0;});
+    test("rest-allocation-reset",[]{bake();matched_model();arm("alloc",reset_heap);sobake::decide(0x101);
+        assert(!sobake::S && !wants[210]);model.mat[2][3]=0;});
+    test("rest-allocation-reentry",[]{bake();matched_model();arm("alloc",replace_bake);sobake::decide(0x101);
+        assert(sobake::S && sobake::S->frames==123 && !wants[210]);model.mat[2][3]=0;});
+    test("rest-bind-log-reentry",[]{bake();matched_model();arm("log",replace_bake);sobake::decide(0x101);
+        assert(sobake::S && sobake::S->frames==123 && !wants[210]);model.mat[2][3]=0;});
+    test("rest-retired",[]{install_model();re4dc_static_free((void*)sobake::S->obj[0].rest);
+        sobake::decide(0x101);assert(!wants[209] && !re4dc_sob_bake_skip(&model));});
+    test("rest-reused-address",[]{install_model();auto& o=sobake::S->obj[0];auto* old=o.rest;
+        re4dc_static_free((void*)old);auto* fresh=re4dc_static_alloc(o.words*4);assert(fresh==old);
+        memset(fresh,0xa5,o.words*4);sobake::decide(0x101);assert(!wants[209]);
+        unsigned before=frees;re4dc_sob_bake_room_leave();assert(frees==before+1 && *(unsigned*)fresh==0xa5a5a5a5U);
+        re4dc_static_free(fresh);});
+    test("leave-free-reentry",[]{install_model();arm("free",free_reenter);re4dc_sob_bake_room_leave();assert(sobake::S);});
+    test("room-change-free-reentry",[]{install_model();global.room_id=0x102;arm("free",room_reenter);
+        re4dc_sob_bake_frame();assert(sobake::S && sobake::S->room==0x101 && sobake::S->frames==123);});
+    test("same-address-state",[]{bake();auto* old=sobake::S;re4dc_static_free(old);
+        auto* fresh=re4dc_static_alloc(sizeof(sobake::State));assert(fresh==old);memset(fresh,0xa5,sizeof(sobake::State));
+        assert(!re4dc_sob_bake_skip(&model));unsigned before=frees;re4dc_sob_bake_room_leave();assert(frees==before);
+        assert(*(unsigned*)fresh==0xa5a5a5a5U);re4dc_static_free(fresh);});
+    test("ordinary-output-order",[]{install_model();sobake::decide(0x101);assert(wants[209] && re4dc_sob_bake_skip(&model));
+        model.mat[0][0]=1;sobake::decide(0x101);assert(!wants[209] && !re4dc_sob_bake_skip(&model));model.mat[0][0]=0;});
+    test("oom-exhaustion",[]{refuse=true;assert(!sobdump::ensure());re4dc_sob_bake_frame();assert(!sobake::S);
+        refuse=false;room4_incarnation=~0U;unsigned before=frees;assert(!sobdump::ensure());
+        re4dc_sob_bake_frame();assert(!sobake::S && frees==before+2);});
+    assert(tests);clean();for(auto& b:blocks)assert(!munmap(b.map,b.capacity));
+}

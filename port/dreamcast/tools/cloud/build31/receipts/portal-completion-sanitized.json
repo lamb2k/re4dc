@@ -1,0 +1,82 @@
+{
+  "status": "PASS",
+  "scope": "Exercise actual portal runtime, chunk emitter and queued flush receipt block.\n\nSynthetic package/geometry and controlled emit_pick/PVR edges test lifecycle,\nnot authored occluder correctness, GPU completion, look, STRICT or console cost.\n",
+  "sanitize": true,
+  "guards": [
+    {
+      "name": "absent",
+      "accepted": true
+    },
+    {
+      "name": "zero",
+      "accepted": true
+    },
+    {
+      "name": "supported",
+      "accepted": true
+    },
+    {
+      "name": "bad-0",
+      "accepted": false
+    },
+    {
+      "name": "bad-1",
+      "accepted": false
+    },
+    {
+      "name": "bad-2",
+      "accepted": false
+    },
+    {
+      "name": "bad-3",
+      "accepted": false
+    },
+    {
+      "name": "SCENERY_STREAM",
+      "accepted": false
+    },
+    {
+      "name": "SCENERY_CLIP_GATHER",
+      "accepted": false
+    },
+    {
+      "name": "SCENERY_CLIP_INDEXED26",
+      "accepted": false
+    },
+    {
+      "name": "missing-portal",
+      "accepted": false
+    },
+    {
+      "name": "missing-compose",
+      "accepted": false
+    },
+    {
+      "name": "source-supported",
+      "accepted": true
+    },
+    {
+      "name": "source-legacy-refusal",
+      "accepted": false
+    },
+    {
+      "name": "source-stream-refusal",
+      "accepted": false
+    }
+  ],
+  "output": "portal29 production loader/runtime: 388 checks PASS; allocation balance 5/5\nportal completion actual runtime/emit/flush: 628 checks PASS; closes=5 ends=5\n",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "4c025235eeb58b26eb8849aa8101ae014907710590332220c840f3919e989a13",
+    "port/dreamcast/game/platform/include/world_portal29.hpp": "8de21545620ed93a3d6462df62c9daaf428e83e783a95280a2a66304a5c4a9a9",
+    "port/dreamcast/game/platform/include/world_portal29_runtime.inc": "3f0243ef9ea25277fbf24e93bc57a34c17ba4b73c97673981db9e5b8fefc27d9",
+    "port/dreamcast/tools/cloud/build31/portal_runtime_fixture.cpp": "8f3a35fd83669a1f7ec0413542035b481ae79382b67eafeae3fbd61c416c6609",
+    "port/dreamcast/tools/cloud/build31/portal_completion_fixture.cpp.in": "700c68d3ec1fd75e11611f41223cd3b6c3a1be81add1f19406acb2ecc9361641",
+    "port/dreamcast/game/world_plan29.mk": "01db47667ce7e1c81857b8486b00f1c74cd6a8b51ceb06f2febee0d10621e4b8",
+    "port/dreamcast/tools/cloud/build31/portal_completion_profiles.json": "50d1370952f55829ec18f9033800a362dc3ffdcee2015b8a12b08c2db5431fa0",
+    "port/dreamcast/tools/cloud/build31/portal_completion_host.py": "b477467c7cc949ce3b4d8d4de4ea5508892b8427d45babd78543c6ece5539e33"
+  },
+  "extracted_sha256": {
+    "CHUNK_EMIT": "67a8ddc2e9f5ecc507591b0f973366db4adc42a637f07fddc377300fbc4f4cd2",
+    "FLUSH": "a96682bcc74a4810e7ee9effd33fd5c3c70cbad556fdced364cc035750608369"
+  }
+}

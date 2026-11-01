@@ -1,0 +1,35 @@
+#include "@HEADER@"
+alignas(4) static std::uint8_t section34[16+256+128*8];
+static const std::uint8_t builder34[]={@BUILDER_BYTES@};
+static std::uint32_t words34[4];
+// External inputs prevent the fixture compiler from removing live runtime
+// checks (including alignment, version, identity and variable group division).
+unsigned len34,version34,meshlets34,parts34,groups34;
+std::uint32_t crc34,bytes34;
+const std::uint8_t* pointer34;
+extern "C" {
+extern const unsigned fixture_layout[]={1,reinterpret_cast<unsigned>(section34),sizeof(section34),
+    reinterpret_cast<unsigned>(words34),sizeof(words34)};
+void fixture_prepare(unsigned mode){
+    const std::uint32_t h[4]={0x04758321U,123456U,32U,4U};
+    std::memcpy(section34,h,16);std::memcpy(section34+16,builder34,sizeof(builder34));
+    pointer34=section34;len34=sizeof(section34);version34=1;crc34=h[0];bytes34=h[1];
+    meshlets34=32;parts34=128;groups34=4;
+    if(mode==0)len34=8;
+    if(mode==1){meshlets34=1;len34=272+4*8;std::memcpy(section34+8,&meshlets34,4);}
+    if(mode==3)section34[272+127*8+3]=64;
+    if(mode==4||mode==5||mode==6){
+        const std::uint32_t p[4]={0x04758321U,123456U,parts34,0};
+        std::memcpy(section34,p,16);len34=16+4*parts34;
+        if(mode==5)len34=8;
+        if(mode==6){parts34=0x40000000U;std::memcpy(section34+8,&parts34,4);len34=16;}
+    }
+    if(mode==7)section34[0]^=1;
+}
+unsigned fixture_cone(unsigned){
+    return re4dc_scn21::cone(pointer34,len34,version34,crc34,bytes34,meshlets34,groups34,words34)==nullptr;
+}
+unsigned fixture_piece(unsigned){
+    return re4dc_scn21::piece(pointer34,len34,version34,crc34,bytes34,parts34,words34)==nullptr;
+}
+}

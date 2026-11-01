@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include "actor_source_span.h"
+#include "actor_resource_lease.h"
 #include "native_ui.h"
 #include "../../../room/source_lighting.hpp"
 // View of a qualified source ModelData part. The source already selected and
@@ -25,6 +27,13 @@ struct Re4dcModelPart {
     // like the arrays above; the part's (texId, alphaTex or 0xff) key.
     unsigned serial=0; const float* world=nullptr; const float* view=nullptr;
     unsigned char source_key[4]={0,0xff,0,0};
+#if RE4DC_ACTOR_SOURCE_SPAN
+    Re4dcActorSourceSpan source_span{};
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+    const void* native_pose=nullptr;
+    Re4dcActorWorkspaceLease native_pose_lease{};
+#endif
 };
 extern "C" {
 int re4dc_model_diagnostic_enabled();

@@ -1,0 +1,231 @@
+{
+  "status": "PASS",
+  "scope": "Actual Make-expanded compiler flags only; no additional target compilation. All direct FA29/FA35 cpp header consumers and old FA29 target lists are covered; included disc/actor fragments are owned by their listed parent TUs.",
+  "baseline": "b7c321300a12de206c692793d4b3e41ffec03d27",
+  "targets": [
+    {
+      "unit": "main",
+      "source": "src/game/main.cpp",
+      "target": "src/game/main.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "287fb4f84b7dcf0e2f4b6bd743ef6a4e1e65b140dde2880fe96db4c6143b9f8e"
+    },
+    {
+      "unit": "motion",
+      "source": "src/game/motion.cpp",
+      "target": "src/game/motion.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "ce8acc392a1ccf9b798ba3736bf9b78e2c8b3267ef78d5671cec27b7de18dcb9"
+    },
+    {
+      "unit": "atari",
+      "source": "src/game/atari.cpp",
+      "target": "src/game/atari.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "abed3222b87a35831959efe32520f4f44ebca4e1d971f6f97a1b2f200b257c49"
+    },
+    {
+      "unit": "cloth",
+      "source": "src/game/cloth.cpp",
+      "target": "src/game/cloth.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "eec64158820c591c3ae633754825d187519a133f3bffc96e8764c19eb6c0da34"
+    },
+    {
+      "unit": "esp",
+      "source": "src/game/esp.cpp",
+      "target": "src/game/esp.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "b683f697fe1ba5175a6125c83461681b5f192fc713373171cb54818be452d562"
+    },
+    {
+      "unit": "esp_efm",
+      "source": "src/game/esp_efm.cpp",
+      "target": "src/game/esp_efm.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "0d682f3e605b3133ccfa75d710d35a0b17b842d3debe188d1dc37966a255ce3e"
+    },
+    {
+      "unit": "trans_ot",
+      "source": "src/game/trans_ot.cpp",
+      "target": "src/game/trans_ot.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "0d682f3e605b3133ccfa75d710d35a0b17b842d3debe188d1dc37966a255ce3e"
+    },
+    {
+      "unit": "pendulum",
+      "source": "src/game/pendulum.cpp",
+      "target": "src/game/pendulum.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "3ba3aec5e41ed527be7124144ef5e2fcc46b683329ae987436c62333cdee319e"
+    },
+    {
+      "unit": "trans",
+      "source": "src/game/trans.cpp",
+      "target": "src/game/trans.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "cdbb66a71874ab2ef840430e18b6e969578571a49c9adc75e27df8785349927c"
+    },
+    {
+      "unit": "espgen",
+      "source": "src/game/espgen.cpp",
+      "target": "src/game/espgen.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "e25a00aed1eeb32a058f816abbcbba54f7db3c24f68b407ccacdd96062d21c00"
+    },
+    {
+      "unit": "est",
+      "source": "src/game/est.cpp",
+      "target": "src/game/est.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "abd71d8b32f0bf64711bb827ea0da03928587057f4311d35cb2822f2040d922b"
+    },
+    {
+      "unit": "at_mod",
+      "source": "src/game/at_mod.cpp",
+      "target": "src/game/at_mod.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "1c49c28ead92010104fff85d65b64c7d903fc328fd373c559a2f5a23e04bc8f8"
+    },
+    {
+      "unit": "native_actor_fast",
+      "source": "port/dreamcast/game/platform/native_actor_fast.cpp",
+      "target": "platform/native_actor_fast.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "e8a7c424c7380c86f46d84608802dc590f2df5a8ed871c8a7e18f5e30ccb64a1"
+    },
+    {
+      "unit": "native_motion",
+      "source": "port/dreamcast/game/platform/native_motion.cpp",
+      "target": "platform/native_motion.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "d05052dae5b3b9bbdcfab706f79fae797a96506bdd7aaeb510effe3be82af652"
+    },
+    {
+      "unit": "native_ui",
+      "source": "port/dreamcast/game/platform/native_ui.cpp",
+      "target": "platform/native_ui.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "777b1971023c261d8928351deb7fd8205f60d3bc0c00589e67bcfb02fdc48bf4"
+    },
+    {
+      "unit": "dvd_read_safe",
+      "source": "port/dreamcast/game/platform/dvd_read_safe.cpp",
+      "target": "platform/dvd_read_safe.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "6350efbacb3cda34d93ce1e7cd378df3c7e8695bff7316d201fc6e753fa62b7c"
+    },
+    {
+      "unit": "audio_aica",
+      "source": "port/dreamcast/game/platform/audio_aica.cpp",
+      "target": "platform/audio_aica.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "d8b682f7fe42a3aade0ded9b27a1f88ca6dc1f29b6201b1140db07ccd9ffb9bc"
+    },
+    {
+      "unit": "audio_strm",
+      "source": "port/dreamcast/game/platform/audio_strm.cpp",
+      "target": "platform/audio_strm.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "8fb456727c12b1a1b9c67cf931c266bd749ed620fecb5938116d486a2e820494"
+    },
+    {
+      "unit": "gx_stub",
+      "source": "port/dreamcast/game/platform/gx_stub.cpp",
+      "target": "platform/gx_stub.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "e11096fdcd1c128905d174934aaf4ca052f6525e0a51bbf121279b68a64204d2"
+    },
+    {
+      "unit": "model_bridge",
+      "source": "port/dreamcast/game/model_bridge.cpp",
+      "target": "model_bridge.o",
+      "audit35_definition": 1,
+      "window35_definition": null,
+      "flags_sha256": "bee7f77486a8ffda8b03da1560791e55cc9214a8699a8a81b9ed143cc1d24d30"
+    },
+    {
+      "unit": "qa_menu",
+      "source": "port/dreamcast/game/qa_menu.cpp",
+      "target": "qa_menu.o",
+      "audit35_definition": 1,
+      "window35_definition": 32,
+      "flags_sha256": "52981f2a3e342e059eb8507fa1a8fa62782f2f68b24004960bca984df4034dbe"
+    },
+    {
+      "unit": "draw_fallback_audit",
+      "source": "port/dreamcast/game/draw_fallback_audit.cpp",
+      "target": "draw_fallback_audit.o",
+      "audit35_definition": 1,
+      "window35_definition": 32,
+      "flags_sha256": "4a3a2faa3b827bcfb99aaf8dab8d6327a89aafeb638508d683b092636aff9c06"
+    },
+    {
+      "unit": "fallback_audit29",
+      "source": "port/dreamcast/game/fallback_audit29.cpp",
+      "target": "fallback_audit29.o",
+      "audit35_definition": 1,
+      "window35_definition": 32,
+      "flags_sha256": "0b4a61c8b527316cbadb3072d0d8cb88b84f743900303c60d7dd852f01332639"
+    },
+    {
+      "unit": "fallback_window35",
+      "source": "port/dreamcast/game/fallback_window35.cpp",
+      "target": "fallback_window35.o",
+      "audit35_definition": 1,
+      "window35_definition": 32,
+      "flags_sha256": "f96f419d03ad9c4617f1a3346d76cf1923fb529260d6ed04c6fa0b9017f27637"
+    }
+  ],
+  "direct_header_consumers": [
+    "port/dreamcast/game/fallback_audit29.cpp",
+    "port/dreamcast/game/fallback_window35.cpp",
+    "port/dreamcast/game/platform/audio_aica.cpp",
+    "port/dreamcast/game/platform/audio_strm.cpp",
+    "port/dreamcast/game/platform/dvd_read_safe.cpp",
+    "port/dreamcast/game/platform/gx_stub.cpp",
+    "port/dreamcast/game/platform/native_actor_fast.cpp",
+    "port/dreamcast/game/platform/native_motion.cpp",
+    "port/dreamcast/game/platform/native_ui.cpp",
+    "port/dreamcast/game/qa_menu.cpp",
+    "src/game/at_mod.cpp",
+    "src/game/atari.cpp",
+    "src/game/cloth.cpp",
+    "src/game/esp.cpp",
+    "src/game/esp_efm.cpp",
+    "src/game/espgen.cpp",
+    "src/game/est.cpp",
+    "src/game/main.cpp",
+    "src/game/motion.cpp",
+    "src/game/pendulum.cpp",
+    "src/game/trans.cpp",
+    "src/game/trans_ot.cpp"
+  ],
+  "profile_sha256": "bc45c6bcab4a8722b9956fa6dc6ddc3a012e1e883c89b5b586ccf4f3cf23816f",
+  "target_receipt_sha256": "0b2e17ec1583a668283272a1a1ea5828d81bb2d326c0f4ad6d42cd0c549e5c3f",
+  "source_sha256": {
+    "port/dreamcast/tools/cloud/build35/build_controls.py": "4dc0e5f2d495dad4893cbc7cb0a808dbf449aef63b199764b94f731a2c5d5a1a",
+    "port/dreamcast/game/Makefile": "67cad1dbdf175eccca4c79b7e7223d00c5a062b8f357242448fc270828baf0bf",
+    "port/dreamcast/game/fallback_audit29.mk": "d01e66fb6cc5b76035b6a3b5ef8037b8d84c03fb64e57e8a047bc1567f488c22",
+    "port/dreamcast/game/fallback_audit35.mk": "2fc763418155ff7db2f032d1d11e81cb05eeb7ad493b9495a0ef67c5baf036b8"
+  }
+}

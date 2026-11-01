@@ -1,3 +1,18 @@
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+#include "platform/include/static_obj_lifetime05.hpp"
+#include "platform/include/static_obj_siblings05.hpp"
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+#include "platform/include/static_obj_batch33.hpp"
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "platform/include/draw_fallback_audit.h"
+#define DFA26_MODEL_HIT(reason, n) ::re4dc::dfa26::hit(::re4dc::dfa26::reason, (n));
+#define DFA26_MODEL_SLOW(reason, n, ...) { DFA26_MODEL_HIT(reason, n) __VA_ARGS__ }
+#else
+#define DFA26_MODEL_HIT(reason, n)
+#define DFA26_MODEL_SLOW(reason, n, ...) __VA_ARGS__
+#endif
 #include "platform/include/gc_asset_motion_unknown.h"
 #include "actor_visibility_diag.h"
 // Recovered commonModelTrans -> existing native frame/packet/texture owner.
@@ -7,6 +22,10 @@
 #include "model.h"
 #include "gx.h"
 #include "native_model.h"
+#if defined(RE4DC_STATIC_OBJ_SPANS10) && RE4DC_STATIC_OBJ_SPANS10
+#include "platform/include/static_obj_spans10.h"
+#include "platform/include/native_draw_owner_stamp.hpp"
+#endif
 #if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
 #include "gc_asset_members.h"
 #include "player.h"
@@ -157,6 +176,41 @@ extern "C" int re4dc_actor_obj_id(const void* model){
 }
 #endif
 #endif
+#endif
+#if defined(RE4DC_BARN28_DIAG) && RE4DC_BARN28_DIAG
+// BARN28_DIAG (barn28.mk): kindid << 8 | id of a model (-1 none), for the B28L rows.
+extern "C" int re4dc_b28_model_kind(const void* model){
+    auto* m=(const cModel*)model;
+    return m ? int((unsigned(m->kindid)&255U)<<8|(unsigned(m->id)&255U)) : -1;
+}
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+// Read the source declarations only when a new diagnostic row is installed.
+// Unknown chunk/attachment identities stay unknown; never guess a package row.
+extern "C" void re4dc_fa29_actor_identity(const Re4dcModelPart* p,unsigned* tag,unsigned* info_index,unsigned* offset){
+    *tag=*info_index=*offset=~0U;
+    const auto* m=static_cast<const cModel*>(p->model);
+    const auto* info=static_cast<const cModelInfo*>(p->info);
+    if(!m)return;
+    *tag=((unsigned(m->kindid)&255U)<<24)|((unsigned(m->id)&255U)<<16)|
+         ((unsigned(m->type)&255U)<<8)|(unsigned(m->nParts)&255U);
+    const cModelInfo* q=m->pModelInfo;
+    for(unsigned n=0;q && n<1024;++n,q=q->pList){if(q==info){*info_index=n;break;}}
+    if(!info || !info->pData || p->part==p->info)return;
+    const auto* d=info->pData;
+    const uintptr_t base=reinterpret_cast<uintptr_t>(d),part=reinterpret_cast<uintptr_t>(p->part);
+    // Only publish an offset after finding the submitted part in this model's
+    // real part table. A chunk's synthetic view is not an offline source row.
+    const ModelPart* source=d->pParts;
+    for(unsigned n=0;source && n<d->displist_num && n<4096;++n){
+        if(source==p->part){
+            if(part>=base && part-base<16U*1024U*1024U)*offset=unsigned(part-base);
+            break;
+        }
+        if(source->size>1024U*1024U)break;
+        source=reinterpret_cast<const ModelPart*>(reinterpret_cast<const unsigned char*>(source)+sizeof(ModelPart)+source->size);
+    }
+}
 #endif
 extern "C" void re4dc_model_material(const void* object,float u,float v,unsigned flags){
     selected={};mask={};mask_ref=256;mask_same_uv=0;
@@ -318,6 +372,16 @@ State* S=nullptr;
 unsigned seen_frame=~0U,generation=0; bool live=false;
 const void* cur_model=nullptr; const void* cur_info=nullptr; unsigned cur_idx=0;
 struct Stats { unsigned groups,lists,merged,saved,built,refused,singles,lit,log; } st{};
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+re4dc::sob05::Cell<State> owner;
+bool validate(){
+    State* prior=S;
+    S=owner.get();
+    live=re4dc_room4_live_generation(&generation)!=0;
+    if(prior && !S){cur_model=cur_info=nullptr;cur_idx=0;}
+    return S!=nullptr;
+}
+#endif
 inline bool static_class(const cModel* m){
     const unsigned k=m->kindid,id=m->id;
     return (k==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(k==1&&id==0x21);
@@ -350,9 +414,13 @@ inline bool same(const Re4dcModelPart& a,const Re4dcModelPart& b){
 inline const unsigned char* list_of(const ModelPart* q){return (const unsigned char*)q+0x20;}
 void new_frame(){
     seen_frame=pG->Frame_cnt;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate();
+#else
     unsigned cells,bytes,stale,refused;
     live=re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused)!=0;
     if(S && (!live || S->generation!=generation))S=nullptr;  // a heap-4 reset without a room leave: the cells are gone
+#endif
     if(seen_frame-st.log>=600U){
         st.log=seen_frame;
         re4dc_log("SOBATCH frame=%u groups=%u lists=%u merged=%u saved=%u built=%u refused=%u singles=%u lit=%u entries=%u bytes=%u\n",
@@ -360,6 +428,7 @@ void new_frame(){
             S?S->count:0U,S?S->bytes:0U);
     }
 }
+#if !defined(RE4DC_STATIC_OBJ_LIFETIME05) || !RE4DC_STATIC_OBJ_LIFETIME05
 Entry* find(const Pending& q){
     for(unsigned k=0;k<S->count;++k){
         Entry& e=S->e[k];
@@ -395,8 +464,38 @@ Entry* build(const Pending& q){
     S->bytes+=total;++st.built;
     return &e;
 }
+#endif
+#if RE4DC_STATIC_OBJ_SPANS10
+struct SpanFence10 {const State* state;unsigned generation,incarnation;};
+bool span_current10(const void* context){
+    const auto& f=*static_cast<const SpanFence10*>(context);
+    return validate() && S==f.state && owner.generation==f.generation && owner.incarnation==f.incarnation;
+}
+bool submit_spans10(const Pending& q){
+    Re4dcModelSpan10 spans[kMaxParts];
+    for(unsigned i=0;i<q.n;++i){
+        // Unknown source extents retain the ordinary uncached path. Never
+        // inspect a source header using the room-cell token as its authority.
+        if(!re4dc_model_draw_owner_stamp(q.parts[i],32).valid())return false;
+        spans[i]={q.parts[i],list_of(q.parts[i]),q.parts[i]->size};
+    }
+    const SpanFence10 fence{S,owner.generation,owner.incarnation};
+    return re4dc_model_submit_spans10(&q.rec,spans,q.n,span_current10,&fence)!=0;
+}
+#endif
 void flush(){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return;
+    // Submission may reenter room retirement. Keep the record/light off the
+    // room cell, and drop it before touching source pointers after retirement.
+    State* const held=S;
+    const unsigned held_generation=owner.generation,held_incarnation=owner.incarnation;
+    Pending q=S->pend;
+    S->pend.on=false;
+    q.rec.lighting=&q.light;
+#else
     Pending& q=S->pend;
+#endif
     if(!q.on)return;
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
     // Held/cached merged groups never borrow the replay caller's current pose.
@@ -406,6 +505,10 @@ void flush(){
     ++st.groups;st.lists+=q.n;
     Re4dcModelPart r=q.rec;
     if(q.n>1){
+#if RE4DC_STATIC_OBJ_SPANS10
+        if(submit_spans10(q)){++st.merged;st.saved+=q.n-1;return;}
+#endif
+#if !defined(RE4DC_STATIC_OBJ_LIFETIME05) || !RE4DC_STATIC_OBJ_LIFETIME05
         Entry* e=find(q);
         if(!e)e=build(q);
         if(e){
@@ -414,15 +517,25 @@ void flush(){
             re4dc_model_submit(&r);
             return;
         }
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_MODEL_HIT(ModelObjectBatchRefused, q.n)
+#endif
         ++st.refused;
     } else ++st.singles;
     for(unsigned i=0;i<q.n;++i){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!validate() || S!=held || owner.generation!=held_generation || owner.incarnation!=held_incarnation)return;
+#endif
         r.part=q.parts[i];r.stream=list_of(q.parts[i]);r.stream_bytes=q.parts[i]->size;
         re4dc_model_submit(&r);
     }
 }
 // 1: the part was taken (held, or submitted with its run); 0: the caller submits it.
 bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelPart* part,const Re4dcModelPart& p){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate(); // frame identity cannot authorize a pointer after a same-frame reset
+#endif
     if(pG->Frame_cnt!=seen_frame)new_frame();
     if(m!=cur_model || info!=cur_info){cur_model=m;cur_info=info;cur_idx=0;}
     const unsigned idx=++cur_idx;
@@ -433,15 +546,39 @@ bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
         eligible=RE4DC_STATIC_OBJ_BATCH>=2;
     }
     if(eligible && !S){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        const unsigned expected=generation;
+        State* fresh=(State*)re4dc_static_alloc(sizeof(State));
+        // static_alloc may reclaim other packages; establish publication identity
+        // only after it returns, before the first payload write.
+        if(owner.bind(fresh,expected)){S=fresh;memset(S,0,sizeof(State));S->generation=expected;}
+        else {
+            S=nullptr;unsigned now=0;
+            // A returned allocation with token zero (exhaustion) remains an
+            // ordinary valid cell. Return it instead of leaking each refusal.
+            if(re4dc_room4_live_generation(&now) && re4dc_room4_cell_valid(fresh,sizeof(State),now))
+                re4dc_static_free(fresh);
+        }
+        if(!S)eligible=false;
+#else
         S=(State*)re4dc_static_alloc(sizeof(State));
         if(S){memset(S,0,sizeof(State));S->generation=generation;}
         else eligible=false;
+#endif
     }
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    State* const held=S;
+    const unsigned held_generation=owner.generation,held_incarnation=owner.incarnation;
+#endif
     if(S && S->pend.on){
         const Pending& q=S->pend;
         if(!eligible || q.info!=info || q.model!=m || !same(q.rec,p))flush();
     }
-    if(!eligible){if(idx>=d->displist_num)cur_info=nullptr;return false;}
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    // flush/submit can retire this room or reenter another object run.
+    if(eligible && (!validate() || S!=held || owner.generation!=held_generation || owner.incarnation!=held_incarnation))eligible=false;
+#endif
+    if(!eligible){DFA26_MODEL_HIT(ModelObjectBatchSplit, 1)if(idx>=d->displist_num)cur_info=nullptr;return false;}
     Pending& q=S->pend;
     if(!q.on){
         q.on=true;q.rec=p;q.light=*p.lighting;q.rec.lighting=&q.light;
@@ -454,10 +591,18 @@ bool take(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
 }
 // Room leave (ui_bridge.cpp re4dc_room_leave, before re4dc_room4_close): return every cell.
 extern "C" void re4dc_sob_room_leave(){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    sob::State* state=sob::owner.get();
+    // Detach pending/global references before free or any possible reentry.
+    sob::owner.clear();sob::S=nullptr;sob::cur_model=sob::cur_info=nullptr;sob::cur_idx=0;
+    sob::live=false;
+    if(state)re4dc_static_free(state); // no persistent copied lists without source authority
+#else
     if(!sob::S)return;
     for(unsigned k=0;k<sob::S->count;++k)re4dc_static_free(sob::S->e[k].buf);
     re4dc_static_free(sob::S);
     sob::S=nullptr;sob::cur_model=nullptr;sob::cur_info=nullptr;
+#endif
 }
 #endif
 #if defined(RE4DC_SOB_DUMP) && RE4DC_SOB_DUMP
@@ -475,6 +620,13 @@ constexpr unsigned kBytes=384u*1024u,kSeen=160,kLines=8,kLine=96,kMods=48,kSettl
 struct State { unsigned generation,used,sent,nseen,done,nlist,nmod; const void* seen[kSeen][2]; const void* lists[kSeen];
                const void* mod[kMods]; unsigned mod_frame[kMods]; unsigned char data[kBytes]; };
 State* S=nullptr; unsigned frame_seen=~0U;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+re4dc::sob05::Cell<State> owner;
+bool validate(){S=owner.get();return S!=nullptr;}
+bool current(const re4dc::sob05::Cell<State>& held){
+    const bool ok=re4dc::sob05::current(owner,held);S=owner.get();return ok;
+}
+#endif
 inline bool target(const cModel* m){
     const unsigned k=m->kindid,id=m->id;
     return (k==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(k==1&&id==0x21);
@@ -493,9 +645,14 @@ void put(const void* p,unsigned n){
 void put32(unsigned v){put(&v,4);}
 void frame(){
     frame_seen=pG->Frame_cnt;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return;
+    const auto held=owner;
+#else
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf)){S=nullptr;return;}
     if(S && S->generation!=g)S=nullptr;
+#endif
     if(!S || S->done || S->used>kBytes)return;
     char line[16+2*kLine+2];
     for(unsigned n=0;n<kLines && S->sent<S->used;++n){
@@ -504,10 +661,27 @@ void frame(){
         for(unsigned i=0;i<k;++i){static const char hx[]="0123456789abcdef";line[o++]=hx[S->data[S->sent+i]>>4];line[o++]=hx[S->data[S->sent+i]&15];}
         line[o++]='\n';line[o]=0;
         re4dc_log("%s",line);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!current(held))return;
+#endif
         S->sent+=k;
     }
 }
 bool ensure(){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate();
+    if(!S){
+        unsigned g=0;if(!re4dc_room4_live_generation(&g))return false;
+        State* fresh=(State*)re4dc_static_alloc(sizeof(State));
+        // Allocation can reclaim a package or reenter a newer owner.
+        if(validate()){re4dc::sob05::discard(fresh,sizeof(State));return false;}
+        if(!owner.bind(fresh,g)){re4dc::sob05::discard(fresh,sizeof(State));return false;}
+        S=fresh;memset(S,0,sizeof(State)-kBytes);S->generation=g;
+        const auto held=owner;
+        re4dc_log("SOBX BEGIN room=%03x generation=%u\n",unsigned(pG->room_id),g);
+        if(!current(held))return false;
+    }
+#else
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf))return false;
     if(S && S->generation!=g)S=nullptr;
@@ -517,6 +691,7 @@ bool ensure(){
         memset(S,0,sizeof(State)-kBytes);S->generation=g;
         re4dc_log("SOBX BEGIN room=%03x generation=%u\n",unsigned(pG->room_id),g);
     }
+#endif
     return true;
 }
 void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelPart* pt,const Re4dcModelPart& p){
@@ -525,6 +700,9 @@ void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf))return;
     if(!ensure())return;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    const auto held=owner;
+#endif
     {   // settle: the first frames of a model hold matrices the game has not set yet (zero / identity)
         unsigned k=0;
         while(k<S->nmod && S->mod[k]!=m)++k;
@@ -564,6 +742,9 @@ void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
         }
     }
     unsigned crc=0,fnvk=0;re4dc_ui_part_key(&p,&crc,&fnvk);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!current(held))return;
+#endif
     const unsigned list_bytes=encoded?0U:p.stream_bytes;
     const unsigned npos=p.position_count,nnrm=p.normal_count;
     const unsigned len=4*4+16*4+24*4+4*4+npos*p.position_stride+nnrm*p.normal_stride+nuv*4+nclr*4+list_bytes;
@@ -583,6 +764,9 @@ void part(const cModel* m,const cModelInfo* info,const ModelData* d,const ModelP
     Re4dcModelPart q=p;
 #if RE4DC_NATIVE_ACTOR_SKIN_LAZY
     if(!q.positions)re4dc_actor_materialize_lazy(&q);  // lazily skinned info: the source's own CPU skin of this frame
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!current(held))return;
+#endif
 #endif
     if(q.positions)put(q.positions,npos*p.position_stride);else put32(0xDEADBEEFU);
     if(q.normals)put(q.normals,nnrm*p.normal_stride);
@@ -653,9 +837,27 @@ const Entry kTable[]={
     {0x101,0,0x46,0x0e6ad519U,222},  // obj 13, 4 tris
 };
 constexpr unsigned kN=sizeof(kTable)/sizeof(kTable[0]);
-struct Obj { const cModel* m; const unsigned* rest; unsigned words,live; unsigned char ready,draw,prev,seen; };
+struct Obj { const cModel* m; const unsigned* rest; unsigned words,live; unsigned char ready,draw,prev,seen;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    unsigned rest_incarnation;
+#endif
+};
 struct State { unsigned generation,room,first,n,frames,drawn,switches,frame; Obj obj[kN]; };
 State* S=nullptr;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+re4dc::sob05::Cell<State> owner;
+bool validate(){S=owner.get();return S!=nullptr;}
+bool current(const re4dc::sob05::Cell<State>& held){
+    const bool ok=re4dc::sob05::current(owner,held);S=owner.get();return ok;
+}
+bool rest_current(const Obj& o){
+    return o.rest && o.words<=~0U/4 && o.rest_incarnation &&
+        re4dc_room4_cell_incarnation(o.rest,o.words*4,owner.generation)==o.rest_incarnation;
+}
+void live_fallback(unsigned room){
+    for(const auto& e:kTable)if(e.room==room)re4dc_ps2_place_gate(room,e.placement,0);
+}
+#endif
 inline bool cls(const cModel* m){
     const unsigned k=m->kindid,id=m->id;
     return (k==0&&(id==0x41||id==0x43||id==0x45||id==0x46))||(k==1&&id==0x21);
@@ -689,6 +891,10 @@ unsigned fnv(const unsigned* w,unsigned n){
     return h;
 }
 void bind(const cModel* m){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return;
+    const auto held=owner;
+#endif
     for(unsigned i=0;i<S->n;++i)if(S->obj[i].m==m)return;
     const unsigned n=words_of(m);
     unsigned* t=nullptr;unsigned hash=0;
@@ -699,6 +905,12 @@ void bind(const cModel* m){
         if(hash!=e.rest)continue;
         unsigned* w=(unsigned*)re4dc_static_alloc(n*4);
         if(!w)return;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!current(held)){re4dc::sob05::discard(w,n*4);return;}
+        const unsigned token=re4dc_room4_cell_incarnation(w,n*4,held.generation);
+        if(!token){re4dc::sob05::discard(w,n*4);return;}
+        o.rest_incarnation=token;
+#endif
         memcpy(w,t,n*4);
         o.m=m;o.rest=w;o.words=n;
         re4dc_log("SOBAKE bind room=%03x placement=%u id=%02x model=%08x words=%u\n",S->room,e.placement,e.id,
@@ -719,22 +931,53 @@ extern "C" void re4dc_sob_bake_frame(){
     const unsigned room=pG->room_id;
     unsigned g,c,b,st,rf;
     if(!re4dc_room4_state(&g,&c,&b,&st,&rf)){S=nullptr;return;}
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    validate();
+#else
     if(S && S->generation!=g)S=nullptr;          // the room heap was retired with its cells
+#endif
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(S && S->room!=room){
+        re4dc_sob_bake_room_leave();
+        if(validate())return; // a free callback installed a different state
+    }
+#else
     if(S && S->room!=room)re4dc_sob_bake_room_leave();  // same heap, the game moved on: give the cells back
+#endif
     if(!S){
         unsigned first=kN,n=0;
         for(unsigned i=0;i<kN;++i)if(kTable[i].room==room){if(first==kN)first=i;++n;}
         if(!n)return;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        State* fresh=(State*)re4dc_static_alloc(sizeof(State));
+        if(validate()){re4dc::sob05::discard(fresh,sizeof(State));return;}
+        if(!owner.bind(fresh,g)){re4dc::sob05::discard(fresh,sizeof(State));S=nullptr;return;}
+        S=fresh;
+#else
         S=(State*)re4dc_static_alloc(sizeof(State));
+#endif
         if(!S)return;
         memset(S,0,sizeof(State));S->generation=g;S->room=room;S->first=first;S->n=n;S->frame=~0U;
         for(unsigned i=0;i<n;++i)S->obj[i].live=~0U;
     }
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    const auto held=owner;
+    for(unsigned i=0;i<S->n;++i){
+        re4dc_ps2_place_own(room,kTable[S->first+i].placement);
+        if(!current(held))return;
+    }
+#else
     for(unsigned i=0;i<S->n;++i)re4dc_ps2_place_own(room,kTable[S->first+i].placement);
+#endif
     re4dc_ps2_place_prepare_fn(room,sobake::decide);
 }
 void sobake::decide(unsigned room){
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate() || S->room!=room){live_fallback(room);return;}
+    const auto held=owner;
+#else
     if(!S || S->room!=room)return;
+#endif
     S->frame=re4dc_ui_frame();
     for(unsigned i=0;i<S->n;++i)S->obj[i].draw=S->obj[i].seen=0;
     for(unsigned table=0;table<OT_MAX;++table){
@@ -746,13 +989,29 @@ void sobake::decide(unsigned room){
             if(!cls(m) || m->invisible_factor*m->invisible_factor2==0.0f)continue;
             unsigned i=0;
             while(i<S->n && S->obj[i].m!=m)++i;
-            if(i==S->n){bind(m);i=0;while(i<S->n && S->obj[i].m!=m)++i;if(i==S->n)continue;}
+            if(i==S->n){bind(m);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+                if(!current(held)){live_fallback(room);return;}
+#endif
+                i=0;while(i<S->n && S->obj[i].m!=m)++i;if(i==S->n)continue;}
             Obj& o=S->obj[i];
             const unsigned placement=kTable[S->first+i].placement;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+            if(!o.ready){
+                const bool ready=re4dc_ps2_place_ready(room,placement)!=0;
+                if(!current(held)){live_fallback(room);return;}
+                o.ready=ready;
+            }
+#else
             if(!o.ready)o.ready=re4dc_ps2_place_ready(room,placement)!=0;
+#endif
             o.seen=1;
             if(o.live==S->frame)continue;  // ModelRender drew it live already this frame
-            o.draw=o.ready && words_of(m)==o.words && same(m,o.rest);
+            o.draw=o.ready && words_of(m)==o.words &&
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+                rest_current(o) &&
+#endif
+                same(m,o.rest);
         }
     }
     unsigned drawn=0;
@@ -760,12 +1019,19 @@ void sobake::decide(unsigned room){
         const unsigned placement=kTable[S->first+i].placement;
         Obj& o=S->obj[i];
         re4dc_ps2_place_gate(room,placement,o.draw);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+        if(!current(held)){live_fallback(room);return;}
+#endif
         drawn+=o.draw;
         if(o.draw!=o.prev && o.m && S->switches<64){
             ++S->switches;
             // why live: seen 0 = no OT ModelRender entry (or invisible); else ready, words, first differing word
             unsigned k=~0U,was=0,now=0;
-            if(o.seen && o.ready && words_of(o.m)==o.words){
+            if(o.seen && o.ready && words_of(o.m)==o.words
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+               && rest_current(o)
+#endif
+            ){
                 unsigned* w=(unsigned*)__builtin_alloca(o.words*4);fill(o.m,w);
                 for(k=0;k<o.words && w[k]==o.rest[k];++k){}
                 if(k<o.words){was=o.rest[k];now=w[k];}
@@ -773,6 +1039,9 @@ void sobake::decide(unsigned room){
             re4dc_log("SOBAKE switch room=%03x frame=%u placement=%u id=%02x draw=%u seen=%u ready=%u words=%u/%u diff=%d %08x>%08x\n",
                       room,unsigned(pG->Frame_cnt),placement,kTable[S->first+i].id,o.draw,o.seen,o.ready,
                       o.seen?words_of(o.m):0U,o.words,int(k),was,now);
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+            if(!current(held)){live_fallback(room);return;}
+#endif
         }
         o.prev=o.draw;
     }
@@ -783,15 +1052,34 @@ void sobake::decide(unsigned room){
 extern "C" void re4dc_static_free(void* data);
 extern "C" void re4dc_sob_bake_room_leave(){
     using namespace sobake;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    auto held=owner;State* state=held.get();
+    owner.clear();S=nullptr; // detach before frees can reenter a replacement
+    if(!state)return;
+    for(unsigned i=0;i<state->n;++i){
+        Obj& o=state->obj[i];
+        const unsigned* rest=o.rest;const unsigned words=o.words,token=o.rest_incarnation;
+        o.rest=nullptr;o.rest_incarnation=0;
+        if(words<=~0U/4 && token && re4dc_room4_cell_incarnation(rest,words*4,held.generation)==token)
+            re4dc_static_free(const_cast<unsigned*>(rest));
+        if(!held.get())return;
+    }
+    re4dc_static_free(state);
+#else
     if(!S)return;
     for(unsigned i=0;i<S->n;++i)if(S->obj[i].rest)re4dc_static_free(const_cast<unsigned*>(S->obj[i].rest));
     re4dc_static_free(S);
     S=nullptr;
+#endif
 }
 // ModelRender (trans.cpp): 1 when this frame's decision draws the model from the world.
 extern "C" int re4dc_sob_bake_skip(const void* model){
     using namespace sobake;
+#if defined(RE4DC_STATIC_OBJ_LIFETIME05) && RE4DC_STATIC_OBJ_LIFETIME05
+    if(!validate())return 0;
+#else
     if(!S)return 0;
+#endif
     const unsigned f=re4dc_ui_frame();
     for(unsigned i=0;i<S->n;++i)if(S->obj[i].m==model){
         if(S->frame==f)return S->obj[i].draw;
@@ -879,6 +1167,9 @@ extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, un
 extern "C" unsigned re4dc_stream_model_bytes_now();
 extern "C" unsigned long long re4dc_otp_now_us();
 #endif
+#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR) && RE4DC_LEON_PS2_PORTRAIT_HAIR
+extern "C" int re4dc_portrait_hair(const void*,const void*,const Re4dcModelPart*);
+#endif
 extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
  const void* part_ptr,const float mv[3][4],unsigned pass){
     if(!RE4DC_MODEL_DIAG() || pass)return;
@@ -947,6 +1238,15 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
         p.serial=m->serial;p.world=&m->mat[0][0];p.view=&pG->Cam.v_mat[0][0];
         p.source_key[0]=part->texId;p.source_key[1]=(part->flags&4)?part->alphaTex:0xff;
     }
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    // The existing deferred view stores all four source-key bytes. Only final
+    // identical TA headers may be joined; each part keeps its own source draw.
+    if(re4dc::sob33::eligible_class(m->kindid,m->id))
+        p.source_key[3]=re4dc::sob33::marker(d->displist_num,p.blend);
+#endif
+#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR) && RE4DC_LEON_PS2_PORTRAIT_HAIR
+    if(re4dc_portrait_hair(m,info,&p))return;  // coarse_actor.cpp: the PS2 hair for the portrait GameCube hair info
 #endif
 #if RE4DC_FRONT_NATIVE>=2
     if(front_verify_part(&p))return;  // native replay: compared, not drawn
@@ -1077,6 +1377,16 @@ extern "C" void re4dc_callprof_part_key(unsigned path,unsigned key);
 extern "C" void re4dc_callprof_part(const void* model,unsigned path){
     const cModel* m=static_cast<const cModel*>(model);
     re4dc_callprof_part_key(path,m?(unsigned(m->kindid)<<8|unsigned(m->id)):0xffffU);
+}
+#endif
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+// DRAW_SETUP_AUDIT_XLU (draw_setup_audit.mk): a model's kind/id/type key for the XM rows; 0xffffff when the pointer is
+// not a cModel in main RAM (borrowed views, static packages).
+extern "C" unsigned re4dc_dsa28_model_key(const void* model) {
+    const unsigned a = (unsigned) model & 0x1fffffffU;
+    if (!model || ((unsigned) model & 3U) || a < 0x0c000000U || a >= 0x0d000000U) return 0xffffffU;
+    const cModel* m = static_cast<const cModel*>(model);
+    return (unsigned(m->kindid) & 255u) << 16 | (unsigned(m->id) & 255u) << 8 | (unsigned(m->type) & 255u);
 }
 #endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF

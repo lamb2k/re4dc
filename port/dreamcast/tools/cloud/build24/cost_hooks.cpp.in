@@ -1,0 +1,28 @@
+// Separate object, without LTO: the production compiler cannot see or optimize
+// through these deterministic stand-ins for real external OS/hardware hooks.
+#include <stdint.h>
+#include <stdio.h>
+#include "@DC@/game/platform/include/draw_setup_audit.h"
+extern "C" {
+extern uint64_t fixture_clock;
+extern uintptr_t fixture_thread;
+extern unsigned fixture_identity[re4dc::dsa24::IdentityWords];
+__attribute__((noinline)) uint64_t re4dc_dsa24_test_clock(){return fixture_clock;}
+__attribute__((noinline)) uintptr_t re4dc_dsa24_test_thread(){return fixture_thread;}
+__attribute__((noinline)) void re4dc_dsa24_test_identity(unsigned* out){
+    for(unsigned i=0;i<re4dc::dsa24::IdentityWords;++i)out[i]=fixture_identity[i];
+}
+__attribute__((noinline)) void re4dc_dsa24_test_log(const char*){}
+// Link-only stub. No priced case reaches the window-seal formatting path.
+__attribute__((noinline)) int snprintf(char*,size_t,const char*,...){return -1;}
+}
+#if defined(RE4DC_PERF_PHASE_MISS) && RE4DC_PERF_PHASE_MISS
+#include "@DC@/game/platform/include/perf_phase_miss.h"
+extern re4dc::ppm14::AuditSample fixture_sample;
+extern bool fixture_sample_valid;
+namespace re4dc { namespace ppm14 {
+__attribute__((noinline)) bool read_audit_sample(AuditSample* out){
+    *out=fixture_sample;return fixture_sample_valid;
+}
+} }
+#endif

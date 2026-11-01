@@ -1,0 +1,351 @@
+#include <algorithm>
+#include <array>
+#include <cassert>
+#include <cerrno>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <functional>
+#include <new>
+#include <string>
+#include <vector>
+#include "log_publication16.hpp"
+
+using namespace re4dc::log_publication16;
+static unsigned sr, inside, windows, window_bytes, maximum, edges, selected;
+static unsigned format_calls, console_calls;
+static std::function<void(unsigned)> edge_hook;
+static std::function<void()> format_hook;
+static std::function<void()> deferred;
+static std::vector<unsigned> active_windows;
+static void edge(unsigned phase) { ++edges; if (edge_hook) edge_hook(phase); }
+struct Head {
+    std::uint32_t value;
+    operator std::uint32_t() const volatile { return value; }
+    void operator++(int) volatile {
+        edge(0); // byte stored, old head still visible
+        value = value + 1;
+        ++window_bytes;
+        for (auto& count : active_windows) ++count;
+        edge(1); // byte publication complete
+    }
+};
+static volatile Head re4dc_log_head;
+constexpr unsigned RE4DC_LOG_SIZE = TEST_RING_SIZE;
+#if RE4DC_LOG_RING_HDR
+static struct { unsigned long magic, nmagic, size, pad[5]; char buf[RE4DC_LOG_SIZE]; } re4dc_logring;
+#define re4dc_logbuf re4dc_logring.buf
+#else
+static char re4dc_logbuf[RE4DC_LOG_SIZE];
+#endif
+static int re4dc_log_console;
+static unsigned long re4dc_stage;
+static void re4dc_set_stage(unsigned long value) { re4dc_stage = value; }
+static int irq_disable() { const unsigned old = sr; sr = (sr & 0xefffff0f) | 0xf0; ++windows; active_windows.push_back(0); edge(2); return old; }
+static void irq_restore(int old) {
+    assert(!active_windows.empty());
+    maximum = std::max(maximum, active_windows.back()); active_windows.pop_back(); window_bytes = 0;
+    sr = old; edge(3);
+    if (!(sr & 0xf0) && deferred) { auto call = std::move(deferred); deferred = {}; call(); }
+}
+static int irq_inside_int() { return inside; }
+struct irq_context_t { std::uint32_t pc, pr, sr, r[16]; };
+using irq_t = unsigned;
+struct Thread { int tid; void* stack; unsigned stack_size; };
+static Thread thread{42, (void*)0x8c123456, 4096};
+static Thread* thd_current = &thread;
+static unsigned re4dc_ui_frame() { return 0x345; }
+static int test_vsnprintf(char* out, std::size_t length, const char* fmt, va_list args) {
+    ++format_calls;
+    if (format_hook) { auto hook = std::move(format_hook); format_hook = {}; hook(); }
+    if (std::strcmp(fmt, "FORMAT_ERROR") == 0) return -1;
+    return std::vsnprintf(out, length, fmt, args);
+}
+static int test_fputs(const char*, FILE*) { ++console_calls; return 0; }
+
+extern "C" void re4dc_halt(const char*, int);
+#if RE4DC_LOG_CRASH_TEST
+@CRASH@
+#endif
+@PUBLISHER@
+@RAW@
+#define vsnprintf test_vsnprintf
+#define fputs test_fputs
+@LOG@
+#undef vsnprintf
+#undef fputs
+@CALLBACK@
+struct TestDevice { int (*write_buffer)(const uint8_t*, int, int); };
+static TestDevice device{ringWriteBuffer};
+static TestDevice* dbgio = &device;
+static int dbgio_enabled = 1;
+static int lock;
+static char printf_buf[1024];
+static void spinlock_lock(int*) {}
+static void spinlock_unlock(int*) {}
+@DEVICEWRITE@
+@DEVICEXLAT@
+@DEVICESTR@
+#define vsnprintf test_vsnprintf
+@DEVICEPRINTF@
+#undef vsnprintf
+@FAULT@
+@HALT@
+static unsigned halt_calls;
+struct Park {};
+static unsigned long test_expevt = 0x321, test_tea = 0x456;
+static unsigned fault_screen_calls, halt_screen_calls, context_screen_calls, vmu_calls;
+static void re4dc_crash_screen_context(const irq_context_t*) { ++context_screen_calls; }
+static void re4dc_crash_screen_fault(unsigned, unsigned long, unsigned long, unsigned long) { ++fault_screen_calls; }
+static void re4dc_crash_screen_halt(const char*, int) { ++halt_screen_calls; }
+static void re4dc_dbgslot_ring(unsigned, unsigned, unsigned) { ++vmu_calls; }
+@FAULTENTRY@
+@HALTENTRY@
+
+static unsigned checks, refusals, terminal_schedules, alias_checks;
+static void reset(std::uint32_t head = 0, unsigned entry = 0) {
+    edge_hook = {}; format_hook = {}; deferred = {};
+    assert(active_windows.empty());
+    re4dc_log_publication16_state.~State();
+    new (&re4dc_log_publication16_state) State;
+    for (unsigned i = 0; i < RE4DC_LOG_SIZE; ++i) re4dc_logbuf[i] = char('a' + i % 23);
+#if RE4DC_LOG_RING_HDR
+    re4dc_logring.magic = re4dc_logring.nmagic = re4dc_logring.size = 0;
+#endif
+    re4dc_log_head.value = head;
+    sr = entry; inside = 0; windows = window_bytes = maximum = edges = 0;
+    format_calls = console_calls = 0; re4dc_log_console = 0; errno = 0;
+    re4dc_stage = 0; fault_screen_calls = halt_screen_calls = context_screen_calls = vmu_calls = 0;
+}
+static std::vector<char> snapshot() { return {re4dc_logbuf, re4dc_logbuf + RE4DC_LOG_SIZE}; }
+static void expect_forward(const char* data, unsigned length, std::vector<char>& expected, std::uint32_t& head) {
+    // Independent original producer semantics, including live ring/head aliases.
+    const auto address = reinterpret_cast<std::uintptr_t>(data);
+    const auto ring = reinterpret_cast<std::uintptr_t>(re4dc_logbuf);
+    const auto cursor = reinterpret_cast<std::uintptr_t>(&re4dc_log_head.value);
+    for (unsigned i = 0; i < length; ++i) {
+        char byte;
+        if (address >= ring && address + length <= ring + RE4DC_LOG_SIZE) byte = expected[address - ring + i];
+        else if (address >= cursor && address + length <= cursor + sizeof(head)) byte = reinterpret_cast<const char*>(&head)[address - cursor + i];
+        else byte = data[i];
+        expected[head % RE4DC_LOG_SIZE] = byte;
+        ++head;
+    }
+}
+static void check_write(const char* data, unsigned length) {
+    auto expected = snapshot(); std::uint32_t head = re4dc_log_head.value;
+    expect_forward(data, length, expected, head);
+    const auto entry = sr;
+    assert(re4dc_log_write16(data, length) == accepted);
+    assert(snapshot() == expected && re4dc_log_head.value == head && sr == entry && maximum <= window);
+#if RE4DC_LOG_RING_HDR
+    assert(re4dc_logring.magic == 0x5A53474CUL && re4dc_logring.nmagic == ~0x5A53474CUL && re4dc_logring.size == RE4DC_LOG_SIZE);
+#endif
+    ++checks;
+}
+static void lengths_aliases() {
+    const std::array<unsigned, 15> lengths{0, 1, 10, 64, 254, 255, 256, 1023, 4096, 8192, 65535, 65536, 65537, 131089, 262157};
+    std::string data(lengths.back(), 'X');
+    for (unsigned i = 0; i < data.size(); ++i) data[i] = char(i % 251);
+    for (auto head : {0u, RE4DC_LOG_SIZE - 4, RE4DC_LOG_SIZE - 1, 0xfffffffcu}) {
+        for (auto length : lengths) { reset(head, 0x40000001); check_write(data.data(), length); }
+        for (auto offset : {0u, 1u, RE4DC_LOG_SIZE / 2, RE4DC_LOG_SIZE - 256}) {
+            reset(head); check_write(re4dc_logbuf + offset, 256); ++alias_checks;
+        }
+        for (unsigned offset = 0; offset < sizeof(std::uint32_t); ++offset) {
+            reset(head); check_write(const_cast<const char*>(reinterpret_cast<const volatile char*>(&re4dc_log_head.value)) + offset, sizeof(std::uint32_t) - offset); ++alias_checks;
+        }
+    }
+    reset(); check_write(nullptr, 0);
+}
+static void contexts_device() {
+    std::string data(1024, 'M');
+    for (unsigned mask = 0; mask < 16; ++mask) {
+        for (unsigned interrupt = 0; interrupt < 2; ++interrupt) {
+            for (unsigned length : {0u, 1u, 255u, 256u, 1024u}) {
+                const unsigned entry = 0x40000001 | (mask << 4);
+                reset(0, entry); inside = interrupt;
+                auto before = snapshot();
+                const bool refuse = length > window && (mask || interrupt);
+                const int result = ringWriteBuffer((const uint8_t*)data.data(), length, 1);
+                assert(result == (refuse ? -1 : int(length)) && sr == entry);
+                if (refuse) { assert(errno == EMSGSIZE && snapshot() == before && !re4dc_log_head.value); ++refusals; }
+                else { assert(re4dc_log_head.value == length && maximum <= window); ++checks; }
+            }
+            reset(0, 0x40000001 | (mask << 4)); inside = interrupt;
+            re4dc_log("value %d\n", 17);
+            assert(format_calls == unsigned(!mask && !interrupt));
+            assert(sr == (0x40000001 | (mask << 4)));
+        }
+    }
+    reset(); assert(ringWriteBuffer(nullptr, -1, 0) == -1 && errno == EINVAL);
+    assert(ringWriteBuffer(nullptr, 1, 0) == -1 && errno == EFAULT);
+    assert(re4dc_log_write16(nullptr, 1) == invalid);
+    assert(ringWriteBuffer(nullptr, 0, 0) == 0);
+    assert(!re4dc_log_head.value);
+    reset(0, 0x40000011);
+    assert(re4dc_log_write16(reinterpret_cast<const char*>(1), 256) == context && sr == 0x40000011);
+    reset(); inside = 1;
+    assert(re4dc_log_write16(reinterpret_cast<const char*>(1), ~0ul) == context && !re4dc_log_head.value);
+    reset();
+    assert(!re4dc_log_publication16_state.writer.test_and_set());
+    assert(dbgio_write_buffer((const uint8_t*)"device", 6) == -1 && errno == EAGAIN);
+    assert(dbgio_write_buffer_xlat((const uint8_t*)"device", 6) == -1 && errno == EAGAIN);
+    // Excluded external API witness, not a publication-success claim: the
+    // installed KOS formatter runs before this device and ignores its refusal.
+    inside = 1;
+    const unsigned before_formats = format_calls;
+    assert(dbgio_printf("external %d", 17) == 11 && errno == EAGAIN);
+    assert(format_calls == before_formats + 1 && !re4dc_log_head.value);
+    inside = 0;
+    re4dc_log_publication16_state.release();
+    format_calls = 0;
+    re4dc_log("FORMAT_ERROR"); assert(!re4dc_log_head.value && format_calls == 1);
+    re4dc_log("%s", std::string(600, 'F').c_str());
+    assert(re4dc_log_head.value == 255);
+    reset(); format_hook = [] {
+        re4dc_log("nested formatter");
+        assert(ringWriteBuffer((const uint8_t*)"nested raw", 10, 0) == -1 && errno == EAGAIN);
+    };
+    re4dc_log("outer %d\n", 19);
+    assert(format_calls == 1 && re4dc_log_head.value == 9);
+    assert(re4dc_log_publication16_state.outcome[busy] == 1);
+    reset(); format_hook = [] {
+        irq_context_t ctx{}; ctx.pc = 0x123;
+        logFaultRecord16(0x180, &ctx, 0x321, 0x456);
+    };
+    re4dc_log("interrupted formatter %d\n", 7);
+    assert(format_calls == 1 && re4dc_log_head.value == 0);
+    assert(re4dc_log_publication16_state.slots[0].ready && re4dc_log_publication16_state.outcome[abandoned] == 1);
+}
+static void competing_schedules() {
+    const std::string data(777, 'A');
+    reset(); check_write(data.data(), data.size());
+    const unsigned total = edges;
+    for (unsigned forced = 0; forced < 2; ++forced) for (unsigned cut = 1; cut <= total; ++cut) {
+        reset(); selected = cut; bool invoked = false;
+        edge_hook = [&](unsigned) {
+            if (edges != selected || invoked) return;
+            invoked = true;
+            auto nested = [&] {
+                const unsigned entry = sr;
+                const int result = ringWriteBuffer((const uint8_t*)"B\n", 2, 0);
+                // Entry/exit SR probe precedes the writer claim. A nested call
+                // before claim or after release can be accepted, otherwise busy.
+                assert(result == 2 || (result == -1 && errno == EAGAIN));
+                assert(sr == entry);
+            };
+            if (!forced && (sr & 0xf0)) deferred = nested;
+            else nested();
+        };
+        const auto old_head = re4dc_log_head.value;
+        assert(re4dc_log_write16(data.data(), data.size()) == accepted && invoked);
+        edge_hook = {};
+        assert(maximum <= window && sr == 0);
+        assert(re4dc_log_head.value == old_head + 777 || re4dc_log_head.value == old_head + 779);
+        // A successful nested call appears wholly before/after A, never within.
+        const std::string actual(re4dc_logbuf, re4dc_logbuf + re4dc_log_head.value);
+        assert(actual == data || actual == "B\n" + data || actual == data + "B\n");
+        ++checks;
+    }
+}
+static irq_context_t fault_context() {
+    irq_context_t ctx{}; ctx.pc = 0x8c011234; ctx.pr = 0x8c056789; ctx.sr = 0x400000f1;
+    for (unsigned i = 0; i < 16; ++i) ctx.r[i] = 0x1000 + i;
+    return ctx;
+}
+static void verify_fault(const Slot& slot, const irq_context_t& ctx) {
+    assert(slot.ready.load(std::memory_order_acquire));
+    const auto& e = slot.evidence;
+    assert(e.kind == 1 && e.code == 0x180 && e.pc == ctx.pc && e.pr == ctx.pr && e.sp == ctx.r[15] && e.sr == ctx.sr);
+    assert(e.expevt == 0x321 && e.tea == 0x456 && e.tid == 42 && e.stack_bytes == 4096);
+    for (unsigned i = 0; i < 16; ++i) assert(e.r[i] == ctx.r[i]);
+}
+static void terminal_edges() {
+    const auto ctx = fault_context();
+    const std::string data(520, 'P');
+    reset(); check_write(data.data(), data.size()); const unsigned total = edges;
+    for (unsigned cut = 1; cut <= total; ++cut) {
+        reset(); bool invoked = false;
+        edge_hook = [&](unsigned) {
+            if (edges != cut || invoked) return;
+            invoked = true; const auto entry = sr;
+            logFaultRecord16(0x180, &ctx, 0x321, 0x456);
+            assert(sr == entry);
+        };
+        const int result = ringWriteBuffer((const uint8_t*)data.data(), data.size(), 0);
+        edge_hook = {};
+        assert(invoked && result == -1 && errno == EIO && maximum <= window && sr == 0);
+        verify_fault(re4dc_log_publication16_state.slots[0], ctx);
+        const auto end = re4dc_log_head.value;
+        assert(ringWriteBuffer((const uint8_t*)"later\n", 6, 0) == -1 && errno == EIO && re4dc_log_head.value == end);
+        ++terminal_schedules;
+    }
+    reset(0, 0x40000071); inside = 1;
+    logFaultRecord16(0x180, &ctx, 0x321, 0x456);
+    verify_fault(re4dc_log_publication16_state.slots[0], ctx);
+    assert(sr == 0x40000071 && maximum <= window);
+    assert(std::string(re4dc_logbuf, re4dc_logbuf + re4dc_log_head.value).find("FAULT code=") == 0);
+    const auto first = re4dc_log_publication16_state.slots[0].evidence;
+    logHaltRecord16("a/b/source.cpp", 123);
+    const auto& second = re4dc_log_publication16_state.slots[1];
+    assert(second.ready && second.evidence.kind == 2 && second.evidence.code == 123 && second.evidence.sr == 0x40000071);
+    assert(std::strcmp(second.evidence.file, "a/b/source.cpp") == 0 && second.evidence.frame == 0x345);
+    logHaltRecord16("third", 999);
+    assert(re4dc_log_publication16_state.evidence_lost == 1);
+    assert(std::memcmp(&first, &re4dc_log_publication16_state.slots[0].evidence, sizeof(first)) == 0);
+    reset(); logHaltRecord16(std::string(100, 'P').c_str(), 3);
+    assert(re4dc_log_publication16_state.slots[0].evidence.flags == 1);
+    assert(std::strlen(re4dc_log_publication16_state.slots[0].evidence.file) == 63);
+    reset(); logHaltRecord16(nullptr, 4);
+    assert(re4dc_log_publication16_state.slots[0].evidence.flags == 2);
+    assert(std::string(re4dc_logbuf, re4dc_logbuf + re4dc_log_head.value).find("HALT stop:") == 0);
+    // Explicit abandoned owner never waits/steals. Second slot remains usable.
+    reset(); assert(!re4dc_log_publication16_state.writer.test_and_set());
+    assert(!re4dc_log_publication16_state.slots[0].claimed.test_and_set());
+    logFaultRecord16(0x180, &ctx, 0x321, 0x456);
+    assert(!re4dc_log_publication16_state.slots[0].ready);
+    verify_fault(re4dc_log_publication16_state.slots[1], ctx);
+    assert(re4dc_log_head.value == 0 && re4dc_log_publication16_state.outcome[busy] == 1);
+    for (unsigned i = 0; i < 1024; ++i) logHaltRecord16("lost", i);
+    assert(re4dc_log_publication16_state.evidence_lost == 1); // sticky, no count/overflow
+    // Execute the real terminal handlers. The fixture substitutes MMIO reads
+    // and throws only at the final intentional park; all selected calls/hooks
+    // before that point are the extracted production body.
+    reset(0, 0x40000071); inside = 1;
+    try { onFault(0x180, const_cast<irq_context_t*>(&ctx), nullptr); assert(false); } catch (Park) {}
+    verify_fault(re4dc_log_publication16_state.slots[0], ctx);
+    assert(re4dc_stage == 0xdead0180 && (sr & 0xf0) == 0xf0);
+    assert(fault_screen_calls == 1 && context_screen_calls == 1 && vmu_calls == 1 && halt_screen_calls == 0);
+    active_windows.clear(); // actual terminal park intentionally retains its final mask
+    // A real terminal handler entered while a normal writer is abandoned still
+    // captures context and parks; its main-ring busy outcome stays explicit.
+    reset(); assert(!re4dc_log_publication16_state.writer.test_and_set());
+    try { onFault(0x180, const_cast<irq_context_t*>(&ctx), nullptr); assert(false); } catch (Park) {}
+    verify_fault(re4dc_log_publication16_state.slots[0], ctx);
+    assert(re4dc_log_publication16_state.outcome[busy] == 1 && !re4dc_log_head.value);
+    active_windows.clear();
+    reset(0, 0x40000031);
+    try { re4dc_halt("real-halt.cpp", 99); assert(false); } catch (Park) {}
+    assert(re4dc_stage == 0xdead0111 && (sr & 0xf0) == 0xf0 && halt_screen_calls == 1);
+    assert(re4dc_log_publication16_state.slots[0].evidence.sr == 0x40000031);
+    active_windows.clear();
+}
+int main() {
+#if RE4DC_LOG_CRASH_TEST
+    reset();
+    re4dc_log_raw("R", 1);
+    assert(ringWriteBuffer((const uint8_t*)"D", 1, 0) == 1);
+    try { re4dc_log("F"); assert(false); } catch (Park) {}
+    assert(halt_calls == 1 && re4dc_log_publication16_state.slots[0].ready);
+    assert(re4dc_log_publication16_state.slots[0].evidence.kind == 2);
+    assert(ringWriteBuffer((const uint8_t*)"refused", 7, 0) == -1 && errno == EIO && halt_calls == 1);
+    assert(maximum <= window);
+    std::printf("{\"ring\":%u,\"mixed_raw_device_formatter_crash\":true}\n", RE4DC_LOG_SIZE);
+#else
+    lengths_aliases(); contexts_device(); competing_schedules(); terminal_edges();
+    std::printf("{\"ring\":%u,\"checks\":%u,\"refusals\":%u,\"aliases\":%u,\"terminal_schedules\":%u,\"state_bytes\":%zu}\n",
+                RE4DC_LOG_SIZE, checks, refusals, alias_checks, terminal_schedules, sizeof(State));
+#endif
+}

@@ -1,0 +1,18 @@
+{
+  "results": {
+    "bench": "PASS benchmark actual-TU bounded log contracts: 14 cases",
+    "transport": "PASS transport actual-TU contracts: 28 cases"
+  },
+  "sanitizer": "address,undefined",
+  "scope": "Complete production transport and benchmark TUs; synthetic KOS, socket, timer and thread services. No real network, scheduler, target ABI, PVR, or hardware acceptance.",
+  "source_adaptations": "None. Only external header/service boundary is synthetic.",
+  "source_sha256": {
+    "port/dreamcast/game/qa_link.cpp": "d6bb30e27c94c88b28aae187cf9a7af19e1143ac947bd7a790db53c39370c61b",
+    "port/dreamcast/game/qa_link_bench.cpp": "31ed7eb9819904318d4ae92ba3ec0cdb1d825516716aa00e435df5fd9d58c6ac",
+    "port/dreamcast/tools/cloud/build28/bench_fixture.cpp.in": "3532df6febc408bdaa222a94216fe6015d598e9b283b0c4e65863b88e8c63139",
+    "port/dreamcast/tools/cloud/build28/transport_fixture.cpp.in": "b34e8ef3947bb49020ceee95959bd2adae9ef90273f5f29ae9b9d72cc4fc6897",
+    "port/dreamcast/tools/cloud/build28/transport_fixture_prefix.hpp": "51363681778c965d0f1c429d012fddb001ed48e9a4f04e43feaab2f0c09afd6f",
+    "port/dreamcast/tools/cloud/build28/transport_host.py": "569861e56ced9e57528fa3467fa179c0ce6308a2119f42a3176987d4225d57d5"
+  },
+  "status": "PASS"
+}

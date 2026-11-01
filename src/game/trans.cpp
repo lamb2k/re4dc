@@ -1,3 +1,10 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "fallback_audit35.h"
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_NATIVE_ACTOR_SKIN && !RE4DC_NATIVE_ACTOR_SKIN_LAZY
+#include <string.h>
+#endif
+#line 1
 // game/trans.cpp: the model renderer. ModelTrans registers a model in the ordering tables,
 // commonScreenMatSub skins its vertices into the primitive buffer, ModelRender / commonModelTrans
 // set up the TEV stages of every material and submit the display lists.
@@ -116,6 +123,10 @@ namespace { bool sourceWorldR11fModelBlocked(cModel* model); }
 #include "shadow.h"
 #include "room_tex.h"
 #include "tpl.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#include "scroll.h"
+#endif
 #include "TexRender.h"
 #include "examine.h"
 #include "debug.h"
@@ -127,6 +138,16 @@ namespace { bool sourceWorldR11fModelBlocked(cModel* model); }
 extern "C" void re4dc_leon_gc_note(cModel*); // mcheck.mk MCHECK_LEONGC (coarse_actor_transaction.inc)
 #endif
 
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "draw_setup_audit.h"
+#define DSA24_RENDER() const re4dc::dsa24::RenderScope dsa_render;
+#define DSA24_MODEL() const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList); re4dc::dsa24::count(re4dc::dsa24::Models);
+#define DSA24_MODEL_OT(call) { const re4dc::dsa24::Scope dsa_ot(re4dc::dsa24::ModelList); call; }
+#else
+#define DSA24_RENDER()
+#define DSA24_MODEL()
+#define DSA24_MODEL_OT(call) call
+#endif
 #line 1 "D:/Bio4/Prog/trans.cpp"
 
 extern cEm* pPL;   // game/em.cpp
@@ -386,6 +407,9 @@ void* g_prev_add_tpl_addr;
 // D367 records30 FRONT_TEXOBJ (R1; obj/records30.h, default off = previous image).
 #ifndef RE4DC_FRONT_TEXOBJ
 #define RE4DC_FRONT_TEXOBJ 0
+#endif
+#ifndef RE4DC_FRONT_TPL_OWNER
+#define RE4DC_FRONT_TPL_OWNER 0
 #endif
 #if RE4DC_FRONT_TEXOBJ && RE4DC_FRONT_NATIVE && defined(__sh__)
 static void frontTexFlush();
@@ -770,7 +794,13 @@ void sourceActorFailure(unsigned reason) {
         re4dc_log("SOURCE_ACTORS_FAIL t=%u reason=%u count=%u\n",
             unsigned(pG->Frame_cnt),reason,sourceActorFailures);
 }
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+void sourceActorPresentation32Retire();
+#endif
 void sourceActorRetire() {
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    sourceActorPresentation32Retire();
+#endif
 #if RE4DC_ACTOR_TRANSACTION
     sourceActorRenderActive=false;
     re4dc_actor_transaction_retire();
@@ -1989,6 +2019,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             if (g_skinLazyNow) {
                 // SKIN_PALETTE_LAZY: registered with its copy reserved, built at the first render read.
                 if (skinDeferPending(m, info, d, &dc_mtx_built)) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1862
                     info->pPosBuf[pG->vtx_buf_no] = 0;
                     info->pNrmBuf[pG->vtx_buf_no] = 0;
                     setupGQR6(0x32073207);
@@ -1997,6 +2032,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                     }
                     continue;
                 }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferFail, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinFailVertices, d->nVtx);
+#endif
+#line 1870
                 goto dc_skin_cpu;  // not deferred: the CPU pass below builds the palette (dc_palette_built 0)
             }
 #endif
@@ -2017,7 +2057,13 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             {
                 const int ok = re4dc_skin_defer_lazy(info, d);
                 if (ok) { ++skincen_def; skincen_defv += d->nVtx; } else { ++skincen_fail; skincen_failv += d->nVtx; }
+#line 1890
                 if (ok) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                    re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1891
                     info->pPosBuf[pG->vtx_buf_no] = 0;
                     info->pNrmBuf[pG->vtx_buf_no] = 0;
                     setupGQR6(0x32073207);
@@ -2031,6 +2077,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
 #else
             if (re4dc_skin_defer_lazy(info, d)) {
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1904
                 info->pPosBuf[pG->vtx_buf_no] = 0;
                 info->pNrmBuf[pG->vtx_buf_no] = 0;
                 setupGQR6(0x32073207);
@@ -2039,6 +2090,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                 }
                 continue;
             }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::SkinDeferFail, 1);
+            re4dc::fa35::hit(re4dc::fa35::SkinFailVertices, d->nVtx);
+#endif
+#line 1912
         }
 #if RE4DC_SKIN_PALETTE_LAZY
     dc_skin_cpu:
@@ -2080,6 +2136,11 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
                 return 0;  // the eager pass's PTR ERR (logged there)
             }
             if (face) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 1953
                 continue;
             }
         }
@@ -2148,17 +2209,38 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
         {
             int re4dc_skin_defer(cModelInfo* info, ModelData* d);
             if (!(info->be_flag & 2) && re4dc_skin_defer(info, d)) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferred, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferredVertices, d->nVtx);
+#endif
+#line 2021
                 setupGQR6(0x32073207);
                 if (d->flags & 0x20000000) {
                     setupGQR6(0x20062006);
                 }
                 continue;
             }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            if (!(info->be_flag & 2)) {
+                re4dc::fa35::hit(re4dc::fa35::SkinDeferFail, 1);
+                re4dc::fa35::hit(re4dc::fa35::SkinFailVertices, d->nVtx);
+            }
+#endif
+#line 2027
         }
 #endif
 #if defined(__sh__)
         dc_stamp=re4dc_model_source_stamp();
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::SkinCpu, 1);
+        re4dc::fa35::hit(re4dc::fa35::SkinCpuVertices, nVtx);
+        if (info->be_flag & 2) {
+            re4dc::fa35::hit(re4dc::fa35::SkinMorph, 1);
+            re4dc::fa35::hit(re4dc::fa35::SkinMorphVertices, nVtx);
+        }
+#endif
+#line 2032
 #if RE4DC_SKIN_CENSUS
         ++skincen_cpu; skincen_cpuv += nVtx;
         if (info->be_flag & 2) { ++skincen_morph; skincen_morphv += nVtx; }
@@ -2359,6 +2441,9 @@ static void invisReplayRender(cModel* m, int alphaUpdate)
                 }
                 if ((s32) d->flags < 0) {
                     TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                    if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                     wh->wrapT = 1;
                     wh->wrapS = 1;
                 }
@@ -2435,6 +2520,10 @@ static int MakeWeightPaletteExt(WeightExt* w0, int n)
     u32 wa = (u32) w0;
 #define w ((WeightExt*) wa)
 
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (n > 0) re4dc::fa35::hit(re4dc::fa35::PaletteExtended, unsigned(n));
+#endif
+#line 2308
     for (i = 0; i < n; i++, wa += sizeof(WeightExt)) {
         Mtx m;
         f32 total;
@@ -2496,6 +2585,10 @@ static int MakeWeightPalette(Weight* w0, int n)
         pLog->err(0, 0, "MakeWeightPalette() PTR ERR");
         return 0;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (n > 0) re4dc::fa35::hit(re4dc::fa35::PaletteOrdinary, unsigned(n));
+#endif
+#line 2369
 #if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM && defined(__sh__)
     // SKIN_SH4ZAM 0x20 (game30.mk; render only): the entries built in XMTRX (shz_xmtrx_init_zero + shz_xmtrx_blend per
     // weight, platform/sh4zam_skin.c), stored transposed as the loop below stores them.
@@ -2668,7 +2761,7 @@ extern "C" void re4dc_r200_scroll_diag();               // source_world_scroll.i
 // effects, screen, cockpit, id models, messages, after-render, debug, then 0x13..0x15), the
 // filter 09 post-process and the draw-sync callback. Skipped output while System_flg 0x800.
 void Render()
-{
+{ DSA24_RENDER()
 #if RE4DC_PS2_WORLD_R11F_OWNER
     R11fRenderScope r11fScope;
 #endif
@@ -2685,6 +2778,9 @@ void Render()
 #if RE4DC_ACTOR_TRANSACTION
     // RAII clears/restores the gate on normal completion and every early return.
     SourceActorRenderScope sourceActorRenderScope(coarse!=0);
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+    SourceActorPresentation32Scope sourceActorPresentation32Scope;
+#endif
 #endif
 #endif
 #if RE4DC_PS2_FX_COMMON_HAZE && RE4DC_PACE_CATCHUP
@@ -2733,7 +2829,7 @@ void Render()
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SUBSCRN);
     SetDrawTmpBufType(0);
-    ExecOt(OT_TYPE_MODEL);
+    DSA24_MODEL_OT(ExecOt(OT_TYPE_MODEL));
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SHADOW_DRAW);
     SetDrawTmpBufType(0);
@@ -2834,7 +2930,7 @@ static void ModelRenderBody(cModel* m)
 #else
 void ModelRender(cModel* m)
 #endif
-{
+{ DSA24_MODEL()
 #if defined(RE4DC_OTHER_PROFILE) && RE4DC_OTHER_PROFILE
     OtherActorDraw otherActorDraw(m);
 #endif
@@ -2909,8 +3005,8 @@ void ModelRender(cModel* m)
 #endif
 #if defined(RE4DC_NMR_NO_GC_FRONT) && RE4DC_NMR_NO_GC_FRONT
     // NATIVE_MODEL_REGISTRY_NO_GC_FRONT: a registry-owned actor the ledger did not nominate this frame (door demo start)
-    // is not drawn through the GameCube front path.
-    if(frontNative && re4dc_registry_owned(m))return;
+    // is not drawn through the GameCube front path; LEON_NO_GC_FRONT: neither is Leon (native_model_registry.mk).
+    if(frontNative && (re4dc_registry_owned(m) || (RE4DC_LEON_NO_GC_FRONT && m==(cModel*)pPL)))return;
 #endif
 
 #if RE4DC_FRONT_NATIVE < 2
@@ -3080,10 +3176,18 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
 #endif
 #if RE4DC_ACTOR_TRANSACTION
     if(!flag) {
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+        // Capture before a yielding texture acquisition can retire the owner.
+        // A direct image has no prepared source arrays to fall back to.
+        const bool direct_image=re4dc_actor_presentation32_required(m)!=0;
+#endif
         const int owned=re4dc_actor_transaction_draw(m);
 #if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC
         // mcheck.mk MCHECK_LEONGC (test builds): the player's model left to the source (GameCube) path.
         if(owned==0 && m==(cModel*)pPL)re4dc_leon_gc_note(m);
+#endif
+#if defined(RE4DC_ACTOR_PRESENTATION32) && RE4DC_ACTOR_PRESENTATION32
+        if(direct_image && owned==0)return;
 #endif
         if(owned<0)return; // caller still restores alpha state and shaderReset
         if(owned>0)info=nullptr; // original postlude still executes below
@@ -3234,6 +3338,9 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
                 }
                 if ((s32) d->flags < 0) {
                     TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                    if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                     wh->wrapT = 1;
                     wh->wrapS = 1;
                 }
@@ -3398,9 +3505,158 @@ static int frontNativeOk(cModel* m)
 // the FRONT_NATIVE=2 snapshot, or before a new set with fewer objects (whose tail keeps the old
 // objects, as in the source). Swaps with an index outside the set, and sets that do not fit the
 // cache, take the source loop. Render only.
+#if RE4DC_FRONT_TPL_OWNER
+static void frontTexFlush();
+#endif
 namespace {
+#if RE4DC_FRONT_TPL_OWNER
+// Only SMD palettes whose TPL/descriptor/header spans and image-data pointers
+// lie in the current native room archive are certified. The info table is a bounded,
+// direct-mapped sidecar: a collision loses an optimization, never authority.
+struct FtOwnerInfo {
+    const cModelInfo* info;
+    const TEXPalette* base;
+    const TEXPalette* add;
+    const TEXDescriptor* base_desc;
+    const TEXDescriptor* add_desc;
+    u32 base_version, add_version, life;
+    u8 base_count, add_count, zero_base, qualified;
+};
+constexpr u32 kFtOwners = 64;
+FtOwnerInfo ft_owner_infos[kFtOwners];
+const u8* ft_owner_room;
+u32 ft_owner_bytes, ft_owner_life = 1, ft_owner_change = 1;
+const cSmd* ft_owner_smd;
+const cSmd* ft_owner_common;
+bool ft_owner_exhausted;
+
+bool ftOwnerSpan(const void* p, u32 bytes)
+{
+    if (!ft_owner_room || !p || !bytes) return false;
+    const __UINTPTR_TYPE__ base = (__UINTPTR_TYPE__) ft_owner_room;
+    const __UINTPTR_TYPE__ addr = (__UINTPTR_TYPE__) p;
+    if (addr < base) return false;
+    const __UINTPTR_TYPE__ delta = addr - base;
+    return delta <= ft_owner_bytes && bytes <= ft_owner_bytes - delta;
+}
+bool ftOwnerAligned(const void* p, u32 alignment)
+{
+    return (((__UINTPTR_TYPE__) p) & (alignment - 1)) == 0;
+}
+const u8* ftOwnerOffset(const void* origin, u32 offset, u32 bytes)
+{
+    if (!ftOwnerSpan(origin, 1)) return 0;
+    const __UINTPTR_TYPE__ pos = (__UINTPTR_TYPE__) origin - (__UINTPTR_TYPE__) ft_owner_room;
+    if (offset > ft_owner_bytes - pos || bytes > ft_owner_bytes - pos - offset) return 0;
+    return ft_owner_room + pos + offset;
+}
+void ftOwnerNext(u32& serial)
+{
+    if (serial == ~0U) {
+        ft_owner_exhausted = true;  // never reuse an old key or owner token
+    } else {
+        ++serial;
+    }
+}
+void ftOwnerMutation()
+{
+    ftOwnerNext(ft_owner_change);
+}
+void ftOwnerClear()
+{
+    frontTexFlush();  // a retired set can still own the symbolic GX tail
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+    ft_owner_smd = ft_owner_common = 0;
+}
+bool ftOwnerPalette(const TEXPalette* p, u32& count, const TEXDescriptor*& desc)
+{
+    if (!ftOwnerAligned(p, alignof(TEXPalette)) || !ftOwnerSpan(p, sizeof(*p)) ||
+        p->version != 0x0020AF30) return false;
+    count = p->numDescriptors;
+    desc = p->descriptorArray;
+    if (count > 0xF8 || (count && (!ftOwnerAligned(desc, alignof(TEXDescriptor)) ||
+                                  !ftOwnerSpan(desc, count * sizeof(*desc))))) return false;
+    for (u32 i = 0; i < count; ++i) {
+        const TEXHeader* h = desc[i].textureHeader;
+        if (!ftOwnerAligned(h, alignof(TEXHeader)) || !ftOwnerSpan(h, sizeof(*h)) ||
+            !ftOwnerSpan(h->data, 1)) return false;
+    }
+    return true;
+}
+u32 ftOwnerSlot(const void* info)
+{
+    return (u32) (((__UINTPTR_TYPE__) info >> 4) & (kFtOwners - 1));
+}
+u32 ftOwnerStamp(const cModelInfo* info, u32 n)
+{
+    if (ft_owner_exhausted || !ft_owner_common) return 0;
+    const FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
+    if (o.info != info || o.life != ft_owner_life || !o.qualified || o.base != info->tpl_addr ||
+        o.add != info->pAddTpl || o.add_count != info->nAddTex ||
+        o.base_count + o.add_count != n) return 0;
+    // These bounded top-level reads catch count shrink and descriptor-array
+    // remaps before a hit; there is no descendant walk on the qualified path.
+    if (!o.zero_base) {
+        if (!ftOwnerSpan(o.base, sizeof(*o.base)) || o.base->version != o.base_version ||
+            o.base->numDescriptors != o.base_count || o.base->descriptorArray != o.base_desc) return 0;
+    } else if (o.base->numDescriptors != 0 || o.base->version != 0x0020AF30) {
+        return 0;
+    }
+    if (!ftOwnerSpan(o.add, sizeof(*o.add)) || o.add->version != o.add_version ||
+        o.add->numDescriptors != o.add_count || o.add->descriptorArray != o.add_desc) return 0;
+    return ft_owner_change;
+}
+u32 ftOwnerRestamp(const cModelInfo* info, u32 n)
+{
+    const u32 stamp=ftOwnerStamp(info,n);
+    if (!stamp) return 0;
+    const FtOwnerInfo& o=ft_owner_infos[ftOwnerSlot(info)];
+    u32 count=0;
+    const TEXDescriptor* desc=0;
+    if (!o.zero_base && (!ftOwnerPalette(o.base,count,desc) ||
+                         count!=o.base_count || desc!=o.base_desc)) return 0;
+    if (!ftOwnerPalette(o.add,count,desc) || count!=o.add_count || desc!=o.add_desc) return 0;
+    return stamp;
+}
+u32 ftOwnerCount(const cModelInfo* info, u32& stamp)
+{
+    stamp = 0;
+    if (ft_owner_exhausted) return 0;
+    const FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
+    if (o.info != info || o.life != ft_owner_life) return 0;
+    const u32 n = o.base_count + o.add_count;
+    stamp = ftOwnerStamp(info, n);
+    return stamp ? n : 0;
+}
+void ftOwnerForeign(const cModelInfo* info)
+{
+    const FtOwnerInfo& known = ft_owner_infos[ftOwnerSlot(info)];
+    if (known.info == info && known.life == ft_owner_life) return;
+    if (!ftOwnerSpan(info->tpl_addr, 1) && !ftOwnerSpan(info->pAddTpl, 1)) return;
+    // A foreign info can expose a registered TPL through a base or added
+    // alias. Refuse the entire published generation rather than trusting that
+    // caller to keep the SMD descriptor mutation contract.
+    for (u32 i = 0; i < kFtOwners; ++i) {
+        const FtOwnerInfo& o = ft_owner_infos[i];
+        if (o.life == ft_owner_life && o.qualified &&
+            (o.base == info->tpl_addr || o.add == info->tpl_addr ||
+             o.base == info->pAddTpl || o.add == info->pAddTpl)) {
+            ftOwnerNext(ft_owner_life);
+            ftOwnerMutation();
+            return;
+        }
+    }
+}
+#endif
 struct FtRec { u32 w[4]; };  // GXInitTexObj stub words 0..3 (4..7 are zero)
+#if RE4DC_FRONT_TPL_OWNER
+struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap;
+    u32 owner_stamp;
+};
+#else
 struct FtKey { void* tpl; void* add; void* data0; u16 first; u8 count; u8 wrap; };
+#endif
 constexpr u32 kFtKeys = 32, kFtRecs = 512;  // r100 fight peak: 21 keys, 394 records
 FtKey ft_keys[kFtKeys];
 FtRec ft_recs[kFtRecs];
@@ -3426,29 +3682,121 @@ void ftObj(GXTexObj* o, const FtRec& r)
         w[k] = k < 4 ? r.w[k] : 0;
     }
 }
+FtRec ftRecord(TEXHeader* h, u8 wrap)
+{
+    // Preserve the source's header writes even when the packed object matches.
+    // Another model can share this header through its added TPL.
+    if (wrap) {
+#if RE4DC_FRONT_TPL_OWNER
+        if (h->wrapT != 1 || h->wrapS != 1) re4dc_front_tpl_header_changed(h);
+#endif
+        h->wrapT = 1;
+        h->wrapS = 1;
+    }
+    FtRec r;
+    r.w[0] = (u32) h->data;
+    r.w[1] = ((u32) (u16) h->width << 16) | (u16) h->height;
+    r.w[2] = (u32) h->format;
+    r.w[3] = ((u32) h->wrapS << 8) | (u32) h->wrapT | ((u32) (u8) (h->minLOD == h->maxLOD ? 0 : 1) << 16);
+    return r;
+}
+#if RE4DC_FRONT_TPL_OWNER
+const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n, u32 owner_stamp)
+#else
 const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
+#endif
 {
     const u32 room = ((u32) pG->stage_no << 8) | pG->room_no;
     const u8 wrap = (s32) d->flags < 0;
     if (n == 0 || n > 0xF8) {
         return 0;
     }
+#if RE4DC_FRONT_TPL_OWNER
+    if (!owner_stamp) ftOwnerForeign(info);
+    void* data0 = 0;
+    bool have_data0 = false;
+#else
     void* data0 = ftDesc(info, 0)->textureHeader->data;
+#endif
     if (room != ft_room) {
         frontTexFlush();
         ft_room = room;
         ft_nkeys = ft_nrecs = 0;
     }
     for (u32 k = 0; k < ft_nkeys; k++) {
+#if RE4DC_FRONT_TPL_OWNER
+        FtKey& key = ft_keys[k];
+#else
         const FtKey& key = ft_keys[k];
+#endif
+#if RE4DC_FRONT_TPL_OWNER
+        if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap) {
+#else
         if (key.tpl == info->tpl_addr && key.add == info->pAddTpl && key.count == n && key.wrap == wrap && key.data0 == data0) {
+#endif
+#if RE4DC_FRONT_TPL_OWNER
+            if (owner_stamp && key.owner_stamp == owner_stamp) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontHit, 1);
+#endif
+                ++ft_hits;
+                return &key;
+            }
+            if (!have_data0) {
+                data0 = ftDesc(info, 0)->textureHeader->data;
+                have_data0 = true;
+            }
+            if (key.data0 != data0) continue;
+#endif
+            // Pointer identity does not certify the remaining descriptors or
+            // their current packed fields after same-room reuse/relocation.
+            bool same = true;
+            for (u32 i = 0; i < n; i++) {
+                const FtRec now = ftRecord(ftDesc(info, i)->textureHeader, wrap);
+                const FtRec& old = ft_recs[key.first + i];
+                if (now.w[0] != old.w[0] || now.w[1] != old.w[1] || now.w[2] != old.w[2] || now.w[3] != old.w[3]) {
+                    same = false;
+                    break;
+                }
+            }
+            if (!same) {
+                // The preceding symbolic set may use these records. Materialize
+                // it before refreshing in place so its tail/remap stay intact.
+                frontTexFlush();
+                for (u32 i = 0; i < n; i++) {
+                    ft_recs[key.first + i] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
+                }
+#if RE4DC_FRONT_TPL_OWNER
+                key.owner_stamp = ftOwnerRestamp(info, n);
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontBuild, 1);
+#endif
+#line 2228
+                ++ft_builds;
+                return &key;
+            }
+#if RE4DC_FRONT_TPL_OWNER
+            key.owner_stamp = ftOwnerRestamp(info, n);
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::FrontHit, 1);
+#endif
+#line 2231
             ++ft_hits;
             return &key;
         }
     }
+#if RE4DC_FRONT_TPL_OWNER
+    if (!have_data0) data0 = ftDesc(info, 0)->textureHeader->data;
+#endif
     if (ft_nkeys == kFtKeys || ft_nrecs + n > kFtRecs) {
         frontTexFlush();
         ft_nkeys = ft_nrecs = 0;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::FrontReset, 1);
+#endif
+#line 2238
         ++ft_resets;
     }
     FtKey& key = ft_keys[ft_nkeys++];
@@ -3459,18 +3807,11 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
     key.count = (u8) n;
     key.wrap = wrap;
     for (u32 i = 0; i < n; i++) {
-        TEXDescriptor* td = ftDesc(info, i);
-        TEXHeader* h = td->textureHeader;
-        if (wrap) {
-            h->wrapT = 1;
-            h->wrapS = 1;
-        }
-        FtRec& r = ft_recs[ft_nrecs++];
-        r.w[0] = (u32) h->data;
-        r.w[1] = ((u32) (u16) h->width << 16) | (u16) h->height;
-        r.w[2] = (u32) h->format;
-        r.w[3] = ((u32) h->wrapS << 8) | (u32) h->wrapT | ((u32) (u8) (h->minLOD == h->maxLOD ? 0 : 1) << 16);
+        ft_recs[ft_nrecs++] = ftRecord(ftDesc(info, i)->textureHeader, wrap);
     }
+#if RE4DC_FRONT_TPL_OWNER
+    key.owner_stamp = ftOwnerRestamp(info, n);
+#endif
     if (wrap) {
         // The fix-up rewrote the headers: sets of this TPL cached without it are stale.
         for (u32 k = 0; k + 1 < ft_nkeys; k++) {
@@ -3479,6 +3820,10 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
             }
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::FrontBuild, 1);
+#endif
+#line 2258
     ++ft_builds;
     return &key;
 }
@@ -3486,8 +3831,15 @@ const FtKey* ftLookup(cModelInfo* info, ModelData* d, u32 n)
 // taken symbolically, 0 when the caller must run the source loop (gx->texObj is then current).
 int frontTexInit(cModel* m, cModelInfo* info, ModelData* d)
 {
+#if RE4DC_FRONT_TPL_OWNER
+    u32 owner_stamp;
+    const u32 owned_n = ftOwnerCount(info, owner_stamp);
+    const u32 n = owned_n ? owned_n : ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex;
+    const FtKey* key = ftLookup(info, d, n, owner_stamp);
+#else
     const u32 n = ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex;
     const FtKey* key = ftLookup(info, d, n);
+#endif
     cTexChg* chg = MODEL_EXT(m)->pTexChg;
     if (key && chg) {
         u8 remap[0xF8];
@@ -3508,6 +3860,10 @@ int frontTexInit(cModel* m, cModelInfo* info, ModelData* d)
     }
     if (!key) {
         frontTexFlush();
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::FrontRefuse, 1);
+#endif
+#line 2287
         ++ft_fallbacks;
         return 0;
     }
@@ -3535,11 +3891,127 @@ inline const void* frontTexObj(GxWork* gx, u32 id)
     return &gx->texObj[id];
 }
 }
+#if RE4DC_FRONT_TPL_OWNER
+extern "C" void re4dc_front_tpl_bind_room(const void* room, unsigned bytes)
+{
+    ftOwnerClear();
+    ft_owner_room = 0;
+    ft_owner_bytes = 0;
+    if (!room || !bytes || (__UINTPTR_TYPE__) room + bytes < (__UINTPTR_TYPE__) room) return;
+    ft_owner_room = (const u8*) room;
+    ft_owner_bytes = bytes;
+}
+extern "C" void re4dc_front_tpl_retire_room()
+{
+    ftOwnerClear();
+    ft_owner_room = 0;
+    ft_owner_bytes = 0;
+}
+extern "C" void re4dc_front_tpl_smd_begin(const void* smd, const void* common)
+{
+    ftOwnerClear();
+    if (ftOwnerAligned(smd, alignof(cSmd)) && ftOwnerAligned(common, alignof(cSmd)) &&
+        ftOwnerSpan(smd, 16) && ftOwnerSpan(common, 16)) {
+        ft_owner_smd = (const cSmd*) smd;
+        ft_owner_common = (const cSmd*) common;
+    }
+}
+extern "C" void re4dc_front_tpl_smd_clear()
+{
+    frontTexFlush();
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+}
+extern "C" void re4dc_front_tpl_smd_publish(const void* info_ptr, const void* zero_tpl,
+                                                const void* smd, const void* common)
+{
+    if (!info_ptr) return;
+    FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info_ptr)];
+    if (o.info == info_ptr) o.info = 0;
+    if (ft_owner_exhausted || !ft_owner_common ||
+        common != ft_owner_common || !ftOwnerSpan(common, 16)) return;
+    o.info = (const cModelInfo*) info_ptr;
+    o.life = ft_owner_life;
+    o.qualified = 0;
+    const cModelInfo* info = (const cModelInfo*) info_ptr;
+    const cSmd* cs = (const cSmd*) common;
+    const u8* table = ftOwnerOffset(cs, cs->TplTblOfs, sizeof(u32));
+    if (!table || !ftOwnerAligned(table, alignof(u32))) return;
+    const u32 add_ofs = *(const u32*) table;
+    const TEXPalette* add = (const TEXPalette*) ftOwnerOffset(table, add_ofs, sizeof(TEXPalette));
+    if (!add) return;
+    if (info->pAddTpl != add) return;
+    u32 add_count = 0, base_count = 0;
+    const TEXDescriptor *add_desc = 0, *base_desc = 0;
+    if (!ftOwnerPalette(add, add_count, add_desc) || !add_count ||
+        info->nAddTex != add_count) return;
+    const TEXPalette* base = (const TEXPalette*) info->tpl_addr;
+    const bool zero = base == zero_tpl;
+    if (zero) {
+        if (!base || !ftOwnerAligned(base, alignof(TEXPalette)) ||
+            base->version != 0x0020AF30 || base->numDescriptors != 0) return;
+        base_desc = base->descriptorArray;
+    } else if (smd != ft_owner_smd || !ftOwnerPalette(base, base_count, base_desc)) {
+        return;
+    }
+    if (base_count + add_count > 0xF8) return;
+    o.info = info;
+    o.base = base;
+    o.add = add;
+    o.base_desc = base_desc;
+    o.add_desc = add_desc;
+    o.base_count = base_count;
+    o.add_count = add_count;
+    o.base_version = base->version;
+    o.add_version = add->version;
+    o.zero_base = zero;
+    o.qualified = 1;
+    o.life = ft_owner_life;
+}
+extern "C" void re4dc_front_tpl_smd_slide(const void* smd)
+{
+    if (smd == ft_owner_smd || smd == ft_owner_common) {
+        frontTexFlush();
+        ftOwnerNext(ft_owner_life);
+        ftOwnerMutation();
+    }
+}
+extern "C" void re4dc_front_tpl_info_changed(const void* info)
+{
+    FtOwnerInfo& o = ft_owner_infos[ftOwnerSlot(info)];
+    if (o.info == info) o.info = 0;
+}
+extern "C" void re4dc_front_tpl_palette_changed(const void*)
+{
+    // A different palette can share a nonfirst certified TEXHeader or even a
+    // descriptor array. Its address does not identify every descendant that
+    // calcTplAddr/Offset or slideTplAddr will write. These are cold structural
+    // writers: revoke the whole certified generation before their first
+    // descendant store, regardless of the palette's own archive membership.
+    // Materialize a symbolic set first so a later record refresh cannot alter
+    // the already-selected GX tail/remap.
+    frontTexFlush();
+    ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+}
+extern "C" void re4dc_front_tpl_header_changed(const void* header)
+{
+    if (!ftOwnerSpan(header, sizeof(TEXHeader))) return;
+    // This notifier is used only by the source's wrapS/T writes. If a header
+    // was remapped outside the certified image span, do not renew authority.
+    if (!ftOwnerSpan(((const TEXHeader*) header)->data, 1)) ftOwnerNext(ft_owner_life);
+    ftOwnerMutation();
+}
+#endif
 static void frontTexFlush()
 {
     if (!ft_cur) {
         return;
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(re4dc::fa35::FrontFlush, ft_cur->count);
+#endif
+#line 2319
     GxWork* gx = GXWORK();
     const FtRec* r = ft_recs + ft_cur->first;
     for (u32 i = 0; i < ft_cur->count; i++) {
@@ -3549,6 +4021,8 @@ static void frontTexFlush()
     ++ft_flushes;
 }
 #endif
+// Keep the original source diagnostic locations after the optional cache body.
+#line 2302 "D:/Bio4/Prog/trans.cpp"
 static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
 {
     GxWork* gx = GXWORK();
@@ -3652,6 +4126,10 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
             if (!frontTexInit(m, info, d))
 #endif
             {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontSource, 1);
+#endif
+#line 2405
                 for (i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
                     TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
                     TEXDescriptor* td;
@@ -3664,6 +4142,10 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
                     }
                     if ((s32) d->flags < 0) {
                         TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                        if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
+#line 2417
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -3794,6 +4276,10 @@ static int sceneryGate(cModel* m)
             if (!frontTexInit(m, info, id))
 #endif
             {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontSource, 1);
+#endif
+#line 2547
                 for (u32 i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
                     TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
                     TEXDescriptor* td;
@@ -3806,6 +4292,9 @@ static int sceneryGate(cModel* m)
                     }
                     if ((s32) id->flags < 0) {
                         TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                        if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -4090,6 +4579,10 @@ static int propGate(cModel* m, Mtx viewMat)
             if (!frontTexInit(m, info, id))
 #endif
             {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+                re4dc::fa35::hit(re4dc::fa35::FrontSource, 1);
+#endif
+#line 2843
                 for (u32 i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
                     TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
                     TEXDescriptor* td;
@@ -4102,6 +4595,9 @@ static int propGate(cModel* m, Mtx viewMat)
                     }
                     if ((s32) id->flags < 0) {
                         TEXHeader* wh = td->textureHeader;
+#if RE4DC_FRONT_TPL_OWNER
+                        if (wh->wrapT != 1 || wh->wrapS != 1) re4dc_front_tpl_header_changed(wh);
+#endif
                         wh->wrapT = 1;
                         wh->wrapS = 1;
                     }
@@ -5389,13 +5885,22 @@ static inline void re4dc_prim_tag(const void* a, u32 size, u32 caller)
     t.addr = (u32) a; t.size = size; t.frame = pG->Frame_cnt; t.caller = caller;
 }
 #endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+extern "C" void re4dc_actor_skin_retire_pending();
+#endif
 void SetPrimBuffPtr()
 {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    re4dc_actor_skin_retire_pending();
+#endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER
     ++sourceWorldPrimGeneration; // invalidates even same-frame/address reuse
 #endif
 #if RE4DC_COARSE_SOURCE_ACTORS
     sourceActorRetire(); // before even the no-buffer return or any storage reuse
+#endif
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    re4dc_actor_skin_recipe_retire(); // also when prim_cnt==0 or Frame_cnt is unchanged
 #endif
     GxWork* gx = GXWORK();
 
@@ -5426,12 +5931,53 @@ void SetPrimBuffPtr()
 #endif
 }
 
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+static unsigned skin_recipe_credit=0;
+extern "C" unsigned re4dc_prim_recipe_credit(){return skin_recipe_credit;}
+extern "C" unsigned re4dc_prim_recipe_frame(){return pG->Frame_cnt;}
+extern "C" void re4dc_prim_recipe_retire_credit(){skin_recipe_credit=0;}
+static bool re4dc_prim_recipe_room(unsigned* available) {
+    const u8* base=(const u8*)pG->prim_cnt;
+    if(!available || PTR_INVALID(base) || pG->vtx_buf_no>1 ||
+       pG->nPrim>~0u/(pG->vtx_buf_no+1u))return false;
+    const std::uintptr_t begin=reinterpret_cast<std::uintptr_t>(base);
+    const unsigned span=pG->nPrim*(pG->vtx_buf_no+1u);
+    if(begin>~std::uintptr_t(0)-span)return false;
+    const std::uintptr_t end=begin+span;
+    const std::uintptr_t at=reinterpret_cast<std::uintptr_t>(GXWORK()->prim);
+    if(at<begin || at>end)return false;
+    *available=unsigned(end-at);
+    return true;
+}
+extern "C" int re4dc_prim_recipe_release(unsigned bytes) {
+    if(!bytes || (bytes&31u) || bytes>skin_recipe_credit)return 0;
+    skin_recipe_credit-=bytes;return 1;
+}
+// One non-yielding claim transfers an old pending row's credit or adds a
+// descriptor. The admission margin is checked here only; later allocations
+// protect the hard palette credit without charging another 16 KiB per row.
+extern "C" int re4dc_prim_recipe_claim(unsigned descriptor,unsigned old_credit,
+                                        unsigned new_credit,void** allocation) {
+    if(!allocation || (descriptor&31u) || (old_credit&31u) || (new_credit&31u) ||
+       old_credit>skin_recipe_credit || !new_credit)return 0;
+    unsigned room=0;
+    if(!re4dc_prim_recipe_room(&room) || skin_recipe_credit-old_credit>~0u-new_credit)return 0;
+    const unsigned total=skin_recipe_credit-old_credit+new_credit;
+    if(room<descriptor || room-descriptor<total ||
+       room-descriptor-total<16u*1024u)return 0;
+    GxWork* gx=GXWORK();*allocation=gx->prim;
+    gx->prim+=descriptor;skin_recipe_credit=total;
+    return 1;
+}
+#endif
 // Allocates `size` bytes (32-byte aligned) from this frame's primitive buffer; 0 when exhausted.
 void* GetPrimBuff(int size)
 {
     GxWork* gx = GXWORK();
     u8* base = (u8*) pG->prim_cnt;
+#if !defined(RE4DC_SKIN_RECIPE32) || !RE4DC_SKIN_RECIPE32
     u8* limit;
+#endif
     u8* p;
     u8* next;
 
@@ -5439,17 +5985,35 @@ void* GetPrimBuff(int size)
         pLog->err(0, 0, "GetPrimBuff() PTR ERR %08X", base);
         return 0;
     }
-    limit = base + pG->nPrim * (pG->vtx_buf_no + 1);
-    size = (size + 0x1F) / 32 * 32;
-    p = gx->prim;
-    next = p + size;
-    if (limit < next) {
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    unsigned room=0;
+    if(size<0 || size>0x7fffffff-31 || !re4dc_prim_recipe_room(&room)) {
 #if RE4DC_PRIM_WATER
         ++primw_overflow;
 #endif
         pLog->err(0, 0, "GetPrimBuff() : OVERFLOW");
         return 0;
     }
+#else
+    limit = base + pG->nPrim * (pG->vtx_buf_no + 1);
+#endif
+    size = (size + 0x1F) / 32 * 32;
+    p = gx->prim;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(unsigned(size)>room || skin_recipe_credit>room-unsigned(size)) {
+#else
+    next = p + size;
+    if (limit < next) {
+#endif
+#if RE4DC_PRIM_WATER
+        ++primw_overflow;
+#endif
+        pLog->err(0, 0, "GetPrimBuff() : OVERFLOW");
+        return 0;
+    }
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    next=p+size;
+#endif
     gx->prim = next;
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
 #if RE4DC_OT_WALK_CHECK >= 2
@@ -5467,14 +6031,26 @@ void* GetPrimBuff(int size)
 // it never triggers GetPrimBuff's OVERFLOW report. D358: 37% peak use of 312 KiB.
 extern "C" void* re4dc_prim_tail(unsigned bytes, unsigned reserve)
 {
+#if !defined(RE4DC_SKIN_RECIPE32) || !RE4DC_SKIN_RECIPE32
     GxWork* gx = GXWORK();
+#endif
     u8* base = (u8*) pG->prim_cnt;
     if (PTR_INVALID(base)) {
         return 0;
     }
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    unsigned room=0;
+    if(bytes>~0u-31u || !re4dc_prim_recipe_room(&room))return 0;
+#else
     u8* limit = base + pG->nPrim * (pG->vtx_buf_no + 1);
+#endif
     u32 size = (bytes + 0x1F) / 32 * 32;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if(size>0x7fffffffu || size>room || reserve>room-size ||
+       skin_recipe_credit>room-size-reserve) {
+#else
     if (gx->prim + size + reserve > limit) {
+#endif
 #if RE4DC_PRIM_WATER
         ++primw_declined;
 #endif
@@ -5788,15 +6364,29 @@ extern "C" void* re4dc_prim_tail(unsigned bytes, unsigned reserve);
 int re4dc_skin_defer(cModelInfo* info, ModelData* d)
 {
     const u32 n = d->weight_ext_num > 0xFF ? d->weight_ext_num : d->weight_palette_num;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (n > (0x7FFFFFFFu - 31u) / 48u) return 0;
+#endif
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission admission{};
+    if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, info->pPosBuf[pG->vtx_buf_no], n, &admission)) return 0;
+#endif
     void* copy = re4dc_prim_tail(n * 0x30, 64 * 1024);
     if (!copy) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+        re4dc_actor_skin_cancel(&admission);
+#endif
         return 0;
     }
     memcpy(copy, (const void*) RE4DC_LC_PALETTE, n * 0x30);
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    return re4dc_actor_skin_commit(&admission, (const float*) copy);
+#else
     return re4dc_actor_skin_register(pG->Frame_cnt, info, info->pPosBuf[pG->vtx_buf_no], (const float*) copy, n);
+#endif
 }
 
 #if RE4DC_NATIVE_ACTOR_SKIN_LAZY
@@ -5806,15 +6396,29 @@ int re4dc_skin_defer(cModelInfo* info, ModelData* d)
 int re4dc_skin_defer_lazy(cModelInfo* info, ModelData* d)
 {
     const u32 n = d->weight_ext_num > 0xFF ? d->weight_ext_num : d->weight_palette_num;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (n > (0x7FFFFFFFu - 31u) / 48u) return 0;
+#endif
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission admission{};
+    if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, 0, n, &admission)) return 0;
+#endif
     void* copy = re4dc_prim_tail(n * 0x30, 16 * 1024);
     if (!copy) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+        re4dc_actor_skin_cancel(&admission);
+#endif
         return 0;
     }
     memcpy(copy, (const void*) RE4DC_LC_PALETTE, n * 0x30);
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    return re4dc_actor_skin_commit(&admission, (const float*) copy);
+#else
     return re4dc_actor_skin_register(pG->Frame_cnt, info, 0, (const float*) copy, n);
+#endif
 }
 
 #if RE4DC_SKIN_PALETTE_LAZY
@@ -5868,11 +6472,29 @@ static void skinLazyBuild(void* w, u32 n, int ext, void* dst)
 static int skinDeferPending(cModel* m, cModelInfo* info, ModelData* d, int* mtxBuilt)
 {
     const u32 n = d->weight_ext_num > 0xFF ? d->weight_ext_num : d->weight_palette_num;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    if (n > 0xFFFFu) return 0; // SkinLazyHead captures the count in its low half.
+#endif
     if (!n || !re4dc_model_diagnostic_enabled()) {
         return 0;
     }
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    Re4dcActorSkinAdmission admission{};
+    if (!re4dc_actor_skin_admit(pG->Frame_cnt, info, 0, n, &admission)) return 0;
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+    const unsigned n_ext=n|(d->weight_ext_num>0xFF?0x10000u:0u);
+    const int recipe=re4dc_actor_skin_recipe_claim(&admission,m,d->pWeight,n_ext);
+    if(recipe) {
+        if(recipe<0)re4dc_actor_skin_cancel(&admission);
+        return recipe>0;
+    }
+#endif
+#endif
     void* copy = re4dc_prim_tail(n * 0x30, 16 * 1024);
     if (!copy) {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+        re4dc_actor_skin_cancel(&admission);
+#endif
         return 0;
     }
     SkinLazyHead h;
@@ -5900,7 +6522,11 @@ static int skinDeferPending(cModel* m, cModelInfo* info, ModelData* d, int* mtxB
     (void) mtxBuilt;
     memcpy(copy, &h, sizeof(h));
 #endif
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    if (!re4dc_actor_skin_commit(&admission, (const float*) copy)) {
+#else
     if (!re4dc_actor_skin_register(pG->Frame_cnt, info, 0, (const float*) copy, n)) {
+#endif
         return 0;
     }
 #if RE4DC_SKIN_PALETTE_LAZY == 2
@@ -5974,6 +6600,26 @@ extern "C" void re4dc_skin_palette_resolve(const float* palette)
     skinLazyBuild(h.w, h.n_ext & 0xFFFF, h.n_ext >> 16, (void*) palette);
 #endif
 }
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+extern "C" const float* re4dc_skin_recipe_materialize(const void* model,const void* weight,
+                                                       unsigned n_ext,unsigned frame,unsigned bytes) {
+    if(!model || !weight || !bytes || (bytes&31u) ||
+       !re4dc_prim_recipe_release(bytes))return nullptr;
+    // The reserved credit was removed immediately before the exact allocation.
+    // GetPrimBuff still protects every other live recipe's credit.
+    void* copy=GetPrimBuff(int(bytes));
+    if(!copy) {
+        skin_recipe_credit+=bytes;
+        return nullptr;
+    }
+    SkinLazyHead h;
+    h.magic=kSkinLazyMagic;h.frame=frame;
+    h.m=(cModel*)model;h.w=const_cast<void*>(weight);h.n_ext=n_ext;
+    memcpy(copy,&h,sizeof(h));
+    re4dc_skin_palette_resolve((const float*)copy);
+    return (const float*)copy;
+}
+#endif
 #if RE4DC_LEON_FACE_LAZY
 // LEON_FACE_LAZY's pending job (see the knob note at the top of this file).
 static struct {
@@ -6117,6 +6763,12 @@ void CalcTplAddrC8(TEXPalette* tpl)
     if ((s32) tpl->descriptorArray < 0) {
         return;
     }
+#if RE4DC_FRONT_TPL_OWNER
+    // The core/thermo palette can alias a room descendant even though the
+    // palette itself lies outside the certified room. Revoke before touching
+    // its texture and CLUT headers, as the model.cpp TPL writers do.
+    re4dc_front_tpl_palette_changed(tpl);
+#endif
     tpl->descriptorArray = (TEXDescriptor*) ((u32) tpl->descriptorArray + (u32) tpl);
     for (i = 0; i < tpl->numDescriptors; i++) {
         TEXDescriptor* td = &tpl->descriptorArray[i];

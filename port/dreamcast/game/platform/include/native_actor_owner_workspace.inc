@@ -26,6 +26,11 @@ extern "C" void re4dc_actor_workspace_release(Re4dcActorWorkspaceLease* lease) {
     if(lease)owned_workspace.release(*lease);
 }
 extern "C" void re4dc_actor_owner_retire() {
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+    // An owner/frame rebind may retire the palette backing even when the
+    // numeric source frame is unchanged. Reject a copied in-flight ticket.
+    re4dc_actor_skin_retire_pending();
+#endif
     owned_workspace.retire();owned_skin_clear();owned_skin_invalidate_frames();owned_submission=false;
     // This memory belongs to the retiring primitive allocation, not Frame_cnt.
     // re4dc_actor_frame installs a fresh span immediately after this function

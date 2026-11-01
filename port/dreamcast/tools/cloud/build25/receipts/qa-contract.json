@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "row_bytes": 244,
+  "framing_cases": 14,
+  "max_datagram_bytes": 1128,
+  "scope": "Exercise production AL25 row formatting and QA_LINK part framing on the host.",
+  "source_sha256": {
+    "port/dreamcast/game/qa_menu.cpp": "0c8215961a550d9335972de17a7053969a4b95d129caee60606a12fadf6fc070",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.h": "0e9f68c219112d29667f681269211fbf95fd534479ab999d933df08271127974",
+    "port/dreamcast/tools/cloud/build25/qa_contract.py": "5aaefa99ca0250d8a872bd91445772d8c69be17a644e325a2a141cdbac09b320"
+  }
+}

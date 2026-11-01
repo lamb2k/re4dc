@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "scope": "Actual production-TU Build 25 cases; no copy of the light arithmetic.",
+  "sanitizer": false,
+  "leak_detection": null,
+  "profiles": [
+    {
+      "profile": [],
+      "result": "PASS ACTOR_LIGHT_FAST_ONLY 65653 cases; normal dispatch fallback=0; injected invariant violation=1",
+      "evaluator_symbols": "absent"
+    },
+    {
+      "profile": [
+        "RE4DC_ACTOR_PROBE_LIGHT=1",
+        "RE4DC_LEON_SOURCE_LIGHT=1"
+      ],
+      "result": "PASS ACTOR_LIGHT_FAST_ONLY 65654 cases; normal dispatch fallback=0; injected invariant violation=1",
+      "evaluator_symbols": "absent"
+    },
+    {
+      "profile": [
+        "RE4DC_ACTOR_PROBE_LIGHT=2",
+        "RE4DC_LEON_SOURCE_LIGHT=1",
+        "RE4DC_GIGANTE_LIGHTS=1",
+        "RE4DC_LEON_LIGHT_HEADROOM=1",
+        "RE4DC_LEON_LIGHT_FILL=45",
+        "RE4DC_ACTOR_BYTES_LEAN=1",
+        "RE4DC_ACTOR_NO_CLEAR=1",
+        "RE4DC_ACTOR_SETUP_LEAN=1",
+        "RE4DC_ACTOR_EXACT_FAST=1",
+        "RE4DC_STATUE_LIGHTS=2",
+        "RE4DC_GANADO_LIT=1",
+        "RE4DC_GANADO_LIT_TOGGLE=1",
+        "RE4DC_GANADO_LIT_FILL=40"
+      ],
+      "result": "PASS ACTOR_LIGHT_FAST_ONLY 65655 cases; normal dispatch fallback=0; injected invariant violation=1",
+      "evaluator_symbols": "absent"
+    },
+    {
+      "profile": [
+        "RE4DC_ACTOR_LIGHT_CAP=1",
+        "RE4DC_BARN28_DIAG=1"
+      ],
+      "result": "PASS ACTOR_LIGHT_FAST_ONLY 65654 cases; normal dispatch fallback=0; injected invariant violation=1",
+      "evaluator_symbols": "absent"
+    }
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "fa4f39d1e4f0afe6e35f2c6989ae5cc5bcf07235e831cfdfeb1665e6a001e92b",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.h": "0e9f68c219112d29667f681269211fbf95fd534479ab999d933df08271127974",
+    "port/dreamcast/game/platform/include/actor_light_fast_only.inc": "b2a3e7ebc020149078b9f9d9635a40ef0868db165729e5a91cbe24264a7dc60e",
+    "port/dreamcast/tools/cloud/build25/runtime_cases.cpp.in": "e8fb93f8f1df3f44672685f621322a98c8704dcd7152545db5483452df29d088",
+    "port/dreamcast/tools/cloud/build25/runtime_host.py": "fabb33a17936559d4365c7756a37700aaa58b6af97758e80ed8d6638729aa7e9"
+  }
+}

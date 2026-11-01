@@ -1,3 +1,7 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // GX compatibility state for recovered source consumers. Common ID quads now
 // connect directly to native_ui and the shared Package/storage/PVR mechanisms.
 // Remaining GX primitives, 3D materials and effects are still unbound; accepting
@@ -12,6 +16,9 @@
 
 #include "re4dc_platform.h"
 #include "native_ui.h"
+#if (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11) || (defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12)
+#include "include/cloth_material11_sampler.hpp"
+#endif
 extern "C" void re4dc_model_finish_source_draws();
 #if defined(RE4DC_RAIN_PS2) && RE4DC_RAIN_PS2
 extern "C" void re4dc_rain_flush();
@@ -98,10 +105,22 @@ void* GXSetCurrentGXThread(void) { return 0; }
 u32 re4dc_gx_begin_count(void) { return g_stat_begin; }
 u32 re4dc_gx_vertex_count(void) { return g_stat_verts; }
 
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+void GXBegin(int type, int vtxfmt, u16 nverts) { re4dc::fa29::hit(re4dc::fa29::GxImmediate,nverts); (void) type; (void) vtxfmt; g_stat_begin++; g_stat_verts += nverts; }
+#else
+#line 101
 void GXBegin(int type, int vtxfmt, u16 nverts) { (void) type; (void) vtxfmt; g_stat_begin++; g_stat_verts += nverts; }
+#endif
+#line 102
 void GXBeginDisplayList(void* list, u32 size) { (void) list; (void) size; }
 u32 GXEndDisplayList(void) { return 0; }
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+void GXCallDisplayList(void* list, u32 nbytes) { re4dc::fa29::hit(re4dc::fa29::GxDisplayList,nbytes); (void) list; (void) nbytes; }
+#else
+#line 104
 void GXCallDisplayList(void* list, u32 nbytes) { (void) list; (void) nbytes; }
+#endif
+#line 105
 void GXClearBoundingBox(void) {}
 void GXClearVtxDesc(void) {}
 void GXSetVtxDesc(int attr, int type) { (void) attr; (void) type; }
@@ -285,13 +304,22 @@ void GXInitTexObj(GXTexObj* o, void* image, u16 w, u16 h, int fmt, int ws, int w
 {
     memset(o, 0, sizeof(*o));
     o->w[0] = (u32) image; o->w[1] = ((u32) w << 16) | h; o->w[2] = (u32) fmt; o->w[3] = ((u32) ws << 8) | (u32) wt | ((u32) mip << 16);
+#if (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11) || (defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12)
+    re4dc::cloth_material11::init_sampler(o->w,mip);
+#endif
 }
 void GXInitTexObjCI(GXTexObj* o, void* image, u16 w, u16 h, int fmt, int ws, int wt, u8 mip, u32 tlut)
 {
     GXInitTexObj(o, image, w, h, fmt, ws, wt, mip);
     o->w[4] = tlut;
 }
+#if (defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11) || (defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12)
+void GXInitTexObjLOD(GXTexObj* o, int minf, int magf, f32 minl, f32 maxl, f32 bias, u8 bc, u8 edge, int aniso) {
+    re4dc::cloth_material11::lod_sampler(o->w,minf,magf,minl,maxl,bias,bc,edge,aniso);
+}
+#else
 void GXInitTexObjLOD(GXTexObj* o, int minf, int magf, f32 minl, f32 maxl, f32 bias, u8 bc, u8 edge, int aniso) { (void) o; (void) minf; (void) magf; (void) minl; (void) maxl; (void) bias; (void) bc; (void) edge; (void) aniso; }
+#endif
 void* GXGetTexObjData(GXTexObj* o) { return (void*) o->w[0]; }
 void GXLoadTexObj(GXTexObj* o, int id) { (void) o; (void) id; }
 void GXInitTlutObj(GXTlutObj* t, void* lut, int fmt, u16 n) { t->w[0] = (u32) lut; t->w[1] = (u32) fmt; t->w[2] = n; }

@@ -1,0 +1,100 @@
+// Actual production Entry, retirement, publication, slot, hit and readiness
+// boundaries are inserted by upload_host.py. Package and PVR compile are edges.
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <limits>
+#define RE4DC_UI_HANDLES CHECK_HANDLES
+#define OVLW(...) ((void)0)
+#define OVLG(...) ((void)0)
+using pvr_ptr_t=void*;
+struct Key {unsigned crc=0,fnv=0;bool operator==(const Key&)const=default;};
+namespace re4dc::texture {
+struct Package {unsigned address=0x8000,format=1,mips=0;bool complete=true;
+    unsigned vram_bytes()const{return 128;}
+    void close(){complete=false;}
+    pvr_ptr_t pvr_texture(unsigned)const{return reinterpret_cast<void*>(uintptr_t(address));}
+};
+}
+@ENTRY@
+constexpr unsigned kTextureCount=4;
+Entry entries[kTextureCount];unsigned used=0;
+unsigned entry_closed[kTextureCount],handle_clock=1;
+@ADVANCE@
+@CLOSE@
+@SLOT@
+@MATCH@
+void publish(Entry* slot,Key key){
+@PUBLICATION@
+    used+=slot->package.vram_bytes();
+}
+void fill(Ps2HdrSlot& slot,Entry* handle,const unsigned* k,unsigned hdr_size,unsigned hdr_mode,const unsigned* hw){
+@FILL@
+}
+bool hit_current(Ps2HdrSlot* hit,Key key){
+    @HIT@ return true;
+    }
+    return false;
+}
+bool piece_current(Ps2HdrSlot& s,unsigned hdr_mode,unsigned hdr_size,const unsigned* k){
+    Ps2HdrSlot* hit=nullptr;unsigned ps2_piece_hits=0;
+    @PIECE@
+    return hit==&s;
+}
+bool ready_current(const Ps2HdrSlot& slot,const Entry* resident,pvr_ptr_t address,const unsigned* expected){
+    @READY@
+    return true;
+}
+unsigned checks=0,counterexamples=0;
+#define CHECK(x) do{++checks;assert(x);}while(0)
+void words(const Entry& e,unsigned out[4]){out[0]=0x80840000;out[1]=e.package.format;out[2]=e.package.mips;out[3]=e.package.address;}
+void reload(Entry& e,Key key,unsigned format,unsigned mips){
+    close_entry(e);e.package.complete=true;e.package.format=format;e.package.mips=mips;publish(&e,key);
+}
+int main(){
+    unsigned k[6]={17,29,64,64,0,0};Key key{k[0],k[1]};const unsigned size=64|64<<16,mode=0x100;
+    Entry& e=entries[0];Ps2HdrSlot slot{};unsigned expected[4];
+    for(unsigned scenario=0;scenario<6;++scenario){
+        reload(e,key,1,0);words(e,expected);fill(slot,&e,k,size,mode,expected);
+        CHECK(hit_current(&slot,key));CHECK(piece_current(slot,mode,size,k));
+        CHECK(ready_current(slot,&e,e.package.pvr_texture(0),expected));
+        // Eviction/reentry/movie restoration use the same close/publication
+        // contract. The allocator deliberately returns exactly the same address.
+        reload(e,key,scenario%2?1:2,scenario%2?1:0);words(e,expected);
+#if RE4DC_PS2_UPLOAD_INCARNATION
+        CHECK(!hit_current(&slot,key));CHECK(!piece_current(slot,mode,size,k));
+#else
+        CHECK(hit_current(&slot,key));CHECK(piece_current(slot,mode,size,k));
+        CHECK(std::memcmp(slot.words,expected,16)!=0);++counterexamples;
+#endif
+        CHECK(!ready_current(slot,&e,e.package.pvr_texture(0),expected));
+        // The refill must publish the current incarnation together with words.
+        fill(slot,&e,k,size,mode,expected);CHECK(hit_current(&slot,key));
+        CHECK(piece_current(slot,mode,size,k));CHECK(ready_current(slot,&e,e.package.pvr_texture(0),expected));
+        CHECK(!hit_current(&slot,Key{99,29}));
+        CHECK(!piece_current(slot,mode^4,size,k));CHECK(!piece_current(slot,mode,size^1,k));
+        e.package.address+=32;CHECK(!hit_current(&slot,key));e.package.address-=32;
+        // Even an identical re-upload invalidates the proof prerequisite until
+        // a fresh slot is compiled: full words alone don't authorize old data.
+        reload(e,key,e.package.format,e.package.mips);words(e,expected);
+#if RE4DC_PS2_UPLOAD_INCARNATION
+        CHECK(!ready_current(slot,&e,e.package.pvr_texture(0),expected));
+#else
+        CHECK(ready_current(slot,&e,e.package.pvr_texture(0),expected));
+#endif
+        close_entry(e);CHECK(!hit_current(&slot,key));
+    }
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    // No generation wrap or room reset may revive any old cache token.
+    e.upload_incarnation=std::numeric_limits<std::uint32_t>::max()-2;
+    reload(e,key,1,0);CHECK(e.upload_incarnation==std::numeric_limits<std::uint32_t>::max());
+    words(e,expected);fill(slot,&e,k,size,mode,expected);CHECK(hit_current(&slot,key));
+    close_entry(e);CHECK(e.upload_incarnation==0);publish(&e,key);CHECK(e.upload_incarnation==0);
+    CHECK(!hit_current(&slot,key));fill(slot,&e,k,size,mode,expected);
+    CHECK(!hit_current(&slot,key));CHECK(!piece_current(slot,mode,size,k));
+    CHECK(!ready_current(slot,&e,e.package.pvr_texture(0),expected));
+    for(unsigned n=0;n<8;++n){reload(e,key,1,0);CHECK(e.upload_incarnation==0);}
+#endif
+    std::printf("{\"checks\":%u,\"stale_counterexamples\":%u}\n",checks,counterexamples);
+}

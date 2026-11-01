@@ -90,6 +90,28 @@ void re4dc_model_next_header_pcw(unsigned set, unsigned clear);
 // caller may skip. `frame` is pG->Frame_cnt (constant from Trans to Render).
 int re4dc_actor_skin_register(unsigned frame, const void* info, const void* position_buffer,
                               const float* palette, unsigned entries);
+#if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
+// One non-yielding source palette allocation at a time. A provisional ticket
+// claims capacity without replacing a prior lazy/owner entry or advancing the
+// primitive buffer. Cancel only this ticket after an allocation refusal.
+struct Re4dcActorSkinAdmission {
+    unsigned serial, frame, slot, entries;
+    const void* info;
+    const void* positions;
+    unsigned provisional;
+};
+int re4dc_actor_skin_admit(unsigned frame, const void* info, const void* position_buffer,
+                           unsigned entries, Re4dcActorSkinAdmission* out);
+int re4dc_actor_skin_commit(Re4dcActorSkinAdmission* ticket, const float* palette);
+void re4dc_actor_skin_cancel(Re4dcActorSkinAdmission* ticket);
+#if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32
+// 1: recipe published; 0: ordinary admission; -1: eligible but refused.
+// The source caller owns the provisional admission on a 0 or -1 result.
+int re4dc_actor_skin_recipe_claim(Re4dcActorSkinAdmission*, const void* model,
+                                  const void* weight, unsigned n_ext);
+void re4dc_actor_skin_recipe_retire();
+#endif
+#endif
 // Registered palette for (info, pPosBuf) or nullptr.
 const float* re4dc_actor_skin_palette(const void* info, const void* position_buffer, unsigned* entries);
 // trans.cpp: run the source's own CalcSk1_x/_x2 for a registered info into
@@ -103,6 +125,8 @@ void re4dc_actor_materialize(const Re4dcModelPart* p);
 int re4dc_actor_materialize_lazy(Re4dcModelPart* p);
 // model_bridge.cpp: p->positions/normals from the info current pPosBuf/pNrmBuf.
 int re4dc_actor_model_buffers(Re4dcModelPart* p);
+// ACTOR_REPLAY_SKIN: re-register a materialized lazy palette for the part's arrays (native_actor_fast.cpp).
+int re4dc_actor_skin_rearm(Re4dcModelPart* p);
 }
 
 // COARSE_ONE_SUBMIT (game30.mk; render only; native_actor_fast.cpp): the coarse adapters' chunks of one actor in
@@ -113,6 +137,9 @@ int re4dc_actor_model_buffers(Re4dcModelPart* p);
 struct Re4dcActorChunk {
     const void* info; const unsigned char* stream; const unsigned char* uv; const float* modelview;
     unsigned stream_bytes, position_count, normal_count;
+#if RE4DC_ACTOR_SOURCE_SPAN
+    Re4dcActorSourceSpan source_span{};
+#endif
 };
 extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* p, const Re4dcActorChunk* chunks, unsigned n);
 

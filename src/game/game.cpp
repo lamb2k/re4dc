@@ -42,6 +42,9 @@
 #include "snd.h"
 #include "dbmodule.h"
 #include "scroll.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #include "cam_ctrl.h"
 #include "camera.h"
 #include "merchant.h"
@@ -489,6 +492,10 @@ extern "C" void re4dc_loadind_hold();
 extern "C" void re4dc_loadind_resume();
 extern "C" void re4dc_loadind_end();
 #endif
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+extern "C" void re4dc_dvd_borrow_room_reset();   // dvd.cpp DVD_BORROW
+extern "C" void re4dc_dvd_borrow_window_end();
+#endif
 // Rno0 == 2: room set-up after the room archive is loaded: player/area data, every manager's room
 // init + array allocation sized by the room "CNS" counts (models, parts, enemies, objects, sprites,
 // controllers, ctrl, lights, damage, SAT/EAT collision, events), the room data blocks (SMD/SMX
@@ -759,6 +766,9 @@ void gameRoomInit()
     }
 #if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR
     re4dc_loadind_end();
+#endif
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+    re4dc_dvd_borrow_window_end();   // DVD_BORROW: room setup done; gameplay reads use the static staging area
 #endif
     BitOff(pG->System_flg, 0x2000);
     BitOff(pG->System_flg, 0x100);
@@ -1530,13 +1540,22 @@ void gameDoordemo()
 #if RE4DC_WEAPON_HEAP4
 void re4dc_weapon_heap4_room_reset();   // read.cpp
 #endif
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+void re4dc_weapon_ovl_room_reset();   // read.cpp
+#endif
 #if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL
 extern "C" void re4dc_route_overlay_room_reset();   // platform/modules.cpp: pl0f / em2f overlays leave heap 4
 #endif
 void gameRoomMemInit()
 {
+#if defined(RE4DC_DVD_BORROW) && RE4DC_DVD_BORROW
+    re4dc_dvd_borrow_room_reset();
+#endif
 #if RE4DC_WEAPON_HEAP4
     re4dc_weapon_heap4_room_reset();
+#endif
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+    re4dc_weapon_ovl_room_reset();
 #endif
 #if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL
     re4dc_route_overlay_room_reset();
@@ -1544,6 +1563,9 @@ void gameRoomMemInit()
 #if defined(RE4DC_GAME) && !defined(__PPC__)
     re4dc_motion_retire_all();
     re4dc_effect_retire_room();
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_retire_room();
+#endif
     re4dc_ui_retire_room();
 #endif
     if (pG->System_flg & 0x200000) {

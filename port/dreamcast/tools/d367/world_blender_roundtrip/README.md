@@ -12,6 +12,14 @@ accepts all three exported meshes in a host executable. See [receipt.json](recei
 This is not a lost-part, appearance, visibility-proof, Dreamcast timing, or
 30-fps acceptance result. No private game asset was used.
 
+The default-off index-placement follow-up is documented below and in
+[WORLD_BLENDER_INDEX_LAYOUT_FIX_20261025.md](../../../docs/cloud/WORLD_BLENDER_INDEX_LAYOUT_FIX_20261025.md).
+Its [index-layout-receipt.json](index-layout-receipt.json) records a passing
+public gate: five noncanonical real-Blender round trips, nine canonical mode
+round trips, six old-blend compatibility exports, 21 host methods / 61 subcases,
+27 CLI refusals and 57 enabled-mode Blender mutation controls. The original
+Build11 receipt above remains the historical baseline.
+
 ## Reproduce
 
 Use Blender **4.4.3**, build **802179c51ccc**. The official Linux archive is
@@ -69,15 +77,89 @@ The original input bundle is required at export: it is the independent source of
 identity and quantization expectations. A self-edited text block cannot redefine
 what an unchanged scene means. Embedded Python in a blend is disabled.
 
+## Preserve existing index placement (explicit option, default 0)
+
+The public `ps2_world_append.append_tables()` writer aligns each appended index
+table to four bytes. Its valid zero padding can be larger than the canonical
+bridge's one-byte indexed-pool alignment. A synthetic use of that actual writer
+reproduces the owner's `noncanonical index placement` refusal: a 66-byte base
+index table gains two zero bytes before the first appended plain meshlet at
+offset 68. The runtime reads each meshlet's stored offset independently.
+
+Use `--preserve-index-layout=1` on **both** import and export to preserve that
+layout, including disjoint spans stored in a different physical order:
+
+```sh
+/path/to/blender --background --factory-startup --disable-autoexec \
+  --python-exit-code 1 \
+  --python port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py \
+  -- import --preserve-index-layout=1 \
+  --source /path/to/complete-original-policy-bundle \
+  --blend /tmp/world-layout-identity.blend
+
+/path/to/blender --background --factory-startup --disable-autoexec \
+  --python-exit-code 1 \
+  --python port/dreamcast/tools/d367/world_blender_roundtrip/blender_bridge.py \
+  -- export --preserve-index-layout=1 \
+  --source /path/to/complete-original-policy-bundle \
+  --blend /tmp/world-layout-identity.blend --out /tmp/world-layout-export
+```
+
+The option accepts only 0 or 1 (a bare option means 1). Absent and zero retain
+the original document/schema, canonical-placement checks and output bytes.
+An enabled scene uses `re4dc.blender.identity-index-layout/1`, so changing the
+mode at export is refused even for canonical input. Existing default-mode
+blends continue to export with the default mode.
+
+This adapter stores only the index-table byte count as additional layout
+metadata. Existing meshlet records retain their original offsets. Pool offsets
+and strip commands are regenerated from typed, source-validated scene records;
+the serializer does not save or return an opaque copy of the index table.
+It permits zero prefix, interstitial and suffix padding. All unclaimed bytes
+must be zero. Full/partial overlaps and aliases, odd indexed-pool offsets,
+out-of-bounds spans, malformed commands, unknown extensions and noncanonical
+outer section layout remain errors. Pool bytes and strip bytes together form
+one indivisible span. This is a supported subset of standard prelit R4IM v3,
+not permission to copy unknown payloads or SDO3 sharing layouts.
+
+The independent input bundle is required on export. Every layout field,
+meshlet offset, command, vertex and source hash is checked against it before
+writing output. All supported companion files still pass the unchanged
+binding checks and must regenerate byte-identically. This option does not
+resolve the separate shipped `WORLD_RECT21` source-policy lineage: use the
+owner's complete, qualified original-policy control bundle, or a separately
+qualified provenance workflow. Never drop a companion or stamp a new CRC
+around an unverified proof to make the bundle pass.
+
+The reproducible follow-up gate is:
+
+```sh
+python3 port/dreamcast/tools/d367/world_blender_roundtrip/validate_index_layout.py \
+  --blender /path/to/blender-4.4.3-linux-x64/blender \
+  --archive /path/to/blender-4.4.3-linux-x64.tar.xz \
+  --work /tmp/build11-index-layout-validation \
+  --receipt /tmp/build11-index-layout-receipt.json \
+  --baseline 9c2c83dba00ba219fbb135503aa508975fe4855c
+```
+
+Use a new work directory. This gate includes real Blender save/reopen cycles,
+the original Build11 suite, baseline-blend compatibility, enabled/disabled CLI
+controls, malformed-layout and actual-scene mutation controls, registered
+companion identity, and the existing runtime reader on the exported public
+fixtures. Its measurements describe the host authoring tool only. Private r101
+admission, full-room memory/time and subsequent reconstruction remain owner
+checks. Accepted data is unchanged, so this adapter claims no game speedup.
+
 ## Format and scene contract
 
 The codec imports the existing structures and strip walker from
-[`convert_room_bins.py`](../../convert_room_bins.py). Its scope is the canonical
-standard **R4IM v3**, prelit **ARGB1555** encoding, plus **R4PW v1** produced by the
-current PS2 world pipeline. Sections, offsets, 32-byte alignment, zero padding,
+[`convert_room_bins.py`](../../convert_room_bins.py). Its default scope is the
+canonical standard **R4IM v3**, prelit **ARGB1555** encoding, plus **R4PW v1**
+produced by the current PS2 world pipeline. The explicit index-placement option
+above broadens only the index-table layout. Sections, offsets, 32-byte alignment, zero padding,
 every record, strip command, pool remap, class/rule table, and both checksums are
 regenerated. The original binary is not stored in a text block or returned as
-the exported mesh. Noncanonical layout, unrepresented vertices, unknown header
+the exported mesh. Unsupported layout, unrepresented vertices, unknown header
 fields, nonfinite values, and unsupported extensions fail closed.
 
 The imported scene uses this schema:

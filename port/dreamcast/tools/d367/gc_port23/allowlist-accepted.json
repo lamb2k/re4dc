@@ -1,0 +1,306 @@
+{
+ "schema": 1,
+ "note": "Coordinator-accepted allowlist rows (rr-judge merges them into the last-good baseline). Add rows only with a recorded user or coordinator decision; remove when the asset is replaced. 2026-10-26: windows26 panes (user: glass and bars).",
+ "entries": [
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0100",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0100",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0101",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0101",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0105",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0105",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0107",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0107",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "0111",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0111",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "011c",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "011c",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "0b7be44a2c3ed85e4d80d1189fb0922042f98410",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et0000]",
+   "room": "011f",
+   "sha256": "0b7be44a2c3ed85e4d80d1189fb0922042f98410939cf3e6833be17385e8539a"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "011f",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0101",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0105",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "coordinator",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0111",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "graft26 private rr 1026-1450-bbe2cfe2 gca-judge (windows26 graft: GC et0000/et2500 + et0000.tpl image 0)",
+   "id": "7e7c5a5c0c2236a9462b4617f2cc4af4947ca0c9",
+   "kind": "layout",
+   "owner": "coordinator",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [r100 static composite with the pane drawn; replaces the pre-windows26 unbound-accepted-model row]",
+   "room": "0100",
+   "sha256": "7e7c5a5c0c2236a9462b4617f2cc4af4947ca0c9ee6d7f1a46e65d9d8bdcb2df"
+  },
+  {
+   "evidence": "props-ps2-26 private rr 1026-1648-e10b0c73 gca-r11e:3111 / gca-r11f:2035; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "360e94ae7d07d2d2eddab943c6c14ecc9f8cf091",
+   "kind": "layout",
+   "owner": "props-ps2-26",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r11e (ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "011e",
+   "sha256": "360e94ae7d07d2d2eddab943c6c14ecc9f8cf091d8a2d3219abaf650e763a6d4"
+  },
+  {
+   "evidence": "props-ps2-26 private rr 1026-1648-e10b0c73 gca-r11e:3111 / gca-r11f:2035; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "3157380ad1cd13e74aef335b21cb63c03330cbb2",
+   "kind": "layout",
+   "owner": "props-ps2-26",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r11f (ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "011f",
+   "sha256": "3157380ad1cd13e74aef335b21cb63c03330cbb29b9f8d3fecee87d50551e746"
+  },
+  {
+   "evidence": "fix-title27 10-27: data set title27 restores the Test 23 package (sha256 fbf56765) from the user PNG 182f26ae (re4-assets-private/title27-20261027 RECIPE.txt); catalog of the fixed disc lists it gc only because its RECIPE names no other-console source",
+   "id": "c67f5c01-63e0879e",
+   "kind": "texture",
+   "owner": "fix-title27",
+   "phase": "startup",
+   "provenance": "gc",
+   "reason": "user custom title art (not GC): the 2026 title background with the port credit (user 10-27: custom title image required)",
+   "sha256": "fbf5676505e66047b97fa31315c62bccac50b104f7f499438015e03883e79821"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: Test 22 GC-derived Dreamcast button set (A pad label)",
+   "room": "0100",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: Test 22 GC-derived Dreamcast button set (A pad label)",
+   "room": "0101",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "0100",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "0101",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "0103",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "011e",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "font22b-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package, 2192 bytes)",
+   "id": "e42a7628-c166970d",
+   "kind": "texture",
+   "owner": "font22-27",
+   "provenance": "gc",
+   "reason": "user 10-27: restore Test 22 controller glyph set (HUD d-pad (etc/core.das 0x1b2c60#0))",
+   "room": "011f",
+   "sha256": "c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940"
+  },
+  {
+   "evidence": "gca-n256off27 private rr 1027-1520-44a76a5d gca-r101:2520 (also gca-grenade) / gca-r103:1993; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "443631ad5bd4b27e992c5694f80f440373664d97",
+   "kind": "layout",
+   "owner": "gca-n256off27",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r101 at 64-vertex meshlets (n256off27, user 10-27: Test 22's world pieces; ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Its harvested ps2 layout rows (gc-audit25) predate later sidecar/graft data, so the digest is new; the window pane graft's GC models are separate kind=model rows. Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "0101",
+   "sha256": "443631ad5bd4b27e992c5694f80f440373664d970098bc6e20e18c6fcbc2f963"
+  },
+  {
+   "evidence": "gca-n256off27 private rr 1027-1520-44a76a5d gca-r101:2520 (also gca-grenade) / gca-r103:1993; source: native_static.cpp ps2w path (payload_capture_composite(ps2w.asset_proof, ..., layout = the room's ps2-world.r4pw span, GCSTC001 manifest sealing roles R4PW/R4ID/R4TC/R4PV/R4SG/SCCN/SCPS/SCDD/...); kind=layout rows come only from that call (every other composite capture passes layout=nullptr)",
+   "id": "551a2fa592cbb71772520cfb4bb3dca31b608956",
+   "kind": "layout",
+   "owner": "gca-n256off27",
+   "provenance": "unknown",
+   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r103 at 64-vertex meshlets (n256off27, user 10-27: Test 22's world pieces; ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Its harvested ps2 layout rows (gc-audit25) predate later sidecar/graft data, so the digest is new; the window pane graft's GC models are separate kind=model rows. Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
+   "room": "0103",
+   "sha256": "551a2fa592cbb71772520cfb4bb3dca31b6089560c04d9d9b00f1b36e76497ff"
+  }
+ ]
+}

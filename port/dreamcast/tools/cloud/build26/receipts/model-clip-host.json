@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "scope": "Actual actor clip-strip controls: four OFF/ON x reuse arms, synthetic only.",
+  "sanitizer": null,
+  "leak_detection": null,
+  "arms": [
+    {
+      "reuse": 0,
+      "front": 0,
+      "cases": 3940,
+      "output_sha256": "1891f19444bdf405a04a65cbf0095766dc4ef675015f252d916c1da22b825184",
+      "clipped_triangles": 137214,
+      "reconstructed_corners": 411642,
+      "emitted_vertices": 101394
+    },
+    {
+      "reuse": 0,
+      "front": 1,
+      "cases": 3940,
+      "output_sha256": "721e4d92186ef19250bbd7731d970a2580aa77d73117fafbef604519f2d98ce3",
+      "clipped_triangles": 48486,
+      "reconstructed_corners": 145458,
+      "emitted_vertices": 101394
+    },
+    {
+      "reuse": 1,
+      "front": 0,
+      "cases": 3940,
+      "output_sha256": "21fedcb92cea37b43f694148395197dd86b974713ad5db67d97e232a0002787e",
+      "clipped_triangles": 137214,
+      "reconstructed_corners": 145094,
+      "emitted_vertices": 101394
+    },
+    {
+      "reuse": 1,
+      "front": 1,
+      "cases": 3940,
+      "output_sha256": "15b9f50c51ee797babee28d9360b6d09c8608cc33752126229d3c6425c61ccf5",
+      "clipped_triangles": 48486,
+      "reconstructed_corners": 57794,
+      "emitted_vertices": 101394
+    }
+  ],
+  "meaning": "Synthetic cache populated through actual world_of/project; exact TA/output/capacity equality on these inputs. Real FTRV/reciprocal rounding remains an authorized render approximation.",
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_actor_fast.cpp": "741d8a65173baee56fd6cdc518d828ce3c0bbe84436109d5df4f4e389443ea9d",
+    "port/dreamcast/game/platform/include/actor_clip_front26.hpp": "ae7d25c066ae4b6b1d0f0453344ee7f65ec5f5c05e5c38ae12349241744906a9",
+    "port/dreamcast/game/platform/include/actor_clip_reuse.hpp": "b3e7d71e817a672164458762805af4d967c5b78f75c9041c3f34c9a0ad5d7e69",
+    "port/dreamcast/game/platform/include/draw_fallback_model.def": "887311c6449585101111ddebda48696e6137e6841fb9d9b188ee4b4d264330b1",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/tools/cloud/build26/model_clip_cases.cpp.in": "f3187d6b0a77d4821fef8eccf267c7b4e39ed6ae51397ad1024c0ca42501bf88",
+    "port/dreamcast/tools/cloud/build26/model_clip_host.py": "3cafbc6438e9c81117eef9ab77e09d0f17d3ffca93da7ab5bbf1938aa3c3dd4b"
+  }
+}

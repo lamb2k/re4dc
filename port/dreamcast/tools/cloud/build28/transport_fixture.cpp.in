@@ -1,0 +1,173 @@
+#include "@ROOT@/port/dreamcast/game/qa_link.cpp"
+
+extern "C" {
+qalink_chain_buffer* __real_createChainBuffer(int) { fixture::note("chain.heap"); return nullptr; }
+void __real_destroyChainBuffer(qalink_chain_buffer*) { fixture::note("chain.free"); }
+kthread_worker_t* __real_thd_worker_create_ex(const kthread_attr_t* a, void (*)(void*), void*) {
+    static kthread_worker_t w{&fixture::threads[2]};
+    if (a) fixture::last_attr = *a;
+    fixture::note("worker.create"); return &w;
+}
+}
+
+void reset() {
+    fixture::reset();
+    g_state = S_OFF; g_attempt = g_err = g_stop = 0;
+    g_rate = g_tx_bytes = g_rx_bytes = g_tx_drops = g_modem_tx = g_modem_rx = g_bulk_skips = 0;
+    g_sock = -1; g_net_ready = g_ppp_init = false;
+    g_dial_running = g_ppp_running = 0; g_ppp_thd = g_dial_thd = g_timer_thd = nullptr;
+    g_host = g_configured_host28 = 0xFFFFFFFFu; g_port = g_lport = 52040;
+    g_rx_drops28 = g_tx_stalls28 = 0;
+    g_retiring28 = g_tx_fault28 = g_write_waiting28 = false; g_write_since28 = 0;
+    g_ppp_tid28 = g_dial_tid28 = 0;
+    g_tx = Ring{}; g_rx = Ring{};
+}
+
+int main() {
+    unsigned cases = 0;
+    const std::string payload(1200, 'x');
+    char out[1408]{};
+    reset();
+    assert(!g_tx.put(nullptr, 1) && !g_tx.put("", 0));
+    assert(g_tx.put(payload.data(), 1200));
+    assert(!g_tx.put(payload.data(), 1201) && !g_tx.put(payload.data(), 1400));
+    assert(g_tx.get(out, sizeof(out)) == 1200 && std::string(out, 1200) == payload);
+    assert(g_tx.get(out, sizeof(out)) == -1); ++cases;
+
+    for (unsigned start : {4095u, UINT_MAX - 4u}) {
+        reset(); g_tx.head = g_tx.tail = start;
+        for (char c : {'a', 'b', 'c'}) { std::string p(1200, c); assert(g_tx.put(p.data(), p.size())); }
+        assert(!g_tx.put(payload.data(), 1200));
+        for (char c : {'a', 'b', 'c'}) {
+            assert(g_tx.get(out, sizeof(out)) == 1200 && std::string(out, 1200) == std::string(1200, c));
+        }
+        assert(g_tx.used() == 0); ++cases;
+    }
+
+    reset();
+    for (unsigned i = 0; i < 1365; ++i) { char c = i & 127; assert(g_tx.put(&c, 1)); }
+    assert(g_tx.used() == 4095 && !g_tx.put("z", 1));
+    for (unsigned i = 0; i < 1365; ++i) { assert(g_tx.get(out, 1) == 1 && out[0] == char(i & 127)); }
+    assert(g_tx.used() == 0); ++cases;
+
+    reset(); assert(g_rx.put("1 PING", 6));
+    assert(re4dc_qalink_recv(nullptr, 4) == -1 && re4dc_qalink_recv(out, 0) == -1 && g_rx.used() == 8);
+    std::memset(out, '!', sizeof(out));
+    assert(re4dc_qalink_recv(out, 4) == -2 && out[0] == '!' && g_rx.used() == 0 && g_rx_drops28 == 1);
+    assert(g_rx.put("2 PING", 6) && re4dc_qalink_recv(out, 7) == 6 && !std::strcmp(out, "2 PING")); ++cases;
+
+    reset(); g_state = S_UP; g_sock = 7;
+    const unsigned a = fixture::address("192.0.2.1"), other = fixture::address("192.0.2.9");
+    fixture::incoming = {{"", a, 52040}, {payload, a, 52040}, {payload, a, 52040}, {payload, a, 52040},
+                         {payload, a, 52040}, {"badport", a, 123}, {"badhost", other, 52040},
+                         {std::string(1201, 'y'), a, 52040}, {"last", a, 52040}};
+    pump();
+    assert(g_host == a && fixture::incoming.empty() && g_rx_drops28 == 5 && g_rx.used() == 3612);
+    for (unsigned i = 0; i < 3; ++i) assert(re4dc_qalink_recv(out, sizeof(out)) == 1200);
+    assert(re4dc_qalink_recv(out, sizeof(out)) == 4 && !std::strcmp(out, "last")); ++cases;
+
+    reset(); g_state = S_UP; g_sock = 7; g_host = a;
+    for (unsigned i = 0; i < 3; ++i) assert(re4dc_qalink_send("answer", 6));
+    fixture::incoming.push_back({"1 PING", a, 52040});
+    pump(); assert(fixture::sent.size() == 1 && g_tx.used() == 16 && g_tx_bytes == 6);
+    assert(std::find(fixture::calls.begin(), fixture::calls.end(), "socket.recv") <
+           std::find(fixture::calls.begin(), fixture::calls.end(), "socket.send")); ++cases;
+
+    reset(); g_state = S_UP; g_sock = 7; g_ppp_thd = &fixture::threads[1];
+    re4dc_qalink_thd_pass(); assert(fixture::count("socket.recv") == 0 && fixture::slept == 4);
+    fixture::current = g_ppp_thd; re4dc_qalink_thd_pass(); assert(fixture::count("socket.recv") == 1); ++cases;
+
+    reset(); unsigned char bytes[4]{}; fixture::write_result = 0; fixture::now_ms = 100;
+    assert(re4dc_qalink_modem_write(bytes, 4) == 0 && g_write_waiting28);
+    fixture::now_ms = 2099; fixture::write_result = 1;
+    assert(re4dc_qalink_modem_write(bytes, 4) == 1 && !g_write_waiting28 && g_modem_tx == 1);
+    fixture::write_result = 0; fixture::now_ms = 3000;
+    assert(re4dc_qalink_modem_write(bytes, 4) == 0);
+    fixture::now_ms = 5000; assert(re4dc_qalink_modem_write(bytes, 4) == 4);
+    const unsigned writes = fixture::driver_calls;
+    assert(g_tx_fault28 && g_tx_stalls28 == 1 && g_err == -14);
+    assert(re4dc_qalink_modem_write(bytes, 4) == 4 && fixture::driver_calls == writes && g_tx_stalls28 == 1); ++cases;
+
+    for (int which : {0, 1}) {
+        reset(); if (which) g_retiring28 = true; else g_stop = 1;
+        assert(re4dc_qalink_modem_write(bytes, 4) == 4 && !fixture::driver_calls); ++cases;
+    }
+    reset(); g_ppp_init = true; g_sock = 7; assert(g_rx.put("old", 3));
+    fixture::shutdown_hook = [] { unsigned char b = 0; assert(re4dc_qalink_modem_write(&b, 1) == 1); };
+    assert(hang_up() && !g_ppp_init && g_sock == -1 && g_rx.used() == 0 && !fixture::driver_calls);
+    assert(fixture::login_clears == 1 && fixture::destroy_calls == 0);
+    assert(std::find(fixture::calls.begin(), fixture::calls.end(), "login.clear") <
+           std::find(fixture::calls.begin(), fixture::calls.end(), "ppp.shutdown")); ++cases;
+
+    reset(); g_ppp_init = true; g_ppp_running = 1; g_ppp_thd = &fixture::threads[1]; g_sock = 7;
+    assert(!hang_up() && fixture::slept == 3200 && g_ppp_running && g_ppp_init && g_err == -31);
+    assert(!fixture::login_clears && !fixture::destroy_calls && !fixture::count("ppp.shutdown"));
+    g_ppp_running = 0; g_ppp_thd = nullptr;
+    assert(hang_up() && fixture::login_clears == 1 && !g_ppp_init); ++cases;
+
+    reset(); g_ppp_init = true; g_ppp_running = 1; g_ppp_thd = &fixture::threads[1];
+    fixture::sleep_hook = [](unsigned ms) { if (ms == 8) { g_ppp_running = 0; g_ppp_thd = nullptr; } };
+    assert(hang_up() && fixture::slept == 8 && fixture::login_clears == 1); ++cases;
+
+    for (const char* host : {"peer", "192.0.2.17"}) {
+        reset(); re4dc_qalink_config(nullptr, host, 0, 0);
+        const unsigned configured = g_configured_host28;
+        g_host = other; g_retiring28 = g_tx_fault28 = g_write_waiting28 = true;
+        assert(g_rx.put("old", 3));
+        assert(dial_once() && g_host == configured && !g_retiring28 && !g_tx_fault28 && !g_write_waiting28);
+        assert(g_rx.used() == 0 && g_sock == 7 && fixture::count("socket.nonblock") == 1); ++cases;
+    }
+    reset(); fixture::fcntl_result = -1;
+    assert(!dial_once() && g_sock == -1 && g_err == -13 && fixture::count("socket.close") == 1); ++cases;
+    reset(); fixture::login_result = -1;
+    assert(!dial_once() && g_err == -15 && !fixture::count("ppp.connect")); ++cases;
+
+    reset(); g_state = S_UP; g_sock = 7; g_ppp_running = 1; fixture::thread_ok = false;
+    re4dc_qalink_stop(); assert(g_stop && g_state == S_FAILED && g_err == -30 && !g_dial_running);
+    fixture::thread_ok = true;
+    assert(re4dc_qalink_start() == 0 && !g_stop && g_state == S_STOPPING && fixture::created_arg == (void*) 2); ++cases;
+    reset(); g_dial_running = 1; g_ppp_running = 1; g_ppp_init = true; g_ppp_thd = &fixture::threads[1];
+    dial_main((void*) 2);
+    assert(g_state == S_DROPPED && !g_dial_running && g_ppp_running && !fixture::count("ppp.init")); ++cases;
+
+    reset(); g_state = S_UP; g_sock = 7; g_tx_fault28 = true;
+    g_ppp_thd = fixture::current; re4dc_qalink_thd_pass();
+    assert(g_state == S_DROPPED && fixture::phase_calls == 1 && !fixture::count("socket.recv")); ++cases;
+    reset(); g_state = S_UP; g_sock = 7; g_ppp_thd = fixture::current;
+    assert(re4dc_qalink_send("x", 1)); fixture::write_result = 0;
+    g_write_waiting28 = true; g_write_since28 = 0; fixture::now_ms = 2000;
+    fixture::send_hook = [] { unsigned char b; assert(re4dc_qalink_modem_write(&b, 1) == 1); };
+    re4dc_qalink_thd_pass();
+    assert(g_state == S_DROPPED && fixture::phase_calls == 1 && !g_tx_bytes && g_tx_drops == 1); ++cases;
+
+    reset(); g_state = S_UP; g_sock = 7; fixture::connected = false;
+    pump(); assert(g_state == S_DROPPED && !fixture::count("socket.recv")); ++cases;
+    reset(); g_state = S_UP; assert(!re4dc_qalink_send_bulk(payload.data(), 1201));
+    assert(re4dc_qalink_send_bulk(payload.data(), 1200));
+    assert(!re4dc_qalink_send_bulk(payload.data(), 1200) && g_bulk_skips == 1);
+    fixture::heap_free = 32767; g_tx.clear();
+    assert(!re4dc_qalink_send_bulk("x", 1) && g_bulk_skips == 2); ++cases;
+
+    unsigned rx, stalls; g_rx_drops28 = 17; g_tx_stalls28 = 23;
+    re4dc_qalink_review_counters(&rx, &stalls); assert(rx == 17 && stalls == 23); ++cases;
+
+    reset(); g_dial_tid28 = fixture::threads[1].id;
+    assert(!g_dial_running && re4dc_qalink_start() == 0 && !fixture::count("thread.create"));
+    assert(!spawn_dial(0) && !fixture::irq_depth);
+    fixture::threads[1].state = STATE_ZOMBIE;
+    assert(spawn_dial(0) && fixture::count("thread.create") == 1 && !fixture::irq_depth); ++cases;
+
+    reset(); g_ppp_tid28 = fixture::threads[1].id;
+    auto fn = +[](void*) -> void* { return (void*) 123; };
+    assert(!re4dc_qalink_thd_create(true, fn, nullptr) && !fixture::count("thread.create"));
+    assert(!hang_up() && fixture::slept == 3200 && !fixture::login_clears);
+    fixture::threads[1].state = STATE_ZOMBIE;
+    assert(hang_up() && re4dc_qalink_thd_create(true, fn, nullptr));
+    fixture::current = &fixture::threads[1]; fixture::threads[1].state = STATE_RUNNING;
+    assert(ppp_trampoline(nullptr) == (void*) 123 && !g_ppp_running && !g_ppp_thd);
+    assert(g_ppp_tid28 == fixture::threads[1].id && stack_busy28(g_ppp_tid28));
+    fixture::threads[1].state = STATE_ZOMBIE; assert(!stack_busy28(g_ppp_tid28)); ++cases;
+
+    reset(); assert(!stack_busy28(0) && !stack_busy28(9999) && !fixture::irq_depth); ++cases;
+    std::printf("PASS transport actual-TU contracts: %u cases\n", cases);
+}

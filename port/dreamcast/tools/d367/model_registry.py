@@ -86,6 +86,7 @@ MATERIAL_ROWS = 64          # actor_lifetime.inc Info::roles mask capacity
 SOURCE_BLOBS = 32           # actor_lifetime.inc Asset::templates mask capacity
 CH22_LUIS_COVERAGE = False  # explicit room11c pinned source coverage; package-only
 SLOTS = False               # --slots: draw-slot descriptors (source.json draw_slots), package only
+ASHLEY_RIG = False          # --ashley-rig: require the original full pl11 PS2 rig source contract
 WIDE_IDENTITY = False       # --wide-identity: 64 / 96 and the pl08 base rows (RE4DC_ACTOR_WIDE_IDENTITY)
 ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
@@ -521,6 +522,12 @@ def main():
         CH22_LUIS_COVERAGE = True
         PACK_CAPACITY['fpart'] = 83  # exact room11c Luis body + independent gun
     global SLOTS, PACK_MAX_BYTES
+    global ASHLEY_RIG
+    if '--ashley-rig' in args:
+        args.remove('--ashley-rig')
+        if '--slots' not in args:
+            sys.exit('model_registry: --ashley-rig needs --slots')
+        ASHLEY_RIG = True
     if '--slots' in args:
         args.remove('--slots')
         if package_room is None:
@@ -554,6 +561,8 @@ def main():
     source_normal_length = '--source-normal-length' in args
     if source_normal_length:
         args.remove('--source-normal-length')
+        if ASHLEY_RIG:
+            sys.exit('model_registry: PS2 Ashley rig must keep PS2 normals; --source-normal-length is forbidden')
     global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5, ROLE_TEX23
     if '--wide-identity' in args:
         args.remove('--wide-identity')
@@ -668,6 +677,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: {L["runtime_header"]} sha256 differs from the catalog')
         binds = inputs.json(os.path.join(cast, name, 'source-bindings.json'), f'cast/{name}/source-bindings.json')
         src = inputs.json(os.path.join(cast, name, 'source.json'), f'cast/{name}/source.json')
+        if source_normal_length and src.get('ps2_rig'):
+            raise Fail(f'{name}: PS2 rig must keep PS2 normals; source-derived normal length is forbidden')
         # The spec's model id / source types are the cast's own, not a label: a descriptor never claims another
         # appearance's selection (the cow type 0 vs type 1 TPLs share one BIN).
         if int(d['model_id'], 16) != src.get('source_model_id') or sorted(d['source_types'] or []) != sorted(src.get('types') or []):
@@ -739,6 +750,10 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                     any(not 0 <= x < bones for x in draw_slots) or draw_slots != sorted(set(draw_slots))):
                 raise Fail(f'{name}: draw_slots must be strictly increasing source joints < {bones} (<= 255 joints)')
             draw = len(draw_slots)
+        if ASHLEY_RIG and not (src.get('ps2_rig', {}).get('schema') == 'ashley-ps2-rig-1' and
+                src['ps2_rig'].get('ps2_bones') == 81 and arcname == 'pl11' and
+                int(d['model_id'], 0) == 3 and bones == 141 and len(binds) == 7 and draw_slots is not None):
+            raise Fail(f'{name}: --ashley-rig requires the full pl11 PS2 rig 141-joint seven-role partner')
         # ---- sections against the archive
         sections, need, contract = [], 0, []
         for i, b in enumerate(binds):
@@ -794,7 +809,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name}: lod_of {d["lod_of"]} must be an earlier descriptor with the same source identity')
         elif identity in seen_identity:
             raise Fail(f'{name}: source identity {identity} is ambiguous with {seen_identity[identity]}')
-        seen_identity[identity] = name
+        if not d.get('lod_level'):   # NMR_POOL_LOD: numbered levels all name the full descriptor
+            seen_identity[identity] = name
         # ---- chunks
         chunks, hbones = parse_header(hdr)
         if hbones != draw:
@@ -846,7 +862,16 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name}: mask_runs names section {si}, the header has none')
             c = c[0]
             mj = inputs.json(os.path.join(mdir, 'mask-runs.json'), f'mask/{name}/{si}/mask-runs.json')
-            if mj['header_sha256'] != L['header_sha256'] or mj['section'] != si or mj['triangles']['chunk'] != c['triangles']:
+            same_as_full = False
+            if d.get('lod_level') and mj['header_sha256'] != L['header_sha256']:
+                # NMR_POOL_LOD: a numbered level keeps a masked section whole (glod_rung keep_roles); the full
+                # descriptor's mask runs index that section's arrays, so they apply when its chunk is byte-identical.
+                fe = [x for x in runtime if x['name'] == d.get('lod_of')]
+                fc = [x for x in fe[0]['chunks'] if x['source_info'] == si] if fe else []
+                same_as_full = bool(fc) and fe[0]['header_sha256'] == mj['header_sha256'] and all(
+                    fc[0][k] == c[k] for k in ('positions', 'normals', 'uv', 'stream', 'weights'))
+            if (mj['header_sha256'] != L['header_sha256'] and not same_as_full) or mj['section'] != si or \
+                    mj['triangles']['chunk'] != c['triangles']:
                 raise Fail(f'{name} section {si}: mask runs were made from another header / section')
             mask_only = bool(mj.get('mask_only'))
             # mask-only: the complete pinned Luis hair, or (--pool) a pool section whose every triangle is a hair card
@@ -937,6 +962,14 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             # archive, BINs, TPLs and skeleton; reduced mesh). Package word 44 bit 25 + bits 16..23 = that descriptor's
             # package index + 1; the runtime draws it outside in-engine events only.
             entry['lod_of'] = d['lod_of']
+            if d.get('lod_level'):
+                # NMR_POOL_LOD (lane lod26b 2026-10-26): a numbered pool level (word 44 bits 26..29; GANADO_LOD order)
+                lv = int(d['lod_level'])
+                if not 1 <= lv <= 15 or not pool:
+                    raise Fail(f'{name}: lod_level {lv} needs 1..15 and a pool descriptor')
+                entry['lod_level'] = lv
+        elif d.get('lod_level'):
+            raise Fail(f'{name}: lod_level needs lod_of')
         if draw_slots is not None:
             entry.update(source_bones=bones, slots=list(draw_slots))
         if not 1 <= entry['position_shift'] <= 4:
@@ -1216,6 +1249,13 @@ def lod_word(r, runtime):
     if full >= names.index(r['name']) or full > 254:
         raise Fail(f'{r["name"]}: lod_of {r["lod_of"]} must come earlier in the room package')
     f = runtime[full]
+    if r.get('lod_level'):
+        # NMR_POOL_LOD: a numbered pool level of a pool full descriptor, the same sections in the same order
+        same = [(s['bin'], s['tpl']) for s in f['sections']] == [(s['bin'], s['tpl']) for s in r['sections']]
+        if (f['model_id'], f['bones']) != (r['model_id'], r['bones']) or not same or not f.get('pool') or not r.get('pool') \
+                or f.get('lod_of'):
+            raise Fail(f'{r["name"]}: a numbered pool level needs its pool full descriptor\'s model id, bones and sections')
+        return (r['lod_level'] << 26) | (1 << 25) | ((full + 1) << 16)
     if (f['model_id'], f['bones'], len(f['sections'])) != (r['model_id'], r['bones'], len(r['sections'])) or f.get('pool') or r.get('pool'):
         raise Fail(f'{r["name"]}: a gameplay level needs its full descriptor\'s model id, bones and sections (no pool)')
     return (1 << 25) | ((full + 1) << 16)

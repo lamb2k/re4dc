@@ -13,6 +13,8 @@ record points at a little-endian body at the end of the file:
   tables  ESQ (R4ESQTBL: effect records, archive offsets), NTR (R4NTBL: texture payload/header/TPL archive offsets),
           MTC (R4MOTBL v2: per clip resident offset, bytes, crc, fnv, hot flag), each with a CRC-32 and the archive size
   REL     the 64-byte static module descriptor or a whole REL (rel = its offset; 0 = none), moved intact
+Tagged archives (the sub screen's ss/cmn/ss_wepNN.dat: the same count / offsets / tags header as a DRS body, no
+container) take --bare (output under <outdir>/st1/). relayout() is shared with ps2cast/ps2_weapons.py --relayout.
 Also plain / texture-prepared archives (Leon pl00 / pl08, the weapons): no MTC (every FCV stays whole), optional NTR /
 ESQ, the body anywhere in the container (records after it, e.g. the sound bank, move with the size change).
 rewrite: every FCV / SEQ member gets the PS2 entry of the same slot (BIO4DAT.AFS emNN.dat; PS2 FCV = the host image,
@@ -58,12 +60,16 @@ def key_of(b):
 
 
 class Prepared:
-    def __init__(self, d):
+    def __init__(self, d, bare=False):
         self.d = d
         # the live body is the container's one type-0 record (le_mirror.native_payload_slot); a prepared file may keep
         # the original body at 0x400 as unread bytes, so never assume the body sits at 0x400
-        self.slot = mirror.native_payload_slot(d)
-        size, base = struct.unpack_from('<I4xI', d, self.slot + 4)
+        # bare (purge-motion25): a room archive (st1/rNNN.arc) is the archive itself, no DVD container
+        if bare:
+            self.slot, size, base = None, len(d), 0
+        else:
+            self.slot = mirror.native_payload_slot(d)
+            size, base = struct.unpack_from('<I4xI', d, self.slot + 4)
         self.base, self.size = base, size
         b = self.b = d[base:base + size]
         n, rel = struct.unpack_from('<2I', b)
@@ -86,7 +92,8 @@ class Prepared:
         mo = self.tab.get(b'MTC\0')
         cnt = 0
         if mo is not None:
-            assert b[mo:mo + 8] == b'R4MOTBL\0' and U32(b, mo + 8) == 2
+            # version 3 = a bounded r11f profile (prepare_enemy_motions.py); its rows have the v2 layout
+            assert b[mo:mo + 8] == b'R4MOTBL\0' and U32(b, mo + 8) in (2, 3)
             cnt = U32(b, mo + 12)
         for k in range(cnt):
             off, sz, crc, fnv, hot = struct.unpack_from('<5I', b, mo + 32 + 20 * k)
@@ -104,65 +111,24 @@ def ps2_entries(iso, name):
     return raw, {i: (t, b) for i, t, b in ps2_bin.dat_entries(raw)}
 
 
-def rewrite(a):
-    src = open(a.payload, 'rb').read()
-    P = Prepared(src)
+def slot_map(a):
+    """--map GC:PS2,... (room archives whose PS2 entry order is shifted against the GC one); identity otherwise."""
+    return {int(x): int(y) for x, y in (p.split(':') for p in a.map.split(','))} if getattr(a, 'map', None) else {}
+
+
+def ps2_mapped(a):
     raw, ps2 = ps2_entries(a.iso, a.name)
-    rep = dict(payload=a.payload, payload_sha256=hashlib.sha256(src).hexdigest(), ps2=a.name,
-               ps2_sha256=hashlib.sha256(raw).hexdigest(), clips=[], seq_changed=[], keys_new=[])
-    keys = {}
-    new_members = []  # (old start, old end, new bytes, mtc row or None)
-    for s, e in zip(P.starts, P.ends):
-        m = P.b[s:e]
-        slots = P.slots_at(s)
-        tag = P.tags[slots[0]] if slots else None
-        if tag not in (b'FCV\0', b'SEQ\0'):
-            new_members.append((s, e, m, None))
-            continue
-        assert all(P.tags[i] == tag for i in slots), 'mixed alias at %#x' % s
-        cands = set()
-        for i in slots:
-            if i not in ps2 or ps2[i][0] != tag.rstrip(b'\0').decode():
-                raise SystemExit('slot %d %s: PS2 entry missing or tagged %s' % (i, tag, ps2.get(i, ('-',))[0]))
-            cands.add(ps2[i][1])
-        if len(cands) != 1:
-            raise SystemExit('slots %s alias one member but their PS2 entries differ' % slots)
-        p = cands.pop()
-        if tag == b'SEQ\0':
-            new = ps2_seq_host(p)
-            new = new + bytes([0xCD]) * (al32(len(new)) - len(new))
-            old = m[:host_len('SEQ', m)]
-            if new[:len(old)] != old or len(new) != len(old):
-                rep['seq_changed'].append(slots)
-            new_members.append((s, e, new, None))
-            continue
-        new = ps2_fcv_host(p)
-        assert len(new) % 32 == 0, 'PS2 FCV not 32-byte sized'
-        row = P.mtc.get(s)
-        oldfull = None
-        if row:
-            oldfull = dict(bytes=row['bytes'], key=row['key'], max_frame=struct.unpack_from('<H', m)[0], joints=m[2])
-        else:
-            oldfull = dict(bytes=len(m), max_frame=struct.unpack_from('<H', m)[0], joints=m[2])
-        c = dict(slots=slots, arc=[i + 4 for i in slots], gc=oldfull, ps2_bytes=len(new),
-                 ps2_max_frame=struct.unpack_from('<H', new)[0], ps2_joints=new[2])
-        pre = prefix(new) if new[2] else 0
-        if row and new[2] and len(new) <= MAX_CLIP and al32(pre) < len(new):  # the slot's residency policy is kept
-            k = key_of(new)
-            if k in keys and keys[k] != new:
-                raise SystemExit('motion identity collision ' + k)
-            keys[k] = new
-            hot = row['hot'] if row else 0
-            res = new[:pre] + bytes(al32(pre) - pre)
-            c.update(key=k, hot=hot, streamed=True)
-            new_members.append((s, e, res, dict(bytes=len(new), crc=zlib.crc32(new) & 0xffffffff, fnv=fnv1a(new), hot=hot)))
-        else:
-            if row:
-                rep.setdefault('notes', []).append('slot %s: PS2 clip stays whole (was streamed)' % slots)
-            c.update(streamed=False)
-            new_members.append((s, e, new, None))
-        c['changed'] = (row is None and new != m) or (row is not None and c.get('key') != row['key'])
-        rep['clips'].append(c)
+    m = slot_map(a)
+    if m:
+        ps2 = {i: ps2[m[i]] for i in m if m[i] in ps2}
+    return raw, ps2
+
+
+def relayout(src, P, new_members, bare=False):
+    """Lay the body out again with new_members [(old start, old end, new bytes, MTC row or None)] in the old order:
+    every archive offset (body table, rel, ESQ / NTR / MTC rows, table archive-size words) is remapped, the tables and
+    REL keep their bytes and order, and the container records after the body move by the size change (wep19-26:
+    shared by rewrite and archive_relayout.py). An offset inside a resized member refuses. -> (container, body, rows)."""
     # layout
     hdr = P.b[:P.first]
     out = bytearray(hdr)
@@ -224,17 +190,82 @@ def rewrite(a):
     # the container: bytes before the body as they are; anything after it (the sound bank) moves by the size change
     delta = len(out) - P.size
     cont = bytearray(src[:P.base]) + out + src[P.base + P.size:]
-    struct.pack_into('<I', cont, P.slot + 4, len(out))
-    for pos in range(32, 0x400, 32):
-        kind, _sz, _dst, off = struct.unpack_from('<4I', cont, pos)
-        if kind == 0xFFFFFFFF:
-            break
-        if pos != P.slot and off >= P.base + P.size:
-            struct.pack_into('<I', cont, pos + 12, off + delta)
-    os.makedirs(os.path.join(a.outdir, 'em'), exist_ok=True)
+    if not bare:
+        struct.pack_into('<I', cont, P.slot + 4, len(out))
+        for pos in range(32, 0x400, 32):
+            kind, _sz, _dst, off = struct.unpack_from('<4I', cont, pos)
+            if kind == 0xFFFFFFFF:
+                break
+            if pos != P.slot and off >= P.base + P.size:
+                struct.pack_into('<I', cont, pos + 12, off + delta)
+    return cont, out, rows
+
+
+def rewrite(a):
+    src = open(a.payload, 'rb').read()
+    P = Prepared(src, a.bare)
+    raw, ps2 = ps2_mapped(a)
+    rep = dict(payload=a.payload, payload_sha256=hashlib.sha256(src).hexdigest(), ps2=a.name,
+               ps2_sha256=hashlib.sha256(raw).hexdigest(), clips=[], seq_changed=[], keys_new=[])
+    keys = {}
+    new_members = []  # (old start, old end, new bytes, mtc row or None)
+    for s, e in zip(P.starts, P.ends):
+        m = P.b[s:e]
+        slots = P.slots_at(s)
+        tag = P.tags[slots[0]] if slots else None
+        if tag not in (b'FCV\0', b'SEQ\0'):
+            new_members.append((s, e, m, None))
+            continue
+        assert all(P.tags[i] == tag for i in slots), 'mixed alias at %#x' % s
+        cands = set()
+        for i in slots:
+            if i not in ps2 or ps2[i][0] != tag.rstrip(b'\0').decode():
+                raise SystemExit('slot %d %s: PS2 entry missing or tagged %s' % (i, tag, ps2.get(i, ('-',))[0]))
+            cands.add(ps2[i][1])
+        if len(cands) != 1:
+            raise SystemExit('slots %s alias one member but their PS2 entries differ' % slots)
+        p = cands.pop()
+        if tag == b'SEQ\0':
+            new = ps2_seq_host(p)
+            new = new + bytes([0xCD]) * (al32(len(new)) - len(new))
+            old = m[:host_len('SEQ', m)]
+            if new[:len(old)] != old or len(new) != len(old):
+                rep['seq_changed'].append(slots)
+            new_members.append((s, e, new, None))
+            continue
+        new = ps2_fcv_host(p)
+        assert len(new) % 32 == 0, 'PS2 FCV not 32-byte sized'
+        row = P.mtc.get(s)
+        oldfull = None
+        if row:
+            oldfull = dict(bytes=row['bytes'], key=row['key'], max_frame=struct.unpack_from('<H', m)[0], joints=m[2])
+        else:
+            oldfull = dict(bytes=len(m), max_frame=struct.unpack_from('<H', m)[0], joints=m[2])
+        c = dict(slots=slots, arc=[i + 4 for i in slots], gc=oldfull, ps2_bytes=len(new),
+                 ps2_max_frame=struct.unpack_from('<H', new)[0], ps2_joints=new[2])
+        pre = prefix(new) if new[2] else 0
+        if row and new[2] and len(new) <= MAX_CLIP and al32(pre) < len(new):  # the slot's residency policy is kept
+            k = key_of(new)
+            if k in keys and keys[k] != new:
+                raise SystemExit('motion identity collision ' + k)
+            keys[k] = new
+            hot = row['hot'] if row else 0
+            res = new[:pre] + bytes(al32(pre) - pre)
+            c.update(key=k, hot=hot, streamed=True)
+            new_members.append((s, e, res, dict(bytes=len(new), crc=zlib.crc32(new) & 0xffffffff, fnv=fnv1a(new), hot=hot)))
+        else:
+            if row:
+                rep.setdefault('notes', []).append('slot %s: PS2 clip stays whole (was streamed)' % slots)
+            c.update(streamed=False)
+            new_members.append((s, e, new, None))
+        c['changed'] = (row is None and new != m) or (row is not None and c.get('key') != row['key'])
+        rep['clips'].append(c)
+    cont, out, rows = relayout(src, P, new_members, a.bare)
+    sub = 'st1' if a.bare else 'em'
+    os.makedirs(os.path.join(a.outdir, sub), exist_ok=True)
     os.makedirs(os.path.join(a.outdir, 'dc', 'mot'), exist_ok=True)
     name = os.path.basename(a.payload)
-    open(os.path.join(a.outdir, 'em', name), 'wb').write(cont)
+    open(os.path.join(a.outdir, sub, name), 'wb').write(cont)
     have = set(os.listdir(a.mot_dir)) if a.mot_dir else set()
     for k, v in sorted(keys.items()):
         fn = k + '.fcv'
@@ -257,9 +288,9 @@ def rewrite(a):
 
 
 def verify(a):
-    new = Prepared(open(a.rewritten, 'rb').read())
-    old = Prepared(open(a.payload, 'rb').read())
-    _, ps2 = ps2_entries(a.iso, a.name)
+    new = Prepared(open(a.rewritten, 'rb').read(), a.bare)
+    old = Prepared(open(a.payload, 'rb').read(), a.bare)
+    _, ps2 = ps2_mapped(a)
     mot = {}
     for d in a.mot:
         for f in os.listdir(d):
@@ -269,7 +300,7 @@ def verify(a):
     assert new.n == old.n and new.tags == old.tags
     assert new.base == old.base and new.d[0x400:old.base] == old.d[0x400:old.base], 'container bytes before the body changed'
     assert new.d[new.base + new.size:] == old.d[old.base + old.size:], 'container bytes after the body changed'
-    for pos in range(32, 0x400, 32):  # record table: only the body size and the offsets after it move
+    for pos in (() if a.bare else range(32, 0x400, 32)):  # record table: only the body size and the offsets after it move
         ro, rn = struct.unpack_from('<4I', old.d, pos), struct.unpack_from('<4I', new.d, pos)
         want = (ro[0], new.size if pos == old.slot else ro[1], ro[2],
                 ro[3] + (new.size - old.size if pos != old.slot and ro[3] >= old.base + old.size else 0))
@@ -359,6 +390,9 @@ def main():
     for k in ('rewritten', 'payload', 'iso', 'name'):
         v.add_argument(k)
     v.add_argument('mot', nargs='+')
+    for q in (p, v):  # purge-motion25: room archives (no container) and shifted PS2 entry order
+        q.add_argument('--bare', action='store_true', help='a bare archive (st1/rNNN.arc), no DVD container')
+        q.add_argument('--map', help='GC slot:PS2 entry,... for every FCV / SEQ slot (default: same index)')
     a = ap.parse_args()
     if a.cmd == 'rewrite':
         rewrite(a)

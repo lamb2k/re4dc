@@ -196,6 +196,9 @@ template<class T> struct Frozen { u32 n; T** slots; };
 template<class T> Frozen<T>* frozen(cManager<T>*) { return 0; }
 #endif
 template<class T> int array_free(cManager<T>* m) {
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
     if(!m->pArray) return 0;
     if(frozen(m)) { re4dc_log("work backing: size=%u frozen pool kept (freed while the sub screen is open)\n",(unsigned)sizeof(T));return 0; }
@@ -211,6 +214,9 @@ template<class T> int array_free(cManager<T>* m) {
     OSFreeToHeap(p->handle,p);m->pArray=0;return 1;
 }
 template<class T> int array_alloc(cManager<T>* m,u32 n) {
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     RE4DC_ALIVE_BUMP();
     array_free(m);m->nArray=n;
     if(!demand<T> || m->pArrayPush) {
@@ -297,6 +303,11 @@ template<class T> bool prepare_work(cManager<T>* m,u32 first,u32 count) {
 #endif
     c->next=p->chunks;p->chunks=c;
     for(u32 j=0;j<count;++j)slots[first+j]=c->parts()+j;
+    // A newly mapped object page is a different class-index incarnation even when its pool
+    // header or backing address is reused. Existing cObj pages stay pinned until pool free.
+    #if defined(RE4DC_EFM_CLASS_IDENTITY) && RE4DC_EFM_CLASS_IDENTITY && !defined(__PPC__)
+    RE4DC_EFM_CLASS_BUMP()
+    #endif
     p->bytes+=c->bytes;++p->chunks_count;if(p->bytes>p->peak)p->peak=p->bytes;
     report(p,"grow");return true;
 }

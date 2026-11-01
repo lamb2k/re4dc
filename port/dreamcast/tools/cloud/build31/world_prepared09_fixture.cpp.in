@@ -1,0 +1,193 @@
+#define RE4DC_WORLD_PREPARED09 1
+#define RE4DC_WORLD_PART_PLAN29 1
+#define RE4DC_MOVIE_WORLD_ARENA 1
+#define RE4DC_STATIC_OBJ_LIFETIME05 1
+#define RE4DC_WORLD_PORTAL29 1
+#define RE4DC_PS2_INTERIOR_CULL 1
+#define RE4DC_PS2_WORLD_DYNAMIC 1
+#define RE4DC_PS2_WORLD_SOURCE_OWNER 1
+#define RE4DC_PS2_WORLD_TRANSITION_OWNER 1
+#define RE4DC_PS2_WORLD_R11F_OWNER 1
+#include "world_part_plan29.hpp"
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <unordered_map>
+#include <limits>
+#ifdef __SANITIZE_ADDRESS__
+#include <sanitizer/asan_interface.h>
+#endif
+static unsigned checks=0;
+#define CHECK(x) do{++checks;assert(x);}while(0)
+struct Ps2Part {std::uint32_t crc,fnv;std::uint16_t width,height;std::uint8_t pass,cull,texture,reserved;};
+struct Head {unsigned mesh_count=1,part_count=2;};
+struct Mesh {unsigned first_part=0,part_count=2;float bounds_min[3]{-2,-3,-4},bounds_max[3]{2,3,4};};
+struct Part {unsigned meshlet_count=1;};
+struct Placement {unsigned mesh=0,placement=0;float affine[12]{1,0,0,0,0,1,0,0,0,0,1,0};};
+struct Package {Head h;Mesh mesh;Part part[2];const Head& header()const{return h;}const Mesh* meshes()const{return &mesh;}const Part* parts()const{return part;}};
+static Ps2Part meta[2]{{1,2,64,64,0,0,1,0},{3,4,64,64,2,0,1,0}};
+static Placement placements[2];
+struct World {Package package;const Ps2Part* parts=meta;const Placement* placements=::placements;unsigned nplacements=2,room=0x103,bytes=64;void* storage=reinterpret_cast<void*>(1);}ps2w;
+unsigned sourceWorldPackageGeneration=1;
+static unsigned heap_limit=1024*1024,heap_used=0,heap_overhead=0,fail_at=0,attempts=0,allocations=0,frees=0;
+struct Cell {unsigned bytes,charged,generation,token;};
+static std::unordered_map<void*,Cell> blocks;
+static unsigned room_generation=7,package_generation=7,source_cell_token=10000,next_cell_token=0;static bool room_live=true,zero_cell_token=false;
+static void (*after_allocate)()=nullptr;static void (*before_free)()=nullptr;static void* returned_candidate=nullptr;
+extern "C" int re4dc_room4_live_generation(unsigned* out){*out=room_generation;return room_live;}
+extern "C" int re4dc_room4_cell_valid(const void* p,unsigned bytes,unsigned generation){
+    if(!room_live || generation!=room_generation)return 0;
+    if(p==ps2w.storage)return generation==package_generation && bytes==ps2w.bytes;
+    auto it=blocks.find(const_cast<void*>(p));return it!=blocks.end() && it->second.generation==generation && it->second.bytes==bytes;
+}
+static bool verify_close=false;static unsigned leased_token=0;
+extern "C" unsigned re4dc_room4_cell_incarnation(const void* p,unsigned bytes,unsigned generation){
+    if(!re4dc_room4_cell_valid(p,bytes,generation))return 0;
+    if(p==ps2w.storage)return source_cell_token;
+    return blocks.at(const_cast<void*>(p)).token;
+}
+void verify_revoked();
+int re4dc_static_heap_free(){return int(heap_limit)-int(heap_used);}
+extern "C" void* re4dc_world_part_plan29_alloc(unsigned bytes){
+    ++attempts;if((fail_at && bytes>=fail_at) || bytes>heap_limit-heap_used)return nullptr;
+    void* p=std::malloc(bytes);assert(p);blocks[p]={bytes,bytes+heap_overhead,room_generation,zero_cell_token?0:++next_cell_token};heap_used+=bytes+heap_overhead;++allocations;
+    if(after_allocate){returned_candidate=p;std::memset(p,0x5a,bytes);auto fn=after_allocate;after_allocate=nullptr;fn();}
+    return p;
+}
+void re4dc_static_free(void* p){if(!p)return;if(verify_close)verify_revoked();if(before_free){auto fn=before_free;before_free=nullptr;fn();}auto it=blocks.find(p);assert(it!=blocks.end());heap_used-=it->second.charged;blocks.erase(it);std::free(p);++frees;}
+void re4dc_log(const char*,...){}
+#include "world_part_plan29_runtime.inc"
+void verify_revoked(){CHECK(!wplan29::current(leased_token));}
+namespace pc {
+struct {bool active=false;unsigned placements=0;}st;
+static bool hide=true;
+@WORLD_BOX@
+int hidden(const float*,const float*){return hide?1:0;}
+}
+namespace wp29 {static bool proof=true;void activate(){pc::st.active=proof;}}
+namespace dyn {constexpr unsigned kIds=4,kNone=255;static unsigned char values[2]{255,255};const unsigned char* ids=values;unsigned nids=2;unsigned slot_of[4]{255,255,255,255};}
+static bool group_claimed=false,r11f_claimed=false;
+bool re4dc_source_world_group_claimed(){return group_claimed;}
+bool r11fNativeClaimed(){return r11f_claimed;}
+static float outer[6]{-10,-10,-10,10,10,10};
+#define PC_OUTER_RENDER outer
+#define RE4DC_PS2_AFFINE affine
+static unsigned view_setups=0;
+int placement_setup(unsigned target,bool moved=false){
+    for(unsigned i=target;i==target;++i){
+        const auto& pl=ps2w.placements[i];float copy[12];std::memcpy(copy,pl.affine,sizeof(copy));const float* affine=moved?copy:pl.affine;
+@EARLY@
+        ++view_setups;return 1;
+    }
+    return 0;
+}
+static unsigned packet_aborts=0;
+void re4dc_model_packet_abort(){++packet_aborts;}
+static int guarded_record_index(const re4dc::wp29::Record* plan,unsigned plan_incarnation){
+    struct {unsigned aborts=0;}c;
+@RECORD_GUARD@
+    return plan?int(plan->index):0;
+}
+static const Ps2Part* metadata_address(const re4dc::wp29::Record* plan,unsigned k){
+    Mesh mesh;
+@METADATA@
+    return &meta;
+}
+static void external_retire_all(){for(auto cell:blocks){std::free(cell.first);++frees;}blocks.clear();heap_used=0;}
+static void reset_heap(){wplan29::close();CHECK(blocks.empty());++room_generation;package_generation=room_generation;++source_cell_token;heap_limit=1024*1024;heap_overhead=fail_at=0;verify_close=false;zero_cell_token=false;}
+static void reenter_open(){wplan29::close();wplan29::open();}
+static void reenter_free(){wplan29::open();}
+
+int main(){
+    using namespace re4dc::wp29;
+    for(unsigned n:{0U,1U,2U,2048U,0xffffffffU})for(unsigned budget:{0U,32U,100U,kMaxBytes}){
+        auto extra=optional_bounds(32,n,budget);
+        CHECK(!extra.count || (extra.count==n && extra.bytes<=budget && extra.bytes<=kMaxBytes));
+        CHECK(extra.count || extra.bytes==32);
+    }
+    placements[1].placement=1;placements[1].affine[3]=100;
+    wplan29::open();CHECK(wplan29::records && wplan29::box_count==2 && wplan29::bytes<=kMaxBytes+31);
+    unsigned count=123;const auto* record=wplan29::run(0,0,count);CHECK(record && count==1 && record->key[0]==1);
+    CHECK(metadata_address(record,0)==ps2w.parts+record->index);
+    leased_token=wplan29::bound_incarnation;CHECK(wplan29::current(leased_token));
+    const auto* box=wplan29::bounds(1,leased_token);CHECK(box && box->center[0]==100);
+    unsigned before=view_setups;CHECK(placement_setup(1)==0 && view_setups==before); // before any view setup
+    CHECK(placement_setup(0)==1); // inside house retains ordinary path
+    wp29::proof=false;CHECK(placement_setup(1)==1);wp29::proof=true;
+    dyn::values[1]=0;dyn::slot_of[0]=0;CHECK(placement_setup(1)==1);dyn::values[1]=255;dyn::slot_of[0]=255;
+    dyn::ids=nullptr;CHECK(placement_setup(1)==1);dyn::ids=dyn::values;
+    dyn::nids=1;CHECK(placement_setup(1)==1);dyn::nids=2;
+    CHECK(placement_setup(1,true)==1);
+    group_claimed=true;CHECK(placement_setup(1)==1);group_claimed=false;
+    r11f_claimed=true;CHECK(placement_setup(1)==1);r11f_claimed=false;
+    pc::hide=false;CHECK(placement_setup(1)==1);pc::hide=true;
+    ++sourceWorldPackageGeneration;CHECK(!wplan29::current(leased_token));count=123;CHECK(!wplan29::run(0,0,count) && count==123);CHECK(placement_setup(1)==1);
+    wplan29::open();CHECK(wplan29::current(wplan29::bound_incarnation) && !wplan29::current(leased_token));
+    leased_token=wplan29::bound_incarnation;++source_cell_token;CHECK(!wplan29::current(leased_token));
+    meta[0].width=128;++sourceWorldPackageGeneration;wplan29::open();count=0;record=wplan29::run(0,0,count);CHECK(record && record->key[2]==128 && metadata_address(record,0)->width==128);
+    meta[0].width=64;++sourceWorldPackageGeneration;wplan29::open();
+    leased_token=wplan29::bound_incarnation;verify_close=true;wplan29::close();verify_close=false;
+    CHECK(!wplan29::current(leased_token) && !wplan29::bounds(1,leased_token));
+    // Actual same-address archive restoration runs close/open: old tokens stay revoked.
+    wplan29::open();CHECK(!wplan29::current(leased_token));leased_token=wplan29::bound_incarnation;
+    ps2w.storage=reinterpret_cast<void*>(2);CHECK(!wplan29::current(leased_token));ps2w.storage=reinterpret_cast<void*>(1);
+    // Forced same-frame heap reset before close: memory is retired externally,
+    // and stale close must not free the replacement allocation/address.
+    leased_token=wplan29::bound_incarnation;++room_generation;
+    CHECK(!wplan29::current(leased_token));
+    for(auto cell:blocks){std::free(cell.first);++frees;}blocks.clear();heap_used=0;
+    wplan29::close();CHECK(!wplan29::records && !wplan29::current(leased_token));
+    package_generation=room_generation;wplan29::open();CHECK(!wplan29::current(leased_token));
+    room_live=false;CHECK(!wplan29::current(wplan29::bound_incarnation));room_live=true;
+    // Same-generation/address/size recycling is distinct from a heap reset.
+    leased_token=wplan29::bound_incarnation;void* foreign=wplan29::allocation;
+    const auto* foreign_record=wplan29::records;
+    auto& foreign_cell=blocks.at(foreign);const unsigned old_cell=foreign_cell.token;
+    foreign_cell.token=++next_cell_token;CHECK(foreign_cell.token!=old_cell);
+    std::memset(foreign,0x6b,foreign_cell.bytes);
+#ifdef __SANITIZE_ADDRESS__
+    __asan_poison_memory_region(foreign,foreign_cell.bytes);
+#endif
+    CHECK(!wplan29::current(leased_token));count=123;CHECK(!wplan29::run(0,0,count) && count==123);CHECK(!wplan29::bounds(1,leased_token));
+    unsigned aborts_before=packet_aborts;CHECK(guarded_record_index(foreign_record,leased_token)==-1 && packet_aborts==aborts_before+1);
+    unsigned freed_before=frees;wplan29::close();CHECK(frees==freed_before && blocks.count(foreign));
+#ifdef __SANITIZE_ADDRESS__
+    __asan_unpoison_memory_region(foreign,foreign_cell.bytes);
+#endif
+    re4dc_static_free(foreign);CHECK(!blocks.count(foreign));
+    reset_heap();wplan29::open();void* retiring=wplan29::allocation;before_free=reenter_free;
+    wplan29::open();CHECK(wplan29::records && wplan29::allocation!=retiring && blocks.size()==1);
+    CHECK(wplan29::current(wplan29::bound_incarnation));
+    // An allocator callback may publish a newer plan. The outer call must
+    // neither overwrite its globals nor write through its returned old buffer.
+    reset_heap();after_allocate=reenter_open;wplan29::open();
+    CHECK(wplan29::records && wplan29::allocation!=returned_candidate);
+    CHECK(static_cast<unsigned char*>(returned_candidate)[0]==0x5a);
+    CHECK(wplan29::unproven_return_bytes>0 && blocks.size()==2);
+    wplan29::close();CHECK(blocks.size()==1);unsigned attempt_count=attempts;
+    wplan29::open();CHECK(!wplan29::records && attempts==attempt_count);
+    external_retire_all(); // only owning heap retirement reclaims unproven cells
+    reset_heap();zero_cell_token=true;wplan29::open();CHECK(!wplan29::records && wplan29::unproven_return_bytes>0);
+    attempt_count=attempts;wplan29::open();CHECK(attempts==attempt_count);
+    external_retire_all();zero_cell_token=false;
+    // Optional-tail failure and post-allocation headroom both retain base records.
+    reset_heap();Layout layout;CHECK(measure(ps2w.package,ps2w.parts,false,false,layout));
+    fail_at=layout.bytes+32;unsigned prior=attempts;wplan29::open();CHECK(wplan29::records && !wplan29::box_count && attempts==prior+2);
+    reset_heap();heap_limit=layout.bytes+31+kHeapFloor+47;wplan29::open();CHECK(wplan29::records && !wplan29::box_count);
+    reset_heap();heap_limit=layout.bytes+31+kHeapFloor+80;heap_overhead=64;wplan29::open();CHECK(wplan29::records && !wplan29::box_count && re4dc_static_heap_free()>=int(kHeapFloor));
+    reset_heap();heap_limit=layout.bytes+31+kHeapFloor-1;wplan29::open();CHECK(!wplan29::records && blocks.empty());
+    reset_heap();ps2w.nplacements=100000;wplan29::open();CHECK(wplan29::records && !wplan29::box_count);ps2w.nplacements=2;
+    reset_heap();placements[1].affine[0]=std::numeric_limits<float>::quiet_NaN();wplan29::open();CHECK(wplan29::records && !wplan29::bounds(1,wplan29::bound_incarnation));CHECK(placement_setup(1)==1);placements[1].affine[0]=1;
+    // Compare conservative boxes to the literal original world_box chain.
+    reset_heap();for(unsigned i=0;i<1000;++i){
+        float matrix[12]{1+float(i%7),-.125f,.5f,float(i)-500, .25f,-2,0,float(i%31), 0,.75f,3,-20};
+        const float lo[3]{-20,-10,-3},hi[3]{30,40,7};float c[3],h[3];pc::world_box(matrix,lo,hi,c,h);
+        const auto b=placement_bounds(matrix,lo,hi);CHECK(b.half[0]>=0);
+        for(unsigned a=0;a<3;++a){CHECK(b.center[a]==c[a]);CHECK(b.half[a]>=h[a]);}
+    }
+    float matrix[12]{1,0,0,0,0,1,0,0,0,0,1,0},bad_lo[3]{1,0,0},bad_hi[3]{0,1,1};CHECK(placement_bounds(matrix,bad_lo,bad_hi).half[0]<0);
+    wplan29::incarnation=~0U;wplan29::open();CHECK(!wplan29::records && !wplan29::incarnation);wplan29::open();CHECK(!wplan29::records && !wplan29::incarnation);
+    wplan29::close();CHECK(allocations==frees && blocks.empty());
+    std::printf("prepared09 actual plan/early consumer: %u checks PASS; allocation balance %u/%u\n",checks,allocations,frees);
+}

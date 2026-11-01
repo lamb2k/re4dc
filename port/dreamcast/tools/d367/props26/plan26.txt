@@ -1,0 +1,16 @@
+r100 et0d00.bin -
+r101 et0400.bin,et0500.bin,et0700.bin,et0d00.bin -
+r102 et0d00.bin -
+r103 et0500.bin -
+r104 et1700.bin -
+r105 et2400.bin -
+r106 et0500.bin,et0d00.bin 34:34
+r107 et0700.bin,et1600.bin,et2b00.bin -
+r10f et2b00.bin 23:23
+r111 et0400.bin,et0500.bin,et0700.bin,et0d00.bin -
+r112 et0d00.bin -
+r113 et0500.bin -
+r117 et1600.bin -
+r11c et0500.bin,et0700.bin,et1700.bin -
+r11d et0700.bin,et2400.bin -
+r11e et0900.bin -

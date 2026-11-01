@@ -1,3 +1,11 @@
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+#include "include/fallback_audit35.h"
+#endif
+#line 1
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
 // Narrow source-motion key residency adapter. Original FCV/SEQ evaluation stays
 // in motion.cpp; original archive and whole-clip paths remain selectable.
 #include "native_motion.h"
@@ -561,6 +569,11 @@ unsigned* load(Binding& b,unsigned i) {
         bool new_overflow=false;
 #endif
         const unsigned size=word(e+4),bytes=aligned(size);
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::MotionKeyMiss);
+        re4dc::fa29::hit(re4dc::fa29::MotionKeyBytes,size);
+#endif
+#line 564
 #if RE4DC_MOTION_PRESSURE_BYTES
 #if !RE4DC_MOTION_PRESSURE_BACKING
         pressure_room_for(bytes);
@@ -692,6 +705,10 @@ unsigned* load(Binding& b,unsigned i) {
         if(fast>=0 && unsigned(fast)==size) {
             stats.bytes_read+=size;
         } else {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::MotionFastRead);
+#endif
+#line 695
             // Short (the stream request met another GD DMA in flight: "Previous DMA request is in
             // progress") or unaligned: read the whole key again through the storage reader below.
             static unsigned shorts;
@@ -709,6 +726,10 @@ unsigned* load(Binding& b,unsigned i) {
         // Issue #25: a GD read error on hardware stopped the game during the intro ("motion key read"). Read the
         // key again into the same block (fresh arena) up to 3 times before giving up. Error path only.
         for(unsigned retry=1;(result.error || result.size!=size) && retry<=3U;++retry) {
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::MotionReadRetry);
+#endif
+#line 712
             static unsigned retries;
             if(++retries<=16 || (retries&63)==0)
                 re4dc_log("motion key read retry %u (#%u): %s error=%s got=%u size=%u\n",retry,retries,path,
@@ -1033,11 +1054,21 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
     return 1;
 }
 extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    unsigned fa35_probes = 0;
+    bool fa35_bound = false;
+    if (!header) re4dc::fa35::hit(re4dc::fa35::MotionUnbound, 1);
+#endif
+#line 1036
     if(!header)return 0;
 #if !RE4DC_MOTION_LEASE_LEAN
     const auto started=timer_us_gettime64();
 #endif
     Locked guard;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    if (!stats.metadata_bytes) re4dc::fa35::hit(re4dc::fa35::MotionUnbound, 1);
+#endif
+#line 1041
     if(!stats.metadata_bytes)return 0;
     const auto p=reinterpret_cast<std::uintptr_t>(header);
     for(unsigned bno=0;bno<kArchives;++bno) {
@@ -1047,17 +1078,50 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
 #endif
         auto base=reinterpret_cast<std::uintptr_t>(b.archive);
         if(!base || p<base || p-base>=b.bytes)continue;
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        fa35_bound = true;
+#endif
+#line 1050
 #if RE4DC_MOTION_INDEX
         // GAME_MOTION_INDEX (design-logic P4): re4dc_motion_bind accepts a table only when the record
         // offsets are strictly increasing (off<=prev rejects it), so the offsets are unique and sorted
         // and a binary search finds the one record the linear scan finds (8 probes instead of up to
         // 255 unaligned word() reads per acquire). The lease, pins, stats and load() are unchanged.
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::MotionBinary, 1);
+#endif
+#line 1055
         unsigned lo=0,hi=b.count;const unsigned want=unsigned(p-base);
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        while(lo<hi) { ++fa35_probes; const unsigned mid=(lo+hi)>>1;if(word(record(b,mid))<want)lo=mid+1;else hi=mid; }
+#else
+#line 1056
         while(lo<hi) { const unsigned mid=(lo+hi)>>1;if(word(record(b,mid))<want)lo=mid+1;else hi=mid; }
+#endif
+#line 1057
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        if (lo < b.count) ++fa35_probes;
+#endif
+#line 1057
         for(unsigned i=lo;i<b.count && i==lo;++i)if(word(record(b,i))==want) {
 #else
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        re4dc::fa35::hit(re4dc::fa35::MotionLinear, 1);
+#endif
+#line 1059
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+        for(unsigned i=0;i<b.count;++i)if((++fa35_probes,word(record(b,i)))==p-base) {
+#else
+#line 1059
         for(unsigned i=0;i<b.count;++i)if(word(record(b,i))==p-base) {
 #endif
+#line 1060
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+            re4dc::fa35::hit(re4dc::fa35::MotionFound, 1);
+            re4dc::fa35::hit(re4dc::fa35::MotionProbes, fa35_probes);
+#endif
+#line 1061
             *table=load(b,i);auto& s=b.slots[i];
 #if RE4DC_MOTION_USAGE_LOG
             if(b.seen && !b.seen[i]) { b.seen[i]=1;re4dc_log("motion use: archive=%u entry=%u bytes=%u hot=%u\n",b.bytes,i,word(record(b,i)+4),word(record(b,i)+16)); }
@@ -1078,6 +1142,11 @@ extern "C" int re4dc_motion_acquire(const void* header,unsigned** table) {
             return bno*256+i+1;
         }
     }
+#if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+    re4dc::fa35::hit(fa35_bound ? re4dc::fa35::MotionMissing : re4dc::fa35::MotionUnbound);
+    re4dc::fa35::hit(re4dc::fa35::MotionProbes, fa35_probes);
+#endif
+#line 1081
     return 0;
 }
 extern "C" void re4dc_motion_release(int token) {

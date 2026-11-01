@@ -1,0 +1,149 @@
+ModelData source_data[8];unsigned source_weights[8];cModelInfo unrelated;
+unsigned palette_credit(unsigned n){return (n*48+31)&~31u;}
+void pending_info(cModelInfo* info,cModel* m,unsigned n=1){
+    ModelData d{};d.weight_palette_num=n;d.pWeight=source_weights;int built=0;
+    CHECK(skinDeferPending(m,info,&d,&built));
+}
+void seed_luis(bool extra=true){
+    const void* keys[7];for(unsigned i=0;i<6;++i)keys[i]=&infos[i];keys[6]=&unrelated;
+    CHECK(re4dc_actor_skin_reserve(pG->Frame_cnt,keys,extra?7:6));
+    for(auto&info:infos)pending_info(&info,&luis);if(extra)pending_info(&unrelated,&luis,2);
+}
+void prepared_recipe_source(){
+    FrameIdentity frame{};CHECK(sourceActorIdentity(frame));sourceActorActive=sourceActorRenderActive=true;
+    const auto model=sourceActorModel(&luis);CHECK(sourceActorLedger.begin(ledger_storage,sizeof ledger_storage,1,frame));
+    CHECK(sourceActorLedger.append(frame,model,ModelPath::Source,0)&&sourceActorLedger.seal(frame));
+    PreparationTicket ticket{};CHECK(sourceActorLedger.claim(frame,ticket));source_callback(&luis);
+    seed_luis();CHECK(sourceActorLedger.complete(frame,ticket,model));
+}
+void leave_source_domain(){
+    // Exact non-yielding retirement prefix of sourceActorPlan, without its
+    // following new ledger construction. Primitive storage is still current.
+    re4dc_actor_transaction_retire();sourceActorLedger.retire();sourceActorActive=false;sourceActorCount=0;
+    sourceActorRenderActive=false;
+}
+void assert_no_resources(){CHECK(!texture_leases.pinned(0)&&!texture_leases.pinned(1)&&!owned_workspace.maximum());}
+void output_reference(){
+    reset();registry.texture_count=2;chunks[3].texture=1;
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);}
+    CHECK(!source_draws&&!source_callbacks);assert_no_resources();
+    unsigned long long hash=1469598103934665603ULL;
+    for(auto b:wire)hash=(hash^b)*1099511628211ULL;
+    std::printf("OUTPUT bytes=%zu hash=%016llx\n",wire.size(),hash);
+}
+#if RE4DC_SKIN_RECIPE32
+void direct_credit_and_domains(){
+    reset();seed_luis();const unsigned before=re4dc_prim_recipe_credit();CHECK(before==6*palette_credit(1)+palette_credit(2));
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);}
+    CHECK(re4dc_prim_recipe_credit()==palette_credit(2)&&!source_palette_builds&&!source_draws&&!source_callbacks);
+    CHECK(find_skin(&unrelated,nullptr)->materialized==kSkinRecipePending);assert_no_resources();
+    // Real prepared ledger/source-producer rows become direct only after the
+    // actual plan-retirement prefix. This same-owner edge is handled, rather
+    // than assumed impossible from numeric frame identity.
+    reset();prepared_recipe_source();leave_source_domain();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);}
+    CHECK(source_callbacks==1&&!source_draws&&re4dc_prim_recipe_credit()==palette_credit(2));assert_no_resources();
+    // A direct ticket cannot silently become the prepared domain during I/O.
+    reset();seed_luis();texture_yield=[](){sourceActorActive=true;};const unsigned held=re4dc_prim_recipe_credit();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+    CHECK(!emitted_n&&!source_draws&&re4dc_prim_recipe_credit()==held);assert_no_resources();
+}
+void prepared_restore_and_materialize(){
+    for(unsigned failure=0;failure<4;++failure){
+        reset();prepared_recipe_source();const unsigned held=re4dc_prim_recipe_credit();const float* backup=skins[0].palette;
+        switch(failure){case 0:texture_ok=false;break;case 1:allocation_ok=false;break;
+            case 2:preflight_ok=false;break;case 3:proof_live=false;break;}
+        {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+        CHECK(source_draws==1&&!submits&&source_callbacks==1&&re4dc_prim_recipe_credit()==held);
+        CHECK(find_skin(&infos[0],nullptr)->palette==backup);assert_no_resources();
+        allocation_ok=true;unsigned n=0;const float* palette=re4dc_actor_skin_palette(&infos[0],nullptr,&n);
+        CHECK(palette&&n==1&&palette[9]==7&&source_palette_builds==1);
+        CHECK(re4dc_prim_recipe_credit()==held-palette_credit(1));
+    }
+    reset();prepared_recipe_source();{SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);}
+    CHECK(!source_draws&&source_callbacks==1&&re4dc_prim_recipe_credit()==palette_credit(2));assert_no_resources();
+}
+void direct_declines_and_partial(){
+    for(unsigned failure=0;failure<5;++failure){
+        reset();seed_luis();const unsigned held=re4dc_prim_recipe_credit();
+        switch(failure){case 0:texture_ok=false;break;case 1:allocation_ok=false;break;
+            case 2:preflight_ok=false;break;case 3:submit_ok=false;break;case 4:joint_partial=1;break;}
+        {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+        CHECK(!source_draws&&!source_callbacks);assert_no_resources();
+        CHECK(re4dc_prim_recipe_credit()==(failure<2?held:palette_credit(2)));
+        CHECK(emitted_n==(failure==4?1u:0u));
+        if(failure>=3)CHECK(aborts);
+    }
+    // Hard credit from an unrelated source recipe must prevent overcommit.
+    reset();seed_luis();pG->nPrim=int(primitive_used+re4dc_prim_recipe_credit()+128);
+    const unsigned held=re4dc_prim_recipe_credit();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+    CHECK(!emitted_n&&!source_draws&&re4dc_prim_recipe_credit()==held);assert_no_resources();
+    reset();seed_luis();re4dc_bind_actor_frame();workspace_bytes=1;const unsigned workspace_credit=re4dc_prim_recipe_credit();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+    CHECK(!emitted_n&&!source_draws&&re4dc_prim_recipe_credit()==workspace_credit);assert_no_resources();
+    reset();seed_luis();re4dc_bind_actor_frame();Re4dcActorTextureLease blocked[64]{};
+    for(auto& lease:blocked)CHECK(texture_leases.acquire(1,frame_serial,lease));
+    const unsigned texture_credit=re4dc_prim_recipe_credit();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+    CHECK(!emitted_n&&!source_draws&&re4dc_prim_recipe_credit()==texture_credit);
+    for(auto& lease:blocked)texture_leases.release(lease);assert_no_resources();
+    reset();seed_luis();owned_skin_serial=UINT_MAX;const unsigned serial_credit=re4dc_prim_recipe_credit();
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+    CHECK(!emitted_n&&!source_draws&&re4dc_prim_recipe_credit()==serial_credit);assert_no_resources();
+}
+void recipe_io_replacement_retire(){
+    for(unsigned at=1;at<=2;++at)for(unsigned kind=0;kind<4;++kind){
+        reset();seed_luis();registry.texture_count=2;chunks[3].texture=1;texture_yield_at=at;
+        switch(kind){
+        case 0:texture_yield=[](){SetPrimBuffPtr();std::memset(primitive,0xA5,sizeof primitive);};break;
+        case 1:texture_yield=[](){++registry.generation;registry.descriptors=reinterpret_cast<const nmr::Descriptor*>(1);};break;
+        case 2:texture_yield=[](){++binding_revision;};break;
+        case 3:texture_yield=[](){material_live=false;};break;
+        }
+        const unsigned held=re4dc_prim_recipe_credit();
+        {SourceActorPresentation32Scope scope;source_consumer(&luis);}
+        CHECK(!emitted_n&&!source_draws&&texture_acquires==at&&texture_releases==at&&!stale_texture_reads);
+        CHECK(re4dc_prim_recipe_credit()==(kind?held:0u));assert_no_resources();
+    }
+    reset();seed_luis();const unsigned at=primitive_used;const auto* old=skins[0].palette;
+    pending_info(&infos[0],&luis,3);CHECK(skins[0].palette==old&&primitive_used==at);
+    CHECK(re4dc_prim_recipe_credit()==5*palette_credit(1)+palette_credit(3)+palette_credit(2));
+    {SourceActorPresentation32Scope scope;source_consumer(&luis);expect_luis(0,7);}
+    CHECK(re4dc_prim_recipe_credit()==palette_credit(2));
+    // Same frame, reused primitive bytes: stale owner fails before descriptor
+    // poison can be read or the new unrelated credit can be reduced.
+    reset();seed_luis();Re4dcActorSkinBinding b{&infos[0],{positions,normals,3,3,1,0},source_palette,1};
+    Re4dcActorSkinLease lease{};CHECK(re4dc_actor_skin_acquire(7,&b,1,&lease));
+    SetPrimBuffPtr();std::memset(primitive,0xA5,sizeof primitive);seed_luis();const unsigned held=re4dc_prim_recipe_credit();
+    CHECK(!actor_presentation32_forget_source(lease)&&re4dc_prim_recipe_credit()==held);
+    pG->prim_cnt=0;SetPrimBuffPtr();CHECK(!re4dc_prim_recipe_credit()&&!re4dc_actor_skin_validate(&lease));
+    reset();seed_luis();skin_admission_serial=UINT_MAX;int built=0;ModelData d{0,1,source_weights};
+    CHECK(!skinDeferPending(&luis,&infos[0],&d,&built));
+    reset();skin_recipe_epoch=UINT_MAX;const void* key=&infos[0];CHECK(re4dc_actor_skin_reserve(7,&key,1));
+    CHECK(!skinDeferPending(&luis,&infos[0],&d,&built)&&!re4dc_prim_recipe_credit());
+}
+void credit_mixed_two_pass(){
+#if RE4DC_LEON_NO_GC_FRONT >= 2
+    reset();const void* keys[]={&leon_infos[0],&leon_infos[1]};CHECK(re4dc_actor_skin_reserve(7,keys,2));
+    pending_info(&leon_infos[0],&leon);pending_info(&leon_infos[1],&leon);
+    SourceActorPresentation32Scope scope;source_consumer(&leon);CHECK(emitted_n==1);
+    auto lease=actor_owned_head->skin;CHECK(re4dc_actor_skin_validate(&lease));
+    // Add the direct partner alongside this live owner by ordinary source
+    // registration; source reserve intentionally refuses while an owner lives.
+    for(auto&info:infos)pending_info(&info,&luis);
+    const unsigned leon_credit=re4dc_prim_recipe_credit();CHECK(leon_credit==2*palette_credit(1));
+    source_consumer(&luis);expect_luis(1,7);CHECK(re4dc_actor_skin_validate(&lease)&&re4dc_prim_recipe_credit()==leon_credit);
+    leon.be_flag|=0x08000000;source_consumer(&leon);CHECK(emitted_n==7&&!re4dc_prim_recipe_credit());assert_no_resources();
+#endif
+}
+#endif
+int main(){
+    legacy_contract();inactive_images();mixed_passes();stale_and_duplicates();primitive_integer_identity();
+    io_boundaries();multiple_materials();unavailable_and_state();output_reference();
+#if RE4DC_SKIN_RECIPE32
+    direct_credit_and_domains();prepared_restore_and_materialize();direct_declines_and_partial();
+    recipe_io_replacement_retire();credit_mixed_two_pass();
+#endif
+    std::printf("joint checks=%u recipe=%u\n",checks,unsigned(RE4DC_SKIN_RECIPE32));
+}

@@ -1,0 +1,2414 @@
+{
+  "status": "PASS",
+  "scope": "Exact Git entry equivalence for every consumed baseline/candidate repository input; no target matrix rerun claimed. Candidate source hashes still match the complete passing target receipt.",
+  "qualified_baseline": "ac154934df7ddf14fc5c6b6932a24a99a253f8e6",
+  "final_integration_base": "1511637ac54057807b654ac55ea43a48f6e8ae47",
+  "qualified_full_receipt_sha256": "4b5cfa77cde798c217cce55b13fce6e53bcb5096160c57c558d11d5975e759af",
+  "qualified_compact_receipt_sha256": "d7e0c9c63dd07820f8e20e2a1819f8afd8ecc082a3af80663c51cae153e7a8f0",
+  "changed_integration_paths": [
+    "port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md",
+    "port/dreamcast/docs/cloud/handbacks/build-31.md",
+    "port/dreamcast/docs/cloud/handbacks/build-32.md",
+    "port/dreamcast/docs/cloud/handbacks/build-33.md",
+    "port/dreamcast/docs/cloud/handbacks/build-34-actor-review.md",
+    "port/dreamcast/docs/cloud/handbacks/build-34-render-review.md",
+    "port/dreamcast/docs/cloud/handbacks/build-34-systems-review.md",
+    "port/dreamcast/docs/cloud/handbacks/build-34.md"
+  ],
+  "baseline_consumed_inputs": 196,
+  "candidate_consumed_inputs": 246,
+  "checked_union_inputs": 246,
+  "baseline_artifact_receipts": [
+    {
+      "arm": "control-on-cone-plus",
+      "unit": "native_static",
+      "profile": "on-all/control-on-cone-plus/profile.json",
+      "profile_sha256": "892a508c39458b887e80db944981992844618f286373585872fc5accff651e7e",
+      "dependency": "on-all/control-on-cone-plus-native_static.d",
+      "dependency_sha256": "532ab30641fd776226960740cc5862defe54a6c73b9a3398cfc25fe3580069c1"
+    },
+    {
+      "arm": "control-on-cone-minus",
+      "unit": "native_static",
+      "profile": "on-all/control-on-cone-minus/profile.json",
+      "profile_sha256": "79b9007994941cff6299c5441399163ff8a5bc454d8096a9a811042816f6f797",
+      "dependency": "on-all/control-on-cone-minus-native_static.d",
+      "dependency_sha256": "932173e3c920a1f6444f547cd610eb2841d09e46813eddbb7bf06915bb7f38b5"
+    },
+    {
+      "arm": "control-on-piece",
+      "unit": "native_static",
+      "profile": "on-all/control-on-piece/profile.json",
+      "profile_sha256": "53d1172eb1d11d695649ee09048578d6f3264e904088624aa1a25548fd286928",
+      "dependency": "on-all/control-on-piece-native_static.d",
+      "dependency_sha256": "7cf2be43eec0eea1a228bc7d1de8a448674d6e55e7b3192d3d56b6bba4a47a60"
+    },
+    {
+      "arm": "control-on-front",
+      "unit": "trans",
+      "profile": "on-all/control-on-front/profile.json",
+      "profile_sha256": "9642c3dc277381946b06f8e480a416fd9a2cba2bfaf75524e6b676d3bc35ec99",
+      "dependency": "on-all/control-on-front-trans.d",
+      "dependency_sha256": "c05bf74c446f8595771ec202b873f1c98ac3c62cf7b67faf53e0a8303f430308"
+    },
+    {
+      "arm": "control-on-front",
+      "unit": "trans",
+      "profile": "recovery/on-trans/control-on-front/profile.json",
+      "profile_sha256": "fdecf643a71af088d593cf15f1f172eeec657598a13e7a05403e28a153fa0c82",
+      "dependency": "recovery/on-trans/control-on-front-trans.d",
+      "dependency_sha256": "def7b56c7638453f8853ddcd917d5463563e0847df4b2222bbb8146e119f1cc9"
+    },
+    {
+      "arm": "control-on-combined-exact",
+      "unit": "native_actor_fast",
+      "profile": "on-all/control-on-combined-exact/profile.json",
+      "profile_sha256": "449d18ba964d1d4d541937747d0f874431c96e92e8b9b12bae31afca6f979445",
+      "dependency": "on-all/control-on-combined-exact-native_actor_fast.d",
+      "dependency_sha256": "26074b45bfbeb18cee2e311ba12ca4ef02f82b0ba102c60e1732ffe038a22766"
+    },
+    {
+      "arm": "control-on-combined-fast",
+      "unit": "native_actor_fast",
+      "profile": "on-all/control-on-combined-fast/profile.json",
+      "profile_sha256": "5d3c9feccad6d00a0ac8e2607d6c7a9228e35b1c58e644e8123f77327e0ea57d",
+      "dependency": "on-all/control-on-combined-fast-native_actor_fast.d",
+      "dependency_sha256": "09d454f6c90e40d1ebf3156142e427ac365587a5651340232c87997889fda651"
+    },
+    {
+      "arm": "release-baseline",
+      "unit": "native_static",
+      "profile": "off-release/release-baseline/profile.json",
+      "profile_sha256": "73658bfd620f48be42c9407ee032f31a21d9fc964a3b2bf6ae99d50fe8c0a043",
+      "dependency": "off-release/release-baseline-native_static.d",
+      "dependency_sha256": "fa6bbb7d7a94897f13242bda656218688d0a2bcc676e1f7150e4b821c4b347a8"
+    },
+    {
+      "arm": "release-baseline",
+      "unit": "native_static",
+      "profile": "recovery/off-release/release-baseline/profile.json",
+      "profile_sha256": "f3dc67bd7c57504127920f05f9c781142f398d8d6056bd5b2bfdbad54a173d90",
+      "dependency": "recovery/off-release/release-baseline-native_static.d",
+      "dependency_sha256": "bdba0333bb75d0239e8b6d3a2a602f8a6e86420b961820a0f58e97a687f95008"
+    },
+    {
+      "arm": "release-baseline",
+      "unit": "trans",
+      "profile": "off-release/release-baseline/profile.json",
+      "profile_sha256": "73658bfd620f48be42c9407ee032f31a21d9fc964a3b2bf6ae99d50fe8c0a043",
+      "dependency": "off-release/release-baseline-trans.d",
+      "dependency_sha256": "ee47dcf938bae2a08c22bf30fdb542136c2d66f06ae17937600347cbcecbe9d9"
+    },
+    {
+      "arm": "release-baseline",
+      "unit": "trans",
+      "profile": "recovery/off-release/release-baseline/profile.json",
+      "profile_sha256": "f3dc67bd7c57504127920f05f9c781142f398d8d6056bd5b2bfdbad54a173d90",
+      "dependency": "recovery/off-release/release-baseline-trans.d",
+      "dependency_sha256": "78426117a670aa03a155d5dbf51c19e99d6e9a29198d8bf5be0d8b6c3a2e0209"
+    },
+    {
+      "arm": "release-baseline",
+      "unit": "native_actor_fast",
+      "profile": "off-release/release-baseline/profile.json",
+      "profile_sha256": "73658bfd620f48be42c9407ee032f31a21d9fc964a3b2bf6ae99d50fe8c0a043",
+      "dependency": "off-release/release-baseline-native_actor_fast.d",
+      "dependency_sha256": "a34a6dd38eb0b206aeb57925033b2926a75093e8c6b9249a1af2bcb35635ab2f"
+    },
+    {
+      "arm": "release-baseline",
+      "unit": "native_actor_fast",
+      "profile": "recovery/off-release/release-baseline/profile.json",
+      "profile_sha256": "f3dc67bd7c57504127920f05f9c781142f398d8d6056bd5b2bfdbad54a173d90",
+      "dependency": "recovery/off-release/release-baseline-native_actor_fast.d",
+      "dependency_sha256": "12c54710b9795baad03d6ca569db5bcb3d950c85868cf7c1f032166034f12dfd"
+    },
+    {
+      "arm": "qa-baseline",
+      "unit": "native_static",
+      "profile": "off-qa/qa-baseline/profile.json",
+      "profile_sha256": "98afcbd985b1a7eb58c96474e307e50cdbdbdd875e9dda68dcbd597506674a64",
+      "dependency": "off-qa/qa-baseline-native_static.d",
+      "dependency_sha256": "76b8f8dcc38188e752bb746f8205431d4f701dc225c881cdf31fe1bd403fe692"
+    },
+    {
+      "arm": "qa-baseline",
+      "unit": "native_static",
+      "profile": "recovery/off-qa/qa-baseline/profile.json",
+      "profile_sha256": "ae5fd15d5cbeae9b7f034260cd836d3f4a4b567d7c83f39e90c878b7e264bc38",
+      "dependency": "recovery/off-qa/qa-baseline-native_static.d",
+      "dependency_sha256": "28ff1091202b713e42fdd418c03462be2f12e69f91d0f8c7b3d5a27e7c06100d"
+    },
+    {
+      "arm": "qa-baseline",
+      "unit": "trans",
+      "profile": "off-qa/qa-baseline/profile.json",
+      "profile_sha256": "98afcbd985b1a7eb58c96474e307e50cdbdbdd875e9dda68dcbd597506674a64",
+      "dependency": "off-qa/qa-baseline-trans.d",
+      "dependency_sha256": "072a02b22d6159e93495d13a460b11ad8105597ebfb07dee5b1fc2b451645e43"
+    },
+    {
+      "arm": "qa-baseline",
+      "unit": "trans",
+      "profile": "recovery/off-qa/qa-baseline/profile.json",
+      "profile_sha256": "ae5fd15d5cbeae9b7f034260cd836d3f4a4b567d7c83f39e90c878b7e264bc38",
+      "dependency": "recovery/off-qa/qa-baseline-trans.d",
+      "dependency_sha256": "bac14b36bedfbddc38003c96863a87d2572350bcc821e3152fd5c792b9723f7e"
+    },
+    {
+      "arm": "qa-baseline",
+      "unit": "native_actor_fast",
+      "profile": "off-qa/qa-baseline/profile.json",
+      "profile_sha256": "98afcbd985b1a7eb58c96474e307e50cdbdbdd875e9dda68dcbd597506674a64",
+      "dependency": "off-qa/qa-baseline-native_actor_fast.d",
+      "dependency_sha256": "7bc4f61cc6747d9f524de154c6e1f672f4bcaf2b1a35f37c81b6f34b7e72470f"
+    },
+    {
+      "arm": "qa-baseline",
+      "unit": "native_actor_fast",
+      "profile": "recovery/off-qa/qa-baseline/profile.json",
+      "profile_sha256": "ae5fd15d5cbeae9b7f034260cd836d3f4a4b567d7c83f39e90c878b7e264bc38",
+      "dependency": "recovery/off-qa/qa-baseline-native_actor_fast.d",
+      "dependency_sha256": "36d0fc00cd5799e5e8ba38c3bbf0f7d9c38b778b4b371134fc7e33a7041e034f"
+    }
+  ],
+  "target_raw_evidence": {
+    "layout": "on-all preserves original full ON controls/providers; recovery contains final OFF/trans recompiles and freshly recombined links",
+    "superseded_attempt": "Initial off-release/off-qa failed raw trans preprocessor identity: legacy HALT line2465 shifted to2491. These failed comparisons are not counted as PASS.",
+    "repair": "A source #line directive restores the existing diagnostic mapping. Only src/game/trans.cpp changed after the successful original ON receipt.",
+    "reused_on_receipt_sha256": "8fb22d8074c5c3a256a8e2ded59bb231213bc48d702877ed6ae73eae6782bdcf",
+    "replaced_source": {
+      "path": "src/game/trans.cpp",
+      "before": "2976894dbf1b1cda38eeaa324a73143e3d9e24db2d8907de3e5b4caab5e0b83e",
+      "after": "4bdf9c21fec3ce2ec0d65aaeafa383d33361a74ce3b1b69b410da47a8100acd7"
+    },
+    "replacement_scope": "All six candidate trans objects and the front existing-ON trans control recompiled. Other ON source/dependency inputs revalidated unchanged. All six partial links recreated from final objects.",
+    "subruns": [
+      {
+        "name": "recovery/off-release",
+        "receipt_sha256": "52c1a5cfb5cbff2d54beeb0a7a08fe165facd8a981a1b334fc675af57c68e166",
+        "log_sha256": "c9c36561d86ea77b46a849cee6273bd3f7132aff681b53b8cb74dcd4b9f5bb0f"
+      },
+      {
+        "name": "recovery/off-qa",
+        "receipt_sha256": "847834e3616a02406593152c378151778c6d1bcd2792179231f1e24e31e4d514",
+        "log_sha256": "95dc1708849b1a0bef85132ca35197b49eb72eb9cefa30381f1d3193dec9cf50"
+      },
+      {
+        "name": "recovery/on-trans",
+        "receipt_sha256": "96837896a4cad3b89785dd003a6eb21b56eb62135e6b9baeb0d87988134ab450",
+        "log_sha256": "9a6f60792e0015df97c92e77d3baf5b0fccd8fa792c421486b48487e734470fd"
+      }
+    ],
+    "replacement_config_sha256": "60159a01a5af179f2516c94047f37fcaf6f787870e830a0f05e23a0a97b23f90",
+    "relink_commands_sha256": "305e987b4e9d568dc69988c3c272724bd11d8651b27f341ebaadb51cd7a79519"
+  },
+  "inputs": {
+    "include/TexRender.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2f4b5939b4ca976e2b082a7a2f517e636974c0d4"
+      },
+      "candidate_sha256": "ce680f2b5d731d10c5b7267d4cae0e5cd8645ef3d3afff5c94beebcd82512b44"
+    },
+    "include/at_sub.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "736f879ab94d8c82ff5932df40d74b87755ec918"
+      },
+      "candidate_sha256": "e66f9b5eaff83eb74ba320c4c497a600fa6f361e13d65b1e19c8708a07f13679"
+    },
+    "include/at_sub2.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "f495595f37692a6fa88ec86bbc94d1318fce02d4"
+      },
+      "candidate_sha256": "85da5c29cfe17b9d109f1e8abc0eaac923a5d7c15a990ee3f60a8d0bcae62d2d"
+    },
+    "include/atari.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "4bdf48fe7bce4ff002065f96e60fb7c32c42027a"
+      },
+      "candidate_sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72"
+    },
+    "include/atariInfo.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "60730026b538ac1e9c8225d7c8273656d8ab4171"
+      },
+      "candidate_sha256": "45bc12b409e0e28ab66b43867d4b8404502dcf0508f5b46b0c0204d6366623b8"
+    },
+    "include/cManager.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d96f17f114f8b955ff044334a06453d7f567beaf"
+      },
+      "candidate_sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+    },
+    "include/cam_ctrl.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "155b02176ccf3b6467810319790a4f68a307a0d1"
+      },
+      "candidate_sha256": "2ac891e596fb1bde591f7a11929ebcfe538f8c2767dd77c842abad7dfec80436"
+    },
+    "include/cam_extra.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "77099f5900de6d192402f809c238c2817fbc63e3"
+      },
+      "candidate_sha256": "4f7ea1e32200b074e1d72a302e245d02637da678da756a7d5c498868efca02d9"
+    },
+    "include/cam_motion.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d2efbb62092180ded76a81f45a81e57b00280300"
+      },
+      "candidate_sha256": "6cb34db02486f3c20388484c7211bc6835405e27f21bef9eea8ed5dce20bf711"
+    },
+    "include/cam_qfps.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c2c7c0dac92e0267ec09c03cfc279f6a6ab19e53"
+      },
+      "candidate_sha256": "bfdc8492b68f17e7588c7a64c08b4d4162a96400fb0f949ffc366c169aee6c72"
+    },
+    "include/camera.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "02731c119cc04755c21acbd9e84461e4aab33686"
+      },
+      "candidate_sha256": "d22b4698b6f90eb4a5aab88f2d289b967c590ec409c51f9129b47829907bb33b"
+    },
+    "include/cloth.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5abaeace6f82dfe01f27f193e0bd77abaf70898a"
+      },
+      "candidate_sha256": "870eeef769185b185d145cfd64b933e1cf77b48a061e2939c5599d75673fd463"
+    },
+    "include/ctrl.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "f41d0e9b1297321e1fa6e156801ab267cb125fd9"
+      },
+      "candidate_sha256": "938832700d8a652c49f0fa739b4eca902ee3b51a96a207bfddd6d37c8d5a71b3"
+    },
+    "include/db_cam.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d9a8347f106ed14461744f7e5413087d79e5efec"
+      },
+      "candidate_sha256": "74f1e72cf17a14445dce0a748c9ba97a1dc7663366928f396c107abb5d81fc9e"
+    },
+    "include/db_log.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cf71bea61d732cfb06c2528491964ba134c7783f"
+      },
+      "candidate_sha256": "d3b7c882b8499bb61ec4f74efa2dd6233ca38bec31f273a95d3dbeb1a17243c1"
+    },
+    "include/debug.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "92e97663c7abd8940c3fb992490c48d4d34dfce3"
+      },
+      "candidate_sha256": "26a1c33ca387718513794d8365cbc32e3852342b919d7a6952fd6abd79ddea2f"
+    },
+    "include/em.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "bb0d0a4abe513f130d35e9e290ae68e77d293398"
+      },
+      "candidate_sha256": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f"
+    },
+    "include/examine.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "871d2bf34d6d15571fb9b9b5e0d7f6bfca398390"
+      },
+      "candidate_sha256": "d0105d808d3e8964b3a8b067070f35327d9a6b06723edc3b5d5a5642f6eef732"
+    },
+    "include/filter.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a9512650adc6a3e125ebfd1d6bc8c5d029e97240"
+      },
+      "candidate_sha256": "9fe214f01a352873092ab03aa9a2a5db1d7ba39c5d971dc2ae6955c0f15330e4"
+    },
+    "include/foot_shadow.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "130b4a1046f90af8982c8d33f5fce5b9929c7dde"
+      },
+      "candidate_sha256": "01bdb1833e0c0584880bd62617b364b1710a106b435fa7ba6930266c5de6135d"
+    },
+    "include/global.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "fb113412392d539601e6dbdacbde3058566c6ea4"
+      },
+      "candidate_sha256": "608aeec6e7de6b9952970f1ba21b4252af93c2e56805f89e6e48d269f3907d5a"
+    },
+    "include/gx.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6bd75c60c9478ed50cc6a154bc67f282e580f650"
+      },
+      "candidate_sha256": "471d0065eb45b8de8b47289e50534778f4a83bff15bbff7eb55780f9758de4e8"
+    },
+    "include/hermite.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "938259b11df5fe797e6e51107f57a2415665f3db"
+      },
+      "candidate_sha256": "9fd7cfd6151b2106560a4b4b46f678153b16d0193f5867c37dfb845d4f032b69"
+    },
+    "include/id_sys.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5ef9cb763895d96da73a021a0db5cb6d2c251874"
+      },
+      "candidate_sha256": "25dc142236e80043d83c9432de3148fb09916336bf5d3f9070fc7ce8ca9be2e0"
+    },
+    "include/joy.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "dc3e409cafa4d076058be595644b7e508bfeda2c"
+      },
+      "candidate_sha256": "e20bab477cf784375a20ae7c46a116acb000d31a0705976e252e8582be181330"
+    },
+    "include/light.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "47f078aa1b461f863bd2794f4163465b34fc8432"
+      },
+      "candidate_sha256": "17f3609a7e81275f51571497bd00624571c93e24b725713081a9237b1d10540c"
+    },
+    "include/lightPath.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2d563cea4a121682898e5cea67983d9e4593f843"
+      },
+      "candidate_sha256": "7a2db7f00ab5d9dcf42151016de26c9651ded9e5a2f863db64a61df0164e9e5d"
+    },
+    "include/main_mem.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cc6e25732f13f582461259d33f3fd76b8daea408"
+      },
+      "candidate_sha256": "7d4f1e41ae696fb77c0075d1f3cd9f5db019ce42632d71dd29d949793f7ef2a7"
+    },
+    "include/main_sub.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "67b0a134a8e4d6bda7e99402aa5c7adb1f84688b"
+      },
+      "candidate_sha256": "bf6b3ebd70ab88200102cfd7ed2fcfd210a3b1db4f6aad56d5ddc5a0a0c734b6"
+    },
+    "include/math_sub.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "9a5ab47f851a55b2d4d9b510fb0435c2350b15a8"
+      },
+      "candidate_sha256": "b22ea560254b33002780cc9067e3065136245d731550de227b0c340e8af04507"
+    },
+    "include/model.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "7f9279d910524f855c703ecf1f5a996206f78568"
+      },
+      "candidate_sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5"
+    },
+    "include/motion.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "f8ad996e4b3db9405028331c4f1182eddc09f6b3"
+      },
+      "candidate_sha256": "4bdf10720065d691e0f20a493082399f8650811b1358eef6fa856206e4b23857"
+    },
+    "include/obj.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "31338a89cac417d955024b931e7ebcef1a67f83e"
+      },
+      "candidate_sha256": "f1ef75fafca7efcc3d982b5b7dc9d73ef2170364fd861a7b16b958802d417768"
+    },
+    "include/pendulum.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "98b75dfe49d93663b0c0fb0c3bd3894b1ac515a5"
+      },
+      "candidate_sha256": "a7b8552e898d051b6046774a28aec97203b0b317cd91ecc15e1e3ef7202f09a4"
+    },
+    "include/room_tex.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "42bed56855467cf59c09e71bc41217a7601c6ee5"
+      },
+      "candidate_sha256": "7f0555ce6cf99c94b4172a32f1f8f75ac9e6506647aa190e29c6c539c81b04dc"
+    },
+    "include/shadow.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e5842db10ca10e03cbfd67f073e94394edb4e4a0"
+      },
+      "candidate_sha256": "4b10031d0c5dfe2e1804b1c3fcf265e4a20261f7256300b7d2c04f1e38e416c5"
+    },
+    "include/texture.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "8f79c7229b83d483f86d59eea35070b5bd5433bd"
+      },
+      "candidate_sha256": "9f2d2feef84556f763967af35b247f1e247d6384938af249daa0f477edbbb7eb"
+    },
+    "include/tpl.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "de2b1f8a3b8546bd764bf1132fdf01cb8884e92f"
+      },
+      "candidate_sha256": "74ef5db021156b4c0cc5c2406ad9d861e1a810b0bb2eb5a83e56c09228cc3f35"
+    },
+    "include/trans.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "96348a851f84a1aa184898085fb95f684639ff8f"
+      },
+      "candidate_sha256": "f723867ba0a1a6f9fb262067bb19d087f5d5c355338e948dd6acdf6e608554b4"
+    },
+    "include/trans_ot.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "91b78ed7d3e6bf956c286133f03d735e2871585b"
+      },
+      "candidate_sha256": "10f21bdd7a8e53de6ad007f398663e99049e0a295dcc203580d199ba9f535c48"
+    },
+    "include/types.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "3f2a97f40a1693c4fe47c6fa67d9699ff5067991"
+      },
+      "candidate_sha256": "d88ba2c842abf4efdce4f3ea40f3039ff73e1196be17190508ba53e05bf6ba3d"
+    },
+    "include/va_ppc.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "09d08d52fa0fce65486d37a57a4bc94dc7cd042d"
+      },
+      "candidate_sha256": "a141e41ab83325c63be833a59e98bc90e1be761f7753f0887469184145d94129"
+    },
+    "include/vec.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "4cbbfd5dc406bb77ea828341e5085eead92a1d47"
+      },
+      "candidate_sha256": "7b8bc9b2715fcd8b06b9e66c92ff0164a114cd2ca64e9dd8cf6db8dab8dd1a7d"
+    },
+    "include/view.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "aa820e83984ba7be3c378a53e12f0290841b05e9"
+      },
+      "candidate_sha256": "e6b81450a954e524146261cda5703302d055afd58108fd85df4c9781efdc9087"
+    },
+    "port/dreamcast/build-public.sh": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6bbee218e3a7c9919ec309a8b071f19d9992438c"
+      },
+      "candidate_sha256": "f533c7e032847708f6531376d2ddf01b7608e8f446432187f795ad2e62ed2a3f"
+    },
+    "port/dreamcast/game/Makefile": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "7cacc4fc6cd448b4a9f763cd6f35464edcfd7c2a"
+      },
+      "candidate_sha256": "be34ee619b766898d8c2aa580c765c3cd6ff6731fb810b1f967f5cc3358a787a"
+    },
+    "port/dreamcast/game/actor_format32.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "8cd64c8a76abb1b4ef64c8a0d4b10da34379e3b0"
+      },
+      "candidate_sha256": "fbf58bdec4129640db9840420e10cf7f309f83368f2330184aab7a3e806db054"
+    },
+    "port/dreamcast/game/actor_ganado_ps2_stump.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2a98f028a962c641f38bcdd34dc5ca9bf75ce26e"
+      },
+      "candidate_sha256": "f435e94c76cc2ea57bf64bef82033f79520f8f1a5cd8b56b19788d14f6ddea4a"
+    },
+    "port/dreamcast/game/actorplan.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "f2a9cadcfb7c3dc16fa1274f07078ece7d53e0b1"
+      },
+      "candidate_sha256": "d256e5c6abbcbc2301a83753017c6d0f466b215f301d847f26c7ff5aaa4ff4ce"
+    },
+    "port/dreamcast/game/backface.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "43b3911fd65a4de05a1c8d759f8808069f5b7525"
+      },
+      "candidate_sha256": "e579718e2109acb6f5cc04001e38323dbf6c5eee893f843e12c810b6ab3f312f"
+    },
+    "port/dreamcast/game/barn28.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "35a3f9188f4d685f44a86680180da0afc3ea46ce"
+      },
+      "candidate_sha256": "0d7f3bdfdfd8e9628c3e67fdd6c286437ad83c3475053885ab2678452542c15f"
+    },
+    "port/dreamcast/game/bench.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ddeb6efc614ed18c7b5988d2d84b8ac05c292ab7"
+      },
+      "candidate_sha256": "7c6eca2f116b6fabe4799d33e79a44ac52e775462658124d6833fbd7eba3854d"
+    },
+    "port/dreamcast/game/blender30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "894cb7510caf36bf4f8c12fca03d298821f2973d"
+      },
+      "candidate_sha256": "9769d1141e1ca47e10ff94fa67f7a7799ec33c3fade565ada37b641e9186537d"
+    },
+    "port/dreamcast/game/bodysvc20.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "1419d19a18247704a8a96b5581376d8a2ee50e80"
+      },
+      "candidate_sha256": "df456c8a62b5e3d58bc4b6f3c11ead1365d3f0ed75a53a0dc0ad2a8460135453"
+    },
+    "port/dreamcast/game/cache20.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2f6228a717907d8a6e23c9f89dbcf3967dbb9592"
+      },
+      "candidate_sha256": "b88f46b5b4494d5a830d2c01e850fd75e64af66a063025e5568b2ce29100381c"
+    },
+    "port/dreamcast/game/charbake.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "dc239d54dbf6bcf0ce6c36055ad76f31e238c17a"
+      },
+      "candidate_sha256": "b6e58694cab718df70b31915ada82417fc32b0ab7517ff6e85eedb5b6570d2d3"
+    },
+    "port/dreamcast/game/charbake_variants.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "1bafac797aa23a6d1318f5426a6a11d89c12c2b2"
+      },
+      "candidate_sha256": "0aecf29a5a24092f87e7c8c1971d421b0b47d09cde269858828a011b07a70b29"
+    },
+    "port/dreamcast/game/chardraw19.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a4a423dc7816b4c711712776d0ddf1e6ac6ba6e7"
+      },
+      "candidate_sha256": "0a9db853a9432df007421d5a6e7ca8c90c2aa770fa46a30ed72a321f2f87403f"
+    },
+    "port/dreamcast/game/crowd.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cdba7d62fcc29a3c5e10e4fffe757b1896fb600d"
+      },
+      "candidate_sha256": "db5dcfb0e9ec85d116c222cb266badff62a90df275c50e2a33f0eeb4bbb68fca"
+    },
+    "port/dreamcast/game/dbgwarp.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e7920b7a4225998106e6a4adac8db223559792e2"
+      },
+      "candidate_sha256": "7dabc7487167c8c0ec2d3f583278b650bb1619decf7f8abc663ec74533ed98d1"
+    },
+    "port/dreamcast/game/demo_candidate.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "025a1bdaca4bac2f269964a47fda6a3761437fc7"
+      },
+      "candidate_sha256": "548266bfcb134492aed006771600fda3c2b3d5b046596a1fc2f7d074520912d4"
+    },
+    "port/dreamcast/game/draw_fallback_audit.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "21a00357ba55a94b0dd4bc51a7ec05808c2c85cb"
+      },
+      "candidate_sha256": "f85ce3c213ea182c92999fbf1c0665532089f75f4ad63eaba852bd17a72ac21b"
+    },
+    "port/dreamcast/game/draw_setup_audit.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "84531c1fe57f8005d2891cd4d79d723c5d4b47e2"
+      },
+      "candidate_sha256": "69465519c474c2db137897dabd822de4dc29234622f5a96dba436b30c2ade7a6"
+    },
+    "port/dreamcast/game/effects30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "986dd465847ac1093c57c6e9f157a5290ddf81ed"
+      },
+      "candidate_sha256": "5d5c82d6bc19483dfc969321d8628e7e879c44a9888ea11d30e25d0d2bc3aba3"
+    },
+    "port/dreamcast/game/engine_preview.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "7423a37a5fe46968421f8ecdace44dafdaf6df94"
+      },
+      "candidate_sha256": "6ad87f53c5f2c4f164b9c8229cdc077a895111057b4a17c6294e9eac38454e18"
+    },
+    "port/dreamcast/game/esppool.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "45695b0794e0712deeea3d641d58f152def10f44"
+      },
+      "candidate_sha256": "fbe98591f1beeadfc4192dbf88d7d6dc321dc7642b88696afec4de6eb7a6b13d"
+    },
+    "port/dreamcast/game/fallback_audit29.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "7019d57c3ca40f293a91b79a258d94de3d9837fe"
+      },
+      "candidate_sha256": "d01e66fb6cc5b76035b6a3b5ef8037b8d84c03fb64e57e8a047bc1567f488c22"
+    },
+    "port/dreamcast/game/fallback_scan29.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "77c1118cc12462ac756ea476d146b64bd5986b10"
+      },
+      "candidate_sha256": "2e590a292012ca4258fbd0ee27f6c12e6bd3a35203f8e255e63cd5b744ce4a83"
+    },
+    "port/dreamcast/game/frontend30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "15e4cff20c487a70e3701578e3ce08b732c26816"
+      },
+      "candidate_sha256": "c6ac0510ca94d30dbb41a36afd5e45e84555c49511f7003dde1f4c6511064614"
+    },
+    "port/dreamcast/game/fxtrim.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e83b39fd94d835adc02966b137755863fd2510cd"
+      },
+      "candidate_sha256": "40e2d18ee46a8284a1fb5773c46c60d73e970bc851c2be494e4f503616abb0d4"
+    },
+    "port/dreamcast/game/g1parts.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b7698f98d4fdc70ed344dd6acd86b6f25c8ff18f"
+      },
+      "candidate_sha256": "f5ffeb4594647e7c239fac40a038f77ff43ebe2c4ed4f503af1436058c5c3a50"
+    },
+    "port/dreamcast/game/game30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2ffd89d203ad3d2d70e82b2b3724f507add82879"
+      },
+      "candidate_sha256": "ac9f81c61cf45f1dee205c6ff211fdc90387725f36c57b67486e9b0a96244207"
+    },
+    "port/dreamcast/game/gc_asset_gate.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b0f18cb0ea3c0d41e11fb25f5c35a4acd1e4469e"
+      },
+      "candidate_sha256": "ef1f3c564abece94fdf4b7c60a1f738b11f4fedafd11e71230af0264f4b76ecd"
+    },
+    "port/dreamcast/game/gx_fast.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b8cfad78c7aa0dfc462ef5fba182e68e4e8241d1"
+      },
+      "candidate_sha256": "e8e981f1afaec9a5b115e05a36f2abc6c72f41f27ac9f1ceaa18cb0c8da74959"
+    },
+    "port/dreamcast/game/hwfog.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "16bf51fa42712772811ac131b497cbf8a730a811"
+      },
+      "candidate_sha256": "95d43fd37359ebd11e8d8f11efe678d479b69b3f648440440c24c595adefae25"
+    },
+    "port/dreamcast/game/knobs.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5ddbb6c9e36ba1933760a64277a079bc8fc3030a"
+      },
+      "candidate_sha256": "8be88086cfa0e7f23b87ae1cdb4d09c0924ea783cea45009747b722383d59863"
+    },
+    "port/dreamcast/game/kos_cache_p2.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "f05601d02c7ced564c99e5e2afdeca8fe8568304"
+      },
+      "candidate_sha256": "0ca0b63cbfc3fe0e15a67752d86413088a867a630418782dded42539fbe9d3ae"
+    },
+    "port/dreamcast/game/logiclod20.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "988c91cae714aca8621dc9b48751fee11ff0c898"
+      },
+      "candidate_sha256": "d90740b778194734e335421da72b3593849e9d75f372c155a2cc56e40b0bd969"
+    },
+    "port/dreamcast/game/mcheck.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "205281b01ba6aa77121993b481c481d9cd4f683e"
+      },
+      "candidate_sha256": "988282bed93d335a6a1dae07cd74c8c85abf71f47e49847fd68ee28dc2bd94ba"
+    },
+    "port/dreamcast/game/mendezfx.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a78c84c9bc02515c5ec60135656520a3c5374012"
+      },
+      "candidate_sha256": "c56892f8607f838dff36a52d8189445b299208c87e6f07461b4d06325d03a167"
+    },
+    "port/dreamcast/game/native_model_registry.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "603e27ede244c405ae524a589df1750f14858716"
+      },
+      "candidate_sha256": "b83bf9dde04fc4f75c41f86509ac0bbc6fc505c0ab26b12a3f68ef122db32737"
+    },
+    "port/dreamcast/game/pace.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2f8a34a3d29639fafc21aa772fcae358c1939625"
+      },
+      "candidate_sha256": "78fef47bf1ec90662be905d449bb4ef139105e4d74c4fac6848f51ce3bf43710"
+    },
+    "port/dreamcast/game/partdump.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "04270d7f466127169469c0d8e4b858259baa0dc3"
+      },
+      "candidate_sha256": "abd44d97992217788371885a60c9898d2e00429f0d0e5ef6bfe255abf6773416"
+    },
+    "port/dreamcast/game/perf_phase_miss.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6cecc24c761b576f3c3582a4498fdeb007d569f3"
+      },
+      "candidate_sha256": "5ba2d007fd5cc2829b8225fab8ecd9fd83edc9a9f9df027f8f5e8589b618aea6"
+    },
+    "port/dreamcast/game/platform/chunk_submit.cpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "9faa464809efd9b18a9185b51b5697ac526f4402"
+      },
+      "candidate_sha256": "50b902310ca2f5f8bef73e44d539d4ea88f1f08c1b4b391ff3bff91dbfa8adbb"
+    },
+    "port/dreamcast/game/platform/chunk_submit.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c6dac67018e759e3b75df885ac399f756d627420"
+      },
+      "candidate_sha256": "5257805131e6b5222e002a2a72053f5c33b03ef88790d370748c08e24fd53e5a"
+    },
+    "port/dreamcast/game/platform/far_shell.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cbb3ab817e4262328483cf3bac578834812a2867"
+      },
+      "candidate_sha256": "5d7a2a6b75fc3e9f2258697ca06ef69077a242578fe4ac109b0342d17d076e65"
+    },
+    "port/dreamcast/game/platform/fx_none_cut_pack.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "53b573220b0b2ac8aa2ed8c90da3fe7a2082147e"
+      },
+      "candidate_sha256": "502ae15ece814ebf10435c0891d3d3f80273f907879f2f3129c17b06b610a7b4"
+    },
+    "port/dreamcast/game/platform/include/actor_ganado_ps2_stump.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "972b605380a329f8d4ea61dba2ea44676a95e8ac"
+      },
+      "candidate_sha256": "6d77e23c0668904e3dee5feef000a60dadcf0cf9288f5340fa967c6f2208d736"
+    },
+    "port/dreamcast/game/platform/include/actor_lifetime.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "888b6db5c365181605e2e2255dbdf409ab429494"
+      },
+      "candidate_sha256": "9c204cb853b3f39a97d7c785110f98994c892ae30bb42216f7ab366b9b54fdfc"
+    },
+    "port/dreamcast/game/platform/include/actor_light_fast_only.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "45f58ded2d4ed1719761969ec1873d3fc4b3746d"
+      },
+      "candidate_sha256": "0e9f68c219112d29667f681269211fbf95fd534479ab999d933df08271127974"
+    },
+    "port/dreamcast/game/platform/include/actor_light_fast_only.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "076b09a815066675fbe840d5f4bd874039831964"
+      },
+      "candidate_sha256": "b2a3e7ebc020149078b9f9d9635a40ef0868db165729e5a91cbe24264a7dc60e"
+    },
+    "port/dreamcast/game/platform/include/actor_light_probe.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "418db41f62ebef865315a2cceb753389066c791b"
+      },
+      "candidate_sha256": "de18656c46a5a008aec55e0d7ff48b195724076b95a5c65a3f1a48b3a724040b"
+    },
+    "port/dreamcast/game/platform/include/actor_native_owner.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ae3a947ae3d609d0d8aef2ac4c09a16363ceeb20"
+      },
+      "candidate_sha256": "4e1e18332fb26e1b10e44a3721e71567ee812607e9e73b0c0fcaf1c033a0fc4a"
+    },
+    "port/dreamcast/game/platform/include/actor_plan.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ae9fdff4a440ecd00a1c4c4f5bfc1d4518489c11"
+      },
+      "candidate_sha256": "1907a3fa4516d12c624d0d2f18ea3687106d0da3efa83b3413c2381b3d64b626"
+    },
+    "port/dreamcast/game/platform/include/actor_prof.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "239d8307dc1f14442a2b78bd66335494105b69d8"
+      },
+      "candidate_sha256": "22d0b2ddae99e16b978c5bd6049bda4dcc24d96adb3436a8eefd79a2053395bf"
+    },
+    "port/dreamcast/game/platform/include/actor_resource_lease.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "10e59390101db5d7fc1a4b0633a41371c85a9f28"
+      },
+      "candidate_sha256": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9"
+    },
+    "port/dreamcast/game/platform/include/actor_transaction_diag.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ed7c5c9a28c4557b0489c5287951f4ee73f25d21"
+      },
+      "candidate_sha256": "ec07e2661ad07f8fdc7049b4effea9aa224ec15bd9f0fd655d1e9ff119b828ca"
+    },
+    "port/dreamcast/game/platform/include/actor_visibility_diag.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "3ef069cde5acb9c1391e42af3aa34e8bc71dd73b"
+      },
+      "candidate_sha256": "b937fc425599f981fb0155583f361007a6266122e648b5dcc95662373a3dff0d"
+    },
+    "port/dreamcast/game/platform/include/bfc_class.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b5697cd8e7e6218990bfdac7339b78004e21aa03"
+      },
+      "candidate_sha256": "cce7ba975a27c9ccc2d18ffa22548a8aee085bfd52f6933f97cf9cbea1a41107"
+    },
+    "port/dreamcast/game/platform/include/binocular_art_keys.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "51a0719cfbf37d9c7bf31f7bd3162d909b85fe07"
+      },
+      "candidate_sha256": "3c9f896170e0c8ac034facf7aff49588e7c64ba5ceb493f185f763f9249f9206"
+    },
+    "port/dreamcast/game/platform/include/cache20.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "913063b1c47905f838f13a50c43feb62fc105130"
+      },
+      "candidate_sha256": "0477e8c84785b9c242c96363c371327380e460e0693245284a4ab0a7d45b3bfd"
+    },
+    "port/dreamcast/game/platform/include/coarse_actor_geometry_once.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d5e7e5aa745bc90ca022303dd1e930aeb112f352"
+      },
+      "candidate_sha256": "71855740daa83974fb3db00fd91fc32384de1b0b1e8f9db3991ec96aab372118"
+    },
+    "port/dreamcast/game/platform/include/coarse_actor_preflight.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d5054e23d7b61432682da8788f7423a1204a219a"
+      },
+      "candidate_sha256": "238c507a5df66357ffb59ac3f16a1ed226778d88ec48f5c7aa24df772eb41679"
+    },
+    "port/dreamcast/game/platform/include/coarse_actor_transaction.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "bc6a7fa59f32b1884ffea98ce6f14fcf11c832dc"
+      },
+      "candidate_sha256": "ea4a2c3f00ac08f6b4b7c1acb5dbbfe98fbc1ea39ee864ae92ca5e10ac3aa304"
+    },
+    "port/dreamcast/game/platform/include/coarse_source_frame.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ad90b489b7617b9875807451eebe4db20f2247a1"
+      },
+      "candidate_sha256": "8c5c81bc00286293b3c623b1bdd0ffbb05c4881fcd0e30edc66a0d21468ca746"
+    },
+    "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d631012563783ad0d836e3e3b2f530fb5363f98a"
+      },
+      "candidate_sha256": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481"
+    },
+    "port/dreamcast/game/platform/include/foliage_keys.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "3e74c62c4c0c4cab570b65bfa3a8bdef5d6a1e8b"
+      },
+      "candidate_sha256": "b3db418a40a6d44151a3f969faba3b12ee13010b75e68507c1c24180a870b4a4"
+    },
+    "port/dreamcast/game/platform/include/fx_sprite_trim.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cdb9c6ef3aff5f5a53cd53e2bdf90a4af01912f1"
+      },
+      "candidate_sha256": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2"
+    },
+    "port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2b293148a728f0883d053a87f597ad894468da9b"
+      },
+      "candidate_sha256": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_actor.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "31d912287bb2dfff5069c8089d97a487fcd240bf"
+      },
+      "candidate_sha256": "e601e026a611e339d6caf233d02e932885a4b8163d970471dd88cf6f7315e849"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_audio.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "1ece5fa5fa4d95775744d6701df71da11038943d"
+      },
+      "candidate_sha256": "d4df30b1f478edc25d570ba4f4c70d9be89305a0d0b2d3df13fc7f0f96656985"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_gate.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b2b037eb57bf89c7b7c8a953ad3293119fd9c2f3"
+      },
+      "candidate_sha256": "4dfbee21becd264b55b249fef6f09bddf654d3168d59501482d82bd8685f64a1"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_lifecycle.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e319996708fff71ced9408bc2e0f191ba8b9ed1b"
+      },
+      "candidate_sha256": "8b986321ed5916de5aadcad4b5b24a94144294a7b71db71d5fdc77e0ca59b4ff"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_members.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5415d865bd8d2e2766fb082e79b2e5f065172907"
+      },
+      "candidate_sha256": "558c2baf0d82768e7225d85ca73cc404e493a877910667bf5c082ee9964eec3b"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_motion_unknown.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6c458eec4af5276b71254c6991c3af50aa659190"
+      },
+      "candidate_sha256": "2d61f845fed695c66f078fdb5135317c6a1c60fe5cbb18579ece0d7430f42c67"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_movie.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "680f5ba4343ca2fc47f42aecd0f01394f05e115f"
+      },
+      "candidate_sha256": "0755ba58aaffac5f9a563a6e2f3bb7c8f2604b965d83a2b5d822a1e50eaecf0e"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_movie_stream.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "28c9a12b0f9a98605f9f5c31504f6caf22b3d6be"
+      },
+      "candidate_sha256": "bee23b0136fab7a844f498bf18567fae73597f29c2c45d4da2741d3ad95eb913"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_packet_cursor.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "f95bb2516cca54ead2e63cd1b2ee645c299516cf"
+      },
+      "candidate_sha256": "b44c680240b624492b5a62f6ff22c181b8cdac684cac8cc8300b74a0ee59cc98"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_payloads.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a7d360ae927b8fb10d82b8bf2bc4b0aa4d0632a7"
+      },
+      "candidate_sha256": "04be6fb54668d397982ef545c3464e84b96e222b8faabfa7e4c82851c7369b34"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_static.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "0dd3ebd4a6307e07181770ae00a9835d899ac185"
+      },
+      "candidate_sha256": "1d78c81c8c1096b622374dfc477f60ad2fe64fc6365195dd4877445434679bd4"
+    },
+    "port/dreamcast/game/platform/include/gc_asset_static_source.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a9b3e1fb9a64490db8df69d7bea03c6830cdcb34"
+      },
+      "candidate_sha256": "27b94d5b44bfd139fc606891d62125e20e42f993f0541e218d7888a5b1864e37"
+    },
+    "port/dreamcast/game/platform/include/hud_source_mask.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "08ca248e2c117f11ae37995df3f445fe2389836b"
+      },
+      "candidate_sha256": "9960a824f2300100ad6ace4fe1271da552b46ff960e24c392a324ae76979fc6b"
+    },
+    "port/dreamcast/game/platform/include/hud_source_mask_keys.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "e63dbfec3367fe2cdb9aeee740c71d9ab58b5a7f"
+      },
+      "candidate_sha256": "f4bed90d8c872592adce9a34c11670868e67c58f676cd15e0d4997cbc3c1ef68"
+    },
+    "port/dreamcast/game/platform/include/hud_source_mask_native.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "e3628a1f46fbac6a1ec029c3dac519e3a5fea9de"
+      },
+      "candidate_sha256": "ec6622706bdbee729919997756f226ad5959ddfe511fe73b02049bf9957bf755"
+    },
+    "port/dreamcast/game/platform/include/manual_pages_keys.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "425344bb1589d6cdeb874ee884875cb17f4875c8"
+      },
+      "candidate_sha256": "6aa4cef86c0ff36c322f99dc4eccb3ee42cb92b571721e7f2bc15bd1565cd6e8"
+    },
+    "port/dreamcast/game/platform/include/manual_pages_native.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "88d7d28e763ea9ffa30e3fcf72bd553650e409f8"
+      },
+      "candidate_sha256": "c30e4c36e0ea4d2caaaae7ed47b79470bc026a7f904fd7687ca629b9cc876921"
+    },
+    "port/dreamcast/game/platform/include/movie_world_arena.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "06e721dce587a3ffa3d9f85ec8c5c2327353877a"
+      },
+      "candidate_sha256": "8d0427cde56a4556c0a098cd17fbc9bbdcc04b475f3f6358110501b8eeaa4815"
+    },
+    "port/dreamcast/game/platform/include/movie_world_arena_lifecycle.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "898d3aa02edcb467d23cdde87ec678a2dcf29264"
+      },
+      "candidate_sha256": "e137da9d61c8c8a6929ed13412a063028fb8cf173f56a114d52164efe1de27ef"
+    },
+    "port/dreamcast/game/platform/include/native_actor.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "afab37e409d3725b5e6ec9ae74d33b9912f75362"
+      },
+      "candidate_sha256": "2c2e225a7184f3b5842409641e0554c1d58229c4f63e7ac035b40fe329cb7dee"
+    },
+    "port/dreamcast/game/platform/include/native_actor_owner_registry.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "bfb83f79e346ede440b3a679877f80d1aa87cd7f"
+      },
+      "candidate_sha256": "702c915b1667de9502c298e60d08c1b3b008d31db0d71079511c92faddba068f"
+    },
+    "port/dreamcast/game/platform/include/native_actor_owner_runs.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "846c66a84725dc912e8a120db0fc756df8c18612"
+      },
+      "candidate_sha256": "8d84b5e1b7a653a8a6fe439cdb9800f7571b6a74d6036b61c988071ed9b7bea5"
+    },
+    "port/dreamcast/game/platform/include/native_actor_owner_submit.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "97b2d28d0d7378da60a453e7b24b97cd1007cb1b"
+      },
+      "candidate_sha256": "78081db9815549382f80c1321a41b6d116c8dbff32ad36f2ecfc85b73bd2ec23"
+    },
+    "port/dreamcast/game/platform/include/native_actor_owner_workspace.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "0f6c58f00642b2f5c4459588445f501f1d08eec2"
+      },
+      "candidate_sha256": "4c758d18c1641af7f2524b163f7ec1ef1e8a680e5557aa0f05ad26fcac4da035"
+    },
+    "port/dreamcast/game/platform/include/native_cabin.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "df94391ad855d6a17925bab8fcffb7ead783f21d"
+      },
+      "candidate_sha256": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660"
+    },
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e53f7820fe391e28a5491ac95d70b09bec02b09c"
+      },
+      "candidate_sha256": "dd9431c1aaa4f12f8a72c7c9ec894e45c7cee5079d3dc3e4100fcf4e8dd7df04"
+    },
+    "port/dreamcast/game/platform/include/native_effect_stage1_prepare.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "615ed455c4a81a2339d885b9384ef34f710ba0fa"
+      },
+      "candidate_sha256": "645160ffccbe0c2e5c976c96e7cc82c3f134bc5fc5ad602bdd652650a7b68d17"
+    },
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ecb8fabdc6793ba253c91bc4b42d13899c097ff2"
+      },
+      "candidate_sha256": "0f2727427f75a7bf25142bf74cfba3eee88140a4ab119e47150f59f411f61bee"
+    },
+    "port/dreamcast/game/platform/include/native_event_file.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "023934575ca9cf65c31dd6be560f2dfc818f1c9a"
+      },
+      "candidate_sha256": "9b03201ec028db70f1b699acaae090ca0f952038d786f81157a887d5271872fd"
+    },
+    "port/dreamcast/game/platform/include/native_flashlight_pool.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "4b979f9cb4518de423021a89b4ab91ddd83ae950"
+      },
+      "candidate_sha256": "cc56e2984902582ebf523f648ccbcb608708a1a057bd92af81c8247cf22d527b"
+    },
+    "port/dreamcast/game/platform/include/native_io.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "600ba38493e9adedadfb82d0639b762a730760a1"
+      },
+      "candidate_sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86"
+    },
+    "port/dreamcast/game/platform/include/native_model.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ac69f2758b6c136f2f0632a9fa8782c506c14317"
+      },
+      "candidate_sha256": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde"
+    },
+    "port/dreamcast/game/platform/include/native_primitive.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2d99f7771ef6fcca524563cb04a910f9c10d08eb"
+      },
+      "candidate_sha256": "9cf7bd89c3fab26f0806d74ce3e97ff9b6eee12d1ff99ef83b3020cfbd080e7f"
+    },
+    "port/dreamcast/game/platform/include/native_ps2_world.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "692e67ee6b2499f76a42a69fbd623759d5140f1b"
+      },
+      "candidate_sha256": "8ab8b3421b9ce095d86cb86f3e0e918a09ef47d0e7d6be9ef77f01950e56e411"
+    },
+    "port/dreamcast/game/platform/include/native_render_profile.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "529cca31ff23458138ae3e052ab4ed064f2ee057"
+      },
+      "candidate_sha256": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3"
+    },
+    "port/dreamcast/game/platform/include/native_source_world.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "9595ac5fb5bd28eeb744dfdc650d579f2ce2f0d6"
+      },
+      "candidate_sha256": "c5ab3def7f3a6647ddbc84bf6e9893c748a8ff10b906d8d087cc2f8a2be1d7ab"
+    },
+    "port/dreamcast/game/platform/include/native_static.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b1dcd036ae19e2b2562afcea324d33473aea3c42"
+      },
+      "candidate_sha256": "d5ab6ca8a55c124b6474b70e0f9ac5724d9aca5e77de0547009b786cbcb667ef"
+    },
+    "port/dreamcast/game/platform/include/native_ui.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "9ad1cd7c787d9ebec9f834ea4e73a1766c2841f4"
+      },
+      "candidate_sha256": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882"
+    },
+    "port/dreamcast/game/platform/include/native_ui_actor_material.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "641484958e273d67a62e2bf133009299ced43b63"
+      },
+      "candidate_sha256": "20d37e8f49ef98289e691593061dbf53bbed7d0ad686f423fab46416d67b328b"
+    },
+    "port/dreamcast/game/platform/include/native_ui_source_world.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "46a019326a77d131ff5771326ee43f78d44a0711"
+      },
+      "candidate_sha256": "b3a12a69f1d0216c348502441bb8d2b866bb3a5952d04d6c73a5260ce8a355c3"
+    },
+    "port/dreamcast/game/platform/include/native_water_ps2.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "db758670e1b95fa774f36cbe69878a187b771e04"
+      },
+      "candidate_sha256": "f9bf5c6e9ac778d0a9ed7813ac4ff7f0eedf1e8150ddc3f90f37ba83081ad11a"
+    },
+    "port/dreamcast/game/platform/include/pc_sampler.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "3a5c89746e1513b63efecc9514e91dc912113925"
+      },
+      "candidate_sha256": "fd921feb0d82c2bd0d58134c85d963c7ca12646604421377a2481d85e92d85f0"
+    },
+    "port/dreamcast/game/platform/include/ps2_interior_cell.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e9c2260832351c7ce78103551dff88cef863f013"
+      },
+      "candidate_sha256": "4ec4ca49ce5c4af005a0d8b87cccfcfb65eb9abf751ac68cdd449f9cea7dcad5"
+    },
+    "port/dreamcast/game/platform/include/ps2_source_world.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "fb136013064c1bc67e78a4f7ffab96d464a8c6a1"
+      },
+      "candidate_sha256": "5881716a958f0bc6dff045e45bc660b57884c0050cdfd306b8c490528f0ca029"
+    },
+    "port/dreamcast/game/platform/include/ps2_world_rooms.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "dace48e10abbf97d7bca390eb419233a36a78f1c"
+      },
+      "candidate_sha256": "ed4779f8c71b8e9c0044cbd38b49b6b942ce767f78ccb898a30e45dae0828731"
+    },
+    "port/dreamcast/game/platform/include/pvs23_meter.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ec3f558addf6bc8c336edd444e998362f56000ff"
+      },
+      "candidate_sha256": "0dd6282122b93d543f4105920f16f2106047c4a1d9a080efdaf4e1da7751f349"
+    },
+    "port/dreamcast/game/platform/include/re4dc_manual_pages.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "abc1d0523f9a914a8a7b5e680ff6a7f680ec5cdd"
+      },
+      "candidate_sha256": "39a0e46e3e068b49e1d53d38f77a035db99c6c09df3976b702aaa7122cc659ee"
+    },
+    "port/dreamcast/game/platform/include/re4dc_pad_prompts.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "7a3425e500661b2028d8738ec762b2247cfd18a5"
+      },
+      "candidate_sha256": "906323853612ac1ec2de506376ccb4f8c280b4c8f0740efcbe6b051720120b59"
+    },
+    "port/dreamcast/game/platform/include/re4dc_platform.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "34549d09cc10620d26698ee913ec6dc8b19d42a6"
+      },
+      "candidate_sha256": "a3d43b28fd78980cb50ac508b6aa816d1efabdc8b62c4c296fa414b71e36524b"
+    },
+    "port/dreamcast/game/platform/include/re4dc_prelude.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a0337a46be75c84c7064da81b7ec3abbe32dbd58"
+      },
+      "candidate_sha256": "25e2e3dd536dce40dc03b5e42a26dc7149de4768a1d8ecb707c2e46474b9c50f"
+    },
+    "port/dreamcast/game/platform/include/re4dc_screen.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "4b5a1e296fcfdbb65e8903dc7628d6292c6f73a4"
+      },
+      "candidate_sha256": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f"
+    },
+    "port/dreamcast/game/platform/include/re4dc_vmu.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "bc70d5a8306bf5cc77a6b3bf68e327d63c9c01c1"
+      },
+      "candidate_sha256": "ffb89121935c8eabe3ef3dbccc8fc5032ad5618a8de4cc4e6973b1e459304ebc"
+    },
+    "port/dreamcast/game/platform/include/room_file.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d8c95090a13b374b746b4251ee00eab72327d65b"
+      },
+      "candidate_sha256": "c6985ebf7d77e87ee4602e435a0854b13915e57308fd5762152fa365338c7f55"
+    },
+    "port/dreamcast/game/platform/include/scenery_chunk_select.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "55d9b7c5b197bdcf64db6da4e4229fb59b5686e9"
+      },
+      "candidate_sha256": "f425dde0075cd74242dfe8f9a1fc45b276c7f238394418f5bb01b2f04ac5a553"
+    },
+    "port/dreamcast/game/platform/include/scenery_part_far.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "36d2a682401378328d4d442f087b1f213ef73b68"
+      },
+      "candidate_sha256": "81099189e36cc324176605b1a0506a8bde2aa088ad498aa77e71101ff6d1303c"
+    },
+    "port/dreamcast/game/platform/include/scenery_submit_batch.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "0284db5bde23851831ffb4a00838e0307345184a"
+      },
+      "candidate_sha256": "f8398358a3d3b24fc88948c0ca9699db814bc384c234da3201dc10c1b1aac106"
+    },
+    "port/dreamcast/game/platform/include/scn21_validate34.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": null,
+      "candidate_sha256": "c4989cf6a5d5a172d128acbbe962351f64c1b33ee251e1d27c7c924b7116d168"
+    },
+    "port/dreamcast/game/platform/include/source_actor_owner_hooks.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e5cfa499563ef5c9f1784464851f9045707f1c55"
+      },
+      "candidate_sha256": "24c358a9e7055147c3255ca3a64514acf7514036c248b817d569941552d5d41e"
+    },
+    "port/dreamcast/game/platform/include/source_actor_owner_ledger.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5b37d8c4334b7c986b095f39ea33839f545ac22a"
+      },
+      "candidate_sha256": "41daf70a383413cf1db2869f3e19d20c9a554185c64e6fedc15e544364db6d49"
+    },
+    "port/dreamcast/game/platform/include/source_world_frame.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "07d7d1ab037445e98e606490bf8da8c64fa677a8"
+      },
+      "candidate_sha256": "abe2a711f66d0b95cf9ae0056db933433d2a6b4d508377517226ff3d61a931ec"
+    },
+    "port/dreamcast/game/platform/include/source_world_memory.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "36d372ee35608fc613bf3708b6c249dea051187a"
+      },
+      "candidate_sha256": "29c0dfead79cd74ce078662486193f6669caa8ee5a9ea993042e2329e461aac5"
+    },
+    "port/dreamcast/game/platform/include/subscreen_quad_geometry.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "dba9c3937188059b57910d8e7dc6b0aeae9a51a8"
+      },
+      "candidate_sha256": "062db0e9535002d4dd7728265b88da76d537d2ce73d03414a52fbe7e4876a512"
+    },
+    "port/dreamcast/game/platform/include/ta_direct.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6c726eba45fa4f59082688fb8bcda784383ba091"
+      },
+      "candidate_sha256": "737faccbe29bdbd8c6a24fec0d5217f1ee992369f1405a4359ece947b8348cbe"
+    },
+    "port/dreamcast/game/platform/include/texpack_index.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "163c72744a111f37f71e5f7e9156336383a97506"
+      },
+      "candidate_sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d"
+    },
+    "port/dreamcast/game/platform/include/texpack_payload_retry.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c928edfa0e087f683b6e9da083bce5659341d502"
+      },
+      "candidate_sha256": "915601b92d8a9d10d763a377da6680c1579d39ad9109a1750f402fa3f8ed8f38"
+    },
+    "port/dreamcast/game/platform/include/warp_late.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "61f400dc9d54c7cf00ddabc8ba4add5e8a287e30"
+      },
+      "candidate_sha256": "b4189647177075921b64c7fd383349c7d31778292c9b21d68764441f3bf59b56"
+    },
+    "port/dreamcast/game/platform/include/worldopt26_sg_cell.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "de405ce2c02e453dc2b68b68795bdf104cc7272c"
+      },
+      "candidate_sha256": "f7732f558e7bb49518747f7b269fe9dbdc7449178ec211070a73547a2d89383b"
+    },
+    "port/dreamcast/game/platform/native_actor_chunk.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "0fd7f75c2cf0c2abe24e8713a4ec6399bce24a03"
+      },
+      "candidate_sha256": "454980bf0c83cbb9bf3dfaeca2fd37d166833ff46c0cf494a957ab59cb6d5a35"
+    },
+    "port/dreamcast/game/platform/native_actor_fast.cpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6004f70905fe033255b4ff115362f2bda324ac86"
+      },
+      "candidate_sha256": "213d5c175fcd39f214d4cc2126df9c11568c6b43b1e8a932df961a950459927f"
+    },
+    "port/dreamcast/game/platform/native_actor_rigid.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "1e226ddbd1dc6057cbb942fef163210178db6e1f"
+      },
+      "candidate_sha256": "5885e036f63e23735ddd46057bb1de81861c30d90a8ee01ccafbfc834f6c7fc9"
+    },
+    "port/dreamcast/game/platform/native_static.cpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "15b4055abe9431dd6bb936304187753d9a775c20"
+      },
+      "candidate_sha256": "7a21d815c60b58bde647aa218cc545af2ef6fa1837763e81403043348ecfe51d"
+    },
+    "port/dreamcast/game/platform/native_ui.cpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d78087e9a4b1288a1f8c4e0815e00fcd084d0b5f"
+      },
+      "candidate_sha256": "c3ae6e4c505be78948b93ea82c0ccbb24e4962919d4c7f87ec7b2089898ce189"
+    },
+    "port/dreamcast/game/platform/preload_skip_gcidle.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "0304c6d519d19e385d528fa21e70ca7403721fd2"
+      },
+      "candidate_sha256": "e4282e3055458aad8f968a06cb6e8483967a0c19f7b15838de093435279f0c69"
+    },
+    "port/dreamcast/game/platform/preload_skip_gcidle.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "8d7b3c0158fd0e098aa67e56e7afd719b72afbf2"
+      },
+      "candidate_sha256": "c36963537dd7c2339293103288d83a7cb1ee6f551e8f9d912545bc783141e121"
+    },
+    "port/dreamcast/game/platform/quality.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "61ea274bcc6807d5a2f30b233a7d7215af6fb396"
+      },
+      "candidate_sha256": "f781f8d36cb5b7017346bb6ae12acd47d34b31762de560a767da5850d8209270"
+    },
+    "port/dreamcast/game/post30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "febbe79399efd3ab61f3cc6d9e8b8b3198b95cf5"
+      },
+      "candidate_sha256": "c9e7a3ff79f1a8d59a1adabbead4a269eda26a467185597bf96f3ab1542ac8d5"
+    },
+    "port/dreamcast/game/ps2leon.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "9a4c96d1f1b9783b5cfb1c0953c7305530efcfef"
+      },
+      "candidate_sha256": "011f39130ca3329c57148417e10b4a372c1f8dddaa735e38cbd0bb00f9aa4137"
+    },
+    "port/dreamcast/game/pvr_rtt.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d10eafc2bbca8929b85d7785ff13d1dab08f418d"
+      },
+      "candidate_sha256": "4b34e026faf4835b7339ee9eac9dd3ddcc8020153885f0acb1ed32bee175c2c3"
+    },
+    "port/dreamcast/game/qalink.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "1d7181839c1074bdc34b612496ffc0927c5920c7"
+      },
+      "candidate_sha256": "7ce627272ce0df4cfb9ff6d8415b093282a90b5f960a0599a4ded0aa7a460d31"
+    },
+    "port/dreamcast/game/qamenu.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "41e585125546d6426c896979e39ea2169028b47f"
+      },
+      "candidate_sha256": "8278906026e8836d4027e48f99292fbc0b47eac2f59bbe76dda96dc38f33ba56"
+    },
+    "port/dreamcast/game/quickweapon.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c9186208346b8d5bd648f7fcba56ed57cf7f8c57"
+      },
+      "candidate_sha256": "6329640761dbc5802c32fd4272d90347b64807a0995c888098d7237ecd27abf0"
+    },
+    "port/dreamcast/game/records30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "8924b86939cffb67ab25e4b2391acdf994b44b29"
+      },
+      "candidate_sha256": "132df68c9fdd14efb107fcf921183b7519e430d82c6b87bc026108f50eba515c"
+    },
+    "port/dreamcast/game/rigid20.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "13dcfaa9d56a47835eb2ef594e8fbe324c3fea31"
+      },
+      "candidate_sha256": "3608f11dd5572b98692db3839a8c92189cc09009eb11350a311949d644e07b63"
+    },
+    "port/dreamcast/game/safecuts.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d67b67a544a79710c47dd5a65cd3e45bce1e0556"
+      },
+      "candidate_sha256": "da6ba39b803e76b1f97e34688ae05bbc7baff5f5f47a9f0ff2efdbdea7d80afe"
+    },
+    "port/dreamcast/game/scenery19.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cb2236f58b606f4e2d99ddbdcd34e0113fce8274"
+      },
+      "candidate_sha256": "ef9501b6120905ea22e4371590c44ceffa2e771070fe1bbbf0a81aa16d5394ca"
+    },
+    "port/dreamcast/game/scenery30.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5f33e3351342ed8b8b58f99ee049c168abfb77bf"
+      },
+      "candidate_sha256": "46acf4cb67022b9d4f820bf887075143e951b1895e3e1cb95e9e2335105411ec"
+    },
+    "port/dreamcast/game/scenery_data_variants.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "32f205f9e3271699d64a9e858ae9eade4f3a0d51"
+      },
+      "candidate_sha256": "98b8c8c9c945a899170943b161926c47307b204d1e47f021a9d40e4fbfef7af4"
+    },
+    "port/dreamcast/game/scenery_n256.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "29dbda9907fbc9ebd3fc2ce3dfd8ca6ac9165f1b"
+      },
+      "candidate_sha256": "bee85b66ccc26887a7295405d8d5507425010268b7b0fc1bc5f98387b10a8be8"
+    },
+    "port/dreamcast/game/scenery_record_split.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "084368cab1d48fb5af19b56e5ab9535d2e5504f3"
+      },
+      "candidate_sha256": "0de971619bd764a69a4fc2b400347828ea660a1ce1a923f083b5be6af5f22a6c"
+    },
+    "port/dreamcast/game/shotfx20.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2a7039b47d82d1ebd6e420f3c96cb7619e95f25a"
+      },
+      "candidate_sha256": "dc5be227dcf55f1a28eeb68dfb58589cc929bc04fdb2e473a7efb8ac62e946a6"
+    },
+    "port/dreamcast/game/static_obj_batch33.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ac9fd838f78a43b20dc5453747ca9a93a8bb61e0"
+      },
+      "candidate_sha256": "a44fd8a36a85550814a2906e200af187073423ad791ab047e2c013bfff3ae86d"
+    },
+    "port/dreamcast/game/subscreen.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a973e3ab3a961dfd025ca334a648ec9e1a0ab69e"
+      },
+      "candidate_sha256": "326f2a516ee9b52dbc43ad32b3b2ec93a597265e4184811a52c6919643f2c95c"
+    },
+    "port/dreamcast/game/t2exact.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2625a038be0bb4f072a147d2450b56acadbc7cd3"
+      },
+      "candidate_sha256": "ab8b9b2c20ab4fa88831de792300bc53fb5d9373b10c7b64d31dbde37c7a1fc2"
+    },
+    "port/dreamcast/game/tahash.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "de017c21e7413d43f27100f4205aac1bfccd7bad"
+      },
+      "candidate_sha256": "c32223ced5323b52388ed5b282e223495a9dc89f927bfcc947d6f0423a00f184"
+    },
+    "port/dreamcast/game/vmu_context.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "93a495ba6df6fa0818d44673a6861a338d1c9acc"
+      },
+      "candidate_sha256": "c2f3714f6f86f7c96d7c8697498e7679bf5b1ae33820cba059a610772a0502e4"
+    },
+    "port/dreamcast/game/vmusave.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "b28601236c26748c3caaee28bddc9271c1ba5611"
+      },
+      "candidate_sha256": "c99a41216906a2b9d3c1c55be2a826cf0fba4eecb0d71d3b0c50c14ed885e5eb"
+    },
+    "port/dreamcast/game/wep_modules27.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c10514f29f02cac603ca6777ba28ec96a9370edd"
+      },
+      "candidate_sha256": "8c47364afbafd2d02b445e343cfa43c8ac9a979186076b07a3913fe15c7bd7a5"
+    },
+    "port/dreamcast/game/world_census24.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "6890ef432347ab2f3d17eff1e46adef32b816043"
+      },
+      "candidate_sha256": "9013e9977a24a2beaab45c3eaddd22d5de36cc8b25aa43adc85cc45602b35b52"
+    },
+    "port/dreamcast/game/world_census24_errors.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d8303caeda9d5e2733eb385314336e63eaa4a2df"
+      },
+      "candidate_sha256": "0b1f8fda7459246404f88d1f0d3b5a94d56396019759201d21dae820094f3874"
+    },
+    "port/dreamcast/game/world_plan29.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "8c39e407fa10ca5caa2f6c73caecc5018fcde74d"
+      },
+      "candidate_sha256": "245e8471c064f9195c2c88e13e20913b2448ee2b3c18b741432dced0f8143042"
+    },
+    "port/dreamcast/game/world_scratch.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "24f44093aa59641d3b3e6109b98f93a1a10e1838"
+      },
+      "candidate_sha256": "6e6b0f1f2b2d9f5762708a21a2c6c0f5ba0308c04b4332534d80b6456934d5b6"
+    },
+    "port/dreamcast/game/worldhole.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "b8d2d04114682bf855ee5ac126b58e83fd1e6728"
+      },
+      "candidate_sha256": "fc39dd79c316360601ad59b1805662864fdd9a5c9a42542193513fc167fc3f2c"
+    },
+    "port/dreamcast/game/worldopt26.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a86b93902baac343935deb1239be966cce2f665f"
+      },
+      "candidate_sha256": "290b454a0b075fb097b21d9c8566282204dd93e21c7c7e5109e77447261a26e9"
+    },
+    "port/dreamcast/game/worldscratch.mk": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "39c31f553b56f935b58c62962617014118af1b50"
+      },
+      "candidate_sha256": "7a71efa755f0c1984df3eef28ff07122459b90ca86bf596872f7b8b5b013f057"
+    },
+    "port/dreamcast/kos-env.sh": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100755",
+        "kind": "blob",
+        "sha": "8382a58260f9fe9a74217ce2b3dfebdf7eebdfe5"
+      },
+      "candidate_sha256": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8"
+    },
+    "port/dreamcast/room/gpu_lifecycle.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ebc49b4373215f4cfd8eb55f3ee25badd79aa17e"
+      },
+      "candidate_sha256": "af53be33ac070625425b5afeaf56955151507e16533ee2feab294ebd4c74ed91"
+    },
+    "port/dreamcast/room/instanced_mesh.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ef8e2bf6c18d2449cc0479799a24f04c6a5d9126"
+      },
+      "candidate_sha256": "e9f0d7fd0bd977b1aa9334a5718dcfb9d93e6c5616fecc8f11bdcadfca5db019"
+    },
+    "port/dreamcast/room/mesh_fastpath.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c45ceb4b5797d5962998b6f7f7eb91a2bb829c62"
+      },
+      "candidate_sha256": "732b9aa75741265ca59e729a5e9ce8c2c2a018d4d32812f412ae9eb721ea19cd"
+    },
+    "port/dreamcast/room/mesh_fastpath_sched.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "4c001c363eff764c61884e5d2f43212384a65e2c"
+      },
+      "candidate_sha256": "17d7d74994c696ceaddaf30d323d7c64bb131782f05f11423b8454305e73f1b0"
+    },
+    "port/dreamcast/room/mesh_strip_lean.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "336c11f0ac2818d997152c46998046e0b090463f"
+      },
+      "candidate_sha256": "0cbfb2d425fecc2462641ae9391cbeb134553de15e11d8a290b9175165631b1c"
+    },
+    "port/dreamcast/room/native_draw_plan.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "838dd4aa6530aaa6fc499a40fce6eb4ea8fd0ca2"
+      },
+      "candidate_sha256": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405"
+    },
+    "port/dreamcast/room/nonempty_lod.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cc7707b29a08ad0887afffaec39f9e3a375e7168"
+      },
+      "candidate_sha256": "75c7a9a591827257e81e0681ce3a5c1e6947ac9a2657d68deef37f828ad01061"
+    },
+    "port/dreamcast/room/pvr_geometry.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "5d6116ff08ea8c3d02b99c4b21081b320ea11b9e"
+      },
+      "candidate_sha256": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c"
+    },
+    "port/dreamcast/room/room_package.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "c3d356ae2bc40821ec8c5571e449331acc00524c"
+      },
+      "candidate_sha256": "0f68e9b943e018af1c1b67022d2f5774fed8f829c3a4e094b52fceccac9aa0fe"
+    },
+    "port/dreamcast/room/room_storage.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "8167c229a4c2f8b882ac700a97e7e5cc1eb57163"
+      },
+      "candidate_sha256": "7d501f89e0d551ab17da30a432f234b7b165c5a2c5de500e7abf64c5168b24c0"
+    },
+    "port/dreamcast/room/source_lighting.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "124807a525e56d23bf07ae283ac65d17b66f65a9"
+      },
+      "candidate_sha256": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45"
+    },
+    "port/dreamcast/room/static_room_prepare.hpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "be1bec1326c538975a11fa900d7497fea273ebd6"
+      },
+      "candidate_sha256": "65f55db4ec1ab97162c38c6038d228a9df3b6814dc5e3e0cc1130ce148929329"
+    },
+    "port/dreamcast/room/texture_package.hpp": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d8b8eb7ec24c72b232a52644400ae9797b396f42"
+      },
+      "candidate_sha256": "6a8990a11daf6ca3b3ae2e30232f2648e8f041dbb583e0037161ad4b84f8c397"
+    },
+    "port/dreamcast/tools/cloud/build18/build_profile.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "164f040633f60b68c3ff7add7f8c657d5ebbefb2"
+      },
+      "candidate_sha256": "47e787b0820f67e9f3fde33010a67ecddc0814059505204e1afec6d51952927a"
+    },
+    "port/dreamcast/tools/cloud/build24/build_controls.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d73661e0179cb7297306c6d321043054df4afefe"
+      },
+      "candidate_sha256": "7b9185a3b8f0ce980a1f9f2f31b5e0fe3c8ec3b285eb64ab45afd3c5c8575a7c"
+    },
+    "port/dreamcast/tools/cloud/build26/build_controls.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "2e5b0c5a84603165d9e5080c7113ca1acfca6d43"
+      },
+      "candidate_sha256": "66582d44486cd1cbea42f0b5ac423380b4b8395130164ad81f22cbc3a76f1e8f"
+    },
+    "port/dreamcast/tools/cloud/build34/build_controls.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": null,
+      "candidate_sha256": "102850818851579510f3fbb3e54eff2810c4bb3ff57aff3e50c3fb395d21a5c6"
+    },
+    "port/dreamcast/tools/d367/build-r21.sh": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "517c22194fd01f334db50c55e3001071d086e564"
+      },
+      "candidate_sha256": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93"
+    },
+    "port/dreamcast/tools/d367/rr/recipe.conf": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "16c25cb68dd8aba825d2fd69a79b8836a093e129"
+      },
+      "candidate_sha256": "66940fea7531fd3a402dc8fc6f779d7861801c0cd39a4c91be31f7f0871816c0"
+    },
+    "port/dreamcast/tools/d367/test24/release-knobs.txt": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "a51029ecbcf2c69b770d9102076772819380ce20"
+      },
+      "candidate_sha256": "d041bb6606037803af26e4c1757f6348a60b4389547ee1679354ec788b78ba5b"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/provenance_certificates.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "ca61f0af8e0960d65b84e988a4ea32873f5fcbeb"
+      },
+      "candidate_sha256": "371206a9784a86359208fff95925f7d11d8360c33c0a8ab983d097923ecc9cde"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/scoped_origin.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "e05ac5af7a7859d541fb1e2da91141382abc29f1"
+      },
+      "candidate_sha256": "31908e1cd70769f164e19199853c27997d24efcee85657fcae4efa23ea205c55"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/scoped_origins.inc": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "1a7a76b1f37453258e26c5596a71a401310229db"
+      },
+      "candidate_sha256": "93d44d4ff4b22aad124237a487c2c1c9be529106250477c07d830453b9ac44d1"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/scoped_representations_fol24.inc": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "7ac012db6fddae3dcd67fc6ccb1c2a5319b2e0a7"
+      },
+      "candidate_sha256": "175a027ce9f3d3a09b0cfde1fe2e8fab87e92c3a05043229c88c1b259079dbad"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "18a65017f86d0c94b72a978c66fa5162788dddda"
+      },
+      "candidate_sha256": "a77de47c842bbc8281b205c7883a42680eabe664f7435c8501f61c94bdae9905"
+    },
+    "port/dreamcast/tools/d367/texture_rect21/world_rect_provenance.h": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "cecf4f99ee8068010cfa024ce6956bb2621c05e2"
+      },
+      "candidate_sha256": "afa345958e441ce801169ad0d0763652f5749f6c8e67825ed9a15afde1a56b43"
+    },
+    "port/dreamcast/tools/d367/ui_draw_lean/build_profile.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "46cc29f3d6ec6d13b18db56f75e33e0d0914938d"
+      },
+      "candidate_sha256": "d9768c80edec4fc2fef9187a883cad2ac1b2f02b4a2c84be313661d4e7ec9ccc"
+    },
+    "port/dreamcast/tools/d367/world_setup_spike/build_target.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "881227d2c65a6a6f9cf099c9e742e37ff83348c8"
+      },
+      "candidate_sha256": "a83d3c356db200150d23febc5aa45ae5f7f667005c87f851b4d64883bc96f29e"
+    },
+    "port/dreamcast/tools/d367/world_setup_spike/release_profile.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "4e9d3ac885d6d37bf85dc85bf53694758584ecc0"
+      },
+      "candidate_sha256": "76f987d26a783b0ba17345569e685786998c2f52fff468328d0d4e6ce842093b"
+    },
+    "port/dreamcast/tools/d367/world_submit_spike/build_profile.py": {
+      "consumed_by_baseline": false,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "0b4acd6aef564baf5640ed4ac8d4b9c19e1ffbe6"
+      },
+      "candidate_sha256": "93d339687cde6c61628b1c73803000616f95768669360bf18ad60258e4ea1aef"
+    },
+    "src/game/trans.cpp": {
+      "consumed_by_baseline": true,
+      "baseline_git_entry": {
+        "mode": "100644",
+        "kind": "blob",
+        "sha": "d9ca57fda701a3378ec4cc5f3d88c5506b8ce459"
+      },
+      "candidate_sha256": "4bdf9c21fec3ce2ec0d65aaeafa383d33361a74ce3b1b69b410da47a8100acd7"
+    }
+  }
+}

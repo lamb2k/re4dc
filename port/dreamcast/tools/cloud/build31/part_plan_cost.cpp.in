@@ -1,0 +1,51 @@
+#include "@HEADER@"
+struct FixtureMeta {std::uint32_t crc,fnv;std::uint16_t width,height;std::uint8_t pass,cull,texture,reserved;};
+struct FixturePart {unsigned source_offset,source_size;unsigned char texture,alpha,flags,reserved;unsigned first_meshlet,meshlet_count;float uv_bias[2],uv_scale[2];};
+static_assert(sizeof(FixtureMeta)==16 && sizeof(FixturePart)==36,"actual R4PW/R4IM record sizes");
+struct FixtureMesh {unsigned first_part,part_count;};
+struct FixtureHeader {unsigned mesh_count,part_count;};
+extern "C" {
+alignas(32) FixtureMeta fixture_meta[128];
+alignas(32) FixturePart fixture_parts[128];
+alignas(32) unsigned char fixture_plan[16384];
+alignas(32) unsigned fixture_output[128][7];
+unsigned fixture_count,fixture_planned;
+}
+struct FixturePackage {
+    FixtureHeader h;FixtureMesh m;
+    const FixtureHeader& header()const{return h;}
+    const FixtureMesh* meshes()const{return &m;}
+    const FixturePart* parts()const{return fixture_parts;}
+};
+extern "C" unsigned fixture_prepare(unsigned n){
+    fixture_count=n;FixturePackage package{{1,n},{0,n}};
+    for(unsigned i=0;i<n;++i){
+        fixture_meta[i]={0x10000U+i,0x20000U+i,64,128,std::uint8_t(i%3),std::uint8_t(i%3),0,0};
+        fixture_parts[i]={};fixture_parts[i].meshlet_count=4+i;
+    }
+    re4dc::wp29::Layout layout;
+    if(!re4dc::wp29::compile(fixture_plan,sizeof fixture_plan,package,fixture_meta,false,false,layout))return 0;
+    fixture_planned=layout.offset;return 1;
+}
+extern "C" __attribute__((noinline)) unsigned fixture_before(unsigned n){
+    unsigned count=0;
+    for(unsigned i=0;i<n;++i){
+        const auto& p=fixture_meta[i];if(p.pass!=0)continue;
+        unsigned key[6]={p.crc,p.fnv,p.width,p.height,0,p.cull};
+        std::memcpy(fixture_output[count],key,sizeof key);
+        fixture_output[count][6]=fixture_parts[i].meshlet_count;++count;
+    }
+    return count;
+}
+extern "C" __attribute__((noinline)) unsigned fixture_after(unsigned){
+    const auto* spans=reinterpret_cast<const re4dc::wp29::Span*>(fixture_plan);
+    const auto* records=reinterpret_cast<const re4dc::wp29::Record*>(fixture_plan+fixture_planned);
+    const auto& span=spans[0];
+    for(unsigned k=0;k<span.count;++k){
+        const auto& p=records[span.first+k];
+        std::memcpy(fixture_output[k],p.key,sizeof p.key);
+        fixture_output[k][6]=p.meshlets;
+    }
+    return span.count;
+}
+extern "C" const std::uintptr_t fixture_layout[]={1,std::uintptr_t(fixture_output),sizeof fixture_output};

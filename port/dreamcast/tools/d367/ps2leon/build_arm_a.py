@@ -2,7 +2,15 @@
 """ps2leon arm A (PS2_LEON=1): the full PS2 Leon as an approved render mesh (re4dc-approved-render-mesh-1), the input
 of pack_coarse_actor.py and the cl lane's fastpath, like today's leon-hair-v2 mesh.json.
 
-  build_arm_a.py <out dir>      writes <out>/mesh.json and <out>/report-a.json
+  build_arm_a.py <out dir> [--rig]   writes <out>/mesh.json and <out>/report-a.json
+
+--rig (LEON_PS2_RIG, cast-ps2-25 2026-10-26, coordinator decision (a)): the PS2 rig. Every section keeps its PS2 weights
+(no nearest-GC-vertex transfer). The PS2 jacket (69-75) and hair (64-68) bones are driven by the game's GameCube
+cloth / hair simulation (code, not an asset): each PS2 bone takes the skinning delta of the GC bone whose rest
+position it shares (RIG_MAP; 64-68 sit exactly on GC 65-67 / 82-83, 70 / 72 / 74 on GC 91 / 97 / 103, 69 / 71 / 73
+/ 75 nearest GC 86 / 95 / 99 / 107), so a weight on PS2 bone b is written on GC bone RIG_MAP[b]. Bones: the PS2
+pl00 skeleton's rests (pl00.dat body BIN) for the shared bones; the GC cloth / hair range (RIG_SIM) carries identity
+here and the runtime (LEON_PS2_RIG=1) reads the game's own bind for those bones.
 
 Geometry: the eight PS2 pl00 / wep02 sections at the GC roles' arcs (leon_sources.ROLES), every triangle of the PS2
 strips except zero-area strip joints; positions in the GC model space (the PS2 vertices coincide with the GC ones).
@@ -40,6 +48,11 @@ PS2_KEY = {
 }
 HAIR_MATERIAL = {'ac381b1a-3ade84b1': 1, '7a9de1fd-0e415f15': 2}   # runtime materials 1 / 2 (owner_leon hair_colours)
 TRANSFER = {1, 7}   # sections whose PS2 bones are not the GC skeleton's
+RIG = '--rig' in sys.argv
+RIG_MAP = {64: 65, 65: 66, 66: 67, 67: 82, 68: 83, 69: 86, 70: 91, 71: 95, 72: 97, 73: 99, 74: 103, 75: 107}
+RIG_SIM = set(range(64, 110))   # GC hair (64-85) and jacket (86-109) bones: the game's simulation drives them
+if RIG:
+    TRANSFER = set()
 
 
 def atlas_uv(key, u, v):
@@ -81,8 +94,28 @@ def closest_on_triangles(p, A, B, C):
     return best
 
 
+def rig_bones(gc_bones):
+    """The PS2 pl00 skeleton (body BIN) rests for the shared bones (they equal the GC ones: same id, parent, rest; checked
+    here); identity for RIG_SIM (the runtime takes the game's bind there). Same record shape as mesh.json bones."""
+    body = ls.ps2_role(0)
+    gpar, grest = ls.gc_skeleton()
+    assert body['bone_ids'] == list(range(119))
+    out = []
+    for i in range(119):
+        b = dict(id=i, parent=body['bone_parents'][i], source='ps2 pl00.dat body BIN')
+        if i in RIG_SIM:
+            b.update(rest=[[1.0, 0, 0, 0], [0, 1.0, 0, 0], [0, 0, 1.0, 0], [0, 0, 0, 1.0]], sim=True, parent=gpar[i])
+        else:
+            r = body['bone_rest'][i]
+            assert gpar[i] == body['bone_parents'][i] and abs(r - grest[i]).max() < .05, i
+            b['rest'] = [[1.0, 0, 0, float(r[0])], [0, 1.0, 0, float(r[1])], [0, 0, 1.0, float(r[2])], [0, 0, 0, 1.0]]
+        b['capture'] = b['rest']   # host fixture pose only (pack_coarse_actor's quantization check): rest, no GC capture
+        out.append(b)
+    return out
+
+
 def main():
-    out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
+    out = Path([a for a in sys.argv[1:] if not a.startswith('--')][0]); out.mkdir(parents=True, exist_ok=True)
     today = ls.leon_mesh()
     parents, _ = ls.gc_skeleton()
     regions = ls.bone_regions(parents)
@@ -130,6 +163,13 @@ def main():
             for c in cs:
                 pk = tuple(np.round(c['p'], 4))
                 w = transfer[pk] if role in TRANSFER else tuple((int(b), float(x)) for b, x in c['w'])
+                if RIG:
+                    acc = {}
+                    for b, x in w:
+                        b = RIG_MAP.get(b, b)
+                        assert b < 64 or b > 109 or b in RIG_MAP.values(), (role, b)
+                        acc[b] = acc.get(b, 0.0) + x
+                    w = tuple(acc.items())
                 w = tuple(sorted(w, key=lambda bw: -bw[1])[:3])
                 s = sum(x for _, x in w)
                 w = tuple(sorted((b, x / s) for b, x in w))
@@ -159,9 +199,12 @@ def main():
         'blend_sha256': None,
         'source_sha256': today['source_sha256'],
         'mesh': 'Leon_PS2_A_RenderMesh',
-        'positions_mm': positions, 'weights': weights, 'bones': today['bones'], 'triangles': triangles,
+        'positions_mm': positions, 'weights': weights, 'bones': rig_bones(today['bones']) if RIG else today['bones'],
+        'triangles': triangles,
         'source_info_counts': {str(i): sum(t['source_info'] == i for t in triangles) for i in range(8)},
-        'policy': 'ps2leon arm A: PS2 pl00 geometry on the GC skeleton; render only. Source info visibility remains separate.',
+        'policy': ('ps2leon arm A rig: PS2 pl00 geometry, weights and skeleton rests; the PS2 jacket / hair bones driven '
+                   'by the game GC cloth / hair simulation (RIG_MAP); render only.') if RIG else
+                  'ps2leon arm A: PS2 pl00 geometry on the GC skeleton; render only. Source info visibility remains separate.',
     }
     text = json.dumps(mesh, separators=(',', ':'))
     (out / 'mesh.json').write_text(text)

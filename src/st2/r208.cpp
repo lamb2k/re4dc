@@ -134,6 +134,8 @@ extern "C" int re4dc_aliveCapFull();
 extern "C" void OSReport(const char* fmt, ...);
 static int r208CapOwed;   // wall feeds the base made while the cap was full, not made yet
 #define R208_RESETS (getResetNum() + (u32) r208CapOwed)
+static void r208HeldRelease();
+static int r208HeldN;
 #else
 #define R208_RESETS getResetNum()
 #endif
@@ -272,6 +274,7 @@ void R208Init()
     W->gotoWait = 900;
 #if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
     r208CapOwed = 0;
+    r208HeldN = 0;
 #endif
     EatMgr.registEffInfo(EAT_ET_ROOM0, (AtEffInfo*) &r208_eff_info4);
     EatMgr.registEffInfo(EAT_ET_ROOM1, (AtEffInfo*) &r208_eff_info5);
@@ -420,6 +423,9 @@ void R208Main()
     u32 i;
 
     r208_StrCheck();
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    r208HeldRelease();
+#endif
     if (RsfCheck(G_ROOM_ID, 5) == 0) {
         if (((pG->Room_flg[0] & 0x02000000) && (pGS->Room_flg[0] & 0x01000000)) || DebugTrg(0) != 0) {
             RsfSet(G_ROOM_ID, 5);
@@ -1483,9 +1489,41 @@ extern "C" cEm* R208_setEm(s16 no)
 }
 
 // EmSetEvent only while enemy list 2 (the courtyard list) is the loaded one.
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+// ALIVE_CAP: the room's event sends (footing counters, group A, under feeds) create through EmSetEvent, which the
+// cap does not see (r208 reached 8-9 alive at cap 4). A send made while the cap is full is held here, in order, and
+// made from R208Main as soon as the cap has room, so the room still gets every send (hold, never drop). The
+// callers that use the returned pointer only steer it (setGoto) and accept NULL.
+static EmListData* r208Held[24];
+
+static void r208HeldRelease()
+{
+    if (r208HeldN > 0 && pG->em_list_no == 2 && !re4dc_aliveCapFull()) {
+        EmListData* d = r208Held[0];
+        int k;
+
+        for (k = 1; k < r208HeldN; k++) {
+            r208Held[k - 1] = r208Held[k];
+        }
+        r208HeldN--;
+        EmSetEvent(d);
+        OSReport("alivecap: r208 held send made, %d left frame %u\n", r208HeldN, (unsigned) pG->Frame_cnt);
+    }
+}
+#endif
+
 extern "C" cEm* R208_EmSetEvent(EmListData* d)
 {
     if (pG->em_list_no == 2) {
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+        if (re4dc_aliveCapFull() || r208HeldN > 0) {
+            if (r208HeldN < (int) (sizeof(r208Held) / sizeof(r208Held[0]))) {
+                r208Held[r208HeldN++] = d;
+                OSReport("alivecap: r208 send held, %d held frame %u\n", r208HeldN, (unsigned) pG->Frame_cnt);
+                return NULL;
+            }
+        }
+#endif
         return EmSetEvent(d);
     }
     return NULL;
@@ -1533,7 +1571,15 @@ static void under_set_task()
             } else if (pG->Game_level > 1) {
                 max = 2;
             }
-            if (getUnderEmNum() < max) {
+            if (getUnderEmNum() < max
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+                // ALIVE_CAP: the under feeds create through EmSetEvent, which the cap does not see (r208 reached
+                // 8-9 alive at cap 4 while Ashley turned the footing cranks). The feed waits while the cap is full;
+                // the slot index only advances once the cap has room, so every under slot is still sent. Room
+                // progress comes from Ashley's cranks (footACnt / footBCnt timers), not from these kills.
+                && !re4dc_aliveCapFull()
+#endif
+                ) {
                 if (pG->Game_level <= 6 && (i == 3 || i == 7)) {
                 } else if (pG->Game_level <= 3 && (i == 3 || i == 5 || i == 7)) {
                 } else if (r208_underEmTbl[i] != -1) {

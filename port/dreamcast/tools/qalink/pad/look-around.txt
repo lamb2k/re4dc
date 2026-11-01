@@ -1,0 +1,7 @@
+# QA link SCRIPT look-around: Leon turns on the spot (about a full turn right, then back left), marking each half.
+# Lines: "[+]frame buttons hold [stick=lx,ly]" as the harness fixtures, "goto x z [run] [timeout_s]", "mark label", "wait ticks".
+mark look-right
+0 0000 75 stick=70,0
+mark look-left
++75 0000 75 stick=-70,0
+mark look-done

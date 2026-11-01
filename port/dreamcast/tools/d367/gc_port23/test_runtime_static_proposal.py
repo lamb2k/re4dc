@@ -69,7 +69,7 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);prepare();unsigned
     def test_proposed_actual_mixed_owner_impostor_flush(self):
         static = (GAME / 'platform/native_static.cpp').read_text()
         ui = (GAME / 'platform/native_ui.cpp').read_text()
-        helper = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        helper = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
         fixture = r'''
 #include "gc_asset_static.h"
 #include <cassert>

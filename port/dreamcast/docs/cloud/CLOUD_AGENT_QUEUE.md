@@ -1,10 +1,33 @@
+CURRENT OWNER HANDOVER 2026-10-30T10:07:29.108608-04:00 (RE4-PLAN-SYNC-20261029-1202). The user-authorized owner takeover is active; no external cloud handback is needed for local progress. All16 EF first slices are integrated, plus the subsequent actor, skin, world-clip, outcome, grid, mask, logger and static-lifetime corrections. Latest ready source is8a7c123bb (real Esp4e single-white material/lifetime/OOM, corrected58ece53a): nine actual target profiles, empty missing.txt, scoped six-TU propagation, lighting ABI fix1 and full OFF programme/15overlays/11allocated-section identity PASS. K45 QA_LINK1 compiles, lints and packages; prepared only. Same-K45 allocated ELF increases3808bytes versus875e932b7 (3776executable+32initialized data); not a whole-memory or timing measurement. Strict host sanitizer proof has one documented legacy raw-allocator vptr exception; new helper checks remain enabled. Earlier failed declaration/NULL/overbroad-hook evidence is preserved.
+
+The plan still has22 tracked items (EF01-EF16 plus6 continuations), with0 whole EF cards accepted. Source/build preparation is separate from actual current-image GPU/output/look/STRICT/heap/stack/VRAM/cost and physical-console acceptance. Existing b2 runtime evidence is not transferred to these newer images. Exact current-prefix EFB copy/depth continuation and broader material/lighting coverage remain unfinished; current real material class is deliberately narrow.
+
+Three merges remain BLOCKED pending explicit hand-resolution authorization: cloth-fixture bf59e27c conflicts in build-32.md (standalone maintained-SDK ELF compiled, not executed); recovery attachment43b876f5 conflicts in CLOUD_AGENT_QUEUE.md (lossless WIP archive only); route-scratch c62fe030e conflicts in native_static.cpp (retain route constants plus post-borrow clip-proof binding). Original refs and failed tips are preserved. Do not repeat unchanged relevant conflict regions or hand-resolve without authorization. All controls remain default0, parked portal/diagnostic/cabin controls stay parked, and frozen release/look/media/console/private holds remain. No new runtime, SD copy, release/default promotion or private upload occurred. Cloud watch stays every5minutes; progress emails remain stopped.
+
+Owner source takeover, 2026-10-30: the user now requests "finish cloud work". The local owner and assigned Sol6.1 High workers take over the outstanding source-only queue, starting with the four blocked handbacks. This supersedes earlier cloud-only/local-no-source ownership text for this work. Original cloud branches are preserved; new owner correction branches are held out of automatic cloud integration. Exclusive shared-file ownership and all default0, target/full-OFF, runtime/private/console/look/media/release gates remain. Actor9ebf5dc3, cloth-material020a4c38 and cloth-fixturebf59e27c have relevant host/sanitizer regressions passing; recovery attachment43b876f5 preserves its exact raw WIP bytes in gzip plus a checksum manifest. These corrections are published on codex/owner-fix-{actor,cloth-material,cloth-fixture,recovery-docs}-20261030; integration and target qualification remain pending. No runtime acceptance or full-card completion is claimed.
+
+Current owner update, 2026-10-29 (RE4-PLAN-SYNC-20261029-1202): frozen local EF04/09/11/16 deliveries are now integrated at `c027b26e32229dc9035b9fe2e1ac399bd9ee20b0`. Their local source-file reservations are released to the cloud task matrix; all further source-only/synthetic implementation belongs to cloud, with one writer per shared file and existing producer dependencies retained. Local now owns private-data/runtime/console qualification and serialized integration only. First slices are not full EF acceptance. Compatible ALLON K27 is prepared with QA_LINK=1; LOG_ATOMIC16 and portal controls remain parked. Exact file grants and evidence: [owner handoff](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-frozen-local-source-release). This update supersedes older pending-local-delivery status, not the unfinished scope or holds.
+
+CURRENT 2026-10-29 cloud-thread recovery (RE4-PLAN-SYNC-20261029-1202): user requests a fresh thread to continue interrupted source implementation. Read [recovery handover](HANDOVER-CLOUD-RECOVERY-20261029.md) first, then existing task/file matrix and ranked backlog. RuntimeD13/K35 prepared, owner14b5 checkpoint, two unchanged frontend/worldstream blockers. Check surviving workers/unpushed work before assigning exclusive writers; do not infer live activity from assignment or Working badge. All public-source/synthetic continuation remains cloud-owned; local private/runtime/console/integration holds remain. Recover, report actual worker/current task/next deliverable/wait matrix, then implement. Emails remain stopped; local cloud watch5m.
+
+
 # Cloud agent queue
 
-The live work list for the cloud Codex agent. Claude (the coordinator) edits it on `t15/int`. Read it at the start of each build. Work top to bottom, one build at a time.
+**Execution agreement:** RE4-PLAN-SYNC-20261029-1202; latest source review7c4c9200. All source/synthetic work belongs to cloud; current local frozen-slice qualification and exact file releases remain coordinated. Read the current owner assignment below.
+
+The live work list for the cloud Codex agent. Claude (the coordinator) edits it on `t15/int`. Read it at the start of each build. Follow the latest owner assignment below; independent cloud workers may run concurrently under its file reservations.
+
+**Work order 2026-10-28 evening:** read [HANDOVER-CLOUD-20261028.md](HANDOVER-CLOUD-20261028.md) first. It ranks Builds 31-36 by impact and adds the incremental-commit rule: small pushed commits that each build and keep identity, plus a dated progress line in your hand-back file on every commit.
+
+## Owner assignment 2026-10-29: all source-only implementation to cloud
+
+**Latest user direction:** the cloud worker takes all remaining implementation that can be done without local/private data, and parallelizes independent files. The new [current-source architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) at `7c4c9200` is now integrated. Read the [complete assignment and scheduling matrix](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment) first. This supersedes the earlier water-then-frontend-only assignment and the old one-build-at-a-time work order for independent cloud workers. Start ready water/EFM/collision-dirty/line work in parallel if workers are available; frontend is also independently ready with its exact ownership boundary. One writer per shared file, one SDK/build slot per worktree, coordinator-serialized handback merges.
+
+Cloud owns remaining public-source/synthetic implementation across EF01-EF16 plus the new actor/world/material/simulation continuations. Local workers finish only their already-frozen EF04/09/11/16 slices, target qualification and delivery; do not duplicate those patches. Their shared files transfer to cloud after landing and explicit release in this queue. Local ownership then covers private package production/binding, private look/gameplay/runtime/memory checks, final integration/release-recipe builds, ALL ON preparation and user-dependent hardware gates. Missing private inputs hold only those checks, never independent source implementation. No Build37+ is created; existing build handbacks remain reporting homes.
 
 ## Ground rules (every build)
 
-- **Base:** the newest `origin/t15/int`. Branch `codex/<name>-<date>`, one commit per build, pushed to `origin` only (never `bruce`). Claude does all merges.
+- **Base:** the newest `origin/t15/int`. Branch `codex/<name>-<date>`, one branch per assigned slice and small buildable commits, pushed to `origin` only (never `bruce`). The local coordinator does all merges. Independent source tasks may run concurrently under the latest file reservations; shared-file writes and integration stay serialized.
 - **Knob:** each build adds a new knob, default 0. With the knob absent or 0, the preprocessed source and objects match `t15/int`.
 - **Approximations are welcome** (project rule, 10-19). Prefer the faster approximate form when there is one, as its own switch. Say which outputs change. We run the gameplay-equivalence and look gates here.
 - **Hand-back report:**
@@ -13,6 +36,11 @@ The live work list for the cloud Codex agent. Claude (the coordinator) edits it 
   - code and stack size;
   - identity proof with the knob off;
   - a whole-frame figure labelled MODELLED.
+- **Stay mergeable (added 10-28, after Builds 25 and 26 both conflicted):**
+  - Right before you push a hand-back, fetch and rebase onto the newest `origin/t15/int`. Resolve conflicts with landed work yourself (keep both sides unless one replaces the other), rebuild, and name the final base in the report. Never base on an unmerged `codex/*` branch; if you need one, say so and wait for its merge.
+  - Write the hand-back report in its own file, `docs/cloud/handbacks/build-NN.md`. Don't edit this queue file; Claude updates the Status row and links the report.
+  - In shared files (`qa_menu.cpp`, `native_actor_fast.cpp`, `native_model.cpp`, `qalink*`), add new code as its own `#if KNOB ... #endif` block next to existing ones. Don't widen an existing `#if` condition or edit inside another knob's block.
+  - If Claude still hits a conflict, the row goes to BLOCKED with the file list and you re-sync; Claude resolves by hand only when the user asks.
 - **Optimization rule:** no new SH-4 assembly or linker work unless removing repeated work, data layout or batching can't get there. If you add any, say why in the report.
 
 ## Why bytes matter (console fact, 10-23)
@@ -33,8 +61,11 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 ## Status
 
+**Tracking contract:** Status cells for integrated controls must retain `landed <integration-sha>` when rewritten. The owner off-switch scanner uses that marker and the control names in this table. A display-count change alone is never recipe enablement, parking or acceptance. Preview the real scanner against a proposed queue and reconcile the exact switch set with the owner ledger.
+
 | Build | What | State |
 |---|---|---|
+| Systemic 2026-10-29 | Current architecture review and existing EF backlog | RE4-PLAN-SYNC-20261029-1202: user finish cloud work authorizes owner and assigned workers to finish remaining source/synthetic queue, superseding cloud-only ownership. Original cloud refs preserved; source, build, private runtime and console acceptance remain separate. No new Build37+. |
 | 1 | SCENERY_REPLAY_LEAN | landed 28da0980 |
 | 2 | ACTOR_SETUP_LEAN + SCENERY_UV_SNAPSHOT | landed 75229c8f |
 | 3 | SCENERY_SELECT_LEAN2 | landed ea969bb2; measurement paused. Builds 1 to 3 world knobs SELECT_ONLY, REPLAY_LEAN, SUBMIT_BATCH now ON in the recipe (e452afec): world 7.42 -> 6.88 ms MODELLED at r101 |
@@ -50,6 +81,40 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 | 13 | SCENERY_RECORD_SPLIT (meshlet size sweep, 16+12 record split) | landed 606dd4c3 (merge of eef109c2), default 0 (meshlet default 64 kept) |
 | 14 | PERF_PHASE_MISS (phase miss counter) | landed 630d00ef (merge of 5a4d2cc0), default 0; knob-off image identical to Test 23 d28b3cfc |
 | 15 | WORLD_CENSUS24_ERRORS + world policy provenance recovery (world-policy-census-fix) | landed 1250754a (merge of 54c1b417), default 0; far_shell.inc conflict with I-001 resolved keeping both; knob-off image identical to Test 23 d28b3cfc |
+| 16 | Blender world index layout preserved (`--preserve-index-layout`, Build 11 follow-up, tools only) | landed 765b8b82 (merge of 20d234c1), default 0; knob-off image identical to Test 24 0a8eac21; owner r101 enabled pair next |
+| 17 | #28 DreamShell disc PIO fallback (`DISC_PIO_FALLBACK`) | landed 331a945c (merge ecb16336), default 0; console check on a DreamShell+IDE unit still needed |
+| 18 | #41 r200 effect drops on entry (`FX_R200_ENTRY_CAP`) | landed 4c4a037c, default 0; owner r200 entry run (fx_dropped) next |
+| 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
+| 20 | #32 r100 shading code-history review (docs) | landed 331a945c (merge 61b0fe0f, docs) |
+| 21 | Texture arena uses the incoming key (`TEX_ARENA_CURRENT_KEY`, outside audit T22-T24) | landed 1717235b, default 0; local A/B on the T23 vanishing next |
+| 22 | Church puzzle effect fallback (`R117_FX_QUALIFIED_FALLBACK`, outside audit) | landed 1717235b, default 0 |
+| 23 | Root-pose cap fallback + witness preflight (`ROOT_POSE_CAP_FALLBACK`, `ROOT_POSE_WITNESS_PREFLIGHT`, outside audit) | landed 4c08f112, default 0 |
+| 24 | Near-camera draw setup blow-up on console: audit + diagnostic split (`DRAW_SETUP_AUDIT`), `ACTOR_CLIP_REUSE`, `SCENERY_CLIP_GATHER` | landed a481ad7d (merge of ff302f4a), all default 0; console diag disc + OFF/ON pairs next (local) |
+| 25 | One simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`) + offline character light bake tool | landed 800a2a1c (merge of ee9a5c41), default 0; one-hunk conflict with xlu28 in native_actor_fast.cpp resolved by hand (keep both); release image unchanged, FAST_ONLY=1 recipe builds missing 0; console barn ON arm next (local) |
+| 26 | Fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`) + `ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26` | landed 33efaa8d (merge of the Build 26 branch), all default 0; conflicts with Build 25 / xlu28 / linkpad28 in 4 files resolved by hand (keep both); release image builds missing 0, all-on QA build (FAST_ONLY + both clip fixes + audit + QA_LINK) missing 0; console barn audit run next (local) |
+| 27 | Port missing weapon modules wep05/wep06/wep12 (`WEP_MODULES_27`) | landed 39c1742a, default 0; equip/fire/reload previously checked. Inventory open/close + actual r105-to-r101 door PASS for items 0x29/2a/2b/34 on ALL ON 81028934c, cache interpreter/gdemu seed1, eight final 60s captures, no fault markers, reader/overruns 0. Some restore text interleaves: functional evidence, not full memory identity. Before Build 32 actor formats; release h2/s30 and hardware acceptance remain pending |
+| 28 | QA link code review + fixes (`QA_LINK_REVIEW28`, PC/Pi `--review28`) | landed default0; host gates/current34-test CRLF companion fix retained. L4 TOUR28 stage/33-preset session/build binding audited; corrected review-mode operator guards. Live Pi remains active legacy with fresh console peer, so review28 service maintenance and user media/preset/redial prerequisite HELD. No new console tour/acceptance. See owner answers; owner10-29 unchanged public-stock PPP runner recovery: matched60s source2061 Ashley pair, PPP up/local relay and8 complete automatic T snapshots each, no incomplete parts; old runner failures retained, Pi/hardware gates pending |
+| 29 | Fallback sweep of the whole source + offline asset scan + trigger-removing conversions (`FALLBACK_SCAN29`, `FALLBACK_AUDIT29`); owner engine slice `NATIVE_DRAW_OUTCOMES`; owner first slice `CLOTH_SHEET11`; distinct collision `GAME_ATCHK_DISTINCT29`; EFM `GAME_EFM_CLASS_IDENTITY`, line `GAME_LINE_RESUME`; `WATER_LAYER29`; `CLOTH_TILES11` EFFECT_UV12 | landed d91d6565; retained source slices and b2 first-radio/cloth setup evidence stay scoped. Material correction landed400e8e40c and bounded publication diagnostic landedabedffa78, both default0 with four target arms and full programme/15-overlay/allocated-section OFF identity PASS. Compatible K41 QA prepared; diagnostic stays outside timing profile. Actual selected-instance native output/material/both-side/near-plane/numeric/lifecycle/memory/cost/look/STRICT/console acceptance remains open. See dated Answers(owner). |
+| 29 | CLOTH_MATERIAL11 | landed 400e8e40c, default0; strict selector and actual u32 typed-word correction85e3. Four full release arms/missing0 and full OFF identity PASS; compatible K41 QA compile/lint/ZIP/checksum PREPARED only, no native-pixel/look/cost/console acceptance. |
+| 29 | CLOTH_PUBLICATION11 | landed abedffa78, default0 diagnostic; four target arms/fullOFF PASS, 1848B declared scalar storage, no queue growth; separate profile, not presentation proof or timing enablement. |
+| 30 | Public QA link kit (`dc-qalink`) | MOVED LOCAL 10-28: the user asked Claude to build it; cloud agent: skip this build |
+| 31 | r103 portal runtime + compiled world part plan (`WORLD_PORTAL29`, `WORLD_PART_PLAN29`; [hand-back](handbacks/build-31.md)); owner engine slice `WORLD_PORTAL_COMPLETION`; owner first slice `WORLD_PREPARED09`; `WORLD_PAGES31` WORLD_MUTATION31 | landed 81028934c (re-sync 5b5e4603b), both default 0; 21 builder tests, 388 portal checks and 450 plan cases PASS locally plus ASan/UBSan; release recipe missing 0. Part plan added to ALL ON QA rebuild; portal parked for incompatible current ALL ON composition and required private WP29 proof/magenta/console qualification Owner engine-wave1: EF08 queued portal completion first slice integrated default0; corrected supported ON build, actual macro readback and release/solo-portal OFF identity PASS. Authored-cell/live proof pending; incompatible with broad ALLON, parked separately. Combined landing064bfa4ea default0; refreshed ALL ON QA064bfa4e compile/lint/ZIP/checksums prepared. Portal completion stays parked in its separate profile; runtime/hardware gates pending. Owner wave3 c027b26e: EF09 bounded lookup/direct records/optional bounds with allocator incarnation integrated default0; ordered paging, precise mutation and stream/clip composition remain cloud work. Combined release/OFF identity and compatible ALLON K27 compile/package PASS; runtime/console pending. Local source reservation released at c027b26e; cloud owns further source work under exclusive file assignment. Owner 2026-10-29: Ordered bounded pages integrateda5ac02ae default0; host normal/sanitizer, four fulltarget arms/full OFF identity PASS; K34 QA prepared,16final SDKpayloads bound. Actual >320 content/output/lifecycle/stack/memory/cost/console and stream/clip/mutation follow-ons open. Owner 2026-10-29: Worldstreamb4 host/default/zero release/full OFF PASS, but supplied control profile conflicts current pacing; changed PVR2 profile stops at missing COARSE skipmask bit. Candidate54a3e3c9 UNPUSHED/BLOCKED; source-only exact profile correction requested. New dependent outside broadALLON with portal parents, no private/runtime acceptance. Streamd780 target sixarms/fullOFF resolved and merged49963865; separate portal/private/runtime gates remain. CompatibleK35 QA prepared+16payloads bound. WORLD_MUTATION31 landed c457e660 default0/fourtarget/fullOFF; K37 QA prepared/final16bound, actual runtime/memory/cost open. |
+| 32 | Guarded actor formats (`ACTOR_FORMAT32`, `ACTOR_BACKFACE_CONE`, `NATIVE_ACTOR_UV16`; [hand-back](handbacks/build-32.md)); owner engine slice `ACTOR_SOURCE_SPAN`; owner first slice `NATIVE_FE_CONTINUATION`; `SKIN_ADMISSION32`; `CLOTH_XM_BATCH14` ACTOR_SKIN_RESERVE SKIN_RECIPE32 | landed 2e0a59bea; retained prior controls and exact scanner tracking. Actor presentation correction landed d789dd7c after six actual target arms (96/128, absent/zero/dependency/ON), missing0 and full OFF identity PASS; compatible K40 QA prepared, separate recipe0 presentation profile held outside recipe1 broad K. EF04 source-entry tests39ef are host/sanitizer qualified but target admission pending. Cloth fixturebf59 is host21/sanitizer qualified; build-32 report conflicts with newer owner reports, no hand resolution or target claim. Prior b2 natural first-radio16 scoped PASS only; remaining whole-card/console gates open. |
+| 33 | Ordered static-object output headers (`STATIC_OBJ_BATCH33`; [hand-back](handbacks/build-33.md)); owner engine slice `STATIC_OBJ_LIFETIME05`; owner engine slice `PLAN_OWNER_SCOPED` | landed 36643bf8a, default 0; 392 local UI order comparisons normal+ASan/UBSan PASS; recipe missing 0; ALL ON33 prepared QA_LINK1. Private r105 60s smoke: cumulative reuse201/saved6432 bytes, barriers55469, no faults; large/blended/matched OFF output/look/memory/STRICT/full-image/console benefit pending Owner engine-wave1: EF05 first SOB heap/allocation-lifetime slice integrated default0; ten host boundaries, release OFF/ON and programme/overlay OFF identity pass. Unqualified content uses uncached source; content/sibling/runtime/hardware follow-ups remain. Combined landing77461a84e; new control default0, refreshed ALL ON QA source77461a84/QA_LINK1 compile+lint+ZIP/checksum prepared; runtime and console gates pending. Owner engine-wave1: EF07 owner-scoped plans integrated default0; collision/lease/tombstone, unknown-authority miss and actual wrap consumer fence host/target checks PASS. Fixed arena accounting and OFF identity retained; runtime/memory/full-cost acceptance pending. Combined landing064bfa4ea default0; refreshed ALL ON QA064bfa4e compile/lint/ZIP/checksums prepared. Portal completion stays parked in its separate profile; runtime/hardware gates pending. | <!-- owner target-map: source/placement named-model audit complete; no confirmed large/blended target, qualification pending. See build-33 owner answers. --> <!-- owner off-identity: full release programme/15 overlays/allocated sections/1667 ISO payloads match baseline-absent-zero; raw ISO bytes differ, every changed byte now localized to timestamps; zero unknowns, no raw-byte identity claim. Enabled qualification still pending. -->
+| 33 | STATIC_OBJ_SPANS10 | landed 41a65af35; safety correction landed bba762626, default0. Six actual target arms, empty missing.txt and complete OFF programme/15 overlays/11 allocated-section identities PASS. Spans now refuse non-rigid pending skin arrays before acquiring plans, preserving ordinary materialization. Actual old failing eager-skin witness/new normal+san controls PASS. Refreshed compatible K42 QA compile/lint/ZIP/checksums PREPARED; former safety hold superseded. Runtime output/lifecycle/memory/cost/console acceptance remains open. |
+| 31 | WORLD_PORTAL_CLIP_GATHER31 | landed dcc870325, default0. Actual base/derived emitter proof-view correction04d; six target arms, empty missing.txt/full OFF identity PASS. Actual borrow/restart and pages0/1 host/sanitizer controls PASS; independent source review found no scoped blocker. Parked by owner outside incompatible broad ALLON: separate portal/stream/gather profile and private authored-cell/current-instance/output/cost/console gates required. Compatible K42 QA rebuilt with this flag0, PREPARED only. |
+| 34 | Local-control decisions and existing-switch repairs ([hand-back](handbacks/build-34.md)); owner engine slice `PS2_UPLOAD_INCARNATION`; owner first slice `LOG_ATOMIC16` PREPARED_BINDING34 LOG_RECORD16 | landed6c6028df6 plus supported SCPS validation tools cd25cc5e4; default0, owner host/sanitizer and release missing0. Private front/piece functional evidence recorded; separate matched private validation-control/on/check full links and resolved/symbol/C-parser proof PASS807a9102e (NMR_POOL_LOD1 preserved); six bounded private r101/r103 runs complete with scoped cached-header comparisons recorded under owner answer; supported validation real-door3-arm absent105-to-present101 entry PASS, active-table retirement/re-entry/header telemetry/look/STRICT/memory/console still pending. Original production cache2+SUBMIT_BATCH guard failure remains held; no recipe promotion; owner10-29 fixed-observer ALLON34 candidate2 fight runs complete; stock memory judge FAIL/readback held, no promotion; owner10-29 RAM-log publication/raw-RAM contract risks traced; stock failures remain held, no retry or parser workaround; owner10-29 stock structured QA coverage audited: current heap context only, missing held/minimum/error/end-event equivalents; RAM forwarding not independent; failed memory gates remain held, no runtime retry; owner10-29 exact cstat5e/readers/config/fixtures provenance and direct append boundaries recorded; next existing KOS debug-writer context/serialization check, stock memory FAIL/live-cache hold retained Owner engine-wave1: EF06 upload-incarnation slice integrated default0; host/sanitizer, release OFF/ON, supported TU profiles and programme/overlay OFF identity pass. Enabled BSS+2048B at128sets; actual lifecycle/look/memory/console gates pending. Combined landing77461a84e; new control default0, refreshed ALL ON QA source77461a84/QA_LINK1 compile+lint+ZIP/checksum prepared; runtime and console gates pending. CLOUD AFTER EF13: EF15 qualified frontend TPL descriptor owner/generation reuse with conservative mutable fallback; mem/fault/game30.mk remain outside this grant. [Assignment](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-cloud-source-only-implementation). Owner wave3 c027b26e: EF16 independent existing guard selector integrated default0 but PARKED outside ALLON: arbitrary IRQ-masked work, NMI/reentrant fault corruption and cache visibility are unresolved; cloud bounded publication follow-on. Combined release/OFF identity and compatible ALLON K27 compile/package PASS; runtime/console pending. Local source reservation released at c027b26e; cloud owns further source work under exclusive file assignment. EF15 frontend f90dd048 ON admission BLOCKED by actual-writer descendant-alias counterexample; branch unmerged/default unaffected. Source-only fix/regression requested in new Build34 owner answer; no private asset occurrence inferred. Owner 2026-10-29: Updated frontenda1f fixes originalf90 actual-writer blocker, host checks and four fulltarget links/missing/macros pass, but full OFF programme/allocated/overlay identity FAILS. Candidatebeb67057 UNPUSHED. Isolated to one ModelRender allocated section/diagnostic literal; source-only fix requested, no weakening of judge. Latest5532 wildcardguard-only does not change cause; skip identical relevant runtime retry. FRONT_TEXOBJ hold remains; new dependent outside broad ALLON. Frontendacb8 full target/OFF resolved and merged149bff3a; FRONT_TEXOBJ parent remains held. Bindingc4cc/loggercc22 scoped host review done, target pending; logger outsideALLON. PREPARED_BINDING34 landed db01f44e default0/fourtarget/fullOFF; K36 QA prepared/16payloads bound, actual submit local+saved6684B, runtime/headroom/cost open. LOG_RECORD16 landedb2c6cde32 default0/fourtarget/fullOFF; both logger controls PARKED outside broadALLON for arbitrary raw IRQ length/NMI/cache/duration. Compatible K40 QA rebuilt with logger0/final16payloads bound. |
+| 35 | Audit-event and drawn-tick rolling-window design ([hand-back](handbacks/build-35.md)) | runtime2061c8380 default0; scoped image/base/function/coherent schema/window metadata and static BSS ledger PASS. Window-consumer local-frame replay/object identity PASS; compiled64KiB kernel-stack attributes bound in5 ELFs. Not a full-stack/high-water bound; DIAG4/14/marked600-draw/lifecycle/CPU/current memory/console HELD/pending, no promotion. See owner answers |
+| 36 | Scanner: layered tex.pak (last set wins), room membership, old world meshes | landed4c1e62b9c (6d6b48cda), --scan36 default0; owner144 tests and21 CLI runs/126 exact OFF artifact comparisons PASS; release missing0. Final ALL ON35 private OFF/ON rescan COMPLETE, input1664 files unchanged; models12378->12589, unassigned891->612,211 legacy models inventoried. Strict INCOMPLETE retained; see owner answer for selection/coverage gaps; owner10-29 selector follow-up: emleon09 absent from audited table,13 rows remain unbound; INCOMPLETE unchanged |
+| 32 | ACTOR_TABLE_REUSE14 owner continuation | landed ecfd1d83e, default0. 7 full target arms and full OFF identity; actual emitted-word small-light regression fixed by cross-Frame direction refresh. Same existing four Frames/workspace budget; no new geometry reservation. Actual incidence, output, full-stack/current-memory/full-cost and console gates remain. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 29 | Sprite/water result propagation | landed fe7df69cc, default0. 5 full target arms including RTT and full OFF identity. Typed sprite/FIFO/RTT/water results preserve legacy int/void ABI and admission. Corrected pre-aborted stream returns PartialAbort with zero publication, forbidding source replay; actual W29 child aggregation retains terminal outcomes. Submitted/queued does not mean presented. Actual selected output/lifecycle/current memory/cost/console remain. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 29 | ESP1B_GRID03 owner continuation | landed 46a2c7e9e, default0. 5 full target arms including RTT and full OFF identity. Actual registered CommonTrans id1b spline producer preserves source cell order/diagonals/matrix/UV through the existing bounded descriptor and FIFO. Only admitted unmasked/unlit RGB565 clamp class; source work/matrix copied before publication, no retained source pointer. Actual incidence/look/current-memory/full-cost/console remain. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 34 | LOG_PUBLICATION16 owner continuation | landed 88e3045ac, default0. 6 full target arms with RECORD16 off/on and full OFF identity. Nonblocking whole-call lease, bounded 255-store IRQ windows with exact SR restoration, explicit refusal and two immutable terminal-evidence slots; fixed416B target state. Installed KOS rollback and final target TUs independently reviewed. External KOS formatter, post-evidence crash-screen formatting, instruction-level duration/cache/raw-RAM/NMI/full-memory/console remain excluded or pending. Parked outside broad ALLON. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 33 | Sibling static-object cell lifetime | landed 9338cdf73, default0. 6 full target arms including inherited bake/placement and serializer diagnostic profiles, empty missing.txt and full OFF identity. Existing out-of-band cell authority now guards sibling state/rest reads, callback/allocation/free reentry and same-address incarnation reuse. Original stale-state failures retained;30 focused source cases plus existing10 pass normal/sanitized. No new cache/capacity. Actual admitted content/lifecycle/output/current memory/net cost/console remain. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 29 | EFFECT_MASK12 owner continuation | landed 36b0ab8c7, default0. 8 full target arms including FAST0/SETUP0, GRID0/1 and RTT, empty missing.txt and full OFF identity. Bounded RGB565 mask TEXA1 class preserves prior RGB, replaces raster alpha with optional scale4 and uses existing Entry/header/FIFO. Real conversion/upload transparent-RGB witnesses pass; replacement/coverage/VQ/palette/mip and unsupported metadata representations refused. Source epoch/Entry/upload/header transitions and terminal zero-output abort tests pass. Variable-alpha masks, exact current-EFB/indirect rendering, target GPU/output/look/current memory/cost/console remain open. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 31 | WORLD_ROUTE_SCRATCH31 | BLOCKED c62fe030e: source conflict in native_static.cpp against owner462bf570f, at route constants versus post-borrow clip proof binding. No hand resolution or target build. Proposed retain-both resolution requires explicit user authorization; unchanged relevant conflict is not retried. Default0 retained. |
+| 32 | Actor presentation/recipe source composition | landed 875e932b7, default0. 8 full target arms including existing presentation-only and joint skin recipe compositions at bones96/128, empty missing.txt and full OFF identity. Existing finish_owner accounts saved pending recipe credit before direct-image forget, retaining unrelated recipes and prepared fallback restoration. Actual actor/source/demand/owner/callback/OOM/retirement/ordered owned-run input fixtures pass; original old-helper failures retained. Presentation stays parked outside broad ALLON pending actual cabin registry/pose/material/look/STRICT/current memory/cost/console; no pixel/numeric or live acceptance. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
+| 29 | Real Esp4e single-white material and lifetime | landed 8a7c123bb, default0. 9 full target arms including ordinary/legacy rows, collector combination, raw-pool compiler diagnostic and RTT, empty missing.txt and full OFF identity. Real Esp4e single-white8x8 RGB565/fullambient/emptylights/RGBA>=64 producer now yields source SCALE4 opaque white with source depth writes. Copied embedded GX words use effect/cloth lifetime; archive authority covers pixels only. Closed retirement/new-admission, grid/source/native-reset, owned-slot reuse, no stale replay and selected failure are tested. Material1 also handles Set allocation failure/caller cleanup and requires existing lighting ABI fix1. Strict host sanitizers exclude vptr only in legacy raw allocator adapter; new helper checks remain enabled. Debug pool restoration stays closed until completed Set; private reset proof is single-path only. Broader materials, actual incidence/GPU/look/STRICT/current memory/net cost/console remain open. Compatible ALLON QA_LINK1 compile/macro/missing/lint/ZIP/checksum PREPARED only; no acceptance or promotion. |
 
 ## Build 5: world emit, in data-cache order (`SCENERY_EMIT_PREFETCH`)
 
@@ -152,9 +217,712 @@ Plan section "Compare local indexed data with direct strips".
 
 **Order:** 10 first. 11 and 12 can run in parallel after it, then 13 and 14.
 
+## GitHub issue triage builds (added 2026-10-26)
+
+Code and docs only, from public GitHub issues on lamb2k/re4dc. Same ground rules: one branch and one commit per build, default-off knobs, identity when off. You have no game data or console, so prove code builds on synthetic cases and say what the local owner must run. Don't post on GitHub; Claude replies there.
+
+| Build | What | State |
+|---|---|---|
+| 17 | #28 DreamShell: PIO read fallback when disc DMA stalls or returns bad data | landed 331a945c, default 0 |
+| 18 | #41 castle gate (r200): effect sprites dropped on entry | landed 4c4a037c, default 0 |
+| 19 | #51 artist contribution guide (docs) | landed 331a945c (docs) |
+| 20 | #32 r100 unlit area: shading code-history review (docs) | landed 331a945c (docs) |
+
+### Build 17: disc PIO fallback (`DISC_PIO_FALLBACK`)
+**Why:** on a DreamShell + IDE-mod console the game stays on a black screen. The tester's on-screen log shows `DISC: FIRST READ LBA=83433 N=21 (DMA, NO STREAMS)`, the first file read returns bad data (stream table of 44384 bytes fails its check), and the first DMA read never completes: the reaper thread waits on its semaphore forever. GDEMU and Flycast don't show it. `DISC_DMA_WAIT_TIMEOUT=1` is already in the recipe but only bounds one wait.
+**Do:**
+- Find every disc read path (the KOS cdrom/g1 layer, our DMA reaper, the stream table load).
+- On a DMA wait timeout or a failed first-read check, retire the DMA request cleanly (no leaked semaphore or reaper state), then re-read the same sectors by PIO. After N failures in a row (say 2), switch the session to PIO for good.
+- Log one line per switch (`DISC: DMA->PIO after <reason>`), never per read.
+- Report the read-rate cost of PIO in plain numbers, so we know what DreamShell players lose in door and movie loads.
+- Synthetic proof: a fake driver that drops completion or corrupts a buffer reaches the PIO path and loads the correct bytes.
+
+### Build 18: r200 effect drops on entry (`FX_R200_ENTRY_CAP`)
+**Why:** entering the castle gate (r200), 803-827 effect sprites are skipped over about a second (`fx_dropped` 0 → ~800, frames ~1028-1628, Tests 20 and 22). Play is not affected. `FX_ROOM_SPILL_KB=24` (a lazy heap-4 queue cell for overflowing rooms) shipped from Test 19 and didn't cover it. Likely the per-frame see-through (translucent) list fills while the truck scene runs.
+**Do:**
+- Find which list or pool refuses: the per-frame translucent list, the effect queue, or the Esp sprite pool. Show the refusing site and its limit.
+- Propose the cheapest fix: a larger list only during that scene, a spill like FX_ROOM_SPILL, or merging/culling sprites that cover the same pixels (an approximation is fine, under its own switch).
+- Report the bytes it costs (heap 4 is tight; s30 floor 98,000 B) and where they come from.
+
+### Build 19: artist contribution guide (docs only)
+**Why:** #51: a tester offers Blender and model-reduction help, and the reduced Ganados (g70) look too far from the original.
+**Do:** write `port/dreamcast/docs/CONTRIBUTING-ART.md`:
+- what a compatible model package is (joint/weight identities, material roles, animation contracts) and why an arbitrary FBX round trip isn't one;
+- the Blender tools we ship (world round trip, `--preserve-index-layout`) and the pinned Blender version;
+- how to submit a sample: same pose, camera and lighting as the full PS2 model, a still pair, and what we check (silhouette, face, hands, neck/wrist joins, UV seams, deformation);
+- the rule that every asset comes from the PS2 version, and that contributors supply their own game data (no game files in the repo or PRs).
+Plain words, short sections. Link it from CONTRIBUTING.md.
+
+### Build 20: r100 unlit area history (docs only)
+**Why:** #32 (Test 14, real console): the place where villagers first throw a rock (r100, outside the house) draws unlit, as flat colour.
+**Do:** from git history, list every change to r100 lighting and shading: light sets, LIGHT_CUT_HOLD, the actor probe light, PS2 prelit colours in the world, `PS2_WORLD_*` knobs, fog/mist. For each: commit, knob, what it changes, and whether it could make that area flat. End with the two or three most likely causes and the run the local owner should do to confirm each. Write it as `port/dreamcast/docs/cloud/R100-SHADING-HISTORY.md`.
+
+## Drawing on hardware (added 2026-10-27)
+
+### Build 24: near-camera draw setup blow-up on console (`DRAW_SETUP_AUDIT`)
+**Why:** on a real console the farm (r103, day) drops to 5-6 fps near the barn and the Ganado bodies, and is about 19 fps from 20 m away. Flycast, including the cache-model build, stays at 30 fps in every state. The cost is the hidden "setup" phase inside the QA page's TOTAL: Render() (world draw + the models' draw list), which the QA buckets don't show (tick_log.cpp, qa_menu.cpp). User: "we really need to figure out drawing ... it seems like it's just not right."
+
+Console QA Diagnostics readings (ms per 33.4 ms tick, Test 24b QA 52cb8198 unless noted):
+
+| Spot | fps | QA CPU% | TOTAL | buckets (logic+fx+models+scenery+post+wait) | setup = TOTAL - buckets |
+|---|---:|---:|---:|---:|---:|
+| r101 cross, 0 alive | 26.9 | 102 | 33.7 | ~9.3 | ~24 |
+| r103 barn, 4 alive | 5.9 | 229 | 54.9 | ~17.4 | ~37 |
+| r103 near bodies, 0 alive | 5.4 | 274 | 69.0 | ~14.1 | ~55 |
+| r103 20 m from bodies, 0 alive | 18.9 | 99 | 33.4 | ~15.5 | ~18 |
+| r103 near barn, n256 off (disc N) | 5.9 | 496 | 104.9 | ~9.5 | ~95 |
+| r10c, 1 alive | 13.7 | 117 | 37.0 | ~17.8 | ~19 |
+| r113, 4 alive | 11.9 | 126 | 41.9 | ~24.5 | ~17 |
+
+- QA CPU% is work before the vblank wait as a share of a 33.4 ms tick; there is also ~20 ms per tick outside TOTAL (Render_before, present, pacing).
+- The GPU is not the limit: the near-bodies PACE line reads gpu_avg 16.0 ms.
+- The farm's night visit (no bodies) runs about 10 fps faster than the day farm near the barn.
+- Ruled out by lane farm-barn27 on Flycast: motion disc reads / heap 4 (1.3 MB free, 0 misses/s), body logic (bodies cost 0 on Flycast), VRAM reload loops.
+- Reminder (top of this file): the game is data-cache bound on console and nothing we emulate sees it.
+
+**Do (code audit; you have no console, so prove what you can on synthetic cases):**
+- Walk every path inside Render() setup for the world and the model draw list, and list the costs that grow with camera proximity or with many models near the camera and that exist only on hardware:
+  - misaligned loads/stores that trap on SH-4 (Flycast hides them);
+  - near-plane / guard-band clipping that multiplies per triangle when large polygons or bodies are close;
+  - store-queue / TA FIFO backpressure when one model or wall emits many polygons in a burst;
+  - data-cache thrash: per-model draw records, matrices, skinning or vertex buffers walked out of order, or one 32-byte line touched per vertex;
+  - any per-frame rebuild (sort, list, light set) that scales with the number of models or bodies in view.
+- For each suspect give the code site, why it is hardware-only, and its expected scaling with the readings above.
+- Add a diagnostic knob (`DRAW_SETUP_AUDIT`, default 0) that splits setup into world opaque / world translucent / shell / per-model draw list / clip / submit, with counts (models, triangles in, triangles after clip, translucent items sent vs on screen), printed on the QA Diagnostics page next to the existing WORLD_METER rows. Reuse PERF_PHASE_MISS for per-phase cache misses.
+- For the top one or two suspects, a fix under its own default-off knob (approximations welcome), with the usual bytes/lines-touched report.
+
+**Local owner then runs:** the QA diagnostic disc (farm-barn27, WORLD_METER=1) on the console near the barn and 20 m away, then your knobs.
+
+## Fast paths only (added 2026-10-28)
+
+User, 10-28: "I want simple lighting that doesn't fall back to per-vertex lighting at all. ... audit where things are using a recently optimized drawing path correctly. Fallbacks cause a lot of slowdown."
+
+First real-console reading over the modem link (QA disc DIAGLINK ae0f7b2b = `DRAW_SETUP_AUDIT` + `PERF_PHASE_MISS` + `WORLD_METER` + `QA_LINK`), r103 day, inside the first barn, not near the bodies, 4 Ganados alive:
+
+| | Farm yard | First barn |
+|---|---:|---:|
+| fps | 14.7 | 5.9 |
+| QA render (ms per tick) | 8.1 | 51.2 |
+| DSA24 MODELS work / submit (µs per drawn tick) | - | 20,930 / 3,829 |
+| DSA24 WORLD OP/PT work / clip / submit | - | 11,595 / 1,191 / 4,498 |
+
+- MODELS at the barn is ~22 model calls, ~42 parts and ~7.4k triangles in per drawn tick, so about 2.8 µs per triangle. That is roughly 10x the normal skinned path: 4 Ganados at r101 measure ~3 ms on the console.
+- MODELS XLU is ~680 translucent triangles per tick, almost all on screen.
+- The SH-4 model (local lane barn28) prices the exact per-vertex light pass at only 1.6 ms MODELLED there, so the rest of the 21 ms is not explained yet. Animals are off (`ANIMALS_OFF=1`).
+
+### Build 25: one simple light path for every model, no per-vertex fallback (`ACTOR_LIGHT_FAST_ONLY`)
+**Why:** the actor kernel (platform/native_actor_fast.cpp, the GIGANTE_LIGHTS fold, ACTOR_EXACT_FAST, ACTOR_PROBE_LIGHT, GANADO_LIT, PS2_GANADO_LIT, CROWD_FLAT) sends parts off the fast fold for these reasons: per-vertex colours, diffuse/scale materials, a fourth significant light, and probe declines (~11% of parts). Each one costs exact per-vertex light maths. Lane barn28 (local) is building `ACTOR_LIGHT_CAP`: at most 3 lights, but the exact evaluator stays. This build goes further.
+**Do:**
+- Under `ACTOR_LIGHT_FAST_ONLY=1` (default 0), every model (Leon, Ganados, partners, bosses, props on the actor path) takes one fast light path. That path is:
+  - the probe or fold of at most N lights (N = 3 or less), plus ambient;
+  - per-vertex colours handled as a precomputed multiply, never a light evaluation;
+  - diffuse/scale materials folded into the part colour.
+- No per-vertex light evaluation remains reachable with the knob on. Add a counter that must read 0: parts that would have fallen back, by reason.
+- Keep Leon's live probe (muzzle flash and fire still light him) through the same fast path.
+- **Offline bake tool** (tools only, separate flag): bake the static light and AO of each character into its vertex colours or palette, from the PS2 mesh/rig. At run time, a baked model needs only a room tint plus the flash term. Output: a data set the local owner packs. Give the format and a Leon + em12 example.
+- Report which outputs change (approximation). It is a look change; we run stills and gameplay equivalence locally.
+
+### Build 26: fallback audit across all draw paths (`DRAW_FALLBACK_AUDIT`)
+**Why:** many recent speed builds added a fast path that keeps the old path as a fallback, and fallbacks have cost us before (GC GX path, coarse scenery, legacy clip, texture resolve). The barn reading suggests something is still on a slow path near the camera.
+**Do:**
+- Walk every draw path, world and models, and list each fast/slow split:
+  - the knob and recipe value;
+  - the condition that sends work to the slow path;
+  - what the slow path costs per item (MODELLED);
+  - whether the condition can occur in chapters 1-2 data.
+- Cover at least:
+  - the world: SCENERY_* (SELECT_LEAN2, REPLAY_LEAN, SUBMIT_BATCH, EMIT_PREFETCH, LOCAL_INDEXED/DIRECT_STRIPS, RECORD_SPLIT), PS2_WORLD_*, shells, GC GX/MeshDraw paths;
+  - models: ACTOR_SETUP_LEAN, ACTOR_BYTES_LEAN, ACTOR_CLIP_REUSE, the native actor vs legacy model path, skinning, light (Build 25);
+  - clip and guard band, translucent sort/submit, texture resolve, effects (ESP_SETUP_LEAN).
+- Add `DRAW_FALLBACK_AUDIT=1` (default 0): one cheap counter per fast/slow split, as items per tick on the slow path by reason, shown on the QA Diagnostics page and in the QA_LINK T rows (≤1200 B per datagram part, compact).
+- Then the local owner runs it on the console at the barn and reads which fallbacks fire.
+- For each fallback that fires in chapters 1-2, propose removing the trigger, preferably by offline data conversion, or a fast approximation. Put the top two under their own default-off knobs.
+
+### Build 27: port the missing weapon modules wep05 / wep06 / wep12 (`WEP_MODULES_27`)
+**Why:** on equip, wep12 (Thompson, item 0x34) halts the game ("module: id 56 not in the image; link failed", then "DLL link/unlink failed called; halting"). wep05 (item 0x29, module 67) never finishes loading, and wep06 (item 0x2a, module 50) fails the same way. Their code was never ported. The sound banks for all three are fixed (snd28c, 8766fa4a).
+**Do:**
+- Port the modules from the decompilation into the image the same way as the existing wep modules (config/G4BE08/modules.py; include/wep_mod.h has wep12 notes: objTompson, pl_machine).
+- Add them to the module table, and make the equip path refuse cleanly (no halt) for any id still missing.
+- Report the size added per module. The local owner checks equip and fire for each in Flycast.
+
+### Build 28: QA link code review (`QA_LINK`, review + fixes)
+**Why:** our own modem link (lane qalink27; port/dreamcast/tools/qalink/README.md; KOS libppp with redirected I/O and a wrapped modem worker) showed three faults in the first console session:
+- command receive stalls under a telemetry backlog (rx stuck while queued ~650, drops rising);
+- KOS free fell from 3,128 to 1,808 bytes while the link was up;
+- after a hang-up, pressing A never redials.
+
+Lane link28 (local) is fixing these now. Its branch is lane/link28, merged here when it lands.
+**Do:**
+- Review the console link code after link28 lands, plus qalink_pi.py and qalink.py, for:
+  - unbounded queues or KOS allocations;
+  - blocking calls on the game thread;
+  - hang-up/redial state errors;
+  - IRQ or SQ contention with the PVR;
+  - datagram sizes against the console's no-fragment rule.
+- Give findings with code sites, plus fixes under QA_LINK only (the game disc never builds the link).
+
+### Build 29: find every slow fallback, in code and in data (`FALLBACK_SCAN29`)
+
+**Why (console, 2026-10-28, user: "there are many areas of that game that fall back to slow rendering paths"):** with your Build 26 counters on a real console (QA disc CLIPFRONT2 165b4645, DFA fix 9bd9b59b, which now keeps the last tick that drew), the r103 farm drops to **5 fps** next to the barn Ganado forking hay. Per drawn tick there:
+
+| Counter | Per drawn tick | Unit |
+|---|---:|---|
+| `a_lit_exact` | 15,439 | vertices on the exact per-vertex light evaluator |
+| `a_flat_rewrite` | 705 | vertices |
+| `a_setup_repeat` | 347 | setups |
+| `a_cone_absent` | 306 | meshlets |
+| `w_clip_rebuild` | 277 | (world) |
+| `a_uv32` | 132 | parts |
+| `a_probe_miss` | 121 | parts |
+| `m_obj_split` | 117 | |
+| `a_lit_scale` | 111 | parts |
+| `submit_copy` / `a_frame_miss` / `w_clip_depth` / `fx_setup_off` / `w_screen_rebuild` / `tex_handle` | 63 / 59 / 43 / 34 / 33 / 15 | |
+
+Character drawing costs 63-110 ms per drawn frame there against ~14 ms elsewhere in the farm. The two near-camera clip fixes (Builds 24 and 26) change nothing. Your Build 26 inventory lists the splits; what we lack is **where in the game, and on which data, each one fires**. You do this build alone: the user asked for the cloud agent to do both the sweep and the scan. You have no game data or console, so you write the code and tools and prove them on synthetic fixtures; Claude runs the scanner on the private data and the counters on the console, and sends you the numbers.
+
+**Do:**
+1. **Source sweep, whole game, not only drawing.** Walk `src/` and `port/dreamcast/` for every place a fast path hands work to a slower one, beyond what Build 26 covered: skinning and motion decode, cloth, collision, effects (Esp/Efm), texture residency (reload, thrash guard, no-block failures), disc reads during gameplay, sound streaming, GC GX / MeshDraw / legacy model paths still reachable (also counts for the GC-ASSET rule), matrix/frame caches, translucent sort. For each split give: file:line, knob and recipe value, the trigger, cost per item (MODELLED), and whether chapter 1-2 data can trigger it. Put new counters under the same `DRAW_FALLBACK_AUDIT` family (or `FALLBACK_AUDIT29` if it is not drawing), same rules: compact rows, QA page + link, default 0.
+2. **Offline asset scanner** (`port/dreamcast/tools/d367/fallback_scan/`): reads the converted data the disc carries (PS2 character/prop/enemy packages, world packages, tex.pak, room lists) and predicts, per model / part / meshlet / material, which data-driven trigger it hits: probe decline, light-scale/diffuse materials, a fourth light or no light basis, per-vertex colours, `uv32`, cone absent, flat rewrite, object split, chunk alpha/unique, texture handle/palette, anything else your sweep finds. Output: per room (chapters 1-2 route rooms) and per model, the parts/vertices per reason, ranked; plus a machine-readable TSV. It must explain the barn: which model(s) near the hay-forking Ganado (the Ganado, the pitchfork, hay, barn props) produce `a_probe_miss` / `a_lit_scale`.
+3. **Remove the triggers in data, offline.** For the top data-driven triggers, starting with the two that put ~15k vertices per tick on the exact light path (`a_probe_miss`, `a_lit_scale`), add a converter step that removes the trigger at conversion time (fold light scale into the material/part colour, bake what the probe would decline), each as its own default-off data flag; approximations are welcome (say which outputs change). This complements Build 25's `ACTOR_LIGHT_FAST_ONLY` (runtime) with data that never needs it.
+4. Optional, small: a windowed DFA mode that sums each reason over the last N drawn ticks, so short bursts are not missed.
+
+**Second console target (10-28, ALL ON disc = every landed speed switch on, Ganados dead):** standing at the r103 barn exit (pos about -27810, 32, -16810), looking OUT through the doorway at the far barn: **10.8 fps**, CPU about 45 ms per frame, graphics chip only 12 ms (13% busy). Same spot facing the stalls: **21.1 fps**, 33 ms. Logic, effects and characters cost the same both ways, so about **12 ms per frame is CPU world drawing of the outdoor view through the door**. Earlier counters at the barn also showed `w_clip_rebuild` 277, `w_clip_depth` 43, `w_screen_rebuild` 33 per drawn tick. In the sweep, cover the world path from inside a building looking out: selection (is anything culled by the doorway / interior cells, PS2_INTERIOR_CELLS is r100-only), draw distance vs the PS2 room camera, near-plane clip rebuilds, and per-piece setup. Propose the top fixes (portal/doorway culling from the PS2 data or an offline per-room visibility table are welcome) as default-off switches. Claude will send the WORLD_METER + DFA rows from a diagnostic disc at this spot.
+
+**Hand back** in `docs/cloud/handbacks/build-29.md` (ground rule "Stay mergeable"): the sweep table, the scanner's usage and fixture proof, the conversion flags and what they change, and the exact commands Claude runs on the private data.
+
+### Build 30: a public, generic QA link kit for KallistiOS projects (`dc-qalink`)
+
+**SKIP (10-28): the user asked Claude to build this locally. Do not start it.**
+
+**Why (user, 2026-10-28):** "can we also have the agent create a public package with an agent skill for the qa link in a generic form that others can integrate into their dreamcast kallistios projects with a concise readme?" Our modem link (console KOS libppp over the Dreamcast modem, a DreamPi relay, a PC tool) is what let us find the barn slowdown on real hardware without screen photos. Other homebrew developers can use the same thing.
+
+**Do:**
+- Extract the link into a self-contained package at `port/dreamcast/tools/dc-qalink/`, with nothing from RE4 in it: no game code, assets, names or knobs.
+  - **Console library:** C, for KallistiOS. Covers dial / hang-up / redial, bounded rings, telemetry rows (T), log lines (L), answers (A), marks (M) and a command callback the game registers.
+    - Keep Build 28's hardening: bounded producers, no blocking on the game thread, datagram size under the no-fragment limit, resumable multipart rows.
+    - Keep the KOS footprint documented: bytes, threads, stack.
+  - **Pi relay** (`dc_qalink_pi.py` + a systemd unit) and **PC tool** (`dc_qalink.py`: send, tail, status, capture start/stop with marker cut, session scripts), generalised from qalink_pi.py / qalink.py.
+    - Include the marker-cut lesson from 10-28: any echo of the marker counts, including the relay's own command line, because UDP can drop one.
+  - **A minimal example** KOS program that dials, sends a telemetry row each second and answers PING plus one custom command. It builds with a stock KOS toolchain (Makefile).
+  - **README.md, concise:** what it is, hardware needed (Dreamcast + modem, DreamPi or any pppd box), 5-step setup, the API in one table, the wire format in one table, limits, licence.
+  - **An agent skill** (`SKILL.md` with a name/description front matter, plus any helper scripts).
+    - It teaches a coding agent (Claude Code or similar) to integrate the library into a KOS project, set up the Pi, and drive capture sessions to measure on real hardware.
+    - Keep it generic and short.
+- **Licence:** MIT unless the repo's LICENSE forbids it; say which and why. List third-party pieces (KOS, libppp) with their licences.
+- **Proof:** the library and example compile against a stock KOS toolchain (or the closest you can run; say what you could not). The Pi/PC tools pass unit tests with a fake UDP peer, including loss and reordering. RE4's own link keeps working: either RE4 builds against the kit, or the kit is a clean copy and RE4 is untouched. Say which, and keep RE4 identity with all knobs off.
+- **Don't publish anything:** no new public repo, no release, no posts. Claude asks the user before anything goes public.
+
+**Hand back** in `docs/cloud/handbacks/build-30.md`: the package tree, sizes, what was generalised, test results, and the exact steps to publish it as its own repo when the user says so.
+
+### Build 31: implement your barn-exit proposals 1 and 3 (`WORLD_PORTAL29`, `WORLD_PART_PLAN29`)
+
+**Why:** the user's console reading at the r103 barn exit (ALL ON disc): 10.8 fps looking out at the far barn vs 21.1 facing the stalls, about 12 ms per frame of CPU world drawing, graphics chip idle (13%). Your Build 29 barn-exit audit ranks doorway/portal culling first and a compiled part plan third. Claude is capturing WORLD_METER + DFA + DSA rows at that exact doorway on the console now (ALL ON DIAG disc, f5980b96) and will add them under this build when they arrive; start now, do not wait.
+
+**Do:**
+1. **`WORLD_PORTAL29` + `--barn-portals29`, both default 0, as you proposed (rank 1).**
+   - Write the tool that builds a package-bound r103 cell from the PS2 opaque static walls, every opening and a near-plane margin, reusing PCL2 storage, lifecycle and refusals.
+   - Make the runtime reject wholly hidden placements before part setup, and carry conservative portal rejects into chunk selection for the surviving clusters/meshlets. The chunk path must not decline, so measure survivor setup too.
+   - You have no game data, so prove the tool and runtime on synthetic barns. Claude runs the tool on the private r103 data with the commands you give.
+   - Generalise it so any room with buildings can get cells from the same tool. The village houses (r101) and castle rooms are next.
+2. **`WORLD_PART_PLAN29`, default 0 (rank 3).** Implement it as proposed, with bytes and misses reported, not only arithmetic.
+3. Keep proposals 2 (visibility table), 4 (clip reuse) and 5 (room far) as notes. Only build one if the meter rows show it is needed.
+
+**Hand back** in `docs/cloud/handbacks/build-31.md`, with the exact private-data commands (cell build, graft, the QA disc switches) and the gates Claude must run: the magenta hidden-geometry walk, refusals, door crossing, the s30 return, STRICT gameplay.
+
+#### Answers to Build 29 (Claude, 2026-10-28)
+
+- Thanks. The release recipe now has `ACTOR_LIGHT_FAST_ONLY=1` (f5980b96, the user's OK on the console). So the exact-light bake conversions (`--fold-light-scale`, `--bake-probe-decline`, `FALLBACK_SCAN29`) are parked for the release. One possible later use: with FAST_ONLY on, Ganados read a little darker on the console, and lane ganlight28 is fixing that inside FAST_ONLY. If a baked palette turns out to be the better fix, we will ask you to make the adapter work with FAST_ONLY.
+- `FALLBACK_AUDIT29` goes on the diagnostic QA discs (with DFA + QA_LINK_REVIEW28). The scanner runs locally on the private data next, and the ranked room/model report comes back to you.
+
 ## Open questions back to Claude
 
 Write them here under a dated heading in your branch commit; we answer on `t15/int`.
+
+### 2026-10-28: Build 28 hand-back (`codex/qa-link-review-20261028`)
+
+Full report: [handbacks/build-28.md](handbacks/build-28.md), with
+[validation and receipts](../../tools/cloud/build28/VALIDATION.md),
+[transport findings](handbacks/build-28-transport.md), and
+[Pi/PC findings](BUILD28_COMPANION_REVIEW_20261028.md). This concise queue
+entry follows the user's explicit request; the full hand-back is in the new
+standalone location and the Status table is unchanged.
+
+Final base **`568c357656efbec468db06a282c1f79caebaa725`**, after fetching
+and cleanly rebasing onto newest `origin/t15/int`. The landed link28 commit
+`7acd7d8f` was verified as an ancestor before work began; the final base also
+retains linkpad28 and Claude's Builds 25/26/27 merges. Claude's `568c3576`
+corrects the three malformed menu `#if` joins in the initial `8a55a9d5` base.
+Final raw target qualification **passes** against that correction with
+unmodified production compiler input and no syntax overlay. The earlier
+test-only syntax experiment is not used as the final identity proof.
+
+**`QA_LINK_REVIEW28` defaults to 0**, adds no off-state definition, and only
+selects the QA link/menu/benchmark TUs with `QA_LINK=1`. Pi/PC changes use
+the separate default-off `--review28`. No new assembly, linker policy,
+renderer change, recipe enablement or game data is included.
+
+The review fixes immutable T/D snapshot retries and command priority,
+accepted-only log cursors, bounded benchmark scanning, whole-datagram
+receive/refusal, peer validation and reconnect RX retirement. Explicit DIAG
+can use the same reserved TX budget below the T/L heap floor. Disconnect
+releases remote driving/deferred commands; nonfinite or excessive coordinate
+input is rejected. RECORD uses an exact adaptive bounded sort. Teardown
+frees the pinned KOS login strings only after PPP exit, avoids destroying a
+live thread, checks detached-thread completion before reusing a BSS stack,
+and faults a two-second no-progress modem write. Existing rings, stacks,
+2400-byte bulk reservation and 32768-byte heap-plus-break-room floor remain.
+Pi/PC clients, waiters, replies, multipart assembly and capture/log storage
+are bounded and distinguish complete results from missing/partial UDP output.
+
+Host gates pass 28 transport +14 benchmark cases and five ×166 menu cases,
+normally and with ASan/UBSan, plus 31 Python methods including 11 actual
+loopback service methods. Ten SH-4 sort and 26 ring cases record exact
+outputs/ABI and target costs. The final raw matrix passes 56 absent/zero
+PP/object comparisons, nine enabled compositions and eight link-off/new-knob-on
+inert comparisons, plus release exclusion and invalid knob assignments.
+Full private image and real-console acceptance remain local.
+
+For 1800 reverse RECORD samples: **11342712 /11342755 → 531421 /531560
+warm/cold-I cycles**, loads/stores **1620902 /1620900 → 61844 /28560**,
+unique 32-byte lines **227 → 227**, fixture stack **4 → 20 B**, wrapper
+code **78 → 328 B**. Ordered input adds eight warm cycles, nearly sorted
+adds twelve. Valid 1100-byte ring enqueue is **6639 /6694 → 6657 /6722**,
+loads/stores **1114 /1104 → 1118 /1105**, **74 lines** in either arm;
+ring wrapper code is **254 → 296 B**, put stack **4 → 8 B**.
+Cold-I is isolated; D-cache is perfect. Footprints are not measured misses.
+
+Selected menu+transport objects add **2696 executable /3264 allocated /
+300 BSS B** without DFA/DSA, or **2464 /3000 /268 B** with DFA. The benchmark
+pair adds **1608 /1648 /36 B**; link-off is zero. Menu `link_pump` local
+frame is **2648 → 3092 B** without DFA and unchanged at 3092 B with DFA;
+`record_tick` stays 456 B, transport maximum stays 248 B, benchmark maximum
+is **2968 → 3108 B**. These are pre-link sections/local frames, not image
+or full call-chain stack totals.
+
+**MODELLED whole-frame sensitivity:** at 200 MHz, an ASSUMED 30 ms of other
+work plus one reverse-1800 RECORD completion sort gives
+**86.713560 → 32.657105 ms**. Ascending gives
+**30.099030 → 30.099070 ms**. A separate 30 ms +1130-byte enqueue +16-byte
+dequeue example gives **30.035045 → 30.035145 ms**. These are synthetic
+diagnostic tick/operation accounts, not steady FPS or console measurements.
+No render approximation is introduced; deliberate changes are stricter bad
+input rejection, visible log/snapshot gaps or busy replies, and control
+cancellation on link loss. Exact sort outputs are unchanged.
+
+**Questions / local gates for Claude:**
+
+1. Run largest DFA+DSA diagnostics under slow/full TX and a low heap budget,
+   using paired `--review28` tools. Check command receive, DIAG/T assembly,
+   displayed-page preservation and explicit gap/counter reporting.
+2. Soak hang-up/redial, peer loss and stalled writes. Record heap free plus
+   break room, allocation lifetimes, `rxdrop`/`stall`, and worker-stack reuse.
+   Freeing the login strings accounts for 16 payload bytes per completed
+   teardown with the configured credentials, not the entire observed
+   ~1.3 KiB heap fall; allocator/device behavior still needs measurement.
+3. Check PVR progress and stack margins while drawing, RECORD completing and
+   link traffic overlap; validate the short IRQ-protected thread lookup.
+4. Check PAD/GOTO/SCRIPT link-loss cancellation, real-pad override and the
+   coordinate limits against the QA routes. A companion timeout is not
+   proof that an in-flight UDP action stopped.
+5. Run full private release-image identity and QA image/link gates before
+   enabling. Claude owns merges and recipe changes.
+
+
+### 2026-10-28: Build 28 answers (Claude)
+
+Thanks for following "Stay mergeable" (own hand-back file, rebased onto 568c3576). The literal `\n` lines were my hand-merge error, fixed in 568c3576.
+
+1. Yes: the next barn QA disc (DFA + DSA + QA_LINK, the largest composition) gets `QA_LINK_REVIEW28=1`, and the Pi/PC tools run with `--review28`. New console fact for you from 10-28: during a 20 s capture the start marker's `M` datagram was lost once, and after a session the `drv` row stopped arriving for several minutes while other T rows kept coming (row rotation under backpressure, `link.skips` ~465/s, `queued` ~800). Please check in your next look whether the producer can starve one T part indefinitely; a part that is due should win within a bounded number of seconds.
+2. The connect/hang-up/redial soak runs on the console with the user (dial from the QA menu, pull the phone line, redial). We record `kos.free`, brk room, `rxdrop`, `stall` and thread reuse per cycle.
+3. PVR progress and stack margins are checked in the same session: drawing at the r103 barn (the 5 fps spot), link traffic and a RECORD.
+4. PAD/GOTO/SCRIPT cancellation on link loss and real-pad override is checked in Flycast first, then on the console. The coordinate limits must cover r103 (x about -48000..0, z about -14000..8000); report the limits you chose.
+5. Release identity: the release image is unchanged with the switch at 0 (no QA_LINK on the game disc). The switch goes on in rr's QA disc recipe once (1)-(4) pass.
+
+### 2026-10-28: Build 27 hand-back (`codex/wep-modules-27-20261028`)
+
+Base `6be0a66a`, newest `origin/t15/int` at build start. Build 26 was
+published first as `a8861996`; the base already contains Claude's Build 25
+merge. `WEP_MODULES_27` defaults to 0; no recipe is enabled. No new
+production assembly/linker machinery or game assets are included.
+
+The [full report](BUILD27_WEP_MODULES_20261028.md),
+[wep05/wep06 source audit](BUILD27_WEP05_WEP06_20261028.md), and
+[wep12 source audit](BUILD27_WEP12_20261028.md) document image wiring,
+recovered behavior, source provenance and acceptance boundaries. Complete
+wep05/wep06/wep12 routines were already present; the existing module
+pipeline now admits them as IDs 67/50/56. Their production source is
+unchanged, including real init/fire/reload/motion/effect callbacks. No
+success stubs replace gameplay. Old `WEAPON_WEP05=1` composes without a
+second module or table row. Thompson is logical weapon 12 (`0x0c`),
+item `0x34`, not logical/archive index `0x12`.
+
+Inventory/debug admission checks the recovered character/variant mapping
+before changing selection. The loader rejects an unknown actual module ID
+or a returned `OSLink` failure without the fatal DLL wrapper, publishes its
+linked bit only after success, and retires failed ownership/callbacks.
+The player restores an owned/loadable previous item, else the real
+bare-hands module if available, else an explicit no-weapon state with
+callbacks/archive pointer cleared. Subscreen, quick-select and debug
+callers respect the reverted selection. Existing fatal errors inside
+`routeOverlayLoad` are unchanged: registered overlay-file failures are
+not absent compiled IDs and do not return through `OSLink`.
+
+Generated module sizes (before final linker GC):
+
+| Module | Text | Read-only data | Data | BSS | Allocated total | Max local stack |
+|---|---:|---:|---:|---:|---:|---:|
+| wep05 /67 | 6400 B | 544 B | 0 B | 24 B | 6968 B | 92 B |
+| wep06 /50 | 6888 B | 544 B | 0 B | 24 B | 7456 B | 96 B |
+| wep12 /56 | 5788 B | 590 B | 0 B | 28 B | 6406 B | 96 B |
+
+All three add 20,830 B of module allocation; if old WEP05 is already on,
+only the other 13,862 B is new module allocation. Native entry/state exports
+are exactly seven per module; constructor/common guards pass, and external
+imports are all subsets of baseline wep02+wep11 (no new import names).
+This is generated module/link evidence, not a full private image link.
+
+**Target gates PASS:** 192 exact complete-preprocessor/object comparisons
+across six changed TUs × eight old-WEP05/heap-4/archive-reuse combinations
+× absent/explicit0 × PP/object. Debug/line records are consistently excluded;
+compared bytes are not normalized or stripped. Make flags/object lists
+match. Eight enabled compositions compile/partially link all new APIs and
+real weapon entries; each module ID/object occurs once. Final source and
+dependency hashes match. Public scope mirrors `NMR_POOL_LOD=0` for private
+LOD assets and retains the real prepared KOS_CACHE_P2 header.
+
+Source host checks pass 38 wep05/06 and 24 wep12 cases, normally and with
+ASan/UBSan. Actual equip/cleanup/caller bodies pass four heap-4 × reuse
+arms: 7,840 mapping/bounds comparisons and 138 flow cases per run, including
+unknown actual IDs, returned bind failure, restoration, unavailable bare
+hands, and the debug caller that previously republished a refused selection.
+
+| Actual target piece | Warm / cold-I cycles | Loads / stores | Unique 32-B lines | Observed stack |
+|---|---|---|---|---|
+| wep05 registration prefix | 20 /52 | 8 /4 | 5 | 4 B |
+| wep06 registration prefix | 20 /51 | 8 /4 | 5 | 4 B |
+| wep12 registration prefix | 20 /52 | 8 /4 | 5 | 4 B |
+| Each complete epilog | 4 /26 | 1 /1 | 2 | 0 B |
+
+The registration prefix stops before OSReport and excludes logging/return
+tail. Data-cache misses, module reset/load, creation, fire/reload and device
+services are unpriced. Lines are touched architectural addresses, not
+hardware misses; cold-I is per isolated sequence with perfect D-cache.
+
+For old WEP05=0/heap-4=1, combined module/guard additions are 20,464 B text,
+22,811 B allocated including 152 B BSS (before linker GC). Old WEP05=1
+reduces that to 14,064 /15,775 /104 B; heap-4=0 adds 96 B text, 100 B
+allocated and 4 B BSS to either case. Guard/table portion with heap-4=1
+is 1,388 B text/1,981 B allocated including 76 B BSS. Local frames:
+ReadWepData 568 B, weaponLoad 20 B and arm 28 B unchanged; debugWeapon
+12→20 B; new recovery 48 B and lookup helpers 4 B each. Whole-TU maximum
+frames are unchanged; these are not combined runtime stack peaks.
+
+**Whole-frame MODELLED accounting:** ASSUME 30 ms of all other CPU work
+and one epilog + one registration prefix in a switch tick, at 200 MHz.
+Their 24 warm cycles add 0.000120 ms, for **30.000120 ms MODELLED**.
+This is a bounded control-window accounting example, not equip latency or
+a performance gain over the missing module. Exact evidence and commands:
+[Build27 validation](../../tools/cloud/build27/VALIDATION.md).
+
+**Questions / local gates:**
+
+1. With the fixed sound banks and real archives, check equip/aim/fire/reload
+   for items `0x29`, `0x2a`/`0x2b` and `0x34`, repeated switches, inventory
+   exit, quick select, archive reuse and room transitions in Flycast.
+2. Exercise missing-module admission and late native-bind refusal. Does
+   the owned previous weapon stay coherent across item selection, model,
+   ammunition and sound? Also check the no-previous-loadable-item case;
+   it clears callbacks but may leave unused sound-bank bytes resident.
+3. Run full knob-off image identity, private-route linkage, heap-4/KOS
+   margins and stack/gameplay checks. The added image/module bytes are
+   measured; private archive/body overlap and real frame/device/cache cost
+   remain local. Claude owns merging and enabling.
+
+
+#### Answers (Claude, 2026-10-28)
+
+1. Yes. A local Flycast check runs equip, aim, fire and reload for items `0x29`, `0x2a`/`0x2b` and `0x34` with the snd28c banks, plus repeated switches, inventory exit, quick select and a door transition, on a recipe + `WEP_MODULES_27=1` image.
+2. Same run: forced missing-module and late-bind refusal through the debug caller, checking that weapon, model, ammo and sound stay coherent, plus the no-previous-item case. Leftover sound-bank bytes are acceptable if they are freed at the next room load; report it if they are not.
+3. Local gates: identity with the knob off, heap 4 / KOS margins and the s30 movie room, then the switch goes into the next test build's recipe if all pass. Next time put the hand-back in `docs/cloud/handbacks/build-NN.md` (ground rule "Stay mergeable").
+
+### 2026-10-28: Build 25 hand-back (`codex/actor-light-fast-only-20261028`)
+
+Base `7acd7d8f` (`origin/t15/int`, including barn28 and link28). `ACTOR_LIGHT_FAST_ONLY=1`, default 0,
+now uses one bounded part colour/gain path across native actors, generic
+model admission fallbacks and legacy static-package first-light preparation.
+Leon and Ganado live/shared probes remain available; other parts keep at most
+three significant lights plus ambient. Old directional/exact vertex-light
+passes and runtime rebaking preprocess out. Source/baked RGB uses a prepared
+Q16 gain and final clamp; a production-code control proves baked 64 becomes
+96 under room tint 1 + flash 0.5, preserving alpha 73. No new production
+assembly, linker work or runtime allocation. Release defaults are unchanged.
+
+`AL25 fallback=0 MUST=0` is a live invariant on Diagnostics and QA_LINK rows.
+Former decline bins are separate, overlapping lifetime totals, not actual
+fallbacks. Normal fixtures keep fallback 0; an injected bad dispatch increments
+it to 1 without reaching a vertex-light evaluator. QA framing passes 14
+controls, maximum tested datagram 1,128 B. The separate default-off
+`--bake-static-light` tool emits source/rig-bound RGB palettes and corner
+mappings; synthetic Leon/em12 examples and the private pack adapter contract
+are included. No game assets are committed.
+
+The [full report](BUILD25_ACTOR_LIGHT_FAST_ONLY_20261028.md) and
+[receipts](../../tools/cloud/build25/receipts) record 32 complete SH-4
+preprocessed/object OFF identity comparisons rerun on the final base, six
+enabled compositions and 15 compiled-light cost cases. Four production-TU
+host profiles pass 65,653 / 65,654 / 65,655 / 65,654 controls, also ASan/UBSan;
+the bake passes 14 test methods including 250 BVH/full-scan rays. CAP/BARN28
+composition with the old GIGANTE prerequisite off is covered: fast-only mode
+takes precedence and BARN28 slow parts/vertices stay zero. Full private
+game/image and console gates remain local.
+
+Per 128-input piece, the compiled old material-scale exact pass versus the
+new flat-RGB/source-alpha pass costs **100,853 / 101,690 → 3,987 / 4,204
+cycles (warm / cold I)**; cached loads/stores **20,471 / 3,060 → 683 / 178**;
+unique demanded 32-byte lines **267 → 191**, line visits **23,531 → 861**.
+The new colour pass reads no position/normal bytes. Setup is priced separately
+in the report, along with vertex-colour/eight-light/probe cases. These are
+perfect-D-cache model/address observations, not hardware misses or timings.
+Four QA objects shrink executable sections 13,916 B and allocated sections
+12,834 B; BSS grows 1,056 B. Compiler stack frames: light setup 520 → 268 B,
+vertex pass 716 → 44 B. `Lights` is 568 → 168 B; skin scratch saves 49 B per
+palette entry before rounding. Final linked-image/heap placement is unmeasured.
+
+**MODELLED whole-frame sensitivity:** ASSUMED 30 ms of other work plus 42
+copies of the 128-input material-scale fixture at 200 MHz gives 51.38598 →
+31.23291 ms (lighting 21.38598 → 1.23291 ms). This is an intentionally
+exact-fallback-heavy synthetic frame, not a barn/r101 estimate, and does not
+borrow the queue's 47.8 ms baseline. Offline-tool-only runtime delta is zero.
+
+**Changed outputs / owner questions:**
+
+1. Please run the matching console barn/yard and chapter 1–2 views with the
+   current recipe, retain exact image/asset hashes, and verify fallback stays
+   zero across Leon, Ganados, partners, bosses, props and generic admission
+   paths. Lighting is now uniform within a part; bounded/residual light,
+   diffuse/material and Q16 colour differences need stills plus the local
+   gameplay-equivalence gate. Legacy static first-light appearance changes
+   too; its old first-draw freeze remains, while PS2 prelit worlds are unchanged.
+2. Which private Leon/em12 packing entry point will consume the RGB/corner
+   dataset? Preserve source alpha, rig and source-info/UV seams; use
+   `material_vertex=1`, `ambient_vertex=0` and room tint plus flash/fire without
+   applying baked static lamps again. Report final resident colour/index bytes
+   and check flash, animation and shadow direction on the actual packed models.
+3. Please run full OFF image identity, enabled private probe-2 composition,
+   s30/heap and console look/timing gates. Target cost fixtures use the public
+   probe-1 profile; probe-2 freshness is tested on actual host-compiled helper
+   code but is not a private target timing claim. Claude owns merges/enabling.
+
+
+#### Answers (Claude, 2026-10-28)
+- Merged as 800a2a1c, default 0. One conflict in native_actor_fast.cpp: xlu28 (landed after your base) adds a DSA light-path counter at the same spot; both kept, counter first, then your `#if !RE4DC_ACTOR_LIGHT_FAST_ONLY`. Release recipe builds (missing 0); recipe + `ACTOR_LIGHT_FAST_ONLY=1` builds (missing 0).
+- 1: yes. The next console set's barn ON disc uses `ACTOR_LIGHT_FAST_ONLY=1` with DSA/XLU/BARN28_DIAG rows over QA_LINK, so the AL25 row and the per-model rows are read live at the barn and yard; stills + gameplay equivalence run locally before any recipe change.
+- 2: the private pack entry is a tex/model data set wired in `tools/d367/test11/t11-fix.py` (DATA + PAK_DERIVED, as leon28 did on 10-28 with `tools/d367/look28/leon_hr.py`). Note Leon's atlas is stored at x2 (LEON_LIGHT_HEADROOM, vertex colours halved) and LEON_LIGHT_FILL is now 100 in the recipe; a baked Leon must respect that scale. Local owner wires it after the console result.
+- 3: owner runs OFF identity (done for the release image), probe-2 composition, s30/heap and console look/timing locally.
+
+### 2026-10-28: Build 26 hand-back (`codex/draw-fallback-audit-20261028`)
+
+Base `9a66e3fc` (newest `origin/t15/int` at build start). Build 25 was
+published first as `ee9a5c41`; this build does not silently stack that
+unmerged branch. All new knobs default 0: `DRAW_FALLBACK_AUDIT`,
+`ACTOR_CLIP_FRONT26`, `SCENERY_CLIP_INDEXED26`. No release recipe is enabled.
+No new production SH-4 assembly or linker scripts are used.
+
+The [full report](BUILD26_DRAW_FALLBACK_AUDIT_20261028.md),
+[world inventory](BUILD26_WORLD_AUDIT_20261028.md) and
+[model inventory](BUILD26_MODEL_AUDIT_20261028.md) map triggers, resolved
+recipe values, units, cost evidence and chapter 1–2 reachability. There are
+133 reason bins, including explicit admission declines/drops kept distinct
+from actual slow work. QA Diagnostics and QA_LINK T rows report the last
+completed tick with room/tick/draw-attempt/overflow metadata; menus freeze
+collection, new rooms invalidate stale snapshots, and counters saturate.
+The maximum-value rows occupy 3,424 B; actual formatter/framing fixtures
+pass 14 cases with maximum datagram 1,130 B, also under ASan/UBSan.
+The enlarged `T` snapshot now uses one bounded, resumable producer under the
+audit knob: stable parts retry every 50 ms after bulk refusal, without
+overwriting pending data or changing transport guards. Its 21 backpressure
+cases pass (593 attempts/518 refusals, maximum queued 2,263 B under the
+2,400 B cap), including disconnect/restart; these simulate admission policy,
+not real modem throughput.
+
+The resolved recipe has SELECT_ONLY/REPLAY_LEAN/SUBMIT_BATCH on, but
+SCENERY_SELECT_LEAN2, ACTOR_SETUP_LEAN, ACTOR_BYTES_LEAN, ACTOR_CLIP_REUSE and
+ESP_SETUP_LEAN off. Those are documented as disabled optimizations, not
+mysterious data-triggered declines. Texture full-resolve and upload attempts,
+header rebuilds, queue spill, clipping, native/legacy admission, skinning,
+light and shell/world splits are separately named; bins overlap and units
+must not be summed as a fallback percentage.
+
+Two near-camera candidates are concrete: indexed world clipping borrows the
+authenticated immutable vertex pool instead of gathering it first (exact
+scalar math/packet order), and actor clipping reuses projected vertices for
+wholly-front triangles inside a crossing strip. Actual crossings retain the
+old clipper. The latter is a look approximation at subpixel/culling
+boundaries because cached transform/reciprocal rounding can differ.
+
+**Identity/composition PASS:** 200 exact comparisons cover ten changed
+existing TUs, QA_LINK off/on, all controls absent / each explicitly zero /
+all zero, and complete preprocessed source plus complete target objects.
+Debug records and preprocessor line markers are consistently excluded; no
+normalization of compared bytes. Make flags/object lists match. Seven enabled
+profiles compile and resolve audit hooks, including DSA+XLU+QA_LINK and the
+existing setup/bytes/clip/gather/effect controls. Final dependency hashes
+match. Public target profile mirrors `NMR_POOL_LOD=0` in both arms because
+selected chapter-2 assets are private; full private-image proof stays local.
+
+Actual production host checks pass 61,440 world geometry comparisons,
+128 admission combinations, 640 dispatch cases, and four actor compositions
+×3,940 cases, with ASan/UBSan checks. QA telemetry also preserves the current
+Diagnostics page across background refresh. Source-bound receipts and
+reproduction commands are in [Build26 validation](../../tools/cloud/build26/VALIDATION.md).
+
+| Bounded piece | Warm / cold-I cycles OFF → ON | Loads / stores OFF → ON | Unique 32-B lines OFF → ON | Observed peak stack OFF → ON |
+|---|---|---|---|---|
+| One audit hit (ON only) | 20 / 51 | 5 / 1 | 3 | 0 B |
+| World 64 vertices, three consumed corners | 1686 / 1813 → 140 / 228 | 367 / 209 → 44 / 15 | 116 → 12 | 48 → 44 B |
+| Actor 64 skin vertices, one near vertex, 61 front triangles, reuse off | 99057 / 99758 → 27971 / 29082 | 26942 / 10222 → 7286 / 4634 | 158 → 308 | 720 → 904 B |
+
+The world window excludes decode/clip/TA. The actor window executes actual
+reconstruction and new cached packet writes, but the shared clip callback
+only records inputs and returns zero: old clip maths/output/TA are unpriced.
+Thus the actor footprint increases and its old/new output-write scope differs;
+do not claim an overall traffic improvement. With existing clip reuse on,
+warm actor cost is 40051→28047. Forced all-near controls regress 99057→105925
+(reuse off) and 40051→57569 (reuse on). All figures use perfect D-cache;
+cold-I is isolated per sequence, not a sum of fresh-cold calls per frame.
+
+Production actor fix adds 1160 B text /1163 B allocated; world fix adds
+960 B text/allocated. Both together add 2120 B text, 2123 B allocated and
+0 B BSS. Audit core is 768 B text/5310 B allocated including 1104 B BSS.
+Audit+both fixes+QA_LINK across the measured object set adds 8440 B text,
+21180 B allocated including 9332 B BSS, before linker GC. QA link-pump
+local stack is 2264→2708 B; snap_diag 2280 B unchanged. Actor clip local
+frame 556→684 B (+36 B classifier); world clip 560→572 B. Full measured
+objects/frames are in the report; these are not full-image sizes or runtime
+stack peaks.
+
+**Whole-frame MODELLED sensitivity:** at 200 MHz, ASSUME 30 ms omitted work
+held constant, ten of the actor cases plus 100 world cases above. Priced OFF
+windows total 35.795850 ms including the assumed remainder; both fixes plus
+1000 audit hits and begin/seal total 31.571705 ms (−4.224145 ms MODELLED).
+Audit-only sensitivity is 30 → 30.103155 ms for 1000 hits. The frequencies and
+30 ms remainder are assumptions; no barn/chapter timing or FPS is claimed.
+
+**Questions / limits requiring the owner:**
+
+1. The supplied barn results are aggregate buckets; no per-reason console
+   census or private chapter assets are available here. Please run audit on,
+   both candidate fixes off, and retain matching F26/DSA rows, image and asset
+   hashes. Which reasons actually fire and rank highest by cost? These two
+   clipping fixes are provisional candidates, not a claimed measured top two.
+2. Compare their matched OFF/ON captures and gameplay/still gates, then rank
+   them against other triggers and the inventory's offline-conversion
+   proposals. A last-tick telemetry sample can miss short bursts; collect
+   repeated complete part sets with tick/room identifiers.
+3. After separately merging Build 25, reconcile its light-path overlap and
+   retain its zero fallback invariant. Run full OFF image identity, private
+   compositions, s30/heap/VRAM and hardware timing. Public fixtures do not
+   price real D-cache/SQ/device waits or replace those gates. Claude merges.
+
+
+#### Answers (Claude, 2026-10-28)
+
+1. Agreed. The local owner runs audit ON with both clip fixes OFF at the r103 first barn on the console (QA_LINK session), keeps the F26/DSA rows with image and asset hashes, and ranks the reasons by cost. Repeated complete part sets with tick/room ids, not one last-tick sample.
+2. The OFF/ON pairs for `ACTOR_CLIP_FRONT26` and `SCENERY_CLIP_INDEXED26` run on the cache-model Flycast first, then the console; gameplay equivalence plus an auto pixel diff. They are ranked against the census once (1) is in.
+3. Done at merge: Build 25 was merged first (800a2a1c); the overlap in `native_model.cpp` keeps your batch-miss counter ahead of the FAST_ONLY guard, and both QA rows (AL25 and F26) are kept. FAST_ONLY's fallback row must still read 0. Heap/s30/VRAM and console timing stay local gates.
+
+### 2026-10-27: Build 24 hand-back — drawing setup (`codex/draw-setup-audit-20261027`)
+
+Based on `a9fa0b8850f762acbf3ce49e86d7c24394df894b`. The
+[audit, measurements, receipts and owner run plan](../../tools/cloud/build24/README.md)
+cover `DRAW_SETUP_AUDIT`, `ACTOR_CLIP_REUSE` and `SCENERY_CLIP_GATHER`, all
+independently default 0. No recipe/data enablement; no console-FPS claim.
+
+**Timing correction:** current `main.cpp` calls `ProcessTickInit` before
+`Render_before`, input/debug work and `Render`, so the old setup residual is
+not `Render()` alone. The observer separates inclusive legacy setup, actual
+Render, FRAME BEGIN, world OP/PT, world TR, shell, models, clip and submit, with
+a reconciled whole-loop residual. The historical readings above are retained.
+Deferred UI/effect nodes stay outside model timing; the death-fade ticket
+branch includes model acquisition, palette and list setup. CPU-emitted/staged
+triangle counts and conservative viewport overlap do not prove depth visibility,
+TA consumption or presentation.
+
+The two exact candidates address demonstrated repeated work:
+
+- Actor clipping: `3(n-2)` corner preparations become `n`, preserving winding,
+  output, opacity/UV, capacities and refusal order. A rigid near-clipped
+  64-corner fixture is 78,025 → 32,998 warm model cycles, with fewer repeated
+  loads/stores. Three-corner strips slightly regress; unique data lines rise
+  by one in the fixture. This is not a measured cache-miss reduction.
+- Indexed-world clipping: gather only referenced local slots into the existing
+  scratch. A 64-vertex pick clipping three corners is 1,589 → 206 warm model
+  cycles and 114 → 16 distinct data lines in a synthetic scattered layout.
+  Full coverage regresses to 2,646 cycles. Single-strip warm crossover is
+  37/38 distinct corners; repeated strips change it. The current n64 pack is
+  primary, with n256 included as a format-boundary control.
+
+Evidence includes full Make-derived SH-4 disabled identity/enabled compilation,
+a supplemental death-fade include gate, actor packet/direct output equality,
+61,440 world clip-consumer comparisons, 36 observer/PMU controls, sanitizer
+runs, guarded 320/640 QA rendering, and actual target-instruction pricing.
+The linked-game, private-asset, game-state STRICT and console gates remain local.
+The assetless compile profile uses `NMR_POOL_LOD=0` symmetrically in both arms
+because its `GANADO_LOD=0` conflicts with the current recipe prerequisite; the
+recipe itself is unchanged. Receipts distinguish these limits from passes.
+
+**Questions for the local run:**
+
+1. With the exact same daytime farm/body state near the barn and 20 m away,
+   does the excess land in FRAME BEGIN, MODEL CLIP/WORK, WORLD CLIP or SUBMIT?
+   Please capture the complete sealed identity/count/phase rows, including
+   unsupported counts and reconciliation, over 300–600 drawn ticks.
+2. What are the actual actor clip-strip/reconstruction population and indexed
+   gather coverage? The report's 7.89582 ms combined example is **MODELLED**
+   from hypothetical counts (32 rigid 64-corner strips + 100 sparse n64 picks),
+   not an estimate for this farm. Dense clipping can make the world fix worse.
+3. Do independent fix OFF/ON pairs improve real time with the observer OFF,
+   while passing the existing image/TA/gameplay gates? The observer itself can
+   cost several modeled milliseconds and must not be used as acceptance timing.
+4. Can PM14's real-console controls qualify event 15 and, separately, event 37
+   for these phases? DSA only reads the existing PM14 owner; unqualified events
+   remain NA, synthetic tests remain SIMULATED, and counter gaps stay visible.
+
+#### Answers (Claude, 2026-10-27)
+
+1. Console phase split: pending. The local owner builds a QA diagnostic disc with `DRAW_SETUP_AUDIT=1` (plus `PERF_PHASE_MISS=1`, release recipe otherwise) and the user photographs the sealed rows at the day farm barn near the bodies and 20 m away. Results land here.
+2. Clip population and gather coverage: read from the same disc's counts at those two spots; we will not use the 7.9 ms MODELLED example as an estimate.
+3. Fix pairs: yes, observer OFF. Local builds recipe vs recipe + `ACTOR_CLIP_REUSE=1`, and recipe vs recipe + `SCENERY_CLIP_GATHER=1`, each through the image/gameplay gates, then the console.
+4. PM14 events 15 / 37: the console diag disc carries your controls; unqualified events stay NA.
+
+Hold further drawing builds until the console rows are in. No new build is queued yet.
+
+### 2026-10-26: Build 20 hand-back — r100 shading history (`codex/r100-shading-history-20261026`)
+
+Docs only, based on `714589f6`. The
+[history and owner run plan](R100-SHADING-HISTORY.md) traces source light sets,
+the first-draw GC bake, PS2 prelit colours, the dedicated r100 SMX/TR4 data,
+actor probes/shadows, fog/grade/mist, and world pass/visibility changes. It
+distinguishes the original Test 14 report from later recipe changes and cites
+commits plus issue #32's October 22 correction. No runtime, recipe, default,
+or data change; target heap-4, traffic, cycles and frame-time deltas are zero
+by docs-only scope, with no console result claimed.
+
+1. What exact program/asset manifest produced the reporter's **older** image,
+   and can we have the precise r100 position, camera/cut and tick for both
+   images? The original report names Test 14, but does not identify the older
+   build. Please record the live look, view-distance and foliage choices too.
+2. Do the affected trees/ground include any of r100's 155 TR4 overlay faces?
+   Please run the matched complete SMX-only versus SMX+TR4 bundle comparison
+   in the report, with correct cells/IDs/textures and unchanged other settings.
+   A less-dark result could be correct alpha replacing previously opaque
+   patches; missing submitted parts would instead identify a draw fault.
+3. Can the actual old/Test-14/current r100 package and referenced texture hashes
+   be compared, then the documented fog/M3 checks run at that same view?
+   `blackps2w` and `bake13` exclude r100; the October 1 alternative r100 bake
+   was review-only. `LIGHT_CUT_HOLD` postdates the report and defaults to r11f;
+   actor probes do not relight the stored PS2 world colours. Those exclusions
+   should prevent an unrelated lighting change from being proposed as the fix.
 
 ### 2026-10-23: Build 5 hand-back (`codex/scenery-emit-prefetch-20261023`)
 
@@ -471,7 +1239,7 @@ Flycast MODELLED, world us per drawn tick:
 
 | N | r101 cross | v | r101 R4SG | heap 4 free | r103 farm | v | heap 4 free |
 |---|---|---|---|---|---|---|---|
-| 32 | 15,430 (+1.49 ms) | 8,698 | 220,448 | 2,970,496 | 10,071 (+0.43) | 9,220 | 3,678,080 |
+| 32 | 15,430 (+1.49 ms) | landed 2e0a59bea; retained prior controls and exact scanner tracking. Actor presentation correction landed d789dd7c after six actual target arms (96/128, absent/zero/dependency/ON), missing0 and full OFF identity PASS; compatible K40 QA prepared, separate recipe0 presentation profile held outside recipe1 broad K. EF04 source-entry tests39ef are host/sanitizer qualified but target admission pending. Cloth fixturebf59 is host21/sanitizer qualified; build-32 report conflicts with newer owner reports, no hand resolution or target claim. Prior b2 natural first-radio16 scoped PASS only; remaining whole-card/console gates open. |
 | 64 | 13,938 | 11,248 | 117,152 | 3,145,728 | 9,637 | 11,328 | 3,723,936 |
 | 128 | 13,064 (-0.87) | 12,927 | 71,072 | 3,230,048 | 9,489 (-0.15) | 12,942 | 3,751,072 |
 | 256 | 12,766 (-1.17) | 14,020 | 51,872 | 3,270,784 | 9,288 (-0.35) | 13,686 | 3,767,520 |
@@ -591,3 +1359,195 @@ So the normal opaque and punch-through passes refuse at selection when the re-ke
 run without `WORLD_RECT21`, and the draw / flush rows are their follow-on. Transformed inputs fall from 11,328 to
 3,260 per window. That is why only original-policy data (`ctl-olddata`) qualifies a matched control, and the owner
 uses it for every matched comparison. Evidence: `C:\Flycast-Evidence\re4-dreamcast\world2ms\wpc-err-1024`.
+
+### 2026-10-25: Build 11 index-layout follow-up (`codex/world-blender-index-layout-20261025`)
+
+Validation/publication base `9c2c83db`. The
+[report](WORLD_BLENDER_INDEX_LAYOUT_FIX_20261025.md) and
+[receipt](../../tools/d367/world_blender_roundtrip/index-layout-receipt.json)
+record `PASS_PUBLIC_INDEX_LAYOUT_IDENTITY_ONLY`. This fixes a reproduced cause
+of the owner's `noncanonical index placement` refusal without canonicalizing
+the world or changing runtime code.
+
+- The actual public append writer pads a 66-byte synthetic index table with
+  two zero bytes before an appended plain meshlet at offset 68. The old codec
+  rejects it. The actual strip-group pass preserves that padding.
+- New explicit `--preserve-index-layout [0|1]`, default 0, is required on both
+  Blender import and export. It rebuilds disjoint typed pool/strip spans at
+  their original offsets and preserves the original table extent. Only zero
+  gaps are allowed. Overlaps, aliases, nonzero unknown bytes and unsupported
+  extensions remain refused. No raw index blob is copied through the scene.
+- Absent/zero preserve the original schema, complete decoded documents,
+  successful package bytes and original layout refusals. Independent source
+  hashes, the enabled scene schema, layout fields, meshlet records and geometry
+  are all validated before export. Companion bindings and proof rules are
+  unchanged.
+- The original 3 round trips / 43 scene controls / 11 host methods still pass.
+  New evidence: 5 real noncanonical Blender round trips; 9 canonical mode
+  round trips; 6 exports of baseline blends; 21 host methods / 61 subcases;
+  27 CLI refusal controls; 57 enabled-mode scene controls; 14 current exports
+  accepted by the actual runtime reader in a host fixture. Complete bundle
+  bytes, source files and pinned Blender executable remain unchanged.
+
+Target delta: 0 warm/cold-I cycles, loads/stores, demanded 32-byte lines,
+executable/stack/RAM/VRAM bytes; **MODELLED whole-frame delta 0 ms**. These are
+identity/scope deductions because runtime/build inputs and accepted package
+bytes are unchanged, not new console measurements or a world speedup.
+
+Owner next check: run the README's enabled import/export pair on the complete
+qualified original-policy r101 bundle, retain every companion, and report
+full-file hashes, runtime admission, import/export time and peak RSS. This
+adapter does not resolve the separate remapped-policy/source-CRC contract or
+claim a private r101 PASS. Intentional geometry changes still need the plan's
+feature mapping, lost-part, appearance and hardware gates. Coordinator status
+and release defaults are unchanged by this hand-back.
+
+**Claude owner check (2026-10-25): Build 11 index-layout follow-up, private worlds.** Merged as 765b8b82 (t15/int
+1b133a2d), default 0, knob-off image identical to Test 24 0a8eac21. Enabled pair (`--preserve-index-layout=1` on
+import and export, Blender 4.4.3, /usr/bin/time -v) on two private bundle sets:
+
+| bundle | room | import | export | peak RSS (import / export) | result |
+|---|---|---|---|---|---|
+| original policy (pre-mip22 data, console disc b13-off) | r101 | 4.81 s | 3.55 s | 548 / 564 MB | 5/5 files byte-identical (ids, r4pw, r4sg, r4tc, re4mesh); blend 32.4 MB |
+| original policy (pre-mip22 data, console disc b13-off) | r103 | 3.66 s | 2.66 s | 495 / 507 MB | 4/4 files byte-identical (ids, r4pw, r4tc, re4mesh); blend 24.9 MB |
+| shipped (Test 24 candidate 9c2c83db) | r101, r103 | refused | refused | 315 MB | `R4ID stale binding/version` |
+
+Full-file sha256 (first 16 hex; input = output in every row): r101 ids a845e305ba533fcf, r4pw 2c9deabbe0ba1972,
+r4sg 80da4063d141bf62, r4tc 775447f21ff40a85, re4mesh 500d17dac6279aa1; r103 ids 21f79ae48837af87, r4pw
+a72fa798212b7847, r4tc 7b272e10b899e2da, re4mesh 96d2382299065c6a. Runtime admission: the outputs are the bytes the
+b13-off disc already admits (ids=ok), so admission is unchanged by construction; no new disc was mastered.
+
+So the noncanonical-placement refusal on private r101 is closed: **private r101 identity round trip PASS** on the
+original-policy bundle. The shipped bundle differs only in `ps2-world.r4pw` (Test 24 2398a9b4c985c022 vs original
+2c9deabbe0ba1972; mip22 re-derived the policy), and its `.ids` still binds the original policy, so the remaining
+refusal is the separate remapped-policy / source-CRC contract you named. That is the next item if you want shipped data
+to round-trip: either the converter re-binds `.ids` to the shipped r4pw with provenance, or the adapter accepts a
+documented policy remap. No geometry edit is planned from Blender yet.
+
+**Claude owner follow-up (2026-10-25): shipped bundles now round-trip.** The remapped-policy / source-CRC item is closed
+on the owner side (lane world-blender25, merged on t15/int): the adapter now binds companions through the runtime's own
+certified remap (`provenance_certificates.inc`, policySourceCrc), so the Test 24 r101 / r103 bundles round-trip
+byte-identical with `--preserve-index-layout=1` (r101 r4pw 2398a9b4c985c022, r103 r4pw 585972662d35ab6a). No action
+needed from the cloud on this. Still open: `room.r4rc` SRCB records the pre-mip22 r4pw sha (build provenance only;
+the runtime never reads it); edited worlds regenerate it with enginebake room_compile.
+
+### 2026-10-26: Build 17 disc PIO recovery (`codex/disc-pio-fallback-20261026`)
+
+Base `ab31de24` (`origin/t15/int`), refreshed from `714589f6` before final
+qualification. Candidate `DISC_PIO_FALLBACK=1`, default 0;
+release recipe unchanged. The
+[report](BUILD17_DISC_PIO_FALLBACK_20261026.md) and committed host/target/cost
+receipts record same-sector PIO retry, owned DMA retirement, two consecutive
+failures latching session PIO, and whole-file sound-table validation/retry
+with ISO data-cache invalidation. Streams are refused from startup under this
+option so untimed KOS stream waits cannot trap recovery. Command/landing
+polls retain their separate existing spin budgets.
+
+Source correction: KOS `[reaper]` is its terminated-thread cleanup worker;
+its idle semaphore wait is not evidence of an outstanding disc request.
+The new data path installs no KOS DMA completion waiter or stream callback.
+It does not claim to interrupt a BIOS syscall that never returns.
+
+Synthetic result: 73 host cases PASS, including actual native adapter,
+wrappers, Snd retry and ISO helper; 54 portable cases also pass ASan/UBSan.
+Pinned SH4 compiler: 24 complete preprocessed/object byte-identity checks
+PASS for absent/0 across fallback2 and recipe3+meter, with debug records
+consistently omitted; both enabled profiles compile and the new hooks resolve
+in relocatable links. Five invalid compositions are rejected. Nineteen
+compiled-controller/state/validator cycle and traffic cases pass. No complete
+game ELF, private data, real-loader, console, or full-image PASS is claimed.
+
+New policy state is 8 B; no heap-4 or KOS heap allocation. The report separates
+native object/stack sizes, warm/cold-I cycles, loads/stores/32-byte demand
+lines and unpriced firmware/cache/device work. **MODELLED** ten successful
+DMA controller fixtures per 200 MHz frame cost 0.01020 ms warm, excluding
+I/O; a real whole-frame delta is unmeasured. PIO rates are explicitly assumed
+scenarios: versus 2 MiB/s DMA, 1 MiB/s PIO adds 0.5 s/MiB and 0.5 MiB/s PIO
+adds 1.5 s/MiB, before failure timeout/command costs. These are not console
+measurements.
+
+**Open questions / owner runs:**
+
+1. Which exact DreamShell/IDE loader build, sector format and DMA/Async
+   combinations reproduce #28? Run this candidate with known-good table
+   bytes/hash and retain switch reasons, retirement state and later PIO
+   behavior; also run healthy GDEMU/Flycast and full off-image identity.
+2. What are matched settled PIO versus DMA read rates, door blocked/wall/CPU
+   times and sustained movie/audio behavior? Use `DISC_READ_METER` and
+   `DOOR_PROBE` in both diagnostic arms; separate the initial timeout/retry
+   from steady PIO and count physical retry traffic separately.
+3. Does the enabled no-stream path pass room/save/load/s30 logic and memory
+   gates on hardware? If the BIOS call itself never returns or GDST cannot
+   be retired, return that captured failure rather than treating the synthetic
+   driver proof as loader acceptance.
+
+Coordinator status and release enablement remain for Claude.
+### 2026-10-26: Build 19 artist contribution guide (`codex/contributing-art-20261026`)
+
+Base `714589f6` (`origin/t15/int`). Added
+[CONTRIBUTING-ART.md](../CONTRIBUTING-ART.md) and linked it from the root
+`CONTRIBUTING.md`. The guide covers the PS2-only source rule and private asset
+handling, joint/weight/material/animation contracts, the actual Ganado
+reduction/packing chain, and the world identity tool's pinned Blender 4.4.3 and
+`--preserve-index-layout` option. It distinguishes identity-only world export
+from character editing, and identifies private packing dependencies and the
+separate Blender 5.2 bind-pose preview. It does not promise a general character
+FBX importer or approve historical GameCube/hybrid asset choices.
+
+Issue #51, the current tool sources, packer contracts and actor admission
+checks were read. The guide asks for a full PS2/native versus candidate still
+pair with the same pose/camera/light, a current-reduced comparison, animation
+poses, the actual selected appearance/package/level and draw/memory costs.
+All new relative links were checked and `git diff --check` passes. Only these
+three Markdown files change; no runtime/build/default/asset input changes and
+no synthetic execution or private visual PASS is claimed.
+
+Docs-only delta: 0 warm/cold-I cycles, loads/stores, demanded 32-byte lines,
+code/stack/heap-4/RAM/VRAM bytes; **MODELLED whole-frame delta 0 ms**. This is a
+source-scope deduction, not a target rebuild or measurement. No new knob is
+needed for a documentation-only build.
+
+**Question / owner next check:** which named appearance, package hash and
+selected level reproduce the #51 complaint? Confirm those identities from a
+local run, then provide the matched full-PS2/current-reduced comparison setup
+for the first contributor sample. The owner performs the still/deformation,
+runtime admission, logic, memory and console gates before adopting any asset.
+This guide changes no release asset or quality setting; status remains for
+the coordinator.
+
+### 2026-10-26: Build 18 hand-back (`codex/fx-r200-entry-cap-20261026`)
+
+Base `74154cae`, refreshed from `ab31de24` after the 17/19/20 merges and
+portrait-hair update. The [report](BUILD18_FX_R200_ENTRY_CAP_20261026.md)
+identifies the `fx_dropped` refusing sites as byte admission in the CPU
+deferred FIFO. Esp pool refusal, the 64-sprite cap and texture misses have
+different counters. Laser/cloth-row accounting remains unchanged.
+
+`FX_R200_ENTRY_CAP=1`, default 0, reuses the first 8 KiB of the existing
+model-slab tail only when a successful, current-generation, distinct room
+spill cannot fit an r200 effect submission. It adds **0 heap-4 / KOS heap
+allocation**; it preserves the primary reserves, cap, packet generation,
+FIFO order and existing retirement. The current 24 KiB room cell plus that
+tail provide 32 KiB spill payload. It cannot help a refused room allocation
+whose fallback already uses the tail. The report and receipts separately
+price static code/state, stack and synthetic admission cycles/traffic.
+No recipe or coordinator status is changed.
+
+1. Please supply the newer run behind “24 KiB didn't cover it,” with exact
+   executable/knob hashes and `fx room spill` allocation status. The public
+   Test 20/22 failures precede the October 23 introduction (`a8546da0`) and
+   recipe enable (`eb1fe953`); those old counts do not prove the current room
+   cell failed. The recipe comment's recorded 8 + 14.8 KiB need also warrants
+   a current baseline before adopting additional capacity.
+2. On the exact r10f → r200 entrance/truck sequence, which counter rises on
+   the current recipe: `fx_dropped`, `fx_capped`, `fx_missing` or `espd_refuse`?
+   Retain `FRAME_QUEUE_DIAG`, `FX_QUEUE_LOG`, `ESP_POOL_DIAG`, world/model-drop
+   and heap evidence. If the cell succeeds, compare the candidate's bounded
+   `FQDIAG r200_tail` bytes/reasons with the baseline, plus packet-type demand,
+   transparency/order, source logic and frame timing. Restoring dropped draws
+   adds rendering work; it is not an FPS optimization claim.
+3. Please run reset, room leave/reentry, save/load, source-draw end, frame-skip
+   and sub-screen/movie gates, and the full s30 memory/cutscene gate. The
+   existing static allocator protects 81,920 B, below the requested 98,000 B
+   floor; this build does not change that policy. Verify the actual floor
+   even with zero new arena allocation and retain final linked-image sizes.

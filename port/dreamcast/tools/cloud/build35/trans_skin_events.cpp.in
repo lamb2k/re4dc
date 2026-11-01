@@ -1,0 +1,89 @@
+#include <cstddef>
+using u32=std::uint32_t;using f32=float;
+struct Weight{};struct WeightExt{};struct GxWork{};
+static GxWork fixture_gx;
+#define GXWORK() (&fixture_gx)
+struct Logger{void err(int,int,const char*,...){} void warn(int,int,const char*,...){}};
+static Logger logger;static Logger* pLog=&logger;
+#define PTR_INVALID(p) ((p)==nullptr)
+#define PTR_INVALID2(p) ((p)==nullptr)
+struct ModelTexInfo{unsigned flags=0,frame=0,anim[2]{};float u=0,v=0,su=0,sv=0;};
+struct ModelData{unsigned weight_palette_num=2,weight_ext_num=0,nParts=2,nVtx=17,nNrm=11,flags=0,shift=0;void* pWeight;void* vtxOrig;void* nrmOrig;};
+struct Shape{void* data=nullptr;float rate=0;};
+struct cModelInfo{ModelData* pData=nullptr;cModelInfo* pList=nullptr;unsigned flagsDC=0,be_flag=0;void* pPosBuf[2]{};void* pNrmBuf[2]{};Shape shape[5];ModelTexInfo tex;};
+struct cModel{unsigned be_flag=0;};
+#define MODEL_TEX(info) (&(info)->tex)
+struct Game{unsigned Stop_flg=0,vtx_buf_no=0,Frame_cnt=1;};
+static Game game;static Game* pG=&game;
+static unsigned palette_calls,alloc_calls,skin_calls,reset_shapes,calc_shapes,weight_mats;
+static unsigned fail_alloc=0;static bool defer_ok=true;static int face_result=0;
+static int g_skinLazyNow=0,g_skinLazyMtx=0;
+static unsigned skincen_def,skincen_defv,skincen_fail,skincen_failv,skincen_cpu,skincen_cpuv,skincen_morph,skincen_morphv,skincen_f0;
+alignas(32) static unsigned char memory[4096];
+static void* GetPrimBuff(unsigned n){++alloc_calls;check(n<=512,"fixture allocation bound");return alloc_calls==fail_alloc?nullptr:memory+(alloc_calls%4)*512;}
+static void calcWeightMat(cModel*){++weight_mats;}
+static void setupGQR6(unsigned){}
+static void ResetShape(cModelInfo*,void*){++reset_shapes;}
+static void CalculateShape_new(cModelInfo*,void*,float,void*){++calc_shapes;}
+static void CalcSk1_x(void*,void*,unsigned){++skin_calls;}
+static void CalcSk1_x2(void*,void*,unsigned){++skin_calls;}
+static void DCStoreRangeNoSync(void*,unsigned){}
+static void re4dc_log(const char*,...){}
+static bool skinDeferPending(cModel*,cModelInfo*,ModelData*,int*){return defer_ok;}
+int re4dc_skin_defer_lazy(cModelInfo*,ModelData*){return defer_ok;}
+int re4dc_skin_defer(cModelInfo*,ModelData*){return defer_ok;}
+static int faceLazyDefer(cModel*,cModelInfo*,ModelData*){return face_result;}
+#define SKIN_LAZY_MTX(m,built) if(!(built)){calcWeightMat(m);built=1;}
+@PALETTE@
+@UV@
+@SKIN@
+struct Fixture{cModel model;cModelInfo info;ModelData data;Fixture(){info.pData=&data;data.pWeight=memory;data.vtxOrig=memory;data.nrmOrig=memory+128;}};
+static void reset(const char* name){clear_events(name);palette_calls=alloc_calls=skin_calls=reset_shapes=calc_shapes=weight_mats=0;fail_alloc=0;defer_ok=true;face_result=0;g_skinLazyNow=0;}
+static void cpu(unsigned count=17,bool morph=false){expect(SkinCpu,1);expect(SkinCpuVertices,count);expect(SkinMorph,morph?1:0);expect(SkinMorphVertices,morph?count:0);check(skin_calls==2,"vertex and normal skin edges");}
+static void deferred(unsigned count=17){expect(SkinDeferred,1);expect(SkinDeferredVertices,count);expect(SkinCpu,0);expect(SkinDeferFail,0);check(skin_calls==0,"deferred bypasses CPU skin");}
+int main(){
+    reset("ordinary-and-extended-prefix-units");{
+        Weight w;WeightExt x;MakeWeightPalette(&w,3);MakeWeightPalette(&w,0);MakeWeightPalette(&w,-1);MakeWeightPalette(nullptr,4);
+        MakeWeightPaletteExt(&x,257);MakeWeightPaletteExt(&x,0);MakeWeightPaletteExt(&x,-1);
+        expect(PaletteOrdinary,3);expect(PaletteExtended,257);check(total()==260,"positive admitted matrix counts only");
+    }
+    reset("invalid-header");{Fixture f;f.info.pData=nullptr;check(commonScreenMatSub(&f.model,&f.info)==0,"invalid header fails");check(total()==0,"no work events");}
+    reset("rigid-info");{Fixture f;f.data.weight_palette_num=1;f.data.nParts=1;check(commonScreenMatSub(&f.model,&f.info)==1,"rigid succeeds");check(total()==0,"rigid does not skin");}
+    reset("hidden-info");{Fixture f;f.model.be_flag=0x4000;check(commonScreenMatSub(&f.model,&f.info)==1,"hidden succeeds");check(total()==0,"hidden does not skin");}
+    reset("ordinary-skin");{
+        Fixture f;check(commonScreenMatSub(&f.model,&f.info)==1,"ordinary succeeds");expect(PaletteOrdinary,2);check(palette_calls==1,"palette exactly once");
+#if RE4DC_NATIVE_ACTOR_SKIN
+        deferred();check(alloc_calls==(RE4DC_NATIVE_ACTOR_SKIN_LAZY?0:2),"lazy versus eager allocation");
+#else
+        cpu();expect(SkinDeferred,0);expect(SkinDeferFail,0);
+#endif
+    }
+    reset("defer-refusal-cpu");{
+        Fixture f;defer_ok=false;check(commonScreenMatSub(&f.model,&f.info)==1,"decline continues");cpu();expect(PaletteOrdinary,2);check(palette_calls==1,"failure does not duplicate palette");
+#if RE4DC_NATIVE_ACTOR_SKIN
+        expect(SkinDeferFail,1);expect(SkinFailVertices,17);
+#else
+        expect(SkinDeferFail,0);
+#endif
+    }
+    reset("extended-palette");{
+        Fixture f;f.data.weight_ext_num=256;defer_ok=false;check(commonScreenMatSub(&f.model,&f.info)==1,"extended succeeds");expect(PaletteExtended,256);expect(PaletteOrdinary,0);cpu();
+    }
+    reset("morph-cpu-subset");{
+        Fixture f;f.info.be_flag=2;f.info.shape[2].data=memory;check(commonScreenMatSub(&f.model,&f.info)==1,"morph succeeds");cpu(17,true);expect(SkinDeferred,0);expect(SkinDeferFail,0);expect(PaletteOrdinary,2);check(reset_shapes==1&&calc_shapes==1,"morph edges executed");
+    }
+    for(unsigned fail=1;fail<=2;++fail){reset("allocation-failure-is-not-executed-cpu-work");Fixture f;defer_ok=false;fail_alloc=fail;check(commonScreenMatSub(&f.model,&f.info)==0,"allocation failure propagates");expect(SkinCpu,0);expect(SkinCpuVertices,0);check(skin_calls==0,"failed allocation never skins");}
+#if RE4DC_SKIN_PALETTE_LAZY
+    reset("pending-defer-success");{Fixture f;g_skinLazyNow=1;check(commonScreenMatSub(&f.model,&f.info)==1,"pending succeeds");deferred();check(alloc_calls==0&&palette_calls==0,"pending delays both allocation and palette");}
+    reset("pending-defer-failure");{Fixture f;g_skinLazyNow=1;defer_ok=false;check(commonScreenMatSub(&f.model,&f.info)==1,"pending decline continues");cpu();expect(SkinDeferFail,1);expect(SkinFailVertices,17);expect(PaletteOrdinary,2);check(palette_calls==1,"pending fail builds one palette");}
+#endif
+#if RE4DC_LEON_FACE_LAZY
+    reset("face-defer-success");{Fixture f;f.info.be_flag=2;face_result=1;check(commonScreenMatSub(&f.model,&f.info)==1,"face defers");deferred();expect(SkinMorph,0);check(palette_calls==0&&alloc_calls==2,"face registers allocated output without eager palette");}
+    reset("face-invalid-source");{Fixture f;f.info.be_flag=2;face_result=-1;check(commonScreenMatSub(&f.model,&f.info)==0,"invalid face returns failure");check(total()==0&&skin_calls==0,"invalid face is no completed skin work");}
+#endif
+    reset("two-infos-exact-multiplicity");{
+        Fixture a,b;a.info.pList=&b.info;b.data.nVtx=23;defer_ok=false;
+        check(commonScreenMatSub(&a.model,&a.info)==1,"linked infos succeed");expect(SkinCpu,2);expect(SkinCpuVertices,40);expect(PaletteOrdinary,4);check(skin_calls==4,"both infos skin vertices and normals");
+    }
+    std::printf("{\"cases\":%u,\"checks\":%u}\n",cases,checks);
+}

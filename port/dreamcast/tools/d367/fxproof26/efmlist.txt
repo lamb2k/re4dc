@@ -1,0 +1,76 @@
+== r119 PS2 efm: ['#7:EFF:0x5(88)', '#7:EFF:0x6(100)', '#7:EFF:0x7(116)', '#7:EFF:0x12(120)', '#7:EFF:0x13(200)', '#7:EFF:0x15(424)', '#7:EFF:0x18(128)', '#7:EFF:0x1a(216)', '#7:EFF:0x1b(1337)', '#7:EFF:0x1c(963)', '#7:EFF:0xc9(768)', '#10:ETM/et10.eff:0xf(464)', '#10:ETM/et11.eff:0x9(376)', '#10:ETM/et11.eff:0x19(58)', '#10:ETM/et11.eff:0x2b(50)']
+   PS2 ETM members: ['et1000.bin', 'et10.eff', 'et1100.bin', 'et11.eff']
+   GC  ETM members: ['et1000.bin', 'et10.eff', 'et1100.bin', 'et11.eff']
+  GC eff0_efm05     tris=  88 bbox=(319.3, 145.5, 259.4)    samePS2=True best=1.00 #7:EFF:0x5
+  GC eff0_efm06     tris= 100 bbox=(70.0, 96.5, 174.2)      samePS2=True best=1.00 #7:EFF:0x6
+  GC eff0_efm07     tris= 116 bbox=(102.1, 110.6, 113.7)    samePS2=True best=1.00 #7:EFF:0x7
+  GC eff0_efm12     tris= 120 bbox=(1952.0, 119.0, 3278.0)  samePS2=True best=1.00 #7:EFF:0x12
+  GC eff0_efm13     tris= 200 bbox=(981.0, 44.0, 3599.0)    samePS2=True best=1.00 #7:EFF:0x13
+  GC eff0_efm14     tris=  52 bbox=(410.0, 397.0, 1299.0)   samePS2=False best=0.00 #7:EFF:0xc9
+  GC eff0_efm15     tris= 424 bbox=(1631.0, 55.0, 1991.0)   samePS2=True best=1.00 #7:EFF:0x15
+  GC eff0_efm16     tris=  52 bbox=(114.0, 127.0, 3713.0)   samePS2=False best=0.00 #7:EFF:0xc9
+  GC eff0_efm17     tris=  90 bbox=(1914.0, 941.0, 47.0)    samePS2=False best=0.00 #7:EFF:0xc9
+  GC eff0_efm18     tris= 128 bbox=(38.0, 1493.0, 909.0)    samePS2=True best=1.00 #7:EFF:0x18
+  GC eff0_efm1a     tris= 216 bbox=(976.0, 1075.0, 1086.0)  samePS2=True best=1.00 #7:EFF:0x1a
+  GC eff0_efm1b     tris=1337 bbox=(3695.0, 6339.0, 3349.0) samePS2=True best=1.00 #7:EFF:0x1b
+  GC eff0_efm1c     tris= 963 bbox=(1492.0, 7661.0, 1787.0) samePS2=True best=1.00 #7:EFF:0x1c
+  GC et10_efm0f     tris= 464 bbox=(280.0, 519.0, 312.0)    samePS2=True best=1.00 #10:ETM/et10.eff:0xf
+  GC et11_efm09     tris= 412 bbox=(711.0, 1177.0, 694.0)   samePS2=True best=0.35 #10:ETM/et11.eff:0x9
+  GC et11_efm19     tris=  92 bbox=(618.0, 127.0, 617.0)    samePS2=True best=0.35 #10:ETM/et11.eff:0x19
+  GC et11_efm2b     tris=  68 bbox=(1030.0, 110.0, 564.0)   samePS2=True best=0.74 #10:ETM/et11.eff:0x2b
+== r11a PS2 efm: ['#10:ETM/et01.eff:0x4(114)', '#10:ETM/et11.eff:0x9(376)', '#10:ETM/et11.eff:0x19(58)', '#10:ETM/et11.eff:0x2b(50)']
+   PS2 ETM members: ['et0100.bin', 'et01.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+   GC  ETM members: ['et0100.bin', 'et01.eff', 'et1000.bin', 'et10.eff', 'et1100.bin', 'et11.eff', 'et1400.bin', 'et1400.tpl', 'et14.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+  GC et01_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et01.eff:0x4
+  GC et10_efm0f     tris= 464 bbox=(280.0, 519.0, 312.0)    samePS2=False best=0.00 #10:ETM/et11.eff:0x2b
+  GC et11_efm09     tris= 412 bbox=(711.0, 1177.0, 694.0)   samePS2=True best=0.35 #10:ETM/et11.eff:0x9
+  GC et11_efm19     tris=  92 bbox=(618.0, 127.0, 617.0)    samePS2=True best=0.35 #10:ETM/et11.eff:0x19
+  GC et11_efm2b     tris=  68 bbox=(1030.0, 110.0, 564.0)   samePS2=True best=0.74 #10:ETM/et11.eff:0x2b
+== r101 PS2 efm: ['#10:ETM/et01.eff:0x4(114)', '#10:ETM/et02.eff:0x4(114)', '#10:ETM/et03.eff:0xa(176)', '#10:ETM/et04.eff:0x0(284)', '#10:ETM/et05.eff:0x3(711)', '#10:ETM/et11.eff:0x9(376)', '#10:ETM/et11.eff:0x19(58)', '#10:ETM/et11.eff:0x2b(50)']
+   PS2 ETM members: ['et0000.bin', 'et0000.tpl', 'et0001.bin', 'et00.eff', 'pl00536.fcv', 'pl00537.fcv', 'pl00538.fcv', 'et0100.bin', 'et01.eff', 'et0200.bin', 'et02.eff', 'et0300.bin', 'et03.eff', 'obm2b.eff', 'et0400.bin', 'et04.eff', 'et0500.bin', 'et05.eff', 'et0600.bin', 'et0600.tpl', 'et06.eff', 'pl00017.fcv', 'pl00018.fcv', 'pl00019.fcv', 'pl00020.fcv', 'pl00021.fcv', 'et06000.fcv', 'pl00024.fcv', 'et06001.fcv', 'et06002.fcv', 'pl00025.fcv', 'et06003.fcv', 'et060000.seq', 'et060010.seq', 'et060020.seq', 'et060030.seq', 'et060031.seq', 'pl01106.fcv', 'pl01107.fcv', 'pl01108.fcv', 'pl01118.fcv', 'et0700.bin', 'et0700.tpl', 'et0701.bin', 'et0701.tpl', 'et07.eff', 'et0800.bin', 'et0800.tpl', 'et08.eff', 'et0d00.bin', 'et0d00.tpl', 'et0d.eff', 'et1100.bin', 'et11.eff', 'et1e00.bin', 'et2500.bin', 'et2500.tpl', 'et25.eff']
+   GC  ETM members: ['et0000.bin', 'et0000.tpl', 'et0001.bin', 'et00.eff', 'pl00536.fcv', 'pl00537.fcv', 'pl00538.fcv', 'et0100.bin', 'et01.eff', 'et0200.bin', 'et02.eff', 'et0300.bin', 'et03.eff', 'obm2b.eff', 'et0400.bin', 'et04.eff', 'et0500.bin', 'et05.eff', 'et0600.bin', 'et0600.tpl', 'et06.eff', 'pl00017.fcv', 'pl00018.fcv', 'pl00019.fcv', 'pl00020.fcv', 'pl00021.fcv', 'et06000.fcv', 'pl00024.fcv', 'et06001.fcv', 'et06002.fcv', 'pl00025.fcv', 'et06003.fcv', 'et060000.seq', 'et060010.seq', 'et060020.seq', 'et060030.seq', 'et060031.seq', 'pl01106.fcv', 'pl01107.fcv', 'pl01108.fcv', 'pl01118.fcv', 'et0700.bin', 'et0700.tpl', 'et0701.bin', 'et0701.tpl', 'et07.eff', 'et0800.bin', 'et0800.tpl', 'et08.eff', 'et0d00.bin', 'et0d00.tpl', 'et0d.eff', 'et1100.bin', 'et11.eff', 'et1e00.bin', 'et2500.bin', 'et2500.tpl', 'et25.eff']
+  GC eff0_efm02     tris= 141 bbox=(59.0, 205.0, 59.0)      samePS2=False best=0.00 #10:ETM/et11.eff:0x2b
+  GC et01_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et02.eff:0x4
+  GC et02_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et02.eff:0x4
+  GC et03_efm0a     tris= 400 bbox=(1299.0, 2299.0, 68.0)   samePS2=True best=0.01 #10:ETM/et03.eff:0xa
+  GC et04_efm00     tris= 284 bbox=(1490.0, 862.0, 942.0)   samePS2=True best=1.00 #10:ETM/et04.eff:0x0
+  GC et05_efm03     tris= 711 bbox=(1422.0, 1987.0, 815.0)  samePS2=True best=1.00 #10:ETM/et05.eff:0x3
+  GC et11_efm09     tris= 412 bbox=(711.0, 1177.0, 694.0)   samePS2=True best=0.35 #10:ETM/et11.eff:0x9
+  GC et11_efm19     tris=  92 bbox=(618.0, 127.0, 617.0)    samePS2=True best=0.35 #10:ETM/et11.eff:0x19
+  GC et11_efm2b     tris=  68 bbox=(1030.0, 110.0, 564.0)   samePS2=True best=0.74 #10:ETM/et11.eff:0x2b
+== r106 PS2 efm: ['#10:ETM/et01.eff:0x4(114)', '#10:ETM/et02.eff:0x4(114)', '#10:ETM/et05.eff:0x3(711)', '#10:ETM/et11.eff:0x9(376)', '#10:ETM/et11.eff:0x19(58)', '#10:ETM/et11.eff:0x2b(50)', '#42:EFF:0x20(728)']
+   PS2 ETM members: ['et0100.bin', 'et01.eff', 'et0200.bin', 'et02.eff', 'et0500.bin', 'et05.eff', 'et0d00.bin', 'et0d00.tpl', 'et0d.eff', 'obm2b.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+   GC  ETM members: ['et0100.bin', 'et01.eff', 'et0200.bin', 'et02.eff', 'et0500.bin', 'et05.eff', 'et0d00.bin', 'et0d00.tpl', 'et0d.eff', 'obm2b.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+  GC eff0_efm5a     tris=  78 bbox=(158.0, 73.0, 262.0)     samePS2=False best=0.00 #42:EFF:0x20
+  GC eff1_efm20     tris= 728 bbox=(1220.0, 1326.0, 1254.0) samePS2=True best=1.00 #42:EFF:0x20
+  GC et01_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et02.eff:0x4
+  GC et02_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et02.eff:0x4
+  GC et05_efm03     tris= 711 bbox=(1422.0, 1987.0, 815.0)  samePS2=True best=1.00 #10:ETM/et05.eff:0x3
+  GC et11_efm09     tris= 412 bbox=(711.0, 1177.0, 694.0)   samePS2=True best=0.35 #10:ETM/et11.eff:0x9
+  GC et11_efm19     tris=  92 bbox=(618.0, 127.0, 617.0)    samePS2=True best=0.35 #10:ETM/et11.eff:0x19
+  GC et11_efm2b     tris=  68 bbox=(1030.0, 110.0, 564.0)   samePS2=True best=0.74 #10:ETM/et11.eff:0x2b
+== r10a PS2 efm: ['#10:ETM/et01.eff:0x4(114)', '#10:ETM/et11.eff:0x9(376)', '#10:ETM/et11.eff:0x19(58)', '#10:ETM/et11.eff:0x2b(50)', '#42:EFF:0x20(728)']
+   PS2 ETM members: ['et0100.bin', 'et01.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+   GC  ETM members: ['et0100.bin', 'et01.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+  GC eff0_efm7b     tris= 702 bbox=(1629.6, 1263.2, 4552.4) samePS2=False best=0.00 #42:EFF:0x20
+  GC eff1_efm20     tris= 728 bbox=(1220.0, 1326.0, 1254.0) samePS2=True best=1.00 #42:EFF:0x20
+  GC et01_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et01.eff:0x4
+  GC et11_efm09     tris= 412 bbox=(711.0, 1177.0, 694.0)   samePS2=True best=0.35 #10:ETM/et11.eff:0x9
+  GC et11_efm19     tris=  92 bbox=(618.0, 127.0, 617.0)    samePS2=True best=0.35 #10:ETM/et11.eff:0x19
+  GC et11_efm2b     tris=  68 bbox=(1030.0, 110.0, 564.0)   samePS2=True best=0.74 #10:ETM/et11.eff:0x2b
+== r10b PS2 efm: ['#10:ETM/et01.eff:0x4(114)', '#10:ETM/et11.eff:0x9(376)', '#10:ETM/et11.eff:0x19(58)', '#10:ETM/et11.eff:0x2b(50)']
+   PS2 ETM members: ['et0100.bin', 'et01.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+   GC  ETM members: ['et0100.bin', 'et01.eff', 'et1100.bin', 'et11.eff', 'et1f00.bin', 'et1f00.tpl', 'et1f.eff']
+  GC eff0_efm7b     tris= 702 bbox=(1629.6, 1263.2, 4552.4) samePS2=False best=0.00 #10:ETM/et11.eff:0x2b
+  GC eff0_efm7c     tris=  12 bbox=(2000.0, 2000.0, 2000.0) samePS2=False best=0.00 #10:ETM/et11.eff:0x2b
+  GC et01_efm04     tris= 193 bbox=(565.0, 366.0, 1003.0)   samePS2=True best=0.24 #10:ETM/et01.eff:0x4
+  GC et11_efm09     tris= 412 bbox=(711.0, 1177.0, 694.0)   samePS2=True best=0.35 #10:ETM/et11.eff:0x9
+  GC et11_efm19     tris=  92 bbox=(618.0, 127.0, 617.0)    samePS2=True best=0.35 #10:ETM/et11.eff:0x19
+  GC et11_efm2b     tris=  68 bbox=(1030.0, 110.0, 564.0)   samePS2=True best=0.74 #10:ETM/et11.eff:0x2b
+== core PS2 efm: ['#1:EFF:0x1(80)', '#1:EFF:0x8(84)', '#1:EFF:0xe(78)', '#1:EFF:0x10(52)', '#1:EFF:0x25(24)']
+  GC core1_efm01    tris=  80 bbox=(1269.0, 186.0, 34.0)    samePS2=True best=1.00 #1:EFF:0x1
+  GC core1_efm08    tris=  84 bbox=(336.0, 611.0, 294.0)    samePS2=True best=1.00 #1:EFF:0x8
+  GC core1_efm0e    tris=  78 bbox=(235.0, 470.0, 32.0)     samePS2=True best=1.00 #1:EFF:0xe
+  GC core1_efm10    tris=  52 bbox=(236.0, 423.0, 10.0)     samePS2=True best=1.00 #1:EFF:0x10
+  GC core1_efm25    tris=  48 bbox=(200.0, 1499.0, 200.0)   samePS2=True best=0.50 #1:EFF:0x25
+  GC core1_efm3e    tris=  52 bbox=(70.0, 19.0, 164.0)      samePS2=False best=0.00 #1:EFF:0x25

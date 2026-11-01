@@ -1,0 +1,1177 @@
+{
+  "base": "74154cae31b48ac6b15bfd6699a221da295cda63",
+  "base_commit": "74154cae31b48ac6b15bfd6699a221da295cda63",
+  "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "extracted_sha256": {
+    "base": "bd5df163f46ac320e57cd294523b22c9c43100124de888ab13175233020218fb",
+    "candidate": "f2e0a21fbffd278fd0667e6c87d37f0fb3bc91193fdf6c2c4e378c3ca85e71b1"
+  },
+  "fixture_definitions": {
+    "RE4DC_BRIDGE_LEAN": 1,
+    "RE4DC_CLOTH_NATIVE": 1,
+    "RE4DC_COPY_LEAN": 1,
+    "RE4DC_D349_RENDERER_STACK": 1,
+    "RE4DC_EFFECT_HAZE_LEAN": 4,
+    "RE4DC_EFFECT_ROOM": 1,
+    "RE4DC_EFFECT_SPRITES": 1,
+    "RE4DC_EFFECT_SPRITE_MAX": 64,
+    "RE4DC_ESP_SETUP_LEAN": 1,
+    "RE4DC_ESP_SPRITE_FAST": 1,
+    "RE4DC_FX_QUEUE_MARGIN": "8192U",
+    "RE4DC_FX_ROOM_SPILL_KB": 24,
+    "RE4DC_FX_SPRITE_TRIM": 2,
+    "RE4DC_FX_STRIP21": 1,
+    "RE4DC_MODEL_DRAW_PLANS": 1,
+    "RE4DC_NATIVE_FOG": 0,
+    "RE4DC_NATIVE_LASER": 1,
+    "RE4DC_NATIVE_STATIC": 1,
+    "RE4DC_PS2_FX_ADDITIONS": 1,
+    "RE4DC_PS2_FX_COMMON_HAZE": 1,
+    "RE4DC_PVR_STREAM": 1,
+    "RE4DC_RES_MODES": 0,
+    "RE4DC_UI_HANDLES": 1,
+    "RE4DC_WORLD_AUTOSORT": 1,
+    "RE4DC_WORLD_HOLE_FIX": 1
+  },
+  "generated_utc": "2026-10-26T15:31:00.610975+00:00",
+  "identity": {
+    "base_absent_zero_observations_equal": true,
+    "enabled_no_overflow_other_room_cap_observations_equal": 19,
+    "preprocessed_production_functions_equal": 12,
+    "seam_sha256": {
+      "bool fx_packet(": "d97d9de2453eea652d7b914471c0e5fb646567654940eb44a785e4a76b1a0319",
+      "extern \"C\" int re4dc_effect_haze_batch(": "b509044f8749f7f9f15560a49593f660b2c9ddfc29781a7c2142bd2cb98bf517",
+      "extern \"C\" int re4dc_effect_line(": "b053c8474bacd1c2e0578278162b7323a6a6f8e4fdd3279f4b2e8ebd9f88d1ad",
+      "extern \"C\" int re4dc_effect_mesh21(": "7d6e460c66cc47fd7947e4d63f28445f1e947b3b0d254973064df8c26fc94974",
+      "extern \"C\" int re4dc_effect_quad(": "8b1e37620b9bac7959058f6aa8a6563f055ebd0c3bdf8176128a740f23bc6ec7",
+      "extern \"C\" int re4dc_effect_sprite(": "6d76207f085497f17bddfa265a333de0de84756619d9249b8e63cc23a01b85e1",
+      "extern \"C\" int re4dc_effect_stage1_batch(": "d65fcc58586bddf7461a014b6e4bf065d84b033f5b61f0b549d0c438219e7c35",
+      "extern \"C\" void re4dc_model_invalidate_pending(": "8dca10df2adc5e0ec1f182005b656013e5116e00c0527d029d27d9029594b1d6",
+      "extern \"C\" void re4dc_ui_submit(": "30217c0f1815be6e5c0700328028f147ae5482dc61fffee33950dea61f3ccf10",
+      "extern \"C\" void* re4dc_model_deferred_storage(": "f94a5b2c763514ed996eec2c243424386b17a485ccbd4c3910ab361e02b23a05",
+      "int defer_part(": "0a70fa0d76d5e97cecdcaace8af1bd0243c803adc1d408b3b11aa80f22634294",
+      "void reset_deferred(": "5d19ec7af0edd6136e5a3f89787c2733f88f094baf40da37a71644148ec6e08d"
+    }
+  },
+  "limits": [
+    "No private room data, console or emulator; this does not establish which allocation refused the owner's reported 803-827 sprites.",
+    "Actual production enqueue/packet/drain/reset/provider code is executed; texture lookup, heap-4 provider and PVR header compilation are controlled host shims.",
+    "The real strip/cloth projection and clipping code executes on host floating point, not SH4 floating point.",
+    "Native model enqueue and view restoration execute; final model rendering is captured at the re4dc_model_submit boundary.",
+    "Host pointers/structure ABI differ from SH4. Runtime seam and packet equivalence here do not replace complete target option-off object identity.",
+    "ASan and UBSan are enabled; LeakSanitizer is disabled because this sandbox cannot inspect /proc tasks.",
+    "No hardware cycles, frame-time saving, heap floor or observed r200 drop reduction is claimed."
+  ],
+  "result": "PASS",
+  "schema": "re4dc-build18-host-gate-v1",
+  "source_sha256": {
+    "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481",
+    "port/dreamcast/game/platform/include/fx_r200_entry_cap.h": "1c9f23a5161a707fdb114139d36d927a9429e60d742bc987733f6f3add646267",
+    "port/dreamcast/game/platform/include/fx_sprite_trim.inc": "9f74b574f55c0897849e0956688c1f3e868797a44e7d7ec432182706598fe1d2",
+    "port/dreamcast/game/platform/include/fx_sprite_trim_table.inc": "9e58e010758bbbe87899931e34f8b1749cecc700c4023f2ec5a0fb768a143e93",
+    "port/dreamcast/game/platform/include/native_effect_haze_batch.inc": "fedb787cbe12aca1c7c3988528172c767d54834bff9da30f02d63e6354fea8d1",
+    "port/dreamcast/game/platform/include/native_effect_stage1_batch.inc": "dd9431c1aaa4f12f8a72c7c9ec894e45c7cee5079d3dc3e4100fcf4e8dd7df04",
+    "port/dreamcast/game/platform/include/native_effect_strip21.inc": "0f2727427f75a7bf25142bf74cfba3eee88140a4ab119e47150f59f411f61bee",
+    "port/dreamcast/game/platform/include/native_model.h": "40b01fbcb66e8f2f89009e2532b5eb6c3db9ddcbe27c4d1a00d7682b2d6e0dde",
+    "port/dreamcast/game/platform/include/native_render_profile.hpp": "0776aa713d3e4e0c608b3d847e04b528a60d13005ab72966f91927560f149bf3",
+    "port/dreamcast/game/platform/include/native_ui.h": "7490e37bbe989399aa75108cf880027a4943da89ffa4999f272b0eccf4ffb882",
+    "port/dreamcast/game/platform/include/re4dc_screen.h": "34688a35cd9592ac9c77f8298ae1ba6cca1f2d51e9de30d27f8c4f532138cb8f",
+    "port/dreamcast/game/platform/native_ui.cpp": "062b1f5d25de151e3bb55a76d73e78546426bcd0f51492722efd5c8e6e0a9c17",
+    "port/dreamcast/room/native_draw_plan.hpp": "951dffb90793f7afa8a6191720425ea14c49a65be46bb490bc288a6cf95f9405",
+    "port/dreamcast/room/pvr_geometry.cpp": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136",
+    "port/dreamcast/room/pvr_geometry.hpp": "0e7d6a83bff8a5e76794aea8e4da75a7adfc9c497f9b5ccb815a79a4e3d75d3c",
+    "port/dreamcast/room/source_lighting.hpp": "dfc9fd1e8bd4f30a11be65d59146d1d48d3dfcc0b392ed35fa18e665b3d50e45",
+    "port/dreamcast/tests/fx_r200_entry_cap_test.cpp": "4b6ec78af24431c8d3ba05ae69574d06c7ce45768927886f830be3a8361cdea3",
+    "port/dreamcast/tests/test_fx_r200_entry_cap.py": "2c230945fbe9ac92b0997ac7415b2136c17067e07bf79c4fd48a03abd913cea7",
+    "port/dreamcast/tools/d367/esp_setup_lean/check_runtime.py": "ba0b2739e010cdda105e3483c998c84d702a3e16955e8bbd2f2c091410249de8",
+    "port/dreamcast/tools/d367/esp_setup_lean/runtime_queue.cpp.in": "0f6fbb5f66c811360ba0134938f2498349ec19897cb77c3d40083d86b4602804"
+  },
+  "steps": [
+    {
+      "argv": [
+        "g++",
+        "--version"
+      ],
+      "host_wall_seconds": 0.002239,
+      "label": "compiler version",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "74154cae31b48ac6b15bfd6699a221da295cda63^{commit}"
+      ],
+      "host_wall_seconds": 0.002573,
+      "label": "resolve base",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "74154cae31b48ac6b15bfd6699a221da295cda63\n"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-r200-gate-y_b35sst/base"
+      ],
+      "host_wall_seconds": 6.689979,
+      "label": "compile base",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/tmp/re4dc-r200-gate-y_b35sst/base",
+        "/tmp/re4dc-r200-gate-y_b35sst/base.trace"
+      ],
+      "host_wall_seconds": 0.041401,
+      "label": "run base",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "CASE\tno_overflow_sprite\tPASS\nCASE\tfull_distinct_room_cell_sprite\tPASS\nCASE\tother_room_unchanged_sprite\tPASS\nCASE\tno_overflow_trim_octagon\tPASS\nCASE\tfull_distinct_room_cell_trim_octagon\tPASS\nCASE\tother_room_unchanged_trim_octagon\tPASS\nCASE\tno_overflow_haze_octagon\tPASS\nCASE\tfull_distinct_room_cell_haze_octagon\tPASS\nCASE\tother_room_unchanged_haze_octagon\tPASS\nCASE\tno_overflow_laser\tPASS\nCASE\tfull_distinct_room_cell_laser\tPASS\nCASE\tother_room_unchanged_laser\tPASS\nCASE\tno_overflow_strip\tPASS\nCASE\tfull_distinct_room_cell_strip\tPASS\nCASE\tother_room_unchanged_strip\tPASS\nCASE\tno_overflow_cloth\tPASS\nCASE\tfull_distinct_room_cell_cloth\tPASS\nCASE\tother_room_unchanged_cloth\tPASS\nCASE\tno_overflow_haze_batch\tPASS\nCASE\tfull_distinct_room_cell_haze_batch\tPASS\nCASE\tother_room_unchanged_haze_batch\tPASS\nCASE\tno_overflow_stage_alpha\tPASS\nCASE\tfull_distinct_room_cell_stage_alpha\tPASS\nCASE\tother_room_unchanged_stage_alpha\tPASS\nCASE\tno_overflow_stage_add\tPASS\nCASE\tfull_distinct_room_cell_stage_add\tPASS\nCASE\tother_room_unchanged_stage_add\tPASS\nCASE\troom_spill_allocation_failure_already_uses_tail_no_alias\tPASS\nCASE\tnull_slab_does_not_allocate_or_extend_room_cell\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_haze_batch\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_haze_batch\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_alpha\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_alpha\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_add\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_add\tPASS\nCASE\texact_primary_fit_uses_room_cell_before_tail\tPASS\nCASE\texact_8192_tail_fit_and_sprite_64_cap_unchanged\tPASS\nCASE\ttail_exhaustion_with_laser_and_exact_final_sprite\tPASS\nCASE\ttoo_large_atomic_batch_preserves_queue_and_allocation_cursor\tPASS\nCASE\tinterleaved_model_reuses_primary_fragment_and_preserves_fifo\tPASS\nCASE\tmodels_do_not_borrow_effect_only_tail\tPASS\nCASE\tframe_reset_releases_tail_ownership_for_next_frame\tPASS\nCASE\troom_generation_change_refuses_until_owner_reset\tPASS\nCASE\tlive_room_change_and_room_end_refuse_retained_tail\tPASS\nCASE\tnative_pending_invalidation_clears_queue_before_reuse\tPASS\nCASE\tlive_room_required_even_if_stale_mesh_room_would_match\tPASS\nCASE\teffect_frame_margin_exact_boundary_is_unchanged\tPASS\nCASE\tui_above_8192_retains_its_actual_byte_reserve\tPASS\nCASE\tui_cannot_borrow_the_effect_tail\tPASS\nCASE\tglobal_sprite_cap_stays_64_without_pressure\tPASS\nTOTAL\tpassed=50\tfailed=0\tassertions=128729\n"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "-E",
+        "-P",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp"
+      ],
+      "host_wall_seconds": 0.074704,
+      "label": "preprocess seams base",
+      "returncode": 0,
+      "stderr": "",
+      "stdout_bytes": 1925918,
+      "stdout_sha256": "37c636d1d15d7ffa377e8c3b21d19f958351bcded166a1cd955d72fb9f80bfe6"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-r200-gate-y_b35sst/absent"
+      ],
+      "host_wall_seconds": 6.817675,
+      "label": "compile absent",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/tmp/re4dc-r200-gate-y_b35sst/absent",
+        "/tmp/re4dc-r200-gate-y_b35sst/absent.trace"
+      ],
+      "host_wall_seconds": 0.05213,
+      "label": "run absent",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "CASE\tno_overflow_sprite\tPASS\nCASE\tfull_distinct_room_cell_sprite\tPASS\nCASE\tother_room_unchanged_sprite\tPASS\nCASE\tno_overflow_trim_octagon\tPASS\nCASE\tfull_distinct_room_cell_trim_octagon\tPASS\nCASE\tother_room_unchanged_trim_octagon\tPASS\nCASE\tno_overflow_haze_octagon\tPASS\nCASE\tfull_distinct_room_cell_haze_octagon\tPASS\nCASE\tother_room_unchanged_haze_octagon\tPASS\nCASE\tno_overflow_laser\tPASS\nCASE\tfull_distinct_room_cell_laser\tPASS\nCASE\tother_room_unchanged_laser\tPASS\nCASE\tno_overflow_strip\tPASS\nCASE\tfull_distinct_room_cell_strip\tPASS\nCASE\tother_room_unchanged_strip\tPASS\nCASE\tno_overflow_cloth\tPASS\nCASE\tfull_distinct_room_cell_cloth\tPASS\nCASE\tother_room_unchanged_cloth\tPASS\nCASE\tno_overflow_haze_batch\tPASS\nCASE\tfull_distinct_room_cell_haze_batch\tPASS\nCASE\tother_room_unchanged_haze_batch\tPASS\nCASE\tno_overflow_stage_alpha\tPASS\nCASE\tfull_distinct_room_cell_stage_alpha\tPASS\nCASE\tother_room_unchanged_stage_alpha\tPASS\nCASE\tno_overflow_stage_add\tPASS\nCASE\tfull_distinct_room_cell_stage_add\tPASS\nCASE\tother_room_unchanged_stage_add\tPASS\nCASE\troom_spill_allocation_failure_already_uses_tail_no_alias\tPASS\nCASE\tnull_slab_does_not_allocate_or_extend_room_cell\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_haze_batch\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_haze_batch\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_alpha\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_alpha\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_add\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_add\tPASS\nCASE\texact_primary_fit_uses_room_cell_before_tail\tPASS\nCASE\texact_8192_tail_fit_and_sprite_64_cap_unchanged\tPASS\nCASE\ttail_exhaustion_with_laser_and_exact_final_sprite\tPASS\nCASE\ttoo_large_atomic_batch_preserves_queue_and_allocation_cursor\tPASS\nCASE\tinterleaved_model_reuses_primary_fragment_and_preserves_fifo\tPASS\nCASE\tmodels_do_not_borrow_effect_only_tail\tPASS\nCASE\tframe_reset_releases_tail_ownership_for_next_frame\tPASS\nCASE\troom_generation_change_refuses_until_owner_reset\tPASS\nCASE\tlive_room_change_and_room_end_refuse_retained_tail\tPASS\nCASE\tnative_pending_invalidation_clears_queue_before_reuse\tPASS\nCASE\tlive_room_required_even_if_stale_mesh_room_would_match\tPASS\nCASE\teffect_frame_margin_exact_boundary_is_unchanged\tPASS\nCASE\tui_above_8192_retains_its_actual_byte_reserve\tPASS\nCASE\tui_cannot_borrow_the_effect_tail\tPASS\nCASE\tglobal_sprite_cap_stays_64_without_pressure\tPASS\nTOTAL\tpassed=50\tfailed=0\tassertions=128729\n"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "-E",
+        "-P",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp"
+      ],
+      "host_wall_seconds": 0.101213,
+      "label": "preprocess seams absent",
+      "returncode": 0,
+      "stderr": "",
+      "stdout_bytes": 1925918,
+      "stdout_sha256": "c3dab2bc985f246db24f064debf60f86219ff49348b06a60d43c001e846d4df3"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "-DRE4DC_FX_R200_ENTRY_CAP=0",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-r200-gate-y_b35sst/zero"
+      ],
+      "host_wall_seconds": 7.303256,
+      "label": "compile zero",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/tmp/re4dc-r200-gate-y_b35sst/zero",
+        "/tmp/re4dc-r200-gate-y_b35sst/zero.trace"
+      ],
+      "host_wall_seconds": 0.050623,
+      "label": "run zero",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "CASE\tno_overflow_sprite\tPASS\nCASE\tfull_distinct_room_cell_sprite\tPASS\nCASE\tother_room_unchanged_sprite\tPASS\nCASE\tno_overflow_trim_octagon\tPASS\nCASE\tfull_distinct_room_cell_trim_octagon\tPASS\nCASE\tother_room_unchanged_trim_octagon\tPASS\nCASE\tno_overflow_haze_octagon\tPASS\nCASE\tfull_distinct_room_cell_haze_octagon\tPASS\nCASE\tother_room_unchanged_haze_octagon\tPASS\nCASE\tno_overflow_laser\tPASS\nCASE\tfull_distinct_room_cell_laser\tPASS\nCASE\tother_room_unchanged_laser\tPASS\nCASE\tno_overflow_strip\tPASS\nCASE\tfull_distinct_room_cell_strip\tPASS\nCASE\tother_room_unchanged_strip\tPASS\nCASE\tno_overflow_cloth\tPASS\nCASE\tfull_distinct_room_cell_cloth\tPASS\nCASE\tother_room_unchanged_cloth\tPASS\nCASE\tno_overflow_haze_batch\tPASS\nCASE\tfull_distinct_room_cell_haze_batch\tPASS\nCASE\tother_room_unchanged_haze_batch\tPASS\nCASE\tno_overflow_stage_alpha\tPASS\nCASE\tfull_distinct_room_cell_stage_alpha\tPASS\nCASE\tother_room_unchanged_stage_alpha\tPASS\nCASE\tno_overflow_stage_add\tPASS\nCASE\tfull_distinct_room_cell_stage_add\tPASS\nCASE\tother_room_unchanged_stage_add\tPASS\nCASE\troom_spill_allocation_failure_already_uses_tail_no_alias\tPASS\nCASE\tnull_slab_does_not_allocate_or_extend_room_cell\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_haze_batch\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_haze_batch\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_alpha\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_alpha\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_add\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_add\tPASS\nCASE\texact_primary_fit_uses_room_cell_before_tail\tPASS\nCASE\texact_8192_tail_fit_and_sprite_64_cap_unchanged\tPASS\nCASE\ttail_exhaustion_with_laser_and_exact_final_sprite\tPASS\nCASE\ttoo_large_atomic_batch_preserves_queue_and_allocation_cursor\tPASS\nCASE\tinterleaved_model_reuses_primary_fragment_and_preserves_fifo\tPASS\nCASE\tmodels_do_not_borrow_effect_only_tail\tPASS\nCASE\tframe_reset_releases_tail_ownership_for_next_frame\tPASS\nCASE\troom_generation_change_refuses_until_owner_reset\tPASS\nCASE\tlive_room_change_and_room_end_refuse_retained_tail\tPASS\nCASE\tnative_pending_invalidation_clears_queue_before_reuse\tPASS\nCASE\tlive_room_required_even_if_stale_mesh_room_would_match\tPASS\nCASE\teffect_frame_margin_exact_boundary_is_unchanged\tPASS\nCASE\tui_above_8192_retains_its_actual_byte_reserve\tPASS\nCASE\tui_cannot_borrow_the_effect_tail\tPASS\nCASE\tglobal_sprite_cap_stays_64_without_pressure\tPASS\nTOTAL\tpassed=50\tfailed=0\tassertions=128729\n"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "-DRE4DC_FX_R200_ENTRY_CAP=0",
+        "-E",
+        "-P",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp"
+      ],
+      "host_wall_seconds": 0.123878,
+      "label": "preprocess seams zero",
+      "returncode": 0,
+      "stderr": "",
+      "stdout_bytes": 1925918,
+      "stdout_sha256": "c3dab2bc985f246db24f064debf60f86219ff49348b06a60d43c001e846d4df3"
+    },
+    {
+      "argv": [
+        "g++",
+        "-std=c++20",
+        "-O2",
+        "-ffp-contract=off",
+        "-fno-pie",
+        "-no-pie",
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer",
+        "-I/tmp/re4dc-r200-gate-y_b35sst",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/game/platform/include",
+        "-I/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room",
+        "-include",
+        "/tmp/re4dc-r200-gate-y_b35sst/config.h",
+        "-DRE4DC_FX_R200_ENTRY_CAP=1",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/tests/fx_r200_entry_cap_test.cpp",
+        "/workspace/scratch/794179ef02a4/work/re4dc-fx-r200-entry-cap-20261026/port/dreamcast/room/pvr_geometry.cpp",
+        "-o",
+        "/tmp/re4dc-r200-gate-y_b35sst/enabled"
+      ],
+      "host_wall_seconds": 7.348188,
+      "label": "compile enabled",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "/tmp/re4dc-r200-gate-y_b35sst/enabled",
+        "/tmp/re4dc-r200-gate-y_b35sst/enabled.trace"
+      ],
+      "host_wall_seconds": 0.037078,
+      "label": "run enabled",
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "CASE\tno_overflow_sprite\tPASS\nCASE\tfull_distinct_room_cell_sprite\tPASS\nCASE\tother_room_unchanged_sprite\tPASS\nCASE\tno_overflow_trim_octagon\tPASS\nCASE\tfull_distinct_room_cell_trim_octagon\tPASS\nCASE\tother_room_unchanged_trim_octagon\tPASS\nCASE\tno_overflow_haze_octagon\tPASS\nCASE\tfull_distinct_room_cell_haze_octagon\tPASS\nCASE\tother_room_unchanged_haze_octagon\tPASS\nCASE\tno_overflow_laser\tPASS\nCASE\tfull_distinct_room_cell_laser\tPASS\nCASE\tother_room_unchanged_laser\tPASS\nCASE\tno_overflow_strip\tPASS\nCASE\tfull_distinct_room_cell_strip\tPASS\nCASE\tother_room_unchanged_strip\tPASS\nCASE\tno_overflow_cloth\tPASS\nCASE\tfull_distinct_room_cell_cloth\tPASS\nCASE\tother_room_unchanged_cloth\tPASS\nCASE\tno_overflow_haze_batch\tPASS\nCASE\tfull_distinct_room_cell_haze_batch\tPASS\nCASE\tother_room_unchanged_haze_batch\tPASS\nCASE\tno_overflow_stage_alpha\tPASS\nCASE\tfull_distinct_room_cell_stage_alpha\tPASS\nCASE\tother_room_unchanged_stage_alpha\tPASS\nCASE\tno_overflow_stage_add\tPASS\nCASE\tfull_distinct_room_cell_stage_add\tPASS\nCASE\tother_room_unchanged_stage_add\tPASS\nCASE\troom_spill_allocation_failure_already_uses_tail_no_alias\tPASS\nCASE\tnull_slab_does_not_allocate_or_extend_room_cell\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_haze_batch\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_haze_batch\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_alpha\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_alpha\tPASS\nCASE\tbatch_without_active_spill_does_not_allocate_stage_add\tPASS\nCASE\tbatch_validation_after_selection_does_not_consume_stage_add\tPASS\nCASE\texact_primary_fit_uses_room_cell_before_tail\tPASS\nCASE\texact_8192_tail_fit_and_sprite_64_cap_unchanged\tPASS\nCASE\ttail_exhaustion_with_laser_and_exact_final_sprite\tPASS\nCASE\ttoo_large_atomic_batch_preserves_queue_and_allocation_cursor\tPASS\nCASE\tinterleaved_model_reuses_primary_fragment_and_preserves_fifo\tPASS\nCASE\tmodels_do_not_borrow_effect_only_tail\tPASS\nCASE\tframe_reset_releases_tail_ownership_for_next_frame\tPASS\nCASE\troom_generation_change_refuses_until_owner_reset\tPASS\nCASE\tlive_room_change_and_room_end_refuse_retained_tail\tPASS\nCASE\tnative_pending_invalidation_clears_queue_before_reuse\tPASS\nCASE\tlive_room_required_even_if_stale_mesh_room_would_match\tPASS\nCASE\teffect_frame_margin_exact_boundary_is_unchanged\tPASS\nCASE\tui_above_8192_retains_its_actual_byte_reserve\tPASS\nCASE\tui_cannot_borrow_the_effect_tail\tPASS\nCASE\tglobal_sprite_cap_stays_64_without_pressure\tPASS\nTOTAL\tpassed=50\tfailed=0\tassertions=129038\n"
+    }
+  ],
+  "variants": {
+    "absent": {
+      "assertions": 128729,
+      "cases": [
+        {
+          "name": "no_overflow_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "room_spill_allocation_failure_already_uses_tail_no_alias",
+          "status": "PASS"
+        },
+        {
+          "name": "null_slab_does_not_allocate_or_extend_room_cell",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_primary_fit_uses_room_cell_before_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_8192_tail_fit_and_sprite_64_cap_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "tail_exhaustion_with_laser_and_exact_final_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "too_large_atomic_batch_preserves_queue_and_allocation_cursor",
+          "status": "PASS"
+        },
+        {
+          "name": "interleaved_model_reuses_primary_fragment_and_preserves_fifo",
+          "status": "PASS"
+        },
+        {
+          "name": "models_do_not_borrow_effect_only_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "frame_reset_releases_tail_ownership_for_next_frame",
+          "status": "PASS"
+        },
+        {
+          "name": "room_generation_change_refuses_until_owner_reset",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_change_and_room_end_refuse_retained_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "native_pending_invalidation_clears_queue_before_reuse",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_required_even_if_stale_mesh_room_would_match",
+          "status": "PASS"
+        },
+        {
+          "name": "effect_frame_margin_exact_boundary_is_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_above_8192_retains_its_actual_byte_reserve",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_cannot_borrow_the_effect_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "global_sprite_cap_stays_64_without_pressure",
+          "status": "PASS"
+        }
+      ],
+      "failed": 0,
+      "passed": 50,
+      "trace_sha256": "4e7d6b08b8122fc6e83921beb6c58fd7c0a252944f9f0e04a75acb2d7ee5c2a1"
+    },
+    "base": {
+      "assertions": 128729,
+      "cases": [
+        {
+          "name": "no_overflow_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "room_spill_allocation_failure_already_uses_tail_no_alias",
+          "status": "PASS"
+        },
+        {
+          "name": "null_slab_does_not_allocate_or_extend_room_cell",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_primary_fit_uses_room_cell_before_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_8192_tail_fit_and_sprite_64_cap_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "tail_exhaustion_with_laser_and_exact_final_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "too_large_atomic_batch_preserves_queue_and_allocation_cursor",
+          "status": "PASS"
+        },
+        {
+          "name": "interleaved_model_reuses_primary_fragment_and_preserves_fifo",
+          "status": "PASS"
+        },
+        {
+          "name": "models_do_not_borrow_effect_only_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "frame_reset_releases_tail_ownership_for_next_frame",
+          "status": "PASS"
+        },
+        {
+          "name": "room_generation_change_refuses_until_owner_reset",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_change_and_room_end_refuse_retained_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "native_pending_invalidation_clears_queue_before_reuse",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_required_even_if_stale_mesh_room_would_match",
+          "status": "PASS"
+        },
+        {
+          "name": "effect_frame_margin_exact_boundary_is_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_above_8192_retains_its_actual_byte_reserve",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_cannot_borrow_the_effect_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "global_sprite_cap_stays_64_without_pressure",
+          "status": "PASS"
+        }
+      ],
+      "failed": 0,
+      "passed": 50,
+      "trace_sha256": "4e7d6b08b8122fc6e83921beb6c58fd7c0a252944f9f0e04a75acb2d7ee5c2a1"
+    },
+    "enabled": {
+      "assertions": 129038,
+      "cases": [
+        {
+          "name": "no_overflow_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "room_spill_allocation_failure_already_uses_tail_no_alias",
+          "status": "PASS"
+        },
+        {
+          "name": "null_slab_does_not_allocate_or_extend_room_cell",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_primary_fit_uses_room_cell_before_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_8192_tail_fit_and_sprite_64_cap_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "tail_exhaustion_with_laser_and_exact_final_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "too_large_atomic_batch_preserves_queue_and_allocation_cursor",
+          "status": "PASS"
+        },
+        {
+          "name": "interleaved_model_reuses_primary_fragment_and_preserves_fifo",
+          "status": "PASS"
+        },
+        {
+          "name": "models_do_not_borrow_effect_only_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "frame_reset_releases_tail_ownership_for_next_frame",
+          "status": "PASS"
+        },
+        {
+          "name": "room_generation_change_refuses_until_owner_reset",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_change_and_room_end_refuse_retained_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "native_pending_invalidation_clears_queue_before_reuse",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_required_even_if_stale_mesh_room_would_match",
+          "status": "PASS"
+        },
+        {
+          "name": "effect_frame_margin_exact_boundary_is_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_above_8192_retains_its_actual_byte_reserve",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_cannot_borrow_the_effect_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "global_sprite_cap_stays_64_without_pressure",
+          "status": "PASS"
+        }
+      ],
+      "failed": 0,
+      "passed": 50,
+      "trace_sha256": "62386d85d022aed58bf2e49e0661c25652c7502efc025d9153a648e3a5a104d2"
+    },
+    "zero": {
+      "assertions": 128729,
+      "cases": [
+        {
+          "name": "no_overflow_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_trim_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_octagon",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_laser",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_strip",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_cloth",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "no_overflow_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "full_distinct_room_cell_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "other_room_unchanged_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "room_spill_allocation_failure_already_uses_tail_no_alias",
+          "status": "PASS"
+        },
+        {
+          "name": "null_slab_does_not_allocate_or_extend_room_cell",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_haze_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_alpha",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_without_active_spill_does_not_allocate_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "batch_validation_after_selection_does_not_consume_stage_add",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_primary_fit_uses_room_cell_before_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_8192_tail_fit_and_sprite_64_cap_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "tail_exhaustion_with_laser_and_exact_final_sprite",
+          "status": "PASS"
+        },
+        {
+          "name": "too_large_atomic_batch_preserves_queue_and_allocation_cursor",
+          "status": "PASS"
+        },
+        {
+          "name": "interleaved_model_reuses_primary_fragment_and_preserves_fifo",
+          "status": "PASS"
+        },
+        {
+          "name": "models_do_not_borrow_effect_only_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "frame_reset_releases_tail_ownership_for_next_frame",
+          "status": "PASS"
+        },
+        {
+          "name": "room_generation_change_refuses_until_owner_reset",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_change_and_room_end_refuse_retained_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "native_pending_invalidation_clears_queue_before_reuse",
+          "status": "PASS"
+        },
+        {
+          "name": "live_room_required_even_if_stale_mesh_room_would_match",
+          "status": "PASS"
+        },
+        {
+          "name": "effect_frame_margin_exact_boundary_is_unchanged",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_above_8192_retains_its_actual_byte_reserve",
+          "status": "PASS"
+        },
+        {
+          "name": "ui_cannot_borrow_the_effect_tail",
+          "status": "PASS"
+        },
+        {
+          "name": "global_sprite_cap_stays_64_without_pressure",
+          "status": "PASS"
+        }
+      ],
+      "failed": 0,
+      "passed": 50,
+      "trace_sha256": "4e7d6b08b8122fc6e83921beb6c58fd7c0a252944f9f0e04a75acb2d7ee5c2a1"
+    }
+  }
+}

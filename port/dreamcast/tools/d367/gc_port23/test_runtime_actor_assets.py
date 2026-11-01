@@ -32,8 +32,8 @@ struct Body{cModelInfo*pRight=nullptr,*pLeft=nullptr;};struct Player:cModel{stru
 struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
 struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
-struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
-struct RegistryView{unsigned geometry_count=1;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
+struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;unsigned geometry=0,mask_geometry[2]={~0u,~0u};};
+struct RegistryView{unsigned geometry_count=1,chunk_count=0;Chunk* chunks=nullptr;}registry;Chunk chunks[1];Chunk registry_gview(unsigned g){return chunks[g];}PayloadProof gcasset_registry[2];
 ''' + selection + r'''
 void put(std::vector<unsigned char>&a,unsigned offset,unsigned value){memcpy(a.data()+offset,&value,4);}
 std::vector<unsigned char> archive(unsigned arc){unsigned count=arc-3,at=16+count*8;std::vector<unsigned char>a(at+96);put(a,0,count);put(a,16+4*(count-1),at);put(a,16+4*count+4*(count-1),0x004e4942);a[at]=37;return a;}
@@ -61,7 +61,7 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char repl
  // earlier class mask, never recapturing a new current model/BIN role.
  member_retire(&shell);assert(!selected().serial);info.pData=nullptr;model.kindid=0;model.id=0x10;
  {ReplayScope replay(saved.serial,saved.mask,saved.payload);auto use=selected();assert(use.serial==saved.serial && use.payload==saved.payload && use.mask==weapon);}
- begin(0x111,2,Required);logs.clear();payload_retire(gcasset_registry[0]);sq=true;{ReplayScope replay(saved.serial,saved.mask,saved.payload);ActorSourceScope scope(&p,&source);scope.accepted();}sq=false;payload_flush_all();assert(logs.find("unbound-accepted-payload")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
+ begin(0x111,2,Required);logs.clear();payload_retire(gcasset_registry[0]);sq=true;{ReplayScope replay(saved.serial,saved.mask,saved.payload);ActorSourceScope scope(&p,&source);scope.accepted();}sq=false;payload_flush_all();member_flush();assert(logs.find("unbound-accepted-")!=std::string::npos && logs.find("GC-ASSET v=")==std::string::npos);
 }
 '''
         definitions = ['-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1', '-DRE4DC_NMR_MASK=1']
@@ -95,7 +95,7 @@ namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
 struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
 struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
-namespace leon4k{struct Chunk{unsigned source_info,position_count=1,normal_count=1,palette_count=1,triangles=1,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};Chunk chunks[8];float bind[2][12]{};}
+namespace leon4k{struct Chunk{unsigned source_info,position_count=1,normal_count=1,palette_count=1,triangles=1,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;unsigned geometry=0,mask_geometry[2]={~0u,~0u};};Chunk chunks[8];float bind[2][12]{};}
 unsigned char arrays[8][5][32]{};
 re4dc_source::ChunkInput input_for(unsigned k){return {{arrays[k][0],8},{arrays[k][1],8},{arrays[k][2],4},{arrays[k][3],32},{arrays[k][4],16},1,1,1,1,119};}
 #define RE4DC_OWNER_INPUT(ns,prefix,c,bones) input_for(c.source_info)
@@ -135,8 +135,8 @@ extern "C" void re4dc_log(const char*fmt,...){assert(!sq);char text[256];va_list
 struct GcFixtureLighting{bool ambient_vertex=false,material_vertex=false;};
 struct Re4dcModelPart{const void*model;const void*info;const unsigned char*stream,*uv;unsigned stream_bytes,position_count,normal_count;const unsigned char*positions=nullptr,*normals=nullptr;unsigned position_stride=8,normal_stride=8,normal_shift=14;unsigned alpha_state=255,flags=0;const GcFixtureLighting*lighting=nullptr;const unsigned char*colors=nullptr;};
 struct Re4dcActorSource{const unsigned char*positions,*normals;unsigned position_count,normal_count,palette_entries,small_normals;};
-struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;};
-struct RegistryView{unsigned geometry_count=2;}registry;Chunk chunks[2];Chunk registry_gview(unsigned g){return chunks[g];}
+struct Chunk{unsigned position_count=1,normal_count=1,palette_count=1,uv_bytes=4,stream_bytes=32;const unsigned char*positions,*normals,*uv,*stream,*weights;unsigned geometry=0,mask_geometry[2]={~0u,~0u};};
+struct RegistryView{unsigned geometry_count=2,chunk_count=0;Chunk* chunks=nullptr;}registry;Chunk chunks[2];Chunk registry_gview(unsigned g){return chunks[g];}
 PayloadProof gcasset_registry[2],gcasset_pl08;
 struct P8{bool published=false;struct View{unsigned bytes[5];}view[3];}pl08_pack;Chunk pl08_pack_chunks[3];
 ''' + selection + r'''
@@ -155,13 +155,13 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);unsigned char data
  {ActorSourceScope scope(&p,&s);assert(scope.selected.payload==&gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(rows()==2 && w.slots==6);
  end(1);begin(0x111,2,Required);logs.clear();{ActorSourceScope scope(&p,&s);sq=true;e.slots=0;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(logs.empty());
  // Mixed arrays or an out-of-range stream cannot inherit the previous owner.
- p.stream=chunks[0].stream;{ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;e.slots=3;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
+ p.stream=chunks[0].stream;{ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);sq=true;e.slots=3;acknowledge(scope,e,w);sq=false;}payload_flush_all();member_flush();assert(!rows() && logs.find("unbound-accepted-")!=std::string::npos);
  logs.clear();p.stream=chunks[1].stream+30;assert(!re4dc_gcasset_actor_select(&p,&s).serial);p.stream=chunks[1].stream;
  // Replay never substitutes another live owner when consumed arrays changed.
  {ReplayScope replay(gcasset_registry[0].serial,1U<<SourceGeometry,&gcasset_registry[0]);ActorSourceScope scope(&p,&s);
   assert(!scope.selected.serial);}
  {ReplayScope replay(0,0);ActorSourceScope scope(&p,&s);assert(!scope.selected.serial);}
- {ActorSourceScope scope(&p,&s);payload_retire(gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();assert(!rows() && logs.find("unbound-accepted-payload")!=std::string::npos);
+ {ActorSourceScope scope(&p,&s);payload_retire(gcasset_registry[1]);sq=true;acknowledge(scope,e,w);sq=false;}payload_flush_all();member_flush();assert(!rows() && logs.find("unbound-accepted-")!=std::string::npos);
 }
 '''
         self.compile_run(fixture, ['-DRE4DC_NATIVE_MODEL_REGISTRY=1', '-DRE4DC_NATIVE_MODEL_REGISTRY_PACK=1',
@@ -183,7 +183,7 @@ extern "C" void re4dc_log(const char*fmt,...){char text[256];va_list ap;va_start
 namespace re4dc_gcasset{bool ensure_disc_catalog(){return true;}}
 PayloadProof gcasset_registry[2],gcasset_pl08;
 ''' + function(registry, 'void gcasset_registry_capture(') + '\n' + function(registry, 'void gcasset_registry_retire(') + r'''
-namespace leon4k{struct Weight{};struct Chunk{unsigned source_info,position_count,normal_count,palette_count,triangles,stream_bytes;const unsigned char*positions,*normals,*uv,*stream;const Weight*weights;};}
+namespace leon4k{struct Weight{};struct Chunk{unsigned source_info,position_count,normal_count,palette_count,triangles,stream_bytes;const unsigned char*positions,*normals,*uv,*stream;const Weight*weights;unsigned geometry=0,mask_geometry[2]={~0u,~0u};};}
 struct Pl08ChunkView{const unsigned char*array[5];unsigned bytes[5];unsigned source_info,position_count,normal_count,palette_count,triangles;};
 struct Pl08PackLife{unsigned char*base;}pl08_pack;
 constexpr unsigned kPl08PackBytes=64;leon4k::Chunk pl08_pack_chunks[3];
@@ -246,7 +246,7 @@ int main(){assert(install(nullptr,0));begin(0x111,1,Required);int owner,other;Pa
  PayloadSpan spans[]={{"ab",2},{"c",1}};assert(payload_capture_fragments(proof,&owner,spans,2));
  AssetDescription row;assert(describe_checked(proof.asset,&row));unsigned char expected[]={DIGEST};assert(!memcmp(expected,row.digest.bytes,32));assert(row.provenance==Unknown);
  const unsigned serial=proof.serial;{PayloadScope scope(proof,&owner);sq=true;payload_accept(source_use.payload,source_use.serial,1U<<SourceGeometry);sq=false;}payload_flush_all();assert(logs.find("consumer=source_geometry")!=std::string::npos);
- payload_retire(proof);logs.clear();sq=true;payload_accept(&proof,serial,1U<<Weapon);sq=false;payload_flush_all();assert(logs.find("unbound-accepted-payload")!=std::string::npos);
+ payload_retire(proof);logs.clear();sq=true;payload_accept(&proof,serial,1U<<Weapon);sq=false;payload_flush_all();member_flush();assert(logs.find("unbound-accepted-")!=std::string::npos);
  PayloadSpan other_split[]={{"a",1},{"bc",2}};assert(payload_capture_fragments(proof,&owner,other_split,2));assert(describe_checked(proof.asset,&row));assert(memcmp(expected,row.digest.bytes,32)); // lengths are authoritative
  assert(!payload_capture_fragments(alias,&owner,spans,2));assert(!proof.serial); // conflicting same owner revokes old
  assert(!payload_capture_fragments(proof,&owner,nullptr,2));assert(!payload_capture_fragments(proof,&owner,spans,49));

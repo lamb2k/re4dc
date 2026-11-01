@@ -22,7 +22,7 @@ def function(source, marker):
 class RuntimeTextureTests(unittest.TestCase):
     def test_actual_payload_scope_latch_and_retirement(self):
         ui = (GAME / 'platform/native_ui.cpp').read_text()
-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
         fixture = (HERE / 'test_payloads.cpp').read_text().replace('// ACTUAL_UI_HELPERS', helpers)
         with tempfile.TemporaryDirectory(prefix='gc-port23-payload-', dir='/dev/shm') as temporary:
             root = Path(temporary)
@@ -79,7 +79,7 @@ int main(){using namespace re4dc_gcasset;int info,other;cModel model{1,0};
         bridge = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_model_identity(')
         classifier = function((GAME / 'model_bridge.cpp').read_text(), 'extern "C" unsigned re4dc_gcasset_weapon_consumer(')
         ui = (GAME / 'platform/native_ui.cpp').read_text()
-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
         fixture = r'''
 #include "gc_asset_members.h"
 #include "gc_asset_payloads.h"
@@ -111,6 +111,9 @@ int main(){using namespace re4dc_gcasset;int ownerA,ownerB;cModel model{};auto a
  logs.clear();member_retire(&ownerA);
  {ReplayScope replay(ma.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
  assert(logs.find("unbound-accepted-model")!=std::string::npos);assert(logs.find("id="+id(mb))==std::string::npos);
+ logs.clear(); // the queued serial of the member that holds the drawn BIN is kept (cast-ps2-25 r17)
+ {ReplayScope replay(mb.serial,1U<<SourceGeometry);re4dc_model_submit(&queued);}member_flush();
+ assert(logs.find("unbound-accepted-model")==std::string::npos);
 }
 '''
         with tempfile.TemporaryDirectory(prefix='gc-port23-replay-', dir='/dev/shm') as temporary:
@@ -149,6 +152,7 @@ int re4dc_static_submit(const Re4dcModelPart*){assert(!re4dc_gcasset::source_use
 extern "C" unsigned re4dc_gcasset_model_identity(const void*,const void* info,const void** data){*data=static_cast<const Info*>(info)->data;return 0;}
 extern "C" unsigned re4dc_gcasset_weapon_consumer(const void*,const void*,unsigned,unsigned){return 0;}
 bool re4dc_gcasset::member_lookup(const void* data,ModelMember* out){++lookups;out->serial=data==&a?77:88;return true;}
+bool re4dc_gcasset::member_contains(unsigned serial,const void* data,unsigned){return serial==77 && data==&a;}
 void observe_selected(const Re4dcModelPart*){++selections;assert(re4dc_gcasset::source_use.serial==expected);}
 ''' + gateway + r'''
 struct DeferredPart{unsigned asset_serial=0,asset_mask=0;re4dc_gcasset::PayloadProof* asset_payload=nullptr;};
@@ -186,7 +190,7 @@ int main(){
 
     def test_actual_source_latch_packet_direct_and_switch(self):
         ui = (GAME / 'platform/native_ui.cpp').read_text()
-        helpers = ui[ui.index('re4dc_gcasset::SourceUse gcasset_model_pending;'):ui.index('void gcasset_packet_reset()')]
+        helpers = ui[ui.index("const void* gcasset_probe_part;"):ui.index('void gcasset_packet_reset()')]
         commit = function(ui, 'extern "C" void re4dc_model_packet_commit(')
         marker = ui.index('// WORLD_SUBMIT_END_IMPLEMENTATION')
         start = ui.index('#if RE4DC_TA_DIRECT', marker)

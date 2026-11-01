@@ -26,6 +26,11 @@ kind/id/full-SHA256 rules of the runtime callers:
                (.dar, .drs, bio4midi.dat); a prebuilt AIC1 ARAM part also as its
                96-byte header + image (gc_asset_audio.cpp bank_piece)
 
+  compiled     payloads compiled into the program (no disc file): --compiled TSV
+               (compiled.tsv: kind, id, sha256, evidence), e.g. the PS2 Leon
+               mesh arrays (gc_asset_actor_compiled.inc); without a row their
+               runtime bind fails with payload-catalog-bind
+
 Not derivable from the disc (runtime-built bytes): font-glyph/font-palette
 cells (converted at load), layout
 sidecars. Those binds stay explicit unknown quarantine at runtime.
@@ -34,6 +39,7 @@ Provenance is 'unknown' for every row unless --proofs supplies an exact
 (kind,id,sha256) row with provenance and evidence. This is a DIAGNOSTIC catalog:
 it formats reviewed input; it never proves origin and is never a gate pass.
 """
+import zlib
 import argparse
 import hashlib
 import json
@@ -50,6 +56,7 @@ MOVIE = re.compile(r'^r([0-9a-f]{3})s([0-9a-f]{2})(c?)\.seq$')
 DRS_TABLE = 0x400
 VALID_NAME = re.compile(r'^[A-Za-z0-9._-]{1,31}$')
 HARVEST_KINDS = ('font-glyph', 'font-palette', 'layout')   # sound banks are disc rows (sound_banks)
+COMPILED_KINDS = ('geometry',)   # program-compiled payloads (gc_asset_payloads.cpp payload_capture_fragments*)
 HARVEST_LINE = re.compile(r'GC-ASSET-HARVEST v=1 kind=([a-z0-9-]+) id=([0-9a-z._:/-]+) sha256=([0-9a-f]{64})')
 
 
@@ -240,6 +247,36 @@ def sound_banks(b):
         i = b.find(BANK_SIG, i + 32)
 
 
+def fnv1a(b):
+    h = 2166136261
+    for x in b:
+        h = ((h ^ x) * 16777619) & 0xffffffff
+    return h
+
+
+def motion_clips(b):
+    """Port of gc_asset_members.cpp motion_use: (key, 8-byte {crc,fnv}) per top-level FCV/SEQ entry.
+    An FCV with an MTC (R4MOTBL) row takes that row's key (its body is the dc/mot key file); any other
+    FCV/SEQ hashes its archive span as the disc holds it (zlib CRC-32, FNV-1a 32)."""
+    spans = archive_spans(b)
+    mtc = {}
+    for _i, tag, s, e in spans:
+        if tag[:3] == b'MTC' and e - s >= 32 and b[s:s + 7] == b'R4MOTBL':
+            rows, stride = word(b, s + 12), word(b, s + 16)
+            if stride >= 20 and rows <= (e - s - 32) // stride:
+                for r in range(rows):
+                    at = s + 32 + r * stride
+                    mtc[word(b, at)] = (word(b, at + 8), word(b, at + 12))
+    for _i, tag, s, e in spans:
+        if tag[:3] not in (b'FCV', b'SEQ'):
+            continue
+        if tag[:3] == b'FCV' and s in mtc:
+            crc, fnv = mtc[s]
+        else:
+            crc, fnv = zlib.crc32(b[s:e]) & 0xffffffff, fnv1a(b[s:e])
+        yield '%08x-%08x' % (crc, fnv), struct.pack('<II', crc, fnv)
+
+
 def record_bodies(b):
     """Type-0 records of a 0x400-byte container table (drs.py layout, little-endian on our disc)."""
     o = 0x20
@@ -261,6 +298,33 @@ def texpak_members(b):
     for i in range(count):
         crc, fnv, off, size = struct.unpack_from('<4I', b, index + 16 * i)
         yield '%08x-%08x' % (crc, fnv), b[off:off + size], off, size
+
+
+def member_rows(rel, b):
+    """The archive members of one disc file (sound banks, models, motion clips, DRS body, record bodies) as
+    (kind, id, bytes, source) rows; collect() and provenance.py (wep19-26 byte-following) share it."""
+    name = rel.rsplit('/', 1)[-1].lower()
+    for kind, data, at in sound_banks(b):
+        yield (kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
+    for payload in model_payloads(b):
+        yield ('model', sha(payload)[:40], payload, rel)
+    for ident, k8 in motion_clips(b):
+        yield ('motion', ident, k8, rel)
+    # em/*.drs: the runtime adopts the body after the 0x400-byte record
+    # table (drs.py), not the file start (em12/wepNN harvest misses).
+    if name.endswith('.drs') and len(b) > DRS_TABLE:
+        for payload in model_payloads(b[DRS_TABLE:]):
+            yield ('model', sha(payload)[:40], payload, rel + '#body')
+        for ident, k8 in motion_clips(b[DRS_TABLE:]):
+            yield ('motion', ident, k8, rel + '#body')
+    # Record-table containers (.dar rooms, .drs, .das): every type-0
+    # record body is an archive the runtime adopts as loaded (r101.dar
+    # body at 0x4ccea0 = "native room identities archive=1745152").
+    for at, body in record_bodies(b):
+        for payload in model_payloads(body):
+            yield ('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
+        for ident, k8 in motion_clips(body):
+            yield ('motion', ident, k8, '%s#record=%d' % (rel, at))
 
 
 def collect(disc):
@@ -308,22 +372,8 @@ def collect(disc):
             if name == 'registry.re4nmr' or 'pl08' in low:
                 continue
         if p.stat().st_size >= 16:
-            b = p.read_bytes()
-            for kind, data, at in sound_banks(b):
-                add(kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
-            for payload in model_payloads(b):
-                add('model', sha(payload)[:40], payload, rel)
-            # em/*.drs: the runtime adopts the body after the 0x400-byte record
-            # table (drs.py), not the file start (em12/wepNN harvest misses).
-            if name.endswith('.drs') and len(b) > DRS_TABLE:
-                for payload in model_payloads(b[DRS_TABLE:]):
-                    add('model', sha(payload)[:40], payload, rel + '#body')
-            # Record-table containers (.dar rooms, .drs, .das): every type-0
-            # record body is an archive the runtime adopts as loaded (r101.dar
-            # body at 0x4ccea0 = "native room identities archive=1745152").
-            for at, body in record_bodies(b):
-                for payload in model_payloads(body):
-                    add('model', sha(payload)[:40], payload, '%s#record=%d' % (rel, at))
+            for kind, ident, data, source in member_rows(rel, p.read_bytes()):
+                add(kind, ident, data, source)
     return rows
 
 
@@ -372,6 +422,7 @@ def main(argv=None):
     ap.add_argument('--proofs-sha256')
     ap.add_argument('--harvest', type=Path, help='reviewed harvest TSV (extract-harvest output)')
     ap.add_argument('--harvest-sha256')
+    ap.add_argument('--compiled', type=Path, help='reviewed compiled-payload TSV (kind, id, sha256, evidence)')
     ap.add_argument('--out-dir', required=True, type=Path)
     if argv is None:
         argv = sys.argv[1:]
@@ -411,6 +462,14 @@ def main(argv=None):
         for (kind, ident, digest), evidence in read_harvest(hraw).items():
             rows.setdefault((kind, ident, digest), dict(kind=kind, id=ident, sha256=digest,
                             source='runtime-harvest:' + evidence))
+    if a.compiled:
+        for n, line in enumerate(a.compiled.read_text().splitlines(), 1):
+            if not line.strip() or line.startswith('#') or line.startswith('kind\t'):
+                continue
+            kind, ident, digest, evidence = line.split('\t')
+            if kind not in COMPILED_KINDS or not re.fullmatch(r'[0-9a-f]{64}', digest) or digest[:40] != ident or not evidence.strip():
+                sys.exit('invalid compiled row %d' % n)
+            rows.setdefault((kind, ident, digest), dict(kind=kind, id=ident, sha256=digest, source='compiled:' + evidence))
     if not set(proofs) <= set(rows):
         sys.exit('proof row matches no disc payload')
     out = []

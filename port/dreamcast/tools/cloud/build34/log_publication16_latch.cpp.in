@@ -1,0 +1,47 @@
+#include <cassert>
+#include <cstring>
+#include <cstdio>
+#include <functional>
+static std::function<void()> hook;
+static void latch_edge() { if (hook) hook(); }
+#include "instrumented_log_publication16.hpp"
+using namespace re4dc::log_publication16;
+static Evidence a, b, c;
+static void poll(const State& state) {
+    for (const auto& slot : state.slots) {
+        // The real reader contract: never inspect an unready evidence payload.
+        if (!slot.ready.load(std::memory_order_acquire)) continue;
+        assert(!std::memcmp(&slot.evidence, &a, sizeof(a)) || !std::memcmp(&slot.evidence, &b, sizeof(b)));
+    }
+}
+int main() {
+    std::memset(&a, 0x31, sizeof(a)); std::memset(&b, 0x72, sizeof(b)); std::memset(&c, 0x93, sizeof(c));
+    unsigned total = 0;
+    { State state; hook = [&] { ++total; }; assert(state.capture(a)); }
+    for (unsigned cut = 1; cut <= total; ++cut) {
+        State state; unsigned edge = 0; bool nested = false;
+        hook = [&] {
+            poll(state);
+            if (++edge != cut || nested) return;
+            nested = true;
+            assert(state.capture(b)); poll(state);
+        };
+        assert(state.capture(a)); hook = {};
+        assert(nested); poll(state);
+        assert(state.slots[0].ready && state.slots[1].ready);
+        assert(!state.capture(c) && state.evidence_lost == 1);
+        poll(state);
+    }
+    // Every interrupted copy prefix remains unready; a nested writer uses the
+    // second slot without stealing or waiting for an abandoned first owner.
+    for (unsigned cut = 2; cut < total - 1; ++cut) {
+        State state; unsigned edge = 0;
+        hook = [&] { poll(state); if (++edge == cut) throw 1; };
+        try { state.capture(a); assert(false); } catch (int) {}
+        hook = {};
+        assert(!state.slots[0].ready);
+        assert(state.capture(b)); poll(state);
+        assert(state.slots[1].ready && !state.capture(c) && state.evidence_lost == 1);
+    }
+    std::printf("{\"publication_edges\":%u,\"nested_schedules\":%u,\"abandoned_prefixes\":%u}\n", total, total, total - 3);
+}

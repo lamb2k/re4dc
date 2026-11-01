@@ -27,6 +27,8 @@ dvd.cpp FileTbl) names em/wepNN.das (weapon-map.json in the lane evidence).
       and report.json. Exit 1 when a requested weapon has a refused BIN.
   ps2_weapons.py convert-ss --base <dir with the release's ss/cmn/ss_wepNN.dat> --out <dir> [--weapons ss_wep02,...]
       the same for the sub screen's weapon models (inventory / examine): <out>/files/ss/cmn/ss_wepNN.dat.
+  ps2_weapons.py convert-pl --base <dir with the release's em/plNN.drs> --out <dir> [--weapons pl00,pl08]
+      the same for the weapon models in Leon's own archives (PLAYER_PAIRS: grenades, eggs, rocket launcher, rocket).
 """
 import argparse
 import hashlib
@@ -135,16 +137,79 @@ def bone_check(gc_bin, ps2_bin):
     return True, 'match (%d bones)' % len(g)
 
 
+def skeleton_fit(gc_bin, ps2_bin):
+    """gc-audit25 (10-25): the PS2 mesh fitted to the GC skeleton. When the bone tables differ only by ONE translation
+    d shared by every child of the root (ids, parents and every deeper rest translation within BONE_TOL), the PS2 model
+    is the GC model moved by d in model space (wep05 Broken Butterfly: d = (-14.97, -4.42, 8.32)). Moving every PS2
+    vertex by -d puts it on the GC skeleton exactly. -> (offset or None, why)."""
+    gm = modelbin.parse(gc_bin)
+    pm = pb.parse_bin(ps2_bin)
+    g = [(p.attach, p.parent, p.pos) for p in gm.parts]
+    p = [(b['id'], b['parent'], b['pos']) for b in pm.bones]
+    if len(g) != len(p) or any(a[0] != b[0] or a[1] != b[1] for a, b in zip(g, p)):
+        return None, 'bone ids / parents differ'
+    root = g[0][0]
+    d = None
+    for a, b in zip(g, p):
+        dt = tuple(y - x for x, y in zip(a[2], b[2]))
+        if a[1] == root and a[1] >= 0:
+            d = d or dt
+            if max(abs(x - y) for x, y in zip(d, dt)) > BONE_TOL:
+                return None, 'root children move by different translations'
+        elif max(abs(x) for x in dt) > BONE_TOL:
+            return None, 'bone %d rest differs below the root children' % a[0]
+    if not d:
+        return None, 'no root child'
+    off = tuple(-x for x in d)
+    return off, 'fit: PS2 mesh moved by (%.3f, %.3f, %.3f) onto the GC skeleton' % off
+
+
+# wep19-26 round 3 (coordinator 10-26, --hands): Leon's hand BINs that are still GameCube bytes, converted to the PS2
+# file's hand BIN of the same arc (geometry onto the GC joints; no picture: the hand samples Leon's own TPL).
+#   wep19.drs 0x7: the grenade hand (wep19.cpp setMotion initWepHand(WEP_ARC_PTR(0x7))). LEON_HAND_PACK draws it from
+#   the pack by its runtime key; the converted BIN's new key is added to leon_hands_pl00.re4hp (hands_pack.py addkey)
+#   on the same PS2 blob, so the drawn hand is unchanged.
+HAND_PAIRS = {'wep19': {0x7: ()}}
+
+
 def em_units(args, src):
     """Leon's weapon archives em/wepNN.drs (DRS body; archive numbers = entry index + 4)."""
-    for w in (args.weapons.split(',') if args.weapons else sorted(WEAPON_PAIRS)):
+    table = dict(WEAPON_PAIRS)
+    if getattr(args, 'hands', False):
+        for w, hp in HAND_PAIRS.items():
+            table[w] = {**table.get(w, {}), **hp}
+    for w in (args.weapons.split(',') if args.weapons else sorted(table)):
         gcd = src.gc_file('em/%s.drs' % w)
         ps2d = src.ps2_file('%s.dat' % w)
         g = drs.Drs(gcd)
         yield dict(w=w, rel='em/%s.drs' % w, gc_rel='em/%s.drs' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
                    base=Path(args.base) / ('%s.drs' % w), gc_entry=lambda arc, g=g: g.entries[arc - 4],
                    pe={i + 4: (t, b) for i, t, b in pb.dat_entries(ps2d)},
-                   span=lambda base, arc: le_span(base, arc - 4), pairs=WEAPON_PAIRS[w])
+                   span=lambda base, arc: le_span(base, arc - 4), pairs=table[w])
+
+
+# wep19-26 (2026-10-26): weapon models that live in Leon's own archive (em/pl00.drs, and pl08 for the no-jacket
+# costume), drawn by the weapon code from PL_ARC_PTR(pG->pPlayer, ...): BIN arc -> the TPL arcs it is drawn with.
+#   0x6A grenade body with 0x6B hand / 0x6D incendiary / 0x6F flash (wep19.cpp cObjHandGre::init, objSubWep.cpp thrown)
+#   0x7D egg with 0x7E / 0x7F / 0x80 (same call sites, weapon numbers 0x19 / 0x1F / 0x20)
+#   0x70 with 0x71 (objRocket.cpp 38 launcher, wep28.cpp 256 / SetMine)   0x76 with 0x75 (objRocket.cpp 226 rocket)
+#   (0x77 / 0x78 is the radio, sscrn.cpp 1116: not a weapon)
+PLAYER_PAIRS = {
+    'pl00': {0x6A: (0x6B, 0x6D, 0x6F), 0x7D: (0x7E, 0x7F, 0x80), 0x70: 0x71, 0x76: 0x75},
+    'pl08': {0x6A: (0x6B, 0x6D, 0x6F), 0x7D: (0x7E, 0x7F, 0x80), 0x70: 0x71, 0x76: 0x75},
+}
+
+
+def pl_units(args, src):
+    """Weapon models in Leon's archives em/plNN.drs (PLAYER_PAIRS; archive numbers = entry index + 4)."""
+    for w in (args.weapons.split(',') if args.weapons else sorted(PLAYER_PAIRS)):
+        gcd = src.gc_file('em/%s.drs' % w)
+        ps2d = src.ps2_file('%s.dat' % w)
+        g = drs.Drs(gcd)
+        yield dict(w=w, rel='em/%s.drs' % w, gc_rel='em/%s.drs' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
+                   base=Path(args.base) / ('%s.drs' % w), gc_entry=lambda arc, g=g: g.entries[arc - 4],
+                   pe={i + 4: (t, b) for i, t, b in pb.dat_entries(ps2d)},
+                   span=lambda base, arc: le_span(base, arc - 4), pairs=PLAYER_PAIRS[w])
 
 
 def ss_units(args, src):
@@ -165,10 +230,15 @@ def ss_units(args, src):
         tpls = [i for i, (t, b) in enumerate(ge) if t.rstrip(b'\0') == b'TPL']
         pairs = {}
         for i, (t, b) in enumerate(ge):
-            if t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach == 0:
-                if len(tpls) != 1:
+            if t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach != 0 and getattr(args, 'hands', False):
+                # --hands (wep19-26 round 3): Leon's hand BIN, drawn with his own picture (ss_model.cpp PL_ARC 5 / 17)
+                pairs[i] = ()
+            elif t.rstrip(b'\0') == b'BIN' and modelbin.parse(b).parts[0].attach == 0:
+                if len(tpls) > 1:
                     raise ValueError('%s: %d TPL entries' % (w, len(tpls)))
-                pairs[i] = tpls[0]
+                # wep19-26: ss_wep13 / ss_wep19 carry no TPL (the model samples a picture the sub screen loads
+                # elsewhere): geometry only (pictures follow their own owner)
+                pairs[i] = tpls[0] if tpls else ()
         if not pairs:
             continue
 
@@ -177,7 +247,33 @@ def ss_units(args, src):
             return s, e, t
         yield dict(w=w, rel='ss/cmn/%s.dat' % w, gc_rel='ss/cmn/%s.dat' % w, ps2_name='%s.dat' % w, gcd=gcd, ps2d=ps2d,
                    base=Path(args.base) / ('%s.dat' % w), gc_entry=lambda i, ge=ge: ge[i],
-                   pe={i: (t, b) for i, t, b in pb.dat_entries(ps2d)}, span=span, pairs=pairs)
+                   pe={i: (t, b) for i, t, b in pb.dat_entries(ps2d)}, span=span, pairs=pairs, bare=True)
+
+
+def relayout_grow(d, grow, w, bare=False):
+    """wep19-26: the DRS body laid out again with the grown BIN slots (grow: absolute slot start -> new bytes), by
+    motion/ps2_motion_prepared.py relayout (every archive offset, table row and container record after the body
+    remapped). Checked: same entry count / tags, every other member byte-identical, each grown slot = its BIN."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('ps2_motion_prepared', HERE.parent / 'motion' / 'ps2_motion_prepared.py')
+    pmp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pmp)
+    P = pmp.Prepared(d, bare)
+    rel = {s - P.base: b for s, b in grow.items()}
+    assert set(rel) <= set(P.starts), (w, 'grown slot is not a member start')
+    members = [(s, e, rel.get(s, P.b[s:e]), None if s in rel else P.mtc.get(s)) for s, e in zip(P.starts, P.ends)]
+    cont, _, _ = pmp.relayout(d, P, members, bare)
+    Q = pmp.Prepared(bytes(cont), bare)
+    assert Q.n == P.n and Q.tags == P.tags, (w, 'entry table changed')
+    assert bool(Q.rel) == bool(P.rel) and (not P.rel or Q.b[Q.rel:] == P.b[P.rel:]), (w, 'REL changed')
+    for i in range(P.n):
+        if not P.offs[i] or P.tags[i] in (b'ESQ\0', b'NTR\0', b'MTC\0', b'\0\0\0\0'):
+            continue
+        want = rel.get(P.offs[i], P.member(P.offs[i]) if P.offs[i] in P.starts else None)
+        got = Q.member(Q.offs[i]) if Q.offs[i] in Q.starts else None
+        assert want is None or got == want, (w, 'entry %d moved wrongly' % i)
+    assert cont[Q.base + Q.size:] == d[P.base + P.size:], (w, 'bytes after the body changed')
+    return bytes(cont)
 
 
 def convert(args):
@@ -185,7 +281,7 @@ def convert(args):
     src = pi.Sources()
     manifest, prov, report, failed = [], [], {}, []
     prov.append('\t'.join(['weapon', 'kind', 'gc_member', 'gc_sha256', 'ps2_member', 'ps2_sha256', 'output', 'output_sha256', 'note']))
-    for u in (ss_units if args.cmd == 'convert-ss' else em_units)(args, src):
+    for u in {'convert-ss': ss_units, 'convert-pl': pl_units}.get(args.cmd, em_units)(args, src):
         w, gcd, ps2d, pe = u['w'], u['gcd'], u['ps2d'], u['pe']
         base_path = u['base']
         base = bytearray(base_path.read_bytes())
@@ -195,16 +291,23 @@ def convert(args):
         rep = dict(weapon=w, file=u['rel'], base=str(base_path), base_sha256=sha(bytes(base)), gc_sha256=sha(gcd), ps2_dat_sha256=sha(ps2d), bins=[], pictures=[])
         used = {}  # tpl arc -> set of images
         pairs = {}
+        grow = {}  # absolute slot start -> new BIN bytes (--relayout)
         for arc, tarc in sorted(u['pairs'].items()):
             name = '%s_bin%02x' % (w, arc)
             gtag, gb = u['gc_entry'](arc)
-            row = dict(arc=hex(arc), tpl=hex(tarc), name=name, gc_sha256=sha(gb))
+            tarcs = tarc if isinstance(tarc, tuple) else (tarc,)   # one BIN drawn with several TPLs (convert-pl)
+            row = dict(arc=hex(arc), tpl=' '.join(hex(t) for t in tarcs), name=name, gc_sha256=sha(gb))
             rep['bins'].append(row)
             if gtag.rstrip(b'\0') != b'BIN' or arc not in pe or pe[arc][0] != 'BIN':
                 row.update(status='REFUSED', reason='no BIN pair (GC %s, PS2 %s)' % (gtag, pe.get(arc, ('-',))[0]))
                 failed.append(name); continue
             pbn = pe[arc][1]
             ok, why = bone_check(gb, pbn)
+            off = None
+            if not ok and getattr(args, 'fit_skeleton', False):
+                off, fwhy = skeleton_fit(gb, pbn)
+                if off:
+                    ok, why = True, why + '; ' + fwhy
             row['bones'] = why
             if not ok:
                 row.update(status='REFUSED', reason=why); failed.append(name); continue
@@ -213,18 +316,28 @@ def convert(args):
             slot = bytes(base[s:e])
             if slot.rstrip(b'\0') != gc_le.rstrip(b'\0') or len(slot) < len(gc_le.rstrip(b'\0')):
                 row.update(status='REFUSED', reason='disc slot is not le_mirror(GC BIN)'); failed.append(name); continue
-            new, st = pi.convert_geometry(gb, pbn)
+            new, st = pi.convert_geometry(gb, pbn, pos_offset=off)
             new, st['empty_parts_filled'] = fill_empty_parts(new)
             le = po.to_le(new, name)
-            if len(le.rstrip(b'\0')) > len(slot):
+            if len(le.rstrip(b'\0')) > len(slot) and not getattr(args, 'relayout', False):
                 row.update(status='REFUSED', reason='PS2 BIN %d B does not fit the %d B slot' % (len(le), len(slot)), stats=st); failed.append(name); continue
-            le = le[:len(slot)] if len(le) > len(slot) else le
-            base[s:e] = le + bytes(len(slot) - len(le))
+            if len(le.rstrip(b'\0')) > len(slot):
+                # --relayout (wep19-26): the slot grows to the BIN (32-byte rounded) when the body is laid out again
+                # below (motion/ps2_motion_prepared.py relayout); the old slot keeps its bytes until then
+                le = le.rstrip(b'\0')
+                le = le + bytes(-len(le) % 32)
+                grow[s] = le
+                row['grown_from'] = len(slot)
+                slot = bytes(len(le))
+            else:
+                le = le[:len(slot)] if len(le) > len(slot) else le
+                base[s:e] = le + bytes(len(slot) - len(le))
             (wd / (name + '.bin')).write_bytes(le)
             m = po.GcModel(new)
             drawn = [p for p in m.parts if p['tris']]
-            used.setdefault(tarc, set()).update(p['hdr'][0x0C] for p in drawn)
-            pairs.setdefault(tarc, set()).update((p['hdr'][0x0C], p['hdr'][0x0E]) for p in drawn if p['hdr'][0x0B] & 4)
+            for tarc in tarcs:
+                used.setdefault(tarc, set()).update(p['hdr'][0x0C] for p in drawn)
+                pairs.setdefault(tarc, set()).update((p['hdr'][0x0C], p['hdr'][0x0E]) for p in drawn if p['hdr'][0x0B] & 4)
             row.update(status='PS2', slot_bytes=len(slot), gc_le_bytes=len(gc_le), out_bytes=len(le), out_sha256=sha(le), ps2_sha256=sha(pbn),
                        stats=dict((k, st[k]) for k in ('gc_tris', 'ps2_tris', 'out_tris', 'no_tex_part', 'weight_mismatch', 'flipped', 'degenerate', 'appended_weights', 'shift_lowered', 'empty_parts_filled')))
             prov.append('\t'.join([w, 'BIN', '%s#%x' % (u['gc_rel'], arc), sha(gb), 'BIO4DAT.AFS/%s#%x' % (u['ps2_name'], arc), sha(pbn), '%s#%x (le_mirror)' % (u['rel'], arc), sha(le), 'geometry PS2, GC joints/parts kept']))
@@ -273,6 +386,9 @@ def convert(args):
             rep['pictures'].append(dict(tpl=hex(tarc), used=sorted(imgs), swaps=written, kept=kept, pairs=pair_list))
             if written:
                 manifest.append(dict(room=w, name=tname, swaps=written, pairs=[]))
+        if grow:
+            base = bytearray(relayout_grow(bytes(base), grow, w, u.get('bare', False)))
+            rep['relayout'] = {hex(k): len(v) for k, v in grow.items()}
         dst = out / 'files' / u['rel']
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_bytes(bytes(base))
@@ -282,22 +398,55 @@ def convert(args):
         print('%s: bins %s pictures %s %s' % (w, ' '.join('%s=%s' % (r['arc'], r['status']) for r in rep['bins']),
                                               sum(len(p.get('swaps', [])) for p in rep['pictures']), 'changed' if rep['changed'] else 'UNCHANGED'))
     # ps2_items_tex.py reads <lib>/<class>/manifest.json and the PNGs under <lib>/<class>/<room>/
+    (out / 'weapons').mkdir(parents=True, exist_ok=True)
     (out / 'weapons' / 'manifest.json').write_text(json.dumps(dict(tool=TOOL_VERSION, assets=manifest), indent=1))
     (out / 'provenance.tsv').write_text('\n'.join(prov) + '\n')
     (out / 'report.json').write_text(json.dumps(report, indent=1))
+    bad = self_check(report)
+    if bad:
+        print('SELF-CHECK FAILED:', '; '.join(bad))
     if failed:
         print('REFUSED:', ' '.join(failed))
-    return 1 if failed else 0
+    return 1 if failed or bad else 0
+
+
+# wep19-26 (10-26): the Dreamcast steps every converted weapon BIN must have taken. Pictures: ps2_items_tex.py
+# encodes VQ (or twiddled 16-bit only when VQ is not smaller) and checks its own output; geometry stripping and LOD
+# levels are built by the native actor path at load (native_actor_fast.cpp: strips + relod), not offline.
+STEPS = ('degenerate', 'empty_parts_filled')
+
+
+def self_check(report):
+    bad = []
+    for w, rep in report.items():
+        for r in rep['bins']:
+            if r.get('status') != 'PS2':
+                continue
+            if r['out_bytes'] > r['slot_bytes']:
+                bad.append('%s %s: output %d B larger than the %d B slot it replaces' % (w, r['arc'], r['out_bytes'], r['slot_bytes']))
+            miss = [k for k in STEPS if k not in r.get('stats', {})]
+            if miss:
+                bad.append('%s %s: reduction step(s) skipped: %s' % (w, r['arc'], ','.join(miss)))
+            st = r.get('stats', {})
+            if st.get('out_tris', 0) > st.get('ps2_tris', 0):
+                bad.append('%s %s: %d triangles out of %d PS2 source' % (w, r['arc'], st['out_tris'], st['ps2_tris']))
+    return bad
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd', required=True)
-    for nm in ('convert', 'convert-ss'):
+    for nm in ('convert', 'convert-ss', 'convert-pl'):
         c = sp.add_parser(nm)
         c.add_argument('--base', required=True)
         c.add_argument('--out', required=True)
         c.add_argument('--weapons')
+        c.add_argument('--fit-skeleton', action='store_true',
+                       help='fit a PS2 mesh whose root children are uniformly translated onto the GC skeleton (wep05)')
+        c.add_argument('--relayout', action='store_true',
+                       help='a PS2 BIN larger than its slot grows the slot: the archive body is laid out again (egg 0x7D)')
+        c.add_argument('--hands', action='store_true',
+                       help="also Leon's GameCube hand BINs (HAND_PAIRS; convert-ss: every attach != 0 BIN), no pictures")
     a = ap.parse_args()
     sys.exit(convert(a))
 

@@ -1,3 +1,32 @@
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#include "include/native_draw_result.hpp"
+#endif
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+#include "include/cloth_publication11.inc"
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+#include "include/static_obj_batch33.hpp"
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+#include "include/actor_format32_uv.hpp"
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "include/fallback_audit29.h"
+#endif
+#line 1
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "include/draw_fallback_audit.h"
+#define DFA26_HIT(reason) ::re4dc::dfa26::hit(::re4dc::dfa26::reason);
+#define DFA26_FALSE(reason) (::re4dc::dfa26::hit(::re4dc::dfa26::reason), false)
+#define DFA26_COUNT(counter,reason) (::re4dc::dfa26::hit(::re4dc::dfa26::reason), ++counter)
+#else
+#define DFA26_HIT(reason)
+#define DFA26_FALSE(reason) false
+#define DFA26_COUNT(counter,reason) ++counter
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "draw_setup_audit.h"
+#endif
 #include "include/gc_asset_motion_unknown.h"
 #include "include/gc_asset_gate.h"
 #include "include/gc_asset_packet_cursor.h"
@@ -7,6 +36,9 @@
 #include "include/gc_asset_movie.h"
 #include "include/gc_asset_lifecycle.h"
 #include "include/gc_asset_actor.h"
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+#include "include/model_prepared_binding34.h"
+#endif
 #if RE4DC_GC_ASSET_GATE
 #include "include/native_io.h"
 #define RE4DC_GCA_ADOPT(...) ((void)(re4dc_gcasset::ensure_disc_catalog() && re4dc_gcasset::member_adopt(__VA_ARGS__)))
@@ -16,6 +48,13 @@
 #define RE4DC_GCA_RETIRE(...) ((void)0)
 #endif
 #include "../world_scratch.h"
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+#if !RE4DC_NATIVE_STATIC || !RE4DC_EFFECT_SPRITES || !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM || !RE4DC_FX_ROOM_SPILL_KB
+#error FX_R200_ENTRY_CAP requires native static, effect sprites, the renderer stack, PVR stream and a room spill
+#endif
+#include "include/fx_r200_entry_cap.h"
+extern "C" unsigned re4dc_room_id_now();
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
 #include "include/world_census24.h"
 namespace {
@@ -39,6 +78,18 @@ extern "C" unsigned re4dc_ps2_mesh_room();
 #endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
+#endif
+#if defined(RE4DC_TEX_ARENA_CURRENT_KEY) && RE4DC_TEX_ARENA_CURRENT_KEY
+#if !RE4DC_VRAM_ROOM_ARENA || !RE4DC_VRAM_PAGES || !RE4DC_UI_VRAM
+#error TEX_ARENA_CURRENT_KEY requires VRAM_ROOM_ARENA, VRAM_PAGES and UI_VRAM
+#endif
+#endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+#if !RE4DC_VRAM_PAGES || !RE4DC_UI_VRAM
+#error TEX_FINAL_REFUSAL_LOG requires VRAM_PAGES and UI_VRAM
+#endif
+extern "C" unsigned re4dc_room_id_now();
+extern "C" void re4dc_vram_pages_census(unsigned* out);
 #endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
@@ -278,6 +329,11 @@ static unsigned ta_vertex_bytes=RE4DC_TA_VERTBUF_KB*1024U;   // TA_HEADROOM: the
 #ifndef RE4DC_UI_HANDLES
 #define RE4DC_UI_HANDLES 0
 #endif
+// PS2_UPLOAD_INCARNATION: bind derived PS2 headers to an exact published
+// upload, independent of UI_HANDLES. Zero retains the previous ABI/output.
+#ifndef RE4DC_PS2_UPLOAD_INCARNATION
+#define RE4DC_PS2_UPLOAD_INCARNATION 0
+#endif
 // UI_HEADERS=1 (default off = previous image): each UI/HUD quad's PVR header
 // (texture binding and blend) is compiled once per cache entry and blend mode
 // and reused while the entry lives; the per-frame UI path only writes vertices.
@@ -359,6 +415,12 @@ extern "C" void* re4dc_rtt_override_texture(unsigned* w,unsigned* h);
 #endif
 #include "hud_source_mask.h"
 #include "native_model.h"
+#if RE4DC_NATIVE_FE_CONTINUATION
+#include "native_actor_continuation.h"
+#if !RE4DC_COPY_LEAN || !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM
+#error NATIVE_FE_CONTINUATION requires the existing copied deferred-view streaming owner
+#endif
+#endif
 #include "native_static.h"
 #include "native_render_profile.hpp"
 #include "pc_sampler.h"
@@ -431,6 +493,11 @@ static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry
 #endif
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    // Never reset with source tables or room/movie transitions. Exhaustion
+    // permanently disables derived-header reuse for this Entry (zero).
+    std::uint32_t upload_incarnation=1;
+#endif
 #if RE4DC_GC_ASSET_GATE
     re4dc_gcasset::CheckedAsset asset{};
     unsigned asset_consumers=0;
@@ -647,6 +714,9 @@ void gcasset_packet_reset(){for(auto& state:gcasset_packet_states){
 void gcasset_packet_emitted(const void* packet,unsigned bytes,unsigned list,re4dc_gcasset::Consumer consumer) {
     if(!bytes)return;
     if(list>=5 || !packet || bytes%32){re4dc_gcasset::unresolved(consumer,"packet-shape");return;}
+    // Modifier-volume lists (MV_SHADOWS volumes, re4dc_ui_mv_send) carry no texture: their 0x80000000 triangle words
+    // read as polygon headers whose "address" is vertex data (GC-ASSET-PROBE addr=0x0 caller=re4dc_ui_mv_send). Nothing to attribute.
+    if(list==PVR_LIST_OP_MOD || list==PVR_LIST_TR_MOD)return;
     auto& state=gcasset_packet_states[list];
     const auto* words=static_cast<const std::uint32_t*>(packet);
     for(unsigned offset=0;offset<bytes;offset+=32) {
@@ -789,14 +859,55 @@ unsigned model_slab_failures=0;
 #endif
 // TEX_RESIDENT deliberately exceeds this bound: TEX_SLOTS-80 more entries (x sizeof(Entry)).
 static_assert(RE4DC_TEX_RESIDENT || sizeof(entries)+sizeof(sources)<=64*sizeof(Entry)+256*sizeof(Source));
+// SOB33_STATE_BEGIN
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+re4dc::sob33::Run sob33_run;
+re4dc::sob33::Stats sob33_stats;
+bool sob33_packet_eligible=false,sob33_direct_candidate=false;
+unsigned char sob33_packet_marker=0;
+inline void sob33_barrier(re4dc::sob33::Barrier cause){
+    sob33_run.barrier();sob33_packet_eligible=false;sob33_direct_candidate=false;
+    sob33_packet_marker=0;
+    ++sob33_stats.barriers;++sob33_stats.barrier_causes[cause];
+}
+void sob33_report(unsigned fr){
+    // Two cumulative rows fit a capture of at least 300 drawn UI frames.
+    if(fr%120)return;
+    const auto& s=sob33_stats;
+    re4dc_log("SOB33 f=%u first=%u reuse=%u foreign=%u format=%u boundary=%u header=%u direct=%u packet=%u op=%u tr=%u pt=%u single=%u/%u large=%u/%u blended=%u/%u completed=%u incomplete=%u empty=%u barriers=%u saved=%u\n",
+        fr,s.decisions[re4dc::sob33::First],s.decisions[re4dc::sob33::Reuse],s.decisions[re4dc::sob33::Foreign],
+        s.decisions[re4dc::sob33::Format],s.decisions[re4dc::sob33::Boundary],s.decisions[re4dc::sob33::Header],
+        s.direct_reused,s.packet_reused,s.list_reused[0],s.list_reused[2],s.list_reused[4],
+        s.category_seen[0],s.category_reused[0],s.category_seen[1],s.category_reused[1],
+        s.category_seen[2],s.category_reused[2],
+        s.completed,s.incomplete,s.empty,s.barriers,(s.direct_reused+s.packet_reused)*32U);
+    // Boundary-call counts (including an already empty receipt), not lost
+    // reuse opportunities. Source includes retirement and pending invalidation.
+    const auto* b=s.barrier_causes;
+    re4dc_log("SOB33B f=%u source=%u deferred=%u frame=%u scene=%u list=%u abort=%u send=%u direct=%u custom=%u empty=%u\n",
+        fr,b[re4dc::sob33::SourceReset],b[re4dc::sob33::DeferredReset],b[re4dc::sob33::FrameReset],
+        b[re4dc::sob33::SceneBoundary],b[re4dc::sob33::ListBoundary],b[re4dc::sob33::PacketAbort],
+        b[re4dc::sob33::StreamSend],b[re4dc::sob33::ForeignDirect],b[re4dc::sob33::CustomPacket],
+        b[re4dc::sob33::EmptyPacket]);
+}
+#endif
+// SOB33_STATE_END
 #if RE4DC_UI_HANDLES
 // One 32-bit clock stamps every event that invalidates a handle: closing an
 // entry (entry_closed[]) and every source descriptor boundary (each sources[]
 // reset, handle_reset). A handle stamped later than both is still exact.
 unsigned entry_closed[kTextureCount]; unsigned handle_clock=1,handle_reset=1,handle_hits,handle_misses,handle_bypass;
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+inline void sources_reset(){sob33_barrier(re4dc::sob33::SourceReset);nsource=0;handle_reset=++handle_clock;}
+#else
 inline void sources_reset(){nsource=0;handle_reset=++handle_clock;}
+#endif
+#else
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+inline void sources_reset(){sob33_barrier(re4dc::sob33::SourceReset);nsource=0;}
 #else
 inline void sources_reset(){nsource=0;}
+#endif
 #endif
 #if RE4DC_TEX_RESIDENT || RE4DC_SUBSCREEN
 // (SUBSCREEN: sub screen images without a converted package are drawn every frame.)
@@ -975,6 +1086,9 @@ Re4dcModelPart restore_view(const DeferredPart* node){
 }
 #else
 unsigned view_words(const Re4dcModelPart& p,const Re4dcModelPart& base,unsigned* masks,unsigned* values){
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    re4dc::dfa26::hit(re4dc::dfa26::DeferredWordCopy,kViewWords);
+#endif
     unsigned count=0;if(masks)std::memset(masks,0,kViewMasks*sizeof(unsigned));
     for(unsigned i=0;i<kViewWords;++i){
         unsigned a,b;std::memcpy(&a,reinterpret_cast<const char*>(&p)+i*4,4);
@@ -1082,6 +1196,13 @@ SourceLighting restore_lighting(const DeferredLighting* stored){
 DeferredPart* deferred_first=nullptr;DeferredPart* deferred_last=nullptr;
 unsigned deferred_top=sizeof(frame_storage),deferred_peak=0,deferred_count=0,deferred_drops=0;
 unsigned char* deferred_spill=nullptr;unsigned deferred_spill_top=0,deferred_spill_capacity=0;
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+// FX_R200_TAIL_STATE_BEGIN (one cursor per existing deferred-queue lifetime).
+re4dc::fx_r200::Tail fx_r200_tail;
+bool fx_r200_tail_select(unsigned required,unsigned char*& storage,unsigned*& top);
+void fx_r200_tail_reset();
+// FX_R200_TAIL_STATE_END
+#endif
 bool draining_parts=false,source_draws_finished=false;
 pvr_list_t draining_list=PVR_LIST_TR_POLY;
 #if RE4DC_ACTOR_TRANSACTION_DIAG
@@ -1090,7 +1211,19 @@ unsigned avd_queue_epoch;
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 void actor_fade_queue_reset();
 #endif
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+extern bool stream_aborted;
+#endif
 void reset_deferred(){
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    re4dc_cloth_publication11.reset(frame,stream_aborted);
+#endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+    re4dc_actor_native_pose_retire();
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::DeferredReset);
+#endif
 #if defined(RE4DC_ESP_SETUP_BATCH)
     fx_setup_forget(); // queue addresses can be reused after any reset, even within a frame
 #endif
@@ -1100,6 +1233,9 @@ void reset_deferred(){
 #endif
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
     actor_fade_queue_reset();
+#endif
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+    fx_r200_tail_reset();
 #endif
     deferred_spill=nullptr;deferred_spill_top=deferred_spill_capacity=0;deferred_light_sets=nullptr;deferred_basis=nullptr;deferred_lights=nullptr;deferred_first=deferred_last=nullptr;deferred_top=sizeof(frame_storage);deferred_count=0;}
 pvr_list_t select_model_pass(const Re4dcModelPart* p){
@@ -1173,11 +1309,26 @@ constexpr unsigned kModelStaticLightBytes=0;
 constexpr unsigned kModelPreparationBytes=RE4DC_D349_RENDERER_STACK?12288:0;
 constexpr unsigned kModelPacketBytes=kModelSlabBytes-kModelMetadataBytes-kModelStaticLightBytes-kModelDeferredSpillBytes-kModelPreparationBytes;
 pvr_vertex_t* model_packets; unsigned model_used,model_pending; Entry* model_handle;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+re4dc::format32::UvRequest actor_uv32_request;
+struct ActorUv32Binding {
+    Entry* handle=nullptr;
+    unsigned width=0,height=0;
+    float u_scale=0,v_scale=0;
+    bool valid=false;
+} actor_uv32_binding;
+#endif
 #if RE4DC_ACTOR_UV16
 unsigned next_pcw_set,next_pcw_clear; // actors30: re4dc_model_next_header_pcw, one packet_begin
 #endif
 int model_diagnostic=-1;
 unsigned model_parts,model_invalid,model_resource,model_overflow,model_input,model_output,model_peak,model_presented;
+#if defined(RE4DC_MODEL_PART_DUMP)
+unsigned model_dump_crc,model_dump_fnv;
+#define RE4DC_PART_DUMP_KEY(k) (model_dump_crc=(k).crc,model_dump_fnv=(k).fnv)
+#else
+#define RE4DC_PART_DUMP_KEY(k) ((void)0)
+#endif
 unsigned model_capacity_rejects,model_state_rejects,model_texture_rejects,model_wrap_rejects,model_empty_parts,model_scale_rebuilds;
 unsigned model_state_bits[8];
 unsigned model_alpha_material,model_alpha_vertex,model_alpha_faded;
@@ -1675,6 +1826,9 @@ void flush(){
     pending=false;
     uint32_t* vr=reinterpret_cast<uint32_t*>(PVR_RAM_BASE)+tm/4U+6U;
     if(((vr[0]>>29)&1U)==(want?1U:0U)){++skips;return;}
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(PresortChanged)
+#endif
     ++writes;
     for(int x=0;x<tw;++x)
         for(int y=0;y<th;++y){vr[0]=(uint32_t(y)<<8)|(uint32_t(x)<<2)|(uint32_t(want)<<29);vr+=6;}
@@ -1690,7 +1844,7 @@ extern "C" int __wrap_pvr_scene_finish(){
 }
 extern "C" void __wrap_pvr_set_presort_mode(bool presort){
     pvr_ready::acquire_bank();   // the target bank's tile matrix is free only once the bank is acquired
-    if(!pvr_state.vbuf_doublebuf){presort_lazy::flush();__real_pvr_set_presort_mode(presort);return;}
+    if(!pvr_state.vbuf_doublebuf){presort_lazy::flush();DFA26_HIT(PresortRewrite)__real_pvr_set_presort_mode(presort);return;}
     const uint32_t tm=pvr_state.ta_buffers[pvr_state.ta_target].tile_matrix;
     if(presort_lazy::pending && presort_lazy::tm!=tm)presort_lazy::flush();   // another bank's request (not in play)
     presort_lazy::pending=true;presort_lazy::want=presort;presort_lazy::tm=tm;
@@ -1699,6 +1853,9 @@ extern "C" void __wrap_pvr_set_presort_mode(bool presort){
 #else
 extern "C" void __wrap_pvr_set_presort_mode(bool presort){
     pvr_ready::acquire_bank();   // the target bank's tile matrix is free only once the bank is acquired
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(PresortRewrite)
+#endif
     __real_pvr_set_presort_mode(presort);
 }
 #endif
@@ -2323,6 +2480,9 @@ unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownershi
 extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
 #endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SceneBoundary);
+#endif
 #if RE4DC_GC_ASSET_GATE
     gcasset_packet_reset();
 #endif
@@ -2434,6 +2594,9 @@ void stream_select(pvr_list_t list){
     desired_list=list;
     if(!stream_scene){stream_open();AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
     if(stream_list==list){AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ListBoundary);
+#endif
     // End the old list once. Never reopen it or replay source ModelRender.
 #if RE4DC_PS2_WORLD_DRAW
     if(stream_closed_lists&(1u<<unsigned(list))){
@@ -2498,7 +2661,19 @@ void post_diag_frame(){
                   post_diag_ui_before,post_diag_ui_frames,post_diag_ui_max,post_diag_op_after,frame);
 }
 #endif
+// SOB33_STREAM_SEND_BEGIN
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+void stream_send33(const void* data,unsigned bytes,unsigned skip_header) {
+    // Asset auditing consumes the complete logical model packet. Only the
+    // physical TA stream and its byte/hash counters omit the repeated header.
+    const void* const logical_data=data;const unsigned logical_bytes=bytes;
+    data=static_cast<const unsigned char*>(data)+skip_header;bytes-=skip_header;
+#else
 void stream_send(const void* data,unsigned bytes) {
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
     re4dc::profile::Scope profile_scope(stream_list==PVR_LIST_OP_POLY?re4dc::profile::SubmitOP:
         stream_list==PVR_LIST_PT_POLY?re4dc::profile::SubmitPT:re4dc::profile::SubmitTR);
     ++frame_pvr_calls;frame_pvr_bytes+=bytes;
@@ -2510,13 +2685,26 @@ void stream_send(const void* data,unsigned bytes) {
 #if RE4DC_TA_HASH
     re4dc_ta_hash(data,bytes);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(SubmitCopy)
+#endif
     re4dc::render::submit_pvr(data,bytes);
     sq_unlock();
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    RE4DC_GCA_PACKET(logical_data,logical_bytes,unsigned(stream_list),gcasset_packet_consumer);
+#else
     RE4DC_GCA_PACKET(data,bytes,unsigned(stream_list),gcasset_packet_consumer);
+#endif
 #if RE4DC_TA_GUARD
     guard_account(1,bytes/32-1); // every call is one header + its vertices
 #endif
 }
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+void stream_send(const void* data,unsigned bytes) {
+    sob33_barrier(re4dc::sob33::StreamSend);stream_send33(data,bytes,0);
+}
+#endif
+// SOB33_STREAM_SEND_END
 #if RE4DC_MV_SHADOWS
 // MV_SHADOWS (game30.mk; mv_shadow.cpp): the frame's shadow volumes go into the opaque modifier volume list, opened
 // once after every other list of a presented scene (a closed list is never reopened). re4dc_mv_emit calls
@@ -2536,6 +2724,9 @@ unsigned blob_sends,blob_bytes;
 void safe_audit_scene(bool present);
 #endif
 void stream_close(bool present) {
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SceneBoundary);
+#endif
     RE4DC_PROFILE_SCOPE(PresentFence);
 #if RE4DC_UI_FRAG_WINDOW==2
     if(frag_discard){present=false;frag_discard=false;} // UI_FRAG_WINDOW: this frame released textures its scene used
@@ -2597,6 +2788,9 @@ void stream_close(bool present) {
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::scene_finished(); // finished game scene, including a later discard
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    re4dc::dsa24::scene_finished();
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     // pvr_scene_finish can wait. Revalidate immediately before presentation.
@@ -3593,18 +3787,44 @@ void vram_room_frame(){
 // FX_PS2_NONE_CUT (lane purge-fx24, render only; effects30.mk): an effect picture the PS2 dropped (ps2lib effects-tex
 // ps2_source=NONE) is not drawn. Decided once per texture entry and room, then a byte test per sprite.
 }   // namespace (fx_none_cut.inc is plain data)
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+// FX_NONE_CUT_PACK (lane heap-margin25; effects30.mk): the same table packed (fx_none_cut_pack.inc, tools/d367/purge-fx24/
+// fx_none_cut_pack.py: each key once, rows as one-byte key indices per room) and the per-entry decision in one u16
+// ((room + 1) | cut << 15). Same answers and log lines; ~4 KB less image (heap 4 at r100 s30).
+struct FxPackKey { unsigned crc,fnv; };
+#include "fx_none_cut_pack.inc"
+#else
 struct FxNoneCutRow { unsigned short room; unsigned crc,fnv; };
 #include "fx_none_cut.inc"
+#endif
 extern "C" void re4dc_profile_source(re4dc::profile::Source* out);   // ui_bridge.cpp
 namespace {
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+unsigned short fxnone_room[kTextureCount];   // (room + 1) | cut << 15 when decided for the entry's current texture
+#else
 unsigned short fxnone_room[kTextureCount];   // room + 1 when decided for the entry's current texture
 unsigned char fxnone_cut[kTextureCount];
+#endif
 unsigned fxnone_cuts,fxnone_frame=~0U,fxnone_now;
 bool fx_none_cut(const Entry& e){
     const unsigned i=unsigned(&e-entries);
     if(i>=kTextureCount)return false;
     if(fxnone_frame!=frame){re4dc::profile::Source s{};re4dc_profile_source(&s);fxnone_now=s.room&0xffffU;fxnone_frame=frame;}
     const unsigned room=fxnone_now;
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+    if((fxnone_room[i]&0x7fffU)==((room+1U)&0x7fffU))return (fxnone_room[i]&0x8000U)!=0;
+    bool lib=false,cut=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(unsigned j=0;j<sizeof(kFxPackRoom)/sizeof(kFxPackRoom[0]) && !cut;++j){
+        const unsigned r=kFxPackRoom[j];
+        if(!(r==room || (r==0xffffU && !lib)))continue;
+        for(unsigned k=kFxPackBeg[j];k<kFxPackBeg[j+1];++k){
+            const FxPackKey& c=kFxPackKeys[kFxPackIdx[k]];
+            if(c.crc==e.key.crc && c.fnv==e.key.fnv){cut=true;break;}
+        }
+    }
+    fxnone_room[i]=(unsigned short)(((room+1U)&0x7fffU)|(cut?0x8000U:0U));
+#else
     if(fxnone_room[i]==room+1U)return fxnone_cut[i]!=0;
     bool lib=false,cut=false;
     for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
@@ -3612,11 +3832,72 @@ bool fx_none_cut(const Entry& e){
         if(c.crc==e.key.crc && c.fnv==e.key.fnv && (c.room==room || (c.room==0xffffU && !lib))){cut=true;break;}
     }
     fxnone_room[i]=(unsigned short)(room+1U);fxnone_cut[i]=cut;
+#endif
     if(cut)re4dc_log("fx ps2 none cut: room=%03x key=%08x-%08x total=%u\n",room,e.key.crc,e.key.fnv,fxnone_cuts);
     return cut;
 }
+#if defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+// FX_EARLY_CUT (lane fxcut28, render only; effects30.mk): the FX_PS2_NONE_CUT answer before the texture is loaded.
+// load() asks fx_none_key() on a miss for an effect sprite (fxearly_armed) and returns no entry without opening the
+// package, so a picture the PS2 dropped is never uploaded. The answer per image descriptor (pixels, palette, shape) is
+// kept in a small table stamped like the UI handles (handle_reset: sources reset on room / archive change) and the
+// room, so later frames skip the resolve too. Same table, same answers as fx_none_cut(); same "fx ps2 none cut:" line.
+bool fx_none_key(const Key& key,unsigned room){
+#if defined(RE4DC_FX_NONE_CUT_PACK) && RE4DC_FX_NONE_CUT_PACK
+    bool lib=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(unsigned j=0;j<sizeof(kFxPackRoom)/sizeof(kFxPackRoom[0]);++j){
+        const unsigned r=kFxPackRoom[j];
+        if(!(r==room || (r==0xffffU && !lib)))continue;
+        for(unsigned k=kFxPackBeg[j];k<kFxPackBeg[j+1];++k){
+            const FxPackKey& c=kFxPackKeys[kFxPackIdx[k]];
+            if(c.crc==key.crc && c.fnv==key.fnv)return true;
+        }
+    }
+    return false;
+#else
+    bool lib=false;
+    for(unsigned short r:kFxNoneRooms)if(r==room){lib=true;break;}
+    for(const auto& c:kFxNoneCut)
+        if(c.crc==key.crc && c.fnv==key.fnv && (c.room==room || (c.room==0xffffU && !lib)))return true;
+    return false;
 #endif
+}
+bool fxearly_armed,fxearly_hit;
+unsigned fxearly_skips,fxearly_refused;   // descriptor-table hits / loads declined in load()
+struct FxEarlyNeg { const void* pixels; const void* palette; unsigned shape,stamp; unsigned short room,palette_bytes; };
+FxEarlyNeg fxearly_neg[32];
+unsigned fxearly_room(){
+    if(fxnone_frame!=frame){re4dc::profile::Source s{};re4dc_profile_source(&s);fxnone_now=s.room&0xffffU;fxnone_frame=frame;}
+    return fxnone_now;
+}
+inline unsigned fxearly_slot(const Re4dcUiImage& i){
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(i.pixels));return ((a>>5)^(a>>11))&31U;
+}
+inline unsigned fxearly_shape(const Re4dcUiImage& i){return i.width|i.height<<11|i.format<<22|(i.palette_format&15U)<<26;}
+bool fxearly_known_cut(const Re4dcUiImage& i){
+    const FxEarlyNeg& n=fxearly_neg[fxearly_slot(i)];
+    return n.pixels && n.pixels==i.pixels && n.palette==i.palette && n.palette_bytes==i.palette_bytes &&
+           n.shape==fxearly_shape(i) && n.stamp>handle_reset && n.room==(unsigned short)fxearly_room();
+}
+void fxearly_remember(const Re4dcUiImage& i){
+    fxearly_neg[fxearly_slot(i)]={i.pixels,i.palette,fxearly_shape(i),++handle_clock,(unsigned short)fxearly_room(),
+                                  (unsigned short)i.palette_bytes};
+}
+#endif
+#endif
+// PS2_UPLOAD_ADVANCE_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+void advance_upload_incarnation(Entry& entry) {
+    // Saturate to the nonreusable zero sentinel; never resurrect an old token.
+    if(entry.upload_incarnation)++entry.upload_incarnation;
+}
+#endif
+// PS2_UPLOAD_ADVANCE_END
 void close_entry(Entry& entry) {
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    advance_upload_incarnation(entry); // revoke before any retirement callback
+#endif
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
     fxnone_room[&entry-entries]=0;
 #endif
@@ -3708,6 +3989,43 @@ void gad_room_states(){
 #else
 #define RE4DC_GAD_HIT(k) do{}while(0)
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+// Only terminal load() refusals call this: no extra line for intermediate
+// retries, successful loads or cache hits. Read Package::error before close()
+// clears it. Invalid descriptors/identity failures have kv=0, never a stale key.
+void tex_final_refusal(const Re4dcUiImage& image,const Key& key,bool key_valid,
+                       const char* stage,const char* reason,unsigned need) {
+    unsigned census[13]={};re4dc_vram_pages_census(census);
+    re4dc_log("TEX-REFUSE r=%03x f=%u k=%08x-%08x kv=%u s=%s why=%.56s wh=%ux%u fmt=%u need=%u free=%u max=%u\n",
+              re4dc_room_id_now()&0xffffU,frame,key.crc,key.fnv,key_valid?1U:0U,
+              stage,reason?reason:"unknown",image.width,image.height,image.format,
+              need,census[3],census[4]);
+}
+#define RE4DC_TEX_FINAL_REFUSAL(...) tex_final_refusal(__VA_ARGS__);
+#define RE4DC_TEX_REFUSE_RETURN(...) do{tex_final_refusal(__VA_ARGS__);return nullptr;}while(0)
+#else
+#define RE4DC_TEX_FINAL_REFUSAL(...)
+#define RE4DC_TEX_REFUSE_RETURN(...) return nullptr
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+void fa29_tex_refusal(const Re4dcUiImage&,const Key&,bool,const char* stage,const char* reason,unsigned){
+    using namespace re4dc::fa29;
+    hit(TextureRefusal);
+    if(!std::strcmp(stage,"guard"))hit(TextureGuard);
+    if(!std::strcmp(stage,"slot"))hit(TextureSlot);
+    if(reason && !std::strcmp(reason,"PVR texture allocation failed"))hit(TextureNoBlock);
+    if(reason && (!std::strcmp(reason,"pack-error") || !std::strcmp(reason,"pack-payload-retry")))hit(TexturePack);
+}
+#undef RE4DC_TEX_FINAL_REFUSAL
+#undef RE4DC_TEX_REFUSE_RETURN
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+#define RE4DC_TEX_FINAL_REFUSAL(...) do{fa29_tex_refusal(__VA_ARGS__);tex_final_refusal(__VA_ARGS__);}while(0);
+#else
+#define RE4DC_TEX_FINAL_REFUSAL(...) do{fa29_tex_refusal(__VA_ARGS__);}while(0);
+#endif
+#define RE4DC_TEX_REFUSE_RETURN(...) do{RE4DC_TEX_FINAL_REFUSAL(__VA_ARGS__)return nullptr;}while(0)
+#endif
+#line 3874
 #if RE4DC_TEX_CHECK
 __attribute__((noinline))   // TEX_CHECK: texchk::site is this function's caller
 #endif
@@ -3736,6 +4054,9 @@ void note(const Re4dcUiImage& image,const Key* prepared_key){
 }
 #endif
 Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=nullptr) {
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT && !RE4DC_UI_HANDLES
+    re4dc::dfa26::hit(re4dc::dfa26::TextureFullNoHandle);
+#endif
 #if defined(RE4DC_G1_PART_CENSUS) && RE4DC_G1_PART_CENSUS
     g1pc_ui::note(image,prepared_key);
 #endif
@@ -3746,8 +4067,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     hashdiag::site=__builtin_return_address(0);
 #endif
     RE4DC_PROFILE_SCOPE(TextureResolve);RE4DC_PROFILE_COUNT(TextureLookups,1);
-    if(!image.pixels || !image_size(image) || !image.width || !image.height || image.width>1024 || image.height>1024) return nullptr;
-    Key key{};if(prepared_key)key=*prepared_key;else if(!image_key(image,key)){RE4DC_TEXCHK_FAIL(Key{},"identity");return nullptr;}
+    if(!image.pixels || !image_size(image) || !image.width || !image.height || image.width>1024 || image.height>1024) RE4DC_TEX_REFUSE_RETURN(image,Key{},false,"input","invalid-image",0);
+    Key key{};if(prepared_key)key=*prepared_key;else if(!image_key(image,key)){RE4DC_TEXCHK_FAIL(Key{},"identity");RE4DC_TEX_REFUSE_RETURN(image,Key{},false,"identity","identity",0);}
 #if RE4DC_COPY_LEAN
     const unsigned hint=(key.crc^(key.crc>>7)^key.fnv)&127U;
     if(const unsigned h=entry_hint[hint]){
@@ -3757,6 +4078,18 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     for(auto& e:entries) if(e.valid && e.key==key) {entry_hint[hint]=EntryHint(&e-entries+1);RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #else
     for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::hit(re4dc::fa29::TextureMiss);
+#endif
+#line 3927
+#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
+    // FX_EARLY_CUT: an effect picture the PS2 dropped is declined before any eviction, budget test or file I/O.
+    if(fxearly_armed && fx_none_key(key,fxearly_room())){
+        fxearly_hit=true;++fxearly_refused;
+        re4dc_log("fx ps2 none cut: room=%03x key=%08x-%08x total=%u early\n",fxearly_room(),key.crc,key.fnv,fxnone_cuts);
+        return nullptr;
+    }
 #endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     // WORLD_METER: a failed texture-RAM allocation from here on names this key in its VRAMFAIL log line (vram_pages.cpp).
@@ -3768,7 +4101,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_VRAM_ROOM_LOG
         if(frame-fx_evict_frame<=1)++vram_guard_pressure;   // VRAM_ROOM_LOG: skipped under eviction pressure
 #endif
-        RE4DC_TEXCHK_SKIP(key,"fx-resident-only");return nullptr;}
+        RE4DC_TEXCHK_SKIP(key,"fx-resident-only");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","fx-resident-only",0);}
 #endif
 #if RE4DC_UI_VRAM
     {
@@ -3779,25 +4112,25 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         unsigned pw=8,ph=8;while(pw<image.width)pw*=2;while(ph<image.height)ph*=2;
         const unsigned least=std::min(pw*ph*2,2048+pw*ph/4);
         unsigned pinned=0;for(const auto& e:entries)if(e.valid && RE4DC_ENTRY_PINNED(e))pinned+=e.package.vram_bytes();
-        if(pinned+least>vram_budget){++vram_rejects;RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);RE4DC_TEXCHK_FAIL(key,"vram-budget");return nullptr;}
+        if(pinned+least>vram_budget){++vram_rejects;RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);RE4DC_TEXCHK_FAIL(key,"vram-budget");RE4DC_TEX_REFUSE_RETURN(image,key,true,"budget","vram-budget",least);}
     }
 #endif
 #if RE4DC_TEX_RESIDENT || RE4DC_SUBSCREEN
     // A package absent from the disc: fail without evicting an entry or
     // touching the filesystem again (it was retried every frame).
-    for(const auto& m:missing_keys) if(m.crc|m.fnv) if(m==key) {RE4DC_TEXCHK_FAIL(key,"missing");return nullptr;}
+    for(const auto& m:missing_keys) if(m.crc|m.fnv) if(m==key) {RE4DC_TEXCHK_FAIL(key,"missing");RE4DC_TEX_REFUSE_RETURN(image,key,true,"lookup","missing",0);}
 #endif
 #if RE4DC_UI_VRAM && RE4DC_UI_FRAG_LATCH
 #if RE4DC_UI_FRAG_RESERVE
-    if(key==frag_key && !frag_held && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");return nullptr;} // before any eviction
+    if(key==frag_key && !frag_held && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","frag-latched",0);} // before any eviction
 #else
-    if(key==frag_key && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");return nullptr;} // before any eviction
+    if(key==frag_key && frame-frag_frame<kFragRetryFrames){++frag_latched;RE4DC_TEXCHK_FAIL(key,"frag-latched");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","frag-latched",0);} // before any eviction
 #endif
 #endif
     Entry* slot=nullptr;
     for(auto& e:entries) if(!e.valid){slot=&e;break;}
     if(!slot) for(auto& e:entries) if(!RE4DC_ENTRY_PINNED(e) && !RE4DC_CORE_PINNED(e) && (!slot || e.frame<slot->frame)) slot=&e;
-    if(!slot) {RE4DC_PROFILE_COUNT(TextureNoSlot,1);RE4DC_TEXCHK_FAIL(key,"no-slot");return nullptr;}
+    if(!slot) {RE4DC_PROFILE_COUNT(TextureNoSlot,1);RE4DC_TEXCHK_FAIL(key,"no-slot");RE4DC_TEX_REFUSE_RETURN(image,key,true,"slot","no-slot",0);}
 #if RE4DC_TEX_RESIDENT
     // Never evict a resident texture for a package that is not on the disc:
     // check it exists first (only when this load would evict), and remember
@@ -3818,14 +4151,14 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     // A pack read error is transient: no eviction, no per-file probe, and the key is not remembered as missing
     // (on a packed disc its loose file is gone); a later use retries (texpack_index.inc spaces the retries in UI frames).
-    if(pack==texpack::kError){++pack_error_skips;RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"pack-error");return nullptr;}
+    if(pack==texpack::kError){++pack_error_skips;RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"pack-error");RE4DC_TEX_REFUSE_RETURN(image,key,true,"lookup","pack-error",0);}
     const bool in_pack=pack==texpack::kFound;
 #undef RE4DC_PACK_FIND
 #if RE4DC_TEX_PAYLOAD_RETRY
     // Existing resident hits returned above. Only this exact failed member waits,
     // before close_entry/eviction or a new package open; never a loose-key miss.
     if(in_pack && texpack::payload_blocked(pack_member,frame,pack_epoch)){
-        RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");return nullptr;
+        RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");RE4DC_TEX_REFUSE_RETURN(image,key,true,"guard","pack-payload-retry",0);
     }
 #endif
     if(slot->valid && !in_pack){
@@ -3837,11 +4170,15 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         if(f==FILEHND_INVALID){
             re4dc_log("native UI: package absent, not evicting: %s\n",probe);
             missing_keys[nmissing++%(sizeof(missing_keys)/sizeof(missing_keys[0]))]=key;
-            RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"absent");return nullptr;
+            RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"absent");RE4DC_TEX_REFUSE_RETURN(image,key,true,"lookup","absent",0);
         }
         fs_close(f);
     }
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    if(slot->valid)re4dc::fa29::hit(re4dc::fa29::TextureEvict);
+#endif
+#line 4019
     if(slot->valid){RE4DC_PROFILE_COUNT(TextureEvictions,1);RE4DC_FX_EVICTED();RE4DC_HOLD_EVICTED(*slot);}
     close_entry(*slot); // caller has completed both TA and render fences
     char path[96];RE4DC_TEX_PATH(path,key);
@@ -3870,7 +4207,15 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     // (gcasset_texture_finish after a successful upload).
     slot->asset={};gca_tex_arm(*slot);
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(TextureUpload)
+#endif
     bool ok=RE4DC_OPEN_PACKAGE();
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+    unsigned refusal_need=0;
+    const char* refusal_stage="open";
+    const char* refusal_reason="open";
+#endif
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
 #if RE4DC_UI_FRAG_RESERVE
     if(frag_held && key==frag_key){
@@ -3901,6 +4246,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         Entry* victim=nullptr;
         for(auto& e:entries) if(&e!=slot && e.valid && !RE4DC_ENTRY_PINNED(e) && !RE4DC_CORE_PINNED(e) && (!victim || e.frame<victim->frame)) victim=&e;
         if(!victim) return false;
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::TextureEvict);
+#endif
+#line 4086
         RE4DC_PROFILE_COUNT(TextureEvictions,1);RE4DC_FX_EVICTED();RE4DC_HOLD_EVICTED(*victim);close_entry(*victim);++reclaimed;return true;
     };
 #if RE4DC_TEX_META_EVICT
@@ -3919,6 +4268,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     };
     for(unsigned tries=0;!ok && tries<8 && slot->package.error() && !std::strcmp(slot->package.error(),"streamed metadata allocation failed") && evict_kos();++tries){
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+        re4dc::fa29::hit(re4dc::fa29::TextureMeta);
+#endif
+#line 4104
         ++vram_meta_evicts;
         ok=RE4DC_OPEN_PACKAGE();
     }
@@ -3935,6 +4288,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     if(ok) {
         const auto& h=slot->package.header();
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+        refusal_need=h.data_size;refusal_stage="budget";
+        refusal_reason=h.texture_count!=1?"texture-count":"vram-budget";
+#endif
         ok=h.texture_count==1 && h.data_size<=vram_budget;
         // Accounted budget first, then the real pool (allocator overhead).
         while(ok && (used+h.data_size>vram_budget || pvr_mem_available()<h.data_size))
@@ -3946,11 +4303,20 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     struct ArenaClass { explicit ArenaClass(unsigned c){re4dc_vram_arena_class=c;} ~ArenaClass(){re4dc_vram_arena_class=0;} };
     bool arena_core=false;
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
+#if defined(RE4DC_TEX_ARENA_CURRENT_KEY) && RE4DC_TEX_ARENA_CURRENT_KEY
+    // close_entry() retains the old slot key until success is published below.
+    // Placement belongs to this request, including all upload retries.
+    for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==key;
+#else
     for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==slot->key;
+#endif
 #endif
     const ArenaClass arena_class(arena_core?2U:1U);
 #endif
     if(ok) {RE4DC_PROFILE_SCOPE(TextureUpload);
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+        refusal_stage="upload";refusal_reason="upload";
+#endif
         ok=slot->package.upload();
 #if RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
         // No contiguous block: take the overlay slab before evicting anything the scene uses.
@@ -3991,6 +4357,10 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         // more unreferenced upload and retry; reopening releases the partial
         // allocation (Package refuses to resume a partial upload in place).
         for(const char* e=slot->package.error();!ok && e && !std::strcmp(e,"PVR texture allocation failed") && evict();e=slot->package.error()){
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::hit(re4dc::fa29::TextureReopen);
+#endif
+#line 4189
             ++vram_retries;
             re4dc_log("native UI: fragmented VRAM, evicted and retrying (retries=%u free=%u)\n",vram_retries,(unsigned)pvr_mem_available());
 #if RE4DC_TEX_RESIDENT
@@ -4042,6 +4412,9 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
         }
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+        if(ok){refusal_stage="payload";refusal_reason="release-payload";}
+#endif
         ok=ok && slot->package.release_payload();
         if(ok){RE4DC_PROFILE_COUNT(TextureUploads,1);RE4DC_PROFILE_COUNT(TextureUploadBytes,slot->package.vram_bytes());}
         else RE4DC_PROFILE_COUNT(TextureUploadFailures,1);
@@ -4080,7 +4453,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
     OVLW("upload");
 #if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+#if defined(RE4DC_TEX_ARENA_CURRENT_KEY) && RE4DC_TEX_ARENA_CURRENT_KEY
+    re4dc_vram_ring_upload(key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#else
     re4dc_vram_ring_upload(slot->key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#endif
 #endif
     OVLG("upload");
 #if RE4DC_TEX_CHECK
@@ -4092,6 +4469,16 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
         else if(texpack_payload_retry::source_error(slot->package.error()))texpack::payload_failed(pack_member,frame,pack_epoch);
     }
 #endif
+#if defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG
+    if(!ok) RE4DC_TEX_FINAL_REFUSAL(image,key,true,refusal_stage,
+                                 slot->package.error()?slot->package.error():refusal_reason,refusal_need)
+#endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if !defined(RE4DC_TEX_FINAL_REFUSAL_LOG) || !RE4DC_TEX_FINAL_REFUSAL_LOG
+    if(!ok)fa29_tex_refusal(image,key,true,"upload",slot->package.error(),0);
+#endif
+#endif
+#line 4301
     if(!ok) slot->package.close();
 #if RE4DC_TEX_META_EVICT
     re4dc_log("native UI: bounded upload heap=%d->%d metadata=%u staging=shared-16384 source_allocation=0 kos=%u->%u\n",heap_before,re4dc_ui_heap_free(),slot->package.metadata_bytes(),kos_before,kos_headroom());
@@ -4111,7 +4498,12 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     } else gca_tex_disarm();
 #endif
     if(!ok) {RE4DC_TEXCHK_FAIL(key,texchk_why);return nullptr;}
+    // PS2_UPLOAD_PUBLICATION_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    advance_upload_incarnation(*slot); // accepted upload; retries were unpublished
+#endif
     slot->valid=true;slot->key=key;
+    // PS2_UPLOAD_PUBLICATION_END
 #if RE4DC_TEX_RESIDENT
     slot->frame=pin?frame:frame?frame-1:0;
 #else
@@ -4126,6 +4518,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 }
 #undef RE4DC_OPEN_PACKAGE
 #undef RE4DC_OPEN_PACKAGE_RAW
+#undef RE4DC_TEX_FINAL_REFUSAL
+#undef RE4DC_TEX_REFUSE_RETURN
 #if RE4DC_UI_HANDLES
 // Direct texture handles. The first draw of a source image (with its alpha
 // mask for masked model parts) takes the full path: image_key() (source scan,
@@ -4189,21 +4583,21 @@ inline bool handle_shape(const Re4dcUiImage& i,unsigned& shape,bool allow_indexe
 inline bool palette_same(unsigned index,const Re4dcUiImage& i){
 #if RE4DC_UI_PALETTE_SLOTS
     const PaletteCopy* cp=palette_copy(index);
-    if(!cp || cp->bytes!=i.palette_bytes)return false;
+    if(!cp || cp->bytes!=i.palette_bytes)return DFA26_FALSE(TexturePalette);
     const PaletteCopy& c=*cp;
 #else
     const PaletteCopy& c=palette_copies[index%kPaletteCopies];
-    if(c.owner!=index+1 || c.bytes!=i.palette_bytes)return false;
+    if(c.owner!=index+1 || c.bytes!=i.palette_bytes)return DFA26_FALSE(TexturePalette);
 #endif
     const auto* p=static_cast<const unsigned short*>(i.palette);
 #if RE4DC_UI_PALETTE_SLOTS
     if(!((unsigned(reinterpret_cast<std::uintptr_t>(p))|i.palette_bytes)&3)){   // word compare
         const auto* w=reinterpret_cast<const palette_word*>(p);
         const auto* cw=reinterpret_cast<const palette_word*>(c.data);
-        for(unsigned n=0;n<i.palette_bytes/4;++n)if(cw[n]!=w[n])return false;
+        for(unsigned n=0;n<i.palette_bytes/4;++n)if(cw[n]!=w[n])return DFA26_FALSE(TexturePalette);
     }else
 #endif
-    for(unsigned n=0;n<i.palette_bytes/2;++n)if(c.data[n]!=p[n])return false;
+    for(unsigned n=0;n<i.palette_bytes/2;++n)if(c.data[n]!=p[n])return DFA26_FALSE(TexturePalette);
 #if RE4DC_UI_PALETTE_SLOTS
     palette_used[&c-palette_copies]=++palette_clock;
 #endif
@@ -4235,7 +4629,7 @@ Entry* resolve_full(const Re4dcUiImage& image,const Re4dcModelPart* masked,bool 
 Entry* resolve(const Re4dcUiImage& image,const Re4dcModelPart* masked,bool pin){
     const Re4dcUiImage* mask=masked?&masked->mask:nullptr;
     unsigned shape,mask_shape=0;
-    if(!handle_shape(image,shape,!mask) || (mask && !handle_shape(*mask,mask_shape,false))){++handle_bypass;return resolve_full(image,masked,pin);}
+    if(!handle_shape(image,shape,!mask) || (mask && !handle_shape(*mask,mask_shape,false))){DFA26_HIT(TextureShape)++handle_bypass;return resolve_full(image,masked,pin);}
     const bool indexed=image.format==8 || image.format==9;
     const void* mask_pixels=mask?mask->pixels:nullptr;const void* mask_palette=mask?mask->palette:nullptr;
     const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(image.pixels)),b=unsigned(reinterpret_cast<std::uintptr_t>(mask_pixels));
@@ -4273,6 +4667,9 @@ Entry* resolve(const Re4dcUiImage& image,const Re4dcModelPart* masked,bool pin){
                 ++handle_hits;RE4DC_PROFILE_COUNT(TextureHits,1);return &e;
             }
         }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_HIT(TextureHandleMiss)
+#endif
         ++handle_misses;
         Entry* e=resolve_full(image,masked,pin);
         if(e){
@@ -4295,6 +4692,9 @@ Entry* resolve(const Re4dcUiImage& image,const Re4dcModelPart* masked,bool pin){
         RE4DC_TOUCH(e);
         ++handle_hits;RE4DC_PROFILE_COUNT(TextureHits,1);return &e;
     }
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(TextureHandleMiss)
+#endif
     ++handle_misses;
     Entry* e=resolve_full(image,masked,pin);
     if(e){
@@ -5367,6 +5767,9 @@ void room_change_retire(){
 }  // namespace
 #endif
 extern "C" void re4dc_ui_retire_room(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SourceReset);
+#endif
 #if RE4DC_WORLD_SCRATCH
     // Close admission immediately; the final synchronous borrower restores mode.
     re4dc_world_scratch_cancel();
@@ -5803,7 +6206,9 @@ enum GcAssetPhase { GcStartup,GcRoom,GcTransition };GcAssetPhase gcasset_phase;u
 constexpr unsigned gcasset_wired_mask(){
     // Specialized static/coarse payload bridges are not integrated yet. Keep
     // both affected consumer classes visibly incomplete, even in empty rooms.
-    unsigned mask=re4dc_gcasset::Required&~((1U<<re4dc_gcasset::SourceGeometry)|(1U<<re4dc_gcasset::Weapon)|(1U<<re4dc_gcasset::Motion));
+    // gc-catalog24b: Weapon (actor/static/model weapon producers) and Motion
+    // (every FCV lease + SEQ set) are wired; source geometry stays incomplete.
+    unsigned mask=re4dc_gcasset::Required&~(1U<<re4dc_gcasset::SourceGeometry);
 #if !RE4DC_NATIVE_MES
     mask&=~(1U<<re4dc_gcasset::Font); // legacy font consumer is not qualified
 #endif
@@ -5814,7 +6219,7 @@ void gcasset_flush(){
     re4dc_gcasset::motion_unknown_flush();
 #endif
     for(auto& entry:entries)gcasset_texture_flush(entry);
-    re4dc_gcasset::member_flush();re4dc_gcasset::payload_flush_all();
+    re4dc_gcasset::member_flush();re4dc_gcasset::motion_flush();re4dc_gcasset::payload_flush_all();
     re4dc_gcasset::bank_pump();re4dc_gcasset::pump();
 }
 void gcasset_startup(){
@@ -5830,7 +6235,7 @@ void gcasset_startup(){
 // Judge contract v2: the in-room checkpoint marks the render-side consumers
 // as close_visit does (audio consumers keep what their own flush reported).
 void gcasset_checkpoint(){
-    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Weapon,re4dc_gcasset::Ui,re4dc_gcasset::Movie,re4dc_gcasset::Motion})
         re4dc_gcasset::checked(consumer);
 #if RE4DC_NATIVE_MES
     re4dc_gcasset::checked(re4dc_gcasset::Font);
@@ -5838,10 +6243,10 @@ void gcasset_checkpoint(){
     re4dc_gcasset::checkpoint(frame);
 }
 void gcasset_close_visit(unsigned audio){
-    gcasset_flush();gcasset_packet_reset();
+    gcasset_flush();gcasset_packet_reset();re4dc_gcasset::motion_visit_reset();
     // The actual renderer observer/flush paths are source-extracted in tests.
     // Active sound coverage additionally requires the real audio_step flush.
-    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Ui,re4dc_gcasset::Movie})
+    for(auto consumer:{re4dc_gcasset::Texture,re4dc_gcasset::EffectPicture,re4dc_gcasset::Weapon,re4dc_gcasset::Ui,re4dc_gcasset::Movie,re4dc_gcasset::Motion})
         re4dc_gcasset::checked(consumer);
 #if RE4DC_NATIVE_MES
     re4dc_gcasset::checked(re4dc_gcasset::Font);
@@ -6019,6 +6424,9 @@ unsigned pace_skipped_frames;   // skipped iterations: frame + this = iterations
 // re4dc_ui_begin; the frame is not begun (frame_ready=false: every emission entry returns before
 // any work, no texture is resolved or uploaded, no preload, no fog), `frame` does not advance.
 extern "C" void re4dc_ui_begin_skip(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::FrameReset);
+#endif
 #if RE4DC_WORLD_SCRATCH
     re4dc_world_scratch_boundary(1,re4dc_ps2_mesh_room());
 #endif
@@ -6212,6 +6620,9 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 extern "C" void* re4dc_model_deferred_storage(unsigned* bytes);
 #endif
 extern "C" void re4dc_ui_begin(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_report(frame);sob33_barrier(re4dc::sob33::FrameReset);
+#endif
 #if RE4DC_WORLD_SCRATCH
     re4dc_world_scratch_boundary(0,re4dc_ps2_mesh_room());
 #endif
@@ -6800,7 +7211,7 @@ extern "C" void re4dc_ui_end_frame(int present){
             static unsigned serial,frames;
             if(!gcasset_visit_live)return;
             if(serial!=gcasset_visit_serial){serial=gcasset_visit_serial;frames=0;}
-            ++frames;if(frames==120 || (frames>120 && !((frames-120)%600)))gcasset_checkpoint();
+            ++frames;if(frames==60 || (frames>60 && !((frames-60)%600)))gcasset_checkpoint();
         }
     } gcasset_frame_flush;
 #endif
@@ -6896,6 +7307,9 @@ extern "C" void re4dc_ui_end_frame(int present){
     completed_frame.present_requested=present;
 #if RE4DC_PVR_STREAM
     completed_frame.aborted=stream_aborted;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+    if(stream_aborted)re4dc_cloth_publication11.abort(frame);
+#endif
 #endif
     asm volatile("" ::: "memory");
     completed_frame.sequence=completed_frame.sequence+1;
@@ -7061,12 +7475,26 @@ extern "C" void* re4dc_model_metadata_storage(unsigned* bytes){
 #if RE4DC_ACTOR_UV16
 extern "C" void re4dc_model_next_header_pcw(unsigned set,unsigned clear){next_pcw_set=set;next_pcw_clear=clear;}
 #endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+extern "C" void re4dc_model_uv16_request32(unsigned certificate){actor_uv32_request.prepare(certificate);}
+extern "C" unsigned re4dc_model_uv16_result32(){return actor_uv32_request.result;}
+extern "C" unsigned re4dc_model_uv16_live32(const Re4dcModelPart* p,unsigned certificate){
+    if(!p || !direct_open || !actor_uv32_binding.valid || actor_uv32_binding.handle!=model_handle)
+        return re4dc::format32::Binding;
+    return re4dc::format32::uv_decide(certificate,(p->flags&0x80000000U)!=0,p->uv_offset,
+        actor_uv32_binding.width,actor_uv32_binding.height,actor_uv32_binding.u_scale,actor_uv32_binding.v_scale);
+}
+#endif
 #if RE4DC_FRONT_NATIVE>=2 && RE4DC_UI_HANDLES && RE4DC_D349_RENDERER_STACK
 // FRONT_NATIVE=2 group 8 (model_bridge.cpp): the PVR header a part would get, computed without
 // side effects (no texture load, no handle touch, no pass switch, no header cache). A copy of
 // re4dc_model_packet_reserve's state checks and re4dc_model_packet_begin's header build; the
 // compare against the header packet_begin really built for the source part proves the copy.
 extern "C" void re4dc_front_header_built(const void* header,unsigned alpha_state);
+#endif
+#if (RE4DC_FRONT_NATIVE>=2 || (defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34)) && RE4DC_UI_HANDLES && RE4DC_D349_RENDERER_STACK
+// Read-only resident lookup. A miss leaves binding and any I/O at the old
+// post-geometry packet_begin boundary; this path touches no allocator or file.
 Entry* resolve_peek(const Re4dcUiImage& image,const Re4dcModelPart* masked){
     const Re4dcUiImage* mask=masked?&masked->mask:nullptr;
     unsigned shape,mask_shape=0;
@@ -7080,6 +7508,8 @@ Entry* resolve_peek(const Re4dcUiImage& image,const Re4dcModelPart* masked){
        h.palette_bytes==image.palette_bytes && (!indexed || palette_same(unsigned(&h-handle_table),image)))return &entries[h.entry];
     return nullptr;
 }
+#endif
+#if RE4DC_FRONT_NATIVE>=2 && RE4DC_UI_HANDLES && RE4DC_D349_RENDERER_STACK
 extern "C" int re4dc_model_header_preview(const Re4dcModelPart* p,void* out){
     if(p->blend>4 || p->cull>2 || p->depth_mode>2 || p->wrap_s>1 || p->wrap_t>1)return 0;
     if((p->material_flags&4) && (!p->mask.pixels || !p->mask_same_uv || p->mask_ref!=0 ||
@@ -7129,7 +7559,121 @@ extern "C" void re4dc_model_texture(const unsigned* key){model_texture=key;}
 // the same result, model_pending and packet fields.
 namespace { const Re4dcModelPacket* model_reserved=nullptr; }
 #endif
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+#if !RE4DC_PLAN_OWNER_SCOPED || !RE4DC_MODEL_DRAW_PLANS || !RE4DC_ACTOR_TRANSACTION || !RE4DC_UI_HANDLES || !RE4DC_PS2_UPLOAD_INCARNATION || !RE4DC_D349_RENDERER_STACK
+#error PREPARED_BINDING34 requires scoped draw plans, texture handles and upload leases
+#endif
+namespace {
+bool prepared_sources34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding34* b,
+                        Re4dcDrawOwnerStamp* capture=nullptr){
+    if(!p || !p->part || !p->stream || !p->positions || !p->normals || !p->uv || !p->image.pixels ||
+       !b->uv_bytes || !p->position_count || !p->normal_count || !p->position_stride || !p->normal_stride ||
+       p->position_count>~0U/p->position_stride || p->normal_count>~0U/p->normal_stride)return false;
+    const void* const ptr[]={p->part,p->stream,p->positions,p->normals,p->uv,p->colors,p->image.pixels,p->image.palette};
+    // max_uv/max_color are the plan's highest *referenced address*, not a
+    // claimed source UV/colour logical count. The old parser remains the
+    // authority for index semantics; these bytes only need archive backing.
+    const unsigned bytes[]={32U,p->stream_bytes,p->position_count*p->position_stride,p->normal_count*p->normal_stride,
+        b->uv_bytes,b->color_bytes,b->pixel_bytes,p->image.palette_bytes};
+    for(unsigned i=0;i<Re4dcModelPreparedBinding34::SpanCount;++i){
+        if(!bytes[i]){
+            if(capture)capture[i]={};
+            else if(b->source[i].valid())return false;
+            continue;
+        }
+        const auto stamp=re4dc_model_draw_owner_stamp(ptr[i],bytes[i]);
+        if(!stamp.valid() || (!capture && !(stamp==b->source[i])))return false;
+        if(capture)capture[i]=stamp;
+    }
+    return true;
+}
+Entry* prepared_entry34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding34* b){
+    if(!b || !b->active || !frame_ready || stream_aborted || direct_open || frame!=b->frame ||
+       draining_parts || (p->material_flags&4) ||
+       b->pass!=unsigned(select_model_pass(p)))return nullptr;
+#if RE4DC_MESH_TEXTURES
+    if(model_texture)return nullptr;
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    unsigned rw=0,rh=0;if(re4dc_rtt_override_texture(&rw,&rh))return nullptr;
+#endif
+    unsigned index=~0U;
+    if(!actor_texture_leases.resolve(b->texture,frame,index) || index!=b->entry || index>=kTextureCount)return nullptr;
+    Entry& e=entries[index];
+    if(!e.valid || !(e.key==Key{b->crc,b->fnv}) || !e.upload_incarnation ||
+       e.upload_incarnation!=b->upload || !e.package.upload_complete() ||
+       e.package.header().texture_count!=1 || !e.package.pvr_texture(0))return nullptr;
+    const auto& t=e.package.textures()[0];
+    if(t.width!=b->width || t.height!=b->height ||
+       ((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(e.package))return nullptr;
+    return &e;
+}
+}
+extern "C" int re4dc_model_packet_prepared_current34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding34* b){
+    return p && b && prepared_sources34(p,b) &&
+        !std::memcmp(p->part,b->descriptor,sizeof(b->descriptor)) && prepared_entry34(p,b);
+}
+extern "C" void re4dc_model_packet_prepared_release34(Re4dcModelPreparedBinding34* b){
+    if(b){actor_texture_leases.release(b->texture);b->active=0;}
+}
+extern "C" int re4dc_model_packet_prepare34(const Re4dcModelPart* p,unsigned uv_bytes,unsigned color_bytes,
+                                                Re4dcModelPreparedBinding34* out){
+    if(!out || out->active || out->texture.slot || out->texture.serial)return 0;
+    // This first class is an archive-backed rigid part with an ordinary
+    // resident texture. No early I/O widens the source-content interval.
+    if(!p || !p->part || !p->static_geometry || !frame_ready || stream_aborted || direct_open || draining_parts ||
+       (p->material_flags&4) || !actor_texture_leases.available() ||
+       p->stream!=(const unsigned char*)p->part+32 || p->image.format>6 ||
+       p->image.palette || p->image.palette_bytes)return 0;
+#if RE4DC_MESH_TEXTURES
+    if(model_texture)return 0;
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    unsigned rw=0,rh=0;if(re4dc_rtt_override_texture(&rw,&rh))return 0;
+#endif
+    Re4dcModelPreparedBinding34 b{};
+    b.uv_bytes=uv_bytes;b.color_bytes=color_bytes;b.pixel_bytes=image_size(p->image);
+    if(!b.pixel_bytes || !prepared_sources34(p,&b,b.source))return 0;
+    std::memcpy(b.descriptor,p->part,sizeof(b.descriptor));
+    b.frame=frame;b.pass=unsigned(select_model_pass(p));
+    // This existing resident-handle query has no I/O or allocator side effect.
+    // Cold and ambiguous textures retain the original later resolve/replay.
+    Entry* e=resolve_peek(p->image,nullptr);
+    if(!e)return 0;
+    if(frame!=b.frame || !frame_ready || stream_aborted || direct_open || draining_parts ||
+       b.pass!=unsigned(select_model_pass(p)) || !prepared_sources34(p,&b) ||
+       std::memcmp(p->part,b.descriptor,sizeof(b.descriptor)))return -1;
+    if(!e->valid || !e->upload_incarnation || !e->package.upload_complete() ||
+       e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
+    const auto& t=e->package.textures()[0];
+    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) &&
+       !RE4DC_WRAP_SAFE(e->package))return 0;
+    b.entry=unsigned(e-entries);b.upload=e->upload_incarnation;
+    b.crc=e->key.crc;b.fnv=e->key.fnv;b.width=t.width;b.height=t.height;
+#if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
+    b.u_scale=float(int(p->image.width))/float(int(t.width));
+    b.v_scale=float(int(p->image.height))/float(int(t.height));
+#else
+    b.u_scale=float(p->image.width)/t.width;b.v_scale=float(p->image.height)/t.height;
+#endif
+    if(!actor_texture_leases.acquire(b.entry,frame,b.texture))return -1;
+    b.active=1;
+    if(!re4dc_model_packet_prepared_current34(p,&b)){
+        actor_texture_leases.release(b.texture);return -1;
+    }
+    *out=b;return 1;
+}
+#endif
 extern "C" int re4dc_model_packet_begin(const Re4dcModelPart* p,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_packet_eligible=false;sob33_packet_marker=0;
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    // Consume before every possible return. A failed/foreign begin cannot
+    // leave an actor-format request for a later unrelated part.
+    const unsigned actor_uv32_pending=actor_uv32_request.take();
+    actor_uv32_binding.valid=false;
+#endif
 #if RE4DC_GC_ASSET_GATE && defined(RE4DC_GC_ASSET_PROF) && RE4DC_GC_ASSET_PROF
     gcasset_probe_outer=__builtin_return_address(0);
 #endif
@@ -7293,7 +7837,7 @@ if(!handle){
 #if RE4DC_NATIVE_FOG
     c.gen.fog_type=p->source_key[2]?PVR_FOG_TABLE:PVR_FOG_DISABLE; // table: native_static.cpp re4dc_fog_frame
 #endif
-    pvr_poly_compile(&header,&c);++model_header_builds;
+    pvr_poly_compile(&header,&c);DFA26_COUNT(model_header_builds,PacketHeaderBuild);
 #if RE4DC_D349_RENDERER_STACK
         handle->model_header=header;handle->model_header_key=header_key;
     }
@@ -7318,7 +7862,7 @@ if(!handle){
     // bit on this part's slab copy only (the cached header stays generic).
     if(re4dc_mv_receiver && list==PVR_LIST_OP_POLY){model_packets[model_used].flags|=PVR_TA_CMD_MODIFIER;++mv_receivers;}
 #endif
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
 #if RE4DC_MESH_TEXTURES
@@ -7328,11 +7872,11 @@ if(!handle){
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
     {   // G1_FP_UNSIGNED: sizes <= 1024 (reserve checked them; t is a loaded texture): the same floats through int, once
         const float us=float(int(p->image.width))/float(int(t.width)),vs=float(int(p->image.height))/float(int(t.height));
-        if(out->u_scale!=us || out->v_scale!=vs)++model_scale_rebuilds;
+        if(out->u_scale!=us || out->v_scale!=vs)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
         out->u_scale=us;out->v_scale=vs;
     }
 #else
-    if(out->u_scale!=float(p->image.width)/t.width || out->v_scale!=float(p->image.height)/t.height)++model_scale_rebuilds;
+    if(out->u_scale!=float(p->image.width)/t.width || out->v_scale!=float(p->image.height)/t.height)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
     out->u_scale=float(p->image.width)/t.width;out->v_scale=float(p->image.height)/t.height;
 #endif
 #if RE4DC_MESH_TEXTURES
@@ -7341,13 +7885,52 @@ if(!handle){
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
     if(rtt_pass){out->u_scale=1.0f;out->v_scale=1.0f;}
 #endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    // All texture overrides and final scales are now known. Only the slab
+    // copy changes; cached headers stay generic. Direct begin sends it after
+    // this function returns, so the actor learns the actual committed format.
+    if(actor_uv32_pending){
+        unsigned width=t.width,height=t.height;
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+        if(rtt_pass){width=rtt_w;height=rtt_h;}
+#endif
+        actor_uv32_request.result=re4dc::format32::uv_decide(actor_uv32_pending&63U,
+            (p->flags&0x80000000U)!=0,p->uv_offset,width,height,out->u_scale,out->v_scale);
+        constexpr unsigned mask=(3U<<18)|1U;
+        const unsigned set=(3U<<18)|(actor_uv32_request.result==re4dc::format32::Uv16?1U:0U);
+        model_packets[model_used].flags=(model_packets[model_used].flags&~mask)|set;
+        actor_uv32_binding={handle,width,height,out->u_scale,out->v_scale,true};
+    }else actor_uv32_request.result=re4dc::format32::NotRequested;
+#endif
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
     RE4DC_GCA_MODEL_PREPARE(p);
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_packet_marker=p->source_key[3];sob33_packet_eligible=re4dc::sob33::marked(sob33_packet_marker);
+#endif
     return 1;
 }
+#if defined(RE4DC_PREPARED_BINDING34) && RE4DC_PREPARED_BINDING34
+extern "C" int re4dc_model_packet_begin_prepared34(const Re4dcModelPart* p,Re4dcModelPacket* out,
+                                                      const Re4dcModelPreparedBinding34* prepared){
+    // The ordinary header builder still owns RTT/baked/wrap/pass semantics.
+    // Its second resolve should be a resident handle hit, but may yield after
+    // retirement; compare the actual bound Entry before any packet commit.
+    if(!prepared || !re4dc_model_packet_prepared_current34(p,prepared) ||
+       !re4dc_model_packet_begin(p,out))return 0;
+    return re4dc_model_packet_prepared_current34(p,prepared) &&
+        model_handle==prepared_entry34(p,prepared) &&
+        out->u_scale==prepared->u_scale && out->v_scale==prepared->v_scale;
+}
+#endif
 extern "C" void re4dc_model_packet_commit(unsigned count){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    if(!count){++sob33_stats.empty;sob33_barrier(re4dc::sob33::EmptyPacket);}
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7357,25 +7940,64 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
     // A loaded but wholly clipped/rolled-back part owns no submitted packets.
     // Keep its upload cached; pin only when this part actually commits a draw.
     if(count){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+        // The ordinary packet emitter stores exactly one packed-colour
+        // header followed by 32-byte vertices. Incomplete/unknown layouts
+        // retain their header and cannot publish a receipt for the next draw.
+        const bool sob33_layout=model_packets && model_used==0 && model_pending==1 &&
+            count<=kModelPacketBytes/32-1 && stream_scene && !stream_aborted;
+        const bool sob33_eol=sob33_layout && model_packets[model_pending+count-1].flags==PVR_CMD_VERTEX_EOL;
+        re4dc::sob33::Decision sob33_decision;
+        if(sob33_packet_eligible && (!sob33_layout || !sob33_eol)){
+            sob33_run.barrier();sob33_decision=re4dc::sob33::Format;
+            if(sob33_layout && !sob33_eol)++sob33_stats.incomplete;
+        }else sob33_decision=sob33_run.begin(reinterpret_cast<const std::uint32_t*>(model_packets),
+            frame,unsigned(stream_list),frame_pvr_bytes,sob33_packet_eligible && sob33_eol);
+        sob33_stats.begin(sob33_decision,unsigned(stream_list),false,sob33_packet_marker);
+        const unsigned sob33_skip=sob33_decision==re4dc::sob33::Reuse?32U:0U;
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        if(!sob33_skip)re4dc::wc24::submitted_header(reinterpret_cast<const std::uint32_t*>(model_packets+model_used));
+#endif
+#else
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24 && RE4DC_PVR_STREAM
         re4dc::wc24::submitted_header(reinterpret_cast<const std::uint32_t*>(model_packets+model_used));
+#endif
 #endif
         RE4DC_GCA_MODEL_TEXTURE(model_handle);
         RE4DC_GCA_MODEL_PACKET_ACCEPT(model_packets+model_pending,count);
         model_handle->frame=frame;model_used=model_pending+count;
         if(model_used*32>model_peak)model_peak=model_used*32;
 #if RE4DC_PVR_STREAM
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+        const bool sob33_pending=sob33_run.pending;
+        stream_send33(model_packets,model_used*32,sob33_skip);
+        if(sob33_pending){
+            if(sob33_run.finish(frame,unsigned(stream_list),frame_pvr_bytes,count,
+                sob33_eol && stream_scene && !stream_aborted))++sob33_stats.completed;
+            else ++sob33_stats.incomplete;
+        }
+#else
         stream_send(model_packets,model_used*32);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
         re4dc::wc24::count(re4dc::wc24::Corners,count);
 #endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+        stream_model_bytes+=model_used*32-sob33_skip;
+#else
         stream_model_bytes+=model_used*32;
+#endif
         if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
         model_used=0; // PVR owns copied packets; reuse the same bounded scratch.
 #endif
     }
 }
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+#if defined(RE4DC_MODEL_PART_DUMP)
+    if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)
+        re4dc_log("PARTDUMP f=%u key=%08x-%08x in=%u out=%u r=%u\n",frame,model_dump_crc,model_dump_fnv,input,output,reason);
+    model_dump_crc=model_dump_fnv=0;
+#endif
     if(reason==0){++model_parts;if(!output)++model_empty_parts;}else if(reason==1)++model_invalid;else if(reason==2)++model_resource;else ++model_overflow;
     model_input+=input;model_output+=output;
 }
@@ -7390,6 +8012,12 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
+#if RE4DC_NATIVE_FE_CONTINUATION
+    re4dc_actor_native_pose_retire();
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::PacketAbort);
+#endif
 #if RE4DC_WORLD_SCRATCH
     // Close admission immediately; the final synchronous borrower restores mode.
     re4dc_world_scratch_cancel();
@@ -7454,6 +8082,19 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 }
 #endif
 extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_direct_candidate=false;
+    if(!p || !re4dc::sob33::marked(p->source_key[3]))sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    struct ActorUv32BeginGuard {
+        bool success=false;
+        ~ActorUv32BeginGuard(){if(!success){actor_uv32_request.cancel();actor_uv32_binding.valid=false;}}
+    } actor_uv32_guard;
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_material(re4dc::wc24::HeaderMaterial);
 #endif
@@ -7482,6 +8123,23 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 #endif
     auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
     const auto* header=reinterpret_cast<const std::uint32_t*>(model_packets+model_used);
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    const auto sob33_decision=sob33_run.begin(header,frame,unsigned(stream_list),frame_pvr_bytes,
+        sob33_packet_eligible && !stream_aborted);
+    sob33_stats.begin(sob33_decision,unsigned(stream_list),true,sob33_packet_marker);
+    const bool sob33_skip=sob33_decision==re4dc::sob33::Reuse;
+    sob33_direct_candidate=sob33_run.pending;
+    if(!sob33_skip){
+        for(unsigned i=0;i<8;++i)sq[i]=header[i];
+#if RE4DC_TA_HASH
+        re4dc_ta_hash(header,32);
+#endif
+        sq_flush(sq);
+#if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
+        re4dc::wc24::submitted_header(header);
+#endif
+    }
+#else
     for(unsigned i=0;i<8;++i)sq[i]=header[i];
 #if RE4DC_TA_HASH
     re4dc_ta_hash(header,32);
@@ -7490,11 +8148,20 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::submitted_header(header);
 #endif
+#endif
     direct_open=true;
     model_handle->frame=frame; // the header is in the TA: pinned for this scene
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    if(!sob33_skip){++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;}
+    out->sq=sq+(sob33_skip?0:8);out->scratch=packet.vertices;out->scratch_capacity=packet.capacity;
+#else
     ++frame_pvr_calls;frame_pvr_bytes+=32;stream_model_bytes+=32;
     out->sq=sq+8;out->scratch=packet.vertices;out->scratch_capacity=packet.capacity;
+#endif
     out->u_scale=packet.u_scale;out->v_scale=packet.v_scale;
+#if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
+    actor_uv32_guard.success=true;
+#endif
     return 1;
 #else
     (void)p;(void)out;return 0;
@@ -7507,6 +8174,9 @@ extern "C" int re4dc_model_direct_begin(const Re4dcModelPart* p,Re4dcModelDirect
 static void model_direct_account(unsigned vertices){
 #else
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
@@ -7530,6 +8200,20 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
 #endif
     frame_pvr_bytes+=vertices*32;stream_model_bytes+=vertices*32;
     if(stream_model_bytes>stream_peak_bytes)stream_peak_bytes=stream_model_bytes;
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    // Marked bridge classes reach the ordinary actor emitter: whole meshlets
+    // carry their terminal index EOL, strip emission forces its last EOL and
+    // clipped triangles end at their third corner. Failure calls packet_abort
+    // before this end; no read from write-only SQ memory is needed. World,
+    // coarse-window and foreign producers clear this candidate at begin.
+    if(sob33_direct_candidate){
+        if(!vertices)++sob33_stats.empty;
+        if(sob33_run.finish(frame,unsigned(stream_list),frame_pvr_bytes,vertices,
+            stream_scene && !stream_aborted))++sob33_stats.completed;
+        else ++sob33_stats.incomplete;
+    }
+    sob33_direct_candidate=false;
+#endif
     model_used=0;
 #else
     (void)vertices;
@@ -7537,6 +8221,9 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
 }
 #if RE4DC_SCENERY_SUBMIT_BATCH
 extern "C" void re4dc_model_direct_end(unsigned vertices){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7548,6 +8235,9 @@ extern "C" void re4dc_model_direct_end(unsigned vertices){
     model_direct_account(vertices);
 }
 extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7560,6 +8250,9 @@ extern "C" void re4dc_ps2_world_batch_close(Re4dcWorldSubmitBatch* batch){
     }
 }
 extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_submit(re4dc::wc24::Submit);
 #endif
@@ -7602,6 +8295,9 @@ extern "C" int re4dc_ui_blob_send(const void* data,unsigned bytes){
 #endif
 #if RE4DC_COARSE_ONE_SUBMIT && RE4DC_TA_DIRECT
 extern "C" int re4dc_model_direct_begin_reserved(const Re4dcModelPart* p,const Re4dcModelPacket* reserved,Re4dcModelDirect* out){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(2);
 #endif
@@ -7654,6 +8350,9 @@ extern "C" int re4dc_leon_direct_capture(const Re4dcModelPart* p,Re4dcLeonHeader
     return 1;
 }
 extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const Re4dcLeonHeader* h,unsigned vertices,std::uint32_t* sq){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(2);
 #endif
@@ -7689,9 +8388,9 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
     re4dc_front_header_built(&header,p->alpha_state);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
-    if(h->scale_rebuild)++model_scale_rebuilds;
+    if(h->scale_rebuild)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
     if(model_parts<6)re4dc_log("native model DIAGNOSTIC source=%08x info=%08x part=%08x positions=%u stride=%u stream=%u flags=%08x material=%02x cull=%u\n",(unsigned)p->model,(unsigned)p->info,(unsigned)p->part,p->position_count,p->position_stride,p->stream_bytes,p->flags,p->material_flags,p->cull);
@@ -7798,6 +8497,9 @@ extern "C" int re4dc_coarse_leon_texture_ready(const Re4dcUiImage* image,unsigne
 }
 #endif
 extern "C" std::uint32_t* re4dc_coarse_begin(int fog){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
 #if RE4DC_COARSE >= 2
     static unsigned dbg;
     if(dbg<4 || dbg%600==0)re4dc_log("COARSE2 begin n=%u frame=%u ready=%d scene=%d list=%d desired=%d aborted=%d direct=%d finished=%d\n",
@@ -7844,6 +8546,9 @@ extern "C" std::uint32_t* re4dc_coarse_begin(int fog){
 // area, 32 16-bit UVs (vertex word 4), 64 no depth write (bit 32 builds: R7's sky dome). nullptr: no frame, or
 // the package cannot be loaded.
 extern "C" std::uint32_t* re4dc_coarse_begin_mode(unsigned crc,unsigned fnv,unsigned width,unsigned height,unsigned mode){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
+#endif
     if(!frame_ready || stream_aborted || direct_open)return nullptr;
 #if RE4DC_UI_POLY_ORDER && RE4DC_SS_UI_ORDER
     if(ui_order && quads_flushed<nquad)ui_order_flush();
@@ -7867,7 +8572,7 @@ extern "C" std::uint32_t* re4dc_coarse_begin_mode(unsigned crc,unsigned fnv,unsi
 #if RE4DC_NATIVE_FOG
     c.gen.fog_type=(mode&1)?PVR_FOG_TABLE:PVR_FOG_DISABLE;
 #endif
-    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);++model_header_builds;
+    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);DFA26_COUNT(model_header_builds,PacketHeaderBuild);
     stream_select(PVR_LIST_OP_POLY);
     auto* sq=static_cast<std::uint32_t*>(static_cast<void*>(sq_lock((void*)PVR_TA_INPUT)));
 #if RE4DC_UI_POLY_ORDER
@@ -7905,6 +8610,9 @@ extern "C" void re4dc_coarse_end(unsigned vertices){
 // (/cd/dc/tex/<crc>-<fnv>.re4tex); no source image exists for it.
 extern "C" void re4dc_static_flush_impostors();
 extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,unsigned height,int fog,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::CustomPacket); // no marked source-part begin
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=2;
 #endif
@@ -7929,13 +8637,13 @@ extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,uns
 #else
     (void)fog;
 #endif
-    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);++model_header_builds;
+    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);DFA26_COUNT(model_header_builds,PacketHeaderBuild);
 
 #if RE4DC_UI_POLY_ORDER
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=1.0f;out->v_scale=1.0f;
@@ -7949,12 +8657,24 @@ namespace {
 // (nullptr: none) and the same queue layout and admission. The view diff is
 // taken once into stack scratch (it was walked twice: size, then fill) and a
 // found lighting record supplies its own light set (no second list scan).
-int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
+int defer_part(const Re4dcModelPart* p,const SourceLighting* source
+#if RE4DC_NATIVE_FE_CONTINUATION
+    ,re4dc::NativeDrawResult* result=nullptr
+#endif
+){
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(result)*result={re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#endif
     if(draining_parts){AVD_EVENT(Direct,nullptr,p,0);return 0;}
     if(source_draws_finished){AVD_EVENT(Direct,nullptr,p,1);RE4DC_PROFILE_COUNT(DirectTR,1);return 0;}
     if(select_model_pass(p)==PVR_LIST_OP_POLY){AVD_EVENT(Direct,nullptr,p,2);RE4DC_PROFILE_COUNT(DirectOP,1);return 0;}
     RE4DC_PROFILE_SCOPE(TranslucentEnqueue);
-    if(!frame_ready || stream_aborted)return 1;
+    if(!frame_ready || stream_aborted) {
+#if RE4DC_NATIVE_FE_CONTINUATION
+        if(result){*result={re4dc::NativeDrawOutcome::Refused};re4dc_model_result(2,0,0);}
+#endif
+        return 1;
+    }
     DeferredLighting* lighting=nullptr;
     if(source)for(auto* l=deferred_lights;l;l=l->next)
         if(same_lighting(l,*source)){lighting=l;break;}
@@ -7980,6 +8700,9 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
     if(required>deferred_top || deferred_top-required<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         if(!deferred_spill || required>deferred_spill_top){
+#if RE4DC_NATIVE_FE_CONTINUATION
+            if(result)*result={re4dc::NativeDrawOutcome::Refused};
+#endif
             RE4DC_WHD_ABORT(1,__builtin_return_address(0),required);
 #if RE4DC_WORLD_HOLE_FIX
             // WORLD_HOLE_FIX (worldhole.mk): the queue is full: drop this translucent part only. Nothing of it was
@@ -7990,7 +8713,7 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
             ++deferred_drops;++frame_queue_drops;stream_aborted=true;re4dc_model_result(3,0,0);return 1;
 #endif
         }
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
     }
     if(basis_bytes){*top-=basis_bytes;deferred_basis=new(storage+*top) Re4dcModelPart(view);}
     if(set_bytes){
@@ -8015,6 +8738,12 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
 #endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
+#if RE4DC_NATIVE_FE_CONTINUATION
+    if(result)*result={re4dc::NativeDrawOutcome::Queued,0,1};
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(DeferredModel)
+#endif
     AVD_EVENT(Enqueue,node,&view,unsigned(uintptr_t(node->lighting)));
     deferred_peak=std::max(deferred_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
@@ -8027,6 +8756,12 @@ extern "C" int re4dc_model_defer_part_unlit(const Re4dcModelPart* p){return defe
 #elif RE4DC_COPY_LEAN
 extern "C" int re4dc_model_defer_part_unlit(const Re4dcModelPart*){return 0;}
 #endif
+#if RE4DC_NATIVE_FE_CONTINUATION
+extern "C" int re4dc_model_defer_native_result(const Re4dcModelPart* p,re4dc::NativeDrawResult* result){
+    if(!p || !result){if(result)*result={re4dc::NativeDrawOutcome::Refused};return 1;}
+    return defer_part(p,p?p->lighting:nullptr,result);
+}
+#endif
 extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
 #if RE4DC_COPY_LEAN && RE4DC_D349_RENDERER_STACK
     return defer_part(p,p->lighting);
@@ -8036,6 +8771,9 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
     if(select_model_pass(p)==PVR_LIST_OP_POLY){AVD_EVENT(Direct,nullptr,p,2);RE4DC_PROFILE_COUNT(DirectOP,1);return 0;}
     RE4DC_PROFILE_SCOPE(TranslucentEnqueue);
     if(!frame_ready || stream_aborted)return 1;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(DeferredSnapshotRepeat)
+#endif
     // Full current state snapshot; arrays/display-list remain source-owned.
     // Only nonopaque models borrow this space, typically a small minority.
     DeferredLighting* lighting=nullptr;
@@ -8074,7 +8812,7 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
             ++deferred_drops;++frame_queue_drops;stream_aborted=true;re4dc_model_result(3,0,0);return 1;
 #endif
         }
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
     }
     if(basis_bytes){*top-=basis_bytes;deferred_basis=new(storage+*top) Re4dcModelPart(view);}
     if(set_bytes){
@@ -8095,6 +8833,9 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
 #endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(DeferredModel)
+#endif
     AVD_EVENT(Enqueue,node,&view,unsigned(uintptr_t(node->lighting)));
     deferred_peak=std::max(deferred_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
@@ -8139,10 +8880,19 @@ extern "C" unsigned re4dc_fog_enabled();
 #if defined(RE4DC_ESP_SETUP_BATCH)
 struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;
     const DeferredPart* owner;unsigned color;
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    unsigned material12=0;
+#endif
 };
 alignas(32)
 #else
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;
+    unsigned material12=0;
+};
+#else
 struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen;};
+#endif
 #endif
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
@@ -8231,13 +8981,25 @@ void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #endif
 #if defined(RE4DC_ESP_SETUP_BATCH)
 bool fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out,
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+               const DeferredPart* previous=nullptr,unsigned material12=0){
+#else
                const DeferredPart* previous=nullptr){
+#endif
+#else
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out,unsigned material12=0){
 #else
 void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
+#endif
 #endif
     const auto& t=e->package.textures()[0];
     auto* h=reinterpret_cast<pvr_poly_hdr_t*>(out);
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    // Material belongs to the header/body identity even for the same Entry.
+    if(fx_hdr_key.material12!=material12)fx_hdr_key.fmt=~0U;
+#endif
     const unsigned fmt=re4dc::texture::pvr_format(t);const void* txr=e->package.pvr_texture(0);
 #if defined(RE4DC_ESP_SETUP_BATCH)
     const bool same=fx_hdr_key.fmt==fmt && fx_hdr_key.w==t.width && fx_hdr_key.h==t.height && fx_hdr_key.txr==txr &&
@@ -8254,6 +9016,9 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     if(fx_hdr_key.fmt!=fmt || fx_hdr_key.w!=t.width || fx_hdr_key.h!=t.height || fx_hdr_key.txr!=txr ||
        fx_hdr_key.src!=s.src || fx_hdr_key.dst!=s.dst || fx_hdr_key.screen!=s.screen){
 #endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+        DFA26_HIT(EffectHeaderChange)
+#endif
         pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                               const_cast<void*>(txr),PVR_FILTER_BILINEAR);
         c.gen.culling=PVR_CULLING_NONE;
@@ -8263,16 +9028,31 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #if RE4DC_NATIVE_FOG
         c.gen.fog_type=s.screen?PVR_FOG_DISABLE:PVR_FOG_TABLE; // table: native_static.cpp re4dc_fog_frame
 #endif
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+        c.txr.alpha=material12?PVR_TXRALPHA_DISABLE:PVR_TXRALPHA_ENABLE;
+#endif
         pvr_sprite_compile(&fx_hdr_cache,&c);
         fx_hdr_key=FxHeaderKey{fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),txr,(unsigned char)s.src,(unsigned char)s.dst,(unsigned char)s.screen};
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+        fx_hdr_key.material12=material12;
+#endif
     }
 #if defined(RE4DC_ESP_SETUP_BATCH)
-    if(!body_only){*h=fx_hdr_cache;h->argb=s.color;h->oargb=0;}
+    if(!body_only){DFA26_HIT(EffectBatchBreak)*h=fx_hdr_cache;h->argb=s.color;h->oargb=0;}
     fx_hdr_key.owner=owner;fx_hdr_key.color=s.color;
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(EffectSetupDisabled)
+#endif
     *h=fx_hdr_cache;h->argb=s.color;h->oargb=0;
 #endif
 #else
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(EffectSetupDisabled)
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+    DFA26_HIT(EffectHeaderChange)
+#endif
     pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                           e->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE;
@@ -8281,6 +9061,9 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     c.txr.env=PVR_TXRENV_MODULATEALPHA;c.txr.uv_clamp=PVR_UVCLAMP_UV;
 #if RE4DC_NATIVE_FOG
     c.gen.fog_type=s.screen?PVR_FOG_DISABLE:PVR_FOG_TABLE; // table: native_static.cpp re4dc_fog_frame
+#endif
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    c.txr.alpha=material12?PVR_TXRALPHA_DISABLE:PVR_TXRALPHA_ENABLE;
 #endif
     pvr_sprite_compile(h,&c);h->argb=s.color;h->oargb=0;
 #endif
@@ -8304,213 +9087,58 @@ extern "C" float re4dc_fog_gate_far() __attribute__((weak)); // ACTOR_FOG_GATE b
 #endif
 // EFFECT_SPRITES (effects30.mk): one effect sprite from EspCommonTrans. Never aborts the
 // frame: without texture, over the per-frame cap or without queue room the sprite is dropped.
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+#if !RE4DC_NATIVE_DRAW_OUTCOMES || !RE4DC_UI_HANDLES
+#error EFFECT_MASK12 requires NATIVE_DRAW_OUTCOMES and UI_HANDLES
+#endif
+#endif
 #if RE4DC_GC_ASSET_GATE
 #define stream_send gcasset_fx_stream_send
 #endif
 extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
-#if RE4DC_TA_MATERIAL_DIAG
-    tamat::Scope source_scope(4);
-#endif
-    if(!frame_ready || stream_aborted || draining_parts)return 0;
-#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
-    // PVR_RTT: inside a target's bracket a sprite belongs to the target (pvr_rtt.inc), never to the screen: a target no
-    // model shows (e.g. the r221 128x128 slot 0) drops its sprites, as the GC copies them only into its buffer.
-    if(rtt::capture_slot>=0)return rtt::wanted(rtt::capture_slot)?rtt::capture(s):0;
-#endif
-#if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
-    fxCoreBeginFxFrame();
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+    // Legacy sprites count admitted output only: policy/cull/refusal stay 0.
+    return re4dc_effect_sprite_result(s).published()?1:0;
 #else
-    if(fx_frame!=frame){fx_frame=frame;fx_count=0;
-#if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
-        fx_new_loads=0;
+#include "native_effect_sprite03.inc"
 #endif
-    }
-#endif
-    if((s->color>>24)==0){++fx_culled;return 0;}
-#if RE4DC_RES_MODES
-    Re4dcEffectSprite scaled;      // esp_sub.cpp projects to 640x480: the current render size (no copy at 640x480)
-    if(re4dc_ui_sy!=1.0f || re4dc_ui_sx!=1.0f){scaled=*s;for(unsigned i=0;i<4;++i){scaled.x[i]*=re4dc_ui_sx;scaled.y[i]*=re4dc_ui_sy;}s=&scaled;}
-#endif
-#if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
-    {   // ESP_SPRITE_FAST: std::isfinite on the bits (UI_QUAD_LEAN's test): an all-ones exponent carries into bit
-        // 31 of (bits & 0x7f800000) + 0x00800000; no __unordsf2 call per coordinate.
-        typedef std::uint32_t fx_word __attribute__((may_alias));
-        const fx_word* xw=reinterpret_cast<const fx_word*>(s->x);
-        const fx_word* yw=reinterpret_cast<const fx_word*>(s->y);
-        const fx_word* zw=reinterpret_cast<const fx_word*>(s->z);
-        std::uint32_t top=0;
-        for(unsigned i=0;i<4;++i)
-            top|=((xw[i]&0x7f800000U)+0x00800000U)|((yw[i]&0x7f800000U)+0x00800000U)|((zw[i]&0x7f800000U)+0x00800000U);
-        if(top&0x80000000U){++fx_culled;return 0;}
-    }
-#else
-    for(unsigned i=0;i<4;++i)if(!std::isfinite(s->x[i]) || !std::isfinite(s->y[i]) || !std::isfinite(s->z[i])){++fx_culled;return 0;}
-#endif
-#if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
-    {   // EFFECT_ROOM: spend the cap and the queue only on sprites that can change a pixel. Off screen:
-        // all four corners past one edge of the 640x480 frame. Beyond the fog: every corner deeper than
-        // the fogged View far, where the fog table is at 100% (the sprite is the fog colour there).
-        float x0=s->x[0],x1=s->x[0],y0=s->y[0],y1=s->y[0],zmax=s->z[0];
-        for(unsigned i=1;i<4;++i){
-            x0=std::min(x0,s->x[i]);x1=std::max(x1,s->x[i]);y0=std::min(y0,s->y[i]);y1=std::max(y1,s->y[i]);
-            zmax=std::max(zmax,s->z[i]);
-        }
-        if(x1<0.0f || x0>RE4DC_SCREEN_WF || y1<0.0f || y0>RE4DC_SCREEN_HF){++fx_culled;return 0;}
-        const float fog_far=(!s->screen && re4dc_fog_gate_far)?re4dc_fog_gate_far():0.0f;
-        if(fog_far>0.0f && zmax*fog_far<1.0f){++fx_culled;return 0;}
-    }
-#endif
-    if(fx_count>=RE4DC_EFFECT_SPRITE_MAX){++fx_capped;return 0;}
-#if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
-    fx_resident_only=frame-fx_evict_frame<=1 || fx_new_loads>=kFxNewLoads;
-#if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
-    if(!fx_pool_full && fx_new_loads<kFxNewLoads)fx_resident_only=false;   // FX_TEX_POOL: fill the pool first
-#endif
-    const unsigned opens=load_opens;
-#endif
-#if RE4DC_UI_HANDLES
-    Entry* e=resolve(s->image,nullptr,true);
-#else
-    Entry* e=load(s->image);
-#endif
-#if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
-    fx_resident_only=false;fx_new_loads+=load_opens-opens;
-#endif
-#if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
-    fxCoreTextureAcquired(s->image,e);
-#endif
-    if(!e){++fx_missing;return 0;}
-#if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
-    if(fx_none_cut(*e)){++fxnone_cuts;return 0;}   // FX_PS2_NONE_CUT: a picture the PS2 dropped
-#endif
-#if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK
-    if(!RE4DC_COVER(e->package))vram_room_gcfx(*e);   // VRAM_ROOM_LOG: a GameCube effect picture (no PS2 conversion)
-#endif
-#if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
-    {const unsigned i=unsigned(e-entries);
-     if(i<kTextureCount && !fx_pool_pin[i] && e->valid){
-         const unsigned b=e->package.vram_bytes();
-         if(fx_pool_bytes+b<=unsigned(RE4DC_FX_TEX_POOL)*1024U){fx_pool_pin[i]=true;fx_pool_size[i]=b;fx_pool_bytes+=b;++fx_pool_pins;}
-         else fx_pool_full=1;
-     }}
-#endif
-#if RE4DC_FX_SPRITE_TRIM || RE4DC_FX_SPRITE_TRIM_DIAG
-    Re4dcEffectSprite trimmed;    // FX_SPRITE_TRIM: the quad over its texture's alpha box or octagon (fxtrim.mk)
-    float fx_oct_p[8],fx_oct_q[8];
-    const int fx_trim_kind=fx_trim(*s,e,trimmed,fx_oct_p,fx_oct_q);
-#if RE4DC_FX_SPRITE_TRIM
-    if(fx_trim_kind==2){
-#if RE4DC_TA_BIN_DIAG
-        {
-            float xs[8],ys[8];
-            for(unsigned i=0;i<8;++i){
-                xs[i]=s->x[3]+fx_oct_p[i]*(s->x[2]-s->x[3])+fx_oct_q[i]*(s->x[0]-s->x[3]);
-                ys[i]=s->y[3]+fx_oct_p[i]*(s->y[2]-s->y[3])+fx_oct_q[i]*(s->y[0]-s->y[3]);
-            }
-            (s->pad&2?tabin::fill_haze:s->pad&4?tabin::fill_mist:tabin::fill_fx)+=tabin::clip_area(xs,ys,8);
-        }
-#endif
-        if(source_draws_finished){
-            alignas(32) unsigned char packet[kFxOctPacket];fx_trim_oct_packet(*s,e,fx_oct_p,fx_oct_q,packet);
-            stream_select(PVR_LIST_TR_POLY);
-#if RE4DC_TA_BIN_DIAG
-            tabin::skip_fill=true;stream_send(packet,kFxOctPacket);tabin::skip_fill=false;
-#else
-            stream_send(packet,kFxOctPacket);
-#endif
-            ++fx_direct;++fx_count;return 1;
-        }
-        const unsigned required=kSpriteNode+kFxOctPacket,margin=RE4DC_FX_QUEUE_MARGIN;
-        unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
-        if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
-            if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-            if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
-            storage=deferred_spill;top=&deferred_spill_top;
-        }
-        *top-=required;
-        auto* node=new(storage+*top) DeferredPart{};node->lighting=kFxOctTag;
-        fx_trim_oct_packet(*s,e,fx_oct_p,fx_oct_q,storage+*top+kSpriteNode);
-        if(deferred_last)deferred_last->next=node;else deferred_first=node;
-        deferred_last=node;++deferred_count;
-        ++fx_queued;++fx_count;
-        fx_peak=std::max(fx_peak,fx_count);
-        frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
-        return 1;
-    }
-#endif
-    if(fx_trim_kind==1)s=&trimmed;
-#endif
-#if RE4DC_TA_BIN_DIAG
-    {
-        const float xs[4]={s->x[0],s->x[1],s->x[2],s->x[3]},ys[4]={s->y[0],s->y[1],s->y[2],s->y[3]};
-        float a=tabin::clip_area(xs,ys,4);
-        if((s->pad&1) && !s->screen)a*=0.671f;
-        (s->pad&2?tabin::fill_haze:s->pad&4?tabin::fill_mist:tabin::fill_fx)+=a;
-    }
-#endif
-#if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 4)
-    if((s->pad&1) && !s->screen){
-        if(source_draws_finished){
-            AVD_EVENT(Direct,nullptr,nullptr,7);
-        alignas(32) unsigned char packet[kOctPacket];oct_packet(*s,e,packet);
-            stream_select(PVR_LIST_TR_POLY);
-#if RE4DC_TA_BIN_DIAG
-            tabin::skip_fill=true;stream_send(packet,kOctPacket);tabin::skip_fill=false;
-#else
-            stream_send(packet,kOctPacket);
-#endif
-            ++fx_direct;++fx_count;return 1;
-        }
-        const unsigned required=kSpriteNode+kOctPacket,margin=RE4DC_FX_QUEUE_MARGIN;
-        unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
-        if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
-            if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-            if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
-            storage=deferred_spill;top=&deferred_spill_top;
-        }
-        *top-=required;
-        auto* node=new(storage+*top) DeferredPart{};node->lighting=kOctTag;
-        oct_packet(*s,e,storage+*top+kSpriteNode);
-        if(deferred_last)deferred_last->next=node;else deferred_first=node;
-        deferred_last=node;++deferred_count;
-    AVD_EVENT(Enqueue,node,nullptr,unsigned(uintptr_t(node->lighting)));
-    ++fx_queued;++fx_count;
-        fx_peak=std::max(fx_peak,fx_count);
-        frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
-        return 1;
-    }
-#endif
-    if(source_draws_finished){
-        AVD_EVENT(Direct,nullptr,nullptr,1);
-        alignas(32) unsigned char packet[kSpritePacket];fx_packet(*s,e,packet);
-        stream_select(PVR_LIST_TR_POLY);fx_send(packet,s->screen);
-        ++fx_direct;++fx_count;return 1;
-    }
-    const unsigned required=kSpriteNode+kSpritePacket,margin=RE4DC_FX_QUEUE_MARGIN;
-    unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
-    if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
-        if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-        // The spill tail holds only model snapshots and sprites (no UI lane): no margin.
-        if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
-        storage=deferred_spill;top=&deferred_spill_top;
-    }
-    *top-=required;
-#if defined(RE4DC_ESP_SETUP_BATCH)
-    auto* node=new(storage+*top) DeferredPart{};node->changed[0]=s->screen;
-    const bool body_only=fx_packet(*s,e,storage+*top+kSpriteNode,deferred_last?deferred_last:node);
-    node->lighting=body_only?kSpriteBodyTag:kSpriteTag;
-#else
-    auto* node=new(storage+*top) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=s->screen;
-    fx_packet(*s,e,storage+*top+kSpriteNode);
-#endif
-    if(deferred_last)deferred_last->next=node;else deferred_first=node;
-    deferred_last=node;++deferred_count;
-    AVD_EVENT(Enqueue,node,nullptr,unsigned(uintptr_t(node->lighting)));
-    ++fx_queued;++fx_count;
-    fx_peak=std::max(fx_peak,fx_count);
-    frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
-    return 1;
 }
+#if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+static re4dc::NativeDrawResult effectSpriteMaterial12(const Re4dcEffectSprite*,unsigned);
+#endif
+extern "C" re4dc::NativeDrawResult re4dc_effect_sprite_result(const Re4dcEffectSprite* s){
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    return effectSpriteMaterial12(s,re4dc::effect_mask12::sample_alpha);
+#else
+    // The existing entry guard refuses a stopped stream before RTT selection.
+    // A terminal frame cannot authorize whole-producer fallback, even at zero output.
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
+#include "native_effect_sprite03.inc"
+#endif
+}
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+static re4dc::NativeDrawResult effectSpriteMaterial12(const Re4dcEffectSprite* s,unsigned material12){
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
+#include "native_effect_sprite03.inc"
+}
+extern "C" re4dc::NativeDrawResult re4dc_effect_masked_sprite12_result(const Re4dcEffectSprite* s,unsigned material){
+    if(stream_aborted)return {re4dc::NativeDrawOutcome::PartialAbort};
+    if(material!=re4dc::effect_mask12::opaque_mask || !s || s->pad || s->src!=4 || s->dst!=5 || direct_open)
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    if(!s->image.pixels || !s->image.width || !s->image.height || s->image.width>1024 || s->image.height>1024 ||
+       !image_size(s->image) || (s->image.palette_bytes && !s->image.palette))
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    if(rtt::capture_slot>=0)return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+#endif
+    for(unsigned i=0;i<4;++i)if(!std::isfinite(s->u[i]) || !std::isfinite(s->v[i]))
+        return {re4dc::NativeDrawOutcome::UnsupportedBeforePublication};
+    if((s->color>>24)<=1)return {re4dc::NativeDrawOutcome::Culled};
+    return effectSpriteMaterial12(s,material);
+}
+#endif
+#endif
 #if defined(RE4DC_PS2_FX_COMMON_HAZE) && RE4DC_PS2_FX_COMMON_HAZE
 #include "include/native_effect_haze_batch.inc"
 #endif
@@ -8569,8 +9197,14 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+        if(!deferred_spill || required>deferred_spill_top){
+            if(!fx_r200_tail_select(required,storage,top)){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
+        }else{storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)}
+#else
         if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
+#endif
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};node->lighting=kLineTag;
     std::memcpy(storage+*top+kSpriteNode,packet,kLinePacket);
@@ -8643,7 +9277,7 @@ static int subscreen_submit(const Re4dcSubscreenQuad* q,const pvr_vertex_t* vert
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         if(!deferred_spill || required>deferred_spill_top){++dropped;return 0;}
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};
     node->lighting=kSubscreenQuadTag;node->changed[0]=bytes;
@@ -8713,7 +9347,7 @@ extern "C" int re4dc_water45_quad(const float positions[4][3],const float rgb[4]
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         if(!deferred_spill || required>deferred_spill_top){++dropped;return 0;}
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};
     node->lighting=kSubscreenQuadTag;node->changed[0]=bytes;
@@ -8847,7 +9481,7 @@ extern "C" void re4dc_post_filter00(unsigned char rate,unsigned char type,signed
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         if(!deferred_spill || required>deferred_spill_top){++post_dropped;return;}
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
     }
     *top-=required;
     auto* node=new(storage+*top) DeferredPart{};node->lighting=kPostTag;node->changed[0]=kPostBytes;
@@ -8956,7 +9590,7 @@ extern "C" void re4dc_look_grade_post(void){
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         if(!deferred_spill || required>deferred_spill_top){++grade_dropped;return;}
-        storage=deferred_spill;top=&deferred_spill_top;
+        storage=deferred_spill;top=&deferred_spill_top; DFA26_HIT(DeferredSpill)
     }
     *top-=required;
     auto* node=new(storage+*top) DeferredPart{};node->lighting=kGradeTag;node->changed[0]=bytes;
@@ -9028,6 +9662,9 @@ extern "C" int re4dc_leon_owned_tr_idle(const Re4dcModelPart* part){
 extern "C" unsigned re4dc_ps2_world_fog(); // native_ps2_world.cpp: latched at this frame's scenery draw
 #endif
 extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,unsigned height,unsigned pass,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::CustomPacket); // may retain the current list
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=1;
 #endif
@@ -9063,13 +9700,13 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
 #elif RE4DC_NATIVE_FOG
     c.gen.fog_type=PVR_FOG_TABLE;
 #endif
-    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);++model_header_builds;
+    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);DFA26_COUNT(model_header_builds,PacketHeaderBuild);
 
 #if RE4DC_UI_POLY_ORDER
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
@@ -9077,6 +9714,9 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
 }
 #if RE4DC_PS2_WORLD_KERNEL==4
 extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned width,unsigned height,unsigned pass,unsigned cull,Re4dcModelPacket* out){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::CustomPacket);
+#endif
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::packet_source=1;
 #endif
@@ -9113,13 +9753,13 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
 #elif RE4DC_NATIVE_FOG
     c.gen.fog_type=PVR_FOG_TABLE;
 #endif
-    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);++model_header_builds;
+    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);DFA26_COUNT(model_header_builds,PacketHeaderBuild);
 
 #if RE4DC_UI_POLY_ORDER
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
@@ -9132,8 +9772,8 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
 // PS2_WORLD_HDR_CACHE (game30.mk; exact in pixels): the compiled header of each PS2 world material (texture key and
 // size, pass, cull, latched fog) with the Entry it was compiled for. A hit skips the texture lookup (load(): hint,
 // else the TEX_SLOTS scan) and pvr_poly_cxt_txr + pvr_poly_compile. A slot is used only while its Entry is valid,
-// still holds that key and still has the same VRAM address: a closed (evicted, retired) and reloaded upload fails
-// the address test and recompiles, so header words 0..3 are always the ones a compile would give now. Words 4..7:
+// still holds that key and still has the same VRAM address. PS2_UPLOAD_INCARNATION additionally requires the
+// exact published upload: allocator address reuse alone cannot authorize format/mip header words. Words 4..7:
 // KOS pvr_poly_compile never writes them for a header without a modifier volume, so the uncached path sends whatever
 // the stack held there (the PVR ignores them for these packed-colour, non-modifier headers); with this knob both
 // paths send zeros. 32 sets of 4 slots; a miss refills the set's slots in turn.
@@ -9144,7 +9784,20 @@ namespace {
 #endif
 constexpr unsigned kPs2HdrSets=RE4DC_PS2_HDR_SETS,kPs2HdrWays=4;
 static_assert((kPs2HdrSets&(kPs2HdrSets-1U))==0,"PS2_HDR_SETS is a power of two");
+// PS2_UPLOAD_SLOT_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4];
+    std::uint32_t upload_incarnation;
+};
+#else
 struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4]; };
+#endif
+// PS2_UPLOAD_SLOT_END
+#if RE4DC_PS2_UPLOAD_INCARNATION
+bool ps2_hdr_upload_current(const Ps2HdrSlot& slot,const Entry* entry) {
+    return entry && slot.upload_incarnation && slot.upload_incarnation==entry->upload_incarnation;
+}
+#endif
 static_assert(sizeof(pvr_poly_hdr_t)==32);
 Ps2HdrSlot ps2_hdr[kPs2HdrSets][kPs2HdrWays];
 unsigned char ps2_hdr_next[kPs2HdrSets];
@@ -9288,7 +9941,13 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
         const unsigned size=k[2]|k[3]<<16,mode=k[5]<<2|fog<<4|0x100U;
         const unsigned set=(k[0]^(k[1]>>7)^(k[1]<<3)^(k[5]*0x3c1U))&(kPs2HdrSets-1U);
         for(const auto& slot:ps2_hdr[set])if(slot.mode==mode && slot.crc==k[0] && slot.fnv==k[1] && slot.size==size){
+            // PS2_UPLOAD_READY_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+            if(slot.entry!=resident || slot.texture!=address || !ps2_hdr_upload_current(slot,resident) || std::memcmp(slot.words,&expected,16))return 0;
+#else
             if(slot.entry!=resident || slot.texture!=address || std::memcmp(slot.words,&expected,16))return 0;
+#endif
+            // PS2_UPLOAD_READY_END
         }
     }
 #endif
@@ -9304,12 +9963,18 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
 // One implementation for the ordinary and batched entry points: the cache,
 // material gates, header modifiers and accounting below remain shared.
 extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_batch(const unsigned* k,Re4dcModelDirect* out,Re4dcWorldSubmitBatch* batch){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    const re4dc::dsa24::Scope dsa_submit(re4dc::dsa24::Submit);
+#endif
     struct FailedBegin {
         Re4dcWorldSubmitBatch* batch;bool accepted=false;
         ~FailedBegin(){if(!accepted)re4dc_ps2_world_batch_close(batch);}
     } failed_begin{batch};
 #else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::ForeignDirect);
 #endif
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     re4dc::wc24::Scope wc24_material(re4dc::wc24::HeaderMaterial);
@@ -9409,7 +10074,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         // this key (the entry / VRAM address test below applies as for any hit)
         if(re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot<=kPs2HdrSets*kPs2HdrWays){
             Ps2HdrSlot& s=(&ps2_hdr[0][0])[*re4dc_ps2_piece_slot-1U];
+            // PS2_UPLOAD_PIECE_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size && ps2_hdr_upload_current(s,s.entry)){hit=&s;++ps2_piece_hits;}
+#else
             if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;++ps2_piece_hits;}
+#endif
+            // PS2_UPLOAD_PIECE_END
         }
         if(!hit)
 #endif
@@ -9425,7 +10096,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         if(!re4dc::rect21::header_dimensions(hit->words[2],RE4DC_TSP_W(resident),RE4DC_TSP_H(resident)))hit=nullptr;
     }
 #endif
+    // PS2_UPLOAD_HIT_BEGIN
+#if RE4DC_PS2_UPLOAD_INCARNATION
+    if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture && ps2_hdr_upload_current(*hit,hit->entry)){
+#else
     if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture){
+#endif
+    // PS2_UPLOAD_HIT_END
         const Ps2HdrSlot& slot=*hit;
         Entry* const handle=slot.entry;
 #if RE4DC_WORLD_RECT21
@@ -9534,7 +10211,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         ui_order_polygon_header(header);
 #endif
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-        RE4DC_GAD_HIT(handle->key);
+        RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
 #if RE4DC_SCENERY_SUBMIT_BATCH
         if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
@@ -9669,7 +10346,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #elif RE4DC_NATIVE_FOG
     c.gen.fog_type=PVR_FOG_TABLE;
 #endif
-    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);++model_header_builds;
+    pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);DFA26_COUNT(model_header_builds,PacketHeaderBuild);
 #if RE4DC_PS2_WORLD_HDR_CACHE
     if(hdr_on){
         auto* hw=reinterpret_cast<std::uint32_t*>(&header);
@@ -9678,6 +10355,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         Ps2HdrSlot& slot=hit?*hit:ps2_hdr[hdr_set][ps2_hdr_next[hdr_set]++%kPs2HdrWays];
         slot.crc=k[0];slot.fnv=k[1];slot.size=hdr_size;slot.mode=hdr_mode;slot.entry=handle;
         slot.texture=handle->package.pvr_texture(0);
+#if RE4DC_PS2_UPLOAD_INCARNATION
+        slot.upload_incarnation=handle->upload_incarnation;
+#endif
         for(unsigned i=0;i<4;++i)slot.words[i]=hw[i];
         ++ps2_hdr_fills;
 #if RE4DC_SCENERY_PIECE_STATE
@@ -9703,7 +10383,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-    RE4DC_GAD_HIT(handle->key);
+    RE4DC_GAD_HIT(handle->key);RE4DC_PART_DUMP_KEY(handle->key);
     RE4DC_GCA_MODEL_PREPARE(nullptr);model_pending=model_used+count;model_handle=handle;
 #if RE4DC_SCENERY_SUBMIT_BATCH
     if(!stream_scene){re4dc_ps2_world_batch_close(batch);stream_open();}
@@ -9802,6 +10482,11 @@ struct R11fSourceFinishScope {
 }
 #endif
 extern "C" void re4dc_model_finish_source_draws(){
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+    // This queue also contains UI, effects, water and post-processing nodes.
+    // Only the actual model branch below belongs to the model-list bucket.
+    const re4dc::dsa24::Scope dsa_drain(re4dc::dsa24::RenderOther);
+#endif
     AVD_EVENT(FinishBegin,nullptr,nullptr,0);
     RE4DC_PROFILE_SCOPE(TranslucentDrain);
 #if RE4DC_PS2_WORLD_R11F_OWNER
@@ -9854,7 +10539,16 @@ extern "C" void re4dc_model_finish_source_draws(){
         if(deferred_first->lighting==kEffectQuad21Tag){
             const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kEffectQuad21Node;
             const unsigned bytes=deferred_first->changed[0];
-            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,bytes);continue;
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+            // Effect-tag nodes use changed[0] only, never restore_view masks.
+            // Other effect producers value-initialize this unused token to 0.
+            const unsigned cloth_observation=deferred_first->changed[1];
+#endif
+            deferred_first=deferred_first->next;gcasset_fx_stream_send(packet,bytes);
+#if defined(RE4DC_CLOTH_PUBLICATION11) && RE4DC_CLOTH_PUBLICATION11
+            re4dc_cloth_publication11.drain(cloth_observation,frame,stream_aborted);
+#endif
+            continue;
         }
 #endif
 #if defined(RE4DC_ESP_SETUP_BATCH)
@@ -9932,7 +10626,13 @@ extern "C" void re4dc_model_finish_source_draws(){
 #endif
         // Copy the small view before I/O can yield. Retirement clears the queue
         // and aborts this same frame; it never frees an in-flight PVR texture.
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+        const re4dc::dsa24::Scope dsa_model(re4dc::dsa24::ModelList);
+#endif
         Re4dcModelPart view=restore_view(deferred_first);
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+        const re4dc::dsa24::x28::ModelScope dsa28_model(view.model);
+#endif
 #if RE4DC_GC_ASSET_MOTION_UNKNOWN
         re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::MotionDelayedModel|re4dc_gcasset::MotionViewTrack);
 #endif
@@ -9963,6 +10663,9 @@ extern "C" void re4dc_model_finish_source_draws(){
 }
 
 extern "C" void re4dc_model_invalidate_pending(){
+#if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
+    sob33_barrier(re4dc::sob33::SourceReset);
+#endif
     re4dc_model_invalidate_static_lighting();
 #if RE4DC_D349_RENDERER_STACK
     if(deferred_first || draining_parts){reset_deferred();stream_aborted=true;}
@@ -10008,6 +10711,51 @@ extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
     *bytes=model_packets?kModelDeferredSpillBytes:0;
     return *bytes?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
 }
+
+#if defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP
+// FX_R200_TAIL_ADAPTER_BEGIN
+namespace {
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+unsigned fx_r200_attempts,fx_r200_grants,fx_r200_refused,fx_r200_reasons,fx_r200_frames,fx_r200_peak;
+#endif
+bool fx_r200_tail_select(unsigned required,unsigned char*& storage,unsigned*& top){
+    re4dc::fx_r200::Context c{};
+    c.room=re4dc_room_id_now();
+    if(c.room==0x200U){
+        unsigned cells,bytes,stale,refused;
+        c.room_live=re4dc_room4_state(&c.generation,&cells,&bytes,&stale,&refused)!=0;
+        c.room_cell=fxroomspill::cell;c.room_generation=fxroomspill::generation;
+        c.room_bytes=RE4DC_FX_ROOM_SPILL_KB*1024U;
+        c.spill=deferred_spill;c.spill_top=deferred_spill_top;c.spill_bytes=deferred_spill_capacity;
+        c.tail=model_packets?reinterpret_cast<unsigned char*>(model_packets)+kModelPacketBytes+kModelPreparationBytes+kModelStaticLightBytes:nullptr;
+        c.tail_bytes=model_packets?kModelDeferredSpillBytes:0;
+    }
+    const auto result=fx_r200_tail.select(c,required,storage,top);
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+    if(c.room==0x200U || fx_r200_tail.data){
+        ++fx_r200_attempts;
+        if(result==re4dc::fx_r200::Result::Accepted)++fx_r200_grants;
+        else{++fx_r200_refused;fx_r200_reasons|=1U<<unsigned(result);}
+    }
+#endif
+    return result==re4dc::fx_r200::Result::Accepted;
+}
+void fx_r200_tail_reset(){
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+    if(fx_r200_attempts){
+        const unsigned used=fx_r200_tail.data?re4dc::fx_r200::kTailBytes-fx_r200_tail.top:0;
+        fx_r200_peak=std::max(fx_r200_peak,used);++fx_r200_frames;
+        if(fx_r200_frames<=96 || !(frame%120))
+            re4dc_log("FQDIAG r200_tail frame=%u room=%03x used=%u/%u grants=%u refused=%u reasons=%03x peak=%u queues=%u\n",
+                frame,re4dc_room_id_now(),used,re4dc::fx_r200::kTailBytes,fx_r200_grants,fx_r200_refused,fx_r200_reasons,fx_r200_peak,fx_r200_frames);
+        fx_r200_attempts=fx_r200_grants=fx_r200_refused=fx_r200_reasons=0;
+    }
+#endif
+    fx_r200_tail.reset();
+}
+} // namespace
+// FX_R200_TAIL_ADAPTER_END
+#endif
 
 #if RE4DC_MOVIE_WORLD_ARENA || RE4DC_CABIN_SOURCE
 #if RE4DC_CABIN_SOURCE
@@ -10480,4 +11228,17 @@ extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_po
     if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_poly_mod_compile(dst,&c);
 }
+#endif
+
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+extern "C" unsigned re4dc_dsa24_model_translucent(const Re4dcModelPart* p){
+    return (draining_parts?draining_list:select_model_pass(p))==PVR_LIST_TR_POLY;
+}
+#if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
+// XLU28 area class of a model part's list: 0 opaque, 1 punch-through, 2 translucent.
+extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart* p){
+    const unsigned list=draining_parts?draining_list:select_model_pass(p);
+    return list==PVR_LIST_TR_POLY?2U:list==PVR_LIST_PT_POLY?1U:0U;
+}
+#endif
 #endif

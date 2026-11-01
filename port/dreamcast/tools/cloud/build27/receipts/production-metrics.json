@@ -1,0 +1,2370 @@
+{
+  "status": "PASS",
+  "baseline": "6be0a66ab59fa597a55aae7379fb09777d357bc1",
+  "scope": "Summarize Build27 guarded-TU sections plus newly selected module storage.",
+  "profiles": {
+    "w0-h0-a0-on": {
+      "baseline": "w0-h0-a0-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8641,
+              "after": 9013,
+              "delta": 372
+            },
+            "zero_fill_bytes": {
+              "before": 1348,
+              "after": 1420,
+              "delta": 72
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c99203b0e2f85ff00174ddf1a1ff129afd88a7de73eb44f93d9b35fa0828d3e3",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 5652,
+              "after": 6700,
+              "delta": 1048
+            },
+            "allocated_bytes": {
+              "before": 11622,
+              "after": 12946,
+              "delta": 1324
+            },
+            "zero_fill_bytes": {
+              "before": 917,
+              "after": 925,
+              "delta": 8
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 564,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "95e69cd87a993ff131edf46e2a2ed7ed98b83e3f521ed597c7ba0be461797f9a",
+          "after_sha256": "8ac1f222568ac90752769add4bd3c9cb43ad15ecc8baa92eb81728e4bbc24891"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7592,
+              "after": 7672,
+              "delta": 80
+            },
+            "allocated_bytes": {
+              "before": 7685,
+              "after": 7765,
+              "delta": 80
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "052d496d50a98a1f61819dbd54ffa4095fa86a143db7be7976d4b7532471192f",
+          "after_sha256": "cc84dff9d4b038bc99429aa12a848c849443d9c3aba8db837396527f520e27f8"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7970,
+              "after": 8018,
+              "delta": 48
+            },
+            "allocated_bytes": {
+              "before": 9841,
+              "after": 9889,
+              "delta": 48
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "063cb16663fc85e050b1ce14c04bb476b790dee3e09ab4fb110ae61032d142f6",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 49842,
+          "after": 51326,
+          "delta": 1484
+        },
+        "allocated_bytes": {
+          "before": 69525,
+          "after": 71606,
+          "delta": 2081
+        },
+        "zero_fill_bytes": {
+          "before": 4642,
+          "after": 4722,
+          "delta": 80
+        }
+      },
+      "new_modules": [
+        "wep05",
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 19076,
+        "allocated_bytes": 20830,
+        "zero_fill_bytes": 76
+      },
+      "combined_added_sections": {
+        "executable_bytes": 20560,
+        "allocated_bytes": 22911,
+        "zero_fill_bytes": 156
+      }
+    },
+    "w0-h0-a1-on": {
+      "baseline": "w0-h0-a1-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8641,
+              "after": 9013,
+              "delta": 372
+            },
+            "zero_fill_bytes": {
+              "before": 1348,
+              "after": 1420,
+              "delta": 72
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c99203b0e2f85ff00174ddf1a1ff129afd88a7de73eb44f93d9b35fa0828d3e3",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 5652,
+              "after": 6700,
+              "delta": 1048
+            },
+            "allocated_bytes": {
+              "before": 11622,
+              "after": 12946,
+              "delta": 1324
+            },
+            "zero_fill_bytes": {
+              "before": 917,
+              "after": 925,
+              "delta": 8
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 564,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "95e69cd87a993ff131edf46e2a2ed7ed98b83e3f521ed597c7ba0be461797f9a",
+          "after_sha256": "8ac1f222568ac90752769add4bd3c9cb43ad15ecc8baa92eb81728e4bbc24891"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7592,
+              "after": 7672,
+              "delta": 80
+            },
+            "allocated_bytes": {
+              "before": 7685,
+              "after": 7765,
+              "delta": 80
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "052d496d50a98a1f61819dbd54ffa4095fa86a143db7be7976d4b7532471192f",
+          "after_sha256": "cc84dff9d4b038bc99429aa12a848c849443d9c3aba8db837396527f520e27f8"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7970,
+              "after": 8018,
+              "delta": 48
+            },
+            "allocated_bytes": {
+              "before": 9841,
+              "after": 9889,
+              "delta": 48
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "063cb16663fc85e050b1ce14c04bb476b790dee3e09ab4fb110ae61032d142f6",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 49842,
+          "after": 51326,
+          "delta": 1484
+        },
+        "allocated_bytes": {
+          "before": 69525,
+          "after": 71606,
+          "delta": 2081
+        },
+        "zero_fill_bytes": {
+          "before": 4642,
+          "after": 4722,
+          "delta": 80
+        }
+      },
+      "new_modules": [
+        "wep05",
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 19076,
+        "allocated_bytes": 20830,
+        "zero_fill_bytes": 76
+      },
+      "combined_added_sections": {
+        "executable_bytes": 20560,
+        "allocated_bytes": 22911,
+        "zero_fill_bytes": 156
+      }
+    },
+    "w0-h1-a0-on": {
+      "baseline": "w0-h1-a0-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8641,
+              "after": 9013,
+              "delta": 372
+            },
+            "zero_fill_bytes": {
+              "before": 1348,
+              "after": 1420,
+              "delta": 72
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c99203b0e2f85ff00174ddf1a1ff129afd88a7de73eb44f93d9b35fa0828d3e3",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6876,
+              "after": 7944,
+              "delta": 1068
+            },
+            "allocated_bytes": {
+              "before": 13378,
+              "after": 14718,
+              "delta": 1340
+            },
+            "zero_fill_bytes": {
+              "before": 930,
+              "after": 934,
+              "delta": 4
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c4dc2f6303a6dc00f84624c4b7c1f6920545a24798741b7937b2d7efff3cbffd",
+          "after_sha256": "b00b3db00a097de49ca52bd001290832e9f278b8fc81572c257cb1b4a6131621"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7672,
+              "after": 7684,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 7765,
+              "after": 7777,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "de0524ee9dd1ecfda68fde4473d7a3d6f17702ef241696b86dc34677580111f8",
+          "after_sha256": "43f8955c17c5455c63fcccddcaeea5ad21773d867d8b2d18267df9e0eb5d2def"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 8018,
+              "after": 8018,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 9889,
+              "after": 9889,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 51194,
+          "after": 52582,
+          "delta": 1388
+        },
+        "allocated_bytes": {
+          "before": 71409,
+          "after": 73390,
+          "delta": 1981
+        },
+        "zero_fill_bytes": {
+          "before": 4655,
+          "after": 4731,
+          "delta": 76
+        }
+      },
+      "new_modules": [
+        "wep05",
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 19076,
+        "allocated_bytes": 20830,
+        "zero_fill_bytes": 76
+      },
+      "combined_added_sections": {
+        "executable_bytes": 20464,
+        "allocated_bytes": 22811,
+        "zero_fill_bytes": 152
+      }
+    },
+    "w0-h1-a1-on": {
+      "baseline": "w0-h1-a1-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8641,
+              "after": 9013,
+              "delta": 372
+            },
+            "zero_fill_bytes": {
+              "before": 1348,
+              "after": 1420,
+              "delta": 72
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c99203b0e2f85ff00174ddf1a1ff129afd88a7de73eb44f93d9b35fa0828d3e3",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6876,
+              "after": 7944,
+              "delta": 1068
+            },
+            "allocated_bytes": {
+              "before": 13378,
+              "after": 14718,
+              "delta": 1340
+            },
+            "zero_fill_bytes": {
+              "before": 930,
+              "after": 934,
+              "delta": 4
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c4dc2f6303a6dc00f84624c4b7c1f6920545a24798741b7937b2d7efff3cbffd",
+          "after_sha256": "b00b3db00a097de49ca52bd001290832e9f278b8fc81572c257cb1b4a6131621"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7672,
+              "after": 7684,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 7765,
+              "after": 7777,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "de0524ee9dd1ecfda68fde4473d7a3d6f17702ef241696b86dc34677580111f8",
+          "after_sha256": "43f8955c17c5455c63fcccddcaeea5ad21773d867d8b2d18267df9e0eb5d2def"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 8018,
+              "after": 8018,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 9889,
+              "after": 9889,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 51194,
+          "after": 52582,
+          "delta": 1388
+        },
+        "allocated_bytes": {
+          "before": 71409,
+          "after": 73390,
+          "delta": 1981
+        },
+        "zero_fill_bytes": {
+          "before": 4655,
+          "after": 4731,
+          "delta": 76
+        }
+      },
+      "new_modules": [
+        "wep05",
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 19076,
+        "allocated_bytes": 20830,
+        "zero_fill_bytes": 76
+      },
+      "combined_added_sections": {
+        "executable_bytes": 20464,
+        "allocated_bytes": 22811,
+        "zero_fill_bytes": 152
+      }
+    },
+    "w1-h0-a0-on": {
+      "baseline": "w1-h0-a0-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8709,
+              "after": 9013,
+              "delta": 304
+            },
+            "zero_fill_bytes": {
+              "before": 1372,
+              "after": 1420,
+              "delta": 48
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "d1d15b233cf2583f90df7952f4c8b8dd20fe34d6367e40845eeb592a581c4b10",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 5652,
+              "after": 6700,
+              "delta": 1048
+            },
+            "allocated_bytes": {
+              "before": 11622,
+              "after": 12946,
+              "delta": 1324
+            },
+            "zero_fill_bytes": {
+              "before": 917,
+              "after": 925,
+              "delta": 8
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 564,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "95e69cd87a993ff131edf46e2a2ed7ed98b83e3f521ed597c7ba0be461797f9a",
+          "after_sha256": "8ac1f222568ac90752769add4bd3c9cb43ad15ecc8baa92eb81728e4bbc24891"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7592,
+              "after": 7672,
+              "delta": 80
+            },
+            "allocated_bytes": {
+              "before": 7685,
+              "after": 7765,
+              "delta": 80
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "052d496d50a98a1f61819dbd54ffa4095fa86a143db7be7976d4b7532471192f",
+          "after_sha256": "cc84dff9d4b038bc99429aa12a848c849443d9c3aba8db837396527f520e27f8"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7970,
+              "after": 8018,
+              "delta": 48
+            },
+            "allocated_bytes": {
+              "before": 9841,
+              "after": 9889,
+              "delta": 48
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "063cb16663fc85e050b1ce14c04bb476b790dee3e09ab4fb110ae61032d142f6",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 49842,
+          "after": 51326,
+          "delta": 1484
+        },
+        "allocated_bytes": {
+          "before": 69593,
+          "after": 71606,
+          "delta": 2013
+        },
+        "zero_fill_bytes": {
+          "before": 4666,
+          "after": 4722,
+          "delta": 56
+        }
+      },
+      "new_modules": [
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 12676,
+        "allocated_bytes": 13862,
+        "zero_fill_bytes": 52
+      },
+      "combined_added_sections": {
+        "executable_bytes": 14160,
+        "allocated_bytes": 15875,
+        "zero_fill_bytes": 108
+      }
+    },
+    "w1-h0-a1-on": {
+      "baseline": "w1-h0-a1-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8709,
+              "after": 9013,
+              "delta": 304
+            },
+            "zero_fill_bytes": {
+              "before": 1372,
+              "after": 1420,
+              "delta": 48
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "d1d15b233cf2583f90df7952f4c8b8dd20fe34d6367e40845eeb592a581c4b10",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 5652,
+              "after": 6700,
+              "delta": 1048
+            },
+            "allocated_bytes": {
+              "before": 11622,
+              "after": 12946,
+              "delta": 1324
+            },
+            "zero_fill_bytes": {
+              "before": 917,
+              "after": 925,
+              "delta": 8
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 564,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "95e69cd87a993ff131edf46e2a2ed7ed98b83e3f521ed597c7ba0be461797f9a",
+          "after_sha256": "8ac1f222568ac90752769add4bd3c9cb43ad15ecc8baa92eb81728e4bbc24891"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7592,
+              "after": 7672,
+              "delta": 80
+            },
+            "allocated_bytes": {
+              "before": 7685,
+              "after": 7765,
+              "delta": 80
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 0,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "052d496d50a98a1f61819dbd54ffa4095fa86a143db7be7976d4b7532471192f",
+          "after_sha256": "cc84dff9d4b038bc99429aa12a848c849443d9c3aba8db837396527f520e27f8"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7970,
+              "after": 8018,
+              "delta": 48
+            },
+            "allocated_bytes": {
+              "before": 9841,
+              "after": 9889,
+              "delta": 48
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "063cb16663fc85e050b1ce14c04bb476b790dee3e09ab4fb110ae61032d142f6",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 49842,
+          "after": 51326,
+          "delta": 1484
+        },
+        "allocated_bytes": {
+          "before": 69593,
+          "after": 71606,
+          "delta": 2013
+        },
+        "zero_fill_bytes": {
+          "before": 4666,
+          "after": 4722,
+          "delta": 56
+        }
+      },
+      "new_modules": [
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 12676,
+        "allocated_bytes": 13862,
+        "zero_fill_bytes": 52
+      },
+      "combined_added_sections": {
+        "executable_bytes": 14160,
+        "allocated_bytes": 15875,
+        "zero_fill_bytes": 108
+      }
+    },
+    "w1-h1-a0-on": {
+      "baseline": "w1-h1-a0-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8709,
+              "after": 9013,
+              "delta": 304
+            },
+            "zero_fill_bytes": {
+              "before": 1372,
+              "after": 1420,
+              "delta": 48
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "d1d15b233cf2583f90df7952f4c8b8dd20fe34d6367e40845eeb592a581c4b10",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6876,
+              "after": 7944,
+              "delta": 1068
+            },
+            "allocated_bytes": {
+              "before": 13378,
+              "after": 14718,
+              "delta": 1340
+            },
+            "zero_fill_bytes": {
+              "before": 930,
+              "after": 934,
+              "delta": 4
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c4dc2f6303a6dc00f84624c4b7c1f6920545a24798741b7937b2d7efff3cbffd",
+          "after_sha256": "b00b3db00a097de49ca52bd001290832e9f278b8fc81572c257cb1b4a6131621"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7672,
+              "after": 7684,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 7765,
+              "after": 7777,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "de0524ee9dd1ecfda68fde4473d7a3d6f17702ef241696b86dc34677580111f8",
+          "after_sha256": "43f8955c17c5455c63fcccddcaeea5ad21773d867d8b2d18267df9e0eb5d2def"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 8018,
+              "after": 8018,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 9889,
+              "after": 9889,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 51194,
+          "after": 52582,
+          "delta": 1388
+        },
+        "allocated_bytes": {
+          "before": 71477,
+          "after": 73390,
+          "delta": 1913
+        },
+        "zero_fill_bytes": {
+          "before": 4679,
+          "after": 4731,
+          "delta": 52
+        }
+      },
+      "new_modules": [
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 12676,
+        "allocated_bytes": 13862,
+        "zero_fill_bytes": 52
+      },
+      "combined_added_sections": {
+        "executable_bytes": 14064,
+        "allocated_bytes": 15775,
+        "zero_fill_bytes": 104
+      }
+    },
+    "w1-h1-a1-on": {
+      "baseline": "w1-h1-a1-baseline",
+      "guarded_units": {
+        "modules": {
+          "sections": {
+            "executable_bytes": {
+              "before": 4260,
+              "after": 4428,
+              "delta": 168
+            },
+            "allocated_bytes": {
+              "before": 8709,
+              "after": 9013,
+              "delta": 304
+            },
+            "zero_fill_bytes": {
+              "before": 1372,
+              "after": 1420,
+              "delta": 48
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 152,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 152,
+              "selected": [
+                {
+                  "function": "<stdin>:401:16:int re4dc_weapon27_module_id_present(unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "<stdin>:405:16:int re4dc_weapon27_module_file_present(const char*)",
+                  "bytes": 4,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "d1d15b233cf2583f90df7952f4c8b8dd20fe34d6367e40845eeb592a581c4b10",
+          "after_sha256": "a6ef1a1c1c54ec444a565b16ce0121b9e759f232208bd5d08149aecf5b713b86"
+        },
+        "read": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6876,
+              "after": 7944,
+              "delta": 1068
+            },
+            "allocated_bytes": {
+              "before": 13378,
+              "after": 14718,
+              "delta": 1340
+            },
+            "zero_fill_bytes": {
+              "before": 930,
+              "after": 934,
+              "delta": 4
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1487:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 656,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1582:16:int re4dc_weapon27_available(unsigned int, unsigned int)",
+                  "bytes": 4,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1656:6:void ReadWepData(u32, u32)",
+                  "bytes": 568,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1352:6:void re4dc_weapon_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/read.cpp:1605:6:void re4dc_weapon27_revert(int, int, int, int)",
+                  "bytes": 48,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "c4dc2f6303a6dc00f84624c4b7c1f6920545a24798741b7937b2d7efff3cbffd",
+          "after_sha256": "b00b3db00a097de49ca52bd001290832e9f278b8fc81572c257cb1b4a6131621"
+        },
+        "pl_wep": {
+          "sections": {
+            "executable_bytes": {
+              "before": 7672,
+              "after": 7684,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 7765,
+              "after": 7777,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 13,
+              "after": 13,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:185:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 272,
+              "selected": [
+                {
+                  "function": "<stdin>:188:6:void cPlayer::weaponLoad(int, int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "de0524ee9dd1ecfda68fde4473d7a3d6f17702ef241696b86dc34677580111f8",
+          "after_sha256": "43f8955c17c5455c63fcccddcaeea5ad21773d867d8b2d18267df9e0eb5d2def"
+        },
+        "item": {
+          "sections": {
+            "executable_bytes": {
+              "before": 17722,
+              "after": 17850,
+              "delta": 128
+            },
+            "allocated_bytes": {
+              "before": 21582,
+              "after": 21827,
+              "delta": 245
+            },
+            "zero_fill_bytes": {
+              "before": 48,
+              "after": 48,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4516:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 12,
+                  "kind": "static"
+                }
+              ]
+            },
+            "after": {
+              "max_local_frame": 260,
+              "selected": [
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:3772:5:int cItemMgr::arm(ItemWork*)",
+                  "bytes": 28,
+                  "kind": "static"
+                },
+                {
+                  "function": "D:/Bio4/Prog/item.cpp:4523:6:void cItemMgr::debugWeapon(int)",
+                  "bytes": 20,
+                  "kind": "static"
+                }
+              ]
+            }
+          },
+          "before_sha256": "1f75be902717e180b1417c92f3c15a44016133953f3ee1f04be8c8846d4d27c7",
+          "after_sha256": "1d4a670b23d7da2523308b5433d023e5963d205b7b4d2d61c5d792958b0cc9d2"
+        },
+        "sscrn": {
+          "sections": {
+            "executable_bytes": {
+              "before": 8018,
+              "after": 8018,
+              "delta": 0
+            },
+            "allocated_bytes": {
+              "before": 9889,
+              "after": 9889,
+              "delta": 0
+            },
+            "zero_fill_bytes": {
+              "before": 1056,
+              "after": 1056,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 172,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 172,
+              "selected": []
+            }
+          },
+          "before_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414",
+          "after_sha256": "803ba8eaca00076876ab0fddcc61715c2b0602c026bf3b5dad8a0ee375b86414"
+        },
+        "t_option": {
+          "sections": {
+            "executable_bytes": {
+              "before": 6646,
+              "after": 6658,
+              "delta": 12
+            },
+            "allocated_bytes": {
+              "before": 10154,
+              "after": 10166,
+              "delta": 12
+            },
+            "zero_fill_bytes": {
+              "before": 1260,
+              "after": 1260,
+              "delta": 0
+            }
+          },
+          "stack": {
+            "before": {
+              "max_local_frame": 60,
+              "selected": []
+            },
+            "after": {
+              "max_local_frame": 60,
+              "selected": []
+            }
+          },
+          "before_sha256": "442ac0d70f9405e2d68985ddcbefe8501c12475e77ea52e207a678cd5102da23",
+          "after_sha256": "2ace1690e734884da777db36ef54c6fee70a341c4da9eeac64c0109242ae94fb"
+        }
+      },
+      "guarded_unit_totals": {
+        "executable_bytes": {
+          "before": 51194,
+          "after": 52582,
+          "delta": 1388
+        },
+        "allocated_bytes": {
+          "before": 71477,
+          "after": 73390,
+          "delta": 1913
+        },
+        "zero_fill_bytes": {
+          "before": 4679,
+          "after": 4731,
+          "delta": 52
+        }
+      },
+      "new_modules": [
+        "wep06",
+        "wep12"
+      ],
+      "new_module_sections": {
+        "executable_bytes": 12676,
+        "allocated_bytes": 13862,
+        "zero_fill_bytes": 52
+      },
+      "combined_added_sections": {
+        "executable_bytes": 14064,
+        "allocated_bytes": 15775,
+        "zero_fill_bytes": 104
+      }
+    }
+  },
+  "source_receipts_sha256": {
+    "off": "717d4ef879bca07b897e900fb394cec7e2ea94185353274b6612ea9d8fb3a917",
+    "on": "e1cc9dac22aecc493c8cb50371dbdc48f425d46302e0a19f82b444075646bbc8",
+    "modules": "54b7db0584a3aa0346afacb4071b2cda43082685855e8e6ab61ff881cf7d9909"
+  },
+  "script_sha256": "d546b6305a943a9e16fd3928af79d642143e6b8c94a473178806ab00eb68c3ba",
+  "limitations": "Whole relocatable sections before final link and garbage collection, not final game image growth. With old WEAPON_WEP05=1 its module already exists and is not added twice. Compiler local stack frames are not complete call-chain or console watermarks."
+}

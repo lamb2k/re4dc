@@ -1,3 +1,8 @@
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+// Owns the cEspSystem layout and its C++-linkage g_pEspSys declaration.
+#include "espgen.h"
+#endif
+#line 1
 // game/esp4e: effect id 0x4E, cloth sheet (D:/Bio4/Prog/esp4e.cpp). A Cloth grid pulled from the
 // cloth pool follows the effect's position/angle and is disturbed by two sine fields (along x and
 // y) modulated by a global "wind" phase plus the effect's m_Speed. Entry points: Esp4e_Create,
@@ -206,6 +211,9 @@ int cEsp4e::SetFreeWork(EspGenWork* gen, u32* seed)
     } else {
         wk->pCl->Set(m_Ang, m_Pos, nx, ny, width, &wk->tex, height * (3000.0f / d / 23.0f), NULL, d, NULL, flag);
     }
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+    if(!wk->pCl->m_pMem){wk->pCl=nullptr;return 0;}
+#endif
     if (gen->Blend_type) {
         wk->pCl->x74 = 1;
     }
@@ -223,3 +231,39 @@ int cEsp4e::SetFreeWork(EspGenWork* gen, u32* seed)
 }
 
 asm(".section .sdata; .balign 8");
+
+#if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+#include <cstdint>
+#include <cstring>
+#include "cloth_publication11.hpp"
+extern Cloth ClothWk[8];
+extern EspCreateFunc EspCreateTbl[0xFF];
+extern "C" int re4dc_cloth_frame_open11();
+extern "C" void re4dc_cloth_material_retire_one11(Cloth*);
+// Called only after the fixed Cloth admission/epoch check. Never retain this
+// effect pointer across texture I/O: callers keep copied words and revalidate.
+extern "C" int re4dc_cloth_esp4e_words11(const Cloth* cloth,unsigned words[8]){
+    const auto address=reinterpret_cast<std::uintptr_t>(cloth),first=reinterpret_cast<std::uintptr_t>(ClothWk);
+    if(!words || address<first || address-first>=sizeof ClothWk || (address-first)%sizeof(Cloth) ||
+       !re4dc::cloth_material11::admitted(unsigned((address-first)/sizeof(Cloth))) || !re4dc_cloth_frame_open11())return 0;
+    if(EspCreateTbl[0x4e]!=Esp4e_Create || !g_pEspSys || !g_pEspSys->pEspBuf ||
+       !g_pEspSys->nEsp || g_pEspSys->nEsp>~0U/0x150U)return 0;
+    const auto base=reinterpret_cast<std::uintptr_t>(g_pEspSys->pEspBuf);
+    const auto tex=reinterpret_cast<std::uintptr_t>(cloth->tex);
+    if(tex<base || tex-base>=g_pEspSys->nEsp*0x150U)return 0;
+    const unsigned slot=unsigned((tex-base)/0x150U);
+    auto* live=reinterpret_cast<cEsp*>(g_pEspSys->pEspBuf+slot*0x150U);
+    if(!(live->m_Be_flg&1) || live->m_Id!=0x4e)return 0;
+    auto* effect=static_cast<cEsp4e*>(live);
+    if(&effect->m_Free.tex!=cloth->tex || effect->m_Free.pCl!=cloth)return 0;
+    static_assert(sizeof effect->m_Free.tex==8*sizeof(unsigned));
+    std::memcpy(words,&effect->m_Free.tex,8*sizeof(unsigned));
+    return 1;
+}
+// The unretired wrapped allocator path can clear a live slot. Retire only
+// that Esp4e's cloth view; unrelated effects and cloth keep their admission.
+extern "C" void re4dc_cloth_esp4e_retire11(cEsp* effect){
+    if(effect && (effect->m_Be_flg&1) && effect->m_Id==0x4e)
+        re4dc_cloth_material_retire_one11(static_cast<cEsp4e*>(effect)->m_Free.pCl);
+}
+#endif

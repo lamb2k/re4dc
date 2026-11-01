@@ -552,6 +552,23 @@ $(error NATIVE_MODEL_REGISTRY_LOD=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_LOD=1
 endif
+# NMR_POOL_LOD=1 (lane lod26b 2026-10-26; default 0: no code; render only; needs NATIVE_MODEL_REGISTRY_LOD=1 and
+#   GANADO_LOD=1): numbered gameplay levels of POOL descriptors (the chapter 2 registry Ganados em16 / em17). Package
+#   word 44 bits 26..29 = the level's number in the GANADO_LOD order (2 g70, 3 g50); model_registry.py spec
+#   "lod_level" with "lod_of" (the level repeats its full descriptor's pool sections in order, body / head reduced by
+#   glod_rung.py). registry_lod_want draws, for a pool Ganado, the numbered level with the highest number not above the
+#   level the cast Ganados draw now (re4dc_ganado_lod_level: GANADO_LOD_LEVEL, its event rule, GANADO_EVENT_KEEP_LOD),
+#   else the full descriptor: one knob for every Ganado. An image without the knob refuses a numbered level package.
+NMR_POOL_LOD ?= 0
+ifeq ($(filter $(NMR_POOL_LOD),0 1),)
+$(error NMR_POOL_LOD must be 0 or 1)
+endif
+ifeq ($(NMR_POOL_LOD),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_LOD)$(GANADO_LOD),11)
+$(error NMR_POOL_LOD=1 needs NATIVE_MODEL_REGISTRY_LOD=1 GANADO_LOD=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_POOL_LOD=1
+endif
 # NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1 (lane fix-mendez-door24 2026-10-24; default 0; render only; needs
 #   NATIVE_MODEL_REGISTRY=1): an actor the registry owns (a live registry binding: earlier frames drew it from its PS2
 #   package) never falls back to the GameCube FRONT_NATIVE path. On a frame where the source ledger has not prepared it
@@ -566,6 +583,23 @@ endif
 ifeq ($(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),1)
 GAME_CPPFLAGS += -DRE4DC_NMR_NO_GC_FRONT=1
 endif
+# LEON_NO_GC_FRONT=1 (lane cast-ps2-25 2026-10-25; default 0; render only; needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1):
+#   the same rule for Leon (pPL). On r100's first frames after the s20 movie the source ledger is not active
+#   (re4dc_actor_transaction_identity 0), so Leon was not a transaction candidate and trans.cpp ModelRender drew him GC
+#   through frontNativeRender (GC-ASSET r100: his weapon hand BIN ef82164d). Those frames draw no Leon. The macro is
+#   always defined (0 / 1 / 2) so the check sits on an existing source line: knob off, the image is unchanged.
+# LEON_NO_GC_FRONT=2 (round 4): Leon's PS2 owner also plans without the source ledger (source_actor_owner_hooks.inc):
+#   on images with no coarse ledger (those r100 frames) the player draws PS2, not nothing. The =1 guard stays.
+LEON_NO_GC_FRONT ?= 0
+ifeq ($(filter $(LEON_NO_GC_FRONT),0 1 2),)
+$(error LEON_NO_GC_FRONT must be 0, 1 or 2)
+endif
+ifneq ($(LEON_NO_GC_FRONT),0)
+ifneq ($(NATIVE_MODEL_REGISTRY_NO_GC_FRONT),1)
+$(error LEON_NO_GC_FRONT=$(LEON_NO_GC_FRONT) needs NATIVE_MODEL_REGISTRY_NO_GC_FRONT=1)
+endif
+endif
+GAME_CPPFLAGS += -DRE4DC_LEON_NO_GC_FRONT=$(LEON_NO_GC_FRONT)
 # NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
 #   NATIVE_MODEL_REGISTRY_LOD=1): registry_lod_want also draws the full descriptor while the player runs the custom
 #   damage routine this actor started (pl_sub.cpp SetPlDamage: routine 0 == 4, dmgType = the enemy). r221 Verdugo's
@@ -614,6 +648,40 @@ endif
 #              the bump drop in the certificate (coarse_actor_material.inc), and the slot palettes' bind (one inverse
 #              per SOURCE joint: slot b uses its joint's; coarse_actor_owner_registry.inc registry_palettes).
 PS2_ASHLEY ?= 0
+# Ashley's PS2 bind and authored weights, with the existing game cloth simulation
+# adapted by tools/ps2_ashley.py --rig. Private rig headers pin all three hand sets.
+ASHLEY_PS2_RIG ?= 0
+ASHLEY_PS2_RIG_DIR ?=
+ifeq ($(filter $(ASHLEY_PS2_RIG),0 1),)
+$(error ASHLEY_PS2_RIG must be 0 or 1)
+endif
+ifeq ($(ASHLEY_PS2_RIG),1)
+ifneq ($(PS2_ASHLEY),2)
+$(error ASHLEY_PS2_RIG needs PS2_ASHLEY=2)
+endif
+ifeq ($(strip $(ASHLEY_PS2_RIG_DIR)),)
+$(error ASHLEY_PS2_RIG needs ASHLEY_PS2_RIG_DIR from tools/d367/ashley_rig27/rig_header.py)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_PS2_RIG=1 -I$(ASHLEY_PS2_RIG_DIR)
+$(OBJDIR)/coarse_actor.o: $(ASHLEY_PS2_RIG_DIR)/ashley_ps2_rig27.h
+endif
+# Playable cPlAshley has its own player-family/archive contract. It must never
+# inherit the partner's model3 predicate or distance LOD policy.
+ASHLEY_PLAYABLE_PS2_RIG ?= 0
+ASHLEY_PLAYABLE_PS2_RIG_DIR ?=
+ifeq ($(filter $(ASHLEY_PLAYABLE_PS2_RIG),0 1),)
+$(error ASHLEY_PLAYABLE_PS2_RIG must be 0 or 1)
+endif
+ifeq ($(ASHLEY_PLAYABLE_PS2_RIG),1)
+ifneq ($(PS2_ASHLEY)$(NATIVE_MODEL_REGISTRY_PL_ASHLEY),21)
+$(error ASHLEY_PLAYABLE_PS2_RIG needs PS2_ASHLEY=2 NATIVE_MODEL_REGISTRY_PL_ASHLEY=1)
+endif
+ifeq ($(strip $(ASHLEY_PLAYABLE_PS2_RIG_DIR)),)
+$(error ASHLEY_PLAYABLE_PS2_RIG needs ASHLEY_PLAYABLE_PS2_RIG_DIR from tools/d367/ashley_playable27/rig_header.py)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ASHLEY_PLAYABLE_PS2_RIG=1 -I$(ASHLEY_PLAYABLE_PS2_RIG_DIR)
+$(OBJDIR)/coarse_actor.o: $(ASHLEY_PLAYABLE_PS2_RIG_DIR)/ashley_playable_ps2_rig27.h
+endif
 # PS2_ASHLEY_ROOMS=1 (lane ps2cast 2026-10-15; default 0; render only; needs PS2_ASHLEY=1|2): Ashley in the chapter 2-2 /
 #              2-3 rooms whose own registry package already carries other PS2 actors (r111 / r113 crows, r112 merchant,
 #              r118 Ganados + wolf, r11c Luis, r11f Mendez). Her package is the room's SECOND package,

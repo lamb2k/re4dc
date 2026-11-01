@@ -112,8 +112,10 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include "sce_sys.h"
 #include "etc_model.h"
 #include "emdoor.h"
+#include "emswitch.h"
 #include "embox.h"
 #include "sscrn.h"
+#include "merchant.h"
 #include "re4dc_platform.h"
 #include "geometry.h"
 #include "camera.h"
@@ -121,7 +123,11 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <stdio.h>
 #include <stdlib.h>
 #include <arch/timer.h>
+
+// `god`: read by LifeDownSet2 (src/game/em_sub.cpp, RE4DC_WARP_GOD_HOOK, warp builds only): no damage to the player.
+extern "C" { int re4dc_warp_god; int re4dc_warp_ashley; unsigned re4dc_warp_ashley_saves; unsigned re4dc_warp_ashley_rescues; unsigned re4dc_warp_god_rescues; }
 #include <kos/thread.h>
+#include "emdoor.h"
 #include "read.h"   // EmReadSearch (setem: the enemy read-table entry)
 
 #if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
@@ -150,6 +156,11 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms);
 void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset);
 void re4dc_qa_set_flags(unsigned f);
 void re4dc_qa_in_room(int on);
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+int re4dc_qa_link_tick(void (*game)(void), int free_play, const char** path);   // qa_menu.cpp (qalink.mk QA_LINK)
+void re4dc_qa_drive_feed(unsigned room, float x, float y, float z, float ang, float cam, int free_play);   // qa_menu.cpp
+int re4dc_qa_link_tpos(float* p, int* has_ang);                                                       // qa_menu.cpp
+#endif
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
@@ -326,6 +337,14 @@ struct Warp {
     u16 late_room;
     // god: Leon's life refilled every frame (benchmark fixtures; hwcal's invuln). alert <frame>: the room-forced
     // alert + the "Ganado hurt" alarm at Leon once at that room frame of its entry (hwcal's alert): the crowd hunts him.
+    int money;   // `money N`: adds N PTAS once, at the first room frame (shop fixtures)
+    u16 stock_room;  // `stock`: logs the merchant stock and tune table once per room entry (castle31 shop check)
+    bool stock;
+    bool ashley;              // `ashley` (castle31 chain): no Mission Failed from Ashley; every suppressed cause logged
+    u16 ashley_carry;         // frames she has been carried (Status_flg[1] bit16)
+    u16 ammo_keep, ammo_wep;  // `ammo` in observe runs (castle31 chain): most rounds seen loaded in the equipped weapon
+    u32 pl_period;   // `plpos N`: Leon's position, angle and life every N room frames (castle31 no-warp segments)
+    u32 stock_sum;
     bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
     // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
     u8 face_mode;
@@ -650,10 +669,20 @@ void load()
             if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
             if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "ashley")) {
+            wp.ashley = true;
+            re4dc_warp_ashley = 1;
+        } else if (!strcmp(k, "plpos") && n >= 2) {
+            wp.pl_period = num(tok[1]);
+        } else if (!strcmp(k, "stock")) {
+            wp.stock = true; wp.stock_room = 0xFFFF;
+        } else if (!strcmp(k, "money") && n >= 2) {
+            wp.money = num(tok[1]);
         } else if (!strcmp(k, "ammo")) {
             wp.ammo = true;
         } else if (!strcmp(k, "god")) {
             wp.god = true;
+            re4dc_warp_god = 1;
             re4dc_log("warp: god (Leon's life refilled every frame)\n");
         } else if (!strcmp(k, "bell108") && n >= 2) {
             wp.b108_frame = num(tok[1]);
@@ -980,9 +1009,201 @@ void alive_log_poll()
                                 (unsigned) vis[id]);
         line[len] = 0;
         re4dc_log("warp: alivelist room %03x frame %u ids%s\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, line);
+#if defined(RE4DC_BARN28_EMDUMP) && RE4DC_BARN28_EMDUMP
+        for (u32 i = 0; i < EmMgr.nArray; i++) {
+            cEm* em = (cEm*) EmMgr.workAt(i);
+            if (!em) continue;
+            re4dc_log("barn28 em i=%u id=%02x alive=%d pos=%d %d %d\n", (unsigned) i, (unsigned) em->id & 0xff,
+                      SceCheckEmAlive(em), (int) em->pos.x, (int) em->pos.y, (int) em->pos.z);
+        }
+        if (pPL) re4dc_log("barn28 pl pos=%d %d %d\n", (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
+#endif
     }
 }
 
+// `god` / `ammo` (existing warp lines) also in observe runs (no room override: the castle31 no-warp chain), via
+// plpos_poll. Life back to max (a hit still lands: knockback, grabs and scripted
+// deaths run as in play); the equipped weapon's loaded count back to the most seen for that weapon.
+// `ashley`: the Mission Failed causes of the partner, suppressed before they fire and each logged
+// (warp: ashley-fail frame/room/cause): carried (held 150 frames = 5 s, Leon had his chance to shoot the carrier: the
+// nearest enemy's life goes to 0 via one hit through its damage path, so its own death drops her, logged warp: ashley-free, not a real kill), hp (life under a
+// quarter: refilled), other (a death demo started anyway while Leon's life is up: not suppressed, reported as a bug).
+static void ashley_poll()
+{
+    if (!wp.ashley || !pG || !pSubEm) return;
+    if (pG->Status_flg[1] & 0x10000) {
+        if (++wp.ashley_carry >= 150) {
+            cEm* best = nullptr;
+            float bd = 0;
+            for (u32 i = 0; i < EmMgr.nArray; i++) {
+                cEm* em = (cEm*) EmMgr.workAt(i);
+                if (!em || SceCheckEmAlive(em) != 1 || (em->id & 0xff) >= 0x40) continue;
+                const float dx = em->pos.x - pSubEm->pos.x, dz = em->pos.z - pSubEm->pos.z, d = dx * dx + dz * dz;
+                if (!best || d < bd) { best = em; bd = d; }
+            }
+            re4dc_log("warp: ashley-fail frame %u room %x cause carried carrier %02x pos %d %d %d\n",
+                      (unsigned) wp.room_frames, (unsigned) pG->room_id, best ? (unsigned) best->id & 0xff : 0u,
+                      best ? (int) best->pos.x : 0, best ? (int) best->pos.y : 0, best ? (int) best->pos.z : 0);
+            if (best) {  // coordinator 10-26 option (a): the carrier's life to 0, its own death/release runs
+                // hp 0 alone leaves her carried (the carrier never runs its damage check): hp 1 plus one handgun hit
+                // through its own damage path (the `kill` rig's cDmgInfo::set), so its death and her release run as in play.
+                if (!(best->dmg.m_Flag & 1)) {
+                    best->hp = 1;
+                    Vec c = best->pos;
+                    YARARE_INFO* part = emSphereAtCk(best, &c, &c, 5000.0f, 1, 5000.0f);
+                    if (!part) part = &best->hitInfo;
+                    Vec from = pPL ? pPL->pos : best->pos;
+                    best->dmg.set(0, 10, 1, &from, part->rad, part);
+                }
+                re4dc_log("warp: ashley-free frame %u room %x carrier %02x (not a real kill)\n", (unsigned) wp.room_frames,
+                          (unsigned) pG->room_id, (unsigned) best->id & 0xff);
+            }
+            wp.ashley_carry = 0;
+        }
+    } else {
+        wp.ashley_carry = 0;
+    }
+    static unsigned rescues_seen;
+    if (re4dc_warp_ashley_rescues != rescues_seen) {  // blast death turned into knock-down + get-up (pl_npc hook)
+        rescues_seen = re4dc_warp_ashley_rescues;
+        re4dc_log("warp: ashley-rescue frame %u room %x cause blast-death n %u (not a real outcome)\n",
+                  (unsigned) wp.room_frames, (unsigned) pG->room_id, rescues_seen);
+    }
+    static unsigned saves_seen;
+    if (re4dc_warp_ashley_saves != saves_seen) {  // LifeDownSet2 kept her at 1 point (a one-frame lethal hit)
+        saves_seen = re4dc_warp_ashley_saves;
+        re4dc_log("warp: ashley-fail frame %u room %x cause hp lethal-hit saves %u\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, saves_seen);
+    }
+    if (pG->ashley_life_max && (s16) pG->ashley_life < (s16) (pG->ashley_life_max / 4)) {
+        re4dc_log("warp: ashley-fail frame %u room %x cause hp life %d\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, (int) (s16) pG->ashley_life);
+        pG->ashley_life = pG->ashley_life_max;
+    }
+    static bool demo_logged;
+    if ((pG->Status_flg[0] & 0x100000) && !demo_logged) {
+        demo_logged = true;
+        re4dc_log("warp: ashley-fail frame %u room %x cause other (death demo started: pl_life %d ashley_life %d status1 %08x)\n",
+                  (unsigned) wp.room_frames, (unsigned) pG->room_id, (int) (s16) pG->pl_life, (int) (s16) pG->ashley_life,
+                  (unsigned) pG->Status_flg[1]);
+    }
+}
+
+static void god_ammo_poll()
+{
+    if (!pG) return;
+    ashley_poll();
+    // `god` masks pl_life only: a death routine entered anyway (one-frame kill, grab kill, fall) is reported, not hidden.
+    static unsigned god_rescues_seen;
+    if (re4dc_warp_god_rescues != god_rescues_seen) {  // lethal damage ending turned non-lethal (pl_dmg hook)
+        god_rescues_seen = re4dc_warp_god_rescues;
+        re4dc_log("warp: god-rescue frame %u room %x cause lethal-damage n %u (not a real outcome)\n",
+                  (unsigned) wp.room_frames, (unsigned) pG->room_id, god_rescues_seen);
+    }
+    static bool god_fail_logged;
+    if (wp.god && pPL && pPL->r_no_0 == 2 && !god_fail_logged) {
+        god_fail_logged = true;
+        re4dc_log("warp: god-fail frame %u room %x cause pl-dead rno %u/%u/%u life %d\n", (unsigned) wp.room_frames,
+                  (unsigned) pG->room_id, (unsigned) pPL->r_no_0, (unsigned) pPL->r_no_1, (unsigned) pPL->r_no_2,
+                  (int) (s16) pG->pl_life);
+    }
+    if (wp.god && pG->pl_life_max && pG->pl_life < pG->pl_life_max) pG->pl_life = pG->pl_life_max;
+    ItemWork* w = wp.ammo ? ItemMgr.pArm : nullptr;
+    if (!w) return;
+    const u16 loaded = w->bullet & 0x1FFF;
+    if (w->id != wp.ammo_wep) { wp.ammo_wep = w->id; wp.ammo_keep = loaded; }
+    if (loaded > wp.ammo_keep) wp.ammo_keep = loaded;
+    if (loaded < wp.ammo_keep) w->bullet = (u16) ((w->bullet & 0xE000) | wp.ammo_keep);
+}
+
+// Kills per room for the chain report: a creature id < 0x40 leaving the live set while Leon is in the room
+// (a cap park also leaves the live set, so `kill` rows are kills + parks; `warp: alivelist` shows the rest).
+static void kill_count_poll()
+{
+    static u32 last_live[64];
+    static u16 last_room = 0xFFFF;
+    static u32 kills;
+    if (!pG) return;
+    if (pG->room_id != last_room) {
+        if (last_room != 0xFFFF) re4dc_log("warp: kills room %x total %u\n", (unsigned) last_room, (unsigned) kills);
+        last_room = pG->room_id; kills = 0; memset(last_live, 0, sizeof(last_live));
+    }
+    u32 live[64] = {};
+    for (u32 i = 0; i < EmMgr.nArray && i < 64 * 32; i++) {
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (em && SceCheckEmAlive(em) == 1 && (em->id & 0xff) < 0x40) live[i >> 5] |= 1u << (i & 31);
+    }
+    for (int j = 0; j < 64; j++) {
+        u32 gone = last_live[j] & ~live[j];
+        for (; gone; gone &= gone - 1) {
+            cEm* em = (cEm*) EmMgr.workAt(j * 32 + __builtin_ctz(gone));
+            ++kills;
+            re4dc_log("warp: kill room %x frame %u id %02x n %u\n", (unsigned) pG->room_id, (unsigned) wp.room_frames,
+                      em ? (unsigned) em->id & 0xff : 0u, (unsigned) kills);
+        }
+        last_live[j] = live[j];
+    }
+}
+
+void plpos_poll()
+{
+    god_ammo_poll();
+    if (wp.pl_period && pPL) kill_count_poll();
+    if (!wp.pl_period || !pG || !pPL || wp.room_frames % wp.pl_period) return;
+    // castle31 steer.py: also the nearest live enemy (any id, position + id) and the live count. A read, no logic state.
+    cEm* best = nullptr;
+    float bd = 0;
+    int live = 0;
+    for (u32 i = 0; i < EmMgr.nArray; i++) {
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (!em || SceCheckEmAlive(em) != 1 || (em->id & 0xff) >= 0x40) continue;  // creatures only (0x4x+ = props)
+        ++live;
+        const float dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+        if (!best || d < bd) { best = em; bd = d; }
+    }
+    re4dc_log("warp: pl room %x frame %u pos %d %d %d ang %d life %d em %d %d %d %02x n %d rno %u/%u/%u\n", (unsigned) pG->room_id,
+              (unsigned) wp.room_frames, (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z, (int) (pPL->ang.y * 1000.0f),
+              (int) pG->pl_life, best ? (int) best->pos.x : 0, best ? (int) best->pos.y : 0, best ? (int) best->pos.z : 0,
+              best ? (unsigned) best->id & 0xff : 0u, live, (unsigned) pPL->r_no_0, (unsigned) pPL->r_no_1,
+              (unsigned) pPL->r_no_2);
+    if (pSubEm)
+        re4dc_log("warp: ash room %x frame %u pos %d %d %d life %d st1 %08x rno %u/%u/%u\n", (unsigned) pG->room_id,
+                  (unsigned) wp.room_frames, (int) pSubEm->pos.x, (int) pSubEm->pos.y, (int) pSubEm->pos.z,
+                  (int) (s16) pG->ashley_life, (unsigned) pG->Status_flg[1], (unsigned) pSubEm->r_no_0,
+                  (unsigned) pSubEm->r_no_1, (unsigned) pSubEm->r_no_2);
+    // castle31: room flags and every lever switch (0x4B) with the inputs of emSwitchOperationActEvtCk
+    // (distance, height gap, the player's and the lever's facing errors), so a missing prompt is attributable.
+    re4dc_log("warp: rflg room %x frame %u room_flg %08x rsf0 %d rsf1 %d rsf5 %d\n", (unsigned) pG->room_id,
+              (unsigned) wp.room_frames, (unsigned) pG->Room_flg[0], RsfCheck(G_ROOM_ID, 0) ? 1 : 0,
+              RsfCheck(G_ROOM_ID, 1) ? 1 : 0, RsfCheck(G_ROOM_ID, 5) ? 1 : 0);
+    for (cEm* e = EmMgr.getEmPtr(0x4B, 0); e; e = EmMgr.getEmPtr(0x4B, e)) {
+        EmSwitchWork* w = EMSWITCH_WK(e);
+        const float dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z;
+        re4dc_log("warp: sw room %x frame %u pos %d %d %d ang %d type %d state %d opened %d act %d mode %d ck %d"
+                  " dist %d dy %d muku_pl %d muku_sw %d rno %u/%u\n", (unsigned) pG->room_id, (unsigned) wp.room_frames,
+                  (int) e->pos.x, (int) e->pos.y, (int) e->pos.z, (int) (e->ang.y * 1000.0f), (int) e->type,
+                  (int) w->state, (int) w->opened, (int) w->actButton, (int) w->Mode, (int) w->Ck_dis,
+                  (int) sqrtf(dx * dx + dz * dz), (int) (e->pos.y - (pPL->pos.y + 1000.0f)),
+                  (int) (Muku(&pPL->pos, &e->pos, pPL->ang.y, 3.1415927f) * 1000.0f),
+                  (int) (Muku(&e->pos, &pPL->pos, e->ang.y, 3.1415927f) * 1000.0f), (unsigned) e->r_no_0,
+                  (unsigned) e->r_no_1);
+    }
+    // castle31: doors (0x41) within 4 m: why A does or does not open them (cEmDoor::ckOpen 0 ok, 1 open/broken,
+    // 2 object in the way, 3 locked) with the lock inputs.
+    for (cEm* e = EmMgr.getEmPtr(0x41, 0); e; e = EmMgr.getEmPtr(0x41, e)) {
+        const float dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z;
+        if (dx * dx + dz * dz > 16000000.0f) continue;
+        cEmDoor* d = (cEmDoor*) e;
+        EmDoorWork* w = EMDOOR_WK(d);
+        re4dc_log("warp: door room %x frame %u pos %d %d %d type %d hp %d ck %u be %08x flag %08x lock %d/%d chain %d/%d/%d"
+                  " key %u etc %d rno %u/%u\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, (int) e->pos.x,
+                  (int) e->pos.y, (int) e->pos.z, (int) e->type, (int) e->hp, (unsigned) d->ckOpen(), (unsigned) w->Be_flg,
+                  (unsigned) e->flag, w->Lock_L_hp, w->Lock_R_hp, w->Chain_hp[0], w->Chain_hp[1], w->Chain_hp[2],
+                  (unsigned) w->Key_flag, (int) w->Etc_no, (unsigned) e->r_no_0, (unsigned) e->r_no_1);
+    }
+}
+
+void kill_poll();
 void native_alive_poll()
 {
     // Never inspect EmMgr while the title, load, room jump or teardown owns it.
@@ -991,6 +1212,8 @@ void native_alive_poll()
         pG->room_id != wp.observe_room || pG->Rno0 != 3 || pG->Rno1 != 0) return;
     ++wp.room_frames;
     alive_log_poll();
+    plpos_poll();
+    if (wp.has_kill) kill_poll();  // castle31 chain: an assisted  (r201 Garrador) in an observe run
 }
 
 void kill_poll()
@@ -1349,10 +1572,40 @@ void face_poll()
 }   // namespace (closed for the C symbol below)
 // bell108: requests for r108's bell task (src/st1/r108.cpp r108_initChurchBell, DBG_WARP builds), one per shot
 extern "C" { int re4dc_bell108_req = 0; }
+int addMoney(int n);   // src/game/item.cpp
 namespace {
+void stock_poll()
+{
+    // 30 room frames in: a card load sets room_id before the saved merchant data is restored
+    // Logged again whenever the tables change (an event adds stock, e.g. the r200 2-3 end).
+    if (!wp.stock || !pG || wp.room_frames < 30) return;
+    // MerchantData (include/merchant.h): stock 64 x {u16 id, s16 num, u8 isNew, pad3} then level 32 x {u16 id, u8 lv[4], u8 isNew, pad}
+    const u8* m = (const u8*) &merchantData[0];
+    u32 sum = 0;
+    for (int i = 0; i < 0x300; i++) sum = sum * 31u + m[i];
+    if (wp.stock_room == pG->room_id && wp.stock_sum == sum) return;
+    wp.stock_room = pG->room_id; wp.stock_sum = sum;
+    for (int i = 0; i < 64; i++) {
+        const u16 id = *(const u16*) (m + 8 * i); const s16 nm = *(const s16*) (m + 8 * i + 2);
+        if (id == 0xFFFF || (id == 0 && nm == 0)) continue;
+        re4dc_log("warp: stock room %x item %02x num %d new %d\n", pG->room_id, id, nm, m[8 * i + 4]);
+    }
+    for (int i = 0; i < 32; i++) {
+        const u8* e = m + 0x200 + 8 * i; const u16 id = *(const u16*) e;
+        if (id == 0xFFFF || id == 0) continue;
+        re4dc_log("warp: tune room %x item %02x lv %d %d %d %d\n", pG->room_id, id, e[2], e[3], e[4], e[5]);
+    }
+}
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
+    if (wp.money > 0 && pG) {
+        const int have = addMoney(wp.money);
+        re4dc_log("warp: money +%d -> %d\n", wp.money, have);
+        wp.money = 0;
+    }
+    stock_poll();
+    plpos_poll();
     if (wp.ammo && ItemMgr.pArm && (ItemMgr.pArm->bullet & 0x1FFF) < 3)
         ItemMgr.pArm->bullet = (u16) ((ItemMgr.pArm->bullet & 0xE000) | 9);
     if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {
@@ -1559,6 +1812,19 @@ bool bench_poll()
 // entry or menu (no door load). The menu holds the frame loop (no hang check meanwhile, as `still`). A teleport or
 // "quit to title" requests the source's soft reset (as the benchmark disc); re4dc_warp_soft_reset arms the preset.
 // true = a reset is pending: the rest of the poll is skipped.
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// QA_LINK: the Diagnostics page's game side for the remote link's telemetry (once a second, game thread).
+void qa_link_game()
+{
+    if (!pG) return;
+    int live = 0;
+    for (int id = 0x10; id <= 0x20; ++id)
+        for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+            if ((e->be_flag & 1) && e->hp > 0) ++live;
+    re4dc_qa_game((unsigned) pG->room_id, live, memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1,
+                  wp.name[0] ? wp.name : nullptr);
+}
+#endif
 bool qa_poll()
 {
     if (!pG) return false;
@@ -1582,7 +1848,51 @@ bool qa_poll()
                            !SubScreenWk.type && !SceSys.event_start_cnt && pPL->checkEvent() == 1;
     qa_frames = free_play ? qa_frames + 1 : 0;
     const bool autom = qa_auto_armed && qa_frames >= (qa_auto_frame > 30 ? qa_auto_frame : 30);
+#if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+    // the remote link (commands in, telemetry out); TELEPORT / TITLE / MENU come back only in free play (30 frames)
+    bool link_menu = false;
+    {
+        // remote driving (lane linkpad28): Leon's state and free play for PAD / GOTO / SCRIPT; TELEPORT POS here
+        if (pPL) {
+            const Vec& lk = pG->Cam.Look;   // pos - at: the view looks along -Look
+            re4dc_qa_drive_feed((unsigned) pG->room_id, pPL->pos.x, pPL->pos.y, pPL->pos.z, pPL->ang.y,
+                                atan2f(-lk.x, -lk.z), free_play && qa_frames >= 2);
+            float tp[4];
+            int has_ang = 0;
+            if (re4dc_qa_link_tpos(tp, &has_ang)) {
+                Vec p = {tp[0], tp[1], tp[2]};
+                pPL->setPos(&p);
+                if (has_ang) {
+                    Vec a = {0.0f, tp[3], 0.0f};
+                    pPL->setAng(&a);
+                }
+                char what[80];
+                snprintf(what, sizeof(what), "qa: teleport pos (link) %d,%d,%d", (int) p.x, (int) p.y, (int) p.z);
+                stamp(what);
+            }
+        } else {
+            re4dc_qa_drive_feed((unsigned) pG->room_id, 0, 0, 0, 0, 0, 0);
+        }
+        const char* lpath = nullptr;
+        const int la = re4dc_qa_link_tick(qa_link_game, qa_frames >= 30, &lpath);
+        if (la == 3) {
+            pG->pl_life = pG->pl_life_max;
+            if (pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
+            re4dc_log("qa: health refilled (link)\n");
+        } else if (la == 1 || la == 2) {
+            qa_next = la == 1 ? lpath : nullptr;
+            qa_pending = true;
+            SndSoftReset();
+            pG->System_flg |= 0x4000000;
+            stamp(la == 1 ? "qa: teleport (link): soft reset requested" : "qa: quit to title (link): soft reset requested");
+            return true;
+        }
+        link_menu = la == 4;
+    }
+    if (!autom && !link_menu && (qa_frames < 30 || !re4dc_qa_combo())) return false;
+#else
     if (!autom && (qa_frames < 30 || !re4dc_qa_combo())) return false;
+#endif
     const u32 keep = pG->System_flg & 0x20000000;
     pG->System_flg |= 0x20000000;   // no hang check while the menu holds the frame loop
     const char* path = nullptr;
@@ -1803,13 +2113,20 @@ void re4dc_warp_room_enter(void)
 }
 
 // ui_bridge.cpp re4dc_room_cycle_poll (top of gameMainLoop, game thread).
+#if defined(RE4DC_QA_LINK_BENCH) && RE4DC_QA_LINK_BENCH
+extern "C" void re4dc_qa_link_bench_tick(void);   // qa_link_bench.cpp (qalink.mk: QA_LINK=1 on a benchmark disc)
+#endif
 void re4dc_warp_poll(void)
 {
+#if defined(RE4DC_QA_LINK_BENCH) && RE4DC_QA_LINK_BENCH
+    re4dc_qa_link_bench_tick();   // the remote link, each game tick (dials on its own with `auto 1`)
+#endif
 #if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
     if (qa_poll()) return;
 #endif
     if (!wp.active) {
         native_alive_poll();
+        stock_poll();
         return;
     }
     // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).

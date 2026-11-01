@@ -388,7 +388,7 @@ int EtcModelGetLastNo()
 // PS2_ETS_MATCH=2 (lane purge-props24 2026-10-24, "drop what PS2 dropped"): the GC etc-list entries absent from the
 // room's PS2 rNNN.dat ETS, matched by id and position (etsdiff over the GC disc 1 room archives and the PS2 ISO,
 // chapter 1-2 rooms r100..r11f + r200; rooms not listed match PS2 entry for entry). Torches et1400 (cEmTorch type 0),
-// et0c00 / et3800 (type 2), et1c00 (r11f), et1000 (r11a type 4) and r11f's et0000 window panes. No room script reads
+// et0c00 / et3800 (type 2), et1c00 (r11f) and et1000 (r11a type 4); r11f's et0000 window panes stay (user, 10-26). No room script reads
 // these slots (getRoomEtc* calls checked per room; r11c only registers et1400.bin as an effect model).
 struct Ps2EtsDrop {
     u16 room;
@@ -493,19 +493,39 @@ static const Ps2EtsDrop g_ps2_ets_drop[] = {
     {0x11e, 0x14, 0x0019},  // r11e et1400
     {0x11e, 0x14, 0x001A},  // r11e et1400
     {0x11e, 0x14, 0x001B},  // r11e et1400
-    {0x11f, 0x00, 0x0001},  // r11f et0000
-    {0x11f, 0x00, 0x0002},  // r11f et0000
-    {0x11f, 0x00, 0x0003},  // r11f et0000
-    {0x11f, 0x00, 0x0004},  // r11f et0000
-    {0x11f, 0x00, 0x0005},  // r11f et0000
-    {0x11f, 0x00, 0x0006},  // r11f et0000
-    {0x11f, 0x00, 0x0007},  // r11f et0000
-    {0x11f, 0x00, 0x0008},  // r11f et0000
+    // r11f et0000 window panes 1..8: kept (lane windows26 2026-10-26: user requires glass and bars; PS2 dropped them)
     {0x11f, 0x1C, 0x000A},  // r11f et1c00
     {0x200, 0x14, 0x0005},  // r200 et1400
     {0x200, 0x14, 0x0006},  // r200 et1400
     {0x200, 0x14, 0x0007},  // r200 et1400
 };
+
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+// PS2_ETS_LIGHT (lane fix-r111-27 2026-10-27): the room lights (LIT) still name the dropped torches as their etc
+// parent (light ParentType 3, ParentNo = parts << 16 | slot). Without the model cLight::calcPos / getNormal logged
+// "ETCMODEL PARENT NOT FOUND" every frame and left the light at a stale position (r111: 10 torch lights near the
+// world origin, so the em17 villagers drew unlit). The dropped entry's placement is kept per slot and the light is
+// placed from it: root translation + yaw (torches stand upright; the part offset is the light's own Pos).
+struct Ps2EtsGhost {
+    u8 valid;
+    Vec pos;
+    Vec ang;
+};
+static Ps2EtsGhost g_ps2_ets_ghost[0x40];
+
+int re4dc_ps2_ets_ghost_mtx(u32 parentNo, Mtx out)
+{
+    u32 no = parentNo & 0xFFFF;
+    if (no >= 0x40 || !g_ps2_ets_ghost[no].valid) {
+        return 0;
+    }
+    PSMTXRotRad(out, 'y', g_ps2_ets_ghost[no].ang.y);
+    out[0][3] = g_ps2_ets_ghost[no].pos.x;
+    out[1][3] = g_ps2_ets_ghost[no].pos.y;
+    out[2][3] = g_ps2_ets_ghost[no].pos.z;
+    return 1;
+}
+#endif
 
 static int ps2_ets_dropped(u32 room, u32 id, u32 no)
 {
@@ -518,6 +538,33 @@ static int ps2_ets_dropped(u32 room, u32 id, u32 no)
 }
 #endif
 
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+// PS2_FIRE_SST (lane purge-audit26 2026-10-26; needs PS2_ETS_MATCH=2 and data set pfire26): PS2 moved the chapter 1-2
+// torches out of the etc list; their flames are SST sets of the PS2 room EFF. pfire26 puts those sets (PS2 records,
+// texture-less EFF) in the room ETM's et14.eff, which no dropped torch reads any more; eff_sys.cpp re4dc_pfire_load
+// registers it under the torch owner 0x68 and starts it as the room does its own sets.
+extern "C" int re4dc_pfire_load(void* data);
+static void ps2_fire_sst()
+{
+    void* arc;
+    void* data;
+    u32 k;
+
+    for (k = 0; k < sizeof(g_ps2_ets_drop) / sizeof(g_ps2_ets_drop[0]); k++) {
+        if (g_ps2_ets_drop[k].room == pG->room_id && g_ps2_ets_drop[k].id == 0x14) {
+            break;
+        }
+    }
+    if (k == sizeof(g_ps2_ets_drop) / sizeof(g_ps2_ets_drop[0]) || !EtcGetDasAddr(0x14, &arc)) {
+        return;
+    }
+    data = GetEtcAddr(arc, "et14.eff");
+    if (data != 0) {
+        re4dc_pfire_load(data);
+    }
+}
+#endif
+
 // Creates every record of the room's etc list (EtcModelSet) and remembers the highest slot.
 int EtcModelListSet(EtcList* list)
 {
@@ -527,7 +574,15 @@ int EtcModelListSet(EtcList* list)
     if (pG->Debug_flg[3] & 0x800) {
         return 0;
     }
+#if defined(RE4DC_PS2_FIRE_SST) && RE4DC_PS2_FIRE_SST
+    ps2_fire_sst();
+#endif
     d = list->data;
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+    for (i = 0; i < 0x40; i++) {
+        g_ps2_ets_ghost[i].valid = 0;
+    }
+#endif
     for (i = 0; i < list->num; i++) {
 #if defined(RE4DC_PS2_ETS_MATCH) && RE4DC_PS2_ETS_MATCH
         // PS2_ETS_MATCH (game30.mk, lane fix-r10d-speed23): etc entries the PS2 room lists (r10d.dat ETS) dropped.
@@ -539,6 +594,13 @@ int EtcModelListSet(EtcList* list)
 #else
         // =2 (lane purge-props24 2026-10-24): every chapter 1-2 room; see ps2_ets_dropped.
         if (ps2_ets_dropped(pG->room_id, d[i].id, d[i].no)) {
+#if defined(RE4DC_PS2_ETS_LIGHT) && RE4DC_PS2_ETS_LIGHT
+            if (d[i].no < 0x40) {
+                g_ps2_ets_ghost[d[i].no].valid = 1;
+                g_ps2_ets_ghost[d[i].no].pos = d[i].pos;
+                g_ps2_ets_ghost[d[i].no].ang = d[i].ang;
+            }
+#endif
             continue;
         }
 #endif

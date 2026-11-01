@@ -1,0 +1,96 @@
+{
+  "checks": [
+    {
+      "command": "python3 -B port/dreamcast/tools/d367/fallback_scan/test_convert.py -v",
+      "methods": 11,
+      "status": "PASS"
+    },
+    {
+      "command": "python3 -B port/dreamcast/tools/d367/fallback_scan/test_package.py -v",
+      "methods": 4,
+      "status": "PASS"
+    },
+    {
+      "command": "python3 -B port/dreamcast/tools/d367/fallback_scan/test_runtime.py -v",
+      "configurations": 7,
+      "methods": 1,
+      "status": "PASS"
+    },
+    {
+      "command": "env SCAN29_SANITIZE=1 ASAN_OPTIONS=detect_leaks=0 python3 -B port/dreamcast/tools/d367/fallback_scan/test_runtime.py -v",
+      "configurations": 7,
+      "methods": 1,
+      "status": "PASS"
+    },
+    {
+      "command": "env ASAN_OPTIONS=detect_leaks=0 python3 -B port/dreamcast/tests/test_model_stream_dispatch.py -v",
+      "methods": 1,
+      "status": "PASS"
+    }
+  ],
+  "file_sha256": {
+    "port/dreamcast/game/fallback_scan29.mk": "2e590a292012ca4258fbd0ee27f6c12e6bd3a35203f8e255e63cd5b744ce4a83",
+    "port/dreamcast/game/platform/include/fallback_scan29.hpp": "02100f1908533134b3308daf7aa18c795e3ff4dbd83072e00f740b3c5432f78c",
+    "port/dreamcast/game/platform/include/fallback_scan29_bake.inc": "d5850b4c4ba482d0c2c2127e0ad268487de138f1cb62620ab601a4c8304b7d6c",
+    "port/dreamcast/game/platform/include/fallback_scan29_lights.inc": "b8d13afba2b4b2399f893323509b0a66120b85cbae3b8f2a39fb1a399d88ac13",
+    "port/dreamcast/tools/d367/fallback_scan/convert.py": "703f9d713182a2c73320596dcd58d63b6c3b1ad718ff77322fd2d548b3f654ec",
+    "port/dreamcast/tools/d367/fallback_scan/package.py": "f11c301459363a0b99c4aae2a5cd8bfba71839e9a50291f2a33d26298bbad1f4",
+    "port/dreamcast/tools/d367/fallback_scan/test_convert.py": "3c5a3febb05333edb940cfc836c403a6790817e5d87207717d7dc24d99c8e437",
+    "port/dreamcast/tools/d367/fallback_scan/test_package.py": "10a66151a10c102a3ccbea484e0b43b00e5d38487de27ac2f327ba4a240fb77d",
+    "port/dreamcast/tools/d367/fallback_scan/test_runtime.cpp": "ff91263b862ffaaec5086c690be69ff875399e901010ee498019ea6a5f66fbb4",
+    "port/dreamcast/tools/d367/fallback_scan/test_runtime.py": "e906781ead65b8cbc8093b217b5c67b87f9f1ca1c2255375459f2136b3cc574e"
+  },
+  "runtime_matrix": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      1,
+      1
+    ]
+  ],
+  "runtime_matrix_fields": [
+    "FALLBACK_SCAN29",
+    "ACTOR_LIGHT_FAST_ONLY",
+    "MEMSET_LEAN/ACTOR_NO_CLEAR",
+    "LEON_LIGHT_HEADROOM"
+  ],
+  "sanitizer_note": "AddressSanitizer and UndefinedBehaviorSanitizer enabled. LeakSanitizer disabled because the execution trace wrapper prevents /proc task inspection.",
+  "schema": "re4dc.fallback29.conversion-validation/1",
+  "scope": "synthetic host proof; target build/cost gates maintained in tools/cloud/build29"
+}

@@ -1,0 +1,37 @@
+#include "@HEADER@"
+static re4dc::sob33::Run run33;
+static std::uint32_t header33[8];
+static unsigned frame33,list33,serial33;
+static bool eligible33,complete33;
+extern "C" {
+extern const unsigned fixture_layout[]={1,sizeof(run33),sizeof(re4dc::sob33::Stats),sizeof(header33)};
+void fixture_prepare(unsigned mode){
+    run33={};frame33=100;list33=0;serial33=128;eligible33=true;complete33=true;
+    const unsigned h[8]={0x80840002U,0x96000000U,0x2080040U,0x8000,0,0,0,0};
+    for(unsigned i=0;i<8;++i)header33[i]=h[i];
+    if(mode){run33.begin(header33,frame33,list33,0,true);run33.finish(frame33,list33,128,3,true);}
+    if(mode==2)header33[7]=1;
+    if(mode==3)++frame33;
+    if(mode==4)serial33+=32;
+    if(mode==5)eligible33=false;
+    if(mode==6)header33[0]|=0x40;
+    if(mode==7)complete33=false;
+}
+unsigned fixture_begin(unsigned){return run33.begin(header33,frame33,list33,serial33,eligible33);}
+unsigned fixture_finish(unsigned vertices){
+    const unsigned words=(vertices+(run33.reused?0U:1U))*32;
+    return run33.finish(frame33,list33,serial33+words,vertices,complete33);
+}
+unsigned fixture_sequence(unsigned packed){
+    const unsigned count=packed&65535U,alternating=packed>>16;
+    run33={};serial33=0;unsigned reused=0;
+    for(unsigned i=0;i<count;++i){
+        if(alternating)header33[3]=0x8000U+(i&1U)*4096U;
+        const auto result=run33.begin(header33,100,0,serial33,true);
+        reused+=result==re4dc::sob33::Reuse;
+        serial33+=(3+(result==re4dc::sob33::Reuse?0U:1U))*32;
+        if(!run33.finish(100,0,serial33,3,true))return ~0U;
+    }
+    return reused;
+}
+}

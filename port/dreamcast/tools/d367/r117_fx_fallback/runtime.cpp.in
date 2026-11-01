@@ -1,0 +1,324 @@
+// Host-only controlled boundaries around source-extracted production functions.
+// No private data, live effect engine, renderer packets, or target FP claim.
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <cstdarg>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <new>
+#include "ps2_fx_population.h"
+#include "fx_r200_entry_cap.h"
+using u8=unsigned char;using u16=unsigned short;using u32=unsigned;using f32=float;
+using Mtx=float[3][4];using Mtx44=float[4][4];
+template<class T> struct TargetPtr {
+    T* p=nullptr;unsigned id=0;
+    explicit operator bool()const{return p!=nullptr;}
+    explicit operator unsigned()const{return id;}
+    T* operator->()const{return p;}
+    bool operator==(const TargetPtr& b)const{return id==b.id;}
+};
+struct Vec{float x=0,y=0,z=0;};
+struct Model{unsigned serial=7,be_flag=2;};
+struct Parent{Mtx mat{};};
+struct cEsp {
+    struct{unsigned owner=1,Core_kind=2,Call_no=1,Core_pEm=2,Core_flg=0;}info;
+    unsigned m_Id=0,m_Tex_id=0xff,m_Parts_no=0,m_Release_time=0xff,m_Be_flg=1,m_Flg=0;
+    Vec m_Ang{},m_Speed{},m_Pos{};
+    float m_Size_base_x=470,m_Size_base_y=470,m_Size_plus=0,m_Size_mul=1;
+    unsigned m_Col_start_a=130,m_Del_far=200,m_Del_near=50,m_Blend_type=1;
+    unsigned m_Col_start_r=0,m_Col_start_g=50,m_Col_start_b=0;
+    TargetPtr<Parent> parent{};TargetPtr<Model> m_pMod{};unsigned m_Guid_pMod=7;
+    unsigned m_Tool_flg=0x8000,m_Life_max=0;
+};
+TargetPtr<Parent> pEffParentWorld{};
+struct Globals{unsigned Frame_cnt=1,Status_flg[2]{};struct{Mtx44 ProjMat{};Mtx v_mat{};}Cam;} globals;
+Globals* pG=&globals;unsigned room_id=0x117;
+#define G_ROOM_ID room_id
+struct TEXHeader{void* data=nullptr;unsigned width=96,height=96,format=1;};
+struct CLUTHeader{void* data=nullptr;unsigned format=0,numEntries=0;};
+struct TEXDescriptor{TEXHeader* textureHeader=nullptr;struct CLUTHeader* CLUTHeader=nullptr;};
+struct Tpl{unsigned numDescriptors=1;TEXDescriptor* descriptor=nullptr;};
+struct Animation{unsigned Cx=0,Cy=0,Width=96,Height=96,Frames=1;};
+struct EspTexWk{unsigned Owner=1;Tpl* pTpl=nullptr;Animation* pAnm=nullptr;Mtx mtx{};};
+struct EspSys{u8* pEspBuf=nullptr;unsigned nEsp=0;EspTexWk Esp_tex_tbl[256]{};}espsys;
+EspSys* g_pEspSys=&espsys;
+struct EspgenWork{};EspgenWork* EspgenArray=nullptr;unsigned nEspgen=0;
+@PS2FX_ENUM@
+unsigned re4dc_ps2fx=PS2FX_STREAK;
+unsigned room_generation=41,room_state_calls=0;bool room_live=true;
+extern "C" int re4dc_room4_state(unsigned* g,unsigned* c,unsigned* b,unsigned* s,unsigned* r){
+    ++room_state_calls;*g=room_generation;*c=*b=*s=*r=0;return room_live;
+}
+float viewport[6]={0,0,640,480,0,1};
+void GXGetViewportv(float* out){std::memcpy(out,viewport,sizeof(viewport));}
+const TEXDescriptor* TEXGet(const Tpl* tpl,unsigned i){assert(i==0);return tpl->descriptor;}
+void PSMTXConcat(const Mtx a,const Mtx b,Mtx out){
+    for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c){
+        out[r][c]=c==3?a[r][3]:0;
+        for(unsigned k=0;k<3;++k)out[r][c]+=a[r][k]*b[k][c];
+    }
+}
+void PSMTXMultVec(const Mtx m,const Vec* p,Vec* out){
+    out->x=m[0][0]*p->x+m[0][1]*p->y+m[0][2]*p->z+m[0][3];
+    out->y=m[1][0]*p->x+m[1][1]*p->y+m[1][2]*p->z+m[1][3];
+    out->z=m[2][0]*p->x+m[2][1]*p->y+m[2][2]*p->z+m[2][3];
+}
+struct GXColor{u8 r=255,g=255,b=255,a=255;};
+bool EffIsSetFinalCol(){return false;}void EffGetFinalCol(GXColor*){assert(false);}
+extern "C" int ESP_IsActive(cEsp* e){return bool(e->m_Be_flg&1);}
+void Ps2fxAdditionsDraw(){} // The unrelated r118/r11c addition is outside this fixture.
+struct Re4dcUiImage{const void* pixels=nullptr;const void* palette=nullptr;
+    unsigned width=96,height=96,format=1,palette_format=~0U,palette_bytes=0;};
+struct Re4dcEffectSprite{Re4dcUiImage image{};float x[4]{},y[4]{},z[4]{},u[4]{},v[4]{};
+    unsigned color=0xffffffff;unsigned char src=4,dst=1,screen=0,pad=0;};
+Re4dcEffectSprite s_stage1_sprites[50]{};
+struct Key{unsigned crc=0,fnv=0;bool operator==(const Key& b)const{return crc==b.crc&&fnv==b.fnv;}};
+struct Entry{bool valid=false;Key key{};unsigned frame=0;};Entry entries[2]{};
+struct DeferredLighting{};
+struct DeferredPart{DeferredPart* next=nullptr;DeferredLighting* lighting=nullptr;unsigned changed[2]{};};
+constexpr unsigned kSpriteNode=(sizeof(DeferredPart)+31)&~31U,kSpritePacket=96,kFxOctPacket=288;
+DeferredLighting* const kSpriteTag=reinterpret_cast<DeferredLighting*>(1);
+DeferredLighting* const kFxOctTag=reinterpret_cast<DeferredLighting*>(8);
+struct Re4dcUiQuad{unsigned char bytes[104];};
+alignas(32) unsigned char frame_storage[26*1024]{},spill_storage[24*1024]{};
+unsigned deferred_top=sizeof(frame_storage),deferred_spill_capacity=0,deferred_spill_top=0;
+unsigned char* deferred_spill=nullptr;
+DeferredPart* deferred_first=nullptr;DeferredPart* deferred_last=nullptr;
+unsigned deferred_count=0,nquad=0,frame_queue_peak=0;
+bool frame_ready=true,stream_aborted=false,draining_parts=false,source_draws_finished=false;
+unsigned frame=1,fx_frame=1,fx_count=0,fx_capped=0,fx_culled=0,fx_dropped=0,fx_missing=0,fx_queued=0,fx_direct=0,fx_peak=0;
+unsigned fx_new_loads=0,load_opens=0,fx_evict_frame=~0U-8;
+constexpr unsigned kFxNewLoads=4;bool fx_resident_only=false;
+unsigned last_refusal=0,packet_calls=0,stream_calls=0,spill_calls=0;bool supply_spill=false;
+void re4dc_log(const char* fmt,...){
+    if(std::strstr(fmt,"PS2FXSTAGE1_BATCH")){
+        va_list ap;va_start(ap,fmt);(void)va_arg(ap,unsigned);last_refusal=va_arg(ap,unsigned);va_end(ap);
+    }
+}
+namespace re4dc{namespace render{bool is_finite(float x){return std::isfinite(x);}}}
+bool same_image(const Re4dcUiImage&a,const Re4dcUiImage&b){return a.pixels==b.pixels;}
+unsigned image_size(const Re4dcUiImage&i){return i.width*i.height;}
+bool image_key(const Re4dcUiImage&i,Key&k){k={unsigned(reinterpret_cast<std::uintptr_t>(i.pixels)),0};return true;}
+Entry* resolve(const Re4dcUiImage&i,void*,bool){
+    Key k{};image_key(i,k);for(auto&e:entries)if(e.valid&&e.key==k){e.frame=frame;return &e;}return nullptr;
+}
+float (*re4dc_fog_gate_far)()=nullptr;
+void fx_packet(const Re4dcEffectSprite&,Entry*,unsigned char*out){++packet_calls;std::memset(out,0,kSpritePacket);}
+int fx_trim(const Re4dcEffectSprite&,Entry*,Re4dcEffectSprite&,float*,float*){return 0;}
+void fx_trim_oct_packet(const Re4dcEffectSprite&,Entry*,float*,float*,unsigned char*out){std::memset(out,0,kFxOctPacket);}
+void stream_select(int){}void stream_send(const void*,unsigned){++stream_calls;}void fx_send(unsigned char*,bool){++stream_calls;}
+void* re4dc_model_deferred_storage(unsigned*bytes){
+    ++spill_calls;*bytes=supply_spill?sizeof(spill_storage):0;return supply_spill?spill_storage:nullptr;
+}
+#if RE4DC_FX_R200_ENTRY_CAP
+re4dc::fx_r200::Tail fx_r200_tail;
+bool fx_r200_tail_select(unsigned required,unsigned char*& storage,unsigned*& top){
+    re4dc::fx_r200::Context c;c.room=room_id;
+    // r117 never reaches the r200-only tail, regardless of other fields.
+    const auto result=fx_r200_tail.select(c,required,storage,top);
+    assert(result==re4dc::fx_r200::Result::OtherRoom);return false;
+}
+#endif
+#define RE4DC_EFFECT_SPRITE_MAX 64
+#define RE4DC_EFFECT_ROOM 7
+#define RE4DC_FX_QUEUE_MARGIN 8192U
+#define RE4DC_SCREEN_WF 640.0f
+#define RE4DC_SCREEN_HF 480.0f
+#define RE4DC_UI_HANDLES 1
+#define RE4DC_ESP_SPRITE_FAST 1
+#define RE4DC_FX_SPRITE_TRIM 2
+#define RE4DC_FQ_DROP(a,b) ((void)0)
+#define AVD_EVENT(...) ((void)0)
+#define PVR_LIST_TR_POLY 2
+#define RE4DC_GAME 1
+#define RE4DC_FX_TRIM 1
+#define RE4DC_PS2_FX_ADDITIONS 1
+@KNOB_GUARD@
+@TRIM_TABLE@
+@ESSENTIAL_TABLE@
+u8 re4dc_fx_essential=1,re4dc_fx_level=0;
+@EARLY_STATE@
+#if defined(RE4DC_R117_FX_FALLBACK)
+static int Ps2fxPuzzleFallback(const cEsp*);
+#endif
+@ESSENTIAL_CUT@
+@EARLY_CUT@
+@TRIM_SPRITE@
+@BATCH@
+@SPRITE@
+@PUZZLE@
+
+alignas(16) u8 pool[64*0x150]{},other_pool[64*0x150]{};
+Parent parent;Model model;Animation animation;TEXHeader tex_header;TEXDescriptor descriptor;Tpl tpl;
+cEsp* anchors[3]{};
+static Re4dcEffectSprite sprite(unsigned image_id){
+    Re4dcEffectSprite s{};s.image.pixels=reinterpret_cast<void*>(std::uintptr_t(image_id));
+    for(unsigned i=0;i<4;++i){s.x[i]=(i==1||i==2)?110:100;s.y[i]=i<2?100:110;s.z[i]=0.001f;s.u[i]=i&1;s.v[i]=i>>1;}
+    return s;
+}
+static void identity(Mtx m){std::memset(m,0,sizeof(Mtx));for(unsigned i=0;i<3;++i)m[i][i]=1;}
+static void reset_frame(unsigned colors=1){
+    static_assert(sizeof(cPs2fxEsp0a)<=0x150);
+    ++frame;pG=&globals;globals.Frame_cnt=frame;globals.Status_flg[0]=globals.Status_flg[1]=0;
+    room_id=0x117;room_live=true;++room_generation;model={};parent={};identity(parent.mat);parent.mat[2][3]=-3000;
+    identity(globals.Cam.v_mat);std::memset(globals.Cam.ProjMat,0,sizeof(Mtx44));
+    globals.Cam.ProjMat[0][0]=globals.Cam.ProjMat[1][1]=1;
+    globals.Cam.ProjMat[2][2]=-1.0f/19999.0f;globals.Cam.ProjMat[2][3]=-20000.0f/19999.0f;
+    viewport[2]=640;viewport[3]=480;
+    g_pEspSys=&espsys;espsys={};espsys.pEspBuf=pool;EspgenArray=nullptr;nEspgen=0;
+    std::memset(pool,0,sizeof(pool));
+    for(unsigned color=0;color<3;++color){
+        anchors[color]=nullptr;if(!(colors&(1U<<color)))continue;
+        for(unsigned rank=0;rank<(color==1?50U:1U);++rank){
+            auto* e=new(pool+espsys.nEsp++*0x150)cPs2fxEsp0a{};
+            e->info.Call_no=100+color;e->parent={&parent,0x1000};e->m_pMod={&model,0x2000};
+            e->m_Col_start_r=color==0?50:0;e->m_Col_start_g=color==1?50:0;e->m_Col_start_b=color==2?50:0;
+            e->m_Pos={kPuzzleX[color],kPuzzleY[color],-250.0f*rank};
+            if(color!=1){e->m_Id=0x0a;e->m_Tool_flg=0x8400;e->m_Speed.z=-250;e->type=1;e->base_alpha=130;}
+            if(!rank)anchors[color]=e;
+        }
+    }
+    animation={};tex_header={reinterpret_cast<void*>(0x13),96,96,1};descriptor={&tex_header,nullptr};tpl={1,&descriptor};
+    EspTexWk& tw=espsys.Esp_tex_tbl[0x13];tw={};tw.Owner=1;tw.pTpl=&tpl;tw.pAnm=&animation;identity(tw.mtx);
+    fx_frame=frame;fx_count=0;deferred_top=sizeof(frame_storage);deferred_first=deferred_last=nullptr;deferred_count=0;
+    deferred_spill=nullptr;deferred_spill_capacity=deferred_spill_top=0;supply_spill=false;
+    frame_ready=true;stream_aborted=draining_parts=source_draws_finished=false;
+    last_refusal=packet_calls=stream_calls=spill_calls=0;re4dc_fx_essential=1;re4dc_fx_level=0;re4dc_ps2fx=PS2FX_STREAK;
+    entries[0]={false,{0x13,0},0};entries[1]={true,{0xff,0},0};
+}
+static cEsp copy(unsigned color){
+    assert(anchors[color]);cEsp e=*anchors[color];e.m_Id=0;e.m_Life_max=color==1?0:1;e.m_Speed={};return e;
+}
+static void replace(){
+    u8 before[sizeof(pool)];std::memcpy(before,pool,sizeof(pool));
+    Ps2fxStage1Prepare();re4dc_ps2_fx_stage1_render(1,0);
+    assert(std::memcmp(before,pool,sizeof(pool))==0); // No source state/lifetime writes.
+}
+static bool fallback(const cEsp& e){
+#if defined(RE4DC_R117_FX_FALLBACK)
+    return Ps2fxPuzzleFallback(&e);
+#else
+    (void)e;return false;
+#endif
+}
+static void expect_eligible(cEsp& e,bool permitted){
+    assert(!Ps2fxPuzzleSuppress(&e));assert(fallback(e)==permitted);
+    Re4dcEffectSprite s=sprite(0xff);
+    assert(FxTrimSprite(&e,&s,100)==(permitted?0:5));
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    // The late call has initialized/reset both production bucket stamps.
+    assert(FxEssentialSetupCut(&e,0)==!permitted);
+#endif
+}
+static int draw_source(cEsp& e){
+    // Controlled transform/texture boundary between actual production filters.
+    if(Ps2fxPuzzleSuppress(&e))return 0;
+#if defined(RE4DC_ESP_ESSENTIAL_EARLY)
+    if(FxEssentialSetupCut(&e,0))return 0;
+#endif
+    Re4dcEffectSprite s=sprite(0xff);
+    return FxTrimSprite(&e,&s,100)==0?re4dc_effect_sprite(&s):0;
+}
+static void missing_texture(){
+    reset_frame();cEsp e=copy(0);replace();
+    assert(last_refusal==31 && fx_count==0 && deferred_count==0 && packet_calls==0 && stream_calls==0);
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    assert(draw_source(e)==RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    assert(packet_calls==RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    // A repeated consumed render call cannot revoke the failed-colour ticket.
+    re4dc_ps2_fx_stage1_render(1,0);assert(fallback(e)==bool(RE4DC_R117_FX_QUALIFIED_FALLBACK));
+    reset_frame(2);e=copy(1);replace();
+    assert(last_refusal==31 && s_puzzle[1].evidence.complete() && !s_puzzle_active);
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    assert(draw_source(e)==RE4DC_R117_FX_QUALIFIED_FALLBACK);
+}
+static void capacities(){
+    reset_frame();entries[0].valid=true;fx_count=63;cEsp e=copy(0);replace();
+    assert(last_refusal==21 && fx_count==63 && deferred_count==0 && packet_calls==0);
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    assert(draw_source(e)==RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    if(RE4DC_R117_FX_QUALIFIED_FALLBACK)assert(fx_count==64 && !draw_source(e));
+    reset_frame();entries[0].valid=true;e=copy(0);deferred_top=16384+kSpriteNode+kSpritePacket;replace();
+    assert(last_refusal==22 && deferred_count==0 && packet_calls==0 && spill_calls==0);
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    assert(draw_source(e)==RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    reset_frame();entries[0].valid=true;e=copy(0);deferred_top=16384;supply_spill=true;replace();
+    assert(last_refusal==22 && spill_calls==0); // Batch never allocates the release's lazy spill.
+    assert(draw_source(e)==RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    if(RE4DC_R117_FX_QUALIFIED_FALLBACK)assert(spill_calls==1 && deferred_spill==spill_storage);
+    reset_frame();entries[0].valid=true;e=copy(0);fx_count=64;replace();
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);assert(!draw_source(e));
+    reset_frame();e=copy(0);entries[1].valid=false;replace();
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);assert(!draw_source(e));
+    reset_frame();entries[0].valid=true;e=copy(0);deferred_top=16384;replace();
+    expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);assert(!draw_source(e));
+}
+static void success_and_mixed(){
+    reset_frame();entries[0].valid=true;cEsp e=copy(0);replace();
+    assert(s_puzzle_active==1 && fx_count>0 && !last_refusal && Ps2fxPuzzleSuppress(&e) && !fallback(e));
+    const unsigned count=fx_count,packets=packet_calls;assert(!draw_source(e));
+    assert(fx_count==count && packet_calls==packets);
+    re4dc_ps2_fx_stage1_render(1,0);assert(Ps2fxPuzzleSuppress(&e));
+    reset_frame(7);entries[0].valid=true;replace();
+    ps2fx::TrailPoint points[50];const unsigned n=ps2fx::puzzle_trail(points);
+    assert(n*2<=64 && n*3>64 && s_puzzle_active==3 && last_refusal==21);
+    assert(fx_count==n*2 && packet_calls==n*2 && deferred_count==n*2); // Third rejection atomic.
+    for(unsigned c=0;c<3;++c){e=copy(c);
+        if(c<2){assert(Ps2fxPuzzleSuppress(&e) && !fallback(e) && !draw_source(e));}
+        else{expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);assert(draw_source(e)==RE4DC_R117_FX_QUALIFIED_FALLBACK);}
+    }
+    // Same-frame retry after a new Prepare replaces the failed ticket completely.
+    reset_frame();e=copy(0);replace();entries[0].valid=true;replace();
+    assert(Ps2fxPuzzleSuppress(&e) && !fallback(e) && !draw_source(e));
+    reset_frame();e=copy(0);model.be_flag=0;replace();
+    assert(!last_refusal && !fx_count && Ps2fxPuzzleSuppress(&e) && !fallback(e));
+    reset_frame();e=copy(0);parent.mat[2][3]=100000;replace();
+    assert(!last_refusal && !fx_count && Ps2fxPuzzleSuppress(&e) && !fallback(e));
+}
+static void qualification(){
+    reset_frame();cEsp original=copy(0);replace();
+    for(unsigned change=0;change<14;++change){cEsp e=original;
+        switch(change){
+        case 0:++e.info.Call_no;break;case 1:++e.info.Core_pEm;break;case 2:++e.info.Core_flg;break;
+        case 3:++e.parent.id;break;case 4:++e.m_pMod.id;break;case 5:++e.m_Guid_pMod;break;
+        case 6:e.m_Life_max=0;break;case 7:e.m_Tool_flg=0x8000;break;case 8:e.m_Size_plus=1;break;
+        case 9:e.m_Speed.z=1;break;case 10:e.m_Parts_no=1;break;case 11:e.m_Id=0x0a;break;
+        case 12:e.m_Col_start_r=0;e.m_Col_start_b=50;break;case 13:e.info.owner=0xd0;break;
+        }
+        expect_eligible(e,false);
+    }
+    ++model.serial;expect_eligible(original,false);
+    // No permission from missing/incomplete/duplicate qualification metadata.
+    reset_frame(2);cEsp e=copy(1);--espsys.nEsp;replace();assert(!last_refusal);expect_eligible(e,false);
+    reset_frame(2);e=copy(1);reinterpret_cast<cEsp*>(pool+0x150)->m_Pos.z=0;replace();assert(!last_refusal);expect_eligible(e,false);
+    reset_frame();e=copy(0);animation.Width=95;replace();assert(!last_refusal);expect_eligible(e,false);
+    reset_frame();e=copy(0);viewport[2]=0;replace();assert(!last_refusal);expect_eligible(e,false);
+    reset_frame();e=copy(0);model.be_flag=0;frame_ready=false;replace();assert(last_refusal==1);expect_eligible(e,false);
+}
+static void lifetime_and_toggles(){
+    reset_frame();cEsp e=copy(0);replace();++globals.Frame_cnt;expect_eligible(e,false);
+    reset_frame();e=copy(0);replace();espsys.pEspBuf=other_pool;expect_eligible(e,false);
+    espsys.pEspBuf=pool;Ps2fxStage1Prepare();expect_eligible(e,false);
+    // Same pool address is reused with a different source identity in the same frame.
+    ++anchors[0]->info.Call_no;cEsp rebound=copy(0);re4dc_ps2_fx_stage1_render(1,0);
+    expect_eligible(e,false);expect_eligible(rebound,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    reset_frame();e=copy(0);replace();room_live=false;expect_eligible(e,false);
+    reset_frame();e=copy(0);replace();++room_generation;expect_eligible(e,false);
+    replace();expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    reset_frame();e=copy(0);replace();room_id=0x118;expect_eligible(e,false);
+    reset_frame();e=copy(0);replace();re4dc_ps2fx=0;expect_eligible(e,false);
+    Ps2fxStage1Prepare();re4dc_ps2fx=PS2FX_STREAK;expect_eligible(e,false);
+    reset_frame();e=copy(0);replace();re4dc_fx_essential=0;assert(draw_source(e)==1);
+    re4dc_fx_essential=1;expect_eligible(e,RE4DC_R117_FX_QUALIFIED_FALLBACK);
+    // A skipped/stale pending frame grants neither suppression nor fallback.
+    reset_frame();e=copy(0);Ps2fxStage1Prepare();re4dc_ps2_fx_stage1_render(1,1);expect_eligible(e,false);
+    reset_frame();e=copy(0);Ps2fxStage1Prepare();++room_generation;re4dc_ps2_fx_stage1_render(1,0);expect_eligible(e,false);
+    reset_frame();e=copy(0);Ps2fxStage1Prepare();espsys.pEspBuf=other_pool;re4dc_ps2_fx_stage1_render(1,0);expect_eligible(e,false);
+}
+int main(){
+    missing_texture();capacities();success_and_mixed();qualification();lifetime_and_toggles();
+    std::printf("{\"status\":\"PASS\",\"knob\":%u,\"early\":%u,\"r200\":%u,\"frames\":%u}\n",
+        unsigned(RE4DC_R117_FX_QUALIFIED_FALLBACK),unsigned(RE4DC_ESP_SETUP_LEAN),unsigned(RE4DC_FX_R200_ENTRY_CAP),frame);
+}

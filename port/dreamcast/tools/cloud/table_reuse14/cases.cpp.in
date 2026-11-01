@@ -1,0 +1,146 @@
+unsigned assertions=0;
+extern "C" unsigned re4dc_actor_stream_begin(const void*,unsigned){return 0;}
+extern "C" void re4dc_actor_stream_end(unsigned,const void*,unsigned){}
+#define require(x) do{++check::assertions;if(!(x)){std::fprintf(stderr,"case line %u: %s\n",unsigned(__LINE__),#x);std::abort();}}while(0)
+std::vector<std::uint32_t> all_words;
+void finish_case(){all_words.push_back(unsigned(ta.size()));all_words.insert(all_words.end(),ta.begin(),ta.end());require(locks==unlocks);}
+Re4dcActorSkinBinding binding(Asset& a){
+    Re4dcActorSource s{reinterpret_cast<const u8*>(a.positions.data()),
+        reinterpret_cast<const u8*>(a.small?static_cast<const void*>(a.small_normals.data()):static_cast<const void*>(a.wide_normals.data())),
+        a.p.position_count,a.p.normal_count,3u,unsigned(a.small)};
+    return {a.p.info,s,a.palette.data(),3};
+}
+struct Owner {
+    Re4dcActorSkinLease skin{};Re4dcActorWorkspaceLease workspace{};
+    unsigned capacity_info=0;float capacity_palette[8*12]{};
+    Owner(Asset& a,Asset& b,unsigned capacity_entries=8){
+        a.bind();b.bind();Re4dcActorSkinBinding bindings[3]={binding(a),binding(b),{}};
+        unsigned count=2;
+        // Model the existing transaction's MAX(role.palette_count*114), not
+        // an oversized speculative reservation. A third live eight-matrix
+        // role funds the window even when the ordered run draws only A/B.
+        if(capacity_entries){
+            require(capacity_entries<=8);auto source=bindings[0].source;source.palette_entries=capacity_entries;
+            for(unsigned i=0;i<capacity_entries;++i)capacity_palette[i*12]=capacity_palette[i*12+4]=capacity_palette[i*12+8]=1;
+            bindings[count++]={&capacity_info,source,capacity_palette,capacity_entries};
+            sources.push_back({&capacity_info,source});
+        }
+        const unsigned budget=(std::max(3u,capacity_entries)*114u+31u)&~31u;
+        require(re4dc_actor_workspace_acquire(budget,&workspace));
+        require(re4dc_actor_skin_acquire(serial,bindings,count,&skin));
+    }
+    void release(){require(re4dc_actor_skin_release(&skin));re4dc_actor_workspace_release(&workspace);}
+};
+void draw(Asset& a){require(re4dc_actor_submit(&a.p)==1);}
+void sequence(Asset& a,Asset& b){
+#if RE4DC_COARSE_ONE_SUBMIT
+    const Re4dcActorChunk chunks[]={
+        {a.p.info,a.p.stream,a.p.uv,a.p.modelview,a.p.stream_bytes,a.p.position_count,a.p.normal_count},
+        {b.p.info,b.p.stream,b.p.uv,b.p.modelview,b.p.stream_bytes,b.p.position_count,b.p.normal_count},
+        {a.p.info,a.p.stream,a.p.uv,a.p.modelview,a.p.stream_bytes,a.p.position_count,a.p.normal_count}};
+    auto p=a.p;require(re4dc_actor_submit_chunks(&p,chunks,3)==7u);
+#else
+    draw(a);draw(b);draw(a);
+#endif
+}
+void light_draw(Asset& a){
+#if RE4DC_COARSE_ONE_SUBMIT
+    const Re4dcActorChunk chunk{a.p.info,a.p.stream,a.p.uv,a.p.modelview,
+        a.p.stream_bytes,a.p.position_count,a.p.normal_count};
+    auto p=a.p;require(re4dc_actor_submit_chunks(&p,&chunk,1)==1u);
+#else
+    draw(a);
+#endif
+}
+void light_boundary(float delta,bool immediate){
+    start();Asset a(1,1,12),b(1,1,12);Owner owner(a,b);
+    light_draw(a);if(!immediate)light_draw(b);ta.clear();
+    // Exact review witnesses: light X=400 -> 402/404 are below the existing
+    // direction tolerance but change emitted ARGB. Zero and 408 are controls.
+    a.lighting.lights[0].position[0]+=delta;
+    const unsigned before=table14_host_builds,dirs=stats.skin_dir_sets;
+    light_draw(a);const auto live=ta;
+    require(!live.empty());
+    require(table14_host_builds-before==unsigned(!immediate && !RE4DC_ACTOR_TABLE_REUSE14));
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+    require(stats.skin_dir_sets-dirs==unsigned(!immediate || delta>=8));
+#endif
+    finish_case();ta.clear();owned_skin_invalidate_frames();light_draw(a);
+    require(ta.size()==live.size());
+    if(!immediate || delta==0 || delta>=8 || RE4DC_ACTOR_LIGHT_FAST_ONLY)require(ta==live);
+    else {
+        // Immediate same-info hits keep their legacy tolerant directions in
+        // both OFF and ON. Only ARGB may differ from a forced fresh Frame.
+        require(ta!=live);
+        for(unsigned i=0;i<ta.size();++i)if(ta[i]!=live[i])require((i&7u)==6u);
+    }
+    finish_case();owner.release();
+}
+void aba(bool bounded){
+    start();Asset a(1,1,12),b(1,1,12);b.palette[9]=19;
+    Owner owner(a,b,bounded?0:8);
+    const auto scratch_limit=workspace_scratch_limit();
+    const unsigned before=table14_host_builds;
+    sequence(a,b);
+    require(!ta.empty());require(workspace_scratch_limit()==scratch_limit);
+    require(workspace_bytes-workspace_end<=owner.workspace.bytes);
+#if RE4DC_ACTOR_TABLE_REUSE14
+    require(table14_host_builds-before==(bounded?3u:2u));
+#else
+    require(table14_host_builds-before==3);
+#endif
+    finish_case();owner.release();
+}
+void changes(){
+    start();Asset a(1,1,12),b(1,1,12);Owner owner(a,b);
+    draw(a);draw(b);const unsigned built=table14_host_builds;
+    a.p.modelview[3]=17;draw(a);require(table14_host_builds==built+1);
+    finish_case();ta.clear();
+    // Light/material work remains current even when A's position table hits.
+    a.lighting.lights[0].position[0]=-900;a.lighting.lights[0].color[0]=10;
+    a.lighting.ambient[1]=120;draw(a);const auto live=ta;
+    ta.clear();owned_skin_invalidate_frames();draw(a);require(ta==live);
+    finish_case();ta.clear();
+    a.p.projection[1]=1.1f;draw(a);const auto zoom=ta;
+    ta.clear();owned_skin_invalidate_frames();draw(a);require(ta==zoom);
+    finish_case();ta.clear();
+    owner.release();
+}
+void replacement(){
+    start();Asset a(1,1,12),b(1,1,12);Owner owner(a,b);
+    draw(a);const auto first=ta;ta.clear();const auto old=owner.skin;
+    owner.release();require(!re4dc_actor_skin_validate(&old));
+    for(const auto& f:frames)require(f.frame!=frame_serial || !f.skin_positions);
+    a.palette[9]+=45;Owner fresh(a,b);draw(a);require(ta!=first);finish_case();ta.clear();
+    auto stale=fresh.skin;re4dc_actor_owner_retire();require(!re4dc_actor_skin_validate(&stale));
+    require(!workspace && !workspace_bytes);for(const auto& f:frames)require(!f.skin_positions);
+    // Same memory, fresh allocation/render epoch: no table or owner survives.
+    std::memset(work,0xa5,sizeof work);re4dc_actor_frame(work,sizeof work);
+    Owner rebound(a,b);draw(a);finish_case();rebound.release();
+}
+void unknown_and_capacity(){
+    start();Asset a(1,1,12),b(1,1,12);a.bind();b.bind();
+    draw(a);const auto prepared=stats.info_preparations;draw(a);require(stats.info_preparations==prepared);
+    ta.clear();owned_skin_invalidate_frames();
+    const unsigned before=table14_host_builds;sequence(a,b);require(table14_host_builds==before+3);finish_case();
+    // An allocation too small for one table keeps the existing on-demand
+    // position-matrix fallback; output remains the ordinary native geometry.
+    start();a.bind();draw(a);const auto reference=ta;ta.clear();
+    re4dc_actor_frame(work,64);a.bind();draw(a);require(ta==reference);
+    for(const auto& f:frames)if(f.info==a.p.info && f.frame==frame_serial)require(!f.skin_positions);
+    finish_case();
+}
+void victims(){
+    start();Asset a(1,1,12),b(1,1,12);Owner owner(a,b);
+    for(unsigned i=0;i<12;++i){a.p.modelview[3]=float(i*2);draw(a);require(workspace_bytes-workspace_end<=owner.workspace.bytes);}
+    finish_case();owner.release();
+}
+} // namespace check
+int main(int argc,char** argv){
+    check::aba(false);check::aba(true);check::changes();check::replacement();check::unknown_and_capacity();check::victims();
+    for(float delta:{0.f,2.f,4.f,8.f})for(bool immediate:{false,true})check::light_boundary(delta,immediate);
+    require(argc==2);FILE* out=std::fopen(argv[1],"wb");require(out);
+    require(std::fwrite(check::all_words.data(),4,check::all_words.size(),out)==check::all_words.size());std::fclose(out);
+    std::printf("{\"checks\":%u,\"words\":%zu,\"table_builds\":%u,\"matrix_builds\":%u,\"frame_bytes\":%zu}\n",
+        check::assertions,check::all_words.size(),table14_host_builds,table14_host_matrices,sizeof(Frame));
+}

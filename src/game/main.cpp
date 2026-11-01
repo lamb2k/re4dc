@@ -1,6 +1,13 @@
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#include "fallback_audit29.h"
+#endif
+#line 1
 // game/main: entry point, frame loop, system init and reset handling (D:/Bio4/Prog/main.cpp).
 #include "types.h"
 #include "global.h"
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+#include "frontend_tpl_owner34.h"
+#endif
 #include "joy.h"
 
 // .sbss objects in the order the original lays them out (uninitialised globals are emitted in
@@ -73,6 +80,44 @@ f32 ORTHO_R;
 #define WC24_RESET()
 #define WC24_WAIT()
 #define WC24_DECISION()
+#endif
+#if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+#include "draw_setup_audit.h"
+#define DSA24_BEGIN() re4dc::dsa24::begin_tick(pG->Frame_cnt,unsigned(pG->room_id));
+#define DSA24_END() re4dc::dsa24::end_tick();
+#define DSA24_RESET() re4dc::dsa24::reset();
+#define DSA24_SETUP_BEGIN() re4dc::dsa24::begin_setup();
+#define DSA24_SETUP_END() re4dc::dsa24::end_setup();
+#define DSA24_BEFORE(call) { const re4dc::dsa24::Scope dsa_begin(re4dc::dsa24::FrameBegin); call; }
+#if RE4DC_PACE_CATCHUP
+#define DSA24_DECISION() re4dc::dsa24::decision(!re4dc_pace_skipping);
+#else
+#define DSA24_DECISION() re4dc::dsa24::decision(true);
+#endif
+#else
+#define DSA24_BEGIN()
+#define DSA24_END()
+#define DSA24_RESET()
+#define DSA24_SETUP_BEGIN()
+#define DSA24_SETUP_END()
+#define DSA24_BEFORE(call) call
+#define DSA24_DECISION()
+#endif
+#if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+#include "draw_fallback_audit.h"
+#define DFA26_BEGIN() re4dc::dfa26::begin_tick(pG->Frame_cnt,unsigned(pG->room_id));
+#define DFA26_END() re4dc::dfa26::end_tick();
+#define DFA26_RESET() re4dc::dfa26::reset();
+#if RE4DC_PACE_CATCHUP
+#define DFA26_DECISION() re4dc::dfa26::decision(!re4dc_pace_skipping);
+#else
+#define DFA26_DECISION() re4dc::dfa26::decision(true);
+#endif
+#else
+#define DFA26_BEGIN()
+#define DFA26_END()
+#define DFA26_RESET()
+#define DFA26_DECISION()
 #endif
 #line 58
 
@@ -236,7 +281,11 @@ int main()
     int ret;
 
     systemStartInit();
-RESTART: WC24_RESET()
+RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+    re4dc::fa29::reset();
+#endif
+#line 82
     {
         systemRestartInit();
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
@@ -274,7 +323,11 @@ RESTART: WC24_RESET()
             BitOff(pG->Debug_flg[3], 0x2000);
         }
         TaskExec(0, Title_task, 0);
-        for (;;) { WC24_BEGIN()
+        for (;;) { WC24_BEGIN() DSA24_BEGIN() DFA26_BEGIN()
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::begin_tick(pG->Frame_cnt,unsigned(pG->room_id));
+#endif
+#line 120
 #if defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE
             // Determinism trace (LOGIC_TRACE=1 test builds only): the state left by the previous
             // iteration's complete logic + render pass, independent of how long rendering took.
@@ -285,11 +338,19 @@ RESTART: WC24_RESET()
             // Render_swap); the logic tick below runs in full either way.
             re4dc_pace_begin();
 #endif
-            OTHER_PHASE(4); WC24_DECISION() // definitive bench_iter boundary: after pace_begin
+            OTHER_PHASE(4); WC24_DECISION() DSA24_DECISION() DFA26_DECISION() // definitive bench_iter boundary: after pace_begin
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if RE4DC_PACE_CATCHUP
+            re4dc::fa29::decision(!re4dc_pace_skipping);
+#else
+            re4dc::fa29::decision(true);
+#endif
+#endif
+#line 131
             StopwatchInit();
-            ProcessTickInit();
+            ProcessTickInit(); DSA24_SETUP_BEGIN()
             MWC("top");
-            Render_before();
+            DSA24_BEFORE(Render_before());
             ClearOTagR(MainOt, 5);
             PadRead();
             DebugControl();
@@ -297,7 +358,7 @@ RESTART: WC24_RESET()
 #if RE4DC_PACE_CATCHUP
             re4dc_pace_test_draw();
 #endif
-            ProcessTickGet(4, "RENDER SETUP");
+            ProcessTickGet(4, "RENDER SETUP"); DSA24_SETUP_END()
             SetPrimBuffPtr();
             ClearOt();
             MWC("clear");
@@ -397,7 +458,11 @@ RESTART: WC24_RESET()
             ProcessTickLog();  // GAME_TICK_LOG: per-subsystem timing line every N frames
 #endif
             MWC("end");
-            ret = systemResetCheck(); WC24_END()
+            ret = systemResetCheck(); WC24_END() DSA24_END() DFA26_END()
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+            re4dc::fa29::end_tick();
+#endif
+#line 243
             if (ret == 1) {
                 goto RESTART;
             }
@@ -755,6 +820,9 @@ void systemSoftReset()
     systemResetCommon();
     re4dc_motion_retire_all();
     re4dc_effect_retire_room();
+#if defined(RE4DC_FRONT_TPL_OWNER) && RE4DC_FRONT_TPL_OWNER
+    re4dc_front_tpl_retire_room();
+#endif
     re4dc_ui_retire_room();
 #endif
     ResetDebugAlloc();

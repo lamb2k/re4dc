@@ -152,8 +152,15 @@ MODULE(wep11)
 MODULE(wep13)
 MODULE(wep19)
 #endif
-#if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04
+#if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04 && !(defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL)
 MODULE(wep04)
+#endif
+#if (defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05) || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
+MODULE(wep05)
+#endif
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+MODULE(wep06)
+MODULE(wep12)
 #endif
 #if RE4DC_SUBSCREEN && !RE4DC_SUBSCREEN_OVL
 MODULE(Sscrn)
@@ -317,7 +324,18 @@ static const Re4dcModule g_modules[] = {
     MODULE(53, wep19), // WEAPON_MODULES: hand / incendiary / flash grenades
 #endif
 #if defined(RE4DC_WEAPON_WEP04) && RE4DC_WEAPON_WEP04
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+    {70, "wep04", 0, 0, 0, 0, 0, 0, 0},  // WEAPON_WEP04_OVL: Blacktail; overlay wep04.ovl (weapon slot)
+#else
     MODULE(70, wep04), // WEAPON_WEP04: Blacktail
+#endif
+#endif
+#if (defined(RE4DC_WEAPON_WEP05) && RE4DC_WEAPON_WEP05) || (defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27)
+    MODULE(67, wep05), // WEAPON_WEP05: weapon 5 (item 0x29)
+#endif
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+    MODULE(50, wep06), // Government / Matilda (item 0x2a, stock variant 0x2b)
+    MODULE(56, wep12), // Thompson (item 0x34)
 #endif
 #if RE4DC_SUBSCREEN_OVL
     {71, "Sscrn", 0, 0, 0, 0, 0, 0, 0},  // sub screen overlay (entry points set per load)
@@ -376,6 +394,27 @@ static int moduleIndex(u32 id)
     return -1;
 }
 
+#if defined(RE4DC_WEP_MODULES_27) && RE4DC_WEP_MODULES_27
+// Pure admission checks: no link, state reset, allocation or disc access.
+// An overlay table row counts as present; OSLink remains responsible for its
+// actual load and can still refuse it without publishing weapon callbacks.
+extern "C" int re4dc_weapon27_module_id_present(unsigned id)
+{
+    return moduleIndex(id) >= 0;
+}
+extern "C" int re4dc_weapon27_module_file_present(const char* rel)
+{
+    if (!rel || rel[0]!='r' || rel[1]!='e' || rel[2]!='l' || rel[3]!='/') return 0;
+    for (unsigned i=0;i<kModules;++i) {
+        const char* p=rel+4;
+        const char* name=g_modules[i].name;
+        while (*name && *p==*name) { ++p; ++name; }
+        if (!*name && p[0]=='.' && p[1]=='r' && p[2]=='e' && p[3]=='l' && !p[4]) return 1;
+    }
+    return 0;
+}
+#endif
+
 // RELs linked as one group object (gen_modules.py group_rules, EM10_SHARED=1) share one state
 // span: the pristine .data is captured once for the span, at the first link of any member, and
 // a member linked while another is still linked resets the state that member is using.
@@ -420,6 +459,9 @@ typedef unsigned char u8;
 extern "C" void re4dc_module_overlay(u32 id, void (*prolog)(void), void (*epilog)(void), char* data, char* data_end,
                                      char* bss, char* bss_end, char* pristine);
 extern "C" int re4dc_static_heap_free();  // ui_bridge.cpp: heap 4 free bytes
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+extern "C" unsigned re4dc_motion_evict_one();  // platform/native_motion.cpp
+#endif
 namespace {
 // tools/gen_overlay.py: a 64-byte header, the module bytes as linked at `base`, the relocation offsets.
 struct RouteOverlayHeader {
@@ -512,11 +554,21 @@ inline int stageSlot(u32 id)
     }
     return -1;
 }
-#define OVL_ID(id) (ROUTE_OVL_ID(id) || stageSlot(id) >= 0)
-#define OVL_REF(id) (stageSlot(id) >= 0 ? g_stage_ovl[stageSlot(id)] : g_route_ovl[ROUTE_OVL_SLOT(id)])
+#define BASE_OVL_ID(id) (ROUTE_OVL_ID(id) || stageSlot(id) >= 0)
+#define BASE_OVL_REF(id) (stageSlot(id) >= 0 ? g_stage_ovl[stageSlot(id)] : g_route_ovl[ROUTE_OVL_SLOT(id)])
 #else
-#define OVL_ID(id) ROUTE_OVL_ID(id)
-#define OVL_REF(id) g_route_ovl[ROUTE_OVL_SLOT(id)]
+#define BASE_OVL_ID(id) ROUTE_OVL_ID(id)
+#define BASE_OVL_REF(id) g_route_ovl[ROUTE_OVL_SLOT(id)]
+#endif
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+// WEAPON_WEP04_OVL: the Blacktail (module 70) has its own slot beside the route / stage tables.
+RouteOverlay g_wep04_ovl;
+#define WEP_OVL_ID(id) ((id) == 70)
+#define OVL_ID(id) (WEP_OVL_ID(id) || BASE_OVL_ID(id))
+#define OVL_REF(id) (*(WEP_OVL_ID(id) ? &g_wep04_ovl : &BASE_OVL_REF(id)))
+#else
+#define OVL_ID(id) BASE_OVL_ID(id)
+#define OVL_REF(id) BASE_OVL_REF(id)
 #endif
 u32 ovlHash(const void* p, u32 bytes)
 {
@@ -579,6 +631,11 @@ static void routeOverlayLoad(unsigned index)
 #endif
 #endif
     u8* block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, heap));
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+    // A weapon equips mid-room: as WEAPON_HEAP4's body, evict cold motion keys before giving up.
+    while (!block && WEP_OVL_ID(m.id) && re4dc_motion_evict_one())
+        block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, heap));
+#endif
     if (!block) {
         fs_close(f);
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
@@ -799,6 +856,13 @@ extern "C" int re4dc_ovl_crash_line(char* out, int size)
 }
 #endif
 
+#if defined(RE4DC_WEAPON_WEP04_OVL) && RE4DC_WEAPON_WEP04_OVL
+// read.cpp re4dc_weapon_ovl_room_reset: 1 when module `id` is a weapon overlay that is loaded now.
+extern "C" int re4dc_weapon_ovl_loaded(u32 id)
+{
+    return WEP_OVL_ID(id) && g_wep04_ovl.block != 0;
+}
+#endif
 // Unlink or room heap rebuild: fill the code with `trapa #0xFF` (a stale call into it stops loudly
 // in the exception handler instead of running reused memory as code until the cell is reused), free it,
 // empty the table entry (the next link reads the overlay again: a fresh link).
