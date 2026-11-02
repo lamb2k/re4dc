@@ -12,7 +12,7 @@ Assembles the two Disc 2 data sets (recipe.conf D2_DATA="cgca26,pmcgca26") from 
                         (a bank with at least one PS2 sample = ps2). Rows provenance.py reads: output_sha256, ps2_sha256.
   PMCGCA26/             the same em / st2 files + the new dc/mot keys: the PS2 motion store (provenance.py credits motion
                         keys only to pm* sets); RECIPE.txt names the PS2 sources."""
-import hashlib, json, shutil, sys
+import hashlib, json, os, shutil, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -44,12 +44,7 @@ rows = []
 for dest, (fin, inp, p2) in files.items():
     (s1 / dest).parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(fin, s1 / dest)
-    if dest.endswith('.dar'):   # the .arc beside it = the .dar's type-0 payload (the copy the catalog also reads)
-        import struct
-        fb = fin.read_bytes(); _k, size, _d, off = struct.unpack_from('<4I', fb, 0x20)
-        for s_ in (s1, s2):
-            (s_ / 'st2').mkdir(parents=True, exist_ok=True)
-            (s_ / dest.replace('.dar', '.arc')).write_bytes(fb[off:off + size])
+    # .dar only: the game opens st2/rNNN.dar, never the .arc (read.cpp ReadAreaData; coordinator 11-02)
     old = {i for k, i, _d, _s in bc.member_rows(dest, inp.read_bytes()) if k == 'model'}
     seen, ps = set(), ps2sha(p2)
     for k, i, data, _s in bc.member_rows(dest, fin.read_bytes()):
@@ -71,7 +66,14 @@ with open(s1 / 'provenance.tsv', 'w') as f:
         f.write('\t'.join(r) + '\n')
 (s1 / 'tex').mkdir()
 n, dup = 0, []
+# PRIOR_TEX (colon-separated tex dirs of D2_DATA sets that come earlier, e.g. cgca26/tex): keys they already ship are
+# not repeated here (the earlier set's package wins on the disc anyway); listed in reports/tex-prior.txt
+prior = {p.name.lower(): str(d) for d in os.environ.get('PRIOR_TEX', '').split(':') if d for p in Path(d).glob('*.re4tex')}
+skipped = []
 for t in sorted(wk.glob('obj/*/x/tex/*.re4tex')) + sorted(wk.glob('itemlib/*/tex/*.re4tex')):
+    if t.name.lower() in prior:
+        skipped.append('%s %s' % (t.name.lower(), prior[t.name.lower()]))
+        continue
     o = s1 / 'tex' / t.name.lower()
     if o.exists():
         a, b = o.read_bytes(), t.read_bytes()
@@ -103,5 +105,7 @@ if (snd / '_map').exists():
     '%s (lane world-ch32, 2026-11-02): Disc 2 chapter 3-2 motion from the PS2 version: BIO4DAT.AFS %s .dat,\n'
     'motion/ps2_motion_prepared.py rewrite + verify. Files = %s final bytes and the new dc/mot keys.\n' % (SET2, ' '.join(CEM + ROOMS), SET1))
 (s1 / 'reports' / 'tex-duplicates.txt').write_text(''.join(x + chr(10) for x in dup))
+(s1 / 'reports' / 'tex-prior.txt').write_text(''.join(x + chr(10) for x in skipped))
+print('PRIOR_TEX: %d keys already shipped by earlier sets, not repeated' % len(skipped))
 print('mkfinal: %d files, %d provenance rows (%d ps2), %d tex keys (%d room duplicates), %d mot keys' % (
     len(files), len(rows), sum(1 for r in rows if r[3]), n, len(dup), k))
