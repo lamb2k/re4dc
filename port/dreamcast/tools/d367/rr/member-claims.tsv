@@ -100,3 +100,4 @@ dc/tex.pak:~e42a7628-c166970d	font22b	Test 22 HUD d-pad (etc/core.das 0x1b2c60#0
 # assets-dc 11-02: Dreamcast-form texture sets and the GameCube room archive drop
 dc/tex.pak:~*	dcf02,dcf03,dcf01	assets-dc: same key re-encoded in Dreamcast form (VQ / mips) or PS2 pixels; size kept, format flags change
 st?/r*.arc:removed	arcdrop	assets-dc batch 4: GameCube room archives no game path reads (read.cpp opens .dar only)
+dc/native/*/ps2-sky.r4sk:added	SKY_PLAY=1 (DATA sky27)	sky27: normal-play PS2 sky as the PVR background plane, one file per outdoor room (t15/int 931512cbd; claimed by lane house26, reviewed by coordinator 11-02)

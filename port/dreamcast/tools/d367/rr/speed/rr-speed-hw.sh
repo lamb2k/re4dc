@@ -32,7 +32,9 @@ S="$HW/scenarios/rrspeed-$N"
 [ ! -e "$S" ] || { echo "rr-speed-hw: $S exists"; exit 1; }
 cleanup() { rm -f "${S:?}/disc/disc.bin" "/mnt/c/Flycast-Evidence/re4-dreamcast/_bench-discs/hwmodel-${N:?}.bin"; rm -rf "${S:?}"; }
 trap cleanup EXIT
-( cd "$HW" && python3 stage-scenario.py "rrspeed-$N" --arm "candidate-route${X}rW" --programs "$HW/programs-route.json" \
+# the scenario disc lives under $HW on C:, and disccache.py hard-links into it: its cache must be on C: too, whatever
+# RE4DC_DISCCACHE the cycle uses for D: bases (house26: cross-device link, every scene "not measured")
+( cd "$HW" && RE4DC_DISCCACHE=${SPEED_HW_DISCCACHE:-/mnt/c/Flycast-Evidence/_disccache} python3 stage-scenario.py "rrspeed-$N" --arm "candidate-route${X}rW" --programs "$HW/programs-route.json" \
   --overlay /mnt/c/Flycast-Evidence/re4-dreamcast/r11-media-overlay-r1/payloads --fixture "$FIX" ) > "$LOG/stage-$N.json" 2>&1 || true
 python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d['status'],d['disc_sha256'])" "$LOG/stage-$N.json" \
   || { tail -5 "$LOG/stage-$N.json"; exit 1; }
