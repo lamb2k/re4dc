@@ -1,0 +1,18 @@
+# MOTION_PIN rows from lane coldread27 (2026-11-02), in gigslow27's motpin.tsv format (port/dreamcast/game/data/motpin.tsv,
+# lane/motionpin): room <TAB> archive_bytes <TAB> mtc_crc <TAB> keys <TAB> note. Append these to motpin.tsv when it lands.
+# The r119 / r11e rows are gigslow27's and are not here.
+# archive_bytes = the "motion bind: archive=" value at a484b261 (rr census logs 1102-1643-638521db-full). heap4 = the
+# census "w11 census: room+90" free heap 4 at that commit; key bytes = the dc/mot key files the archive's MTC table
+# names (candidate disc a484b261). Cold-pool margin MOTION_COLD_POOL=262144. Only rows whose whole key set fits with
+# >= 256 KB above that margin are listed as "all"; the Ganado archives (1.5-1.9 MB of keys) need measured entry lists
+# (MOTION_MISS_LOG), which wait for a measuring run (C: below 20 GB on 11-02, builds held).
+# room	archive_bytes	mtc_crc	keys	note
+117	1321120	*	all	em11 Ganados (157 keys, 1889248 B); heap4 3049952 at entry, 730592 after both r117 rows (STATIC, not measured)
+117	411744	*	all	Ashley pl11 (61 keys, 430112 B); joins in r117 (STATIC)
+112	411744	*	all	Ashley pl11; heap4 3130880 -> 2700768 (STATIC)
+118	411744	*	all	Ashley pl11; heap4 1722880 -> 1292768; em17 (1545824 B) does not fit, needs entries (STATIC)
+200	411744	*	all	Ashley pl11; heap4 1659744 -> 1229632; em12 does not fit, needs entries (STATIC)
+# Candidate, held: Mendez em35 is bounded (MOTION_BOUNDED_R11F: no cold pool, 2 slabs of 123 KB), so every non-slab key
+# re-reads; pinning all 82 keys (2486496 B) leaves heap4 330080, only 68 KB over the margin for the fight. Needs a
+# measured entry list first.
+#11f	1035392	*	all	Mendez em35 (held: 68 KB over the cold-pool margin)
