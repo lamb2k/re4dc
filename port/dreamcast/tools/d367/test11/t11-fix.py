@@ -1981,16 +1981,16 @@ if os.path.isdir(CPIC26CD):
 # cw32 / pmcw32 (lane world-ch32 11-02, chapter 3-2 on Disc 2; DISC 2 ONLY via D2_DATA, after cpic26c): the 3-2 rooms r205
 # r209 r20a r20b and enemy archives em2d em23 em18 em22 from the PS2 version (worldch32/gen-all.sh, the castlegca26
 # method): PS2 objects, items, debris, pictures (loose keys), motion and PCM; pmcw32 = the PS2 motion store of the same
-# files. Stores: re4-assets-private/cw32-20261102, pmcw32-20261102.
+# files. .dar only (the game reads st2/rNNN.dar, never the .arc: read.cpp ReadAreaData). Stores: re4-assets-private/cw32-20261102, pmcw32-20261102.
 CW32D = os.environ.get('CW32D', '/root/re4data/private/cw32-20261102')
 if os.path.isfile(CW32D + '/provenance.tsv'):
     DATA['cw32'] = {'tex': CW32D + '/tex'}
-    for _f in sorted(Path(CW32D, 'st2').glob('*.dar')) + sorted(Path(CW32D, 'st2').glob('*.arc')) + sorted(Path(CW32D, 'em').glob('*.drs')):
+    for _f in sorted(Path(CW32D, 'st2').glob('*.dar')) + sorted(Path(CW32D, 'em').glob('*.drs')):
         DATA['cw32']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 PMCW32D = os.environ.get('PMCW32D', '/root/re4data/private/pmcw32-20261102')
 if os.path.isfile(PMCW32D + '/RECIPE.txt'):
     DATA['pmcw32'] = {}
-    for _f in sorted(Path(PMCW32D, 'st2').glob('*.dar')) + sorted(Path(PMCW32D, 'st2').glob('*.arc')) + sorted(Path(PMCW32D, 'em').glob('*.drs')):
+    for _f in sorted(Path(PMCW32D, 'st2').glob('*.dar')) + sorted(Path(PMCW32D, 'em').glob('*.drs')):
         DATA['pmcw32']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     if os.path.isdir(PMCW32D + '/dc/mot'):
         DATA['pmcw32'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCW32D, _k) for _k in sorted(os.listdir(PMCW32D + '/dc/mot'))})
