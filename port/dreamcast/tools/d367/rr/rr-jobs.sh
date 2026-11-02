@@ -39,13 +39,23 @@ disc2_jobs() {
     r=${rw%%:*}; grep -v '^squeeze' "$CW31/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
-  echo "r200 r202 r203 r201 r207 r208 r204" > "$W/d2-census-rooms.txt"
+  # Chapter 4 rooms (lane world-ch4 11-02; D2_DATA c4world / c4gca): entry warps worldch4/warps/<room>.txt (door arrival,
+  # chapter, god, census). RR_D2_CH4=0 skips them.
+  C4R=""
+  if [ "${RR_D2_CH4:-1}" = 1 ]; then
+    C4R="r210 r222 r219 r211 r216 r212 r213 r214 r217 r218 r215 r229 r221 r22b r220 r223 r224 r21d r225 r21b r21a r226 r227 r228 r22a r22c"
+    for r in $C4R; do
+      tr -d '\r' < "$T/port/dreamcast/tools/d367/worldch4/warps/$r.txt" > "$EVU/fixtures/d2-$r.txt"
+        job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
+    done
+  fi
+  echo "r200 r202 r203 r201 r207 r208 r204 $C4R" > "$W/d2-census-rooms.txt"
   [ "$TIER" != full ] || seeds="1 2 3 4 5 6 7 8 9 10"
-  job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' 'd2door d2fight'"
+  job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' \"d2door d2fight${C4R:+ d2c4door d2c4fight}\""
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r201 r208 r204; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r201 r208 r204 $C4R; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi

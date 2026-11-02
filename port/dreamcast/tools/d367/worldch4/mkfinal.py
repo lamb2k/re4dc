@@ -37,11 +37,8 @@ rows = []
 for dest, (fin, inp, p2) in files.items():
     (s1 / dest).parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(fin, s1 / dest)
-    if dest.endswith('.dar'):   # the .arc beside it = the .dar's type-0 payload
-        fb = fin.read_bytes(); _k, size, _d, off = struct.unpack_from('<4I', fb, 0x20)
-        for s_ in (s1, s2):
-            (s_ / 'st2').mkdir(parents=True, exist_ok=True)
-            (s_ / dest.replace('.dar', '.arc')).write_bytes(fb[off:off + size])
+    # No .arc beside the .dar (lane world-ch4 11-02, Disc 2 capacity): the game opens only st2/rNNN.dar (read.cpp
+    # ReadAreaData; the .arc payload copy is read by no runtime path), so the chapter 4 rooms ship the .dar alone.
     old = {i for k, i, _d, _s in bc.member_rows(dest, inp.read_bytes()) if k == 'model'}
     seen, ps = set(), ps2sha(p2)
     for k, i, data, _s in bc.member_rows(dest, fin.read_bytes()):

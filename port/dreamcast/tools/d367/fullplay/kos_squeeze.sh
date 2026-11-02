@@ -20,10 +20,12 @@ EVU=$(cygpath -u "$EV"); mkdir -p "$EVU/fixtures"
 declare -A WARP=( [fight]=$here/segments/kos-fight-warp.txt [call]=$here/segments/kos-call-warp.txt
                   [door]=$here/segments/door103-warp.txt [leave100]=$here/segments/kos-leave100-warp.txt
                   [leave103]=$here/segments/kos-leave103-warp.txt
-                  [d2door]=$here/../rr/d2-kos-door.txt [d2fight]=$here/../rr/d2-kos-fight.txt )
+                  [d2door]=$here/../rr/d2-kos-door.txt [d2fight]=$here/../rr/d2-kos-fight.txt
+                  [d2c4door]=$here/../rr/d2-kos-c4door.txt [d2c4fight]=$here/../rr/d2-kos-c4fight.txt )
 declare -A END=( [fight]='warp: alert at room frame' [call]='subscreen backing: open' [door]='phase=enter room=103'
                  [leave100]='phase=enter room=100' [leave103]='phase=enter room=103'
-                 [d2door]='phase=enter room=202' [d2fight]='warp: kill' )
+                 [d2door]='phase=enter room=202' [d2fight]='warp: kill'
+                 [d2c4door]='phase=enter room=214' [d2c4fight]='warp: kill' )
 # Per-scene wall limit. door is 75 s (10-16, lane s30movie16): its r103 entry marker lands ~57-60 s into the run,
 # so a 60 s capture could stop two log lines short of it. That is a harness limit, not a game fault.
 declare -A SECS=( [fight]=60 [call]=60 [door]=75 [leave100]=60 [leave103]=60 )

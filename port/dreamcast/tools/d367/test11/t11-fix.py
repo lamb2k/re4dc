@@ -1996,6 +1996,10 @@ for _n, _env, _dflt in (('c4gca', 'C4GCAD', 'c4gca-20261102'), ('pmc4gca', 'PMC4
 C4MOVD = os.environ.get('C4MOVD', '/root/re4data/private/c4mov-20261102')
 if os.path.isfile(C4MOVD + '/RECIPE.txt'):
     DATA['c4mov'] = {'dc/movie/' + _k: '%s/dc/movie/%s' % (C4MOVD, _k) for _k in sorted(os.listdir(C4MOVD + '/dc/movie'))}
+# d2noarc (same lane 11-02, DISC 2 ONLY via D2_DATA, capacity): takes every castle room's st2/rNNN.arc off Disc 2. The game
+# opens only st2/rNNN.dar (src/game/read.cpp ReadAreaData: "never fall back to ... an unqualified .arc sidecar"); the .arc
+# (the .dar's type-0 payload copy) is read by tools only. Remove-only: no store. Disc 1 keeps its .arc files.
+DATA['d2noarc'] = {'remove': ['st2/r2%02x.arc' % _i for _i in range(0x00, 0x10)]}   # r200..r20f: the castle content's .arc files
 # c4world (same lane 11-02, DISC 2 ONLY via D2_DATA): the chapter 4 PS2 room worlds (ps2lib/world/<room>: ps2-world.re4mesh /
 # r4pw / ids, UV guard .002, tr4, cutout224) for r210 .. r22c and their loose picture keys; the castle content tree had none.
 C4WORLDD = os.environ.get('C4WORLDD', '/root/re4data/private/c4world-20261102')

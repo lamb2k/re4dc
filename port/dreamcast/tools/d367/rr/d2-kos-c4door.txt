@@ -1,0 +1,18 @@
+# Disc 2 KOS chapter 4 door scene (lane world-ch4 11-02): r213 (entered from r211, worldch4/warps/r213.txt) walked to its
+# door 1 (AEV area centre -26885 -14406, worldch4/doors-ch4.tsv) into r214 (the Novistador hall's exit)
+name w4-r213-door
+room 0x213
+chapter 10
+pos -121 1000 108
+ang 3.1049
+inv default
+god
+alivelog 60
+census 200
+dump
+goto 300 -26885 1000 -14406 3.14 sub
+act 420 fwd 40
+act 470 a 10
+act 510 a 10
+entry 1
+alivelog 60

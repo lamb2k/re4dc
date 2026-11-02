@@ -72,6 +72,14 @@ def ps2_fcv_host(d):
     so = (3 + 3 * n + 3) & ~3
     size = struct.unpack_from('<I', d, so)[0]
     chk = d
+    if size not in (0, len(d)) and struct.unpack_from('>I', d, so)[0] == len(d):
+        # PS2 r229.dat ARC 0x1f (lane world-ch4 11-02): a FCV left in GameCube big-endian layout inside the PS2 file
+        # (size word 0x00001100 big-endian = the entry's 4,352 B). The PS2 data is the source: convert it to the host
+        # layout through the codec (parse big-endian, serialise little-endian) instead of failing the whole archive.
+        m = fcv.parse(d)
+        if fcv.serialise(m, '>') != d:
+            raise ValueError('big-endian PS2 FCV does not round-trip through the codec')
+        return fcv.serialise(m, '<')
     if size not in (0, len(d)):
         # PS2 wep10: the size word (0x19a0) is 32 B short of the entry its key blocks fill (0x19c0). The game never
         # reads the word (MotionSetCore skips it); validate the layout with the entry size, ship the PS2 bytes as they are.

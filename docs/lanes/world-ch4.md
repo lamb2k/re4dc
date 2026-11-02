@@ -54,3 +54,24 @@ r22c (castle hub, doors to r204 r211 r220 r305 r31d) is reachable from r211 / r2
 - CH-FIXES-CARRY rows: 1/2/14 done by c4gca (16 GC samples kept, rows in the bank map); 5 already on (PS2_CH4_ENEMY +
   cap 4 in CH4REC, r214 documented exception); 15 resident lists exist in vram/resident for 22 rooms (r21a r221 r228
   r22a r22c missing) but the Disc 2 resident.bin is the castle one: needs the shared pack; 6 no cells; others global.
+
+## Round 2 (coordinator 11-02)
+- em16 regenerated with the rr candidate 15ed29fe Disc 1 tree (fp_iso.py extract to D:\RE4DC-Lanes\world-ch4): all nine
+  enemy archives byte-identical to the first run.
+- em24 converted from its own inputs (worldch4/emin.py: GC disc em24.drs + PS2 AFS em24.dat). em18 / em25 / em29 /
+  em24: their BINs are the castle native cast's source BINs (kept by exact bytes; the PS2 cast package draws them),
+  except one piece each in em24 (0x19) and em25 (0x31) whose PS2 rebuild is 32 / 64 B over its slot (ps2_ganado_bins
+  window limit): GC-ASSET allowlist candidates or a tool change.
+- r229 motion: the PS2 r229.dat ARC 0x1f FCV is stored big-endian; ps2_motion.ps2_fcv_host now converts such an entry
+  through the codec. r229 motion VERIFY PASS (PS2-identical).
+- Capacity: the game opens only st2/rNNN.dar (src/game/read.cpp ReadAreaData), so the chapter 4 rooms ship no .arc and
+  D2_DATA set d2noarc takes the castle content's r200..r20f .arc copies off Disc 2 (22.2 MB). Disc 2 estimate with
+  chapter 4: about 525,000 of 549,150 sectors (was ~553,200).
+- Stores mirrored to re4-assets-private (manifest commit 3381e80).
+- rr-jobs.sh: chapter 4 rooms in the Disc 2 census (d2cg) and GC-ASSET (d2gca) lists (RR_D2_CH4=0 skips them); KOS
+  scenes d2c4door (r213 -> r214) and d2c4fight (r226 statue kill rig) in kos_squeeze.sh.
+
+### Keys shared with chapter 3 (coordinator dedupes at merge)
+- em/em11.drs, em/em18.drs, em/em2d.drs, em/em29.drs (c4gca and pmc4gca) and their dc/mot keys (pmc4gca).
+- st2/r22c.dar (c4gca), dc/native/r22c/ps2-world.* (c4world): r22c is the castle hub, also reached from r204.
+- Loose picture keys in c4gca/tex and c4world/tex may coincide with chapter 3 keys (same PS2 pictures).

@@ -8,11 +8,12 @@ set -euo pipefail
 WK=${1:?work}; D1=${2:?Disc 1 tree}
 H=$(cd "$(dirname "$0")" && pwd); D=$(cd "$H/.." && pwd)
 source "$H/env.sh"
-I=${EMIN:-/root/probe/lanes/ps2cast/inputs}
+I=${EMIN:-$WK/emin}   # GC disc emNN.drs + PS2 AFS emNN.dat for every W4_CEM enemy (emin.py)
+python3 "$H/emin.py" "$I" $W4_CEM > /dev/null
 ISO=${PS2_ISO:-/mnt/c/Game Dev/Emulators/re4_helpers/Resident Evil 4 (USA)/Resident Evil 4 (USA).iso}
 rm -rf "${WK:?}/em" "${WK:?}/m" "${WK:?}/cast"; mkdir -p "$WK/cast/dc" "$WK/em" "$WK/m" "$WK/reports"
 # --remove-destination: the castle copies replace the hard links instead of writing through them into the Disc 1 tree
-cp -al "$D1/dc/native" "$WK/cast/dc/native"; cp -a --remove-destination "$CT/dc/native/." "$WK/cast/dc/native/"
+cp -al "$D1/dc/native" "$WK/cast/dc/native" 2>/dev/null || { rm -rf "${WK:?}/cast/dc/native"; cp -a "$D1/dc/native" "$WK/cast/dc/native"; }; cp -a --remove-destination "$CT/dc/native/." "$WK/cast/dc/native/"
 OK=""
 for e in $W4_CEM; do
   if [ ! -f "$I/$e.dat" ] || [ ! -f "$I/$e.drs" ]; then echo "$e SKIP (no PS2 input in $I)"; continue; fi
