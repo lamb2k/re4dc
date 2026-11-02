@@ -1957,6 +1957,13 @@ if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
     for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
         DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
+# cpic26 (lane castle-gca-26 11-02, no-GameCube-assets rule; DISC 2 ONLY via D2_DATA, after pmcgca26): dc/tex.pak = the
+# Disc 2 composed pack with 5 castle enemy / r201 pictures as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes
+# and formats kept). castle_fixture merges it over its composed pack. Store: re4-assets-private/cpic26-20261102.
+CPIC26D = os.environ.get('CPIC26D', '/root/re4data/private/cpic26-20261102')
+if os.path.isdir(CPIC26D):
+    DATA['cpic26'] = {'dc/tex.pak': CPIC26D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26'] = CPIC26D + '/pak-derived.json'
 
 if __name__ == '__main__':
     main()

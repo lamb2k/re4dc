@@ -429,6 +429,16 @@
    "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
    "room": "0204",
    "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "castle-gca-26 rr 1101-2152-25f77027 d2gca-r204: castle r204 ETM et2500.bin = le_mirror(GC r101 et2500) window pane, the same object and the same user decision (windows26, 10-26) as the r101 / r105 / r111 rows",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "castle-gca-26",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0204",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
   }
  ],
  "schema": 1

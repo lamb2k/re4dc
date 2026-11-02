@@ -88,6 +88,12 @@ if D2:
 pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), os.path.join(ct, 'dc/tex.pak')])
+d2pak = rep.get('dc/tex.pak')  # a D2_DATA set's own pack (em_eff_pics.py over this composed pack): its keys win
+if d2pak:
+    pak2 = os.path.join(work, 'tex-d2.pak')
+    subprocess.check_call([sys.executable, os.path.join(HERE, 'pak_keep.py'), pak2, d2pak, pak])
+    pak = pak2
+    print('D2_DATA dc/tex.pak override %s' % d2pak)
 rep['dc/tex.pak'] = pak
 import struct
 b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0)
