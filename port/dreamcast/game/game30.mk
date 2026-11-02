@@ -202,6 +202,31 @@ $(error MOTION_COLD_POOL needs MOTION_PRESSURE_BYTES)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_COLD_POOL=$(MOTION_COLD_POOL)
 endif
+# MOTION_PIN=<bytes> (lane motionpin 2026-11-02; needs MOTION_PRESSURE_BACKING=1; I/O only, default 0 = image unchanged):
+# the motion keys named by data/motpin.tsv (one row per room and archive: room, archive bytes, MTC crc, keys, note;
+# compiled in) are read when their archive binds at room entry while heap 4 keeps <bytes> free after each key, and stay
+# resident: they never use the two cold slabs, are not counted against the MOTION_PRESSURE_BYTES cap, and are evicted
+# only when no other key frees memory (OOM, movie / weapon heap requests). Why: El Gigante's em2b archive has no hot
+# keys, so every clip cycled through two 31.6 KB slabs: EmMgr.move up to 274 ms per tick in r119 (Flycast, gigslow27).
+MOTION_PIN ?= 0
+ifneq ($(MOTION_PIN),0)
+ifneq ($(MOTION_PRESSURE_BACKING),1)
+$(error MOTION_PIN needs MOTION_PRESSURE_BACKING=1)
+endif
+$(OBJDIR)/platform/motpin_table.inc: data/motpin.tsv
+	@mkdir -p $(dir $@)
+	tr -d '\r' < $< | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/^/"/' -e 's/$$/\\n"/' > $@
+$(OBJDIR)/platform/native_motion.o: $(OBJDIR)/platform/motpin_table.inc
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN) -I$(OBJDIR)/platform
+endif
+# ESP_SPIKE_LOG=1 (lane motionpin 2026-11-02; log only, needs DISC_READ_METER=1, default 0 = image unchanged): an
+# effect-move phase over 20 ms logs "esp spike:" with the texture uploads, disc reads / blocked time and motion key
+# misses inside it (gigslow27: EspMove reached 233 ms in r119 on Flycast).
+ESP_SPIKE_LOG ?= 0
+ifeq ($(ESP_SPIKE_LOG),1)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_ESP_SPIKE_LOG=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ESP_SPIKE_LOG=1
+endif
 # MOTION_COLD_POOL_CASTLE=<bytes> (lane ch4found16 2026-10-17; needs MOTION_COLD_POOL; render and I/O only, default 0 =
 # image unchanged): the cold pool's heap 4 margin in the castle rooms (room 0x2xx) instead of MOTION_COLD_POOL's.
 # Why: r226's six em11 Zealots (GC-prepared archive, all keys cold) need ~130 KB of keys at once; with the test 15

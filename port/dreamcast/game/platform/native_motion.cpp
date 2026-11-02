@@ -96,6 +96,25 @@ static_assert(RE4DC_MOTION_PRESSURE_BYTES >= 65536 &&
 #ifndef RE4DC_MOTION_RESERVE
 #define RE4DC_MOTION_RESERVE 0
 #endif
+// MOTION_PIN=<heap-4 margin bytes> (game30.mk, lane motionpin 11-02; default 0 = image unchanged): data/motpin.tsv rows (room, archive bytes,
+// MTC crc, keys) name motion keys loaded into heap 4 when their archive binds at room entry and kept resident: they
+// never take the two cold slabs and are evicted only when nothing else can be (pressure, OOM, movie / weapon heap
+// requests), so a pin never adds a failure. Admission keeps <margin> bytes of heap 4 free after each pinned key. El Gigante (em2b)
+// streamed every clip through two 31.6 KB slabs: up to 274 ms per EmMgr.move tick in r119 (Flycast, gigslow27).
+#ifndef RE4DC_MOTION_PIN
+#define RE4DC_MOTION_PIN 0
+#endif
+#if RE4DC_MOTION_PIN
+#if !RE4DC_MOTION_COLD_POOL_CASTLE
+extern "C" unsigned re4dc_room_id_now();
+#endif
+#if !RE4DC_MOTION_RESERVE_SPILL && !RE4DC_MOTION_COLD_POOL && !RE4DC_MOTION_RESUME
+extern "C" int re4dc_static_heap_free();
+#endif
+static const char kMotPinTable[] =
+#include "motpin_table.inc"
+    "";
+#endif
 #ifndef RE4DC_MOTION_BOUNDED_R11F
 #define RE4DC_MOTION_BOUNDED_R11F 0
 #endif
@@ -157,6 +176,9 @@ struct Binding {
 #endif
 #if RE4DC_MOTION_USAGE_LOG
     unsigned char* seen;   // first acquire per entry since bind (hot-set audit)
+#endif
+#if RE4DC_MOTION_PIN
+    unsigned char pin[32]; // MOTION_PIN: entries named by a motpin.tsv row for this room and archive
 #endif
 };
 struct Owner { const void* thread; unsigned leases; };
@@ -308,6 +330,11 @@ struct Locked {
     }
 };
 const unsigned char* record(const Binding& b,unsigned i) { return b.records+20*i; }
+#if RE4DC_MOTION_PIN
+bool pinned_key(const Binding& b,unsigned i) { return i<256 && (b.pin[i>>3]&(1u<<(i&7)))!=0; }
+// hot (archive flag) or pinned (motpin.tsv): never a slab user, never a first-choice victim
+bool key_hot(const Binding& b,unsigned i) { return word(record(b,i)+16)!=0 || pinned_key(b,i); }
+#endif
 #if RE4DC_MOTION_RESERVE_PACK
 const unsigned char* reserved_base(const Binding& b,const unsigned char* p) {
     if(!p)return nullptr;
@@ -451,7 +478,11 @@ bool reserved_data(const Binding& b,const unsigned char* p) {
 unsigned pressure_heap_bytes() {
     unsigned bytes=0;
     for(const auto& b:bindings)if(b.archive)
-        for(unsigned i=0;i<b.count;++i)if(b.slots[i].data && !reserved_data(b,b.slots[i].data))
+        for(unsigned i=0;i<b.count;++i)if(b.slots[i].data && !reserved_data(b,b.slots[i].data)
+#if RE4DC_MOTION_PIN
+                                          && !pinned_key(b,i)   // admitted at bind against the heap-4 margin, outside the cap
+#endif
+                                          )
             bytes+=aligned(word(record(b,i)+4));
     return bytes;
 }
@@ -481,6 +512,9 @@ void pressure_room_for(unsigned bytes) {
 #if RE4DC_MOTION_PRESSURE_BACKING
                 if(reserved_data(q,slot.data))continue; // discarding a slab key frees no heap
 #endif
+#if RE4DC_MOTION_PIN && RE4DC_MOTION_PRESSURE_BACKING
+                if(pinned_key(q,j))continue;            // not counted against the cap (pressure_heap_bytes)
+#endif
                 if(slot.data && !slot.pins && slot.used<oldest) {
                     victim=&q;index=j;oldest=slot.used;
                 }
@@ -504,6 +538,9 @@ unsigned char* oom_evict_alloc(unsigned bytes) {
     while(!data) {
         Binding* victim=nullptr;unsigned index=0;
         std::uint64_t oldest=~std::uint64_t(0);
+#if RE4DC_MOTION_PIN
+        for(int pass=0;pass<2 && !victim;++pass)   // MOTION_PIN: pinned keys only when nothing else frees memory
+#endif
         for(auto& q:bindings) {
             if(!q.archive)continue;
             for(unsigned j=0;j<q.count;++j) {
@@ -512,6 +549,9 @@ unsigned char* oom_evict_alloc(unsigned bytes) {
                 if(reserved_data(q,slot.data))continue;
 #elif RE4DC_MOTION_RESERVE
                 if(slot.data==q.slab[0] || slot.data==q.slab[1])continue;   // evicting a slab user frees nothing
+#endif
+#if RE4DC_MOTION_PIN
+                if(!pass && pinned_key(q,j))continue;
 #endif
                 if(slot.data && !slot.pins && slot.used<oldest) { victim=&q;index=j;oldest=slot.used; }
             }
@@ -605,9 +645,17 @@ unsigned* load(Binding& b,unsigned i) {
 #endif
 #if RE4DC_MOTION_RESERVE
 #if RE4DC_SUBSCREEN
+#if RE4DC_MOTION_PIN
+        if(!hold && b.slab_bytes && !key_hot(b,i) && bytes<=b.slab_bytes) {
+#else
         if(!hold && b.slab_bytes && !word(e+16) && bytes<=b.slab_bytes) {
+#endif
+#else
+#if RE4DC_MOTION_PIN
+        if(b.slab_bytes && !key_hot(b,i) && bytes<=b.slab_bytes) {
 #else
         if(b.slab_bytes && !word(e+16) && bytes<=b.slab_bytes) {
+#endif
 #endif
             for(;;) {
 #if RE4DC_MOTION_RESERVE_PACK
@@ -929,7 +977,11 @@ extern "C" void re4dc_motion_ws_window() {
         unsigned n[3]={0,0,0},by[3]={0,0,0},cold=0;
         for(unsigned i=0;i<b.count && i<256;++i) {
             const unsigned char m=(unsigned char)(1u<<(i&7));const unsigned sz=aligned(word(record(b,i)+4));
+#if RE4DC_MOTION_PIN
+            if(ws_win[k][i>>3]&m){++n[0];by[0]+=sz;if(!key_hot(b,i))cold+=sz;}
+#else
             if(ws_win[k][i>>3]&m){++n[0];by[0]+=sz;if(!word(record(b,i)+16))cold+=sz;}
+#endif
             if(ws_blk[k][i>>3]&m){++n[1];by[1]+=sz;}
             if(ws_all[k][i>>3]&m){++n[2];by[2]+=sz;}
         }
@@ -937,6 +989,73 @@ extern "C" void re4dc_motion_ws_window() {
                   n[0],by[0],cold,n[1],by[1],blk_end?" end":"",n[2],by[2],b.resident);
         std::memset(ws_win[k],0,32);if(blk_end)std::memset(ws_blk[k],0,32);
     }
+}
+#endif
+#if RE4DC_MOTION_PIN
+namespace {
+// motpin.tsv rows: room<TAB>archive_bytes<TAB>mtc_crc<TAB>keys<TAB>note. room hex or *, crc hex or *, keys "all" or a
+// comma list of entry indices / ranges (3,5,10-14). Every row matching (room, archive) adds its keys.
+unsigned pin_hex(const char*& p) { unsigned v=0;for(;;++p){const char c=*p;
+    if(c>='0'&&c<='9')v=v*16+unsigned(c-'0');else if(c>='a'&&c<='f')v=v*16+unsigned(c-'a'+10);
+    else if(c>='A'&&c<='F')v=v*16+unsigned(c-'A'+10);else return v;} }
+unsigned pin_dec(const char*& p) { unsigned v=0;while(*p>='0'&&*p<='9')v=v*10+unsigned(*p++-'0');return v; }
+const char* pin_field(const char* p) { while(*p && *p!='	' && *p!='
+')++p;return *p=='	'?p+1:p; }
+void pin_apply(Binding& b,unsigned crc) {
+    std::memset(b.pin,0,sizeof(b.pin));
+#if RE4DC_MOTION_BOUNDED_R11F
+    if(b.bounded)return;   // bounded (v3) archives only ever use their reserved slabs
+#endif
+#if RE4DC_SUBSCREEN
+    if(hold)return;
+#endif
+    const unsigned room=re4dc_room_id_now();
+    unsigned rows=0;
+    for(const char* line=kMotPinTable;*line;) {
+        const char* next=line;while(*next && *next!='
+')++next;if(*next)++next;
+        if(*line!='#' && *line!='
+' && *line) {
+            const char* p=line;bool ok=true;
+            if(*p=='*')++p;else { const char* q=p;ok=pin_hex(q)==room;p=q; }
+            p=pin_field(p);
+            if(ok) { const char* q=p;ok=pin_dec(q)==b.bytes;p=q; }
+            p=pin_field(p);
+            if(ok && *p!='*') { const char* q=p;ok=pin_hex(q)==crc;p=q; }
+            p=pin_field(p);
+            if(ok) {
+                ++rows;
+                if(!std::strncmp(p,"all",3)) { for(unsigned i=0;i<b.count;++i)b.pin[i>>3]|=(unsigned char)(1u<<(i&7)); }
+                else for(;;) {
+                    if(*p<'0'||*p>'9')break;
+                    unsigned lo=pin_dec(p),hi=lo;
+                    if(*p=='-') { ++p;hi=pin_dec(p); }
+                    for(unsigned i=lo;i<=hi && i<b.count && i<256;++i)b.pin[i>>3]|=(unsigned char)(1u<<(i&7));
+                    if(*p!=',')break;
+                    ++p;
+                }
+            }
+        }
+        line=next;
+    }
+    re4dc_log("motion pin: room=%03x archive=%u crc=%08x rows=%u
+",room,b.bytes,crc,rows);
+    if(!rows)return;
+    // Admission: each pinned key is read now (room entry) while heap 4 keeps the cold-pool margin after it.
+    unsigned keys=0,bytes=0,refused=0,refused_bytes=0;
+    for(unsigned i=0;i<b.count;++i) {
+        if(!pinned_key(b,i))continue;
+        const unsigned n=aligned(word(record(b,i)+4));
+        if(b.slots[i].data) { ++keys;bytes+=n;continue; }
+        if(re4dc_static_heap_free()<int(n+unsigned(RE4DC_MOTION_PIN)+96)) {
+            b.pin[i>>3]&=(unsigned char)~(1u<<(i&7));++refused;refused_bytes+=n;continue;
+        }
+        load(b,i);++keys;bytes+=n;
+    }
+    re4dc_log("motion pin: archive=%u pinned=%u bytes=%u refused=%u refused_bytes=%u heap4=%d margin=%u
+",b.bytes,keys,bytes,
+              refused,refused_bytes,re4dc_static_heap_free(),unsigned(RE4DC_MOTION_PIN));
+}
 }
 #endif
 extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
@@ -1045,6 +1164,9 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
     if(b->seen)std::memset(b->seen,0,aligned(count));
 #endif
     for(unsigned i=0;i<count;++i)if(word(record(*b,i)+16))load(*b,i);
+#if RE4DC_MOTION_PIN
+    pin_apply(*b,word(mtc+20));
+#endif
     re4dc_log("motion bind: archive=%u entries=%u hot=%u cache-budget=%u metadata=%u\n",bytes,count,hot,b->budget,meta);
 #if RE4DC_MOTION_PRESSURE_BYTES
     re4dc_log("motion pressure: cap=%u resident=%u peak=%u pinned=%u evictions=%u loads=%u\n",
@@ -1243,6 +1365,9 @@ extern "C" unsigned re4dc_motion_evict_one() {
 #endif
     Binding* victim=nullptr;unsigned index=0;
     std::uint64_t oldest=~std::uint64_t(0);
+#if RE4DC_MOTION_PIN
+    for(int pass=0;pass<2 && !victim;++pass)   // MOTION_PIN: pinned keys go last (a movie / weapon still gets the memory)
+#endif
     for(auto& q:bindings) {
         if(!q.archive)continue;
         for(unsigned j=0;j<q.count;++j) {
@@ -1251,6 +1376,9 @@ extern "C" unsigned re4dc_motion_evict_one() {
             if(reserved_data(q,slot.data))continue;
 #elif RE4DC_MOTION_RESERVE
             if(slot.data==q.slab[0] || slot.data==q.slab[1])continue;   // evicting a slab user frees nothing
+#endif
+#if RE4DC_MOTION_PIN
+            if(!pass && pinned_key(q,j))continue;
 #endif
             if(slot.data && !slot.pins && slot.used<oldest) { victim=&q;index=j;oldest=slot.used; }
         }

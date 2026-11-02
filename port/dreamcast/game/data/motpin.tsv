@@ -1,0 +1,5 @@
+# MOTION_PIN rows (game30.mk MOTION_PIN): motion keys read at room entry and kept resident.
+# room<TAB>archive_bytes<TAB>mtc_crc<TAB>keys<TAB>note
+#   room: hex room id or *; archive_bytes: decimal, as "motion bind: archive=" logs it; mtc_crc: hex as "motion pin:"
+#   logs it, or *; keys: all, or entry indices / ranges (3,5,10-14) from MOTION_MISS_LOG "motion miss" entry= values.
+#   Several rows may name the same room (one per archive). Rows only add pins; heap-4 admission can still refuse a key.
