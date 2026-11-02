@@ -829,7 +829,7 @@ def main():
     used, gains = final_gains(a.room, a.src, a.out, groups)
     textures = build_textures(a.room, a.src, a.out, used, gains)
     if a.bake_static:
-        extra = json.loads(a.bake_rows.read_text())[a.room] if a.bake_rows else ()
+        extra = json.loads(a.bake_rows.read_text()).get(a.room, ()) if a.bake_rows else ()
         groups = bake_static(groups, a.src / f'{a.room}_004.scenario.obj', extra=extra)
     meshes, placements, sources, parts_meta, stats = build(groups, gains, textures, share=not a.no_share,
                                                            vertex_alpha=a.vertex_alpha)

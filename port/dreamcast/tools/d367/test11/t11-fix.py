@@ -1617,6 +1617,14 @@ DATA['r10dlod23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DLOD23D + '/dc/native
 R10DBAKE23D = os.environ.get('R10DBAKE23D', '/root/re4data/private/r10dbake23-20261023')
 DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/native/r10d/ps2-world.%s' % x
                       for x in ('re4mesh', 'r4pw', 'ids')}
+# bakepilot (lane bakeall 11-02, render only; needs WORLD_BAKE=1, never KSETS): r11e + r119 PS2 worlds with every row no
+# code / effect / light / module addresses baked into one world-space mesh (tools/d367/bakeall, RECIPE.txt in the store);
+# ids, r4tc and room.r4rc (GRID + OCCL + SCDD) regenerated for the baked packages. Last of the world sets in the data line
+# (after ch2, mip22b, trans17, rc19s). Store copy: re4-assets-private/bakeall-pilot-20261102.
+BAKEPILOTD = os.environ.get('BAKEPILOTD', '/root/re4data/private/bakeall-pilot-20261102')
+DATA['bakepilot'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (BAKEPILOTD, r, f)
+                     for r in ('r11e', 'r119')
+                     for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')}
 # ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
 # chapter 1 + r200 sound banks (etc/core.das, em/pl00 pl08 pl0f pl11, the weapon banks, the room .dar ROOM/FOOT banks,
 # the rooms' enemy banks, ss/cmn/title.snd, bgm/bio4midi.dat) and bgm/aica_str.dat with PS2 PCM written into the
