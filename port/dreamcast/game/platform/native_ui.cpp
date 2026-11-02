@@ -5219,6 +5219,9 @@ void preload_identities(){
 #endif
     re4dc_log("native texture preload: frame=%u picked=%u resident=%u loads=%u skipped=%u full=%d used=%u budget=%u entries=%u us=%u\n",frame,n,resident,preload_loads-loads,
         preload_skipped-skipped,full?1:0,used,budget,kTextureCount,unsigned(timer_us_gettime64()-start));
+#if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
+    { extern "C" void re4dc_disc_meter_mark_load(void); re4dc_disc_meter_mark_load(); }   // PLAY-DISC-READ: phase=load
+#endif
 #if RE4DC_TEX_PACK
     // Only while the pack's init is waiting to retry: a failed lookup sector of a ready pack would otherwise re-arm
     // the pass every frame (its keys load on first sight once the sector re-reads).

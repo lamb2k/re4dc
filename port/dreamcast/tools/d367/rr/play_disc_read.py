@@ -16,13 +16,15 @@ are NOT gameplay and are skipped:
   - the entry settle: windows drawing <= 2 frames in the 10 s after a room line or a warp placement,
   - route movies (a "route movie start" .. "route movie terminal" span),
   - windows with no PACE vmu line before them (boot / title).
-Minimal log line proposed so this needs no heuristics: DISCRD window lines gain " phase=play|load|movie" (the state at
-window close plus whether a room load or a preload ran inside it).
+Builds from lane coldread27 on tag each DISCRD window line " phase=play|load|movie" (dvd_read_safe.cpp) and, with
+DISC_READ_LOG=2, list the files read per window ("DRF:" lines); a tagged window is judged by its tag, the heuristics
+above only serve older logs.
 Exit 1 when any run has a gameplay window above the threshold (report-only callers ignore the exit code)."""
 import argparse, json, os, re, sys
 
 PACE = re.compile(r'^PACE vmu t=(\d+) win_vb=(\d+) drawn=(\d+)')
-WIN = re.compile(r'^DISCRD: window_ms=(\d+) reads=(\d+) kb=(\d+) block_ms=(\d+) .*other=(\S+)')
+WIN = re.compile(r'^DISCRD: window_ms=(\d+) reads=(\d+) kb=(\d+) block_ms=(\d+) .*other=(\S+)(?: phase=(\w+))?')
+DRF = re.compile(r'^DRF: phase=\w+ file=(\S+) reads=(\d+) kb=(\d+) ms=(\d+) thr=(\S+)')
 ROOM = re.compile(r'^DISCRD: room=([0-9a-f]+) load_ms=(\d+)')
 MOT = re.compile(r'^MOTSTAT: window_ms=\d+ misses=(\d+) evictions=(\d+) kb=(\d+) .*heap4=(-?\d+)')
 PRE = re.compile(r'^native texture preload: .* us=(\d+)')
@@ -46,7 +48,7 @@ def windows(path):
         m = PACE.match(l)
         if m:
             cur = dict(t=int(m.group(1)), ms=int(m.group(2)) * 1000 // 60, drawn=int(m.group(3)), room=room,
-                       block=0, reads=0, kb=0, other='-', miss=None, mkb=None, heap4=None, load=False, movie=movie)
+                       block=0, reads=0, kb=0, other='-', miss=None, mkb=None, heap4=None, load=False, movie=movie, phase=None, files=[])
             if pend or (settle > 0 and cur['drawn'] <= 2):   # pend: a load / preload line logged before this window's PACE line
                 pend = False
                 cur['load'] = True
@@ -72,7 +74,12 @@ def windows(path):
         m = WIN.match(l)
         if m:
             wm = max(1, int(m.group(1)))
-            cur.update(block=int(m.group(4)) * 1000 // wm, reads=int(m.group(2)), kb=int(m.group(3)), other=m.group(5))
+            cur.update(block=int(m.group(4)) * 1000 // wm, reads=int(m.group(2)), kb=int(m.group(3)), other=m.group(5),
+                       phase=m.group(6))
+            continue
+        m = DRF.match(l)
+        if m:
+            cur['files'].append('%s:%sms/%sKB/%s' % (m.group(1), m.group(4), m.group(3), m.group(5)))
             continue
         m = PRE.match(l)
         if m and int(m.group(1)) >= 200000:
@@ -81,6 +88,9 @@ def windows(path):
         m = MOT.match(l)
         if m:
             cur.update(miss=int(m.group(1)), mkb=int(m.group(3)), heap4=int(m.group(4)))
+    for w in ws:   # a phase-tagged build (DISCRD ... phase=) decides directly; the heuristics only serve older logs
+        if w['phase']:
+            w['load'], w['movie'] = w['phase'] == 'load', w['phase'] == 'movie'
     return ws
 
 
@@ -109,12 +119,13 @@ def main():
         worst = max(play, key=lambda w: w['block']) if play else None
         r = dict(run=f, windows=len(ws), play=len(play), over=len(over),
                  worst=worst and {k: worst[k] for k in ('room', 't', 'block', 'reads', 'kb', 'other', 'miss', 'mkb', 'heap4', 'drawn')},
-                 rows=[{k: w[k] for k in ('room', 't', 'block', 'reads', 'kb', 'other', 'miss', 'mkb', 'heap4', 'drawn')} for w in over])
+                 rows=[{k: w[k] for k in ('room', 't', 'block', 'reads', 'kb', 'other', 'miss', 'mkb', 'heap4', 'drawn', 'phase', 'files')} for w in over])
         res.append(r)
         bad += bool(over)
         for w in over:
-            print('PLAY-DISC-READ over room=%s t=%d block_ms/s=%d reads=%d kb=%d motion_misses=%d motion_kb=%d heap4=%s drawn=%d waited=%s run=%s'
-                  % (w['room'], w['t'], w['block'], w['reads'], w['kb'], w['miss'], w['mkb'], w['heap4'], w['drawn'], w['other'], f))
+            print('PLAY-DISC-READ over room=%s t=%d block_ms/s=%d reads=%d kb=%d motion_misses=%d motion_kb=%d heap4=%s drawn=%d waited=%s files=%s run=%s'
+                  % (w['room'], w['t'], w['block'], w['reads'], w['kb'], w['miss'], w['mkb'], w['heap4'], w['drawn'], w['other'],
+                     ','.join(w['files'][:4]) or '-', f))
     print('PLAY-DISC-READ %s: %d metered runs, %d with a gameplay window over %d ms/s (Flycast)'
           % ('FAIL' if bad else 'PASS', metered, bad, a.ms))
     if a.json:

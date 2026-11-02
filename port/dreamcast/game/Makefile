@@ -1858,12 +1858,26 @@ endif
 # DISC_READ_LOG=1 (lane zeroread17 2026-10-17; diagnostic, log only, default 0; needs DISC_READ_METER=1): one "DRL:" line
 # per drive call that moves data (a sector read: S, a stream start: T) with its first sector, its size and the calling
 # thread, so in-play reads map to disc files through the ISO listing (isoinfo -l extents of track03).
+# DISC_READ_LOG=2 (lane coldread27 2026-11-02; diagnostic, log only): instead of the DRL lines, platform/play_read_log.cpp
+# (fs_open / fs_read wraps) names the files read in each DISCRD window: "DRF: phase=play|load|movie file=<path tail>
+# reads= kb= ms= thr=" (the 8 slowest per window), for the PLAY-DISC-READ gate (tools/d367/rr/play_disc_read.py).
 DISC_READ_LOG ?= 0
+ifneq ($(filter $(DISC_READ_LOG),0 1 2),$(DISC_READ_LOG))
+$(error DISC_READ_LOG must be 0, 1 or 2)
+endif
 ifneq ($(DISC_READ_LOG),0)
 ifneq ($(DISC_READ_METER),1)
-$(error DISC_READ_LOG=1 needs DISC_READ_METER=1)
+$(error DISC_READ_LOG needs DISC_READ_METER=1)
 endif
-$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_LOG=1
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_LOG=$(DISC_READ_LOG)
+endif
+ifeq ($(DISC_READ_LOG),2)
+ifneq ($(filter 1,$(DOOR_PROBE) $(IO_PROBE)),)
+$(error DISC_READ_LOG=2 wraps fs_open / fs_read like DOOR_PROBE / IO_PROBE: use one)
+endif
+GAME_LDFLAGS += -Wl,--wrap=fs_open -Wl,--wrap=fs_read
+else
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/play_read_log.o,$(PLATFORM_OBJS))
 endif
 # DISC_COMPAT=1 (test 14 items 11/12, lane discread 2026-10-15, default 0): the disc-read compatibility set for GDEMU
 # units and clones, ODEs and loaders (RE4DC-DISC-COMPAT-RESEARCH-20261015.md section 6), one knob:
