@@ -1414,7 +1414,11 @@ extern "C" int re4dc_movie_cancel(){
     return m.entered?finish(RE4DC_MOVIE_CANCEL):RE4DC_MOVIE_CANCEL;
 }
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+extern "C" void re4dc_movie_world_scope(unsigned id){movie_scope=id;}  // bossmem26: every room movie may fall back
+#else
 extern "C" void re4dc_movie_world_scope(unsigned id){movie_scope=movie_world_id(id)?id:0;}
+#endif
 extern "C" int re4dc_movie_world_active(){return movie_world_token!=0;}
 extern "C" void* re4dc_movie_world_sep_alloc(unsigned bytes){
     return movie_world_token?re4dc_ps2_mesh_movie_alloc(movie_world_token,bytes):nullptr;
