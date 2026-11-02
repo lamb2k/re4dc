@@ -1,0 +1,24 @@
+name fx-r332-m5
+# final16: as m3, then Leon placed beside Saddler's start position at room frame 260 (grab / close attacks), A presses
+# (grab escape prompts) every 40 frames; god; em31 state every 30 room frames; kill rig from 900
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
+emlog 0x31 30
+act 40 a 4 ev
+act 80 a 4 ev
+act 120 a 4 ev
+act 160 a 4 ev
+act 200 a 4 ev
+goto 260 -29800 15811 50300
+act 300 a 4 ev
+act 340 a 4 ev
+act 380 a 4 ev
+act 420 a 4 ev
+act 460 a 4 ev
+act 500 a 4 ev
+act 540 a 4 ev
+act 580 a 4 ev
+kill 0x31 900

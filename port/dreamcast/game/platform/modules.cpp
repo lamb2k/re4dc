@@ -251,6 +251,10 @@ static const Re4dcModule g_modules[] = {
 #if !(defined(RE4DC_WORLD_ROOM_MODULES) && RE4DC_WORLD_ROOM_MODULES)
     {109, "em1f", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH3: island Ganados (r304 r30b r30c r30f r311 r321 r330), room overlay
 #endif
+#if defined(RE4DC_ROUTE_FINAL) && RE4DC_ROUTE_FINAL
+    {57, "pl0e", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_FINAL: jet ski (r333), room overlay
+    {89, "em31", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_FINAL: Saddler's final form (r332, list 0xA8 / 0xA9), room overlay
+#endif
 #if !(defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23)
     {63, "em3b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r301 vehicles, room overlay
 #endif
@@ -295,6 +299,9 @@ static const Re4dcModule g_modules[] = {
     {5, "em22", 0, 0, 0, 0, 0, 0, 0},   // ROUTE_CH21: r11b: script-spawn (the shore wolves); overlay em22.ovl
     {30, "em2b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante); overlay em2b.ovl
     {47, "pl11", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley); overlay pl11.ovl
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    {89, "em31", 0, 0, 0, 0, 0, 0, 0},  // STRESS_SADDLER: Saddler's final form (stress disc only); overlay em31.ovl
+#endif
 #else
     MODULE(5, em22),   // ROUTE_CH21: r11b: script-spawn (the shore wolves)
     MODULE(30, em2b),  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante)
@@ -475,7 +482,11 @@ struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
 // ROUTE_CH3: one slot per overlay id (any knob combination); ids not in the table are never bound. Holds every id of
 // the per-knob tables below (ROUTE_CH21..CH41, ROUTE_BOSS4) plus the island's em1d (90), em1e (92), em36 (85), em1f (109),
 // em39 (64), em3a (95), em32 (77), em3d (80).
-constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 32, 10, 68, 31, 79, 90, 92, 85, 109, 64, 95, 77, 80};
+constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 32, 10, 68, 31, 79, 90, 92, 85, 109, 64, 95, 77, 80
+#if defined(RE4DC_ROUTE_FINAL) && RE4DC_ROUTE_FINAL
+    , 89, 57  // ROUTE_FINAL: em31 (Saddler, r332), pl0e (jet ski, r333)
+#endif
+};
 RouteOverlay g_route_ovl[sizeof(kRouteOvlIds) / sizeof(kRouteOvlIds[0])];
 int routeOvlSlot(u32 id)
 {
@@ -527,6 +538,11 @@ RouteOverlay g_route_ovl[7];  // retain the old five slots, then em3b and em35
 RouteOverlay g_route_ovl[6];  // old five, then pl14
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : 5)
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66)
+#elif defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21 && defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER (stress disc only): the five CH21 slots, then em31 (89).
+RouteOverlay g_route_ovl[6];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : 5)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 89)
 #elif defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
 RouteOverlay g_route_ovl[5];  // 0 = pl0f, 1 = em2f, 2 = em22 (ROUTE_CH21: r11b), 3 = em2b (r119), 4 = pl11 (r117 on)
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : 4)

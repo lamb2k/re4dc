@@ -1,0 +1,130 @@
+{
+ "source_complete": false,
+ "profile": "diagnostic recurring first-event triplets only; not full source closure or shipping hotset",
+ "union": {
+  "source_arc_indices": [
+   39,
+   47,
+   51,
+   60,
+   62,
+   64,
+   86,
+   88,
+   127,
+   129,
+   155,
+   196
+  ]
+ },
+ "source_sha256": "b71ccd178fb3a7d1f7fd6994feccf6916afb4efdf6a393cd38d91ee02a6159be",
+ "prepared_source_sha256": "9522d6ddf2b768876e006a5b5eda4eb8771fa6c3acb741c6d98712933fd9ea45",
+ "prepared_candidate_sha256": "0125b0a8285f5b7626a2f0d106d8c50ad4a3c845c6c714084e16126e034c0675",
+ "hot_payload_bytes": 90144,
+ "fixed_requested_bytes": 1580960,
+ "clips": {
+  "0": {
+   "source_arc_indices": [
+    39
+   ],
+   "bytes": 288,
+   "already_hot": true
+  },
+  "4": {
+   "source_arc_indices": [
+    47
+   ],
+   "bytes": 1056,
+   "already_hot": false
+  },
+  "6": {
+   "source_arc_indices": [
+    51
+   ],
+   "bytes": 576,
+   "already_hot": false
+  },
+  "13": {
+   "source_arc_indices": [
+    60
+   ],
+   "bytes": 11136,
+   "already_hot": true
+  },
+  "14": {
+   "source_arc_indices": [
+    62
+   ],
+   "bytes": 6560,
+   "already_hot": true
+  },
+  "15": {
+   "source_arc_indices": [
+    64
+   ],
+   "bytes": 6496,
+   "already_hot": true
+  },
+  "26": {
+   "source_arc_indices": [
+    86
+   ],
+   "bytes": 11840,
+   "already_hot": true
+  },
+  "27": {
+   "source_arc_indices": [
+    88
+   ],
+   "bytes": 15936,
+   "already_hot": true
+  },
+  "48": {
+   "source_arc_indices": [
+    127
+   ],
+   "bytes": 4800,
+   "already_hot": false
+  },
+  "50": {
+   "source_arc_indices": [
+    129
+   ],
+   "bytes": 4704,
+   "already_hot": false
+  },
+  "65": {
+   "source_arc_indices": [
+    155
+   ],
+   "bytes": 15456,
+   "already_hot": true
+  },
+  "83": {
+   "source_arc_indices": [
+    196
+   ],
+   "bytes": 11296,
+   "already_hot": false
+  }
+ },
+ "data_set": "island18-krauser-triplets-20261018",
+ "sha256sums": "e11fe4673a6b23956f70346c92ee7115c60ea33fca8e2130294cc088f2eea179",
+ "mutation": "five cold->hot MTC flag words plus tableCRC only; eight file bytes differ; all154 rawFCVs reused/verified",
+ "guest": {
+  "build": "i18s4mW",
+  "control": "cx-r31c-walk-kev1",
+  "candidate": "cx-r31c-walk-kev2",
+  "heap4_min": 35168,
+  "largest_min": 22464,
+  "last_logged_misses": 30,
+  "last_logged_evictions": 22,
+  "em39_draw_rows": 0
+ },
+ "limits": [
+  "not zero in-play reads",
+  "texture67evictions/1retry remain",
+  "invisible em39 is FAIL",
+  "STRICT/complete phase/target hardware gates unproved"
+ ]
+}

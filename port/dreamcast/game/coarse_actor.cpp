@@ -17,6 +17,10 @@
 #endif
 #line 13 "coarse_actor.cpp"
 #include "model.h"
+#if RE4DC_ACTOR_TRANSACTION_DIAG || RE4DC_ACTOR_CAST_SHADOW_EMPTY
+#include "light.h"
+#include "shadow.h"
+#endif
 #include "native_actor.hpp"
 #if RE4DC_NATIVE_FE_CONTINUATION
 #include "native_actor_continuation.h"
@@ -283,6 +287,9 @@ extern "C" int re4dc_coarse_actor_source(const void* info,Re4dcActorSource* out)
 }
 #if RE4DC_NATIVE_MODEL_REGISTRY
 extern "C" int re4dc_registry_texture_key(const Re4dcUiImage*,unsigned*,unsigned*);  // coarse_actor_owner_registry.inc
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+extern "C" unsigned re4dc_nmr_lod_pick;  // dbgwarp_bridge.cpp `saddler` line: 0 full, k = the k-th gameplay level
+#endif
 #endif
 #if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
 extern "C" int re4dc_atlas_texture_key(const Re4dcUiImage*,unsigned*,unsigned*);
@@ -608,3 +615,20 @@ extern "C" const char* re4dc_charbake_label(void){return re4dc_charbake::variant
 
 #include "platform/include/gc_asset_actor_compiled.inc"
 #include "platform/include/gc_asset_actor_select.inc"
+
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+// NMR_PRELOAD_SKIP (Makefile; lane final16): whether the open room package's role rows name this GameCube texture
+// identity as one of the source textures a registry descriptor replaces (native_ui.cpp preload_identities' enemy pass).
+extern "C" int re4dc_registry_replaces_key(unsigned crc,unsigned fnv) {
+#if RE4DC_NATIVE_MODEL_REGISTRY_PACK
+    const auto& rr=re4dc_material::room_rows;
+    for(unsigned r=0;r<rr.role_count;++r) {
+        const auto& ro=rr.roles[r];
+        for(unsigned t=0;t<ro.texture_count;++t)if(ro.textures[t].crc==crc && ro.textures[t].fnv==fnv)return 1;
+    }
+#else
+    (void)crc;(void)fnv;
+#endif
+    return 0;
+}
+#endif

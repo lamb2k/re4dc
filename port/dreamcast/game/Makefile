@@ -662,6 +662,29 @@ $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o
 endif
 endif
+# STRESS_SADDLER=1 (lane stress16b 2026-10-16; default 0: no effect; stress disc only, never a play image; needs
+#   ROUTE_CH21=1 without ROUTE_CH22 / ROUTE_CH23, DBG_WARP=1): the model-only Saddler stress disc ("RE4DC Saddler Stress (NOT
+#   THE GAME)"). em31 (module 89, Saddler's final form: body type 0 + the tentacle on its back, type 1; r332 on GC Disc 2)
+#   is a sixth room overlay (em31.ovl, linked after pl11 so the earlier overlays keep their bytes). The warp line
+#   `saddler <room frame> x y z ang [lod]` creates both parts in the warp room through EmSetEvent (no list entry, no room
+#   code); under the knob em31 runs no boss logic: idle and one attack loop (body HeadAtk, tentacle T_Atk), with its
+#   per-frame parts / cloth / collision / route work as in the fight. `lod`: 0 full PS2 mesh, 1 / 2 the package's first /
+#   second gameplay level (NATIVE_MODEL_REGISTRY_LOD; g70 / g50 on the stress disc).
+STRESS_SADDLER ?= 0
+ifneq ($(STRESS_SADDLER),0)
+ifneq ($(STRESS_SADDLER)$(ROUTE_CH21)$(ROUTE_OVL)$(DBG_WARP),1111)
+$(error STRESS_SADDLER must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1 DBG_WARP=1)
+endif
+ifneq ($(filter 1,$(ROUTE_CH22) $(ROUTE_CH23)),)
+$(error STRESS_SADDLER=1 is for the test 15 recipe (ROUTE_CH21 only): its overlay slot follows the five CH21 slots)
+endif
+MODULES += em31:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em31
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
+$(OBJDIR)/mod/em31/src/em31/em31.o $(OBJDIR)/dbgwarp_bridge.o $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
+# with BENCHMARK=1 (bench.mk): four scenes (full, g70, g50, full again) under the stress disc's own name
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=4 '-DRE4DC_BENCH_NAME="SADDLER STRESS"' '-DRE4DC_BENCH_MENU="X: FULL ONLY  Y: G70 ONLY  B: G50 ONLY"'
+endif
 # ROUTE_CH22=1 (default 0): chapter 2-2 room adapters and Luis' cabin overlay.
 # The overlay follows the five CH21 slots; the chapter movie list remains explicit.
 ROUTE_CH22 ?= 0
@@ -913,6 +936,57 @@ $(OBJDIR)/mod/st3_3/src/st3/r327.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2
 endif
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
+endif
+# ROUTE_FINAL=1 (lane final16 2026-10-16, default 0: no effect; needs ROUTE_CH3=1 STAGE_OVL=1; not with STRESS_SADDLER):
+#   the final boss room r332 (st3_3) with Saddler's real fight. em31 (module 89, Saddler's final form: body type 0 +
+#   tentacle type 1, r332 list entries 0xA8 / 0xA9) is a room overlay (em31.ovl) running its full routine tables (no
+#   stress loop). r331 / r332 get RE4DC_ROUTE_CH3 so their round-10 event hooks present s00 / s10 (r331) and s00 / s10 /
+#   s20 (r332) as PS2 route movies when the disc carries them (source path otherwise). The registry package ceilings and
+#   part facts for Saddler's PS2 cast (body 83 + head 83 + tentacle 60 parts, ~0.4-0.9 MB) follow STRESS_SADDLER's
+#   (RE4DC_SADDLER_NMR in coarse_actor.cpp); no level pick (the full PS2 mesh always).
+#   SADDLER_MASK_OPAQUE=1 (needs ROUTE_FINAL=1; VISIBLE APPROXIMATION, default 0): the registry draws Saddler (0x31) with
+#   no bump stage and its I4-masked parts as opaque PS2 sections (the crow rule; STRESS_SADDLER's material certificate).
+#   Without it the registry plan declines em31 and the GC model path draws him.
+# NMR_PRELOAD_SKIP=1 (lane final16 2026-10-16; render only, default 0; needs NATIVE_MODEL_REGISTRY=1): the room-entry
+#   texture preload (native_ui.cpp preload_identities, TEX_RESIDENT) leaves out an enemy archive's GameCube texture
+#   identities that the room's registry package replaces (its role rows' source texture facts: the textures the PS2
+#   cast's atlases stand in for). The registry draws those actors from its own atlases, so the GC model textures were
+#   pinned in VRAM and never drawn (Saddler: the em31 model TPL, 2 x 512x512 + 5 x 256x256 16-bit = ~1.7 MB). A source
+#   draw that still asks for one (a registry decline) loads it on first sight, as any unlisted key ("NMR preload skip"
+#   counts per pass).
+NMR_PRELOAD_SKIP ?= 0
+ifneq ($(NMR_PRELOAD_SKIP),0)
+ifneq ($(NMR_PRELOAD_SKIP)$(NATIVE_MODEL_REGISTRY),11)
+$(error NMR_PRELOAD_SKIP must be 0 or 1 and needs NATIVE_MODEL_REGISTRY=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PRELOAD_SKIP=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NMR_PRELOAD_SKIP=1
+endif
+ROUTE_FINAL ?= 0
+SADDLER_MASK_OPAQUE ?= 0
+ifneq ($(ROUTE_FINAL),0)
+ifneq ($(ROUTE_FINAL)$(ROUTE_CH3)$(STAGE_OVL),111)
+$(error ROUTE_FINAL must be 0 or 1 and needs ROUTE_CH3=1 STAGE_OVL=1)
+endif
+ifneq ($(STRESS_SADDLER),0)
+$(error ROUTE_FINAL and STRESS_SADDLER are exclusive (both link em31.ovl))
+endif
+MODULES += em31:ovl pl0e:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em31 .ovl_pl0e
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_FINAL=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_NMR=1
+# S00 source effects follow the movie clock, including dropped pictures.
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_SOURCE_CURSOR=1
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOVIE_SOURCE_CURSOR=1
+$(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o $(OBJDIR)/mod/st3_3/src/st3/r333.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_ST3 += $(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o $(OBJDIR)/mod/st3_3/src/st3/r333.o
+ifeq ($(SADDLER_MASK_OPAQUE),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_MASK_OPAQUE=1
+else ifneq ($(SADDLER_MASK_OPAQUE),0)
+$(error SADDLER_MASK_OPAQUE must be 0 or 1)
+endif
+else ifneq ($(SADDLER_MASK_OPAQUE),0)
+$(error SADDLER_MASK_OPAQUE needs ROUTE_FINAL=1)
 endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
@@ -2754,9 +2828,9 @@ CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
-CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
+CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl $(if $(filter 1,$(ROUTE_FINAL)),em31:ovl pl0e:ovl))
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep04:ovl wep05 wep07 wep09 wep11 wep13 wep19 $(WEP27_AUDITED_MODULES) $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep04:ovl wep05 wep07 wep09 wep11 wep13 wep19 $(WEP27_AUDITED_MODULES) $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES) $(if $(filter 1,$(STRESS_SADDLER)),em31:ovl),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
@@ -3140,6 +3214,12 @@ ifeq ($(KOS_SQUEEZE),1)
 $(OBJDIR)/platform/os.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_SQUEEZE=1 -DRE4DC_KOS_SQUEEZE_BYTES=$(KOS_SQUEEZE_BYTES) -DRE4DC_KOS_SQUEEZE_FRAG=$(KOS_SQUEEZE_FRAG)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_KOS_SQUEEZE=1
 endif
+# RESIDENT_SKIP_LOG=1 (lane ch5found16, log only, default 0 = image unchanged): preload_resident logs why each listed key
+# it does not pick was skipped (known / entry / missing / picked / byte limit). Needs VRAM_ROOM_LOG=1.
+RESIDENT_SKIP_LOG ?= 0
+ifneq ($(filter-out 0 1,$(RESIDENT_SKIP_LOG)),)
+$(error RESIDENT_SKIP_LOG must be 0 or 1)
+endif
 VRAM_ROOM_LOG ?= 0
 ifneq ($(filter-out 0 1,$(VRAM_ROOM_LOG)),)
 $(error VRAM_ROOM_LOG must be 0 or 1)
@@ -3314,6 +3394,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_PAGES_VQ_ONLY %s\n' '$(VRAM_PAGES_VQ_ONLY)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_ROOM_LOG %s\n' '$(VRAM_ROOM_LOG)' >> $@.tmp
+	@printf '#define RE4DC_RESIDENT_SKIP_LOG %s\n' '$(RESIDENT_SKIP_LOG)' >> $@.tmp
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
 	@printf '#define RE4DC_ROOM_RESIDENT %s\n' '$(ROOM_RESIDENT)' >> $@.tmp
