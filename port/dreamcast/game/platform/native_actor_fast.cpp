@@ -2617,11 +2617,17 @@ bool dir26_weapon;  // LEON_LIGHT_DIR26: the part being folded is Leon's held we
 #else
 constexpr bool dir26_weapon = false;
 #endif
+#if RE4DC_LEON_LIGHT_DIR26 && defined(RE4DC_BOSS_LIGHT_DIR26) && RE4DC_BOSS_LIGHT_DIR26
+bool dir26_boss;  // BOSS_LIGHT_DIR26: the part being folded is a boss's (boss_dir26_fold sets it)
+#else
+constexpr bool dir26_boss = false;
+#endif
 bool probe_eligible(const Re4dcModelPart& p) {
     const SourceLighting& S = *p.lighting;
     if (!S.enable || S.ambient_vertex || S.material_vertex || S.diffuse != 2) return false;
     if (S.normal_matrix[3] == 1.0e30f) return true;  // Leon (LEON_SOURCE_LIGHT capture)
     if (dir26_weapon) return true;                    // LEON_LIGHT_DIR26: Leon's held weapon
+    if (dir26_boss) return true;                      // BOSS_LIGHT_DIR26: a boss part
 #if RE4DC_ACTOR_PROBE_LIGHT >= 2
 #if RE4DC_GANADO_LIT_TOGGLE
     if (re4dc_ganlit_mode == 0) return false;  // GANADO_LIT_TOGGLE mode 0: Ganados as test 15 (build_lights, flat)
@@ -2884,10 +2890,34 @@ inline unsigned dsa28_light_path(const Lights& L) {
 // camera fill + ambient, lit per vertex by pass_lights' fast kernel). Other models, and a declined Leon part, return
 // false here and take fast_only_lights (one part colour). The exact evaluator stays compiled out.
 unsigned leon_dir26_parts;
+#if defined(RE4DC_BOSS_LIGHT_DIR26) && RE4DC_BOSS_LIGHT_DIR26
+// BOSS_LIGHT_DIR26=1 (lane bossahead; render only; default 0; needs LEON_LIGHT_DIR26=1): the bosses' parts (model_bridge
+// re4dc_actor_is_boss: El Gigante, Del Lago, Mendez, Verdugo, Salazar's monster, U-3, Krauser + arm, Saddler, Garrador)
+// take Leon's probe fold too: probe direction + ambient (no camera fill), lit per vertex by pass_lights' fast kernel,
+// instead of fast_only_lights' one colour per part. A declined part (vertex colour, material < 255, no probe) keeps the
+// one part colour. Never the exact evaluator.
+extern "C" int re4dc_actor_is_boss(const void* model);
+unsigned boss_dir26_tried, boss_dir26_parts, boss_dir26_logged;
+inline bool boss_dir26_fold(const Re4dcModelPart& p, const Frame& f, Lights& L) {
+    if (!re4dc_actor_is_boss(p.model)) return false;
+    ++boss_dir26_tried;
+    dir26_boss = true;
+    const bool ok = probe_lights(p, f, L);
+    dir26_boss = false;
+    if (ok) ++boss_dir26_parts;
+    if (frame_serial - boss_dir26_logged >= 300U) {
+        boss_dir26_logged = frame_serial;
+        re4dc_log("BD26 f=%u tried=%u lit=%u\n", frame_serial, boss_dir26_tried, boss_dir26_parts);
+    }
+    return ok;
+}
+#else
+#define boss_dir26_fold(p, f, L) false
+#endif
 inline bool leon_dir26_fold(const Re4dcModelPart& p, const Frame& f, Lights& L) {
     // Leon's marked record, and (same switch) his held weapon: its own record's probe at the weapon, plus the fill.
     dir26_weapon = p.lighting->normal_matrix[3] != 1.0e30f;
-    if (dir26_weapon && !re4dc_actor_is_leon_weapon(p.model)) { dir26_weapon = false; return false; }
+    if (dir26_weapon && !re4dc_actor_is_leon_weapon(p.model)) { dir26_weapon = false; return boss_dir26_fold(p, f, L); }
     const bool ok = probe_lights(p, f, L);
     dir26_weapon = false;
     if (!ok) return false;

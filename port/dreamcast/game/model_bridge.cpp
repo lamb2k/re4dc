@@ -1414,4 +1414,20 @@ extern "C" int re4dc_actor_is_leon_weapon(const void* model){
     const cPlWep* w=pPL->Wep;
     return (const void*)static_cast<const cModel*>(w->m_pWep)==model || (const void*)static_cast<const cModel*>(w->pObj2)==model;
 }
+#if defined(RE4DC_BOSS_LIGHT_DIR26) && RE4DC_BOSS_LIGHT_DIR26
+// BOSS_LIGHT_DIR26 (native_actor_fast.cpp boss_dir26_fold): 1 when the model is a boss enemy (kindid 0): El Gigante
+// em2b, Verdugo em2c, Del Lago em2f, Saddler em31, U-3 em32, Mendez em35, Salazar + the Queen em38, Krauser em39 and
+// his arm em3a, and the Garrador (em1b / em1c type 10). Only main-RAM cModels are read (borrowed views are not).
+extern "C" int re4dc_actor_is_boss(const void* model){
+    const unsigned a=(unsigned)model&0x1fffffffU;
+    if(!model||((unsigned)model&3U)||a<0x0c000000U||a>=0x0d000000U) return 0;
+    const cModel* m=static_cast<const cModel*>(model);
+    if(m->kindid!=0) return 0;
+    switch(m->id){
+    case 0x2b: case 0x2c: case 0x2f: case 0x31: case 0x32: case 0x35: case 0x38: case 0x39: case 0x3a: return 1;
+    case 0x1b: case 0x1c: return m->type==0x0a;
+    default: return 0;
+    }
+}
+#endif
 #endif

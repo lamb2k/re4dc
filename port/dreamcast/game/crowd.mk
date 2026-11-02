@@ -610,6 +610,21 @@ endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_LIGHT_DIR26=1
 $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_LIGHT_DIR26=1
 endif
+# BOSS_LIGHT_DIR26=1 (lane bossahead 11-02, user "ensure the bosses are on fast drawing paths"; render only; default 0:
+#              nothing changes; needs LEON_LIGHT_DIR26=1): the bosses (El Gigante, Del Lago, Mendez, Verdugo, Salazar's
+#              monster, U-3, Krauser + arm, Saddler, Garrador) take Leon's probe direction + ambient through the same
+#              fast kernel instead of one flat colour per part under ACTOR_LIGHT_FAST_ONLY=1. Log: BD26 every 300 frames.
+BOSS_LIGHT_DIR26 ?= 0
+ifeq ($(filter $(BOSS_LIGHT_DIR26),0 1),)
+$(error BOSS_LIGHT_DIR26 must be 0 or 1)
+endif
+ifeq ($(BOSS_LIGHT_DIR26),1)
+ifneq ($(LEON_LIGHT_DIR26),1)
+$(error BOSS_LIGHT_DIR26 needs LEON_LIGHT_DIR26=1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_BOSS_LIGHT_DIR26=1
+$(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_BOSS_LIGHT_DIR26=1
+endif
 # LEON_PROBE_LOG26=1 (diagnostic, test only, default 0): one LP26 line per frame with Leon's light probe (needs
 #              ACTOR_PROBE_LIGHT=1/2); lane leonlight26's flicker check.
 LEON_PROBE_LOG26 ?= 0
