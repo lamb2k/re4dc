@@ -18,6 +18,13 @@ ifneq ($(GC_ASSET_CATALOG_PIN_FILE),)
 GC_ASSET_CATALOG_SHA256 := $(strip $(shell cat $(GC_ASSET_CATALOG_PIN_FILE)))
 endif
 GC_ASSET_CATALOG_SHA256 ?= 0
+# GC_ASSET_CKPT_FIRST=<room frames> (gate-ON twins): first in-room checkpoint (then every 600). Default 60 emits no flag.
+# rr's Disc 2 gate twin d2a uses 30 (lane castle-gca-26 11-02): the gate build runs r201 at 3-6 fps, so a 60 s run
+# reached only ~60 room frames and missed the checkpoint.
+GC_ASSET_CKPT_FIRST ?= 60
+ifneq ($(GC_ASSET_CKPT_FIRST),60)
+PLATFORM_CPPFLAGS += -DRE4DC_GC_ASSET_CKPT_FIRST=$(GC_ASSET_CKPT_FIRST)
+endif
 # GC_ASSET_PROF=1 (requires GC_ASSET_GATE=1): log texture fingerprint / catalog read time (GC-ASSET-PROF). Diagnostic.
 GC_ASSET_PROF ?= 0
 ifneq ($(GC_ASSET_PROF),0)

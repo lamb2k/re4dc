@@ -7203,6 +7203,9 @@ extern "C" void re4dc_ui_present(){
 
 extern "C" void re4dc_ui_end_frame(int present){
 #if RE4DC_GC_ASSET_GATE
+#ifndef RE4DC_GC_ASSET_CKPT_FIRST
+#define RE4DC_GC_ASSET_CKPT_FIRST 60   // gc_asset_gate.mk GC_ASSET_CKPT_FIRST (rr Disc 2 gate twin: 30)
+#endif
     struct GcAssetFrameFlush {
         ~GcAssetFrameFlush(){
             gcasset_flush();
@@ -7211,7 +7214,7 @@ extern "C" void re4dc_ui_end_frame(int present){
             static unsigned serial,frames;
             if(!gcasset_visit_live)return;
             if(serial!=gcasset_visit_serial){serial=gcasset_visit_serial;frames=0;}
-            ++frames;if(frames==60 || (frames>60 && !((frames-60)%600)))gcasset_checkpoint();
+            ++frames;if(frames==RE4DC_GC_ASSET_CKPT_FIRST || (frames>RE4DC_GC_ASSET_CKPT_FIRST && !((frames-RE4DC_GC_ASSET_CKPT_FIRST)%600)))gcasset_checkpoint();
         }
     } gcasset_frame_flush;
 #endif

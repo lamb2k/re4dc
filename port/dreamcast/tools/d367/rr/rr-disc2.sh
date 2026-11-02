@@ -9,7 +9,8 @@
 #      (discsets/mkdisc2.py) + this program; mastered with mkgdi.sh LAYOUT=standard into <cand>/disc2/gdemu, disc_lint
 #      loader + standard, boot file = this program;
 #   3. twins and bases for the Disc 2 Flycast jobs (rr-jobs.sh d2-*): d2c (census + KOS squeeze) -> _discs/d2c and the
-#      GC-ASSET gate twin d2a (catalog of the Disc 2 image) -> _discs/d2a.
+#      GC-ASSET gate twin d2a (catalog of the Disc 2 image) -> _discs/d2a. GC_ASSET_CKPT_FIRST=30: the gate build runs
+#      r201 at 3-6 fps, so the first in-room checkpoint comes at 30 room frames (other jobs keep 60).
 # Writes <work>/disc2.env (program sha, image sha, sectors) and <work>/disc2.ok on success. Never touches Disc 1's files.
 set -euo pipefail
 W=${1:?work}; TA=${2:?tree A}; TB=${3:?tree B}; S7=${4:?sha7}; EVU=${5:?evidence}
@@ -64,7 +65,7 @@ fi
   NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 > "$W/twin-d2c.txt" 2>&1 & pb=$!; }
 G=$W/gca2; rm -rf "${G:?}"; ga=0
 { PROVENANCE_D2=1 bash "$D/gc_port23/make_catalog.sh" "$CAND/disc2/gdemu/track03.bin" "$W/recipe.conf" "$G" | tail -1 &&
-  FP_TREE=$TA FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d2a GC_ASSET_GATE=1 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-d2a.txt" 2>&1; } || ga=1
+  FP_TREE=$TA FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d2a GC_ASSET_GATE=1 GC_ASSET_CKPT_FIRST=30 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-d2a.txt" 2>&1; } || ga=1
 [ -z "$pb" ] || wait $pb || { echo "rr-disc2: census twin failed"; tail -3 "$W/twin-d2c.txt"; exit 1; }
 rc=0
 bash "$F/fp_master.sh" "$W/d2/out/tree" "$W/d2/out/manifest.json" "$W/d2/d1/IP.BIN" "$EVU/_discs/d2c" "$ROUTE/out-fp${L}d2cW" > "$W/master-d2c.txt" 2>&1 || rc=1
