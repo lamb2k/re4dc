@@ -76,7 +76,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b | Fixed and checked in our tests; the problem was not console-only | 63 |
 | 🛠️ In progress | Being fixed now | 5 |
-| 🔍 Investigating | Being reproduced or traced | 6 |
+| 🔍 Investigating | Being reproduced or traced | 10 |
 | ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
