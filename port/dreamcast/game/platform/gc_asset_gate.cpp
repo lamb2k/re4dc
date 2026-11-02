@@ -9,7 +9,7 @@
 extern "C" void re4dc_log(const char*, ...);
 namespace re4dc_gcasset {
 namespace {
-constexpr unsigned CatalogLimit=16320,KindBytes=16,IdBytes=48,UnknownLimit=64;   // rows+unknown < 2^14 token index
+constexpr unsigned CatalogLimit=65472,KindBytes=16,IdBytes=48,UnknownLimit=64;   // rows+unknown < 2^16 token index (world-ch5: was 2^14, Disc 3 catalog)
 #include "include/gc_asset_sha.inc"
 unsigned char seen[2048];
 unsigned char motion_row[2048];   // cast-ps2-25 r17: the seen row is a "motion" row (kind check per consumer)
@@ -232,7 +232,7 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
     // Tokens are epoch-tagged, so a retired/replaced catalog never hits.
     struct BindCache{char kind[16],id[48];Digest digest;unsigned value;};
     static BindCache bind_cache[16];static unsigned bind_cache_next;
-    for(const auto& c:bind_cache)if(c.value && c.value>>14==epoch && !std::strcmp(c.kind,kind) && !std::strcmp(c.id,id) &&
+    for(const auto& c:bind_cache)if(c.value && c.value>>16==epoch && !std::strcmp(c.kind,kind) && !std::strcmp(c.id,id) &&
         !std::memcmp(c.digest.bytes,digest.bytes,32))return {c.value};
     struct CacheStore{const char* k;const char* i;const Digest& d;
         void operator()(CheckedAsset a)const{if(!a.value)return;auto& c=bind_cache[bind_cache_next++&15];
@@ -243,7 +243,7 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         unsigned found=rows;
         const bool tex=tex_table && !std::strcmp(kind,"texture");
         const SparseResult result=tex?tex_find(id,digest,epoch,found,row):sparse_find(kind,id,digest,epoch,found);
-        if(tex && result==SparseFound)desc_store(epoch<<14|found,row);
+        if(tex && result==SparseFound)desc_store(epoch<<16|found,row);
         // A failed row read is a catalog-read fault even when a callback retired
         // the catalog during it (deferred, attributed at the next flush).
         if(result==SparseFault){catalog_fault(CatalogRead);return {};}
@@ -280,20 +280,20 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& digest) 
         index=rows+i;
     }
     if(!catalog_ok || !index_generation(epoch))return {};
-    return {epoch<<14|index};
+    return {epoch<<16|index};
     }();
     if(catalog_ok && index_generation(epoch))store(result);
     return result;
 }
 bool checked_current(CheckedAsset asset) {
-    return catalog_ok && index_generation(catalog_epoch) && asset.value>>14==catalog_epoch &&
-        (asset.value&16383U)<catalog_rows+unknown_count;
+    return catalog_ok && index_generation(catalog_epoch) && asset.value>>16==catalog_epoch &&
+        (asset.value&65535U)<catalog_rows+unknown_count;
 }
 bool describe_checked(CheckedAsset asset,AssetDescription* out) {
     if(!out)return false;
     *out={};
     if(!checked_current(asset))return false;
-    const unsigned epoch=catalog_epoch,rows=catalog_rows,index=asset.value&16383U;
+    const unsigned epoch=catalog_epoch,rows=catalog_rows,index=asset.value&65535U;
     AssetDescription row{};
     if(index<rows){if(!desc_find(asset.value,row) && !index_row(index,row))return false;}
     else {
@@ -436,8 +436,8 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
     // gc-catalog24b: Motion's producer is members.cpp motion_use/motion_flush
     // (one "motion" row per FCV/SEQ clip key); it is judged like any consumer.
     ++emissions[consumer];checked(consumer);
-    const unsigned index=asset.value&16383U;
-    if(!catalog_ok || !catalog_epoch || asset.value>>14!=catalog_epoch || index>=catalog_rows+unknown_count) {
+    const unsigned index=asset.value&65535U;
+    if(!catalog_ok || !catalog_epoch || asset.value>>16!=catalog_epoch || index>=catalog_rows+unknown_count) {
         unresolved(consumer,"catalog-token");return;
     }
     // A token counts only for its own kind: a motion row only for Motion, any other row never for Motion

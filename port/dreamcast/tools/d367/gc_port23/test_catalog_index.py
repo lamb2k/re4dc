@@ -47,7 +47,7 @@ class IndexedCatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'overflow'):epochs.bind('sound','bank-8',sha(b'8'))
         epochs.install(self.reader())
         with self.assertRaisesRegex(ValueError,'stale'):epochs.resolve(token)
-        epochs.epoch=(1<<18)-2
+        epochs.epoch=(1<<16)-2
         with self.assertRaisesRegex(ValueError,'exhausted'):epochs.install(self.reader())
 
     def test_nontexture_consumers_and_no_origin_inference(self):
