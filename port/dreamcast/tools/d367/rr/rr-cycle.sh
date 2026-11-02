@@ -167,7 +167,7 @@ bases() {
 jobs_quick() { bash "$BIN/rr-jobs.sh" quick "$W" "$TA" "$S7" "$EVU" "$EVW"; }
 jobs_full() { bash "$BIN/rr-jobs.sh" full "$W" "$TA" "$S7" "$EVU" "$EVW"; }
 flycasts() {
-  local evg; evg=/c/${EVU#/mnt/c/}
+  local evg d; d=${EVU#/mnt/}; d=${d%%/*}; evg=/$d${EVU#/mnt/$d}   # any drive (user "Use D: for now")
   "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "$evg" "${RR_JOBS:-12}"
 }
 judge() { python3 "$BIN/rr-judge.py" "$W" "$TA" "$BIN"; }
