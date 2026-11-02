@@ -25,3 +25,9 @@ extern "C" unsigned re4dc_sky_event(void)
     }
     return st ? 2U : 0U;   // 2: drawn unfogged (1 = table fog: at 60-240 m the near fog table paints it the fog colour)
 }
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT >= 2
+// SKY_EVENT=2: re4dc_sky_event() latched once per frame (coarse.cpp re4dc_coarse_draw, before the world and the fog
+// far are noted), so re4dc_view_far / re4dc_far_cap / the sky rows read one word instead of the flags per call.
+extern "C" { unsigned re4dc_sky_event_now; }
+extern "C" void re4dc_sky_event_latch(void) { re4dc_sky_event_now = re4dc_sky_event(); }
+#endif

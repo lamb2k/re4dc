@@ -110,7 +110,7 @@ endif
 ifeq ($(LAKE_FAR)$(LAKE_FAR_SHORE),00)
 $(error SKY_EVENT=2 needs LAKE_FAR (re4dc_far_cap))
 endif
-$(OBJDIR)/option_rows.o: GAME_CPPFLAGS += -DRE4DC_SKY_EVENT=2
+$(OBJDIR)/option_rows.o $(OBJDIR)/coarse.o $(OBJDIR)/sky_event.o: GAME_CPPFLAGS += -DRE4DC_SKY_EVENT=2
 endif
 PLATFORM_OBJS += $(OBJDIR)/sky_event.o
 $(TARGET): $(OBJDIR)/sky_event.o

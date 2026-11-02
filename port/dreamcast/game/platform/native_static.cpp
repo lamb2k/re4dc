@@ -699,7 +699,12 @@ static inline unsigned re4dc_look_sky(){return re4dc_looks[re4dc_look_mode%kLook
 #define RE4DC_SKY_ANY 1
 #if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT
 extern "C" unsigned re4dc_sky_event(void); // sky_event.cpp (SKY_EVENT): 1 while a scripted scene owns the camera
+#if RE4DC_SKY_EVENT>=2
+extern "C" unsigned re4dc_sky_event_now;   // sky_event.cpp: re4dc_sky_event() latched once per frame
+static inline unsigned re4dc_sky_mode(){const unsigned m=re4dc_look_sky();return m?m:re4dc_sky_event_now;}
+#else
 static inline unsigned re4dc_sky_mode(){const unsigned m=re4dc_look_sky();return m?m:re4dc_sky_event();}
+#endif
 #else
 static inline unsigned re4dc_sky_mode(){return re4dc_look_sky();}
 #endif
@@ -10393,7 +10398,7 @@ extern "C" float re4dc_far_cap(float cap){
 #if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT>=2
     // SKY_EVENT=2 (post30.mk): while a scripted scene owns the camera, no 25 m cap: the world, the coarse view and the
     // fog far follow the room camera's View far (the PS2 draws event shots to it; the r100 lift looks up past 25 m).
-    if(re4dc_sky_event())return 1.0e9f;
+    if(re4dc_sky_event_now)return 1.0e9f;
 #endif
     const unsigned r=ps2w.room;
     float lake=0.0f;
