@@ -2362,6 +2362,12 @@ MOVIE_LAYOUT_GUARD ?= 0
 # s30cell-26 (11-02): 1 = an arena movie (r100s30) keeps the PS2_INTERIOR_CULL r100 cell resident instead of lending it
 # (the arena movie never stages in heap 4); lent, the reload after s30 failed the 81920 B reserve and r100 ran unculled.
 MOVIE_ARENA_CELL_KEEP ?= 0
+# bossmem26 (11-02): 1 = El Gigante's r119 parasite (s30, 11930) and death (s20, 11920) movies borrow r119's PS2 world
+# package as the r11f / r100s30 movies do (the world is not drawn under a movie; read again after it). From the heap they
+# were refused (heap 4 fragmented after the fight, `order: piece N short`, terminal=3). Needs MOVIE_LAYOUT_GUARD=1.
+# 2 = also by rule in every room: any full 288x192 room movie heap 4 can't stage borrows its room's PS2 world package
+# (registered at open when it holds the movie set); the heap stays the first choice.
+MOVIE_WORLD_ARENA_R119 ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
@@ -2369,6 +2375,7 @@ $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_ARENA_CELL_KEEP %s\n' '$(MOVIE_ARENA_CELL_KEEP)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_WORLD_ARENA_R119 %s\n' '$(MOVIE_WORLD_ARENA_R119)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
@@ -3210,6 +3217,17 @@ $(error SS11_ROOM_EVICT=1 needs ROOM_CHANGE_EVICT, ROOM_REENTRY_EVICT=1 and SS11
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_EVICT=1
 endif
+# SS11_ROOM_DEFER=1 (lane bossmem26 2026-11-02; render only, default 0 = image unchanged; needs SS11_ROOM_EVICT=1): a room
+# change behind the chapter-end screens loads no picture of the new room there (the save screen's pictures still hold
+# VRAM; r11b's raw 256x256 pictures latched 8-10 no-contiguous uploads after Del Lago); the room's own entry evicts the
+# old set and preloads the new one.
+SS11_ROOM_DEFER ?= 0
+ifeq ($(SS11_ROOM_DEFER),1)
+ifneq ($(SS11_ROOM_EVICT),1)
+$(error SS11_ROOM_DEFER=1 needs SS11_ROOM_EVICT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_DEFER=1
+endif
 # FRAME_QUEUE_DIAG=1 (lane fix18 #39, log only, default 0 = image unchanged): one FQDIAG line per frame whose frame
 # queue refused translucent parts or effect sprites: counts, bytes asked for, the peak, and the queue at the drop.
 FRAME_QUEUE_DIAG ?= 0
@@ -3664,6 +3682,11 @@ include mendezfx.mk
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
 ifneq ($(MOVIE_WORLD_ARENA),1)
 $(error MOVIE_WORLD_ARENA_S30 needs MOVIE_WORLD_ARENA=1)
+endif
+endif
+ifneq ($(MOVIE_WORLD_ARENA_R119),0)
+ifneq ($(MOVIE_WORLD_ARENA)$(MOVIE_LAYOUT_GUARD),11)
+$(error MOVIE_WORLD_ARENA_R119 needs MOVIE_WORLD_ARENA=1 and MOVIE_LAYOUT_GUARD=1)
 endif
 endif
 ifeq ($(MOVIE_WORLD_ARENA),1)
