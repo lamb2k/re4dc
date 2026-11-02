@@ -1458,6 +1458,17 @@ if os.path.isdir(DCF3PAKD):
 DATA['arcdrop'] = {'remove': ['st1/%s.arc' % _r for _r in (
     'r100', 'r101', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d', 'r10e',
     'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f')] + ['st2/r200.arc']}
+# glyph27 (lane glyph27 11-02, user: "the game regressed to the ps2 thumb stick glyph for the escape prompt when you're
+# grabbed by a ganado"): dc/tex.pak = leon28's pack with the grab QTE stick cap 6d33c3f9-9f8cf668 (etc/core.das EFF #25
+# id 0x31) back to the Dreamcast glyph Tests 22-24 shipped (glyph shape-review v4 G08, sha256 57132ed5; fxc26b 10-26 had
+# put PS2 Core.dat pixels under it). Same size / format (32x32 ARGB4444, 2192 B; 0 VRAM). The LAST tex.pak set; the gate
+# below checks every key of rr/ui-glyph-protect.tsv on the final pack, so no later swap can bring a PS2/GC glyph back.
+# GC-ASSET: authored Dreamcast UI, not a GameCube asset. Store: re4data/private/glyph27-20261102 (pkg/ = the package).
+GLYPH27D = os.environ.get('GLYPH27D', '/root/re4data/private/glyph27-20261102')
+if os.path.isdir(GLYPH27D):
+    DATA['glyph27'] = {'dc/tex.pak': GLYPH27D + '/dc/tex.pak'}
+    PAK_DERIVED['glyph27'] = GLYPH27D + '/pak-derived.json'
+    AFTER += [('glyph27', 'leon28')]
 
 
 def title27_gate(names, r, rec):
@@ -1498,6 +1509,14 @@ def title27_gate(names, r, rec):
                 raise SystemExit('leon28: the staged dc/tex.pak (%s) does not hold the leon28 Leon atlas under %s; a set '
                                  'after leon28 replaced it: rebuild that set on leon28 or put leon28 last' % (r['dc/tex.pak'], n_))
         rec.append('leon28 gate: %d Leon atlases' % len(LEON28_KEYS))
+    if 'glyph27' in names:
+        import glyph_protect
+        bad = glyph_protect.check(tex_merge.read(r['dc/tex.pak']))
+        if bad:
+            raise SystemExit('glyph27: the staged dc/tex.pak (%s) does not hold the protected Dreamcast controller glyph under %s '
+                             '(rr/ui-glyph-protect.tsv); a set after glyph27 replaced it: rebuild that set on glyph27 with '
+                             'glyph_protect.skip, or put glyph27 last' % (r['dc/tex.pak'], ', '.join(bad)))
+        rec.append('glyph27 gate: %d protected controller glyphs' % len(glyph_protect.keys()))
 # snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
 # ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
 # its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):

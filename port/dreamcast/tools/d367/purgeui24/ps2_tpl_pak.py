@@ -21,6 +21,7 @@ sys.path.insert(0, str(HERE))
 import ps2_hud_pak as hp     # noqa: E402  (sets the tool paths)
 tpl, ps2_tpl, vq, texpack = hp.tpl, hp.ps2_tpl, hp.vq, hp.texpack
 from vq_pak import read_pak, restamp  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')); import glyph_protect  # lane glyph27: Dreamcast controller glyphs stay
 
 DEFAULT_GLOBS = ['ss/*/*.tpl', 'ss/*/*.dat', 'etc/*.tpl', 'etc/memcard.das', 'op/*.das']
 
@@ -109,6 +110,7 @@ def main():
     base = Path(a.pak).read_bytes()
     pkgs = read_pak(base)
     skip = set(l.split()[0] for l in open(a.skip_keys)) if a.skip_keys else set()
+    skip |= set(glyph_protect.keys())   # lane glyph27: Dreamcast controller glyphs stay
     rows, files, done = [], [], set()
     for g in a.glob or DEFAULT_GLOBS:
         for f in sorted(glob.glob(str(G / g), recursive=True)):

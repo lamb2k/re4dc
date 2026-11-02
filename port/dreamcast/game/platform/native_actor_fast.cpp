@@ -2611,10 +2611,17 @@ constexpr unsigned kProbeEntries = 8;
 ProbeEntry probe_cache[kProbeEntries];
 unsigned probe_next = 0;
 struct ProbeStats { unsigned built, reused, parts, leon, ganado, declined, last; } probe_stats{};
+#if RE4DC_LEON_LIGHT_DIR26
+extern "C" int re4dc_actor_is_leon_weapon(const void* model);
+bool dir26_weapon;  // LEON_LIGHT_DIR26: the part being folded is Leon's held weapon (leon_dir26_fold sets it)
+#else
+constexpr bool dir26_weapon = false;
+#endif
 bool probe_eligible(const Re4dcModelPart& p) {
     const SourceLighting& S = *p.lighting;
     if (!S.enable || S.ambient_vertex || S.material_vertex || S.diffuse != 2) return false;
     if (S.normal_matrix[3] == 1.0e30f) return true;  // Leon (LEON_SOURCE_LIGHT capture)
+    if (dir26_weapon) return true;                    // LEON_LIGHT_DIR26: Leon's held weapon
 #if RE4DC_ACTOR_PROBE_LIGHT >= 2
 #if RE4DC_GANADO_LIT_TOGGLE
     if (re4dc_ganlit_mode == 0) return false;  // GANADO_LIT_TOGGLE mode 0: Ganados as test 15 (build_lights, flat)
@@ -2733,7 +2740,7 @@ bool probe_lights(const Re4dcModelPart& p, const Frame& f, Lights& L) {
     // camera-side fill, from the part's origin toward the camera (view space -t / |t|), coloured F% of the probe's
     // total (directional + ambient), at the probe's scale (headroom x0.5 included). The probe record, its direction and
     // the shared actor_light_probe.h record are unchanged (the shadows lane reads those).
-    if (leon) {
+    if (leon || dir26_weapon) {
         const float tx = p.modelview[3], ty = p.modelview[7], tz = p.modelview[11];
         const float t2 = tx * tx + ty * ty + tz * tz;
         if (t2 > 0.0f && re4dc::render::is_finite(t2)) {
@@ -2878,7 +2885,12 @@ inline unsigned dsa28_light_path(const Lights& L) {
 // false here and take fast_only_lights (one part colour). The exact evaluator stays compiled out.
 unsigned leon_dir26_parts;
 inline bool leon_dir26_fold(const Re4dcModelPart& p, const Frame& f, Lights& L) {
-    if (p.lighting->normal_matrix[3] != 1.0e30f || !probe_lights(p, f, L)) return false;  // Leon's marked record only
+    // Leon's marked record, and (same switch) his held weapon: its own record's probe at the weapon, plus the fill.
+    dir26_weapon = p.lighting->normal_matrix[3] != 1.0e30f;
+    if (dir26_weapon && !re4dc_actor_is_leon_weapon(p.model)) { dir26_weapon = false; return false; }
+    const bool ok = probe_lights(p, f, L);
+    dir26_weapon = false;
+    if (!ok) return false;
     ++leon_dir26_parts;
     return true;
 }
