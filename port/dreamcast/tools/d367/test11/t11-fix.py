@@ -1441,6 +1441,15 @@ DCF3ISLD = os.environ.get('DCF3ISLD', '/root/re4data/private/dcf3isl-20261102')
 if os.path.isdir(DCF3ISLD):
     DATA['dcf3isl'] = {_l.split('	')[0]: DCF3ISLD + '/' + _l.split('	')[0]
                        for _l in open(DCF3ISLD + '/manifest.tsv') if _l.strip()}
+# dcf3pak (lane assets-dc 11-02, for lane world-ch5's D3_DATA; Disc 3 space): the island tree's dc/tex.pak with its
+# island-only keys (868 not in Disc 1's pack) in Dreamcast form, space rule (assetsdc/dcform_pak.py --space): raw 16-bit
+# >= 64x64 -> VQ (+ mips when square), nothing else touched. 224 changed, 9.20 MB -> 1.97 MB (3,530 sectors).
+# ADMIT PASS 224/224; look (assetsdc/lookcheck.py) PSNR min 22.4 / median 38.3 dB. This is the island INPUT pack of
+# discsets/disc3_fixture.py (pak_keep: Disc 1 wins shared keys), not a Disc 1 set. Store: re4data/private/dcf3pak-20261102.
+DCF3PAKD = os.environ.get('DCF3PAKD', '/root/re4data/private/dcf3pak-20261102')
+if os.path.isdir(DCF3PAKD):
+    DATA['dcf3pak'] = {'dc/tex.pak': DCF3PAKD + '/dc/tex.pak'}
+    PAK_DERIVED['dcf3pak'] = DCF3PAKD + '/pak-derived.json'
 # arcdrop (lane assets-dc 11-02, batch 4 "strip and prove"; data only, no knob): takes the GameCube room archives
 # st1/rXXX.arc (+ st2/r200.arc) off Disc 1. No game path reads them: ReadAreaData opens st%x/r%03x.dar only ("never fall
 # back to compressed PPC data or an unqualified .arc sidecar", src/game/read.cpp); the only other opener is the io_probe
