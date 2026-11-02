@@ -48,3 +48,9 @@ C:\Flycast-Evidence\re4-dreamcast\sky27 (runs, sheets, speed, bake).
   cross 35.88 -> 35.91 (+0.03), farm r103 36.70 -> 35.92 (-0.78), barn 38.30 -> 37.70 (-0.61). The sky functions
   themselves: row check 0.02-0.04 ms, frame setup 0.007 ms, render hook 0.008 ms.
 - VRAM: 67,584 B per outdoor room (room arena), loaded at entry; no refusals or no-contiguous-block lines in 29 rooms.
+- Cost, GPU (cache-model Flycast, rr-speed-gpu; not console ms): cross SQ->TA -0.6%, TA list -0.6%; farm r103 -0.5% /
+  -0.5%. Barn not measured (no fast state for the barn scene). TSP fill of the textured background is not modelled by
+  any tool here: it needs the console A/B.
+- KOS squeeze 48 KiB: PASS (10/10; fight min headroom 5,896 B, leave100/103 6,096 B).
+- Logic: decisions-identical on the r101 cross warp to tick 1500 (discrete and coords identical every tick). The parts
+  hashes (pm/em: render-side parts world matrices) differ from frame 216; off vs off is STRICT.
