@@ -49,10 +49,17 @@ CASTLE = re.compile(r'^(st2/%s[^/]*|dc/movie/%ss.*|dc/native/%s/.*|evd/%ss.*|eve
 # dropped by DISC3_MODULES or never linked on the island), Del Lago + Leon's boat (r10b), Luis (pl14, 2-2 .. 3-1)
 UNUSED_EM = re.compile(r'^em/(em1[1-7]|em2[1-9a-f]|em35|em3b|pl0f|pl14)\.(drs|das)$')
 rep['em_pruned'] = 0; rep['em_bytes'] = 0
+# D3_ARCDROP (default 1; lane assets-dc arcdrop 11-02): no game path reads st%x/r%03x.arc (ReadAreaData opens the .dar
+# only, src/game/read.cpp), so the room .arc sidecars stay off Disc 3.
+ARCDROP = os.environ.get('D3_ARCDROP', '1') == '1'
+rep['arc_pruned'] = 0; rep['arc_bytes'] = 0
 for d, _, fs in os.walk(tree):
     for f in fs:
         p = os.path.join(d, f)
         rel = os.path.relpath(p, tree)
+        if ARCDROP and re.match(r'^st[1-3]/r[0-9a-f]{3}\.arc$', rel):   # assets-dc arcdrop: only .dar is read
+            rep['arc_pruned'] += 1; rep['arc_bytes'] += os.path.getsize(p); os.remove(p)
+            continue
         if UNUSED_EM.match(rel) and rel not in ('em/em23.drs', 'em/em25.drs'):
             rep['em_pruned'] += 1; rep['em_bytes'] += os.path.getsize(p); os.remove(p)
             continue

@@ -39,5 +39,34 @@ for f in "$(src island18-u3large-20261018)"/prepared/mot/*.fcv; do put "$f" "dc/
 put "$(src island18-krauser-triplets-20261018)/em39.drs" em/em39.drs
 for d in "$(src island18-r317-movies-20261018)"/r317s*; do put "$d/$(basename "$d").seq" "dc/movie/$(basename "$d").seq"; done
 put "$PA/ch5regen-20261018/paks/tex-ch5e-d5986c3e.pak" dc/tex.pak
+# --- round 2 (lane world-ch5 11-02 afternoon) ---
+# PS2 motion store (motion/ps2_motion_prepared.py rewrite + verify PASS): soldiers em1d / em1e / em1f, rooms r300 r30b r320
+# (the other island archives had no PS2-changed clip; r30c / r30f refused: PS2 slot not an FCV). .arc = the .dar's payload.
+PM=${PM:-/root/re4data/private/island-pm-20261102}
+if [ -d "$PM" ]; then
+  for e in em1d em1e em1f; do put "$PM/$e/em/$e.drs" "em/$e.drs"; done
+  for r in r300 r30b r320; do put "$PM/$r/em/$r.dar" "st3/$r.dar"; done
+  for f in "$PM"/*/dc/mot/*.fcv; do [ -e "$f" ] && put "$f" "dc/mot/$(basename "$f")"; done
+fi
+# PS2 sound (ps2snd24-regen.sh on the Disc 3 disc: 48/48 streams from PS2 ADX, 10/17 music entries)
+SN=${SN:-/root/re4data/private/island-snd-20261102}
+[ -d "$SN" ] && for f in bgm/aica_str.dat bgm/bio4midi.dat; do put "$SN/$f" "$f"; done
+# Final chapter r331-r333 (island18 final sets, 10-18): released room archives (final-sound .dar wins: sound range
+# only), PS2 worlds + their pictures, events, Saddler em31 (motion-prepared, sound-fit) + jet ski pl0e, movies.
+FR=$(src island18-final-rooms-20261018); FW=$(src island18-final-worlds-20261018); FS=$(src island18-final-sound-20261018)
+for r in r331 r332 r333; do
+  put "$FR/$r/released/st3/$r.arc" "st3/$r.arc"; put "$FS/st3/$r.dar" "st3/$r.dar"
+  for t in "$FR/$r"/tex/*.re4tex; do put "$t" "dc/tex/${t##*/}"; done
+  W=$FW/$r/stage; [ "$r" = r333 ] && W=$(src island18-r333-world-20261018)/stage
+  for f in "$W/rooms/$r"/ps2-world.*; do put "$f" "dc/native/$r/${f##*/}"; done
+  for t in "$W"/tex/*.re4tex; do [ -e "$t" ] && put "$t" "dc/tex/${t##*/}"; done
+done
+for f in "$(src island18-final-source-20261018)"/source/evd/*.evd; do put "$f" "evd/${f##*/}"; done
+for f in "$(src island18-r333-transport-20261018)"/evd/*; do put "$f" "evd/${f##*/}"; done
+put "$FS/em/em31.drs" em/em31.drs
+for f in "$(src island18-saddler-motion-20261018)"/prepared/mot/*.fcv; do put "$f" "dc/mot/${f##*/}"; done
+put "$(src island18-r333-sound-20261018)/em/pl0e.drs" em/pl0e.drs
+for f in "$(src island18-r333-transport-20261018)"/prepared/mot/*.fcv; do [ -e "$f" ] && put "$f" "dc/mot/${f##*/}"; done
+for d in "$(src island18-final-movies-20261018)"/r33*; do [ -e "$d/$(basename "$d").seq" ] && put "$d/$(basename "$d").seq" "dc/movie/$(basename "$d").seq"; done
 (cd "$OUT" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 echo "d3-content: $(wc -l < "$OUT/SHA256SUMS") files, $(du -sm "$OUT" | cut -f1) MB, SHA256SUMS $(sha256sum < "$OUT/SHA256SUMS" | cut -c1-16)"

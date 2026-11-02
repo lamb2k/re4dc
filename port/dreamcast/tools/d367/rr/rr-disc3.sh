@@ -28,7 +28,7 @@ $TOOL/sh-elf-objcopy -R .stack -O binary "$O/re4dc-game.elf" "$W/d3/img.bin"
 IMG=$(sha256sum < "$W/d3/img.bin" | cut -c1-64); rm -f "$W/d3/img.bin"
 rm -rf "${W:?}/d3/d1"
 python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/d3/d1/tree" --manifest "$W/d3/d1/manifest.json" --ipbin "$W/d3/d1/IP.BIN" | tail -1
-python3 "$D/discsets/disc3_fixture.py" "$W/d3/d1/tree" "$IT" "$W/d3/fx" | tail -2
+D3_DATA=${D3_DATA:-} python3 "$D/discsets/disc3_fixture.py" "$W/d3/d1/tree" "$IT" "$W/d3/fx" | tail -2
 python3 "$D/discsets/mkdisc3.py" "$W/d3/d1/tree" "$W/d3/fx/island-fixture.json" "$O" "$W/d3/out" "$S8" | tail -1
 rm -rf "${W:?}/d3/gdemu"
 (cd "$D" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$W/d3/out/tree" "$W/d3/gdemu" | tail -1)

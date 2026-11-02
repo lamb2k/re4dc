@@ -12,7 +12,7 @@ import json, os, re, struct, subprocess, sys
 d1, it, work = sys.argv[1:4]
 os.makedirs(work, exist_ok=True)
 HERE = os.path.dirname(os.path.abspath(__file__))
-ISLAND_EM = 'em1d|em1e|em1f|em32|em36|em39|em3a|em3d'
+ISLAND_EM = 'em1d|em1e|em1f|em32|em36|em39|em3a|em3d|em31|pl0e'
 OWN = re.compile(r'(^|/)(r3[0-3][0-9a-f])[^/]*$|^st3/|^rel/st3_|^dc/native/r3[0-3][0-9a-f]/|^em/(%s)\.(drs|das)$|'
                  r'^bgm/aica_str\.dat$|^bgm/bio4midi\.dat$|^dc/resident\.bin$' % ISLAND_EM)
 
@@ -33,6 +33,22 @@ for k in sorted(C):
         continue
     if k not in A or OWN.search(k):
         rep[k] = os.path.join(it, k)
+# D3_DATA (recipe.conf; lane world-ch5): Disc 3 only t11-fix DATA sets, in order, over the island content. Whole-file
+# keys only (e.g. assets-dc dcf3isl: the island loose pictures in Dreamcast form); other key kinds are refused.
+D3 = [x for x in os.environ.get('D3_DATA', '').split(',') if x]
+if D3:
+    import importlib.util
+    _sp = importlib.util.spec_from_file_location('t11fix', os.path.join(HERE, '..', 'test11', 't11-fix.py'))
+    t11 = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(t11)
+    for x in D3:
+        if x not in t11.DATA:
+            raise SystemExit('disc3_fixture: D3_DATA set %s is not in t11-fix DATA (store missing?)' % x)
+        nk = 0
+        for k, v in t11.DATA[x].items():
+            if k in ('graft', 'tex', 'remove', 'dc/tex.pak') or not isinstance(v, str):
+                raise SystemExit('disc3_fixture: D3_DATA set %s key %s is not a whole-file key' % (x, k))
+            rep[k] = v; nk += 1
+        print('D3_DATA %s: %d files' % (x, nk))
 pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'castle31', 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), os.path.join(it, 'dc/tex.pak')])
