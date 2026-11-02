@@ -1979,5 +1979,23 @@ if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
 
+# cgca34 / pmcgca34 (lane world-ch334 11-02, chapters 3-3 / 3-4; DISC 2 ONLY via D2_DATA, after cpic26c): the rooms r20c
+# r20f r206 r20d r20e and the enemy archives em11 em25 em3c from the PS2 version, same generator as cgca26
+# (castlegca34/gen-all.sh): PS2 objects / room BINs / items / debris / pictures / motion / room + enemy banks. Kept GC:
+# r206 BIN 0x32 (converter refuses: PS2 positions outside s16) and BIN 0x34..0x3a + FCV 0x3c..0x3e (no PS2 entry; the
+# PS2 r206.dat dropped them), em25 BIN 0x31 (rebuilt larger than its slot); kept GC samples in sound-kept-gc.tsv.
+# Stores: re4-assets-private/{cgca34,pmcgca34}-20261102.
+CGCA34D = os.environ.get('CGCA34D', '/root/re4data/private/cgca34-20261102')
+if os.path.isfile(CGCA34D + '/provenance.tsv'):
+    DATA['cgca34'] = {'tex': CGCA34D + '/tex'}
+    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'st2').glob('*.arc')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
+        DATA['cgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+PMCGCA34D = os.environ.get('PMCGCA34D', '/root/re4data/private/pmcgca34-20261102')
+if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
+    DATA['pmcgca34'] = {}
+    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
+        DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+    DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
+
 if __name__ == '__main__':
     main()

@@ -1,0 +1,11 @@
+name ch334-r20d
+# lane world-ch334: chapter 3-4 (Leon entry; Ashley section needs pl_type 1, no warp key yet) entry warp (Disc 2; same layout as g-r204)
+room 0x20d
+jp 0
+chapter 9
+inv default
+god
+stock
+alivelog 60
+census 300
+dump
