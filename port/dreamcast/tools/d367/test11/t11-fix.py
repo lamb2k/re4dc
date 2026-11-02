@@ -1432,6 +1432,23 @@ if os.path.isdir(LEON28D):
     DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
     PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
     AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
+# dcf02 / dcf03 (lane assets-dc 11-02, user: "ensure all assets are Dreamcast optimized including mip maps"; data only,
+# no knob; default off = not in DATA): dc/tex.pak = leon28's pack with the PS2-sourced pictures re-encoded in Dreamcast form
+# (assetsdc/dcform_pak.py; same keys, material names, sizes and pixel formats): raw 16-bit >= 64x64 -> full-codebook VQ
+# (+ mips when square), smaller square raw 16-bit / VQ / PAL4 -> + mips (base texels kept). dcf02 = room objects and PS2
+# world pictures (material "PS2 r*", "ps2-source"; 944 keys), dcf03 = characters, items, weapons, breakables (110 keys;
+# Leon's two leon28 atlases left). Needs CAST_MIPMAP TEX_TWIDDLED_MIPMAP TEX_PAL4_MIPMAP (release ON). The LAST tex.pak
+# sets. Store: re4data/private/dcf02-20261102, dcf03-20261102 (report.json: per key how / bytes / PSNR).
+DCF02D = os.environ.get('DCF02D', '/root/re4data/private/dcf02-20261102')
+if os.path.isdir(DCF02D):
+    DATA['dcf02'] = {'dc/tex.pak': DCF02D + '/dc/tex.pak'}
+    PAK_DERIVED['dcf02'] = DCF02D + '/pak-derived.json'
+    AFTER += [('dcf02', 'leon28')]
+DCF03D = os.environ.get('DCF03D', '/root/re4data/private/dcf03-20261102')
+if os.path.isdir(DCF03D):
+    DATA['dcf03'] = {'dc/tex.pak': DCF03D + '/dc/tex.pak'}
+    PAK_DERIVED['dcf03'] = DCF03D + '/pak-derived.json'
+    AFTER += [('dcf03', 'dcf02'), ('dcf03', 'leon28')]
 
 
 def title27_gate(names, r, rec):
