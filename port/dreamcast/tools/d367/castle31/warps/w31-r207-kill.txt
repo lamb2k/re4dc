@@ -12,6 +12,6 @@ act 900 a 10
 act 960 a 10
 entry 2
 alivelog 30
-kill 0 1100 0x207
+kill 0 1000 0x207
 killnear
-killrep 14 75
+killrep 14 45
