@@ -43,6 +43,12 @@ disc2_jobs() {
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
   echo "r200 r202 r203 r201 r207 r208 r204" > "$W/d2-census-rooms.txt"
+  # r207 hall clear rig (lane world-ch31): god + stock, the source damage path kills the nearest Ganado every 75 frames;
+  # the log shows kills, cap holds/releases and the room flags (clear + doors). Judged by hand, not by rr-judge.
+  if [ -s "$CW31/w31-r207-kill.txt" ]; then
+    tr -d '\r' < "$CW31/w31-r207-kill.txt" > "$EVU/fixtures/d2-r207k.txt"
+    job 1 d2clear-r207 "$(run d2clear-r207 d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-r207k.txt\"")"
+  fi
   [ "$TIER" != full ] || seeds="1 2 3 4 5 6 7 8 9 10"
   job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' 'd2door d2fight'"
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
