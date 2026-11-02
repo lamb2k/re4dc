@@ -15,5 +15,9 @@ ln -s "$RC/gdemu/track03.bin" "$C/gdemu/track03.bin"
 cp "$RW/cycle.env" "$W/cycle.env"; echo "$C" > "$W/cand.txt"
 cp "$T/port/dreamcast/tools/d367/rr/recipe.conf" "$W/recipe.conf"
 export RR_PFX=${RR_PFX:-wc5}
-D3_NO_TWINS=${D3_NO_TWINS:-1} bash "$T/port/dreamcast/tools/d367/rr/rr-disc3.sh" "$W" "$T" "$T" "$S7" "${EVU:-/mnt/c/Flycast-Evidence/re4-dreamcast/world-ch5}"
+EVU=${EVU:-/mnt/c/Flycast-Evidence/re4-dreamcast/world-ch5}
+# D: evidence (user 11-02 "Use D: for now"): fp_master hard-links the base into its disc cache, so the cache must sit on the
+# same drive as the evidence.
+case "$EVU" in /mnt/c/*) ;; *) export RE4DC_DISCCACHE=${RE4DC_DISCCACHE:-$EVU/_disccache} ;; esac
+D3_NO_TWINS=${D3_NO_TWINS:-1} bash "$T/port/dreamcast/tools/d367/rr/rr-disc3.sh" "$W" "$T" "$T" "$S7" "$EVU"
 cat "$W/disc3.env"

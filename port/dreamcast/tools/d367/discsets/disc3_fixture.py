@@ -72,6 +72,14 @@ if os.environ.get('D3_PAK_PRUNE', '1') == '1':
     pak = os.path.join(work, 'tex-d3.pak'); open(pak, 'wb').write(blob)
     print(f'pak prune: {len(drop_keys)} village/castle-only keys, {dropped} bytes')
 rep['dc/tex.pak'] = pak
+# dc/resident.bin = Disc 1's current resident.bin (newer core / shared records) + the island room lists
+# (vram/resident/r3*.tsv), via water/water_resident.py pack (base + lists union); the 10-18 island18 copy is older.
+res = os.path.join(work, 'resident-d3.bin')
+import glob as _g
+subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'water', 'water_resident.py'), 'pack',
+                       os.path.join(d1, 'dc/resident.bin'), res] +
+                      sorted(_g.glob(os.path.join(HERE, '..', 'vram', 'resident', 'r3*.tsv'))))
+rep['dc/resident.bin'] = res
 b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0)
 inpak = {'%08x-%08x' % struct.unpack_from('<2I', b, ioff + 16 * i) for i in range(cnt)}
 loose = [k for k in rep if k.startswith('dc/tex/') and os.path.basename(k)[:17] in inpak]
