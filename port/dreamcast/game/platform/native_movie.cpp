@@ -634,6 +634,12 @@ bool open(unsigned id){
 #if RE4DC_PS2_INTERIOR_CULL
     // PS2_INTERIOR_CULL: no world is drawn during a route movie, so it borrows the r100 cell block (read again by
     // route_movie_bridge.cpp after the movie); taken before heap_before so the movie sees the knob-off heap.
+#if RE4DC_MOVIE_WORLD_ARENA && defined(RE4DC_MOVIE_ARENA_CELL_KEEP) && RE4DC_MOVIE_ARENA_CELL_KEEP
+    // MOVIE_ARENA_CELL_KEEP (s30cell-26): an arena movie (r100s30) stages only in the world arena (no heap fallback), so
+    // heap 4 never needs the cell: keep it resident. Lent, its reload needs 38440 B + the 81920 reserve, which heap 4
+    // (dog + crow archives held since s20, ~43 KB free) can't give, and r100 ran unculled after s30.
+    if(!(movie_full_call && movie_scope==id && movie_world_id(id)))
+#endif
     re4dc_ps2_interior_movie_release();
 #endif
 #if RE4DC_FAR_SHELL
