@@ -1,0 +1,8 @@
+name w4-r22b
+# lane world-ch4: r22b entry from r221 (door ?), chapter 4-1
+room 0x22b
+chapter 10
+god
+alivelog 300
+census 400
+dump

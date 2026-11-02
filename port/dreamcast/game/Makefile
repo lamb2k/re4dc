@@ -2272,6 +2272,18 @@ endif
 ROUTE_MOVIE_GAME_CH4 = $(OBJDIR)/mod/st2_2/src/st2/r212.o $(OBJDIR)/mod/st2_2/src/st2/r214.o $(OBJDIR)/mod/st2_2/src/st2/r215.o     $(OBJDIR)/mod/st2_3/src/st2/r227.o $(OBJDIR)/mod/st2_3/src/st2/r228.o
 $(ROUTE_MOVIE_GAME_CH4): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH4=1
 endif
+# ROUTE_MOVIES_CH4B=1 (lane world-ch4 2026-11-02; default 0: no effect; needs ROUTE_MOVIES_CH4=1): the three chapter 4
+# in-engine events the PS2 also plays as movies, r213 s00 (the Novistador hall), r22b s00 (end of 4-1) and r22a s00 (end
+# of 4-4), presented by their PS2 movies (BIO4MOV.AFS r213s00 / r22bs00 / r22as00.sfd -> convert_route_movies.py) like
+# ROUTE_MOVIES_CH4's: no GameCube evd on Disc 2 (no-GameCube-assets rule); a missing movie falls back to the evd.
+ROUTE_MOVIES_CH4B ?= 0
+ifneq ($(ROUTE_MOVIES_CH4B),0)
+ifneq ($(ROUTE_MOVIES_CH4B)$(ROUTE_MOVIES_CH4),11)
+$(error ROUTE_MOVIES_CH4B must be 0 or 1 and needs ROUTE_MOVIES_CH4=1)
+endif
+ROUTE_MOVIE_GAME_CH4B = $(OBJDIR)/mod/st2_2/src/st2/r213.o $(OBJDIR)/mod/st2_3/src/st2/r22a.o $(OBJDIR)/mod/st2_3/src/st2/r22b.o
+$(ROUTE_MOVIE_GAME_CH4B): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH4B=1
+endif
 # ROUTE_MOVIE_DIAG=1: test builds log the movie loop's per-picture timing and the failing step.
 #   2/3/4 are test-only proofs of the route movie VRAM claim (platform/native_ui.cpp; 0 and 1 compile
 #   them out): 2 = the movie claim's normal pass releases nothing, so only its fallback (end this
@@ -2379,7 +2391,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_ST3) $(ROUTE_MOVIE_GAME_CH4)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_ST3) $(ROUTE_MOVIE_GAME_CH4) $(ROUTE_MOVIE_GAME_CH4B)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h

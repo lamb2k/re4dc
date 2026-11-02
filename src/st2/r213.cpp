@@ -31,6 +31,19 @@
 #include "est.h"
 #include "TexRender.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4B) && RE4DC_ROUTE_MOVIES_CH4B
+// ROUTE_MOVIES_CH4B (lane world-ch4 2026-11-02): r213 s00 (the Novistador hall) is presented by its PS2 movie (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, dc/movie), as ROUTE_MOVIES_CH4 does for r212 / r214 / r215 / r227 / r228: while the
+// movie owns the event no evd is read; the handler's begin / end / skip modes run and the rest of the source is
+// unchanged. A missing movie falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R213_ROUTE_MOVIES 1
+static int r213MovieOwns;
+#define R213_MOVIES_OWN() (re4dc_movie_available(0x21300))
+#else
+#define R213_ROUTE_MOVIES 0
+#endif
 
 // Room 2-13 (D:/Bio4/Prog/r213.cpp): the drawbridge over the lake - the statue ("Su") that is shot
 // down, the switch, the two chains holding the bridge and the enemies set after the s00 event.
@@ -169,6 +182,10 @@ void R213Init()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtSetEnable(2, 1);
         SceAtDataSet_exec(2, SCE_LEVEL10, 0, (TaskFunc) R213Event, 0, 1);
+#if R213_ROUTE_MOVIES
+        r213MovieOwns = R213_MOVIES_OWN();
+        if (!r213MovieOwns)
+#endif
         EvtMgr.EvtReadAram("event/evd/r213s00.evd", 0x2D, 0, 0, 0);
     } else {
         SceAtSetEnable(2, 0);
@@ -1072,6 +1089,11 @@ static void R213Event()
         pG->Scenario_flg[0] |= 0x40;
         SubCharCtrl(SCC_KILL, 0);
         pG->Status_flg[3] &= ~0x04000000;
+#if R213_ROUTE_MOVIES
+        if (r213MovieOwns && RouteMoviePlay(0x21300, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R213S00_Func, 0) !=
+                                        RE4DC_MOVIE_UNHANDLED) {
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r213s00.evd", 0x2D, 0);
         R213EmSet();
     }

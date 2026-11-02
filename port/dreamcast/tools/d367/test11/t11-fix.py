@@ -1978,6 +1978,31 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# c4gca / pmc4gca (lane world-ch4 11-02, user 11-02 "remainder of disc 2 build today"; DISC 2 ONLY via D2_DATA, after the
+# castle-gca-26 sets): the chapter 4 rooms (4-1..4-4: r210 .. r22a, 24 rooms; the castle content tree had none of their
+# st2 archives) and the chapter 4 enemy archives, PS2 objects / items / pictures / motion / PCM over the GameCube-prepared
+# base archives, the castlegca26 pipeline per room (worldch4/gen-all.sh, inputs worldch4/env.sh). Same layout as
+# cgca26 / pmcgca26. Stores: /root/re4data/private/{c4gca,pmc4gca}-20261102 (RECIPE.txt, SHA256SUMS.txt).
+for _n, _env, _dflt in (('c4gca', 'C4GCAD', 'c4gca-20261102'), ('pmc4gca', 'PMC4GCAD', 'pmc4gca-20261102')):
+    _d = os.environ.get(_env, '/root/re4data/private/' + _dflt)
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')) + sorted(Path(_d, 'em').glob('*.drs')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+# c4mov (same lane 11-02, DISC 2 ONLY via D2_DATA; program ROUTE_MOVIES_CH4B=1): the PS2 movies of r213 s00, r22b s00
+# and r22a s00 (convert_route_movies.py), so Disc 2 needs no GameCube evd for them. Store /root/re4data/private/c4mov-20261102.
+C4MOVD = os.environ.get('C4MOVD', '/root/re4data/private/c4mov-20261102')
+if os.path.isfile(C4MOVD + '/RECIPE.txt'):
+    DATA['c4mov'] = {'dc/movie/' + _k: '%s/dc/movie/%s' % (C4MOVD, _k) for _k in sorted(os.listdir(C4MOVD + '/dc/movie'))}
+# c4world (same lane 11-02, DISC 2 ONLY via D2_DATA): the chapter 4 PS2 room worlds (ps2lib/world/<room>: ps2-world.re4mesh /
+# r4pw / ids, UV guard .002, tr4, cutout224) for r210 .. r22c and their loose picture keys; the castle content tree had none.
+C4WORLDD = os.environ.get('C4WORLDD', '/root/re4data/private/c4world-20261102')
+if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
+    DATA['c4world'] = {'tex': C4WORLDD + '/tex'}
+    for _f in sorted(Path(C4WORLDD, 'dc', 'native').glob('*/ps2-world.*')):
+        DATA['c4world']['dc/native/%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 
 if __name__ == '__main__':
     main()

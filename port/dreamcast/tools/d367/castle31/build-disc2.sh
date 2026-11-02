@@ -24,7 +24,8 @@ else
   case " $CH2 " in *" DISC_SET=1 "*) ;; *) CH2="$CH2 DISC_SET=1" ;; esac
   # EFM_PS2_CUT=2 (lane castle-gca-26 11-01): + the castle debris rows the PS2 deleted (r202 0x5a / 0x5b); the release
   # recipe's EFM_PS2_CUT=1 earlier on the line, this later value wins.
-  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1 EFM_PS2_CUT=2"
+  # ROUTE_MOVIES_CH4B=1 (lane world-ch4 11-02): r213 s00, r22b s00, r22a s00 as their PS2 movies (D2_DATA c4mov).
+  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1 EFM_PS2_CUT=2 ROUTE_MOVIES_CH4B=1"
 fi
 export CH2
 mkdir -p "$K"

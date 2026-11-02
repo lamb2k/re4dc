@@ -22,6 +22,19 @@
 #include "math_sub.h"
 #include "motion.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4B) && RE4DC_ROUTE_MOVIES_CH4B
+// ROUTE_MOVIES_CH4B (lane world-ch4 2026-11-02): r22a s00 (the end of chapter 4-4) is presented by its PS2 movie (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, dc/movie), as ROUTE_MOVIES_CH4 does for r212 / r214 / r215 / r227 / r228: while the
+// movie owns the event no evd is read; the handler's begin / end / skip modes run and the rest of the source is
+// unchanged. A missing movie falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R22A_ROUTE_MOVIES 1
+static int r22aMovieOwns;
+#define R22A_MOVIES_OWN() (re4dc_movie_available(0x22a00))
+#else
+#define R22A_ROUTE_MOVIES 0
+#endif
 
 // Room 2-2A (D:/Bio4/Prog/r22a.cpp): the mine shaft; the rope down / up (a copy of r10c's ladder
 // event, message and all), the lift and the s00 event.
@@ -60,6 +73,10 @@ void R22aInit()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtSetEnable(6, 1);
         SceAtDataSet_exec(6, SCE_LEVEL10, 0, (TaskFunc) R22A_Event, 0, 1);
+#if R22A_ROUTE_MOVIES
+        r22aMovieOwns = R22A_MOVIES_OWN();
+        if (!r22aMovieOwns)
+#endif
         EvtMgr.EvtReadAram("event/evd/r22as00.evd", 0, 0, 0, 0);
     } else {
         SceAtSetEnable(6, 0);
@@ -203,6 +220,11 @@ extern "C" void R22A_Event()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         RsfSet(G_ROOM_ID, 0);
         SceAtSetEnable(6, 0);
+#if R22A_ROUTE_MOVIES
+        if (r22aMovieOwns && RouteMoviePlay(0x22a00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R22AS00_Func, 0) !=
+                                        RE4DC_MOVIE_UNHANDLED) {
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r22as00.evd", 0, 0x50);
         SceSleep(1);
         SceEventEnd(0);

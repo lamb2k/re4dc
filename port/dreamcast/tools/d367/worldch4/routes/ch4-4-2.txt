@@ -1,0 +1,6 @@
+# chapter 4-2 route (lane world-ch4): room, then the door area to walk into (centre x z) and where it leads
+# start save: chapter 4-2 start (r22b); end: SceSetChapterEnd in r21d
+r22b door 0 centre -689 -1688 -> r220 at 1661 1162 7852 ang -2.1612
+r220 door 1 centre -3778 746 -> r223 at -29407 4126 28370 ang -1.9927
+r223 door 15 centre -14479 8116 -> r224 at -20522 -0 -2129 ang 1.2392
+r224 door 1 centre -5027 18002 -> r21d at -28692 -3843 -39738 ang 1.3271

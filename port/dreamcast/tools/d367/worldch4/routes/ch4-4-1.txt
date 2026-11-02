@@ -1,0 +1,21 @@
+# chapter 4-1 route (lane world-ch4): room, then the door area to walk into (centre x z) and where it leads
+# start save: chapter 4-1 start (r206); end: SceSetChapterEnd in r22b
+r206 door 7 centre -18276 546 -> r210 at -8 -0 -874 ang 2.9787
+r210 door 0 centre -23177 481 -> r222 at 1340 54 -4343 ang -1.5340
+r222 door 0 centre -2449 1993 -> r210 at 439 600 -45423 ang -0.0546
+r210 door 2 centre 121450 -38215 -> r201 at -8705 2000 -30127 ang 1.3415 LOCK 2 flag 17
+r201 door 33 centre -24873 562 -> r219 at 35 0 1246 ang 3.0692
+r219 door 1 centre -180294 -60655 -> r211 at 5222 -0 22995 ang 2.9478
+r211 door 3 centre 9065 25433 -> r216 at -275 -0 15 ang 1.7449
+r216 door 0 centre -457 164 -> r211 at 32595 -0 19605 ang -1.6010
+r211 door 1 centre 9646 518 -> r212 at 4060 0 1980 ang -1.5708
+r212 door 0 centre 846 3928 -> r211 at 1160 0 19740 ang 1.6690
+r211 door 0 centre -11017 7436 -> r213 at -121 1000 108 ang 3.1049
+r213 door 1 centre -26885 -14406 -> r214 at 8762 1505 39019 ang -1.5641
+r214 door 2 centre -8811 -2778 -> r217 at 5134 8021 -1025 ang -1.7804
+r217 door 0 centre 1267 5020 -> r214 at -3020 8021 -21347 ang 1.5016
+r214 door 1 centre -11845 23130 -> r218 at -30870 -2105 -3 ang 1.4897
+r218 door 1 centre 266 19072 -> r215 at 26309 2958 13 ang 1.4012
+r215 door 2 centre 428 -2977 -> r229 at -2290 -15833 15298 ang 1.8284
+r229 door 2 centre -33250 15892 -> r221 at -43710 837 3748 ang 1.5770
+r221 -> r22b: no AEV door (scripted transition: event / jump / lift)
