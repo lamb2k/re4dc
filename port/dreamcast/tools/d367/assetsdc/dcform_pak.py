@@ -27,6 +27,8 @@ PVRTEX = vqn.PVRTEX
 RAW = (tpl.FORMAT_RGB565, tpl.FORMAT_ARGB1555, tpl.FORMAT_ARGB4444)
 # --no-vq-mip (coordinator 11-02, cycle-1 VRAM loss): pictures that were already VQ keep no mips (no new VRAM for them)
 NO_VQ_MIP = False
+# --space (Disc 3 space, coordinator 11-02): only raw 16-bit >= 64x64 -> VQ (+ mips when square); nothing else grows
+SPACE = False
 
 
 def info(pkg):
@@ -73,6 +75,8 @@ def convert(args):
                 q = psnr(px, list(Image.open(td / 'p.png').convert('RGBA').getdata())[:w * ht]) if not sq else None
             out = restamp_keep(old, new, tpl.FLAG_MIPMAP if sq else 0)
             how = 'raw16->vq' + ('+mip' if sq else '')
+        elif SPACE:
+            return key, None, dict(key=key, note='left (--space)')
         elif mip or not sq:
             return key, None, dict(key=key, note='left (mipped or non-square)')
         elif pay == tpl.PAYLOAD_TWIDDLED and fmt in RAW:
@@ -100,9 +104,11 @@ def main():
     ap.add_argument('--jobs', type=int, default=2)
     ap.add_argument('--skip-key', action='append', default=[], help='never touch this key (e.g. leon28 atlases)')
     ap.add_argument('--no-vq-mip', action='store_true')
+    ap.add_argument('--space', action='store_true')
     a = ap.parse_args()
-    global NO_VQ_MIP
+    global NO_VQ_MIP, SPACE
     NO_VQ_MIP = a.no_vq_mip
+    SPACE = a.space
     O = Path(a.out); (O / 'dc').mkdir(parents=True, exist_ok=False)
     base = Path(a.pak).read_bytes()
     pkgs = read_pak(base)
