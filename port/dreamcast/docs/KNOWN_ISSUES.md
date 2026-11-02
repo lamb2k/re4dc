@@ -7,8 +7,8 @@ please name the build, real console or emulator, and where in the game it happen
 **Last updated:** November 2, 2026.
 
 **Current build: Test 26** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). The castle starts on
-Disc 2 (chapters 3-1 and 3-2) with PS2 data, the PS2 sky outdoors and in cutscenes, Leon's Test 23/24 lighting back
-(pistol included) and faster farmhouse cutscenes. Disc 1 and Disc 2 come in the one game zip. A QA build for testers
+Disc 2 (chapter 3-1) with PS2 data, the PS2 sky in cutscenes, Leon's Test 23/24 lighting back (pistol included),
+faster farmhouse cutscenes and the Dreamcast stick back on the grab escape prompt. Disc 1 and Disc 2 come in the one game zip. A QA build for testers
 is the second download.
 
 **Earlier builds** (newest first):
@@ -75,9 +75,9 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b | Fixed and checked in our tests; the problem was not console-only | 63 |
-| 🛠️ In progress | Being fixed now | 2 |
-| 🔍 Investigating | Being reproduced or traced | 5 |
-| ⏸️ Open | Known, not yet worked on | 17 |
+| 🛠️ In progress | Being fixed now | 5 |
+| 🔍 Investigating | Being reproduced or traced | 6 |
+| ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -87,7 +87,7 @@ Not bugs: work that goes on from test to test.
 - **Frame rate.** It varies by scene, and the busiest fights are slowest. Speed work goes on in every test
   (history: [#29](https://github.com/lamb2k/re4dc/issues/29)).
 - **Pauses when entering rooms.** Rooms load their pictures and models at the door; this is getting shorter.
-- **Rooms not built yet.** The castle past chapter 3-2, the island and the final chapter are not on the discs yet.
+- **Rooms not built yet.** The castle past chapter 3-1, the island and the final chapter are not on the discs yet.
 - **Dark night rooms on some consoles.** Some players report them; our Flycast captures match the GameCube's
   brightness. We're checking.
 
@@ -95,9 +95,12 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
-| The first El Gigante fight (r119): the parasite and death cutscenes are skipped for lack of memory. The fight and its end still work | test 26 (Test 18 played them; Test 25 not yet checked) | ⏸️ Open, owner bossmem26 | |
-| Del Lago (r10b): after he dies, some room pictures fail to load (no free block of video memory big enough). Play goes on | test 26 | ⏸️ Open, owner bossmem26 | |
+| The first El Gigante fight (r119): the parasite and death cutscenes are skipped for lack of memory. The fight and its end still work | test 25, test 26 | 🛠️ In progress: also in Test 25; play continues; fixed in Test 27 | |
+| After Del Lago, arriving at the night lake shore (r11b): some room pictures load behind the chapter-change screen, and a few wait for a free block of video memory | test 25, test 26 | 🛠️ In progress: also in Test 25; play continues; fixed in Test 27 | |
 | El Gigante at the village (r11e): his body fades out drawn with the GameCube model | test 26 | 🛠️ In progress: a fix is built and waits for its look check (owner bossmem26) | |
+| The El Gigante fight slows down hard after he breaks objects (console report) | test 25, test 26 | 🔍 Investigating for Test 27 | |
+| Real console: reloading a save after dying in the El Gigante fight with Ashley can crash | test 26 | 🛠️ In progress: a guard comes in Test 27 | |
+| Disc 2: the fight in r207 (castle, chapter 3-1) is not covered by our full no-warp run yet; our room checks pass there | test 26 | ⏸️ Open: covered in Test 27 testing | |
 | Equipping the Blacktail handgun stops the game with "DLL link/unlink failed" | test 23 | 🟢 Fixed in test 24: its weapon code is in the build again | [#58](https://github.com/lamb2k/re4dc/issues/58) |
 | Mendez freezes after grabbing Leon (chapter 2-3 barn, r11f) | test 22 and earlier | 🟢 Fixed in test 23: his state word was read in the wrong byte order; the bear hug holds and the fight goes on | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🟢 Fixed in test 22: the death scene plays and Continue returns you to the room | |

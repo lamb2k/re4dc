@@ -7,9 +7,9 @@
 For players. The full player guide is the [root README](../../README.md).
 
 - **Current build:** Test 26, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): the castle
-  starts on Disc 2 with PS2 data, the PS2 sky outdoors and in cutscenes, Leon's Test 23/24 lighting back, and faster
-  farmhouse cutscenes. Disc 1 and Disc 2 come in the one game zip.
-- **Playable:** New Game through chapter 2-3 on Disc 1, then the castle's chapters 3-1 and 3-2 on Disc 2.
+  starts on Disc 2 with PS2 data, the PS2 sky in cutscenes, Leon's Test 23/24 lighting back, faster farmhouse
+  cutscenes, and the Dreamcast stick back on the grab escape prompt. Disc 1 and Disc 2 come in the one game zip.
+- **Playable:** New Game through chapter 2-3 on Disc 1, then the castle's chapter 3-1 on Disc 2.
 - **Testers:** the release also has a **QA build for testers** with teleports and a Diagnostics page.
 - **Next:** Test 27, see [Coming soon: Test 27](../../README.md#coming-soon-test-27).
 - **Runs on:** a real Dreamcast with GDEMU, or Flycast.
