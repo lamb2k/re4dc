@@ -9,7 +9,7 @@ RW=${1:?rr work dir}; LH=${2:?lane home}
 T=${3:-$(cd "$(dirname "$0")/../../../../.." && pwd)}
 S8=$(sed -n 's/^sha=//p' "$RW/cycle.env" | cut -c1-8); S7=${S8:0:7}
 RC=$(cat "$RW/cand.txt"); [ -s "$RC/gdemu/track03.bin" ] || { echo "disc3-lane: no Disc 1 track in $RC"; exit 1; }
-W=$LH/work/d3-$S7; C=$LH/cand-$S7
+W=$LH/work/d3-$S7; C=${D3_CAND_ROOT:-$LH}/cand-$S7   # D3_CAND_ROOT: where the candidate disc lands (user 11-02: D:)
 rm -rf "${W:?}" "${C:?}"; mkdir -p "$W" "$C/gdemu"
 ln -s "$RC/gdemu/track03.bin" "$C/gdemu/track03.bin"
 cp "$RW/cycle.env" "$W/cycle.env"; echo "$C" > "$W/cand.txt"

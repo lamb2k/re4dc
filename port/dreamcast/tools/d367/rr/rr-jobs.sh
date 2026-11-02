@@ -15,7 +15,7 @@ wpath() { echo "\\\\wsl.localhost\\Ubuntu-24.04$(echo "$1" | tr / '\\')"; }
 ALL_ROOMS="r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10d r10e r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e r11f r200"
 job() { # job <slots> <name> <script body>
   printf '%s %s\n' "$1" "$2" >> "$J/list.txt"
-  { echo 'set -uo pipefail'; echo "J=/c/${J#/mnt/c/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "$3"; } > "$J/$2.sh"; }
+  { echo 'set -uo pipefail'; echo "J=/${J#/mnt/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "$3"; } > "$J/$2.sh"; }
 run() { # fp_run line: <name> <base> <syms> <seconds> [extra fp_run args]
   local n=$1 b=$2 s=$3 sec=$4; shift 4
   echo "python \"\$FPD/fp_run.py\" --base \"\$EVW\\_discs\\$b\" --cap \"\$EVW\\$n\" --syms \"\$(cat \$J/syms-$s.txt)\" --seconds $sec --name rr-$n $*"; }
@@ -49,6 +49,33 @@ disc2_jobs() {
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
+# Disc 3 (lane world-ch5; recipe.conf RR_DISC3=1, rr-disc3.sh made _discs/d3c and _discs/d3a): census of every island room
+# (island5/rooms.tsv: CAST-GC / LEON-GC / TEXCHK / VRAM, cap 4 peak), each warp = the ch5found16 room rig + its chapter
+# (pG->chapter 14..17, so the DISC_SET check asks for no swap) + census; KOS 48 KiB on the r300 -> r301 door and the
+# r30f fight; GC-ASSET gate rooms on the d3a twin. Tier d3: only these jobs.
+disc3_jobs() {
+  local D3O=$ROUTE/out-fp${RR_PFX:-rr}${S7}d3cW I5=$T/port/dreamcast/tools/d367/island5 r ch wf g
+  [ -d "$EVU/_discs/d3c" ] && [ -s "$D3O/syms.txt" ] || { echo "rr-jobs: no Disc 3 census base" > "$W/d3-skip.txt"; return 0; }
+  cp "$D3O/syms.txt" "$J/syms-d3c.txt"
+  : > "$W/d3-census-rooms.txt"
+  while read -r r ch wf g; do
+    case "$r" in r3*) ;; *) continue ;; esac
+    { echo "name d3-$r"; echo "room 0x${r#r}"
+      if [ "$wf" != - ]; then grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'; else echo "jp 0"; echo "inv default"; echo "god"; fi
+      echo "chapter $ch"; echo "census 200"; echo "alivelog 60"; } > "$EVU/fixtures/d3-$r.txt"
+    job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"")"
+    echo -n "$r " >> "$W/d3-census-rooms.txt"
+  done < "$I5/rooms.tsv"
+  job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"
+  if [ -d "$EVU/_discs/d3a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" ]; then
+    cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" "$J/syms-d3a.txt"
+    while read -r r ch wf g; do
+      case "$r" in r3*) [ "$g" = 1 ] || continue ;; *) continue ;; esac
+      job 1 d3gca-$r "$(run d3gca-$r d3a d3a 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"")"
+    done < "$I5/rooms.tsv"
+  fi
+}
+if [ "$TIER" = d3 ]; then disc3_jobs; wc -l < "$J/list.txt"; exit 0; fi
 for x in g c; do cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}${x}W/syms.txt" "$J/syms-$x.txt"; done
 cp "$ROUTE/out-${RR_PFX:-rr}${S7}rP/syms.txt" "$J/syms-rel.txt"
 if [ "$TIER" = qa ]; then
@@ -111,6 +138,7 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
   job 1 gca-grenade "$(run gca-grenade-boot a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --stop "'phase=enter room=101'" --grace 2 --state-out "\"\$EVW\\gca-grenade-state\"") && $(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --state-in "\"\$EVW\\gca-grenade-state\"")"
 fi
 [ "${RR_DISC2:-0}" != 1 ] || disc2_jobs
+[ "${RR_DISC3:-0}" != 1 ] || disc3_jobs
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fp${RR_PFX:-rr}${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
   job 1 gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rr \"\$EVW\\gdemu\" \"\$EVW\\_discs\\g\" \"\$(cat \$J/syms-g.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"
@@ -140,7 +168,7 @@ else
       pad=""; [ "$w" = h2 ] && pad="--pad \"\$EVW\\fixtures\\st-h2-pad.txt\""
       for side in tR tT; do
         n=st-$w-$side
-        { echo 'set -uo pipefail'; echo "J=/c/${J#/mnt/c/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "export RE4DC_LOG_STOP_TICK=2000"
+        { echo 'set -uo pipefail'; echo "J=/${J#/mnt/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "export RE4DC_LOG_STOP_TICK=2000"
           echo "$(run "$n" "$side" "$side" "$sec" --warp "\"\$EVW\\fixtures\\st-$w-warp.txt\"" $pad)"; } > "$J/$n-inner.sh"
         job 1 "$n" "MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -u root -- env TRACE_LOCK_OWNER=rr-$n bash $TL '/mnt/c/Program Files/Git/bin/bash.exe' \$J/$n-inner.sh"
       done
