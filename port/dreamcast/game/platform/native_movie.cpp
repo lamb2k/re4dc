@@ -179,7 +179,7 @@ bool movie_world_id(unsigned id){
 #if RE4DC_MOVIE_WORLD_ARENA_S30
         || id==0x10030
 #endif
-#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
         || id==0x11920 || id==0x11930   // bossmem26: El Gigante death (s20) / parasite (s30)
 #endif
         ;
@@ -702,7 +702,7 @@ bool open(unsigned id){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(movie_full_call && movie_scope==id && movie_world_id(id)){
         if(movie_world_token || m.width!=288 || m.height!=192 || !m.full || !RE4DC_ROUTE_MOVIE_YUV ||
-#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
            !re4dc_movie_stream_idle() || m.expected_frames!=(id==0x11f10?265u:id==0x11f11?321u:id==0x11920?782u:id==0x11930?140u:340u))return false;
 #else
            !re4dc_movie_stream_idle() || m.expected_frames!=(id==0x11f10?265u:id==0x11f11?321u:340u))return false;
