@@ -37,11 +37,13 @@ qa() { # <sha8> <label>: QA disc -> $EV/disc-<label>/gdemu + syms
   git -C "$MAIN" worktree remove -f "$t" || true
 }
 scenes() { # <label>
-  local x=$1 sc pids=() n=0 gw
+  local x=$1 sc pids=() n=0 gw eg
   gw=$(wslpath -w "$EV/disc-$x/gdemu")
+  # Git Bash path of $EV on any drive (/mnt/d/x -> /d/x; house26: "/c/${EV#/mnt/c/}" broke SPEED_EV on D:)
+  eg=${EV#/mnt/}; eg=/${eg%%/*}${EV#/mnt/"${eg%%/*}"}
   for sc in $SCENES; do
     [ -s "$EV/stats/$x-$sc-cstat.txt" ] && continue
-    "$GITBASH" "//wsl.localhost/Ubuntu-24.04$HERE/gpu-scene.sh" "$gw" "/c/${EV#/mnt/c/}/disc-$x/syms.txt" "/c/${EV#/mnt/c/}" "$x" "$sc" \
+    "$GITBASH" "//wsl.localhost/Ubuntu-24.04$HERE/gpu-scene.sh" "$gw" "$eg/disc-$x/syms.txt" "$eg" "$x" "$sc" \
       > "$W/gpu-$x-$sc.log" 2>&1 < /dev/null &
     pids+=($!); n=$((n + 1))
     if [ "$n" -ge "$PAR" ]; then wait "${pids[0]}" || true; pids=("${pids[@]:1}"); n=$((n - 1)); fi
