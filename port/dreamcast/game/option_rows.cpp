@@ -78,9 +78,15 @@ extern "C" void re4dc_view_dist_set(int level, const char* why)
 #endif
 }
 // The far plane to draw with: the given far, or this level's distance (at least the room's minimum) when that is nearer.
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT >= 2
+extern "C" unsigned re4dc_sky_event_now;   // sky_event.cpp: 2 while a scripted scene owns the camera (latched per frame)
+#endif
 extern "C" float re4dc_view_far(float far)
 {
     if (!view_level) return far;
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT >= 2
+    if (re4dc_sky_event_now) return far;   // SKY_EVENT=2: scripted cameras draw to the room camera's own far (the PS2's)
+#endif
     float v = kViewFar[view_level];
     const float m = view_room_min();
     if (m > v) v = m;
