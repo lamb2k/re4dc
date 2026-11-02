@@ -1460,6 +1460,14 @@ if os.path.isdir(DCF01D):
     DATA['dcf01'] = {'dc/tex.pak': DCF01D + '/dc/tex.pak'}
     PAK_DERIVED['dcf01'] = DCF01D + '/pak-derived.json'
     AFTER += [('dcf01', 'dcf03'), ('dcf01', 'leon28')]
+# arcdrop (lane assets-dc 11-02, batch 4 "strip and prove"; data only, no knob): takes the GameCube room archives
+# st1/rXXX.arc (+ st2/r200.arc) off Disc 1. No game path reads them: ReadAreaData opens st%x/r%03x.dar only ("never fall
+# back to compressed PPC data or an unqualified .arc sidecar", src/game/read.cpp); the only other opener is the io_probe
+# debug probe (IO_PROBE). They carry the GameCube world blocks / room models the catalog counts as gc (1917 rows) or
+# unknown (796). The block-swap files st1/rXXX_NN.dat stay (read by the block swap).
+DATA['arcdrop'] = {'remove': ['st1/%s.arc' % _r for _r in (
+    'r100', 'r101', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d', 'r10e',
+    'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f')] + ['st2/r200.arc']}
 
 
 def title27_gate(names, r, rec):

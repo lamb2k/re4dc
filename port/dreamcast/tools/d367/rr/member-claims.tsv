@@ -97,3 +97,6 @@ dc/tex.pak:~c67f5c01-63e0879e	title27	user custom title art (not GC), Test 23 pa
 dc/tex.pak:~d17e9c56-fa23c229	font22	Test 22 A pad label (GC-derived Dreamcast button set), user 10-27
 # font22b 10-27 (lane font22-27 round 2): Test 22 controller glyph set (user 10-27)
 dc/tex.pak:~e42a7628-c166970d	font22b	Test 22 HUD d-pad (etc/core.das 0x1b2c60#0), user 10-27
+# assets-dc 11-02: Dreamcast-form texture sets and the GameCube room archive drop
+dc/tex.pak:~*	dcf02,dcf03,dcf01	assets-dc: same key re-encoded in Dreamcast form (VQ / mips) or PS2 pixels; size kept, format flags change
+st?/r*.arc:removed	arcdrop	assets-dc batch 4: GameCube room archives no game path reads (read.cpp opens .dar only)

@@ -72,3 +72,40 @@ keeps resident (next step: join with the VRAM room log).
 5. GC motion (961 + Disc 2 1390) and GC room models via the existing pm* and ps2_objects converters; sound-kept-gc.
 
 Each batch: knob-off identity, GC-ASSET + CAST-GC PASS (allowlist <= 44), TEXCHK, VRAM per room, KOS 48 KiB, pixel diff.
+
+## Batches 1-3 (2026-11-02): data sets, default off
+
+Stores under `/root/re4data/private/<set>-20261102`, registered in `test11/t11-fix.py`, chain leon28 -> dcf02 -> dcf03 -> dcf01.
+Recipe line: `DATA="$DATA,dcf02,dcf03,dcf01"`. Runtime knobs already in the release recipe (CAST_MIPMAP, TEX_TWIDDLED_MIPMAP,
+TEX_PAL4_MIPMAP).
+
+| Set | What | Keys | Pack after | Offline gates |
+|---|---|---|---|---|
+| dcf02 | PS2 room objects + PS2 world pictures in Dreamcast form (`dcform_pak.py`) | 944 | 158.2 MB | ADMIT 944/944; base kept 729; raw16->VQ PSNR min 24.5 / median 35.0 dB |
+| dcf03 | characters, items, weapons, breakables (Leon's leon28 atlases left) | 110 | 156.7 MB | ADMIT 110/110; base kept 80; PSNR min 24.0 / median 32.3 dB |
+| dcf01 | GameCube-keyed pictures -> PS2 pixels, Dreamcast form (`ps2_source_pak.py`); provenance.tsv names each PS2 twin | 416 | | ADMIT 416/416; 92 load in the 1102-0722 census runs |
+
+dcf01 left: 995 no unique PS2 match, 362 no PS2 picture, 245 padded or palettised base, 27 not located; 1143 keys were already
+PS2-proven. Look sheets: `D:\RE4DC-Lanes\assets-dc\look-20261102\<set>\pairs` (old | new).
+
+**PS2 pictures at their own size (coordinator 11-02): not accepted by today's runtime.** native_ui.cpp requires the package
+size to equal the GC image size for wrapping parts (7525, 7610, 7652, 7768/7770: 'w' drop) and for padded-UV paths (9685,
+9737, 10303); only effect packages may differ (FX_PS2_PACK cover flag, 760). A smaller PS2 package would be dropped on
+wrapping model parts. It needs a render knob (a header flag "whole picture, scaled" that those checks accept). dcf01 ships
+the PS2 pixels at the GC size until that is decided.
+
+## Batch 4: static proof and the PS2 replacement list
+
+Not drawn by construction: the GC world blocks of rooms whose PS2 world loads (native_static.cpp no_std_skip). Everything
+else is consumed and goes to PS2 replacement, in this order of reach:
+1. room objects and effect models with no registry owner (frontNativeRender; NO_GC_FRONT covers registry-owned only);
+2. em/*.drs motion (always played; replaced by swapping the file, pm* sets) - Disc 1 961 rows;
+3. ss/ sub-screen models (ss_model.cpp, ss_map.cpp) - 326 rows;
+4. op/op0N.das codec data (ss_term.cpp) - 24 rows.
+
+## Collision GameCube vs PS2 (read only; the user decides)
+
+`assetsdc/coll-gc-vs-ps2-20261102.tsv` (`coll_compare.py`). About 70% of sections identical. Differences worth a look:
+r118 EAT (PS2 removes ~60 faces, x 20..58 m z -37..-8 m), r103 SAT (PS2 +79 faces), r22a EAT (+307 PS2 faces), r117 EAT
+(+116), r106 / r113 / r202 / r205 / r20a / r212 / r214 smaller changes; r209 sections reordered, not missing. Byte-swap at
+load (MODELLED): 3k-120k words per section, ~0.5-2 ms per room load, none per frame.
