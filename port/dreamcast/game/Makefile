@@ -657,6 +657,16 @@ AICA_SPILL ?= 0
 ifeq ($(AICA_SPILL),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
 endif
+# AICA_SHARED_BGM1 (island18 c0819831, gated by lane world-ch5 2026-11-02; default 0 = image unchanged; needs
+# AICA_SPILL=1): a checked prebuilt bio4midi bank that BGM1 shares with BGM0's slot (final chapter r332) goes to the
+# room arena top. Disc 3 recipe only (island5/build-disc3.sh).
+AICA_SHARED_BGM1 ?= 0
+ifeq ($(AICA_SHARED_BGM1),1)
+ifneq ($(AICA_SPILL),1)
+$(error AICA_SHARED_BGM1=1 needs AICA_SPILL=1)
+endif
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SHARED_BGM1=1
+endif
 export RE4DC_LINK_OVERLAY += .ovl_pl11
 $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o
@@ -1344,6 +1354,17 @@ $(error DISC_SET must be 0 or 1 and excludes DISC2=1)
 endif
 $(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_SET=1
 $(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/dvd.o: GAME_CPPFLAGS += -DRE4DC_DISC_SET=1
+endif
+# DISC3_MODULES=1 (lane world-ch5, 2026-11-02; default 0: no effect; needs DISC_SET=1 ROUTE_CH3=1): the Disc 3 (island)
+# program of the three-disc set drops the same stage-1 modules as DISC2=1 (their bytes return to heap 4: r320 / r30f
+# lows), but keeps DISC_SET's disc identity (dc/disc.id) instead of DISC2's fixed GameCube disc 2 id. modules.o only.
+DISC3_MODULES ?= 0
+ifneq ($(DISC3_MODULES),0)
+ifneq ($(DISC3_MODULES)$(DISC_SET)$(ROUTE_CH3)$(DISC2),1110)
+$(error DISC3_MODULES must be 0 or 1 and needs DISC_SET=1 ROUTE_CH3=1, not DISC2=1)
+endif
+MODULES := $(filter-out st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e,$(MODULES))
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
 endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))

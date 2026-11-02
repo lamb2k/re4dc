@@ -565,8 +565,8 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
     if (!blk_wavetable(t, smp, adpcm, n)) return false;
     u32 total = 0;
     for (u32 i = 0; i < n; i++) total += sample_bytes(smp[i], sample_shift(smp[i], h.cap_hz));
-#if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
-    // A bio4midi member can serve either source BGM channel. Keep its checked
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
+    // AICA_SHARED_BGM1 (island18 c0819831; needs AICA_SPILL): a bio4midi member can serve either source BGM channel. Keep its checked
     // prebuilt image when BGM1 shares BGM0's bank and the frozen layout has no
     // BGM1 slot; the existing high arena block owns its lifetime.
     const bool shared_bgm1 = t == 4 && h.slot == 3 && h.slot_bytes[4] == 0;
@@ -575,7 +575,7 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
                     : fnv1a((const u8*) smp, n * sizeof(WTSAMPLE)) != h.fnv ? "wavetable hash"
                     : ((h.gc_size + 31) & ~31u) != UseAramSize[t] ? "part size"
                     : total != h.total ? "image size" : h.slot != slot_of(t)
-#if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
                     && !shared_bgm1
 #endif
                     ? "slot" : nullptr;
@@ -585,7 +585,7 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
         return false;
     }
     if (!layout_init(h)) { ++S.blocks_skipped; return false; }
-#if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
     if (shared_bgm1 && g_slot[4].size) {
         re4dc_log("aica: blk %d shared bank requires the frozen zero BGM1 slot, block silent\n", t);
         ++S.blocks_skipped;
@@ -597,6 +597,7 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
     Slot& sl = g_slot[h.slot];
     u32 base;
 #if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
     if (shared_bgm1) {
         const u32 need = (total + 31) & ~31u;
         const Slot& arena = g_slot[8];
@@ -615,6 +616,7 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
                   (unsigned) g_arenaNext, (unsigned) arena.size);
         goto placed;
     }
+#endif
     // A BGM0 bank about to overwrite a room-arena bank spilled into its slot's tail silences that bank first.
     if (h.slot == 3 && g_spillBlk >= 0 && g_blk[g_spillBlk].valid
         && g_slot[3].base + ((total + 31) & ~31u) > g_blk[g_spillBlk].aica) {
