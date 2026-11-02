@@ -696,6 +696,10 @@ static inline unsigned re4dc_look_curve(){return re4dc_looks[re4dc_look_mode%kLo
 static inline unsigned re4dc_look_cap(){return re4dc_looks[re4dc_look_mode%kLooks].cap;}
 static inline unsigned re4dc_look_rgb_pct(){return re4dc_looks[re4dc_look_mode%kLooks].rgb;}
 static inline unsigned re4dc_look_sky(){return re4dc_looks[re4dc_look_mode%kLooks].sky;}
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+extern "C" void re4dc_sky_play_room(unsigned room); // native_sky.cpp (SKY_PLAY): the room's panorama in, 0 = out
+extern "C" void re4dc_sky_play_frame(int active,unsigned room,const float* view,const float* P,const float* vp);
+#endif
 #define RE4DC_SKY_ANY 1
 #if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT
 extern "C" unsigned re4dc_sky_event(void); // sky_event.cpp (SKY_EVENT): 1 while a scripted scene owns the camera
@@ -7824,6 +7828,9 @@ bool ps2_open(){
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+    re4dc_sky_play_room(ps2w.room); // SKY_PLAY: the room's PS2 sky panorama into texture RAM with its world (room entry)
+#endif
 #if RE4DC_SCENERY_RECORD_SPLIT
     re4dc_log("SCNSPLIT room=%03x admitted=%s version=%u mesh_bytes=%u actual_crc=%08x source_crc=%08x source_bytes=%u emit_offset=%u bounds_offset=%u gather_reserved=%u\n",
         ps2w.room,ps2w.package.is_split()?"v4":"base",mh.version,mh.bytes,mh.crc,
@@ -8213,6 +8220,11 @@ int ps2_pass(unsigned pass,float zfar){
     }
 #else
     if(P[0]!=0 || ps2w.viewport[2]<=0 || ps2w.viewport[3]<=0)return 0;
+#endif
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+    // SKY_PLAY (post30.mk, native_sky.cpp): the panorama background plane in normal play only (look A's sky 0 and no
+    // scripted camera: SKY_EVENT=2 draws the real sky rows then, never both)
+    if(pass==0)re4dc_sky_play_frame(re4dc_look_sky()==0 && !re4dc_sky_event_now,ps2w.room,ps2w.view,P,ps2w.viewport);
 #endif
     const float near=P[6]/(P[5]-1),far=P[6]/P[5];
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -10046,6 +10058,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #endif
 #if defined(RE4DC_WORLD_PART_PLAN29) && RE4DC_WORLD_PART_PLAN29
     wplan29::close();
+#endif
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+    re4dc_sky_play_room(0); // SKY_PLAY: the panorama leaves with its world package
 #endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
