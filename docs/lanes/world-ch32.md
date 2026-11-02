@@ -51,4 +51,9 @@ rr-jobs.sh disc2_jobs: d2cg / d2gca jobs for r205 r209 r209s00 r20a r20b (warps 
 1. The r205 stall at room set-up. A/B bases (ctl, and cw32 without r205.dar) via castlegca26/ctl-disc2.sh; paused for
    the Test 26 release check.
 2. GC-ASSET: r20a texture 72be589c-3bbd0657; r209 / r20b checkpoints not covered in the 60 s window.
-3. PCCULL cells and R4TC sidecars for the 3-2 rooms.
+3. PCCULL cells for the 3-2 rooms.
+4. R4TC sidecars generated (tr_classify.py over the castle tree + the composed Disc 2 pack):
+   `/root/re4data/private/trans32-20261102/r{205,209,20a,20b}/ps2-world.r4tc` (r205 446 parts, r209 427, r20a 129,
+   r20b 388). Not on the disc yet: the Disc 2 trclass.idx adds a room only after its tier 2 look gate (needs Flycast
+   runs; held until "release done").
+5. Fixed, not yet run: cpic32 (r20a 72be589c), GC-ASSET member table 512 (r209 / r20b coverage).
