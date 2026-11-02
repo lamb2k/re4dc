@@ -23,6 +23,9 @@ int re4dc_ui_movie_handoff_ready(void);
 void re4dc_ps2_world_movie_discard(void);
 int re4dc_ps2_mesh_movie_blocked(void);
 unsigned re4dc_ps2_mesh_movie_borrow(unsigned id);
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+unsigned re4dc_ps2_mesh_movie_borrow_any(unsigned id);
+#endif
 int re4dc_ps2_mesh_movie_valid(unsigned token);
 void* re4dc_ps2_mesh_movie_alloc(unsigned token, unsigned bytes);
 int re4dc_ps2_mesh_movie_free(unsigned token, void* p);

@@ -5924,6 +5924,12 @@ bool ps2_movie_layout(unsigned room){
 #if RE4DC_MOVIE_WORLD_ARENA_S30
         || room==0x100
 #endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
+        || room==0x119   // bossmem26: El Gigante's movies (layout from the opened package)
+#endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+        || room==ps2w.room   // bossmem26 by rule: any room whose package was registered at open
+#endif
         ;
     return room_ok && f.mesh && f.side &&
         ((f.mesh+31u)&~31u)+((f.side+31u)&~31u)+kLutBytes+kGatherBytes==ps2_movie.capacity;
@@ -7721,6 +7727,9 @@ bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA_S30
        || ps2w.room==0x100
 #endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
+       || ps2w.room==0x119
+#endif
     ){
         unsigned gen=0;
         if(!re4dc_room4_live_generation(&gen) || !re4dc_room4_cell_valid(s,total,gen) || !ps2_movie.capture(s,total,gen)){
@@ -7729,6 +7738,16 @@ bool ps2_open(){
         ps2_movie_files={msize,psize,ps2_crc32(s,msize),movie_world::fnv(s,msize),
                         ps2_crc32(s+mbytes,psize),movie_world::fnv(s+mbytes,psize)};
     }
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+    // bossmem26 by rule: every other room's package is registered too (non-fatal: a package smaller than the movie set
+    // stays unregistered), so a movie heap 4 can't stage falls back to it (re4dc_ps2_mesh_movie_borrow_any).
+    else if(total>=movie_world::arena_bytes){
+        unsigned gen=0;
+        if(re4dc_room4_live_generation(&gen) && re4dc_room4_cell_valid(s,total,gen) && ps2_movie.capture(s,total,gen))
+            ps2_movie_files={msize,psize,ps2_crc32(s,msize),movie_world::fnv(s,msize),
+                            ps2_crc32(s+mbytes,psize),movie_world::fnv(s+mbytes,psize)};
+    }
+#endif
 #endif
 #if RE4DC_PS2_STRIP_GROUPS
     {
@@ -9597,6 +9616,9 @@ extern "C" unsigned re4dc_ps2_mesh_movie_borrow(unsigned id){
 #if RE4DC_MOVIE_WORLD_ARENA_S30
         || (ps2w.room==0x100 && id==0x10030)
 #endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
+        || (ps2w.room==0x119 && (id==0x11920 || id==0x11930))
+#endif
         ;
 #if RE4DC_MOVIE_LAYOUT_GUARD
     // guards28: one line per refused eligible borrow (once per movie id, arena generation and reason), with the sizes, so a
@@ -9627,6 +9649,22 @@ extern "C" unsigned re4dc_ps2_mesh_movie_borrow(unsigned id){
         id,token,ps2_movie.generation,ps2_movie.base,ps2_movie.capacity,movie_world::arena_bytes);
     return token;
 }
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+// bossmem26 by rule: the heap-short fallback for any room movie (rNNN sMM id = room<<8 | scene) in its own room.
+extern "C" unsigned re4dc_ps2_mesh_movie_borrow_any(unsigned id){
+    const char* why=(id>>8)!=ps2w.room?"other-room":!ps2_movie.base?"unregistered":ps2w.room!=ps2w.want?"room-not-loaded":
+        !ps2_movie_layout(ps2w.room)?"layout":ps2_movie.phase!=movie_world::Phase::ready?"phase":ps2_movie.readers?"readers":
+        !ps2_movie_current()?"not-current":(!ps2w.parts || !ps2w.placements)?"no-world":!ps2_movie_dyn_valid()?"dyn":
+        !re4dc_ui_movie_handoff_ready()?"handoff":nullptr;
+    if(why){re4dc_log("MOVIEARENA refuse id=%05x room=%03x why=%s capacity=%u (heap-short fallback)\n",id,ps2w.room,why,ps2_movie.capacity);return 0;}
+    const unsigned token=ps2_movie.borrow(ps2_movie_current() && ps2_movie_dyn_valid(),true);
+    if(!token)return 0;
+    re4dc_ps2_world_movie_discard();ps2_movie_unpublish();
+    re4dc_log("MOVIEARENA borrow id=%05x token=%u gen=%u base=%p capacity=%u budget=%u (heap-short fallback)\n",
+        id,token,ps2_movie.generation,ps2_movie.base,ps2_movie.capacity,movie_world::arena_bytes);
+    return token;
+}
+#endif
 extern "C" int re4dc_ps2_mesh_movie_valid(unsigned token){return ps2_movie.valid(token,ps2_movie_current());}
 extern "C" void* re4dc_ps2_mesh_movie_alloc(unsigned token,unsigned bytes){
     return ps2_movie.alloc(token,bytes,ps2_movie_current());

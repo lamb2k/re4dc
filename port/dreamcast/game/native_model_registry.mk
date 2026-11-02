@@ -889,6 +889,17 @@ endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_GANADO_DEATH_FADE=1 -DRE4DC_NMR_DYING=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_GANADO_DEATH_FADE=1
 endif
+# NATIVE_MODEL_REGISTRY_DYING_BOSS=1 (lane boss-check 2026-11-02; render only, default 0): NATIVE_MODEL_REGISTRY_DYING's fade
+#              path also covers El Gigante (em2b) drawn by a registry descriptor: after its r11e death its whole-model
+#              fade declined (semantics 3) and the corpse drew GC (CAST-GC MIXED). Needs NATIVE_MODEL_REGISTRY_DYING=1.
+#              =2 (lane bossmem26): the same for every non-Ganado enemy (id > 0x20) drawn by a registry descriptor.
+NATIVE_MODEL_REGISTRY_DYING_BOSS ?= 0
+ifneq ($(filter 1 2,$(NATIVE_MODEL_REGISTRY_DYING_BOSS)),)
+ifneq ($(NATIVE_MODEL_REGISTRY_DYING),1)
+$(error NATIVE_MODEL_REGISTRY_DYING_BOSS needs NATIVE_MODEL_REGISTRY_DYING=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DYING_BOSS=$(NATIVE_MODEL_REGISTRY_DYING_BOSS)
+endif
 # PROP_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): re4dc_model_submit time / bytes per model and route
 #              (PPF lines). Knob off: the image is unchanged.
 PROP_PROF ?= 0
