@@ -32,8 +32,9 @@ qa() { # <sha8> <label>: QA disc -> $EV/disc-<label>/gdemu + syms
   local s7; s7=$(git -C "$t" rev-parse HEAD | cut -c1-7)
   rm -rf "${EV:?}/disc-$x"; mkdir -p "$EV/disc-$x"
   cp -r "$qw/qa/gdemu" "$EV/disc-$x/gdemu"; rm -rf "${qw:?}/qa/gdemu"
-  cp "/root/probe/lanes/route/out-rr${s7}qrW/syms.txt" "$EV/disc-$x/syms.txt"
-  rm -rf "/root/probe/lanes/route/out-rr${s7:?}qrW"
+  # rr-qa.sh names the QA build ${RR_PFX:-rr}<sha7>q (a lane cycle sets RR_PFX; house26: syms.txt was never copied)
+  cp "/root/probe/lanes/route/out-${RR_PFX:-rr}${s7}qrW/syms.txt" "$EV/disc-$x/syms.txt" || return 1
+  rm -rf "/root/probe/lanes/route/out-${RR_PFX:-rr}${s7:?}qrW"
   git -C "$MAIN" worktree remove -f "$t" || true
 }
 scenes() { # <label>
