@@ -1363,7 +1363,7 @@ ifneq ($(DISC3_MODULES),0)
 ifneq ($(DISC3_MODULES)$(DISC_SET)$(ROUTE_CH3)$(DISC2),1110)
 $(error DISC3_MODULES must be 0 or 1 and needs DISC_SET=1 ROUTE_CH3=1, not DISC2=1)
 endif
-MODULES := $(filter-out st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e,$(MODULES))
+MODULES := $(filter-out st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e em16,$(MODULES))
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
 endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))

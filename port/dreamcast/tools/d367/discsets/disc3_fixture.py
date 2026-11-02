@@ -36,6 +36,41 @@ for k in sorted(C):
 pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'castle31', 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), os.path.join(it, 'dc/tex.pak')])
+# Village / castle-only pack keys (listed only by r1xx / r2xx room resident lists, never by r000, an island room or the
+# island tree) are dead weight on Disc 3: drop them (D3_PAK_PRUNE=0 keeps the composed pack).
+if os.environ.get('D3_PAK_PRUNE', '1') == '1':
+    import glob, zlib
+    lists = {}
+    for t in glob.glob(os.path.join(HERE, '..', 'vram', 'resident', '**', 'r*.tsv'), recursive=True):
+        room = os.path.basename(t)[:4]
+        for ln in open(t).read().splitlines()[1:]:
+            if ln.strip():
+                lists.setdefault(ln.split('\t')[0], set()).add(room)
+    island_keys = {os.path.basename(k)[:17] for k in C if k.startswith('dc/tex/')}
+    def dead(key):
+        rooms = lists.get(key)
+        if not rooms or key in island_keys:
+            return False
+        return all(re.match(r'r[12][0-9a-f]{2}$', r) and r != 'r22c' for r in rooms)
+    b = open(pak, 'rb').read(); magic, ver, count, ioff, doff = struct.unpack_from('<8s4I', b, 0)
+    m = {}
+    for i in range(count):
+        c, f, o, n = struct.unpack_from('<4I', b, ioff + 16 * i); m[(c, f)] = b[o:o + n]
+    drop_keys = [k for k in m if dead('%08x-%08x' % k)]
+    dropped = sum(len(m[k]) for k in drop_keys)
+    for k in drop_keys:
+        del m[k]
+    keys = sorted(m); al = lambda x: (x + 2047) & ~2047
+    ioff = 0x800; doff = al(ioff + 16 * len(keys)); idx = []; data = bytearray(); pos = doff
+    for k in keys:
+        v = m[k]; idx.append(struct.pack('<4I', k[0], k[1], pos, len(v)))
+        data += v; pad = al(pos + len(v)) - (pos + len(v)); data += b'\x00' * pad; pos += len(v) + pad
+    blob = struct.pack('<8s5I', b'RE4PAK1\x00', 1, len(keys), ioff, doff, 0)
+    blob = blob + b'\x00' * (ioff - len(blob)) + b''.join(idx)
+    blob += b'\x00' * (doff - len(blob)) + bytes(data)
+    crc = struct.pack('<I', zlib.crc32(blob[ioff:doff])); blob = blob[:24] + crc + crc + blob[32:]   # as pak_keep.py
+    pak = os.path.join(work, 'tex-d3.pak'); open(pak, 'wb').write(blob)
+    print(f'pak prune: {len(drop_keys)} village/castle-only keys, {dropped} bytes')
 rep['dc/tex.pak'] = pak
 b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0)
 inpak = {'%08x-%08x' % struct.unpack_from('<2I', b, ioff + 16 * i) for i in range(cnt)}

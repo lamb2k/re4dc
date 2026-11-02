@@ -311,7 +311,7 @@ static const Re4dcModule g_modules[] = {
     MODULE(13, em11),  // ROUTE_CH21: r117: enabled-later (the Ganados of a later visit; em10g group)
 #endif
 #endif
-#if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
+#if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23 && !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(20, em16),  // ROUTE_CH23: r11d: enabled-later,entry (the night village Ganados + Bella sisters; em10g group)
 #endif
 #if defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22

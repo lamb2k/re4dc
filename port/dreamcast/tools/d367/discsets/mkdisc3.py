@@ -45,10 +45,17 @@ VILLAGE = re.compile(r'^(st1/.*|dc/movie/r1[0-2][0-9a-f]s.*|dc/native/r1[0-2][0-
 CR = r'r2(?:[01][0-9a-f]|2[0-9ab])'
 CASTLE = re.compile(r'^(st2/%s[^/]*|dc/movie/%ss.*|dc/native/%s/.*|evd/%ss.*|event/evd/%s.*|dc/st2_[0-3]\.ovl)$'
                     % (CR, CR, CR, CR, CR))
+# enemy / partner archives no island or final-chapter room loads: the village and castle enemy sets (their modules are
+# dropped by DISC3_MODULES or never linked on the island), Del Lago + Leon's boat (r10b), Luis (pl14, 2-2 .. 3-1)
+UNUSED_EM = re.compile(r'^em/(em1[1-7]|em2[1-9a-f]|em35|em3b|pl0f|pl14)\.(drs|das)$')
+rep['em_pruned'] = 0; rep['em_bytes'] = 0
 for d, _, fs in os.walk(tree):
     for f in fs:
         p = os.path.join(d, f)
         rel = os.path.relpath(p, tree)
+        if UNUSED_EM.match(rel) and rel not in ('em/em23.drs', 'em/em25.drs'):
+            rep['em_pruned'] += 1; rep['em_bytes'] += os.path.getsize(p); os.remove(p)
+            continue
         for name, rx in (('village', VILLAGE), ('castle', CASTLE)):
             if rx.match(rel):
                 rep[name + '_pruned'] += 1
