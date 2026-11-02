@@ -10,8 +10,9 @@ Branch `lane/world-ch31` from t15/int 15ed29fe; pushed as wip/world-ch31-2026110
 - rr cycle 1102-0904-8b49d9dc (quick, RR_DISC2=1): FAIL 6/37. C: dropped to 16.8 GB during the cycle ("C: too full for 891 MB"),
   and Disc 1 KOS/GDEMU failed too, although its program and data are unchanged. Disc 2 r204 census log empty, r208 cut short.
   Disc 2 CAST-GC PASS. r207 enters (alive 3 + 2 non-cap ids at frame 60). These are not a valid gate.
-- Cap and park: chapter 3 rooms hold only. The Makefile says ALIVE_CAP_PARK is not used because their room code keeps wrap
-  pointers of its sends. Parking them would need a design decision.
+- Cap and park (coordinator 11-02): chapter 3 stays hold-only, a documented cap exception, because the room code keeps
+  pointers to the enemies it sends. A per-room parking design is needed only if a room deadlocks under hold.
+- Route plan note: the bot needs to use the stairs and heal in the r207 hall. That is for the later play-through, not this lane.
 
 ## r207 finding (so far)
 - castle-disc2-26's no-warp bot stands on the ground floor at (1191, -2650) and shoots ("fight 25 9000") while 4 Ganados
