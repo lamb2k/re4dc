@@ -1964,6 +1964,13 @@ CPIC26D = os.environ.get('CPIC26D', '/root/re4data/private/cpic26-20261102')
 if os.path.isdir(CPIC26D):
     DATA['cpic26'] = {'dc/tex.pak': CPIC26D + '/dc/tex.pak'}
     PAK_DERIVED['cpic26'] = CPIC26D + '/pak-derived.json'
+# cpic26b (same lane 11-02, DISC 2 ONLY via D2_DATA, after cpic26): cpic26's pack with the castle Zealot mask-run pairs
+# bc1a9802 / ac23b5fe / ec7b1745 (GC em11 colour+mask bakes) as PS2 pixels (the cast's PS2 atlas over each hair box,
+# opaque like the PS2; castlegca26/zpair.py). Store: re4-assets-private/cpic26b-20261102.
+CPIC26BD = os.environ.get('CPIC26BD', '/root/re4data/private/cpic26b-20261102')
+if os.path.isdir(CPIC26BD):
+    DATA['cpic26b'] = {'dc/tex.pak': CPIC26BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26b'] = CPIC26BD + '/pak-derived.json'
 
 if __name__ == '__main__':
     main()
