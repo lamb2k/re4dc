@@ -1,0 +1,44 @@
+# island5/routes.txt (lane world-ch5, 2026-11-02): chapter 5 route files, start save -> end save, room checkpoints.
+# Source: ISLAND-ROUTE-20261016.md (route3.json door graph + r3xx event jumps). Format per chapter block:
+#   chapter <n> <pG->chapter> start <room> (save point) end <room> <event / SceSetChapterEnd id>
+#   then one line per leg: <from> -> <to> via <door N | event sNN> [notes]
+# These are the leg lists steer.py plans need; the per-room goto paths (castle31/navplan.py on each room's SAT, as
+# plan31.txt) are still to be generated and proven on Flycast (play-through testing, later).
+
+chapter 5-1 14 start r300 (r22a rope landing, Disc 3 boot + chapter 4-4 end save) end r30c s00 (0xE)
+r300 -> r301 via door 0 (warp fixture ch5found/warps/cx-r300-door.txt proves this leg)
+r301 -> r303 via door (soldier waves, PS2 bit 1)
+r303 -> r304 via door
+r304 -> r305 via door (r304 s00)
+r305 -> r306 via door (r305 has the optional r22c door)
+r306 -> r307 via door; r307 -> r306 (key / lever); r306 -> r308; r308 -> r306
+r306 -> r30b via door
+r30b -> r30c via door; r30c s00: Ashley freed, plane through the wall, SceSetChapterEnd 0xE
+
+chapter 5-2 15 start r30c (chapter 5-1 end save) end r316 s00 (0xF)
+r30c -> r30e via door
+r30e -> r309 via door (regenerator room; key item)
+r309 -> r30a via door; r30a s00 / s10 lift
+r30a s00 -> r30b s00 -> r310 via event jump
+r310 -> r311 via door
+r311 -> r30d via door
+r30d -> r312 / r30f via door (r30f bulldozer ride, PS2 bit 0)
+r30f -> r315 via door
+r315 -> r316 via door; r316 s00: Ashley taken, SceSetChapterEnd 0xF
+
+chapter 5-3 16 start r316 (chapter 5-2 end save) end r31c s02 (0x10)
+r316 -> r317 via door; r317 s00..s15 Krauser knife QTE
+r317 -> r318 via door (laser corridor)
+r318 -> r31a via door (elevator)
+r31a -> r31b via door; r31b s00 U-3 (boss-check lane)
+r31b -> r31d via door (r31d has the optional r22c door)
+r31d -> r31c via door; r31c s00..s02 Krauser dies, SceSetChapterEnd 0x10
+
+chapter 5-4 17 start r31c (chapter 5-3 end save) end r330 s00 (0x11)
+r31c -> r320 via door; r320 s00 / s01 Mike (gatling gunner = documented cap-4 exception)
+r320 -> r321 via door (r321 s00)
+r321 -> r325 via door (r325 s00)
+r325 -> r326 via door
+r326 -> r327 via door (camp, PS2 bit 2; kept gatling Ganado = documented cap-4 exception)
+r327 -> r329 via door (r329 s00)
+r329 -> r330 via door; r330 s00, SceSetChapterEnd 0x11, then r331 (final chapter, not on Disc 3 yet)
