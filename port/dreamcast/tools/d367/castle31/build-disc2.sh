@@ -22,7 +22,9 @@ else
   # SS11_ROOM_EVICT=1: the Disc 2 load comes from the title (SS heap 11 preload pass); without the evict the title's
   # 1.08 MB dynamic set stays beside r200's preload and 6 entries are evicted (castle31 10-26, c31-d2fast).
   case " $CH2 " in *" DISC_SET=1 "*) ;; *) CH2="$CH2 DISC_SET=1" ;; esac
-  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1"
+  # EFM_PS2_CUT=2 (lane castle-gca-26 11-01): + the castle debris rows the PS2 deleted (r202 0x5a / 0x5b); the release
+  # recipe's EFM_PS2_CUT=1 earlier on the line, this later value wins.
+  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1 EFM_PS2_CUT=2"
 fi
 export CH2
 mkdir -p "$K"

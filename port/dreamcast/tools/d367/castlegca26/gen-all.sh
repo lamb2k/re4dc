@@ -1,18 +1,44 @@
 #!/bin/bash
-# gen-all.sh <Disc 2 tex.pak (WSL)> <Disc 1 release tree (WSL)> [date tag]   (Git Bash on the Windows host; lane castle-gca-26)
-# Regenerates the three Disc 2 data sets of the castle GC-ASSET convert (user 11-01 "Convert in Test 26") from scratch:
-#   cgca26     gen-objects.sh: castle room objects r201 r202 r204 r208 (ETM all + room BIN pairs) -> PS2 geometry + pictures
-#   cgca26 em  gen-em.sh: em1b / em14 PS2 BIN geometry;  pmcgca26: PS2 motion (em1b, em3b, room FCV / SEQ)
-#   sndcgca26  ps2_audio.py banks (PS2 PCM in place) on pmcgca26's room archives + em19, snd28_store.py layout
-# Stores under /root/re4data/private/<set>-<tag> (default tag 20261101); copy to re4-assets-private afterwards (README).
+# gen-all.sh <Disc 2 tex.pak (WSL)> <Disc 1 release tree (WSL)> [tag]   (Git Bash on the Windows host; lane castle-gca-26)
+# Regenerates the Disc 2 data sets cgca26 + pmcgca26 (recipe.conf D2_DATA; user 11-01 "Convert in Test 26") from the
+# castle content (D2_CASTLE_TREE) and the PS2 USA ISO, in one command:
+#   1. step.sh itemlib   ps2_items.py convert (castle rooms' ITM items + EFF debris, PS2) into <work>/itemlib
+#   2. per room          step.sh objects (ps2_objects.py ETM all + room BIN pairs [+ --etm-from], ps2_items.py pack), then
+#                        Windows python ps2_objects_tex.py (PS2 pictures; <pak> = the Disc 2 tex.pak for material pairs)
+#   3. ps2_items_tex.py  the item / debris picture packages (Windows python)
+#   4. gen-em.sh         em19 em1a em1b em1c em14 PS2 BINs; PS2 motion for the em archives, em3b and the rooms
+#   5. step.sh snd       ps2_audio.py banks (PS2 PCM in place) on the room archives + em19 / em1a; snd28_store.py rows
+#   6. step.sh final     mkfinal.py -> /root/re4data/private/{cgca26,pmcgca26}-<tag>; seal (SHA256SUMS.txt)
+# Room specs room|ETM|PAIRS|ETM-FROM or empty:NAMES (castle content GC BIN index : PS2 .dat index). et1400 (+ et14.eff):
+# the torch etc model the PS2 deleted from every ETM (r201 r202, also r10c): emptied (ps2_objects.py --etm-empty), the
+# PS2 draws the torch with its world and the room EFF fire (pfire26 / PS2_FIRE_SST).
 set -euo pipefail
 PAK=${1:?Disc 2 tex.pak}; D1=${2:?Disc 1 tree}; TAG=${3:-20261101}
-H=$(cd "$(dirname "$0")" && pwd)
+SPECS=${SPECS:-"r201|all|22:22|empty:et1400.bin r202|all|1f:1f,2a:2a|empty:et1400.bin r204|all|1f:1f,2d:2d|- r208|all|28:28|-"}
+CT=${D2_CASTLE_TREE:-/root/re4data/private/castle-d2-j-20261021}
+WK=${WK:-/root/work/lanes/castle-gca-26-scratch/work}
+TW=/root/work/lanes/castle-gca-26/port/dreamcast/tools
+H=$TW/d367/castlegca26
+WS=//wsl.localhost/Ubuntu-24.04
+GI="C:/Game Dev/Emulators/Resident Evil 4 Debug (Disc 1)/Resident Evil 4 Debug (Disc 1).iso"
+PI="C:/Game Dev/Emulators/re4_helpers/Resident Evil 4 (USA)/Resident Evil 4 (USA).iso"
 W() { MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 -u root -- bash "$@"; }
-TW=/root/work/lanes/castle-gca-26/port/dreamcast/tools/d367/castlegca26
-S1=/root/re4data/private/cgca26-$TAG; S2=/root/re4data/private/pmcgca26-$TAG; S3=/root/re4data/private/sndcgca26-$TAG
-W "$TW/step.sh" clean "$S1" "$S2" "$S3"
-bash "$H/gen-objects.sh" "$S1" "$PAK" r201:all:22:22 r202:all:1f:1f,2a:2a r204:all:1f:1f,2d:2d r208:all:28:28
-W "$TW/gen-em.sh" "$S1" "$S2" "$D1" /root/work/lanes/castle-gca-26-scratch/gen-em
-W "$TW/step.sh" snd "$S2" "$S3" "${BASECAT:-/root/work/lanes/castle-disc2-26/rrhome/work/1101-1407-1409ac5e/gca2/catalog/catalog.json}"
-W "$TW/step.sh" seal "$S1" "$S2" "$S3"
+S1=/root/re4data/private/cgca26-$TAG; S2=/root/re4data/private/pmcgca26-$TAG
+W "$H/step.sh" itemlib "$WK/itemlib" r201,r202,r204,r208
+for spec in $SPECS; do
+  IFS='|' read -r r etm pairs from <<< "$spec"
+  O=$WK/obj/$r
+  W "$H/step.sh" objects "$r" "$etm" "$pairs" "$from" "$O" "$CT" "$WK/itemlib"
+  (cd "$WS$TW" && MSYS_NO_PATHCONV=1 py ps2_objects_tex.py --room "$r" --dar "$WS$O/i/$r.dar" --report "$WS$O/$r.json" \
+    --out "$WS$O/x/$r.dar" --texdir "$WS$O/x/tex" --json "$WS$O/x/tex.json" --pak "$WS$PAK" --gc-room "$WS$WK/obj/gcroom/$r.arc" \
+    --gc-iso "$GI" --ps2-iso "$PI" > "$WS$O/x/tex.log" 2>&1) || { echo "$r: tex step failed"; tail -5 "$WS$O/x/tex.log"; exit 1; }
+  echo "$r $(tail -1 "$WS$O/x/tex.log")"
+done
+(cd "$WS$TW" && MSYS_NO_PATHCONV=1 py ps2_items_tex.py "$WS$WK/itemlib" > "$WS$WK/itemlib/tex.log" 2>&1) || { tail -5 "$WS$WK/itemlib/tex.log"; exit 1; }
+echo "items tex: $(tail -1 "$WS$WK/itemlib/tex.log")"
+W "$H/gen-em.sh" "$WK" "$D1"
+W "$H/step.sh" snd "$WK/snd" "$WK" "${BASECAT:-/root/work/lanes/castle-disc2-26/rrhome/work/1101-1407-1409ac5e/gca2/catalog/catalog.json}"
+echo "$D1" > "$WS$WK/d1tree.txt"
+W "$H/step.sh" clean "$S1" "$S2"
+W "$H/step.sh" final "$S1" "$S2" "$WK"
+W "$H/step.sh" seal "$S1" "$S2"

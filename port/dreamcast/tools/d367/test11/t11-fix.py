@@ -1935,41 +1935,28 @@ DATA['wsg26'] = {'dc/native/%s/%s' % (r, f): WSG26D + '/dc/native/%s/%s' % (r, f
 DATA['wsg26']['dc/native/r100/interior.cell'] = WSG26D + '/dc/native/r100/interior.cell'
 
 # cgca26 (lane castle-gca-26 11-01, user 11-01 "Convert in Test 26": the Disc 2 castle passes GC-ASSET; DISC 2 ONLY, staged
-# by castle31/castle_fixture.py from recipe.conf D2_DATA, never in DATA): the castle room objects (ETM etc models + room
-# BINs the castle rooms draw) as PS2 geometry + PS2 pictures (castlegca26/gen-objects.sh = ps2_objects.py --uv-fold
-# --keep-larger + ps2_objects_tex.py on the castle content's st2/rNNN.dar), a GRAFT of the changed members only (store
-# graft.json; provenance.tsv credits each converted model with its PS2 source member) + the loose PS2 picture keys.
-# Store: re4-assets-private/cgca26-20261101 (RECIPE.txt, SHA256SUMS.txt).
+# by castle31/castle_fixture.py from recipe.conf D2_DATA, never in DATA): the castle rooms r201 r202 r204 r208 and the castle
+# enemy archives from the PS2 version, whole files (castlegca26/gen-all.sh): st2/rNNN.dar = PS2 objects (ps2_objects.py
+# ETM etc models + room BINs, et1400 from PS2 r10c), PS2 items + debris (ps2_items.py), PS2 pictures (ps2_objects_tex.py /
+# ps2_items_tex.py, loose keys), PS2 motion (ps2_motion_prepared.py) and PS2 PCM in the room banks (ps2_audio.py banks);
+# em/em19 em1a em1b em1c (castle) + em14 (Disc 1's copy) = PS2 BIN geometry (ps2_ganado_bins.py) + PS2 motion (+ PCM
+# em19 / em1a). provenance.tsv credits PS2 only where the conversion changed a model / bank (kept GC = gc rows; kept GC
+# samples in gc_port23/sound-kept-gc.tsv). Store: re4-assets-private/cgca26-20261101 (RECIPE.txt, SHA256SUMS.txt).
 CGCA26D = os.environ.get('CGCA26D', '/root/re4data/private/cgca26-20261101')
-if os.path.isfile(CGCA26D + '/graft.json'):
-    DATA['cgca26'] = {'graft': {_d: ('%s/%s' % (CGCA26D, _d), _m)
-                                for _d, _m in json.load(open(CGCA26D + '/graft.json')).items()},
-                      'tex': CGCA26D + '/tex'}
-    # + the castle enemy archives (castlegca26/gen-em.sh: ps2cast/ps2_ganado_bins.py PS2 geometry for every GameCube BIN
-    # with a PS2 BIN at the same ARC; em1b also carries pmcgca26's PS2 motion): em1b (castle content) and em14 (Disc 1's).
-    for _e in ('em1b', 'em14'):
-        DATA['cgca26']['em/%s.drs' % _e] = '%s/em/%s.drs' % (CGCA26D, _e)
-# pmcgca26 (same lane, DISC 2 ONLY via D2_DATA, after cgca26): the castle motion from PS2 BIO4DAT.AFS (motion/
-# ps2_motion_prepared.py rewrite + VERIFY PASS): em1b.drs (135 of 178 clips changed, 133 new dc/mot keys), em3b.drs (clips
-# already PS2-identical: staged so the motion store proves them) and the room archives r201 r202 r204 r208 (graft of the
-# FCV entries the rewrite changed: r202 0x35, r204 0x2b 0x2c; the other rooms' clips already equal PS2). Store:
-# re4-assets-private/pmcgca26-20261101 (RECIPE.txt, SHA256SUMS.txt).
+if os.path.isfile(CGCA26D + '/provenance.tsv'):
+    DATA['cgca26'] = {'tex': CGCA26D + '/tex'}
+    for _f in sorted(Path(CGCA26D, 'st2').glob('*.dar')) + sorted(Path(CGCA26D, 'em').glob('*.drs')):
+        DATA['cgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+# pmcgca26 (same lane, DISC 2 ONLY via D2_DATA, after cgca26): the PS2 motion store of the same files (pm* sets alone
+# credit motion keys): cgca26's em / st2 archives + em3b.drs (clips already PS2-identical) and the new dc/mot keys the
+# rewritten em archives stream (ps2_motion_prepared.py rewrite + VERIFY PASS each). Store: re4-assets-private/
+# pmcgca26-20261101.
 PMCGCA26D = os.environ.get('PMCGCA26D', '/root/re4data/private/pmcgca26-20261101')
-if os.path.isfile(PMCGCA26D + '/graft.json'):
-    DATA['pmcgca26'] = {'graft': {_d: ('%s/%s' % (PMCGCA26D, _d), _m)
-                                  for _d, _m in json.load(open(PMCGCA26D + '/graft.json')).items() if _m}}
-    for _e in ('em1b', 'em3b'):
-        DATA['pmcgca26']['em/%s.drs' % _e] = '%s/em/%s.drs' % (PMCGCA26D, _e)
+if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
+    DATA['pmcgca26'] = {}
+    for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
+        DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
-# sndcgca26 (same lane, DISC 2 ONLY via D2_DATA, LAST: whole files built from pmcgca26's room archives = castle content +
-# cgca26 objects + pmcgca26 motion): PS2 PCM written in place into the prebuilt AIC1 banks (tools/ps2_audio.py banks, same
-# sizes / AICA layout) of st2/r201 r202 r204 r208.dar and em/em19.drs: 317 of 334 samples PS2 (17 keep GC, no PS2 match:
-# gc_port23/sound-kept-gc.tsv rows owned castle-gca-26). Store (snd28_store.py layout: provenance.tsv, README, no RECIPE):
-# re4-assets-private/sndcgca26-20261101. Regenerate after cgca26 / pmcgca26 change (castlegca26/README).
-SNDCGCA26D = os.environ.get('SNDCGCA26D', '/root/re4data/private/sndcgca26-20261101')
-if os.path.isfile(SNDCGCA26D + '/provenance.tsv'):
-    DATA['sndcgca26'] = {'st2/%s.dar' % _r: '%s/st2/%s.dar' % (SNDCGCA26D, _r) for _r in ('r201', 'r202', 'r204', 'r208')}
-    DATA['sndcgca26']['em/em19.drs'] = SNDCGCA26D + '/em/em19.drs'
 
 if __name__ == '__main__':
     main()
