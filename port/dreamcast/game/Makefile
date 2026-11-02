@@ -2355,12 +2355,16 @@ MOVIE_WORLD_ARENA_S30 ?= 0
 # extent) instead of the hard-coded package sizes, and log every refused eligible borrow (MOVIEARENA refuse ...), so a
 # reconverted world can't silently stop the r100 s30 / r11f Mendez movies. 0 = the hard-coded rows (identical image).
 MOVIE_LAYOUT_GUARD ?= 0
+# s30cell-26 (11-02): 1 = an arena movie (r100s30) keeps the PS2_INTERIOR_CULL r100 cell resident instead of lending it
+# (the arena movie never stages in heap 4); lent, the reload after s30 failed the 81920 B reserve and r100 ran unculled.
+MOVIE_ARENA_CELL_KEEP ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA %s\n' '$(MOVIE_WORLD_ARENA)' > $@.tmp
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_ARENA_CELL_KEEP %s\n' '$(MOVIE_ARENA_CELL_KEEP)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
