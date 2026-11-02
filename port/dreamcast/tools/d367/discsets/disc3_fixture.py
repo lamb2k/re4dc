@@ -13,7 +13,7 @@ d1, it, work = sys.argv[1:4]
 os.makedirs(work, exist_ok=True)
 HERE = os.path.dirname(os.path.abspath(__file__))
 ISLAND_EM = 'em1d|em1e|em1f|em32|em36|em39|em3a|em3d|em31|pl0e'
-OWN = re.compile(r'(^|/)(r3[0-3][0-9a-f])[^/]*$|^st3/|^rel/st3_|^dc/native/r3[0-3][0-9a-f]/|^em/(%s)\.(drs|das)$|'
+OWN = re.compile(r'(^|/)(r3[0-3][0-9a-f])[^/]*$|^etc/emleon0[3-9]\.esl$|^st3/|^rel/st3_|^dc/native/r3[0-3][0-9a-f]/|^em/(%s)\.(drs|das)$|'
                  r'^bgm/aica_str\.dat$|^bgm/bio4midi\.dat$|^dc/resident\.bin$' % ISLAND_EM)
 
 

@@ -51,6 +51,10 @@ fi
 # PS2 sound (ps2snd24-regen.sh on the Disc 3 disc: 48/48 streams from PS2 ADX, 10/17 music entries)
 SN=${SN:-/root/re4data/private/island-snd-20261102}
 [ -d "$SN" ] && for f in bgm/aica_str.dat bgm/bio4midi.dat; do put "$SN/$f" "$f"; done
+# etc/emleon03..09.esl (t15/int 9f182963a, world-ch334): chapter 3+ enemy lists, the castle tree's byte-swapped copies.
+# Disc 1 ships emleon03/04 raw big-endian (never loads them); left in, PS2_ENEMY_* fails its list baseline at room entry.
+CT=${CT:-/root/re4data/private/castle-d2-j-20261021}
+for n in 3 4 5 6 7 8 9; do put "$CT/etc/emleon0$n.esl" "etc/emleon0$n.esl"; done
 # D3_FINAL=0 leaves the final chapter out (Disc 3 is 14,456 sectors over with it until the island tex.pak keys are in
 # Dreamcast form too; lane world-ch5 11-02).
 if [ "${D3_FINAL:-1}" = 1 ]; then
