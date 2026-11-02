@@ -2008,6 +2008,12 @@ if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
     for _f in sorted(Path(C4WORLDD, 'dc', 'native').glob('*/ps2-world.*')):
         DATA['c4world']['dc/native/%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 
+# c4twins (lane world-ch4 11-02, coordinator decision; DISC 2 ONLY via D2_DATA): r224 El Gigante twins PS2 registry
+# package from Codex boss18-twins-approved-20261019 (receipt I-012; 235,776 B) + its 2 loose atlas keys. Runtime PS2_GIGANTE.
+C4TWINSD = os.environ.get('C4TWINSD', '/root/re4data/private/c4twins-20261102')
+if os.path.isfile(C4TWINSD + '/RECIPE.txt'):
+    DATA['c4twins'] = {'tex': C4TWINSD + '/tex', 'dc/native/r224/registry.re4nmr': C4TWINSD + '/dc/native/r224/registry.re4nmr'}
+
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
 # the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
