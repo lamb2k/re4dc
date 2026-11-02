@@ -1971,6 +1971,13 @@ CPIC26BD = os.environ.get('CPIC26BD', '/root/re4data/private/cpic26b-20261102')
 if os.path.isdir(CPIC26BD):
     DATA['cpic26b'] = {'dc/tex.pak': CPIC26BD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26b'] = CPIC26BD + '/pak-derived.json'
+# cpic26c (same lane 11-02, DISC 2 ONLY via D2_DATA, after cpic26b): 19 r200 PS2-world picture keys (ps2-world.r4pw binds;
+# pak17 held GameCube pixels) as PS2 r200.dat pixels (em_eff_pics.py). Drawn on Disc 2 since SKY_EVENT=2 widens the r200
+# scripted-camera range. Store: re4-assets-private/cpic26c-20261102.
+CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
+if os.path.isdir(CPIC26CD):
+    DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
 
 if __name__ == '__main__':
     main()
