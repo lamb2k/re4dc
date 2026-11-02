@@ -51,6 +51,9 @@ fi
 # PS2 sound (ps2snd24-regen.sh on the Disc 3 disc: 48/48 streams from PS2 ADX, 10/17 music entries)
 SN=${SN:-/root/re4data/private/island-snd-20261102}
 [ -d "$SN" ] && for f in bgm/aica_str.dat bgm/bio4midi.dat; do put "$SN/$f" "$f"; done
+# D3_FINAL=0 leaves the final chapter out (Disc 3 is 14,456 sectors over with it until the island tex.pak keys are in
+# Dreamcast form too; lane world-ch5 11-02).
+if [ "${D3_FINAL:-1}" = 1 ]; then
 # Final chapter r331-r333 (island18 final sets, 10-18): released room archives (final-sound .dar wins: sound range
 # only), PS2 worlds + their pictures, events, Saddler em31 (motion-prepared, sound-fit) + jet ski pl0e, movies.
 FR=$(src island18-final-rooms-20261018); FW=$(src island18-final-worlds-20261018); FS=$(src island18-final-sound-20261018)
@@ -68,5 +71,6 @@ for f in "$(src island18-saddler-motion-20261018)"/prepared/mot/*.fcv; do put "$
 put "$(src island18-r333-sound-20261018)/em/pl0e.drs" em/pl0e.drs
 for f in "$(src island18-r333-transport-20261018)"/prepared/mot/*.fcv; do [ -e "$f" ] && put "$f" "dc/mot/${f##*/}"; done
 for d in "$(src island18-final-movies-20261018)"/r33*; do [ -e "$d/$(basename "$d").seq" ] && put "$d/$(basename "$d").seq" "dc/movie/$(basename "$d").seq"; done
+fi
 (cd "$OUT" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 echo "d3-content: $(wc -l < "$OUT/SHA256SUMS") files, $(du -sm "$OUT" | cut -f1) MB, SHA256SUMS $(sha256sum < "$OUT/SHA256SUMS" | cut -c1-16)"
