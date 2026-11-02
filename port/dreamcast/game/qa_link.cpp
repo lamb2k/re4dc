@@ -45,6 +45,10 @@
 #include <arch/timer.h>
 #include <kos/irq.h>
 #endif
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+#include <arch/timer.h>
+#include <kos/sem.h>
+#endif
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
@@ -69,6 +73,19 @@ kthread_t* volatile g_ppp_thd;
 unsigned char g_dial_stack[8192] __attribute__((aligned(32)));
 unsigned char g_ppp_stack[4096] __attribute__((aligned(32)));
 void* (*g_ppp_fn)(void*);
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+// QA_LINK_FIX26 (lane qalink26, 11-02; qalink.mk). Console 11-02 (Test 25 QA disc): the modems trained, then the Pi's
+// pppd sent ten LCP Config-Requests with no reply and nothing at all came from the console; the console never hung up
+// and later A presses never dialled. KOS libppp's ppp_connect waits on a semaphore with no timeout, so a PPP exchange
+// that never completes kept the dial thread (and g_dial_running) forever: every later start was refused. Now the wait
+// is bounded (RE4DC_QA_LINK_PPP_WAIT_MS) and ends early when the modem drops the line; then the normal hang-up and
+// redial run. The modem byte counts show on the menu row (T<tx> R<rx>) so a photo tells which direction was dead.
+#ifndef RE4DC_QA_LINK_PPP_WAIT_MS
+#define RE4DC_QA_LINK_PPP_WAIT_MS 45000
+#endif
+volatile bool g_abort26;     // the PPP wait gave up: modem writes discard, so libppp's thread lets its mutex go
+volatile int g_why26;        // -16 line lost during PPP, -17 PPP wait timed out (0 = libppp's own failure)
+#endif
 #if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
 // The configured address survives peer learning; a new call must learn anew.
 unsigned g_configured_host28 = 0xFFFFFFFFu;
@@ -247,6 +264,29 @@ void re4dc_qalink_thd_pass(void) {
 #endif
     thd_sleep(4);
 }
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+// sem_wait_timed -> here in libppp (qalink.mk). Its only untimed wait is ppp_connect's wait for LCP + IPCP: poll it
+// in 250 ms steps; on a stop, a lost line or RE4DC_QA_LINK_PPP_WAIT_MS, enter PPP DEAD, which posts the semaphore with
+// conn_rv = -1 (ppp.c _ppp_enter_phase), so ppp_connect returns a failure and the dial thread hangs up and redials.
+int re4dc_qalink_sem_wait_timed(semaphore_t* s, unsigned int timeout) {
+    if (timeout) return sem_wait_timed(s, timeout);
+    const uint64_t t0 = timer_ms_gettime64();
+    for (;;) {
+        if (sem_wait_timed(s, 250) == 0) return 0;
+        const unsigned ms = (unsigned) (timer_ms_gettime64() - t0);
+        const bool lost = !modem_is_connected();
+        if (g_stop || lost || ms >= RE4DC_QA_LINK_PPP_WAIT_MS) {
+            g_why26 = g_stop ? 0 : lost ? -16 : -17;
+            re4dc_log("qalink: PPP %s after %u ms (modem tx %u rx %u bytes)\n",
+                      g_stop ? "stopped" : lost ? "line lost" : "timed out", ms, (unsigned) g_modem_tx,
+                      (unsigned) g_modem_rx);
+            g_abort26 = true;
+            _ppp_enter_phase(PPP_PHASE_DEAD);
+            return sem_wait_timed(s, 0);   // posted by the DEAD entry above (or by the PPP thread just before it)
+        }
+    }
+}
+#endif
 // QA_LINK_DEBUG=1 (qalink.mk): libppp's dbglog lines into the RAM log
 void re4dc_qalink_dbglog(int level, const char* fmt, ...) {
     (void) level;
@@ -262,6 +302,12 @@ int re4dc_qalink_modem_write(unsigned char* data, int size) {
     // Pinned modem_shutdown does not clear CONNECTED; do not rely on that bit
     // while teardown has retired the driver buffers. PPP must release its mutex.
     if (g_stop || g_retiring28 || g_tx_fault28) return size;
+#endif
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+    if (g_abort26) return size;   // the PPP wait gave up: never hold libppp's mutex on a full buffer
+#if defined(RE4DC_QA_LINK_FIX26_DEADTX) && RE4DC_QA_LINK_FIX26_DEADTX
+    if (g_attempt == 1) return size;   // harness twin only: attempt 1 sends nothing (the 11-02 console symptom)
+#endif
 #endif
     if (!modem_is_connected()) return size;   // dropped line: discard (libppp would spin forever)
     const int n = modem_write_data(data, size);
@@ -423,6 +469,12 @@ bool dial_once() {
     g_host = g_configured_host28;
     memcpy(g_peer, &g_host, 4);
 #endif
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+    g_abort26 = false;
+    g_why26 = 0;
+    g_modem_tx = 0;   // per call, for the menu row and the failure line
+    g_modem_rx = 0;
+#endif
     g_state = S_DIAL;
     if (!g_ppp_init) {
         if (ppp_init() < 0) { g_err = -20; return false; }
@@ -439,11 +491,19 @@ bool dial_once() {
     re4dc_log("qalink: modem connected %u bps, PPP\n", g_rate);
 #if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
     if (ppp_set_login("dream", "dreamcast") < 0) { g_err = -15; return false; }
+#elif defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+    // DreamPi's pppd asks for PAP ("auth" in its peers file, seen 11-02): a failed allocation here would leave no login
+    if (ppp_set_login("dream", "dreamcast") < 0) { g_err = -15; re4dc_log("qalink: PPP login alloc failed\n"); return false; }
 #else
     ppp_set_login("dream", "dreamcast");   // DreamPi's pppd runs noauth; PAP is used only if the peer asks for it
 #endif
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+    if (ppp_connect() < 0 || g_abort26) {
+        g_err = g_why26 ? g_why26 : -10;
+#else
     if (ppp_connect() < 0) {
         g_err = -10;
+#endif
         re4dc_log("qalink: PPP failed (modem tx %u rx %u bytes)\n", (unsigned) g_modem_tx, (unsigned) g_modem_rx);
         return false;
     }
@@ -616,10 +676,20 @@ void re4dc_qalink_state_text(char* out, unsigned n) {
     switch (g_state) {
     case S_OFF: snprintf(out, n, "OFF"); break;
     case S_DIAL: snprintf(out, n, "DIALLING %d/3", g_attempt); break;
+#if defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26
+    // T / R = modem bytes sent / received in this call: T0 = the console sent nothing, R0 = nothing heard from the Pi
+    case S_PPP: snprintf(out, n, "PPP %u %d/3 T%u R%u", g_rate, g_attempt, (unsigned) g_modem_tx,
+                         (unsigned) g_modem_rx); break;
+    case S_FAILED: snprintf(out, n, "FAILED %d T%u R%u A:RETRY", g_err, (unsigned) g_modem_tx, (unsigned) g_modem_rx);
+        break;
+#else
     case S_PPP: snprintf(out, n, "PPP %u BPS %d/3", g_rate, g_attempt); break;
+#endif
     case S_UP: snprintf(out, n, "UP %u.%u.%u.%u TO %u.%u.%u.%u", g_ip[0], g_ip[1], g_ip[2], g_ip[3], g_peer[0], g_peer[1],
                         g_peer[2], g_peer[3]); break;
+#if !(defined(RE4DC_QA_LINK_FIX26) && RE4DC_QA_LINK_FIX26)
     case S_FAILED: snprintf(out, n, "FAILED (%d) - A: RETRY", g_err); break;
+#endif
     case S_DROPPED: snprintf(out, n, "LINE DROPPED - A: REDIAL"); break;
     default: snprintf(out, n, "HANGING UP"); break;
     }

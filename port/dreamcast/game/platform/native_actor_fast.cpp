@@ -64,6 +64,17 @@ extern "C" unsigned char re4dc_bf_room_on;  // native_static.cpp (BACKFACE_ROOMS
 #ifndef RE4DC_ACTOR_LIGHT_FAST_ONLY
 #define RE4DC_ACTOR_LIGHT_FAST_ONLY 0
 #endif
+#ifndef RE4DC_LEON_LIGHT_DIR26
+#define RE4DC_LEON_LIGHT_DIR26 0
+#endif
+#if RE4DC_LEON_LIGHT_DIR26 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#error LEON_LIGHT_DIR26 needs ACTOR_LIGHT_FAST_ONLY=1
+#endif
+// LEON_LIGHT_DIR26=1 (lane leonlight26; render only; default 0): under ACTOR_LIGHT_FAST_ONLY, Leon (the marked
+// LEON_SOURCE_LIGHT record) keeps his probe light as a direction: the probe direction + the LEON_LIGHT_FILL camera
+// fill through the fast directional kernel (pass_lights, FIPR per vertex), as Test 24b drew him. Every other model,
+// and any Leon part the probe declines, stays on the one-colour fast-only part light. Never the exact evaluator.
+#define RE4DC_FAST_DIR_PASS (!RE4DC_ACTOR_LIGHT_FAST_ONLY || RE4DC_LEON_LIGHT_DIR26)
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/actor_light_fast_only.h"
 #endif
@@ -2018,7 +2029,7 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
                 }
             workspace_end = workspace_bytes;
 #endif
-#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY && !RE4DC_LEON_LIGHT_DIR26
             f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
             if (f.skin_positions) {
                 f.skin_ready = reinterpret_cast<u8*>(f.skin_positions + entries * 16U);
@@ -2665,6 +2676,23 @@ const ProbeEntry& probe_of(const Re4dcModelPart& p) {
         if (!re4dc::render::is_finite(e.dcol[c]) || !re4dc::render::is_finite(e.amb[c])) return e;
     }
     e.ok = true;
+#if defined(RE4DC_LEON_PROBE_LOG26) && RE4DC_LEON_PROBE_LOG26
+    // LEON_PROBE_LOG26 (diagnostic, test only): Leon's probe once per frame; flat = the fast-only part colour's green
+    // channel (ambient + 0.3 (1 + view_dot) x directional + the LEON_LIGHT_FILL share), before material / headroom.
+    if (S.normal_matrix[3] == 1.0e30f) {
+        unsigned nl = 0;
+        for (unsigned i = 0; i < 8; ++i) if (S.mask & (1U << i)) ++nl;
+        float fill = 0.0f;
+#ifdef RE4DC_LEON_LIGHT_FILL
+        fill = 0.6f * float(RE4DC_LEON_LIGHT_FILL) / 100.0f;
+#endif
+        const float flat = e.amb[1] + std::max(0.0f, 0.3f * (1.0f + e.view_dot)) * e.dcol[1] + fill * (e.dcol[1] + e.amb[1]);
+        re4dc_log("LP26 f=%u n=%u v=%d,%d,%d vd=%d coh=%d dcol=%d,%d,%d amb=%d,%d,%d flat=%d\n", frame_serial, nl,
+                  int(e.v[0] * 100.0f), int(e.v[1] * 100.0f), int(e.v[2] * 100.0f), int(e.view_dot * 100.0f),
+                  int(e.coherence * 100.0f), int(e.dcol[0] * 255.0f), int(e.dcol[1] * 255.0f), int(e.dcol[2] * 255.0f),
+                  int(e.amb[0] * 255.0f), int(e.amb[1] * 255.0f), int(e.amb[2] * 255.0f), int(flat * 255.0f));
+    }
+#endif
     return e;
 }
 // The part's Lights from its actor's probe; false: not eligible / not representable (build_lights then runs).
@@ -2841,6 +2869,23 @@ inline unsigned dsa28_light_path(const Lights& L) {
 #undef RE4DC_PART_LIGHTS
 #define RE4DC_PART_LIGHTS fast_only_lights
 #endif
+#if RE4DC_LEON_LIGHT_DIR26
+#if !RE4DC_ACTOR_PROBE_LIGHT
+#error LEON_LIGHT_DIR26 needs ACTOR_PROBE_LIGHT=1 or 2
+#endif
+// LEON_LIGHT_DIR26: Leon's parts take the probe's directional fold (probe_lights: probe direction + LEON_LIGHT_FILL
+// camera fill + ambient, lit per vertex by pass_lights' fast kernel). Other models, and a declined Leon part, return
+// false here and take fast_only_lights (one part colour). The exact evaluator stays compiled out.
+unsigned leon_dir26_parts;
+inline bool leon_dir26_fold(const Re4dcModelPart& p, const Frame& f, Lights& L) {
+    if (p.lighting->normal_matrix[3] != 1.0e30f || !probe_lights(p, f, L)) return false;  // Leon's marked record only
+    ++leon_dir26_parts;
+    return true;
+}
+#define RE4DC_LEON_DIR26_FOLD(p, f, L) leon_dir26_fold((p), (f), (L))
+#else
+#define RE4DC_LEON_DIR26_FOLD(p, f, L) false
+#endif
 
 #if defined(RE4DC_FALLBACK_SCAN29) && RE4DC_FALLBACK_SCAN29 && !RE4DC_ACTOR_LIGHT_FAST_ONLY
 #include "include/fallback_scan29_lights.inc"
@@ -2850,7 +2895,7 @@ inline unsigned dsa28_light_path(const Lights& L) {
 #include "include/fallback_actor_audit29.inc"
 #endif
 
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 // Light directions of palette entry i (skinned normals): R_i^T l, w = 0,
 // cached per entry for the current part's light set.
 const float* skin_light_dirs(Frame& f, const Lights& L, unsigned i, float* fallback) {
@@ -2969,7 +3014,7 @@ unsigned positions_c(const u8* rec, unsigned rs, unsigned n, const u8* pos, unsi
     return i;
 }
 
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 // Pass 2 (fast lights), portable. XMTRX holds the colour matrix. Small (s8)
 // normals only; with check, stops at the first record whose normal palette
 // index (byte 3) != palette.
@@ -3090,7 +3135,7 @@ unsigned positions_asm(const u8* rec, unsigned rs, unsigned n, const u8* pos, in
     return n - left;
 }
 
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 // SH4 pass 2 (fast lights): fipr per light (fv8, fv12 resident; direction 2
 // reloaded into fv0), m = d + |d|, colour by ftrv, clamp, pack.
 #define ACTOR_NRM_ADDR4 "shll2   r0\n\t"
@@ -4455,7 +4500,7 @@ void avk_build_all(Frame& f) {
     for (unsigned j = 0; j < entries; ++j)
         if (!f.skin_ready[j]) { skin_position_matrix(f, j, f.skin_positions + j * 16U); f.skin_ready[j] = 1; }
 }
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 // Skinned light directions used by records [i, n) and not built yet (skin_light_dirs).
 void avk_build_dirs(Frame& f, const Lights& L, const Records& r, unsigned i, unsigned n) {
     alignas(8) float temp[12];
@@ -4540,7 +4585,7 @@ inline void avk_fold(const u8* oc, unsigned n, unsigned& all, unsigned& any) {
     for (; j < n; ++j) { a &= oc[j]; o |= oc[j]; }
     all &= a & 255U; any |= o & 255U;
 }
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 #if RE4DC_ACTOR_LIGHT_N16
 // ACTOR_LIGHT_N16: pass 2 for s16 normals (normal_shift 14: the owner path's parts, skinned stride 8, rigid
 // stride 8 or 6) on the n16 kernels, with the s8 kernels' contract: the same fold (L.dir / skin_dirs, built by
@@ -4786,7 +4831,7 @@ void avk_check_emit(const pvr_vertex_t* cache, const u8* index, unsigned n) {
 }
 void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv, unsigned& all,
                     unsigned& any);
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n);
 #endif
 void avk_check_positions(Part& e, const Records& r, unsigned n, unsigned done, const PosConst& k, bool s16_uv,
@@ -4856,7 +4901,7 @@ void avk_check_positions(Part& e, const Records& r, unsigned n, unsigned done, c
                   avk_build_mc);
     }
 }
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 void avk_check_lights(Part& e, const Lights& L, const Records& r, unsigned n, unsigned done) {
     AvkCheck& c = avk_chk;
     if (!done) { ++c.light_other; return; }
@@ -4962,7 +5007,7 @@ void pass_fast_only(Part& e, const Lights& L, const Records& r, unsigned n) {
 }
 #endif
 
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
 // Pass 2 (fast directional fold) over a meshlet.
 void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     Frame& f = e.f;
@@ -5041,6 +5086,8 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
         i += done;
     }
 }
+#endif
+#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
 
 #ifndef RE4DC_ACTOR_EXACT_FAST
 #define RE4DC_ACTOR_EXACT_FAST 0
@@ -7033,7 +7080,8 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
-    B28_NOTE(p, fast_only_lights(p, f, blob->center, lights));
+    if (!RE4DC_LEON_DIR26_FOLD(p, f, lights))
+        B28_NOTE(p, fast_only_lights(p, f, blob->center, lights));
 #else
     if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, lights))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
@@ -7078,7 +7126,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     // Skinned directions follow the part's light fold; parts of one info whose
     // folds agree within kDirTolerance of the largest direction (light
     // directions from nearby part centres) keep the entries already built.
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));
@@ -7200,6 +7248,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         e.prime(nv);
         if (e.uv16) pack_uv16(e.cache.v, nv, true);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_LEON_LIGHT_DIR26
+        if (!lights.constant) pass_lights(e, lights, r, nv); else
+#endif
         pass_fast_only(e, lights, r, nv);
 #else
         if (lights.constant) {
@@ -7503,7 +7554,7 @@ Frame& one_frame(const Re4dcModelPart& p, float near_distance, float far_distanc
     workspace_end = workspace_bytes;
 #endif
     const unsigned entries = se.entries;
-#if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_ACTOR_LIGHT_FAST_ONLY && !RE4DC_LEON_LIGHT_DIR26
     f.skin_positions = static_cast<float*>(frame_table(entries * (16U * 4U + 1U)));
     if (f.skin_positions) {
         f.skin_ready = reinterpret_cast<u8*>(f.skin_positions + entries * 16U);
@@ -7915,7 +7966,8 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (!constant_source || !w.lights_ready || w.lights.source != p.lighting) {
         G1PC_LIGHT(p, f, blob->center);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
-        B28_NOTE(p, fast_only_lights(p, f, blob->center, *lp));
+        if (!RE4DC_LEON_DIR26_FOLD(p, f, *lp))
+            B28_NOTE(p, fast_only_lights(p, f, blob->center, *lp));
 #else
         if (!B28_NOTE(p, RE4DC_PART_LIGHTS(p, f, blob->center, *lp))) {
 #if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
@@ -7961,7 +8013,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #if defined(RE4DC_DSA_XLU28) && RE4DC_DSA_XLU28
     re4dc::dsa24::x28::light(dsa28_light_path(lights), lights.count);
 #endif
-#if !RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_FAST_DIR_PASS
     if (f.skin_dirs && !lights.constant) {
         float dmax = 0.0f;
         for (unsigned i = 0; i < 12; ++i) dmax = std::max(dmax, std::fabs(lights.dir[i / 4][i % 4]));
@@ -8094,6 +8146,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
         APROF_SPAN(aprof_lit, APROF_LIT);
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
+#if RE4DC_LEON_LIGHT_DIR26
+        if (!lights.constant) pass_lights(e, lights, r, nv); else
+#endif
         pass_fast_only(e, lights, r, nv);
 #else
         if (lights.constant) {
