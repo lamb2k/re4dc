@@ -2365,6 +2365,8 @@ MOVIE_ARENA_CELL_KEEP ?= 0
 # bossmem26 (11-02): 1 = El Gigante's r119 parasite (s30, 11930) and death (s20, 11920) movies borrow r119's PS2 world
 # package as the r11f / r100s30 movies do (the world is not drawn under a movie; read again after it). From the heap they
 # were refused (heap 4 fragmented after the fight, `order: piece N short`, terminal=3). Needs MOVIE_LAYOUT_GUARD=1.
+# 2 = also by rule in every room: any full 288x192 room movie heap 4 can't stage borrows its room's PS2 world package
+# (registered at open when it holds the movie set); the heap stays the first choice.
 MOVIE_WORLD_ARENA_R119 ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
