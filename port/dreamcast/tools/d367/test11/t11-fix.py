@@ -1945,7 +1945,7 @@ DATA['wsg26']['dc/native/r100/interior.cell'] = WSG26D + '/dc/native/r100/interi
 CGCA26D = os.environ.get('CGCA26D', '/root/re4data/private/cgca26-20261101')
 if os.path.isfile(CGCA26D + '/provenance.tsv'):
     DATA['cgca26'] = {'tex': CGCA26D + '/tex'}
-    for _f in sorted(Path(CGCA26D, 'st2').glob('*.dar')) + sorted(Path(CGCA26D, 'em').glob('*.drs')):
+    for _f in sorted(Path(CGCA26D, 'st2').glob('*.dar')) + sorted(Path(CGCA26D, 'st2').glob('*.arc')) + sorted(Path(CGCA26D, 'em').glob('*.drs')):
         DATA['cgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 # pmcgca26 (same lane, DISC 2 ONLY via D2_DATA, after cgca26): the PS2 motion store of the same files (pm* sets alone
 # credit motion keys): cgca26's em / st2 archives + em3b.drs (clips already PS2-identical) and the new dc/mot keys the
@@ -1954,7 +1954,7 @@ if os.path.isfile(CGCA26D + '/provenance.tsv'):
 PMCGCA26D = os.environ.get('PMCGCA26D', '/root/re4data/private/pmcgca26-20261101')
 if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
     DATA['pmcgca26'] = {}
-    for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
+    for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
         DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
 

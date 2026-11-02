@@ -922,7 +922,8 @@ def room(args):
                                               le_bytes_after=len(nb),
                                               was='emptied' if cur == emptied.rstrip(b'\0') else 'GC'))
                 body = nb
-            elif nm.lower().endswith('.bin') and nm in pents and (want is None or nm in want):
+            elif nm.lower().endswith('.bin') and (nm in pents or nm in etm_empty) and (want is None or nm in want):
+                # (castle-gca-26: --etm-empty also takes an etc model the PS2 ETM no longer has, e.g. the castle et1400 torch)
                 gbin = gb[s + 0x40:e]
                 try:
                     src_le = to_le(gbin, nm)
