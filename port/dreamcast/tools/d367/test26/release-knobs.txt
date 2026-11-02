@@ -3,10 +3,11 @@
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
 # test: 26
-# tag: test-51260612-20261102
-# source: 51260612
+# tag: test-638521db-20261102
+# source: 638521db
 # recipe: port/dreamcast/tools/d367/ch2/ch2-build.sh
-# assets-zip: RE4DC-Test26-51260612-Build-Assets.zip
+# image-sha256: 765ab35fd6af697cbcf8ae9ea0f60b83a2925f3f86b482f55c8aa5f6765af34e
+# assets-zip: RE4DC-Test26-638521db-Build-Assets.zip
 # disc-sets: snd16,water16i,vq16w,fsh,ch2,cast16,r108p,r111p,pak17,zr17,zr17b,v101,stump17,res17b,trans17,res18f,res22,boss18g50r,garr18h,rc19,ch21r,pair20,ch21l,ash21,lake22,sslz23
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
@@ -365,7 +366,6 @@ DISC_SET=1
 VGA_SOFT=0
 SKY_EVENT=2
 MOVIE_ARENA_CELL_KEEP=1
-SKY_PLAY=1
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
 PC_SAMPLER=0
