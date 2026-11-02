@@ -3215,6 +3215,17 @@ $(error SS11_ROOM_EVICT=1 needs ROOM_CHANGE_EVICT, ROOM_REENTRY_EVICT=1 and SS11
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_EVICT=1
 endif
+# SS11_ROOM_DEFER=1 (lane bossmem26 2026-11-02; render only, default 0 = image unchanged; needs SS11_ROOM_EVICT=1): a room
+# change behind the chapter-end screens loads no picture of the new room there (the save screen's pictures still hold
+# VRAM; r11b's raw 256x256 pictures latched 8-10 no-contiguous uploads after Del Lago); the room's own entry evicts the
+# old set and preloads the new one.
+SS11_ROOM_DEFER ?= 0
+ifeq ($(SS11_ROOM_DEFER),1)
+ifneq ($(SS11_ROOM_EVICT),1)
+$(error SS11_ROOM_DEFER=1 needs SS11_ROOM_EVICT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_DEFER=1
+endif
 # FRAME_QUEUE_DIAG=1 (lane fix18 #39, log only, default 0 = image unchanged): one FQDIAG line per frame whose frame
 # queue refused translucent parts or effect sprites: counts, bytes asked for, the peak, and the queue at the drop.
 FRAME_QUEUE_DIAG ?= 0

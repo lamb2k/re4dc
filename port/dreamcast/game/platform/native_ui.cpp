@@ -5621,6 +5621,16 @@ extern "C" void re4dc_ui_room_preload_again(){
 #else
         if(src.room!=rce_last_room){
 #endif
+#if defined(RE4DC_SS11_ROOM_DEFER) && RE4DC_SS11_ROOM_DEFER
+            // SS11_ROOM_DEFER (bossmem26 11-02): the new room's set is not loaded behind the chapter-end screens at all.
+            // Their pictures still hold ~0.8 MB of VRAM there, and r11b's raw 256x256 pictures (128 KB each) found no
+            // contiguous block in both passes (Del Lago death, 8-10 nocontig). The room's own entry (DOORDEMO -> r11b)
+            // runs the room-change evict and the full preload into the freed pool, where every picture fits.
+            preload_pending=false;
+            re4dc_log("native texture preload again: room %03x -> %03x behind SS heap 11, deferred to the room entry\n",
+                      rce_last_room&0xfffU,unsigned(src.room));
+            return;
+#endif
             for(auto& e:entries)if(e.frame>=frame)e.frame=frame?frame-1:0U;
             rce_retire_frame=frame;rce_armed=true;rce_force_all=true;
             re4dc_log("native texture preload again: room %03x -> %03x behind SS heap 11, room change evict armed\n",
