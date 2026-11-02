@@ -1079,6 +1079,7 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
 #endif
         stats.metadata_bytes+=2*b->slab_bytes;
 #endif
+#endif
         re4dc_log("motion reserve: bind slabs=2x%u\n",b->slab_bytes);
     }
 #endif
