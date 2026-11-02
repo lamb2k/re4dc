@@ -61,6 +61,26 @@ ifeq ($(QA_LINK_DEBUG),1)
 QALINK_PPP_DEFS += -DPPP_DEBUG -Ddbglog=re4dc_qalink_dbglog
 $(OBJDIR)/qa_link.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK_DEBUG=1
 endif
+# QA_LINK_FIX26 (lane qalink26, 2026-11-02; default 1 on link builds, which are QA / benchmark discs only, so the game
+#   disc is unchanged): console 11-02, Test 25 QA disc: the modems trained, the Pi's pppd got no PPP frame from the
+#   console in 30 s, the console never hung up and later A presses never dialled (libppp's ppp_connect waits on a
+#   semaphore with no timeout, so the dial thread never came back). 1 = that wait polls: a lost line or
+#   QA_LINK_PPP_WAIT_MS (45 s) enters PPP DEAD and the normal hang-up + redial run; the menu row shows the call's modem
+#   bytes (PPP <bps> n/3 T<tx> R<rx>; FAILED <err> T R) so a console photo says which direction was dead.
+#   0 = the qalink27 / link28 code exactly. QA_LINK_FIX26_DEADTX=1: harness twins only (attempt 1 sends nothing).
+QA_LINK_FIX26 ?= 1
+QA_LINK_PPP_WAIT_MS ?= 45000
+QA_LINK_FIX26_DEADTX ?= 0
+ifneq ($(filter $(QA_LINK_FIX26),0 1),$(QA_LINK_FIX26))
+$(error QA_LINK_FIX26 must be 0 or 1)
+endif
+ifeq ($(QA_LINK_FIX26),1)
+QALINK_PPP_DEFS += -Dsem_wait_timed=re4dc_qalink_sem_wait_timed
+$(OBJDIR)/qa_link.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK_FIX26=1 -DRE4DC_QA_LINK_PPP_WAIT_MS=$(QA_LINK_PPP_WAIT_MS)
+ifeq ($(QA_LINK_FIX26_DEADTX),1)
+$(OBJDIR)/qa_link.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_LINK_FIX26_DEADTX=1
+endif
+endif
 PLATFORM_OBJS += $(OBJDIR)/qa_link.o $(QALINK_PPP_OBJS)
 # the modem driver's chain buffers and its timeout worker's stack from BSS (qa_link.cpp): no KOS heap for them
 GAME_LDFLAGS += -Wl,--wrap=createChainBuffer -Wl,--wrap=destroyChainBuffer -Wl,--wrap=thd_worker_create_ex
