@@ -2008,5 +2008,17 @@ if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
     for _f in sorted(Path(C4WORLDD, 'dc', 'native').glob('*/ps2-world.*')):
         DATA['c4world']['dc/native/%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 
+# sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
+# each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
+# the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
+# sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
+# Store: re4-assets-private/sky27-20261102.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+if os.path.isdir(SKY27D):
+    _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
+    DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
+                     if r.startswith('r1') or r == 'r200'}
+    DATA['sky27c'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky if r.startswith('r2')}
+
 if __name__ == '__main__':
     main()

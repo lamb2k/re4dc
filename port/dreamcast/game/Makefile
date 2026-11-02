@@ -38,6 +38,10 @@ PLATFORM_SRCS = $(filter-out platform/backface_sh4_trace.cpp,$(wildcard platform
 ifneq ($(VMU_CONTEXT),1)
 PLATFORM_SRCS := $(filter-out platform/vmu_lcd.cpp,$(PLATFORM_SRCS))
 endif
+# SKY_PLAY (post30.mk): platform/native_sky.cpp is built only with the knob on.
+ifneq ($(SKY_PLAY),1)
+PLATFORM_SRCS := $(filter-out platform/native_sky.cpp,$(PLATFORM_SRCS))
+endif
 # SDK units compiled from the game's src/lib with the CodeWarrior asm bodies
 # stripped (platform/sdk/strip_cw_asm.py) over the shim headers in platform/sdk.
 SDK_UNITS = mtx mtxvec mtx44 vec quat OSAlloc
