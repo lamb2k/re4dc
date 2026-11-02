@@ -39,3 +39,18 @@ r22c (castle hub, doors to r204 r211 r220 r305 r31d) is reachable from r211 / r2
 ## Test tooling
 - `worldch4/warps/<room>.txt`: entry preset per room (door destination, chapter, god, census).
 - `worldch4/routes/ch4-4-N.txt`: room / door chain from each chapter start to its end.
+
+## Status 2026-11-02 (hand-back)
+- Commits: 754f2ba3e (data sets, ROUTE_MOVIES_CH4B, tools, warps, routes) + this doc update. Stores sealed:
+  /root/re4data/private/{c4world,c4gca,pmc4gca,c4mov}-20261102 (not yet mirrored to re4-assets-private / manifest.py).
+- Gates run: Disc 1 rP image f6f938e6 = rr 15ed29fe (all overlays identical); Disc 2 rP image 845f373d = rr, only
+  st2_2 / st2_3 differ (r213 r22a r22b link RouteMoviePlay). Not run yet (testing later, user 11-02): Flycast room runs,
+  Disc 2 GC-ASSET / CAST-GC / TEXCHK / VRAM / KOS 48 KiB with the new sets.
+- Disc 2 size: about +98,600 sectors (st2 + em + mot 151.9 MB, worlds + pictures 35.6 MB, movies 13.6 MB) on 454,653
+  -> about 553,200 sectors before packing. That is at the GD-ROM high-density limit (549,150) with chapters 3-2..3-4
+  and 5 still to add: needs a capacity decision (each room ships both .dar and its .arc payload copy; ~half the st2 bytes).
+- em16 was regenerated without a Disc 1 cast tree (the castle-gca-26 scratch was cleaned): rerun gen-em.sh with a
+  Disc 1 release tree before landing and confirm em16 equals the first run (the other eight enemies matched).
+- CH-FIXES-CARRY rows: 1/2/14 done by c4gca (16 GC samples kept, rows in the bank map); 5 already on (PS2_CH4_ENEMY +
+  cap 4 in CH4REC, r214 documented exception); 15 resident lists exist in vram/resident for 22 rooms (r21a r221 r228
+  r22a r22c missing) but the Disc 2 resident.bin is the castle one: needs the shared pack; 6 no cells; others global.
