@@ -16,7 +16,7 @@ case "$1" in
     r=$2; etm=$3; pairs=$4; from=$5; O=${6:?}; CT=${7:?}; L=${8:?}
     rm -rf "${O:?}"; mkdir -p "$O/i" "$O/x/tex" "$O/../gcroom"
     cd "$TW"
-    [ -s "$O/../gcroom/$r.arc" ] || python3 "$H/gcroom.py" "$O/../gcroom" "$r"
+    [ -s "$O/../gcroom/$r.arc" ] || python3 "$H/../castlegca26/gcroom.py" "$O/../gcroom" "$r"
     a=(room --dar "$CT/st2/$r.dar" --room "$r" --uv-fold --keep-larger --keep-larger-reason "$REASON" --out "$O/$r.dar" --json "$O/$r.json")
     [ "$etm" = - ] || a+=(--etm "$etm")
     [ "$pairs" = - ] || a+=(--pairs "$pairs")

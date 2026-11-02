@@ -95,19 +95,13 @@ for t in wk.glob('m/*/report-*.json'):
 if (snd / '_map').exists():
     shutil.copytree(snd / '_map', s1 / 'reports' / 'snd-map')
 (s1 / 'RECIPE.txt').write_text(
-    '%s (lane world-ch32, 2026-11-02): Disc 2 chapter 3-2 data from the PS2 version (DISC 2 ONLY, recipe.conf D2_DATA).
-'
-    'PS2 source: Resident Evil 4 (USA) PS2 ISO, BIO4DAT.AFS %s .dat (ETM etc models, room BINs, ITM items, EFF debris,
-'
-    'TPL pictures, FCV/SEQ motion, .snd banks). Generator tools/d367/worldch32/gen-all.sh (castlegca26 method).
-'
-    'provenance.tsv: ps2 where our PS2 conversion changed a payload, gc where GameCube bytes are kept.
-' % (SET1, ' '.join(ROOMS + CEM)))
+    '%s (lane world-ch32, 2026-11-02): Disc 2 chapter 3-2 data from the PS2 version (DISC 2 ONLY, recipe.conf D2_DATA).\n'
+    'PS2 source: Resident Evil 4 (USA) PS2 ISO, BIO4DAT.AFS %s .dat (ETM etc models, room BINs, ITM items, EFF debris,\n'
+    'TPL pictures, FCV/SEQ motion, .snd banks). Generator tools/d367/worldch32/gen-all.sh (castlegca26 method).\n'
+    'provenance.tsv: ps2 where our PS2 conversion changed a payload, gc where GameCube bytes are kept.\n' % (SET1, ' '.join(ROOMS + CEM)))
 (s2 / 'RECIPE.txt').write_text(
-    '%s (lane world-ch32, 2026-11-02): Disc 2 chapter 3-2 motion from the PS2 version: BIO4DAT.AFS %s .dat,
-'
-    'motion/ps2_motion_prepared.py rewrite + verify. Files = %s final bytes and the new dc/mot keys.
-' % (SET2, ' '.join(CEM + ROOMS), SET1))
+    '%s (lane world-ch32, 2026-11-02): Disc 2 chapter 3-2 motion from the PS2 version: BIO4DAT.AFS %s .dat,\n'
+    'motion/ps2_motion_prepared.py rewrite + verify. Files = %s final bytes and the new dc/mot keys.\n' % (SET2, ' '.join(CEM + ROOMS), SET1))
 (s1 / 'reports' / 'tex-duplicates.txt').write_text(''.join(x + chr(10) for x in dup))
 print('mkfinal: %d files, %d provenance rows (%d ps2), %d tex keys (%d room duplicates), %d mot keys' % (
     len(files), len(rows), sum(1 for r in rows if r[3]), n, len(dup), k))
