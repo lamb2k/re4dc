@@ -284,7 +284,7 @@ endif
 #   C:\Game Dev\Emulators\CASTLE-ROUTE-20261015.md) plus the cap on top. It forces PS2_ENEMY_RULES=1; adopts the PS2
 #   emleon02 / emleon03 rows of r201 r203 r207 r208 / r204 r20e (platform/ps2_enemy_ch3.cpp, private table
 #   PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc from tools/d367/castle/ps2_enemy_ch3.py; every baseline byte checked);
-#   ORs PS2_ENEMY_CASTLE with 0x03 (r208 room code, r20b waves); sets ALIVE_CAP=6 when not given. Chapter 3 rooms
+#   ORs PS2_ENEMY_CASTLE with 0x13 (r208 room code, r20b waves, r205 area-3 cut: world-ch32); sets ALIVE_CAP=6 when not given. Chapter 3 rooms
 #   hold only (no ALIVE_CAP_PARK: their code keeps wrap pointers). Not ported on purpose: Easy-only branches; r205
 #   (Normal result identical: the PS2 list holds 0x57 / 0x6D and R205Init sends both); r209 (same as GC).
 PS2_CH3_ENEMY ?= 0
@@ -297,7 +297,7 @@ ifeq ($(wildcard $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc),)
 $(error PS2_CH3_ENEMY needs PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc (tools/d367/castle/ps2_enemy_ch3.py))
 endif
 override PS2_ENEMY_RULES := 1
-override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0x03 )))
+override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0x13 )))
 ifeq ($(or $(ALIVE_CAP),0),0)
 override ALIVE_CAP := 6
 endif
@@ -518,7 +518,9 @@ endif
 #   0x02 r20b: the hall waves never send list row 3 (em[1]); the random wave (Rnd() % 6, same draw) sends one
 #        Ganado in cases 0-2 (0x14 / 0x15 / 0x16) where the GC sends two (st2_1 R20bEmSetMain 0x14618..0x14da8)
 #   0x04 r216: the init sends only the display armor 0xE8 (armor[3]); the GC sends 0xE5..0xE8 (st2_2 R216Init 0x10e58)
-#   0x08 r21a (reserved: alive-gated waves), 0x10 r205 (reserved: +0x57)
+#   0x08 r21a (reserved: alive-gated waves)
+#   0x10 r205 (lane world-ch32; st2_1 R205Init 0x6b40): the area-3 "enemies appear" camera cut is not armed (the PS2
+#        dropped it); no enemy is sent there, the Normal count is unchanged
 #   0x20 r226 (lane ch4found16; st2_3 R226Main 0x1a07c): after the statue wakes (Rsf 9), in area flag 71 / 72 and
 #        below 11 alive, 0xB3 then 0xB5 are sent once more (PS2-only Rsf 18 / 19 / 20 latches); GC: none
 #   0x40 r227 (lane ch4found16; st2_3 task 0x1eaf8, started by both far-side setups 0x201a8 / 0x20348): 0xF7 then
@@ -532,7 +534,7 @@ ifneq ($(PS2_ENEMY_CASTLE),0)
 ifneq ($(PS2_ENEMY_RULES),1)
 $(error PS2_ENEMY_CASTLE needs PS2_ENEMY_RULES=1)
 endif
-$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o $(OBJDIR)/mod/st2_3/src/st2/r223.o $(OBJDIR)/mod/st2_3/src/st2/r226.o $(OBJDIR)/mod/st2_3/src/st2/r227.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
+$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r205.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o $(OBJDIR)/mod/st2_3/src/st2/r223.o $(OBJDIR)/mod/st2_3/src/st2/r226.o $(OBJDIR)/mod/st2_3/src/st2/r227.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
 endif
 # R101_ALIVE_CAP=N (lane crowd12 2026-10-14; CHANGES GAMEPLAY by design; default 0 = off; needs PS2_ENEMY_ROOMS bit 0x02):
 #   at most N Ganados alive at once in the r101 village fight. Start-list Ganados beyond N are held at room entry

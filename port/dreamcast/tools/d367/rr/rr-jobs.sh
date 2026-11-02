@@ -39,13 +39,19 @@ disc2_jobs() {
     r=${rw%%:*}; grep -v '^squeeze' "$CW31/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
-  echo "r200 r202 r203 r201 r207 r208 r204" > "$W/d2-census-rooms.txt"
+  # chapter 3-2 (lane world-ch32 11-02): r205 r209 r20a r20b + the r209 door-4 s00 trigger (etcdoor), warps in worldch32/warps
+  local CW32=$T/port/dreamcast/tools/d367/worldch32/warps
+  for rw in r205:h-r205 r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b; do
+    r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
+    job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
+  done
+  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b" > "$W/d2-census-rooms.txt"
   [ "$TIER" != full ] || seeds="1 2 3 4 5 6 7 8 9 10"
   job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' 'd2door d2fight'"
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r201 r208 r204; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r201 r208 r204 r205 r209 r20a r20b; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
