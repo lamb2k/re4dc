@@ -1,0 +1,26 @@
+# Controller glyph pictures made for the Dreamcast (UI, not GameCube assets): protected from PS2/GC picture swaps.
+# Lane glyph27 2026-11-02 (user: "the game regressed to the ps2 thumb stick glyph for the escape prompt when you're
+# grabbed by a ganado"; fxc26b 10-26 had swapped the grab QTE stick cap 6d33c3f9 to PS2 Core.dat pixels).
+# Swap tools (ps2cast/em_eff_pics.py, castps2-26/fx_core_id.py, purgeui24/ps2_tpl_pak.py, any new tex.pak set tool)
+# skip these keys via tools/d367/glyph_protect.py; t11-fix's title27_gate fails a fixture whose final dc/tex.pak holds
+# other bytes under any key. Change a row only with a user-approved glyph change (new sha256 + reason in the same landing).
+# key	sha256	glyph	set
+d17e9c56-fa23c229	15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a	A button (HUD action prompt, mash, file reader)	font22
+3acc7fea-7110b4a8	55945a616cb9f49b9bf209114ff650d24b52709f1f45a2e6ccb31c467089f0ad	B button	as shipped
+82861969-b6ad7ded	4c9d8fdd9f56b77009954d320e39795a2ab4595c1517fd59559371b872e2c9b5	X button	glyph v4
+86037bd0-1764f68c	0fd807d0ad57873809be9f4feafa1050022ae691b927271a7157f0cd78f9a69e	Y button	glyph v4
+803499f2-4b0a27a8	1c084e3a40ef3d1f20bdabd59b1c318006081b56a5a8b30023acc59d6732cd54	R trigger	as shipped
+755e1575-fea9d26b	1ea7354fbace8753fc7bfbe96f606f139e184b335b6b6f2f7285631f45136d67	L trigger	as shipped
+711dd021-24d61c99	6d2f9d608a4cd7ccfc22d802ee34d59e280df41a787335b9ff029104189dde47	analog stick base (grab QTE)	as shipped (pui24)
+6d33c3f9-9f8cf668	57132ed519ac0689d1084ebe0e1c6f0df4768d17c0a26e845fafba6afb0d2fdb	analog stick cap (grab QTE)	glyph27 (glyph v4)
+a1872ffb-7576d976	1d5ca7cda2d6345e2ae0e783792c142cd3030edc5ed9c4f4324a652cc4dcdb17	Start button	glyph v4
+e42a7628-c166970d	c734bfced8a7dab44a88ee386b5d7293f7fffaee7c9b26e4f43f7c3fbe55a940	HUD d-pad / combo plus	font22b
+d8755976-09ed8220	decc71ef7bc29bf5da95501b8cefc6d449462e2b9a3ead1bda51b84faabbf541	press arrow (mash prompt)	as shipped
+930fbc66-604c3151	ffcf354e6540e8f859911899b566b37b1235a062ea94fc841c4f2efb27f12b0d	stick direction arrow	as shipped
+11cdf896-15c51351	df1c96719ab5f0a44fb358c36570d1fb5543d67e8591a7c32a6b4f709d4944ea	r101 binocular zoom stick	as shipped
+c0059fb5-bf9900c5	05e78918466c6538ed42b7427f8030779a6a6f078865d5f71548e6ec693ee37c	ss_cap button strip	glyph v4
+01026576-52a279e0	37d83ccdd0948ac1177c04b2a163b9aab6aee0f152ddb9acfc5473f3629cb436	ss_cap A	glyph v4
+fba4ac10-e14796e0	c4efe618386270c3dcf7cac03d91de9ed821bef8984c262d8e5c55a4d826a518	inventory X move hint	glyph v4
+be564424-930053e2	81667b16e547cfb0e714ae94a2555bed5609afc5366885ca7bbb9d4742ca6826	map hint strip (A L R stick X)	glyph v4
+13ef90d4-15e98b96	71235a3fef791dc09ea9fdcc680bb4867612dcf83b6829a0f4c2ed0235ccd15b	map hint strip (A X)	glyph v4
+96ea4c38-80842320	f14a5f65936fc5d2cbd4da5eac2223dfbe3a103fc1568efdecf2c4ebcad940a2	map mode select (A B)	glyph v4
