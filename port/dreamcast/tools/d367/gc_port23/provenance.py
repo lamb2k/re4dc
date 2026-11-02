@@ -276,6 +276,13 @@ def main(catalog, recipe_conf, out_dir):
     for m in re.finditer(r'^DATA="([^"]*)"', conf, re.M):
         data = m.group(1).replace('${DATA}', data).replace('$DATA', data)
     names = [n for n in (mod.T17_DATA + ',' + data).split(',') if n]
+    # PROVENANCE_D2=1 (lane castle-gca-26 11-01, rr-disc2.sh's Disc 2 catalog only): the recipe's D2_DATA sets (castle
+    # Disc 2 data, castle31/castle_fixture.py stages them over the castle content) come last. Disc 1 catalogs never set it.
+    if os.environ.get('PROVENANCE_D2') == '1':
+        d2 = ''
+        for m in re.finditer(r'^D2_DATA="([^"]*)"', conf, re.M):
+            d2 = m.group(1).replace('${D2_DATA}', d2).replace('$D2_DATA', d2)
+        names += [n for n in d2.split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
     grafted = {}
     for n in names:

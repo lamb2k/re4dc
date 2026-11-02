@@ -37,7 +37,7 @@ IMG=$(sha256sum < "$W/d2/img.bin" | cut -c1-64); rm -f "$W/d2/img.bin"
 # 2. tree: Disc 1 candidate tree + castle fixture - village, this program
 rm -rf "${W:?}/d2/d1"
 python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/d2/d1/tree" --manifest "$W/d2/d1/manifest.json" --ipbin "$W/d2/d1/IP.BIN" | tail -1
-python3 "$D/castle31/castle_fixture.py" "$W/d2/d1/tree" "$CT" "$W/d2/fx" | tail -2
+D2_DATA=${D2_DATA:-} python3 "$D/castle31/castle_fixture.py" "$W/d2/d1/tree" "$CT" "$W/d2/fx" | tail -3
 python3 "$D/discsets/mkdisc2.py" "$W/d2/d1/tree" "$W/d2/fx/castle-fixture.json" "$O" "$W/d2/out" "$S8" | tail -1
 rm -rf "${W:?}/d2/gdemu"
 (cd "$D" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$W/d2/out/tree" "$W/d2/gdemu" | tail -1)
@@ -63,7 +63,7 @@ fi
 [ -s "$ROUTE/out-fp${L}d2cW/re4dc-game.elf" ] && [ "${D2_MODE:-}" = bases ] && pb= || { FP_TREE=$TB FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d2c KOS_WATCH=1 KOS_SQUEEZE=1 NATIVE_MODEL_REGISTRY_CENSUS=1 \
   NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 > "$W/twin-d2c.txt" 2>&1 & pb=$!; }
 G=$W/gca2; rm -rf "${G:?}"; ga=0
-{ bash "$D/gc_port23/make_catalog.sh" "$CAND/disc2/gdemu/track03.bin" "$W/recipe.conf" "$G" | tail -1 &&
+{ PROVENANCE_D2=1 bash "$D/gc_port23/make_catalog.sh" "$CAND/disc2/gdemu/track03.bin" "$W/recipe.conf" "$G" | tail -1 &&
   FP_TREE=$TA FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d2a GC_ASSET_GATE=1 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-d2a.txt" 2>&1; } || ga=1
 [ -z "$pb" ] || wait $pb || { echo "rr-disc2: census twin failed"; tail -3 "$W/twin-d2c.txt"; exit 1; }
 rc=0

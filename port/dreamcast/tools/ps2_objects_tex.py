@@ -118,7 +118,8 @@ def room_bindings(room, gd):
                 res.setdefault(int(b, 16), ('efm', int(e, 16), int(eid, 0)))
         return res
     out = scan(room)
-    ALIAS = {('r104', 0x20): ('r106', 0x20)}  # checked below: the GC BINs must be byte-identical
+    ALIAS = {('r104', 0x20): ('r106', 0x20),  # checked below: the GC BINs must be byte-identical
+             ('r208', 0x28): ('r202', 0x2a)}  # castle-gca-26: the r202 hall object, bound in r202's room code only
     for (r, b), (r2, b2) in ALIAS.items():
         if r == room and b not in out:
             import pathlib
@@ -127,8 +128,8 @@ def room_bindings(room, gd):
                 d2 = g2.read_bytes(); e1 = rs.tagged_entries(gd, '>'); e2 = rs.tagged_entries(d2, '>')
                 if gd[e1[b - 4][1]:e1[b - 4][2]] == d2[e2[b2 - 4][1]:e2[b2 - 4][2]]:
                     bb = scan(r2).get(b2)
-                    if bb:
-                        out[b] = bb
+                    if bb:  # a TPL binding moves with the BIN (r208 BIN 0x28 + TPL 0x29 = r202 BIN 0x2a + TPL 0x2b)
+                        out[b] = ('tpl', bb[1] + b - b2) if bb[0] == 'tpl' else bb
     return out
 
 

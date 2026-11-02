@@ -366,7 +366,7 @@ TEX_MAPS = {'et1700.bin': {0: 1, 1: 0}}
 # largest first), each PS2 triangle's UVs are mapped into its picture's rectangle, and ps2_objects_tex.py composes the
 # atlas picture from the same layout. (room, room-archive BIN index) -> the GC image size the atlas fills (checked
 # against the GC TPL header by ps2_objects_tex.py).
-ATLAS_OBJECTS = {('r117', 0x1f): (256, 256)}
+ATLAS_OBJECTS = {('r117', 0x1f): (256, 256), ('r204', 0x1f): (256, 256)}  # r204 0x1f = le_mirror(GC r117 0x1f) (castle-gca-26)
 
 
 def atlas_for(ps2_tpl, off, used, gc_wh):

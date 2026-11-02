@@ -38,6 +38,53 @@ for k in sorted(C):
         continue
     if k not in A or OWN.search(k):
         rep[k] = os.path.join(ct, k)
+# D2_DATA (lane castle-gca-26, 2026-11-01; recipe.conf D2_DATA, default empty = the castle31 fixture unchanged): Disc 2
+# data sets of test11/t11-fix.py DATA, in order, over the castle content (never on Disc 1). Keys as t11-fix stages them:
+# 'graft' {dest: (source .dar, members)} = graft/dar_graft.py member copy onto the composed castle archive (the .arc
+# beside a grafted .dar is rewritten as its type-0 payload, as pmrest25 stages both); 'tex' = loose PS2 picture keys
+# (t11-fix texdir); 'remove' = paths off Disc 2; any other key = whole-file replacement.
+D2 = [n for n in os.environ.get('D2_DATA', '').split(',') if n]
+if D2:
+    import importlib.util, struct as _st
+    sys.path[:0] = [os.path.join(HERE, '..', 'graft')]
+    import dar_graft
+    _sp = importlib.util.spec_from_file_location('t11fix', os.path.join(HERE, '..', 'test11', 't11-fix.py'))
+    t11 = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(t11)
+    gdir = os.path.join(work, 'd2data'); os.makedirs(gdir, exist_ok=True)
+    rec = []
+    for n in D2:
+        if n not in t11.DATA:
+            raise SystemExit('castle_fixture: D2_DATA set %s is not in t11-fix DATA (store missing?)' % n)
+        for k, v in t11.DATA[n].items():
+            if k == 'graft':
+                for dest, (src, members) in v.items():
+                    cur = rep.get(dest) or os.path.join(d1, dest)
+                    comp, sb = open(cur, 'rb').read(), open(src, 'rb').read()
+                    res, _r = dar_graft.graft(comp, sb, list(members))
+                    bad = dar_graft.verify(comp, res, list(members), sb)
+                    if bad:
+                        raise SystemExit('castle_fixture: %s graft %s member identity %s' % (n, dest, bad))
+                    o = os.path.join(gdir, '%s-%s' % (n, dest.replace('/', '_')))
+                    open(o, 'wb').write(res); rep[dest] = o
+                    arc = dest[:-4] + '.arc'
+                    if dest.endswith('.dar') and (arc in rep or arc in A):
+                        _k, size, _d, off = _st.unpack_from('<4I', res, 0x20)
+                        oa = o[:-4] + '.arc'; open(oa, 'wb').write(res[off:off + size]); rep[arc] = oa
+                    rec.append('%s graft %s %d members' % (n, dest, len(members)))
+            elif k == 'tex':
+                t11.texdir(v, rep, rec)
+            elif k == 'remove':
+                for p_ in v:
+                    rep.pop(p_, None); rem.append(p_)
+            else:
+                rep[k] = v
+                arc = k[:-4] + '.arc'
+                if k.endswith('.dar') and (arc in rep or arc in A):  # keep the .arc copy = this .dar's type-0 payload
+                    res = open(v, 'rb').read()
+                    _k, size, _d, off = _st.unpack_from('<4I', res, 0x20)
+                    oa = os.path.join(gdir, '%s-%s' % (n, arc.replace('/', '_')))
+                    open(oa, 'wb').write(res[off:off + size]); rep[arc] = oa
+    print('D2_DATA %s: %s' % (','.join(D2), '; '.join(rec)))
 pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), os.path.join(ct, 'dc/tex.pak')])
