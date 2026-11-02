@@ -35,7 +35,8 @@ fi
 log() { echo "$(date -Is) $*" | tee -a "$RR_HOME/logs/watch.log"; }
 # the shared disc cache's own eviction (unreferenced entries only, LRU); then the floor check
 python3 "$MAIN/port/dreamcast/tools/d367/stage_ext4/disccache.py" evict > /dev/null 2>&1 || true
-free_gb=$(df --output=avail -BG /mnt/c | tail -1 | tr -dc 0-9)
+# the disk that holds this cycle's evidence and candidates (RR_EBASE: /mnt/c by default, /mnt/d when a lane runs from D:)
+free_gb=$(df --output=avail -BG "$(echo "${RR_EBASE:-/mnt/c/x}" | cut -d/ -f1-3)" | tail -1 | tr -dc 0-9)
 if [ "$free_gb" -lt "$FLOOR_GB" ]; then log "skip: C: free ${free_gb} GB < ${FLOOR_GB} GB floor"; exit 0; fi
 
 if [ "$TIER" = full ]; then
@@ -53,7 +54,7 @@ LAST=$(cat "$RR_HOME/state/last-tried" 2>/dev/null || true)
 if [ "$TIER" = quick ] && [ "$FORCE" = 0 ] && [ "$SHA" = "$LAST" ]; then exit 0; fi
 [ "$TIER" = full ] || echo "$SHA" > "$RR_HOME/state/last-tried"
 ID=$(date +%m%d-%H%M)-$S8; [ "$TIER" = quick ] || ID=$ID-full
-W=$RR_HOME/work/$ID; EVU=$EBASE/$ID; EVW=$(echo "C:${EVU#/mnt/c}" | tr / '\\')   # follows RR_EBASE (default C:\Flycast-Evidence\re4-dreamcast\rr\<id>)
+W=$RR_HOME/work/$ID; EVU=$EBASE/$ID; EVW=$(d=${EVU#/mnt/}; d=${d%%/*}; echo "${d^^}:${EVU#/mnt/$d}" | tr / '\\')   # follows RR_EBASE (default C:\Flycast-Evidence\re4-dreamcast\rr\<id>)
 mkdir -p "$W" "$EVU/_jobs" "$EVU/fixtures"
 STEPS=$W/steps.tsv; : > "$STEPS"
 exec > >(tee -a "$W/cycle.log") 2>&1
@@ -166,7 +167,7 @@ bases() {
 jobs_quick() { bash "$BIN/rr-jobs.sh" quick "$W" "$TA" "$S7" "$EVU" "$EVW"; }
 jobs_full() { bash "$BIN/rr-jobs.sh" full "$W" "$TA" "$S7" "$EVU" "$EVW"; }
 flycasts() {
-  local evg; evg=/c/${EVU#/mnt/c/}
+  local evg d; d=${EVU#/mnt/}; d=${d%%/*}; evg=/$d${EVU#/mnt/$d}   # any drive (user "Use D: for now")
   "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "$evg" "${RR_JOBS:-12}"
 }
 judge() { python3 "$BIN/rr-judge.py" "$W" "$TA" "$BIN"; }

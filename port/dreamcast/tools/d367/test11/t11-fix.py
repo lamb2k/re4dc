@@ -1984,18 +1984,31 @@ if os.path.isdir(CPIC26CD):
 # (castlegca34/gen-all.sh): PS2 objects / room BINs / items / debris / pictures / motion / room + enemy banks. Kept GC:
 # r206 BIN 0x32 (converter refuses: PS2 positions outside s16) and BIN 0x34..0x3a + FCV 0x3c..0x3e (no PS2 entry; the
 # PS2 r206.dat dropped them), em25 BIN 0x31 (rebuilt larger than its slot); kept GC samples in sound-kept-gc.tsv.
-# Stores: re4-assets-private/{cgca34,pmcgca34}-20261102.
+# Ships st2/*.dar only (the game never opens the .arc: read.cpp ReadAreaData; Disc 2 space). Stores:
+# re4-assets-private/{cgca34,pmcgca34}-20261102.
 CGCA34D = os.environ.get('CGCA34D', '/root/re4data/private/cgca34-20261102')
 if os.path.isfile(CGCA34D + '/provenance.tsv'):
     DATA['cgca34'] = {'tex': CGCA34D + '/tex'}
-    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'st2').glob('*.arc')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
+    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
         DATA['cgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 PMCGCA34D = os.environ.get('PMCGCA34D', '/root/re4data/private/pmcgca34-20261102')
 if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
     DATA['pmcgca34'] = {}
-    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
+    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
         DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
+
+# sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
+# each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
+# the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
+# sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
+# Store: re4-assets-private/sky27-20261102.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+if os.path.isdir(SKY27D):
+    _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
+    DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
+                     if r.startswith('r1') or r == 'r200'}
+    DATA['sky27c'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky if r.startswith('r2')}
 
 if __name__ == '__main__':
     main()
