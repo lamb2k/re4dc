@@ -12,7 +12,11 @@ import json, os, re, subprocess, sys
 d1, ct, work = sys.argv[1:4]
 os.makedirs(work, exist_ok=True)
 HERE = os.path.dirname(os.path.abspath(__file__))
-OWN = re.compile(r'(^|/)(r2[0-9a-f]{2})[^/]*$|^dc/native/r2[0-9a-f]{2}/|^bgm/aica_str\.dat$|^em/pl01\.drs$|^dc/resident\.bin$')
+# etc/emleon03..09.esl (lane world-ch334 11-02): the enemy lists of chapter 3 on are castle-owned. Disc 1 carries
+# emleon03 / emleon04 as raw big-endian GC bytes (it never loads them); the game reads lists unswapped, so on Disc 2 the
+# Disc 1 copy failed PS2_ENEMY_CH3's baseline (list 3 row 74 byte 4 expected 30 got 00: halt entering r20c..r20e).
+OWN = re.compile(r'(^|/)(r2[0-9a-f]{2})[^/]*$|^dc/native/r2[0-9a-f]{2}/|^bgm/aica_str\.dat$|^em/pl01\.drs$|^dc/resident\.bin$'
+                 r'|^etc/emleon0[3-9]\.esl$')
 # D1_ROOMS (lane castle-disc2-26): rooms whose Disc 1 files win although they are r2xx (r200: the castle gate is also the
 # 2-3 end room of Disc 1, whose release package carries the PS2 cast; the castle21 J copy drew an em12 Ganado on the GC
 # path, CAST-GC r200 1143 frames). Default r200; D1_ROOMS= (empty) restores the castle31 rule.
