@@ -47,8 +47,10 @@ bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
     // NATIVE_MODEL_REGISTRY_DYING_BOSS (lane boss-check 2026-11-02): El Gigante (em2b, one source pass, ot_type 0) drawn
     // by a registry descriptor (r11e gig2b02-g50 / gigante-em2b-02) fades out after its r11e death the same way; without
     // this its fade frames declined (semantics 3, invisible_factor) and the corpse drew GC (CAST-GC MIXED).
-    // =2 (bossmem26, by rule): every non-Ganado enemy (id > 0x20) drawn by a registry descriptor fades the same way.
-    if(m && m->kindid==0 && (m->id==0x2B || (RE4DC_NMR_DYING_BOSS>=2 && m->id>0x20)) && !m->ot_type && p.appearance>=nmr::appearance_first &&
+    // =2 (bossmem26, by rule): every non-Ganado enemy (id > 0x20) drawn by a registry descriptor fades the same way,
+    // including ot_type 5 (Verdugo em2c, per lane bossahead; untested until Verdugo draws from a registry package).
+    if(m && m->kindid==0 && (m->id==0x2B || (RE4DC_NMR_DYING_BOSS>=2 && m->id>0x20)) &&
+       (!m->ot_type || (RE4DC_NMR_DYING_BOSS>=2 && m->ot_type==5)) && p.appearance>=nmr::appearance_first &&
        m->invisible_factor>0.0f && m->invisible_factor<1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255)return true;
 #endif
 #endif
