@@ -11,7 +11,11 @@ set -euo pipefail
 G=${1:?gdemu}; SY=${2:?syms}; EV=${3:?evidence}; X=${4:?label}; SC=${5:?scene}
 HERE=$(cd "$(dirname "$0")" && pwd)
 FP=$HERE/../../fullplay/fp_run.py
-[ -f "$FP" ] || FP=${RR_TREE:-/root/work/lanes/rr}/port/dreamcast/tools/d367/fullplay/fp_run.py   # installed copy
+# installed copy ($RR_HOME/bin/speed has no fullplay/). This runs under Git Bash and hands FP to Windows python, so the
+# WSL tree path needs the //wsl.localhost prefix: a bare /root/... became C:\root\..., no fast state, and every scene
+# was "not measured" (rr 1102-0722-15ed29fe, lane house26)
+[ -f "$FP" ] || FP=//wsl.localhost/Ubuntu-24.04${RR_TREE:-/root/work/lanes/rr}/port/dreamcast/tools/d367/fullplay/fp_run.py
+[ -f "$FP" ] || { echo "GPU $4-$5: fp_run.py not found ($FP)"; exit 1; }
 EXE=${SPEED_GPU_EXE:-C:\\Flycast-Evidence\\re4-dreamcast\\perf-cache27-20261027\\bin\\flycast-console-cstat.exe}
 mkdir -p "$EV/runs" "$EV/stats" "$EV/states"
 EW=$(cygpath -w "$EV")
@@ -26,7 +30,7 @@ run() { # <name> <dynarec> [extra env assignments...]
     ${KEYARG:+--keys "$KEYARG"} > "$EV/runs/$n.out" 2>&1 || true
 }
 KEYARG=$KEYS run "$N-fast" yes RE4DC_CONSOLE_SAVE_STATE="$EW\\states\\$N-fast.state" RE4DC_CONSOLE_SAVE_AT_S="${SPEED_GPU_FAST_S:-50}"
-[ -s "$EV/states/$N-fast.state" ] || { echo "GPU $N: no fast state"; exit 1; }
+[ -s "$EV/states/$N-fast.state" ] || { echo "GPU $N: no fast state"; tail -3 "$EV/runs/$N-fast.out" 2>/dev/null || true; exit 1; }
 KEYARG= run "$N-warm" no RE4DC_CONSOLE_LOAD_STATE="$EW\\states\\$N-fast.state" RE4DC_CONSOLE_SAVE_STATE="$EW\\states\\$N-warm.state" RE4DC_CONSOLE_SAVE_AT_S=40
 [ -s "$EV/states/$N-warm.state" ] || { echo "GPU $N: no warm state"; exit 1; }
 KEYARG= run "$N-meas" no RE4DC_CONSOLE_LOAD_STATE="$EW\\states\\$N-warm.state" \
