@@ -436,6 +436,9 @@ void live_kind_display()
 // Link-time wrap of KOS's render start (pvr_irq.c / pvr_misc.c, IRQ context, the PVR is about to be told to render):
 // for an alternating mode, the write-out start of this render is the older half of its scene's parity.
 extern "C" void __real_pvr_begin_queued_render(void);
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+extern "C" int re4dc_sky_play_render(void);   // native_sky.cpp
+#endif
 extern "C" void __wrap_pvr_begin_queued_render(void)
 {
     if (alt && !pvr_state.curr_to_texture) {
@@ -447,6 +450,10 @@ extern "C" void __wrap_pvr_begin_queued_render(void)
         inflight_buf = b;
         pvr_state.frame_buffers[pvr_state.view_target ^ 1].frame = fb_base[b] + unsigned(p) * lb;
     }
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+    // SKY_PLAY (post30.mk, native_sky.cpp): the same render start with the room's PS2 sky panorama as the background plane
+    if (re4dc_sky_play_render()) return;
+#endif
     __real_pvr_begin_queued_render();
 }
 
