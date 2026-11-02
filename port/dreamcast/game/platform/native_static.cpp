@@ -10390,6 +10390,11 @@ extern "C" int re4dc_ps2_mesh_failed(unsigned room){
 extern "C" { volatile unsigned re4dc_qa_shore_far_mm; }
 #endif
 extern "C" float re4dc_far_cap(float cap){
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT>=2
+    // SKY_EVENT=2 (post30.mk): while a scripted scene owns the camera, no 25 m cap: the world, the coarse view and the
+    // fog far follow the room camera's View far (the PS2 draws event shots to it; the r100 lift looks up past 25 m).
+    if(re4dc_sky_event())return 1.0e9f;
+#endif
     const unsigned r=ps2w.room;
     float lake=0.0f;
     if(r==0x10bU)lake=float(RE4DC_LAKE_FAR);
