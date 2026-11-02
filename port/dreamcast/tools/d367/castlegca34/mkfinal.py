@@ -73,6 +73,17 @@ with open(s1 / 'provenance.tsv', 'w') as f:
 n, dup = 0, []
 for t in sorted(wk.glob('obj/*/x/tex/*.re4tex')) + sorted(wk.glob('itemlib/*/tex/*.re4tex')):
     o = s1 / 'tex' / t.name.lower()
+    # a key an earlier D2_DATA set already ships (PRIOR_TEX dirs, ':'-separated; default cgca26): theirs is kept, ours is
+    # dropped (castle_fixture refuses one key staged twice with different bytes); a big difference still refuses
+    pr = next((Path(d) / o.name for d in os.environ.get('PRIOR_TEX', '/root/re4data/private/cgca26-20261101/tex').split(':')
+               if d and (Path(d) / o.name).exists()), None)
+    if pr:
+        a, b = pr.read_bytes(), t.read_bytes()
+        d = sum(x != y for x, y in zip(a, b))
+        if len(a) != len(b) or d > 64:
+            raise SystemExit('tex key %s already in %s with a different picture (%d bytes)' % (t.name, pr.parent, d))
+        dup.append('%s prior %s %d' % (t.name, pr.parent.parent.name, d))
+        continue
     if o.exists():
         a, b = o.read_bytes(), t.read_bytes()
         # the same picture converted in two rooms: the package label (header) and at most a few VQ codebook bytes differ
