@@ -1460,6 +1460,15 @@ if os.path.isdir(DCF01D):
     DATA['dcf01'] = {'dc/tex.pak': DCF01D + '/dc/tex.pak'}
     PAK_DERIVED['dcf01'] = DCF01D + '/pak-derived.json'
     AFTER += [('dcf01', 'dcf03'), ('dcf01', 'leon28')]
+# dcf3isl (lane assets-dc 11-02, for lane world-ch5's D3_DATA; Disc 3 space): the island tree's loose dc/tex pictures
+# in Dreamcast form (assetsdc/dcform_dir.py over re4data/private/island-d3-20261102): 3,420 of 4,474 changed, 163.1 MB ->
+# 38.6 MB (raw 16-bit >= 64x64 -> VQ, + mips when square; small square / VQ -> + mips, base kept). Same paths, keys,
+# sizes and pixel formats. ADMIT PASS 3420/3420 (assetsdc/admit_dir.py); look: assetsdc/look_rooms.py per room.
+# Store: re4data/private/dcf3isl-20261102 (manifest.tsv = the staged paths).
+DCF3ISLD = os.environ.get('DCF3ISLD', '/root/re4data/private/dcf3isl-20261102')
+if os.path.isdir(DCF3ISLD):
+    DATA['dcf3isl'] = {_l.split('	')[0]: DCF3ISLD + '/' + _l.split('	')[0]
+                       for _l in open(DCF3ISLD + '/manifest.tsv') if _l.strip()}
 # arcdrop (lane assets-dc 11-02, batch 4 "strip and prove"; data only, no knob): takes the GameCube room archives
 # st1/rXXX.arc (+ st2/r200.arc) off Disc 1. No game path reads them: ReadAreaData opens st%x/r%03x.dar only ("never fall
 # back to compressed PPC data or an unqualified .arc sidecar", src/game/read.cpp); the only other opener is the io_probe
