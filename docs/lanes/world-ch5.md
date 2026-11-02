@@ -87,3 +87,23 @@ the gate the merge changed the release image (re4dc_audio_arq +400 B: island18 c
    rooms without one, PS2 motion stores) are not built for the island; program-wide rows ride D3CARRY.
 4. rr-jobs disc3_jobs + packaging of disc3/ into the game zip are not written (rr infrastructure; coordinator call).
 5. make_catalog.sh is called with PROVENANCE_D2=1 in rr-disc3.sh; Disc 3 provenance rows need checking.
+
+## Round 2 (2026-11-02 afternoon, coordinator items 1-5; evidence on D:\RE4DC-Lanes\world-ch5, user "Use D: for now")
+
+- **Soldiers (item 1):** the PS2 cast packages already exist (lane cast16: model-registry ps2-ch5-em1dp / em1dp2 / em1ep /
+  em1fp, 16 island room registry.re4nmr packages in the island tree). They are bump bodies admitted only with
+  NATIVE_BUMP_FLAT=1, which the 10-17 island arms lacked (the round-7 CAST-GC FAILs). Disc 3 now carries NATIVE_BUMP_FLAT=1
+  (D3CARRY, as Disc 2). Proof = the d3cg census rows (queued).
+- **CH-FIXES-CARRY island rows (item 2):** resident lists exist for all 33 rooms (vram/resident/r3*.tsv); Disc 3's
+  resident.bin is now Disc 1's current resident.bin + those lists (disc3_fixture.py, water_resident.py pack), not the older
+  island18 copy. Registry packages: 26 of 33 rooms (the rest have no soldier cast). Interior cells (row 6), R4TC sidecars
+  (row 10), PS2 sound / effect sets (rows 12, 14) and PS2 motion stores (row 2): none built for the island yet.
+- **rr integration (item 3):** rr-jobs.sh tier d3 / disc3_jobs (island5/rooms.tsv: 33 census rooms, 21 GC-ASSET rooms,
+  KOS d3door r300 -> r301 and d3fight r30f), kos_squeeze.sh d3door / d3fight, t16-package.sh disc3/ in the game zip, rr.sh
+  Disc 3 knob file + Build-Assets zip, provenance.py PROVENANCE_D3 / recipe D3_DATA. Job paths: t15/int 99ef4235's rr_gb kept.
+- **Gates (item 4):** Disc 3 census twin built and its base mastered on D: (_discs/d3c, 5646 identical / 30 differing
+  files, as expected for a twin). **GC-ASSET twin FAILS to build: catalog_index.py MAX_RECORDS 16320 ("catalog capacity")**:
+  the Disc 3 catalog has more rows than the runtime index format holds. A format / quarantine decision for the
+  gc_port23 owner. The 34 Flycast jobs (33 census rooms + KOS) are queued behind /root/probe/lane-rr.lock, 2 slots.
+- **Routes (item 5):** island5/routes.txt: chapter 5-1..5-4 leg lists (start save -> end save, doors / event jumps).
+  Per-room navplan goto paths still to generate.
