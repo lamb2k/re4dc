@@ -25,6 +25,8 @@ from vq_pak import read_pak        # noqa: E402
 
 PVRTEX = vqn.PVRTEX
 RAW = (tpl.FORMAT_RGB565, tpl.FORMAT_ARGB1555, tpl.FORMAT_ARGB4444)
+# --no-vq-mip (coordinator 11-02, cycle-1 VRAM loss): pictures that were already VQ keep no mips (no new VRAM for them)
+NO_VQ_MIP = False
 
 
 def info(pkg):
@@ -75,6 +77,8 @@ def convert(args):
             return key, None, dict(key=key, note='left (mipped or non-square)')
         elif pay == tpl.PAYLOAD_TWIDDLED and fmt in RAW:
             out, _ = mipmap_twiddled.add_mipmaps(old, enabled=True); how, q = 'tw16+mip', None
+        elif pay == tpl.PAYLOAD_VQ and fmt in RAW and NO_VQ_MIP:
+            return key, None, dict(key=key, note='left (already VQ: no mips, --no-vq-mip)')
         elif pay == tpl.PAYLOAD_VQ and fmt in RAW:
             out, _ = mipmap_vq.add_mipmaps(old, enabled=True); how, q = 'vq+mip', None
         elif fmt == tpl.FORMAT_PAL4_ARGB4444:
@@ -95,7 +99,10 @@ def main():
     ap.add_argument('--keys', help='only these keys (one per line)')
     ap.add_argument('--jobs', type=int, default=2)
     ap.add_argument('--skip-key', action='append', default=[], help='never touch this key (e.g. leon28 atlases)')
+    ap.add_argument('--no-vq-mip', action='store_true')
     a = ap.parse_args()
+    global NO_VQ_MIP
+    NO_VQ_MIP = a.no_vq_mip
     O = Path(a.out); (O / 'dc').mkdir(parents=True, exist_ok=False)
     base = Path(a.pak).read_bytes()
     pkgs = read_pak(base)

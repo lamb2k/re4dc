@@ -102,6 +102,8 @@ def main():
     ap.add_argument('--max-mae', type=float, default=30.0)
     ap.add_argument('--min-side', type=int, default=8, help='only convert pictures with both sides >= this (raw16 small UI-ish pictures stay)')
     ap.add_argument('--dry', action='store_true')
+    ap.add_argument('--ps2-size', action='store_true', help='keep the PS2 picture at its own size (power of two, >= 64x64 '
+                    'pictures, VQ) and set header flags bit 29 (runtime PKG_PS2_SIZE=1: whole picture, scaled)')
     ap.add_argument('--skip-keys', help='keys never touched (one per line): already PS2-proven pictures (HUD, fonts, pics sets)')
     a = ap.parse_args()
     G, P, O = Path(a.gc_root), Path(a.ps2_dir), Path(a.out)
@@ -166,11 +168,21 @@ def main():
                     row['note'] = 'no unique PS2 picture'; rows.append(row); continue
                 if a.dry:
                     row['note'] = 'dry-match'; rows.append(row); continue
+                pw, ph = pim['width'], pim['height']
+                native = (a.ps2_size and (pw, ph) != (bw, bh) and pw * ph >= 64 * 64 and max(pw, ph) <= 1024
+                          and not (pw & (pw - 1)) and not (ph & (ph - 1)))
                 try:
-                    enc, how = encode_dc(list(r.getdata()), bw, bh, bfmt, work, gim)
+                    if native:
+                        enc, how = encode_dc(list(tp.rgba(pw, ph, pim['rgba']).getdata()), pw, ph, bfmt, work, gim)
+                        how += ' ps2size'
+                    else:
+                        enc, how = encode_dc(list(r.getdata()), bw, bh, bfmt, work, gim)
                 except Exception as e:  # noqa: BLE001
                     row['note'] = 'encode failed: %s' % e; rows.append(row); continue
                 final = restamp_mip(pkgs[kt], enc)
+                if native:
+                    hh = list(tpl.HEADER.unpack_from(final)); hh[10] |= 1 << 29   # Header.flags: whole picture, scaled
+                    final = tpl.HEADER.pack(*hh) + final[tpl.HEADER.size:]
                 row.update(how=how, before=len(pkgs[kt]), after=len(final), sha256=hashlib.sha256(final).hexdigest(),
                            ps2_file=twins[0][0] if twins else None, ps2_file_sha256=twins[0][1] if twins else None)
                 pkgs[kt] = final; done.add(key); frow['replaced'] += 1

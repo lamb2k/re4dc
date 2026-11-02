@@ -805,6 +805,17 @@ Key room_pin_key{};
 #else
 #define RE4DC_WRAP_SAFE(pkg) false
 #endif
+#if defined(RE4DC_PKG_PS2_SIZE) && RE4DC_PKG_PS2_SIZE
+// PKG_PS2_SIZE=1 (game30.mk; render only, lane assets-dc 2026-11-02): a package built from the PS2 picture at the PS2's
+// own size (dcf01) carries header flags bit 29: the whole picture is the source image's UV 0..1, scaled. It is never
+// padded, so repeat wrap is safe and the UV scale is 1 (cover = the package texture size).
+#define RE4DC_PS2SZ(pkg) ((((pkg).header().flags>>29)&1U)!=0U)
+#else
+#define RE4DC_PS2SZ(pkg) false
+#endif
+#define RE4DC_WRAP_OK(pkg) (RE4DC_WRAP_SAFE(pkg) || RE4DC_PS2SZ(pkg))
+#define RE4DC_CW(pkg,iw) (RE4DC_PS2SZ(pkg)?unsigned((pkg).textures()[0].width):unsigned(RE4DC_COVER_W(pkg,iw)))
+#define RE4DC_CH(pkg,ih) (RE4DC_PS2SZ(pkg)?unsigned((pkg).textures()[0].height):unsigned(RE4DC_COVER_H(pkg,ih)))
 #if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
 extern "C" void re4dc_ovl_watch(const char* where);
 #define OVLW(x) re4dc_ovl_watch(x)
@@ -6904,9 +6915,9 @@ static void ui_draw_quad(unsigned i){
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
 #if RE4DC_UI_DRAW_LEAN
-        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+        const float cover_w=float(RE4DC_CW(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
-                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    cover_h=float(RE4DC_CH(handles[i]->package,q.image.height)),
                     texture_h=float(t.height);
 #endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
@@ -6914,7 +6925,7 @@ static void ui_draw_quad(unsigned i){
 #if RE4DC_UI_DRAW_LEAN
             v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
 #else
-            v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+            v[n].u=q.uv[2*j]*RE4DC_CW(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_CH(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
 #endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
@@ -7008,9 +7019,9 @@ extern "C" void re4dc_ui_present(){
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
 #if RE4DC_UI_DRAW_LEAN
-        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+        const float cover_w=float(RE4DC_CW(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
-                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    cover_h=float(RE4DC_CH(handles[i]->package,q.image.height)),
                     texture_h=float(t.height);
 #endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
@@ -7018,7 +7029,7 @@ extern "C" void re4dc_ui_present(){
 #if RE4DC_UI_DRAW_LEAN
             v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
 #else
-            v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+            v[n].u=q.uv[2*j]*RE4DC_CW(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_CH(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
 #endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
@@ -7522,7 +7533,7 @@ extern "C" int re4dc_model_header_preview(const Re4dcModelPart* p,void* out){
     Entry* handle=resolve_peek(p->image,(p->material_flags&4)?p:nullptr);
     if(!handle)return 0;
     const auto& t=handle->package.textures()[0];
-    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(handle->package))return 0;
+    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(handle->package))return 0;
     unsigned fmt=re4dc::texture::pvr_format(t);
     const pvr_list_t list=select_model_pass(p);
     pvr_poly_hdr_t header;
@@ -7608,7 +7619,7 @@ Entry* prepared_entry34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding3
        e.package.header().texture_count!=1 || !e.package.pvr_texture(0))return nullptr;
     const auto& t=e.package.textures()[0];
     if(t.width!=b->width || t.height!=b->height ||
-       ((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(e.package))return nullptr;
+       ((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(e.package))return nullptr;
     return &e;
 }
 }
@@ -7650,14 +7661,14 @@ extern "C" int re4dc_model_packet_prepare34(const Re4dcModelPart* p,unsigned uv_
        e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
     const auto& t=e->package.textures()[0];
     if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) &&
-       !RE4DC_WRAP_SAFE(e->package))return 0;
+       !RE4DC_WRAP_OK(e->package))return 0;
     b.entry=unsigned(e-entries);b.upload=e->upload_incarnation;
     b.crc=e->key.crc;b.fnv=e->key.fnv;b.width=t.width;b.height=t.height;
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
-    b.u_scale=float(int(p->image.width))/float(int(t.width));
-    b.v_scale=float(int(p->image.height))/float(int(t.height));
+    b.u_scale=float(int(RE4DC_CW(e->package,p->image.width)))/float(int(t.width));
+    b.v_scale=float(int(RE4DC_CH(e->package,p->image.height)))/float(int(t.height));
 #else
-    b.u_scale=float(p->image.width)/t.width;b.v_scale=float(p->image.height)/t.height;
+    b.u_scale=float(RE4DC_CW(e->package,p->image.width))/t.width;b.v_scale=float(RE4DC_CH(e->package,p->image.height))/t.height;
 #endif
     if(!actor_texture_leases.acquire(b.entry,frame,b.texture))return -1;
     b.active=1;
@@ -7765,9 +7776,9 @@ if(!handle){
     // Repeating a padded image would repeat its border. Reject, never change wrap.
 #if RE4DC_MESH_TEXTURES
     // A baked texture is addressed 0..1 as authored: no source image size to match.
-    if(!model_texture && (((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(handle->package))){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
+    if(!model_texture && (((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(handle->package))){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
 #else
-    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(handle->package)){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
+    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(handle->package)){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
 #endif
     unsigned fmt=re4dc::texture::pvr_format(t);
     pvr_list_t list=PVR_LIST_TR_POLY;
@@ -7874,13 +7885,14 @@ if(!handle){
 #endif
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
     {   // G1_FP_UNSIGNED: sizes <= 1024 (reserve checked them; t is a loaded texture): the same floats through int, once
-        const float us=float(int(p->image.width))/float(int(t.width)),vs=float(int(p->image.height))/float(int(t.height));
+        const float us=float(int(RE4DC_CW(handle->package,p->image.width)))/float(int(t.width)),vs=float(int(RE4DC_CH(handle->package,p->image.height)))/float(int(t.height));
         if(out->u_scale!=us || out->v_scale!=vs)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
         out->u_scale=us;out->v_scale=vs;
     }
 #else
-    if(out->u_scale!=float(p->image.width)/t.width || out->v_scale!=float(p->image.height)/t.height)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
-    out->u_scale=float(p->image.width)/t.width;out->v_scale=float(p->image.height)/t.height;
+    const float ps2u=float(RE4DC_CW(handle->package,p->image.width))/t.width,ps2v=float(RE4DC_CH(handle->package,p->image.height))/t.height;
+    if(out->u_scale!=ps2u || out->v_scale!=ps2v)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
+    out->u_scale=ps2u;out->v_scale=ps2v;
 #endif
 #if RE4DC_MESH_TEXTURES
     }
@@ -8347,8 +8359,8 @@ extern "C" int re4dc_leon_direct_capture(const Re4dcModelPart* p,Re4dcLeonHeader
     while(width<p->image.width)width*=2;
     while(height<p->image.height)height*=2;
     const auto& t=model_handle->package.textures()[0];
-    out->scale_rebuild=(float(p->image.width)/width!=float(p->image.width)/t.width ||
-                        float(p->image.height)/height!=float(p->image.height)/t.height)?1u:0u;
+    out->scale_rebuild=(float(p->image.width)/width!=float(RE4DC_CW(model_handle->package,p->image.width))/t.width ||
+                        float(p->image.height)/height!=float(RE4DC_CH(model_handle->package,p->image.height))/t.height)?1u:0u;
     out->entry=model_handle;out->list=list;out->key=key;out->valid=1;
     return 1;
 }
@@ -8417,7 +8429,7 @@ extern "C" int re4dc_actor_texture_acquire(const Re4dcUiImage* image,unsigned cr
     const Key key{crc,fnv};Entry* e=load(*image,false,&key);
     if(!e || !e->valid || !(e->key==key) || !e->package.upload_complete() || e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
     const auto& t=e->package.textures()[0];
-    if(t.width!=image->width || t.height!=image->height || t.format>re4dc::texture::kArgb4444)return 0;
+    if(((t.width!=image->width || t.height!=image->height) && !RE4DC_PS2SZ(e->package)) || t.format>re4dc::texture::kArgb4444)return 0;
 #if RE4DC_ACTOR_TEX_PREP && RE4DC_ACTOR_TEX_PREP_DIAG
     if(!actor_texture_leases.acquire(unsigned(e-entries),frame,*out))return 0;
     actor_tex_prep_bound(key);return 1;
@@ -8431,7 +8443,7 @@ extern "C" int re4dc_actor_texture_acquire_next(const Re4dcUiImage* image,unsign
     const Key key{crc,fnv};Entry* e=load(*image,false,&key);
     if(!e || !e->valid || !(e->key==key) || !e->package.upload_complete() || e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
     const auto& t=e->package.textures()[0];
-    if(t.width!=image->width || t.height!=image->height || t.format>re4dc::texture::kArgb4444)return 0;
+    if(((t.width!=image->width || t.height!=image->height) && !RE4DC_PS2SZ(e->package)) || t.format>re4dc::texture::kArgb4444)return 0;
     return actor_texture_leases.acquire(unsigned(e-entries),frame+1,*out)?1:0;
 }
 extern "C" int re4dc_actor_texture_validate_key(const Re4dcActorTextureLease* lease,unsigned crc,unsigned fnv){
@@ -8961,10 +8973,10 @@ void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     static const unsigned char order[8]={0,1,7,2,6,3,5,4};
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
     // G1_FP_UNSIGNED: picture and texture sizes are < 2^31 (a loaded texture), so the signed conversion is the same float.
-    const float su=float(int(RE4DC_COVER_W(e->package,s.image.width)))/float(int(t.width)),
-                sv=float(int(RE4DC_COVER_H(e->package,s.image.height)))/float(int(t.height));
+    const float su=float(int(RE4DC_CW(e->package,s.image.width)))/float(int(t.width)),
+                sv=float(int(RE4DC_CH(e->package,s.image.height)))/float(int(t.height));
 #else
-    const float su=float(RE4DC_COVER_W(e->package,s.image.width))/t.width,sv=float(RE4DC_COVER_H(e->package,s.image.height))/t.height;
+    const float su=float(RE4DC_CW(e->package,s.image.width))/t.width,sv=float(RE4DC_CH(e->package,s.image.height))/t.height;
 #endif
     auto* v=reinterpret_cast<pvr_vertex_t*>(out+sizeof(pvr_poly_hdr_t));
     for(unsigned i=0;i<8;++i){
@@ -9071,7 +9083,7 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     pvr_sprite_compile(h,&c);h->argb=s.color;h->oargb=0;
 #endif
     auto* b=reinterpret_cast<pvr_sprite_txr_t*>(out+sizeof(pvr_poly_hdr_t));
-    const float su=float(RE4DC_COVER_W(e->package,s.image.width))/t.width,sv=float(RE4DC_COVER_H(e->package,s.image.height))/t.height;
+    const float su=float(RE4DC_CW(e->package,s.image.width))/t.width,sv=float(RE4DC_CH(e->package,s.image.height))/t.height;
     b->flags=PVR_CMD_VERTEX_EOL;
     b->ax=s.x[0];b->ay=s.y[0];b->az=s.z[0];b->bx=s.x[1];b->by=s.y[1];b->bz=s.z[1];
     b->cx=s.x[2];b->cy=s.y[2];b->cz=s.z[2];b->dx=s.x[3];b->dy=s.y[3];b->dummy=0;
@@ -9682,7 +9694,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
     Entry* handle=load(image,false,&key);
     if(!handle || !frame_ready || stream_aborted || direct_open){++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
-    if(t.width!=width || t.height!=height)return 0; // repeated UVs cannot use padding
+    if((t.width!=width || t.height!=height) && !RE4DC_PS2SZ(handle->package))return 0; // repeated UVs cannot use padding
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
 #if RE4DC_WORLD_AUTOSORT
@@ -9734,7 +9746,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
     Entry* handle=load(image,false,&key);
     if(!handle || !frame_ready || stream_aborted || direct_open){++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
-    if(t.width!=width || t.height!=height)return 0; // repeated UVs cannot use padding
+    if((t.width!=width || t.height!=height) && !RE4DC_PS2SZ(handle->package))return 0; // repeated UVs cannot use padding
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
 #if RE4DC_WORLD_AUTOSORT
@@ -10300,7 +10312,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #if RE4DC_WORLD_RECT21
     if(!rect_scale(*handle)){RE4DC_WHD(7);return 0;}
 #else
-    if(t.width!=k[2] || t.height!=k[3]){RE4DC_WHD(7);return 0;} // repeated UVs cannot use padding
+    if((t.width!=k[2] || t.height!=k[3]) && !RE4DC_PS2SZ(handle->package)){RE4DC_WHD(7);return 0;} // repeated UVs cannot use padding
 #endif
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
