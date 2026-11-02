@@ -29,5 +29,12 @@ extern "C" unsigned re4dc_sky_event(void)
 // SKY_EVENT=2: re4dc_sky_event() latched once per frame (coarse.cpp re4dc_coarse_draw, before the world and the fog
 // far are noted), so re4dc_view_far / re4dc_far_cap / the sky rows read one word instead of the flags per call.
 extern "C" { unsigned re4dc_sky_event_now; }
-extern "C" void re4dc_sky_event_latch(void) { re4dc_sky_event_now = re4dc_sky_event(); }
+// Interiors (lane house26, Test 26 rr SPEED house 34.9 -> 44.2 MODELLED; 36.4 with SKY_EVENT=0): while the player stands
+// in an indoor effect area (Status_flg[1] 0x02000000, the house interiors; option_rows.cpp re4dc_view_indoor_depth) the
+// scripted camera is not widened: the outdoor world far stays at the view-distance cut and no sky rows are drawn. The
+// #60 shots (r100 radio lift, r101 alert) are outdoors and keep the widened far and the sky.
+extern "C" void re4dc_sky_event_latch(void)
+{
+    re4dc_sky_event_now = (pG && (pG->Status_flg[1] & 0x02000000)) ? 0U : re4dc_sky_event();
+}
 #endif

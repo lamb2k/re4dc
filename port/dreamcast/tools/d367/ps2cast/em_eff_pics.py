@@ -26,6 +26,7 @@ sys.path[:0] = [str(HERE.parent / 'purgeui24'), str(HERE.parent / 'test12fx'), s
 import ps2_tpl_pak as P  # noqa: E402
 import fx_ps2_pack as F  # noqa: E402
 from PIL import Image  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')); import glyph_protect  # lane glyph27: Dreamcast controller glyphs stay
 
 
 def sha(b):
@@ -116,6 +117,8 @@ def main():
         pims = [im for _o, ims in P.ps2_tpl.find_all(open(ps2f, 'rb').read()) for im in ims]
         for spec in keys:
             key, _, pi = spec.partition(':')
+            if glyph_protect.skip(key):
+                print(key, 'protected controller glyph (rr/ui-glyph-protect.tsv): skipped'); continue
             kt = tuple(int(x, 16) for x in key.split('-'))
             gim = Ref(gims[key]) if gcf != '-' else Ref(img=package_image(pkgs[kt]))
             if pi:
