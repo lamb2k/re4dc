@@ -2,13 +2,48 @@
 
 # RE4 Dreamcast
 
-**Resident Evil 4 runs on the Sega Dreamcast, from New Game to the end of chapter 2-3 at the castle gate.**
+**Resident Evil 4 runs on the Sega Dreamcast, from New Game into the castle (chapters 3-1 and 3-2) on Disc 2.**
 
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 25](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 26](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 26
+
+The castle starts on Disc 2, the PS2 sky is back, and Leon looks right again. Both discs come in the one game zip.
+Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **The PS2 sky** outdoors in normal play, from the forest to the lake, and in cutscenes.
+
+  ![Outdoor rooms: before left, Test 26 right](https://github.com/lamb2k/re4dc/raw/test-51260612-20261102/docs/images/releases/test26/sky-outdoors.jpg)
+  <br>The forest, village and farm. Left before, right Test 26. Flycast capture.
+
+  ![The radio call on the bridge: before left, Test 26 right](https://github.com/lamb2k/re4dc/raw/test-51260612-20261102/docs/images/releases/test26/sky-cutscene.jpg)
+  <br>A radio call on the bridge. Left before, right Test 26. Flycast capture.
+- **Leon's lighting is back to the Test 23/24 look**, his pistol included.
+
+  ![Leon in a house and the village: Test 23, Test 25, Test 26, GameCube](https://github.com/lamb2k/re4dc/raw/test-51260612-20261102/docs/images/releases/test26/leon-light.jpg)
+  <br>Leon in a house and the village. Test 23, Test 25 and Test 26 are Flycast captures; the last is GameCube (Dolphin).
+
+  ![Leon's pistol in the village](https://github.com/lamb2k/re4dc/raw/test-51260612-20261102/docs/images/releases/test26/leon-pistol.jpg)
+  <br>Leon's pistol in the village. Flycast capture.
+- **Faster farmhouse cutscenes.** Scenes inside the farmhouse no longer draw the outdoor world behind the walls.
+- **The castle starts on Disc 2** (chapters 3-1 and 3-2), now with PS2 data for its rooms, characters and animations.
+
+  ![The castle gate and first rooms: GameCube data left, PS2 data right](https://github.com/lamb2k/re4dc/raw/test-51260612-20261102/docs/images/releases/test26/castle-ps2.jpg)
+  <br>The castle gate and the first castle rooms. Left GameCube data, right Test 26 PS2 data. Flycast capture.
+- **QA build only:** the QA link connects reliably again.
+
+## Coming soon: Test 27
+
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 27.
+
+- [ ] **More of the castle on Disc 2:** chapters 3-3, 3-4 and 4.
+- [ ] **Disc 3:** the island and the final chapter.
+- [ ] **Boss fight fixes:** El Gigante's farm cutscenes, Del Lago's textures after he dies, and El Gigante's fade at the village.
+- [ ] **More PS2 assets:** GameCube ones replaced with PS2 ones in Dreamcast formats.
 
 ## What's new in Test 25
 
@@ -40,14 +75,6 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 - **Hanging cloth and flags** are drawn, and **Leon's flashlight** lights the ground at night ([#55](https://github.com/lamb2k/re4dc/issues/55)).
 - **Faster merchant hideout** in the cave, and **PS2 animations** for the last characters that used GameCube ones.
 - **More PS2 data:** room props, Ganado bodies, pictures and sounds.
-
-## Coming soon: Test 26
-
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 26.
-
-- [ ] **Chapter 3-1 playable on Disc 2:** the castle's first part, past the gate. Both discs come in the one game zip.
-- [ ] **The farm's PS2 world layout.**
-- [ ] **First-chapter fixes from [#60](https://github.com/lamb2k/re4dc/issues/60)** that are not in Test 25.
 
 ## What's new in Test 24
 
