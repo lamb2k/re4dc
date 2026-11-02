@@ -1934,5 +1934,36 @@ DATA['wsg26'] = {'dc/native/%s/%s' % (r, f): WSG26D + '/dc/native/%s/%s' % (r, f
     for r in WSG26_ROOMS for f in ('ps2-world.re4mesh', 'ps2-world.r4sg')}
 DATA['wsg26']['dc/native/r100/interior.cell'] = WSG26D + '/dc/native/r100/interior.cell'
 
+# cgca26 (lane castle-gca-26 11-01, user 11-01 "Convert in Test 26": the Disc 2 castle passes GC-ASSET; DISC 2 ONLY, staged
+# by castle31/castle_fixture.py from recipe.conf D2_DATA, never in DATA): the castle rooms r201 r202 r204 r208 and the castle
+# enemy archives from the PS2 version, whole files (castlegca26/gen-all.sh): st2/rNNN.dar = PS2 objects (ps2_objects.py
+# ETM etc models + room BINs, et1400 from PS2 r10c), PS2 items + debris (ps2_items.py), PS2 pictures (ps2_objects_tex.py /
+# ps2_items_tex.py, loose keys), PS2 motion (ps2_motion_prepared.py) and PS2 PCM in the room banks (ps2_audio.py banks);
+# em/em19 em1a em1b em1c (castle) + em14 (Disc 1's copy) = PS2 BIN geometry (ps2_ganado_bins.py) + PS2 motion (+ PCM
+# em19 / em1a). provenance.tsv credits PS2 only where the conversion changed a model / bank (kept GC = gc rows; kept GC
+# samples in gc_port23/sound-kept-gc.tsv). Store: re4-assets-private/cgca26-20261101 (RECIPE.txt, SHA256SUMS.txt).
+CGCA26D = os.environ.get('CGCA26D', '/root/re4data/private/cgca26-20261101')
+if os.path.isfile(CGCA26D + '/provenance.tsv'):
+    DATA['cgca26'] = {'tex': CGCA26D + '/tex'}
+    for _f in sorted(Path(CGCA26D, 'st2').glob('*.dar')) + sorted(Path(CGCA26D, 'st2').glob('*.arc')) + sorted(Path(CGCA26D, 'em').glob('*.drs')):
+        DATA['cgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+# pmcgca26 (same lane, DISC 2 ONLY via D2_DATA, after cgca26): the PS2 motion store of the same files (pm* sets alone
+# credit motion keys): cgca26's em / st2 archives + em3b.drs (clips already PS2-identical) and the new dc/mot keys the
+# rewritten em archives stream (ps2_motion_prepared.py rewrite + VERIFY PASS each). Store: re4-assets-private/
+# pmcgca26-20261101.
+PMCGCA26D = os.environ.get('PMCGCA26D', '/root/re4data/private/pmcgca26-20261101')
+if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
+    DATA['pmcgca26'] = {}
+    for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
+        DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+    DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
+# cpic26 (lane castle-gca-26 11-02, no-GameCube-assets rule; DISC 2 ONLY via D2_DATA, after pmcgca26): dc/tex.pak = the
+# Disc 2 composed pack with 5 castle enemy / r201 pictures as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes
+# and formats kept). castle_fixture merges it over its composed pack. Store: re4-assets-private/cpic26-20261102.
+CPIC26D = os.environ.get('CPIC26D', '/root/re4data/private/cpic26-20261102')
+if os.path.isdir(CPIC26D):
+    DATA['cpic26'] = {'dc/tex.pak': CPIC26D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26'] = CPIC26D + '/pak-derived.json'
+
 if __name__ == '__main__':
     main()

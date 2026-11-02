@@ -366,7 +366,7 @@ TEX_MAPS = {'et1700.bin': {0: 1, 1: 0}}
 # largest first), each PS2 triangle's UVs are mapped into its picture's rectangle, and ps2_objects_tex.py composes the
 # atlas picture from the same layout. (room, room-archive BIN index) -> the GC image size the atlas fills (checked
 # against the GC TPL header by ps2_objects_tex.py).
-ATLAS_OBJECTS = {('r117', 0x1f): (256, 256)}
+ATLAS_OBJECTS = {('r117', 0x1f): (256, 256), ('r204', 0x1f): (256, 256)}  # r204 0x1f = le_mirror(GC r117 0x1f) (castle-gca-26)
 
 
 def atlas_for(ps2_tpl, off, used, gc_wh):
@@ -922,7 +922,8 @@ def room(args):
                                               le_bytes_after=len(nb),
                                               was='emptied' if cur == emptied.rstrip(b'\0') else 'GC'))
                 body = nb
-            elif nm.lower().endswith('.bin') and nm in pents and (want is None or nm in want):
+            elif nm.lower().endswith('.bin') and (nm in pents or nm in etm_empty) and (want is None or nm in want):
+                # (castle-gca-26: --etm-empty also takes an etc model the PS2 ETM no longer has, e.g. the castle et1400 torch)
                 gbin = gb[s + 0x40:e]
                 try:
                     src_le = to_le(gbin, nm)

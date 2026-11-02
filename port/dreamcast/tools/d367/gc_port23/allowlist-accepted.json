@@ -301,6 +301,26 @@
    "reason": "reviewed: not GameCube data. The PS2 world package static composite of r103 at 64-vertex meshlets (n256off27, user 10-27: Test 22's world pieces; ps2-world.re4mesh + r4pw + our R4SG/R4ID/SCPS/SCDD sidecars, derived from the PS2 world; user 10-23 rule: world sidecars are not GameCube assets). Its harvested ps2 layout rows (gc-audit25) predate later sidecar/graft data, so the digest is new; the window pane graft's GC models are separate kind=model rows. Runtime digest rows are harvest rows, so provenance.py cannot attribute them.",
    "room": "0103",
    "sha256": "551a2fa592cbb71772520cfb4bb3dca31b6089560c04d9d9b00f1b36e76497ff"
+  },
+  {
+   "evidence": "castle-gca-26 rr 1101-2152-25f77027 d2gca-r204: castle r204 ETM et2500.bin = le_mirror(GC r101 et2500) window pane, the same object and the same user decision (windows26, 10-26) as the r101 / r105 / r111 rows",
+   "id": "2f6dac9d19063fbabce7b14b79be50eae815a450",
+   "kind": "model",
+   "owner": "castle-gca-26",
+   "provenance": "gc",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [window pane et2500]",
+   "room": "0204",
+   "sha256": "2f6dac9d19063fbabce7b14b79be50eae815a450ba15d7d8ab43b830637ec77f"
+  },
+  {
+   "evidence": "castle-gca-26 rr 1101-2152-25f77027 d2gca-r204: castle r204 ETM et2500.bin = le_mirror(GC r101 et2500) window pane, the same object and the same user decision (windows26, 10-26) as the r101 / r105 / r111 rows",
+   "id": "d3bab4c3-80a172d5",
+   "kind": "texture",
+   "owner": "castle-gca-26",
+   "provenance": "unknown",
+   "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
+   "room": "0204",
+   "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
   }
  ]
 }
