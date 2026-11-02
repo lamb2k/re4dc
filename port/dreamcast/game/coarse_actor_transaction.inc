@@ -520,6 +520,11 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
        (((RE4DC_NMR_SOURCE_LIGHT&1) && m->id==0x2B) || ((RE4DC_NMR_SOURCE_LIGHT&2) && m->id==0x2F) ||
         ((RE4DC_NMR_SOURCE_LIGHT&4) && (m->id==0x17 || m->id==0x16)) || ((RE4DC_NMR_SOURCE_LIGHT&16) && m->id==0x22) ||
         ((RE4DC_NMR_SOURCE_LIGHT&8) && m->id==0x23) || ((RE4DC_NMR_SOURCE_LIGHT&32) && m->id==0x18)
+        // bit 128 (BOSS_LIGHT_DIR26, lane bossahead): the registry bosses without a bit of their own (Mendez em35, U-3
+        // em32, Verdugo em2c, Saddler em31, Salazar em38, Krauser em39 / em3a) take the source GX lighting record, so
+        // the probe fold can light them (without it Mendez's record was the constant colour: BD26 lit=0 of 2103).
+        || ((RE4DC_NMR_SOURCE_LIGHT&128) && (m->id==0x35 || m->id==0x32 || m->id==0x2C || m->id==0x31 || m->id==0x38 ||
+                                             m->id==0x39 || m->id==0x3A))
 #if RE4DC_NMR_POOL
         || ((RE4DC_NMR_SOURCE_LIGHT&64) && p.pool)
 #endif
