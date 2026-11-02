@@ -139,6 +139,10 @@ struct EfmPs2CutRow {
 static const EfmPs2CutRow kEfmPs2Cut[] = {
     {0x101, 0x02, 1}, {0x106, 0x5a, 1}, {0x10a, 0x7b, 1}, {0x10b, 0x7b, 1}, {0x10b, 0x7c, 1},
     {0x119, 0x14, 1}, {0x119, 0x16, 1}, {0x119, 0x17, 1}, {0x11a, 0x0f, 2}, {0xffff, 0x3e, 0},
+#if RE4DC_EFM_PS2_CUT >= 2
+    // EFM_PS2_CUT=2 (lane castle-gca-26, Disc 2): the castle room EFF debris the PS2 deleted (ps2_items.py NONE rows)
+    {0x202, 0x5a, 1}, {0x202, 0x5b, 1},
+#endif
 };
 static unsigned s_efmCutLogged[sizeof(kEfmPs2Cut) / sizeof(kEfmPs2Cut[0])];
 static unsigned s_efmCutCount;

@@ -306,3 +306,23 @@ st2/r200.dar	FOOT	33	no PS2 match at matcher floor	gcleft26
 st2/r200.dar	FOOT	34	no PS2 match at matcher floor	gcleft26
 st2/r200.dar	ROOM	1	no PS2 match at matcher floor	gcleft26
 st2/r200.dar	ROOM	3	no PS2 match at matcher floor	gcleft26
+# castle-gca-26 11-01: Disc 2 castle banks st2/r201 r202 r204 r208.dar + em/em19 em1a.drs (store cgca26-20261101/reports/snd-map): 457 of 476 samples PS2, the 19 rows owned castle-gca-26 keep GC
+st2/r201.dar	ROOM	6	no PS2 match at matcher floor	castle-gca-26
+st2/r201.dar	ROOM	32	no PS2 match at matcher floor	castle-gca-26
+st2/r201.dar	ROOM	33	no PS2 match at matcher floor	castle-gca-26
+st2/r201.dar	FOOT	22	no PS2 match at matcher floor	castle-gca-26
+st2/r201.dar	FOOT	23	no PS2 match at matcher floor	castle-gca-26
+st2/r201.dar	FOOT	24	no PS2 match at matcher floor	castle-gca-26
+st2/r201.dar	FOOT	25	no PS2 match at matcher floor	castle-gca-26
+st2/r202.dar	FOOT	14	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	6	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	7	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	8	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	9	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	19	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	20	no PS2 match at matcher floor	castle-gca-26
+st2/r208.dar	FOOT	21	no PS2 match at matcher floor	castle-gca-26
+em/em19.drs	EM0	39	no PS2 match at matcher floor	castle-gca-26
+em/em19.drs	EM0	65	no PS2 match at matcher floor	castle-gca-26
+em/em1a.drs	EM0	39	no PS2 match at matcher floor	castle-gca-26
+em/em1a.drs	EM0	65	no PS2 match at matcher floor	castle-gca-26

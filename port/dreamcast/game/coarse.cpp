@@ -61,6 +61,9 @@ extern "C" void re4dc_log(const char* fmt, ...);
 extern "C" void* re4dc_ui_movie_texture() __attribute__((weak));   // ROUTE_MOVIES builds
 extern "C" void re4dc_fog_note_far(float far) __attribute__((weak));   // NATIVE_FOG builds
 #if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT >= 2
+extern "C" void re4dc_sky_event_latch(void);   // sky_event.cpp (SKY_EVENT=2)
+#endif
 extern "C" float re4dc_view_far(float far);   // option_rows.cpp: the Options View distance far plane (render only)
 #endif
 extern "C" int ESP_IsActive(cEsp* esp);                             // esp.cpp (C linkage)
@@ -895,6 +898,9 @@ extern "C" void re4dc_coarse_draw(void)
 #endif
     OTHER_PHASE(3);
     const std::uint64_t t0 = timer_us_gettime64();
+#if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT >= 2
+    re4dc_sky_event_latch();   // SKY_EVENT=2 (sky_event.cpp): this frame's scripted-camera state, before any far is noted
+#endif
 #if RE4DC_PS2_WORLD_DRAW
     // Texture/file work must precede coarse_begin acquiring the TA store queues.
     setup_camera();

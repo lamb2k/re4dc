@@ -86,6 +86,76 @@ $(error LAKE_FAR needs FOG_FAR_CAP=0)
 endif
 endif
 SKY_FAR ?= 0
+# SKY_EVENT=1 (lane fix60b-26, GitHub #60 item 2; render only, default 0 = no code, identical image; needs LOOK_TOGGLE=1):
+# under a look whose sky is culled (look A), the sky / backdrop rows draw while a scripted scene owns the camera
+# (event flag, scene event start or sub screen; sky_event.cpp). The r100 radio-call lift showed the clear colour behind
+# Leon (the tester's white background). Log: "sky event: state=" on each change.
+SKY_EVENT ?= 0
+# SKY_EVENT=2 (lane sky60-26, #60 item 2 full fix; render only): SKY_EVENT=1 plus, while the scripted scene owns the
+# camera, the View distance cut (option_rows.cpp re4dc_view_far) and the 25 m world cap (native_static.cpp
+# re4dc_far_cap) are lifted, so the world, coarse view and fog far follow the room camera's own far, as the PS2 draws
+# its event shots. The r100 lift's grey wedges were the gorge walls / far ground past the 18.75 m Near cut. Needs
+# VIEW_DIST_OPTION=1 and LAKE_FAR (the far_cap hook). Play cameras are unchanged.
+ifneq ($(filter-out 0 1 2,$(SKY_EVENT)),)
+$(error SKY_EVENT is 0, 1 or 2)
+endif
+ifneq ($(SKY_EVENT),0)
+ifneq ($(LOOK_TOGGLE),1)
+$(error SKY_EVENT needs LOOK_TOGGLE=1)
+endif
+ifeq ($(SKY_EVENT),2)
+ifneq ($(VIEW_DIST_OPTION),1)
+$(error SKY_EVENT=2 needs VIEW_DIST_OPTION=1)
+endif
+ifeq ($(LAKE_FAR)$(LAKE_FAR_SHORE),00)
+$(error SKY_EVENT=2 needs LAKE_FAR (re4dc_far_cap))
+endif
+$(OBJDIR)/option_rows.o $(OBJDIR)/coarse.o $(OBJDIR)/sky_event.o: GAME_CPPFLAGS += -DRE4DC_SKY_EVENT=2
+endif
+PLATFORM_OBJS += $(OBJDIR)/sky_event.o
+$(TARGET): $(OBJDIR)/sky_event.o
+$(OBJDIR)/sky_event.o: sky_event.cpp
+	@mkdir -p $(dir $@)
+	kos-c++ $(KOS_CFLAGS) $(GAME_CPPFLAGS) -MMD -MP -c $< -o $@
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SKY_EVENT=$(SKY_EVENT)
+endif
+# SKY_PLAY=1 (lane sky27, user 11-02 "Yes fix the sky" + "It shouldn't impact rendering performance"; render only,
+# default 0 = no code, identical image): in normal play (look A, sky 0, no scripted camera) the room's PS2 sky / backdrop
+# rows show as the PVR background plane, a per-room panorama baked offline from those rows with the PS2 fog at their
+# distance (tools/ps2_sky_bake.py -> dc/native/rXXX/ps2-sky.r4sk, data sets sky27 / sky27c; 1024 x 256 VQ, 66 KiB of
+# texture RAM per room, read with the room's world package). No geometry: the ISP fills the plane behind everything,
+# the CPU sets three corner texture coordinates per frame (platform/native_sky.cpp). A room without the file keeps the
+# flat clear colour. Scripted cameras keep SKY_EVENT=2's real rows (never both). Log: "sky play:".
+# Needs SKY_EVENT=2 (the latched scripted-camera flag), PS2_WORLD_ROOMS (the room's package) and the render-start link
+# wrap of res_mode.cpp (RES_MODES with RENDER_OPTION=1, not RENDER_DOUBLE=1).
+SKY_PLAY ?= 0
+ifneq ($(filter-out 0 1,$(SKY_PLAY)),)
+$(error SKY_PLAY is 0 or 1)
+endif
+ifeq ($(SKY_PLAY),1)
+ifneq ($(SKY_EVENT),2)
+$(error SKY_PLAY=1 needs SKY_EVENT=2)
+endif
+ifeq ($(filter-out 0,$(PS2_WORLD_ROOMS)),)
+$(error SKY_PLAY=1 needs PS2_WORLD_ROOMS)
+endif
+ifeq ($(filter-out 0,$(RES_MODES)),)
+$(error SKY_PLAY=1 needs RES_MODES (res_mode.cpp's render-start wrap))
+endif
+ifneq ($(RENDER_OPTION),1)
+$(error SKY_PLAY=1 needs RENDER_OPTION=1 (res_mode.cpp's render-start wrap))
+endif
+ifeq ($(RENDER_DOUBLE),1)
+$(error SKY_PLAY=1 needs the render-start wrap (not RENDER_DOUBLE=1))
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/res_mode.o $(OBJDIR)/platform/native_sky.o: PLATFORM_CPPFLAGS += -DRE4DC_SKY_PLAY=1
+$(OBJDIR)/platform/native_sky.o: PLATFORM_CPPFLAGS += -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr -DRE4DC_VRAM_ROOM_ARENA=$(VRAM_ROOM_ARENA)
+# SKY_PLAY_DEBUG=1 (test only): the plane modulated by a red corner colour (is the plane on screen at all)
+SKY_PLAY_DEBUG ?= 0
+ifneq ($(SKY_PLAY_DEBUG),0)
+$(OBJDIR)/platform/native_sky.o: PLATFORM_CPPFLAGS += -DRE4DC_SKY_PLAY_DEBUG=$(SKY_PLAY_DEBUG)
+endif
+endif
 ifneq ($(filter-out 0 1 2,$(FOG_CURVE))$(filter-out 0 1,$(FOG_FAR_CAP))$(filter-out 0 1 2,$(SKY_FAR)),)
 $(error FOG_CURVE / SKY_FAR are 0..2, FOG_FAR_CAP 0 or 1)
 endif

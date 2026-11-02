@@ -226,13 +226,15 @@ endif
 #                    eff_sys.cpp kEfmPs2Cut, the ps2_source=NONE rows of ps2lib/breakables). trans.cpp ModelRender
 #                    returns before the draw; the object, its records, Rnd() and its motion run as before. Log:
 #                    "efm ps2 cut:" once per row and room.
+#                    EFM_PS2_CUT=2 (lane castle-gca-26 11-01, the Disc 2 program): + the castle rows (r202 0x5a / 0x5b,
+#                    room EFF; ps2_items.py convert castle rooms, NONE rows). =1 compiles exactly as before.
 EFM_PS2_CUT ?= 0
 ifneq ($(EFM_PS2_CUT),0)
-ifneq ($(EFM_PS2_CUT),1)
-$(error EFM_PS2_CUT is 0 or 1)
+ifneq ($(filter $(EFM_PS2_CUT),1 2),$(EFM_PS2_CUT))
+$(error EFM_PS2_CUT is 0, 1 or 2)
 endif
-$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=1
-$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=1
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=$(EFM_PS2_CUT)
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=$(EFM_PS2_CUT)
 endif
 # FX_PS2_NONE_CUT=1 (lane purge-fx24 2026-10-24; render only, default 0; needs FX_PS2_PACK=1): effect sprites whose
 #                    picture the PS2 dropped are not drawn. platform/fx_none_cut.inc (tools/d367/purge-fx24/

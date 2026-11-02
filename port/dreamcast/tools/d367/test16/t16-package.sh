@@ -67,15 +67,25 @@ for f in disc.gdi track01.bin track02.raw track03.bin; do cp $R/gdemu/$f "$P/gde
 tr -d '\r' < $KD/README-package.txt | sed "s/SHA_PLACEHOLDER/$SHA/g" | sed 's/$/\r/' > "$P/README.txt"
 (cd "$P/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  gdemu/#') > $R/SHA256SUMS-inner.txt
 cmp <(cut -c1-64 $R/SHA256SUMS-inner.txt) <(cut -c1-64 $R/gdemu-sha256.txt) && echo tracks-match-ext4-build
+# Disc 2 (lane castle-disc2-26; user 10-26 "Disc 2, one zip"): when the candidate dir holds disc2/gdemu (rr-disc2.sh), its four
+# files go into the SAME game zip under disc2/ (Disc 1 stays gdemu/), and their sums join the zip's SHA256SUMS.txt.
+D2Z=0
+if [ -s "$P/disc2/gdemu/track03.bin" ]; then
+  (cd "$P/disc2/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  disc2/#') >> $R/SHA256SUMS-inner.txt
+  D2Z=1; echo "Disc 2 joins the game zip: $(grep -c '  disc2/' $R/SHA256SUMS-inner.txt) files"
+fi
 if [ "${NOZIP:-0}" != 1 ]; then
   cd "$P"
   rm -f RE4DC-Console-Test-*-GDEMU.zip RE4DC-Test$TN-*-Build-Assets.zip
-  python3 - "$P" "$Z" "$R/SHA256SUMS-inner.txt" <<'E'
+  python3 - "$P" "$Z" "$R/SHA256SUMS-inner.txt" "$D2Z" <<'E'
 import sys, zipfile, os
-p, z, sums = sys.argv[1:4]
+p, z, sums, d2 = sys.argv[1:5]
 with zipfile.ZipFile(os.path.join(p, z), 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
     for f in ('disc.gdi', 'track01.bin', 'track02.raw', 'track03.bin'):
         zf.write(os.path.join(p, 'gdemu', f), 'gdemu/' + f)
+    if d2 == '1':
+        for f in ('disc.gdi', 'track01.bin', 'track02.raw', 'track03.bin'):
+            zf.write(os.path.join(p, 'disc2', 'gdemu', f), 'disc2/' + f)
     zf.write(os.path.join(p, 'README.txt'), 'README.txt')
     zf.write(sums, 'SHA256SUMS.txt')
 print('zip ok')

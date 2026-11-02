@@ -913,6 +913,25 @@ def smdrel_all(smdrels, r, out, rec):
             nm, dest, chk['released_bins'], chk['saved'], sha(cur), sha(o)))
 
 
+def loopalign_all(aligns, r, out, rec):
+    """LOOPALIGN (lane fix60b-26 11-01, GitHub #60 item 6): a set's {'loopalign': {dest: N}} rounds the room-bank
+    (block 6) loop points of the composed archive to N AICA samples (tools/d367/fix60b/loop_align.py: start up, end
+    down; the sample data is not touched), after every set, graft and release, so no later set is undone."""
+    if not aligns:
+        return
+    import subprocess
+    tool = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'fix60b', 'loop_align.py')
+    gd = os.path.join(os.path.dirname(os.path.abspath(out)), 'graft')
+    os.makedirs(gd, exist_ok=True)
+    for nm, dest, n in aligns:
+        cur = r.get(dest)
+        assert isinstance(cur, str) and os.path.exists(cur), ('loopalign %s: no composed %s' % (nm, dest), cur)
+        o = os.path.join(gd, '%s-%s' % (nm, dest.replace('/', '_')))
+        res = subprocess.run([sys.executable, tool, cur, o, '--align', str(n)], check=True, capture_output=True, text=True)
+        r[dest] = o
+        rec.append('%s loopalign %s %s onto %s -> %s' % (nm, dest, res.stdout.strip().splitlines()[-1], sha(cur), sha(o)))
+
+
 def main():
     a = sys.argv[1:]
     new, out = a[:2]
@@ -935,6 +954,7 @@ def main():
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]
     grafts = []
     smdrels = []
+    aligns = []
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     # AFTER (lane purge-ui24 10-24): (set, needs): set stages only with needs named before it (its pack derives from it).
@@ -962,6 +982,10 @@ def main():
                     assert os.path.exists(summary), (nm, dest, summary)
                     smdrels.append((nm, dest, summary))
                 continue
+            if k == 'loopalign':   # room-bank loop alignment on the composed archive, last (loopalign_all)
+                for dest, n in v.items():
+                    aligns.append((nm, dest, n))
+                continue
             if k == 'remove':   # paths the set takes off the disc (nostd20)
                 for p_ in v:
                     r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
@@ -977,6 +1001,7 @@ def main():
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
     graft_all(grafts, r, out, rec)
     smdrel_all(smdrels, r, out, rec)
+    loopalign_all(aligns, r, out, rec)
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
@@ -1407,6 +1432,17 @@ if os.path.isdir(LEON28D):
     DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
     PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
     AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
+# glyph27 (lane glyph27 11-02, user: "the game regressed to the ps2 thumb stick glyph for the escape prompt when you're
+# grabbed by a ganado"): dc/tex.pak = leon28's pack with the grab QTE stick cap 6d33c3f9-9f8cf668 (etc/core.das EFF #25
+# id 0x31) back to the Dreamcast glyph Tests 22-24 shipped (glyph shape-review v4 G08, sha256 57132ed5; fxc26b 10-26 had
+# put PS2 Core.dat pixels under it). Same size / format (32x32 ARGB4444, 2192 B; 0 VRAM). The LAST tex.pak set; the gate
+# below checks every key of rr/ui-glyph-protect.tsv on the final pack, so no later swap can bring a PS2/GC glyph back.
+# GC-ASSET: authored Dreamcast UI, not a GameCube asset. Store: re4data/private/glyph27-20261102 (pkg/ = the package).
+GLYPH27D = os.environ.get('GLYPH27D', '/root/re4data/private/glyph27-20261102')
+if os.path.isdir(GLYPH27D):
+    DATA['glyph27'] = {'dc/tex.pak': GLYPH27D + '/dc/tex.pak'}
+    PAK_DERIVED['glyph27'] = GLYPH27D + '/pak-derived.json'
+    AFTER += [('glyph27', 'leon28')]
 
 
 def title27_gate(names, r, rec):
@@ -1447,6 +1483,14 @@ def title27_gate(names, r, rec):
                 raise SystemExit('leon28: the staged dc/tex.pak (%s) does not hold the leon28 Leon atlas under %s; a set '
                                  'after leon28 replaced it: rebuild that set on leon28 or put leon28 last' % (r['dc/tex.pak'], n_))
         rec.append('leon28 gate: %d Leon atlases' % len(LEON28_KEYS))
+    if 'glyph27' in names:
+        import glyph_protect
+        bad = glyph_protect.check(tex_merge.read(r['dc/tex.pak']))
+        if bad:
+            raise SystemExit('glyph27: the staged dc/tex.pak (%s) does not hold the protected Dreamcast controller glyph under %s '
+                             '(rr/ui-glyph-protect.tsv); a set after glyph27 replaced it: rebuild that set on glyph27 with '
+                             'glyph_protect.skip, or put glyph27 last' % (r['dc/tex.pak'], ', '.join(bad)))
+        rec.append('glyph27 gate: %d protected controller glyphs' % len(glyph_protect.keys()))
 # snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
 # ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
 # its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
@@ -1691,6 +1735,13 @@ if os.path.isdir(SMDREL26D):
 if os.path.isfile(SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'):
     DATA['smdrel26b'] = {'smdrel': {'st2/r200.dar': SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'}}
 
+# snd60 (lane fix60b-26 11-01, GitHub #60 item 6, console A/B candidate): the r100 room bank's looped ambient samples
+# (the river / bridge loops: PS2 r100.snd VAG 13 and 10 loops land on GC sample 75, an odd AICA start at the 2x
+# decimation; GC-kept sample 11 likewise) get their loop start rounded up and loop end down to 4 AICA samples. Flycast
+# plays both the same (no restarts, no level steps in AICA_ROOM_LOG runs); the console's ADPCM loop is the suspect.
+# No store: computed on the composed archive (loopalign_all). Data only.
+DATA['snd60'] = {'loopalign': {'st1/r100.dar': 4}}
+
 
 # t24pak (lane compose-test24 10-24, Test 24 composition): the tex.pak sets re-derived as ONE chain, each on the previous
 # output (tools/d367/vram/pak_chain.py: every set's own pak-derived.json delta, added keys + re-made keys, applied to the
@@ -1901,6 +1952,63 @@ WSG26_ROOMS = ('r100', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', '
 DATA['wsg26'] = {'dc/native/%s/%s' % (r, f): WSG26D + '/dc/native/%s/%s' % (r, f)
     for r in WSG26_ROOMS for f in ('ps2-world.re4mesh', 'ps2-world.r4sg')}
 DATA['wsg26']['dc/native/r100/interior.cell'] = WSG26D + '/dc/native/r100/interior.cell'
+
+# cgca26 (lane castle-gca-26 11-01, user 11-01 "Convert in Test 26": the Disc 2 castle passes GC-ASSET; DISC 2 ONLY, staged
+# by castle31/castle_fixture.py from recipe.conf D2_DATA, never in DATA): the castle rooms r201 r202 r204 r208 and the castle
+# enemy archives from the PS2 version, whole files (castlegca26/gen-all.sh): st2/rNNN.dar = PS2 objects (ps2_objects.py
+# ETM etc models + room BINs, et1400 from PS2 r10c), PS2 items + debris (ps2_items.py), PS2 pictures (ps2_objects_tex.py /
+# ps2_items_tex.py, loose keys), PS2 motion (ps2_motion_prepared.py) and PS2 PCM in the room banks (ps2_audio.py banks);
+# em/em19 em1a em1b em1c (castle) + em14 (Disc 1's copy) = PS2 BIN geometry (ps2_ganado_bins.py) + PS2 motion (+ PCM
+# em19 / em1a). provenance.tsv credits PS2 only where the conversion changed a model / bank (kept GC = gc rows; kept GC
+# samples in gc_port23/sound-kept-gc.tsv). Store: re4-assets-private/cgca26-20261101 (RECIPE.txt, SHA256SUMS.txt).
+CGCA26D = os.environ.get('CGCA26D', '/root/re4data/private/cgca26-20261101')
+if os.path.isfile(CGCA26D + '/provenance.tsv'):
+    DATA['cgca26'] = {'tex': CGCA26D + '/tex'}
+    for _f in sorted(Path(CGCA26D, 'st2').glob('*.dar')) + sorted(Path(CGCA26D, 'st2').glob('*.arc')) + sorted(Path(CGCA26D, 'em').glob('*.drs')):
+        DATA['cgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+# pmcgca26 (same lane, DISC 2 ONLY via D2_DATA, after cgca26): the PS2 motion store of the same files (pm* sets alone
+# credit motion keys): cgca26's em / st2 archives + em3b.drs (clips already PS2-identical) and the new dc/mot keys the
+# rewritten em archives stream (ps2_motion_prepared.py rewrite + VERIFY PASS each). Store: re4-assets-private/
+# pmcgca26-20261101.
+PMCGCA26D = os.environ.get('PMCGCA26D', '/root/re4data/private/pmcgca26-20261101')
+if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
+    DATA['pmcgca26'] = {}
+    for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
+        DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+    DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
+# cpic26 (lane castle-gca-26 11-02, no-GameCube-assets rule; DISC 2 ONLY via D2_DATA, after pmcgca26): dc/tex.pak = the
+# Disc 2 composed pack with 5 castle enemy / r201 pictures as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes
+# and formats kept). castle_fixture merges it over its composed pack. Store: re4-assets-private/cpic26-20261102.
+CPIC26D = os.environ.get('CPIC26D', '/root/re4data/private/cpic26-20261102')
+if os.path.isdir(CPIC26D):
+    DATA['cpic26'] = {'dc/tex.pak': CPIC26D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26'] = CPIC26D + '/pak-derived.json'
+# cpic26b (same lane 11-02, DISC 2 ONLY via D2_DATA, after cpic26): cpic26's pack with the castle Zealot mask-run pairs
+# bc1a9802 / ac23b5fe / ec7b1745 (GC em11 colour+mask bakes) as PS2 pixels (the cast's PS2 atlas over each hair box,
+# opaque like the PS2; castlegca26/zpair.py). Store: re4-assets-private/cpic26b-20261102.
+CPIC26BD = os.environ.get('CPIC26BD', '/root/re4data/private/cpic26b-20261102')
+if os.path.isdir(CPIC26BD):
+    DATA['cpic26b'] = {'dc/tex.pak': CPIC26BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26b'] = CPIC26BD + '/pak-derived.json'
+# cpic26c (same lane 11-02, DISC 2 ONLY via D2_DATA, after cpic26b): 19 r200 PS2-world picture keys (ps2-world.r4pw binds;
+# pak17 held GameCube pixels) as PS2 r200.dat pixels (em_eff_pics.py). Drawn on Disc 2 since SKY_EVENT=2 widens the r200
+# scripted-camera range. Store: re4-assets-private/cpic26c-20261102.
+CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
+if os.path.isdir(CPIC26CD):
+    DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+
+# sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
+# each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
+# the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
+# sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
+# Store: re4-assets-private/sky27-20261102.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+if os.path.isdir(SKY27D):
+    _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
+    DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
+                     if r.startswith('r1') or r == 'r200'}
+    DATA['sky27c'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky if r.startswith('r2')}
 
 if __name__ == '__main__':
     main()

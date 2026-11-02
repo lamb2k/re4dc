@@ -19,6 +19,8 @@ here=$(cd "$(dirname "$0")" && pwd)
 TAG=$1; EV=$2; BASE=$3; SYMS=$4; WARP=$5; shift 5
 MAXP=${MAXP:-6}
 SECS=${SECS:-60}
+# GG_ROOM (lane castle-disc2-26): the room whose entry ends a run (default 103, the door103 fixture; Disc 2: 202)
+GG_ROOM=${GG_ROOM:-103}
 export RE4DC_EMU=console RE4DC_GD_PROFILE=${RE4DC_GD_PROFILE:-gdemu}
 if [ "$RE4DC_GD_PROFILE" = gdemu ]; then export RE4DC_GD_JITTER=${RE4DC_GD_JITTER:-20000}; fi
 if [ -e "$BASE/base.json" ]; then SRC=(--base "$(cygpath -w "$BASE")"); else SRC=(--disc "$(cygpath -w "$BASE")"); fi
@@ -27,7 +29,7 @@ mkdir -p "$EV"
 [ "${SUMMARY_ONLY:-0}" = 1 ] || for s in "$@"; do
   while [ $(jobs -rp | wc -l) -ge $MAXP ]; do sleep 5; done
   ( RE4DC_GD_SEED=$s python "$(cygpath -w "$here/fp_run.py")" "${SRC[@]}" --cap "$(cygpath -w "$EV/$TAG-s$s")" \
-      --syms "$SYMS" --seconds $SECS --name $TAG-s$s "${FIX[@]}" --stop 'phase=enter room=103' --grace 15 \
+      --syms "$SYMS" --seconds $SECS --name $TAG-s$s "${FIX[@]}" --stop "phase=enter room=$GG_ROOM" --grace 15 \
       > "$EV/$TAG-s$s.runner.log" 2>&1 ) &
   sleep 4
 done
@@ -43,10 +45,10 @@ for s in "$@"; do
   stop=$(grep -a -m1 -E 'HALT|FAULT|Out of memory' "$o" 2>/dev/null | cut -c1-100)
   nbad=$(grep -a -c -E "$BADRE" "$o" 2>/dev/null)
   bad1=$(grep -a -m1 -E "$BADRE" "$o" 2>/dev/null | cut -c1-100)
-  r103=$(grep -a -c 'phase=enter room=103' "$o" 2>/dev/null)
+  r103=$(grep -a -c "phase=enter room=$GG_ROOM" "$o" 2>/dev/null)
   placed=$(grep -a -m1 -o 'warp: placed room=101.*wall_ms=[0-9]*' "$o" 2>/dev/null | grep -o '[0-9]*$')
-  lastact=$(grep -a -B200 'warp: room enter 103' "$o" 2>/dev/null | grep -a -o 'warp: act [0-9]* .*wall_ms=[0-9]*' | tail -1 | grep -o '[0-9]*$')
-  enter=$(grep -a -m1 -o 'warp: room enter 103.*wall_ms=[0-9]*' "$o" 2>/dev/null | grep -o '[0-9]*$')
+  lastact=$(grep -a -B200 "warp: room enter $GG_ROOM" "$o" 2>/dev/null | grep -a -o 'warp: act [0-9]* .*wall_ms=[0-9]*' | tail -1 | grep -o '[0-9]*$')
+  enter=$(grep -a -m1 -o "warp: room enter $GG_ROOM.*wall_ms=[0-9]*" "$o" 2>/dev/null | grep -o '[0-9]*$')
   door=-; [ -n "$lastact" ] && [ -n "$enter" ] && door=$((enter - lastact))
   # r103 load: host seconds at which 'phase=enter room=103' appeared (fp_run stop_matched_s) minus the guest time of
   # 'room enter 103'; approximate (host clock vs guest clock, Flycast start-up included)

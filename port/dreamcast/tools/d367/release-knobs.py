@@ -43,7 +43,9 @@ from pathlib import Path
 BUNDLE = '/root/probe/lanes/play-actor-bundle'
 PRIVATE = {'PS2_LEON_DIR': 'ps2leon', 'PS2_GANADO_DIR': 'ps2ganado',
            'PS2_ENEMY_CH22_DIR': 'ps2enemych2', 'PS2_ENEMY_CH23_DIR': 'ps2enemych2',
-           'ACTOR_GANADO_PS2_STUMP_DIR': 'ps2stump', 'LEON_HEADLESS_DIR': 'ps2leonhead'}
+           'ACTOR_GANADO_PS2_STUMP_DIR': 'ps2stump', 'LEON_HEADLESS_DIR': 'ps2leonhead',
+           # Disc 2 (lane castle-disc2-26): the castle program's PS2 enemy rows (chapters 3 / 4)
+           'PS2_ENEMY_CH3_DIR': 'ps2enemych3', 'PS2_ENEMY_CH4_DIR': 'ps2enemych4'}
 PRIVATE_FILES = {'GANADO_LOD_PACK': 'glod'}
 FIX_TOOL = Path(__file__).resolve().parent / 'test11' / 't11-fix.py'
 ZIP_ROOT = 're4dc-assets'

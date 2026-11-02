@@ -38,22 +38,32 @@ case "${1:-status}" in
     # package README: the newest committed test<N>/README-package.txt on origin/t15/int (same rule as the knob file)
     git -C /root/work/re4-dreamcast fetch -q origin t15/int || true
     mkdir -p "$W/kit"; echo "README: $(bash "$RR_HOME/bin/rr-newest.sh" 'test[^/]*' README-package.txt "$W/kit/README-package.txt")"
-    TT=/root/work/lanes/rr/port/dreamcast/tools/d367; O=/root/probe/lanes/route/out-rr${S7}rP
-    [ "$(git -C /root/work/lanes/rr rev-parse HEAD)" = "$SHA" ] || git -C /root/work/lanes/rr checkout -q -f --detach "$SHA"
+    TT=${RR_TA:-/root/work/lanes/rr}/port/dreamcast/tools/d367; O=/root/probe/lanes/route/out-${RR_PFX:-rr}${S7}rP
+    [ "$(git -C ${RR_TA:-/root/work/lanes/rr} rev-parse HEAD)" = "$SHA" ] || git -C ${RR_TA:-/root/work/lanes/rr} checkout -q -f --detach "$SHA"
     python3 "$TT/release-knobs.py" write "$O/candidate.txt" "$W/kit/release-knobs.txt" --test "$TN" --tag "$TAG" --source "${SHA:0:8}" \
       --recipe port/dreamcast/tools/d367/ch2/ch2-build.sh --image-sha256 "$(lg image)" \
       --assets-zip "RE4DC-Test$TN-${SHA:0:8}-Build-Assets.zip" --disc-sets "$KSETS"
-    R=$W/pkg L=rr${S7}rP P="$CAND" SRC_SHA=${SHA:0:8} TN=$TN PKG_KIT_DIR=$W/kit KSETS=$KSETS bash "$TT/test16/t16-package.sh" 2>&1 | tail -8
+    R=$W/pkg L=${RR_PFX:-rr}${S7}rP P="$CAND" SRC_SHA=${SHA:0:8} TN=$TN PKG_KIT_DIR=$W/kit KSETS=$KSETS bash "$TT/test16/t16-package.sh" 2>&1 | tail -8
     echo "knob file for the release lane: $W/kit/release-knobs.txt"
+    # Disc 2 (lane castle-disc2-26, recipe.conf RR_DISC2=1): t16-package.sh put <cand>/disc2/gdemu into the game zip (disc2/);
+    # here its knob file (castle31/build-disc2.sh recipe) and its own Build-Assets zip (the castle program's private dirs)
+    if [ "${RR_DISC2:-0}" = 1 ] && [ -s "$CAND/disc2/gdemu/track03.bin" ]; then
+      O2=/root/probe/lanes/route/out-${RR_PFX:-rr}${S7}d2rP; A2=RE4DC-Test$TN-${SHA:0:8}-Disc2-Build-Assets.zip
+      python3 "$TT/release-knobs.py" write "$O2/candidate.txt" "$W/kit/release-knobs-disc2.txt" --test "$TN" --tag "$TAG" --source "${SHA:0:8}"         --recipe port/dreamcast/tools/d367/castle31/build-disc2.sh --image-sha256 "$(sed -n 's/^prog=//p' "$W/disc2.env")" --assets-zip "$A2"
+      python3 "$TT/release-knobs.py" zip "$O2/candidate.txt" "$CAND/$A2"
+      python3 "$TT/release-knobs.py" zipcheck "$O2/candidate.txt" "$CAND/$A2" --objdir "$O2/obj"
+      (cd "$CAND" && sha256sum ./*-GDEMU.zip ./*Build-Assets.zip | sed 's#  \./#  #' > SHA256SUMS.txt)
+      echo "Disc 2 knob file: $W/kit/release-knobs-disc2.txt; Build-Assets $CAND/$A2"
+    fi
     # the QA disc zip beside the game zip (standing rule 8)
-    { bash "$RR_HOME/bin/rr-qa.sh" "$W" /root/work/lanes/rr "$SHA" "$TN" "$CAND" 2>&1 | tail -6; } \
+    { bash "$RR_HOME/bin/rr-qa.sh" "$W" ${RR_TA:-/root/work/lanes/rr} "$SHA" "$TN" "$CAND" 2>&1 | tail -6; } \
       || echo "QA disc: FAIL (reported only; the game package above is unaffected)" ;;
   qa)
     # the QA disc step of the last good candidate again (rr-qa-tier.sh; reports its own QA rows)
     exec 7>"$RR_HOME/rr.lock"; flock 7
     SHA=$(lg sha); W=$(lg work); ID=$(lg id)
     [ -n "$SHA" ] && [ -d "$W" ] || { echo "rr: no last good candidate"; exit 1; }
-    bash "$RR_HOME/bin/rr-qa-tier.sh" "$W" /root/work/lanes/rr "$SHA" "$ID" ;;
+    bash "$RR_HOME/bin/rr-qa-tier.sh" "$W" ${RR_TA:-/root/work/lanes/rr} "$SHA" "$ID" ;;
   install)
     [ "$HERE" != "$(cd "$RR_HOME/bin" 2>/dev/null && pwd)" ] || { echo "rr: run install from a source tree (tools/d367/rr/rr.sh install), not from $RR_HOME/bin"; exit 2; }
     mkdir -p "$RR_HOME/bin" "$RR_HOME/logs" "$RR_HOME/state"

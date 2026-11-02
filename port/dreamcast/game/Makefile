@@ -38,6 +38,10 @@ PLATFORM_SRCS = $(filter-out platform/backface_sh4_trace.cpp,$(wildcard platform
 ifneq ($(VMU_CONTEXT),1)
 PLATFORM_SRCS := $(filter-out platform/vmu_lcd.cpp,$(PLATFORM_SRCS))
 endif
+# SKY_PLAY (post30.mk): platform/native_sky.cpp is built only with the knob on.
+ifneq ($(SKY_PLAY),1)
+PLATFORM_SRCS := $(filter-out platform/native_sky.cpp,$(PLATFORM_SRCS))
+endif
 # SDK units compiled from the game's src/lib with the CodeWarrior asm bodies
 # stripped (platform/sdk/strip_cw_asm.py) over the shim headers in platform/sdk.
 SDK_UNITS = mtx mtxvec mtx44 vec quat OSAlloc
@@ -1509,6 +1513,13 @@ AICA_WEP_LOG ?= 0
 ifneq ($(AICA_WEP_LOG),0)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_WEP_LOG=1
 endif
+# AICA_ROOM_LOG=1 (test only, default 0: no effect; lane fix60b-26, #60 item 6): logs every room-bank (blk 6) SE voice
+# key on / key off and each attenuation step of more than 3 TL units, uncapped, so ambient loops (r100 river, bridge)
+# show whether a voice restarts or its volume steps. Audio state only; the game never reads it.
+AICA_ROOM_LOG ?= 0
+ifneq ($(AICA_ROOM_LOG),0)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_ROOM_LOG=1
+endif
 .PHONY: aica-audio-force
 $(OBJDIR)/aica-audio.h: aica-audio-force
 	@mkdir -p $(dir $@)
@@ -2348,12 +2359,16 @@ MOVIE_WORLD_ARENA_S30 ?= 0
 # extent) instead of the hard-coded package sizes, and log every refused eligible borrow (MOVIEARENA refuse ...), so a
 # reconverted world can't silently stop the r100 s30 / r11f Mendez movies. 0 = the hard-coded rows (identical image).
 MOVIE_LAYOUT_GUARD ?= 0
+# s30cell-26 (11-02): 1 = an arena movie (r100s30) keeps the PS2_INTERIOR_CULL r100 cell resident instead of lending it
+# (the arena movie never stages in heap 4); lent, the reload after s30 failed the 81920 B reserve and r100 ran unculled.
+MOVIE_ARENA_CELL_KEEP ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA %s\n' '$(MOVIE_WORLD_ARENA)' > $@.tmp
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_ARENA_CELL_KEEP %s\n' '$(MOVIE_ARENA_CELL_KEEP)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
@@ -3691,6 +3706,7 @@ include world_plan29.mk
 include actor_format32.mk
 # K45 fix plan repairs (default off): needs the world/actor switch values above.
 include k45fix31.mk
+include call26.mk
 include actor_presentation32.mk
 include skin_admit32.mk
 include prepared_binding34.mk
