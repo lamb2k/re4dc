@@ -44,6 +44,7 @@ for k in sorted(C):
 # beside a grafted .dar is rewritten as its type-0 payload, as pmrest25 stages both); 'tex' = loose PS2 picture keys
 # (t11-fix texdir); 'remove' = paths off Disc 2; any other key = whole-file replacement.
 D2 = [n for n in os.environ.get('D2_DATA', '').split(',') if n]
+d2paks = []
 if D2:
     import importlib.util, struct as _st
     sys.path[:0] = [os.path.join(HERE, '..', 'graft')]
@@ -76,6 +77,8 @@ if D2:
             elif k == 'remove':
                 for p_ in v:
                     rep.pop(p_, None); rem.append(p_)
+            elif k == 'dc/tex.pak':   # pack set: only its pak-derived.json changed/added keys win (keys it did not touch
+                d2paks.append((n, v, t11.PAK_DERIVED[n]))   # keep the composed pack's bytes: a newer Disc 1 pack stays)
             else:
                 rep[k] = v
                 arc = k[:-4] + '.arc'
@@ -88,12 +91,28 @@ if D2:
 pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), os.path.join(ct, 'dc/tex.pak')])
-d2pak = rep.get('dc/tex.pak')  # a D2_DATA set's own pack (em_eff_pics.py over this composed pack): its keys win
-if d2pak:
-    pak2 = os.path.join(work, 'tex-d2.pak')
-    subprocess.check_call([sys.executable, os.path.join(HERE, 'pak_keep.py'), pak2, d2pak, pak])
-    pak = pak2
-    print('D2_DATA dc/tex.pak override %s' % d2pak)
+if d2paks:   # D2_DATA pack sets in order: each set's changed/added keys (pak-derived.json) over the composed pack
+    import json as _js, struct as _s2, zlib as _z
+    def _rd(p):
+        b = open(p, 'rb').read(); magic, ver, count, ioff, doff = _s2.unpack_from('<8s4I', b, 0)
+        assert magic == b'RE4PAK1\x00' and ver == 1
+        return {(c, f): b[o:o + n] for c, f, o, n in (_s2.unpack_from('<4I', b, ioff + 16 * i) for i in range(count))}
+    m = _rd(pak); done = []
+    for n, sp, der in d2paks:
+        dj = _js.load(open(der)); sk = _rd(sp)
+        for key in dj.get('changed', []) + dj.get('added', []):
+            kt = tuple(int(x, 16) for x in key.split('-')); m[kt] = sk[kt]; done.append(key)
+    keys = sorted(m); al = lambda x: (x + 2047) & ~2047
+    ioff = 0x800; doff = al(ioff + 16 * len(keys)); idx = []; data = bytearray(); pos = doff
+    for k in keys:
+        v = m[k]; idx.append(_s2.pack('<4I', k[0], k[1], pos, len(v)))
+        data += v; pad = al(pos + len(v)) - (pos + len(v)); data += b'\x00' * pad; pos += len(v) + pad
+    blob = _s2.pack('<8s5I', b'RE4PAK1\x00', 1, len(keys), ioff, doff, 0)
+    blob = blob + b'\x00' * (ioff - len(blob)) + b''.join(idx)
+    blob += b'\x00' * (doff - len(blob)) + bytes(data)
+    crc = _s2.pack('<I', _z.crc32(blob[ioff:doff])); blob = blob[:24] + crc + crc + blob[32:]   # as pak_keep.py
+    pak = os.path.join(work, 'tex-d2.pak'); open(pak, 'wb').write(blob)
+    print('D2_DATA dc/tex.pak keys %d from %s' % (len(done), ','.join(n for n, _, _ in d2paks)))
 rep['dc/tex.pak'] = pak
 import struct
 b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0)
