@@ -1,0 +1,20 @@
+kind	prov	reach	rows	example
+texture	unknown	texpack	4148	dc/tex.pak#offset=120832&bytes=4240
+model	gc	room-loaded	2016	st1/r11a.arc
+motion	gc	actor-unref	961	em/em2f.drs#body
+model	unknown	room-loaded	855	st1/r11d.arc
+model	gc	common:ss	326	ss/eng/ss_map.dat
+model	gc	actor-unref	88	em/em14.drs#body
+geometry	unknown	common:dc	73	dc/native/r102/registry.re4nmr
+movie	unknown	common:dc	42	dc/movie/r100s40.seq
+motion	gc	common:ss	41	ss/cmn/ss_wep28.dat
+motion	gc	room-loaded	38	st1/r104.arc
+font-glyph	unknown	runtime-harvest(seen drawn)	28	runtime-harvest:harvest-log=hv-r100/run-output.txt
+motion	gc	common:op	24	op/op01.das#record=1024
+texture	gc	texpack	13	dc/tex.pak#offset=747520&bytes=133264
+model	gc	actor-route	10	em/pl01.drs#body
+texture	unknown	common:dc	4	dc/tex/3f690586-7edb7c3e.re4tex
+model	unknown	actor-unref	2	em/em3b.drs#body
+font-palette	unknown	runtime-harvest(seen drawn)	1	runtime-harvest:harvest-log=hv-r100/run-output.txt
+sound-aram	gc	actor-unref	1	em/pl04.drs#bank=631712
+sound-mram	gc	actor-unref	1	em/pl04.drs#bank=631712
