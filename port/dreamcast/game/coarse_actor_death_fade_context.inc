@@ -43,6 +43,13 @@ bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
     // and its last frames drew GC (CAST-GC).
     if(m && m->kindid==0 && m->id>=0x10 && m->id<=0x20 && !m->ot_type &&
        m->invisible_factor>0.0f && m->invisible_factor<1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255)return true;
+#if defined(RE4DC_NMR_DYING_BOSS) && RE4DC_NMR_DYING_BOSS
+    // NATIVE_MODEL_REGISTRY_DYING_BOSS (lane boss-check 2026-11-02): El Gigante (em2b, one source pass, ot_type 0) drawn
+    // by a registry descriptor (r11e gig2b02-g50 / gigante-em2b-02) fades out after its r11e death the same way; without
+    // this its fade frames declined (semantics 3, invisible_factor) and the corpse drew GC (CAST-GC MIXED).
+    if(m && m->kindid==0 && m->id==0x2B && !m->ot_type && p.appearance>=nmr::appearance_first &&
+       m->invisible_factor>0.0f && m->invisible_factor<1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255)return true;
+#endif
 #endif
     return actor_fade_eligible_g1(m,p);
 }
