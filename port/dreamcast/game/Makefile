@@ -1140,6 +1140,12 @@ $(OBJDIR)/route_movie_bridge.o $(OBJDIR)/platform/dvd.o $(OBJDIR)/platform/nativ
 ifeq ($(WEAPON_HEAP4_TOP),1)
 $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_HEAP4_TOP=1
 endif
+# WEAPON_HEAP4_WALK_GUARD=1 (with WEAPON_HEAP4_TOP; lane crash26, default 0: no effect): the top walk checks every free
+# heap-4 cell (range, alignment, back link, size) before reading it; a damaged list refuses the heap-4 load (the equip
+# reverts to a resident weapon, as when heap 4 is short) and logs the cell, instead of the Test 25 QA fault in ReadWepData.
+ifeq ($(WEAPON_HEAP4_WALK_GUARD),1)
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_HEAP4_WALK_GUARD=1
+endif
 ifeq ($(WEAPON_HEAP4_FAILTEST),1)
 $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_HEAP4_FAILTEST=1
 endif
