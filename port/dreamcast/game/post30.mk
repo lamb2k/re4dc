@@ -150,6 +150,11 @@ $(error SKY_PLAY=1 needs the render-start wrap (not RENDER_DOUBLE=1))
 endif
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/res_mode.o $(OBJDIR)/platform/native_sky.o: PLATFORM_CPPFLAGS += -DRE4DC_SKY_PLAY=1
 $(OBJDIR)/platform/native_sky.o: PLATFORM_CPPFLAGS += -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr -DRE4DC_VRAM_ROOM_ARENA=$(VRAM_ROOM_ARENA)
+# SKY_PLAY_DEBUG=1 (test only): the plane modulated by a red corner colour (is the plane on screen at all)
+SKY_PLAY_DEBUG ?= 0
+ifneq ($(SKY_PLAY_DEBUG),0)
+$(OBJDIR)/platform/native_sky.o: PLATFORM_CPPFLAGS += -DRE4DC_SKY_PLAY_DEBUG=$(SKY_PLAY_DEBUG)
+endif
 endif
 ifneq ($(filter-out 0 1 2,$(FOG_CURVE))$(filter-out 0 1,$(FOG_FAR_CAP))$(filter-out 0 1 2,$(SKY_FAR)),)
 $(error FOG_CURVE / SKY_FAR are 0..2, FOG_FAR_CAP 0 or 1)

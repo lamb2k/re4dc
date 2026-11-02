@@ -22,8 +22,10 @@ fog colour (the PS2 clear). Resampled to an equirectangular band (u = yaw = atan
 
 Output per room: <out>/<room>/ps2-sky.r4sk  (48-byte header + VQ payload) and ps2-sky.png (the decoded panorama),
 plus <out>/rows.json (the room / row table with each row's features).
-R4SK header (48 bytes, little-endian): magic 'R4SK', u32 version 1, u16 width, u16 height, u32 payload bytes,
-f32 top elevation (deg), f32 bottom elevation (deg), f32 eye x, y, z (mm, world).
+R4SK header (48 bytes, little-endian): magic 'R4SK', u32 version 2, u16 width, u16 height, u32 payload bytes,
+f32 top elevation (deg), f32 bottom elevation (deg), f32 eye x, y, z (mm, world), u16 row count, u16 payload offset;
+then the sky rows (u16 each = R4PW placement field = OBJ group, zero-padded to 16 bytes), then the payload.
+The runtime leaves those rows out of the world while it shows the plane.
 
 usage: ps2_sky_bake.py <extract dir (inputs/ + aux/)> <out dir> [room ...] [--near 20000] [--face 512]
 Windows Python (numpy, PIL), like ps2_room_r4im.py.
@@ -226,8 +228,15 @@ def bake(room, src, aux, out, near, face):
     img = np.clip(np.rint(pano.reshape(H, W, 3)), 0, 255)
     rgba = np.concatenate([img, np.full((H, W, 1), 255.0)], -1)
     payload = R.vq_encode(rgba, 0)
-    head = struct.pack('<4sIHHI5f', b'R4SK', 1, W, H, len(payload), TOP, BOTTOM, *map(float, eye))
+    # the rows the plane stands in for: the runtime leaves them out of the world while the plane is shown (in normal
+    # play look A draws them anyway when their bounds reach the view, fully fogged: that hid the plane and cost geometry)
+    rl = sorted(r['row'] for r in sky)
+    rows_blob = struct.pack('<%dH' % len(rl), *rl)
+    rows_blob += b'\0' * (-len(rows_blob) % 16)
+    head = struct.pack('<4sIHHI5fHH', b'R4SK', 2, W, H, len(payload), TOP, BOTTOM, *map(float, eye), len(rl),
+                       48 + len(rows_blob))
     head += b'\0' * (48 - len(head))
+    head += rows_blob
     od = out / room
     od.mkdir(parents=True, exist_ok=True)
     blob = head + payload

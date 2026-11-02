@@ -34,15 +34,23 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp: 1 = ro
 #endif
 
 namespace {
-struct Head { char magic[4]; std::uint32_t version; std::uint16_t w, h; std::uint32_t payload; float top, bottom, eye[3]; std::uint32_t reserved[3]; };
+struct Head { char magic[4]; std::uint32_t version; std::uint16_t w, h; std::uint32_t payload; float top, bottom, eye[3];
+              std::uint16_t nrows, payload_at; std::uint32_t reserved[2]; };
 static_assert(sizeof(Head) == 48, "R4SK header");
 
 pvr_ptr_t texture;
 unsigned loaded_room, tex_w, tex_h, tsp_size;
 float el_top, el_bottom;
-unsigned st_frames, st_drawn, st_fallback;
+unsigned st_frames, st_fallback, last_log_k;
+// the room's sky / backdrop rows (R4PW placement field): left out of the world while the plane is shown
+constexpr unsigned kRows = 4096;
+std::uint32_t row_bits[kRows / 32];
+unsigned nrows;
+volatile unsigned st_drawn, first_pos;
+volatile float first_u, first_v;
+bool first_logged;
 
-struct Corners { float u[3], v[3]; volatile int armed; };
+struct Corners { float u[3], v[3], bgz; volatile int armed; };
 Corners slot[2];
 
 unsigned size_code(unsigned n) { unsigned c = 0; while ((8U << c) < n) ++c; return c; }
@@ -53,6 +61,7 @@ void release() {
         re4dc_log("sky play: room=%03x freed\n", loaded_room);
     }
     texture = nullptr; loaded_room = 0; slot[0].armed = 0; slot[1].armed = 0;
+    std::memset(row_bits, 0, sizeof(row_bits)); nrows = 0;
 }
 }  // namespace
 
@@ -68,10 +77,21 @@ extern "C" void re4dc_sky_play_room(unsigned room) {
     Head h{};
     const char* why = nullptr;
     if (fs_read(f, &h, sizeof(h)) != ssize_t(sizeof(h))) why = "header";
-    else if (std::memcmp(h.magic, "R4SK", 4) || h.version != 1U) why = "magic";
+    else if (std::memcmp(h.magic, "R4SK", 4) || h.version != 2U) why = "magic";
     else if (h.w < 8 || h.w > 1024 || h.h < 8 || h.h > 1024 || (h.w & (h.w - 1)) || (h.h & (h.h - 1)) ||
-             h.payload != 2048U + unsigned(h.w) * h.h / 4U || !(h.top > h.bottom))
+             h.payload != 2048U + unsigned(h.w) * h.h / 4U || !(h.top > h.bottom) || !h.nrows || h.nrows > 256U ||
+             h.payload_at != ((48U + 2U * h.nrows + 15U) & ~15U))
         why = "layout";
+    if (!why) {
+        std::uint16_t rows[256];
+        const unsigned bytes = h.payload_at - 48U;
+        if (fs_read(f, rows, bytes) != ssize_t(bytes)) why = "rows";
+        for (unsigned i = 0; !why && i < h.nrows; ++i) {
+            if (rows[i] >= kRows) { why = "row range"; break; }
+            row_bits[rows[i] >> 5] |= 1U << (rows[i] & 31U);
+        }
+        if (!why) nrows = h.nrows;
+    }
     if (!why) {
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
         const unsigned cls = re4dc_vram_arena_class;
@@ -96,30 +116,55 @@ extern "C" void re4dc_sky_play_room(unsigned room) {
     }
     fs_close(f);
     if (why) {
+        std::memset(row_bits, 0, sizeof(row_bits)); nrows = 0;
         re4dc_log("sky play: room=%03x FAIL %s free=%u\n", room, why, unsigned(pvr_mem_available()));
         return;
     }
     loaded_room = room; tex_w = h.w; tex_h = h.h; el_top = h.top; el_bottom = h.bottom;
     tsp_size = size_code(h.w) << 3 | size_code(h.h);
-    re4dc_log("sky play: room=%03x loaded %ux%u vq bytes=%u vram=%08x free=%u\n", room, tex_w, tex_h, unsigned(h.payload),
-              unsigned(std::uintptr_t(texture)), unsigned(pvr_mem_available()));
+    re4dc_log("sky play: room=%03x loaded %ux%u vq bytes=%u rows=%u vram=%08x free=%u\n", room, tex_w, tex_h,
+              unsigned(h.payload), nrows, unsigned(std::uintptr_t(texture)), unsigned(pvr_mem_available()));
+}
+
+// native_static.cpp ps2_pass, per placement while the plane is armed: 1 = one of the room's sky / backdrop rows.
+extern "C" int re4dc_sky_play_row(unsigned row) {
+    return row < kRows && ((row_bits[row >> 5] >> (row & 31U)) & 1U);
 }
 
 // native_static.cpp ps2_pass (pass 0, the scene being built): active = look A sky 0, no scripted camera, room drawn.
 // view = the camera's 3x4 world -> eye matrix (GX: the eye looks down -z), P = GXGetProjectionv, vp = GXGetViewportv.
-extern "C" void re4dc_sky_play_frame(int active, unsigned room, const float* view, const float* P, const float* vp) {
+// Returns 1 when the plane is armed for this scene: the room's sky rows are then left out of the world.
+extern "C" int re4dc_sky_play_frame(int active, unsigned room, const float* view, const float* P, const float* vp, float far) {
     Corners& s = slot[pvr_state.ta_target & 1];
     s.armed = 0;
     if (!active || !texture || room != loaded_room || P[0] != 0.0f || !(P[1] > 0.0f) || !(P[3] > 0.0f) || !(vp[2] > 0.0f) ||
-        !(vp[3] > 0.0f))
-        return;
-    ++st_frames;
-    // screen corners in the GX frame (640 x 480 EFB pixels): bottom-left, top-left, bottom-right (the plane's order)
-    static const float sx[3] = {0.0f, 0.0f, 640.0f}, sy[3] = {480.0f, 0.0f, 480.0f};
+        !(vp[3] > 0.0f)) {
+        static unsigned logged;
+        if (texture && logged < 4U && room == loaded_room) {
+            ++logged;
+            re4dc_log("sky play: idle room=%03x active=%d p=%d,%d,%d vp=%d,%d\n", room, active, int(P[0] * 1000.0f),
+                      int(P[1] * 1000.0f), int(P[3] * 1000.0f), int(vp[2]), int(vp[3]));
+        }
+        return 0;
+    }
+    if (!st_frames++)
+        re4dc_log("sky play: first frame room=%03x bank=%d\n", room, int(pvr_state.ta_target));
+    {
+        const unsigned d = st_drawn;
+        if ((d && !first_logged) || (d / 300U != last_log_k)) {
+            first_logged = true; last_log_k = d / 300U;
+            re4dc_log("sky play: room=%03x drawn=%u frames=%u fallback=%u first_pos=%08x u=%d v=%d\n", room, d, st_frames,
+                      st_fallback, unsigned(first_pos), int(first_u * 1000.0f), int(first_v * 1000.0f));
+        }
+    }
+    // the viewport's corners (it fills the screen) in normalised device coordinates, in the background plane's vertex
+    // order: top-left, top-right, bottom-left (the PVR takes the fourth corner as v1 + v2 - v0; Flycast's textured
+    // background reads this order only: ta_vtx.cpp FillBGP)
+    static const float cx[3] = {-1.0f, 1.0f, -1.0f}, cy[3] = {1.0f, 1.0f, -1.0f};
     const float kTau = 6.28318531f, rad = 57.2957795f;
     float u0 = 0.0f;
     for (unsigned i = 0; i < 3; ++i) {
-        const float nx = (sx[i] - vp[0]) / vp[2] * 2.0f - 1.0f, ny = 1.0f - (sy[i] - vp[1]) / vp[3] * 2.0f;
+        const float nx = cx[i], ny = cy[i];
         const float xc = (nx + P[2]) / P[1], yc = (ny + P[4]) / P[3];   // eye space, z = -1
         const float dx = view[0] * xc + view[4] * yc - view[8];
         const float dy = view[1] * xc + view[5] * yc - view[9];
@@ -131,7 +176,9 @@ extern "C" void re4dc_sky_play_frame(int active, unsigned room, const float* vie
         s.u[i] = u;
         s.v[i] = (el_top - el) / (el_top - el_bottom);
     }
+    s.bgz = far > 1000.0f ? 1.0f / far : 0.0f;   // the plane's depth: the world past the far is clipped per pixel
     s.armed = 1;
+    return 1;
 }
 
 // res_mode.cpp __wrap_pvr_begin_queued_render (IRQ context): 1 = this render was started here with the panorama.
@@ -152,27 +199,49 @@ extern "C" int re4dc_sky_play_render(void) {
     volatile std::uint32_t* w = reinterpret_cast<volatile std::uint32_t*>(PVR_RAM_BASE | pos);
     auto f = [](float x) { std::uint32_t r; std::memcpy(&r, &x, 4); return r; };
     w[0] = 0x90800000U | (1U << 25);                                   // KOS's ISP word + texture
+#if defined(RE4DC_SKY_PLAY_DEBUG) && RE4DC_SKY_PLAY_DEBUG
+    w[1] = 0x20800000U | (4U << 8) | (1U << 15) | (1U << 13) | (1U << 6) | tsp_size; // test: modulate by a red corner
+#else
     w[1] = 0x20800000U | (4U << 8) | (1U << 15) | (1U << 13) | tsp_size; // ONE/ZERO, no fog, D 1.0, clamp V, bilinear, decal
+#endif
     w[2] = (1U << 30) | (1U << 27) | ((std::uint32_t(std::uintptr_t(texture)) & 0x00fffff8U) >> 3);   // VQ, RGB565, twiddled
-    const float xs[3] = {0.0f, 0.0f, tw}, ys[3] = {th, 0.0f, th};
+    const float xs[3] = {0.0f, tw, 0.0f}, ys[3] = {0.0f, 0.0f, th};
     for (unsigned i = 0; i < 3; ++i) {
         volatile std::uint32_t* v = w + 3 + 6 * i;
         v[0] = f(xs[i]); v[1] = f(ys[i]); v[2] = f(FLT_EPSILON);
-        v[3] = f(s.u[i]); v[4] = f(s.v[i]); v[5] = 0xffffffffU;
+        v[3] = f(s.u[i]); v[4] = f(s.v[i]);
+#if defined(RE4DC_SKY_PLAY_DEBUG) && RE4DC_SKY_PLAY_DEBUG
+        v[5] = 0xffff4040U;
+#else
+        v[5] = 0xffffffffU;
+#endif
     }
+#if defined(RE4DC_SKY_PLAY_DEBUG) && RE4DC_SKY_PLAY_DEBUG == 2
+    {   // test: KOS's own untextured plane, red
+        const float bx[3] = {0.0f, 0.0f, tw}, by[3] = {th, 0.0f, th};
+        w[0] = 0x90800000U; w[1] = 0x20800440U; w[2] = 0;
+        for (unsigned i = 0; i < 3; ++i) {
+            volatile std::uint32_t* v = w + 3 + 4 * i;
+            v[0] = f(bx[i]); v[1] = f(by[i]); v[2] = f(FLT_EPSILON); v[3] = 0xffff0000U;
+        }
+        PVR_SET(PVR_BGPLANE_CFG, 0x01000000U | ((pos - tbuf->vertex) << 1));
+    }
+#endif
     PVR_SET(PVR_ISP_TILEMAT_ADDR, tbuf->tile_matrix);
     PVR_SET(PVR_ISP_VERTBUF_ADDR, tbuf->vertex);
     PVR_SET(PVR_RENDER_ADDR, rbuf->frame);
+#if !defined(RE4DC_SKY_PLAY_DEBUG) || RE4DC_SKY_PLAY_DEBUG != 2
     PVR_SET(PVR_BGPLANE_CFG, vert_end);
+#endif
     union { float f; std::uint32_t i; } zclip;
-    zclip.f = pvr_state.zclip;
+    zclip.f = s.bgz > 0.0f ? s.bgz : pvr_state.zclip;
     PVR_SET(PVR_BGPLANE_Z, zclip.i);
     PVR_SET(PVR_PCLIP_X, pvr_state.pclip_x);
     PVR_SET(PVR_PCLIP_Y, pvr_state.pclip_y);
     PVR_SET(PVR_RENDER_MODULO, (pvr_state.w * vid_pmode_bpp[vid_mode->pm]) / 8);
     PVR_SET(PVR_ISP_START, PVR_ISP_START_GO);
-    if (!(++st_drawn % 1800U))
-        re4dc_log("sky play: room=%03x drawn=%u frames=%u fallback=%u u=%d v=%d\n", loaded_room, st_drawn, st_frames,
-                  st_fallback, int(s.u[1] * 1000.0f), int(s.v[1] * 1000.0f));
+    const unsigned n = st_drawn;
+    st_drawn = n + 1U;
+    if (!n) { first_pos = pos; first_u = s.u[1]; first_v = s.v[1]; }   // logged by the next frame (not in the IRQ)
     return 1;
 }

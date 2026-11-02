@@ -698,7 +698,9 @@ static inline unsigned re4dc_look_rgb_pct(){return re4dc_looks[re4dc_look_mode%k
 static inline unsigned re4dc_look_sky(){return re4dc_looks[re4dc_look_mode%kLooks].sky;}
 #if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
 extern "C" void re4dc_sky_play_room(unsigned room); // native_sky.cpp (SKY_PLAY): the room's panorama in, 0 = out
-extern "C" void re4dc_sky_play_frame(int active,unsigned room,const float* view,const float* P,const float* vp);
+extern "C" int re4dc_sky_play_frame(int active,unsigned room,const float* view,const float* P,const float* vp,float far);
+extern "C" int re4dc_sky_play_row(unsigned row); // native_sky.cpp: the room's sky / backdrop rows
+static bool re4dc_sky_play_now; // the plane is armed for this scene (set by pass 0)
 #endif
 #define RE4DC_SKY_ANY 1
 #if defined(RE4DC_SKY_EVENT) && RE4DC_SKY_EVENT
@@ -8223,8 +8225,10 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
     // SKY_PLAY (post30.mk, native_sky.cpp): the panorama background plane in normal play only (look A's sky 0 and no
-    // scripted camera: SKY_EVENT=2 draws the real sky rows then, never both)
-    if(pass==0)re4dc_sky_play_frame(re4dc_look_sky()==0 && !re4dc_sky_event_now,ps2w.room,ps2w.view,P,ps2w.viewport);
+    // scripted camera: SKY_EVENT=2 draws the real sky rows then, never both). While it is armed the room's sky / backdrop
+    // rows are left out of the world: look A draws them anyway once their bounds reach the view (fully fogged), which
+    // hid the plane and cost geometry.
+    if(pass==0)re4dc_sky_play_now=false; // armed below, once this pass's far is known
 #endif
     const float near=P[6]/(P[5]-1),far=P[6]/P[5];
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
@@ -8258,6 +8262,12 @@ int ps2_pass(unsigned pass,float zfar){
     if(pass){const float f=foliage_far;if(f>near && f<cull_far)cull_far=f;}
 #endif
     c.near=near;c.far=far;c.cull_far=cull_far;
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+    // SKY_PLAY: the plane's depth is this far, so the PVR clips what lies past it per pixel (fully fogged silhouettes
+    // of the parts that reach past the cut would stand in front of the sky)
+    if(pass==0)re4dc_sky_play_now=re4dc_sky_play_frame(re4dc_look_sky()==0 && !re4dc_sky_event_now,ps2w.room,ps2w.view,P,
+        ps2w.viewport,cull_far)!=0;
+#endif
 #if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
     if(pass)trans::frame_cuts();
 #endif
@@ -8825,6 +8835,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #endif
         const auto& pl=ps2w.placements[i];const auto& mesh=pk.meshes()[pl.mesh];
+#if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
+        if(re4dc_sky_play_now && re4dc_sky_play_row(pl.placement)){++c.culled;continue;} // SKY_PLAY: the plane shows it
+#endif
 #if RE4DC_PS2_PVS
         if(pvs_cur && pvs::hidden(i))continue;
 #endif
