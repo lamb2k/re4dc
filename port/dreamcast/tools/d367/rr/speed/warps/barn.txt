@@ -1,0 +1,8 @@
+name sky27-hwbarn
+# barn (qalink/sessions/barn.txt): r103 farm barn, the dense scene; 4 Ganados at cap 4. Settle 0..299, measure 300..1199.
+room 0x103
+pos -11000 163 -1000
+ang -1.1
+inv default
+god
+alivelog 150
