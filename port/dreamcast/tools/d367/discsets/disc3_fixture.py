@@ -35,6 +35,7 @@ for k in sorted(C):
         rep[k] = os.path.join(it, k)
 # D3_DATA (recipe.conf; lane world-ch5): Disc 3 only t11-fix DATA sets, in order, over the island content. Whole-file
 # keys only (e.g. assets-dc dcf3isl: the island loose pictures in Dreamcast form); other key kinds are refused.
+ipak = os.path.join(it, 'dc/tex.pak')
 D3 = [x for x in os.environ.get('D3_DATA', '').split(',') if x]
 if D3:
     import importlib.util
@@ -45,13 +46,22 @@ if D3:
             raise SystemExit('disc3_fixture: D3_DATA set %s is not in t11-fix DATA (store missing?)' % x)
         nk = 0
         for k, v in t11.DATA[x].items():
+            if k == 'dc/tex.pak' and isinstance(v, str):
+                # an island INPUT pack (assets-dc dcf3pak): must derive from the island tree's pack (PAK_DERIVED base)
+                import hashlib
+                d = json.load(open(t11.PAK_DERIVED[x])) if x in t11.PAK_DERIVED else None
+                base = hashlib.sha256(open(os.path.join(it, 'dc/tex.pak'), 'rb').read()).hexdigest()
+                if not d or d['base'] != base or hashlib.sha256(open(v, 'rb').read()).hexdigest() != d['out']:
+                    raise SystemExit('disc3_fixture: D3_DATA %s dc/tex.pak does not derive from the island pack' % x)
+                ipak = v; nk += 1
+                continue
             if k in ('graft', 'tex', 'remove', 'dc/tex.pak') or not isinstance(v, str):
                 raise SystemExit('disc3_fixture: D3_DATA set %s key %s is not a whole-file key' % (x, k))
             rep[k] = v; nk += 1
         print('D3_DATA %s: %d files' % (x, nk))
 pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'castle31', 'pak_keep.py'), pak,
-                       os.path.join(d1, 'dc/tex.pak'), os.path.join(it, 'dc/tex.pak')])
+                       os.path.join(d1, 'dc/tex.pak'), ipak])
 # Village / castle-only pack keys (listed only by r1xx / r2xx room resident lists, never by r000, an island room or the
 # island tree) are dead weight on Disc 3: drop them (D3_PAK_PRUNE=0 keeps the composed pack).
 if os.environ.get('D3_PAK_PRUNE', '1') == '1':

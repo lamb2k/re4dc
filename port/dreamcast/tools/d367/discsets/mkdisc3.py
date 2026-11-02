@@ -83,6 +83,34 @@ for f in os.listdir(prog):
         shutil.copyfile(os.path.join(prog, f), os.path.join(tree, 'dc', f))
 drop(os.path.join(tree, 'dc', 'disc.id'))
 open(os.path.join(tree, 'dc', 'disc.id'), 'w').write(f'RE4DC disc=3 of=3 set={setid}\n')
+# D3_PAK_LIVE (default 1; coordinator 11-02, Disc 3 space): Disc 3's tex.pak keeps only the keys some file Disc 3 ships
+# can ask for (vram/texpak_live.py, the static liveness scan: raw key words, R4NREF/R4PREF records, GC TPL source
+# identities, material pairs) plus every key an r000 / island / r22c resident list names (UI, fonts, core effects).
+# A key pruned wrongly shows as a GC-ASSET / TEXCHK row in the room census (the gate). D3_PAK_LIVE=0 keeps the pack.
+if os.environ.get('D3_PAK_LIVE', '1') == '1':
+    import glob, struct
+    here = os.path.dirname(os.path.abspath(__file__))
+    sys.path.insert(0, os.path.join(here, '..'))
+    import texpack
+    lo = os.path.join(out, 'paklive')
+    rc = subprocess.call([sys.executable, os.path.join(here, '..', 'vram', 'texpak_live.py'), tree, '--out', lo])
+    if rc not in (0, 1):
+        raise SystemExit('mkdisc3: texpak_live rc %d' % rc)
+    live = {ln.split('	')[0] for ln in open(os.path.join(lo, 'live.tsv')).read().splitlines()[1:]
+            if ln.split('	')[2] == '1'}
+    keep = set()
+    for t in glob.glob(os.path.join(here, '..', 'vram', 'resident', '**', 'r*.tsv'), recursive=True):
+        if re.match(r'r(000|3[0-3][0-9a-f]|22c)', os.path.basename(t)):
+            keep |= {ln.split('	')[0] for ln in open(t).read().splitlines()[1:] if ln.strip()}
+    pp = os.path.join(tree, 'dc', 'tex.pak'); blob = open(pp, 'rb').read()
+    _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', blob, 0); pk = {}
+    for i in range(cnt):
+        c, f, o_, n = struct.unpack_from('<4I', blob, ioff + 16 * i)
+        if '%08x-%08x' % (c, f) in live | keep:
+            pk[(c, f)] = blob[o_:o_ + n]
+    nb = texpack.build(pk)[0]; texpack.verify(nb)
+    drop(pp); open(pp, 'wb').write(nb)
+    rep['pak_live_keys'] = len(pk); rep['pak_keys_in'] = cnt; rep['pak_bytes_in'] = len(blob); rep['pak_bytes'] = len(nb)
 man, sectors = {}, 0
 for d, _, fs in os.walk(tree):
     for f in fs:
