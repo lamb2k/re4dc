@@ -617,15 +617,27 @@ def fit_affine(a, b):
     return M.T                                              # 3 x 4
 
 
-def bake_static(groups, obj_path, dynamic_below=250):
+BAKED_INDEX = None    # bake_static: the merged placement's row index when it is an addressable (id < 250) row
+
+
+def bake_static(groups, obj_path, dynamic_below=250, extra=()):
     """--bake-static: the static groups (scroll object id >= dynamic_below) as one world-space group placed once (the
-    first static group's index, so ps2-world.ids gives it a static id); the other groups unchanged, in order."""
+    first static group's index, so ps2-world.ids gives it a static id); the other groups unchanged, in order.
+    extra (--bake-rows, lane bakeall): SMD row indices with an id < dynamic_below that are proven unaddressed (no room
+    code, effect, light or module reference: tools/d367/bakeall); baked too. The merged placement keeps a static row's
+    index when there is one; otherwise main() writes id 0xFF for it in ps2-world.ids (BAKED_INDEX)."""
     import ps2_room_ids
+    global BAKED_INDEX
     ids = ps2_room_ids.group_ids(obj_path)
-    keep = [g for g in groups if ids[g['index']] < dynamic_below]
-    stat = [g for g in groups if ids[g['index']] >= dynamic_below]
+    extra = set(extra)
+    is_stat = lambda g: ids[g['index']] >= dynamic_below or g['index'] in extra
+    keep = [g for g in groups if not is_stat(g)]
+    stat = [g for g in groups if is_stat(g)]
     if len(stat) < 2:
         return groups
+    stat.sort(key=lambda g: ids[g['index']] < dynamic_below)     # a static-id row first (stable otherwise)
+    if ids[stat[0]['index']] < dynamic_below:
+        BAKED_INDEX = stat[0]['index']
     base, vidx = 0, []
     for g in stat:
         vidx.append(g['vidx'] + base)
@@ -798,6 +810,10 @@ def main():
                          "(doors, PS2_WORLD_DYNAMIC binds, sky) stay their own placements. With --lod-cluster the merged "
                          "mesh is cut into spatial clusters, so culling and LOD still work per region (lane "
                          "fix-r10d-speed23: r10d, 167 static of 228 placements). Default off (byte-identical packages)")
+    ap.add_argument('--bake-rows', type=Path,
+                    help="--bake-static: a json {room: [SMD row index, ...]} of rows with an id < 250 proven unaddressed "
+                         "(tools/d367/bakeall smd_data_refs.py + bake_classify.py 'addr-unref'); baked with the static "
+                         "rows (lane bakeall tier 2). Default none")
     a = ap.parse_args()
     crb.MAX_MESHLET_VERTICES = a.meshlet_vertices
     global CUTOUT_MAX_ALPHA
@@ -813,7 +829,8 @@ def main():
     used, gains = final_gains(a.room, a.src, a.out, groups)
     textures = build_textures(a.room, a.src, a.out, used, gains)
     if a.bake_static:
-        groups = bake_static(groups, a.src / f'{a.room}_004.scenario.obj')
+        extra = json.loads(a.bake_rows.read_text())[a.room] if a.bake_rows else ()
+        groups = bake_static(groups, a.src / f'{a.room}_004.scenario.obj', extra=extra)
     meshes, placements, sources, parts_meta, stats = build(groups, gains, textures, share=not a.no_share,
                                                            vertex_alpha=a.vertex_alpha)
     scales = collections.defaultdict(float)
@@ -836,6 +853,10 @@ def main():
     sys.path.insert(0, str(HERE))
     import ps2_room_ids
     ps2_room_ids.write(a.src / f'{a.room}_004.scenario.obj', a.out / 'ps2-world.r4pw', a.out / 'ps2-world.ids')
+    if BAKED_INDEX is not None:          # the merged mesh sits on an addressable row's index: never bind it to that object
+        b = bytearray((a.out / 'ps2-world.ids').read_bytes())
+        b[16 + BAKED_INDEX] = 0xFF
+        (a.out / 'ps2-world.ids').write_bytes(b)
     summary.pop('meshes_detail', None)
     tri = collections.Counter()
     for g in groups:
