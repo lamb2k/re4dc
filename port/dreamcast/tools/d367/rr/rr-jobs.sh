@@ -3,6 +3,9 @@
 # Writes the Flycast job list of a tier into <evidence>/_jobs: list.txt ("<slots> <name>" per line) and one Git Bash
 # script per job (<name>.sh), run by rr-flycast.sh on the Windows host. Bases: <evidence>/_discs/{rel,g,k,c}
 # (fp_master.sh): rel = the release binary, g = the full-play twin, k = KOS squeeze twin, c = census twin.
+# 2026-11-02 (user "Use D: for now"): paths may live on any /mnt/<drive>, not only /mnt/c.
+rr_gb() { local d=${1#/mnt/}; d=${d%%/*}; printf '/%s%s' "$d" "${1#/mnt/$d}"; }          # /mnt/d/x -> /d/x (Git Bash)
+rr_win() { local d=${1#/mnt/}; d=${d%%/*}; local p="${d^^}:${1#/mnt/$d}"; printf '%s' "${p//\//\\}"; }   # /mnt/d/x -> D:\x
 set -euo pipefail
 TIER=${1:?}; W=${2:?}; T=${3:?}; S7=${4:?}; EVU=${5:?}; EVW=${6:?}
 BIN=$(cd "$(dirname "$0")" && pwd)
@@ -15,7 +18,7 @@ wpath() { echo "\\\\wsl.localhost\\Ubuntu-24.04$(echo "$1" | tr / '\\')"; }
 ALL_ROOMS="r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10d r10e r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e r11f r200"
 job() { # job <slots> <name> <script body>
   printf '%s %s\n' "$1" "$2" >> "$J/list.txt"
-  { echo 'set -uo pipefail'; echo "J=/c/${J#/mnt/c/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "$3"; } > "$J/$2.sh"; }
+  { echo 'set -uo pipefail'; echo "J=$(rr_gb "$J")"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "$3"; } > "$J/$2.sh"; }
 run() { # fp_run line: <name> <base> <syms> <seconds> [extra fp_run args]
   local n=$1 b=$2 s=$3 sec=$4; shift 4
   echo "python \"\$FPD/fp_run.py\" --base \"\$EVW\\_discs\\$b\" --cap \"\$EVW\\$n\" --syms \"\$(cat \$J/syms-$s.txt)\" --seconds $sec --name rr-$n $*"; }
@@ -73,7 +76,7 @@ if [ "$TIER" = qa ]; then
 fi
 SEG=$(wpath "$T/port/dreamcast/tools/d367/fullplay/segments")
 # boot: the release binary from power-on to the title (no fixture)
-CAND=$(cat "$W/cand.txt"); CW="C:/${CAND#/mnt/c/}"; CW=${CW//\//\\}
+CAND=$(cat "$W/cand.txt"); CW=$(rr_win "$CAND")
 job 1 boot "python \"\$FPD/fp_run.py\" --disc '$CW\gdemu' --cap \"\$EVW\boot\" --syms \"\$(cat \$J/syms-rel.txt)\" --seconds 45 --name rr-boot --stop 'state title=' --grace 5"
 # h2: r100 house to the s30 cliff movie (340/340 pictures, heap 4 before s30), the full-play gate's segment
 job 1 h2 "$(run h2 g g 300 --warp "'$SEG\\h2-warp.txt'" --pad "'$SEG\\h2-pad.txt'" --stop "'route movie terminal=. id=10030'" --grace 10)"
@@ -97,7 +100,7 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
   # so @startup was judged empty. Power-on through the title, its menus and the load / card screens (castle31's gca-load
   # pad), stock boot; the VMU (RR_GCA_TITLE_VMU, default castle31's ch2-3 end save) lists save slots for the save pictures.
   V=${RR_GCA_TITLE_VMU:-/mnt/c/Flycast-Evidence/re4-dreamcast/castle31/vmu/handoff-ch23end-A1.bin}
-  VA=; if [ -s "$V" ]; then VW="C:/${V#/mnt/c/}"; VW=${VW//\//\\}; VA="--vmu '$VW'"; fi
+  VA=; if [ -s "$V" ]; then VW=$(rr_win "$V"); VA="--vmu '$VW'"; fi
   tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-title-warp.txt" > "$EVU/fixtures/gca-title-warp.txt"
   tr -d '\r' < "$T/port/dreamcast/tools/d367/rr/gca-title-pad.txt" > "$EVU/fixtures/gca-title-pad.txt"
   job 1 gca-title "$(run gca-title a a 60 --warp "\"\$EVW\\fixtures\\gca-title-warp.txt\"" --pad "\"\$EVW\\fixtures\\gca-title-pad.txt\"" $VA)"
@@ -146,7 +149,7 @@ else
       pad=""; [ "$w" = h2 ] && pad="--pad \"\$EVW\\fixtures\\st-h2-pad.txt\""
       for side in tR tT; do
         n=st-$w-$side
-        { echo 'set -uo pipefail'; echo "J=/c/${J#/mnt/c/}"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "export RE4DC_LOG_STOP_TICK=2000"
+        { echo 'set -uo pipefail'; echo "J=$(rr_gb "$J")"; echo "FPD='$FPD'"; echo "EVW='$EVW'"; echo "export RE4DC_LOG_STOP_TICK=2000"
           echo "$(run "$n" "$side" "$side" "$sec" --warp "\"\$EVW\\fixtures\\st-$w-warp.txt\"" $pad)"; } > "$J/$n-inner.sh"
         job 1 "$n" "MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -u root -- env TRACE_LOCK_OWNER=rr-$n bash $TL '/mnt/c/Program Files/Git/bin/bash.exe' \$J/$n-inner.sh"
       done
