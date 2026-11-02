@@ -14,7 +14,11 @@ using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
 // NATIVE_MODEL_REGISTRY_POOL: a pool descriptor carries one source BIN model per pool section (the zealot pool: 18) and
 // their TPLs' texture facts, beside Ashley's partner package (10 models, 28 texture facts) in her rooms.
 #define RE4DC_NMR_TEX_FACTS 64u
-#if defined(RE4DC_NMR_ROLE_TEX23) && RE4DC_NMR_ROLE_TEX23
+#if defined(RE4DC_NMR_ROLE_TEX34) && RE4DC_NMR_ROLE_TEX34
+// NATIVE_MODEL_REGISTRY_ROLE_TEX34 (lane bossahead 11-02): Salazar's em38 TPL 8 has 34 images (the identity facts of the
+// source TPL the game loads; none is drawn). Same validation bound, wider.
+#define RE4DC_NMR_ROLE_TEXTURES 34u
+#elif defined(RE4DC_NMR_ROLE_TEX23) && RE4DC_NMR_ROLE_TEX23
 // NATIVE_MODEL_REGISTRY_ROLE_TEX23 (lane geodrop17 10-17): the r320 helicopter (em3d TPL 6) has 23 images. Same validation
 // bound as below, wider.
 #define RE4DC_NMR_ROLE_TEXTURES 23u
@@ -139,11 +143,15 @@ bool pack_alias(const PackSpan& a,const PackSpan& b,const unsigned char* geom) {
 // Descriptor word 44: 0, or under NATIVE_MODEL_REGISTRY_SHIFT the position shift 1..4 (0 = 4).
 #if RE4DC_NMR_SLOTS
 // PS2_ASHLEY: bits 8..15 = a draw-slot descriptor's source joint count (0 = an ordinary descriptor); bits 0..7 the shift.
-#if RE4DC_NMR_SHIFT
+#if RE4DC_NMR_SHIFT && defined(RE4DC_NMR_SHIFT0) && RE4DC_NMR_SHIFT0
+#define RE4DC_NMR_WORD44_BAD(w) ((((w)&255u)>4 && ((w)&255u)!=8u) || ((w)>>16))
+#elif RE4DC_NMR_SHIFT
 #define RE4DC_NMR_WORD44_BAD(w) (((w)&255u)>4 || ((w)>>16))
 #else
 #define RE4DC_NMR_WORD44_BAD(w) (((w)&255u) || ((w)>>16))
 #endif
+#elif RE4DC_NMR_SHIFT && defined(RE4DC_NMR_SHIFT0) && RE4DC_NMR_SHIFT0
+#define RE4DC_NMR_WORD44_BAD(w) ((w)>4 && (w)!=8u)
 #elif RE4DC_NMR_SHIFT
 #define RE4DC_NMR_WORD44_BAD(w) ((w)>4)
 #else
@@ -401,7 +409,11 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         desc.source_bones=S;
         desc.source_parents=S?reinterpret_cast<const unsigned char*>(parents+pat):nullptr;
 #endif
-#if RE4DC_NMR_SHIFT && RE4DC_NMR_SLOTS
+#if RE4DC_NMR_SHIFT && defined(RE4DC_NMR_SHIFT0) && RE4DC_NMR_SHIFT0
+        // NATIVE_MODEL_REGISTRY_SHIFT0 (lane bossahead): byte 8 = position shift 0 (Salazar's tentacles and roots keep the
+        // GC source's integer positions); 1..4 as before, 0 = 4.
+        desc.shift=(pu32(r,44)&255u)==8u?0u:(pu32(r,44)&255u)?(pu32(r,44)&255u):4u;
+#elif RE4DC_NMR_SHIFT && RE4DC_NMR_SLOTS
         desc.shift=(pu32(r,44)&255u)?(pu32(r,44)&255u):4u;
 #elif RE4DC_NMR_SHIFT && RE4DC_NMR_POOL
         desc.shift=(pu32(r,44)&255u)?(pu32(r,44)&255u):4u;

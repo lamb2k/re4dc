@@ -352,6 +352,16 @@ endif
 ifneq ($(NATIVE_MODEL_REGISTRY_SHIFT),0)
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_SHIFT=1
 endif
+# NATIVE_MODEL_REGISTRY_SHIFT0=1 (lane bossahead 2026-11-02; default 0; render only; needs NATIVE_MODEL_REGISTRY_SHIFT=1):
+#   descriptor word 44 byte 8 = position shift 0 (integer positions: Salazar's tentacles and roots, Verdugo-size models;
+#   model_registry.py --shift0). The fast kernel already takes any shift <= 30. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_SHIFT0 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_SHIFT0),1)
+ifeq ($(NATIVE_MODEL_REGISTRY_SHIFT),0)
+$(error NATIVE_MODEL_REGISTRY_SHIFT0=1 needs NATIVE_MODEL_REGISTRY_SHIFT=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_SHIFT0=1
+endif
 endif
 
 # PS2_CAST_MERCHANT=1 (lane ps2cast2 2026-10-14; default 0; render only): the merchant (em18; r102, later r10d r10e r112)
@@ -518,6 +528,17 @@ $(error NATIVE_MODEL_REGISTRY_ROLE_TEX23=1 needs NATIVE_MODEL_REGISTRY_ROLES5=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
 PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
+endif
+# NATIVE_MODEL_REGISTRY_ROLE_TEX34=1 (lane bossahead 2026-11-02; default 0; render only; needs NATIVE_MODEL_REGISTRY_ROLES5=1):
+#   a role's source TPL may have 34 images (Salazar em38 TPL 8, r228). Validation bound only (model_registry.py
+#   --role-tex34); the drawn pictures are the PS2 atlas. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_ROLE_TEX34 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_ROLE_TEX34),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
+$(error NATIVE_MODEL_REGISTRY_ROLE_TEX34=1 needs NATIVE_MODEL_REGISTRY_ROLES5=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX34=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX34=1
 endif
 # NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
 #   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the

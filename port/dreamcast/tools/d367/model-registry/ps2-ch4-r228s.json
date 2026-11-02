@@ -1,0 +1,99 @@
+{
+ "registry": "ps2-ch4-r228s",
+ "about": "lane bossahead (2026-11-02): r228 with Salazar's monster. armor-em25-00 as ps2-ch4-r228 (cast16) plus the boss18 em38 casts (PS2 geometry and VQ atlases; boss18-salazar-role-contract cast-full). Transparent runs in the PS2 source order (boss18-salazar-order ordered/body, ordered/upper). The weak point (em38 obj00, an object model) stays on its source path. Package: model_registry.py --wide-identity --pool --roles5 --role-tex34 --package-room 228 (em38 TPL 8 has 34 images: identity facts only, NATIVE_MODEL_REGISTRY_ROLE_TEX34). Render only.",
+ "cast_dir": "/root/probe/lanes/bossahead/cast-r228",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); BOSS_LIGHT_DIR26 gives em38 the source lighting record",
+ "descriptors": [
+  {
+   "name": "armor-em25-00",
+   "archive": "em25",
+   "model_id": "0x25",
+   "source_types": [
+    0,
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em25/em25.cpp em25_R0_Init modelInit(ARC 4, ARC 5)",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv4/mask-armor-em25-00-s0"
+   }
+  },
+  {
+   "name": "queen-em38-00",
+   "archive": "em38",
+   "model_id": "0x38",
+   "source_types": [
+    0
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em38/em38.cpp type 0 (the Queen body) modelInit(ARC 4, ARC 8)",
+   "mask_runs": {
+    "0": "/root/re4data/private/boss18-salazar-order-20261019/ordered/body"
+   }
+  },
+  {
+   "name": "tent-em38-01",
+   "archive": "em38",
+   "model_id": "0x38",
+   "source_types": [
+    1,
+    2
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em38/em38.cpp types 1 / 2 (tentacles)"
+  },
+  {
+   "name": "salazar-em38-03",
+   "archive": "em38",
+   "model_id": "0x38",
+   "source_types": [
+    3
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em38/em38.cpp type 3 (Salazar's upper body)",
+   "mask_runs": {
+    "0": "/root/re4data/private/boss18-salazar-order-20261019/ordered/upper"
+   }
+  },
+  {
+   "name": "roots-em38-04",
+   "archive": "em38",
+   "model_id": "0x38",
+   "source_types": [
+    4
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em38/em38.cpp type 4 (roots)"
+  }
+ ],
+ "room_packages": {
+  "228": {
+   "descriptors": [
+    "armor-em25-00",
+    "queen-em38-00",
+    "tent-em38-01",
+    "salazar-em38-03",
+    "roots-em38-04"
+   ],
+   "evidence": "lane bossahead: package generation only; census / CAST-GC / still pair after release done"
+  }
+ }
+}

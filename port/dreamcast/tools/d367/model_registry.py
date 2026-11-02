@@ -91,6 +91,8 @@ WIDE_IDENTITY = False       # --wide-identity: 64 / 96 and the pl08 base rows (R
 ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
 ROLE_TEXTURES5 = False      # --roles5: a role's TPL may have 19 images (RE4DC_NMR_ROLE_TEXTURES 19)
+SHIFT0 = False              # --shift0: position shift 0 allowed, encoded 8 (NATIVE_MODEL_REGISTRY_SHIFT0)
+ROLE_TEX34 = False          # --role-tex34: 34 images (NATIVE_MODEL_REGISTRY_ROLE_TEX34, Salazar em38 TPL 8)
 ROLE_TEX23 = False          # --role-tex23: 23 images (NATIVE_MODEL_REGISTRY_ROLE_TEX23, the r320 helicopter em3d TPL 6)
 POOL = False                # --pool: pool descriptors (spec "pool": true), package only (NATIVE_MODEL_REGISTRY_POOL images)
 POOL_SECTIONS = 48          # coarse_actor_owner_registry.inc kRegPoolSections
@@ -563,7 +565,7 @@ def main():
         args.remove('--source-normal-length')
         if ASHLEY_RIG:
             sys.exit('model_registry: PS2 Ashley rig must keep PS2 normals; --source-normal-length is forbidden')
-    global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5, ROLE_TEX23
+    global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5, ROLE_TEX23, ROLE_TEX34, SHIFT0
     if '--wide-identity' in args:
         args.remove('--wide-identity')
         WIDE_IDENTITY = True; MATERIAL_ROWS = 96; SOURCE_BLOBS = 64   # RE4DC_ACTOR_WIDE_IDENTITY
@@ -593,6 +595,14 @@ def main():
         PACK_CAPACITY.update(fmodel=64, fpart=224)  # coarse_actor_registry_pack_check.inc with RE4DC_NMR_ROLES5
         PACK_MAX_BYTES = 416 * 1024  # RE4DC_NMR_PACK_KIB with RE4DC_NMR_ROLES5
         ROLE_TEXTURES5 = True  # RE4DC_NMR_ROLE_TEXTURES 19 with RE4DC_NMR_ROLES5 (coarse_actor_registry_pack_check.inc)
+    if '--shift0' in args:
+        args.remove('--shift0')
+        SHIFT0 = True
+    if '--role-tex34' in args:
+        args.remove('--role-tex34')
+        if not ROLE_TEXTURES5:
+            sys.exit('model_registry: --role-tex34 needs --roles5')
+        ROLE_TEX34 = True
     if '--role-tex23' in args:
         args.remove('--role-tex23')
         if not ROLE_TEXTURES5:
@@ -972,7 +982,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: lod_level needs lod_of')
         if draw_slots is not None:
             entry.update(source_bones=bones, slots=list(draw_slots))
-        if not 1 <= entry['position_shift'] <= 4:
+        if not (1 <= entry['position_shift'] <= 4 or (SHIFT0 and entry['position_shift'] == 0)):
             raise Fail(f'{name}: position_shift {entry["position_shift"]} outside 1..4')
         # "source_drops": ["bump"] (lane ps2cast-2): the source path itself never draws the bump stage (trans.cpp
         # bumpSetup only feeds the GX stubs; model_bridge binds the colour texture alone), so the owner path drawing
@@ -1340,7 +1350,7 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                                                          first_ref, parents_at, bind_first,
                                                          # word 44: the position shift read by NATIVE_MODEL_REGISTRY_SHIFT=1
                                                          # images (0 = 4, what every image assumes)
-                                                         (0 if r['position_shift'] == 4 else r['position_shift']) |
+                                                         (0 if r['position_shift'] == 4 else 8 if r['position_shift'] == 0 else r['position_shift']) |
                                                          (r['source_bones'] << 8 if r.get('slots') else 0) |
                                                          # word 44 bit 24: a pool descriptor (--pool)
                                                          (1 << 24 if r.get('pool') else 0) |
@@ -1359,6 +1369,8 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                     role_texture_max = 19  # RE4DC_NMR_ROLE_TEXTURES 19 with RE4DC_NMR_ROLES5 (the island U-3 em32 TPL 5)
                 if ROLE_TEX23:
                     role_texture_max = 23  # RE4DC_NMR_ROLE_TEX23 (the r320 helicopter em3d TPL 6)
+                if ROLE_TEX34:
+                    role_texture_max = 34  # RE4DC_NMR_ROLE_TEX34 (Salazar em38 TPL 8)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
             if len(tpls[tk]['textures']) > role_texture_max:
