@@ -97,4 +97,6 @@ dc/tex.pak:~c67f5c01-63e0879e	title27	user custom title art (not GC), Test 23 pa
 dc/tex.pak:~d17e9c56-fa23c229	font22	Test 22 A pad label (GC-derived Dreamcast button set), user 10-27
 # font22b 10-27 (lane font22-27 round 2): Test 22 controller glyph set (user 10-27)
 dc/tex.pak:~e42a7628-c166970d	font22b	Test 22 HUD d-pad (etc/core.das 0x1b2c60#0), user 10-27
+# glyph27 11-02 (lane glyph27): grab QTE stick cap back to the Dreamcast glyph (fxc26b had made it PS2)
+dc/tex.pak:~6d33c3f9-9f8cf668	glyph27	grab escape prompt stick cap, Dreamcast glyph v4 G08 (authored, not GC), user 11-02
 dc/native/*/ps2-sky.r4sk:added	SKY_PLAY=1 (DATA sky27)	sky27: normal-play PS2 sky as the PVR background plane, one file per outdoor room (t15/int 931512cbd; claimed by lane house26, reviewed by coordinator 11-02)

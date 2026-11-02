@@ -1406,3 +1406,12 @@ extern "C" unsigned re4dc_propprof_key(const void* model) {
     return m ? (unsigned(m->kindid) & 255u) << 16 | (unsigned(m->id) & 255u) << 8 | (unsigned(m->type) & 255u) : 0xffffffu;
 }
 #endif
+#if defined(RE4DC_LEON_LIGHT_DIR26) && RE4DC_LEON_LIGHT_DIR26
+#include "player.h"
+// LEON_LIGHT_DIR26: 1 when the model is Leon's held weapon (pPL->Wep's weapon object or its second display part).
+extern "C" int re4dc_actor_is_leon_weapon(const void* model){
+    if(!model||!pPL||!pPL->Wep) return 0;
+    const cPlWep* w=pPL->Wep;
+    return (const void*)static_cast<const cModel*>(w->m_pWep)==model || (const void*)static_cast<const cModel*>(w->pObj2)==model;
+}
+#endif
