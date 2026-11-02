@@ -23,6 +23,10 @@ print(' '.join('%s=%s' % (k, shlex.quote(v)) for k, v in out.items()))
 PY
 )"
     LIN=/root/probe/lanes/bakeall/rc/rc-$R-64/ps2-world.r4pw; [ -f "$LIN" ] || LIN=$SCR/rc-$R-64/ps2-world.r4pw
-    [ "$R" = r10d ] && LIN=/root/re4data/private/ch21l-20261020/dc/native/r10d/ps2-world.r4pw   # rc-r10d-64 is r10dbake23's
+    # r10d: rc-r10d-64 and the shipped R4PW are r10dbake23 (tier-1 bake): rekey from the unbaked lineage pair ch21l -> mip22b
+    if [ "$R" = r10d ]; then
+        LIN=/root/re4data/private/ch21l-20261020/dc/native/r10d/ps2-world.r4pw
+        SHIP_R4PW=/root/re4data/private/mip22b-20261022/dc/native/r10d/ps2-world.r4pw
+    fi
     bash "$HERE/post_room.sh" "$R" "$CONV/$R" "$SET" "$LIN" "$SHIP_R4PW" "$PAK" "$HAS_TC" "$SHIP_RC" "$SG"
 done

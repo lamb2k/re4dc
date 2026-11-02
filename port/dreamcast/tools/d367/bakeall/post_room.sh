@@ -7,7 +7,7 @@
 # Writes <set>/dc/native/<room>/{ps2-world.re4mesh,r4pw,ids,r4sg[,r4tc]} and room.r4rc, and appends <set>/cert-rows.txt
 # (one provenance_certificates row) and <set>/sizes.tsv.
 set -euo pipefail
-R=${1:?}; C=${2:?}; SET=${3:?}; LIN=${4:?}; SHIP=${5:?}; PAK=${6:?}; HAS_TC=${7:?}; RC=${8:?}; SG=${9:?}
+R=${1:?}; C=${2:?}; SET=${3:?}; LIN=${4:?}; SHIP=${5:?}; PAK=${6:?}; HAS_TC=${7?}; RC=${8:?}; SG=${9:?}
 T=/root/work/lanes/bakeall/port/dreamcast/tools
 ISO=/root/work/re4-dreamcast/orig/G4BE08/re4_debug_disc1.iso
 D="$SET/dc/native/$R"; W="$SET/work/$R"
