@@ -592,6 +592,29 @@ $(error LEON_LIGHT_FILL needs ACTOR_PROBE_LIGHT=1 or 2)
 endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_LIGHT_FILL=$(LEON_LIGHT_FILL)
 endif
+# LEON_LIGHT_DIR26=1 (lane leonlight26, user 11-02 "Why is Leon's model no longer lit?"; render only; default 0: nothing
+#              changes): with ACTOR_LIGHT_FAST_ONLY=1 Leon gets his probe light back as a direction (probe direction +
+#              LEON_LIGHT_FILL camera fill + ambient, fast FIPR kernel per vertex, the Test 24b look) instead of one
+#              colour per part. Every other model keeps the fast-only part colour; no exact per-vertex evaluator.
+LEON_LIGHT_DIR26 ?= 0
+ifeq ($(filter $(LEON_LIGHT_DIR26),0 1),)
+$(error LEON_LIGHT_DIR26 must be 0 or 1)
+endif
+ifeq ($(LEON_LIGHT_DIR26),1)
+ifneq ($(ACTOR_LIGHT_FAST_ONLY),1)
+$(error LEON_LIGHT_DIR26 needs ACTOR_LIGHT_FAST_ONLY=1)
+endif
+ifeq ($(ACTOR_PROBE_LIGHT),0)
+$(error LEON_LIGHT_DIR26 needs ACTOR_PROBE_LIGHT=1 or 2)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_LIGHT_DIR26=1
+endif
+# LEON_PROBE_LOG26=1 (diagnostic, test only, default 0): one LP26 line per frame with Leon's light probe (needs
+#              ACTOR_PROBE_LIGHT=1/2); lane leonlight26's flicker check.
+LEON_PROBE_LOG26 ?= 0
+ifeq ($(LEON_PROBE_LOG26),1)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_PROBE_LOG26=1
+endif
 # GANADO_LIT=1 (lane ganlit 2026-10-16; villagers lit by the room's lights; render only; default 0: nothing changes):
 #              with ACTOR_PROBE_LIGHT=2 (each Ganado's probe from its own GX light set), only the GANADO_LIT_NEAREST
 #              nearest Ganado models light per vertex; every other Ganado (and every one when NEAREST=0) takes one colour
