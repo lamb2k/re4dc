@@ -102,12 +102,14 @@ def main():
     ap.add_argument('--max-mae', type=float, default=30.0)
     ap.add_argument('--min-side', type=int, default=8, help='only convert pictures with both sides >= this (raw16 small UI-ish pictures stay)')
     ap.add_argument('--dry', action='store_true')
+    ap.add_argument('--skip-keys', help='keys never touched (one per line): already PS2-proven pictures (HUD, fonts, pics sets)')
     a = ap.parse_args()
     G, P, O = Path(a.gc_root), Path(a.ps2_dir), Path(a.out)
     (O / 'dc').mkdir(parents=True, exist_ok=True)
     base = Path(a.pak).read_bytes()
     pkgs = read_pak(base)
-    src = {k for k, v in pkgs.items() if base_info(v)[0] == 'source'}
+    skip = set(l.split()[0] for l in open(a.skip_keys) if l.strip()) if a.skip_keys else set()
+    src = {k for k, v in pkgs.items() if base_info(v)[0] == 'source' and '%08x-%08x' % k not in skip}
     rows, files, done, seen = [], [], set(), set()
     work = Path(tempfile.mkdtemp(prefix='psp-', dir=str(O)))
     for g in a.glob or DEFAULT_GLOBS:

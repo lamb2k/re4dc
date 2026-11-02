@@ -1449,6 +1449,17 @@ if os.path.isdir(DCF03D):
     DATA['dcf03'] = {'dc/tex.pak': DCF03D + '/dc/tex.pak'}
     PAK_DERIVED['dcf03'] = DCF03D + '/pak-derived.json'
     AFTER += [('dcf03', 'dcf02'), ('dcf03', 'leon28')]
+# dcf01 (lane assets-dc 11-02, no-GameCube-assets rule applied retroactively; data only, no knob): dc/tex.pak = dcf03's pack
+# with 416 GameCube-keyed "source" pictures as PS2 pixels in Dreamcast form (assetsdc/ps2_source_pak.py): the GC TPL image
+# of each key (GC disc st1/st2 .das decoded, em/*.drs, ss, etc, op, evd) matched to its PS2 twin file's picture (NCC
+# >= 0.97, unique best, MAE <= 30), resampled to the GC size, >= 64x64 -> VQ (+ mips when square), smaller -> 16-bit
+# twiddled (+ mips when square). Keys already PS2-proven in the catalog are left. provenance.tsv names each PS2 twin
+# file. Stages after dcf03. Store: re4data/private/dcf01-20261102.
+DCF01D = os.environ.get('DCF01D', '/root/re4data/private/dcf01-20261102')
+if os.path.isdir(DCF01D):
+    DATA['dcf01'] = {'dc/tex.pak': DCF01D + '/dc/tex.pak'}
+    PAK_DERIVED['dcf01'] = DCF01D + '/pak-derived.json'
+    AFTER += [('dcf01', 'dcf03'), ('dcf01', 'leon28')]
 
 
 def title27_gate(names, r, rec):
