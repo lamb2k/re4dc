@@ -2362,6 +2362,10 @@ MOVIE_LAYOUT_GUARD ?= 0
 # s30cell-26 (11-02): 1 = an arena movie (r100s30) keeps the PS2_INTERIOR_CULL r100 cell resident instead of lending it
 # (the arena movie never stages in heap 4); lent, the reload after s30 failed the 81920 B reserve and r100 ran unculled.
 MOVIE_ARENA_CELL_KEEP ?= 0
+# bossmem26 (11-02): 1 = El Gigante's r119 parasite (s30, 11930) and death (s20, 11920) movies borrow r119's PS2 world
+# package as the r11f / r100s30 movies do (the world is not drawn under a movie; read again after it). From the heap they
+# were refused (heap 4 fragmented after the fight, `order: piece N short`, terminal=3). Needs MOVIE_LAYOUT_GUARD=1.
+MOVIE_WORLD_ARENA_R119 ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
@@ -2369,6 +2373,7 @@ $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_ARENA_CELL_KEEP %s\n' '$(MOVIE_ARENA_CELL_KEEP)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_WORLD_ARENA_R119 %s\n' '$(MOVIE_WORLD_ARENA_R119)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
@@ -3664,6 +3669,11 @@ include mendezfx.mk
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
 ifneq ($(MOVIE_WORLD_ARENA),1)
 $(error MOVIE_WORLD_ARENA_S30 needs MOVIE_WORLD_ARENA=1)
+endif
+endif
+ifneq ($(MOVIE_WORLD_ARENA_R119),0)
+ifneq ($(MOVIE_WORLD_ARENA)$(MOVIE_LAYOUT_GUARD),11)
+$(error MOVIE_WORLD_ARENA_R119 needs MOVIE_WORLD_ARENA=1 and MOVIE_LAYOUT_GUARD=1)
 endif
 endif
 ifeq ($(MOVIE_WORLD_ARENA),1)

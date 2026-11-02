@@ -5924,6 +5924,9 @@ bool ps2_movie_layout(unsigned room){
 #if RE4DC_MOVIE_WORLD_ARENA_S30
         || room==0x100
 #endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119
+        || room==0x119   // bossmem26: El Gigante's movies (layout from the opened package)
+#endif
         ;
     return room_ok && f.mesh && f.side &&
         ((f.mesh+31u)&~31u)+((f.side+31u)&~31u)+kLutBytes+kGatherBytes==ps2_movie.capacity;
@@ -7720,6 +7723,9 @@ bool ps2_open(){
     if(ps2w.room==0x11f
 #if RE4DC_MOVIE_WORLD_ARENA_S30
        || ps2w.room==0x100
+#endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119
+       || ps2w.room==0x119
 #endif
     ){
         unsigned gen=0;
@@ -9596,6 +9602,9 @@ extern "C" unsigned re4dc_ps2_mesh_movie_borrow(unsigned id){
     const bool supported=(ps2w.room==0x11f && (id==0x11f10 || id==0x11f11))
 #if RE4DC_MOVIE_WORLD_ARENA_S30
         || (ps2w.room==0x100 && id==0x10030)
+#endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119
+        || (ps2w.room==0x119 && (id==0x11920 || id==0x11930))
 #endif
         ;
 #if RE4DC_MOVIE_LAYOUT_GUARD
