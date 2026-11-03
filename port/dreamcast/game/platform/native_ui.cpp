@@ -11298,3 +11298,25 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart* p){
 }
 #endif
 #endif
+
+#if defined(RE4DC_ESP_SPIKE_LOG) && RE4DC_ESP_SPIKE_LOG
+// ESP_SPIKE_LOG (game30.mk, lane motionpin; log only): an effect-move phase (EffAreaUpdate .. EffCallToolStateCallBack,
+// game.cpp) over 20 ms logs what ran inside it: texture uploads (this file's loads), disc reads and blocked time
+// (dvd_read_safe.cpp meter) and motion key misses, so a spike reads as texture load, other disc read or CPU.
+#include "native_motion.h"
+extern "C" void re4dc_disc_meter_totals(unsigned*,unsigned long long*,unsigned long long*);
+namespace { unsigned long long esp_t0,esp_b0,esp_k0; unsigned esp_r0,esp_l0,esp_m0,esp_spikes; }
+extern "C" void re4dc_esp_spike_begin(){
+    Re4dcMotionStats m{};re4dc_motion_get_stats(&m);
+    re4dc_disc_meter_totals(&esp_r0,&esp_k0,&esp_b0);esp_l0=loads;esp_m0=m.misses;esp_t0=timer_us_gettime64();
+}
+extern "C" void re4dc_esp_spike_end(){
+    const unsigned long long us=timer_us_gettime64()-esp_t0;
+    if(us<20000)return;
+    unsigned r=0;unsigned long long k=0,b=0;re4dc_disc_meter_totals(&r,&k,&b);
+    Re4dcMotionStats m{};re4dc_motion_get_stats(&m);
+    if(++esp_spikes<=64 || (esp_spikes&63)==0)
+        re4dc_log("esp spike #%u: us=%u tex_uploads=%u disc_reads=%u kb=%u block_us=%u motion_misses=%u\n",esp_spikes,
+                  unsigned(us),loads-esp_l0,r-esp_r0,unsigned((k-esp_k0)>>10),unsigned(b-esp_b0),m.misses-esp_m0);
+}
+#endif
