@@ -1,5 +1,79 @@
 # Build 32: actor cone and UV16 admission
 
+
+## 2026-10-29 recovery: explicit reviewed maintained-SDK fixture inputs
+
+This follow-up addresses the local owner's target-admission refusal below for
+the first published fixture `b2ba8d33e9469139328f485ef0d71f233941f427`.
+Fresh integration base: `26f7d8278be77388b157910765f5e6b182c39cc1`. The maintained-profile implementation is now
+source-complete and host-validated for publication on the existing
+`codex/cloth-target-fixture-20261029` branch. The owner's original blocked run is
+retained as history; a new target build/run has not yet been observed.
+
+Root synchronized this slice without source conflicts and reran all20 normal
+driver tests and `check-source` successfully on the fresh base. Independent
+read-only review verified the source and final receipt hashes. The worker's
+20 ASan/UBSan cases also passed, with the recorded LeakSanitizer limitation.
+
+### Implemented correction
+
+The builder now supports the explicit option:
+
+```sh
+python3 port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py build \
+  --kos-profile maintained-d367-20261029 \
+  --kos-root "$XM14_KOS" \
+  --sdk-root "$XM14_SH4ZAM" \
+  --sh4-cxx "$XM14_CXX" \
+  --output "$XM14_OUT"
+```
+
+Those variables denote the caller's selected SDK/compiler and a new output directory; no SDK path is silently substituted. `--kos-profile pristine` remains separate and is the default. Its exact receipt mode is `pristine-consumed-sources-bound-installed-binaries`: it validates consumed pinned sources/headers and binds selected installed binary bytes, not a proved pristine binary build history. The existing `_arch_sub_pristine=1` requirement is KOS's Dreamcast hardware subarchitecture and stays unchanged for both provenance profiles.
+
+`cloth_xm14_sdk_reviewed.json` is the one repository-owned reviewed manifest. Its exact SHA256 `8870a5b049058d69553afe6463e7347016a5a2839816818feaeef38bd62d12dc` is pinned in the builder. There is no caller-supplied manifest path, arbitrary allowlist, dirty-header override, or automatic patched-header admission. The manifest binds:
+
+- KOS base `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`.
+- Original PVR header Git blob `9ac9ed1b5f975094d54b39c5dbe13309332ad0c5`, SHA256 `280551012a9d631e88e4058141fd803c55c1968cdd3d76bb0979116ed6191eb4`.
+- Maintained header Git blob `7d0b84a251451ac6d13f508764faad10678d67a0`, SHA256 `55a2abc199af2f48b7c713e3975777150da567ea0216fae32cbd7c8f0d9dfa1f`.
+- The exact ordered public manual-flip, async-present and vbuf-switch patch bytes, with SHA256 respectively `c8bd2883f9422e78da250e1b26a5bbc97c3f363cd98a6be242bd9cecf239f4df`, `d3fc98e7dbd78efe58f8d32592147d44d96030037a83358039629aa624b4d442`, `52f99b1fb5b0dd9391a193381434c808737302d4f8121747e6d0b4201963f4a7`.
+- Selected installed `libkallisti.a` SHA256 `5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf` and `_kos_startup.o` SHA256 `ec3a5f7757f9af742171bcc6ab56d5b0b7c77a86b034623fe66b963708a886fd`.
+
+The builder proves that those public patches derive the selected header from its exact pristine Git object in a temporary scratch directory. It never patches or resets the selected SDK. Inherited Git worktree/config variables are removed for the scratch mutation so they cannot redirect it. Exact selected header bytes are checked independently against both Git-blob and SHA256 identities.
+
+All other consumed SDK headers and the IRQ/timer/entry/environment/wrapper/linker source inputs still require pristine pinned bytes. Compiler, ABI/math defines, foreign roots, dependency provenance and actual linker archive/startup selection checks remain. The actual compiler dependency evidence must now explicitly include `dc/pvr.h`.
+
+The fixed profile, manifest, ordered patch identities, selected header and selected binary hashes enter the same executable build ID through `bound-kos-v2`. Receipt/profile equality and approved binary/header identities are checked by `verify-run`, even if somebody recomputes the surrounding receipt checksum. Old binding-v1 or absent/changed profile receipts do not qualify the new fixture. After linking, the driver repeats Git base, manifest, patch, source/header, wrapper/compiler and binary checks against the original binding. Unknown modifications or mid-build changes fail closed.
+
+### Changed files (only four)
+
+- `port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py`
+- `port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py`
+- `port/dreamcast/tools/cloud/build32/tests/cloth_xm14_sdk_reviewed.json` (new)
+- `port/dreamcast/tools/cloud/build32/tests/cloth_xm14_pvr_fixture.json` (new, 16,211 bytes): compressed exact public upstream 55,048-byte header solely for deterministic offline host tests; upstream source URL, original copyright notices and the existing repository KOS license attribution are retained. It is never used as the target SDK or compiled by the target builder.
+
+No target main/probe/production assembly/numeric code, Make driver or SDK checkout was modified. Root updates this existing handback and the EF14 backlog; queue Status is serialized on the recovery branch.
+
+### Validation and limits
+
+`python3 -m unittest -v port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py`: **20 PASS**.
+
+`SANITIZE=1 ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 python3 -m unittest -v port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py`: **20 PASS**, including the actual production clipper host case under ASan/UBSan.
+
+`cloth_xm14_target.py check-source`: production scalar/batch/API/geometry pins and new reviewed-manifest/patch identities **PASS**. `git diff --check`: **PASS**.
+
+Evidence: `/tmp/ef14-reviewed-sdk-qualified/receipt.json`, with normal/sanitized logs and check-source JSON alongside it. Tests establish explicit maintained-header acceptance from the real public patch chain; pristine/maintained distinction; read-only selected SDK behavior even with an inherited foreign Git worktree; rejection of unknown header edits, foreign symlink paths, changed header base, wrong KOS commit, malformed/changed manifest and patch bytes, wrong/missing/ambiguous selected archive/startup hash claims, actual linker input changes, mid-build header/profile changes, stale or rehashed tampered receipts, and all prior wrapper/ABI/clip/IRQ-parser controls.
+
+The installed archive/startup **hash policy** positive test uses the owner-published identities; it does not fabricate those binary preimages or claim access to the local installed SDK. The actual public header bytes and patch derivation are exercised, while complete SDK compilation/linking remains local. An earlier sanitized invocation encountered LeakSanitizer's unsupported `/proc`/ptrace check; the successful run explicitly disables only leak checking, with address/undefined checks active. This limitation is recorded in the receipt and is not target evidence.
+
+Source SHA256s at freeze:
+
+- builder `3f75fe43c19f11ef08f86ff48252278439d34f54e690e9b2854cc4b7bbe715b5`
+- tests `6ae73b1443b377f4c31ae024f3a1dff3b56c281167ff6019d662b063d3cd5b99`
+- manifest `8870a5b049058d69553afe6463e7347016a5a2839816818feaeef38bd62d12dc`
+- public header fixture `21f499d54ff972277d221888d869c25dd5e3d52eae174b540541b1b89f3af2ff`
+
+Independent focused source review found no arbitrary allowlist or binding bypass; its pristine-provenance wording correction is incorporated. No pinned SH4 SDK target compile/link or numeric/FPSCR/TMU1 execution occurred here. The exact installed hashes identify selected inputs, not their complete build history. Actual numeric/FPSCR/normal-TMU1-IRQ acceptance remains open, separate from logger IRQ-duration, returning-fault/NMI/cache visibility and all existing stack/heap/VRAM/look/STRICT/runtime/console/release/private holds. No enablement, SDK reset, hardware/media operation or email action.
+
 ## Answers (owner): 2026-10-29 actual cloth target fixture admission blocked
 
 ﻿### Reviewed patched SDK binding needed
@@ -1011,6 +1085,271 @@ passes and source callback cadence before claiming demand-driven preparation
 or usable primitive capacity. This commit only fixes admission ordering; it
 does not claim those subsequent recipe/presentation changes.
 
+
+## 2026-10-29 Build32 EF14: public SH-4 cloth batch executable fixture
+
+### Scope and current verdict
+
+**2026-10-29 progress: DONE** public target-executable source and host/source-pin checks on `14b5c196db699640f7a9f39bc2318df22dc45ade`; **NEXT** local pinned SDK link and execution; **BLOCKED** actual target execution only. Branch `codex/cloth-target-fixture-20261029`. The fixture lives in `port/dreamcast/tools/cloud/build32/tests/`. It is an asset-free KOS executable that calls the **actual production** `re4dc_zam_xm_points14` and `re4dc_zam_xm_points14_scalar` definitions, with the pinned SH4ZAM inline XMTRX/FTRV implementation. The scalar call is bound to the existing production SH-4 `_re4dc_sh4_MTXMultVec` body, just as the game aliases `PSMTXMultVec` when `GAME_SH4_MATH=1`. No game source, Make selector, release recipe, private asset, or runtime switch changed.
+
+**Current result: source/host preparation PASS; target compile and execution PENDING.** This workspace has no initialized KOS/SH4 compiler, built KOS libraries, or SH4ZAM submodule. The target executable has therefore not been linked or run, and no SH-4 numerical or FPSCR result is claimed. The local owner’s K35/D13 static disassembly review already checks the production batch codegen; this fixture adds an executable way to check its runtime behavior. It does not replace that static review or the full-game qualification.
+
+The fixture is deliberately bounded: one KOS process, no disc reads or private inputs, counts 1, 2, 3, 4, 5, 99, and 100, fixed arrays, no interactive loop, a single `CLOTH_XM14_TARGET PASS` line on completion, and a nonzero exit with a line/expression on failure. The `verify-run` command refuses an absent, duplicated, or malformed PASS record or any FAIL record. The build command refuses changed production excerpts, changed API header, missing or wrong SDK pins, wrong toolchain versions, missing KOS wrappers, and an existing output directory.
+
+### Exact source and toolchain pins
+
+| Input | Pin or check | Purpose |
+|---|---|---|
+| Integrated source basis | `bbfd3254fe4d94299a4bdbc869dbae92bb5ff978` (the unchanged EF14 wrapper is present on the later integrated source) | The fixture records this as its reviewed source basis. |
+| `port/dreamcast/game/platform/sh4zam_direct.c` batch block | SHA-256 `320be560017cbc2d470af1273b7f735c35486d31a0174c9a57abaabed77cf86f` | The builder extracts from the unique `RE4DC_CLOTH_XM_BATCH14` guard to EOF, byte for byte. |
+| `port/dreamcast/game/platform/mtx_sh4.S` MultVec body | SHA-256 `5772f23246a2570f11a10e4848346509d0525dcb74230cf75fb8086227306996` | The builder extracts the unique `_re4dc_sh4_MTXMultVec` body through its `.size` directive. |
+| `include/re4dc_xm.h` | SHA-256 `ba21710229f1233aa597ea30bce98468db10718e07a354be4b5c6db466e1cd37` | Exact public ABI checked before build. |
+| KOS source | `804b3195ebd1a06a27cc2b3a5eacf7a2429040a3` plus the repository’s KOS patches | Builder checks source HEAD and `Makefile.rules`; the local SDK owner must retain the separately built patched KOS library identity. |
+| SH4ZAM | `33fa4850cacb30dd0ad35485ef035526ec4ce782` | Builder checks git HEAD and its real header. No stub header is accepted by the target build. |
+| Cross toolchain | GCC 15.2.0, binutils 2.45.1, newlib 4.6.0.20260123 | Builder checks compiler/KOS thread model, four binutils versions, and the pinned newlib header SHA-256 `be2a4d2763fd9f409369fc62a741dff6722b71ca56050b7c6469581c81fd2420`. |
+
+The builder materializes `production_batch.c` with only the includes and `zvec_t` declaration required by the excerpt, and `production_scalar.S` with `.text` plus the production assembly excerpt. It does not reimplement their transform math. The scalar assembly is compiled with `RE4DC_FP_CONTRACT_OFF=1` and `RE4DC_MULTVEC_SCHED=1`, matching the public `build-r21.sh` recipe's `GAME_FP_CONTRACT=off GAME_MULTVEC_SCHED=1` selection. The batch C wrapper uses `-O2 -ffp-contract=off`, as the production `sh4zam_direct.o` rule does. The C probe uses the real SH4ZAM `shz_xmtrx_load_rows_3x4` and `shz_xmtrx_transform_point3` APIs to seed and inspect XMTRX around rejected calls. The C++ main includes `include/re4dc_xm.h` for its exact declarations. All generated source, objects, ELF, map of commands, `nm`, `objdump`, `readelf`, build log, and a receipt go into a fresh output directory.
+
+### Runtime cases and their verdict boundaries
+
+| Case | Assertion in the SH-4 executable | Limit |
+|---|---|---|
+| Count and storage | Counts 1–5, 99, 100; 12-byte points inside 16-byte input stride and 20-byte output stride; input and output guards remain intact. | Synthetic finite points, not a real cloth instance. |
+| Matrix alignment | Same nontrivial affine transform from a 16-byte-aligned matrix and from a matrix deliberately only four-byte aligned. | Checks the production wrapper’s aligned local row materialization at runtime. |
+| Scalar and batch numerics | Both paths compared to a double-precision affine oracle, and to each other with an explicit magnitude-dependent error bound. The cancellation case uses `1024*x - 1024*y + .25*z + .125` and checks the first exact expected value `.25`. | This is a bounded error check, not bit equality with GameCube or a visual judgment. |
+| Exact in-place | Five points transformed with identical source/output pointer and stride, compared to a separate scalar result. | Shifted overlap is tested as a rejection. |
+| Near plane | One hundred camera-space depths spanning `-0.5`, `-0.99`, `-1.01`, and `-10` compare scalar/batch classification under the production geometry predicate `-z >= 1.0`. Exactly 50 are retained. | It does not execute `re4dc_cloth_band11`, emit PVR packets, or prove clipped triangles visually. The existing host suite covers source packet order and seam behavior. |
+| Malformed envelopes | Short spans, stride below a point, non-word stride/pointer, zero/101 count, shifted alias, matrix/source or matrix/output alias, misaligned matrix and address/stride overflow return zero with no protected-byte write. | Invalid pointers are only passed to the preflight; no invalid read is permitted. |
+| XMTRX and FPSCR | A seeded XMTRX transform remains unchanged after every rejected batch call; FPSCR RM/DN/PR/SZ/FR bits match before/after scalar, batch and rejection calls. PR/SZ must be zero on entry. An unrelated XMTRX owner is interleaved between two complete successful batches, and the second result must be byte-identical to the first. | Arithmetic exception cause/flag bits may change, so full FPSCR equality would be unsound. Interleaving occurs **between** calls; this is not an asynchronous IRQ inserted into the callback-free FTRV loop. |
+
+The numeric tolerance is `1e-5 + 3e-6 * sum(abs(each affine term))` per axis for each path against the double oracle, and twice that for scalar versus batch. It is tight enough to catch an omitted translation or swapped row on the selected cases while allowing expected SH-4 FTRV/FMAC association differences. All outputs must remain finite.
+
+### Reproduce on the pinned local SDK
+
+Use a clean candidate checkout containing these test files and the unchanged EF14 production sources. Set paths to the local pinned SDK; `XM14_OUT` must not exist before the build. The KOS tree must have its repository patches applied and its libraries built, and `dc-tool` (or the local KOS loader) must be able to run a KOS ELF on the selected Dreamcast target. The builder itself checks the precise source and toolchain inputs above.
+
+```bash
+set -euo pipefail
+cd /root/work/re4-dreamcast
+export XM14_KOS=/opt/toolchains/dc/kos
+export XM14_SH4ZAM="$PWD/port/dreamcast/game/third_party/sh4zam"
+export XM14_CXX=/opt/toolchains/dc/sh-elf/bin/sh-elf-g++
+export XM14_OUT=/root/probe/lanes/route/cloth-xm14-target-20261029-a
+export KOS_BASE="$XM14_KOS"
+export PATH="$(dirname "$XM14_CXX"):$XM14_KOS/utils:$PATH"
+test ! -e "$XM14_OUT"
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py check-source
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py build \
+  --output "$XM14_OUT" --kos-root "$XM14_KOS" \
+  --sdk-root "$XM14_SH4ZAM" --sh4-cxx "$XM14_CXX"
+make --no-print-directory -C "$XM14_OUT" \
+  -f "$PWD/port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.mk" \
+  KOS_BASE="$XM14_KOS" SH4ZAM_DIR="$XM14_SH4ZAM" \
+  SOURCE_ROOT="$PWD" TEST_DIR="$PWD/port/dreamcast/tools/cloud/build32/tests" \
+  OUT="$XM14_OUT" KOS_LOADER='dc-tool -x' run 2>&1 | tee "$XM14_OUT/run.log"
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py \
+  verify-run --log "$XM14_OUT/run.log"
+```
+
+The `build` command performs the compile and link via the checked-in Makefile. Its exact expanded invocation is retained in `make-command.json`; `build.log`, `symbols.txt`, `disassembly.txt`, `batch-disassembly.txt`, `elf-header.txt` and `receipt.json` identify the executable and check that the actual batch symbol contains FTRV and paired FRCHG. The executable prints its own check count. Preserve the full serial/emulator log, KOS patch/build identity, chosen target, and exit status with the receipt. If the local loader prefixes serial lines or emits CRLF, `verify-run` still recognizes the exact PASS token.
+
+The static `nm`/disassembly check in this builder is a narrow sanity gate on this fixture ELF. The already completed owner K35/D13 review is the authority for detailed selected-instruction, local stack, aligned-row, stride and callback interval inspection in the production build. Running this standalone ELF does not establish full-game symbol closure or byte identity.
+
+### Checks completed in this cloud worktree
+
+```bash
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py check-source
+# SOURCE_PIN_PASS, exact three source hashes above
+python3 -B port/dreamcast/tests/test_cloth_xm_batch14.py
+# 4 tests, OK (existing host shim, adapter/packet and Make checks)
+mkdir -p /tmp/cloth_xm14_target_syntax
+printf '#define KOS_INIT_FLAGS(x)\n#define INIT_DEFAULT 0\n' \
+  > /tmp/cloth_xm14_target_syntax/kos.h
+g++ -std=c++20 -Wall -Wextra -Werror -DRE4DC_CLOTH_XM_BATCH14=1 \
+  -fsyntax-only -I/tmp/cloth_xm14_target_syntax -Iinclude \
+  port/dreamcast/tools/cloud/build32/tests/cloth_xm14_main.cpp
+# PASS using a temporary two-line kos.h declaration stub for syntax only
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py build \
+  --output /tmp/cloth-xm14-should-not-exist --kos-root /tmp/nonexistent-kos \
+  --sdk-root /tmp/nonexistent-sh4zam --sh4-cxx /tmp/nonexistent-sh-elf-g++
+# REFUSED: missing pinned build input; exit 2, no output directory
+git diff --check
+# clean
+```
+
+The `g++ -fsyntax-only` command is a host grammar check; its temporary `kos.h` declaration stub has no KOS or SH-4 execution authority. The existing `test_cloth_xm_batch14.py` uses host SH4ZAM shims and is likewise not an SH proof. No compiler, KOS libraries or SDK submodule was downloaded or fabricated in this cloud workspace.
+
+### Remaining gates and integration note
+
+1. On the local pinned SDK, run the exact target build and KOS executable, inspect the retained `nm`/disassembly/stack outputs, capture `TARGET_LOG_PASS`, and review any numeric/FPSCR failure. Run with the actual target configuration and document its FPSCR entry control bits. If an asynchronous timer/IRQ preemption guarantee is required, test or inspect KOS interrupt FPU/XMTRX preservation separately; this executable’s inter-call interference does not claim it.
+2. Keep the already specified full-game release absent/explicit-zero identity, `ctrl/on`, narrow `CLOTH_TILES11=0` and compatible ALLON build gates. The fixture ELF cannot substitute for program/overlay identity, target footprint, loaded-package memory, source STRICT, actual packet/clip visuals, or measured frame time.
+3. Exercise current private cloth assets and scene views on the intended emulator/console. The public entry `cEsp4e::SetFreeWork` derives and clamps `nx` to 2–100 and `ny` to 2–50 **before** it calls `Cloth::Set`; `Cloth::Set` accepts `u8` dimensions and contains no such clamp. Synthetic 101/255-wide host cases prove consumer bounds and tiling but do not establish that this producer currently emits a wide sheet.
+
+This source handback precedes target execution; append the actual target result here without relabelling the cloud host check as a target pass. The default-off EF14 implementation remains a prepared render-only approximation until its live image and console gates pass.
+
+The checked-in fixture is outside the production build graph. It adds zero game runtime text/data/BSS/stack by changed-file scope. Target fixture stack files are generated by -fstack-usage; per-frame cycles/traffic and MODELLED frame gain are not inferred. The asynchronous IRQ/FPSCR/XMTRX preservation obligation remains open: the present executable tests interference between complete calls only.
+
+**2026-10-29 progress: DONE** clean synchronization of this reviewed local
+candidate with documentation-only recovery base `d45eb759dd92685255929625e04fae3d7a46bca7`. The previously
+reviewed tip is `d29b781955930244846d9c415d7758196da7bcb8`; every changed path in this synchronization is under
+`port/dreamcast/docs/`, so production/fixture/Make bytes and prior validation
+scope are unchanged. No runtime check is relabeled as freshly executed.
+**NEXT** origin publication when writes return results, then the named
+changed-input target/private gates in this handback. **BLOCKED** no successful
+GitHub write/ref update is established for this local delivery. Keep earlier
+target failures and dependency/publication holds; this documentation-only merge
+does not enable a control, integrate source, or qualify a whole EF card.
+
+## 2026-10-29 recovery: EF14 actual clipping and asynchronous IRQ fixture
+
+**DONE (source and host validation):** recovered the unpublished fixture at
+`888e93cb041cde4c3b7eeb90071d4dc047f00198` (source `d29b781955930244846d9c415d7758196da7bcb8`)
+and extended it on the fetched integration base
+`d45eb759dd92685255929625e04fae3d7a46bca7`. The earlier fixture's inter-call
+XMTRX interference and near-depth classification did not exercise interruption
+inside the FTRV loop or actual triangle clipping. This source update fills those
+fixture gaps. It does not establish a successful target build or run.
+
+The executable now runs all 16 near-plane corner masks through the actual
+`re4dc::cloth11::cell` and `clip_projected_triangle` implementation after both
+the existing production scalar transform and real pinned SH4ZAM FTRV transform.
+It compares vertex counts, source triangle order/flags, colors, UVs and projected
+positions, plus bounded output guards. The target emits a separate CLIP record.
+This is CPU production clipping; no PVR raster or live material acceptance follows.
+
+A bounded asynchronous TMU1 test replaces the earlier inter-call-only claim.
+The existing batch object is compiled unchanged; its actual FTRV instruction
+offsets generate the fixture's interrupt-PC allowlist. The linked executable's
+offsets must match the object before the builder accepts it. A real KOS timer
+interrupt then calls the actual pinned SH4ZAM seed/probe routines, deliberately
+overwriting XMTRX. Resumed batch output must be byte-identical to the uninterrupted
+reference. The run needs at least four interrupts whose saved PC is the FTRV
+instruction or its immediately following instruction, not merely somewhere in
+the wrapper. Missing or inadequate interrupt coverage fails the test.
+
+The executable reports actual entry PR/SZ/FR, verifies PR=SZ=0, checks FPSCR
+control preservation, and checks the interrupted thread's saved FPSCR and the
+KOS-normalized handler mode. TMU0 and TMU2 are untouched; a running TMU1 is
+refused, and the previous handler and priority are restored before post-run
+assertions. Three bounded timer rates avoid relying on one sampling phase,
+with at most 12,288 calls. This covers normal KOS timer IRQ preservation,
+not NMI, arbitrary faults, or full-game interrupt policy.
+
+The builder records an input/object-derived build identity in the executable
+and receipt. `verify-run` now requires that receipt, the matching build identity,
+the complete clipping record and sufficient actual FTRV IRQ coverage. It rejects
+stale inter-call-only logs, wrong FPSCR, missing clipping/interrupt evidence,
+duplicate completion and any FAIL record. The additional production clipping
+sources/headers are hash-pinned. The fixture copies only the exact public
+`re4dc_xm.h` into its output directory, avoiding the recovered game's global
+include directory shadowing standard C++ `<new>`.
+
+### Independent review and SDK binding correction
+
+An independent focused review confirmed the pinned KOS IRQ context layout,
+two-FP-bank/FPSCR save/restore, handler PR/SZ/FR normalization and TMU1 priority
+semantics against the actual public KOS sources. It also found a concrete
+qualification defect inherited from the recovered builder: checking
+`--sh4-cxx` and changing `KOS_BASE`/`PATH` did not control KOS's wrappers. Those
+wrappers execute the inherited absolute `KOS_CC`/`KOS_CCPLUS`, and inherit
+include, library and linker-script settings from whichever SDK was sourced.
+A fixture could therefore have attributed a build/run to the wrong SDK.
+
+The builder now constructs an isolated environment by sourcing the supplied
+pinned `environ_base.sh`, with explicit Dreamcast/pristine/toolchain settings,
+and removes inherited compiler, include, library and Make overrides. It uses
+the absolute pinned `utils/build_wrappers/kos-cc` and `kos-c++` paths and checks
+both selected compilers. No kos-ports search path is needed by this executable.
+The actual compile flags produce separate C/C++ macro evidence; incompatible
+SH-4 ABI, endianness, target/profile defines, fast math or finite-only math
+refuse qualification. Compiler-generated dependency files must identify the
+selected KOS/SH4ZAM headers, whose actual bytes must match their pinned Git
+objects, and must not consume headers from another SDK root.
+
+The build identity includes the selected GCC/G++ binary hashes, core
+`libkallisti.a`, startup object, linker script, relevant pinned KOS environment
+and IRQ sources, effective macros and SDK-header hashes. The final real linker
+map must load that same core archive and startup object. All map-listed inputs
+must remain within the selected roots and are recorded with hashes; bound
+inputs are checked again for mid-build changes. The receipt-bound verifier
+recomputes the executable build identity and checks that the linked KOS hashes
+match its bound inputs, so an older unbound receipt cannot qualify this fixture.
+These checks bind the actual selected prebuilt archive; they do not reconstruct
+its entire build history or substitute for the pending target run.
+
+Timer cleanup is scoped to this standalone fixture: it stops/clears TMU1 and
+restores its previous handler and priority. It does not claim to restore an
+inactive third-party owner's TCOR/TCNT/TCR configuration. The fixture requires
+the standalone default initialization context and refuses an already-running
+TMU1; it is not an embeddable game timer-ownership mechanism.
+
+### Repeated cloud checks
+
+```
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py check-source
+# PASS: unchanged production batch, scalar/API and all eight clipping input pins.
+python3 -B port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py
+# 14 tests PASS, including real host clipping and SDK-binding refusal controls.
+ASAN_OPTIONS=detect_leaks=0 SANITIZE=1 python3 -B port/dreamcast/tools/cloud/build32/tests/test_cloth_xm14_driver.py
+# 14 tests PASS with ASan/UBSan on that actual clipper harness.
+python3 -B port/dreamcast/tests/test_cloth_xm_batch14.py
+# 4 existing host tests PASS; their SH4ZAM shim remains host-only evidence.
+git diff --check
+# PASS.
+```
+
+Host C++20 syntax checks of the target main and production clipping translation
+unit pass with declaration-only KOS/PVR headers. Those headers are temporary
+syntax scaffolding, never accepted by the target builder. The initial sanitizer
+attempt hit the sandbox's LeakSanitizer `/proc/.../task` inspection failure;
+rerunning with leak detection disabled passed address/undefined checks. No leak
+check or actual target instruction execution is claimed.
+
+Additional focused checks exercised the actual pinned KOS environment and
+wrapper scripts with synthetic compiler sentinels, starting from deliberately
+wrong inherited `KOS_CC`, `KOS_CCPLUS`, include/library paths and Make flags.
+Both wrappers selected the supplied compiler and Dreamcast/m4-single settings;
+the foreign inherited paths did not reach them. A real host GNU ld link using
+`STARTUP`/`INPUT` confirmed the link-map parser's selected-input behavior. These
+are wrapper/parser controls only, not SH-4 compilation or execution. A missing
+SDK build request still refuses before creating the output directory.
+
+### Remaining concrete gate
+
+**NEXT:** local pinned KOS/SH4ZAM SDK link and target execution using the existing
+build command, followed by the now-required receipt-bound verifier:
+
+```
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py build \
+  --output "$XM14_OUT" --kos-root "$XM14_KOS" \
+  --sdk-root "$XM14_SH4ZAM" --sh4-cxx "$XM14_CXX"
+# Run the resulting cloth_xm14.elf using the existing approved target loader.
+python3 -B port/dreamcast/tools/cloud/build32/tests/cloth_xm14_target.py verify-run \
+  --log "$XM14_OUT/run.log" --receipt "$XM14_OUT/receipt.json"
+```
+
+**BLOCKED (target qualification only):** this cloud environment has no accessible
+pinned SH-4 GCC/KOS library/SH4ZAM SDK. A build request with missing inputs refuses
+before creating its output directory. Neither target linking nor runtime
+numerics/clipping/IRQ restoration is reported as PASS. A source-only fixture
+delivery does not promote `CLOTH_XM_BATCH14`, qualify full-game stack/memory,
+establish speed, change production gameplay/material/lifetime behavior or lift
+private/look/STRICT/console/release holds. All changed files are fixture tools;
+the production game build graph and default0 switches are unchanged.
+
+Public API/source references used for the fixture are pinned KOS
+`804b3195ebd1a06a27cc2b3a5eacf7a2429040a3`:
+`kernel/arch/dreamcast/include/arch/irq.h`, `include/kos/irq.h`,
+`kernel/arch/dreamcast/include/arch/timer.h`, `kernel/arch/dreamcast/kernel/timer.c`
+and `kernel/arch/dreamcast/kernel/entry.s`. The latter supplies the declared
+two-bank/FPSCR save/restore contract that the changed target executable tests.
+The binding review also checked `utils/build_wrappers/kos-cc`,
+`utils/build_wrappers/kos-c++`, `environ_base.sh`, `environ_dreamcast.sh`,
+`utils/ldscripts/shlelf.xc` and the startup-object destination in
+`kernel/arch/dreamcast/kernel/Makefile` at that exact pin. GCC's SH-4 macro names
+were checked in `gcc/config/sh/sh-c.cc` at the public `releases/gcc-15.2.0` tag.
+
+Queue Status and the live cross-card worker matrix are serialized by root on [codex/cloud-recovery-20261029](https://github.com/lamb2k/re4dc/blob/codex/cloud-recovery-20261029/port/dreamcast/docs/cloud/CLOUD_AGENT_QUEUE.md); this source branch carries its existing Build handback and card-specific backlog update.
 
 ## Answers (owner): 2026-10-29 expanded cloud ownership
 
