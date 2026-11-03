@@ -298,7 +298,7 @@ extern "C" void re4dc_disc_meter_room(int what, unsigned room)
               (unsigned) ((m_tot_block - m_room_b0) / 1000));
 }
 
-#if defined(RE4DC_DOOR_PROBE) && RE4DC_DOOR_PROBE
+#if (defined(RE4DC_DOOR_PROBE) && RE4DC_DOOR_PROBE) || (defined(RE4DC_ESP_SPIKE_LOG) && RE4DC_ESP_SPIKE_LOG)
 // door_probe.cpp (DOOR_PROBE=1, diagnostic): the game-read totals since boot, for the door window's phase marks.
 extern "C" void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigned long long* block_us)
 {

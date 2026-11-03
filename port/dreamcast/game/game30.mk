@@ -218,6 +218,7 @@ $(OBJDIR)/platform/motpin_table.inc: data/motpin.tsv
 	tr -d '\r' < $< | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/^/"/' -e 's/$$/\\n"/' > $@
 $(OBJDIR)/platform/native_motion.o: $(OBJDIR)/platform/motpin_table.inc
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN) -I$(OBJDIR)/platform
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
 endif
 # ESP_SPIKE_LOG=1 (lane motionpin 2026-11-02; log only, needs DISC_READ_METER=1, default 0 = image unchanged): an
 # effect-move phase over 20 ms logs "esp spike:" with the texture uploads, disc reads / blocked time and motion key
@@ -226,6 +227,7 @@ ESP_SPIKE_LOG ?= 0
 ifeq ($(ESP_SPIKE_LOG),1)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_ESP_SPIKE_LOG=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ESP_SPIKE_LOG=1
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_ESP_SPIKE_LOG=1
 endif
 # MOTION_COLD_POOL_CASTLE=<bytes> (lane ch4found16 2026-10-17; needs MOTION_COLD_POOL; render and I/O only, default 0 =
 # image unchanged): the cold pool's heap 4 margin in the castle rooms (room 0x2xx) instead of MOTION_COLD_POOL's.
