@@ -49,7 +49,7 @@ rm -rf "${W:?}/d3/gdemu" "${W:?}/d3/d1/tree"
   python3 -c "import json,sys;r=json.load(open(sys.argv[1]));[print('%s=%d'%(k,r[k])) for k in ('files','data_sectors','village_pruned','castle_pruned')]" "$W/d3/out/report.json"; } > "$W/disc3.env"
 if [ "${D3_NO_TWINS:-0}" = 1 ]; then touch "$W/disc3.ok"; exit 0; fi   # disc only (island5/disc3-lane.sh build)
 FP_TREE=$TB FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d3c KOS_WATCH=1 KOS_SQUEEZE=1 NATIVE_MODEL_REGISTRY_CENSUS=1 \
-  NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 > "$W/twin-d3c.txt" 2>&1 || { echo "rr-disc3: census twin failed"; tail -3 "$W/twin-d3c.txt"; exit 1; }
+  NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 ${D3C_EXTRA:-} > "$W/twin-d3c.txt" 2>&1 || { echo "rr-disc3: census twin failed"; tail -3 "$W/twin-d3c.txt"; exit 1; }
 G=$W/gca3; rm -rf "${G:?}"; ga=0
 { PROVENANCE_D3=1 bash "$D/gc_port23/make_catalog.sh" "$CAND/disc3/gdemu/track03.bin" "$W/recipe.conf" "$G" | tail -1 &&
   FP_TREE=$TA FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d3a GC_ASSET_GATE=1 GC_ASSET_CKPT_FIRST=30 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-d3a.txt" 2>&1; } || ga=1
