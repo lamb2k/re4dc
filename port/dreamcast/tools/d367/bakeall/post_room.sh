@@ -9,7 +9,7 @@
 set -euo pipefail
 R=${1:?}; C=${2:?}; SET=${3:?}; LIN=${4:?}; SHIP=${5:?}; PAK=${6:?}; HAS_TC=${7?}; RC=${8:?}; SG=${9:?}
 T=${BAKE_TOOLS:-/root/work/lanes/bakeall/port/dreamcast/tools}
-ISO=/root/work/re4-dreamcast/orig/G4BE08/re4_debug_disc1.iso
+ISO=${RE4_GC_ISO:-/root/work/re4-dreamcast/orig/G4BE08/re4_debug_disc1.iso}
 D="$SET/dc/native/$R"; W="$SET/work/$R"
 mkdir -p "$D" "$W/own/$R" "$W/rc0" "$W/rc1" "$W/tc/$R" "$W/tco"
 # 1 strip groups only where the release ships an R4SG (r109, sg109: --preserve-order); sidecar crc = own R4PW crc
