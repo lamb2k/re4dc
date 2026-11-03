@@ -114,7 +114,7 @@ def main():
         if not has:
             continue
         metered += 1
-        play = [w for w in ws if not w['load'] and not w['movie']]
+        play = [w for w in ws if not w['load'] and not w['movie'] and w['room'] != '?']   # boot / title windows have no room yet
         over = [w for w in play if w['block'] > a.ms]
         worst = max(play, key=lambda w: w['block']) if play else None
         r = dict(run=f, windows=len(ws), play=len(play), over=len(over),
