@@ -999,8 +999,7 @@ unsigned pin_hex(const char*& p) { unsigned v=0;for(;;++p){const char c=*p;
     if(c>='0'&&c<='9')v=v*16+unsigned(c-'0');else if(c>='a'&&c<='f')v=v*16+unsigned(c-'a'+10);
     else if(c>='A'&&c<='F')v=v*16+unsigned(c-'A'+10);else return v;} }
 unsigned pin_dec(const char*& p) { unsigned v=0;while(*p>='0'&&*p<='9')v=v*10+unsigned(*p++-'0');return v; }
-const char* pin_field(const char* p) { while(*p && *p!='	' && *p!='
-')++p;return *p=='	'?p+1:p; }
+const char* pin_field(const char* p) { while(*p && *p!='\t' && *p!='\n')++p;return *p=='\t'?p+1:p; }
 void pin_apply(Binding& b,unsigned crc) {
     std::memset(b.pin,0,sizeof(b.pin));
 #if RE4DC_MOTION_BOUNDED_R11F
@@ -1012,10 +1011,8 @@ void pin_apply(Binding& b,unsigned crc) {
     const unsigned room=re4dc_room_id_now();
     unsigned rows=0;
     for(const char* line=kMotPinTable;*line;) {
-        const char* next=line;while(*next && *next!='
-')++next;if(*next)++next;
-        if(*line!='#' && *line!='
-' && *line) {
+        const char* next=line;while(*next && *next!='\n')++next;if(*next)++next;
+        if(*line!='#' && *line!='\n' && *line) {
             const char* p=line;bool ok=true;
             if(*p=='*')++p;else { const char* q=p;ok=pin_hex(q)==room;p=q; }
             p=pin_field(p);
@@ -1038,8 +1035,7 @@ void pin_apply(Binding& b,unsigned crc) {
         }
         line=next;
     }
-    re4dc_log("motion pin: room=%03x archive=%u crc=%08x rows=%u
-",room,b.bytes,crc,rows);
+    re4dc_log("motion pin: room=%03x archive=%u crc=%08x rows=%u\n",room,b.bytes,crc,rows);
     if(!rows)return;
     // Admission: each pinned key is read now (room entry) while heap 4 keeps the cold-pool margin after it.
     unsigned keys=0,bytes=0,refused=0,refused_bytes=0;
@@ -1052,8 +1048,7 @@ void pin_apply(Binding& b,unsigned crc) {
         }
         load(b,i);++keys;bytes+=n;
     }
-    re4dc_log("motion pin: archive=%u pinned=%u bytes=%u refused=%u refused_bytes=%u heap4=%d margin=%u
-",b.bytes,keys,bytes,
+    re4dc_log("motion pin: archive=%u pinned=%u bytes=%u refused=%u refused_bytes=%u heap4=%d margin=%u\n",b.bytes,keys,bytes,
               refused,refused_bytes,re4dc_static_heap_free(),unsigned(RE4DC_MOTION_PIN));
 }
 }
