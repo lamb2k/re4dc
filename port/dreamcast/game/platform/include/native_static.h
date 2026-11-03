@@ -51,3 +51,31 @@ void re4dc_fog_frame();
 int re4dc_fog_frame_pending();  // TA_DOUBLEBUF: a fog change must fence the render in flight
 #endif
 }
+
+// lane bakeall: one-line hooks used inside native_static.cpp (kept here so no source line moves in the default image).
+// R4ID count check (native_static.cpp PS2DYN). WORLD_BAKE (lane bakeall): a baked package keeps each placement's
+// SMD row as its field with fewer placements than rows; the ids sidecar is indexed by field, so it must cover every
+// placement's field instead of matching the placement count. Default build: unchanged exact-count check.
+#if defined(RE4DC_WORLD_BAKE) && RE4DC_WORLD_BAKE
+template<class P> static inline bool re4dc_ids_count_ok(unsigned n,unsigned placements,const P* pl) {
+    if(n==placements)return true;
+    for(unsigned i=0;i<placements;++i)if(pl[i].placement>=n)return false;
+    return true;
+}
+#define RE4DC_IDS_COUNT_OK(n,p,pl) re4dc_ids_count_ok((n),(p),(pl))
+#else
+#define RE4DC_IDS_COUNT_OK(n,p,pl) ((n)==(p))
+#endif
+// PS2DYN per-id trace (DYN_ID_TRACE=1, diagnostic builds only): first frame each scroll-bound id is hidden (1), moved (2)
+// or drawn from its source hierarchy (3). Proves which bound placements leave rest pose before a bake merges them.
+#if defined(RE4DC_DYN_ID_TRACE) && RE4DC_DYN_ID_TRACE
+extern "C" void re4dc_log(const char*,...);
+static inline void re4dc_dyn_id_trace(unsigned id,unsigned r,unsigned f){
+    static unsigned char seen[256][4];
+    if(!r || r>3U || id>255U || seen[id][r])return;
+    seen[id][r]=1;re4dc_log("PS2DYN id=%02x state=%s frame=%u\n",id,r==1U?"hidden":r==2U?"moved":"source",f);
+}
+#define RE4DC_DYN_ID_TRACE(id,r,f) re4dc_dyn_id_trace((id),(r),(f))
+#else
+#define RE4DC_DYN_ID_TRACE(id,r,f) ((void)0)
+#endif

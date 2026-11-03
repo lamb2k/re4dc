@@ -130,16 +130,3 @@ inline std::uint32_t policy_source_crc(unsigned room,const unsigned char* world,
     return actual;
 }
 }
-// R4ID count check (native_static.cpp PS2DYN). WORLD_BAKE (lane bakeall): a baked package keeps each placement's
-// SMD row as its field with fewer placements than rows; the ids sidecar is indexed by field, so it must cover every
-// placement's field instead of matching the placement count. Default build: unchanged exact-count check.
-#if defined(RE4DC_WORLD_BAKE) && RE4DC_WORLD_BAKE
-template<class P> static inline bool re4dc_ids_count_ok(unsigned n,unsigned placements,const P* pl) {
-    if(n==placements)return true;
-    for(unsigned i=0;i<placements;++i)if(pl[i].placement>=n)return false;
-    return true;
-}
-#define RE4DC_IDS_COUNT_OK(n,p,pl) re4dc_ids_count_ok((n),(p),(pl))
-#else
-#define RE4DC_IDS_COUNT_OK(n,p,pl) ((n)==(p))
-#endif
