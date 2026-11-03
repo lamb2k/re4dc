@@ -41,10 +41,10 @@ PY
       python3 "$D367/test11/t11-fix.py" "${X}rW" "$FIX" --base payload --data "$(cat "$W/$X.data")" --warp "$W/stills/$R-$V.txt" > /dev/null
       rm -rf "${S:?}"
       ( set -a; [ -s "$W/$X.env" ] && . "$W/$X.env"; set +a
-        cd "$HW" && RE4DC_DISCCACHE=/mnt/c/Flycast-Evidence/_disccache python3 stage-scenario.py "rrspeed-$N" --arm "candidate-route${X}rW" \
+        cd "$HW" && RE4DC_DISCCACHE=/mnt/c/Flycast-Evidence/_disccache bash /root/probe/lanelock.sh python3 stage-scenario.py "rrspeed-$N" --arm "candidate-route${X}rW" \
           --programs "$HW/programs-route.json" --overlay /mnt/c/Flycast-Evidence/re4-dreamcast/r11-media-overlay-r1/payloads --fixture "$FIX" ) > "$W/stills/stage-$N.json" 2>&1 || true
       grep -q STAGED_PAYLOAD_IDENTITY_PASS "$W/stills/stage-$N.json" || { echo "$R $V $X: stage failed"; rm -rf "${S:?}"; continue; }
-      ( cd "$HW" && flock /root/probe/lane-rr-b.lock timeout 120 "$PY" run-emulator.py "rrspeed-$N" --seconds 40 --period 6 ) > "$W/stills/run-$N.txt" 2>&1 || true
+      ( cd "$HW" && timeout 120 "$PY" run-emulator.py "rrspeed-$N" --seconds 40 --period 6 ) > "$W/stills/run-$N.txt" 2>&1 || true
       LAST=$(ls -d "$S"/capture/shots/t* 2>/dev/null | sort | tail -1)
       if [ -n "$LAST" ] && [ -f "$LAST/frames/fb0.png" ]; then cp "$LAST/frames/fb0.png" "$OUT/$R/$V-$([ $X = "$XB" ] && echo base || echo plan).png"; fi
       echo "$R $V $X frozen=$(grep -ac 'warp: frozen' "$S/capture/run-output.txt" 2>/dev/null) halt=$(grep -ac HALT "$S/capture/run-output.txt" 2>/dev/null) shot=${LAST##*/}"
