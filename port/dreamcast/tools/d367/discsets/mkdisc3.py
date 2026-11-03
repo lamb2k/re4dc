@@ -93,7 +93,16 @@ if os.environ.get('D3_PAK_LIVE', '1') == '1':
     sys.path.insert(0, os.path.join(here, '..'))
     import texpack
     lo = os.path.join(out, 'paklive')
-    rc = subprocess.call([sys.executable, os.path.join(here, '..', 'vram', 'texpak_live.py'), tree, '--out', lo])
+    # The composed pack may hold more than the runtime's 8,192 keys before this prune (Disc 1's pack + the island keys):
+    # read it with texpak_live in-process with the reader's count limit lifted; the pruned pack written below is
+    # texpack.build + verify at the runtime limit.
+    sys.path.insert(0, os.path.join(here, '..', 'vram'))
+    import texpak_live
+    _mc = texpack.MAX_COUNT; texpack.MAX_COUNT = 1 << 20
+    try:
+        rc = texpak_live.main([tree, '--out', lo])
+    finally:
+        texpack.MAX_COUNT = _mc
     if rc not in (0, 1):
         raise SystemExit('mkdisc3: texpak_live rc %d' % rc)
     live = {ln.split('	')[0] for ln in open(os.path.join(lo, 'live.tsv')).read().splitlines()[1:]
