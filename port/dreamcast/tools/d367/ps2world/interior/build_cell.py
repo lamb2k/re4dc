@@ -70,6 +70,17 @@ def load(cfg_path, pkg_dir):
         for x in idv:
             seen[x] = seen.get(x, 0) + 1
         p.dynamic = {i for i, x in enumerate(idv) if x < 250 and seen[x] == 1}
+        # island-interiors 11-03: on the island the room shells, floors and ceilings carry unique ids too; a config
+        # names the placements that are static scenery (never moved or hidden by the room code) so they occlude.
+        p.dynamic -= set(cfg.get('static_placements', []))
+        # static_min_size (mm): a placement whose world box has a side at least this long is room structure (island rooms
+        # give nearly every placement its own id); static_dynamic lists the big ones that do move (kept out).
+        if cfg.get('static_min_size'):
+            box = {}
+            for pi, part, c, ps, cull, lo, hi in p.iter_clusters():
+                a = box.get(pi); box[pi] = (np.minimum(a[0], lo), np.maximum(a[1], hi)) if a else (lo, hi)
+            big = {i for i, (lo, hi) in box.items() if np.max(hi - lo) >= cfg['static_min_size']}
+            p.dynamic -= big - set(cfg.get('static_dynamic', []))
     return cfg, p
 
 
