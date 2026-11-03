@@ -219,6 +219,7 @@ $(OBJDIR)/platform/motpin_table.inc: data/motpin.tsv
 $(OBJDIR)/platform/native_motion.o: $(OBJDIR)/platform/motpin_table.inc
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN) -I$(OBJDIR)/platform
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
 endif
 # ESP_SPIKE_LOG=1 (lane motionpin 2026-11-02; log only, needs DISC_READ_METER=1, default 0 = image unchanged): an
 # effect-move phase over 20 ms logs "esp spike:" with the texture uploads, disc reads / blocked time and motion key

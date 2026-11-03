@@ -69,6 +69,11 @@ static inline void re4dc_far_shell_movie_restore() {}
 #if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
 extern "C" unsigned re4dc_motion_movie_restore();
 #endif
+#if defined(RE4DC_MOTION_PIN) && RE4DC_MOTION_PIN
+extern "C" unsigned re4dc_motion_pin_restore();   // native_motion.cpp: re-read pinned keys a movie evicted
+#else
+static inline unsigned re4dc_motion_pin_restore() { return 0; }
+#endif
 
 // Event::ExeBeginEvt, lasting part: scenario event nesting, event-running status, begin func.
 static void routeBegin(unsigned flags, RouteEvtFunc func)
@@ -182,6 +187,7 @@ int RouteMoviePlayQte(unsigned id, unsigned flags, RouteEvtFunc func, unsigned q
     re4dc_weapon_heap4_movie_restore();
     re4dc_ps2_interior_movie_restore();
     re4dc_far_shell_movie_restore();
+    re4dc_motion_pin_restore();
     pG->Disp_flg = disp;
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
     if (flags & ROUTE_MOVIE_ACT_COUNT) {
@@ -225,6 +231,7 @@ int RouteMoviePlay(unsigned id, unsigned flags, RouteEvtFunc func, RouteMovieTic
     re4dc_weapon_heap4_movie_restore();
     re4dc_ps2_interior_movie_restore();
     re4dc_far_shell_movie_restore();
+    re4dc_motion_pin_restore();
     pG->System_flg &= ~0x400;  // Event::Run releases the held picture after frame 0
     pG->Disp_flg = disp;
     if (st == RE4DC_MOVIE_UNHANDLED) {

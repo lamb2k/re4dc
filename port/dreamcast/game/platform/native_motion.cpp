@@ -1053,6 +1053,33 @@ void pin_apply(Binding& b,unsigned crc) {
 }
 }
 #endif
+#if RE4DC_MOTION_PIN
+// After an in-room movie: pinned keys its heap request evicted are read again before the next game frame,
+// under the same heap-4 margin as admission (no read when the margin is gone; the key stays a cold miss).
+extern "C" unsigned re4dc_motion_pin_restore() {
+    Locked guard;
+#if RE4DC_SUBSCREEN
+    if(hold)return 0;
+#endif
+    if(re4dc_motion_current_heap()!=4)return 0;
+    unsigned keys=0,bytes=0,refused=0;
+    for(auto& b:bindings) {
+        if(!b.archive)continue;
+#if RE4DC_MOTION_BOUNDED_R11F
+        if(b.bounded)continue;
+#endif
+        for(unsigned i=0;i<b.count && i<256;++i) {
+            if(!pinned_key(b,i) || b.slots[i].data)continue;
+            const unsigned n=aligned(word(record(b,i)+4));
+            if(re4dc_static_heap_free()<int(n+unsigned(RE4DC_MOTION_PIN)+96)){++refused;continue;}
+            load(b,i);++keys;bytes+=n;
+        }
+    }
+    if(keys||refused)re4dc_log("motion pin: restored=%u bytes=%u refused=%u heap4=%d
+",keys,bytes,refused,re4dc_static_heap_free());
+    return keys;
+}
+#endif
 extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
     Locked guard;auto* a=static_cast<unsigned char*>(archive);
     if(!a || bytes<16)return 0;
