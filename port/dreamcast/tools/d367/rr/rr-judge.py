@@ -203,6 +203,8 @@ if build_ok and jobs:
     # last good candidate's allowlist is the shrink-only baseline) and unwired-baseline.json. RR_GCA_MODE=report (the
     # default until the coordinator flips it to gate) reports a failure as KNOWN.
     gl = [EVU / n / 'run-output.txt' for n in ('gca-title', 'gca-h2', 'gca-r100', 'gca-r101', 'gca-r103', 'gca-r11e', 'gca-r11f', 'gca-grenade')]
+    gx = (re.findall(r'^RR_GCA_EXTRA="([^"]*)"', rd(W / 'recipe.conf'), re.M) or [''])[-1].split()   # rr-jobs.sh extra gate rooms
+    gl += [EVU / ('gca-' + r) / 'run-output.txt' for r in gx]
     if any(p.exists() for p in gl) or 'gca' in srt:
         G = D367 / 'gc_port23'
         lgs = dict(l.split('=', 1) for l in rd(RR_HOME / 'state/last-good').splitlines() if '=' in l)
@@ -223,7 +225,7 @@ if build_ok and jobs:
         if all(p.exists() for p in gl):
             subprocess.run(['python3', str(G / 'judge.py'), *map(str, gl), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(base),
                             '--unwired-baseline', str(G / 'unwired-baseline.json'), '--room', '0100', '--room', '0101', '--room', '0103',
-                            '--room', '011e', '--room', '011f', *comp_args(W / 'gca'), '--json', str(jj)], capture_output=True, text=True)
+                            '--room', '011e', '--room', '011f', *sum([['--room', '0' + r[1:]] for r in gx], []), *comp_args(W / 'gca'), '--json', str(jj)], capture_output=True, text=True)
         try:
             j = json.loads(jj.read_text())
         except (OSError, ValueError):
