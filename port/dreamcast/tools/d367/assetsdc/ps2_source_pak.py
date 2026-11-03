@@ -102,6 +102,8 @@ def main():
     ap.add_argument('--max-mae', type=float, default=30.0)
     ap.add_argument('--min-side', type=int, default=8, help='only convert pictures with both sides >= this (raw16 small UI-ish pictures stay)')
     ap.add_argument('--dry', action='store_true')
+    ap.add_argument('--align-mae', type=float, default=5.0)
+    ap.add_argument('--only-keys', help='convert only these keys (one per line)')
     ap.add_argument('--ps2-size', action='store_true', help='keep the PS2 picture at its own size (power of two, >= 64x64 '
                     'pictures, VQ) and set header flags bit 29 (runtime PKG_PS2_SIZE=1: whole picture, scaled)')
     ap.add_argument('--skip-keys', help='keys never touched (one per line): already PS2-proven pictures (HUD, fonts, pics sets)')
@@ -111,7 +113,9 @@ def main():
     base = Path(a.pak).read_bytes()
     pkgs = read_pak(base)
     skip = set(l.split()[0] for l in open(a.skip_keys) if l.strip()) if a.skip_keys else set()
-    src = {k for k, v in pkgs.items() if base_info(v)[0] == 'source' and '%08x-%08x' % k not in skip}
+    only = set(l.split()[0] for l in open(a.only_keys) if l.strip()) if a.only_keys else None
+    src = {k for k, v in pkgs.items() if base_info(v)[0] == 'source' and '%08x-%08x' % k not in skip
+           and (only is None or '%08x-%08x' % k in only)}
     rows, files, done, seen = [], [], set(), set()
     work = Path(tempfile.mkdtemp(prefix='psp-', dir=str(O)))
     for g in a.glob or DEFAULT_GLOBS:
@@ -137,7 +141,18 @@ def main():
             for pn in twin(rel):
                 if (P / pn).exists() and (P / pn).stat().st_size:
                     twins.append((pn, hashlib.sha256((P / pn).read_bytes()).hexdigest()))
-                    pimgs += [im for _o, ims in ps2_tpl.find_all((P / pn).read_bytes()) for im in ims]
+                    for t_i, (_o, ims) in enumerate(ps2_tpl.find_all((P / pn).read_bytes())):
+                        for i_i, im in enumerate(ims):
+                            pimgs.append(dict(im, tpl=(pn, t_i), idx=i_i))
+            # the PS2 often stores a tall picture transposed (64x128 -> 128x64): offer each non-square PS2 picture
+            # transposed too (the same texels, 11-03 r203/r207 rows)
+            from PIL import Image as _I
+            for q in list(pimgs):
+                if q['width'] != q['height']:
+                    t = tp.rgba(q['width'], q['height'], q['rgba']).transpose(_I.TRANSPOSE)
+                    pimgs.append(dict(q, width=q['height'], height=q['width'], rgba=list(t.getdata()),
+                                      transposed=True))
+            gc_tpls = sorted({o for o, _n, _g in gims})
             frow['ps2_images'] = len(pimgs)
             psig = [tp.signature(tp.rgba(q['width'], q['height'], q['rgba'])) for q in pimgs]
             for k_i, (off, n, gim, key, kt) in enumerate(mine):
@@ -165,7 +180,18 @@ def main():
                            second=round(second, 3), mae=round(tp.mae(r, gimg), 2))
                 twin_dup = len(cand) > 1 and tp.ncc(psig[j], psig[cand[1][1]]) >= 0.995
                 if score < a.min_ncc or row['mae'] > a.max_mae or (score - second < a.margin and not twin_dup):
-                    row['note'] = 'no unique PS2 picture'; rows.append(row); continue
+                    # flat pictures tie on NCC: accept the PS2 picture at the same TPL / image index when it is near
+                    # identical (MAE <= --align-mae), as stored or transposed
+                    al = [jj for jj, q in enumerate(pimgs) if q.get('tpl', (None, -1))[1] == gc_tpls.index(off)
+                          and q.get('idx') == n and (q['width'], q['height']) == (gim.width, gim.height)]
+                    al = [(tp.mae(tp.rgba(pimgs[jj]['width'], pimgs[jj]['height'], pimgs[jj]['rgba']), gimg), jj) for jj in al]
+                    al = sorted(x for x in al if x[0] <= a.align_mae)
+                    if not al:
+                        row['note'] = 'no unique PS2 picture'; rows.append(row); continue
+                    j = al[0][1]; pim = pimgs[j]
+                    r = tp.rgba(pim['width'], pim['height'], pim['rgba'])
+                    row.update(ps2_index=j, ps2_size=[pim['width'], pim['height']], mae=round(al[0][0], 2), aligned=True)
+                row['transposed'] = bool(pim.get('transposed'))
                 if a.dry:
                     row['note'] = 'dry-match'; rows.append(row); continue
                 pw, ph = pim['width'], pim['height']
@@ -184,7 +210,7 @@ def main():
                     hh = list(tpl.HEADER.unpack_from(final)); hh[10] |= 1 << 29   # Header.flags: whole picture, scaled
                     final = tpl.HEADER.pack(*hh) + final[tpl.HEADER.size:]
                 row.update(how=how, before=len(pkgs[kt]), after=len(final), sha256=hashlib.sha256(final).hexdigest(),
-                           ps2_file=twins[0][0] if twins else None, ps2_file_sha256=twins[0][1] if twins else None)
+                           ps2_file=pim['tpl'][0], ps2_file_sha256=dict(twins)[pim['tpl'][0]], ps2_tpl=pim['tpl'][1], ps2_image=pim['idx'])
                 pkgs[kt] = final; done.add(key); frow['replaced'] += 1
                 rows.append(row)
             print('%-24s gc %4d source %4d ps2 %4d replaced %4d' % (rel, frow['gc_images'], frow['source_keys'],
