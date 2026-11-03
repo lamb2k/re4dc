@@ -7623,7 +7623,7 @@ bool ps2_open(){
         if(iread){
             std::memcpy(&ih,ib,sizeof(ih));
             iwhy="header";
-            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==policySourceCrc && ih.count==h.placements &&
+            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==policySourceCrc && RE4DC_IDS_COUNT_OK(ih.count,h.placements,ps2w.placements) &&
                ih.count<=isize-sizeof(ih)){
                 const std::uint8_t* idv=ib+sizeof(ih);
                 std::uint8_t count[dyn::kIds]={};
