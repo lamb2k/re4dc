@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Real portrait producer -> existing deferred queue -> native actor emitter.
+"""Real source entry/bridge -> hair producer -> deferred queue -> native emitter.
 
-Only source game structs, primitive allocation, texture/SQ/SH4 transport are
-host adapters. Queue/view/lighting snapshots, portrait pose calculation,
-immutable proof and the complete actor TU are extracted from current sources.
-Synthetic arrays are the only asset input; no private artwork is embedded.
+Source structs, the transaction result/current GX state, primitive allocation
+and texture/SQ/SH4 transport are host adapters. Queue/view/lighting snapshots,
+portrait pose calculation, immutable proof and the complete actor TU are
+extracted from current sources.
+Source transaction admission and visibility/OT selection execute extracted
+production branches. Source shader callbacks are outside this bounded fixture;
+the bridge consumes explicitly supplied current state. Synthetic arrays are the
+only asset input; no private artwork is embedded.
 """
 import argparse
 import hashlib
@@ -82,7 +86,39 @@ def fixture():
     text += coarse[start:end]
     text += runtime.adapter.body(coarse, 'extern "C" int re4dc_portrait_hair(')
     text += '\n' + cases.split('// ACTUAL_PORTRAIT')[1]
+    entry, _ = source_entry()
+    text = runtime.replace_once(text, 'int main(){test::Portrait portrait;',
+                                entry + '\nint main(){test::Portrait portrait;entry::cases(portrait);')
     return text
+
+
+def source_entry():
+    """Extract the real nomination boundaries, not copies of their predicates."""
+    trans = (runtime.ROOT / 'src/game/trans.cpp').read_text()
+    common = runtime.adapter.body(trans, 'void commonModelTrans(')
+    admission = runtime.adapter.body(common, '    if(!flag) {\n        const int owned=re4dc_actor_transaction_draw(m);')
+    ot = runtime.adapter.body(common, '        if (!(pG->Status_flg[1] & 0x100) && m->ot_type == 7) {')
+    visible = runtime.adapter.body(common, '        if (!(info->be_flag & 8)) {')
+    bridge = runtime.adapter.body((GAME / 'model_bridge.cpp').read_text(),
+                                  'extern "C" void re4dc_draw_model_part(')
+    begin = bridge.index('#if defined(RE4DC_LEON_PS2_PORTRAIT_HAIR)')
+    end = bridge.index('\n#endif', begin) + len('\n#endif')
+    # Full actual bridge setup up to the hair nomination; its generic tail is
+    # an explicit counted sink when this identified replacement is unsupported.
+    nomination = bridge[:end] + '\n    ++entry_generic;\n}\n'
+    dispatch = '            re4dc_draw_model_part(m, info, part, mv, flag);'
+    completion = '    if(token==0xADEB)re4dc_model_finish_source_draws();'
+    barrier = '    GXSetDrawSync(0xADEB);'
+    assert common.count(dispatch) == 1
+    assert (GAME / 'platform/gx_stub.cpp').read_text().count(completion) == 1
+    assert trans.count(barrier) == 1
+    parts = dict(admission=admission, source_ot=ot, source_visibility=visible,
+                 bridge_nomination=nomination, source_dispatch=dispatch,
+                 source_completion=completion, source_barrier=barrier)
+    text = (HERE / 'actor_continuation_entry.cpp.in').read_text()
+    for name, body in parts.items():
+        text = runtime.replace_once(text, '// ACTUAL_' + name.upper(), body)
+    return text, {name: hashlib.sha256(body.encode()).hexdigest() for name, body in parts.items()}
 
 
 def main():
@@ -113,7 +149,8 @@ def main():
                         RE4DC_ACTOR_SETUP_LEAN=1, RE4DC_COARSE_GATE_ONCE=0,
                         RE4DC_COPY_LEAN=1, RE4DC_D349_RENDERER_STACK=1, RE4DC_PVR_STREAM=1,
                         RE4DC_WORLD_HOLE_FIX=1, RE4DC_BRIDGE_LEAN=0,
-                        RE4DC_LEON_LIGHT_HEADROOM=1)
+                        RE4DC_LEON_LIGHT_HEADROOM=1, RE4DC_LEON_PS2_PORTRAIT_HAIR=1,
+                        RE4DC_NATIVE_ACTOR=1)
             exe = out / ('pool%d-fast%d' % (owner_pool, fast_only))
             command = ['g++', '-std=c++20', '-O2', '-fno-fast-math', '-ffp-contract=off',
                        '-ffunction-sections', '-fdata-sections', '-Wall', '-Wextra',
@@ -134,15 +171,25 @@ def main():
             (out / (exe.name+'.stderr')).write_bytes(run.stderr)
             if run.returncode:
                 raise RuntimeError(run.stderr.decode()[-12000:])
+            result = json.loads(run.stdout)
+            assert result['source_entry_checks'] >= 43 and result['gx_attempts'] == 0
+            assert result['producer'] == 'source-bridge-119-bone-hair'
             rows.append(dict(owner_pool=owner_pool, fast_only=fast_only,
-                             result=json.loads(run.stdout), command=command))
+                             result=result, command=command))
             print(json.dumps(rows[-1]['result']), flush=True)
     inputs = [Path(__file__), HERE / 'actor_continuation_platform.cpp.in', HERE / 'actor_continuation_cases.cpp.in',
+              HERE / 'actor_continuation_entry.cpp.in', runtime.ROOT / 'src/game/trans.cpp', GAME / 'model_bridge.cpp',
+              PLATFORM / 'gx_stub.cpp',
               PLATFORM / 'native_actor_fast.cpp', PLATFORM / 'native_ui.cpp', PLATFORM / 'native_model.cpp',
               GAME / 'coarse_actor.cpp', GAME / 'coarse_actor_geometry_once.inc']
     inputs += list((PLATFORM / 'include').glob('native_actor_*continuation*'))
     inputs += [PLATFORM / 'include/native_actor_pose_snapshot.inc']
     report = dict(status='PASS', scope=__doc__, profiles=rows, adaptations=adaptations, make_policy=policy,
+                  source_entry_fragments_sha256=source_entry()[1],
+                  source_entry_limits=['nomination branches, not full source rendering or actor transaction',
+                      'synthetic current material state; source shader callbacks not executed',
+                      'same-info renomination after reset at unchanged source Frame_cnt not assumed legal',
+                      'hosted transport; no target execution or live producer incidence'],
                   sanitizer='address,undefined' if args.sanitize else None,
                   sha256={str(p.relative_to(runtime.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs})
     (out / 'actor-continuation.json').write_text(json.dumps(report, indent=2)+'\n')

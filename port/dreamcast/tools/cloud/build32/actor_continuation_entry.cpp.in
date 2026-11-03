@@ -1,0 +1,168 @@
+// Bounded source-entry adapter: production nomination branches and bridge setup
+// below, synthetic source structs/current GX state and transaction result only.
+// No source shader/material callback or whole transaction implementation is
+// claimed here; those are independent contracts, not a fabricated live actor.
+namespace entry {extern unsigned transaction_calls;extern int transaction_result;}
+extern "C" int re4dc_actor_transaction_draw(cModel*){++entry::transaction_calls;return entry::transaction_result;}
+namespace entry {
+unsigned transaction_calls=0,bridge_calls=0,source_postludes=0,entry_generic=0;
+unsigned source_checks=0;
+int transaction_result=0;
+Re4dcUiImage selected{},mask{};
+unsigned mask_ref=256,mask_same_uv=0,wrap_s=0,wrap_t=0,current_alpha=255;
+float scroll_u=0,scroll_v=0;
+re4dc::render::SourceLighting current_light;
+float current_projection[7],current_viewport[6];
+int re4dc_model_diagnostic_enabled(){return 1;}
+void bind_actor_frame(){}
+unsigned re4dc_model_cull(unsigned c,bool){return c;}
+unsigned re4dc_gx_model_alpha(){return current_alpha;}
+void re4dc_gx_model_lighting(re4dc::render::SourceLighting* p){*p=current_light;}
+void projection(float* p){std::memcpy(p,current_projection,sizeof(current_projection));}
+void viewport(float* p){std::memcpy(p,current_viewport,sizeof(current_viewport));}
+#define RE4DC_GXF_GET_PROJECTION(p) entry::projection(p)
+#define RE4DC_GXF_GET_VIEWPORT(p) entry::viewport(p)
+// ACTUAL_BRIDGE_NOMINATION
+
+using queue::re4dc_model_finish_source_draws;
+void GXSetDrawSync(unsigned token){
+    // ACTUAL_SOURCE_COMPLETION
+}
+void finish(){
+    // ACTUAL_SOURCE_BARRIER
+}
+
+void source(cModel* m,cModelInfo* info,ModelPart* part,const float mv[3][4],int flag=0){
+    // Actual commonModelTrans transaction branch and filtering execute intact.
+    // The source material/shader work between these islands is supplied above.
+    // ACTUAL_ADMISSION
+    while(info!=nullptr){
+        // ACTUAL_SOURCE_OT
+        // ACTUAL_SOURCE_VISIBILITY
+        ++bridge_calls;
+        // ACTUAL_SOURCE_DISPATCH
+        info=info->pList;
+    }
+    ++source_postludes;
+}
+
+void reset(test::Portrait& p){
+    test::begin();transaction_result=0;
+    transaction_calls=bridge_calls=source_postludes=entry_generic=0;
+    pG->Status_flg[1]=0;p.model.ot_type=7;p.model.be_flag=0;p.info.be_flag=8;
+    p.model.id=0;p.model.nParts=119;p.info.pList=nullptr;
+    current_light=p.asset.lighting;selected=p.asset.p.image;mask=p.asset.p.mask;current_alpha=p.asset.p.alpha_state;
+    std::memcpy(current_projection,p.asset.p.projection,sizeof(current_projection));
+    std::memcpy(current_viewport,p.asset.p.viewport,sizeof(current_viewport));
+    p.data.pTex=p.asset.p.uv;p.data.nrmOrig=p.asset.wide_normals.data();
+    p.pose(0.1f);
+}
+
+void cases(test::Portrait& p){
+    using test::need;using test::Outcome;
+    const unsigned before=test::checks;
+    // ModelPart occupies source-owned space; the actual bridge only records
+    // its byte-after-header stream before replacing it with compiled hair.
+    alignas(32) unsigned char storage[96]{};
+    auto* part=::new(storage) ModelPart{};
+    reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    need(transaction_calls==1 && bridge_calls==1 && source_postludes==1,"actual zero-admission source entry and postlude");
+    need(queue::deferred_count==1 && check::ta.empty() && !queue::source_draws_finished,"non-UI source hair queues before completion");
+    need(entry_generic==0 && host::gx_attempts==0,"identified replacement stays out of generic/GX tail");
+    auto saved=queue::restore_view(queue::deferred_first);
+    need(native_pose_of(saved)!=nullptr,"bridge queued view retains actual pose ticket");
+    GXSetDrawSync(0);need(check::ta.empty() && queue::deferred_count==1,"unrelated source sync cannot drain queued hair");
+    finish();
+    need(host::last.outcome==Outcome::Submitted && host::emissions==1,"source-nominated hair replay publishes once");
+    need(!native_pose_of(saved) && queue::deferred_count==0,"drain releases copied view ticket");
+    const auto expected=check::ta;
+    reset(p);need(p.queue()==1,"existing direct producer reference queues");queue::re4dc_model_finish_source_draws();
+    need(check::ta==expected,"real source bridge state matches existing native reference packet words");
+
+    for(int outcome:{1,-1}){
+        reset(p);transaction_result=outcome;
+        source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+        need(transaction_calls==1 && bridge_calls==0 && queue::deferred_count==0 && host::allocations.empty(),"whole-actor result excludes duplicate source nomination");
+        need(source_postludes==unsigned(outcome>0),"source owner success preserves postlude and failure stops it");
+    }
+    for(unsigned flags:{0u,0x40u,8u,0x48u})for(unsigned second:{0u,1u}){
+        reset(p);p.info.be_flag=flags;p.model.be_flag=second?0x08000000u:0u;
+        source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+        const bool selected=(flags&8u) && bool(flags&0x40u)==bool(second);
+        need(bridge_calls==unsigned(selected) && queue::deferred_count==unsigned(selected),"actual source visibility and two OT groups select matching hair only");
+    }
+    reset(p);p.info.be_flag=0x48;pG->Status_flg[1]=0x100;
+    source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    need(bridge_calls==1 && queue::deferred_count==1,"actual status override bypasses only OT group filtering");
+    reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview),1);
+    need(transaction_calls==0 && bridge_calls==1 && queue::deferred_count==0 && host::allocations.empty(),"nonzero source pass skips transaction and bridge publication");
+    for(unsigned mismatch=0;mismatch<4;++mismatch){
+        reset(p);
+        if(mismatch==0)p.model.id=1;
+        if(mismatch==1)p.model.nParts=118;
+        if(mismatch==2)p.model.be_flag=0x4000;
+        if(mismatch==3)--p.data.nVtx;
+        source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+        need(bridge_calls==1 && entry_generic==1 && queue::deferred_count==0 && host::allocations.empty(),"unidentified source geometry cannot borrow compiled hair capability");
+        if(mismatch==3)++p.data.nVtx;
+    }
+
+    reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    const auto first_view=queue::restore_view(queue::deferred_first);
+    float first_palette[36];std::memcpy(first_palette,pose_palette(*native_pose_of(first_view)),sizeof(first_palette));
+    auto second_info=p.info;second_info.pList=nullptr;
+    p.pose(0.3f);current_alpha=117;current_light.lights[0].color[0]=7;
+    source(&p.model,&second_info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    const auto second_view=queue::restore_view(queue::deferred_last);
+    need(queue::deferred_count==2 && first_view.native_pose_lease.serial!=second_view.native_pose_lease.serial,"interleaved source infos own distinct FIFO pose identities");
+    need(first_view.alpha_state==231 && second_view.alpha_state==117,"bridge snapshots distinct current material state in source order");
+    need(std::memcmp(first_palette,pose_palette(*native_pose_of(first_view)),sizeof(first_palette))==0,"later source pose cannot overwrite first queued palette");
+    finish();
+    need(host::emissions==2 && !native_pose_of(first_view) && !native_pose_of(second_view),"both source-nominated FIFO identities complete and release");
+    const auto fifo_words=check::ta;
+    reset(p);p.pose(0.3f);
+    const auto original_light=p.asset.lighting;const unsigned original_alpha=p.asset.p.alpha_state;
+    p.asset.lighting.lights[0].color[0]=7;p.asset.p.alpha_state=117;
+    need(p.queue()==1,"independent native producer reference for second source state");queue::re4dc_model_finish_source_draws();
+    auto all_expected=expected;all_expected.insert(all_expected.end(),check::ta.begin(),check::ta.end());
+    p.asset.lighting=original_light;p.asset.p.alpha_state=original_alpha;
+    need(fifo_words==all_expected,"both complete FIFO packet sequences match independent current pose/light/material references in order");
+
+    // Source Frame_cnt is not the out-of-band primitive/render capability.
+    // Characterize duplicate nomination only while its original queue is live;
+    // do not assume a same-info retry after reset is a legal source operation.
+    reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    saved=queue::restore_view(queue::deferred_first);
+    const unsigned source_frame=pG->Frame_cnt,allocations=host::allocations_made;
+    source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    need(queue::deferred_count==1 && host::allocations_made==allocations,"same source info/frame with live queue is consumed once");
+    queue::reset_deferred();check::start();
+    need(pG->Frame_cnt==source_frame && !native_pose_of(saved),"same source Frame_cnt cannot preserve a reset/render-stale ticket");
+    second_info=p.info;second_info.pList=nullptr;
+    source(&p.model,&second_info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    auto fresh=queue::restore_view(queue::deferred_first);
+    need(native_pose_of(fresh)!=nullptr && fresh.native_pose_lease.serial!=saved.native_pose_lease.serial,"fresh source info acquires a new render identity at unchanged source Frame_cnt");
+    re4dc_actor_native_pose_release(&saved);
+    need(native_pose_of(fresh)!=nullptr,"stale release cannot revoke fresh reused workspace slot");
+    finish();need(host::last.outcome==Outcome::Submitted,"fresh same-source-frame identity drains normally");
+
+    reset(p);queue::source_draws_finished=true;
+    source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    need(queue::deferred_count==0 && !check::ta.empty(),"source-finished control publishes directly");
+    reset(p);queue::deferred_top=8192;queue::spill_ok=false;
+    const unsigned queued=portrait_hair_queued;
+    source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    need(queue::deferred_count==0 && portrait_hair_queued==queued && entry_generic==0 && check::ta.empty(),"source-entry queue refusal consumes failure without generic replay");
+
+    reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    saved=queue::restore_view(queue::deferred_first);queue::reset_deferred();
+    need(!native_pose_of(saved),"source-entry reset revokes before snapshot access");
+    auto result=re4dc_actor_native_submit_result(&saved,1);
+    need(result.outcome==Outcome::PartialAbort && host::aborts==1 && check::ta.empty(),"reset published identity aborts rather than decoding stale view");
+
+    reset(p);source(&p.model,&p.info,part,reinterpret_cast<const float(*)[4]>(p.asset.p.modelview));
+    saved=queue::restore_view(queue::deferred_first);re4dc_model_packet_abort();finish();
+    need(!native_pose_of(saved) && !host::emissions && check::ta.empty(),"source-entry aborted queue never publishes");
+    source_checks=test::checks-before;
+}
+}

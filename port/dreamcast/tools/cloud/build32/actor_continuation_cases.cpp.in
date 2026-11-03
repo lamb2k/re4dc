@@ -8,10 +8,15 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 }
 using Mtx=float[3][4];
 struct cParts {cParts* pList=nullptr;Mtx mat{};};
-struct ModelData {unsigned nVtx=0,nNrm=0,weight_ext_num=0,weight_palette_num=0;const void* vtxOrig=nullptr;};
-class cModelInfo {public:ModelData* pData=nullptr;cModelInfo* pList=nullptr;};
-class cModel {public:unsigned id=0,nParts=119,be_flag=0;cParts* pList=nullptr; cParts* pParts=nullptr;};
-struct Global {unsigned Frame_cnt=0;} global;
+struct ModelData {unsigned nVtx=0,nNrm=0,weight_ext_num=0,weight_palette_num=0;const void* vtxOrig=nullptr;
+    const void* nrmOrig=nullptr;const void* pTex=nullptr;const void* pClr=nullptr;
+    unsigned nParts=2,shift=4,flags=0;const void* shapeOfs=nullptr;};
+class cModelInfo {public:ModelData* pData=nullptr;cModelInfo* pList=nullptr;
+    const void* pPosBuf[2]{};const void* pNrmBuf[2]{};unsigned be_flag=8,blend_mode=0;};
+class cModel {public:unsigned id=0,nParts=119,be_flag=0;cParts* pList=nullptr; cParts* pParts=nullptr;
+    unsigned ot_type=7,z_mode=0,CullMode=0,kindid=0,serial=1;Mtx mat{};};
+struct ModelPart {unsigned flags=0,size=32;unsigned char texId=0,alphaTex=0;};
+struct Global {unsigned Frame_cnt=0,Status_flg[4]{},Debug_flg[4]{},vtx_buf_no=0;} global;
 Global* pG=&global;
 void PSMTXConcat(const Mtx a,const Mtx b,Mtx out){
     Mtx tmp{};for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c){
@@ -206,5 +211,5 @@ void tickets(Portrait& portrait){
 }
 }
 int main(){test::Portrait portrait;test::queued_lifecycle(portrait);test::failures(portrait);test::tickets(portrait);
-    std::printf("{\"checks\":%u,\"producer\":\"actual-119-bone-portrait\",\"queue\":\"actual-copy-lean\",\"gx_attempts\":%u}\n",test::checks,host::gx_attempts);
+    std::printf("{\"checks\":%u,\"source_entry_checks\":%u,\"producer\":\"source-bridge-119-bone-hair\",\"queue\":\"actual-copy-lean\",\"gx_attempts\":%u}\n",test::checks,entry::source_checks,host::gx_attempts);
     queue::reset_deferred();for(void* p:host::allocations)std::free(p);}
