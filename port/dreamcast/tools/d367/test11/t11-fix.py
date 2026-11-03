@@ -1997,6 +1997,11 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
