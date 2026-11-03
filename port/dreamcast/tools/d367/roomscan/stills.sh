@@ -5,7 +5,7 @@
 # Views per room: the census warp view plus the two costliest sampled views of the plan (before_ms). Each still: a warp
 # fixture (t11-fix.py --base payload, the arm's own data line) with `freeze`, staged with stage-scenario.py, one
 # Flycast run of 40 s (run-emulator.py), the newest framebuffer kept as <out>/<room>/<view>-<arm>.png; disc deleted.
-# Takes /root/probe/lane-rr.lock per run; one Flycast at a time.
+# Takes /root/probe/lane-rr-b.lock per run; one Flycast at a time.
 set -euo pipefail
 XB=${1:?}; XP=${2:?}; W=${3:?}; OUT=${4:?}; shift 4
 TREE=${RR_TREE:-/root/work/lanes/lod27}; D367=$TREE/port/dreamcast/tools/d367
@@ -44,7 +44,7 @@ PY
         cd "$HW" && RE4DC_DISCCACHE=/mnt/c/Flycast-Evidence/_disccache python3 stage-scenario.py "rrspeed-$N" --arm "candidate-route${X}rW" \
           --programs "$HW/programs-route.json" --overlay /mnt/c/Flycast-Evidence/re4-dreamcast/r11-media-overlay-r1/payloads --fixture "$FIX" ) > "$W/stills/stage-$N.json" 2>&1 || true
       grep -q STAGED_PAYLOAD_IDENTITY_PASS "$W/stills/stage-$N.json" || { echo "$R $V $X: stage failed"; rm -rf "${S:?}"; continue; }
-      ( cd "$HW" && flock /root/probe/lane-rr.lock timeout 120 "$PY" run-emulator.py "rrspeed-$N" --seconds 40 --period 6 ) > "$W/stills/run-$N.txt" 2>&1 || true
+      ( cd "$HW" && flock /root/probe/lane-rr-b.lock timeout 120 "$PY" run-emulator.py "rrspeed-$N" --seconds 40 --period 6 ) > "$W/stills/run-$N.txt" 2>&1 || true
       LAST=$(ls -d "$S"/capture/shots/t* 2>/dev/null | sort | tail -1)
       if [ -n "$LAST" ] && [ -f "$LAST/frames/fb0.png" ]; then cp "$LAST/frames/fb0.png" "$OUT/$R/$V-$([ $X = "$XB" ] && echo base || echo plan).png"; fi
       echo "$R $V $X frozen=$(grep -ac 'warp: frozen' "$S/capture/run-output.txt" 2>/dev/null) halt=$(grep -ac HALT "$S/capture/run-output.txt" 2>/dev/null) shot=${LAST##*/}"
