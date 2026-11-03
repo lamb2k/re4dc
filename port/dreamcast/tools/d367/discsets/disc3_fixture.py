@@ -63,9 +63,10 @@ pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'castle31', 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), ipak])
 # Village / castle-only pack keys (listed only by r1xx / r2xx room resident lists, never by r000, an island room or the
-# island tree) are dead weight on Disc 3. Default OFF since 11-03: it dropped keys the island rooms name by crc word
-# (dde6f32a-0b7cfdcf, TEXCHK r300-r333); mkdisc3.py D3_PAK_LIVE prunes the final pack instead (D3_PAK_PRUNE=1 restores).
-if os.environ.get('D3_PAK_PRUNE', '0') == '1':
+# island tree) are dead weight on Disc 3 (D3_PAK_PRUNE=0 keeps the composed pack, which then exceeds the runtime's 8,192
+# keys). 11-03: a key the island rooms name by crc word alone (dde6f32a-0b7cfdcf in resident.bin, TEXCHK r300-r333) or
+# that a Disc 3 census asked for (island5/d3-pak-seen.txt) is never dropped here.
+if os.environ.get('D3_PAK_PRUNE', '1') == '1':
     import glob, zlib
     lists = {}
     for t in glob.glob(os.path.join(HERE, '..', 'vram', 'resident', '**', 'r*.tsv'), recursive=True):
@@ -74,9 +75,22 @@ if os.environ.get('D3_PAK_PRUNE', '0') == '1':
             if ln.strip():
                 lists.setdefault(ln.split('\t')[0], set()).add(room)
     island_keys = {os.path.basename(k)[:17] for k in C if k.startswith('dc/tex/')}
+    import array
+    seen_f = os.path.join(HERE, '..', 'island5', 'd3-pak-seen.txt')
+    keep_seen = {l.strip() for l in open(seen_f) if l.strip()} if os.path.exists(seen_f) else set()
+    crcs = {int(k[:8], 16) for k in lists}; crc_ref = set()
+    for k_ in C:
+        if k_ in ('dc/tex.pak', 'SHA256SUMS') or k_.startswith(('dc/tex/', 'dc/movie/', 'bgm/')):
+            continue
+        b_ = open(os.path.join(it, k_), 'rb').read()
+        for off in range(4):
+            n_ = (len(b_) - off) // 4
+            if n_ > 0:
+                a_ = array.array('I'); a_.frombytes(b_[off:off + 4 * n_])
+                crc_ref |= crcs.intersection(a_); a_.byteswap(); crc_ref |= crcs.intersection(a_)
     def dead(key):
         rooms = lists.get(key)
-        if not rooms or key in island_keys:
+        if not rooms or key in island_keys or key in keep_seen or int(key[:8], 16) in crc_ref:
             return False
         return all(re.match(r'r[12][0-9a-f]{2}$', r) and r != 'r22c' for r in rooms)
     b = open(pak, 'rb').read(); magic, ver, count, ioff, doff = struct.unpack_from('<8s4I', b, 0)
