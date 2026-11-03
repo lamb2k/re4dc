@@ -2072,5 +2072,13 @@ if os.path.isdir(C4SKYD):
     DATA['c4sky'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (C4SKYD, r) for r in sorted(os.listdir(C4SKYD))
                      if os.path.isfile('%s/%s/ps2-sky.r4sk' % (C4SKYD, r))}
 
+# d2esl (lane world-ch4 11-03, coordinator; DISC 2 ONLY via D2_DATA): little-endian etc/emleon05..09.esl. The castle tree's
+# copies (castle_fixture.py takes emleon03..09) are raw GameCube big-endian, so readEmList byte-swapped every room field
+# and EmSetFromList refused every chapter 4 list entry (emleon05). tools/le_mirror.py of those five; same bytes as
+# island-esl-20261103 (Disc 3). Store: re4-assets-private/d2esl-20261103.
+D2ESLD = os.environ.get('D2ESLD', '/root/re4data/private/d2esl-20261103')
+if os.path.isfile(D2ESLD + '/RECIPE.txt'):
+    DATA['d2esl'] = {'etc/emleon0%d.esl' % n: '%s/etc/emleon0%d.esl' % (D2ESLD, n) for n in range(5, 10)}
+
 if __name__ == '__main__':
     main()
