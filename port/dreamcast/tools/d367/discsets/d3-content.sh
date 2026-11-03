@@ -63,10 +63,10 @@ if [ "${D3_FINAL:-1}" = 1 ]; then
 FR=$(src island18-final-rooms-20261018); FW=$(src island18-final-worlds-20261018); FS=$(src island18-final-sound-20261018)
 for r in r331 r332 r333; do
   put "$FR/$r/released/st3/$r.arc" "st3/$r.arc"; put "$FS/st3/$r.dar" "st3/$r.dar"
-  for t in "$FR/$r"/tex/*.re4tex; do put "$t" "dc/tex/${t##*/}"; done
+  for t in "$FR/$r"/tex/*.re4tex; do f_=${t##*/}; put "$t" "dc/tex/${f_:0:1}/$f_"; done
   W=$FW/$r/stage; [ "$r" = r333 ] && W=$(src island18-r333-world-20261018)/stage
   for f in "$W/rooms/$r"/ps2-world.*; do put "$f" "dc/native/$r/${f##*/}"; done
-  for t in "$W"/tex/*.re4tex; do [ -e "$t" ] && put "$t" "dc/tex/${t##*/}"; done
+  for t in "$W"/tex/*.re4tex; do [ -e "$t" ] && f_=${t##*/}; put "$t" "dc/tex/${f_:0:1}/$f_"; done
 done
 for f in "$(src island18-final-source-20261018)"/source/evd/*.evd; do put "$f" "evd/${f##*/}"; done
 for f in "$(src island18-r333-transport-20261018)"/evd/*; do put "$f" "evd/${f##*/}"; done
