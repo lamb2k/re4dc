@@ -296,6 +296,13 @@ if build_ok and jobs:
             ('program %s end %s, %s files, %s sectors (limit 504000), village files pruned %s; disc_lint loader+standard 0' % (
                 de.get('prog', '?')[:16], de.get('end', '?'), de.get('files', '?'), de.get('sectors', '?'), de.get('village_pruned', '?'))
              if (W / 'disc2.ok').exists() else 'rr-disc2.sh failed: see cycle.log'))
+        # not-run rows (lane world-ch31 11-03): a Disc 2 gate whose jobs or base never ran FAILs with the reason instead of
+        # vanishing (cycle 1103-0531 printed PASS with no Disc 2 GC-ASSET row: its d2a base hit the disc-cache floor)
+        def d2_why(what):
+            cl = rd(W / 'cycle.log')
+            rs = [l.strip() for l in cl.splitlines() if l.startswith(('rr-disc2:', 'AssertionError', 'rr-jobs:'))]
+            rs += [l.strip() for l in rd(W / 'd2-skip.txt').splitlines() if l.strip()]
+            return 'not run: %s%s' % (what, (' (' + ' / '.join(rs[:3]) + ')') if rs else '')
         r2 = rd(W / 'd2-census-rooms.txt').split()
         l2 = [EVU / ('d2cg-' + r) / 'run-output.txt' for r in r2 if (EVU / ('d2cg-' + r) / 'run-output.txt').exists()]
         if r2 or (W / 'disc2.ok').exists():
@@ -337,6 +344,15 @@ if build_ok and jobs:
             add('Disc 2 VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
             add('Disc 2 census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
             add('Disc 2 cap 4 (peak enemies alive)', max(list(peak.values()) or [0]) <= 4, ' '.join('%s=%d' % kv for kv in sorted(peak.items())))
+        else:
+            for n in ('Disc 2 CAST-GC', 'Disc 2 LEON-GC', 'Disc 2 TEXCHK', 'Disc 2 VRAM no-contiguous 0',
+                      'Disc 2 census HALT/FAULT/MISSING 0', 'Disc 2 cap 4 (peak enemies alive)'):
+                add(n, False, d2_why('no Disc 2 census logs'))
+        jn = [j_[0] for j_ in jobs]
+        if 'd2kos' not in jn:
+            add('Disc 2 KOS 48 KiB (r200 door, r202 fight)', False, d2_why('no d2kos job'))
+        if 'd2gdemu' not in jn:
+            add('Disc 2 GDEMU race (r200 -> r202 door)', False, d2_why('no d2gdemu job'))
         for n, _, _, rc in jobs:
             if n == 'd2kos':
                 lg = rd(J / 'd2kos.log')
@@ -363,6 +379,9 @@ if build_ok and jobs:
             add('Disc 2 GC-ASSET gate', bool(j.get('pass')), ('not covered: %s' % ('; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items())))
                 for r, c in sorted(nc.items())) or 'none') + ('' if j.get('pass') else ' | ' + ' / '.join(j.get('failures', [])[:3])))[:600],
                 knownrow=os.environ.get('RR_D2_GCA_MODE', os.environ.get('RR_GCA_MODE', 'gate')) == 'report')   # RR_D2_GCA_MODE=report: Disc 2 only
+        else:
+            add('Disc 2 GC-ASSET gate', False, d2_why('no d2gca run logs (%d d2gca dirs)' % len(list(EVU.glob('d2gca-*')))),
+                knownrow=os.environ.get('RR_D2_GCA_MODE', os.environ.get('RR_GCA_MODE', 'gate')) == 'report')
     # siege (lane cast-ps2-25 10-26): r100 house siege, Ganados streaming their motion (rr-jobs.sh siege-r100)
     sg = EVU / 'siege-r100' / 'run-output.txt'
     if 'siege-r100' in [j[0] for j in jobs] or sg.exists():
