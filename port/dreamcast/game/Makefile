@@ -1140,6 +1140,12 @@ $(OBJDIR)/route_movie_bridge.o $(OBJDIR)/platform/dvd.o $(OBJDIR)/platform/nativ
 ifeq ($(WEAPON_HEAP4_TOP),1)
 $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_HEAP4_TOP=1
 endif
+# WEAPON_HEAP4_WALK_GUARD=1 (with WEAPON_HEAP4_TOP; lane crash26, default 0: no effect): the top walk checks every free
+# heap-4 cell (range, alignment, back link, size) before reading it; a damaged list refuses the heap-4 load (the equip
+# reverts to a resident weapon, as when heap 4 is short) and logs the cell, instead of the Test 25 QA fault in ReadWepData.
+ifeq ($(WEAPON_HEAP4_WALK_GUARD),1)
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_HEAP4_WALK_GUARD=1
+endif
 ifeq ($(WEAPON_HEAP4_FAILTEST),1)
 $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_HEAP4_FAILTEST=1
 endif
@@ -1852,12 +1858,26 @@ endif
 # DISC_READ_LOG=1 (lane zeroread17 2026-10-17; diagnostic, log only, default 0; needs DISC_READ_METER=1): one "DRL:" line
 # per drive call that moves data (a sector read: S, a stream start: T) with its first sector, its size and the calling
 # thread, so in-play reads map to disc files through the ISO listing (isoinfo -l extents of track03).
+# DISC_READ_LOG=2 (lane coldread27 2026-11-02; diagnostic, log only): instead of the DRL lines, platform/play_read_log.cpp
+# (fs_open / fs_read wraps) names the files read in each DISCRD window: "DRF: phase=play|load|movie file=<path tail>
+# reads= kb= ms= thr=" (the 8 slowest per window), for the PLAY-DISC-READ gate (tools/d367/rr/play_disc_read.py).
 DISC_READ_LOG ?= 0
+ifneq ($(filter $(DISC_READ_LOG),0 1 2),$(DISC_READ_LOG))
+$(error DISC_READ_LOG must be 0, 1 or 2)
+endif
 ifneq ($(DISC_READ_LOG),0)
 ifneq ($(DISC_READ_METER),1)
-$(error DISC_READ_LOG=1 needs DISC_READ_METER=1)
+$(error DISC_READ_LOG needs DISC_READ_METER=1)
 endif
-$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_LOG=1
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_LOG=$(DISC_READ_LOG)
+endif
+ifeq ($(DISC_READ_LOG),2)
+ifneq ($(filter 1,$(DOOR_PROBE) $(IO_PROBE)),)
+$(error DISC_READ_LOG=2 wraps fs_open / fs_read like DOOR_PROBE / IO_PROBE: use one)
+endif
+GAME_LDFLAGS += -Wl,--wrap=fs_open -Wl,--wrap=fs_read
+else
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/play_read_log.o,$(PLATFORM_OBJS))
 endif
 # DISC_COMPAT=1 (test 14 items 11/12, lane discread 2026-10-15, default 0): the disc-read compatibility set for GDEMU
 # units and clones, ODEs and loaders (RE4DC-DISC-COMPAT-RESEARCH-20261015.md section 6), one knob:
@@ -2362,6 +2382,12 @@ MOVIE_LAYOUT_GUARD ?= 0
 # s30cell-26 (11-02): 1 = an arena movie (r100s30) keeps the PS2_INTERIOR_CULL r100 cell resident instead of lending it
 # (the arena movie never stages in heap 4); lent, the reload after s30 failed the 81920 B reserve and r100 ran unculled.
 MOVIE_ARENA_CELL_KEEP ?= 0
+# bossmem26 (11-02): 1 = El Gigante's r119 parasite (s30, 11930) and death (s20, 11920) movies borrow r119's PS2 world
+# package as the r11f / r100s30 movies do (the world is not drawn under a movie; read again after it). From the heap they
+# were refused (heap 4 fragmented after the fight, `order: piece N short`, terminal=3). Needs MOVIE_LAYOUT_GUARD=1.
+# 2 = also by rule in every room: any full 288x192 room movie heap 4 can't stage borrows its room's PS2 world package
+# (registered at open when it holds the movie set); the heap stays the first choice.
+MOVIE_WORLD_ARENA_R119 ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
@@ -2369,6 +2395,7 @@ $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_LAYOUT_GUARD %s\n' '$(MOVIE_LAYOUT_GUARD)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_ARENA_CELL_KEEP %s\n' '$(MOVIE_ARENA_CELL_KEEP)' >> $@.tmp
+	@printf '#define RE4DC_MOVIE_WORLD_ARENA_R119 %s\n' '$(MOVIE_WORLD_ARENA_R119)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
@@ -3210,6 +3237,17 @@ $(error SS11_ROOM_EVICT=1 needs ROOM_CHANGE_EVICT, ROOM_REENTRY_EVICT=1 and SS11
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_EVICT=1
 endif
+# SS11_ROOM_DEFER=1 (lane bossmem26 2026-11-02; render only, default 0 = image unchanged; needs SS11_ROOM_EVICT=1): a room
+# change behind the chapter-end screens loads no picture of the new room there (the save screen's pictures still hold
+# VRAM; r11b's raw 256x256 pictures latched 8-10 no-contiguous uploads after Del Lago); the room's own entry evicts the
+# old set and preloads the new one.
+SS11_ROOM_DEFER ?= 0
+ifeq ($(SS11_ROOM_DEFER),1)
+ifneq ($(SS11_ROOM_EVICT),1)
+$(error SS11_ROOM_DEFER=1 needs SS11_ROOM_EVICT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_DEFER=1
+endif
 # FRAME_QUEUE_DIAG=1 (lane fix18 #39, log only, default 0 = image unchanged): one FQDIAG line per frame whose frame
 # queue refused translucent parts or effect sprites: counts, bytes asked for, the peak, and the queue at the drop.
 FRAME_QUEUE_DIAG ?= 0
@@ -3664,6 +3702,11 @@ include mendezfx.mk
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
 ifneq ($(MOVIE_WORLD_ARENA),1)
 $(error MOVIE_WORLD_ARENA_S30 needs MOVIE_WORLD_ARENA=1)
+endif
+endif
+ifneq ($(MOVIE_WORLD_ARENA_R119),0)
+ifneq ($(MOVIE_WORLD_ARENA)$(MOVIE_LAYOUT_GUARD),11)
+$(error MOVIE_WORLD_ARENA_R119 needs MOVIE_WORLD_ARENA=1 and MOVIE_LAYOUT_GUARD=1)
 endif
 endif
 ifeq ($(MOVIE_WORLD_ARENA),1)
