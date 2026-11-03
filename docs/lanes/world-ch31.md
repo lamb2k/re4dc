@@ -38,3 +38,20 @@ Branch `lane/world-ch31` from t15/int 15ed29fe; pushed as wip/world-ch31-2026110
 - Start: VMU `castle31/vmu/handoff-ch23end-A1.bin` + `warps/d2-fastload-pad.txt` (Disc 2 boot, load the 2-3 end save).
 - Route: `warps/plan31-steer.txt` (r200 -> r202 -> r207, keys A/B). Room presets: a-r200 b-r202 c-r207 d-r203 e-r201 f-r208 g-r204(b).
 - End: r204 chapter end (g-r204 / end-pad.txt).
+
+## Gates 11-03 (lane head 5b8537f1 = t15/int 7ec95b326 + lane; logs D:\RE4DC-Lanes\world-ch31\rr and \rroff)
+- Disc 1 identity: image eec23ce1925ac9b2 = t15/int base cycle 1103-0015-7ec95b32 (same program; DATA line untouched).
+- OFF arm 1103-0338 (D2_EXTRA empty): 37/38. Only Disc 2 GC-ASSET fails, 9 rows:
+  - r203: layout 96e39bd7, GC model 08d57f77 (record 2003104; likely item itm57, which has no PS2 twin in r203.dat),
+    texture 72be589c;
+  - r207: layout dca7d347, textures 77c1171c, 511673a2, 5224f21f, b894c4b5, 70524d21.
+  - The textures have no unique PS2 picture in r203.dat / r207.dat: NCC ties on flat pictures, MAE >= 19. 761e77f9 is
+    fixed by cpic27 (r203.dat TPL 67t, NCC 1.000). r203 / r207 have no room BINs on either side, so there are no pairs.
+- ON arm 1103-0531 (goto switch on): verdict PASS 38/38, but the Disc 2 GC-ASSET gate twin was not built ("C: too full for
+  891 MB, floor 16 GiB" in the d2a base step, with C: at 17 GB) and the judge reported no row for it. The data equals OFF,
+  so OFF's 9 rows stand.
+- Both arms, Disc 2: CAST-GC, LEON-GC, TEXCHK, VRAM no-contig 0, HALT 0, cap 4 (r200=4 r201=1 r202=4 r203=4 r204=0
+  r207=3 r208=4), KOS 48 KiB, GDEMU 1 seed: PASS.
+- r207 clear rig: ON killed 10 Ganados, OFF 8. Both reach 0 Ganados alive (ON frame 1830, OFF ~1800), with at most 4 alive.
+  With the switch off, 2 held hall Ganados never come into play. rsf 86300000 does not change after the last kill, so the
+  rig cannot show a clear/door flag.
