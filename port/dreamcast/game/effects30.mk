@@ -782,6 +782,21 @@ endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP1B_GRID03=1
 endif
 
+# EF12: RGB565 mask TEXA=1 through the existing sprite Entry/header/FIFO.
+EFFECT_MASK12 ?= 0
+ifneq ("$(EFFECT_MASK12)","0")
+ifneq ("$(EFFECT_MASK12)","1")
+$(error EFFECT_MASK12 must be exactly 0 or 1)
+endif
+endif
+ifeq ("$(EFFECT_MASK12)","1")
+ifneq ($(EFFECT_SPRITES)$(EFFECT_LEAN)$(NATIVE_DRAW_OUTCOMES)$(D349_RENDERER_STACK)$(PVR_STREAM)$(UI_HANDLES),111111)
+$(error EFFECT_MASK12 needs EFFECT_SPRITES=1 EFFECT_LEAN=1 NATIVE_DRAW_OUTCOMES=1 D349_RENDERER_STACK=1 PVR_STREAM=1 UI_HANDLES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_MASK12=1
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_EFFECT_MASK12=1
+endif
+
 # EF11 consumed single-texture cloth sheet; material gaps remain explicit.
 CLOTH_SHEET11 ?= 0
 ifneq ($(filter-out 0 1,$(CLOTH_SHEET11)),)

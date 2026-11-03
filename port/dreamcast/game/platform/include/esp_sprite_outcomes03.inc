@@ -2,6 +2,10 @@
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #define RE4DC_ESPSPRITE03_RETURN(state) return {re4dc::NativeDrawOutcome::state}
     if(!esp)RE4DC_ESPSPRITE03_RETURN(UnsupportedBeforePublication);
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    const unsigned material12=(esp->m_Tool_flg&0x4000)?re4dc::effect_mask12::opaque_mask:re4dc::effect_mask12::sample_alpha;
+    if(material12 && !EspMaskClass12(esp))RE4DC_ESPSPRITE03_RETURN(UnsupportedBeforePublication);
+#endif
 #else
 #define RE4DC_ESPSPRITE03_RETURN(state) return
 #endif
@@ -294,6 +298,9 @@
         }
     }
     s.color = (a << 24) | (r << 16) | (g << 8) | b;
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    if(material12 && a<=1)RE4DC_ESPSPRITE03_RETURN(Culled);
+#endif
     s.src = esp->xA5 & 7;
     s.dst = esp->xA6 & 7;
     s.screen = ortho;
@@ -332,6 +339,9 @@
     }
 #endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    if(material12)return re4dc_effect_masked_sprite12_result(&s,material12);
+#endif
     return re4dc_effect_sprite_result(&s);
 #else
     re4dc_effect_sprite(&s);

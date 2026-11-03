@@ -3,6 +3,9 @@
 #define RE4DC_SPRITE03_RETURN(state,legacy,sent,queued) return {re4dc::NativeDrawOutcome::state,sent,queued}
 #define RE4DC_SPRITE03_DIRECT() return {stream_aborted?re4dc::NativeDrawOutcome::PartialAbort:re4dc::NativeDrawOutcome::Submitted,1,0}
     if(!s)RE4DC_SPRITE03_RETURN(UnsupportedBeforePublication,0,0,0);
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    const unsigned frame12=frame,epoch12=handle_reset;
+#endif
 #else
 #define RE4DC_SPRITE03_RETURN(state,legacy,sent,queued) return legacy
 #define RE4DC_SPRITE03_DIRECT() return 1
@@ -103,6 +106,10 @@
 #endif
     const unsigned opens=load_opens;
 #endif
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    Key key12{};
+    if(material12 && !image_key(s->image,key12))RE4DC_SPRITE03_RETURN(Refused,0,0,0);
+#endif
 #if RE4DC_UI_HANDLES
     Entry* e=resolve(s->image,nullptr,true);
 #else
@@ -119,6 +126,15 @@
     if(!e && fxearly_hit){fxearly_hit=false;fxearly_remember(s->image);++fxnone_cuts;RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}
 #endif
     if(!e){++fx_missing;RE4DC_SPRITE03_RETURN(Refused,0,0,0);}
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    if(material12){
+        if(stream_aborted)RE4DC_SPRITE03_RETURN(PartialAbort,0,0,0);
+        if(frame12!=frame || epoch12!=handle_reset || !frame_ready || draining_parts || !e->valid || !(e->key==key12) ||
+           e->frame!=frame || !e->package.upload_complete() || e->package.header().texture_count!=1 ||
+           !e->package.pvr_texture(0) || e->package.header().flags ||
+           !re4dc::effect_mask12::native_rgb(*e->package.textures()))RE4DC_SPRITE03_RETURN(Refused,0,0,0);
+    }
+#endif
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
 #if defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
     if(fx_none_cut(*e)){fxearly_remember(s->image);++fxnone_cuts;RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // resident already (e.g. drawn elsewhere)
@@ -140,7 +156,11 @@
 #if RE4DC_FX_SPRITE_TRIM || RE4DC_FX_SPRITE_TRIM_DIAG
     Re4dcEffectSprite trimmed;    // FX_SPRITE_TRIM: the quad over its texture's alpha box or octagon (fxtrim.mk)
     float fx_oct_p[8],fx_oct_q[8];
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    const int fx_trim_kind=material12?0:fx_trim(*s,e,trimmed,fx_oct_p,fx_oct_q);
+#else
     const int fx_trim_kind=fx_trim(*s,e,trimmed,fx_oct_p,fx_oct_q);
+#endif
 #if RE4DC_FX_SPRITE_TRIM
     if(fx_trim_kind==2){
 #if RE4DC_TA_BIN_DIAG
@@ -237,7 +257,16 @@
 #endif
     if(source_draws_finished){
         AVD_EVENT(Direct,nullptr,nullptr,1);
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+        alignas(32) unsigned char packet[kSpritePacket];
+#if defined(RE4DC_ESP_SETUP_BATCH)
+        fx_packet(*s,e,packet,nullptr,material12);
+#else
+        fx_packet(*s,e,packet,material12);
+#endif
+#else
         alignas(32) unsigned char packet[kSpritePacket];fx_packet(*s,e,packet);
+#endif
         stream_select(PVR_LIST_TR_POLY);fx_send(packet,s->screen);
         ++fx_direct;++fx_count;RE4DC_SPRITE03_DIRECT();
     }
@@ -258,11 +287,19 @@
     *top-=required;
 #if defined(RE4DC_ESP_SETUP_BATCH)
     auto* node=new(storage+*top) DeferredPart{};node->changed[0]=s->screen;
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    const bool body_only=fx_packet(*s,e,storage+*top+kSpriteNode,deferred_last?deferred_last:node,material12);
+#else
     const bool body_only=fx_packet(*s,e,storage+*top+kSpriteNode,deferred_last?deferred_last:node);
+#endif
     node->lighting=body_only?kSpriteBodyTag:kSpriteTag;
 #else
     auto* node=new(storage+*top) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=s->screen;
+#if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
+    fx_packet(*s,e,storage+*top+kSpriteNode,material12);
+#else
     fx_packet(*s,e,storage+*top+kSpriteNode);
+#endif
 #endif
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;
