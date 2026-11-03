@@ -1075,8 +1075,7 @@ extern "C" unsigned re4dc_motion_pin_restore() {
             load(b,i);++keys;bytes+=n;
         }
     }
-    if(keys||refused)re4dc_log("motion pin: restored=%u bytes=%u refused=%u heap4=%d
-",keys,bytes,refused,re4dc_static_heap_free());
+    if(keys||refused)re4dc_log("motion pin: restored=%u bytes=%u refused=%u heap4=%d\n",keys,bytes,refused,re4dc_static_heap_free());
     return keys;
 }
 #endif
