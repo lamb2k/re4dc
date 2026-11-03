@@ -2064,5 +2064,13 @@ if os.path.isdir(SKY27D):
                      if r.startswith('r1') or r == 'r200'}
     DATA['sky27c'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky if r.startswith('r2')}
 
+# c4sky (lane world-ch4 11-03, CH-FIXES-CARRY row 9; DISC 2 ONLY via D2_DATA; needs SKY_PLAY=1): the chapter 4 outdoor rooms'
+# PS2 sky panoramas (ps2_sky_bake.py v2 on the sky27 extract, shrunk to 1024 x 128 like sky27h: 34,816 B VRAM a room).
+# 17 rooms with sky rows; the others keep the clear colour. Store: re4-assets-private/c4sky-20261103.
+C4SKYD = os.environ.get('C4SKYD', '/root/re4data/private/c4sky-20261103')
+if os.path.isdir(C4SKYD):
+    DATA['c4sky'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (C4SKYD, r) for r in sorted(os.listdir(C4SKYD))
+                     if os.path.isfile('%s/%s/ps2-sky.r4sk' % (C4SKYD, r))}
+
 if __name__ == '__main__':
     main()
