@@ -1997,6 +1997,13 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# em2dres32 (lane world-ch32 11-03, r205 stall fix "Option A"; DISC 2 ONLY, after cw32 / pmcw32 when listed on D2_DATA):
+# em/em2d.drs with every motion resident (textures-only body 2,542,976 B, ch3found16 contract em2d-native-textures-v1) +
+# PS2 em2d.dat BIN geometry / motion, replacing the streamed-motion cache (castle18-em2d-motion) r205 stalls on.
+# Store: re4-assets-private/em2dres32-20261103.
+EM2DRES32D = os.environ.get('EM2DRES32D', '/root/re4data/private/em2dres32-20261103')
+if os.path.isfile(EM2DRES32D + '/RECIPE.txt'):
+    DATA['em2dres32'] = {'em/em2d.drs': EM2DRES32D + '/em/em2d.drs'}
 # cw32 / pmcw32 (lane world-ch32 11-02, chapter 3-2 on Disc 2; DISC 2 ONLY via D2_DATA, after cpic26c): the 3-2 rooms r205
 # r209 r20a r20b and enemy archives em2d em23 em18 em22 from the PS2 version (worldch32/gen-all.sh, the castlegca26
 # method): PS2 objects, items, debris, pictures (loose keys), motion and PCM; pmcw32 = the PS2 motion store of the same
