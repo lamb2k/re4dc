@@ -3,3 +3,4 @@
 #   room: hex room id or *; archive_bytes: decimal, as "motion bind: archive=" logs it; mtc_crc: hex as "motion pin:"
 #   logs it, or *; keys: all, or entry indices / ranges (3,5,10-14) from MOTION_MISS_LOG "motion miss" entry= values.
 #   Several rows may name the same room (one per archive). Rows only add pins; heap-4 admission can still refuse a key.
+*	2258208	5bd2325d	0,7-9,14,28-34,42,47-48,51-52,54,56-59	El Gigante (em2b, r119/r11e): keys read cold in the r119 fight (Flycast mpa fixture g3, MOTION_MISS_LOG), 326016 B
