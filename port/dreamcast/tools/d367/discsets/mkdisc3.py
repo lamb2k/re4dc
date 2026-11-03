@@ -98,6 +98,32 @@ if os.environ.get('D3_PAK_LIVE', '1') == '1':
         raise SystemExit('mkdisc3: texpak_live rc %d' % rc)
     live = {ln.split('	')[0] for ln in open(os.path.join(lo, 'live.tsv')).read().splitlines()[1:]
             if ln.split('	')[2] == '1'}
+    # crc-only references (lane world-ch5 11-03, TEXCHK 0/33 on the first prune): resident.bin, registry.re4nmr, r4pw
+    # parts and the enemy / room archives name many pack keys by their crc word alone (the runtime resolves the second
+    # word), so texpak_live's both-words scan missed 32 keys the island rooms load. A key stays when its crc word
+    # appears, little- or big-endian at any byte offset, in any shipped file other than the pack, loose tex, movies, bgm.
+    import array
+    pb = open(os.path.join(tree, 'dc', 'tex.pak'), 'rb').read(); _, _, pc, pio, _ = struct.unpack_from('<8s4I', pb, 0)
+    allk = ['%08x-%08x' % struct.unpack_from('<2I', pb, pio + 16 * i) for i in range(pc)]
+    cand = {int(k[:8], 16) for k in allk if k not in live}; found = set()
+    for d_, _, fs_ in os.walk(tree):
+        for fn in fs_:
+            rel = os.path.relpath(os.path.join(d_, fn), tree)
+            if rel == 'dc/tex.pak' or rel.startswith(('dc/tex/', 'dc/movie/', 'bgm/')):
+                continue
+            b_ = open(os.path.join(d_, fn), 'rb').read()
+            for off in range(4):
+                n_ = (len(b_) - off) // 4
+                if n_ > 0:
+                    a_ = array.array('I'); a_.frombytes(b_[off:off + 4 * n_])
+                    found |= cand.intersection(a_); a_.byteswap(); found |= cand.intersection(a_)
+    crc_kept = {k for k in allk if k not in live and int(k[:8], 16) in found}
+    live |= crc_kept
+    # census keep list (coordinator 11-03, safety net): every key a Disc 3 census run asked for is never pruned
+    seen = os.path.join(here, '..', 'island5', 'd3-pak-seen.txt')
+    census_kept = {l.strip() for l in open(seen) if l.strip()} - live if os.path.exists(seen) else set()
+    live |= census_kept
+    rep['pak_crc_kept'] = len(crc_kept); rep['pak_census_kept'] = len(census_kept)
     keep = set()
     for t in glob.glob(os.path.join(here, '..', 'vram', 'resident', '**', 'r*.tsv'), recursive=True):
         if re.match(r'r(000|3[0-3][0-9a-f]|22c)', os.path.basename(t)):
