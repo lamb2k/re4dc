@@ -1646,6 +1646,15 @@ DATA['bakepilot'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (BAKEPIL
                      for r in ('r11e', 'r119', 'r11a', 'r10d')
                      for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
                      if os.path.exists('%s/dc/native/%s/%s' % (BAKEPILOTD, r, f))}
+# lod27 (lane lod27 11-03, render only; needs WORLD_BAKE=2, never KSETS): r119 / r10e / r103 PS2 worlds rebuilt from
+# their recorded recipes with LOD clusters 3 m (--lod-cluster 3000 --lod-min-gain 0.8 --lod-floor 60), no merge (placements
+# and instancing as shipped); r4pw rekeyed, ids, r4tc and room.r4rc (GRID + OCCL + SCDD) regenerated (tools/d367/lod27).
+# Last of the world sets in the data line. Store copy: re4-assets-private/lod27-20261103.
+LOD27D = os.environ.get('LOD27D', '/root/re4data/private/lod27-20261103')
+DATA['lod27'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (LOD27D, r, f)
+                 for r in ('r119', 'r10e', 'r103')
+                 for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
+                 if os.path.exists('%s/dc/native/%s/%s' % (LOD27D, r, f))}
 # ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
 # chapter 1 + r200 sound banks (etc/core.das, em/pl00 pl08 pl0f pl11, the weapon banks, the room .dar ROOM/FOOT banks,
 # the rooms' enemy banks, ss/cmn/title.snd, bgm/bio4midi.dat) and bgm/aica_str.dat with PS2 PCM written into the
