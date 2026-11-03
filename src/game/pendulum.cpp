@@ -241,6 +241,51 @@ void PenClothFixClear(cModel* m, PenCloth* c, int no)
     }
 }
 
+
+#if defined(RE4DC_PEN_CLOTH_LOD) && RE4DC_PEN_CLOTH_LOD > 1
+#include "player.h"
+#include "pl_npc.h"
+// PEN_CLOTH_LOD=N (logicbudget.mk; lane logicbudget 2026-11-03; an APPROXIMATION, default 0 = off; 2..4): a pendulum
+// cloth chain (hanging cloth objects, enemy clothing and hair; never Leon's or Ashley's) whose owner is off screen
+// (more than 3 m from the camera and behind it or more than 60 degrees off its axis) or beyond PEN_CLOTH_LOD_FAR
+// units from the camera (default 15000) steps only every Nth tick, staggered per chain. A skipped tick still draws
+// the wind phase from the shared random stream (as PenClothSkipTick does), so every later fRand caller sees the same
+// sequence; the chain keeps its pose and speed and swings 1/N as fast while skipped. A warped model (be_flag
+// 0x00200000) always steps. Cloth links carry no gameplay volumes: render-side approximation (look check).
+static int re4dc_pen_cloth_lod_skip(cModel* m, PenCloth* c)
+{
+    if ((cModel*) pPL == m || (cModel*) pSUB == m || (m->be_flag & 0x00200000)) {
+        return 0;
+    }
+    if ((((u32) pG->Frame_cnt + ((u32) c >> 4)) % RE4DC_PEN_CLOTH_LOD) == 0) {
+        return 0;
+    }
+    const Vec* p = &m->getPartsPtr(0)->world;
+    const Camera* cam = &pG->Cam;
+    const f32 vx = p->x - cam->param.pos.x;
+    const f32 vy = p->y - cam->param.pos.y;
+    const f32 vz = p->z - cam->param.pos.z;
+    const f32 d2 = vx * vx + vy * vy + vz * vz;
+    int skip;
+    if (d2 > (f32) RE4DC_PEN_CLOTH_LOD_FAR * (f32) RE4DC_PEN_CLOTH_LOD_FAR) {
+        skip = 1;
+    } else if (d2 <= 9000000.0f) {
+        skip = 0;
+    } else {
+        const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at
+        skip = !(f > 0.0f && f * f >= 0.25f * d2);
+    }
+    if (skip && !(c->Flag & 0x40)) {
+        c->WindSin += fRand0_1() * GlobalWindAdd;
+        c->WindSin = LIMIT_ANGLE(c->WindSin);
+    }
+    return skip;
+}
+#define PEN_CLOTH_LOD_SKIP(m, c) re4dc_pen_cloth_lod_skip((m), (c))
+#else
+#define PEN_CLOTH_LOD_SKIP(m, c) 0
+#endif
+
 // One simulation frame of a chain (called from the owner's move after the motion): floor from
 // parts 0 unless Flag 0x100, collision volumes unless Flag bit0, random-phase wind unless 0x40,
 // root speed / gravity unless 0x20; each link integrates its speed, is limited in angle and pulled
@@ -270,6 +315,9 @@ void PenClothMove(cModel* m, PenCloth* c)
     int hit;
 
     if (c->Num == 0) {
+        return;
+    }
+    if (PEN_CLOTH_LOD_SKIP(m, c)) {
         return;
     }
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
@@ -586,6 +634,9 @@ void PenClothMove2(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+    if (PEN_CLOTH_LOD_SKIP(m, c)) {
+        return;
+    }
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
     re4dc::fa35::hit(re4dc::fa35::ClothChainMove, 1);
     re4dc::fa35::hit(re4dc::fa35::ClothChainLinks, c->Num);
@@ -883,6 +934,9 @@ void PenClothMove3(cModel* m, PenCloth* c)
     int hit;
 
     if (c->Num == 0) {
+        return;
+    }
+    if (PEN_CLOTH_LOD_SKIP(m, c)) {
         return;
     }
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
