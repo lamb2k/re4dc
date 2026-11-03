@@ -1997,6 +1997,23 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
+# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
+# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
+# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
+               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
