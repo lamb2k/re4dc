@@ -2081,6 +2081,7 @@ if os.path.isdir(CGCA27BD):
 # as PS2 pixels (assetsdc/ps2_source_pak.py --only-keys): 77c1171c b894c4b5 70524d21 = PS2 pl08.dat TPL 0 pictures 5 / 3 / 6;
 # 5224f21f 511673a2 = pl08.dat pictures 0 / 8 stored transposed on the PS2 (MAE 1.7 / 1.5); 72be589c = PS2 r10c.dat
 # picture 1, transposed (MAE 4.1). ADMIT 6/6. provenance.tsv names each PS2 file. Store: re4-assets-private/cpic27b-20261103.
+# Also glyph27's grab-prompt stick cap 6d33c3f9-9f8cf668 (Disc 1 bytes): the Test 26 glyph fix reaches Disc 2 (11-03).
 CPIC27BD = os.environ.get('CPIC27BD', '/root/re4data/private/cpic27b-20261103')
 if os.path.isdir(CPIC27BD):
     DATA['cpic27b'] = {'dc/tex.pak': CPIC27BD + '/dc/tex.pak'}
