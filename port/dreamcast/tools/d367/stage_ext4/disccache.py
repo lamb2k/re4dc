@@ -22,6 +22,8 @@ from pathlib import Path
 ROOT = Path(os.environ.get('RE4DC_DISCCACHE', '/mnt/c/Flycast-Evidence/_disccache'))
 CAP = int(float(os.environ.get('RE4DC_DISCCACHE_CAP_GB', '6')) * 1024 ** 3)
 FLOOR = 16 * 1024 ** 3
+# the drive that receives the cache's bytes (lane world-ch31 11-03: the floor message said C: for a D: cache)
+DRIVE = (ROOT.parts[2].upper() + ':') if len(ROOT.parts) > 2 and ROOT.parts[1] == 'mnt' else str(ROOT.anchor)
 LOCK = Path(os.environ.get('RE4DC_STAGE_ROOT', '/root/stage')) / 'disccache.lock'
 
 class locked:
@@ -77,8 +79,8 @@ def put(src, sha, name, reserve=0, log=None):
             return hit, 0
         size = src.stat().st_size
         evict(need=size, reserve=reserve, log=log)
-        free = shutil.disk_usage(str(ROOT.parent)).free
-        assert free - size - reserve >= FLOOR, 'C: too full for %d MB (free %d MB, floor 16 GiB)' % (size >> 20, free >> 20)
+        free = shutil.disk_usage(str(ROOT if ROOT.exists() else ROOT.parent)).free
+        assert free - size - reserve >= FLOOR, '%s too full for %d MB (free %d MB, floor 16 GiB; cache %s)' % (DRIVE, size >> 20, free >> 20, ROOT)
         ROOT.mkdir(parents=True, exist_ok=True)
         tmp = ROOT / ('.tmp-%d-%s' % (os.getpid(), sha[:16])); shutil.rmtree(tmp, ignore_errors=True); tmp.mkdir()
         n = 0
@@ -113,8 +115,8 @@ def main(argv):
         es = entries()
         for e in sorted(es, key=lambda e: -e['used']):
             print('%s %6d MB refs=%d %s' % (e['dir'].name[:16], e['size'] >> 20, e['refs'], time.strftime('%m-%d %H:%M', time.localtime(e['used']))))
-        print('entries %d, %d MB (cap %d MB), C: free %d MB' % (len(es), sum(e['size'] for e in es) >> 20, CAP >> 20,
-                                                                 shutil.disk_usage('/mnt/c').free >> 20))
+        print('entries %d, %d MB (cap %d MB), %s free %d MB' % (len(es), sum(e['size'] for e in es) >> 20, CAP >> 20, DRIVE,
+                                                                 shutil.disk_usage(str(ROOT if ROOT.exists() else ROOT.parent)).free >> 20))
     else:
         sys.exit(__doc__)
 
