@@ -1081,6 +1081,9 @@ static void* wepHeap4;
 static u8 wepMovieReleased;
 int re4dc_wep_heap4_failed;
 int re4dc_wep_reverted;
+#if defined(RE4DC_WEAPON_HEAP4_WALK_GUARD) && RE4DC_WEAPON_HEAP4_WALK_GUARD
+static u8 re4dc_wep_heap4_list_bad;   // set by wepHeap4AllocTop: heap 4's free list is damaged, no heap-4 alloc
+#endif
 
 #if RE4DC_WEAPON_HEAP4_TOP
 // WEAPON_HEAP4_TOP: OSAllocFromHeap is first fit and hands out the low part of a cell. The body is carved from the top
@@ -1095,11 +1098,32 @@ static void* wepHeap4AllocTop(u32 need)
     OSHeapCell* c;
     OSHeapCell* cell;
 
+#if defined(RE4DC_WEAPON_HEAP4_WALK_GUARD) && RE4DC_WEAPON_HEAP4_WALK_GUARD
+    // WEAPON_HEAP4_WALK_GUARD (lane crash26, Test 25 QA console fault 0x0e0 pc ReadWepData addr 0x16): this walk visits
+    // every free cell, so a damaged cell anywhere in heap 4 faulted here (next = 0x0e). Every cell is checked against
+    // heap 4's range, alignment and back link before it is read; a damaged list fails the load (the caller reverts to a
+    // resident weapon) instead of faulting, and names the cell for the log.
+    const u32 lo = Heap[4].start, hi = Heap[4].end;
+    OSHeapCell* prev = 0;
+    for (c = d->free; c; prev = c, c = c->next) {
+        const u32 a = (u32) c;
+        if ((a & 0x1FU) || a < lo || a >= hi || c->prev != prev || c->size < 0x20 || (u32) c->size > hi - a) {
+            OSReport("weapon heap4: free list damaged at cell %08x (prev %08x size %08x) heap4 %08x-%08x: load refused\n",
+                     a, (u32) prev, prev ? (u32) prev->size : 0U, lo, hi);
+            re4dc_wep_heap4_list_bad = 1;
+            return 0;
+        }
+        if (c->size >= size) {
+            best = c;  // address order: the last fit is the highest
+        }
+    }
+#else
     for (c = d->free; c; c = c->next) {
         if (c->size >= size) {
             best = c;  // address order: the last fit is the highest
         }
     }
+#endif
     if (best == 0) {
         return 0;
     }
@@ -1138,7 +1162,15 @@ static void* wepHeap4Alloc(u32 need)
         return 0;
     }
 #if RE4DC_WEAPON_HEAP4_TOP
+#if defined(RE4DC_WEAPON_HEAP4_WALK_GUARD) && RE4DC_WEAPON_HEAP4_WALK_GUARD
+    re4dc_wep_heap4_list_bad = 0;
     p = wepHeap4AllocTop(need);
+    if (re4dc_wep_heap4_list_bad) {
+        return 0;   // first fit and motion eviction would walk the same damaged list
+    }
+#else
+    p = wepHeap4AllocTop(need);
+#endif
     if (p == 0)
 #endif
     p = mem_alloc(need, 0, 0, 1, 4);

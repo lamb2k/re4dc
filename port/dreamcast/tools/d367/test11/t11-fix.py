@@ -2025,8 +2025,10 @@ if os.path.isdir(CPIC32D):
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
 # the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
 # sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
-# Store: re4-assets-private/sky27-20261102.
-SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+# Store: re4-assets-private/sky27-20261102 (1024 x 256, 66 KiB a room). Default since lane house26 (11-02): sky27h, the
+# same panoramas at 1024 x 128 (34 KiB; resampled from the bake's pre-VQ source, rows / band / eye unchanged): the 66 KiB
+# r100 panorama gave h2 10 VRAM thrash-guard refusals (Test 26 full tier 8a628457), sky27h gives 0 over the whole h2.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27h-20261102')
 if os.path.isdir(SKY27D):
     _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
     DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
