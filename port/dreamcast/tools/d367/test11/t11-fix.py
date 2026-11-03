@@ -2051,13 +2051,32 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
+# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
+# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
+# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
+               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
 # the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
 # sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
-# Store: re4-assets-private/sky27-20261102.
-SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+# Store: re4-assets-private/sky27-20261102 (1024 x 256, 66 KiB a room). Default since lane house26 (11-02): sky27h, the
+# same panoramas at 1024 x 128 (34 KiB; resampled from the bake's pre-VQ source, rows / band / eye unchanged): the 66 KiB
+# r100 panorama gave h2 10 VRAM thrash-guard refusals (Test 26 full tier 8a628457), sky27h gives 0 over the whole h2.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27h-20261102')
 if os.path.isdir(SKY27D):
     _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
     DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky

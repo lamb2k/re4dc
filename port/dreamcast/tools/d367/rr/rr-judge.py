@@ -74,7 +74,14 @@ if QA:
         lg = rd(J / 'qa-gdemu.log')
         g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
         add('QA GDEMU door103', bool(g) and 'PASS' in g[-1], g[-1] if g else (lg.strip()[-120:] or 'not run'))
-    qv = 'PASS' if checks and all(c[1] == 'PASS' for c in checks) else 'FAIL'
+    # PLAY-DISC-READ (lane coldread27 11-02; REPORT-ONLY until the coordinator arms it): the QA disc carries
+    # DISC_READ_METER=1, so its job logs show synchronous disc blocking per second; a gameplay window (not a room load,
+    # entry settle, preload or movie) over PLAY_DISC_READ_MS (100, Flycast) is listed here and never changes the verdict.
+    pdr = subprocess.run([sys.executable, str(Path(__file__).resolve().parent / 'play_disc_read.py'), str(EVU)],
+                         capture_output=True, text=True)
+    pl = pdr.stdout.strip().splitlines()
+    add('PLAY-DISC-READ (report-only)', True, ('; '.join([l.split(' run=')[0][20:] for l in pl[:-1]][:4] + pl[-1:]) if pl else 'no output rc=%d' % pdr.returncode)[:500])
+    qv ='PASS' if checks and all(c[1] == 'PASS' for c in checks) else 'FAIL'
     (W / 'qa-verdict.txt').write_text(qv + '\n')
     qs = [l.split('\t') for l in rd(W / 'qa-steps.tsv').splitlines() if l.count('\t') == 3]
     sec = ['', '## QA disc: %s, candidate %s (does not change the game verdict)' % (qv, env['sha'][:8]), '',
