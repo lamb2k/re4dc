@@ -1627,6 +1627,12 @@ if os.path.isdir(RES24GD):
 RES26PRD = os.environ.get('RES26PRD', '/root/re4data/private/res26pr-20261103')
 if os.path.isdir(RES26PRD):
     DATA['res26pr'] = {'dc/resident.bin': RES26PRD + '/resident.bin'}
+# res26pr2 (lane playreads 11-03, DISC 2 ONLY via D2_DATA): the castle tree's dc/resident.bin + the r201 / r202 / r208
+# in-play keys of the same runs (only the keys new to vram/resident/r20x.tsv; resident_keys.py extend <out>
+# castle-d2-j/dc/resident.bin - new/r*.tsv): 5,959 records (77 added).
+RES26PR2D = os.environ.get('RES26PR2D', '/root/re4data/private/res26pr2-20261103')
+if os.path.isdir(RES26PR2D):
+    DATA['res26pr2'] = {'dc/resident.bin': RES26PR2D + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
