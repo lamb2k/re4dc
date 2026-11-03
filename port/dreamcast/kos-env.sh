@@ -31,3 +31,19 @@ export KOS_SH4_PRECISION="-m4-single"
 # KOS resolves compilers, include paths, libraries, and architecture flags here.
 # Global fast-math remains disabled until RE4 behavior comparisons justify it.
 . "${KOS_BASE}/environ_base.sh"
+
+# Shared compiler cache (lane buildcache, 2026-11-03). RE4DC_CCACHE=1 runs the real sh-elf compilers through ccache;
+# the kos-cc / kos-c++ wrappers call $KOS_CC / $KOS_CCPLUS, so pointing those at tools/ccache/ hooks every compile
+# without changing how builds are called. One shared cache (/root/.cache/ccache: base_dir=/root/work, hash_dir=false,
+# compiler_check=content, max_size=60G) serves every OBJDIR and worktree; knob -D flags hit in preprocessor mode for
+# files a knob does not change. Proven byte-identical (program image + overlays) against uncached builds.
+# Opt-in (RE4DC_CCACHE=1) until the identity proof passes; without ccache installed the build runs uncached.
+if [ "${RE4DC_CCACHE:-0}" = 1 ] && command -v ccache >/dev/null 2>&1; then
+    _re4dc_ccdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/tools/ccache"
+    if [ -x "$_re4dc_ccdir/cc" ] && [ "${KOS_CC}" != "$_re4dc_ccdir/cc" ]; then
+        export RE4DC_REAL_CC="${KOS_CC}" RE4DC_REAL_CCPLUS="${KOS_CCPLUS}"
+        export KOS_CC="$_re4dc_ccdir/cc" KOS_CCPLUS="$_re4dc_ccdir/c++"
+        export CCACHE_DIR="${CCACHE_DIR:-/root/.cache/ccache}"
+    fi
+    unset _re4dc_ccdir
+fi
