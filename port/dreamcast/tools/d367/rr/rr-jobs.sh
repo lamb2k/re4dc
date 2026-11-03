@@ -60,7 +60,7 @@ disc2_jobs() {
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\fixtures\d2-$r.txt\"")"; done
+    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
