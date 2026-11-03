@@ -2014,6 +2014,36 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
             DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
         if os.path.isdir(_d + '/dc/mot'):
             DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+# em2dres32 (lane world-ch32 11-03, r205 stall fix "Option A"; DISC 2 ONLY, after cw32 / pmcw32 when listed on D2_DATA):
+# em/em2d.drs with every motion resident (textures-only body 2,542,976 B, ch3found16 contract em2d-native-textures-v1) +
+# PS2 em2d.dat BIN geometry / motion, replacing the streamed-motion cache (castle18-em2d-motion) r205 stalls on.
+# Store: re4-assets-private/em2dres32-20261103.
+EM2DRES32D = os.environ.get('EM2DRES32D', '/root/re4data/private/em2dres32-20261103')
+if os.path.isfile(EM2DRES32D + '/RECIPE.txt'):
+    DATA['em2dres32'] = {'em/em2d.drs': EM2DRES32D + '/em/em2d.drs'}
+# cw32 / pmcw32 (lane world-ch32 11-02, chapter 3-2 on Disc 2; DISC 2 ONLY via D2_DATA, after cpic26c): the 3-2 rooms r205
+# r209 r20a r20b and enemy archives em2d em23 em18 em22 from the PS2 version (worldch32/gen-all.sh, the castlegca26
+# method): PS2 objects, items, debris, pictures (loose keys), motion and PCM; pmcw32 = the PS2 motion store of the same
+# files. .dar only (the game reads st2/rNNN.dar, never the .arc: read.cpp ReadAreaData). Stores: re4-assets-private/cw32-20261102, pmcw32-20261102.
+CW32D = os.environ.get('CW32D', '/root/re4data/private/cw32-20261102')
+if os.path.isfile(CW32D + '/provenance.tsv'):
+    DATA['cw32'] = {'tex': CW32D + '/tex'}
+    for _f in sorted(Path(CW32D, 'st2').glob('*.dar')) + sorted(Path(CW32D, 'em').glob('*.drs')):
+        DATA['cw32']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+PMCW32D = os.environ.get('PMCW32D', '/root/re4data/private/pmcw32-20261102')
+if os.path.isfile(PMCW32D + '/RECIPE.txt'):
+    DATA['pmcw32'] = {}
+    for _f in sorted(Path(PMCW32D, 'st2').glob('*.dar')) + sorted(Path(PMCW32D, 'em').glob('*.drs')):
+        DATA['pmcw32']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+    if os.path.isdir(PMCW32D + '/dc/mot'):
+        DATA['pmcw32'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCW32D, _k) for _k in sorted(os.listdir(PMCW32D + '/dc/mot'))})
+# cpic32 (lane world-ch32 11-02, DISC 2 ONLY via D2_DATA, after pmcw32): the r20a GC room picture 72be589c-3bbd0657 (16x64,
+# drawn in r20a, GC-ASSET unknown) as PS2 r20a.dat TPL image 52 pixels (NCC 1.000; ps2cast/em_eff_pics.py over the composed
+# Disc 2 pack of rr 1102-1442-d4ef6d18). Store: re4-assets-private/cpic32-20261102.
+CPIC32D = os.environ.get('CPIC32D', '/root/re4data/private/cpic32-20261102')
+if os.path.isdir(CPIC32D):
+    DATA['cpic32'] = {'dc/tex.pak': CPIC32D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic32'] = CPIC32D + '/pak-derived.json'
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
