@@ -23,6 +23,12 @@ kf = BIN / 'known.txt'
 if kf.exists():
     known = {tuple(l.split()[:2]) for l in kf.read_text().splitlines() if l.strip() and not l.startswith('#')}
 
+
+def comp_args(gca):
+    """GC-ASSET design b (lane bakeall 11-03): the catalog's composite records (provenance.py), when present."""
+    f = gca / 'provenance' / 'composite-records.json'
+    return ['--composite-records', str(f)] if f.is_file() else []
+
 def rd(p):
     try:
         return Path(p).read_text(errors='replace')
@@ -217,7 +223,7 @@ if build_ok and jobs:
         if all(p.exists() for p in gl):
             subprocess.run(['python3', str(G / 'judge.py'), *map(str, gl), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(base),
                             '--unwired-baseline', str(G / 'unwired-baseline.json'), '--room', '0100', '--room', '0101', '--room', '0103',
-                            '--room', '011e', '--room', '011f', '--json', str(jj)], capture_output=True, text=True)
+                            '--room', '011e', '--room', '011f', *comp_args(W / 'gca'), '--json', str(jj)], capture_output=True, text=True)
         try:
             j = json.loads(jj.read_text())
         except (OSError, ValueError):
@@ -354,7 +360,7 @@ if build_ok and jobs:
             jj = W / 'gca-d2-judge.json'
             rooms = sum([['--room', '0' + p.parent.name[7:]] for p in g2], [])
             subprocess.run(['python3', str(G / 'judge.py'), *map(str, g2), '--allowlist', str(G / 'allowlist.json'), '--baseline', str(G / 'allowlist.json'),
-                            '--unwired-baseline', str(G / 'unwired-baseline.json'), *rooms, '--json', str(jj)], capture_output=True, text=True)
+                            '--unwired-baseline', str(G / 'unwired-baseline.json'), *rooms, *comp_args(W / 'gca2'), '--json', str(jj)], capture_output=True, text=True)
             try:
                 j = json.loads(jj.read_text())
             except (OSError, ValueError):

@@ -406,6 +406,20 @@ def main(catalog, recipe_conf, out_dir):
                counts={'%s/%s' % k: v for k, v in sorted(counts.items())},
                whole_file_credit=['%s %s %s rows=%d' % (k + (v,)) for k, v in sorted(whole_file.items())])
     (out / 'provenance-report.json').write_text(json.dumps(rep, indent=1) + '\n')
+    # composite records (lane bakeall 11-03, design b): a PS2-recipe store's ps2-composite.tsv lists the world packages
+    # its tool wrote from the PS2 world (output digests + PS2 SMD digest); judge.py --composite-records matches the
+    # runtime layout row's GC-ASSET-NOTE role digests against them. Rows without a PS2 SMD digest prove nothing.
+    comp = []
+    for st in {id(s): s for s in stores.values()}.values():
+        f = st.root / 'ps2-composite.tsv' if st.root else None
+        if f is None or not f.is_file() or st.level != 'ps2':
+            continue
+        for r in csv.DictReader(io.StringIO(f.read_text(errors='replace')), delimiter='\t'):
+            if re.fullmatch(r'[0-9a-f]{64}', r.get('ps2_smd_sha256') or '') and r.get('re4mesh_sha256') and r.get('r4pw_sha256'):
+                comp.append(dict(set=st.name, room=r['room'], geometry=r['re4mesh_sha256'], r4pw=r['r4pw_sha256'],
+                                 ps2_smd_sha256=r['ps2_smd_sha256'], ps2_source=r.get('ps2_source', ''), store=str(f)))
+    comp = sorted({(e['geometry'], e['r4pw']): e for e in comp}.values(), key=lambda e: (e['room'], e['geometry']))
+    (out / 'composite-records.json').write_text(json.dumps(dict(schema=1, entries=comp), indent=1) + '\n')
     print(json.dumps(rep['counts'], indent=0))
     print('packs', rep['packs'], 'missing sets', missing_sets)
 
