@@ -2041,6 +2041,35 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
         if os.path.isdir(_d + '/dc/mot'):
             DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
 
+# cgca27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA, after pmcgca27): the chapter 3-1 rows world-ch31 left, PS2-dropped
+# the way the PS2 dropped them: st2/r203.dar ETM et1400.bin (GC torch model, le_mirror(GC r10c)) emptied (the PS2 r203.dat
+# ETM has no et1400; ps2_objects.py --etm-empty, as cgca26 for r201 / r202); st2/r207.dar FOOT samples 7-11 silenced (no
+# GC cue reaches them; the PS2 r207.snd FOOT block holds exactly the 18 cue-reached VAGs). provenance.tsv rows for the
+# changed members only. Store: re4-assets-private/cgca27b-20261103 (README-cgca27b.txt = the builder's notes).
+CGCA27BD = os.environ.get('CGCA27BD', '/root/re4data/private/cgca27b-20261103')
+if os.path.isdir(CGCA27BD):
+    DATA['cgca27b'] = {'st2/%s' % _f: '%s/st2/%s' % (CGCA27BD, _f) for _f in ('r203.dar', 'r203.arc', 'r207.dar', 'r207.arc')}
+# cpic27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA, after cpic27; the last Disc 2 pack set): the r203 / r207 pictures
+# as PS2 pixels (assetsdc/ps2_source_pak.py --only-keys): 77c1171c b894c4b5 70524d21 = PS2 pl08.dat TPL 0 pictures 5 / 3 / 6;
+# 5224f21f 511673a2 = pl08.dat pictures 0 / 8 stored transposed on the PS2 (MAE 1.7 / 1.5); 72be589c = PS2 r10c.dat
+# picture 1, transposed (MAE 4.1). ADMIT 6/6. provenance.tsv names each PS2 file. Store: re4-assets-private/cpic27b-20261103.
+CPIC27BD = os.environ.get('CPIC27BD', '/root/re4data/private/cpic27b-20261103')
+if os.path.isdir(CPIC27BD):
+    DATA['cpic27b'] = {'dc/tex.pak': CPIC27BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27b'] = CPIC27BD + '/pak-derived.json'
+# isl15 (lane assets-dc 11-03, for world-ch5's D3_DATA): the 15 island picture keys no pack and no loose file held (14 island
+# rooms failed TEXCHK): PS2 world pictures the castle / chapter 4 PS2 world sets carry (c4world tex/, castle-d2-j dc/tex/),
+# same key and bytes, staged loose (VQ or small 16-bit twiddled already). Store: re4-assets-private/isl15-20261103.
+ISL15D = os.environ.get('ISL15D', '/root/re4data/private/isl15-20261103')
+if os.path.isdir(ISL15D):
+    DATA['isl15'] = {_l.split('	')[0]: ISL15D + '/' + _l.split('	')[0] for _l in open(ISL15D + '/manifest.tsv') if _l.strip()}
+# isnd300 (lane assets-dc 11-03, for world-ch5's D3_DATA): st3/r300.dar with the PS2 PCM of PS2 r300.snd in place (ps2_audio.py
+# banks; snd28_store.py rows): ROOM 26 of 27 + FOOT 29 of 29 samples PS2; ROOM sample 22 silenced (no cue reaches it, the PS2
+# bank has no such sound). Store: re4-assets-private/isnd300-20261103.
+ISND300D = os.environ.get('ISND300D', '/root/re4data/private/isnd300-20261103')
+if os.path.isdir(ISND300D):
+    DATA['isnd300'] = {'st3/r300.dar': ISND300D + '/st3/r300.dar'}
+
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
 # the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
