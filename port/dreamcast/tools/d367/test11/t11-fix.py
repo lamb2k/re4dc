@@ -2040,7 +2040,9 @@ DATA['d2noarc'] = {'remove': ['st2/r2%02x.arc' % _i for _i in range(0x00, 0x10)]
 # r4pw / ids, UV guard .002, tr4, cutout224) for r210 .. r22c and their loose picture keys; the castle content tree had none.
 C4WORLDD = os.environ.get('C4WORLDD', '/root/re4data/private/c4world-20261102')
 if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
-    DATA['c4world'] = {'tex': C4WORLDD + '/tex'}
+    # tex: c4wtex-20261103 (11-03) = c4world's keys minus the 8 the castle tree carries as smaller palettized copies
+    C4WTEXD = os.environ.get('C4WTEXD', '/root/re4data/private/c4wtex-20261103')
+    DATA['c4world'] = {'tex': (C4WTEXD if os.path.isfile(C4WTEXD + '/RECIPE.txt') else C4WORLDD) + '/tex'}
     for _f in sorted(Path(C4WORLDD, 'dc', 'native').glob('*/ps2-world.*')):
         DATA['c4world']['dc/native/%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 
