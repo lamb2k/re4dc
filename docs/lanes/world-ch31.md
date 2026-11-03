@@ -2,6 +2,18 @@
 
 Branch `lane/world-ch31` from t15/int 15ed29fe; pushed as wip/world-ch31-20261102. Carry list: `C:\Game Dev\Emulators\CH-FIXES-CARRY.md`.
 
+## rr 1102-1750-426089f1 (ON arm: goto switch on, cgca27; lane head 426089f1 = t15/int 799960376 + lane): 37/38 PASS
+- Disc 1: all PASS. Disc 2: CAST-GC, LEON-GC, TEXCHK, VRAM no-contig 0, HALT 0, cap 4, KOS 48 KiB (min headroom 31032),
+  GDEMU 1 seed: PASS.
+- Disc 2 GC-ASSET: r200 r201 r202 r204 r208 clean. r203 went from 13 rows to 4: layout 96e39bd7, GC model 08d57f77, textures
+  72be589c and 761e77f9. r207 still has 6: layout dca7d347 and textures 77c1171c, 511673a2, 5224f21f, b894c4b5, 70524d21.
+  The textures look like world pack keys, as in r200: next is a cpic27 pack set from r203.dat / r207.dat (em_eff_pics.py
+  --pair -, base cpic26c). Its first run was stopped by the host's low-memory reaper while it waited on the lock; not rerun.
+- r207 clear rig (d2clear-r207, 180 s): 10 Ganados killed through the source damage path from frame 1000. At most 4 alive at
+  once, and held ones came in as others died. Ganados alive 0 from frame 1830 to the end (3660). The two id 0x43 enemies stay.
+  rsf stays 86300000 after the kills, so a clear/door flag is not shown.
+- The OFF arm has not run (the coordinator stopped it).
+
 ## State 11-02 (paused: disk)
 - Already on Disc 2 from earlier lanes: PS2_CH3_ENEMY=1 (one knob, all of chapter 3, PS2_ENEMY_CH3_DIR ps2enemy-ch34-20261018/PE3),
   ALIVE_CAP=4, ALIVE_CAP_NOVIS=1, ALIVE_CAP_DEFER_FLAGS=1, ALIVE_CAP_R202_GATE=1; GC-ASSET and CAST-GC PASS (castle-gca-26).
