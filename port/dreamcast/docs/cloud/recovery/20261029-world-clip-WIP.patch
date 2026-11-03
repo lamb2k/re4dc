@@ -1,0 +1,809 @@
+From 13109debcac832fac371df7420cd6ca4cd7deb2b Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Thu, 29 Oct 2026 16:28:50 -0400
+Subject: [PATCH] dreamcast: qualify depth-safe oversized gather portal
+ completion
+
+Fold actual bounded clip producer coverage through the existing per-part receipt and ordered pages. Exclude near-crossing and alternate clipper paths; preserve current release pacing in actual Make/source-guard fixtures and record dated dependent Build31 target gates.
+---
+ .../docs/cloud/handbacks/build-31.md          |  59 ++++
+ .../dreamcast/game/platform/native_static.cpp |  57 +++-
+ port/dreamcast/game/world_plan29.mk           |  38 ++-
+ .../tests/test_world_portal_clip_gather31.py  | 254 ++++++++++++++++++
+ .../producer_fixture.cpp.in                   | 254 ++++++++++++++++++
+ 5 files changed, 653 insertions(+), 9 deletions(-)
+ create mode 100644 port/dreamcast/tests/test_world_portal_clip_gather31.py
+ create mode 100644 port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in
+
+diff --git a/port/dreamcast/docs/cloud/handbacks/build-31.md b/port/dreamcast/docs/cloud/handbacks/build-31.md
+index 0bcf44c..4da9ee8 100644
+--- a/port/dreamcast/docs/cloud/handbacks/build-31.md
++++ b/port/dreamcast/docs/cloud/handbacks/build-31.md
+@@ -921,3 +921,62 @@ Changed files in this repair:
+ - `port/dreamcast/tests/test_world_portal_stream31.py` (Make gate delegation)
+ 
+ This tools-only correction adds zero runtime code/data/stack or per-frame work. It does not request another unchanged release OFF build: retain the owner’s already-passed b4 OFF results and bind the synchronized source when qualifying these changed controls. Portal controls remain separate from the broad ALLON profile; source completion is not authored-cell or visibility acceptance.
++
++## 2026-10-29 Build31: depth-safe oversized gather completion
++
++**2026-10-29 progress: DONE** bounded clip producer/receipt and current-profile host/Make/guard checks; **NEXT** stream integration followed by target qualification of this dependent slice; **BLOCKED** stream parent integration and SDK/private/console acceptance. No target acceptance is claimed. `codex/world-clip-20261029` is based on the local committed stream-profile repair `4c033a49eb87bb5357d859d82ffebe2e32df03db` (parents `b4cee62b7544704ee09b10759d228401746bf7e7` and current integration `14b5c196db699640f7a9f39bc2318df22dc45ade`). The four owned paths are `port/dreamcast/game/platform/native_static.cpp`, `port/dreamcast/game/world_plan29.mk`, `port/dreamcast/tests/test_world_portal_clip_gather31.py`, and `port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in`. The coordinator reviewed this bounded source slice and recorded it locally. GitHub publication is not established. It depends on the stream repair above: hold origin publication/integration until that parent is integrated, then re-synchronize this branch with the fresh integration. The queue, release recipe and global Makefile remain unchanged.
++
++**Exact semantic boundary.** Default-zero `WORLD_PORTAL_CLIP_GATHER31=1` admits only qualified `WORLD_PORTAL_STREAM31=1`, `WORLD_PORTAL_COMPLETION=1`, `SCENERY_CLIP_GATHER=1`, `PS2_PVS_BATCH_COMPOSE=1` and the existing stream/PVS/page parent guards; it requires prefetch, indexed clip, CPU backface, `MESH_CLIP_LEAN` and `MESH_CLIP_ACCEPT` all zero. The emitter's sticky proof is retained only when the actual `clip_strip` is reached by an oversized strip (`count>limit`) and all transformed indices are near/far depth-inside. Near-crossing, capacity-normal clip, culled/empty, partial/reordered/subset/multi-LOD, refused, aborted, unpublished or source-invalid output grants no witness. A depth-inside triangle can contribute at most one emitted triangle, so the existing positive, published, ordered whole-source and `input==output` receipt test proves no triangle was lost. The clipper and sparse gather are unchanged. The bit is per emission, resets on `chunk_restart`, and folds across ordered pages before the existing end-direct/SQ close, page/plan/source/view/material and EF08 receipt checks. There is no general near-clip authority, new receipt, heap/BSS allocation, asset format or pick/page-capacity change.
++
++**Repaired profile gate.** The dedicated fixture now uses the new `stream_portal_profile.py` release-chain reader and the helpers in `test_world_portal_stream_profile31.py`. It compares the clip-absent and explicit-zero primary `native_static.o` command with *both* `MESH_CLIP_LEAN=0` and `MESH_CLIP_ACCEPT=0` explicitly set. The enabled arm adds `SCENERY_CLIP_GATHER=1 WORLD_PORTAL_CLIP_GATHER31=1` and confirms one definition of each, plus the existing stream, portal and render dependencies. The resolved actual chain retains `PVR_PIPELINE=2 PACE_CATCHUP=2 PACE_TRANS_SKIP=4063 PACE_STEADY=1 COARSE=1`; it does not append the old pipeline 1/skip 1 pair. The fixture preprocesses the production `native_static.cpp` early guard using definitions extracted from its actual primary Make command and the literal `src/game/trans.cpp` COARSE/pacing guard using the actual trans command and generated `pace.h`. Current mask 4063 passes; skip 1 is refused by trans; pipeline 1 is refused by Make's steady-pacing guard; catchup 1 is refused by Make. Empty/pattern/multiword/2 clip-control values and unsupported clip compositions are refused. Source-excerpt exact OFF preprocessing and early-guard object identity compare against the new parent `4c033a4`, including the enabled-stream/clip-off control with both alternate clipper controls zero. These excerpt checks are not a full SH-4 object or ELF identity result.
++
++**Local source gates passed on this parent:**
++
++```bash
++python3 -B port/dreamcast/tests/test_world_portal_clip_gather31.py
++python3 -B port/dreamcast/tests/test_world_portal_stream_profile31.py
++python3 -B port/dreamcast/tests/test_world_portal_stream31.py
++python3 -B port/dreamcast/tests/test_world_pages31.py
++python3 -B port/dreamcast/tools/cloud/build31/portal_completion_host.py --output /tmp/world-clip31-parent-normal --prepared09
++python3 -B port/dreamcast/tools/cloud/build31/portal_completion_host.py --output /tmp/world-clip31-parent-san --sanitize
++git diff --check
++```
++
++The clip fixture compiles the extracted production `stream_gather`, `strips_lean`, `lean_flush`, `clip_strip`, page inputs and receipt block with production `pvr_geometry.cpp` in normal and ASan/UBSan modes, with and without pages. A 65-index strip against output capacity 64 yields 63 input/63 emitted triangles and a receipt; the three-near-rejected-vertex case also totals 63/63 after lost/split balancing but is refused. Full depth and screen/backface culls are refused; sparse and full gather emit byte-equal TA words. Two ordered pages commit once, while a poisoned first page, either page refusal, and final borrowed-batch view/material/plan mutation cannot commit. Stream and page source regressions pass normal and sanitizer paths. The portal host reports 388 loader/runtime and 628 actual receipt checks in both normal and sanitizer runs. `git diff --check` passes for the complete owned patch.
++
++**Exact source-only profile reproduction, from this worktree root:**
++
++```bash
++python3 -B port/dreamcast/tools/cloud/build31/stream_portal_profile.py --output /tmp/build31-clip-profile --mode on --override MESH_CLIP_LEAN=0 --override MESH_CLIP_ACCEPT=0 --override SCENERY_CLIP_GATHER=0 --override WORLD_PORTAL_CLIP_GATHER31=0 > /tmp/build31-clip-control.json
++python3 -B port/dreamcast/tools/cloud/build31/stream_portal_profile.py --output /tmp/build31-clip-profile --mode on --override MESH_CLIP_LEAN=0 --override MESH_CLIP_ACCEPT=0 --override SCENERY_CLIP_GATHER=1 --override WORLD_PORTAL_CLIP_GATHER31=1 > /tmp/build31-clip-on.json
++python3 -B port/dreamcast/tests/test_world_portal_clip_gather31.py
++```
++
++The profile JSON `chain` is the ordered primary Make argv; the helper retains every R21, route, Test 15 and rr CH2 assignment. Its temporary parse-only files satisfy existence probes only. The Python test runs the actual primary `Makefile -n` and the extracted target-conditional guards; no private header, SH-4 object or image is built by these source-only commands.
++
++**Exact private target command form for a fresh matched control/ON qualification:** retain the corrected rr release CH2 profile and portal options on both arms. The three clipper settings `SCENERY_CLIP_GATHER`, `MESH_CLIP_LEAN`, and `MESH_CLIP_ACCEPT` are explicit, with the scoped completion switch separate. This is for the coordinator's SDK/private workspace and has not been run in this cloud worktree.
++
++```bash
++set -euo pipefail
++source <(tr -d '\r' < port/dreamcast/tools/d367/rr/recipe.conf)
++PORTAL_OPTIONS=$(python3 -B -c 'import json; print(" ".join(json.load(open("port/dreamcast/tools/cloud/build31/portal_completion_profiles.json"))["on_options"]))')
++RUN_ROOT=$(mktemp -d /tmp/build31-clip-target.XXXXXX)
++clip_target_arm() {
++  local arm="$1" extra="$2" label="clip31$1"
++  local output="$RUN_ROOT/$arm/out-${label}rP"
++  test ! -e "$output"
++  ROUTE_OUT_ROOT="$RUN_ROOT/$arm" ROUTE_PROGRAMS_DIR="$RUN_ROOT/programs-$arm" \
++    ROUTE_PROGRAMS_JSON='' T="$PWD" K="$RUN_ROOT/$arm-logs" LP="$label" \
++    CH2="$CH2 $PORTAL_OPTIONS SCENERY_STREAM=1 WORLD_PORTAL_STREAM31=1 MESH_CLIP_LEAN=0 MESH_CLIP_ACCEPT=0 $extra" \
++    bash port/dreamcast/tools/d367/ch2/ch2-build.sh rP
++  test -s "$output/re4dc-game.elf"
++  test -f "$output/missing.txt"
++  test ! -s "$output/missing.txt"
++}
++clip_target_arm ctrl 'SCENERY_CLIP_GATHER=0 WORLD_PORTAL_CLIP_GATHER31=0'
++clip_target_arm on 'SCENERY_CLIP_GATHER=1 WORLD_PORTAL_CLIP_GATHER31=1'
++```
++
++Run the same release/portal profile with these two clip arms; compare complete target OFF/default/zero objects and full images as applicable, ON compile/link/sections/stack against the matched control, private authored-cell receipt/refusal and actual output/look/STRICT/cost/heap/VRAM/console gates. Record the exact effective native and trans compiler flags, image/package hashes, scene/view and source witness rows. The workspace lacks the SH-4/KOS target compiler, Build-Assets, authored private cells, Flycast capture and physical Dreamcast; target bytes, gameplay acceptance and performance gain remain open. The next independent source slice is the already-identified in-place package/movie mutation authority, outside this clip change.
++
++**Cost and comparison scope:** the enabled emitter adds one automatic proof boolean and a scan of at most the existing 256 strip indices; there is no new persistent storage or larger workspace. Exact SH text/stack, warm/cold-I cycles, cache-line traffic and MODELLED whole-frame delta are unmeasured. The target pair changes SCENERY_CLIP_GATHER and WORLD_PORTAL_CLIP_GATHER31 together; it qualifies the newly supported composition and cannot isolate the cost of the receipt switch alone. General near-crossing clipping remains unqualified.
+diff --git a/port/dreamcast/game/platform/native_static.cpp b/port/dreamcast/game/platform/native_static.cpp
+index 79f88be..7443dd0 100644
+--- a/port/dreamcast/game/platform/native_static.cpp
++++ b/port/dreamcast/game/platform/native_static.cpp
+@@ -138,20 +138,29 @@ extern "C" unsigned re4dc_dsa28_model_class(const Re4dcModelPart*);
+ #ifndef RE4DC_WORLD_PORTAL_STREAM31
+ #define RE4DC_WORLD_PORTAL_STREAM31 0
+ #endif
++#ifndef RE4DC_WORLD_PORTAL_CLIP_GATHER31
++#define RE4DC_WORLD_PORTAL_CLIP_GATHER31 0
++#endif
+ #if RE4DC_WORLD_PORTAL_COMPLETION != 0 && RE4DC_WORLD_PORTAL_COMPLETION != 1
+ #error WORLD_PORTAL_COMPLETION must be 0 or 1
+ #endif
+ #if RE4DC_WORLD_PORTAL_STREAM31 != 0 && RE4DC_WORLD_PORTAL_STREAM31 != 1
+ #error WORLD_PORTAL_STREAM31 must be 0 or 1
+ #endif
+-#if RE4DC_WORLD_PORTAL_STREAM31 && (RE4DC_WORLD_PORTAL_COMPLETION != 1 || RE4DC_SCENERY_STREAM != 1 || RE4DC_PS2_PVS != 1 || RE4DC_PS2_PVS_BATCH_COMPOSE != 1 || RE4DC_SCENERY_EMIT_PREFETCH || RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_TA_HASH)
+-#error WORLD_PORTAL_STREAM31 needs streamed PVS/portal completion without prefetch, alternate records, direct strips or clip extensions
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31 != 0 && RE4DC_WORLD_PORTAL_CLIP_GATHER31 != 1
++#error WORLD_PORTAL_CLIP_GATHER31 must be 0 or 1
++#endif
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31 && (!RE4DC_WORLD_PORTAL_STREAM31 || !RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_CPU_BACKFACE || RE4DC_MESH_CLIP_LEAN || RE4DC_MESH_CLIP_ACCEPT)
++#error WORLD_PORTAL_CLIP_GATHER31 needs qualified stream and basic gather clipper with indexed clip and CPU backface off
++#endif
++#if RE4DC_WORLD_PORTAL_STREAM31 && (RE4DC_WORLD_PORTAL_COMPLETION != 1 || RE4DC_SCENERY_STREAM != 1 || RE4DC_PS2_PVS != 1 || RE4DC_PS2_PVS_BATCH_COMPOSE != 1 || RE4DC_SCENERY_EMIT_PREFETCH || (RE4DC_SCENERY_CLIP_GATHER && !RE4DC_WORLD_PORTAL_CLIP_GATHER31) || RE4DC_SCENERY_CLIP_INDEXED26 || RE4DC_SCENERY_RECORD_SPLIT || RE4DC_SCENERY_DIRECT_STRIPS || RE4DC_TA_HASH)
++#error WORLD_PORTAL_STREAM31 needs streamed PVS/portal completion without prefetch, alternate records, direct strips or unqualified clip extensions
+ #endif
+ #if RE4DC_SCENERY_STREAM && RE4DC_PS2_PVS && !RE4DC_WORLD_PORTAL_STREAM31
+ #error SCENERY_STREAM with PS2_PVS needs WORLD_PORTAL_STREAM31
+ #endif
+-#if RE4DC_WORLD_PORTAL_COMPLETION && (!RE4DC_WORLD_PORTAL29 || !RE4DC_PS2_PVS_BATCH_COMPOSE || !RE4DC_SCENERY_SUBMIT_BATCH || (RE4DC_SCENERY_STREAM && !RE4DC_WORLD_PORTAL_STREAM31) || RE4DC_SCENERY_CLIP_GATHER || RE4DC_SCENERY_CLIP_INDEXED26)
+-#error WORLD_PORTAL_COMPLETION needs portal + qualified queued batching; stream needs WORLD_PORTAL_STREAM31 and clip remains unqualified
++#if RE4DC_WORLD_PORTAL_COMPLETION && (!RE4DC_WORLD_PORTAL29 || !RE4DC_PS2_PVS_BATCH_COMPOSE || !RE4DC_SCENERY_SUBMIT_BATCH || (RE4DC_SCENERY_STREAM && !RE4DC_WORLD_PORTAL_STREAM31) || (RE4DC_SCENERY_CLIP_GATHER && !RE4DC_WORLD_PORTAL_CLIP_GATHER31) || RE4DC_SCENERY_CLIP_INDEXED26)
++#error WORLD_PORTAL_COMPLETION needs portal + qualified queued batching; stream and gather clip need their scoped controls
+ #endif
+ #ifndef RE4DC_SCENERY_SUBMIT_BATCH
+ #define RE4DC_SCENERY_SUBMIT_BATCH 0
+@@ -1320,6 +1329,11 @@ struct Emitter {
+     unsigned limit=0; // packet slots strips may use: packet.capacity less any borrowed tail
+     bool streaming=false,bound=false,submitted=false;
+     bool vertex_alpha=false; // corner alpha from the colour palette (source vertex alpha)
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
++    // The clipper lives in Emitter; the receipt reads this across every pick
++    // in the derived MeshDraw and folds it across page restarts.
++    bool portal_depth_safe_clip=true;
++#endif
+ #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
+     bool dsa_xlu()const{
+ #if RE4DC_PS2_WORLD_MESH
+@@ -1676,6 +1690,17 @@ struct Emitter {
+     int clip_strip(const Vertex* base,const re4dc::room::CompactBatch& batch,
+ #endif
+                    const Index* index,unsigned count){
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
++        // The existing input==output receipt is a coverage proof only while
++        // each input triangle can produce at most one output triangle. A long
++        // depth-inside strip takes this clipper for capacity, not near clipping.
++        if(!ps2 || !outcodes || count<=limit)portal_depth_safe_clip=false;
++        else {
++            constexpr unsigned depth=re4dc::vp::depth_mask(re4dc::vp::kChecksAll);
++            for(unsigned i=0;i<count;++i)
++                if(outcodes[index[i]]&depth){portal_depth_safe_clip=false;break;}
++        }
++#endif
+ #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
+         re4dc::dfa26::hit(count>limit?re4dc::dfa26::WorldClipCapacity:re4dc::dfa26::WorldClipDepth);
+         struct ClipAudit {
+@@ -4266,6 +4291,9 @@ struct MeshDraw : Emitter {
+         used=input=output=slots=0;
+         bound=submitted=false;
+         cache=nullptr;primed=0;
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
++        portal_depth_safe_clip=true;
++#endif
+ #if RE4DC_PS2_PVS
+         pvs_pending[0]=pvs_pending[1]=~0U;pvs_pending[2]=0;
+ #endif
+@@ -8339,7 +8367,9 @@ int ps2_pass(unsigned pass,float zfar){
+             if(active_page)active_page->selected(cpk+x.first,x.count);
+ #endif
+ #if RE4DC_WORLD_PORTAL_COMPLETION
++#if !RE4DC_WORLD_PORTAL_CLIP_GATHER31
+             const unsigned wp29_clipped=stats.strips_clipped,wp29_culled=stats.strips_culled;
++#endif
+             const auto& wp29_source=cpkg.parts()[x.index];
+             const bool wp29_whole=re4dc::portal29::whole_source(cpk+x.first,x.count,
+                 wp29_source.first_meshlet,wp29_source.meshlet_count);
+@@ -8397,9 +8427,22 @@ int ps2_pass(unsigned pass,float zfar){
+ #endif
+ #if RE4DC_WORLD_PORTAL_COMPLETION
+ #if RE4DC_WORLD_PAGES31
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
++                if(active_page && !e.portal_depth_safe_clip)active_page->whole=false;
++#else
+                 if(active_page && (stats.strips_clipped!=wp29_clipped || stats.strips_culled!=wp29_culled))
+                     active_page->whole=false;
++#endif
+                 if(!active_page || active_page_last){
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
++                    const auto completion=re4dc::portal29::Completion::emitted(
++                        active_page?active_page->result():result,
++                        active_page?active_page->published:e.submitted,
++                        active_page?active_page->input:e.input,
++                        active_page?active_page->output:e.output,
++                        active_page?active_page->complete(wp29_source.first_meshlet):
++                            wp29_whole && e.portal_depth_safe_clip);
++#else
+                     const auto completion=re4dc::portal29::Completion::emitted(
+                         active_page?active_page->result():result,
+                         active_page?active_page->published:e.submitted,
+@@ -8407,11 +8450,17 @@ int ps2_pass(unsigned pass,float zfar){
+                         active_page?active_page->output:e.output,
+                         active_page?active_page->complete(wp29_source.first_meshlet):
+                             wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
++#endif
+                     wp29::finish(x.wp29_ticket,completion,x.key);
+                 }
++#else
++#if RE4DC_WORLD_PORTAL_CLIP_GATHER31
++                const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
++                    wp29_whole && e.portal_depth_safe_clip);
+ #else
+                 const auto completion=re4dc::portal29::Completion::emitted(result,e.submitted,e.input,e.output,
+                     wp29_whole && stats.strips_clipped==wp29_clipped && stats.strips_culled==wp29_culled);
++#endif
+                 wp29::finish(x.wp29_ticket,completion,x.key);
+ #endif
+ #else
+diff --git a/port/dreamcast/game/world_plan29.mk b/port/dreamcast/game/world_plan29.mk
+index 3ba42e0..2ceed00 100644
+--- a/port/dreamcast/game/world_plan29.mk
++++ b/port/dreamcast/game/world_plan29.mk
+@@ -39,7 +39,7 @@ $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_PORTAL29=1
+ endif
+ 
+ # Build31: qualify the existing streamed indexed producer with queued portal
+-# completion. No clip producer receives a witness under this control.
++# completion. Its default composition leaves clip producers excluded.
+ WORLD_PORTAL_STREAM31 ?= 0
+ ifneq ($(words $(WORLD_PORTAL_STREAM31)),1)
+ $(error WORLD_PORTAL_STREAM31 must be exactly 0 or 1)
+@@ -47,6 +47,15 @@ endif
+ ifneq ($(filter-out 0 1,$(WORLD_PORTAL_STREAM31)),)
+ $(error WORLD_PORTAL_STREAM31 must be exactly 0 or 1)
+ endif
++# Depth-safe, oversized SCENERY_CLIP_GATHER producer. Near-crossing and lost
++# triangles still cannot publish a portal witness.
++WORLD_PORTAL_CLIP_GATHER31 ?= 0
++ifneq ($(words $(WORLD_PORTAL_CLIP_GATHER31)),1)
++$(error WORLD_PORTAL_CLIP_GATHER31 must be exactly 0 or 1)
++endif
++ifneq ($(filter-out 0 1,$(WORLD_PORTAL_CLIP_GATHER31)),)
++$(error WORLD_PORTAL_CLIP_GATHER31 must be exactly 0 or 1)
++endif
+ 
+ # EF08: queued portal completion is separately opt-in; legacy portal stays exact.
+ WORLD_PORTAL_COMPLETION ?= 0
+@@ -60,8 +69,13 @@ ifeq ($(WORLD_PORTAL_COMPLETION),1)
+ ifneq ($(WORLD_PORTAL29)$(SCENERY_SUBMIT_BATCH)$(PS2_PVS_BATCH_COMPOSE),111)
+ $(error WORLD_PORTAL_COMPLETION needs WORLD_PORTAL29=1 SCENERY_SUBMIT_BATCH=1 PS2_PVS_BATCH_COMPOSE=1)
+ endif
+-ifneq ($(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),00)
+-$(error WORLD_PORTAL_COMPLETION requires explicit SCENERY_CLIP_GATHER=0 SCENERY_CLIP_INDEXED26=0)
++ifneq ($(SCENERY_CLIP_INDEXED26),0)
++$(error WORLD_PORTAL_COMPLETION requires SCENERY_CLIP_INDEXED26=0)
++endif
++ifneq ($(SCENERY_CLIP_GATHER),0)
++ifneq ($(WORLD_PORTAL_CLIP_GATHER31),1)
++$(error WORLD_PORTAL_COMPLETION with SCENERY_CLIP_GATHER needs WORLD_PORTAL_CLIP_GATHER31=1)
++endif
+ endif
+ ifneq ($(SCENERY_STREAM),0)
+ ifneq ($(WORLD_PORTAL_STREAM31),1)
+@@ -82,11 +96,25 @@ ifeq ($(WORLD_PORTAL_STREAM31),1)
+ ifneq ($(WORLD_PORTAL_COMPLETION)$(SCENERY_STREAM)$(PS2_PVS_BATCH_COMPOSE),111)
+ $(error WORLD_PORTAL_STREAM31 needs WORLD_PORTAL_COMPLETION=1 SCENERY_STREAM=1 PS2_PVS_BATCH_COMPOSE=1)
+ endif
+-ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_GATHER)$(SCENERY_CLIP_INDEXED26),000)
+-$(error WORLD_PORTAL_STREAM31 needs SCENERY_EMIT_PREFETCH=0 and both SCENERY_CLIP controls=0)
++ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_INDEXED26),00)
++$(error WORLD_PORTAL_STREAM31 needs SCENERY_EMIT_PREFETCH=0 SCENERY_CLIP_INDEXED26=0)
++endif
++ifneq ($(SCENERY_CLIP_GATHER),0)
++ifneq ($(WORLD_PORTAL_CLIP_GATHER31),1)
++$(error WORLD_PORTAL_STREAM31 with SCENERY_CLIP_GATHER needs WORLD_PORTAL_CLIP_GATHER31=1)
++endif
+ endif
+ $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_STREAM31=1
+ endif
++ifeq ($(WORLD_PORTAL_CLIP_GATHER31),1)
++ifneq ($(WORLD_PORTAL_STREAM31)$(WORLD_PORTAL_COMPLETION)$(SCENERY_CLIP_GATHER)$(PS2_PVS_BATCH_COMPOSE),1111)
++$(error WORLD_PORTAL_CLIP_GATHER31 needs qualified stream, portal completion, clip gather and PVS batch compose)
++endif
++ifneq ($(SCENERY_EMIT_PREFETCH)$(SCENERY_CLIP_INDEXED26)$(CPU_BACKFACE)$(MESH_CLIP_LEAN)$(MESH_CLIP_ACCEPT),00000)
++$(error WORLD_PORTAL_CLIP_GATHER31 needs prefetch, indexed clip, CPU backface and alternate clipper off)
++endif
++$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PORTAL_CLIP_GATHER31=1
++endif
+ 
+ # EF09 prepared world facts; absent/zero preserves all preceding paths/layouts.
+ WORLD_PREPARED09 ?= 0
+diff --git a/port/dreamcast/tests/test_world_portal_clip_gather31.py b/port/dreamcast/tests/test_world_portal_clip_gather31.py
+new file mode 100644
+index 0000000..833891f
+--- /dev/null
++++ b/port/dreamcast/tests/test_world_portal_clip_gather31.py
+@@ -0,0 +1,254 @@
++#!/usr/bin/env python3
++"""Depth-safe oversized indexed gather through the production clipper and receipt."""
++from pathlib import Path
++import importlib.util
++import os
++import subprocess
++import tempfile
++
++ROOT = Path(__file__).resolve().parents[3]
++BASE = "4c033a49eb87bb5357d859d82ffebe2e32df03db"
++NATIVE = ROOT / "port/dreamcast/game/platform/native_static.cpp"
++TEMPLATE = ROOT / "port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in"
++PROFILE_BUILDER = ROOT / "port/dreamcast/tools/cloud/build31/stream_portal_profile.py"
++PROFILE_GATE = ROOT / "port/dreamcast/tests/test_world_portal_stream_profile31.py"
++
++
++def run(args, **kw):
++    result = subprocess.run([str(x) for x in args], cwd=ROOT, text=True,
++                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, **kw)
++    if result.returncode:
++        raise AssertionError(f"{result.returncode}: {' '.join(map(str, args))}\n{result.stdout}")
++    return result.stdout
++
++
++def extract_methods():
++    path = ROOT / "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py"
++    spec = importlib.util.spec_from_file_location("world_clip_extract", path)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    source = NATIVE.read_text()
++    # clip_strip is an Emitter member, while stream_gather and the receipt
++    # belong to MeshDraw. Keep the eligibility flag in the class whose method
++    # updates it; the combined host fixture alone would not catch a misplaced
++    # derived-only member.
++    before_draw = source.split("\n};\nstruct Draw : Emitter", 1)
++    assert len(before_draw) == 2
++    emitter = before_draw[0].split("struct Emitter {", 1)[1]
++    assert "bool portal_depth_safe_clip=true;" in emitter
++    methods = {
++        "CLIP_VERTEX": "void clip_vertex(const re4dc::render::StaticCorner& in,",
++        "STREAM_GATHER": "__attribute__((noinline)) const re4dc::room::CompactVertex12* stream_gather(\n",
++        "LEAN_FLUSH": "void lean_flush(",
++        "STRIPS_LEAN": "const std::uint8_t* strips_lean(",
++        "CLIP_STRIP": "template<class Vertex,class Index>\n    int clip_strip(",
++    }
++    bodies = {key: module.function(source, signature) for key, signature in methods.items()}
++    bodies["CLIP_STRIP"] = bodies["CLIP_STRIP"].replace(
++        "#endif\n                   const Index*", "                   const Index*", 1)
++    assert "#endif\n                   const Index*" not in bodies["CLIP_STRIP"]
++    bodies["PAGE_INPUTS"] = source.split("// PAGE31_INPUTS_BEGIN", 1)[1].split(
++        "// PAGE31_INPUTS_END", 1)[0]
++    bodies["RECEIPT"] = source.split("// PORTAL_COMPLETION_FLUSH_BEGIN", 1)[1].split(
++        "// PORTAL_COMPLETION_FLUSH_END", 1)[0]
++    return bodies
++
++
++def producer(tmp):
++    kos = tmp / "stubs/dc"
++    kos.mkdir(parents=True)
++    (tmp / "stubs/kos").mkdir()
++    (tmp / "stubs/kos/fs.h").write_text(
++        "#pragma once\nusing file_t=int;\n#define FILEHND_INVALID (-1)\n")
++    (kos / "pvr.h").write_text(
++        "#pragma once\n#include <cstddef>\n#include <cstdint>\n"
++        "struct pvr_vertex_t{std::uint32_t flags;float x,y,z,u,v;std::uint32_t argb,oargb;};\n"
++        "struct pvr_poly_hdr_t{std::uint32_t words[8];};\n"
++        "#define PVR_CMD_VERTEX 0xe0000000U\n#define PVR_CMD_VERTEX_EOL 0xf0000000U\n"
++        "int pvr_prim(const void*,std::size_t);\n")
++    source = TEMPLATE.read_text().replace("@ROOT@", str(ROOT))
++    for key, body in extract_methods().items():
++        source = source.replace("@" + key + "@", body)
++    assert "@" not in source
++    cpp = tmp / "producer.cpp"
++    cpp.write_text(source)
++    for pages in (1, 0):
++        for sanitizer in (False, True):
++            exe = tmp / f"producer-pages{pages}{'-san' if sanitizer else ''}"
++            flags = (["-O1", "-g", "-fno-omit-frame-pointer", "-fsanitize=address,undefined", "-no-pie"]
++                     if sanitizer else ["-O2", "-g0"])
++            run(["g++", "-std=gnu++20", "-Wall", "-Wextra", "-Wno-unused-parameter",
++                 f"-DRE4DC_WORLD_PAGES31={pages}", *flags,
++                 "-I", tmp / "stubs", "-I", ROOT / "port/dreamcast/room",
++                 "-I", ROOT / "port/dreamcast/game/platform/include",
++                 "-I", ROOT / "port/dreamcast/tools/d367/world_scratch23/stubs",
++                 cpp, ROOT / "port/dreamcast/room/pvr_geometry.cpp", "-o", exe])
++            run([exe], env=dict(os.environ, ASAN_OPTIONS="detect_leaks=0:halt_on_error=1",
++                                UBSAN_OPTIONS="halt_on_error=1:print_stacktrace=1"))
++    print("actual sparse gather/strip/clipper/page and direct receipt normal+ASan/UBSan pass")
++
++
++def guards_and_off(tmp):
++    current = NATIVE.read_text()
++    old = run(["git", "show", f"{BASE}:port/dreamcast/game/platform/native_static.cpp"])
++    def block(source):
++        return "#ifndef RE4DC_WORLD_PORTAL_COMPLETION\n" + source.split(
++            "#ifndef RE4DC_WORLD_PORTAL_COMPLETION", 1)[1].split(
++            "#ifndef RE4DC_SCENERY_SUBMIT_BATCH", 1)[0] + "int admitted=1;\n"
++    def pp(source, definitions=()):
++        return subprocess.run(["g++", "-E", "-P", "-x", "c++", *definitions, "-"],
++                              input=source, text=True, capture_output=True)
++    assert pp(block(current)).stdout == pp(block(old)).stdout
++    assert pp(block(current), ["-DRE4DC_WORLD_PORTAL_CLIP_GATHER31=0"]).stdout == pp(block(old)).stdout
++    # The other three edited production regions retain complete OFF source
++    # bytes after preprocessing, including whitespace and newlines.
++    path = ROOT / "port/dreamcast/tools/d367/world_submit_spike/check_runtime.py"
++    spec = importlib.util.spec_from_file_location("world_clip_off_extract", path)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    def slices(source):
++        emitter = source.split("struct Emitter {", 1)[1].split("\n};\nstruct Draw : Emitter", 1)[0]
++        return (
++            emitter,
++            module.function(source, "template<class Vertex,class Index>\n    int clip_strip(").replace(
++                "#endif\n                   const Index*", "                   const Index*", 1),
++            module.function(source, "[[gnu::always_inline]] void chunk_restart(){"),
++            source.split("// PORTAL_COMPLETION_FLUSH_BEGIN", 1)[1].split(
++                "// PORTAL_COMPLETION_FLUSH_END", 1)[0],
++        )
++    off_profile = ["-DRE4DC_WORLD_PORTAL_COMPLETION=1", "-DRE4DC_WORLD_PORTAL29=1",
++                   "-DRE4DC_WORLD_PAGES31=1", "-DRE4DC_WORLD_PREPARED09=1",
++                   "-DRE4DC_SCENERY_SUBMIT_BATCH=1", "-DRE4DC_PS2_PVS_BATCH_COMPOSE=1",
++                   "-DRE4DC_PS2_PVS=1", "-DRE4DC_SCENERY_STREAM=1",
++                   "-DRE4DC_WORLD_PORTAL_STREAM31=1",
++                   "-DRE4DC_MESH_CLIP_LEAN=0", "-DRE4DC_MESH_CLIP_ACCEPT=0",
++                   "-DRE4DC_WORLD_PORTAL_CLIP_GATHER31=0"]
++    for index, (baseline, candidate) in enumerate(zip(slices(old), slices(current))):
++        a, b = pp(baseline, off_profile), pp(candidate, off_profile)
++        assert a.returncode == b.returncode == 0, (a.stderr, b.stderr)
++        assert a.stdout == b.stdout, (index, len(a.stdout), len(b.stdout),
++                                      next((i for i, pair in enumerate(zip(a.stdout, b.stdout))
++                                            if pair[0] != pair[1]), None))
++    definitions = {"WORLD_PORTAL_COMPLETION": 1, "WORLD_PORTAL29": 1,
++                   "PS2_PVS_BATCH_COMPOSE": 1, "SCENERY_SUBMIT_BATCH": 1,
++                   "SCENERY_STREAM": 1, "PS2_PVS": 1, "WORLD_PORTAL_STREAM31": 1,
++                   "WORLD_PORTAL_CLIP_GATHER31": 1, "SCENERY_CLIP_GATHER": 1}
++    def check(changes, valid):
++        values = {**definitions, **changes}
++        d = [f"-DRE4DC_{key}={value}" for key, value in values.items()]
++        result = pp(block(current), d)
++        assert (result.returncode == 0) == valid, (changes, result.stderr)
++    check({}, True)
++    for key, value in (("WORLD_PORTAL_CLIP_GATHER31", 0),
++                       ("WORLD_PORTAL_CLIP_GATHER31", 2),
++                       ("WORLD_PORTAL_STREAM31", 0),
++                       ("SCENERY_CLIP_GATHER", 0),
++                       ("SCENERY_CLIP_INDEXED26", 1),
++                       ("CPU_BACKFACE", 2),
++                       ("MESH_CLIP_LEAN", 1),
++                       ("MESH_CLIP_ACCEPT", 1),
++                       ("SCENERY_EMIT_PREFETCH", 1),
++                       ("PS2_PVS", 0)):
++        check({key: value}, False)
++    for label, source in (("old", block(old)), ("current", block(current))):
++        obj = tmp / f"guard-{label}.o"
++        run(["g++", "-std=gnu++20", "-O2", "-g0", "-x", "c++", "-c", "-", "-o", obj], input=source)
++    assert (tmp / "guard-old.o").read_bytes() == (tmp / "guard-current.o").read_bytes()
++    print("source clip guard/refusals and exact OFF preprocessor/object pass")
++
++
++def make_commands(tmp):
++    def load(name, path):
++        spec = importlib.util.spec_from_file_location(name, path)
++        module = importlib.util.module_from_spec(spec)
++        spec.loader.exec_module(module)
++        return module
++    profile = load("world_clip_stream_profile31", PROFILE_BUILDER)
++    gate = load("world_clip_stream_profile31_test", PROFILE_GATE)
++
++    # Keep the release chain intact. The two clipper exclusions must be
++    # explicit in both the matched stream control and the enabled candidate.
++    common = ["MESH_CLIP_LEAN=0", "MESH_CLIP_ACCEPT=0"]
++    control = profile.source_only_candidate(tmp, common)
++    zero = profile.source_only_candidate(tmp, [*common, "WORLD_PORTAL_CLIP_GATHER31=0"])
++    on = profile.source_only_candidate(tmp, [*common, "SCENERY_CLIP_GATHER=1",
++                                              "WORLD_PORTAL_CLIP_GATHER31=1"])
++    values = profile.resolved(on)
++    assert {key: values.get(key) for key in (
++        "PVR_PIPELINE", "PACE_CATCHUP", "PACE_TRANS_SKIP", "PACE_STEADY", "COARSE",
++        "CPU_BACKFACE", "MESH_CLIP_LEAN", "MESH_CLIP_ACCEPT", "SCENERY_CLIP_GATHER",
++        "WORLD_PORTAL_CLIP_GATHER31")} == dict(
++            PVR_PIPELINE="2", PACE_CATCHUP="2", PACE_TRANS_SKIP="4063",
++            PACE_STEADY="1", COARSE="1", CPU_BACKFACE="0",
++            MESH_CLIP_LEAN="0", MESH_CLIP_ACCEPT="0",
++            SCENERY_CLIP_GATHER="1", WORLD_PORTAL_CLIP_GATHER31="1")
++    assert len(on) > 500, "release chain was shortened"
++    native = "platform/native_static.o"
++    native_source = "platform/native_static.cpp"
++    def command(assignments, accepted):
++        result = gate.make(tmp, assignments, native)
++        assert (result.returncode == 0) == accepted, (assignments[-5:],
++                                                       result.stdout[-2500:], result.stderr[-2500:])
++        return gate.compile_args(result.stdout, native_source) if accepted else []
++    old_args = command(control, True)
++    zero_args = command(zero, True)
++    assert old_args == zero_args
++    assert not any("RE4DC_WORLD_PORTAL_CLIP_GATHER31" in arg for arg in old_args)
++    enabled = command(on, True)
++    assert enabled.count("-DRE4DC_WORLD_PORTAL_CLIP_GATHER31=1") == 1
++    assert enabled.count("-DRE4DC_SCENERY_CLIP_GATHER=1") == 1
++    assert enabled.count("-DRE4DC_WORLD_PORTAL_STREAM31=1") == 1
++    assert enabled.count("-DRE4DC_WORLD_PORTAL_COMPLETION=1") == 1
++    for fact in ("TA_DIRECT", "PS2_WORLD_HDR_CACHE", "MESH_FASTPATH", "PVR_STREAM"):
++        assert enabled.count(f"-DRE4DC_{fact}=1") == 1, fact
++
++    # Feed definitions from the actual primary Make native_static command to
++    # the actual source guard, then use the stream gate's trans.cpp extraction.
++    source = NATIVE.read_text()
++    guard = "#ifndef RE4DC_WORLD_PORTAL_COMPLETION\n" + source.split(
++        "#ifndef RE4DC_WORLD_PORTAL_COMPLETION", 1)[1].split(
++            "#ifndef RE4DC_SCENERY_SUBMIT_BATCH", 1)[0] + "int admitted=1;\n"
++    native_defs = [arg for arg in enabled if arg.startswith("-DRE4DC_")]
++    checked = subprocess.run(["g++", "-E", "-P", "-x", "c++", *native_defs, "-"],
++                             input=guard, text=True, capture_output=True)
++    assert checked.returncode == 0, checked.stderr
++    generated = gate.make(tmp, on, "pace.h", dry=False)
++    assert generated.returncode == 0, generated.stderr[-2500:]
++    trans_source = "../../../src/game/trans.cpp"
++    good_trans = gate.compile_args(gate.accepted(tmp, on, "src/game/trans.o"), trans_source)
++    gate.actual_trans_guard(tmp, good_trans, expected=True)
++    bad_mask = [*on, "PACE_TRANS_SKIP=1"]
++    bad_trans = gate.compile_args(gate.accepted(tmp, bad_mask, "src/game/trans.o"), trans_source)
++    gate.actual_trans_guard(tmp, bad_trans, expected=False)
++    old_pipeline = gate.make(tmp, [*on, "PVR_PIPELINE=1", "PACE_TRANS_SKIP=1"], native)
++    assert old_pipeline.returncode != 0
++    assert "PACE_STEADY / PACE_HOLD_LOG need PVR_PIPELINE=2" in old_pipeline.stderr
++    no_catchup = gate.make(tmp, [*on, "PACE_CATCHUP=1"], native)
++    assert no_catchup.returncode != 0 and "COARSE needs PACE_CATCHUP=2" in no_catchup.stderr
++
++    for changes in (["WORLD_PORTAL_CLIP_GATHER31="],
++                    ["WORLD_PORTAL_CLIP_GATHER31=%"],
++                    ["WORLD_PORTAL_CLIP_GATHER31=0 1"],
++                    ["WORLD_PORTAL_CLIP_GATHER31=2"],
++                    ["WORLD_PORTAL_STREAM31=0"],
++                    ["SCENERY_CLIP_GATHER=0"],
++                    ["SCENERY_CLIP_INDEXED26=1"],
++                    ["CPU_BACKFACE=2"],
++                    ["MESH_CLIP_LEAN=1"],
++                    ["MESH_CLIP_ACCEPT=1"],
++                    ["SCENERY_EMIT_PREFETCH=1"]):
++        command([*on, *changes], False)
++    print("full release-chain primary Make clip OFF/ON/refusals and native source guard pass")
++    print("actual trans.cpp COARSE/pacing guard current-mask pass; old-mask refusal pass")
++
++
++def main():
++    with tempfile.TemporaryDirectory(prefix="world-clip31-") as temp:
++        tmp = Path(temp)
++        producer(tmp)
++        guards_and_off(tmp)
++        make_commands(tmp)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in b/port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in
+new file mode 100644
+index 0000000..073d574
+--- /dev/null
++++ b/port/dreamcast/tests/world_portal_clip_gather31/producer_fixture.cpp.in
+@@ -0,0 +1,254 @@
++// Actual source-extracted streamed gather, strip walker, clipper and receipt.
++// Synthetic mesh data; pvr_geometry.cpp is the production triangle clipper.
++#include <algorithm>
++#include <array>
++#include <cassert>
++#include <cstdint>
++#include <cstring>
++#include <vector>
++#define RE4DC_SCENERY_STREAM 1
++#define RE4DC_SCENERY_CLIP_GATHER 1
++#define RE4DC_SCENERY_CLIP_INDEXED26 0
++#define RE4DC_WORLD_PORTAL_STREAM31 1
++#define RE4DC_WORLD_PORTAL_CLIP_GATHER31 1
++#define RE4DC_WORLD_PORTAL_COMPLETION 1
++#define RE4DC_WORLD_PORTAL29 1
++#define RE4DC_WORLD_PREPARED09 1
++#ifndef RE4DC_WORLD_PAGES31
++#define RE4DC_WORLD_PAGES31 1
++#endif
++#define RE4DC_SCENERY_SUBMIT_BATCH 1
++#define RE4DC_PS2_PVS_BATCH_COMPOSE 1
++#define RE4DC_PS2_PVS 1
++#define RE4DC_PS2_STRIP_GROUPS 0
++#define RE4DC_SG_SELECT_LEAN 0
++#define RE4DC_PS2_WORLD_TRANSITION_OWNER 0
++#define RE4DC_MESH_CLIP_LEAN 0
++#define RE4DC_MESH_CLIP_ACCEPT 0
++#define RE4DC_MESH_DIRECT 1
++#define RE4DC_PS2_VERTEX_ALPHA 0
++#define RE4DC_SCENERY_DEDUP 0
++#define RE4DC_COPY_LEAN 0
++#define RE4DC_HW_LEAN 0
++#define RE4DC_WORLD_CENSUS24 0
++#define RE4DC_DRAW_SETUP_AUDIT 0
++#define RE4DC_DRAW_FALLBACK_AUDIT 0
++#define RE4DC_INV255 /255.0f
++#include "@ROOT@/port/dreamcast/room/pvr_geometry.hpp"
++#include "@ROOT@/port/dreamcast/room/instanced_mesh.hpp"
++#include "@ROOT@/port/dreamcast/room/mesh_fastpath_sched.hpp"
++#include "@ROOT@/port/dreamcast/game/platform/include/scenery_clip_gather.hpp"
++#include "@ROOT@/port/dreamcast/game/platform/include/world_portal29.hpp"
++#include "@ROOT@/port/dreamcast/game/platform/include/world_page31.hpp"
++namespace re4dc::render {struct StaticCorner {float x,y,z;std::uint16_t u,v;std::uint32_t argb;};}
++using Vertex=re4dc::room::CompactVertex12;
++using Record=re4dc::room::Meshlet;
++#define RE4DC_SCENERY_RECORD Record
++static constexpr unsigned kClipOnce=16;
++struct {unsigned strips_clipped=0,strips_culled=0,vertices=0,strips=0,triangles_clipped=0;} stats;
++std::uint32_t vp_words[512]{};
++float vp_host_xmtrx[4][4]={{1,0,0,0},{0,1,0,0},{0,0,1,1},{0,0,0,0}};
++int pvr_prim(const void*,std::size_t){return 0;}
++namespace re4dc::vp {
++inline const std::uint8_t* walk_lean(const std::uint8_t* s,const std::uint8_t* end,
++    const std::uint8_t* oc,const pvr_vertex_t* cache,unsigned limit,std::uint32_t*& q,
++    unsigned& culled,unsigned& emitted){
++    while(s<end){
++        const unsigned n=*s;const auto code=codes(oc,s+1,n);
++        if(code.all&depth_mask(kChecksAll)){++culled;s+=n+1;continue;}
++        if((code.any&depth_mask(kChecksAll))||n>limit)return s;
++        if(code.all&screen_mask(kChecksAll))++culled;
++        else {auto* dst=reinterpret_cast<pvr_vertex_t*>(q);auto* last=emit(dst,cache,s+1,n);
++              q=reinterpret_cast<std::uint32_t*>(last);++emitted;}
++        s+=n+1;
++    }
++    return s;
++}
++}
++struct ClipEmitter {
++    struct Package {
++        std::array<Vertex,65> pool{};
++        std::array<std::uint16_t,65> offsets{};
++        Record record{};
++        re4dc::room::MeshPart part{};
++        const Vertex* vertices()const{return pool.data();}
++        const std::uint16_t* pool_offsets(const Record&)const{return offsets.data();}
++        const re4dc::room::MeshPart* parts()const{return &part;}
++    } package;
++    re4dc::scenery_clip24::Gather stream_clip_gather;
++    std::array<Vertex,65> gathered_storage{};
++    Vertex* gathered=gathered_storage.data();
++    const Record* stream_l=&package.record;
++    std::array<std::uint8_t,66> strip{};
++    std::array<std::uint8_t,256> codes{};
++    std::array<pvr_vertex_t,256> cache_storage{};
++    pvr_vertex_t* cache=cache_storage.data();
++    std::array<pvr_vertex_t,8> scratch{};
++    std::array<std::uint32_t,2048> sq_storage{};
++    std::array<std::uint32_t,512> lut{};
++    std::vector<pvr_vertex_t> sent;
++    pvr_vertex_t* dst=scratch.data();std::uint32_t* sq=sq_storage.data();
++    std::uint8_t* outcodes=codes.data();
++    re4dc::room::CompactBatch batch{};
++    re4dc::render::ClipParameters clip{};
++    struct P {unsigned cull=0;float uv_offset[2]{};} p;
++    struct Packet {float u_scale=1,v_scale=1;} packet;
++    float mvq[12]{1,0,0,0, 0,1,0,0, 0,0,-1,0};
++    float near=.5f,far=2.f;
++    unsigned alpha=0xff000000U,used=0,output=0,input=0,slots=0,limit=64;
++    bool ps2=true,submitted=true,vertex_alpha=false,portal_depth_safe_clip=true;
++    unsigned pvs_pending[3]{};
++    bool flush(){return false;}
++    void put(unsigned n){sent.insert(sent.end(),dst+used,dst+used+n);sq+=8*n;slots+=n;}
++    void end_direct(){sq=nullptr;}
++    static std::uint32_t argb1555(std::uint16_t c){return re4dc::vp::argb1555(c);}
++    re4dc::render::StaticCorner corner(const Vertex& in)const{
++        return {float(in.x),float(in.y),float(in.z),in.u,in.v,argb1555(in.color)};
++    }
++    float u(float value)const{return (value+p.uv_offset[0])*packet.u_scale;}
++    float v(float value)const{return (value+p.uv_offset[1])*packet.v_scale;}
++    static void project(float& x,float& y,float& z,void*){
++        const float inverse=1.0f/(-z);x=100+2*x*inverse;y=200+20*y*inverse;z=inverse;
++    }
++@CLIP_VERTEX@
++@STREAM_GATHER@
++@LEAN_FLUSH@
++@STRIPS_LEAN@
++@CLIP_STRIP@
++    void setup(unsigned lost){
++        sent.clear();portal_depth_safe_clip=true;output=input=slots=used=0;
++        std::fill(gathered_storage.begin(),gathered_storage.end(),Vertex{});
++        for(unsigned i=0;i<65;++i){
++            package.offsets[i]=std::uint16_t(64-i);
++            package.pool[64-i]={std::uint16_t(i),std::uint16_t(i&1U),std::uint16_t(i<lost?0:1),
++                                 std::uint16_t(i),std::uint16_t(i),0xffff};
++            strip[i+1]=std::uint8_t(i);
++        }
++        strip[0]=65;
++        batch.uv_scale[0]=batch.uv_scale[1]=1;
++        re4dc::vp::build_lut(lut.data());
++        re4dc::vp::Constants k{};k.su=k.sv=k.scale_u=k.scale_v=1;
++        k.near_distance=near;k.far_distance=far;k.and_mask=~0U;k.lut=lut.data();k.finish();
++        re4dc::vp::prime(cache,256);
++        re4dc::vp::transform_sched_ix(reinterpret_cast<const re4dc::vp::Vertex12*>(package.pool.data()),
++                                      package.offsets.data(),65,cache,codes.data(),k);
++        clip={near,far,640,480,project,this};stream_clip_gather.begin();
++    }
++    int run(bool full=false){
++        int result=1;strips_lean(strip.data(),strip.data()+66,full?gathered:nullptr,batch,result);
++        return result;
++    }
++};
++static re4dc::portal29::Completion receipt(const ClipEmitter& e,bool whole=true){
++    struct Pick {unsigned let,nr;};const Pick pick{0,0xff};
++    assert(re4dc::portal29::whole_source(&pick,1,0,1));
++    return re4dc::portal29::Completion::emitted(1,e.submitted,e.input,e.output,whole && e.portal_depth_safe_clip);
++}
++struct Ps2Part {std::uint32_t crc=1,fnv=2;std::uint16_t width=64,height=64;
++                std::uint8_t pass=0,cull=0,texture=0,reserved=0;};
++struct World {float view[12]{},projection[7]{},viewport[6]{};Ps2Part meta{};Ps2Part* parts=&meta;
++              const void* lut=nullptr;const void* gather=nullptr;} ps2w;
++unsigned frame=1,abort_count=0,receipt_count=0,finish_count=0,close_count=0;
++bool plan_valid=true;unsigned mutate_on_close=0;
++unsigned re4dc_ui_frame(){return frame;}
++namespace wplan29 {bool current(unsigned){return plan_valid;}}
++void re4dc_model_packet_abort(){++abort_count;}
++struct {unsigned aborts=0;} c;
++struct Batch {bool held=true;};
++void re4dc_ps2_world_batch_close(Batch* b){
++    if(!b->held)return;
++    b->held=false;++close_count;
++    if(mutate_on_close==1)ps2w.view[0]=1;
++    if(mutate_on_close==2)++ps2w.meta.fnv;
++    if(mutate_on_close==3)plan_valid=false;
++}
++namespace wp29 {
++void finish(const re4dc::portal29::Ticket& ticket,const re4dc::portal29::Completion& result,const unsigned*){
++    assert(ticket.serial==1);++finish_count;if(result.witnessed())++receipt_count;
++}
++}
++@PAGE_INPUTS@
++int flush_page(ClipEmitter& e,re4dc::page31::Part& proof,unsigned first,bool last,int result){
++    struct Pick {unsigned let,nr;};Pick pick{first,0xff};
++    proof.selected(&pick,1);
++    proof.emitted(result,e.submitted,e.input,e.output);
++    auto& cpkg=e.package;const auto& wp29_source=cpkg.parts()[0];
++    struct X {unsigned index=0,count=1,key[6]{};
++              re4dc::portal29::Ticket wp29_ticket{1,0,7,0};} x;
++    struct {Batch batch;} submit_scope;
++    ChunkPageInputs inputs{};float affine[12]{};inputs.capture(ps2w.meta,affine);
++    auto* active_page=&proof;const auto* active_page_inputs=&inputs;
++    const float* active_page_affine=affine;
++    const unsigned active_page_index=0,active_page_plan=1;
++    const bool active_page_last=last;unsigned nctx=1,npk=1;
++#if RE4DC_WORLD_PAGES31
++    const bool wp29_whole=re4dc::portal29::whole_source(&pick,1,0,2);
++#else
++    const bool wp29_whole=re4dc::portal29::whole_source(&pick,1,0,1);
++#endif
++    (void)wp29_whole;
++@RECEIPT@
++    assert(!submit_scope.batch.held);
++    return result;
++}
++void page_cases(){
++    auto reset=[](){ps2w.meta={};ps2w.parts=&ps2w.meta;
++        std::fill(std::begin(ps2w.view),std::end(ps2w.view),0.f);
++        frame=1;plan_valid=true;mutate_on_close=0;
++        abort_count=receipt_count=finish_count=close_count=0;c={};};
++    reset();re4dc::page31::Part good(0,2);ClipEmitter a,b;
++    a.setup(0);b.setup(0);assert(a.run()==1 && b.run()==1);
++    assert(flush_page(a,good,0,false,1)==1 && receipt_count==0);
++    assert(flush_page(b,good,1,true,1)==1 && receipt_count==1 && close_count==2);
++    reset();re4dc::page31::Part crossing(0,2);ClipEmitter c0,c1;
++    c0.setup(3);c1.setup(0);assert(c0.run()==1 && c1.run()==1);
++    assert(flush_page(c0,crossing,0,false,1)==1);
++    assert(flush_page(c1,crossing,1,true,1)==1 && receipt_count==0);
++    reset();re4dc::page31::Part refused(0,2);ClipEmitter r0,r1;
++    r0.setup(0);r1.setup(0);assert(r0.run()==1 && r1.run()==1);
++    assert(flush_page(r0,refused,0,false,1)==1);
++    assert(flush_page(r1,refused,1,true,0)==-1 && receipt_count==0 && abort_count==1);
++    reset();re4dc::page31::Part first_refused(0,2);ClipEmitter rf;
++    rf.setup(0);assert(rf.run()==1);
++    assert(flush_page(rf,first_refused,0,false,0)==-1 && receipt_count==0 && abort_count==1);
++    for(unsigned mutation=1;mutation<=3;++mutation){
++        reset();re4dc::page31::Part mutated(0,2);ClipEmitter m0,m1;
++        m0.setup(0);m1.setup(0);assert(m0.run()==1 && m1.run()==1);
++        assert(flush_page(m0,mutated,0,false,1)==1);
++        mutate_on_close=mutation;
++        assert(flush_page(m1,mutated,1,true,1)==-1 && receipt_count==0 && abort_count==1);
++    }
++}
++int main(){
++    ClipEmitter sparse;stats={};sparse.setup(0);
++    assert(sparse.run()==1 && stats.strips_clipped==1 && sparse.portal_depth_safe_clip);
++    assert(sparse.input==63 && sparse.output==63 && sparse.sent.size()==189);
++    // Every emitted TA command comes from the production clipper. Sparse
++    // gather and the old full gather must send the same complete packet.
++    ClipEmitter full;stats={};full.setup(0);
++    for(unsigned i=0;i<65;++i)full.gathered[i]=full.package.pool[full.package.offsets[i]];
++    full.stream_l=nullptr;
++    assert(full.run(true)==1 && full.sent.size()==sparse.sent.size());
++    assert(std::memcmp(full.sent.data(),sparse.sent.data(),sparse.sent.size()*sizeof(pvr_vertex_t))==0);
++    assert(receipt(sparse).witnessed());
++    // Three wholly near-rejected corners followed by a near crossing can
++    // balance one lost and one split triangle: equal totals are insufficient.
++    ClipEmitter crossing;stats={};crossing.setup(3);
++    assert(crossing.run()==1 && !crossing.portal_depth_safe_clip);
++    assert(crossing.input==63 && crossing.output==63);
++    assert(!receipt(crossing).witnessed());
++    ClipEmitter culled;stats={};culled.setup(65);
++    assert(culled.run()==1 && !receipt(culled).witnessed());
++    ClipEmitter backface;stats={};backface.setup(0);backface.p.cull=3;
++    assert(backface.run()==1 && backface.portal_depth_safe_clip && backface.output==0);
++    assert(!receipt(backface).witnessed());
++#if RE4DC_WORLD_PAGES31
++    page_cases();
++#else
++    ClipEmitter direct;stats={};direct.setup(0);assert(direct.run()==1);
++    re4dc::page31::Part unused(0,1);
++    assert(flush_page(direct,unused,0,true,1)==1 && receipt_count==1);
++    ClipEmitter near_crossing;stats={};near_crossing.setup(3);assert(near_crossing.run()==1);
++    assert(flush_page(near_crossing,unused,0,true,1)==1 && receipt_count==1);
++#endif
++}
+-- 
+2.51.1
+

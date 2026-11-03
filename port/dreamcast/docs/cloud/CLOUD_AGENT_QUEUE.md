@@ -53,6 +53,27 @@ Work is 47.8 ms per frame. 30 fps needs 33.4 ms.
 
 ## Status
 
+**Recovery activity 2026-10-29 18:31 EDT:** fresh integration `26f7d8278be77388b157910765f5e6b182c39cc1` includes the cloud
+EF15, EF08, EF06 and EF13 deliveries. Local reports full target OFF identity PASS
+for EF15 and all six target profile/OFF arms PASS for EF08. Ten source slices are
+pushed/read back; no whole-card or new runtime/console acceptance is claimed.
+[Current exact SHA ledger and truthful worker/task/next-deliverable/wait matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-live-source-checkpoint).
+Owner Status rows below are preserved verbatim; root serializes cloud activity in
+this separate table to avoid repeating the old queue-row merge conflict.
+
+### Cloud recovery Status
+
+| Build | Current cloud execution | Next deliverable / wait |
+|---|---|---|
+| Cloud29 | W29 integrated26f7d82; current-matrix strip7d22a91 pushed | Local target/private/runtime gates; EF12 partial coverage remains |
+| Cloud31 | Stream target/OFF PASS and integrated4996386; mutation14def81 pushed; original clip source recovered and fixtures PASS | Root publishes clip now stream dependency is satisfied; use deep integrated profile helper |
+| Cloud32 | Recipe8c0444c and actor presentation5ff2a05 pushed; EF14 maintained-SDK manifest ACTIVE; cloth/material producer ACTIVE | Exact patched SDK source/binary manifest, actual target receipt local; final cloth source fixture and publish |
+| Cloud33 | Static2..16 span source frozen;18 normal+18 sanitizer groups and OFF PASS | Root fresh-base/binding composition, primary Make include and publish; SH-4 headroom/cost open |
+| Cloud34 | EF15 integrated149bff3 with full target OFF PASS; resident binding integrateddb01f44; formatted loggercc2234b pushed | Local target/runtime gates; general-raw IRQ/NMI/cache and frontend lifecycle holds remain |
+
+### Owner Status
+
+
 | Build | What | State |
 |---|---|---|
 | Systemic 2026-10-29 | [Current architecture review](SOURCE-ARCHITECTURE-REVIEW-20261029.md) and [EF backlog](ENGINE-FIX-BACKLOG-20261029.md) | new7c4c9200 review integrated; cloud ASSIGNED all remaining public-source/synthetic implementation, including new actor/world/binding/simulation continuations. [Full matrix/file handoffs](handbacks/systemic-performance-20261029.md#answers-owner-2026-10-29-all-source-work-cloud-assignment). Local frozen EF04/09/11/16 finish qualification/delivery; then cloud owns their source follow-ons. Private/runtime/console gates remain local. No enabled/hardware acceptance claim. |

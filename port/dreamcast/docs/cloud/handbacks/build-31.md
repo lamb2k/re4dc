@@ -45,6 +45,39 @@ qualified runtime, build controls and evidence described in step 2. It retains
 the owner's integration and qualification notes. The queue and release recipe
 are unchanged by this follow-up.
 
+## 2026-10-29 recovery: preserved dependent clip WIP
+
+The surviving `codex/world-clip-20261029` candidate was not replaced. Its original
+source commit `13109debcac832fac371df7420cd6ca4cd7deb2b` and synchronized tip
+`5fa74f503e2449cf354e63a35b52d7ab82869598` are preserved locally. To avoid leaving
+the substantive patch only in the ephemeral executor, its exact original
+format-patch is now [durably checkpointed as WIP](../recovery/20261029-world-clip-WIP.patch)
+on the cloud recovery branch. SHA256: `b763c5395be96ac5def02f15d95b994f2f2c8210b79b4d5537546cdfd99d7fcc`.
+
+This is archival patch evidence, not applied production source, a new test run,
+an updated world-clip feature branch or an integration-ready delivery. The
+recovered assignment explicitly requires the corrected stream parent to be
+integrated first. Current stream delivery is `d7801970bdcb401ad5d0901c6e2e9820a05ad15e`;
+current integration remains `f3a0216d43406555c655947f247acc8f02e5ca0d`. After local stream integration, the world
+writer must re-fetch integration, resynchronize this original bounded clip
+patch, rerun its actual-source/profile/OFF fixtures and target gates, then
+publish the dependent feature branch. Historical host results inside the patch
+are retained as historical claims and have not been rerun by this checkpoint.
+Depth safety, whole-part receipts, ordered pages, fixed budgets, default0 and
+portal-outside-ALLON holds remain. No private/runtime/console acceptance follows.
+
+## 2026-10-29 18:31 EDT: recovered clip dependency released
+
+The archival clip WIP above remains the exact preserved original patch. Local
+integrated corrected stream source at499638652b04ed9b004c62a53254fc44b4f7761b and
+reported six target profile/OFF arms PASS. Root has now applied the original
+13109debcac832fac371df7420cd6ca4cd7deb2b four-file source delta to a fresh18678f2
+worktree. The actual sparse gather/strip/clipper/page/direct fixtures pass normally
+and with ASan/UBSan; exact OFF, full primary Make and effective native/translation
+pacing guard checks pass. This is execution and host validation, not yet a new
+clip feature ref, target receipt or acceptance. Root is synchronizing to current
+integration and preparing the bounded source handback. See the [live matrix](systemic-performance-20261029.md#cloud-recovery-live-source-checkpoint).
+
 ## Step 1: candidate cells, no runtime enablement
 
 **2026-10-28 progress 1: DONE** conservative portal builder, fixture graft and 21 synthetic tests; **NEXT** qualify `WORLD_PORTAL29` runtime and `WORLD_PART_PLAN29`; **BLOCKED** private room geometry and console acceptance are Claude's runs below.

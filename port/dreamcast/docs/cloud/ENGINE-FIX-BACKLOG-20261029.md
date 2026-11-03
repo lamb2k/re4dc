@@ -19,6 +19,19 @@ The section3 dependency table remains authoritative: priorities are ranked, not 
 All remaining public-source/synthetic implementation stays CLOUD-owned. Assignment, landed code and live worker activity are distinct. Parallel work remains authorized; no WIP-one freeze was applied. Local retains private/regeneration/binding/runtime/console/integration ownership and all established holds.
 
 
+## Recovery execution checkpoint: 2026-10-29 18:31 EDT
+
+Fresh integration `26f7d8278be77388b157910765f5e6b182c39cc1` includes EF15, EF08, EF06 and EF13 recovery deliveries.
+EF15 full target OFF and EF08 six target profile/OFF checks passed locally. Ten
+source slices have verified pushed SHAs, including current-image actor presentation.
+Static source is frozen for composition/publication; recovered clip is executing
+after its stream dependency landed. Observed workers implement the explicit
+maintained-SDK EF14 fixture manifest and bounded cloth/material public producer.
+See the [exact ledger and full live matrix](handbacks/systemic-performance-20261029.md#cloud-recovery-live-source-checkpoint).
+Fourteen cards have first integrations; zero whole-card signoffs. EF10/EF12 still
+need first integrations. New knobs remain default0; all required disabled identity,
+gameplay/material/lifetime and release/private/runtime/look/console holds remain.
+
 # Engine fix backlog: native data model and Dreamcast renderer coverage
 
 ## Current execution agreement
