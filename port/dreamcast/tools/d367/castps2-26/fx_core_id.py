@@ -21,6 +21,8 @@ sys.path.insert(0, str(HERE.parent))
 import fx_ps2_pack as F  # noqa: E402
 import tex_merge  # noqa: E402
 import texpack  # noqa: E402
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')); import glyph_protect  # lane glyph27: Dreamcast controller glyphs stay
 
 
 def main():
@@ -53,6 +55,8 @@ def main():
     merged, changed, added = dict(base), [], []
     for f in sorted(texdir.glob('*.re4tex')):
         key = tuple(int(v, 16) for v in f.stem.split('-'))
+        if glyph_protect.skip(key):
+            print(f.stem, 'protected controller glyph (rr/ui-glyph-protect.tsv): skipped'); continue
         data = f.read_bytes()
         if base.get(key) != data:
             (changed if key in base else added).append(f.stem)

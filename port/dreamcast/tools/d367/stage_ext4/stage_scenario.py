@@ -259,6 +259,11 @@ if os.environ.get('PRUNE_AUTO', '1') != '0':
         import subprocess
         subprocess.run(['bash', str(_prune)], stdout=sys.stderr, stderr=sys.stderr, check=False)
 lk = open(LOCKS / (key + '.lock'), 'w'); fcntl.flock(lk, fcntl.LOCK_EX)  # one build per input key at a time
+def cache_free():
+    r = disccache.ROOT
+    return shutil.disk_usage(str(r if r.exists() else r.parent)).free
+
+
 try:
     rec = None
     if use_cache and os.environ.get('RE4DC_STAGE_REUSE', '1') != '0' and (INDEX / (key + '.json')).exists():
@@ -269,7 +274,8 @@ try:
     if rec is not None:
         reused = True
         before, after = rec['before'], rec['after']; disc_sha, disc_bytes = rec['disc_sha256'], rec['disc_bytes']
-        stage_capacity = dict(free_before=shutil.disk_usage('/mnt/c').free, image_upper_bound=upper,
+        # reuse writes nothing new: only the capture reserve, on the cache's drive (lane world-ch31 11-03: was always C:)
+        stage_capacity = dict(free_before=cache_free(), cache_drive=disccache.DRIVE, image_upper_bound=upper,
                               capture_reserve=reserve, floor=16 * 1024 ** 3)
         assert stage_capacity['free_before'] - reserve >= stage_capacity['floor']
         t_built = time.monotonic()
@@ -277,9 +283,12 @@ try:
         # the image is built on ext4 (its vhdx is on C: too, until the ext4 copy is deleted) and then cached on C:
         if use_cache:
             with disccache.locked(): disccache.evict(need=2 * upper, reserve=reserve)
-        stage_capacity = dict(free_before=shutil.disk_usage('/mnt/c').free,
+        # two drives receive bytes: the ext4 image (vhdx on C:) and the cached copy (the cache's drive, RE4DC_DISCCACHE);
+        # each is checked against the floor (lane world-ch31 11-03: the cache drive was read as C:)
+        stage_capacity = dict(free_before=cache_free(), cache_drive=disccache.DRIVE, free_c_before=shutil.disk_usage('/mnt/c').free,
                               image_upper_bound=upper, capture_reserve=reserve, floor=16 * 1024 ** 3)
-        assert stage_capacity['free_before'] - upper - stage_capacity['capture_reserve'] >= stage_capacity['floor']
+        assert stage_capacity['free_c_before'] - upper >= stage_capacity['floor'], 'C: (ext4 image) below the floor'
+        assert stage_capacity['free_before'] - upper - stage_capacity['capture_reserve'] >= stage_capacity['floor'],             '%s (disc cache) below the floor' % disccache.DRIVE
         iso = pycdlib.PyCdlib(); iso.open(str(BASE)); cache = {}
         before = manifest(iso, 'joliet', cache); before_rr = manifest(iso, 'rr', cache)
         assert before == json.loads((BASE.parent / 'payload-manifest.json').read_text())
