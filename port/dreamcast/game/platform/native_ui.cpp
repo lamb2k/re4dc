@@ -2911,6 +2911,7 @@ extern "C" int re4dc_pmc_row(unsigned* code, unsigned* val10);  // pace.cpp
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
 extern "C" int re4dc_disc_meter_hud(unsigned* lit, unsigned* music, unsigned* rate, unsigned* load_ms);  // dvd_read_safe.cpp
 extern "C" int re4dc_disc_meter_loading(void);
+extern "C" void re4dc_disc_meter_mark_load(void);  // PLAY-DISC-READ: the room-entry preload is a load
 #endif
 constexpr int kPhaseRows=11;
 unsigned phase_v[kPhaseRows];unsigned phase_seq=~0U;
@@ -5220,7 +5221,7 @@ void preload_identities(){
     re4dc_log("native texture preload: frame=%u picked=%u resident=%u loads=%u skipped=%u full=%d used=%u budget=%u entries=%u us=%u\n",frame,n,resident,preload_loads-loads,
         preload_skipped-skipped,full?1:0,used,budget,kTextureCount,unsigned(timer_us_gettime64()-start));
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
-    { extern "C" void re4dc_disc_meter_mark_load(void); re4dc_disc_meter_mark_load(); }   // PLAY-DISC-READ: phase=load
+    re4dc_disc_meter_mark_load();   // PLAY-DISC-READ: phase=load
 #endif
 #if RE4DC_TEX_PACK
     // Only while the pack's init is waiting to retry: a failed lookup sector of a ready pack would otherwise re-arm
