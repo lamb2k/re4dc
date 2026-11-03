@@ -6404,7 +6404,7 @@ unsigned query(unsigned id){
             for(float v:change)valid=valid && std::isfinite(v);
             if(valid && nmoved<kMoved){
                 std::memcpy(delta[nmoved],change,sizeof(change));moved_of[id]=std::uint8_t(nmoved++);
-                state[id]=3;++moved;return 2;
+                state[id]=3;++moved;RE4DC_DYN_ID_TRACE(id,2U,f);return 2;
             }
 #if RE4DC_ROOT_POSE_REFUSAL_DIAG
             capacity=valid;
@@ -6425,7 +6425,7 @@ unsigned query(unsigned id){
 #if RE4DC_ROOT_POSE_REFUSAL_DIAG
         if(!valid)root_note(s,capacity?RootCapacity:RootInvalid);
 #endif
-        if(!valid){state[id]=2;++hidden;return 1;} // never display stale baked geometry on refusal
+        if(!valid){state[id]=2;++hidden;RE4DC_DYN_ID_TRACE(id,1U,f);return 1;} // never display stale baked geometry on refusal
         state[id]=1;return 0;
     }
 #endif
@@ -6451,7 +6451,7 @@ unsigned query(unsigned id){
             else ++overflow;
         }
     }
-    state[id]=std::uint8_t(r+1U);
+    state[id]=std::uint8_t(r+1U);RE4DC_DYN_ID_TRACE(id,r,f);
     return r;
 }
 #if RE4DC_ROOT_POSE_CAP_FALLBACK
@@ -7623,7 +7623,7 @@ bool ps2_open(){
         if(iread){
             std::memcpy(&ih,ib,sizeof(ih));
             iwhy="header";
-            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==policySourceCrc && ih.count==h.placements &&
+            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==policySourceCrc && RE4DC_IDS_COUNT_OK(ih.count,h.placements,ps2w.placements) &&
                ih.count<=isize-sizeof(ih)){
                 const std::uint8_t* idv=ib+sizeof(ih);
                 std::uint8_t count[dyn::kIds]={};

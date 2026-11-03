@@ -113,7 +113,13 @@ def fields(line, prefix):
     return values
 
 
-def judge(logs, allowlist, requested, protocol=None):
+COMPOSITE_NOTE = re.compile(r'GC-ASSET-NOTE composite layout=([0-9a-f]{40}) geometry=([0-9a-f]{64}) r4pw=([0-9a-f]{64})')
+
+
+def judge(logs, allowlist, requested, protocol=None, composites=frozenset()):
+    """composites (lane bakeall 11-03, design b): {(geometry sha256, r4pw sha256)} of PS2 world packages a data-set
+    store records (provenance.py composite-records.json). A kind=layout unknown row whose GC-ASSET-NOTE composite line
+    (same log) names a recorded pair is a PS2 world composite: counted as a row, provenance 'ps2-record', no allowlist."""
     protocol_sha, ruled = read_protocol(protocol or HERE / 'protocol.json')
     failures = []
     visits = {}
@@ -126,6 +132,7 @@ def judge(logs, allowlist, requested, protocol=None):
         last_visit = 0
         previous_scope = None
         ekinds = {}
+        notes = dict((m.group(1), (m.group(2), m.group(3))) for m in COMPOSITE_NOTE.finditer(content))
         for number, line in enumerate(content.splitlines(), 1):
             if 'GC-ASSET' not in line:
                 continue
@@ -207,9 +214,11 @@ def judge(logs, allowlist, requested, protocol=None):
                     if asset in visits[key]['rows']:
                         raise ValueError('duplicate asset row in room visit')
                     visits[key]['rows'].add(asset)
-                    visits[key]['prov'][r['provenance']] = visits[key]['prov'].get(r['provenance'], 0) + 1
+                    recorded = r['kind'] == 'layout' and r['provenance'] == 'unknown' and notes.get(r['id']) in composites
+                    pk = 'ps2-record' if recorded else r['provenance']
+                    visits[key]['prov'][pk] = visits[key]['prov'].get(pk, 0) + 1
                     visits[key]['first_consumers'][r['consumer']] += 1
-                    if asset not in allowlist:
+                    if asset not in allowlist and not recorded:
                         raise ValueError('unreviewed draw/play asset: ' + str(asset))
                 elif prefix == 'GC-ASSET-COUNTS ':
                     if active != key or visits[key]['counts'] is not None:
@@ -316,13 +325,17 @@ def main():
     parser.add_argument('--room', action='append', default=[], help='required room, e.g. 0111')
     parser.add_argument('--unwired-baseline', type=Path, default=HERE / 'unwired-baseline.json',
                         help='per room, per consumer/why: the most not-covered errors allowed (may only shrink)')
+    parser.add_argument('--composite-records', type=Path, action='append', default=[],
+                        help='provenance.py composite-records.json: recorded PS2 world packages (lane bakeall, design b)')
     parser.add_argument('--json', type=Path)
     args = parser.parse_args()
     try:
         allow = read_allowlist(args.allowlist, args.baseline)
         if any(not ROOM.fullmatch(r) for r in args.room):
             raise ValueError('--room must contain four lowercase hexadecimal digits')
-        result = judge([(str(p), p.read_text(encoding='utf-8', errors='replace')) for p in args.logs], allow, args.room)
+        comps = {(e['geometry'], e['r4pw']) for f in args.composite_records for e in json.loads(f.read_text())['entries']}
+        result = judge([(str(p), p.read_text(encoding='utf-8', errors='replace')) for p in args.logs], allow, args.room,
+                       composites=comps)
         if 'not_covered_errors' in result:
             base = json.loads(Path(args.unwired_baseline).read_text())['rooms']
             for room, classes in sorted(result['not_covered_errors'].items()):

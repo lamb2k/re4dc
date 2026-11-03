@@ -138,6 +138,16 @@ bool payload_capture_composite(PayloadProof& proof,const void* owner,const void*
     Digest geometry{};for(unsigned i=0;i<32;++i)geometry.bytes[i]=manifest.data[32+i];
     const auto asset=capture_digest(geometry),interpretation=capture_digest(composite,"layout");
     if(!asset.value || !interpretation.value){unresolved(SourceGeometry,"composite-catalog-bind");return false;}
+    if(layout){
+        // lane bakeall (coordinator 11-03, design b): the world composite's role digests beside its layout row, so the judge
+        // can match a data-set store's ps2-composite.tsv record (geometry = the re4mesh, r4pw = the R4PW sidecar). Gate builds only.
+        constexpr char hx[]="0123456789abcdef";char id[41],g[65],w[65];
+        for(unsigned i=0;i<20;++i){id[2*i]=hx[composite.bytes[i]>>4];id[2*i+1]=hx[composite.bytes[i]&15];}id[40]=0;
+        for(unsigned i=0;i<32;++i){const unsigned char a=manifest.data[32+i],b=manifest.data[64+R4PW*52+20+i];
+            g[2*i]=hx[a>>4];g[2*i+1]=hx[a&15];w[2*i]=hx[b>>4];w[2*i+1]=hx[b&15];}
+        g[64]=w[64]=0;
+        re4dc_log("GC-ASSET-NOTE composite layout=%s geometry=%s r4pw=%s\n",id,g,w);
+    }
     proof.owner=owner;proof.base=base;proof.bytes=bytes;proof.layout=layout;proof.layout_bytes=layout_bytes;
     proof.asset=asset;proof.layout_asset=interpretation;proof.serial=++payload_serial;return true;
 }
