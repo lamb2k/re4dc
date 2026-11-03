@@ -23,8 +23,12 @@ import ps2_objects as po  # noqa: E402
 s1, s2, wk = (Path(x) for x in sys.argv[1:4])
 CT = Path('/root/re4data/private/castle-d2-j-20261021')
 D1 = Path((wk / 'd1tree.txt').read_text().strip())
-ROOMS = ['r201', 'r202', 'r204', 'r208']
-CEM = ['em19', 'em1a', 'em1b', 'em1c']
+import os
+# GCA_ROOMS / GCA_EMS (lane world-ch31 11-02, the r203 / r207 set cgca27): rooms and castle enemies of this store; with
+# GCA_ROOMS_ONLY=1 the em14 / em3b files are not staged. Unset = cgca26 as before.
+ROOMS = os.environ.get('GCA_ROOMS', 'r201 r202 r204 r208').split()
+CEM = os.environ.get('GCA_EMS', 'em19 em1a em1b em1c').split()
+ROOMS_ONLY = os.environ.get('GCA_ROOMS_ONLY') == '1'
 snd = wk / 'snd' / 'store'
 sha = lambda b: hashlib.sha256(b).hexdigest()
 idx = po.pb.afs_index(po.PS2_ISO)
@@ -38,7 +42,8 @@ for r in ROOMS:
 for e in CEM:
     f = snd / 'em' / ('%s.drs' % e)
     files['em/%s.drs' % e] = (f if f.exists() else wk / 'm' / e / 'em' / ('%s.drs' % e), CT / 'em' / ('%s.drs' % e), e + '.dat')
-files['em/em14.drs'] = (wk / 'em' / 'em14.drs', D1 / 'em' / 'em14.drs', 'em14.dat')
+if not ROOMS_ONLY:
+    files['em/em14.drs'] = (wk / 'em' / 'em14.drs', D1 / 'em' / 'em14.drs', 'em14.dat')
 rows = []
 for dest, (fin, inp, p2) in files.items():
     (s1 / dest).parent.mkdir(parents=True, exist_ok=True)
@@ -60,8 +65,9 @@ for dest, (fin, inp, p2) in files.items():
     if dest != 'em/em14.drs':   # em14 has no PS2 motion step (its motion is not a castle row)
         (s2 / dest).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(fin, s2 / dest)
-em3b = wk / 'm' / 'em3b' / 'em' / 'em3b.drs'
-(s2 / 'em').mkdir(exist_ok=True); shutil.copyfile(em3b, s2 / 'em' / 'em3b.drs')
+if not ROOMS_ONLY:
+    em3b = wk / 'm' / 'em3b' / 'em' / 'em3b.drs'
+    (s2 / 'em').mkdir(exist_ok=True); shutil.copyfile(em3b, s2 / 'em' / 'em3b.drs')
 if (snd / 'provenance.tsv').exists():
     for l in (snd / 'provenance.tsv').read_text().splitlines()[1:]:
         c = l.split('\t')

@@ -23,7 +23,10 @@ PH=$(cat "$HERE"/gpu-presets/*.txt | sha256sum | cut -c1-6)
 EV=$EVB/gpu; mkdir -p "$W" "$EV"
 qa() { # <sha8> <label>: QA disc -> $EV/disc-<label>/gdemu + syms
   local s=$1 x=$2 t=$W/tree-$2 qw=$W/qa-$2
-  [ -s "$EV/disc-$x/gdemu/disc.gdi" ] && [ -s "$EV/disc-$x/syms.txt" ] && return 0
+  # a cached disc counts only with its data track: the hourly staged-disc cleaner (Remove-StagedDiscs.ps1, track03.bin
+  # older than 3 h) left the reference's disc.gdi + track03.bin.sha256 behind, Flycast quit after 1 s, and every scene
+  # was "not measured" (rr 1102-1521-8a628457, lane house26). KEEP (written below) makes the cleaner skip it.
+  [ -s "$EV/disc-$x/gdemu/disc.gdi" ] && [ -s "$EV/disc-$x/gdemu/track03.bin" ] && [ -s "$EV/disc-$x/syms.txt" ] && return 0
   if [ ! -d "$t" ]; then git -C "$MAIN" worktree prune; git -C "$MAIN" worktree add -q --detach "$t" "$s"; fi
   git -C "$t" submodule update -q --init --recursive
   mkdir -p "$qw"; git -C "$t" show HEAD:port/dreamcast/tools/d367/rr/recipe.conf | tr -d '\r' > "$qw/recipe.conf"
@@ -32,8 +35,10 @@ qa() { # <sha8> <label>: QA disc -> $EV/disc-<label>/gdemu + syms
   local s7; s7=$(git -C "$t" rev-parse HEAD | cut -c1-7)
   rm -rf "${EV:?}/disc-$x"; mkdir -p "$EV/disc-$x"
   cp -r "$qw/qa/gdemu" "$EV/disc-$x/gdemu"; rm -rf "${qw:?}/qa/gdemu"
-  cp "/root/probe/lanes/route/out-rr${s7}qrW/syms.txt" "$EV/disc-$x/syms.txt"
-  rm -rf "/root/probe/lanes/route/out-rr${s7:?}qrW"
+  echo "rr-speed-gpu cached QA disc of $s ($x); deleted by rr-speed-gpu.sh (candidate) or kept as the reference" > "$EV/disc-$x/gdemu/KEEP"
+  # rr-qa.sh names the QA build ${RR_PFX:-rr}<sha7>q (a lane cycle sets RR_PFX; house26: syms.txt was never copied)
+  cp "/root/probe/lanes/route/out-${RR_PFX:-rr}${s7}qrW/syms.txt" "$EV/disc-$x/syms.txt" || return 1
+  rm -rf "/root/probe/lanes/route/out-${RR_PFX:-rr}${s7:?}qrW"
   git -C "$MAIN" worktree remove -f "$t" || true
 }
 scenes() { # <label>

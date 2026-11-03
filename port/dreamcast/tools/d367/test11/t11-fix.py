@@ -1432,6 +1432,17 @@ if os.path.isdir(LEON28D):
     DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
     PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
     AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
+# glyph27 (lane glyph27 11-02, user: "the game regressed to the ps2 thumb stick glyph for the escape prompt when you're
+# grabbed by a ganado"): dc/tex.pak = leon28's pack with the grab QTE stick cap 6d33c3f9-9f8cf668 (etc/core.das EFF #25
+# id 0x31) back to the Dreamcast glyph Tests 22-24 shipped (glyph shape-review v4 G08, sha256 57132ed5; fxc26b 10-26 had
+# put PS2 Core.dat pixels under it). Same size / format (32x32 ARGB4444, 2192 B; 0 VRAM). The LAST tex.pak set; the gate
+# below checks every key of rr/ui-glyph-protect.tsv on the final pack, so no later swap can bring a PS2/GC glyph back.
+# GC-ASSET: authored Dreamcast UI, not a GameCube asset. Store: re4data/private/glyph27-20261102 (pkg/ = the package).
+GLYPH27D = os.environ.get('GLYPH27D', '/root/re4data/private/glyph27-20261102')
+if os.path.isdir(GLYPH27D):
+    DATA['glyph27'] = {'dc/tex.pak': GLYPH27D + '/dc/tex.pak'}
+    PAK_DERIVED['glyph27'] = GLYPH27D + '/pak-derived.json'
+    AFTER += [('glyph27', 'leon28')]
 
 
 def title27_gate(names, r, rec):
@@ -1472,6 +1483,14 @@ def title27_gate(names, r, rec):
                 raise SystemExit('leon28: the staged dc/tex.pak (%s) does not hold the leon28 Leon atlas under %s; a set '
                                  'after leon28 replaced it: rebuild that set on leon28 or put leon28 last' % (r['dc/tex.pak'], n_))
         rec.append('leon28 gate: %d Leon atlases' % len(LEON28_KEYS))
+    if 'glyph27' in names:
+        import glyph_protect
+        bad = glyph_protect.check(tex_merge.read(r['dc/tex.pak']))
+        if bad:
+            raise SystemExit('glyph27: the staged dc/tex.pak (%s) does not hold the protected Dreamcast controller glyph under %s '
+                             '(rr/ui-glyph-protect.tsv); a set after glyph27 replaced it: rebuild that set on glyph27 with '
+                             'glyph_protect.skip, or put glyph27 last' % (r['dc/tex.pak'], ', '.join(bad)))
+        rec.append('glyph27 gate: %d protected controller glyphs' % len(glyph_protect.keys()))
 # snd26 (lane gcleft26 10-27, sound plan A; data only, no knob, no AICA layout or size change): the two sound files the
 # ps2snd24 regeneration (ps2snd24-regen.sh on the 3857dece release disc: 0 changed files, the release banks are already
 # its PS2 output) does not cover, PS2 PCM written in place into their prebuilt AIC1 banks (tools/ps2_audio.py banks):
@@ -1978,6 +1997,23 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
+# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
+# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
+# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
+               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
 # c4gca / pmc4gca (lane world-ch4 11-02, user 11-02 "remainder of disc 2 build today"; DISC 2 ONLY via D2_DATA, after the
 # castle-gca-26 sets): the chapter 4 rooms (4-1..4-4: r210 .. r22a, 24 rooms; the castle content tree had none of their
 # st2 archives) and the chapter 4 enemy archives, PS2 objects / items / pictures / motion / PCM over the GameCube-prepared
@@ -2018,8 +2054,10 @@ if os.path.isfile(C4TWINSD + '/RECIPE.txt'):
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
 # the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
 # sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
-# Store: re4-assets-private/sky27-20261102.
-SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+# Store: re4-assets-private/sky27-20261102 (1024 x 256, 66 KiB a room). Default since lane house26 (11-02): sky27h, the
+# same panoramas at 1024 x 128 (34 KiB; resampled from the bake's pre-VQ source, rows / band / eye unchanged): the 66 KiB
+# r100 panorama gave h2 10 VRAM thrash-guard refusals (Test 26 full tier 8a628457), sky27h gives 0 over the whole h2.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27h-20261102')
 if os.path.isdir(SKY27D):
     _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
     DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
