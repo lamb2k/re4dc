@@ -8,7 +8,15 @@
 # STATIC rows: the whole key set, chosen where it fits >= 256 KB above the 262144 cold-pool margin at the census
 # room+90 heap 4 free (rr 1102-1643-638521db-full).
 # room	archive_bytes	mtc_crc	keys	note
-*	411744	*	3	Ashley pl11 entry 3 (15616 B): read cold in r113 (344 ms wait) and r11e (289 ms) (MEASURED)
+*	411744	*	1-4,14,23,25,30-31	Ashley pl11: entry 3 cold in r113/r11e/r200-r208 (289-446 ms each), the rest in the castle rooms (MEASURED)
+# Disc 2 (castle 3-1; twin cr27c64cd2cW on the a484 Disc 2 tree): the castle archives bind with hot=0 (no bind-time hot
+# set), so every key is read cold during play. MOTION_COLD_POOL_CASTLE=131072 is the castle margin.
+200	1321120	*	0	em11 entry 0 (21184 B, 228 ms); heap4 1311360 (MEASURED)
+202	1321120	*	0,6,23,25,47,86,152	em11, 7 keys ~113 KB, 1.6 s of waits; heap4 falls to 20000-86272 in the fight, so admission will refuse most of it until r202 heap 4 is freed (MEASURED)
+203	1321120	*	0,89	em11 (35072 B); heap4 2078176 (MEASURED)
+207	1321120	*	0	em11 entry 0 (21184 B); heap4 2334784 (MEASURED)
+201	1160544	*	47,99,137	em1b (33792 B, 0.8 s waits); heap4 ~730000 (MEASURED)
+208	1353504	*	0,6,54,86,89-91,111-114,116-117,122	em1a 14 keys ~172 KB, 2.6 s waits; heap4 350000-475000 (MEASURED)
 103	1100384	*	102	farm em12 entry 102 (20672 B, 155 ms wait in the barn) (MEASURED)
 113	1054944	*	49,99-100	em17 (27040 B, 441 ms wait); heap4 330144 at entry, so only these three keys (MEASURED)
 117	1321120	*	all	em11 Ganados (157 keys, 1889248 B); heap4 3049952 at entry, 730592 after both r117 rows (STATIC)
