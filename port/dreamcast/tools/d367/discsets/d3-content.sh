@@ -55,6 +55,11 @@ SN=${SN:-/root/re4data/private/island-snd-20261102}
 # Disc 1 ships emleon03/04 raw big-endian (never loads them); left in, PS2_ENEMY_* fails its list baseline at room entry.
 CT=${CT:-/root/re4data/private/castle-d2-j-20261021}
 for n in 3 4 5 6 7 8 9; do put "$CT/etc/emleon0$n.esl" "etc/emleon0$n.esl"; done
+# emleon05..09 in that tree are the raw GameCube (big-endian) lists: on the SH-4 every room field read byte-swapped and
+# every island list entry was refused (r333 "EM_SET_NO(254) cEmWrap::setEm failed" -> reset; lane island-interiors
+# 11-03). island-esl-20261103 = tools/le_mirror.py of those five (the same run reproduces castle emleon04 exactly).
+EL=$(src island-esl-20261103)
+for n in 5 6 7 8 9; do put "$EL/etc/emleon0$n.esl" "etc/emleon0$n.esl"; done
 # D3_FINAL=0 leaves the final chapter out (Disc 3 is 14,456 sectors over with it until the island tex.pak keys are in
 # Dreamcast form too; lane world-ch5 11-02).
 if [ "${D3_FINAL:-1}" = 1 ]; then
