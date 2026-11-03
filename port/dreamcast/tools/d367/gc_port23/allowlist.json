@@ -439,16 +439,6 @@
    "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
    "room": "0204",
    "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
-  },
-  {
-   "evidence": "bakeall private rr 1103-0152-2b6ccd70 gca-r11e (WORLD_BAKE=1 + DATA bakepilot); source: native_static.cpp ps2w path payload_capture_composite (layout = the room's ps2-world.r4pw span, GCSTC001 manifest of R4PW/R4ID/R4TC/SCDD sidecars); kind=layout rows come only from that call",
-   "id": "e321e29a8dce7c6bee629feec3cd56e386cf27ab",
-   "kind": "layout",
-   "owner": "bakeall",
-   "provenance": "unknown",
-   "reason": "reviewed: not GameCube data. The PS2 world package static composite of r11e after the static-object bake (lane bakeall pilot, WORLD_BAKE=1; ps2-world.re4mesh + r4pw + R4ID/R4TC/SCDD sidecars re-derived from the PS2 world, 64-vertex meshlets; user 10-23 rule: world sidecars are not GameCube assets). New bytes, so a new digest; the knob-off build keeps the n256off27 rows.",
-   "room": "011e",
-   "sha256": "e321e29a8dce7c6bee629feec3cd56e386cf27ab6616348f5bab1fd74d411db4"
   }
  ],
  "schema": 1
