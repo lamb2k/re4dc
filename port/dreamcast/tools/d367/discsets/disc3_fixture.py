@@ -63,8 +63,9 @@ pak = os.path.join(work, 'tex.pak')
 subprocess.check_call([sys.executable, os.path.join(HERE, '..', 'castle31', 'pak_keep.py'), pak,
                        os.path.join(d1, 'dc/tex.pak'), ipak])
 # Village / castle-only pack keys (listed only by r1xx / r2xx room resident lists, never by r000, an island room or the
-# island tree) are dead weight on Disc 3: drop them (D3_PAK_PRUNE=0 keeps the composed pack).
-if os.environ.get('D3_PAK_PRUNE', '1') == '1':
+# island tree) are dead weight on Disc 3. Default OFF since 11-03: it dropped keys the island rooms name by crc word
+# (dde6f32a-0b7cfdcf, TEXCHK r300-r333); mkdisc3.py D3_PAK_LIVE prunes the final pack instead (D3_PAK_PRUNE=1 restores).
+if os.environ.get('D3_PAK_PRUNE', '0') == '1':
     import glob, zlib
     lists = {}
     for t in glob.glob(os.path.join(HERE, '..', 'vram', 'resident', '**', 'r*.tsv'), recursive=True):
