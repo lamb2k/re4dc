@@ -15,3 +15,9 @@ $(error WORLD_BAKE=1 swaps rows of the base (64-vertex) certificate table: not w
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_BAKE=1
 endif
+# DYN_ID_TRACE=1 (lane bakeall 11-03, diagnostic only, default 0): log the first frame each scroll-bound PS2 world id is
+#   hidden / moved / drawn from its source (PS2DYN id=..), the static proof for a bake candidate row.
+DYN_ID_TRACE ?= 0
+ifeq ($(DYN_ID_TRACE),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_DYN_ID_TRACE=1
+endif
