@@ -8,9 +8,12 @@
 # WORLD_BAKE=2 (lane lod27, 2026-11-03): the lod27 set instead (no merge: the room recipe's own placements and
 #   instancing, LOD clusters 3 m / min gain 0.8 / floor 60; r119 r10e r103; tools/d367/lod27), certificate rows from
 #   texture_rect21/provenance_certificates_lod27.inc. Goes with data set lod27.
+# WORLD_BAKE=3 (lane roomscan, 2026-11-03, user look call "halving the detail of expensive rooms"): the scan1 set
+#   (tools/d367/roomscan plans: coarser LOD levels plus per-cell distance caps, levels 1/2/3 from 8/12/16 m; r10e r107
+#   r11d r111 r119 r108 r117 r109 r11e r103), rows from texture_rect21/provenance_certificates_scan1.inc. Data set scan1.
 WORLD_BAKE ?= 0
-ifneq ($(filter-out 0 1 2,$(WORLD_BAKE)),)
-$(error WORLD_BAKE must be 0, 1 or 2)
+ifneq ($(filter-out 0 1 2 3,$(WORLD_BAKE)),)
+$(error WORLD_BAKE must be 0, 1, 2 or 3)
 endif
 ifneq ($(WORLD_BAKE),0)
 ifeq ($(SCENERY_N256),1)

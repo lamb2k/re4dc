@@ -73,7 +73,15 @@ static_assert(n256_rows_match());
 inline constexpr Certificate certificates_base[] = {
 #include "provenance_certificates.inc"
 };
-#if RE4DC_WORLD_BAKE == 2
+#if RE4DC_WORLD_BAKE == 3
+// WORLD_BAKE=3 (lane roomscan): the scan1 set's rows (tools/d367/roomscan, geninc_bake.py), same rule.
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_scan1.inc"
+};
+inline constexpr unsigned bake_rooms[] = {
+#include "provenance_scan1_rooms.inc"
+};
+#elif RE4DC_WORLD_BAKE == 2
 // WORLD_BAKE=2 (lane lod27): the lod27 set's rows (tools/d367/lod27, geninc_bake.py), same rule.
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates_lod27.inc"
