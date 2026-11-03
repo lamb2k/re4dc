@@ -162,6 +162,7 @@ unsigned long long m_tot_bytes, m_tot_block;
 kthread_t* m_game;
 unsigned m_rate[3];                            // last window: reads/s, KB/s, blocked ms/s
 bool m_room_pending;
+bool m_win_load;                               // a room load or a room-entry preload ran in this window (phase=load)
 const char* m_room_from = "";
 unsigned long long m_room_t0, m_room_until, m_room_b0, m_room_k0;
 unsigned m_room_r0, m_room_ms;
@@ -242,6 +243,12 @@ void motion_stats_window(unsigned window_ms)
 }
 }  // namespace
 #endif
+extern "C" unsigned re4dc_movie_stream_active() __attribute__((weak));   // the movie stream (0 when absent)
+#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG == 2
+extern "C" void re4dc_play_read_window(const char* phase);
+#endif
+// native_ui.cpp: the room-entry texture preload ran (a load, not play, for the PLAY-DISC-READ gate).
+extern "C" void re4dc_disc_meter_mark_load(void) { m_win_load = true; }
 // pace.cpp, each one-second window close (the game thread).
 extern "C" void re4dc_disc_meter_window(void)
 {
@@ -258,11 +265,19 @@ extern "C" void re4dc_disc_meter_window(void)
         m_rate[0] = (unsigned) ((reads * 1000000ULL + dt / 2) / dt);
         m_rate[1] = (unsigned) ((bytes * 1000000ULL / 1024 + dt / 2) / dt);
         m_rate[2] = (unsigned) ((block * 1000ULL + dt / 2) / dt);
+        // phase (lane coldread27, PLAY-DISC-READ): load = a room load or room-entry preload ran in the window,
+        // movie = the movie stream is open, else play (the gate judges only play windows)
+        const char* phase = (m_win_load || m_room_pending) ? "load"
+                            : (re4dc_movie_stream_active && re4dc_movie_stream_active()) ? "movie" : "play";
+        m_win_load = false;
         if (reads || block)
-            re4dc_log("DISCRD: window_ms=%u reads=%u kb=%u block_ms=%u (per s: reads=%u kb=%u block_ms=%u) music reads=%u kb=%u other=%s\n",
+            re4dc_log("DISCRD: window_ms=%u reads=%u kb=%u block_ms=%u (per s: reads=%u kb=%u block_ms=%u) music reads=%u kb=%u other=%s phase=%s\n",
                       (unsigned) (dt / 1000), reads, bytes / 1024, (unsigned) (block / 1000), m_rate[0], m_rate[1], m_rate[2],
-                      mreads, mbytes / 1024, m_other ? m_other->label : "-");
+                      mreads, mbytes / 1024, m_other ? m_other->label : "-", phase);
         m_other = nullptr;
+#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG == 2
+        re4dc_play_read_window(phase);   // play_read_log.cpp: the files read in this window ("DRF:")
+#endif
 #if defined(RE4DC_MOTION_STATS_LOG) && RE4DC_MOTION_STATS_LOG
         motion_stats_window((unsigned) (dt / 1000));
 #endif
@@ -278,6 +293,7 @@ extern "C" void re4dc_disc_meter_window(void)
 extern "C" void re4dc_disc_meter_room(int what, unsigned room)
 {
     const unsigned long long now = timer_us_gettime64();
+    m_win_load = true;
     if (what == 0 || (what == 1 && !m_room_pending)) {
         const int o = irq_disable();
         m_room_r0 = m_tot_reads;
@@ -1050,7 +1066,7 @@ extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(cnt * 2048, true);
 #endif
-#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG
+#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG == 1
     re4dc_log("DRL: S sec=%u n=%u thr=%s\n", (unsigned) sector, (unsigned) cnt, thd_current ? thd_current->label : "-");
 #endif
 #if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK
@@ -1160,7 +1176,7 @@ extern "C" int __wrap_cdrom_stream_start(int sector, int cnt, bool dma)
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(0, false);
 #endif
-#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG
+#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG == 1
     re4dc_log("DRL: T sec=%d n=%d thr=%s\n", sector, cnt, thd_current ? thd_current->label : "-");
 #endif
 #if defined(RE4DC_DISC_PIO_FALLBACK) && RE4DC_DISC_PIO_FALLBACK

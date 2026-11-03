@@ -179,6 +179,9 @@ bool movie_world_id(unsigned id){
 #if RE4DC_MOVIE_WORLD_ARENA_S30
         || id==0x10030
 #endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
+        || id==0x11920 || id==0x11930   // bossmem26: El Gigante death (s20) / parasite (s30)
+#endif
         ;
 }
 struct MovieFinishScope {
@@ -699,7 +702,11 @@ bool open(unsigned id){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(movie_full_call && movie_scope==id && movie_world_id(id)){
         if(movie_world_token || m.width!=288 || m.height!=192 || !m.full || !RE4DC_ROUTE_MOVIE_YUV ||
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119==1
+           !re4dc_movie_stream_idle() || m.expected_frames!=(id==0x11f10?265u:id==0x11f11?321u:id==0x11920?782u:id==0x11930?140u:340u))return false;
+#else
            !re4dc_movie_stream_idle() || m.expected_frames!=(id==0x11f10?265u:id==0x11f11?321u:340u))return false;
+#endif
         movie_world_token=re4dc_ps2_mesh_movie_borrow(id);
         if(!movie_world_token)return false; // eligible arena attempt has NO heap fallback
     }
@@ -708,7 +715,21 @@ bool open(unsigned id){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(!movie_world_token)
 #endif
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+    if(!reserve_largest_first(RE4DC_ROUTE_MOVIE_YUV&&m.full,!re4dc_movie_stream_initialized())){
+        // MOVIE_WORLD_ARENA_R119=2 (bossmem26, by rule): any full 288x192 room movie that heap 4 can't stage (a boss
+        // room after its fight) borrows the current room's PS2 world package, which is not drawn under a movie and is
+        // read again after it. The heap stays the first choice; no eligible package = refused as before.
+        release_reserved(0);
+        if(!movie_full_call || movie_scope!=id || movie_world_token || m.width!=288 || m.height!=192 || !m.full ||
+           !RE4DC_ROUTE_MOVIE_YUV || !re4dc_movie_stream_idle())return false;
+        movie_world_token=re4dc_ps2_mesh_movie_borrow_any(id);
+        if(!movie_world_token)return false;
+        re4dc_log("route movie heap: short, room world arena borrowed id=%05x\n",id);
+    }
+#else
     if(!reserve_largest_first(RE4DC_ROUTE_MOVIE_YUV&&m.full,!re4dc_movie_stream_initialized()))return false;
+#endif
 #endif
 #if RE4DC_CABIN_SOURCE
     if(cabin_movie.generation){
@@ -1413,7 +1434,11 @@ extern "C" int re4dc_movie_cancel(){
     return m.entered?finish(RE4DC_MOVIE_CANCEL):RE4DC_MOVIE_CANCEL;
 }
 #if RE4DC_MOVIE_WORLD_ARENA
+#if defined(RE4DC_MOVIE_WORLD_ARENA_R119) && RE4DC_MOVIE_WORLD_ARENA_R119>=2
+extern "C" void re4dc_movie_world_scope(unsigned id){movie_scope=id;}  // bossmem26: every room movie may fall back
+#else
 extern "C" void re4dc_movie_world_scope(unsigned id){movie_scope=movie_world_id(id)?id:0;}
+#endif
 extern "C" int re4dc_movie_world_active(){return movie_world_token!=0;}
 extern "C" void* re4dc_movie_world_sep_alloc(unsigned bytes){
     return movie_world_token?re4dc_ps2_mesh_movie_alloc(movie_world_token,bytes):nullptr;

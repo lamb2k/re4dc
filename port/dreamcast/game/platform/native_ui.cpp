@@ -2911,6 +2911,7 @@ extern "C" int re4dc_pmc_row(unsigned* code, unsigned* val10);  // pace.cpp
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
 extern "C" int re4dc_disc_meter_hud(unsigned* lit, unsigned* music, unsigned* rate, unsigned* load_ms);  // dvd_read_safe.cpp
 extern "C" int re4dc_disc_meter_loading(void);
+extern "C" void re4dc_disc_meter_mark_load(void);  // PLAY-DISC-READ: the room-entry preload is a load
 #endif
 constexpr int kPhaseRows=11;
 unsigned phase_v[kPhaseRows];unsigned phase_seq=~0U;
@@ -5258,6 +5259,9 @@ void preload_identities(){
 #endif
     re4dc_log("native texture preload: frame=%u picked=%u resident=%u loads=%u skipped=%u full=%d used=%u budget=%u entries=%u us=%u\n",frame,n,resident,preload_loads-loads,
         preload_skipped-skipped,full?1:0,used,budget,kTextureCount,unsigned(timer_us_gettime64()-start));
+#if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
+    re4dc_disc_meter_mark_load();   // PLAY-DISC-READ: phase=load
+#endif
 #if RE4DC_TEX_PACK
     // Only while the pack's init is waiting to retry: a failed lookup sector of a ready pack would otherwise re-arm
     // the pass every frame (its keys load on first sight once the sector re-reads).
@@ -5659,6 +5663,16 @@ extern "C" void re4dc_ui_room_preload_again(){
         if(src.room!=rce_last_room && re4dc_lake_fix){   // LAKE_FIX_TOGGLE: only with the lake switches on
 #else
         if(src.room!=rce_last_room){
+#endif
+#if defined(RE4DC_SS11_ROOM_DEFER) && RE4DC_SS11_ROOM_DEFER
+            // SS11_ROOM_DEFER (bossmem26 11-02): the new room's set is not loaded behind the chapter-end screens at all.
+            // Their pictures still hold ~0.8 MB of VRAM there, and r11b's raw 256x256 pictures (128 KB each) found no
+            // contiguous block in both passes (Del Lago death, 8-10 nocontig). The room's own entry (DOORDEMO -> r11b)
+            // runs the room-change evict and the full preload into the freed pool, where every picture fits.
+            preload_pending=false;
+            re4dc_log("native texture preload again: room %03x -> %03x behind SS heap 11, deferred to the room entry\n",
+                      rce_last_room&0xfffU,unsigned(src.room));
+            return;
 #endif
             for(auto& e:entries)if(e.frame>=frame)e.frame=frame?frame-1:0U;
             rce_retire_frame=frame;rce_armed=true;rce_force_all=true;
