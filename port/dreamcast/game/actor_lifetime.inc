@@ -602,14 +602,12 @@ bool adopt_memo(const cModelInfo* p,bool note) {
 static void leongc_bind_dump(cModel* m,unsigned appearance,unsigned pos,unsigned role,unsigned seen,const char* path) {
     using namespace re4dc_material;using namespace life;
     static unsigned lines;if(!pPL || m!=(cModel*)pPL || lines>=16u)return;
-    re4dc_log("LEONGC bind23 path=%s app=%u pos=%u role=%u seen=%x right=%p left=%p
-",path,appearance,pos,role,seen,
+    re4dc_log("LEONGC bind23 path=%s app=%u pos=%u role=%u seen=%x right=%p left=%p\n",path,appearance,pos,role,seen,
               pPL->Body?(void*)pPL->Body->pRight:nullptr,pPL->Body?(void*)pPL->Body->pLeft:nullptr);++lines;
     unsigned k=0;
     for(auto* q=m->pModelInfo;q && lines<16u;q=q->pList,++k){auto* qi=find_info(q);unsigned rr=99;
         if(qi)for(unsigned r=0;r<RE4DC_ROLE_COUNT;++r)if(RE4DC_ROLE(r).appearance==appearance && info_current(*qi,r)){rr=RE4DC_ROLE(r).role;break;}
-        re4dc_log("LEONGC bind23  %u info=%p data=%p hand=%u rec=%u role=%u
-",k,(void*)q,(void*)q->pData,re4dc_leon_hand_role(m,q),unsigned(qi!=nullptr),rr);++lines;}
+        re4dc_log("LEONGC bind23  %u info=%p data=%p hand=%u rec=%u role=%u\n",k,(void*)q,(void*)q->pData,re4dc_leon_hand_role(m,q),unsigned(qi!=nullptr),rr);++lines;}
 }
 #define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) leongc_bind_dump(m,a,pos,role,seen,path)
 #else
