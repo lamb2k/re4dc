@@ -1,0 +1,11 @@
+name ch334-r20f
+# lane world-ch334: chapter 3-3 entry warp (Disc 2; same layout as g-r204)
+room 0x20f
+jp 0
+chapter 8
+inv default
+god
+stock
+alivelog 60
+census 300
+dump

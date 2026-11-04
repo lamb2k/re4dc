@@ -431,6 +431,42 @@ void cEm::setNoItem()
     itemFlag = 0;
 }
 
+#if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
+// DIST_POSE_LOD=N (logicbudget.mk; lane logicbudget 2026-11-03; an APPROXIMATION, default 0 = off; 2..4): a Ganado
+// (ids 0x10..0x20) off screen (more than 5 m away and over 60 degrees off the camera axis) or beyond DIST_POSE_LOD_FAR
+// units from the camera (default 15000) runs the foot IK pose pass (MotionMove's IK partsWorldCalc + InverseKinematics)
+// only every Nth tick, staggered by serial; the other ticks keep the plain skeleton pass (motion keys, root motion and
+// AI unchanged). Feet are not floor-adapted on those ticks. Read by motion.cpp MotionMove.
+extern "C" cModel* re4dc_dist_pose_lod_model;
+cModel* re4dc_dist_pose_lod_model;
+static void re4dc_dist_pose_lod_mark(cEm* em)
+{
+    re4dc_dist_pose_lod_model = 0;
+    if (em->id < 0x10 || em->id > 0x20) {
+        return;
+    }
+    if ((((u32) pG->Frame_cnt + (u32) em->serial) % RE4DC_DIST_POSE_LOD) == 0) {
+        return;
+    }
+    const Camera* cam = &pG->Cam;
+    const f32 vx = em->pos.x - cam->param.pos.x;
+    const f32 vy = em->pos.y - cam->param.pos.y;
+    const f32 vz = em->pos.z - cam->param.pos.z;
+    const f32 d2 = vx * vx + vy * vy + vz * vz;
+    int skip;
+    if (d2 > (f32) RE4DC_DIST_POSE_LOD_FAR * (f32) RE4DC_DIST_POSE_LOD_FAR) {
+        skip = 1;
+    } else if (d2 <= 25000000.0f) {
+        skip = 0;
+    } else {
+        const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at
+        skip = !(f > 0.0f && f * f >= 0.25f * d2);
+    }
+    if (skip) {
+        re4dc_dist_pose_lod_model = em;
+    }
+}
+#endif
 #if defined(RE4DC_LOGIC_LOD_EM) && RE4DC_LOGIC_LOD_EM > 1
 #include "dmg.h"
 // LOGIC_LOD_EM=N (logiclod.mk; lane logiclod20 2026-10-20; an APPROXIMATION, default 0 = off; 2..4): far or off-screen
@@ -610,6 +646,9 @@ void emMove(cEm* em)
     if (re4dc_logic_lod_skip(em)) {
         return;
     }
+#endif
+#if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
+    re4dc_dist_pose_lod_mark(em);
 #endif
 #if defined(RE4DC_BODY_CORPSE) && RE4DC_BODY_CORPSE
     if (re4dc_body_corpse_skip(em)) {

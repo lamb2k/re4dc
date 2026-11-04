@@ -100,3 +100,4 @@ dc/tex.pak:~e42a7628-c166970d	font22b	Test 22 HUD d-pad (etc/core.das 0x1b2c60#0
 # glyph27 11-02 (lane glyph27): grab QTE stick cap back to the Dreamcast glyph (fxc26b had made it PS2)
 dc/tex.pak:~6d33c3f9-9f8cf668	glyph27	grab escape prompt stick cap, Dreamcast glyph v4 G08 (authored, not GC), user 11-02
 dc/native/*/ps2-sky.r4sk:added	SKY_PLAY=1 (DATA sky27)	sky27: normal-play PS2 sky as the PVR background plane, one file per outdoor room (t15/int 931512cbd; claimed by lane house26, reviewed by coordinator 11-02)
+dc/resident.bin:changed	res26pr	playreads 11-03: +137 in-play texture keys on the Disc 1 resident lists (vram/resident/r*.tsv)
