@@ -4,3 +4,18 @@
 #   logs it, or *; keys: all, or entry indices / ranges (3,5,10-14) from MOTION_MISS_LOG "motion miss" entry= values.
 #   Several rows may name the same room (one per archive). Rows only add pins; heap-4 admission can still refuse a key.
 *	2258208	5bd2325d	0,7-9,14,28-34,42,47-48,51-52,54,56-59	El Gigante (em2b, r119/r11e): keys read cold in the r119 fight (Flycast mpa fixture g3, MOTION_MISS_LOG), 326016 B
+# Lane coldread27 measured rows (Flycast twin cr27c4b1cW / cr27c64cd2cW, 60 s runs, MOTION_MISS_LOG entries read cold in play;
+# evidence D:\RE4DC-Lanes\coldread27\run-*). mtc_crc read from the archives' R4MOTBL headers on cand-7ec95b32 Disc 1/2
+# (em12 7280a373 and em2b 5bd2325d match the "motion pin:" log lines of MOTION_PIN builds).
+103	1100384	7280a373	102	farm em12: entry 102 (20672 B, 155 ms wait in the barn)
+113	1054944	1c1b9298	49,99-100	em17: 27040 B, 441 ms wait; heap4 330144 at entry, so only these three keys
+200	1321120	051ec8b7	0	castle em11: entry 0 (21184 B, 228 ms); heap4 1311360
+203	1321120	051ec8b7	0,89	castle em11: 35072 B; heap4 2078176
+207	1321120	051ec8b7	0	castle em11: entry 0 (21184 B); heap4 2334784
+201	1160544	57bbc22a	47,99,137	castle em1b: 33792 B, 0.8 s of waits; heap4 ~730000
+208	1353504	cbc5f706	0,6,54,86,89-91,111-114,116-117,122	castle em1a: 14 keys ~172 KB, 2.6 s of waits; heap4 350000-475000
+# r202 em11 (0,6,23,25,47,86,152; ~113 KB, 1.6 s of waits) left out: its heap 4 is 20-86 KB in the fight, so admission
+# would refuse it. Needs r202 heap-4 relief first (parked, own design).
+# Ashley pl11: a v3 bounded archive (MOTION_BOUNDED_R11F). Its pinned keys are read into heap 4 at bind and after
+# in-room movies only (pin_loading); every other miss still uses the two reserved slabs (lane coldfix 2026-11-03).
+*	411744	70063c28	1-4,14,23,25,30-31	Ashley pl11: entry 3 cold in r113/r11e/r200-r208 (289-446 ms each), the rest in the castle rooms (coldread27, MEASURED)
