@@ -1,0 +1,6 @@
+# r20d, then a room jump into r206 at frame 120 (room_id_prev 0x20d with Room_flg bit 4 clear: R206Init runs the
+# gouryuu event r206s20): route movie 20620 (r206.cpp R206_MOVIES_OWN).
+jp 0
+inv default
+god
+jump 120 0x20d 0x206 0 0 0 0

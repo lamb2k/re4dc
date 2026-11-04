@@ -50,6 +50,17 @@ disc2_jobs() {
     job 1 d2clear-r207 "$(run d2clear-r207 d2c d2c 180 --warp "\"\$EVW\\fixtures\\d2-r207k.txt\"")"
   fi
   [ "$TIER" != full ] || seeds="1 2 3 4 5 6 7 8 9 10"
+  # rr/d2-events.tsv (world-ch5 11-04): Disc 2 event play checks (name room chapter warp), <=60 s each on the d2c twin;
+  # an optional <warp>-pad.txt beside the warp is the padscript. The log shows the route movie or the event file.
+  if [ -s "$T/port/dreamcast/tools/d367/rr/d2-events.tsv" ]; then
+    local RR=$T/port/dreamcast/tools/d367/rr n ch wf pad
+    while read -r n r ch wf; do
+      case "$n" in ""|"#"*) continue ;; esac
+      { echo "name d2ev-$n"; echo "room 0x${r#r}"; grep -v -E '^(name|room|squeeze|chapter) ' "$RR/$wf" | tr -d '\r'; echo "chapter $ch"; } > "$EVU/fixtures/d2ev-$n.txt"
+      pad=""; if [ -f "$RR/${wf%.txt}-pad.txt" ]; then tr -d '\r' < "$RR/${wf%.txt}-pad.txt" > "$EVU/fixtures/d2ev-$n-pad.txt"; pad="--pad \"\$EVW\\fixtures\\d2ev-$n-pad.txt\""; fi
+      job 1 d2ev-$n "$(run d2ev-$n d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2ev-$n.txt\"" $pad)"
+    done < "$T/port/dreamcast/tools/d367/rr/d2-events.tsv"
+  fi
   job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' 'd2door d2fight'"
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then

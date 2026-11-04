@@ -1,0 +1,6 @@
+# r203 at the area 3 trigger (center -22931,4187,-8125, trig 0x81 = check button; R203Init arms the reunion while
+# Room_flg bit 3 is clear) with A pressed (r203s00-pad.txt): route movie 20300 (r203.cpp R203_MOVIES_OWN).
+pos -22931 4187 -8125
+ang 0
+inv default
+god
