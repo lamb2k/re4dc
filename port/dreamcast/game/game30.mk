@@ -3525,6 +3525,12 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_HUD_LENS_ALPHA=$
 endif
 # MEMPROF=1 (diagnostic builds only): wrap memset/memcpy and log the heaviest call sites by bytes every
 # 120 frames (platform/memprof.cpp; logged from native_ps2_world.cpp's flush).
+# HEAP4_CENSUS_EVERY=<frames> (diagnostic builds only, lane coldfix 2026-11-03): the heap-4 census (cells by MAD tag)
+# every <frames> room frames, for heap-4 relief work (r202). Default 0 = image unchanged.
+HEAP4_CENSUS_EVERY ?= 0
+ifneq ($(HEAP4_CENSUS_EVERY),0)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_HEAP4_CENSUS_EVERY=$(HEAP4_CENSUS_EVERY)
+endif
 MEMPROF ?= 0
 ifneq ($(MEMPROF),0)
 GAME_LDFLAGS += -Wl,--wrap=memset -Wl,--wrap=memcpy

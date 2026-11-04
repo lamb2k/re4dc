@@ -25,10 +25,9 @@ kept() { # path -> 0 if protected
   while [ "$d" != / ] && [ "$d" != . ]; do [ -e "$d/KEEP" ] && return 0; d=$(dirname "$d"); done
   return 1
 }
+. "$(dirname "$(readlink -f "$0")")/delguard.sh"  # shared guard: never orig/, re4data, keep*, big non-staging files
 del() { # kind path
-  local sz; sz=$(du -sb "$2" 2>/dev/null | cut -f1)
-  printf '%s\t%s\t%s\t%s\n' "$(date '+%F %T')" "$1" "${sz:-0}" "$2" >> "$M"
-  [ "$APPLY" = 1 ] && rm -rf -- "${2:?}"
+  guarded_rm "$1" "$2" "$M" || true
 }
 
 for B in /mnt/e/RE4DC-Lanes /mnt/d/RE4DC-Lanes; do
