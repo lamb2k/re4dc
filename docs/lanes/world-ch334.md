@@ -128,3 +128,11 @@ unchanged between arms.
 GDEMU (Disc 1, door103): seed 1 FAIL in 1103-2345 and 1104-0106, seeds 2 and 3 PASS (0 bad reads, r103 load 2.8 / 2.4 s).
 Seed 1's read-log.err is empty and it has 0 bad reads: the guest ran ~782 ticks in the 60 s host window (seeds 2/3 reach
 vbl 2478 by 41 s), so the door act (vbl ~1868) never came. Host throughput in the busy start of the cycle, not a disc read.
+
+## 11-04: r206 joins trans34d2 (proof, not a still)
+TRANS_POLICY=3 = kTpFlat|kTpCard (native_static.cpp: target() moves only FLAT / OPAQUE_IN_TR to pass 0 and CARD_NEAR to
+pass 1; DROP and FAR are off). trans34 classes of every 3-3 / 3-4 room: pass 0 OP, pass 2 SOFT / VA / UNKNOWN; none is
+FLAT, OPAQUE_IN_TR, CARD_NEAR or CARD_SOFTA (r206: OP 211, SOFT 6, VA 9, UNKNOWN 13). So the sidecar changes no draw pass
+in these rooms, and a TRANS_POLICY_DEBUG `transdbg 1` still (it hides FLAT / OPAQUE_IN_TR parts) would give an empty mask.
+The r206 13 % still diff is the torch flicker. trclass.idx = trans17 + r20c r20f r206 r20d r20e (31 rooms).
+These sidecars matter once a policy bit that moves SOFT / VA (or FAR) is turned on; that arm needs its own look check.
