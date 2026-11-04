@@ -5,10 +5,10 @@ pos -42267 15811 46777
 ang 1.3520
 inv default
 god
-act 90 start 6 ev
-act 150 start 6 ev
+act 880 start 6 ev
+act 950 start 6 ev
 emlog 0x31 60
-kill 0x31 600
+kill 0x31 1100
 chapter 17
 census 200
 alivelog 60
