@@ -2086,3 +2086,24 @@ if os.path.isdir(SKY27D):
 
 if __name__ == '__main__':
     main()
+
+# islmerch (lane island-interiors 11-03, Disc 3 only via D3_DATA): the island merchant (em18) PS2 cast in r30a / r312 /
+# r31a / r329 / r331 (the census drew him through the GameCube path once the island enemy lists spawned, CAST-GC).
+# Per-room registry packages of cast16's r229 merchant descriptors (merchant18-c0 / -o0, model_registry.py
+# --pack-bones 64 --wide-identity --pool --roles5; spec ps2-ch5-merchant.json in the store) + their 3 atlases.
+# No g50 level: the merchant is not a pool Ganado (NMR_POOL_LOD only levels pool descriptors). Store:
+# re4-assets-private/islmerch-20261103.
+ISLMERCHD = os.environ.get('ISLMERCHD', '/root/re4data/private/islmerch-20261103')
+DATA['islmerch'] = {'dc/native/r%s/registry.re4nmr' % r: ISLMERCHD + '/dc/native/r%s/registry.re4nmr' % r
+                    for r in ('30a', '312', '31a', '329', '331')}
+DATA['islmerch'].update({'dc/tex/%s/%s.re4tex' % (k[0], k): ISLMERCHD + '/dc/tex/%s/%s.re4tex' % (k[0], k)
+                         for k in ('3f690586-7edb7c3e', '4da9c3fa-98934ea1', '61519868-9ee3f93f')})
+
+# isltex (lane island-interiors 11-03, Disc 3 only via D3_DATA): 11 loose keys the island census reported missing (TEXCHK)
+# because dcf3pak replaces Disc 1's pack: r333 / r332 / r330 PS2 effect pictures (ch5tex ps2lib-st3 effects-tex/r330:
+# 457e4015 68b5bde3 7e1949f0 923fb19e a6640aee af4f7edd b7d6fb40 d20b5e0e e600fd43), core.das 10b29a01 (7x10, r333 /
+# r332) and em23 3d9d333a (128x128, r30a). The last two are GameCube-derived pictures (ch3regen emtex), GC-ASSET rows
+# until a PS2 source is found. Store: re4-assets-private/isltex-20261103 (keys.txt).
+ISLTEXD = os.environ.get('ISLTEXD', '/root/re4data/private/isltex-20261103')
+DATA['isltex'] = {'dc/tex/%s/%s.re4tex' % (k[0], k): ISLTEXD + '/dc/tex/%s/%s.re4tex' % (k[0], k)
+                  for k in open(ISLTEXD + '/keys.txt').read().split()} if os.path.exists(ISLTEXD + '/keys.txt') else {}
