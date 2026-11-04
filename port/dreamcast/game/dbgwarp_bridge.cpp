@@ -219,6 +219,8 @@ extern "C" void re4dc_ganado_lod_set(unsigned level);  // coarse_ganado_lod.inc 
 #endif
 
 namespace {
+extern "C" void re4dc_watch_arm_snap(const void* addr, unsigned long words);   // vi.cpp WATCH_LOG
+extern "C" const void* re4dc_pad_code_anchor(void);                            // pad.cpp
 struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; s8 stickx; };
 struct Rsf { u16 room; u8 bit; };
 // Replays a source radio call to test movie-to-subscreen resource handoff.
@@ -495,6 +497,12 @@ void load()
             wp.unlock[num(tok[1]) & 1] |= num(tok[2]);
         } else if (!strcmp(k, "chapter") && n >= 2) {
             wp.chapter = (int) num(tok[1]) + 1;  // DISC_SET disc check (game.cpp StageInit) reads pG->chapter
+        } else if (!strcmp(k, "watch") && n >= 3) {
+            // watch <addr> <words>: arm the vi.cpp memory watch now (r229 FAULT hunt, lane world-ch4 11-04)
+            re4dc_watch_arm_snap((const void*) (uintptr_t) num(tok[1]), num(tok[2]));
+        } else if (!strcmp(k, "watchpad") && n >= 1) {
+            // watchpad: 4 pages of code around pad.cpp scriptButtons (r229 FAULT pc), page aligned
+            re4dc_watch_arm_snap((const void*) (((uintptr_t) re4dc_pad_code_anchor() & ~0xFFFu) - 0x2000), 4096);
         } else if (!strcmp(k, "status") && n >= 3) {
             wp.status[num(tok[1]) & 3] |= num(tok[2]);
         } else if (!strcmp(k, "items") && n >= 3) {

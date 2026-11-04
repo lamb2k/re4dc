@@ -2085,7 +2085,7 @@ if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
 
 # c4anc (lane world-ch4 11-04; DISC 2 ONLY via D2_DATA): 34 chapter 4 room ancillary picture keys the Disc 2 census runs
 # opened and could not find (TEXCHK 'open failed'), hard links of Codex cxfix-replay-20261018 output/<room>/ancillary*/tex.
-C4ANCD = os.environ.get('C4ANCD', '/root/re4data/private/c4anc-20261104')
+C4ANCD = os.environ.get('C4ANCD', '/root/re4data/private/c4anc-20261104b')
 if os.path.isfile(C4ANCD + '/RECIPE.txt'):
     DATA['c4anc'] = {'tex': C4ANCD + '/tex'}
 

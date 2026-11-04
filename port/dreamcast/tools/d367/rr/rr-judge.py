@@ -334,6 +334,9 @@ if build_ok and jobs:
             unk = [r for r in tf if ('texchk-d2', r) not in known]
             add('Disc 2 TEXCHK', not unk, '%d/%d PASS%s' % (len(l2) - len(tf), len(l2), (' (fail: ' + ' '.join(tf) + ')') if tf else ''))
             vr, halts, peak = [], [], {}
+            # CAP_NOT_ENEMY (lane world-ch4 11-04): em2a is the trap module (bear traps / tripwire bombs, src/em2a), set as
+            # cEm objects but not Ganados or Novistadors; r21a's 7 traps made a peak of 11 against 4 Ganados.
+            CAP_NOT_ENEMY = {0x2a}
             for x in l2:
                 o = x.read_text(errors='replace').replace('\x00', '')
                 n = x.parent.name[5:]
@@ -342,7 +345,7 @@ if build_ok and jobs:
                 if bad.search(o):
                     halts.append(n)
                 # cap-rule classes only (Ganados + Novistadors em10..em2f in the alivelist 'cls*count@...' tokens; partners, em3x specials and objects excluded)
-                peak[n] = max([sum(int(c) for k, c in re.findall(r'\b([0-9a-f]{2})\*(\d+)@', l) if 0x10 <= int(k, 16) < 0x30)
+                peak[n] = max([sum(int(c) for k, c in re.findall(r'\b([0-9a-f]{2})\*(\d+)@', l) if 0x10 <= int(k, 16) < 0x30 and int(k, 16) not in CAP_NOT_ENEMY)
                                for l in re.findall(r'warp: alivelist [^\n]*', o)] or [0])
             add('Disc 2 VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
             add('Disc 2 census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))

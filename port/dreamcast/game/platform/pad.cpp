@@ -398,6 +398,8 @@ static u16 scriptButtons(void)
     }
     return 0;
 }
+// WATCH_LOG anchor (lane world-ch4 11-04): r229 FAULTed with an illegal instruction inside scriptButtons.
+extern "C" const void* re4dc_pad_code_anchor(void) { return (const void*) &scriptButtons; }
 
 extern "C" {
 
@@ -491,12 +493,28 @@ u32 PADRead(PADStatus* status)
     static maple_device_t* lastDev[4];
     int ctx0 = re4dc_pad_context();
     u32 connected = 0;
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+    // PADCHK (lane world-ch4 11-04, r229 FAULT hunt): the loop index and status pointer kept in memory and compared
+    // after each call; a callee that clobbers a callee-saved register shows as a mismatch, named by the step.
+    static volatile int chk_i; static PADStatus* volatile chk_status; static volatile int chk_hit;
+    chk_status = status;
+#define PADCHK(tag) do { if (!chk_hit && (chk_i != i || chk_status != status)) { chk_hit = 1; \
+        re4dc_log("PADCHK %s: i %d (want %d) status %p (want %p)\n", tag, i, chk_i, (void*) status, (void*) chk_status); } } while (0)
+#else
+#define PADCHK(tag) do {} while (0)
+#endif
     for (int i = 0; i < 4; i++) {
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+        chk_i = i;
+#endif
         PADStatus* p = &status[i];
         memset(p, 0, sizeof(*p));
         u16 scripted = i == 0 ? scriptButtons() : 0;
+        PADCHK("scriptButtons");
         maple_device_t* dev = maple_enum_type(i, MAPLE_FUNC_CONTROLLER);
+        PADCHK("maple_enum_type");
         const cont_state_t* st = dev ? (const cont_state_t*) maple_dev_status(dev) : NULL;
+        PADCHK("maple_dev_status");
         static const cont_state_t idle = {};
 #if RE4DC_PAD_PROMPTS
         const int prompt_real = dev && st;
@@ -523,6 +541,7 @@ u32 PADRead(PADStatus* status)
         }
         int capsDual = dev && (cont_has_capabilities(dev, CONT_CAPABILITIES_SECONDARY_ANALOG) ||
                                cont_has_capabilities(dev, CONT_CAPABILITY_C) || cont_has_capabilities(dev, CONT_CAPABILITY_Z));
+        PADCHK("caps");
         Re4dcPadIn in = {(u32) st->buttons, st->ltrig, st->rtrig, st->joyx, st->joyy, st->joy2x, st->joy2y};
 #if RE4DC_QUICK_WEAPON
         // QUICK_WEAPON (lane qws19): X held (START up) + a D-pad press posts a quick weapon slot
@@ -580,7 +599,9 @@ u32 PADRead(PADStatus* status)
                 prompt_kind[i]=RE4DC_PROMPT_SECOND_ANALOG;
         }
 #endif
+        PADCHK("re4dcMapPad+prompts");
         if (maps[i].dual != wasDual) re4dc_log("pad %d: dual-analog mapping (C-stick = joy2, Z = C/Z)\n", i);
+        PADCHK("dual log");
         u16 b = mapped.button;
         if (st->buttons & CONT_Z) b |= PAD_TRIGGER_Z;
         {
@@ -596,6 +617,7 @@ u32 PADRead(PADStatus* status)
             u16 real = mapped.button | ((st->buttons & CONT_Z) ? PAD_TRIGGER_Z : 0);
             p->button = (u16) (re4dcBlockDebugChords(real, re4dc_pad_debug_state(), &maps[0]) | scripted);
         }
+        PADCHK("debug chords");
 #if (RE4DC_PACE_CATCHUP && RE4DC_PACE_DEBUG) || (defined(RE4DC_RENDER_OPTION) && RE4DC_RENDER_OPTION)
         // RENDER_OPTION (every build): the chord cycles the speed display (Frame pacing is an Options row).
         // Test builds: a START press that begins with R held (and L not held: L + START is the
@@ -695,12 +717,14 @@ u32 PADRead(PADStatus* status)
 #if RE4DC_VMU_DEBUG_SLOT
         // Debug slot chord (hold L + START): START never reaches the game while L is held.
         if (i == 0) p->button &= (u16) ~re4dc_dbgslot_pad(p->button);
+        PADCHK("dbgslot");
 #endif
 #if RE4DC_ROUTE_MOVIES
         // A consumed movie skip stays masked until its buttons are released
         // (after the debug-chord filter, which rewrites p->button).
         if (i == 0) { movie_skip_latch &= p->button; p->button &= (u16) ~movie_skip_latch; }
 #endif
+        PADCHK("chords/movie");
         p->stickX = mapped.stickX;       // SDK-clamped; maple Y already flipped
         p->stickY = mapped.stickY;
         p->substickX = mapped.substickX;
@@ -714,15 +738,18 @@ u32 PADRead(PADStatus* status)
                              mapped.stickY > 24 || mapped.stickY < -24;
             re4dc_qa_drive_pad(&p->button, &p->stickX, &p->stickY, &p->triggerRight, real);
         }
+        PADCHK("qa_drive");
 #endif
 #if RE4DC_DBG_WARP
         if (i == 0) {
             re4dc_warp_pad(&p->button, &p->stickX, &p->stickY);  // test warp rig: boot card screen, door test
+            PADCHK("warp_pad");
             // A warp `act` mask with R (0x0020) also gives the analog trigger the aim reads.
             if ((p->button & PAD_TRIGGER_R) && !p->triggerRight) p->triggerRight = 0xC0;
         }
 #endif
         p->err = PAD_ERR_NONE;
+        PADCHK("end");
     }
     return connected;
 }
