@@ -1,6 +1,10 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_ui.h"
 #include "native_motion.h"
+#if defined(RE4DC_ESP_SPIKE_LOG) && RE4DC_ESP_SPIKE_LOG
+extern "C" void re4dc_esp_spike_begin();   // platform/native_ui.cpp (ESP_SPIKE_LOG)
+extern "C" void re4dc_esp_spike_end();
+#endif
 #include "native_effect.h"
 #endif
 // game/game: the game task (init / stage / room / main loop / door / ending / option steps), the
@@ -866,6 +870,9 @@ void gameMainLoop()
     } else {
         slow = 1;
     }
+#if defined(RE4DC_ESP_SPIKE_LOG) && RE4DC_ESP_SPIKE_LOG
+    re4dc_esp_spike_begin();
+#endif
     if (slow) {
         if (!(pG->Stop_flg & 0x8000000)) {
             EffAreaUpdate();
@@ -876,6 +883,9 @@ void gameMainLoop()
             EffCallToolStateCallBack();
         }
         ProcessTickGet(5, "EspMove");
+#if defined(RE4DC_ESP_SPIKE_LOG) && RE4DC_ESP_SPIKE_LOG
+        re4dc_esp_spike_end();
+#endif
         if (!(pG->Stop_flg & 0x1000000)) {
             LightMgr.move();
         }
