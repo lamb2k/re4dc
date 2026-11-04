@@ -363,7 +363,7 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     if(ashley_face)expected|=2;
 #endif
     if((i->be_flag&~8u)!=expected)return Error::PassGroup;
-    if(i->invisible_factor!=1.0f || i->blend_mode || i->colorWord!=0xffffffffu ||
+    if(i->invisible_factor!=1.0f || i->blend_mode || !RE4DC_NMR_COLOR_OK(i) ||
        i->color2[0] || i->color2[1] || i->color2[2] || i->color2[3] ||
        (i->flagsDC && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pAddTpl || i->nAddTex ||
        ((i->blendRatio || i->blendType) && !RE4DC_NMR_BLEND_ICE(i,row.appearance)) ||

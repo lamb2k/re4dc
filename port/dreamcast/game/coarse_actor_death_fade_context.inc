@@ -35,19 +35,20 @@ bool actor_fade_eligible_g1(cModel* m,const Re4dcActorPlan& p) {
 #endif
 }
 #if RE4DC_NMR_CLOAK
-// NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk; render only, approximation): the Novistador (em2d) camouflage.
-// em2d.cpp sets Shader_type 1 while Refract_ratio < 0xFF (0 = fully cloaked); the source draws the refraction shader
-// (trans.cpp RefractShaderSetup: the screen copy seen through the body). The native plan draws the body through the
-// fade ticket (TR list, source FIFO position) with an alpha that follows Refract_ratio and keeps a faint body when
-// fully cloaked (the visible shimmer), instead of declining to the GC path (CAST-GC, semantics 5).
+// NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk; render only): the Novistador (em2d) camouflage drawn as the PS2
+// draws it. em2d (GC and PS2 alike) sets Shader_type 1 while Refract_ratio < 0xFF and moves its model info colour alpha
+// (0.9 x + 3.2 -> 32 cloaked, 0.9 x + 12.8 -> 128 while it hums, +0x18 per frame back to 255). The GC draws a
+// refraction shader (trans.cpp RefractShaderSetup); the PS2 renderer never reads Shader_type or Refract_ratio (no
+// load of either field in SLUS_211.34 outside em2d's own hit effect) and draws the body with the info colour alpha.
+// The native plan draws the body through the fade ticket (TR list, source FIFO position) with that alpha.
 inline bool actor_nmr_cloak(const cModel* m) {
-    return m && m->kindid==0 && m->id==0x2D && m->Shader_type==1 && m->Refract_ratio!=0xFF &&
+    return m && m->kindid==0 && m->id==0x2D && m->pModelInfo &&
+        ((m->Shader_type==1 && m->Refract_ratio!=0xFF) || m->pModelInfo->color[3]!=255) &&
+        (m->Shader_type==0 || m->Shader_type==1) &&
         m->invisible_factor==1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255 && !m->z_mode && !m->CullMode &&
         !(pG->Status_flg[1]&0x04000000);
 }
-inline unsigned actor_nmr_cloak_alpha(const cModel* m) {
-    return RE4DC_NMR_CLOAK_FLOOR+(unsigned(m->Refract_ratio)*(255u-RE4DC_NMR_CLOAK_FLOOR))/255u;
-}
+inline unsigned actor_nmr_cloak_alpha(const cModel* m) { return m->pModelInfo->color[3]; }
 #define RE4DC_NMR_SHADER_BAD(m) ((m)->Shader_type && !actor_nmr_cloak(m))
 #endif
 bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {

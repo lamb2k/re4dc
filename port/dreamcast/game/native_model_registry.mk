@@ -902,18 +902,18 @@ $(error NATIVE_MODEL_REGISTRY_DYING_BOSS needs NATIVE_MODEL_REGISTRY_DYING=1)
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DYING_BOSS=$(NATIVE_MODEL_REGISTRY_DYING_BOSS)
 endif
-# NATIVE_MODEL_REGISTRY_CLOAK=1 (lane world-ch32 2026-11-04; render only, approximation, default 0): the Novistador (em2d)
-#              camouflage (Shader_type 1 while Refract_ratio < 0xFF; its texture blend table at any ratio) keeps its registry
-#              plan and draws through the NATIVE_MODEL_REGISTRY_DYING fade ticket (TR list, source FIFO position) with alpha
-#              NATIVE_MODEL_REGISTRY_CLOAK_FLOOR + Refract_ratio * (255 - floor) / 255, instead of declining to the GC path
-#              (CAST-GC r205 semantics 5 / 16). Needs NATIVE_MODEL_REGISTRY_DYING=1. Knob off: unchanged.
+# NATIVE_MODEL_REGISTRY_CLOAK=1 (lane world-ch32 2026-11-04; render only, default 0): the Novistador (em2d) camouflage keeps
+#              its registry plan and draws as the PS2 draws it: the body through the NATIVE_MODEL_REGISTRY_DYING fade ticket
+#              (TR list, source FIFO position) with the model info colour alpha em2d moves (32 cloaked, 128 humming, 255
+#              visible). The PS2 renderer never reads Shader_type / Refract_ratio (no refraction); the GC draws a refraction
+#              shader. Its camouflage blend table (any ratio) draws the base textures. Before: CAST-GC r205 (semantics 5 /
+#              16 / 15). Needs NATIVE_MODEL_REGISTRY_DYING=1. Knob off: unchanged.
 NATIVE_MODEL_REGISTRY_CLOAK ?= 0
-NATIVE_MODEL_REGISTRY_CLOAK_FLOOR ?= 48
 ifeq ($(NATIVE_MODEL_REGISTRY_CLOAK),1)
 ifneq ($(NATIVE_MODEL_REGISTRY_DYING),1)
 $(error NATIVE_MODEL_REGISTRY_CLOAK needs NATIVE_MODEL_REGISTRY_DYING=1)
 endif
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_CLOAK=1 -DRE4DC_NMR_CLOAK_FLOOR=$(NATIVE_MODEL_REGISTRY_CLOAK_FLOOR)u
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_CLOAK=1
 endif
 # PROP_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): re4dc_model_submit time / bytes per model and route
 #              (PPF lines). Knob off: the image is unchanged.

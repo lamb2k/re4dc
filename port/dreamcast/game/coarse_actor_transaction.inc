@@ -130,6 +130,14 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 #include "coarse_actor_death_fade_context.inc"
 #endif
+#if RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK: the camouflage moves only the info colour alpha (the fade ticket draws it); the info
+// carries em2d's texture blend table (flagsDC 4).
+#define RE4DC_NMR_COLOR_OK(i) ((i)->colorWord==0xffffffffu || \
+    (((i)->colorWord|0xff000000u)==0xffffffffu && (i)->flagsDC==4u && (i)->texBlendTbl))
+#else
+#define RE4DC_NMR_COLOR_OK(i) ((i)->colorWord==0xffffffffu)
+#endif
 #ifndef RE4DC_NMR_SHADER_BAD
 #define RE4DC_NMR_SHADER_BAD(m) ((m)->Shader_type)
 #endif
@@ -218,7 +226,7 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
         // Hidden infos were still prepared and animated by the source callback.
         // They participate in the certificate and lease proof too.
         if(!info || !info->pData || info->invisible_factor!=1.0f || info->blend_mode ||
-           info->colorWord!=0xffffffffu || (info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pAddTpl || info->nAddTex ||
+           !RE4DC_NMR_COLOR_OK(info) || (info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pAddTpl || info->nAddTex ||
            (info->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pTexAnim || info->uvU || info->uvV || info->uvScrollU || info->uvScrollV ||
            ((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i)))return false;
         re4dc_source::ChunkProof proof{};
@@ -296,7 +304,7 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
         if(!info || !info->pData)return 12;
         if(info->invisible_factor!=1.0f)return 13;
         if(info->blend_mode){*detail=i<<16|info->blend_mode;return 14;}
-        if(info->colorWord!=0xffffffffu){*detail=info->colorWord;return 15;}
+        if(!RE4DC_NMR_COLOR_OK(info)){*detail=info->colorWord;return 15;}
         if(info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)){*detail=i<<16|info->flagsDC;return 16;}
         if(info->pAddTpl || info->nAddTex)return 17;
         if((info->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pTexAnim)return 18;
