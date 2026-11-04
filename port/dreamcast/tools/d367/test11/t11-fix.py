@@ -2015,6 +2015,22 @@ CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
 if os.path.isdir(CPIC27D):
     DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
     PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cpic34 (lane world-ch334 11-03, DISC 2 ONLY via D2_DATA, after cpic27): cpic27's pack with cgca34's 4 PS2 pictures the
+# composed pack had kept as base bytes (6596bca3 7eea0efc 8a87a40f fcb60a5d) and the r20e armor (em3c) registry package's 5
+# PS2 textures (3f0e6e6e b8a23b61 f8da1db6 fafe0c9d 9cec60e1; r20e TEXCHK "open failed"). castlegca34/mkcpic34.py.
+CPIC34D = os.environ.get('CPIC34D', '/root/re4data/private/cpic34-20261103')
+if os.path.isdir(CPIC34D):
+    DATA['cpic34'] = {'dc/tex.pak': CPIC34D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic34'] = CPIC34D + '/pak-derived.json'
+# r20dem19 (lane world-ch334 11-03, DISC 2 ONLY via D2_DATA): r20d's registry package with zealot-em19-07q (07p + the
+# alternate accessory pool acc2-b 0x211|0x220, acc5-b 0x217|0x219; r20d em19 rows carry flag 0x4000), CAST-GC r20d.
+R20DEM19D = os.environ.get('R20DEM19D', '/root/re4data/private/castle34-em19-20261103/set-r20dem19')
+if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
+    DATA['r20dem19'] = {'dc/native/r20d/registry.re4nmr': R20DEM19D + '/dc/native/r20d/registry.re4nmr'}
+# res34 (lane world-ch334 11-03, DISC 2 ONLY): the castle resident.bin with r20c r20f r206 r20d r20e from vram/resident/castle18.
+RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
+if os.path.isfile(RES34D + '/dc/resident.bin'):
+    DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,

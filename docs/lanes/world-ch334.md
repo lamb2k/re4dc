@@ -81,3 +81,30 @@ GDEMU race PASS; Disc 1 rows PASS. GC-ASSET FAIL is r203 only (3-1: 72be589c-3bb
 - 11 lighting: on program-wide. 12/13/14 effects/fire/sound: from cgca34 (banks PS2); effect census PASS.
 - 15 VRAM residency: evicted 0, no-contig 0; resident lists not made.
 - 17 TEXCHK: OPEN r20e (3 keys), r206 (stall).
+
+## Gate closure, rr cycle 1103-2136-a1882cf5 (Disc 2: all rows of the 3-3 / 3-4 rooms PASS)
+Disc 2 census 12/12: CAST-GC PASS, LEON-GC 12/12, TEXCHK 12/12, VRAM no-contig 0, HALT/FAULT 0, cap peaks <= 4, KOS 48 KiB
+PASS (min 29816), GDEMU PASS; d2gca 0 unreviewed rows in r20c r20f r206 r20d r20e. Disc 2 GC-ASSET FAIL is r203 (3-1) only.
+Disc 2 data_sectors 454735 (limit: disc_lint.py HD_END LBA 549150, track 3 at LBA 45000, about 504150 data sectors).
+- r20d CAST-GC: em19 rows (emleon03 114..119) carry flag 0x4000 without 0x200000 = mot[38] BIN 0x217 + mot[40] TPL 0x219,
+  a role zealot-em19-07p lacks, so registry_bind refused them (NMRS plan=G declined). ps2_cast.py zealot-em19-07q (07p +
+  acc2-b 0x211|0x220 + acc5-b 0x217|0x219, the em1a-07q pattern); masks 13/16/20/22; model_registry.py --package-room 20d
+  --source-normal-length --wide-identity --pool --roles5 (flags proven: castle18 reg-r208-v2 e28cd7a3 rebuilt byte for byte).
+  Data set r20dem19 (dc/native/r20d/registry.re4nmr a95a8850, 120768 B). After: NMRS id=19 plan=R native=1050 declined=0.
+  The partner package (Ashley pl01-no/nc, castle21 4a0825ce) is unchanged.
+- r20e TEXCHK: the armor (em3c) registry package's 5 textures were not on Disc 2; and 4 cgca34 PS2 pictures lost to the base
+  pack's bytes (castle_fixture drops loose keys the pack has). cpic34 = cpic27's pack + both (castlegca34/mkcpic34.py).
+- r206: not a stall. The census warp landed on the Luis event (r206s00, 3030 frames, 101 s), past the 60 s window.
+  j-r206 now sets rsf 0x206 bit 5 (r206_die_event done); o-r206s00 keeps the movie entry. r206 runs at ~17 fps (Flycast).
+  For world-ch32: r205 may be worth the same check (is a movie / event running at the frame-186 "stall"?).
+
+## CH-FIXES-CARRY rows (3-3 / 3-4), updated
+- 1/2/3 PASS (above). 5 cap PASS. 8 KOS PASS (3-1 segments). 11-14 program-wide / cgca34.
+- 6 PCCULL: OPEN. Cells are hand-authored (ps2world/interior: survey.py hull + eye boxes, build_cell.py, scan proof) and
+  cull the outdoor world from inside a house; no castle room has one. These rooms draw unculled (allowed, logged).
+- 10 R4TC: generated, not on disc. /root/re4data/private/trans34-20261103 (r206 239 parts, r20c 111, r20d 525, r20e 242,
+  r20f 165; UNKNOWN parts draw as today). Disc 2 trclass.idx takes a room only after its tier 2 look gate.
+- 15 resident: castle18/r20c r20f r206 (new) r20d r20e lists from the 2136 runs; res34 = res26pr2's Disc 2 resident.bin
+  with those rooms replaced (every other room kept). On D2_DATA; its cycle did not run (C: 3 GB, lanelock refused).
+- Stores cpic34 / castle34-em19 / res34 / trans34 are in /root/re4data/private; the copy to re4-assets-private + manifest
+  is pending (C: full).

@@ -1,6 +1,8 @@
 name ch334-r206
-# lane world-ch334: chapter 3-3 end (Luis event r206s00) entry warp (Disc 2; same layout as g-r204)
+# lane world-ch334: r206 census warp (Disc 2). rsf 0x206 bit 5 = Luis' death event done (r206.cpp r206_die_event guard), so the
+# 101 s r206s00 movie does not fill the 60 s window; the snipe room (bit 0 clear) runs. o-r206s00 plays the movie.
 room 0x206
+rsf 0x206 5
 jp 0
 chapter 8
 inv default

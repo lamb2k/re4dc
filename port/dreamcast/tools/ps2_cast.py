@@ -470,6 +470,12 @@ PRESETS['zealot-em1a-07q'] = dict(PRESETS['zealot-em1a-07p'],
 PRESETS['zealot-em1a-08q'] = dict(PRESETS['zealot-em1a-08p'],
     sections=PRESETS['zealot-em1a-08p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
     rooms=['r208', 'r209'])
+# lane world-ch334 (2026-11-03): r20d's em19 type 7 rows (emleon03 rows 114..119) carry flag 0x4000 without 0x200000
+# (mot[38] BIN 0x217 + mot[40] TPL 0x219) and no hood flag; zealot-em19-07p has no 0x217|0x219 role, so registry_bind
+# refused them and they drew GC (CAST-GC r20d). The same complete alternate pool as zealot-em1a-07q.
+PRESETS['zealot-em19-07q'] = dict(PRESETS['zealot-em19-07p'],
+    sections=PRESETS['zealot-em19-07p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
+    rooms=['r20d'])
 PRESETS['zealot-em11-08h'] = dict(PRESETS['zealot-em11-08g'],
     sections=PRESETS['zealot-em11-08g']['sections'] + [(0x211, 'acc32-b', 0x220)], rooms=['r226'])
 # em3cModelInit attaches a weapon after body and chainmail: C/D for types 0/2, E/F for types 1/3.
