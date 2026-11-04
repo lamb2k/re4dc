@@ -1669,14 +1669,23 @@ DATA['lod27'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (LOD27D, r, 
                  for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
                  if os.path.exists('%s/dc/native/%s/%s' % (LOD27D, r, f))}
 # scan1 (lane roomscan 11-03, render only; needs WORLD_BAKE=3, never KSETS; user look call "halving the detail of
-# expensive rooms"): tools/d367/roomscan plans applied to r11d r111 r119 r11e (the rooms that gained in the 11-03 MODELLED A/B; r103 r10e r108 r107 r117 r109 out, re-planned later with mesh size in the cost) (coarser LOD
+# expensive rooms"): tools/d367/roomscan plans applied to r11d r111 r119 (r11e waits for the assets-dc layout credit; the rooms that gained in the 11-03 MODELLED A/B; r103 r10e r108 r107 r117 r109 out, re-planned later with mesh size in the cost) (coarser LOD
 # levels where the heap allows, distance caps per 8 m cell); sidecars regenerated (lod27/post_lod.sh). Store copy:
 # re4-assets-private/scan1-20261103.
 SCAN1D = os.environ.get('SCAN1D', '/root/re4data/private/scan1-20261103')
 DATA['scan1'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (SCAN1D, r, f)
-                 for r in ('r11d', 'r111', 'r119', 'r11e')
+                 for r in ('r11d', 'r111', 'r119')
                  for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
                  if os.path.exists('%s/dc/native/%s/%s' % (SCAN1D, r, f))}
+# rs2 (lane roomscan 11-04, render only; needs WORLD_BAKE=4, never KSETS; user "roomscan fixes should be used much more
+# aggressively"): scan1 (r119 r111) plus prop decimation in place (r11d on scan1, r117 r10e r108 r103). One room can be
+# left out with RS2_ROOMS (its certificate rows must then be regenerated without it: lod27/post_lod.sh).
+RS2D = os.environ.get('RS2D', '/root/re4data/private/rs2-20261104')
+RS2_ROOMS = os.environ.get('RS2_ROOMS', 'r119 r111 r11d r117 r10e r108 r103').split()
+DATA['rs2'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (RS2D, r, f)
+               for r in RS2_ROOMS
+               for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
+               if os.path.exists('%s/dc/native/%s/%s' % (RS2D, r, f))}
 # ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
 # chapter 1 + r200 sound banks (etc/core.das, em/pl00 pl08 pl0f pl11, the weapon banks, the room .dar ROOM/FOOT banks,
 # the rooms' enemy banks, ss/cmn/title.snd, bgm/bio4midi.dat) and bgm/aica_str.dat with PS2 PCM written into the

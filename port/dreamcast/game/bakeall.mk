@@ -10,10 +10,13 @@
 #   texture_rect21/provenance_certificates_lod27.inc. Goes with data set lod27.
 # WORLD_BAKE=3 (lane roomscan, 2026-11-03, user look call "halving the detail of expensive rooms"): the scan1 set
 #   (tools/d367/roomscan plans: coarser LOD levels plus per-cell distance caps, levels 1/2/3 from 8/12/16 m; r10e r107
-#   r11d r111 r119 r11e), rows from texture_rect21/provenance_certificates_scan1.inc. Data set scan1.
+#   r11d r111 r119; r11e follows the assets-dc layout credit), rows from texture_rect21/provenance_certificates_scan1.inc. Data set scan1.
+# WORLD_BAKE=4 (lane roomscan, 2026-11-04, user "roomscan fixes should be used much more aggressively"): the rs2 set,
+#   scan1 (r119 r111) plus prop decimation in place (r11d on scan1, r117 r10e r108 r103: ps2_room_r4im.py --decimate,
+#   roomscan.py decplan --props 6000), rows from texture_rect21/provenance_certificates_rs2.inc. Data set rs2.
 WORLD_BAKE ?= 0
-ifneq ($(filter-out 0 1 2 3,$(WORLD_BAKE)),)
-$(error WORLD_BAKE must be 0, 1, 2 or 3)
+ifneq ($(filter-out 0 1 2 3 4,$(WORLD_BAKE)),)
+$(error WORLD_BAKE must be 0, 1, 2, 3 or 4)
 endif
 ifneq ($(WORLD_BAKE),0)
 ifeq ($(SCENERY_N256),1)

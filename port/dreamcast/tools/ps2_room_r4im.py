@@ -766,13 +766,17 @@ def dec_fn(path, placements):
     every reachable floor cell under every placement of its mesh -> 0.25, at least dec50_mm -> 0.5; skipped meshes
     (live scroll objects, hero meshes) never."""
     plan = json.loads(Path(path).read_text())
-    floor = np.array(plan['floor'], dtype=np.float64).reshape(-1, 2)
+    floor = np.array(plan['floor'], dtype=np.float64)
+    floor = floor.reshape(-1, floor.shape[-1] if floor.size else 3)   # [x, eye y, z] (or old [x, z])
     skip = set(plan.get('skip_meshes', ()))
+    props = {int(k): float(v) for k, v in plan.get('props', {}).items()}   # small props: that ratio wherever they stand
     d50, d25 = float(plan['dec50_mm']), float(plan['dec25_mm'])
     aff = collections.defaultdict(list)
     for mi, _, A in placements:
         aff[mi].append(np.array(A, dtype=np.float64).reshape(3, 4))
     def f(owner, mi, pts):
+        if mi in props:
+            return props[mi]
         if mi in skip or not len(floor):
             return None
         P = np.array(pts, dtype=np.float64)
@@ -781,7 +785,10 @@ def dec_fn(path, placements):
         for A in aff.get(mi, ()):
             c = A[:, :3] @ ((lo + hi) / 2) + A[:, 3]
             rad = float(np.linalg.norm(np.abs(A[:, :3]) @ ((hi - lo) / 2)))
-            best = min(best, float(np.min(np.hypot(floor[:, 0] - c[0], floor[:, 1] - c[2]))) - rad)
+            if floor.shape[1] == 3:   # 3D from eye height: high ceilings and vaults count as far
+                best = min(best, float(np.min(np.linalg.norm(floor - c, axis=1))) - rad)
+            else:
+                best = min(best, float(np.min(np.hypot(floor[:, 0] - c[0], floor[:, 1] - c[2]))) - rad)
         return 0.25 if best >= d25 else 0.5 if best >= d50 else None
     return f
 
@@ -890,6 +897,8 @@ def main():
                                     floor={None: a.lod_floor} if a.lod_floor > 0 else None, share=True,
                                     source=lambda token: sources[token.mesh], color_mode='prelit',
                                     decimate=dec_fn(a.decimate, placements) if a.decimate else None)
+    if a.decimate:
+        print('decimate: triangles %d -> %d, pieces refused %d' % tuple(summary['decimated_triangles']))
     if summary['parts'] != len(parts_meta):
         raise SystemExit('part count %d != %d (an empty mesh was skipped)' % (summary['parts'], len(parts_meta)))
     body = b''.join(struct.pack('<IIHHBBBB', *m) for m in parts_meta)
@@ -923,6 +932,7 @@ def main():
                   re4mesh_sha256=hashlib.sha256(blob).hexdigest(), r4pw_bytes=len(side),
                   r4pw_sha256=hashlib.sha256(side).hexdigest(), textures=len(textures),
                   texture_vram_bytes=sum(t['vram_bytes'] for t in textures.values()),
+                  decimated_triangles=summary.get('decimated_triangles'),
                   texture_rows=textures, summary=summary,
                   texture_crc_rule='header')   # payload_crc32 over every byte after the header (re4dctx_bytes)
     (a.out / 'ps2-world.json').write_text(json.dumps(report, indent=1, default=str))

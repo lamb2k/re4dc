@@ -257,8 +257,11 @@ def apply(a):
     print('applied %s: %d clusters capped, mesh %d bytes (unchanged size)' % (plan['room'], len(done), len(m)))
 
 
+EYE_MM = 1600.0
+
+
 def grid_floor(path, start=None, step_mm=600.0):
-    """XZ (mm) of the walkable floor cells of a room.r4rc GRID (the room's collision floor). With start (x, z mm, the
+    """Eye points (x, floor y + 1.6 m, z; mm) of the walkable floor cells of a room.r4rc GRID (the room's collision floor). With start (x, z mm, the
     census warp position) only the cells reachable from it: 4-neighbour flood fill over floor cells whose floor heights
     differ by at most step_mm (walls ignored; a cliff or a roof is a height jump), so unreachable terrain and roofs
     around the play area count as far."""
@@ -269,7 +272,7 @@ def grid_floor(path, start=None, step_mm=600.0):
         if tag == b'GRID':
             break
     else:
-        return np.zeros((0, 2))
+        return np.zeros((0, 3))
     npl, nseg, ncombo, nwl, bw, bh, nblock, _ = struct.unpack_from('<8H', b, off)
     btab = struct.unpack_from('<%dH' % (bw * bh), b, off + 16)
     qb = off + ((16 + 2 * bw * bh + 3) // 4) * 4
@@ -299,7 +302,7 @@ def grid_floor(path, start=None, step_mm=600.0):
             for nx, nz in ((x + 1, z), (x - 1, z), (x, z + 1), (x, z - 1)):
                 if (nx, nz) in y and (nx, nz) not in keep and abs(y[(nx, nz)] - y[(x, z)]) <= step_mm:
                     keep.add((nx, nz)); todo.append((nx, nz))
-    return np.array([(x0 + (x + 0.5) * cell, z0 + (z + 0.5) * cell) for x, z in sorted(keep)])
+    return np.array([(x0 + (x + 0.5) * cell, y[(x, z)] + EYE_MM, z0 + (z + 0.5) * cell) for x, z in sorted(keep)])
 
 DEC50, DEC25, HERO_MM = (float(os.environ.get('ROOMSCAN_DEC50_MM', 20000)), float(os.environ.get('ROOMSCAN_DEC25_MM', 35000)), 30000.0)
 
@@ -321,17 +324,42 @@ def decplan(a):
         eyes = grid_floor(a.grid, start); cams = eyes   # every reachable floor cell is a camera
     else:
         cams = cameras(rows, a.warp, n=24)
-        eyes = np.array([c[1] for c in cams])[:, [0, 2]]
+        eyes = np.array([c[1] for c in cams]) + np.array([0.0, EYE_MM, 0.0])
     bound = set()
     if a.bound and os.path.exists(a.bound):
         bound = set(int(x, 16) for x in re.findall(r'PS2PART bind id=([0-9a-f]+)', open(a.bound, errors='replace').read()))
     live = set(i for i in bound if i < 250)
+    # A census PS2PART bind means the id has a game scroll object (SCN): the runtime poses its parts. That is every
+    # scroll object the room loads (houses, fences, barrels), not only the ones that move. --live doors keeps the
+    # shield only on door-shaped bound placements (0.6-2.6 m wide, 1.6-3.6 m tall, under 0.6 m thick) and bound
+    # placements under 1.2 m (pickup-sized); decimation is render only (the pose still applies, collision is not here).
+    if a.live == 'moved':
+        # PS2DYN id=.. state=hidden|moved|source (census twin built with DYN_ID_TRACE=1): only ids the run actually
+        # hid or moved are live (roomscan-castle 11-04: r202 106 bound vs 6 moved). Without PS2DYN lines in the log
+        # the shield stays on every bound id.
+        txt = open(a.bound, errors='replace').read() if a.bound and os.path.exists(a.bound) else ''
+        dyn = set(int(x, 16) for x in re.findall(r'PS2DYN id=([0-9a-f]+) state=', txt))
+        if 'PS2DYN id=' in txt:
+            live = set(i for i in dyn if i < 250)
+    if a.live == 'doors':
+        keep = set()
+        boxes = {}
+        for r in rows:
+            if r['rid'] in live:
+                lo, hi = r['ctr'] - r['half'], r['ctr'] + r['half']
+                b = boxes.get(r['pl']); boxes[r['pl']] = (r['rid'], np.minimum(b[1], lo) if b else lo, np.maximum(b[2], hi) if b else hi)
+        for rid, lo, hi in boxes.values():
+            dx, dy, dz = hi - lo
+            w, t = max(dx, dz), min(dx, dz)
+            if (600 <= w <= 2600 and 1600 <= dy <= 3600 and t <= 600) or max(dx, dy, dz) <= 1200:
+                keep.add(rid)
+        live = keep
     near, wide, skip = {}, set(), set()
     for r in rows:
         mi, gi = W['pl'][r['pl']][0], W['pl'][r['pl']][1]
         if r['rid'] in live:
             skip.add(mi)
-        d = float(np.min(np.linalg.norm(eyes - r['ctr'][[0, 2]], axis=1))) - r['rad']
+        d = float(np.min(np.linalg.norm(eyes - r['ctr'], axis=1))) - r['rad']   # 3D from eye height: vaults count
         near[mi] = min(near.get(mi, 1e18), d)
     for pi, (mi, gi, *aff) in enumerate(W['pl']):
         me_rows = [r for r in rows if r['pl'] == pi]
@@ -347,13 +375,35 @@ def decplan(a):
             meshes[str(mi)] = 0.25
         elif d >= DEC50:
             meshes[str(mi)] = 0.5
+    # --props <mm> (user 11-04 "much more aggressively"): small props (every placement of the mesh narrower than <mm>)
+    # at --props-ratio wherever they stand; never an addressable placement (ids < 250: doors, pickups, scroll
+    # objects, anything the player interacts with), a live one, or a hero mesh
+    props = {}
+    if a.props:
+        # addressable = an id < 250 that a live object binds in the census (doors, pickups, scroll objects in use);
+        # --props-strict also skips every id < 250 (in the village rooms nearly every placement has one)
+        addr = set(mi for mi, gi, *_ in W['pl'] if 16 + gi < len(W['ids']) and W['ids'][16 + gi] < 250
+                   and (a.props_strict or W['ids'][16 + gi] in live))
+        ext = {}
+        for r in rows:
+            mi = W['pl'][r['pl']][0]
+            e = 2 * float(max(r['half'][0], r['half'][2]))
+            ext.setdefault(mi, []).append((r['pl'], r['ctr'] - r['half'], r['ctr'] + r['half']))
+        for mi, boxes in ext.items():
+            if mi in skip or mi in wide or mi in addr:
+                continue
+            per = {}
+            for pi, lo, hi in boxes:
+                a0, b0 = per.get(pi, (lo, hi)); per[pi] = (np.minimum(a0, lo), np.maximum(b0, hi))
+            if all(max(hi[0] - lo[0], hi[2] - lo[2]) <= a.props for lo, hi in per.values()):
+                props[str(mi)] = a.props_ratio
     # the converter decides per cluster (tools/ps2_room_r4im.py --decimate): it gets the reachable floor, the distances
     # and the meshes never to touch; "meshes" is this tool's whole-mesh preview of the same rule
     out = dict(room=a.room, world=a.world, rule=dict(dec50_m=DEC50 / 1000, dec25_m=DEC25 / 1000, hero_m=HERO_MM / 1000),
-               dec50_mm=DEC50, dec25_mm=DEC25, skip_meshes=sorted(skip | wide), floor=[[round(float(x)), round(float(z))] for x, z in eyes],
+               dec50_mm=DEC50, dec25_mm=DEC25, skip_meshes=sorted(skip | wide), props=props, floor=[[round(float(x)), round(float(y)), round(float(z))] for x, y, z in eyes],
                meshes=meshes, skipped_live=len(skip), skipped_hero=len(wide - skip), cameras=len(cams))
     json.dump(out, open(a.out or '%s-dec.json' % a.room, 'w'))
-    print(json.dumps(dict(room=a.room, floor_cells=len(eyes), whole_mesh_dec50=sum(1 for v in meshes.values() if v == 0.5),
+    print(json.dumps(dict(room=a.room, live_mode=a.live, live_ids=len(live), props=len(props), floor_cells=len(eyes), whole_mesh_dec50=sum(1 for v in meshes.values() if v == 0.5),
                           whole_mesh_dec25=sum(1 for v in meshes.values() if v == 0.25), meshes=len(near),
                           skipped_live=len(skip), skipped_hero=len(wide - skip))))
 
@@ -364,5 +414,7 @@ if __name__ == '__main__':
     s.add_argument('--bound'); s.add_argument('--other-ms', type=float, default=30.0); s.add_argument('--out'); s.add_argument('--ref')
     p = sub.add_parser('apply'); p.add_argument('plan'); p.add_argument('world'); p.add_argument('out')
     q = sub.add_parser('decplan'); q.add_argument('room'); q.add_argument('world'); q.add_argument('--warp'); q.add_argument('--bound'); q.add_argument('--grid'); q.add_argument('--out')
+    q.add_argument('--props', type=float, default=0.0); q.add_argument('--props-ratio', type=float, default=0.5); q.add_argument('--props-strict', action='store_true')
+    q.add_argument('--live', choices=('bound', 'doors', 'moved'), default='bound')
     a = ap.parse_args()
     {'scan': scan, 'apply': apply, 'decplan': decplan}[a.cmd](a)

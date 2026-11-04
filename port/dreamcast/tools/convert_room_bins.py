@@ -721,7 +721,7 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
     decimate: callable(owner, bin, [model-space xyz of the cluster's corners]) -> triangle ratio or None (roomscan
     dec, default none): that cluster's level 0 is simplified in place to at most ratio of its triangles, its
     boundary vertices locked (no cracks), before its levels are built; no level records are added. Kept only
-    when the cluster's surface area stays within 10% (a lost piece keeps the source).
+    when the piece's surface area stays within 25% (a lost piece keeps the source).
     color_mode: "oct" (default: palette index + octahedral normal, lit at runtime) or "prelit": the
     colour slot is the corner's final ARGB1555 (source color() 8-bit RGBA, color_scale ignored), header
     reserved[0] = COLOR_ARGB1555 and a one-word palette; the runtime lights nothing. "oct-vertex": the colour
@@ -888,10 +888,17 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
                         r = decimate(owner, bin_no, [welded[v] for t in pc for v in t[0]]) if len(pc) >= 8 else None
                         pick = None
                         if r:
-                            lv = mesh_lod.simplify_levels(welded, pc, [e / scale for e in (5, 10, 20, 40, 80, 160, 320, 640, 1280)],
-                                                          lock, 1.0)
+                            # far / prop decimation is an approved approximation: the UV seam guard is relaxed to the
+                            # scan1 value (0.2) for these pieces only
+                            g0 = mesh_lod.UV_GUARD
+                            mesh_lod.UV_GUARD = max(g0 or 0.0, 0.2)
+                            try:
+                                lv = mesh_lod.simplify_levels(welded, pc, [e / scale for e in (5, 10, 20, 40, 80, 160, 320, 640,
+                                                                                              1280, 2560, 5120)], lock, 1.0)
+                            finally:
+                                mesh_lod.UV_GUARD = g0
                             pick = next((t for _, t in lv[1:] if t and len(t) <= r * len(pc)), None)
-                            if pick is not None and abs(surface(pick, welded)[0] - surface(pc, welded)[0]) > 0.10 * surface(pc, welded)[0]:
+                            if pick is not None and abs(surface(pick, welded)[0] - surface(pc, welded)[0]) > 0.25 * surface(pc, welded)[0]:
                                 pick = None
                             if pick is None:
                                 decimated[2] += 1
