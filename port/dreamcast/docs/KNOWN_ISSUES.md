@@ -137,6 +137,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| In some big castle rooms with no fog, far walls can show as a black gap past the view distance (seen in one Disc 2 hall). Options > View distance > Full reduces it, for that boot only | test 27 | ⏸️ Stays as is for now, to protect speed | |
 | First area (r100) on a real console: some textures look white or mismatched up to the village gate, the path back from the dog trap and the two wooden cabins by the bridge show without textures, and the village gate is missing | test 23 | 🔍 Investigating, not blocking: we are checking each on Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | In the village, the wooden box under the grenade on the shelf by the shotgun is not drawn | test 23 | 🔍 Investigating, not blocking | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | Radio calls run slowly, and a white background shows as Leon lifts the radio | test 23 and earlier | 🔍 Investigating, not blocking: the call portraits are PS2 since Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
