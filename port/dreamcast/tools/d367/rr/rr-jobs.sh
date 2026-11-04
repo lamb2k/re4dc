@@ -72,7 +72,8 @@ disc3_jobs() {
     { echo "name d3-$r"; echo "room 0x${r#r}"
       if [ "$wf" != - ]; then grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'; else echo "jp 0"; echo "inv default"; echo "god"; fi
       echo "chapter $ch"; echo "census 200"; echo "alivelog 60"; } > "$EVU/fixtures/d3-$r.txt"
-    job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"")"
+    pad=""; if [ -f "$I5/warps/d3-$r-pad.txt" ]; then tr -d '\r' < "$I5/warps/d3-$r-pad.txt" > "$EVU/fixtures/d3-$r-pad.txt"; pad="--pad \"\$EVW\\fixtures\\d3-$r-pad.txt\""; fi
+    job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"" $pad)"
     echo -n "$r " >> "$W/d3-census-rooms.txt"
   done < "$I5/rooms.tsv"
   job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"
@@ -80,7 +81,8 @@ disc3_jobs() {
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" "$J/syms-d3a.txt"
     while read -r r ch wf g; do
       case "$r" in r3*) [ "$g" = 1 ] || continue ;; *) continue ;; esac
-      job 1 d3gca-$r "$(run d3gca-$r d3a d3a 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"")"
+      pad=""; [ -f "$EVU/fixtures/d3-$r-pad.txt" ] && pad="--pad \"\$EVW\\fixtures\\d3-$r-pad.txt\""
+      job 1 d3gca-$r "$(run d3gca-$r d3a d3a 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"" $pad)"
     done < "$I5/rooms.tsv"
   fi
 }
