@@ -33,7 +33,10 @@ out = dict(SHIP_R4PW=ship('ps2-world.r4pw'), SHIP_RC=ship('room.r4rc'), HAS_TC=s
 print(' '.join('%s=%s' % (k, shlex.quote(v)) for k, v in out.items()))
 PY
 )"
-    BAKE_TOOLS=$TOOLS bash "$TOOLS/d367/bakeall/post_room.sh" "$R" "$CONV/$R" "$SET" "${LIN[$R]}" "$SHIP_R4PW" "$PAK" "$HAS_TC" "$SHIP_RC" "$SG"
+    L=${LIN[$R]:-}   # rooms not listed: the recipe dir rc-<room>-64 of the n256all / blender25 / bakeall lanes
+    if [ -z "$L" ]; then for d in $N/rc-$R-64 $B/rc-$R-64 /root/probe/lanes/bakeall/rc/rc-$R-64; do [ -f $d/ps2-world.r4pw ] && { L=$d/ps2-world.r4pw; break; }; done; fi
+    [ -n "$L" ] || { echo "$R: no lineage R4PW" >&2; exit 1; }
+    BAKE_TOOLS=$TOOLS bash "$TOOLS/d367/bakeall/post_room.sh" "$R" "$CONV/$R" "$SET" "$L" "$SHIP_R4PW" "$PAK" "$HAS_TC" "$SHIP_RC" "$SG"
 done
 python3 "$TOOLS/d367/bakeall/geninc_bake.py" "$SET/cert-rows.txt" "$TOOLS/d367/texture_rect21/provenance_certificates.inc" \
     "$TOOLS/d367/texture_rect21/provenance_certificates_$TAG.inc" "$TOOLS/d367/texture_rect21/provenance_${TAG}_rooms.inc"
