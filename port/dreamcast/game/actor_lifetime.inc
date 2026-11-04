@@ -17,6 +17,14 @@ static unsigned re4dc_leon_hand_role(const cModel* m,const cModelInfo* info) {
     return 0;
 }
 #endif
+#if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC && defined(RE4DC_LEON_HAND_POSES) && RE4DC_LEON_HAND_POSES
+// MCHECK_LEONGC (world-ch5 11-03, test builds only): a role-binding decline 23 of the player names its info list
+// (defined at the end of this file).
+static void leongc_bind_dump(cModel*,unsigned,unsigned,unsigned,unsigned,const char*);
+#define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) leongc_bind_dump(m,a,pos,role,seen,path)
+#else
+#define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) ((void)0)
+#endif
 #if RE4DC_CROWD_CENSUS
 unsigned crowd_adopt_calls,crowd_adopt_ok,crowd_adopt_fail[4],crowd_archive_full,crowd_archive_unsupported,crowd_revokes,crowd_revoked_infos,crowd_readopt_ok,crowd_readopt_fail;
 #define CROWD_LIFE(stmt) stmt
@@ -596,25 +604,6 @@ bool adopt_memo(const cModelInfo* p,bool note) {
 }
 } }
 #endif
-#if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC && defined(RE4DC_LEON_HAND_POSES) && RE4DC_LEON_HAND_POSES
-// MCHECK_LEONGC (world-ch5 11-03, test builds only): the player's role-binding decline 23 names its info list once per
-// cause (bounded 16 lines): position, info, pData, whether it is the current right / left hand, its record role.
-static void leongc_bind_dump(cModel* m,unsigned appearance,unsigned pos,unsigned role,unsigned seen,const char* path) {
-    using namespace re4dc_material;using namespace life;
-    static unsigned lines;if(!pPL || m!=(cModel*)pPL || lines>=16u)return;
-    re4dc_log("LEONGC bind23 path=%s app=%u pos=%u role=%u seen=%x right=%p left=%p
-",path,appearance,pos,role,seen,
-              pPL->Body?(void*)pPL->Body->pRight:nullptr,pPL->Body?(void*)pPL->Body->pLeft:nullptr);++lines;
-    unsigned k=0;
-    for(auto* q=m->pModelInfo;q && lines<16u;q=q->pList,++k){auto* qi=find_info(q);unsigned rr=99;
-        if(qi)for(unsigned r=0;r<RE4DC_ROLE_COUNT;++r)if(RE4DC_ROLE(r).appearance==appearance && info_current(*qi,r)){rr=RE4DC_ROLE(r).role;break;}
-        re4dc_log("LEONGC bind23  %u info=%p data=%p hand=%u rec=%u role=%u
-",k,(void*)q,(void*)q->pData,re4dc_leon_hand_role(m,q),unsigned(qi!=nullptr),rr);++lines;}
-}
-#define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) leongc_bind_dump(m,a,pos,role,seen,path)
-#else
-#define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) ((void)0)
-#endif
 #if RE4DC_ACTOR_PLAN
 // ACTOR_PLAN: a successful re4dc_actor_role_bindings result for (model, appearance, count) is kept while the lifetime
 // serial stands (see RowMemo: the tables are unchanged). A reuse walks the model's info list again (the same infos in
@@ -867,3 +856,15 @@ extern "C" void re4dc_actor_stream_end(unsigned ticket,const void* p,unsigned by
     }
     // Retired during conversion: never resurrect a proof into a newer owner.
 }
+#if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC && defined(RE4DC_LEON_HAND_POSES) && RE4DC_LEON_HAND_POSES
+static void leongc_bind_dump(cModel* m,unsigned appearance,unsigned pos,unsigned role,unsigned seen,const char* path) {
+    using namespace re4dc_material;using namespace life;
+    static unsigned lines;if(!pPL || m!=(cModel*)pPL || lines>=16u)return;
+    re4dc_log("LEONGC bind23 path=%s app=%u pos=%u role=%u seen=%x right=%p left=%p\n",path,appearance,pos,role,seen,
+              pPL->Body?(void*)pPL->Body->pRight:nullptr,pPL->Body?(void*)pPL->Body->pLeft:nullptr);++lines;
+    unsigned k=0;
+    for(auto* q=m->pModelInfo;q && lines<16u;q=q->pList,++k){auto* qi=find_info(q);unsigned rr=99;
+        if(qi)for(unsigned r=0;r<RE4DC_ROLE_COUNT;++r)if(RE4DC_ROLE(r).appearance==appearance && info_current(*qi,r)){rr=RE4DC_ROLE(r).role;break;}
+        re4dc_log("LEONGC bind23  %u info=%p data=%p hand=%u rec=%u role=%u\n",k,(void*)q,(void*)q->pData,re4dc_leon_hand_role(m,q),unsigned(qi!=nullptr),rr);++lines;}
+}
+#endif
