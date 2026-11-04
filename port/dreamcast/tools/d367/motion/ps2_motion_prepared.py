@@ -116,6 +116,10 @@ def slot_map(a):
     return {int(x): int(y) for x, y in (p.split(':') for p in a.map.split(','))} if getattr(a, 'map', None) else {}
 
 
+def keep_gc(a):
+    return {int(x) for x in (getattr(a, 'keep_gc', None) or '').split(',') if x}
+
+
 def ps2_mapped(a):
     raw, ps2 = ps2_entries(a.iso, a.name)
     m = slot_map(a)
@@ -213,7 +217,7 @@ def rewrite(a):
         m = P.b[s:e]
         slots = P.slots_at(s)
         tag = P.tags[slots[0]] if slots else None
-        if tag not in (b'FCV\0', b'SEQ\0'):
+        if tag not in (b'FCV\0', b'SEQ\0') or (slots and set(slots) <= keep_gc(a)):
             new_members.append((s, e, m, None))
             continue
         assert all(P.tags[i] == tag for i in slots), 'mixed alias at %#x' % s
@@ -314,6 +318,8 @@ def verify(a):
         if t in (b'ESQ\0', b'NTR\0', b'MTC\0', b'\0\0\0\0'):
             continue
         no, oo = new.offs[i], old.offs[i]
+        if i in keep_gc(a):
+            t = b'kept'
         if t == b'FCV\0':
             want = ps2_fcv_host(ps2[i][1])
             row = new.mtc.get(no)
@@ -393,6 +399,8 @@ def main():
     for q in (p, v):  # purge-motion25: room archives (no container) and shifted PS2 entry order
         q.add_argument('--bare', action='store_true', help='a bare archive (st1/rNNN.arc), no DVD container')
         q.add_argument('--map', help='GC slot:PS2 entry,... for every FCV / SEQ slot (default: same index)')
+        q.add_argument('--keep-gc', help='FCV / SEQ slots (decimal, ...) the PS2 archive dropped: GC member kept, '
+                       'verified unchanged (world-ch334: r206 56,57,58 = the GC-only objects 0x34..0x3a)')
     a = ap.parse_args()
     if a.cmd == 'rewrite':
         rewrite(a)
