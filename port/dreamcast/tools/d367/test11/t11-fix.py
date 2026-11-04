@@ -2082,6 +2082,10 @@ if os.path.isfile(EM2DRES32D + '/RECIPE.txt'):
 CW32D = os.environ.get('CW32D', '/root/re4data/private/cw32-20261102')
 if os.path.isfile(CW32D + '/provenance.tsv'):
     DATA['cw32'] = {'tex': CW32D + '/tex'}
+    # tex: cw32tex-20261103 (lane world-ch4 11-03, combined build) = cw32's keys minus 4 that cgca34 / cgca27 stage with other bytes
+    _cwt = os.environ.get('CW32TEXD', '/root/re4data/private/cw32tex-20261103')
+    if os.path.isfile(_cwt + '/RECIPE.txt'):
+        DATA['cw32']['tex'] = _cwt + '/tex'
     for _f in sorted(Path(CW32D, 'st2').glob('*.dar')) + sorted(Path(CW32D, 'em').glob('*.drs')):
         DATA['cw32']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 PMCW32D = os.environ.get('PMCW32D', '/root/re4data/private/pmcw32-20261102')
