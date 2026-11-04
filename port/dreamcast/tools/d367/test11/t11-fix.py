@@ -2036,6 +2036,23 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
+# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
+# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
+# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261103')),
+               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
 # cw32 / pmcw32 (lane world-ch32 11-02, chapter 3-2 on Disc 2; DISC 2 ONLY via D2_DATA, after cpic26c): the 3-2 rooms r205
 # r209 r20a r20b and enemy archives em2d em23 em18 em22 from the PS2 version (worldch32/gen-all.sh, the castlegca26
 # method): PS2 objects, items, debris, pictures (loose keys), motion and PCM; pmcw32 = the PS2 motion store of the same
@@ -2067,23 +2084,22 @@ CPIC32D = os.environ.get('CPIC32D', '/root/re4data/private/cpic32-20261102')
 if os.path.isdir(CPIC32D):
     DATA['cpic32'] = {'dc/tex.pak': CPIC32D + '/dc/tex.pak'}
     PAK_DERIVED['cpic32'] = CPIC32D + '/pak-derived.json'
-# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
-CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
-if os.path.isdir(CPIC27D):
-    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
-    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
-# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
-# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
-# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
-# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
-for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
-               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
-    if os.path.isfile(_d + '/RECIPE.txt'):
-        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
-        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
-            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
-        if os.path.isdir(_d + '/dc/mot'):
-            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+# cgca32 / cpic32b (lane world-ch31 11-03, chapter 3-2 GC-ASSET for r20a / r20b; DISC 2 ONLY via D2_DATA, after cpic27):
+# cgca32 = pmcw32's st2/r205 r20a r20b .dar with the etc models the PS2 deleted from every ETM emptied (et1400 torch,
+# et0c00), r209's unchanged, each with its .arc (the catalog reads the .arc first), and Ashley's PS2 partner package for
+# r20a / r20b (ps2cast/ashley_reroom.py from the castle r201 one; PS2_ASHLEY_ROOMS). cpic32b = 5 tex.pak keys as PS2
+# pixels (em_eff_pics.py). Generator tools/d367/gca32/gen.sh. Stores: re4-assets-private/cgca32-20261103, cpic32b-20261103.
+CGCA32D = os.environ.get('CGCA32D', '/root/re4data/private/cgca32-20261103')
+if os.path.isfile(CGCA32D + '/RECIPE.txt'):
+    DATA['cgca32'] = {}
+    for _f in sorted(Path(CGCA32D, 'st2').glob('*.dar')) + sorted(Path(CGCA32D, 'st2').glob('*.arc')):
+        DATA['cgca32']['st2/' + _f.name] = str(_f)
+    for _f in sorted(Path(CGCA32D, 'dc', 'native').glob('r*/partner.re4nmr')):
+        DATA['cgca32']['dc/native/%s/partner.re4nmr' % _f.parent.name] = str(_f)
+CPIC32BD = os.environ.get('CPIC32BD', '/root/re4data/private/cpic32b-20261103')
+if os.path.isdir(CPIC32BD):
+    DATA['cpic32b'] = {'dc/tex.pak': CPIC32BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic32b'] = CPIC32BD + '/pak-derived.json'
 
 # cgca27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA, after pmcgca27): the chapter 3-1 rows world-ch31 left, PS2-dropped
 # the way the PS2 dropped them: st2/r203.dar ETM et1400.bin (GC torch model, le_mirror(GC r10c)) emptied (the PS2 r203.dat
