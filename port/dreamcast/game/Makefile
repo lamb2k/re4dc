@@ -1584,6 +1584,17 @@ $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/moti
 # IO_ALIGNED=1 (door load U2, design-doorload): native static packages read whole into their
 # aligned storage the same way (one stream + tail) instead of a misaligned body read.
 MOTION_FAST_READ ?= 0
+# MOTION_KEY_INDEX=1 (lane playreads 2026-11-04, default 0 = image unchanged; =2 adds a byte check of the first 64 keys,
+# test only): motion keys open by disc extent from a one-time index of /cd/dc/mot instead of a directory walk per key
+# (platform/native_motion.cpp motidx; KOS fs_iso9660 gets kos-804b319-iso-open-extent.patch). Needs MOTION_FAST_READ=1
+# and KOS_DISC_FIX=1 (the patched fs_iso9660 copy).
+MOTION_KEY_INDEX ?= 0
+ifneq ($(MOTION_KEY_INDEX),0)
+ifneq ($(MOTION_FAST_READ),1)
+$(error MOTION_KEY_INDEX needs MOTION_FAST_READ=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_KEY_INDEX=$(MOTION_KEY_INDEX)
+endif
 IO_ALIGNED ?= 0
 # MOTION_READ_FAULT_TEST=<n> (test only, default 0): the first read of every <n>th motion key miss reports short, so
 # the motion key read retry runs in Flycast (which never fails a GD read).
@@ -1993,9 +2004,15 @@ $(KOSFIX)/fs_iso9660.c: $(KOS_BASE)/kernel/arch/dreamcast/fs/fs_iso9660.c $(KOS_
 ifeq ($(DISC_PIO_FALLBACK),1)
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-fs < $(KOS_PATCHES)/kos-804b319-iso-pio-retry.patch
 endif
+ifneq ($(MOTION_KEY_INDEX),0)
+	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-fs < $(KOS_PATCHES)/kos-804b319-iso-open-extent.patch
+endif
 	cp $(KOSFIX)/p-fs/kernel/arch/dreamcast/fs/fs_iso9660.c $@
 ifeq ($(DISC_PIO_FALLBACK),1)
 $(KOSFIX)/fs_iso9660.c: $(KOS_PATCHES)/kos-804b319-iso-pio-retry.patch
+endif
+ifneq ($(MOTION_KEY_INDEX),0)
+$(KOSFIX)/fs_iso9660.c: $(KOS_PATCHES)/kos-804b319-iso-open-extent.patch
 endif
 # kos-804b319-cdrom-dma-done.patch (lane discread 10-15, the LinkOrder console stops): a GD DMA read that the BIOS
 # reported completed straight away left a DMA completion to be signalled later, which ended the NEXT DMA wait before its

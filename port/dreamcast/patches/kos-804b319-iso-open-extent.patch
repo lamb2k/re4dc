@@ -1,0 +1,92 @@
+--- a/kernel/arch/dreamcast/fs/fs_iso9660.c
++++ b/kernel/arch/dreamcast/fs/fs_iso9660.c
+@@ -581,12 +581,16 @@
+     bool broken;                /* True if the CD has been swapped out since open */
+     size_t stream_part;         /* Stream DMA part of 32 bytes */
+     uint8_t alignas(32) stream_data[32];
++    uint32_t last_extent;       /* RE4DC: extent of the entry iso_readdir returned last */
+ } iso_fd_t;
+ 
+ static TAILQ_HEAD(iso_fd_queue, iso_fd) iso_fd_queue;
+ 
+ static iso_fd_t *stream_fd = NULL;
+ 
++/* RE4DC: bumped by every iso_reset (disc change), so a cached extent index knows it is stale. */
++static unsigned iso_generation;
++
+ /* Break all of our open file descriptor. This is necessary when the disc
+    is changed so that we don't accidentally try to keep on doing stuff
+    with the old info. As files are closed and re-opened, the broken flag
+@@ -1033,6 +1037,7 @@
+         fd->dirent.attr = 0;
+     }
+ 
++    fd->last_extent = iso_733(de->extent);
+     fd->ptr += de->length;
+ 
+     return &fd->dirent;
+@@ -1073,6 +1078,7 @@
+ }
+ 
+ static void iso_reset_locked(void) {
++    ++iso_generation;
+     iso_break_all();
+     bclear();
+     iso_abort_stream();
+@@ -1309,3 +1315,56 @@
+ 
+     nmmgr_handler_remove(&vh.nmmgr);
+ }
++
++/* RE4DC (game MOTION_KEY_INDEX, lane playreads 2026-11-04): open a file by its extent, with no directory walk.
++   The caller indexes a directory once (fs_readdir + fs_iso9660_last_extent) and opens its files by extent; the
++   handle is an ordinary iso_fd_t (same reads, streams and close). A disc change (iso_reset) bumps the generation, and
++   an open with a stale generation fails, so the caller re-indexes. */
++uint32_t fs_iso9660_last_extent(file_t f) {
++    iso_fd_t *fd;
++    if(fs_get_handler(f) != &vh) return 0;
++    fd = (iso_fd_t *)fs_get_handle(f);
++    return fd ? fd->last_extent : 0;
++}
++
++unsigned fs_iso9660_generation(void) {
++    return iso_generation;
++}
++
++file_t fs_iso9660_open_extent(uint32_t extent, uint32_t size, unsigned generation) {
++    iso_fd_t *fd;
++    file_t f;
++
++    {
++        mutex_lock_scoped(&iso_mutex);
++
++        if(!percd_done || generation != iso_generation || !extent) {
++            errno = ENOENT;
++            return FILEHND_INVALID;
++        }
++
++        fd = aligned_alloc(32, sizeof(*fd));
++        if(!fd) {
++            errno = ENOMEM;
++            return FILEHND_INVALID;
++        }
++
++        *fd = (iso_fd_t){
++            .first_extent = extent,
++            .dir = false,
++            .size = size,
++            .broken = false,
++            .stream_part = 0,
++            .stream_data = {0},
++            .last_extent = 0,
++        };
++
++        TAILQ_INSERT_TAIL(&iso_fd_queue, fd, next);
++    }
++
++    f = fs_open_handle(&vh, fd);
++    if(f == FILEHND_INVALID)
++        iso_close(fd);
++
++    return f;
++}

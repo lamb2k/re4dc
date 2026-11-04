@@ -239,9 +239,103 @@ unsigned aligned(unsigned n) { return (n+31)&~31U; }
 // <32-byte tail is then read through the block cache after a seek moves the fd off the
 // stream (KOS's own sub-32-byte stream request is the one that never returns, R4_5A).
 // Returns bytes read, -1 on open/size failure, -2 when dst is not 32-byte aligned.
+#if defined(RE4DC_MOTION_KEY_INDEX) && RE4DC_MOTION_KEY_INDEX
+// MOTION_KEY_INDEX=1 (lane playreads 2026-11-04; needs KOS_DISC_FIX=1, game30.mk): a key open by name walks the
+// dc/mot directory (450+ entries, ~13 sectors) through fs_iso9660's small block cache, which other opens keep evicting:
+// a cold key open cost 180-282 ms in play (r11e, r202; Flycast meter), the read itself < 1 ms. The directory is read
+// once (fs_readdir; the patched fs_iso9660 hands each entry's extent: kos-804b319-iso-open-extent.patch) into a
+// sorted (crc, fnv) -> (extent, size) table, and keys open by extent (an ordinary fs handle: same reads and streams).
+// The mounted disc's own directory is indexed, so Disc 1 and Disc 2 each get theirs; a disc change (iso_reset bumps the
+// generation) re-indexes. A key the table lacks, or a failed open, takes the name open as before. =2 also reads each of
+// the first 64 indexed keys by name and compares the bytes (test only: "motion key index verify" lines).
+extern "C" uint32_t fs_iso9660_last_extent(file_t f);
+extern "C" unsigned fs_iso9660_generation(void);
+extern "C" file_t fs_iso9660_open_extent(uint32_t extent, uint32_t size, unsigned generation);
+namespace motidx {
+struct Ent { unsigned crc, fnv, extent, size; };
+Ent* ents; unsigned count, gen, builds, hits, misses, stale;
+bool built;
+bool hex8(const char* s, unsigned& v) {
+    v=0;for(int i=0;i<8;++i){const char c=s[i];unsigned d;
+        if(c>='0'&&c<='9')d=unsigned(c-'0');else if(c>='a'&&c<='f')d=unsigned(c-'a'+10);
+        else if(c>='A'&&c<='F')d=unsigned(c-'A'+10);else return false;v=v*16+d;}
+    return true;
+}
+bool parse(const char* s, unsigned& crc, unsigned& fnv) {   // "<8 hex>-<8 hex>.fcv"
+    return hex8(s,crc) && s[8]=='-' && hex8(s+9,fnv) && s[17]=='.';
+}
+bool less(const Ent& a, const Ent& b) { return a.crc!=b.crc ? a.crc<b.crc : a.fnv<b.fnv; }
+void build() {
+    const std::uint64_t t0=timer_us_gettime64();
+    std::free(ents);ents=nullptr;count=0;built=true;++builds;
+    const file_t d=fs_open("/cd/dc/mot",O_RDONLY|O_DIR);
+    if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot\n");return; }
+    gen=fs_iso9660_generation();
+    unsigned n=0,c,f;
+    while(const dirent_t* de=fs_readdir(d)) if(!(de->attr&O_DIR) && parse(de->name,c,f))++n;
+    fs_rewinddir(d);
+    ents=n?static_cast<Ent*>(std::malloc(n*sizeof(Ent))):nullptr;
+    if(ents) {
+        while(count<n) {
+            const dirent_t* de=fs_readdir(d);if(!de)break;
+            if((de->attr&O_DIR) || !parse(de->name,c,f))continue;
+            Ent e{c,f,fs_iso9660_last_extent(d),unsigned(de->size)};
+            unsigned j=count++;                        // insertion sort: the directory is nearly sorted already
+            while(j && less(e,ents[j-1])) { ents[j]=ents[j-1];--j; }
+            ents[j]=e;
+        }
+    }
+    fs_close(d);
+    re4dc_log("motion key index: keys=%u bytes=%u gen=%u build=%u us=%u\n",count,unsigned(count*sizeof(Ent)),gen,builds,
+              unsigned(timer_us_gettime64()-t0));
+}
+const Ent* find(unsigned crc, unsigned fnv) {
+    unsigned lo=0,hi=count;
+    while(lo<hi) { const unsigned m=(lo+hi)/2;const Ent& e=ents[m];
+        if(e.crc==crc && e.fnv==fnv)return &e;
+        if(e.crc<crc || (e.crc==crc && e.fnv<fnv))lo=m+1;else hi=m; }
+    return nullptr;
+}
+file_t open(const char* path) {
+    unsigned crc,fnv;
+    if(std::strncmp(path,"/cd/dc/mot/",11) || !parse(path+11,crc,fnv))return FILEHND_INVALID;
+    if(!built || gen!=fs_iso9660_generation())build();
+    const Ent* e=find(crc,fnv);
+    if(!e) { ++misses;return FILEHND_INVALID; }
+    const file_t f=fs_iso9660_open_extent(e->extent,e->size,gen);
+    if(f==FILEHND_INVALID) { ++stale;built=false;return FILEHND_INVALID; }   // disc changed: re-index next time
+    ++hits;
+#if RE4DC_MOTION_KEY_INDEX >= 2
+    static unsigned checked;
+    if(checked<64) {
+        ++checked;
+        unsigned char* a=static_cast<unsigned char*>(std::malloc(e->size+e->size));
+        const file_t g=fs_open(path,O_RDONLY);
+        int same=-1;
+        if(a && g!=FILEHND_INVALID) {
+            const ssize_t na=fs_read(f,a,e->size), nb=fs_read(g,a+e->size,e->size);
+            same=na==ssize_t(e->size) && nb==na && !std::memcmp(a,a+e->size,e->size);
+            fs_seek(f,0,SEEK_SET);
+        }
+        if(g!=FILEHND_INVALID)fs_close(g);
+        std::free(a);
+        re4dc_log("motion key index verify: key=%08x-%08x extent=%u size=%u gen=%u %s\n",crc,fnv,e->extent,e->size,gen,
+                  same==1?"same":same==0?"DIFFERENT":"unread");
+    }
+#endif
+    if((hits&63)==1)re4dc_log("motion key index: hits=%u misses=%u stale=%u builds=%u\n",hits,misses,stale,builds);
+    return f;
+}
+}
+#endif
 int fast_key_read(const char* path, unsigned char* dst, unsigned size) {
     if(reinterpret_cast<std::uintptr_t>(dst)&31U)return -2;
+#if defined(RE4DC_MOTION_KEY_INDEX) && RE4DC_MOTION_KEY_INDEX
+    file_t f=motidx::open(path);
+    if(f==FILEHND_INVALID)f=fs_open(path,O_RDONLY);
+#else
     const file_t f=fs_open(path,O_RDONLY);
+#endif
     if(f==FILEHND_INVALID)return -1;
     if(fs_total(f)!=ssize_t(size)) { fs_close(f);return -1; }
     const unsigned body=size&~31U;unsigned got=0;
