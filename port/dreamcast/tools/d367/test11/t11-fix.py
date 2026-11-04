@@ -2102,8 +2102,8 @@ DATA['islmerch'].update({'dc/tex/%s/%s.re4tex' % (k[0], k): ISLMERCHD + '/dc/tex
 # isltex (lane island-interiors 11-03, Disc 3 only via D3_DATA): 11 loose keys the island census reported missing (TEXCHK)
 # because dcf3pak replaces Disc 1's pack: r333 / r332 / r330 PS2 effect pictures (ch5tex ps2lib-st3 effects-tex/r330:
 # 457e4015 68b5bde3 7e1949f0 923fb19e a6640aee af4f7edd b7d6fb40 d20b5e0e e600fd43), core.das 10b29a01 (7x10, r333 /
-# r332) and em23 3d9d333a (128x128, r30a). The last two are GameCube-derived pictures (ch3regen emtex), GC-ASSET rows
-# until a PS2 source is found. Store: re4-assets-private/isltex-20261103 (keys.txt).
+# r332) and em23 3d9d333a (128x128, r30a). All PS2: those two are PS2 Core.dat EFF #25 id 0xbb and em23.dat TPL 4 image 0
+# under the GC keys (fx_ps2_pack PAL4; SOURCES.txt). Store: re4-assets-private/isltex-20261103 (keys.txt).
 ISLTEXD = os.environ.get('ISLTEXD', '/root/re4data/private/isltex-20261103')
 DATA['isltex'] = {'dc/tex/%s/%s.re4tex' % (k[0], k): ISLTEXD + '/dc/tex/%s/%s.re4tex' % (k[0], k)
                   for k in open(ISLTEXD + '/keys.txt').read().split()} if os.path.exists(ISLTEXD + '/keys.txt') else {}
