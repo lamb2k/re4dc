@@ -1,0 +1,3 @@
+#!/bin/sh
+# KOS_CCPLUS under RE4DC_CCACHE=1 (port/dreamcast/kos-env.sh): the real sh-elf-g++ through the shared ccache.
+exec ccache "${RE4DC_REAL_CCPLUS:?}" "$@"
