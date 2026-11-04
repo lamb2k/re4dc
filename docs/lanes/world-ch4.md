@@ -75,3 +75,20 @@ r22c (castle hub, doors to r204 r211 r220 r305 r31d) is reachable from r211 / r2
 - em/em11.drs, em/em18.drs, em/em2d.drs, em/em29.drs (c4gca and pmc4gca) and their dc/mot keys (pmc4gca).
 - st2/r22c.dar (c4gca), dc/native/r22c/ps2-world.* (c4world): r22c is the castle hub, also reached from r204.
 - Loose picture keys in c4gca/tex and c4world/tex may coincide with chapter 3 keys (same PS2 pictures).
+
+## Round 3 (2026-11-03)
+- Merged origin/t15/int b96604624 (b4424c81e). d2noarc is now the last D2_DATA set.
+- c4sky (688d5ece8): PS2 sky panoramas for the 17 chapter 4 rooms with sky rows (ps2_sky_bake.py v2 on the sky27
+  extract, 1024x128 like sky27h, 34,816 B VRAM a room). The 9 others have no sky row (clear colour). CH-FIXES row 9.
+- d2esl (594b953a3): castle-d2-j etc/emleon05..09.esl are raw GameCube big-endian (03/04 are LE) and Disc 2 took them
+  through castle_fixture.py, so every chapter 4 list enemy (emleon05) was refused. le_mirror.py output, byte-identical
+  to island-esl-20261103. Disc 1 also carries the big-endian emleon05 but never loads it.
+- Texture key collisions (704c1f117, 474d4a300): 8 c4world keys the castle tree has as smaller palettized copies, 13
+  c4gca keys cgca26 / cgca27 stage with other bytes. c4wtex / c4gtex-20261103 drop them; whole-D2_DATA audit 0.
+- Disc 2 does not fit: 525,102 data sectors (mkdcdisc 525,649) against 504,000 usable sectors in the GD-ROM
+  high-density zone (mkdisc2.py limit, mkdcdisc message). 549,150 is the zone's end LBA, not usable space.
+  The chapter 4 sets add 102,484 sectors (unique paths): 4-1 39,362, 4-2 9,528, 4-3 9,105, 4-4 12,635, r22c 2,496,
+  enemy archives 19,412, pictures 8,869, motion 1,077. Chapters 3-2..3-4 (world-ch32 / ch334) are not in this count.
+  Proposal: chapter 4 on Disc 3 (swap at the 3-4 end, r206 door 7 -> r210, a SceSetChapterEnd save point), Disc 2 =
+  chapter 3. A 4-3 / 4-4 only move frees ~21,740 room sectors, 640 over the need, before chapter 3's growth.
+- Gates: not run (Disc 2 arm cannot master while over the limit).
