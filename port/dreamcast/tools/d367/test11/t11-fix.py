@@ -1989,6 +1989,15 @@ if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
     for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
         DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
+# em14lc (lane castlebudget 11-04, DISC 2 ONLY via D2_DATA, after cgca26 / pmcgca26): em/em14.drs (the castle zealots,
+# r20f / r204) with its motion streamed cold: prepare_enemy_motions.py (all-cold hot audit, textures already on Disc 2),
+# cgca26's sound bank, PS2 BINs (ps2_ganado_bins.py), PS2 em14.dat motion (ps2_motion_prepared.py rewrite, VERIFY PASS)
+# + its 133 dc/mot keys. Body 3,884,384 -> 1,452,640 B: cgca26's copy never fit r20f / r204 heap 4 (DVD: Memory allocate
+# failed on em/em14.drs, rr 1104-0628). Generator tools/d367/castlebudget/em14p.sh. Store: re4-assets-private/em14lc-20261104.
+EM14LCD = os.environ.get('EM14LCD', '/root/re4data/private/em14lc-20261104')
+if os.path.isfile(EM14LCD + '/RECIPE.txt'):
+    DATA['em14lc'] = {'em/em14.drs': EM14LCD + '/em/em14.drs'}
+    DATA['em14lc'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (EM14LCD, _k) for _k in sorted(os.listdir(EM14LCD + '/dc/mot'))})
 # cpic26 (lane castle-gca-26 11-02, no-GameCube-assets rule; DISC 2 ONLY via D2_DATA, after pmcgca26): dc/tex.pak = the
 # Disc 2 composed pack with 5 castle enemy / r201 pictures as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes
 # and formats kept). castle_fixture merges it over its composed pack. Store: re4-assets-private/cpic26-20261102.
