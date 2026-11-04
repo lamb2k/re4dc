@@ -1656,12 +1656,12 @@ DATA['lod27'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (LOD27D, r, 
                  for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
                  if os.path.exists('%s/dc/native/%s/%s' % (LOD27D, r, f))}
 # scan1 (lane roomscan 11-03, render only; needs WORLD_BAKE=3, never KSETS; user look call "halving the detail of
-# expensive rooms"): tools/d367/roomscan plans applied to r10e r107 r11d r111 r119 r108 r117 r11e r103 (r109 out: its R4SG strip-group step fails on the rebuilt mesh) (coarser LOD
+# expensive rooms"): tools/d367/roomscan plans applied to r11d r111 r119 r11e (the rooms that gained in the 11-03 MODELLED A/B; r103 r10e r108 r107 r117 r109 out, re-planned later with mesh size in the cost) (coarser LOD
 # levels where the heap allows, distance caps per 8 m cell); sidecars regenerated (lod27/post_lod.sh). Store copy:
 # re4-assets-private/scan1-20261103.
 SCAN1D = os.environ.get('SCAN1D', '/root/re4data/private/scan1-20261103')
 DATA['scan1'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (SCAN1D, r, f)
-                 for r in ('r10e', 'r107', 'r11d', 'r111', 'r119', 'r108', 'r117', 'r11e', 'r103')
+                 for r in ('r11d', 'r111', 'r119', 'r11e')
                  for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
                  if os.path.exists('%s/dc/native/%s/%s' % (SCAN1D, r, f))}
 # ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
