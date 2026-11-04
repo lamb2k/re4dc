@@ -698,9 +698,9 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
     // A registry appearance has exactly its descriptor's sections, in source info order.
     const unsigned registry_sections=re4dc_registry_sections(appearance);
     if(!m || !out || (registry_sections?count!=registry_sections:
-       (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(RE4DC_LEON_WOUND && appearance==267)?count!=10u:(count<4u || count>5u || (appearance==0 && count!=4u)))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+       (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(RE4DC_LEON_WOUND && appearance==267)?count!=10u:(RE4DC_LEON_WOUND && appearance==268)?count!=8u:(count<4u || count>5u || (appearance==0 && count!=4u)))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
 #else
-    if(!m || !out || (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(RE4DC_LEON_WOUND && appearance==267)?count!=10u:(count<4u || count>5u || (appearance==0 && count!=4u))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+    if(!m || !out || (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(RE4DC_LEON_WOUND && appearance==267)?count!=10u:(RE4DC_LEON_WOUND && appearance==268)?count!=8u:(count<4u || count>5u || (appearance==0 && count!=4u))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
 #endif
     unsigned seen=0,n=0;for(unsigned k=0;k<count;++k)out[k]=nullptr;
 #if RE4DC_ACTOR_PL08
@@ -731,6 +731,9 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
         if(unsigned hand=re4dc_leon_hand_role(m,p)) {
 #if RE4DC_LEON_HEADLESS
             if(appearance==265)--hand;  // LEON_HEADLESS: 0x109's compact roles 4 / 5 are the right / left hands
+#if RE4DC_LEON_WOUND
+            if(appearance==268)--hand;  // LEON_WOUND: 0x10C keeps 0x109's hand roles 4 / 5
+#endif
 #endif
             if(hand>=count || (seen&(1u<<hand))){LEONGC_BIND_DUMP(m,appearance,n-1,hand,seen,"hand");ATD(m,23,appearance,(n-1)*256+hand);return 0;}
             out[hand]=p;seen|=1u<<hand;continue;
@@ -770,7 +773,7 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
 #if RE4DC_LEON_HAND_POSES
         // LEON_HAND_POSES: Leon's roles may appear in any source order (a hand swap re-appends its info at the end).
         const bool order_ok=(appearance==256 || appearance==264 || (RE4DC_LEON_HEADLESS && appearance==265) ||
-                            (RE4DC_LEON_WOUND && appearance==267)) || role==expected;
+                            (RE4DC_LEON_WOUND && (appearance==267 || appearance==268))) || role==expected;
 #else
         const bool order_ok=role==expected;
 #endif

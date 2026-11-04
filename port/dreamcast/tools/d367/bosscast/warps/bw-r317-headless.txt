@@ -1,0 +1,13 @@
+name bw-r317-headless
+# bosscast-wound 11-04: wounded Leon made headless at room frame 300 (setHead(0), the kill deaths model swap), census of 0x10C; camera in front from 400.
+room 0x317
+pos -8209 -5100 167
+ang -0.2820
+inv default
+scenario 0 0x20
+god
+headless 300
+camfront 400 1200 1300
+chapter 16
+census 200
+alivelog 60

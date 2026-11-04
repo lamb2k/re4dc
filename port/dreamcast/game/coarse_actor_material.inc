@@ -94,6 +94,7 @@ inline bool source_appearance_type(unsigned appearance,unsigned id,unsigned type
 #endif
 #if RE4DC_LEON_WOUND
     if(appearance==0x10B)return id==0 && type==0;  // LEON_WOUND: pl08 with the wound overlay, proved by the 0x10B rows
+    if(appearance==0x10C)return id==0 && type==0;  // LEON_WOUND: headless and wounded, proved by the 0x10C rows
 #endif
 #endif
     static const unsigned char types[5]={1,0,3,4,11};
@@ -339,11 +340,20 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     unsigned expected=1;
 #if RE4DC_LEON_HEADLESS
     // LEON_HEADLESS: 0x109's role 3 is the neck (setHead(0) adds it plain: no shape bit).
+#if RE4DC_LEON_WOUND
+    // LEON_WOUND: 0x10C (headless + wounded): role 3 the neck (no shape bit), role 7 the wound (plain, no second-pass bit).
+    if(RE4DC_LEON_LIKE(row.appearance) && row.role==3 && row.appearance!=0x109u && row.appearance!=0x10Cu)expected|=2;
+#else
     if(RE4DC_LEON_LIKE(row.appearance) && row.role==3 && row.appearance!=0x109u)expected|=2;
+#endif
 #else
     if(RE4DC_LEON_LIKE(row.appearance) && row.role==3)expected|=2;
 #endif
+#if RE4DC_LEON_WOUND
+    if(RE4DC_LEON_LIKE(row.appearance) && row.role==7 && row.appearance!=0x10Cu)expected|=0x40;
+#else
     if(RE4DC_LEON_LIKE(row.appearance) && row.role==7)expected|=0x40;
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && (RE4DC_ROUTE_CH22 || RE4DC_ROUTE_CH23 || RE4DC_NMR_MERCHANT)
     // The source merchant explicitly gives its robe and selected coat their own material color.
     // Exact source-role ownership was proved before info(); all color/modifier
@@ -492,7 +502,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     armor_rows=registry && (m->id==0x3cu || m->id==0x25u);
 #endif
     if(registry ? !re4dc_registry_model(m,p) :
-       ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:RE4DC_LEON_WOUND && p->appearance==0x10Bu?10u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
+       ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:RE4DC_LEON_WOUND && p->appearance==0x10Bu?10u:RE4DC_LEON_WOUND && p->appearance==0x10Cu?8u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
         (!leon && !RE4DC_HEAD_APP(p->appearance) && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)) ||
         (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type)))) {
         out.error=Error::UnknownAppearance;return out;
@@ -512,7 +522,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
        !room_colour_scale(gxCsScale[m->TevScaleGroup],!leon || RE4DC_ACTOR_LEON_NATIVE_LOOK) ||
        m->AddAmb_r || m->AddAmb_g || m->AddAmb_b) {out.error=Error::LiveModifier;return out;}
 #else
-    if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:RE4DC_LEON_WOUND && p->appearance==0x10Bu?10u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
+    if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:RE4DC_LEON_WOUND && p->appearance==0x10Bu?10u:RE4DC_LEON_WOUND && p->appearance==0x10Cu?8u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
        (!leon && !RE4DC_HEAD_APP(p->appearance) && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)) ||
        (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type))) {
         out.error=Error::UnknownAppearance;return out;
