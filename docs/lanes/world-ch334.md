@@ -46,3 +46,38 @@ GC-ASSET lists. KOS squeeze, GDEMU and Disc 1 identity ride the same rr Disc 2 c
 - Ashley's section has no warp key for pl_type 1: the play-through reaches it from the r206 s00 save.
 - Route 3-3 -> 3-4: r20b (end 3-2 save) -> r20c -> r20f -> r20d -> r206 (s00, end 3-3) -> Ashley: r20d -> r20e -> r20d
   -> r206 (s20, end 3-4). Door order from the GC/PS2 tables, to confirm in the play-through.
+
+## rr cycle 1103-1811-e5635d31 (lane tools; Flycast 60 s warps; Disc 2 census 12/12 rooms)
+Run from a lane copy of /root/rr/bin with this branch's rr-jobs.sh / rr-judge.py / rr-disc2.sh (the installed bin lists
+only the 3-1 rooms). Evidence E:\RE4DC-Lanes\world-ch334\rr\1103-1811-e5635d31. Disc cache on E: (RE4DC_DISCCACHE) when
+RR_EBASE is on E: (hard links cannot cross drives: cycle 1103-1322 failed on that).
+
+| Room | CAST-GC | LEON-GC | TEXCHK | VRAM no-contig | HALT/FAULT | cap peak | GC-ASSET (d2gca) |
+|---|---|---|---|---|---|---|---|
+| r20c | PASS | PASS | PASS | 0 | none | 0 | 0 unreviewed |
+| r20f | PASS | PASS | PASS | 0 | none | 0 | 0 unreviewed |
+| r206 | PASS | PASS | FAIL (no coverage) | 0 | none | 0 | 0 unreviewed (stalled) |
+| r20d | FAIL: em19 drawn GC (4200 parts, no PS2 cast plan / registry) | PASS | PASS | 0 | none | 2 | 0 unreviewed |
+| r20e | PASS | PASS | FAIL: 3 keys open failed (3f0e6e6e-095478dd, b8a23b61-838818fa, f8da1db6-59ba93ae, 512x256 fmt 6; on no store, not on disc) | 0 | none | 0 | 0 unreviewed |
+
+Disc-wide rows: build + disc_lint PASS; KOS 48 KiB PASS (min headroom 31480; door/fight segments are the 3-1 ones);
+GDEMU race PASS; Disc 1 rows PASS. GC-ASSET FAIL is r203 only (3-1: 72be589c-3bbd0657 + GC model rows), not this lane.
+
+- r206 stalls at room set-up: FPS 0.3 from frame ~183, KOS free falling 116984 -> 101984, no refusals (same shape as
+  the 3-2 r205 stall). TEXCHK and GC-ASSET have no real coverage there.
+- Size: Disc 2 data_sectors 454695 (was 454689 before 3-3/3-4); cgca34 mostly replaces castle-content files in place.
+  Limit: disc_lint.py HD_END = LBA 549150 (end of the GD-ROM high-density area; track 3 starts at LBA 45000), so about
+  504150 data sectors; mkdisc2.py reports it as limit 504000. Headroom ~49300 sectors (~96 MB). Fits; no split needed.
+- 8 cgca34 tex keys are not on the disc (PRIOR_TEX / pack drops; 26 of 34 staged files identical): to check against r20e.
+
+## CH-FIXES-CARRY status (3-3 / 3-4 rooms)
+- 1/2 PS2 assets + motion: cgca34 / pmcgca34 staged; d2gca 0 unreviewed for all 5 rooms (r206 window stalled).
+- 3 CAST-GC: OPEN r20d em19 (Zealot) drawn GC. LEON-GC PASS.
+- 5 spawn/cap: PS2_CH3_ENEMY hold-only; peaks <= 4.
+- 6 PCCULL: GAP, every room "cell=-1" (no cell).
+- 8 KOS: PASS on the 3-1 segments; no 3-3/3-4 door segment yet.
+- 9 sky: interiors, no rows needed.
+- 10 R4TC: GAP, no ps2-world.r4tc for these rooms.
+- 11 lighting: on program-wide. 12/13/14 effects/fire/sound: from cgca34 (banks PS2); effect census PASS.
+- 15 VRAM residency: evicted 0, no-contig 0; resident lists not made.
+- 17 TEXCHK: OPEN r20e (3 keys), r206 (stall).
