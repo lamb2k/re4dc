@@ -2073,7 +2073,7 @@ if os.path.isdir(ISND300D):
 # drawn from GameCube data. bossk = r31c Krauser: the room registry package (model-registry/ps2-ch5-r31ck.json: em39 types 1 / 2
 # with every hand / death info, cap, knife / gun / bow / arrow, plus the gunship em3a and its missile that the island tree's
 # cast16 r31c package held) + its 9 PS2 pictures loose + em/em39.drs with PS2 motion (motion/ps2_motion_prepared.py, slot map
-# GC i -> PS2 i+1 from 229; VERIFY PASS) and its 4 new dc/mot keys. bosss = r332 Saddler: the room registry package
+# GC i -> PS2 i+1 from 229; --clip-limit 131072: the 13 clips over 32 KiB stream cold; VERIFY PASS) and its 17 dc/mot keys; needs the program knob MOTION_LARGE_EM39=1 (Disc 3 D3REC). bosss = r332 Saddler: the room registry package
 # (model-registry/ps2-ch5-r332s.json: em31 types 0 / 1, weak point, tail) + its 5 PS2 pictures. em31 / em3a motion is already
 # PS2-identical (rewrite: 0 changed clips). Stores: re4-assets-private/bossk-20261103, bosss-20261103 (RECIPE.txt, manifest.tsv).
 for _n, _d in (('bossk', os.environ.get('BOSSKD', '/root/re4data/private/bossk-20261103')),

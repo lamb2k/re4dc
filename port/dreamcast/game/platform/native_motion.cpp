@@ -234,6 +234,16 @@ unsigned aligned(unsigned n) { return (n+31)&~31U; }
 // Called only after the common MTC/REL extents are validated. Legacy v2 stays at 32 KiB.
 unsigned v2_clip_limit(const unsigned char* a,unsigned bytes,unsigned rel,const unsigned char* mtc) {
     if(word(mtc+28)==kClipLimit)return kClipLimit;
+#if defined(RE4DC_MOTION_LARGE_EM39) && RE4DC_MOTION_LARGE_EM39
+    // em39 (Krauser, lane bosscast 11-03): the bossk archive with PS2 motion and its 13 clips over 32 KiB streamed cold
+    // (motion/ps2_motion_prepared.py rewrite --clip-limit 131072; hot set em39-r31c kept). Largest clip 65,440 B.
+    if(word(mtc+28)==131072u && bytes==877632u && word(mtc+12)==167u && word(mtc+20)==0xdcafeb63u &&
+       word(a+rel)==64u && word(a+rel+28)==0xdc000001u && word(a+rel+32)==52u) {
+        bool clean=true;
+        for(unsigned i=1;i<16;++i)if(i!=7u && i!=8u && word(a+rel+4*i))clean=false;
+        if(clean && net_crc32le(a,bytes)==0xa3a2893du)return 131072u;
+    }
+#endif
     if(word(mtc+28)!=131072u || bytes!=1132416u || word(mtc+12)!=98u ||
        word(mtc+20)!=0x0a5bdee5u || word(a+rel)!=77u ||
        word(a+rel+28)!=0xdc000001u || word(a+rel+32)!=52u)return 0;
