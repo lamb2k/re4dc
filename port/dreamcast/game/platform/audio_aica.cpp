@@ -1627,9 +1627,28 @@ void* audio_main(void*)
 // while game threads open and read other files made every later fs_open fail
 // (b1 capture). Unaligned, KOS reads through its sector cache instead.
 u8 g_strStack[6 * 1024] __attribute__((aligned(8), unused));   // unused without AICA_STREAMS
+#if defined(RE4DC_AICA_STR_READ) && RE4DC_AICA_STR_READ
+// AICA_STR_READ (lane playreads, 11-03; Makefile): the refill reads whole sectors, RE4DC_AICA_STR_READ_KB at a time
+// (24 KB = one 12 KB-per-channel ring half of a stereo stream), into a 32-byte aligned buffer through a handle opened
+// for that read and closed after it. The unaligned path above reads one sector per GD command through KOS's block
+// cache (12 commands per stereo half, 180-390 ms/s of drive time in r113 / r201 / r208, lane coldread27) and stops
+// any game stream at each one; an aligned sector read is one stream command. Closing the handle ends that stream, so
+// none stays open on this thread (the b1 failure above came from a stream left open on the persistent handle).
+// The header and GC-ASSET hash reads keep the persistent handle and the unaligned pointer (g_strCache).
+#ifndef RE4DC_AICA_STR_READ_KB
+#define RE4DC_AICA_STR_READ_KB 24
+#endif
+static_assert(RE4DC_AICA_STR_READ_KB >= 8 && RE4DC_AICA_STR_READ_KB % 4 == 0, "AICA_STR_READ_KB: whole stereo groups");
+u8 g_strCacheRaw[RE4DC_AICA_STR_READ_KB * 1024 + 32] __attribute__((aligned(32)));
+u8* const g_strCache = g_strCacheRaw + 4;   // header / hash reads (unaligned: the KOS sector cache path)
+u8* const g_strData = g_strCacheRaw;        // refill reads (32-byte aligned: one stream command)
+const u32 kStrCacheBytes = RE4DC_AICA_STR_READ_KB * 1024;
+#else
 u8 g_strCacheRaw[8 * 1024 + 32] __attribute__((aligned(32)));
 u8* const g_strCache = g_strCacheRaw + 4;   // 4-byte aligned for the G2 32-bit copy
+u8* const g_strData = g_strCache;
 const u32 kStrCacheBytes = 8 * 1024;
+#endif
 u32 g_strCacheOfs = 0xFFFFFFFFu, g_strCacheLen;
 file_t g_strFile = -1;
 const u32* g_strMissShd;
@@ -1806,7 +1825,13 @@ bool str_cache(u32 fofs, u32 fend)
     re4dc::fa29::hit(re4dc::fa29::SoundRead,len);
 #endif
 #line 1785
+#if defined(RE4DC_AICA_STR_READ) && RE4DC_AICA_STR_READ
+    const file_t rf = fs_open("/cd/bgm/aica_str.dat", O_RDONLY);
+    bool ok = rf >= 0 && fs_seek(rf, fofs, SEEK_SET) == (off_t) fofs && fs_read(rf, g_strData, len) == (ssize_t) len;
+    if (rf >= 0) fs_close(rf);
+#else
     bool ok = fs_seek(g_strFile, fofs, SEEK_SET) == (off_t) fofs && fs_read(g_strFile, g_strCache, len) == (ssize_t) len;
+#endif
     u32 us = (u32) (timer_us_gettime64() - t0);
     S.str_io_us += us;
     if (us > S.str_io_max_us) S.str_io_max_us = us;
@@ -1859,7 +1884,7 @@ void str_fill(u32 h, u32 gen)
         if (k > rbytes - s.pos) k = rbytes - s.pos;
         u32 fofs = base + blk * grp;
         if (!str_cache(fofs, fend)) { s.ended = 1; s.end_half = s.filled; continue; }
-        const u8* src = g_strCache + (fofs - g_strCacheOfs) + in;
+        const u8* src = g_strData + (fofs - g_strCacheOfs) + in;
         for (u32 c = 0; c < s.nch; c++) spu_memload(g_strRing + c * kStrChBytes + dst, (void*) (src + c * 2048), k);
         s.pos += k;
         dst += k;
