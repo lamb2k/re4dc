@@ -2031,6 +2031,11 @@ if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
     DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
+# res28pr (lane playreads 11-04, DISC 2 ONLY via D2_DATA, after res34): res34's resident.bin + the 3 r207 event pictures
+# first loaded in play (Flycast VRAM_ROOM_LOG runs, resident_keys.py list 207 / extend): 6,011 records. RECIPE.txt.
+RES28PRD = os.environ.get('RES28PRD', '/root/re4data/private/res28pr-20261104')
+if os.path.isfile(RES28PRD + '/dc/resident.bin'):
+    DATA['res28pr'] = {'dc/resident.bin': RES28PRD + '/dc/resident.bin'}
 # trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
 # that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
 # trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.

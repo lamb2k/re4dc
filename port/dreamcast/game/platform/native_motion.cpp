@@ -255,7 +255,10 @@ namespace motidx {
 // 8 bytes per key: crc, extent - base (the keys sit together on the disc), size. A crc two keys share is left out (its
 // keys take the name open), so the crc alone names a key; fast_key_read still checks the size.
 struct Ent { unsigned crc; unsigned short rel, size; };
-Ent* ents; unsigned count, base, gen, builds, hits, misses, stale;
+// A static table (in the image, so heap 4 accounts for it; not the KOS heap: the 48 KiB KOS squeeze gate's fight headroom
+// was 8.8 KB): 768 keys (Disc 2 has 731 dc/mot files). Keys past it take the name open.
+constexpr unsigned kCap=768;
+Ent ents[kCap]; unsigned count, base, gen, builds, hits, misses, stale;
 bool built;
 bool hex8(const char* s, unsigned& v) {
     v=0;for(int i=0;i<8;++i){const char c=s[i];unsigned d;
@@ -268,15 +271,14 @@ bool parse(const char* s, unsigned& crc, unsigned& fnv) {   // "<8 hex>-<8 hex>.
 }
 void build() {
     const std::uint64_t t0=timer_us_gettime64();
-    free(ents);ents=nullptr;count=0;base=0;built=true;++builds;
+    count=0;base=0;built=true;++builds;
     const file_t d=fs_open("/cd/dc/mot",O_RDONLY|O_DIR);
     if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot\n");return; }
     gen=fs_iso9660_generation();
-    // One pass over the directory: a Joliet record of a key name is 80 bytes, so size/72 bounds the key count.
-    const unsigned cap=unsigned(fs_total(d))/72U+1U;
-    ents=static_cast<Ent*>(malloc(cap*sizeof(Ent)));
+    // One pass over the directory into the static table.
+    const unsigned cap=kCap;
     unsigned c,f,skipped=0,dups=0;
-    while(ents) {
+    for(;;) {
         const dirent_t* de=fs_readdir(d);if(!de)break;
         if((de->attr&O_DIR) || !parse(de->name,c,f))continue;
         const unsigned ext=fs_iso9660_last_extent(d),size=unsigned(de->size);
