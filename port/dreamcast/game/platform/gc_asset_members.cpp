@@ -12,7 +12,7 @@ ReplayUse replay_use;
 namespace {
 constexpr unsigned ArchiveCount=16, MemberCount=512;   // gc-catalog24b: SMD/SHD/ITM/EFF members (was 128; r11e needs 256; island r31b/r327/r333 overflow 256)
 struct Archive {
-    const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;
+    const void* owner;const unsigned char* base;unsigned bytes,generation;bool transient;OwnerFamily family;bool evd=false;
 } archives[ArchiveCount];
 struct Member {
     const unsigned char* base;const char* name;CheckedAsset asset;
@@ -29,8 +29,30 @@ bool contains(const void* base,unsigned bytes,const void* pointer,unsigned count
 unsigned word(const unsigned char* base,unsigned offset) {
     unsigned value;std::memcpy(&value,base+offset,4);return value;
 }
+constexpr unsigned EvdEntry=0x40;
+bool evd_table(const unsigned char* base,unsigned bytes,unsigned& count) {
+    if(bytes<0x50 || std::memcmp(base,"event/",6))return false;
+    count=word(base,0x48);const unsigned at=word(base,0x4c);
+    return count && count<=4096 && at>=0x50 && at<=bytes && count*EvdEntry<=bytes-at;
+}
+bool evd_table(const Archive& owner,unsigned& count){return evd_table(owner.base,owner.bytes,count);}
+// One bin-table entry of an event file: a .bin (model) entry spans its offset to the next larger entry offset
+// (or the file end). build_catalog.py evd_members is the same rule.
+bool evd_entry(const unsigned char* base,unsigned bytes,unsigned count,unsigned index,Span& span) {
+    const unsigned at=word(base,0x4c),e=at+index*EvdEntry,o=word(base,e+0x30);
+    const char* name=reinterpret_cast<const char*>(base+e);
+    unsigned n=0;while(n<0x30 && name[n])++n;
+    if(n<5 || n>=0x30 || o<at+count*EvdEntry || o>=bytes)return false;
+    if(!(name[n-4]=='.' && (name[n-3]|32)=='b' && (name[n-2]|32)=='i' && (name[n-1]|32)=='n'))return false;
+    unsigned end=bytes;
+    for(unsigned j=0;j<count;++j){const unsigned q=word(base,at+j*EvdEntry+0x30);if(q>o && q<end)end=q;}
+    if(end-o<64)return false;
+    span={base+o,name,end-o,index+4};return true;
+}
+bool evd_entry(const Archive& owner,unsigned count,unsigned index,Span& span){return evd_entry(owner.base,owner.bytes,count,index,span);}
 bool table(const Archive& owner,unsigned& count) {
     if(!owner.owner || owner.bytes<16)return false;
+    if(owner.evd)return evd_table(owner,count);
     count=word(owner.base,0);
     return count<=4096 && 16+count*8<=owner.bytes;
 }
@@ -139,15 +161,31 @@ template<class F> void container_bins(const unsigned char* tag,const Span& c,F&&
             for(unsigned j=0;j<n;++j){const unsigned q=t+word(c.base,t+4+4*j);if(q>m && q<end)end=q;}
             if(end-m>=64)f(Span{c.base+m,nullptr,end-m,0});
         }
+    }else if(!std::memcmp(tag,"EVS",3)){
+        if(c.bytes<8)return;
+        const unsigned n=word(c.base,0),t=word(c.base,4);
+        if(!n || n>256 || t<8 || t>c.bytes || 8*n>c.bytes-t)return;
+        for(unsigned i=0;i<n;++i){
+            const unsigned o=word(c.base,t+8*i);if(o<t+8*n || o>=c.bytes)continue;
+            unsigned end=c.bytes;
+            for(unsigned j=0;j<n;++j){const unsigned q=word(c.base,t+8*j);if(q>o && q<end)end=q;}
+            unsigned m;if(!evd_table(c.base+o,end-o,m))continue;
+            for(unsigned k=0;k<m;++k){Span s;if(evd_entry(c.base+o,end-o,m,k,s))f(Span{s.base,nullptr,s.bytes,0});}
+        }
     }else if(!std::memcmp(tag,"ITM",3)){
         const unsigned ob=word(c.base,8),ot=word(c.base,12);
         if(ob<16 || ob>c.bytes-4 || (ob&3))return;
         table_bins(c,ob,4,word(c.base,ob),ot>ob && ot<=c.bytes?ot-ob:c.bytes-ob,f);
     }
 }
-bool container_tag(const unsigned char* tag){return !std::memcmp(tag,"SMD",3) || !std::memcmp(tag,"SHD",3) || !std::memcmp(tag,"ITM",3) || !std::memcmp(tag,"EFF",3);}
+bool container_tag(const unsigned char* tag){return !std::memcmp(tag,"SMD",3) || !std::memcmp(tag,"SHD",3) || !std::memcmp(tag,"ITM",3) || !std::memcmp(tag,"EFF",3) || !std::memcmp(tag,"EVS",3);}
 bool find(const Archive& owner,const void* data,Span& result) {
     unsigned count;if(!table(owner,count) || !contains(owner.base,owner.bytes,data,1))return false;
+    if(owner.evd) {
+        bool found=false;
+        for(unsigned i=0;i<count;++i){Span s;if(evd_entry(owner,count,i,s) && contains(s.base,s.bytes,data,1)){if(found)return false;result=s;found=true;}}
+        return found;
+    }
     const unsigned tags=16+count*4;bool found=false;
     for(unsigned i=0;i<count;++i) {
         const auto* tag=owner.base+tags+4*i;
@@ -180,6 +218,7 @@ Pre* pre[ArchiveCount];unsigned pre_count[ArchiveCount];
 void pre_free(unsigned owner){std::free(pre[owner]);pre[owner]=nullptr;pre_count[owner]=0;}
 template<class F> void each_model(const Archive& owner,F&& f){
     unsigned count;if(!table(owner,count))return;
+    if(owner.evd){for(unsigned i=0;i<count;++i){Span s;if(evd_entry(owner,count,i,s))f(s);}return;}
     const unsigned tags=16+count*4;
     for(unsigned i=0;i<count;++i){
         const auto* tag=owner.base+tags+4*i;
@@ -234,7 +273,11 @@ bool in_area(std::uintptr_t lo,unsigned bytes,const Archive& a){
 // A parked slot keeps its members (owner index): no other archive takes it until unpark.
 bool slot_parked(unsigned i){for(unsigned k=0;k<parked_count;++k)if(parked[k].slot==i)return true;return false;}
 }
+bool adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family,bool evd);
 bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family) {
+    return adopt(owner,archive,bytes,transient,family,false);
+}
+bool adopt(const void* owner,void* archive,unsigned bytes,bool transient,OwnerFamily family,bool evd) {
     if(!owner || !archive || bytes<16 || generation==0xffffffffU) { unresolved(SourceGeometry,"member-adopt");return false; }
     unsigned free=ArchiveCount;
     for(unsigned i=0;i<ArchiveCount;++i) {
@@ -254,7 +297,7 @@ bool member_adopt(const void* owner,void* archive,unsigned bytes,bool transient,
     }
     if(conflict) { unresolved(SourceGeometry,"member-owner-overlap");return false; }
     if(free==ArchiveCount) { unresolved(SourceGeometry,"member-owner-capacity");return false; }
-    Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient,family};unsigned count;
+    Archive candidate{owner,static_cast<unsigned char*>(archive),bytes,++generation,transient,family,evd};unsigned count;
     if(!table(candidate,count)) { unresolved(SourceGeometry,"member-directory");return false; }
     archives[free]=candidate;pre_hash(free);return true;
 }
@@ -490,6 +533,24 @@ extern "C" void re4dc_gcasset_capture_model(const void* data) { re4dc_gcasset::m
 extern "C" void re4dc_gcasset_motion_use(const void* data) { re4dc_gcasset::motion_use(data); }
 extern "C" void re4dc_gcasset_motion_generated(const void* data) { re4dc_gcasset::motion_generated=data; }
 extern "C" void re4dc_gcasset_retire_archive(const void* base) { re4dc_gcasset::member_retire_archive(base); }
+// EVENT_SWAP_RELOAD (dvd.cpp re4dc_event_swap_reload): the event file is installed over an enemy archive's first
+// `bytes` while the event plays. Swap-in parks the archives in that region and adopts the event file as its own
+// archive (its .bin entries resolve to catalog rows); swap-back retires it and unparks the enemy archive when the
+// region came back CRC-identical, else drops it (its bytes are not the adopted ones).
+static char event_swap_owner;
+extern "C" void re4dc_gcasset_event_swap_in(void* mram,unsigned bytes) {
+    using namespace re4dc_gcasset;
+    if(parked_count){unresolved(SourceGeometry,"member-park-busy");return;}
+    member_park(mram,bytes);
+    if(ensure_disc_catalog())adopt(&event_swap_owner,mram,bytes,true,OtherOwner,true);
+}
+extern "C" void re4dc_gcasset_event_swap_out(void* mram,unsigned bytes,int restored) {
+    using namespace re4dc_gcasset;
+    member_retire(&event_swap_owner);
+    if(!parked_count)return;
+    member_unpark();
+    if(!restored)for(unsigned i=0;i<ArchiveCount;++i)if(archives[i].owner && in_area(reinterpret_cast<std::uintptr_t>(mram),bytes,archives[i]))revoke(i);   // dropped: never rebinds to different bytes
+}
 extern "C" void re4dc_gcasset_member_park(const void* area,unsigned bytes) { re4dc_gcasset::member_park(area,bytes); }
 extern "C" void re4dc_gcasset_member_unpark() { re4dc_gcasset::member_unpark(); }
 // block.cpp (gc-catalog24b): st*/rNNN_NN.dat block archives, adopted as loaded

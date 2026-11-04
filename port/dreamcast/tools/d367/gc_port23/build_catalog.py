@@ -179,6 +179,22 @@ def container_bins(tag, c):
             end = min(ends + [len(c)])
             if end - m >= 64:
                 yield c[m:end]
+    elif tag[:3] == b'EVS':
+        # event.cpp EvsHeader {num, tblOfs} / EvsEntry {ofs, x4}: the room's event files (gc_asset_members.cpp EVS)
+        if len(c) < 8:
+            return
+        n, t = word(c, 0), word(c, 4)
+        if not n or n > 256 or t < 8 or t > len(c) or 8 * n > len(c) - t:
+            return
+        offs = [word(c, t + 8 * i) for i in range(n)]
+        for o in offs:
+            if o < t + 8 * n or o >= len(c):
+                continue
+            end = min([q for q in offs if q > o] + [len(c)])
+            sub = c[o:end]
+            for name, eo, size in evd_members(sub):
+                if name.lower().endswith('.bin') and size >= 64:
+                    yield sub[eo:eo + size]
     elif tag[:3] == b'ITM':
         ob, ot = word(c, 8), word(c, 12)
         if ob < 16 or ob > len(c) - 4 or ob & 3:
@@ -196,7 +212,7 @@ def model_payloads(b, depth=0):
             for member in etm_members(span):
                 if len(member) >= 64:
                     yield member
-        elif tag[:3] in (b'SMD', b'SHD', b'ITM', b'EFF'):
+        elif tag[:3] in (b'SMD', b'SHD', b'ITM', b'EFF', b'EVS'):
             yield from container_bins(tag, span)
         elif depth < 3:
             yield from model_payloads(span, depth + 1)
@@ -300,10 +316,38 @@ def texpak_members(b):
         yield '%08x-%08x' % (crc, fnv), b[off:off + size], off, size
 
 
+def evd_members(b):
+    """Event files (include/event.h EvtHeader): "event/" name at 0, nBin at 0x48, binOfs at 0x4C, EvtBinEntry
+    {name[0x30], ofs} of 0x40 bytes. Every entry as (name, offset, bytes): it spans its offset to the next larger
+    entry offset or the file end. gc_asset_members.cpp evd_entry is the same rule (it binds the .bin entries)."""
+    if len(b) < 0x50 or not b.startswith(b'event/'):
+        return
+    n, at = struct.unpack_from('<2I', b, 0x48)
+    if not n or n > 4096 or at < 0x50 or at + n * 0x40 > len(b):
+        return
+    ents = []
+    for i in range(n):
+        e = at + i * 0x40
+        name = b[e:e + 0x30].split(b'\0', 1)[0].decode('latin1')
+        ents.append((name, struct.unpack_from('<I', b, e + 0x30)[0]))
+    offs = sorted({o for _, o in ents})
+    for name, o in ents:
+        if o < at + n * 0x40 or o >= len(b):
+            continue
+        end = next((q for q in offs if q > o), len(b))
+        yield name, o, end - o
+
+
 def member_rows(rel, b):
     """The archive members of one disc file (sound banks, models, motion clips, DRS body, record bodies) as
     (kind, id, bytes, source) rows; collect() and provenance.py (wep19-26 byte-following) share it."""
     name = rel.rsplit('/', 1)[-1].lower()
+    # event files: each .bin entry is a model member (runtime: EVENT_SWAP_RELOAD adopts the event file as an archive)
+    if name.endswith('.evd'):
+        for ename, o, size in evd_members(b):
+            if ename.lower().endswith('.bin') and size >= 64:
+                payload = b[o:o + size]
+                yield ('model', sha(payload)[:40], payload, '%s#%s' % (rel, ename))
     for kind, data, at in sound_banks(b):
         yield (kind, sha(data)[:40], data, '%s#bank=%d' % (rel, at))
     for payload in model_payloads(b):

@@ -566,6 +566,10 @@ extern "C" int re4dc_event_file_install_direct(const char* name, unsigned bytes,
 extern "C" const char* re4dc_em_arc_file(const void* pointer, unsigned bytes);
 extern "C" int re4dc_swap_reload_record(const char*, const void*, unsigned, void*, unsigned, void*, unsigned, unsigned*);
 extern "C" int re4dc_swap_reload_restore(const char*, void*, unsigned, const void*, unsigned, unsigned);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+extern "C" void re4dc_gcasset_event_swap_in(void*, unsigned);
+extern "C" void re4dc_gcasset_event_swap_out(void*, unsigned, int);
+#endif
 namespace {
 struct SwapReload { void* mram; u32 aram, size; const char* file; void* runs; u32 used, crc; };
 SwapReload swap_reload[2];
@@ -582,6 +586,9 @@ static int re4dc_event_swap_reload(void* mram, u32 aram, u32 size)
     for (auto& s : swap_reload) {
         if (s.mram != mram || s.aram != aram || s.size != size) continue;
         const int ok = re4dc_swap_reload_restore(s.file, mram, size, s.runs, s.used, s.crc);
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+        re4dc_gcasset_event_swap_out(mram, size, ok);
+#endif
         re4dc_log("event swap reload: restore %s bytes=%u runs=%u crc=%08x ok=%d wait_us=%u\n", s.file, (unsigned) size,
                   (unsigned) s.used, (unsigned) s.crc, ok, (unsigned) (re4dc_swap_reload_now_us() - t0));
         Mem_free(s.runs);
@@ -618,6 +625,9 @@ static int re4dc_event_swap_reload(void* mram, u32 aram, u32 size)
         return -1;
     }
     *s = SwapReload{mram, aram, size, em, runs, (u32) used, crc};
+#if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
+    re4dc_gcasset_event_swap_in(mram, size);
+#endif
     re4dc_log("event swap reload: swap-in %s -> %s bytes=%u runs=%u crc=%08x record_us=%u install_us=%u\n", evd, em,
               (unsigned) size, (unsigned) used, (unsigned) crc, (unsigned) (t1 - t0), (unsigned) (re4dc_swap_reload_now_us() - t1));
     return 1;
