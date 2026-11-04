@@ -170,6 +170,16 @@ if build_ok and jobs:
     for p in sorted(EVU.glob('*/run-output.txt')):
         ma += ['%s: %s' % (p.parent.name, l.strip()) for l in rd(p).replace('\x00', '').splitlines() if 'MOVIEARENA refuse' in l]
     add('MOVIEARENA refused 0', not ma, 'none' if not ma else '; '.join(ma[:4])[:400])
+    # READFAIL (lane castlebudget 11-04): a disc read that fails for memory or I/O in any job log (census, room, boot) is a
+    # FAIL. r20f's em/em14.drs ("DVD: Memory allocate failed" / "readEmData: ... read failed", every retry) never loaded
+    # its zealots or drew the room in rr 1104-0628, yet the census rows passed on an empty alive list.
+    rf_pat = re.compile(r'DVD: Memory allocate failed|DVD: Read Error|readEmData: \S+ read failed|readEmData\(\): error')
+    rf = []
+    for p in sorted(EVU.glob('*/run-output.txt')):
+        hits = [l.strip() for l in rd(p).replace('\x00', '').splitlines() if rf_pat.search(l)]
+        if hits:
+            rf.append('%s: %d lines, first %s' % (p.parent.name, len(hits), hits[0][:100]))
+    add('disc reads failed 0', not rf, 'none' if not rf else '; '.join(rf[:4])[:400])
     # h2: s30 cliff movie
     o = runlog('h2')
     m = re.findall(r'route movie terminal=(\d) id=10030 frames=(\d+)/(\d+)[^\n]*', o)
