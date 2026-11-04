@@ -26,6 +26,9 @@ struct CatalogRow {
     const char* kind; const char* id; Digest digest; Provenance provenance;
 };
 struct CheckedAsset { unsigned value=0; };
+// Compact token = epoch<<CatalogTokenBits | row index (lane assets-dc 11-04: 14 -> 16 bits, Disc 2 + chapter 4 > 16,320 rows).
+constexpr unsigned CatalogTokenBits=16,CatalogTokenMask=(1U<<CatalogTokenBits)-1,CatalogUnknownLimit=64,
+    CatalogRowLimit=(1U<<CatalogTokenBits)-CatalogUnknownLimit,CatalogEpochLimit=1U<<(32-CatalogTokenBits);
 struct AssetDescription { char kind[16],id[48];Digest digest;Provenance provenance; };
 using CatalogReadAt = unsigned (*)(void* context,unsigned offset,void* destination,unsigned bytes);
 // One immutable read-only CD catalog per disc/source epoch. Room changes reset

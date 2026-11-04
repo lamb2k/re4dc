@@ -203,7 +203,7 @@ class DefensiveCatalogTests(unittest.TestCase):
         body=self.fixture[:self.fixture.index('int main(int argc')]+r'''
 #include "gc_asset_gate.cpp"
 int main(){
- constexpr unsigned terminal=(1u<<18)-1;
+ constexpr unsigned terminal=CatalogEpochLimit-1;
  // Start an install at the last admissible epoch, then retire while its
  // catalog_ok is already false. Retirement must remain distinguishable.
  catalog_epoch=terminal-2;Reader r;r.phase=1;r.action=1;
@@ -212,7 +212,7 @@ int main(){
  assert(r.fired&&catalog_epoch==terminal&&!catalog_ok);
  assert(!install_index(independent_read,&r,file.size(),pin));
  const CatalogRow row={"geometry","a",digest(0),PS2};
- assert(!install(&row,1)&&!bind_a().value&&!checked_current({terminal<<14}));
+ assert(!install(&row,1)&&!bind_a().value&&!checked_current({terminal<<CatalogTokenBits}));
  retire_catalog();assert(catalog_epoch==terminal&&!catalog_ok);
 }
 '''
