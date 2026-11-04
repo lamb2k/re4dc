@@ -2085,6 +2085,15 @@ if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
     DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
+# trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
+# that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
+# trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.
+TRANS34D2D = os.environ.get('TRANS34D2D', '/root/re4data/private/trans34d2-20261104')
+if os.path.isfile(TRANS34D2D + '/trclass.idx'):
+    DATA['trans34d2'] = {'dc/native/trclass.idx': TRANS34D2D + '/trclass.idx'}
+    for _r in sorted(os.listdir(TRANS34D2D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
+            DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
