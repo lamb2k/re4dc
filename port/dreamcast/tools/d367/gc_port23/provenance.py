@@ -52,7 +52,10 @@ def motion_keys(store):
             continue
         if f.suffix == '.fcv' and re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{8}', f.stem):
             keys.add(f.stem); continue
-        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat'):
+        # .arc too (lane assets-dc 11-03): pmrest25 proves r11e's clips with a staged st1/r11e.arc only (its .dar
+        # already held the same clips); with arcdrop that .arc leaves the disc and the catalog finds the clip in
+        # st1/r11e.dar, so the store's .arc keys must still credit the same key there.
+        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat', '.arc'):
             continue
         b = f.read_bytes()
         bodies = [b] + ([b[build_catalog.DRS_TABLE:]] if f.suffix == '.drs' and len(b) > build_catalog.DRS_TABLE else [])
