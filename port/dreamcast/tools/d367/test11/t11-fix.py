@@ -2058,17 +2058,17 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
 # (castlegca34/gen-all.sh): PS2 objects / room BINs / items / debris / pictures / motion / room + enemy banks. Kept GC:
 # r206 BIN 0x32 (converter refuses: PS2 positions outside s16) and BIN 0x34..0x3a + FCV 0x3c..0x3e (no PS2 entry; the
 # PS2 r206.dat dropped them), em25 BIN 0x31 (rebuilt larger than its slot); kept GC samples in sound-kept-gc.tsv.
-# Ships st2/*.dar only (the game never opens the .arc: read.cpp ReadAreaData; Disc 2 space). Stores:
+# The game reads st2/*.dar (read.cpp ReadAreaData); castle_fixture keeps each .arc = its .dar payload, so the .arc rows are owned here too (11-04: unowned r20d.arc made r20d BIN 0x23 provenance=gc). Stores:
 # re4-assets-private/{cgca34,pmcgca34}-20261102.
 CGCA34D = os.environ.get('CGCA34D', '/root/re4data/private/cgca34-20261102')
 if os.path.isfile(CGCA34D + '/provenance.tsv'):
     DATA['cgca34'] = {'tex': CGCA34D + '/tex'}
-    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
+    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'st2').glob('*.arc')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
         DATA['cgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 PMCGCA34D = os.environ.get('PMCGCA34D', '/root/re4data/private/pmcgca34-20261102')
 if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
     DATA['pmcgca34'] = {}
-    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
+    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
         DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
 
