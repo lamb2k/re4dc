@@ -20,3 +20,17 @@ $(error PEN_CLOTH_LOD_SUB=1 needs PEN_CLOTH_LOD=2..4)
 endif
 $(OBJDIR)/src/game/pendulum.o: GAME_CPPFLAGS += -DRE4DC_PEN_CLOTH_LOD_SUB=1
 endif
+# ACTOR_PART_FRUSTUM=1 (render only): native actor parts wholly outside the side planes of the view skip all their work
+#   (native_actor_fast.cpp pf_hidden: rigid bind sphere; skinned palette-origin box + largest scale bound).
+ACTOR_PART_FRUSTUM ?= 0
+ifneq ($(filter-out 0 1,$(ACTOR_PART_FRUSTUM)),)
+$(error ACTOR_PART_FRUSTUM must be 0 or 1)
+endif
+ifeq ($(ACTOR_PART_FRUSTUM),1)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_PART_FRUSTUM=1
+endif
+# CB_LAYOUT_PAD=N (measurement only, never in a recipe): N bytes of unused code padding in trans.o (layout-noise floor).
+CB_LAYOUT_PAD ?= 0
+ifneq ($(CB_LAYOUT_PAD),0)
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_CB_LAYOUT_PAD=$(CB_LAYOUT_PAD)
+endif

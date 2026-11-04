@@ -1900,6 +1900,10 @@ struct Frame {  // per (info, matrices) per frame
 #if RE4DC_ACTOR_FOG_GATE
     bool gate_ready = false; float gate_T = 0.0f, gate_G = 0.0f;  // ACTOR_FOG_GATE skinned depth bound
 #endif
+#if defined(RE4DC_ACTOR_PART_FRUSTUM) && RE4DC_ACTOR_PART_FRUSTUM
+    // ACTOR_PART_FRUSTUM: view-space box of the palette's bone origins and the largest palette scale (per frame)
+    bool pf_ready = false; float pf_lo[3] = {}, pf_hi[3] = {}, pf_G = 0.0f;
+#endif
 };
 constexpr unsigned kFrames = 4;
 Frame frames[kFrames];
@@ -6637,6 +6641,61 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 #if RE4DC_NATIVE_FE_CONTINUATION
 static int actor_submit_impl(const Re4dcModelPart* part,Frame* explicit_frame,NativeContinuationProgress* progress) {
 #else
+#if defined(RE4DC_ACTOR_PART_FRUSTUM) && RE4DC_ACTOR_PART_FRUSTUM
+namespace {
+// 1 when the view-space box [lo, hi] is wholly outside one side plane of GX projection P (P[1] sx, P[2] ox, P[3] sy,
+// P[4] oy; the eye looks down -z, w = -z): x visible needs -w <= sx x + ox z <= w.
+inline bool pf_box_out(const float* P, const float* lo, const float* hi) {
+    const float sx = P[1], ox = P[2], sy = P[3], oy = P[4];
+    auto out = [](float a, float b, const float* lo_, const float* hi_, int k) {
+        // min over the box of a * v[k] + b * z > 0  -> wholly on the outer side
+        const float v = a > 0.0f ? a * lo_[k] : a * hi_[k];
+        const float z = b > 0.0f ? b * lo_[2] : b * hi_[2];
+        return v + z > 0.0f;
+    };
+    return out(sx, ox + 1.0f, lo, hi, 0) || out(-sx, 1.0f - ox, lo, hi, 0) ||
+           out(sy, oy + 1.0f, lo, hi, 1) || out(-sy, 1.0f - oy, lo, hi, 1);
+}
+bool pf_hidden(Frame& f, const Re4dcModelPart& p, const BlobHeader& b) {
+    const float* m = p.modelview; const float* c = b.center;
+    if (!(b.radius >= 0.0f) || p.projection[0] != 0.0f) return false;  // perspective only
+    float lo[3], hi[3];
+    if (f.mode != kSkin) {
+        const float s = std::sqrt(std::max(std::max(m[0] * m[0] + m[4] * m[4] + m[8] * m[8], m[1] * m[1] + m[5] * m[5] + m[9] * m[9]),
+                                           m[2] * m[2] + m[6] * m[6] + m[10] * m[10]));
+        const float r = s * b.radius * 1.05f + 16.0f;
+        for (int k = 0; k < 3; ++k) {
+            const float v = m[k * 4] * c[0] + m[k * 4 + 1] * c[1] + m[k * 4 + 2] * c[2] + m[k * 4 + 3];
+            lo[k] = v - r; hi[k] = v + r;
+        }
+    } else {
+        if (!f.palette || !f.palette_entries) return false;
+        if (!f.pf_ready) {
+            float L[3] = {3.0e38f, 3.0e38f, 3.0e38f}, H[3] = {-3.0e38f, -3.0e38f, -3.0e38f}, S = 0.0f;
+            const float* P = f.palette;
+            for (unsigned i = f.palette_entries; i; --i, P += 12) {
+                for (int k = 0; k < 3; ++k) {
+                    const float v = m[k * 4] * P[9] + m[k * 4 + 1] * P[10] + m[k * 4 + 2] * P[11] + m[k * 4 + 3];
+                    L[k] = std::min(L[k], v); H[k] = std::max(H[k], v);
+                }
+                S = std::max(S, P[0] * P[0] + P[1] * P[1] + P[2] * P[2]);
+                S = std::max(S, P[3] * P[3] + P[4] * P[4] + P[5] * P[5]);
+                S = std::max(S, P[6] * P[6] + P[7] * P[7] + P[8] * P[8]);
+            }
+            const float ms = std::sqrt(std::max(std::max(m[0] * m[0] + m[4] * m[4] + m[8] * m[8], m[1] * m[1] + m[5] * m[5] + m[9] * m[9]),
+                                                m[2] * m[2] + m[6] * m[6] + m[10] * m[10]));
+            for (int k = 0; k < 3; ++k) { f.pf_lo[k] = L[k]; f.pf_hi[k] = H[k]; }
+            f.pf_G = ms * std::sqrt(S); f.pf_ready = true;
+        }
+        if (!(f.pf_G >= 0.0f) || !(f.pf_G < 1.0e6f)) return false;
+        const float r = f.pf_G * (std::sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]) + b.radius) * 1.05f + 16.0f;
+        for (int k = 0; k < 3; ++k) { lo[k] = f.pf_lo[k] - r; hi[k] = f.pf_hi[k] + r; }
+    }
+    for (int k = 0; k < 3; ++k) if (!(lo[k] == lo[k]) || !(hi[k] == hi[k])) return false;  // NaN: draw
+    return pf_box_out(p.projection, lo, hi);
+}
+}  // namespace
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
@@ -6960,6 +7019,14 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
         }
     }
+#if defined(RE4DC_ACTOR_PART_FRUSTUM) && RE4DC_ACTOR_PART_FRUSTUM
+    // ACTOR_PART_FRUSTUM=1 (castlebudget.mk; lane castlebudget 2026-11-04; render only): a part whose conservative
+    // view-space box lies wholly outside the left / right / top / bottom planes of the projection draws nothing (every
+    // vertex would get the same outcode), so it is skipped before positions, skin, light and packing. Rigid: the
+    // bind-pose sphere (bind == drawn pose). Skinned: the box of the palette's bone origins grown by the largest palette
+    // scale x (|bind centre| + bind radius), the same bound ACTOR_FOG_GATE uses for depth. Margin x1.05 + 16 mm.
+    if (pf_hidden(f, p, *blob)) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1; }
+#endif
 #if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
     // RIGID_CHUNK: the size rule (native_actor_rigid.inc).
     const bool rigid = f.mode == kRigid;

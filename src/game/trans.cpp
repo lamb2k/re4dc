@@ -1676,6 +1676,13 @@ void objTrans(cModel* m)
 // second time), 1 model table, 2 world, 3 / 4 / 5 fixed 0xB buckets, 6 table 0x10, 8 table 0x14;
 // frustum-culled by the light-info sphere (scaled). Then skins its vertices (commonScreenMat)
 // — a skinning failure removes the entry again.
+#if defined(RE4DC_CB_LAYOUT_PAD) && RE4DC_CB_LAYOUT_PAD
+// CB_LAYOUT_PAD=N (castlebudget.mk, measurement only): N bytes of unused code-section padding, to move the code layout
+// after trans.o without changing behaviour (hw-model layout-noise floor).
+#define CB_PAD_S2(x) #x
+#define CB_PAD_S(x) CB_PAD_S2(x)
+extern "C" __attribute__((used, noinline)) void re4dc_cb_layout_pad() { __asm__ volatile(".fill " CB_PAD_S(RE4DC_CB_LAYOUT_PAD) ", 1, 9"); }
+#endif
 #if defined(RE4DC_CASTLE_ACTOR_PREGATE) && RE4DC_CASTLE_ACTOR_PREGATE
 // CASTLE_ACTOR_PREGATE=1 (castlebudget.mk; lane castlebudget 2026-11-04; render only, default 0): an ot_type 5 enemy
 // (kindid 0: the castle zealots em2d, the Verdugo em2c; AddOtDirect, so the game makes no view test for them) whose
@@ -1820,6 +1827,9 @@ void ModelTrans(cModel* m)
     case 5:
         ot = 0x10;
         LIGHT_POS(m, li, pos);
+#if defined(RE4DC_CB_LAYOUT_PAD) && RE4DC_CB_LAYOUT_PAD
+        if (pG->Debug_flg[3] == 0x7fedcba1u) re4dc_cb_layout_pad();   // never true: keeps the pad linked
+#endif
 #if defined(RE4DC_CASTLE_ACTOR_PREGATE) && RE4DC_CASTLE_ACTOR_PREGATE
         if (castleActorPregateHidden(m, &pos, radius)) {
             ret = 0xFFFF;   // as ot 0 / 1's view test: no OT entry, no screen matrices, no skin, no submit
