@@ -3913,22 +3913,29 @@ ifeq ($(filter $(MOTION_LARGE_CLIPS),0 1),)
 $(error MOTION_LARGE_CLIPS must be 0 or 1)
 endif
 ifeq ($(MOTION_LARGE_CLIPS),1)
-ifneq ($(ROUTE_CH3)$(MOTION_RESERVE),11)
-$(error MOTION_LARGE_CLIPS needs ROUTE_CH3=1 MOTION_RESERVE=1)
+ifneq ($(MOTION_RESERVE),1)
+$(error MOTION_LARGE_CLIPS needs MOTION_RESERVE=1)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_CLIPS=1
 endif
-# MOTION_LARGE_EM39=1 (lane bosscast 11-03): also admit the pinned em39 (Krauser) body of data set bossk, its 13 clips over
-# 32 KiB streamed cold (heap 4 r31c: body 1,423,712 -> 877,632 B, slabs 2x32,320 -> 2x65,440). Default 0.
+# MOTION_LARGE_FILES=<names> (lane world-ch32 11-04, generalising bosscast MOTION_LARGE_EM39): pinned v2 bodies whose clips
+# over 32 KiB stream cold (native_motion.cpp v2_clip_limit rows): em39 (Krauser, data set bossk: body 1,423,712 -> 877,632 B,
+# r31c heap 4), em2d (Novistador, cw32 / pmcw32: 1,699,136 -> 1,514,944 B, r205 heap 4). Needs MOTION_LARGE_CLIPS=1.
+# Default empty. MOTION_LARGE_EM39=1 (bosscast, Disc 3 D3REC) = em39 in the list.
+MOTION_LARGE_FILES ?=
 MOTION_LARGE_EM39 ?= 0
 ifeq ($(filter $(MOTION_LARGE_EM39),0 1),)
 $(error MOTION_LARGE_EM39 must be 0 or 1)
 endif
-ifeq ($(MOTION_LARGE_EM39),1)
-ifneq ($(MOTION_LARGE_CLIPS),1)
-$(error MOTION_LARGE_EM39 needs MOTION_LARGE_CLIPS=1)
+MOTION_LARGE_LIST := $(sort $(MOTION_LARGE_FILES) $(if $(filter 1,$(MOTION_LARGE_EM39)),em39))
+ifneq ($(filter-out em39 em2d,$(MOTION_LARGE_LIST)),)
+$(error MOTION_LARGE_FILES: unknown $(filter-out em39 em2d,$(MOTION_LARGE_LIST)) (known: em39 em2d))
 endif
-$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_EM39=1
+ifneq ($(MOTION_LARGE_LIST),)
+ifneq ($(MOTION_LARGE_CLIPS),1)
+$(error MOTION_LARGE_FILES needs MOTION_LARGE_CLIPS=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += $(if $(filter em39,$(MOTION_LARGE_LIST)),-DRE4DC_MOTION_LARGE_EM39=1) $(if $(filter em2d,$(MOTION_LARGE_LIST)),-DRE4DC_MOTION_LARGE_EM2D=1)
 endif
 
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.

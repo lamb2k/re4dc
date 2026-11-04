@@ -2055,6 +2055,14 @@ if os.path.isfile(PMCW32D + '/RECIPE.txt'):
 # cpic32 (lane world-ch32 11-02, DISC 2 ONLY via D2_DATA, after pmcw32): the r20a GC room picture 72be589c-3bbd0657 (16x64,
 # drawn in r20a, GC-ASSET unknown) as PS2 r20a.dat TPL image 52 pixels (NCC 1.000; ps2cast/em_eff_pics.py over the composed
 # Disc 2 pack of rr 1102-1442-d4ef6d18). Store: re4-assets-private/cpic32-20261102.
+# em2dlc32 (lane world-ch32 11-04, DISC 2 ONLY via D2_DATA, after pmcw32): em/em2d.drs with its 5 clips over 32 KiB streamed
+# cold too (motion/ps2_motion_prepared.py rewrite --clip-limit 131072; body 1,699,136 -> 1,514,944 B) + its 5 new dc/mot keys.
+# Needs the program knobs MOTION_LARGE_CLIPS=1 MOTION_LARGE_FILES=em2d (native_motion.cpp v2_clip_limit pins this body).
+# r205 heap 4 with Ashley following (after the r206 rejoin). Store: re4-assets-private/em2dlc32-20261104.
+EM2DLC32D = os.environ.get('EM2DLC32D', '/root/re4data/private/em2dlc32-20261104')
+if os.path.isfile(EM2DLC32D + '/RECIPE.txt'):
+    DATA['em2dlc32'] = {'em/em2d.drs': EM2DLC32D + '/em/em2d.drs'}
+    DATA['em2dlc32'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (EM2DLC32D, _k) for _k in sorted(os.listdir(EM2DLC32D + '/dc/mot'))})
 CPIC32D = os.environ.get('CPIC32D', '/root/re4data/private/cpic32-20261102')
 if os.path.isdir(CPIC32D):
     DATA['cpic32'] = {'dc/tex.pak': CPIC32D + '/dc/tex.pak'}

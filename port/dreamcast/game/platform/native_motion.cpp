@@ -234,16 +234,27 @@ unsigned aligned(unsigned n) { return (n+31)&~31U; }
 // Called only after the common MTC/REL extents are validated. Legacy v2 stays at 32 KiB.
 unsigned v2_clip_limit(const unsigned char* a,unsigned bytes,unsigned rel,const unsigned char* mtc) {
     if(word(mtc+28)==kClipLimit)return kClipLimit;
+    // MOTION_LARGE_FILES (game30.mk): pinned v2 bodies whose clips over 32 KiB stream cold (motion/ps2_motion_prepared.py
+    // rewrite --clip-limit 131072). Each row is the sealed body's facts: size, MTC rows, MTC word 20, REL word 0, CRC.
+    struct LargeBody { unsigned bytes,rows,mtc20,rel0,crc; };
+    static const LargeBody kLarge[]={
 #if defined(RE4DC_MOTION_LARGE_EM39) && RE4DC_MOTION_LARGE_EM39
-    // em39 (Krauser, lane bosscast 11-03): the bossk archive with PS2 motion and its 13 clips over 32 KiB streamed cold
-    // (motion/ps2_motion_prepared.py rewrite --clip-limit 131072; hot set em39-r31c kept). Largest clip 65,440 B.
-    if(word(mtc+28)==131072u && bytes==877632u && word(mtc+12)==167u && word(mtc+20)==0xdcafeb63u &&
-       word(a+rel)==64u && word(a+rel+28)==0xdc000001u && word(a+rel+32)==52u) {
+        // em39 (Krauser, lane bosscast 11-03): bossk, 13 clips over 32 KiB, largest 65,440 B.
+        {877632u,167u,0xdcafeb63u,64u,0xa3a2893du},
+#endif
+#if defined(RE4DC_MOTION_LARGE_EM2D) && RE4DC_MOTION_LARGE_EM2D
+        // em2d (Novistador, lane world-ch32 11-04): cw32 / pmcw32 em2d with PS2 motion, 5 clips over 32 KiB, largest
+        // 43,616 B; body 1,699,136 -> 1,514,944 B (r205 heap 4 with Ashley following).
+        {1514944u,66u,0x11438571u,32u,0x5ec3810au},
+#endif
+        {0u,0u,0u,0u,0u}};
+    for(const auto& l:kLarge) {
+        if(!l.bytes || word(mtc+28)!=131072u || bytes!=l.bytes || word(mtc+12)!=l.rows || word(mtc+20)!=l.mtc20 ||
+           word(a+rel)!=l.rel0 || word(a+rel+28)!=0xdc000001u || word(a+rel+32)!=52u)continue;
         bool clean=true;
         for(unsigned i=1;i<16;++i)if(i!=7u && i!=8u && word(a+rel+4*i))clean=false;
-        if(clean && net_crc32le(a,bytes)==0xa3a2893du)return 131072u;
+        if(clean && net_crc32le(a,bytes)==l.crc)return 131072u;
     }
-#endif
     if(word(mtc+28)!=131072u || bytes!=1132416u || word(mtc+12)!=98u ||
        word(mtc+20)!=0x0a5bdee5u || word(a+rel)!=77u ||
        word(a+rel+28)!=0xdc000001u || word(a+rel+32)!=52u)return 0;

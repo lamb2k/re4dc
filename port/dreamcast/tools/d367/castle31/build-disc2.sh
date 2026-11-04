@@ -26,7 +26,8 @@ else
   # recipe's EFM_PS2_CUT=1 earlier on the line, this later value wins.
   # D2_EXTRA (lane world-ch31 11-02): Disc 2 only knobs on trial (e.g. ALIVE_CAP_DEFER_GOTO_R207=1: held r207 hall
   # Ganados keep their walk-upstairs command, CASTLE_DEFERRED_GOTO_CONTROL_AUDIT_20261019.md). Empty = as before.
-  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1 EFM_PS2_CUT=2${D2_EXTRA:+ $D2_EXTRA}"
+  # MOTION_LARGE_CLIPS=1 MOTION_LARGE_FILES=em2d (lane world-ch32 11-04): goes with D2_DATA em2dlc32 (a fixed pair, not a trial knob).
+  export CH2="$CH2 $CH4REC WEAPON_WEP05=1 SS11_ROOM_EVICT=1 EFM_PS2_CUT=2 MOTION_LARGE_CLIPS=1 MOTION_LARGE_FILES=em2d${D2_EXTRA:+ $D2_EXTRA}"
 fi
 export CH2
 mkdir -p "$K"
