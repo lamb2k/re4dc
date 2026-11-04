@@ -87,6 +87,8 @@ MODULE(em19)
 #if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
 MODULE(em1c)
 SMODULE_DECL(st2_3)
+SMODULE_DECL(st2_4)
+MODULE(em3e)
 #endif
 #if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
 SMODULE_DECL(st2_3)
@@ -225,6 +227,8 @@ static const Re4dcModule g_modules[] = {
     MODULE(81, em1c),  // ROUTE_CH41: r218 Ganados (em10g group)
     SMODULE(97, st2_3), // ROUTE_CH41: castle chapter 4 (r220..r22c; 4-1 ends in r229 / r221 / r22b)
     {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH41: r221 boss, room overlay
+    SMODULE(118, st2_4), // ROUTE_CH41: r22c (castle shooting gallery hub)
+    MODULE(94, em3e),  // ROUTE_CH41: r22c targets (cEmMark), in the image (R22C_HOOKS)
 #endif
 #if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4
 #if !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
@@ -538,9 +542,9 @@ RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #endif
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
-RouteOverlay g_stage_ovl[13];
+RouteOverlay g_stage_ovl[14];
 #else
-RouteOverlay g_stage_ovl[9];
+RouteOverlay g_stage_ovl[10];
 #endif
 inline int stageSlot(u32 id)
 {
@@ -548,6 +552,11 @@ inline int stageSlot(u32 id)
     case 74: return 0; case 73: return 1; case 78: return 2; case 86: return 3;   // st1_0 st1_1 st1_2 st1_3
     case 75: return 4; case 82: return 5; case 83: return 6; case 97: return 7;   // st2_0 st2_1 st2_2 st2_3
     case 96: return 8;                                                           // st4_0
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+    case 118: return 13;                                                         // st2_4 (r22c)
+#else
+    case 118: return 9;                                                          // st2_4 (r22c)
+#endif
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     case 76: return 9; case 87: return 10; case 88: return 11; case 101: return 12; // st3_0 st3_1 st3_2 st3_3 (ROUTE_CH3)
 #endif

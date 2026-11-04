@@ -28,6 +28,14 @@
 
 extern "C" void OSReport(const char* fmt, ...);
 extern void (*EmInitFunc)(cEm* em);   // game/em.cpp
+#if defined(RE4DC_R22C_HOOKS) && RE4DC_R22C_HOOKS
+// R22C_HOOKS (lane world-ch4 11-04): em3e is linked into the image (5.5 KB) while r22c's room code is the st2_4
+// room overlay, which the image cannot link against. R22cInit stores its two callbacks here; em3e only exists in r22c.
+void (*re4dc_r22c_hitmark)(int type, int kind, Vec* pos, int hit, int age);
+void (*re4dc_r22c_hiteffect)(int no);
+#define R22cHitMark(...) (re4dc_r22c_hitmark ? re4dc_r22c_hitmark(__VA_ARGS__) : (void) 0)
+#define R22cHitEffect(n) (re4dc_r22c_hiteffect ? re4dc_r22c_hiteffect(n) : (void) 0)
+#endif
 
 typedef void (*EmMarkFunc)(cEmMark*);
 
@@ -42,7 +50,12 @@ static void emmark_none(cEmMark* em);
 // EmInitFunc: placement-constructs a target in the cEm work.
 void em3eInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEmMark;
+#else
     new (em) cEmMark();
+#endif
 }
 
 // Constructor: targets cannot be locked on.

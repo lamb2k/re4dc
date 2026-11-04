@@ -38,7 +38,11 @@ PER_LINK_CTORS = {"Sscrn"}
 # OSLink binds these by module id while both are linked. Each entry keeps the named symbols of that
 # module global (route lane 2026-10-01: r107.cpp (st1_1) calls cEm27::setWaterHeight on its fish; the
 # only cross-REL import in the image, found by an nm scan of every module object).
-CROSS_REL_EXPORTS = {"em27": ["__ZN5cEm2714setWaterHeightEf"]}
+# em3e (lane world-ch4 11-04): r22c (st2_4 overlay) creates its targets through cEmMark::init / setDown, and
+# R22cInit stores its hit callbacks in em3e's two R22C_HOOKS pointers.
+CROSS_REL_EXPORTS = {"em27": ["__ZN5cEm2714setWaterHeightEf"],
+                     "em3e": ["__ZN7cEmMark4initEP10EmMarkData", "__ZN7cEmMark4initEhP10EmMarkInstfff",
+                              "__ZN7cEmMark7setDownEv", "_re4dc_r22c_hitmark", "_re4dc_r22c_hiteffect"]}
 
 
 def units(cfg, mod):

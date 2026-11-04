@@ -457,8 +457,16 @@ static inline u32 flagBit(u32 f, u32 bit)
 // range entrance is a level); the range keeper and gate tasks, area 0 = start the game, area 7 = the
 // high-score board, area 2 = the exit door; the two range doors paired and close-locked; Ashley's wait
 // task; the bottle caps owned are counted.
+#if defined(RE4DC_R22C_HOOKS) && RE4DC_R22C_HOOKS
+extern void (*re4dc_r22c_hitmark)(int type, int kind, Vec* pos, int hit, int age);   // em3e.cpp (R22C_HOOKS)
+extern void (*re4dc_r22c_hiteffect)(int no);
+#endif
 void R22cInit()
 {
+#if defined(RE4DC_R22C_HOOKS) && RE4DC_R22C_HOOKS
+    re4dc_r22c_hitmark = R22cHitMark;
+    re4dc_r22c_hiteffect = R22cHitEffect;
+#endif
 #line 1978 "D:/Bio4/Prog/r22c.cpp"
     r22c_work.p = (R22cWork*) MEM_CALLOC(sizeof(R22cWork), 1, 0xd);
     r22c_work.p->result.read();
