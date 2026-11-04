@@ -125,6 +125,13 @@ void CameraMove()
         }
     }
     CamDbg.move(cam, &Joy[1], 0);
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+    {   // warp `camfront` (test only): face stills
+        extern "C" int re4dc_warp_camfront(Vec*, Vec*);
+        Vec p, a;
+        if (re4dc_warp_camfront(&p, &a)) { cam->param.pos = p; cam->param.at = a; cam->param.roll = 0.0f; }
+    }
+#endif
     if (cam->param.fovy == 0.0f) {
         pLog->err(0, 0, "CameraMove(): Fovy = 0.0f");
         cam->param.fovy = 50.0f;
