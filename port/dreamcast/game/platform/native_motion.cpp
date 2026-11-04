@@ -244,7 +244,7 @@ unsigned aligned(unsigned n) { return (n+31)&~31U; }
 // dc/mot directory (450+ entries, ~13 sectors) through fs_iso9660's small block cache, which other opens keep evicting:
 // a cold key open cost 180-282 ms in play (r11e, r202; Flycast meter), the read itself < 1 ms. The directory is read
 // once (fs_readdir; the patched fs_iso9660 hands each entry's extent: kos-804b319-iso-open-extent.patch) into a
-// sorted (crc, fnv) -> (extent, size) table, and keys open by extent (an ordinary fs handle: same reads and streams).
+// sorted crc -> (extent, size) table, and keys open by extent (an ordinary fs handle: same reads and streams).
 // The mounted disc's own directory is indexed, so Disc 1 and Disc 2 each get theirs; a disc change (iso_reset bumps the
 // generation) re-indexes. A key the table lacks, or a failed open, takes the name open as before. =2 also reads each of
 // the first 64 indexed keys by name and compares the bytes (test only: "motion key index verify" lines).
@@ -252,8 +252,10 @@ extern "C" uint32_t fs_iso9660_last_extent(file_t f);
 extern "C" unsigned fs_iso9660_generation(void);
 extern "C" file_t fs_iso9660_open_extent(uint32_t extent, uint32_t size, unsigned generation);
 namespace motidx {
-struct Ent { unsigned crc, fnv, extent, size; };
-Ent* ents; unsigned count, gen, builds, hits, misses, stale;
+// 8 bytes per key: crc, extent - base (the keys sit together on the disc), size. A crc two keys share is left out (its
+// keys take the name open), so the crc alone names a key; fast_key_read still checks the size.
+struct Ent { unsigned crc; unsigned short rel, size; };
+Ent* ents; unsigned count, base, gen, builds, hits, misses, stale;
 bool built;
 bool hex8(const char* s, unsigned& v) {
     v=0;for(int i=0;i<8;++i){const char c=s[i];unsigned d;
@@ -264,45 +266,52 @@ bool hex8(const char* s, unsigned& v) {
 bool parse(const char* s, unsigned& crc, unsigned& fnv) {   // "<8 hex>-<8 hex>.fcv"
     return hex8(s,crc) && s[8]=='-' && hex8(s+9,fnv) && s[17]=='.';
 }
-bool less(const Ent& a, const Ent& b) { return a.crc!=b.crc ? a.crc<b.crc : a.fnv<b.fnv; }
 void build() {
     const std::uint64_t t0=timer_us_gettime64();
-    free(ents);ents=nullptr;count=0;built=true;++builds;
+    free(ents);ents=nullptr;count=0;base=0;built=true;++builds;
     const file_t d=fs_open("/cd/dc/mot",O_RDONLY|O_DIR);
-    if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot\n");return; }
+    if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot
+");return; }
     gen=fs_iso9660_generation();
-    unsigned n=0,c,f;
-    while(const dirent_t* de=fs_readdir(d)) if(!(de->attr&O_DIR) && parse(de->name,c,f))++n;
-    fs_rewinddir(d);
-    ents=n?static_cast<Ent*>(malloc(n*sizeof(Ent))):nullptr;
-    if(ents) {
-        while(count<n) {
-            const dirent_t* de=fs_readdir(d);if(!de)break;
-            if((de->attr&O_DIR) || !parse(de->name,c,f))continue;
-            Ent e{c,f,fs_iso9660_last_extent(d),unsigned(de->size)};
-            unsigned j=count++;                        // insertion sort: the directory is nearly sorted already
-            while(j && less(e,ents[j-1])) { ents[j]=ents[j-1];--j; }
-            ents[j]=e;
-        }
+    // One pass over the directory: a Joliet record of a key name is 80 bytes, so size/72 bounds the key count.
+    const unsigned cap=unsigned(fs_total(d))/72U+1U;
+    ents=static_cast<Ent*>(malloc(cap*sizeof(Ent)));
+    unsigned c,f,skipped=0,dups=0;
+    while(ents) {
+        const dirent_t* de=fs_readdir(d);if(!de)break;
+        if((de->attr&O_DIR) || !parse(de->name,c,f))continue;
+        const unsigned ext=fs_iso9660_last_extent(d),size=unsigned(de->size);
+        if(!base)base=ext;
+        if(count>=cap || ext<base || ext-base>0xffffU || !size || size>0xffffU) { ++skipped;continue; }
+        Ent e{c,(unsigned short)(ext-base),(unsigned short)size};
+        unsigned j=count++;                        // insertion sort: the directory is nearly sorted already
+        while(j && ents[j-1].crc>e.crc) { ents[j]=ents[j-1];--j; }
+        ents[j]=e;
     }
     fs_close(d);
-    re4dc_log("motion key index: keys=%u bytes=%u gen=%u build=%u us=%u\n",count,unsigned(count*sizeof(Ent)),gen,builds,
-              unsigned(timer_us_gettime64()-t0));
+    for(unsigned i=0,o=0;i<count;) {               // drop crcs two keys share
+        unsigned k=i+1;while(k<count && ents[k].crc==ents[i].crc)++k;
+        if(k-i==1)ents[o++]=ents[i];else dups+=k-i;
+        i=k;if(i>=count)count=o;
+    }
+    re4dc_log("motion key index: keys=%u bytes=%u skipped=%u dup=%u base=%u gen=%u build=%u us=%u
+",count,cap*unsigned(sizeof(Ent)),
+              skipped,dups,base,gen,builds,unsigned(timer_us_gettime64()-t0));
 }
-const Ent* find(unsigned crc, unsigned fnv) {
+const Ent* find(unsigned crc) {
     unsigned lo=0,hi=count;
-    while(lo<hi) { const unsigned m=(lo+hi)/2;const Ent& e=ents[m];
-        if(e.crc==crc && e.fnv==fnv)return &e;
-        if(e.crc<crc || (e.crc==crc && e.fnv<fnv))lo=m+1;else hi=m; }
+    while(lo<hi) { const unsigned m=(lo+hi)/2;
+        if(ents[m].crc==crc)return &ents[m];
+        if(ents[m].crc<crc)lo=m+1;else hi=m; }
     return nullptr;
 }
 file_t open(const char* path) {
     unsigned crc,fnv;
     if(std::strncmp(path,"/cd/dc/mot/",11) || !parse(path+11,crc,fnv))return FILEHND_INVALID;
     if(!built || gen!=fs_iso9660_generation())build();
-    const Ent* e=find(crc,fnv);
+    const Ent* e=find(crc);
     if(!e) { ++misses;return FILEHND_INVALID; }
-    const file_t f=fs_iso9660_open_extent(e->extent,e->size,gen);
+    const file_t f=fs_iso9660_open_extent(base+e->rel,e->size,gen);
     if(f==FILEHND_INVALID) { ++stale;built=false;return FILEHND_INVALID; }   // disc changed: re-index next time
     ++hits;
 #if RE4DC_MOTION_KEY_INDEX >= 2
@@ -319,7 +328,7 @@ file_t open(const char* path) {
         }
         if(g!=FILEHND_INVALID)fs_close(g);
         free(a);
-        re4dc_log("motion key index verify: key=%08x-%08x extent=%u size=%u gen=%u %s\n",crc,fnv,e->extent,e->size,gen,
+        re4dc_log("motion key index verify: key=%08x-%08x extent=%u size=%u gen=%u %s\n",crc,fnv,base+e->rel,unsigned(e->size),gen,
                   same==1?"same":same==0?"DIFFERENT":"unread");
     }
 #endif
