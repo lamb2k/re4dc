@@ -44,7 +44,7 @@ disc2_jobs() {
   done
   # chapter 3-2 (lane world-ch32 11-02): r205 r209 r20a r20b + the r209 door-4 s00 trigger (etcdoor), warps in worldch32/warps
   local CW32=$T/port/dreamcast/tools/d367/worldch32/warps
-  for rw in r205:h-r205 r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b; do
+  for rw in r205:h-r205 r205a:h2-r205-ashley r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b; do
     r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done

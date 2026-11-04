@@ -2,7 +2,6 @@ name ch32-r20b-end
 room 0x20b
 jp 0
 chapter 7
-status 3 0x04000000
 inv default
 god
 stock

@@ -2,7 +2,6 @@ name ch32-r209-hall
 room 0x209
 jp 0
 chapter 7
-status 3 0x04000000
 inv default
 god
 alivelog 60
