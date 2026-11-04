@@ -254,9 +254,18 @@ void PenClothFixClear(cModel* m, PenCloth* c, int no)
 // 0x00200000) always steps. Cloth links carry no gameplay volumes: render-side approximation (look check).
 static int re4dc_pen_cloth_lod_skip(cModel* m, PenCloth* c)
 {
+#if defined(RE4DC_PEN_CLOTH_LOD_SUB) && RE4DC_PEN_CLOTH_LOD_SUB
+    // PEN_CLOTH_LOD_SUB=1 (castlebudget.mk; lane castlebudget 2026-11-04; approximation, default 0): Ashley (pSUB) takes
+    // the same off-screen / far rule as other chains (her skirt 48 + hair 21 + sweater 8 links; stepped twice a tick
+    // while she is held in cSubChar::moveEvent, as on the GameCube). Leon is still never skipped.
+    if ((cModel*) pPL == m || (m->be_flag & 0x00200000)) {
+        return 0;
+    }
+#else
     if ((cModel*) pPL == m || (cModel*) pSUB == m || (m->be_flag & 0x00200000)) {
         return 0;
     }
+#endif
     if ((((u32) pG->Frame_cnt + ((u32) c >> 4)) % RE4DC_PEN_CLOTH_LOD) == 0) {
         return 0;
     }

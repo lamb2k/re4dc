@@ -3695,6 +3695,7 @@ include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
 include logiclod20.mk
 include logicbudget.mk
+include castlebudget.mk
 # Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
 include rigid20.mk
 include shotfx20.mk
