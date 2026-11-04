@@ -2036,6 +2036,11 @@ if os.path.isdir(CPIC34D):
 R20DEM19D = os.environ.get('R20DEM19D', '/root/re4data/private/castle34-em19-20261103/set-r20dem19')
 if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
     DATA['r20dem19'] = {'dc/native/r20d/registry.re4nmr': R20DEM19D + '/dc/native/r20d/registry.re4nmr'}
+# em14q (lane em14q 11-04, DISC 2 ONLY via D2_DATA): r20f's registry package with zealot-em14-08q (08p + the alternate
+# accessory pool acc2-b 0x211|0x220, acc5-b 0x217|0x219; r20f's second type 8 row carries flag 0x4000), CAST-GC r20f.
+EM14QD = os.environ.get('EM14QD', '/root/re4data/private/em14q-20261104/set-em14q')
+if os.path.isfile(EM14QD + '/dc/native/r20f/registry.re4nmr'):
+    DATA['em14q'] = {'dc/native/r20f/registry.re4nmr': EM14QD + '/dc/native/r20f/registry.re4nmr'}
 # res34 (lane world-ch334 11-03, DISC 2 ONLY): the castle resident.bin with r20c r20f r206 r20d r20e from vram/resident/castle18.
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
