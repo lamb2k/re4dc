@@ -42,6 +42,12 @@ disc2_jobs() {
     r=${rw%%:*}; grep -v '^squeeze' "$CW31/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
+  # chapter 3-2 (lane world-ch32 11-02): r205 r209 r20a r20b + the r209 door-4 s00 trigger (etcdoor), warps in worldch32/warps
+  local CW32=$T/port/dreamcast/tools/d367/worldch32/warps
+  for rw in r205:h-r205 r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b; do
+    r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
+    job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
+  done
   # Chapter 4 rooms (lane world-ch4 11-02; D2_DATA c4world / c4gca): entry warps worldch4/warps/<room>.txt (door arrival,
   # chapter, god, census). RR_D2_CH4=0 skips them.
   C4R=""
@@ -52,7 +58,7 @@ disc2_jobs() {
         job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
     done
   fi
-  echo "r200 r202 r203 r201 r207 r208 r204 $C4R" > "$W/d2-census-rooms.txt"
+  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b $C4R" > "$W/d2-census-rooms.txt"
   # r207 hall clear rig (lane world-ch31): god + stock, the source damage path kills the nearest Ganado every 75 frames;
   # 180 s: the entry radio event alone runs to ~52 s wall; the log shows kills, cap holds/releases and the room flags (clear + doors). Judged by hand, not by rr-judge.
   if [ -s "$CW31/w31-r207-kill.txt" ]; then
@@ -64,7 +70,7 @@ disc2_jobs() {
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r203 r201 r207 r208 r204 $C4R; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b $C4R; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi

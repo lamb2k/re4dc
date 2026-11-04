@@ -1,0 +1,11 @@
+name ch32-r209-door4-s00
+room 0x209
+jp 0
+chapter 7
+status 3 0x04000000
+inv default
+god
+etcdoor 60 4 0x10000000
+alivelog 60
+census 300
+dump
