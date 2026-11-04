@@ -65,6 +65,52 @@ constexpr bool n256_rows_match() {
     return swapped==25U;  // n256w25 + n256x25 + n256z25 + world-n256all + n256r100: r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10c r10f r111 r112 r113 r117 r118 r119 r11a r11b r11c r11d r11e
 }
 static_assert(n256_rows_match());
+#elif defined(RE4DC_WORLD_BAKE) && RE4DC_WORLD_BAKE
+// WORLD_BAKE=1 (lane bakeall 2026-11-02, game/bakeall.mk): the rooms of the bake set (ps2_room_r4im.py --bake-static
+// [--bake-rows], tools/d367/bakeall) carry new packages; their rows are swapped (provenance_certificates_bake.inc,
+// geninc_bake.py) so the shipped rekeyed R4PW maps to the converter's own R4PW crc, the policy source the regenerated
+// ids / r4tc / room file (OCCL, SCDD) are bound to. Swapped, not added: same table size.
+inline constexpr Certificate certificates_base[] = {
+#include "provenance_certificates.inc"
+};
+#if RE4DC_WORLD_BAKE == 3
+// WORLD_BAKE=3 (lane roomscan): the scan1 set's rows (tools/d367/roomscan, geninc_bake.py), same rule.
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_scan1.inc"
+};
+inline constexpr unsigned bake_rooms[] = {
+#include "provenance_scan1_rooms.inc"
+};
+#elif RE4DC_WORLD_BAKE == 2
+// WORLD_BAKE=2 (lane lod27): the lod27 set's rows (tools/d367/lod27, geninc_bake.py), same rule.
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_lod27.inc"
+};
+inline constexpr unsigned bake_rooms[] = {
+#include "provenance_lod27_rooms.inc"
+};
+#else
+inline constexpr Certificate certificates[] = {
+#include "provenance_certificates_bake.inc"
+};
+inline constexpr unsigned bake_rooms[] = {
+#include "provenance_bake_rooms.inc"
+};
+#endif
+static_assert(sizeof(certificates)==sizeof(certificates_base));
+constexpr bool bake_rows_match() {
+    for(unsigned i=0;i<sizeof(certificates)/sizeof(certificates[0]);++i){
+        const auto& a=certificates_base[i];const auto& b=certificates[i];
+        if(a.room!=b.room)return false;
+        bool baked=false;
+        for(unsigned r:bake_rooms)if(r==a.room)baked=true;
+        if(!baked && (a.world_bytes!=b.world_bytes || a.placements!=b.placements || a.parts!=b.parts ||
+           a.meshes!=b.meshes || a.physical_body_crc!=b.physical_body_crc || a.physical_file_fnv!=b.physical_file_fnv ||
+           a.mesh_crc!=b.mesh_crc || a.mesh_bytes!=b.mesh_bytes || a.source_crc!=b.source_crc))return false;
+    }
+    return true;
+}
+static_assert(bake_rows_match());
 #else
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"

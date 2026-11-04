@@ -617,28 +617,57 @@ def fit_affine(a, b):
     return M.T                                              # 3 x 4
 
 
-def bake_static(groups, obj_path, dynamic_below=250):
+BAKED_INDEX = []      # bake_static: the merged placements' row indices that are addressable (id < 250) rows
+
+
+def bake_static(groups, obj_path, dynamic_below=250, extra=(), cell=0.0):
     """--bake-static: the static groups (scroll object id >= dynamic_below) as one world-space group placed once (the
-    first static group's index, so ps2-world.ids gives it a static id); the other groups unchanged, in order."""
+    first static group's index, so ps2-world.ids gives it a static id); the other groups unchanged, in order.
+    extra (--bake-rows, lane bakeall): SMD row indices with an id < dynamic_below that are proven unaddressed (no room
+    code, effect, light or module reference: tools/d367/bakeall); baked too. The merged placement keeps a static row's
+    index when there is one; otherwise main() writes id 0xFF for it in ps2-world.ids (BAKED_INDEX).
+    cell > 0 (--bake-cell, lane bakeall variant): merge only within square XZ cells of this size (by each row's
+    centroid), one merged placement per cell with 2+ rows, so per-placement culling still works per cell."""
     import ps2_room_ids
+    global BAKED_INDEX
     ids = ps2_room_ids.group_ids(obj_path)
-    keep = [g for g in groups if ids[g['index']] < dynamic_below]
-    stat = [g for g in groups if ids[g['index']] >= dynamic_below]
-    if len(stat) < 2:
-        return groups
+    extra = set(extra)
+    is_stat = lambda g: ids[g['index']] >= dynamic_below or g['index'] in extra
+    keep = [g for g in groups if not is_stat(g)]
+    stat = [g for g in groups if is_stat(g)]
+    if cell > 0:
+        bins = collections.defaultdict(list)
+        for g in stat:
+            c = g['pos'].reshape(-1, 3).mean(0)
+            bins[(int(np.floor(c[0] / cell)), int(np.floor(c[2] / cell)))].append(g)
+        cells = [v for _, v in sorted(bins.items())]
+    else:
+        cells = [stat]
+    out = list(keep)
+    for part in cells:
+        if len(part) < 2:
+            out += part
+            continue
+        out.append(_bake_merge(part, ids, dynamic_below))
+    print('bake-static: %d static groups -> %d meshes (cell %g); %d groups kept' % (
+        len(stat), len(out) - len(keep), cell, len(keep)), file=sys.stderr)
+    return out
+
+
+def _bake_merge(stat, ids, dynamic_below):
+    stat = sorted(stat, key=lambda g: ids[g['index']] < dynamic_below)     # a static-id row first (stable otherwise)
+    if ids[stat[0]['index']] < dynamic_below:
+        BAKED_INDEX.append(stat[0]['index'])
     base, vidx = 0, []
     for g in stat:
         vidx.append(g['vidx'] + base)
         base += int(g['vidx'].max()) + 1
     cat = lambda k: np.concatenate([g[k] for g in stat])
-    merged = dict(index=stat[0]['index'], name='baked-static', bin=-1, kind='BAKED', smd=stat[0]['smd'],
-                  vidx=np.concatenate(vidx), pos=cat('pos'), uv=cat('uv'), rgb=cat('rgb'), alpha=cat('alpha'),
-                  tex=cat('tex'), blend=cat('blend'), cull=stat[0]['cull'],
-                  face_cull=np.concatenate([np.full(len(g['tex']), g['cull']) for g in stat]),
-                  gc_lights=None, a0gc=False)
-    print('bake-static: %d static groups (%d triangles) -> 1 mesh; %d groups kept' % (
-        len(stat), len(merged['tex']), len(keep)), file=sys.stderr)
-    return keep + [merged]
+    return dict(index=stat[0]['index'], name='baked-static', bin=-1, kind='BAKED', smd=stat[0]['smd'],
+                vidx=np.concatenate(vidx), pos=cat('pos'), uv=cat('uv'), rgb=cat('rgb'), alpha=cat('alpha'),
+                tex=cat('tex'), blend=cat('blend'), cull=stat[0]['cull'],
+                face_cull=np.concatenate([np.full(len(g['tex']), g['cull']) for g in stat]),
+                gc_lights=None, a0gc=False)
 
 
 def build(groups, gains, textures, share=True, vertex_alpha='off'):
@@ -798,6 +827,12 @@ def main():
                          "(doors, PS2_WORLD_DYNAMIC binds, sky) stay their own placements. With --lod-cluster the merged "
                          "mesh is cut into spatial clusters, so culling and LOD still work per region (lane "
                          "fix-r10d-speed23: r10d, 167 static of 228 placements). Default off (byte-identical packages)")
+    ap.add_argument('--bake-cell', type=float, default=0.0,
+                    help="--bake-static: merge only within square XZ cells of this size (world units; 0 = one mesh)")
+    ap.add_argument('--bake-rows', type=Path,
+                    help="--bake-static: a json {room: [SMD row index, ...]} of rows with an id < 250 proven unaddressed "
+                         "(tools/d367/bakeall smd_data_refs.py + bake_classify.py 'addr-unref'); baked with the static "
+                         "rows (lane bakeall tier 2). Default none")
     a = ap.parse_args()
     crb.MAX_MESHLET_VERTICES = a.meshlet_vertices
     global CUTOUT_MAX_ALPHA
@@ -813,7 +848,8 @@ def main():
     used, gains = final_gains(a.room, a.src, a.out, groups)
     textures = build_textures(a.room, a.src, a.out, used, gains)
     if a.bake_static:
-        groups = bake_static(groups, a.src / f'{a.room}_004.scenario.obj')
+        extra = json.loads(a.bake_rows.read_text()).get(a.room, ()) if a.bake_rows else ()
+        groups = bake_static(groups, a.src / f'{a.room}_004.scenario.obj', extra=extra, cell=a.bake_cell)
     meshes, placements, sources, parts_meta, stats = build(groups, gains, textures, share=not a.no_share,
                                                            vertex_alpha=a.vertex_alpha)
     scales = collections.defaultdict(float)
@@ -836,6 +872,11 @@ def main():
     sys.path.insert(0, str(HERE))
     import ps2_room_ids
     ps2_room_ids.write(a.src / f'{a.room}_004.scenario.obj', a.out / 'ps2-world.r4pw', a.out / 'ps2-world.ids')
+    if BAKED_INDEX:                      # a merged mesh sits on an addressable row's index: never bind it to that object
+        b = bytearray((a.out / 'ps2-world.ids').read_bytes())
+        for i in BAKED_INDEX:
+            b[16 + i] = 0xFF
+        (a.out / 'ps2-world.ids').write_bytes(b)
     summary.pop('meshes_detail', None)
     tri = collections.Counter()
     for g in groups:
