@@ -157,7 +157,11 @@ unsigned char skin_bone[119];
 #if RE4DC_ACTOR_PL08
 // ACTOR_PL08: one stream, keyed by costume (0 pl00 = leon4k::chunks, 1 pl08 = pl08's role chunks). A costume change
 // rebuilds it before use, so no palette program of the other costume can be read.
+#if RE4DC_LEON_WOUND
+unsigned skin_first[10], skin_groups[10], skin_used, skin_state, skin_costume;  // LEON_WOUND: 0x10B has ten roles
+#else
 unsigned skin_first[9], skin_groups[9], skin_used, skin_state, skin_costume;
+#endif
 #if RE4DC_COARSE_SKIN_FTRV == 2
 CoarseSkinCheck skin_chk;
 #endif

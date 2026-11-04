@@ -2077,7 +2077,11 @@ if os.path.isdir(ISND300D):
 # (model-registry/ps2-ch5-r332s.json: em31 types 0 / 1, weak point, tail) + its 5 PS2 pictures. em31 / em3a motion is already
 # PS2-identical (rewrite: 0 changed clips). Stores: re4-assets-private/bossk-20261103, bosss-20261103 (RECIPE.txt, manifest.tsv).
 for _n, _d in (('bossk', os.environ.get('BOSSKD', '/root/re4data/private/bossk-20261103')),
-               ('bosss', os.environ.get('BOSSSD', '/root/re4data/private/bosss-20261103'))):
+               ('bosss', os.environ.get('BOSSSD', '/root/re4data/private/bosss-20261103')),
+               # wound (lane bosscast-wound 11-03, with the program knob LEON_WOUND=1; DISC 3 ONLY via D3_DATA): Leon's
+               # chapter 5 wound picture, the PS2 TPL 0xF pair under GC pair key 8f359de1-44158660 (build_wound.py;
+               # the same store holds the program header ps2leon_wound.h = LEON_WOUND_DIR). Store: re4-assets-private/wound-20261103.
+               ('wound', os.environ.get('WOUNDD', '/root/re4data/private/wound-20261103'))):
     if os.path.isfile(_d + '/manifest.tsv'):
         DATA[_n] = {_l.strip(): _d + '/' + _l.strip() for _l in open(_d + '/manifest.tsv') if _l.strip()}
 

@@ -90,6 +90,9 @@ inline bool source_appearance_type(unsigned appearance,unsigned id,unsigned type
     if(appearance==0x108)return id==0 && type==0;
 #if RE4DC_LEON_HEADLESS
     if(appearance==0x109)return id==0 && type==0;  // LEON_HEADLESS: pl08 after setHead(0), proved by the 0x109 rows
+#endif
+#if RE4DC_LEON_WOUND
+    if(appearance==0x10B)return id==0 && type==0;  // LEON_WOUND: pl08 with the wound overlay, proved by the 0x10B rows
     if(appearance==0x10A)return id==1;  // LEON_HEADLESS v2: the flying head cObj01 (ObjMgr id 1), proved by the 0x10A row
 #endif
 #endif
@@ -489,7 +492,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     armor_rows=registry && (m->id==0x3cu || m->id==0x25u);
 #endif
     if(registry ? !re4dc_registry_model(m,p) :
-       ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
+       ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:RE4DC_LEON_WOUND && p->appearance==0x10Bu?10u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
         (!leon && !RE4DC_HEAD_APP(p->appearance) && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)) ||
         (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type)))) {
         out.error=Error::UnknownAppearance;return out;
@@ -509,7 +512,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
        !room_colour_scale(gxCsScale[m->TevScaleGroup],!leon || RE4DC_ACTOR_LEON_NATIVE_LOOK) ||
        m->AddAmb_r || m->AddAmb_g || m->AddAmb_b) {out.error=Error::LiveModifier;return out;}
 #else
-    if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
+    if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:RE4DC_LEON_WOUND && p->appearance==0x10Bu?10u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
        (!leon && !RE4DC_HEAD_APP(p->appearance) && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)) ||
        (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type))) {
         out.error=Error::UnknownAppearance;return out;

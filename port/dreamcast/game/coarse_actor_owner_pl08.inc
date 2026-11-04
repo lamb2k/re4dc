@@ -4,6 +4,16 @@
 // (exact_infos), the 119 bind matrices must equal the shared Leon bind, and the certificate runs unchanged. Any
 // failure leaves the whole model on the source path. Roles 2..7 and the 14 hair runs use pl00's byte-identical arrays
 // and their immutable IDs; roles 0, 1 and 8 (pl08 BIN4, BIN10, BIN16) are leon_pl08_runtime.h's own chunks.
+#if RE4DC_LEON_WOUND
+// LEON_WOUND (crowd.mk): cPlLeon::setWound() (r317 after the Krauser knife fight; every later room through setModel
+// while pG->Scenario_flg[0] & 0x20) appends player arc 0xE / TPL 0xF, the wound overlay, as a tenth info. The same
+// owner then plans appearance 0x10B: pl08's nine roles unchanged plus role 9, the PS2 wound (ps2leon_wound.h, the
+// PS2 disc's pl08 arc 0xE) drawn as one whole-chunk run on the wound pair material (PS2 TPL 0xF colour + mask).
+#if !RE4DC_LEON_HAND_ANY
+#error LEON_WOUND needs the Leon hand poses (LEON_HAND_PACK or LEON_HAND_DIR)
+#endif
+#include "ps2leon_wound.h"
+#endif
 namespace {
 #if RE4DC_ACTOR_PL08_PACK
 // ACTOR_PL08_PACK: roles 0, 1, 8 are the published package descriptors (coarse_actor_pl08_pack.inc).
@@ -15,8 +25,14 @@ const leon4k::Chunk* const pl08_chunk[9]={&leon_pl08::chunks[0],&leon_pl08::chun
 #endif
 #if RE4DC_LEON_HAND_ANY
 // LEON_HAND_DIR: the pl08 plan's role chunks with roles 5 / 6 following the hand poses, and their skin key.
+#if RE4DC_LEON_WOUND
+// LEON_WOUND: role 9 (only read when the wound plan binds ten infos) is the PS2 wound chunk.
+const leon4k::Chunk* pl08_cur[10]={pl08_chunk[0],pl08_chunk[1],pl08_chunk[2],pl08_chunk[3],pl08_chunk[4],pl08_chunk[5],
+    pl08_chunk[6],pl08_chunk[7],pl08_chunk[8],&leon_wound::chunk};
+#else
 const leon4k::Chunk* pl08_cur[9]={pl08_chunk[0],pl08_chunk[1],pl08_chunk[2],pl08_chunk[3],pl08_chunk[4],pl08_chunk[5],
     pl08_chunk[6],pl08_chunk[7],pl08_chunk[8]};
+#endif
 unsigned pl08_cur_key=1;
 #define RE4DC_PL08_ROLES pl08_cur
 #define RE4DC_PL08_SKIN_KEY pl08_cur_key
@@ -24,7 +40,22 @@ unsigned pl08_cur_key=1;
 #define RE4DC_PL08_ROLES pl08_chunk
 #define RE4DC_PL08_SKIN_KEY 1
 #endif
+#if RE4DC_LEON_WOUND
+cModelInfo* pl08_infos[10];
+// The bound plan's info count: 9 (0x108) or 10 (0x10B, the wound info present), set by owner_pl08_bind.
+unsigned pl08_n=9;
+// The player wears the wound overlay: one of its infos is the player archive's arc 0xE (setWound()).
+bool leon_wound_on(const cModel* m) {
+    if(!pG->pPlayer)return false;
+    const auto* w=static_cast<const ModelData*>(PL_ARC_PTR(pG->pPlayer,0xE));
+    for(const cModelInfo* p=m->pModelInfo;p;p=p->pList)if(p->pData==w)return true;
+    return false;
+}
+#define RE4DC_PL08_N pl08_n
+#else
 cModelInfo* pl08_infos[9];
+#define RE4DC_PL08_N 9
+#endif
 cParts* pl08_parts[119];
 cModel* pl08_owner;
 unsigned pl08_owner_serial,pl08_binding_revision;
@@ -32,7 +63,13 @@ cParts* pl08_owner_parts;
 cModel* pl08_root_parts;
 bool owner_pl08_bind(cModel* m) {
     if(!m || m->id || m->nParts!=119 || !m->pList || !m->pParts || (m->be_flag&0x4000))return false;
+#if RE4DC_LEON_WOUND
+    pl08_n=leon_wound_on(m)?10u:9u;
+    if(!re4dc_actor_role_bindings(m,pl08_n==10u?0x10Bu:0x108u,pl08_infos,pl08_n) ||
+       !re4dc_actor::exact_infos(m->pModelInfo,pl08_infos,pl08_n))return false;
+#else
     if(!re4dc_actor_role_bindings(m,0x108,pl08_infos,9) || !re4dc_actor::exact_infos(m->pModelInfo,pl08_infos,9))return false;
+#endif
     const unsigned revision=re4dc_actor_binding_revision(m);if(!revision)return false;
     if(pl08_owner!=m || pl08_owner_serial!=m->serial || pl08_owner_parts!=m->pList || pl08_root_parts!=m->pParts ||
        pl08_binding_revision!=revision) {
@@ -55,8 +92,11 @@ int owner_pl08_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) 
 #if RE4DC_ACTOR_PL08_PACK
     if(!pl08_pack.published)return 0;
 #endif
-    if(!owner_pl08_bind(m) || !skin_build(RE4DC_PL08_SKIN_KEY,RE4DC_PL08_ROLES,9))return 0;
-    for(unsigned i=0;i<9;++i)if(p.info[i]!=pl08_infos[i] || !output[i])return 0;
+    if(!owner_pl08_bind(m) || !skin_build(RE4DC_PL08_SKIN_KEY,RE4DC_PL08_ROLES,RE4DC_PL08_N))return 0;
+#if RE4DC_LEON_WOUND
+    if(p.count!=pl08_n)return 0;  // the plan and the current binding must agree on the wound info
+#endif
+    for(unsigned i=0;i<RE4DC_PL08_N;++i)if(p.info[i]!=pl08_infos[i] || !output[i])return 0;
     Mtx inv;if(!PSMTXInverse(m->pParts->mat,inv))return 0;
     alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
     for(unsigned u=0;u<skin_used;++u) {
@@ -64,7 +104,7 @@ int owner_pl08_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) 
         skin_jobs[u]={&pl08_parts[b]->mat[0][0],RE4DC_LEON_BIND_ROW(b,pl08_parts[b]),bone_T[b]};
     }
     re4dc_coarse_skin_bones(invx,skin_jobs,skin_used);
-    for(unsigned i=0;i<9;++i) {
+    for(unsigned i=0;i<RE4DC_PL08_N;++i) {
         re4dc_coarse_skin_groups(skin_stream+skin_first[i],skin_groups[i],&bone_T[0][0],output[i],RE4DC_PL08_ROLES[i]->palette_count);
         for(unsigned j=0;j<RE4DC_PL08_ROLES[i]->palette_count*12;++j)if(!coarse_finite(output[i][j]))return 0;
     }
@@ -295,6 +335,10 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #endif
     if(!m || !out || m->id || RE4DC_LEON_OT_BAD(m) || !RE4DC_LEON_LOD_READY() || !owner_pl08_bind(m))return 0;
     Re4dcActorPlan p{};p.count=9;p.appearance=0x108;p.image=pl08_image;p.crc=pl08_crc;p.fnv=pl08_fnv;p.palettes=owner_pl08_palettes;
+#if RE4DC_LEON_WOUND
+    const bool wound=pl08_n==10u;  // LEON_WOUND: the tenth info is the wound overlay (appearance 0x10B)
+    if(wound){p.count=10;p.appearance=0x10B;}
+#endif
 #if RE4DC_ACTOR_PL08_PACK
 #define RE4DC_PL08_OWN(role,prefix,k) re4dc_actor::plan_chunk(p,role,pl08_infos[role],pl08_pack_chunks[k],pl08_pack_input(k))
 #else
@@ -311,6 +355,9 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
     re4dc_actor::plan_chunk(p,5,pl08_infos[5],*hand5.chunk,hand5.input);re4dc_actor::plan_chunk(p,6,pl08_infos[6],*hand6.chunk,hand6.input);
     RE4DC_PL08_SHARED(7,i7);RE4DC_PL08_OWN(8,r8,2);
     pl08_cur[5]=hand5.chunk;pl08_cur[6]=hand6.chunk;pl08_cur_key=leon_hand_key(1,hand5.pose,hand6.pose);
+#if RE4DC_LEON_WOUND
+    if(wound)pl08_cur_key|=0x40000000u;  // the ten-chunk program (wound) never shares a key with the nine-chunk one
+#endif
     const unsigned hand_palette=leon_r32(hand5.chunk->palette_count*48u)+leon_r32(hand6.chunk->palette_count*48u)
         -leon_r32(RE4DC_LEON_STD_PAL(5)*48u)-leon_r32(RE4DC_LEON_STD_PAL(6)*48u);
 #else
@@ -329,6 +376,10 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #endif
 #else
     if(p.palette_bytes!=26144 || p.workspace_bytes!=26112)return 0;
+#endif
+#if RE4DC_LEON_WOUND
+    // The nine pl08 roles proved their totals above; the wound chunk (role 9) adds its own after them.
+    if(wound)re4dc_actor::plan_chunk(p,9,pl08_infos[9],leon_wound::chunk,RE4DC_OWNER_INPUT(leon_wound,w,leon_wound::chunk,119));
 #endif
     p.material_count=1+RE4DC_LEON_HAIR_MATERIALS;  // PS2_LEON: only the hair materials the arm's runs draw
     p.materials[0].image=pl08_image;p.materials[0].crc=pl08_crc;p.materials[0].fnv=pl08_fnv;
@@ -356,7 +407,24 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
         const auto& c=p.input[8];auto& r=p.runs[p.run_count++];
         r.role=8;r.immutable_asset_id=p.immutable_asset_id[8];r.triangles=c.triangles;r.uv=c.uv;r.stream=c.stream;
     }
+#if RE4DC_LEON_WOUND
+    if(wound) {
+        // The wound pair (PS2 TPL 0xF colour + mask intensity as alpha, key 8f359de1-44158660) is the last material,
+        // drawn as the hair pairs are (mask, second pass, no depth write); one whole-chunk run, its own UVs.
+        const unsigned wm=p.material_count++;
+        auto& mat=p.materials[wm];mat.image=wound_colour;mat.mask=wound_mask;mat.crc=kWoundPairCrc;mat.fnv=kWoundPairFnv;
+        mat.material_flags=4;mat.blend=0;mat.depth_mode=RE4DC_ACTOR_LEON_NATIVE_LOOK?1u:0u;
+        mat.mask_ref=0;mat.mask_same_uv=1;mat.wrap_s=mat.wrap_t=1;
+        p.immutable_asset_id[9]=kLeonWoundAsset;
+        const auto& c=p.input[9];auto& r=p.runs[p.run_count++];
+        r.role=9;r.material=wm;r.immutable_asset_id=kLeonWoundAsset;r.triangles=c.triangles;r.uv=c.uv;r.stream=c.stream;
+    }
+#endif
     if((re4dc_actor_material_runs_capability(&p)&3u)!=3u)return 0;
+#if RE4DC_LEON_WOUND
+    if(wound){static unsigned logs;if(logs<4){++logs;re4dc_log("LEON_WOUND plan f=%u palette=%u workspace=%u wound_tris=%u\n",
+        unsigned(pG->Frame_cnt),p.palette_bytes,p.workspace_bytes,leon_wound::chunk.triangles);}}
+#endif
 #if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
     re4dc_atlas_apply(&p);
 #endif

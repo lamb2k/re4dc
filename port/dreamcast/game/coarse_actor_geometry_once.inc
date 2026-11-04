@@ -41,8 +41,15 @@ constexpr unsigned kLeonNeckAsset=kActorImmutableChunks+4u;
 // arc 0xC, build_head.py). Their bytes live in the archive: a new payload address resets the three IDs
 // (actor_immutable_reset_head) before any plan names them.
 constexpr unsigned kLeonHeadAsset=kActorImmutableChunks+5u;
+#if RE4DC_LEON_WOUND
+// LEON_WOUND: the PS2 wound chunk (appearance 0x10B role 9, ps2leon_wound.h, static) follows the flying head's IDs.
+constexpr unsigned kLeonWoundAsset=kActorImmutableChunks+8u;
+ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks+8u)];
+#define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+8u)
+#else
 ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks+7u)];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+7u)
+#endif
 #define RE4DC_LEON_HEAD_IDS 1
 #else
 ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks+3u)];

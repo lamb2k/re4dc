@@ -698,9 +698,9 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
     // A registry appearance has exactly its descriptor's sections, in source info order.
     const unsigned registry_sections=re4dc_registry_sections(appearance);
     if(!m || !out || (registry_sections?count!=registry_sections:
-       (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(count<4u || count>5u || (appearance==0 && count!=4u)))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+       (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(RE4DC_LEON_WOUND && appearance==267)?count!=10u:(count<4u || count>5u || (appearance==0 && count!=4u)))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
 #else
-    if(!m || !out || (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(count<4u || count>5u || (appearance==0 && count!=4u))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+    if(!m || !out || (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(RE4DC_LEON_WOUND && appearance==267)?count!=10u:(count<4u || count>5u || (appearance==0 && count!=4u))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
 #endif
     unsigned seen=0,n=0;for(unsigned k=0;k<count;++k)out[k]=nullptr;
 #if RE4DC_ACTOR_PL08
@@ -769,7 +769,8 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
 #endif
 #if RE4DC_LEON_HAND_POSES
         // LEON_HAND_POSES: Leon's roles may appear in any source order (a hand swap re-appends its info at the end).
-        const bool order_ok=(appearance==256 || appearance==264 || (RE4DC_LEON_HEADLESS && appearance==265)) || role==expected;
+        const bool order_ok=(appearance==256 || appearance==264 || (RE4DC_LEON_HEADLESS && appearance==265) ||
+                            (RE4DC_LEON_WOUND && appearance==267)) || role==expected;
 #else
         const bool order_ok=role==expected;
 #endif

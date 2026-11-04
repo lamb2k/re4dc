@@ -23,6 +23,9 @@ struct Re4dcActorSkinBackup {
 #ifndef RE4DC_LEON_HEADLESS
 #define RE4DC_LEON_HEADLESS 0  // LEON_HEADLESS (crowd.mk): appearance 0x109, Leon after setHead(0)
 #endif
+#ifndef RE4DC_LEON_WOUND
+#define RE4DC_LEON_WOUND 0  // LEON_WOUND (crowd.mk): appearance 0x10B, pl08 with the chapter 5 wound overlay
+#endif
 #ifndef RE4DC_ACTOR_SKIN_RESERVE
 #define RE4DC_ACTOR_SKIN_RESERVE 0
 #endif
@@ -35,7 +38,12 @@ constexpr unsigned kRe4dcActorSkinKeys=64;
 #endif
 // Role-indexed infos per owner plan. ACTOR_PL08=1 (crowd.mk): the nine-info no-jacket Leon (pl08) is the widest
 // plan; every other appearance keeps its exact count. Its one extra (role 8) run follows the 21 Leon runs.
+#if RE4DC_LEON_WOUND
+// LEON_WOUND: the wounded pl08 (0x10B) has ten infos and one more run (the wound) after pl08's 22.
+constexpr unsigned kRe4dcActorRoles=10u;
+#else
 constexpr unsigned kRe4dcActorRoles=RE4DC_ACTOR_PL08?9u:8u;
+#endif
 struct Re4dcActorSkinLease {
     unsigned serial=0,frame=0,count=0;
     Re4dcActorSkinBackup old[kRe4dcActorRoles]{};
@@ -47,7 +55,11 @@ struct Re4dcActorSkinLease {
 #ifndef RE4DC_ACTOR_MATERIALS
 #define RE4DC_ACTOR_MATERIALS 3
 #endif
+#if RE4DC_LEON_WOUND
+constexpr unsigned kRe4dcActorMaterials=RE4DC_ACTOR_MATERIALS,kRe4dcActorRuns=23u;
+#else
 constexpr unsigned kRe4dcActorMaterials=RE4DC_ACTOR_MATERIALS,kRe4dcActorRuns=RE4DC_ACTOR_PL08?22u:21u;
+#endif
 struct Re4dcActorOwnedMaterial {
     Re4dcUiImage image{},mask{};
     unsigned crc=0,fnv=0,material_flags=0,blend=0,depth_mode=0;
