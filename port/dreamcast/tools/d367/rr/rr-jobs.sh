@@ -38,11 +38,11 @@ disc2_jobs() {
   local D2O=$ROUTE/out-fp${RR_PFX:-rr}${S7}d2cW CW31=$T/port/dreamcast/tools/d367/castle31/warps rw r seeds="1"
   [ -d "$EVU/_discs/d2c" ] && [ -s "$D2O/syms.txt" ] || { echo "rr-jobs: no Disc 2 census base" > "$W/d2-skip.txt"; return 0; }
   cp "$D2O/syms.txt" "$J/syms-d2c.txt"
-  for rw in r200:a-r200 r202:b-r202 r203:d-r203 r201:e-r201 r207:c-r207 r208:f-r208 r204:g-r204; do
+  for rw in r200:a-r200 r202:b-r202 r203:d-r203 r201:e-r201 r207:c-r207 r208:f-r208 r204:g-r204 r20c:h-r20c r20f:i-r20f r206:j-r206 r20d:l-r20d r20e:m-r20e; do
     r=${rw%%:*}; grep -v '^squeeze' "$CW31/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
-  echo "r200 r202 r203 r201 r207 r208 r204" > "$W/d2-census-rooms.txt"
+  echo "r200 r202 r203 r201 r207 r208 r204 r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
   # r207 hall clear rig (lane world-ch31): god + stock, the source damage path kills the nearest Ganado every 75 frames;
   # 180 s: the entry radio event alone runs to ~52 s wall; the log shows kills, cap holds/releases and the room flags (clear + doors). Judged by hand, not by rr-judge.
   if [ -s "$CW31/w31-r207-kill.txt" ]; then
@@ -54,7 +54,7 @@ disc2_jobs() {
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r203 r201 r207 r208 r204; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r203 r201 r207 r208 r204 r20c r20f r206 r20d r20e; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
