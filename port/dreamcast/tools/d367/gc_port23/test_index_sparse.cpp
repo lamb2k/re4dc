@@ -68,7 +68,7 @@ void check_one(const char* label) {
         const unsigned char* r = blob.data() + 128 + i * 112;
         Digest d; std::memcpy(d.bytes, r + 64, 32);
         const CheckedAsset a = bind_checked(reinterpret_cast<const char*>(r), reinterpret_cast<const char*>(r + 16), d);
-        assert(a.value && (a.value & 16383u) == i);   // old exact lookup: row i
+        assert(a.value && (a.value & 65535u) == i);   // old exact lookup: row i
         ++binds;
     }
     const unsigned per_bind = reads / binds;
@@ -81,7 +81,7 @@ void check_one(const char* label) {
         const CheckedAsset a = bind_checked(reinterpret_cast<const char*>(r), reinterpret_cast<const char*>(r + 16), d);
         bool row_match = false;   // the mutated digest might equal another real row
         for (unsigned j = 0; j < n; ++j) if (!std::memcmp(blob.data() + 128 + j * 112, r, 64) && !std::memcmp(blob.data() + 128 + j * 112 + 64, d.bytes, 32)) row_match = true;
-        assert(a.value && ((a.value & 16383u) >= n) != row_match);
+        assert(a.value && ((a.value & 65535u) >= n) != row_match);
         ++absent;
     }
     std::printf("%s [%s install]: rows=%u binds=%u reads/bind=%u absent=%u PASS\n", label, use_stream ? "stream" : "read", n, binds, per_bind, absent);

@@ -124,7 +124,7 @@ def ps2_mapped(a):
     return raw, ps2
 
 
-def relayout(src, P, new_members, bare=False):
+def relayout(src, P, new_members, bare=False, clip_limit=None):
     """Lay the body out again with new_members [(old start, old end, new bytes, MTC row or None)] in the old order:
     every archive offset (body table, rel, ESQ / NTR / MTC rows, table archive-size words) is remapped, the tables and
     REL keep their bytes and order, and the container records after the body move by the size change (wep19-26:
@@ -152,8 +152,17 @@ def relayout(src, P, new_members, bare=False):
         return starts_new[k] + (x - s)
     # tables: same sizes, rows remapped
     tb = {t: bytearray(P.b[a_:b_]) for t, (a_, b_) in P.tspan.items()}
-    esq, ntr, mtc = tb.get(b'ESQ\0'), tb.get(b'NTR\0'), tb.get(b'MTC\0')
     rel_desc = P.b[P.rel:] if P.rel else P.b[P.boundary + sum(len(v) for v in tb.values()):]
+    # clip_limit (lane bosscast 11-03, MOTION_LARGE_CLIPS em39): clips over 32 KiB become cold rows too; the MTC table
+    # (the last table, before the REL descriptor) grows in 32-byte steps when its rows do not fit, and its word 28 (the
+    # clip limit) names the larger limit. Only the REL descriptor moves with the growth.
+    if clip_limit and b'MTC\0' in tb:
+        need = 32 + 20 * sum(1 for x in new_members if x[3])
+        if need > len(tb[b'MTC\0']):
+            assert max(P.tab, key=P.tab.get) == b'MTC\0', 'MTC is not the last table'
+            tb[b'MTC\0'] += bytes(al32(need) - len(tb[b'MTC\0']))
+        struct.pack_into('<I', tb[b'MTC\0'], 28, clip_limit)
+    esq, ntr, mtc = tb.get(b'ESQ\0'), tb.get(b'NTR\0'), tb.get(b'MTC\0')
     final = boundary_new + sum(len(v) for v in tb.values()) + len(rel_desc)
     for t, stride, fields in ((esq, 12, (0,)), (ntr, 12, (0, 4, 8))):
         if t is None:
@@ -184,7 +193,7 @@ def relayout(src, P, new_members, bare=False):
     out += rel_desc
     assert len(out) == final
     if P.rel:
-        struct.pack_into('<I', out, 4, mapped(P.rel))
+        struct.pack_into('<I', out, 4, final - len(rel_desc) if clip_limit else mapped(P.rel))
     for i, o in enumerate(P.offs):
         struct.pack_into('<I', out, 16 + 4 * i, mapped(o) if o else 0)
     # the container: bytes before the body as they are; anything after it (the sound bank) moves by the size change
@@ -244,7 +253,9 @@ def rewrite(a):
         c = dict(slots=slots, arc=[i + 4 for i in slots], gc=oldfull, ps2_bytes=len(new),
                  ps2_max_frame=struct.unpack_from('<H', new)[0], ps2_joints=new[2])
         pre = prefix(new) if new[2] else 0
-        if row and new[2] and len(new) <= MAX_CLIP and al32(pre) < len(new):  # the slot's residency policy is kept
+        lim = a.clip_limit or MAX_CLIP
+        # the slot's residency policy is kept; --clip-limit 131072 also streams the whole clips over 32 KiB (cold)
+        if (row or (a.clip_limit and len(new) > MAX_CLIP)) and new[2] and len(new) <= lim and al32(pre) < len(new):
             k = key_of(new)
             if k in keys and keys[k] != new:
                 raise SystemExit('motion identity collision ' + k)
@@ -260,7 +271,7 @@ def rewrite(a):
             new_members.append((s, e, new, None))
         c['changed'] = (row is None and new != m) or (row is not None and c.get('key') != row['key'])
         rep['clips'].append(c)
-    cont, out, rows = relayout(src, P, new_members, a.bare)
+    cont, out, rows = relayout(src, P, new_members, a.bare, a.clip_limit)
     sub = 'st1' if a.bare else 'em'
     os.makedirs(os.path.join(a.outdir, sub), exist_ok=True)
     os.makedirs(os.path.join(a.outdir, 'dc', 'mot'), exist_ok=True)
@@ -386,6 +397,8 @@ def main():
     for k in ('payload', 'iso', 'name', 'outdir'):
         p.add_argument(k)
     p.add_argument('--mot-dir')
+    p.add_argument('--clip-limit', type=int, choices=(131072,), help='stream clips up to 128 KiB (runtime MOTION_LARGE_CLIPS '
+                   'with a pinned body row in native_motion.cpp v2_clip_limit)')
     v = sub.add_parser('verify')
     for k in ('rewritten', 'payload', 'iso', 'name'):
         v.add_argument(k)

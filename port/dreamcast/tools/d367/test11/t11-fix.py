@@ -1432,6 +1432,32 @@ if os.path.isdir(LEON28D):
     DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
     PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
     AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
+# dcf3isl (lane assets-dc 11-02, for lane world-ch5's D3_DATA; Disc 3 space): the island tree's loose dc/tex pictures
+# in Dreamcast form (assetsdc/dcform_dir.py over re4data/private/island-d3-20261102): 3,420 of 4,474 changed, 163.1 MB ->
+# 38.6 MB (raw 16-bit >= 64x64 -> VQ, + mips when square; small square / VQ -> + mips, base kept). Same paths, keys,
+# sizes and pixel formats. ADMIT PASS 3420/3420 (assetsdc/admit_dir.py); look: assetsdc/look_rooms.py per room.
+# Store: re4data/private/dcf3isl-20261102 (manifest.tsv = the staged paths).
+DCF3ISLD = os.environ.get('DCF3ISLD', '/root/re4data/private/dcf3isl-20261102')
+if os.path.isdir(DCF3ISLD):
+    DATA['dcf3isl'] = {_l.split('	')[0]: DCF3ISLD + '/' + _l.split('	')[0]
+                       for _l in open(DCF3ISLD + '/manifest.tsv') if _l.strip()}
+# dcf3pak (lane assets-dc 11-02, for lane world-ch5's D3_DATA; Disc 3 space): the island tree's dc/tex.pak with its
+# island-only keys (868 not in Disc 1's pack) in Dreamcast form, space rule (assetsdc/dcform_pak.py --space): raw 16-bit
+# >= 64x64 -> VQ (+ mips when square), nothing else touched. 224 changed, 9.20 MB -> 1.97 MB (3,530 sectors).
+# ADMIT PASS 224/224; look (assetsdc/lookcheck.py) PSNR min 22.4 / median 38.3 dB. This is the island INPUT pack of
+# discsets/disc3_fixture.py (pak_keep: Disc 1 wins shared keys), not a Disc 1 set. Store: re4data/private/dcf3pak-20261102.
+DCF3PAKD = os.environ.get('DCF3PAKD', '/root/re4data/private/dcf3pak-20261102')
+if os.path.isdir(DCF3PAKD):
+    DATA['dcf3pak'] = {'dc/tex.pak': DCF3PAKD + '/dc/tex.pak'}
+    PAK_DERIVED['dcf3pak'] = DCF3PAKD + '/pak-derived.json'
+# arcdrop (lane assets-dc 11-02, batch 4 "strip and prove"; data only, no knob): takes the GameCube room archives
+# st1/rXXX.arc (+ st2/r200.arc) off Disc 1. No game path reads them: ReadAreaData opens st%x/r%03x.dar only ("never fall
+# back to compressed PPC data or an unqualified .arc sidecar", src/game/read.cpp); the only other opener is the io_probe
+# debug probe (IO_PROBE). They carry the GameCube world blocks / room models the catalog counts as gc (1917 rows) or
+# unknown (796). The block-swap files st1/rXXX_NN.dat stay (read by the block swap).
+DATA['arcdrop'] = {'remove': ['st1/%s.arc' % _r for _r in (
+    'r100', 'r101', 'r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b', 'r10c', 'r10d', 'r10e',
+    'r10f', 'r111', 'r112', 'r113', 'r117', 'r118', 'r119', 'r11a', 'r11b', 'r11c', 'r11d', 'r11e', 'r11f')] + ['st2/r200.arc']}
 # glyph27 (lane glyph27 11-02, user: "the game regressed to the ps2 thumb stick glyph for the escape prompt when you're
 # grabbed by a ganado"): dc/tex.pak = leon28's pack with the grab QTE stick cap 6d33c3f9-9f8cf668 (etc/core.das EFF #25
 # id 0x31) back to the Dreamcast glyph Tests 22-24 shipped (glyph shape-review v4 G08, sha256 57132ed5; fxc26b 10-26 had
@@ -2050,6 +2076,46 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
             DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
         if os.path.isdir(_d + '/dc/mot'):
             DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+
+# cgca27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA, after pmcgca27): the chapter 3-1 rows world-ch31 left, PS2-dropped
+# the way the PS2 dropped them: st2/r203.dar ETM et1400.bin (GC torch model, le_mirror(GC r10c)) emptied (the PS2 r203.dat
+# ETM has no et1400; ps2_objects.py --etm-empty, as cgca26 for r201 / r202); st2/r207.dar FOOT samples 7-11 silenced (no
+# GC cue reaches them; the PS2 r207.snd FOOT block holds exactly the 18 cue-reached VAGs). provenance.tsv rows for the
+# changed members only. Store: re4-assets-private/cgca27b-20261103 (README-cgca27b.txt = the builder's notes).
+CGCA27BD = os.environ.get('CGCA27BD', '/root/re4data/private/cgca27b-20261103')
+if os.path.isdir(CGCA27BD):
+    DATA['cgca27b'] = {'st2/%s' % _f: '%s/st2/%s' % (CGCA27BD, _f) for _f in ('r203.dar', 'r203.arc', 'r207.dar', 'r207.arc')}
+# cpic27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA, after cpic27; the last Disc 2 pack set): the r203 / r207 pictures
+# as PS2 pixels (assetsdc/ps2_source_pak.py --only-keys): 77c1171c b894c4b5 70524d21 = PS2 pl08.dat TPL 0 pictures 5 / 3 / 6;
+# 5224f21f 511673a2 = pl08.dat pictures 0 / 8 stored transposed on the PS2 (MAE 1.7 / 1.5); 72be589c = PS2 r10c.dat
+# picture 1, transposed (MAE 4.1). ADMIT 6/6. provenance.tsv names each PS2 file. Store: re4-assets-private/cpic27b-20261103.
+CPIC27BD = os.environ.get('CPIC27BD', '/root/re4data/private/cpic27b-20261103')
+if os.path.isdir(CPIC27BD):
+    DATA['cpic27b'] = {'dc/tex.pak': CPIC27BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27b'] = CPIC27BD + '/pak-derived.json'
+# isl15 (lane assets-dc 11-03, for world-ch5's D3_DATA): the 15 island picture keys no pack and no loose file held (14 island
+# rooms failed TEXCHK): PS2 world pictures the castle / chapter 4 PS2 world sets carry (c4world tex/, castle-d2-j dc/tex/),
+# same key and bytes, staged loose (VQ or small 16-bit twiddled already). Store: re4-assets-private/isl15-20261103.
+ISL15D = os.environ.get('ISL15D', '/root/re4data/private/isl15-20261103')
+if os.path.isdir(ISL15D):
+    DATA['isl15'] = {_l.split('	')[0]: ISL15D + '/' + _l.split('	')[0] for _l in open(ISL15D + '/manifest.tsv') if _l.strip()}
+# isnd300 (lane assets-dc 11-03, for world-ch5's D3_DATA): st3/r300.dar with the PS2 PCM of PS2 r300.snd in place (ps2_audio.py
+# banks; snd28_store.py rows): ROOM 26 of 27 + FOOT 29 of 29 samples PS2; ROOM sample 22 silenced (no cue reaches it, the PS2
+# bank has no such sound). Store: re4-assets-private/isnd300-20261103.
+ISND300D = os.environ.get('ISND300D', '/root/re4data/private/isnd300-20261103')
+if os.path.isdir(ISND300D):
+    DATA['isnd300'] = {'st3/r300.dar': ISND300D + '/st3/r300.dar'}
+# bossk / bosss (lane bosscast 11-03, release rule 7 + no-GameCube-assets; DISC 3 ONLY via D3_DATA): the last island characters
+# drawn from GameCube data. bossk = r31c Krauser: the room registry package (model-registry/ps2-ch5-r31ck.json: em39 types 1 / 2
+# with every hand / death info, cap, knife / gun / bow / arrow, plus the gunship em3a and its missile that the island tree's
+# cast16 r31c package held) + its 9 PS2 pictures loose + em/em39.drs with PS2 motion (motion/ps2_motion_prepared.py, slot map
+# GC i -> PS2 i+1 from 229; --clip-limit 131072: the 13 clips over 32 KiB stream cold; VERIFY PASS) and its 17 dc/mot keys; needs the program knob MOTION_LARGE_EM39=1 (Disc 3 D3REC). bosss = r332 Saddler: the room registry package
+# (model-registry/ps2-ch5-r332s.json: em31 types 0 / 1, weak point, tail) + its 5 PS2 pictures. em31 / em3a motion is already
+# PS2-identical (rewrite: 0 changed clips). Stores: re4-assets-private/bossk-20261103, bosss-20261103 (RECIPE.txt, manifest.tsv).
+for _n, _d in (('bossk', os.environ.get('BOSSKD', '/root/re4data/private/bossk-20261103')),
+               ('bosss', os.environ.get('BOSSSD', '/root/re4data/private/bosss-20261103'))):
+    if os.path.isfile(_d + '/manifest.tsv'):
+        DATA[_n] = {_l.strip(): _d + '/' + _l.strip() for _l in open(_d + '/manifest.tsv') if _l.strip()}
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from

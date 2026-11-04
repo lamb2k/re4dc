@@ -1,0 +1,105 @@
+{
+ "source_complete": false,
+ "profile": "r332 Saddler fight opening (Flycast f1mW/f2mW runs a2a m2a m3a m4a m5a: s00 skip, up-cut, walk, tentacle swipes, close attacks, hit reactions)",
+ "union": {
+  "source_arc_indices": [
+   10,
+   11,
+   19,
+   25,
+   26,
+   31,
+   35,
+   68,
+   71,
+   88,
+   90,
+   115,
+   120,
+   121
+  ]
+ },
+ "runs": [
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/final16-20261016/h-f1mW/scenarios/cx-r332-fight-a2a/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/final16-20261016/h-f1mW/scenarios/cx-r332-fight-m2a/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/final16-20261016/h-f2mW/scenarios/cx-r332-fight-m3a/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/final16-20261016/h-f2mW/scenarios/cx-r332-fight-m4a/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/final16-20261016/h-f2mW/scenarios/cx-r332-fight-m5a/capture/run-output.txt"
+ ],
+ "contract": "em31-source-motion-cache-v2",
+ "source_sha256": "1866c5c958f050e4cae0459f156118e4e448f700784feff63e3dba53e787deb2",
+ "clips": {
+  "10": {
+   "entry": 0,
+   "bytes": 9024,
+   "misses": 5
+  },
+  "11": {
+   "entry": 1,
+   "bytes": 19552,
+   "misses": 3
+  },
+  "19": {
+   "entry": 5,
+   "bytes": 13024,
+   "misses": 2
+  },
+  "25": {
+   "entry": 8,
+   "bytes": 21600,
+   "misses": 3
+  },
+  "26": {
+   "entry": 9,
+   "bytes": 24000,
+   "misses": 3
+  },
+  "31": {
+   "entry": 12,
+   "bytes": 25728,
+   "misses": 1
+  },
+  "35": {
+   "entry": 14,
+   "bytes": 17696,
+   "misses": 3
+  },
+  "68": {
+   "entry": 34,
+   "bytes": 18592,
+   "misses": 5
+  },
+  "71": {
+   "entry": 37,
+   "bytes": 26048,
+   "misses": 1
+  },
+  "88": {
+   "entry": 48,
+   "bytes": 22880,
+   "misses": 3
+  },
+  "90": {
+   "entry": 49,
+   "bytes": 24640,
+   "misses": 3
+  },
+  "115": {
+   "entry": 64,
+   "bytes": 14688,
+   "misses": 2
+  },
+  "120": {
+   "entry": 66,
+   "bytes": 11488,
+   "misses": 5
+  },
+  "121": {
+   "entry": 67,
+   "bytes": 6656,
+   "misses": 3
+  }
+ },
+ "hot_payload_bytes": 255616,
+ "cold_clips": 63
+}

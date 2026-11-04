@@ -18,6 +18,16 @@
 #include "pl_sub.h"
 #include "snd.h"
 #include "fade.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 / s10 (the mine cart) presented by the PS2 movies
+// (dc/movie/r331<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R331_ROUTE_MOVIES 1
+#else
+#define R331_ROUTE_MOVIES 0
+#endif
 
 // Room 3-31 (D:/Bio4/Prog/r331.cpp): the s00 event (into the mine cart) and the s10 event (the count-down
 // start) with their room jumps.
@@ -61,6 +71,9 @@ void R331Init()
     EvtMgr.SetFunc("evt_r331s10_func", (void*) Evt_R331S10_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(3, 0x12, 0, (TaskFunc) R331ExecEventS00, 0, 1);
+#if R331_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x33100))
+#endif
         EvtMgr.EvtReadAram("event/evd/r331s00.evd", 0, 0, 0, 0);
     }
     if (pG->Scenario_flg[0] & 0x200) {
@@ -87,6 +100,11 @@ static void R331ExecEventS00()
         RsfSet(G_ROOM_ID, 0);
         SceAtSetEnable(3, 0);
         SceEventStart(0);
+#if R331_ROUTE_MOVIES
+        if (re4dc_movie_available(0x33100)) {
+            RouteMoviePlay(0x33100, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R331S00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r331s00.evd", 0, 0);
         SceEventEnd(0);
         pG->Status_flg[3] |= 0x80000000;
@@ -111,6 +129,11 @@ static void R331ExecEventS10()
         pG->System_flg |= 0x400;
         SceSleep(1);
         SceEventStart(0);
+#if R331_ROUTE_MOVIES
+        if (re4dc_movie_available(0x33110)) {
+            RouteMoviePlay(0x33110, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R331S10_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r331s10.evd", 0, 0);
         SceEventEnd(0);
         pG->Status_flg[3] |= 0x04000000;

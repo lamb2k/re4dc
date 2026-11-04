@@ -174,16 +174,18 @@ ifeq ($(filter $(PS2_GIGANTE),0 1),)
 $(error PS2_GIGANTE must be 0 or 1)
 endif
 ifeq ($(PS2_GIGANTE),1)
-ifeq ($(ROUTE_CH23),1)
+# STRESS_SADDLER (lane stress16b, stress disc only) and ROUTE_FINAL (lane final16, r332): Saddler's body has 83 bones, as
+# Mendez: the ROUTE_CH23 capacity rule.
+ifneq ($(filter 1,$(ROUTE_CH23) $(STRESS_SADDLER) $(ROUTE_FINAL)),)
 NATIVE_MODEL_REGISTRY_BONES ?= 96
 else
 NATIVE_MODEL_REGISTRY_BONES ?= 64
 endif
 NATIVE_MODEL_REGISTRY_SHIFT ?= 1
-ifneq ($(filter 1,$(ROUTE_CH23) $(ROUTE_CH3)),)
+ifneq ($(filter 1,$(ROUTE_CH23) $(ROUTE_CH3) $(STRESS_SADDLER) $(ROUTE_FINAL)),)
 # Mendez has 83 bones (ROUTE_CH23); the island U-3 (em32, ROUTE_CH3 disc 2) has 97 (lane cast16 10-17). A larger
 # existing registry capacity still admits the 64-bone Gigante. ROUTE_CH3 keeps 64 unless the recipe asks for more.
-ifeq ($(ROUTE_CH23),1)
+ifneq ($(filter 1,$(ROUTE_CH23) $(STRESS_SADDLER) $(ROUTE_FINAL)),)
 ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),96 128),)
 $(error PS2_GIGANTE=1 with ROUTE_CH23=1 needs registry capacity 96 or 128 for Mendez)
 endif
@@ -943,4 +945,47 @@ endif
 endif
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PROP_GATE=$(PROP_GATE)
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_PROP_GATE=$(PROP_GATE)
+endif
+
+# ACTOR_CAST_SHADOW_EMPTY (island18, default0): PS2 Leon can retain his native plan when the source cast-shadow
+# receive predicate is set but no active selected Type4 light can reach the source's frustum test. Any candidate
+# or invalid manager still declines; no projected-light rendering is approximated or dropped.
+ACTOR_CAST_SHADOW_EMPTY ?= 0
+ifneq ($(filter $(ACTOR_CAST_SHADOW_EMPTY),0 1),$(ACTOR_CAST_SHADOW_EMPTY))
+$(error ACTOR_CAST_SHADOW_EMPTY must be 0 or 1)
+endif
+ifeq ($(ACTOR_CAST_SHADOW_EMPTY),1)
+ifneq ($(PS2_LEON)$(ACTOR_TRANSACTION)$(ROUTE_CH3),111)
+$(error ACTOR_CAST_SHADOW_EMPTY needs PS2_LEON=1 ACTOR_TRANSACTION=1 ROUTE_CH3=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_CAST_SHADOW_EMPTY=1
+endif
+
+# RESIDENT_SHARED_R327 (island18, default0): preserve the one audited explicit resident source key that
+# r327 still draws despite its appearance202 registry role fact. No general package-skip policy change.
+RESIDENT_SHARED_R327 ?= 0
+ifneq ($(filter $(RESIDENT_SHARED_R327),0 1),$(RESIDENT_SHARED_R327))
+$(error RESIDENT_SHARED_R327 must be 0 or 1)
+endif
+ifeq ($(RESIDENT_SHARED_R327),1)
+ifneq ($(ROUTE_CH3)$(ROOM_RESIDENT)$(TEX_PKG_SKIP),111)
+$(error RESIDENT_SHARED_R327 needs ROUTE_CH3=1 ROOM_RESIDENT=1 TEX_PKG_SKIP=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_RESIDENT_SHARED_R327=1
+endif
+
+# ACTOR_R300_FULL_SOURCE(default0): source-prepared r300 movie/load/radio-opening transition actors use the same validated
+# native transaction. Full source world and callback order remain unchanged; no coarse image is forced.
+ACTOR_R300_FULL_SOURCE ?= 0
+ifneq ($(filter $(ACTOR_R300_FULL_SOURCE),0 1),$(ACTOR_R300_FULL_SOURCE))
+$(error ACTOR_R300_FULL_SOURCE must be 0 or 1)
+endif
+ifeq ($(ACTOR_R300_FULL_SOURCE),1)
+ifneq ($(ROUTE_CH3)$(PS2_LEON)$(ACTOR_TRANSACTION)$(COARSE_SOURCE_ACTORS),1111)
+$(error ACTOR_R300_FULL_SOURCE needs ROUTE_CH3=1 PS2_LEON=1 ACTOR_TRANSACTION=1 COARSE_SOURCE_ACTORS=1)
+endif
+ifneq ($(ACTOR_EARLY_COARSE)$(ACTOR_SKIN_RESERVE)$(PACE_CHECK),000)
+$(error ACTOR_R300_FULL_SOURCE needs ACTOR_EARLY_COARSE=0 ACTOR_SKIN_RESERVE=0 PACE_CHECK=0)
+endif
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_R300_FULL_SOURCE=1
 endif

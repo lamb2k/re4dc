@@ -3906,6 +3906,31 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_MIP_DADJ=$(TEX_
 GAME_LDFLAGS += -Wl,--wrap=pvr_poly_compile -Wl,--wrap=pvr_sprite_compile -Wl,--wrap=pvr_poly_mod_compile
 endif
 
+# MOTION_LARGE_CLIPS=1 (island18): sealed em32 all-cold v2 body only, clips up to 128 KiB.
+# Existing two slabs scale to the largest actual clip (102336 B); all other v2/v3 admission stays unchanged.
+MOTION_LARGE_CLIPS ?= 0
+ifeq ($(filter $(MOTION_LARGE_CLIPS),0 1),)
+$(error MOTION_LARGE_CLIPS must be 0 or 1)
+endif
+ifeq ($(MOTION_LARGE_CLIPS),1)
+ifneq ($(ROUTE_CH3)$(MOTION_RESERVE),11)
+$(error MOTION_LARGE_CLIPS needs ROUTE_CH3=1 MOTION_RESERVE=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_CLIPS=1
+endif
+# MOTION_LARGE_EM39=1 (lane bosscast 11-03): also admit the pinned em39 (Krauser) body of data set bossk, its 13 clips over
+# 32 KiB streamed cold (heap 4 r31c: body 1,423,712 -> 877,632 B, slabs 2x32,320 -> 2x65,440). Default 0.
+MOTION_LARGE_EM39 ?= 0
+ifeq ($(filter $(MOTION_LARGE_EM39),0 1),)
+$(error MOTION_LARGE_EM39 must be 0 or 1)
+endif
+ifeq ($(MOTION_LARGE_EM39),1)
+ifneq ($(MOTION_LARGE_CLIPS),1)
+$(error MOTION_LARGE_EM39 needs MOTION_LARGE_CLIPS=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_EM39=1
+endif
+
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
 # Two owned slabs per binding, existing global pressure cap, no spill for these profiles.
 MOTION_BOUNDED_R11F ?= 0

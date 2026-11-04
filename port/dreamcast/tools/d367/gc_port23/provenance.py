@@ -283,6 +283,13 @@ def main(catalog, recipe_conf, out_dir):
         for m in re.finditer(r'^D2_DATA="([^"]*)"', conf, re.M):
             d2 = m.group(1).replace('${D2_DATA}', d2).replace('$D2_DATA', d2)
         names += [n for n in d2.split(',') if n]
+    # PROVENANCE_D3=1 (lane world-ch5 11-02, rr-disc3.sh's Disc 3 catalog only): the recipe's D3_DATA sets (island Disc 3
+    # data over the D3_ISLAND_TREE content), last. Empty today: the island tree's files keep their store rows.
+    if os.environ.get('PROVENANCE_D3') == '1':
+        d3 = ''
+        for m in re.finditer(r'^D3_DATA="([^"]*)"', conf, re.M):
+            d3 = m.group(1).replace('${D3_DATA}', d3).replace('$D3_DATA', d3)
+        names += [n for n in d3.split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
     grafted = {}
     for n in names:

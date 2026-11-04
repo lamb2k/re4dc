@@ -218,6 +218,9 @@ extern "C" void re4dc_leon_lod_set(unsigned level);  // coarse_actor_leon_lod.in
 extern "C" void re4dc_ganado_lod_set(unsigned level);  // coarse_ganado_lod.inc (ps2leon.mk GANADO_LOD)
 #endif
 
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+extern "C" { unsigned re4dc_nmr_lod_pick; }  // read by coarse_actor_owner_registry.inc (STRESS_SADDLER): 0 full, k = k-th level
+#endif
 namespace {
 struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; s8 stickx; };
 struct Rsf { u16 room; u8 bit; };
@@ -287,6 +290,9 @@ struct Warp {
     u32 hand_frame;
     int hand_type, hand_id;
     u32 alive_period, alive_last;  // `alivelog <period>`
+    // `emlog <model id> <period>` (lane final16, test only): every live enemy with the id each period room frames
+    // (hp, routine bytes, position) plus the player's damage seen by god mode (hits / hp taken since the last line).
+    int emlog_id; u32 emlog_period, emlog_last, pl_hits, pl_dmg, pl_hits_total, pl_dmg_total;
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
     int drop_num;
@@ -313,6 +319,15 @@ struct Warp {
     unsigned n_charbake_at;
     struct LookStep { u32 frame; bool done; } lookstep[16];  // lookstep <room frame> (LOOK_TOGGLE)
     unsigned n_lookstep;
+#endif
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    // saddler <room frame> x y z ang [lod] (STRESS_SADDLER, lane stress16b): Saddler's final form (em31 body + tentacle)
+    // created in the first room through EmSetEvent at that frame; lod = the registry level to draw (0 full).
+    // `saddler <room frame> rel <distance> [lod]`: <distance> mm straight ahead of Leon, facing him.
+    bool has_saddler, saddler_done, saddler_rel;
+    u32 saddler_frame;
+    f32 saddler_pos[3], saddler_ang;
+    unsigned saddler_lod;
 #endif
     bool act_source_clock;  // opt-in fixture holds count source pad ticks, not wall-time stalls
     u8 parse_entry, max_entry;  // `entry <n>`: the room entry later act / goto lines belong to (1 = first room)
@@ -627,6 +642,10 @@ void load()
             wp.kill_near = true;
         } else if (!strcmp(k, "killpart") && n >= 2) {
             wp.kill_part = (s16) num(tok[1]);
+        } else if (!strcmp(k, "emlog") && n >= 3) {
+            wp.emlog_id = (int) num(tok[1]);
+            wp.emlog_period = num(tok[2]);
+            wp.emlog_last = ~0u;
         } else if (!strcmp(k, "killrep") && n >= 3) {
             wp.kill_rep = num(tok[1]);
             wp.kill_gap = num(tok[2]);
@@ -661,6 +680,21 @@ void load()
             re4dc_ganlit_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado lighting mode at load (0..9)
         } else if (!strcmp(k, "ganfill") && n >= 2) {
             re4dc_ganlit_fill_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado camera fill, percent (0..100)
+#endif
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+        } else if (!strcmp(k, "saddler") && n >= 4 && !strcmp(tok[2], "rel")) {
+            wp.has_saddler = wp.saddler_rel = true;
+            wp.saddler_frame = num(tok[1]);
+            wp.saddler_pos[0] = (f32) strtod(tok[3], nullptr);
+            wp.saddler_lod = n >= 5 ? num(tok[4]) : 0u;
+            re4dc_nmr_lod_pick = wp.saddler_lod;
+        } else if (!strcmp(k, "saddler") && n >= 6) {
+            wp.has_saddler = true;
+            wp.saddler_frame = num(tok[1]);
+            for (int i = 0; i < 3; ++i) wp.saddler_pos[i] = (f32) strtod(tok[2 + i], nullptr);
+            wp.saddler_ang = (f32) strtod(tok[5], nullptr);
+            wp.saddler_lod = n >= 7 ? num(tok[6]) : 0u;
+            re4dc_nmr_lod_pick = wp.saddler_lod;
 #endif
         } else if (!strcmp(k, "dump")) {
             wp.dump = true;
@@ -1232,6 +1266,20 @@ void kill_poll()
     }
 #endif
     alive_log_poll();
+    if (wp.emlog_period && (wp.room_frames % wp.emlog_period) == 0 && wp.room_frames != wp.emlog_last) {
+        wp.emlog_last = wp.room_frames;
+        for (cEm* e = EmMgr.getEmPtr(wp.emlog_id, 0); e; e = EmMgr.getEmPtr(wp.emlog_id, e)) {
+            re4dc_log("warp: emlog %02x frame %u t=%u type=%u be=%08x hp=%d r=%u/%u/%u/%u pos=%d,%d,%d plhits=%u pldmg=%u\n",
+                      (unsigned) wp.emlog_id, (unsigned) wp.room_frames, (unsigned) pG->Frame_cnt, (unsigned) e->type,
+                      (unsigned) e->be_flag, (int) e->hp, (unsigned) e->r_no_0, (unsigned) e->r_no_1, (unsigned) e->r_no_2,
+                      (unsigned) e->r_no_3, (int) e->pos.x, (int) e->pos.y, (int) e->pos.z, wp.pl_hits, wp.pl_dmg);
+        }
+        re4dc_log("warp: emlog pl frame %u life=%d/%d hits=%u dmg=%u total=%u/%u rsf=%08x room_flg0=%08x scen0=%08x\n",
+                  (unsigned) wp.room_frames, (int) pG->pl_life, (int) pG->pl_life_max, wp.pl_hits, wp.pl_dmg,
+                  wp.pl_hits_total, wp.pl_dmg_total, RoomData.getRoomSavePtr(pG->room_id) ? (unsigned) RsfFlags(pG->room_id)[0] : 0u, (unsigned) pG->Room_flg[0],
+                  (unsigned) pG->Scenario_flg[0]);
+        wp.pl_hits = 0; wp.pl_dmg = 0;
+    }
     if (wp.kill_watch && wp.kill_em && (wp.room_frames % 15) == 0) {
         --wp.kill_watch;
         cEm* em = wp.kill_em;
@@ -1569,6 +1617,43 @@ void face_poll()
     pPL->ang.y = atan2f(dx, dz);
 }
 // `god` / `alert` (benchmark fixtures, the hwcal disc's invuln / alert): every frame / once at the room frame.
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER: the body (type 0) and the tentacle (type 1) from two free-standing list records (EmSetEvent: no list
+// index, no room code); em31's own init loads em/em31.drs + em31.ovl (EmCreate -> EmReadSearch) and builds both models.
+void saddler_poll()
+{
+    if (!wp.has_saddler || wp.saddler_done || wp.rooms != 1 || wp.room_frames < wp.saddler_frame || !pPL ||
+        (pG->Status_flg[1] & 0x10000000)) return;
+    wp.saddler_done = true;
+    if (wp.saddler_rel) {
+        // straight ahead of Leon (his yaw: +z at 0, as the game's sinf / cosf convention), turned to face him
+        const f32 dist = wp.saddler_pos[0], a = pPL->ang.y;
+        wp.saddler_pos[0] = pPL->pos.x + dist * __builtin_sinf(a);
+        wp.saddler_pos[1] = pPL->pos.y;
+        wp.saddler_pos[2] = pPL->pos.z + dist * __builtin_cosf(a);
+        wp.saddler_ang = a + 3.1415927f;
+        if (wp.saddler_ang > 3.1415927f) wp.saddler_ang -= 6.2831853f;
+    }
+    static EmListData d[2];
+    cEm* got[2] = {nullptr, nullptr};
+    for (int t = 0; t < 2; ++t) {
+        memset(&d[t], 0, sizeof(d[t]));
+        d[t].id = 0x31;
+        d[t].type = (u8) t;
+        d[t].hp = 30000;
+        for (int i = 0; i < 3; ++i) d[t].pos[i] = (s16) (wp.saddler_pos[i] / 10.0f);
+        d[t].rot[1] = (s16) (wp.saddler_ang * 16384.0f / 3.1415927f);
+        d[t].room = (u16) pG->room_id;
+        cEm* em = EmSetEvent(&d[t]);
+        got[t] = em == errEm ? nullptr : em;
+    }
+    char what[160];
+    snprintf(what, sizeof(what), "saddler set at room frame %u body=%08x tentacle=%08x pos=%d,%d,%d lod=%u",
+             (unsigned) wp.room_frames, (unsigned) (uintptr_t) got[0], (unsigned) (uintptr_t) got[1],
+             (int) wp.saddler_pos[0], (int) wp.saddler_pos[1], (int) wp.saddler_pos[2], wp.saddler_lod);
+    stamp(what);
+}
+#endif
 }   // namespace (closed for the C symbol below)
 // bell108: requests for r108's bell task (src/st1/r108.cpp r108_initChurchBell, DBG_WARP builds), one per shot
 extern "C" { int re4dc_bell108_req = 0; }
@@ -1598,6 +1683,10 @@ void stock_poll()
 }
 void god_alert_poll()
 {
+    if (wp.god && pG && pG->pl_life < pG->pl_life_max) {  // `emlog`: the damage god mode undoes
+        const u32 d = (u32) (pG->pl_life_max - pG->pl_life);
+        ++wp.pl_hits; wp.pl_dmg += d; ++wp.pl_hits_total; wp.pl_dmg_total += d;
+    }
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
     if (wp.money > 0 && pG) {
         const int have = addMoney(wp.money);
@@ -2155,6 +2244,9 @@ void re4dc_warp_poll(void)
     if (wp.rooms == 1 && bench_poll()) return;
 #endif
     god_alert_poll();
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    if (wp.rooms == 1) saddler_poll();
+#endif
     kill_poll();
     face_poll();
 #if RE4DC_WARP_JUMP

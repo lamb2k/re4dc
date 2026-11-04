@@ -55,6 +55,15 @@ case "${1:-status}" in
       (cd "$CAND" && sha256sum ./*-GDEMU.zip ./*Build-Assets.zip | sed 's#  \./#  #' > SHA256SUMS.txt)
       echo "Disc 2 knob file: $W/kit/release-knobs-disc2.txt; Build-Assets $CAND/$A2"
     fi
+    # Disc 3 (lane world-ch5, recipe.conf RR_DISC3=1): the same for the island program (island5/build-disc3.sh recipe)
+    if [ "${RR_DISC3:-0}" = 1 ] && [ -s "$CAND/disc3/gdemu/track03.bin" ]; then
+      O3=/root/probe/lanes/route/out-${RR_PFX:-rr}${S7}d3rP; A3=RE4DC-Test$TN-${SHA:0:8}-Disc3-Build-Assets.zip
+      python3 "$TT/release-knobs.py" write "$O3/candidate.txt" "$W/kit/release-knobs-disc3.txt" --test "$TN" --tag "$TAG" --source "${SHA:0:8}" --recipe port/dreamcast/tools/d367/island5/build-disc3.sh --image-sha256 "$(sed -n 's/^prog=//p' "$W/disc3.env")" --assets-zip "$A3"
+      python3 "$TT/release-knobs.py" zip "$O3/candidate.txt" "$CAND/$A3"
+      python3 "$TT/release-knobs.py" zipcheck "$O3/candidate.txt" "$CAND/$A3" --objdir "$O3/obj"
+      (cd "$CAND" && sha256sum ./*-GDEMU.zip ./*Build-Assets.zip | sed 's#  \./#  #' > SHA256SUMS.txt)
+      echo "Disc 3 knob file: $W/kit/release-knobs-disc3.txt; Build-Assets $CAND/$A3"
+    fi
     # the QA disc zip beside the game zip (standing rule 8)
     { bash "$RR_HOME/bin/rr-qa.sh" "$W" ${RR_TA:-/root/work/lanes/rr} "$SHA" "$TN" "$CAND" 2>&1 | tail -6; } \
       || echo "QA disc: FAIL (reported only; the game package above is unaffected)" ;;

@@ -76,6 +76,11 @@ SMALL+=('em3c.drs',)
 # em25's model TPLs reach modelInit (ARC 4/5) and SetObj16 (ARC 0x31/0x32); em3b's reach modelInit (ARC 4/5, 0xB/0xC). Their
 # EFF slots (EspDataLoad ARC 7 / ARC 6) keep their own textures; motions stay resident. Both had 0 texture identities.
 SMALL+=('em25.drs','em3b.drs')
+# em31 (Saddler's final form, r332; lane stress16b 2026-10-16, the model-only stress disc STRESS_SADDLER): textures only
+# (--keep-motion-resident). Its model TPL (ARC 7) reaches only modelInit and ModInfoMgr.create (src/em31/em31.cpp
+# em31_R0_Init: body ARC 4 + head ARC 5, tentacle ARC 8); its EFF slot (ARC 9, EspDataLoad) keeps its own textures (top-level
+# TPLs only are selected). Motions stay resident (the em2c / em38 boss rule: raw FCV pointers are not audited).
+SMALL+=('em31.drs',)
 # pl0f (the lake boat, r10b r11b; lane ps2cast 2026-10-15, PS2_CAST_BOAT discs): textures only (--keep-motion-resident),
 # the em2f contract. Its one model TPL (ARC 6) reaches only modelInit (src/pl0f/pl0f.cpp pl0f_R0_Init, modelInit(ARC 5,
 # ARC 6)); the source path uploads its colour texels and never reads them on the CPU. ARC 8 (Leon's harpoon hand BIN,
@@ -148,6 +153,31 @@ MOTION_SMALL+=('em2d.drs',)
 # ModInfoMgr.create, SetWeapon (0x25..0x38), SetObj10 (0x2D 0x2E), SetObj12 (0x16 0x19), EspDataLoad (4), bin = ARC(0xA..0xF).
 # Heap 4: the textures-only body (3,244,800 B) did not fit r31c (2,084,288 B free at the em39 read).
 MOTION_SMALL+=('em39.drs',)
+# em32 (U-3, r31b; island18 2026-10-18): every FCV reaches MotionSetCore. Direct body calls include the second
+# pMot work (ARC 0xAD). em32BlendMotSet (em32.cpp 3891..3916) sends work-held blendM0 / M1 / M2 to MotionSetCore's
+# data argument; blendM3 is its seq argument (SEQ tables stay resident). Those work pointers are not dereferenced.
+# MotSetObj00 (obj00.cpp 121..131) routes the divided-player FCVs ARC 0x9C / 0x9D / 0xA1 / 0xA2 through MotionSetCore;
+# its retained w->pMot has no other reader. All player loans (em32.cpp PL_ARC 0x87..0x94 / 0x9E..0xA0) likewise go to
+# MotionSetCore; 0x93 is seq. cEm32::appear also passes PL_ARC_PTR(subArc, 0x11) to MotionSetCore. No FCV payload or
+# header is read elsewhere in em32. Variable ARC(bin1/bin2) in EM32_DIVIDE_MODELS are BINs (0x95 / 0x9B / 0xAE..0xB1);
+# ARC 4 / 6 / 7 and 0x96..0x9A are model BINs, ARC 5 / 0xAB TPLs, ARC 8 EFF (kept resident); PL_ARC 0xAC is a BIN.
+# The native-textures-only resident body is 4,693,536 B, above r31b's measured entry free heap; reuse the audited
+# motion evaluator/cache and discover a phase-specific hot set from MOTION_MISS_LOG runs before promotion.
+MOTION_SMALL+=('em32.drs',)
+# em31 (Saddler's final form, r332, ROUTE_FINAL room overlay; lane final16 2026-10-16; ARC(n) = archive slot n-4): every
+# FCV it names reaches MotionSetCore. (1) Its own body / tentacle: MotionSetCore directly (em31.cpp, 106 calls), including
+# the m0 / m1 act pairs (1576 / 1764 / 2355: m1 = ARC(0x26 0x28 0x24 0x48 0x4A 0x4C) is MotionSetCore's `seq`) and the
+# `mot` locals (ARC(0x44 0x45 0x6A 0x66 0x67), 2221 / 2272). (2) The tail objects: SetObj16(ARC(0x76) BIN, ARC(0x77) TPL)
+# + MotSetObj16(ARC(0x78) / ARC(0x79)) = MotionSetCore on the cObj16; em31 reads the FCV header maxFrame of 0x78 / 0x79
+# (*(u16*) & 0x3FFF, 4319 / 4330 / 4778): headers stay resident. (3) The pillar (src/game/objPillar.cpp): SetPillar(ARC(0x7A)
+# BIN, ARC(0x7B) TPL); setThrow(ARC(0x7C), ARC(0x7D), ARC(0x7E), ARC(0x75)), setFall(ARC(0x7D), ARC(0x7F)), setBreak(ARC(0x6D),
+# seq ARC(0x6E)) only store the pointers; objPillar plays each through MotionSetCore (on the pillar: 164 / 232 / 259 / 360 /
+# 390 / 402; on the player: 577 / 579 / 680) and reads motBreak's header maxFrame (163, resident). (4) The player while em31
+# lends Leon its subArc (pl->subArc = PL_EM(pl)->subArc, the em2b grab pattern; 1643 / 1916 / 3124 / 3622): PL_ARC(0x6D / 0x6E
+# / 0x6B / 0x73 / 0x82 / 0x83 / 0x84) and the macro's PL_ARC_PTR(subArc, mot) go to MotionSetCore on the player.
+# BIN / TPL / EFF slots: ARC(4 5 6 7 8 9) (modelInit, ModInfoMgr.create, SetObj00, EspDataLoad), PL_ARC(0x86 / 0x85) (the
+# catch object's model). r332.cpp names only room-archive motions (ROOM_ARC_PTR). No FCV is passed anywhere else.
+MOTION_SMALL+=('em31.drs',)
 # em2b (El Gigante, r119; route lane r119 2026-10-10): every FCV it names goes to MotionSetCore, directly or through
 # em2bBlendMotSet (two MotionSetCore calls; the blend work is evaluated by MotionMoveCore), MotSetObj16 (the
 # parasite head and the tentacles: MotionSetCore) and plBlendMotSet / MotionSetCore on the player while it lends
@@ -161,6 +191,13 @@ ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f','em36','em39
 # em2d / em25 / em3c (ROUTE_CH32 room overlays; lane ch3found16 2026-10-17): their static REL is stripped the same way, as on
 # the castle disc's le_mirror build (the code comes from dc/<em>.ovl).
 ROUTE_OVL_MODULES+=('em2d','em25','em3c')
+# em31 uses the ROUTE_FINAL overlay's retained descriptor.
+ROUTE_OVL_MODULES+=('em31','pl0e')
+# pl0e (r333 jet ski, module57): texture-only qualification. Top-level TPLs
+# feed modelInit ARC5/6; ARC4 EFF retains its own texture bytes. All FCVs stay
+# resident: ski ARC8..20, player ARC22..35 and Ashley ARC37..49 are borrowed
+# simultaneously through subArc in pl0e.cpp; no streaming/prefetch contract.
+SMALL+=('pl0e.drs',)
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
@@ -193,9 +230,12 @@ BOUNDED_PROFILES={
         retain=(0x40,0x43,18,19,21,24,36,68,108,109,22,23,37)),
 }
 
-def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None):
+def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None, clip_limit=MAX_CLIP):
     source,destination=map(Path,(source,destination))
     name=source.name.lower();file='em/'+name
+    if clip_limit not in (MAX_CLIP,131072):raise ValueError('clip limit must be 32768 or 131072')
+    if clip_limit!=MAX_CLIP and (name!='em32.drs' or hot_slots or bounded_profile or keep_motion_resident or compact_effects or textures is None):
+        raise ValueError('large clips are audited only for all-cold em32 streamed top-level-texture preparation')
     profile=BOUNDED_PROFILES.get(bounded_profile) if bounded_profile else None
     if bounded_profile and (profile is None or name!=profile['name']):raise ValueError('bounded profile/source mismatch')
     if profile and (hot_slots or keep_motion_resident or compact_effects or textures is None):
@@ -208,6 +248,8 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     if destination.exists():raise FileExistsError(destination)
     hot_slots=set(hot_slots)
     original=source.read_bytes();converted=bytearray(original);refs=[];palettes=[];sequences=[]
+    if clip_limit!=MAX_CLIP and hashlib.sha256(original).hexdigest()!='dc3a8d49179d2235d32f3fb7662be1d40ea69b3ab7046709aa8f0ffc10f01530':
+        raise ValueError('large em32 source identity is not audited')
     if profile and hashlib.sha256(original).hexdigest()!=profile['source']:raise ValueError('unqualified bounded source identity')
     old=mirror.OFFSET_OBSERVER;old_tpl=mirror.TPL_OBSERVER;old_seq=mirror.SEQUENCE_OBSERVER;start=len(mirror.REPORT)
     mirror.OFFSET_OBSERVER=lambda file,field,base,value:refs.append((field,base,value))
@@ -264,7 +306,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
     # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs','em3b.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs','em3b.drs','em31.drs','pl0e.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):
@@ -280,7 +322,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         native=codec.serialise(parsed,'<')
         if native!=body[off:end]:raise ValueError('native FCV differs from qualified archive')
         if not parsed.joints:continue # empty motion is already 32 bytes; keep ordinary
-        if len(native)>(profile['cap'] if profile else MAX_CLIP):
+        if len(native)>(profile['cap'] if profile else clip_limit):
             # em21: a clip over the runtime's slot limit stays resident (ordinary FCV, exact bytes);
             # the Ganado contract keeps refusing, as before.
             # em1b (castle lane 2026-10-15): one Ganado clip over the slot limit stays resident the same way (exact bytes,
@@ -326,7 +368,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         tables+=native_identity_index(selected,mapped,len(body),final_bytes)
     if entries:
         new_tags.append(b'MTC\0');new_offsets.append(new_rel+len(tables))
-        header=struct.pack('<8s6I',MAGIC,3 if profile else 2,len(entries),STRIDE,zlib.crc32(table)&0xffffffff,final_bytes,profile['cap'] if profile else MAX_CLIP)
+        header=struct.pack('<8s6I',MAGIC,3 if profile else 2,len(entries),STRIDE,zlib.crc32(table)&0xffffffff,final_bytes,profile['cap'] if profile else clip_limit)
         tables+=header+table+bytes(table_bytes-32-len(table))
     out=out[:new_rel]+tables+out[new_rel:]
     struct.pack_into('<2I',out,0,count+extra_slots,new_rel+len(tables) if rel else 0)
@@ -344,7 +386,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
             'original_static_body_bytes':size,'resident_body_bytes':len(out),
             'archive_recovery_bytes':size-len(out),'index_bytes':table_bytes,'header_growth_bytes':header_growth,
             'motion_source_bytes':sum(e['bytes'] for e in entries),'motion_header_bytes':sum(e['resident_bytes'] for e in entries),
-            'motions_resident':keep_motion_resident,
+            'motions_resident':keep_motion_resident,'clip_limit':clip_limit,
             'effects':{'entries':effect_entries,'index_bytes':effect_index_bytes,
                 'recovery_bytes':sum(b-a-len(v) for a,b,v in effect_ranges)-effect_index_bytes,
                 'policy':'all records resident; exact native word reconstruction, stable retained generator references'},
@@ -381,12 +423,13 @@ if __name__=='__main__':
     p.add_argument('--keep-motion-resident',action='store_true',help='Texture-only selection retains every FCV payload; no motion cache')
     p.add_argument('--compact-effects',action='store_true',help='Selectable lossless resident em12 EST records; original heads and all effect behavior retained')
     p.add_argument('--bounded-profile',choices=sorted(BOUNDED_PROFILES),help='Exact-source r11f version3 reserve-only profile')
+    p.add_argument('--clip-limit',type=int,choices=(32768,131072),default=MAX_CLIP,help='Audited em32 large-clip diagnostic (requires MOTION_LARGE_CLIPS=1)')
     a=p.parse_args()
     if not a.keep_motion_resident and not a.hot_audit:p.error('--hot-audit is required for motion residency')
     audit=json.loads(a.hot_audit.read_text()) if a.hot_audit else {}
     if not a.keep_motion_resident and not audit.get('source_complete') and not a.diagnostic_incomplete_prefetch:
         p.error('prefetch/concurrency audit is incomplete; explicit diagnostic selection required')
-    r=prepare(a.source,a.output,audit.get('union',{}).get('source_arc_indices',()),a.textures,a.keep_motion_resident,a.compact_effects,a.bounded_profile)
+    r=prepare(a.source,a.output,audit.get('union',{}).get('source_arc_indices',()),a.textures,a.keep_motion_resident,a.compact_effects,a.bounded_profile,a.clip_limit)
     report_path=a.output/'motion-residency-report.json'
     r['prefetch_audit']=audit
     r['runtime_qualified']=False

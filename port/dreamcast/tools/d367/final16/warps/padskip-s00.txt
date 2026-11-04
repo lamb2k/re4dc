@@ -1,0 +1,4 @@
+# final16: START (GC PAD_START 0x1000) while a route movie plays (state movie=1): skips r332s00 (and a later s10 / s20)
+720 1000 6 movie=1 3000
++90 1000 6 movie=1 3000
++90 1000 6 movie=1 3000

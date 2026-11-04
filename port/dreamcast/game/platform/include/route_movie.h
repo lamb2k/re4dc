@@ -12,6 +12,9 @@ enum {
     // leaves enemies / objects out of event mode (r119 s30, the parasite, mid-fight); EvtReadExec's camera
     // Comeback runs at the end, as SceEventEnd's mode-1 path does not.
     ROUTE_MOVIE_SCE_TRUE = 8,
+    // ROUTE_FINAL S00: tick observes logical VI-clock pictures before cancel,
+    // independent of presentation drops. All other clients retain shown ticks.
+    ROUTE_MOVIE_SOURCE_CLOCK = 16,
 };
 class Event;
 typedef void (*RouteEvtFunc)(Event*);

@@ -174,7 +174,13 @@ extern "C" void _unresolved()
 // EmInitFunc: placement-constructs the ski in the cEm work (cEm::move -> cPl0e::move from then on).
 void Pl0eInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // As pl0f: value-initialisation would erase EmMgr's assigned subArc/id.
+    // The source placement constructor installs the vtable and cEm work only.
+    new (em) cPl0e;
+#else
     new (em) cPl0e();
+#endif
 }
 
 // Per-frame update (emMove): clears the frozen-input flag, remembers rot.y for the camera roll,

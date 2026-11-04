@@ -1,0 +1,45 @@
+name bk-r317-qte
+# bosscast 11-03: r317 knife fight (Krauser QTE chain, AEV area 8): Leon placed in area 8 and the area fired at frame 200;
+# A+X pressed during the event every ~0.5 s (the prompt is A or X by coin flip); god; census every 200; 60 s.
+room 0x317
+pos -8209 -5100 167
+ang -0.2820
+inv default
+area 8
+trg 8 200
+god
+act 400 a+x 4 ev
+act 430 a+x 4 ev
+act 460 a+x 4 ev
+act 490 a+x 4 ev
+act 520 a+x 4 ev
+act 550 a+x 4 ev
+act 580 a+x 4 ev
+act 610 a+x 4 ev
+act 640 a+x 4 ev
+act 670 a+x 4 ev
+act 700 a+x 4 ev
+act 730 a+x 4 ev
+act 760 a+x 4 ev
+act 790 a+x 4 ev
+act 820 a+x 4 ev
+act 850 a+x 4 ev
+act 880 a+x 4 ev
+act 910 a+x 4 ev
+act 940 a+x 4 ev
+act 970 a+x 4 ev
+act 1000 a+x 4 ev
+act 1030 a+x 4 ev
+act 1060 a+x 4 ev
+act 1090 a+x 4 ev
+act 1120 a+x 4 ev
+act 1150 a+x 4 ev
+act 1180 a+x 4 ev
+act 1210 a+x 4 ev
+act 1240 a+x 4 ev
+act 1270 a+x 4 ev
+act 1300 a+x 4 ev
+emlog 0x39 60
+chapter 16
+census 200
+alivelog 60

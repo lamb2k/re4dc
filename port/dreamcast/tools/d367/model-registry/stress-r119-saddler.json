@@ -1,0 +1,106 @@
+{
+ "registry": "stress-r119-saddler",
+ "about": "lane stress16b (2026-10-16): the model-only Saddler stress disc (STRESS_SADDLER, NOT THE GAME). Stand-in room 119 (the village at night, after El Gigante) holds Saddler's final form (em31, r332 on GC Disc 2): PS2 body + head (ps2_cast.py saddler-em31-00) and tentacle (saddler-em31-01), with two gameplay levels each (glod_rung.py --pct 70 / 50 --shift 2, boss spec hard_cap_mm 80; same atlases), drawn by the warp line's level (NATIVE_MODEL_REGISTRY_LOD + STRESS_SADDLER). Package: model_registry.py --stress-saddler (1 MiB, 256 part facts).",
+ "cast_dir": "/mnt/c/Game Dev/Emulators/stress16b-20261016/regcast",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em31: the constant registry colour (no source-light bit for em31)",
+ "descriptors": [
+  {
+   "name": "saddler-em31-00",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    0
+   ],
+   "module": "src/em31/em31.cpp type 0 (Saddler's final form, the body) modelInit(ARC 4, ARC 7) + ModInfoMgr.create(ARC 5, ARC 7)",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  },
+  {
+   "name": "saddler-em31-01",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    1
+   ],
+   "module": "src/em31/em31.cpp type 1 (the tentacle on its back) modelInit(ARC 8, ARC 7)",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  },
+  {
+   "name": "s31b-g70",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    0
+   ],
+   "module": "src/em31/em31.cpp type 0 (Saddler's final form, the body) modelInit(ARC 4, ARC 7) + ModInfoMgr.create(ARC 5, ARC 7)",
+   "lod_of": "saddler-em31-00",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  },
+  {
+   "name": "s31t-g70",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    1
+   ],
+   "module": "src/em31/em31.cpp type 1 (the tentacle on its back) modelInit(ARC 8, ARC 7)",
+   "lod_of": "saddler-em31-01",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  },
+  {
+   "name": "s31b-g50",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    0
+   ],
+   "module": "src/em31/em31.cpp type 0 (Saddler's final form, the body) modelInit(ARC 4, ARC 7) + ModInfoMgr.create(ARC 5, ARC 7)",
+   "lod_of": "saddler-em31-00",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  },
+  {
+   "name": "s31t-g50",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    1
+   ],
+   "module": "src/em31/em31.cpp type 1 (the tentacle on its back) modelInit(ARC 8, ARC 7)",
+   "lod_of": "saddler-em31-01",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  }
+ ],
+ "room_packages": {
+  "119": {
+   "descriptors": [
+    "saddler-em31-00",
+    "saddler-em31-01",
+    "s31b-g70",
+    "s31t-g70",
+    "s31b-g50",
+    "s31t-g50"
+   ],
+   "evidence": "stress16b: the stand-in room for the Saddler stress disc (warp line saddler <frame> rel <mm> <level>)"
+  }
+ }
+}

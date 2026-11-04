@@ -1,0 +1,18 @@
+# Disc 3 KOS door scene (lane world-ch5): ch5found cx-r300-door (r300 -> r301), chapter 14
+name d3-kos-door
+room 0x300
+chapter 14
+pos -6094 -13000 8709
+ang 1.4030
+rsf 0x300 0 1
+inv default
+god
+alivelog 60
+census 200
+act 120 b+back 2
+act 150 fwd 90
+act 160 a 2
+act 190 a 2
+act 220 a 2
+act 250 a 2
+dump

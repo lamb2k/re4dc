@@ -151,6 +151,9 @@ extern "C" unsigned re4dc_heap_largest_current(unsigned*) __attribute__((weak));
 #define RE4DC_MOTION_USAGE_LOG 0
 #endif
 
+#ifndef RE4DC_MOTION_LARGE_CLIPS
+#define RE4DC_MOTION_LARGE_CLIPS 0
+#endif
 namespace {
 constexpr unsigned kArchives=4, kEntries=255, kClipLimit=32768;
 struct Slot { unsigned char* data; unsigned pins; std::uint64_t used; };
@@ -225,6 +228,29 @@ void locked_leave() { int old=irq_disable();lock_owner=nullptr;irq_restore(old);
 #endif
 unsigned word(const unsigned char* p) { unsigned n;std::memcpy(&n,p,4);return n; }
 unsigned aligned(unsigned n) { return (n+31)&~31U; }
+#if RE4DC_MOTION_LARGE_CLIPS
+// Audited em32 source only, all 98 FCVs cold. Generated from the sealed preparation:
+// body SHA/individual clips are in the private manifest, these facts qualify the loaded body.
+// Called only after the common MTC/REL extents are validated. Legacy v2 stays at 32 KiB.
+unsigned v2_clip_limit(const unsigned char* a,unsigned bytes,unsigned rel,const unsigned char* mtc) {
+    if(word(mtc+28)==kClipLimit)return kClipLimit;
+#if defined(RE4DC_MOTION_LARGE_EM39) && RE4DC_MOTION_LARGE_EM39
+    // em39 (Krauser, lane bosscast 11-03): the bossk archive with PS2 motion and its 13 clips over 32 KiB streamed cold
+    // (motion/ps2_motion_prepared.py rewrite --clip-limit 131072; hot set em39-r31c kept). Largest clip 65,440 B.
+    if(word(mtc+28)==131072u && bytes==877632u && word(mtc+12)==167u && word(mtc+20)==0xdcafeb63u &&
+       word(a+rel)==64u && word(a+rel+28)==0xdc000001u && word(a+rel+32)==52u) {
+        bool clean=true;
+        for(unsigned i=1;i<16;++i)if(i!=7u && i!=8u && word(a+rel+4*i))clean=false;
+        if(clean && net_crc32le(a,bytes)==0xa3a2893du)return 131072u;
+    }
+#endif
+    if(word(mtc+28)!=131072u || bytes!=1132416u || word(mtc+12)!=98u ||
+       word(mtc+20)!=0x0a5bdee5u || word(a+rel)!=77u ||
+       word(a+rel+28)!=0xdc000001u || word(a+rel+32)!=52u)return 0;
+    for(unsigned i=1;i<16;++i)if(i!=7u && i!=8u && word(a+rel+4*i))return 0;
+    return net_crc32le(a,bytes)==0x4a24cd31u?131072u:0u;
+}
+#endif
 #if RE4DC_MOTION_BOUNDED_R11F
 #include "native_motion_r11f_profiles.inc"
 #endif
@@ -462,7 +488,10 @@ void release_binding(Binding& b) {
     stats.metadata_bytes-=b.joined?2*b.slab_bytes:((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes;
 #else
     for(auto* p:b.slab)if(p)re4dc_motion_free(p);
-#if RE4DC_MOTION_BOUNDED_R11F
+#if RE4DC_MOTION_LARGE_CLIPS
+    // Charge only allocations that succeeded, including failed large-clip binds.
+    stats.metadata_bytes-=((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes;
+#elif RE4DC_MOTION_BOUNDED_R11F
     // New profile accounting charges each successful slab allocation separately.
     stats.metadata_bytes-=b.bounded?((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes:2*b.slab_bytes;
 #else
@@ -821,6 +850,8 @@ unsigned* load(Binding& b,unsigned i) {
         if(result.error || result.size!=size) {
 #if RE4DC_MOTION_RESERVE_PACK
             if(!reserved_data(b,data))
+#elif RE4DC_MOTION_LARGE_CLIPS && RE4DC_MOTION_RESERVE
+            if(data!=b.slab[0] && data!=b.slab[1])
 #elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
@@ -835,6 +866,8 @@ unsigned* load(Binding& b,unsigned i) {
 
 #if RE4DC_MOTION_RESERVE_PACK
             if(!reserved_data(b,data))
+#elif RE4DC_MOTION_LARGE_CLIPS && RE4DC_MOTION_RESERVE
+            if(data!=b.slab[0] && data!=b.slab[1])
 #elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
@@ -846,6 +879,8 @@ unsigned* load(Binding& b,unsigned i) {
             if(offset<head || offset>=size) {
 #if RE4DC_MOTION_RESERVE_PACK
             if(!reserved_data(b,data))
+#elif RE4DC_MOTION_LARGE_CLIPS && RE4DC_MOTION_RESERVE
+            if(data!=b.slab[0] && data!=b.slab[1])
 #elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
@@ -1123,12 +1158,24 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
         clip_limit=bounded_profile(a,bytes,rel,mtc);
         if(!clip_limit)return 0;
         bounded=true;
-    } else if(word(mtc+8)!=2u || word(mtc+28)!=kClipLimit)return 0;
+    }
+#if RE4DC_MOTION_LARGE_CLIPS
+    else if(word(mtc+8)!=2u || !(clip_limit=v2_clip_limit(a,bytes,rel,mtc)))return 0;
 #else
+    else if(word(mtc+8)!=2u || word(mtc+28)!=kClipLimit)return 0;
+#endif
+#else
+#if RE4DC_MOTION_LARGE_CLIPS
+    unsigned clip_limit=0;
+#endif
     if(rel>bytes || bytes-rel!=64 || mtc_offset<16+8*n ||
        mtc_offset>=rel || rel-mtc_offset<32 || (mtc_offset&31) ||
        std::memcmp(mtc,"R4MOTBL\0",8) || word(mtc+8)!=2 || word(mtc+16)!=20 ||
+#if RE4DC_MOTION_LARGE_CLIPS
+       word(mtc+24)!=bytes || !(clip_limit=v2_clip_limit(a,bytes,rel,mtc)))return 0;
+#else
        word(mtc+24)!=bytes || word(mtc+28)!=kClipLimit)return 0;
+#endif
 #endif
     const unsigned count=word(mtc+12);
     if(!count || count>kEntries || count>(rel-mtc_offset-32)/20 ||
@@ -1139,6 +1186,8 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
         if(off<16+8*n || off>=mtc_offset || (off&31) || off<=prev ||
 #if RE4DC_MOTION_BOUNDED_R11F
            size>clip_limit || (bounded && flags) ||
+#elif RE4DC_MOTION_LARGE_CLIPS
+           size>clip_limit ||
 #else
            size>kClipLimit ||
 #endif
@@ -1185,14 +1234,18 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
         for(auto*& p:b->slab) {
             p=static_cast<unsigned char*>(re4dc_motion_alloc(b->slab_bytes));
             if(!p) { re4dc_log("motion bind: reserve slab of %u failed\n",b->slab_bytes);release_binding(*b);return 0; }
-#if RE4DC_MOTION_BOUNDED_R11F
+#if RE4DC_MOTION_LARGE_CLIPS
+            stats.metadata_bytes+=b->slab_bytes;
+#elif RE4DC_MOTION_BOUNDED_R11F
             if(b->bounded)stats.metadata_bytes+=b->slab_bytes;
 #endif
         }
+#if !RE4DC_MOTION_LARGE_CLIPS
 #if RE4DC_MOTION_BOUNDED_R11F
         if(!b->bounded)
 #endif
         stats.metadata_bytes+=2*b->slab_bytes;
+#endif
 #endif
         re4dc_log("motion reserve: bind slabs=2x%u\n",b->slab_bytes);
     }

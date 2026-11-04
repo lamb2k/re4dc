@@ -42,6 +42,16 @@
 #include "TexRender.h"
 #include "db_log.h"
 #include "st_mgr_event.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 / s10 / s20 (the U-3 fight / rocket) presented by the PS2 movies
+// (dc/movie/r332<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R332_ROUTE_MOVIES 1
+#else
+#define R332_ROUTE_MOVIES 0
+#endif
 
 // Room 3-32 (D:/Bio4/Prog/r332.cpp): the final battle. The two cranes drop their steel beams on the
 // boss (R332ExecCrane), the two bridges the boss opens and closes (R332BridgeTask, the player runs
@@ -316,6 +326,9 @@ void R332Init()
         } else {
             size = size1;
         }
+#if R332_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x33200))
+#endif
         EvtMgr.EvtReadAram("event/evd/r332s00.evd", (u8) GetEmIdFromListI(0xA9), 0, 0, size);
         SceAtSetEnable(0, 0);
         SceAtSetEnable(9, 1);
@@ -1019,6 +1032,9 @@ static void R332RocketShootMain(int type)
     if (RsfCheck(G_ROOM_ID, 2) == 0) {
         EvtMgr.EvtFree("event/evd/r332s20.evd");
     }
+#if R332_ROUTE_MOVIES
+    if (!re4dc_movie_available(0x33210))
+#endif
     EvtMgr.EvtReadAram("event/evd/r332s10.evd", (u8) GetEmIdFromListI(0xA9), 0, 0, 0);
     BitOn(pG->Status_flg[2], 0x02000000);
     SceEventStart(0);
@@ -1505,6 +1521,11 @@ static void R332EventS00()
     RsfSet(G_ROOM_ID, 0);
     BitOn(pG->System_flg, 0x400);
     SceSleep(1);
+#if R332_ROUTE_MOVIES
+    if (re4dc_movie_available(0x33200)) {
+        RouteMoviePlay(0x33200, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R332S00_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r332s00.evd", (u8) GetEmIdFromListI(0xA9), 0);
     GamePointBossReset();
     r332_work->em[0].setEm(0xA8, -1, 1, 1, 1);
@@ -1567,6 +1588,9 @@ void R332EventS00End()
     setPosXYZ(pPL, -32900.0f, 15811.0f, 47140.0f);
     setAngXYZ(pPL, 0.0f, 0.766f, 0.0f);
     ((cUnitEventView*) pPL)->endEvent(0);
+#if R332_ROUTE_MOVIES
+    if (!re4dc_movie_available(0x33220))
+#endif
     EvtMgr.EvtReadAram("event/evd/r332s20.evd", (u8) GetEmIdFromListI(0xA9), 0, 0, 0);
     em = (cEm31*) r332_work->em[0].getPtr();
     if (em) {
@@ -1602,6 +1626,11 @@ static void R332EventS10()
     R332BridgeOpened(1, 1);
     BitOn(pG->System_flg, 0x400);
     if ((pG->Room_flg[0] & 0x02000000) == 0) {
+#if R332_ROUTE_MOVIES
+        if (re4dc_movie_available(0x33210)) {
+            RouteMoviePlay(0x33210, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R332S10_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r332s10.evd", (u8) GetEmIdFromListI(0xA9), 0);
     }
     BitOff(pG->System_flg, 0x400);
@@ -1632,6 +1661,14 @@ static void R332EventS10()
 static void R332EventS20()
 {
     RsfSet(G_ROOM_ID, 2);
+#if R332_ROUTE_MOVIES
+    if (re4dc_movie_available(0x33220)) {
+        while (SceCheckEventStart() != 1) {  // EvtReadExec flags 0x200
+            SceSleep(1);
+        }
+        RouteMoviePlay(0x33220, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R332S20_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r332s20.evd", (u8) GetEmIdFromListI(0xA9), 0x200);
     SceAtSetEnable(0x84, 1);
 }

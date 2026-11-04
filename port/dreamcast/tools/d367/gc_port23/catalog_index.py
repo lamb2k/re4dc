@@ -5,7 +5,7 @@ import struct
 MAGIC = b'GCIDX001'
 HEADER = struct.Struct('<8s4I104s')
 RECORD = struct.Struct('<16s48s32sB15s')
-MAX_RECORDS = 16320  # 64 remaining compact-token indices are unknown quarantine
+MAX_RECORDS = 65472  # 16-bit token index (lane world-ch5 11-02, was 16320 / 14 bits); 64 remaining indices are unknown quarantine
 ORIGINS = {'unknown': 0, 'gc': 1, 'ps2': 2, 'authored': 3}
 
 
@@ -117,7 +117,7 @@ class Epochs:
         self.unknown = []
 
     def install(self, reader):
-        if self.epoch >= (1 << 18)-2:
+        if self.epoch >= (1 << 16)-2:
             raise ValueError('catalog epoch exhausted')
         self.epoch += 1
         self.reader, self.unknown = reader, []

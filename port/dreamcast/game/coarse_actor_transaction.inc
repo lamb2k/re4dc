@@ -166,6 +166,33 @@ inline int re4dc_nmr_ice_slot(const cModelInfo* info) {
 #define RE4DC_NMR_BLEND_ICE(info,app) false
 #define RE4DC_NMR_BLEND_IDLE(info,app) RE4DC_NMR_BLEND_IDLE0(info,app)
 #endif
+#if RE4DC_ACTOR_TRANSACTION_DIAG || RE4DC_ACTOR_CAST_SHADOW_EMPTY
+// Source shadow.cpp GetCastShadowMngPtr's pre-frustum tests. Omitting checkKind/frustum is conservative:
+// any possible candidate keeps the source receive-pass contract. Never call the source function here;
+// it allocates/registers managers. -1 means an unproved manager, and must never admit a native plan.
+int actor_shadow_candidates(const cModel* m) {
+    if(!m || LightMgr.nArray>1024 ||
+       (LightMgr.nArray && (!LightMgr.pArray || LightMgr.size!=sizeof(cLight))))return -1;
+    unsigned candidates=0;
+    for(unsigned i=0;i<LightMgr.nArray;++i){
+        const auto* light=(const cLight*)((const u8*)LightMgr.pArray+LightMgr.size*i);
+        if((light->be_flag&3)!=3 || light->Type!=4 || light->xD!=2 ||
+           !(light->xF&m->LightInfo.EnableMask) ||
+           (i<32 && !(m->LightInfo.SelectMask&(1u<<i))))continue;
+        const auto* work=(const ShadowLightWork*)light->work;
+        if(!work)return -1;
+        if(work->mode<1 || work->mode>4)continue;
+        ++candidates;
+    }
+    return (int)candidates;
+}
+#endif
+#if RE4DC_ACTOR_CAST_SHADOW_EMPTY
+bool actor_shadow_empty_leon(cModel* m,const Re4dcActorPlan& p) {
+    return m==(cModel*)pPL && !m->id && (p.appearance==0x100u || p.appearance==0x108u) &&
+           actor_shadow_candidates(m)==0;
+}
+#endif
 bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
     if(!m->pParts || !p.count || p.count>kRe4dcActorRoles || !p.palettes ||
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
@@ -180,7 +207,11 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
     // Shadow/depth, special rendering and texture modifications remain source.
     if(pG->Status_flg[1]&0x100)return false;
     if((pG->Status_flg[2]&0x00100000) && (m->be_flag&0x02000000) &&
-       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200))return false;
+       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200)
+#if RE4DC_ACTOR_CAST_SHADOW_EMPTY
+       && !actor_shadow_empty_leon(m,p)
+#endif
+       )return false;
     unsigned palette_bytes=0,workspace_bytes=0;
     for(unsigned i=0;i<p.count;++i) {
         auto* info=p.info[i];
@@ -248,7 +279,17 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
     if(!p.material_count || p.material_count>kRe4dcActorMaterials || !p.run_count || p.run_count>kRe4dcActorRuns)return 9;
     if(pG->Status_flg[1]&0x100)return 10;
     if((pG->Status_flg[2]&0x00100000) && (m->be_flag&0x02000000) &&
-       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200))return 11;
+       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200)){
+#if RE4DC_ACTOR_CAST_SHADOW_EMPTY
+        if(!actor_shadow_empty_leon(m,p))
+#endif
+        {
+        // high16=array size, low16=source pre-frustum candidates (ffff: invalid/unproved).
+        const int candidates=actor_shadow_candidates(m);
+        *detail=(LightMgr.nArray<<16)|(candidates<0?0xffffu:(unsigned)candidates&0xffffu);
+        return 11;
+        }
+    }
     unsigned palette_bytes=0,workspace_bytes=0;
     for(unsigned i=0;i<p.count;++i) {
         auto* info=p.info[i];*detail=i;

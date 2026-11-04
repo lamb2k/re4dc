@@ -5,10 +5,10 @@ unsigned index_word(const unsigned char* p){unsigned value;std::memcpy(&value,p,
 bool new_catalog_epoch(){
     catalog_ok=false;catalog=nullptr;catalog_read=nullptr;catalog_context=nullptr;
     catalog_rows=catalog_bytes=unknown_count=0;
-    if(catalog_epoch>=(1U<<18)-2){catalog_epoch=(1U<<18)-1;return false;}
+    if(catalog_epoch>=(1U<<16)-2){catalog_epoch=(1U<<16)-1;return false;}
     ++catalog_epoch;return true;
 }
-bool index_generation(unsigned epoch){return epoch && epoch<(1U<<18)-1 && epoch==catalog_epoch;}
+bool index_generation(unsigned epoch){return epoch && epoch<(1U<<16)-1 && epoch==catalog_epoch;}
 unsigned index_read_at(CatalogReadAt read,void* context,unsigned epoch,unsigned offset,void* target,unsigned bytes){
     if(!read || !index_generation(epoch))return 0;
     const unsigned count=read(context,offset,target,bytes);

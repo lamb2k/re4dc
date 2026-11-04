@@ -542,7 +542,7 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     const bool cacheable=bytes!=0;
     FpCache& slot=fp_cache[(key.crc^key.fnv^offset)&63U];
     if(cacheable && slot.token && slot.crc==key.crc && slot.fnv==key.fnv && slot.offset==offset && slot.bytes==bytes &&
-       (slot.token>>14)==re4dc_gcasset::catalog_generation()){
+       (slot.token>>16)==re4dc_gcasset::catalog_generation()){
         entry.asset.value=slot.token;return true;
     }
     if(streamed){
@@ -4744,6 +4744,11 @@ constexpr unsigned kWorldNewKeys=16,kWorldNewBytes=84448;
 unsigned world_new_n,world_new_bytes;
 std::uint64_t world_new_mask,world_seen_mask,world_capped_mask;
 #endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+// NMR_PRELOAD_SKIP (Makefile): the enemy pass leaves out the GC identities the room's registry package replaces.
+extern "C" int re4dc_registry_replaces_key(unsigned crc,unsigned fnv);  // coarse_actor.cpp
+bool preload_enemy_pass; unsigned preload_nmr_skipped,preload_nmr_skipped_bytes;
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
 // TEX_PKG_SKIP (native_model_registry.mk): a source texture of the room package's role rows (the GC TPLs its
 // descriptors replace) is not uploaded at room entry; the package draws its own atlas. A source draw (fallback)
@@ -4767,6 +4772,11 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
         if(!table.record(i,crc,fnv,width,height,format) || !width || !height || width>1024 || height>1024)continue;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
         if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
+#endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+        if(preload_enemy_pass && re4dc_registry_replaces_key(crc,fnv)) {
+            ++preload_nmr_skipped;preload_nmr_skipped_bytes+=preload_least(width,height);continue;
+        }
 #endif
 #if RE4DC_QUALITY_ASSETS
         if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue; RE4DC_GCIDLE_SKIP(crc,fnv)
@@ -4874,6 +4884,14 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             // TPLs, 16 uploads in play). Core keys (room 0) keep the skip.
             if(!r.room && RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
             if(r.room && re4dc_registry_source_key(r.crc,r.fnv))++pkg_listed_kept;
+#elif defined(RE4DC_RESIDENT_SHARED_R327) && RE4DC_RESIDENT_SHARED_R327
+            // r327 registry appearance202 body BIN22b/TPL22c lists this source key, but live play
+            // still uses it. The explicit resident list is authoritative for this one audited record.
+            // Keep other role-package skips and inferred enemy preloads intact (island18 res2).
+            const bool shared_r327=src.room==0x327u && r.room==0x327u &&
+                r.width==256u && r.height==256u && r.format==14u &&
+                r.crc==0x1aad1b6cu && r.fnv==0xe247646eu;
+            if(!shared_r327 && RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
 #else
             if(RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
 #endif
@@ -4884,6 +4902,17 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             for(const auto& m:missing_keys)if(!known && (m.crc|m.fnv) && m==key)known=true;
             for(unsigned k=0;k<n && !known;++k)if(preload_picks[k].key==key)known=true;
             const unsigned least=preload_least(r.width,r.height);
+#if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_RESIDENT_SKIP_LOG) && RE4DC_RESIDENT_SKIP_LOG
+            // RESIDENT_SKIP_LOG=1 only (compiled out otherwise): why a listed key was not picked (lane ch5found16, r327 1aad1b6c).
+            if(known || bytes+least>byte_limit){
+                bool in_entries=false,in_missing=false,in_picks=false;
+                for(const auto& e:entries)if(e.valid && e.key==key){in_entries=true;break;}
+                for(const auto& m:missing_keys)if((m.crc|m.fnv) && m==key)in_missing=true;
+                for(unsigned k=0;k<n;++k)if(preload_picks[k].key==key){in_picks=true;break;}
+                re4dc_log("native texture preload: resident skip %08x-%08x %ux%u room=%03x known=%d (entry=%d missing=%d picked=%d) bytes=%u+%u limit=%u n=%u resident=%u slots=%u\n",
+                          key.crc,key.fnv,(unsigned)r.width,(unsigned)r.height,src.room,known?1:0,in_entries?1:0,in_missing?1:0,in_picks?1:0,bytes,least,byte_limit,n,resident,limit);
+            }
+#endif
             if(known || bytes+least>byte_limit)continue;
             preload_picks[n++]={key,r.width,r.height,r.format};bytes+=least;++resident_picked;
         }
@@ -4997,12 +5026,22 @@ void preload_identities(){
 #if RE4DC_PS2_PRELOAD_LEAN
     }
 #endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+    const unsigned nmr_skipped0=preload_nmr_skipped,nmr_bytes0=preload_nmr_skipped_bytes;
+    preload_enemy_pass=true;
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
     {const unsigned s0=pkg_skips;
      for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit,true);
      re4dc_log("TEXPKG preload enemy skips=%u total=%u\n",pkg_skips-s0,pkg_skips);}
 #else
     for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit);
+#endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+    preload_enemy_pass=false;
+    if(preload_nmr_skipped!=nmr_skipped0)
+        re4dc_log("NMR preload skip: run=%u keys=%u bytes=%u (registry-replaced GC enemy textures; total %u)\n",preload_runs,
+                  preload_nmr_skipped-nmr_skipped0,preload_nmr_skipped_bytes-nmr_bytes0,preload_nmr_skipped);
 #endif
     preload_select(player_identities,n,resident,bytes,limit,byte_limit);preload_select(weapon_identities,n,resident,bytes,limit,byte_limit);
 #if RE4DC_COARSE_WORLD & 64
