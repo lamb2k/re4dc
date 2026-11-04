@@ -103,3 +103,4 @@ st?/r*.arc:removed	arcdrop	assets-dc batch 4: GameCube room archives no game pat
 # glyph27 11-02 (lane glyph27): grab QTE stick cap back to the Dreamcast glyph (fxc26b had made it PS2)
 dc/tex.pak:~6d33c3f9-9f8cf668	glyph27	grab escape prompt stick cap, Dreamcast glyph v4 G08 (authored, not GC), user 11-02
 dc/native/*/ps2-sky.r4sk:added	SKY_PLAY=1 (DATA sky27)	sky27: normal-play PS2 sky as the PVR background plane, one file per outdoor room (t15/int 931512cbd; claimed by lane house26, reviewed by coordinator 11-02)
+dc/resident.bin:changed	dcf02,dcf03,dcf01	assets-dc: resident key lists carry tex.pak payload sizes; dcf re-encodes (and PKG_PS2_SIZE dcf01) change them (seen with res26pr, cycle 1103-2140-5928df26)
