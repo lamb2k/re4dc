@@ -3,3 +3,6 @@
 # warp sets flags after R331Init, so this run does not trigger it (code path: r331.cpp R331ExecEventS10 movie guard).
 r331s10 r331 17 warps/d3ev-r331s10.txt
 r332s00 r332 17 warps/d3ev-r332s00.txt
+r310s00 r310 15 warps/d3ev-r310s00.txt
+r30cs00 r30c 14 warps/d3ev-r30cs00.txt
+r30as10 r30a 15 warps/d3ev-r30as10.txt

@@ -28,6 +28,16 @@
 #include "sscrn.h"
 #include "cam_ctrl.h"
 #include "game.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (world-ch5 2026-11-04): r30cs00 presented by the PS2 movies (dc/movie/<event>.seq) as the
+// PS2 does (BIO4MOV.AFS <event>.sfd; its <event>.evd there is 6 KB of control data, no models). With a movie no
+// evd is read; the handler's begin / end modes run and the code after the event is unchanged. Without it the
+// source path applies.
+#include "route_movie.h"
+#define R30C_ROUTE_MOVIES 1
+#else
+#define R30C_ROUTE_MOVIES 0
+#endif
 
 // Room 3-0C (D:/Bio4/Prog/r30c.cpp): Ashley locked in the cell, the s00 event that frees her, the
 // plane that crashes through the wall (with its cut), the cell door key and the item box.
@@ -101,6 +111,9 @@ void R30cInit()
     EvtMgr.SetFunc("evt_r30cs00_func", (void*) Evt_R30CS00_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(2, 0x12, 0, (TaskFunc) R30cEventS00, 0, 1);
+#if R30C_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x30C00))
+#endif
         EvtMgr.EvtReadAram("event/evd/r30cs00.evd", (u8) GetEmIdFromListI(0x40), 0, 0, 0);
         SubCharInit(1, &pPL->pos, pPL->ang.y);
         SubCharCtrl(5, 0);
@@ -200,6 +213,14 @@ static void R30cEventS00()
         RsfSet(G_ROOM_ID, 0);
         SceAtSetEnable(2, 0);
         SndRoomStrStop(1);
+#if R30C_ROUTE_MOVIES
+        if (re4dc_movie_available(0x30C00)) {
+            while (SceCheckEventStart() != 1) {  // EvtReadExec flags 0x200
+                SceSleep(1);
+            }
+            RouteMoviePlay(0x30C00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R30CS00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r30cs00.evd", (u8) GetEmIdFromListI(0x40), 0x200);
         {
             // pPL read first (its load precedes the pool loads in the stream): the x store then

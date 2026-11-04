@@ -30,6 +30,16 @@
 #include "math_sub.h"
 #include "eprintf.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (world-ch5 2026-11-04): r30bs00 presented by the PS2 movies (dc/movie/<event>.seq) as the
+// PS2 does (BIO4MOV.AFS <event>.sfd; its <event>.evd there is 6 KB of control data, no models). With a movie no
+// evd is read; the handler's begin / end modes run and the code after the event is unchanged. Without it the
+// source path applies.
+#include "route_movie.h"
+#define R30B_ROUTE_MOVIES 1
+#else
+#define R30B_ROUTE_MOVIES 0
+#endif
 
 // Room 3-0B (D:/Bio4/Prog/r30b.cpp): the crane puzzle. The player drives the crane's magnet over the four
 // Ganado (the caught ones ride along and are dropped in the pit), the switch-operated door with its guards,
@@ -141,6 +151,9 @@ void R30bInit()
     if (pG->Status_flg[3] & 0x04000000) {
         if (RsfCheck(G_ROOM_ID, 0) == 0) {
             SceAtDataSet_exec(3, 0x12, 0, (TaskFunc) R30bEventS00, 0, 1);
+#if R30B_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x30B00))
+#endif
             EvtMgr.EvtReadAram("event/evd/r30bs00.evd", (u8) GetEmIdFromListI(0x56), 0, 0, 0);
         }
         SceAtSetEnable(2, 0);
@@ -938,6 +951,11 @@ static void R30bEventS00()
         SceAtSetEnable(3, 0);
         SceDestroyEm(0x10, 0x20);
         SceSleep(2);
+#if R30B_ROUTE_MOVIES
+        if (re4dc_movie_available(0x30B00)) {
+            RouteMoviePlay(0x30B00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R30BS00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r30bs00.evd", (u8) GetEmIdFromListI(0x56), 0);
         pG->System_flg |= 0x400;
         Vec pos = {-6200.0f, 0.0f, -26100.0f};

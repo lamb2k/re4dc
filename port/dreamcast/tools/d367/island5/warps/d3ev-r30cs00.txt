@@ -1,0 +1,6 @@
+# world-ch5 11-04: r30c at the area 2 trigger (center 10068,0,-3518; R30cInit arms s00 while Room_flg bit 0 is clear)
+# (route movie 30c00 with dc/movie/r30cs00.seq).
+pos 10068 0 -3518
+ang 0
+inv default
+god

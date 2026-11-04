@@ -83,7 +83,8 @@ disc3_jobs() {
       case "$n" in ""|"#"*) continue ;; esac
       { echo "name d3ev-$n"; echo "room 0x${r#r}"; grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'
         echo "chapter $ch"; } > "$EVU/fixtures/d3ev-$n.txt"
-      job 1 d3ev-$n "$(run d3ev-$n d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3ev-$n.txt\"")"
+      pad=""; if [ -f "$I5/${wf%.txt}-pad.txt" ]; then tr -d '\r' < "$I5/${wf%.txt}-pad.txt" > "$EVU/fixtures/d3ev-$n-pad.txt"; pad="--pad \"\$EVW\\fixtures\\d3ev-$n-pad.txt\""; fi
+      job 1 d3ev-$n "$(run d3ev-$n d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3ev-$n.txt\"" $pad)"
     done < "$I5/events.tsv"
   fi
   job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"

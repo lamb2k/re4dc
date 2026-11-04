@@ -31,6 +31,16 @@
 #include "est.h"
 #include "math_sub.h"
 #include "vec.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (world-ch5 2026-11-04): r310s00 presented by the PS2 movies (dc/movie/<event>.seq) as the
+// PS2 does (BIO4MOV.AFS <event>.sfd; its <event>.evd there is 6 KB of control data, no models). With a movie no
+// evd is read; the handler's begin / end modes run and the code after the event is unchanged. Without it the
+// source path applies.
+#include "route_movie.h"
+#define R310_ROUTE_MOVIES 1
+#else
+#define R310_ROUTE_MOVIES 0
+#endif
 
 // Room 3-10 (D:/Bio4/Prog/r310.cpp): the two crates Leon and Ashley push together, the lever pairs
 // with their barred doors, the hiding spots and the S00 event with the Ganado that stands up.
@@ -103,6 +113,9 @@ void R310Init()
     pG->Status_flg[3] |= 0x04000000;
     EvtMgr.SetFunc("evt_r310s00_func", (void*) Evt_R310S00_Func);
     if ((int) R310_SAVE_FLAGS >= 0) {
+#if R310_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x31000))
+#endif
         EvtMgr.EvtReadAram("event/evd/r310s00.evd", (u8) GetEmIdFromListI(0x5A), 0, 1, 0);
         SceExec(0x12, (TaskFunc) R310EventS00, 0, 2, 2, 0);
     }
@@ -813,6 +826,11 @@ static void R310EventS00()
     if ((int) R310_SAVE_FLAGS >= 0) {
         R310_SAVE_FLAGS |= 0x80000000;
         pG->System_flg |= 0x400;
+#if R310_ROUTE_MOVIES
+        if (re4dc_movie_available(0x31000)) {
+            RouteMoviePlay(0x31000, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R310S00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r310s00.evd", (u8) GetEmIdFromListI(0x5A), 0);
         cPlayer* pl = pPL;
         p.x = -6877.0f;

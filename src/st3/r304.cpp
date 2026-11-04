@@ -24,6 +24,16 @@
 #include "fade.h"
 #include "sscrn.h"
 #include "TexRender.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (world-ch5 2026-11-04): r304s00 presented by the PS2 movies (dc/movie/<event>.seq) as the
+// PS2 does (BIO4MOV.AFS <event>.sfd; its <event>.evd there is 6 KB of control data, no models). With a movie no
+// evd is read; the handler's begin / end modes run and the code after the event is unchanged. Without it the
+// source path applies.
+#include "route_movie.h"
+#define R304_ROUTE_MOVIES 1
+#else
+#define R304_ROUTE_MOVIES 0
+#endif
 
 // Room 3-04 (D:/Bio4/Prog/r304.cpp): the s00 event with its two render-to-texture cameras (the monitors),
 // the Ganado that appear after it and the two item boxes.
@@ -68,6 +78,9 @@ void R304Init()
     EvtMgr.SetFunc("evt_r304s00_func", (void*) Evt_R304S00_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(2, 0x12, 0, (TaskFunc) R304EventS00, 0, 1);
+#if R304_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x30400))
+#endif
         EvtMgr.EvtReadAram("event/evd/r304s00.evd", (u8) GetEmIdFromListI(0x28), 0, 0, 0);
         EstSet(0, -1, 0, 0, 1, 0, 0, 0, (u32) zero, zero);
         for (i = 0x19; i <= 0x1F; i++) {
@@ -137,6 +150,14 @@ void R304EventS00()
         SeAtSetOnOff(0, 0);
         SndRoomStrStop(1);
         EstSet(0, -1, 0, 0, 1, 1, 0x800, 0, 0, 0);
+#if R304_ROUTE_MOVIES
+        if (re4dc_movie_available(0x30400)) {
+            while (SceCheckEventStart() != 1) {  // EvtReadExec flags 0x200
+                SceSleep(1);
+            }
+            RouteMoviePlay(0x30400, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R304S00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r304s00.evd", (u8) GetEmIdFromListI(0x28), 0x200);
         FadeSetW(1, 0, 0, 0);
         SubScreenOpen(2, 1);

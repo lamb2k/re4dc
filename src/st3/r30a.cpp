@@ -20,6 +20,16 @@
 #include "cam_ctrl.h"
 #include "route_ck.h"
 #include "cSceObj.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (world-ch5 2026-11-04): r30as00 / r30as10 presented by the PS2 movies (dc/movie/<event>.seq) as the
+// PS2 does (BIO4MOV.AFS <event>.sfd; its <event>.evd there is 6 KB of control data, no models). With a movie no
+// evd is read; the handler's begin / end modes run and the code after the event is unchanged. Without it the
+// source path applies.
+#include "route_movie.h"
+#define R30A_ROUTE_MOVIES 1
+#else
+#define R30A_ROUTE_MOVIES 0
+#endif
 
 // Room 3-0A (D:/Bio4/Prog/r30a.cpp): the lift between the two floors (the player and the partner ride it),
 // the s00 escape event that jumps to 3-16 and the s10 event.
@@ -57,11 +67,17 @@ void R30aInit()
         BitOff(pG->Scenario_flg[0], 0x800);
         if (RsfCheck(G_ROOM_ID, 0) == 0) {
             SceExec(0x12, (TaskFunc) R30aEventS00, 0, 0, 2, 0);
+#if R30A_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x30A00))
+#endif
             EvtMgr.EvtReadAram("event/evd/r30as00.evd", 0, 0, 0, 0);
         }
     } else {
         if (RsfCheck(G_ROOM_ID, 1) == 0) {
             SceAtDataSet_exec(3, 0x12, 0, (TaskFunc) r30a_execEvent10, 0, 1);
+#if R30A_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x30A10))
+#endif
             EvtMgr.EvtReadMram("event/evd/r30as10.evd", 0, 0, 0, 0);
         }
         r30a_initElevator();
@@ -237,6 +253,11 @@ static void r30a_execEvent10()
     if (RsfCheck(G_ROOM_ID, 1) == 0) {
         RsfSet(G_ROOM_ID, 1);
         pG->System_flg |= 0x400;
+#if R30A_ROUTE_MOVIES
+        if (re4dc_movie_available(0x30A10)) {  // EvtReadExec flags 0x100 (no partner recall): the movie path recalls none
+            RouteMoviePlay(0x30A10, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R30AS00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r30as10.evd", 0, 0x100);
     }
 }
@@ -247,6 +268,11 @@ static void R30aEventS00()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         RsfSet(G_ROOM_ID, 0);
         pG->System_flg |= 0x400;
+#if R30A_ROUTE_MOVIES
+        if (re4dc_movie_available(0x30A00)) {
+            RouteMoviePlay(0x30A00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R30AS00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r30as00.evd", 0, 0);
         pG->System_flg |= 0x400;
         Vec pos = {12717.0f, 2000.0f, 7351.0f};

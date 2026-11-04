@@ -1,0 +1,6 @@
+# world-ch5 11-04: r30a at the area 3 trigger (center 31396,7740,27809, trig 0x81 = check button; R30aInit arms s10
+# while Scenario_flg[0] 0x800 is clear) with A pressed (d3ev-r30as10-pad.txt) (route movie 30a10).
+pos 31396 7740 27809
+ang 0
+inv default
+god

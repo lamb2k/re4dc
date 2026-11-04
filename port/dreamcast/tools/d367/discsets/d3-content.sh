@@ -84,6 +84,14 @@ put "$(src island18-r333-sound-20261018)/em/pl0e.drs" em/pl0e.drs
 for f in "$(src island18-r333-transport-20261018)"/prepared/mot/*.fcv; do [ -e "$f" ] && put "$f" "dc/mot/${f##*/}"; done
 for d in "$(src island18-final-movies-20261018)"/r33*; do [ -e "$d/$(basename "$d").seq" ] && put "$d/$(basename "$d").seq" "dc/movie/$(basename "$d").seq"; done
 fi
+# Events the PS2 plays as movies (CH-FIXES-CARRY row 23; world-ch5 11-04): r304s00, r30as00/s10, r30bs00, r30cs00 and
+# r310s00 ship as route movies (island-movies-20261104: PS2 BIO4MOV.AFS .sfd -> .seq, island18-final-movies settings);
+# src/st3 r304/r30a/r30b/r30c/r310.cpp read their evd only without the movie, so the GameCube evds (Leon ev0000,
+# Ashley ev0100, Luis pl020, em36 / em39 event models) are not shipped.
+for e in r304s00 r30as00 r30as10 r30bs00 r30cs00 r310s00; do
+  put "$(src island-movies-20261104)/$e/$e.seq" "dc/movie/$e.seq"
+  rm -f "$OUT/evd/$e.evd" "$OUT/evd/$e.evd.evq"
+done
 # Event-file lint (CH-FIXES-CARRY row 21): every evd is little-endian (EvtHeader nBin/binOfs read LE) with a .evq.
 for f in "$OUT"/evd/*.evd; do
   [ -e "$f" ] || continue
