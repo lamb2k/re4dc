@@ -2027,6 +2027,10 @@ if os.path.isdir(CPIC34D):
 R20DEM19D = os.environ.get('R20DEM19D', '/root/re4data/private/castle34-em19-20261103/set-r20dem19')
 if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
     DATA['r20dem19'] = {'dc/native/r20d/registry.re4nmr': R20DEM19D + '/dc/native/r20d/registry.re4nmr'}
+# res34 (lane world-ch334 11-03, DISC 2 ONLY): the castle resident.bin with r20c r20f r206 r20d r20e from vram/resident/castle18.
+RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
+if os.path.isfile(RES34D + '/dc/resident.bin'):
+    DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
