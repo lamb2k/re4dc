@@ -112,6 +112,31 @@ if os.environ.get('D3_PAK_PRUNE', '1') == '1':
     crc = struct.pack('<I', zlib.crc32(blob[ioff:doff])); blob = blob[:24] + crc + crc + blob[32:]   # as pak_keep.py
     pak = os.path.join(work, 'tex-d3.pak'); open(pak, 'wb').write(blob)
     print(f'pak prune: {len(drop_keys)} village/castle-only keys, {dropped} bytes')
+# D3_DATA picture keys win over the pack (lane island-interiors 11-03): the loader reads dc/tex.pak first, so a D3_DATA
+# dc/tex/<key>.re4tex (e.g. isltex: PS2 conversions of keys the pack holds as GameCube pictures) is written into the pack
+# under its key (the loose copy is then dropped below as "in pack"). Keys listed in island5/d3-pak-seen.txt survive
+# mkdisc3's D3_PAK_LIVE prune.
+d3tex = {}
+for x in D3:
+    for k, v in t11.DATA[x].items():
+        if isinstance(v, str) and k.startswith('dc/tex/') and k.endswith('.re4tex'):
+            n_ = os.path.basename(k)[:17]
+            d3tex[(int(n_[:8], 16), int(n_[9:], 16))] = open(v, 'rb').read()
+if d3tex:
+    sys.path.insert(0, os.path.join(HERE, '..'))
+    import texpack
+    b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0); m = {}
+    for i in range(cnt):
+        c, f, o, n = struct.unpack_from('<4I', b, ioff + 16 * i); m[(c, f)] = b[o:o + n]
+    over = sum(1 for k in d3tex if k in m)
+    m.update(d3tex)
+    _mc = texpack.MAX_COUNT; texpack.MAX_COUNT = 1 << 20
+    try:
+        nb = texpack.build(m)[0]
+    finally:
+        texpack.MAX_COUNT = _mc
+    pak = os.path.join(work, 'tex-d3x.pak'); open(pak, 'wb').write(nb)
+    print(f'D3_DATA pictures into the pack: {len(d3tex)} keys ({over} replaced)')
 rep['dc/tex.pak'] = pak
 # dc/resident.bin = Disc 1's current resident.bin (newer core / shared records) + the island room lists
 # (vram/resident/r3*.tsv), via water/water_resident.py pack (base + lists union); the 10-18 island18 copy is older.
