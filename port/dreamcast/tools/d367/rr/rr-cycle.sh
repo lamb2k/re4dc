@@ -90,7 +90,7 @@ trees() {
 }
 build_release() {
   local tt=$TA/port/dreamcast/tools/d367
-  K=$W/k T=$TA LP=${RR_PFX:-rr}$S7 CH2="$CH2" bash "$tt/ch2/ch2-build.sh" rP 2>&1 | grep '^rc=' | cut -c1-200 | tee "$W/build-rP.txt"
+  K=$W/k T=$TA LP=${RR_PFX:-rr}$S7 CH2="$CH2" bash /root/probe/lanelock.sh bash "$tt/ch2/ch2-build.sh" rP 2>&1 | grep '^rc=' | cut -c1-200 | tee "$W/build-rP.txt"
   local O=$ROUTE/out-${RR_PFX:-rr}${S7}rP
   grep -q '^rc=0 ' "$W/build-rP.txt" && [ -s "$O/re4dc-game.elf" ] || { echo "release build failed"; return 1; }
   [ ! -s "$O/missing.txt" ] || { echo "missing.txt not empty:"; head "$O/missing.txt"; return 1; }
@@ -105,7 +105,7 @@ build_release() {
 }
 twin() { # twin <tree> <label> [knobs...]
   local t=$1 l=$2; shift 2
-  FP_TREE=$t FP_SKIP_IDENTITY=1 bash "$t/port/dreamcast/tools/d367/fullplay/fp_twin.sh" "$ROUTE/out-${RR_PFX:-rr}${S7}rP" "$l" "$@" > "$W/twin-$l.txt" 2>&1
+  FP_TREE=$t FP_SKIP_IDENTITY=1 bash /root/probe/lanelock.sh bash "$t/port/dreamcast/tools/d367/fullplay/fp_twin.sh" "$ROUTE/out-${RR_PFX:-rr}${S7}rP" "$l" "$@" > "$W/twin-$l.txt" 2>&1
   [ -s "$ROUTE/out-fp${l}W/re4dc-game.elf" ] && [ ! -s "$ROUTE/out-fp${l}W/missing.txt" ]
 }
 build_twins() {
@@ -142,7 +142,7 @@ bases() {
   python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/rel/tree" --manifest "$W/rel/manifest.json" --ipbin "$W/rel/IP.BIN" | tail -1
   local rc=0
   for x in g c; do
-    bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/$x" "$ROUTE/out-fp${RR_PFX:-rr}${S7}${x}W" > "$W/master-$x.txt" 2>&1 || rc=1
+    bash /root/probe/lanelock.sh bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/$x" "$ROUTE/out-fp${RR_PFX:-rr}${S7}${x}W" > "$W/master-$x.txt" 2>&1 || rc=1
   done   # one at a time: each base peaks ~2 GB on C: (ext4 vhdx + disc cache)
   # MEMBER-CENSUS (lane fix-r100-props26 10-26): every file / room-archive member / tex.pak key that differs from the
   # last published release tree ($MC_REF_TREE, recipe.conf) must be claimed by a row of $MC_CLAIMS (rr/member_census.py).
@@ -176,17 +176,17 @@ gca() { bash "$BIN/rr-gca.sh" "$W" "$TA" "$S7" "$EVU"; }
 
 trace_arms() { # full tier: the recipe's trace arm (A) and the reference recipe's (B), then their bases
   local rc=0
-  K=$W/k T=$TA LP=${RR_PFX:-rr}$S7 CH2="$CH2" bash "$TA/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-rT.txt" &
+  K=$W/k T=$TA LP=${RR_PFX:-rr}$S7 CH2="$CH2" bash /root/probe/lanelock.sh bash "$TA/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-rT.txt" &
   local pa=$!
-  K=$W/kb T=$TB LP=${RR_PFX:-rr}${S7}ref CH2="$CH2_REF" bash "$TB/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-refrT.txt" &
+  K=$W/kb T=$TB LP=${RR_PFX:-rr}${S7}ref CH2="$CH2_REF" bash /root/probe/lanelock.sh bash "$TB/port/dreamcast/tools/d367/ch2/ch2-build.sh" rT 2>&1 | grep '^rc=' | cut -c1-120 > "$W/build-refrT.txt" &
   wait $pa || rc=1; wait $! || rc=1
   cat "$W/build-rT.txt" "$W/build-refrT.txt"
   grep -q '^rc=0 ' "$W/build-rT.txt" && grep -q '^rc=0 ' "$W/build-refrT.txt" || return 1
   local F=$TA/port/dreamcast/tools/d367/fullplay CAND; CAND=$(cat "$W/cand.txt")
   [ -d "$W/rel/tree" ] || python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/rel/tree" --manifest "$W/rel/manifest.json" --ipbin "$W/rel/IP.BIN" | tail -1
-  bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tT" "$ROUTE/out-${RR_PFX:-rr}${S7}rT" > "$W/master-tT.txt" 2>&1 &
+  bash /root/probe/lanelock.sh bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tT" "$ROUTE/out-${RR_PFX:-rr}${S7}rT" > "$W/master-tT.txt" 2>&1 &
   pa=$!
-  bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tR" "$ROUTE/out-${RR_PFX:-rr}${S7}refrT" > "$W/master-tR.txt" 2>&1 || rc=1
+  bash /root/probe/lanelock.sh bash "$F/fp_master.sh" "$W/rel/tree" "$W/rel/manifest.json" "$W/rel/IP.BIN" "$EVU/_discs/tR" "$ROUTE/out-${RR_PFX:-rr}${S7}refrT" > "$W/master-tR.txt" 2>&1 || rc=1
   wait $pa || rc=1
   rm -rf "${W:?}/rel/tree"; return $rc
 }
