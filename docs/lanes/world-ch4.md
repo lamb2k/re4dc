@@ -92,3 +92,19 @@ r22c (castle hub, doors to r204 r211 r220 r305 r31d) is reachable from r211 / r2
   Proposal: chapter 4 on Disc 3 (swap at the 3-4 end, r206 door 7 -> r210, a SceSetChapterEnd save point), Disc 2 =
   chapter 3. A 4-3 / 4-4 only move frees ~21,740 room sectors, 640 over the need, before chapter 3's growth.
 - Gates: not run (Disc 2 arm cannot master while over the limit).
+
+## Round 4 (2026-11-04): Disc 2 fit by a pack prune, first chapter 4 gates
+- Merged t15/int, lane/world-ch32, lane/world-ch334 (incl. cpic34 / r20dem19 / res34), wip/world-ch31-gca32. Combined
+  texture collisions: cw32 yields 4 keys (cw32tex-20261103), c4gca yields fcb60a5d (c4gtex); audit 0.
+- Fit (sectors of 504,000): every chapter 3 set + chapter 4, no prune 525,362 (21,362 over). d2pakprune (castle_fixture
+  'pakdrop', store d2pakprune-20261103): Disc 2's tex.pak is Disc 1's whole pack + castle keys; texpak_live.py marks 4,224
+  keys no Disc 2 file can request; minus run-log / resident / effect-store keys = 3,917, minus 558 keys rr 1103-2143 loaded
+  (the model misses run-time hashed pictures of PS2-converted archives: r229 had 5 TEXCHK fails from it) = 3,359 keys.
+  rr 1104-0049-ee8ce662: Disc 2 497,787 (6,213 free), TEXCHK fails caused by the prune 0.
+- Chunk moves (Disc 3 had 41,812 free): 4-4 frees 32,421 on Disc 2, adds 42,209 on Disc 3 (em00/11/14/18/25 shared);
+  4-3+4-4 48,625 / 58,413; 4-2..4-4 65,882 / 78,715. None fits Disc 3.
+- Gates rr 1104-0049-ee8ce662 (FAIL 8 of 38): PASS Disc 2 build, census 42/42, CAST-GC, VRAM no-contig, cap 4 (d2esl list
+  enemies spawn: r21b r21d r223 r225 = 4), GDEMU race. FAIL: LEON-GC r214 r215 r22b r227 r22c (not judged); TEXCHK 13 rooms
+  (missing world keys, none pruned: r205 r219 r211 r212 r213 r218 r22b r224 r225 r21b r226 r227 r22c); r229 FAULT, r22c HALT
+  "DLL link/unlink failed"; KOS d2c4door; GC-ASSET: catalog over MAX_RECORDS 16,320 (gc_port23/catalog_index.py,
+  runtime token width) with chapter 4.
