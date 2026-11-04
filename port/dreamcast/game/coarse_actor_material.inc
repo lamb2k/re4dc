@@ -90,10 +90,10 @@ inline bool source_appearance_type(unsigned appearance,unsigned id,unsigned type
     if(appearance==0x108)return id==0 && type==0;
 #if RE4DC_LEON_HEADLESS
     if(appearance==0x109)return id==0 && type==0;  // LEON_HEADLESS: pl08 after setHead(0), proved by the 0x109 rows
+    if(appearance==0x10A)return id==1;  // LEON_HEADLESS v2: the flying head cObj01 (ObjMgr id 1), proved by the 0x10A row
 #endif
 #if RE4DC_LEON_WOUND
     if(appearance==0x10B)return id==0 && type==0;  // LEON_WOUND: pl08 with the wound overlay, proved by the 0x10B rows
-    if(appearance==0x10A)return id==1;  // LEON_HEADLESS v2: the flying head cObj01 (ObjMgr id 1), proved by the 0x10A row
 #endif
 #endif
     static const unsigned char types[5]={1,0,3,4,11};
