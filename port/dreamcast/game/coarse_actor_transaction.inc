@@ -130,12 +130,21 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 #include "coarse_actor_death_fade_context.inc"
 #endif
+#ifndef RE4DC_NMR_SHADER_BAD
+#define RE4DC_NMR_SHADER_BAD(m) ((m)->Shader_type)
+#endif
 #if RE4DC_NMR_BLENDTBL
 // NATIVE_MODEL_REGISTRY_BLENDTBL (native_model_registry.mk): a registry actor's info with a texture blend table installed
 // but idle (cModelInfo::setTexBlendTbl sets flagsDC 4; blendRatio 0 and blendType 0: trans.cpp TextureBlend adds no
 // stage, the base textures show) draws as the base: the Novistador (em2d) keeps its table for the whole fight and
 // blends only while its camouflage changes (em2dCamouflageMove).
+#if RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk): the Novistador camouflage blend (em2dCamouflageMove, blendRatio /
+// blendType non-zero while it changes) draws as the base textures too (approximation: no texture cross-fade).
+#define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl)
+#else
 #define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
+#endif
 #else
 #define RE4DC_NMR_BLEND_IDLE0(info,app) false
 #endif
@@ -164,7 +173,7 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
 #else
        m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f || m->alpha_omit!=255 ||
 #endif
-       m->z_mode!=0 || m->CullMode || m->Shader_type || m->AddAmb_r || m->AddAmb_g || m->AddAmb_b ||
+       m->z_mode!=0 || m->CullMode || RE4DC_NMR_SHADER_BAD(m) || m->AddAmb_r || m->AddAmb_g || m->AddAmb_b ||
        (m->be_flag&(0x4000u|0x00020000u)) ||
        !re4dc_actor::exact_infos(m->pModelInfo,p.info,p.count) ||
        !p.material_count || p.material_count>kRe4dcActorMaterials || !p.run_count || p.run_count>kRe4dcActorRuns)return false;
@@ -229,7 +238,7 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
     if(m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f)return 3;
 #endif
     if(m->alpha_omit!=255){*detail=m->alpha_omit;return 4;}
-    if(m->z_mode!=0 || m->CullMode || m->Shader_type){*detail=(unsigned(m->z_mode)<<16)|(unsigned(m->CullMode)<<8)|unsigned(m->Shader_type);return 5;}
+    if(m->z_mode!=0 || m->CullMode || RE4DC_NMR_SHADER_BAD(m)){*detail=(unsigned(m->z_mode)<<16)|(unsigned(m->CullMode)<<8)|unsigned(m->Shader_type);return 5;}
     if(m->AddAmb_r || m->AddAmb_g || m->AddAmb_b){*detail=(unsigned(m->AddAmb_r)<<16)|(unsigned(m->AddAmb_g)<<8)|unsigned(m->AddAmb_b);return 6;}
     if(m->be_flag&(0x4000u|0x00020000u)){*detail=m->be_flag;return 7;}
     if(!re4dc_actor::exact_infos(m->pModelInfo,p.info,p.count)){
@@ -479,6 +488,9 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
         {r->lit=captured->lit;b.lighting=&r->lit;}
     } else if(actor_fade_eligible(m,p)) {
         b.alpha_state=re4dc_fade::alpha(m->invisible_factor,m->invisible_factor2,1.0f,255);
+#if RE4DC_NMR_CLOAK
+        if(actor_nmr_cloak(m))b.alpha_state=actor_nmr_cloak_alpha(m);
+#endif
         b.source_key[2]=re4dc_fog_enabled();
     }
 #endif

@@ -494,7 +494,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
         (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type)))) {
         out.error=Error::UnknownAppearance;return out;
     }
-    if(m->pTexChg || m->Shader_type || m->CullMode ||
+    if(m->pTexChg || RE4DC_NMR_SHADER_BAD(m) || m->CullMode ||
        (!registry && !source_appearance_type(p->appearance,m->id,m->type)) ||
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
        ((!actor_fade_eligible(m,*p)) && (m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f)) || m->alpha_omit!=255 ||

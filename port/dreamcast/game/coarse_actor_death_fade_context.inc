@@ -34,7 +34,26 @@ bool actor_fade_eligible_g1(cModel* m,const Re4dcActorPlan& p) {
     return re4dc_fade::state_allows(*m,p.appearance,static_cast<cEm*>(m)->hp);
 #endif
 }
+#if RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk; render only, approximation): the Novistador (em2d) camouflage.
+// em2d.cpp sets Shader_type 1 while Refract_ratio < 0xFF (0 = fully cloaked); the source draws the refraction shader
+// (trans.cpp RefractShaderSetup: the screen copy seen through the body). The native plan draws the body through the
+// fade ticket (TR list, source FIFO position) with an alpha that follows Refract_ratio and keeps a faint body when
+// fully cloaked (the visible shimmer), instead of declining to the GC path (CAST-GC, semantics 5).
+inline bool actor_nmr_cloak(const cModel* m) {
+    return m && m->kindid==0 && m->id==0x2D && m->Shader_type==1 && m->Refract_ratio!=0xFF &&
+        m->invisible_factor==1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255 && !m->z_mode && !m->CullMode &&
+        !(pG->Status_flg[1]&0x04000000);
+}
+inline unsigned actor_nmr_cloak_alpha(const cModel* m) {
+    return RE4DC_NMR_CLOAK_FLOOR+(unsigned(m->Refract_ratio)*(255u-RE4DC_NMR_CLOAK_FLOOR))/255u;
+}
+#define RE4DC_NMR_SHADER_BAD(m) ((m)->Shader_type && !actor_nmr_cloak(m))
+#endif
 bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
+#if RE4DC_NMR_CLOAK
+    if(actor_nmr_cloak(m) && p.appearance>=nmr::appearance_first)return true;
+#endif
 #if RE4DC_NMR_DYING
     // NATIVE_MODEL_REGISTRY_DYING (native_model_registry.mk): a Ganado-class enemy (em10.cpp family, ids 0x10..0x20,
     // one source pass) planned by the PS2 Ganado cast or a registry descriptor, while its whole-model fade runs (death:

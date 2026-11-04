@@ -900,6 +900,19 @@ $(error NATIVE_MODEL_REGISTRY_DYING_BOSS needs NATIVE_MODEL_REGISTRY_DYING=1)
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DYING_BOSS=$(NATIVE_MODEL_REGISTRY_DYING_BOSS)
 endif
+# NATIVE_MODEL_REGISTRY_CLOAK=1 (lane world-ch32 2026-11-04; render only, approximation, default 0): the Novistador (em2d)
+#              camouflage (Shader_type 1 while Refract_ratio < 0xFF; its texture blend table at any ratio) keeps its registry
+#              plan and draws through the NATIVE_MODEL_REGISTRY_DYING fade ticket (TR list, source FIFO position) with alpha
+#              NATIVE_MODEL_REGISTRY_CLOAK_FLOOR + Refract_ratio * (255 - floor) / 255, instead of declining to the GC path
+#              (CAST-GC r205 semantics 5 / 16). Needs NATIVE_MODEL_REGISTRY_DYING=1. Knob off: unchanged.
+NATIVE_MODEL_REGISTRY_CLOAK ?= 0
+NATIVE_MODEL_REGISTRY_CLOAK_FLOOR ?= 48
+ifeq ($(NATIVE_MODEL_REGISTRY_CLOAK),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_DYING),1)
+$(error NATIVE_MODEL_REGISTRY_CLOAK needs NATIVE_MODEL_REGISTRY_DYING=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_CLOAK=1 -DRE4DC_NMR_CLOAK_FLOOR=$(NATIVE_MODEL_REGISTRY_CLOAK_FLOOR)u
+endif
 # PROP_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): re4dc_model_submit time / bytes per model and route
 #              (PPF lines). Knob off: the image is unchanged.
 PROP_PROF ?= 0
