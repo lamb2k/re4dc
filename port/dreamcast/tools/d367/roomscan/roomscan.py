@@ -333,6 +333,14 @@ def decplan(a):
     # scroll object the room loads (houses, fences, barrels), not only the ones that move. --live doors keeps the
     # shield only on door-shaped bound placements (0.6-2.6 m wide, 1.6-3.6 m tall, under 0.6 m thick) and bound
     # placements under 1.2 m (pickup-sized); decimation is render only (the pose still applies, collision is not here).
+    if a.live == 'moved':
+        # PS2DYN id=.. state=hidden|moved|source (census twin built with DYN_ID_TRACE=1): only ids the run actually
+        # hid or moved are live (roomscan-castle 11-04: r202 106 bound vs 6 moved). Without PS2DYN lines in the log
+        # the shield stays on every bound id.
+        txt = open(a.bound, errors='replace').read() if a.bound and os.path.exists(a.bound) else ''
+        dyn = set(int(x, 16) for x in re.findall(r'PS2DYN id=([0-9a-f]+) state=', txt))
+        if 'PS2DYN id=' in txt:
+            live = set(i for i in dyn if i < 250)
     if a.live == 'doors':
         keep = set()
         boxes = {}
@@ -407,6 +415,6 @@ if __name__ == '__main__':
     p = sub.add_parser('apply'); p.add_argument('plan'); p.add_argument('world'); p.add_argument('out')
     q = sub.add_parser('decplan'); q.add_argument('room'); q.add_argument('world'); q.add_argument('--warp'); q.add_argument('--bound'); q.add_argument('--grid'); q.add_argument('--out')
     q.add_argument('--props', type=float, default=0.0); q.add_argument('--props-ratio', type=float, default=0.5); q.add_argument('--props-strict', action='store_true')
-    q.add_argument('--live', choices=('bound', 'doors'), default='bound')
+    q.add_argument('--live', choices=('bound', 'doors', 'moved'), default='bound')
     a = ap.parse_args()
     {'scan': scan, 'apply': apply, 'decplan': decplan}[a.cmd](a)
