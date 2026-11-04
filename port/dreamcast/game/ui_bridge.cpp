@@ -599,6 +599,12 @@ extern "C" int re4dc_room_cycle_poll(){
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     if(room_frames==1)re4dc_disc_meter_room(2,unsigned(pG->room_id)); if(room_frames==1)RE4DC_DOORPH_END(unsigned(pG->room_id));   // first gameMainLoop frame: the load ends
 #endif
+#if defined(RE4DC_HEAP4_CENSUS_EVERY) && RE4DC_HEAP4_CENSUS_EVERY && RE4DC_NATIVE_STATIC
+    if(room_frames%RE4DC_HEAP4_CENSUS_EVERY==0){  // HEAP4_CENSUS_EVERY (diagnostic): heap-4 cells by tag through the room
+        extern void re4dc_heap4_census_now(unsigned room,unsigned frame);
+        re4dc_heap4_census_now(unsigned(pG?pG->room_id:0),room_frames);
+    }
+#endif
 #if defined(RE4DC_KOS_CENSUS) && RE4DC_KOS_CENSUS>=2
     if(room_frames==1 || room_frames%150==0){  // KOS_CENSUS=2 (diagnostic): peak census per window, thread stacks
         re4dc_kos_census_window(unsigned(pG?pG->room_id:0),room_frames);
@@ -882,6 +888,9 @@ static void heap4_census(){
     for(unsigned i=0;i<n;++i)re4dc_log("heap4 census: %7u B x%-3u %s\n",rows[i].bytes,rows[i].count,rows[i].tag);
 }
 #endif
+#if defined(RE4DC_HEAP4_CENSUS_EVERY) && RE4DC_HEAP4_CENSUS_EVERY && RE4DC_NATIVE_STATIC
+void re4dc_heap4_census_now(unsigned room,unsigned frame){re4dc_log("heap4 census: room=%03x frame=%u\n",room,frame);heap4_census();}
+#endif
 #if RE4DC_MOVIE_HEAP_EVICT
 // MOVIE_HEAP_EVICT diagnostic (platform/native_movie.cpp, a staging allocation that still fails): heap 4's free
 // cells of 4 KB or more in address order, with the tagged cells on either side ("-" = untagged or free).
@@ -975,7 +984,7 @@ extern "C" int re4dc_model_return_retained(unsigned* bytes,unsigned* requests){
 // their owner, which precedes the lazy retained allocation at first draw.
 #if RE4DC_NATIVE_STATIC
 #include "native_static.h"
-#if (defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE) || (defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS) || (defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP) || (defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG)
+#if (defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE) || (defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS) || (defined(RE4DC_FX_R200_ENTRY_CAP) && RE4DC_FX_R200_ENTRY_CAP) || (defined(RE4DC_TEX_FINAL_REFUSAL_LOG) && RE4DC_TEX_FINAL_REFUSAL_LOG) || (defined(RE4DC_MOTION_PIN) && RE4DC_MOTION_PIN)
 extern "C" unsigned re4dc_room_id_now(){return pG?unsigned(pG->room_id):0u;}   // native_motion.cpp
 #endif
 extern "C" int re4dc_static_heap_free(){

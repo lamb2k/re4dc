@@ -65,8 +65,9 @@ if QA:
             jl[p[0]] = p
     bad = re.compile(r'HALT|FAULT|RE4DC MISSING|Out of memory')
     for n, want, what in (('qa-boot', r'room enter|phase=enter', 'boot keys down,a,a,a'), ('qa-warp', r'phase=enter room=103', 'qa_menu warp to r103')):
-        if qrc != '0':
-            break
+        if qrc != '0':   # report-only: says not run (SKIP), never in the game verdict
+            checks.append(('QA ' + n[3:], 'SKIP', 'not run: QA build failed (rc=%s)' % (qrc or '?')))
+            continue
         o = runlog(n)
         add('QA ' + n[3:], bool(re.search(want, o)) and not bad.search(o),
             what + ': ' + (('HALT/FAULT' if bad.search(o) else 'room reached') if re.search(want, o) else ('not run' if n not in jl else 'not reached')))
@@ -74,6 +75,8 @@ if QA:
         lg = rd(J / 'qa-gdemu.log')
         g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
         add('QA GDEMU door103', bool(g) and 'PASS' in g[-1], g[-1] if g else (lg.strip()[-120:] or 'not run'))
+    else:
+        checks.append(('QA GDEMU door103', 'SKIP', 'not run: QA build failed (rc=%s)' % (qrc or '?')))
     # PLAY-DISC-READ (lane coldread27 11-02; REPORT-ONLY until the coordinator arms it): the QA disc carries
     # DISC_READ_METER=1, so its job logs show synchronous disc blocking per second; a gameplay window (not a room load,
     # entry settle, preload or movie) over PLAY_DISC_READ_MS (100, Flycast) is listed here and never changes the verdict.
@@ -296,6 +299,13 @@ if build_ok and jobs:
             ('program %s end %s, %s files, %s sectors (limit 504000), village files pruned %s; disc_lint loader+standard 0' % (
                 de.get('prog', '?')[:16], de.get('end', '?'), de.get('files', '?'), de.get('sectors', '?'), de.get('village_pruned', '?'))
              if (W / 'disc2.ok').exists() else 'rr-disc2.sh failed: see cycle.log'))
+        # not-run rows (lane world-ch31 11-03): a Disc 2 gate whose jobs or base never ran FAILs with the reason instead of
+        # vanishing (cycle 1103-0531 printed PASS with no Disc 2 GC-ASSET row: its d2a base hit the disc-cache floor)
+        def d2_why(what):
+            cl = rd(W / 'cycle.log')
+            rs = [l.strip() for l in cl.splitlines() if l.startswith(('rr-disc2:', 'AssertionError', 'rr-jobs:'))]
+            rs += [l.strip() for l in rd(W / 'd2-skip.txt').splitlines() if l.strip()]
+            return 'not run: %s%s' % (what, (' (' + ' / '.join(rs[:3]) + ')') if rs else '')
         r2 = rd(W / 'd2-census-rooms.txt').split()
         l2 = [EVU / ('d2cg-' + r) / 'run-output.txt' for r in r2 if (EVU / ('d2cg-' + r) / 'run-output.txt').exists()]
         if r2 or (W / 'disc2.ok').exists():
@@ -337,6 +347,15 @@ if build_ok and jobs:
             add('Disc 2 VRAM no-contiguous 0', not vr, 'all rooms 0' if not vr else ', '.join(vr))
             add('Disc 2 census HALT/FAULT/MISSING 0', not halts, 'none' if not halts else ' '.join(halts))
             add('Disc 2 cap 4 (peak enemies alive)', max(list(peak.values()) or [0]) <= 4, ' '.join('%s=%d' % kv for kv in sorted(peak.items())))
+        else:
+            for n in ('Disc 2 CAST-GC', 'Disc 2 LEON-GC', 'Disc 2 TEXCHK', 'Disc 2 VRAM no-contiguous 0',
+                      'Disc 2 census HALT/FAULT/MISSING 0', 'Disc 2 cap 4 (peak enemies alive)'):
+                add(n, False, d2_why('no Disc 2 census logs'))
+        jn = [j_[0] for j_ in jobs]
+        if 'd2kos' not in jn:
+            add('Disc 2 KOS 48 KiB (r200 door, r202 fight)', False, d2_why('no d2kos job'))
+        if 'd2gdemu' not in jn:
+            add('Disc 2 GDEMU race (r200 -> r202 door)', False, d2_why('no d2gdemu job'))
         for n, _, _, rc in jobs:
             if n == 'd2kos':
                 lg = rd(J / 'd2kos.log')
@@ -363,6 +382,9 @@ if build_ok and jobs:
             add('Disc 2 GC-ASSET gate', bool(j.get('pass')), ('not covered: %s' % ('; '.join('%s %s' % (r, ', '.join('%s=%d' % kv for kv in sorted(c.items())))
                 for r, c in sorted(nc.items())) or 'none') + ('' if j.get('pass') else ' | ' + ' / '.join(j.get('failures', [])[:3])))[:600],
                 knownrow=os.environ.get('RR_D2_GCA_MODE', os.environ.get('RR_GCA_MODE', 'gate')) == 'report')   # RR_D2_GCA_MODE=report: Disc 2 only
+        else:
+            add('Disc 2 GC-ASSET gate', False, d2_why('no d2gca run logs (%d d2gca dirs)' % len(list(EVU.glob('d2gca-*')))),
+                knownrow=os.environ.get('RR_D2_GCA_MODE', os.environ.get('RR_GCA_MODE', 'gate')) == 'report')
     # siege (lane cast-ps2-25 10-26): r100 house siege, Ganados streaming their motion (rr-jobs.sh siege-r100)
     sg = EVU / 'siege-r100' / 'run-output.txt'
     if 'siege-r100' in [j[0] for j in jobs] or sg.exists():
@@ -398,6 +420,26 @@ if build_ok and jobs:
         vl = [l for l in d.stdout.splitlines() if 'verdict' in l.lower()]
         add('decisions ' + w, d.returncode == 0, 'decision_cmp: %s; STRICT: %s' % ((vl[0] if vl else 'rc=%d' % d.returncode)[:100], sv))
 
+# Expected rows (coordinator 11-03, after cycle 1103-0531 printed PASS without its Disc 2 GC-ASSET row): a row the tier is
+# expected to produce FAILs as "not run: <reason>" when it is missing. The expected list comes from what rr-cycle.sh /
+# rr-jobs.sh queue for the tier (_jobs/list.txt), not from times.tsv; plus the fixed rows of every tier.
+if build_ok:
+    names = {c[0] for c in checks}
+    ran = {j_[0] for j_ in jobs}
+    for l in rd(J / 'list.txt').splitlines():
+        p = l.split()
+        if len(p) >= 2 and p[1] not in ran:
+            add('job ' + p[1], False, 'not run: queued by rr-jobs.sh (%s tier), no times.tsv row' % tier)
+        elif len(p) >= 2 and not (J / (p[1] + '.log')).exists():
+            add('job ' + p[1], False, 'not run: queued by rr-jobs.sh (%s tier), no job log' % tier)
+    exp = ['GC-ASSET gate', 'siege r100 HALT/FAULT/MISSING 0', 'disc_lint loader', 'disc_lint standard']
+    if tier == 'full':
+        exp += ['decisions ' + w for w in ('h2', 'bell', 'door103', 'r11b')]
+    for n in exp:
+        if n not in names:
+            why = {'GC-ASSET gate': 'no gca-* logs and no gca step', 'siege r100 HALT/FAULT/MISSING 0': 'no siege-r100 job or log',
+                   'disc_lint loader': 'no pkg disc_lint log', 'disc_lint standard': 'no pkg disc_lint log'}.get(n, 'no st-*-tR/tT pair logs')
+            add(n, False, 'not run: %s (expected for the %s tier)' % (why, tier))
 if (W / 'kit-skip.txt').exists():
     checks.append(('kit-check + kit-boot', 'SKIP', rd(W / 'kit-skip.txt').strip()))
 fails = [c for c in checks if c[1] == 'FAIL']

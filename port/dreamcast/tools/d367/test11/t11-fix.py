@@ -1620,6 +1620,19 @@ DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 RES24GD = os.environ.get('RES24GD', '/root/re4data/private/res24g-20261024')
 if os.path.isdir(RES24GD):
     DATA['res24g'] = {'dc/resident.bin': RES24GD + '/resident.bin'}
+# res26pr (lane playreads 11-03, data only): res24g's dc/resident.bin + the keys lane coldread27's 60 s Flycast runs
+# loaded in play (DISC_READ_LOG=2, phase=play tex.pak reads) in r113 / r11e / r201 / r202 / r207 / r208, listed by
+# vram/resident_keys.py list into vram/resident/r*.tsv, then resident_keys.py extend <out> res24g/resident.bin
+# res24g/resident-remap.tsv vram/resident/r*.tsv: 5,596 records (137 added). res24g's remap table. After res24g.
+RES26PRD = os.environ.get('RES26PRD', '/root/re4data/private/res26pr-20261103')
+if os.path.isdir(RES26PRD):
+    DATA['res26pr'] = {'dc/resident.bin': RES26PRD + '/resident.bin'}
+# res26pr2 (lane playreads 11-03, DISC 2 ONLY via D2_DATA): the castle tree's dc/resident.bin + the r201 / r202 / r208
+# in-play keys of the same runs (only the keys new to vram/resident/r20x.tsv; resident_keys.py extend <out>
+# castle-d2-j/dc/resident.bin - new/r*.tsv): 5,959 records (77 added).
+RES26PR2D = os.environ.get('RES26PR2D', '/root/re4data/private/res26pr2-20261103')
+if os.path.isdir(RES26PR2D):
+    DATA['res26pr2'] = {'dc/resident.bin': RES26PR2D + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
@@ -1997,13 +2010,6 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
-# em2dres32 (lane world-ch32 11-03, r205 stall fix "Option A"; DISC 2 ONLY, after cw32 / pmcw32 when listed on D2_DATA):
-# em/em2d.drs with every motion resident (textures-only body 2,542,976 B, ch3found16 contract em2d-native-textures-v1) +
-# PS2 em2d.dat BIN geometry / motion, replacing the streamed-motion cache (castle18-em2d-motion) r205 stalls on.
-# Store: re4-assets-private/em2dres32-20261103.
-EM2DRES32D = os.environ.get('EM2DRES32D', '/root/re4data/private/em2dres32-20261103')
-if os.path.isfile(EM2DRES32D + '/RECIPE.txt'):
-    DATA['em2dres32'] = {'em/em2d.drs': EM2DRES32D + '/em/em2d.drs'}
 # cw32 / pmcw32 (lane world-ch32 11-02, chapter 3-2 on Disc 2; DISC 2 ONLY via D2_DATA, after cpic26c): the 3-2 rooms r205
 # r209 r20a r20b and enemy archives em2d em23 em18 em22 from the PS2 version (worldch32/gen-all.sh, the castlegca26
 # method): PS2 objects, items, debris, pictures (loose keys), motion and PCM; pmcw32 = the PS2 motion store of the same
@@ -2027,6 +2033,23 @@ CPIC32D = os.environ.get('CPIC32D', '/root/re4data/private/cpic32-20261102')
 if os.path.isdir(CPIC32D):
     DATA['cpic32'] = {'dc/tex.pak': CPIC32D + '/dc/tex.pak'}
     PAK_DERIVED['cpic32'] = CPIC32D + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
+# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
+# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
+# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
+               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
