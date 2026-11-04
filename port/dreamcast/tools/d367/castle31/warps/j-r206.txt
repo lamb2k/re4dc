@@ -1,0 +1,11 @@
+name ch334-r206
+# lane world-ch334: chapter 3-3 end (Luis event r206s00) entry warp (Disc 2; same layout as g-r204)
+room 0x206
+jp 0
+chapter 8
+inv default
+god
+stock
+alivelog 60
+census 300
+dump
