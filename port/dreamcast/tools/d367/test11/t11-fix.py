@@ -1654,9 +1654,9 @@ DATA['r10dbake23'] = {'dc/native/r10d/ps2-world.%s' % x: R10DBAKE23D + '/dc/nati
 # the store); ids, r4tc and room.r4rc (GRID + OCCL + SCDD) regenerated for the baked packages. Last of the world sets in
 # the data line (after ch2, ch21l, r10dbake23, mip22b, trans17, rc19s: r10d replaces r10dbake23's three files).
 # Store copy: re4-assets-private/bakeall-pilot-20261102b.
-BAKEPILOTD = os.environ.get('BAKEPILOTD', '/root/re4data/private/bakeall-r119-20261103')
+BAKEPILOTD = os.environ.get('BAKEPILOTD', '/root/re4data/private/bakeall-cellm-20261103')
 DATA['bakepilot'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (BAKEPILOTD, r, f)
-                     for r in ('r11e', 'r119', 'r11a', 'r10d')
+                     for r in ('r11e', 'r119', 'r11a', 'r10d', 'r10e', 'r102', 'r113', 'r108', 'r11b')
                      for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
                      if os.path.exists('%s/dc/native/%s/%s' % (BAKEPILOTD, r, f))}
 # ps2snd24 (lane purge-audio24, 2026-10-24, GC asset purge; data only, no knob, no AICA layout or size change): the
