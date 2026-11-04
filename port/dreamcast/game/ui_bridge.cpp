@@ -599,6 +599,12 @@ extern "C" int re4dc_room_cycle_poll(){
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     if(room_frames==1)re4dc_disc_meter_room(2,unsigned(pG->room_id)); if(room_frames==1)RE4DC_DOORPH_END(unsigned(pG->room_id));   // first gameMainLoop frame: the load ends
 #endif
+#if defined(RE4DC_HEAP4_CENSUS_EVERY) && RE4DC_HEAP4_CENSUS_EVERY && RE4DC_NATIVE_STATIC
+    if(room_frames%RE4DC_HEAP4_CENSUS_EVERY==0){  // HEAP4_CENSUS_EVERY (diagnostic): heap-4 cells by tag through the room
+        extern void re4dc_heap4_census_now(unsigned room,unsigned frame);
+        re4dc_heap4_census_now(unsigned(pG?pG->room_id:0),room_frames);
+    }
+#endif
 #if defined(RE4DC_KOS_CENSUS) && RE4DC_KOS_CENSUS>=2
     if(room_frames==1 || room_frames%150==0){  // KOS_CENSUS=2 (diagnostic): peak census per window, thread stacks
         re4dc_kos_census_window(unsigned(pG?pG->room_id:0),room_frames);
@@ -881,6 +887,9 @@ static void heap4_census(){
         end-Heap[4].start,total,OSCheckHeap(Heap[4].handle),other,other_cells,n);
     for(unsigned i=0;i<n;++i)re4dc_log("heap4 census: %7u B x%-3u %s\n",rows[i].bytes,rows[i].count,rows[i].tag);
 }
+#endif
+#if defined(RE4DC_HEAP4_CENSUS_EVERY) && RE4DC_HEAP4_CENSUS_EVERY && RE4DC_NATIVE_STATIC
+void re4dc_heap4_census_now(unsigned room,unsigned frame){re4dc_log("heap4 census: room=%03x frame=%u\n",room,frame);heap4_census();}
 #endif
 #if RE4DC_MOVIE_HEAP_EVICT
 // MOVIE_HEAP_EVICT diagnostic (platform/native_movie.cpp, a staging allocation that still fails): heap 4's free
