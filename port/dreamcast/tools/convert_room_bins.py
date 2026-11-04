@@ -698,7 +698,7 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
                 cluster_tris_max=768, cards=DEFAULT_CARDS, min_gain=0.5, max_levels=5, bias=None,
                 substitutes=None, export_dir=None, replacements=None, floor=None, share=False,
                 classes=None, class_auto=False, class_rules=None, cluster_trees=None, cluster_bins=None,
-                source=None, color_mode="oct"):
+                source=None, color_mode="oct", decimate=None):
     """entries as convert(); scales: {(owner, bin): world scale} (largest
     placement scale, default 1) so that errors are chosen in world units.
     bias: {(owner, bin): factor}; stored level errors are multiplied by it, so
@@ -718,6 +718,10 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
     (full_dm, cull_dm)}. Without any of the three the package is unchanged.
     source: callable(path) -> parse_bin()-shaped dict, in place of parse_bin(path.read_bytes()) (a
     non-BIN source such as the PS2 world, tools/ps2_world_r4im.py).
+    decimate: callable(owner, bin, [model-space xyz of the cluster's corners]) -> triangle ratio or None (roomscan
+    dec, default none): that cluster's level 0 is simplified in place to at most ratio of its triangles, its
+    boundary vertices locked (no cracks), before its levels are built; no level records are added. Kept only
+    when the cluster's surface area stays within 10% (a lost piece keeps the source).
     color_mode: "oct" (default: palette index + octahedral normal, lit at runtime) or "prelit": the
     colour slot is the corner's final ARGB1555 (source color() 8-bit RGBA, color_scale ignored), header
     reserved[0] = COLOR_ARGB1555 and a one-word palette; the runtime lights nothing. "oct-vertex": the colour
@@ -733,6 +737,7 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
     cluster_bins = cluster_bins or {}
     groves = 0
     floor = floor or {}
+    decimated = [0, 0, 0]  # triangles before, after; parts refused
     scales = scales or {}
     bias = bias or {}
     substitutes = substitutes or {}
@@ -866,6 +871,36 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
                         for v in t[0]:
                             owners.setdefault(v, set()).add(n)
                 locked = {v for v, s in owners.items() if len(s) > 1}
+            if decimate and sub is None and not card:
+                # 4 m pieces of each cluster decide on their own (a 20 m cluster often reaches the play area at one end
+                # only); vertices shared between pieces or clusters are locked, so no cracks open
+                for n, ct in enumerate(cluster_tris):
+                    if len(ct) < 8:
+                        continue
+                    pieces = mesh_lod.kd_clusters(ct, welded, 256, 4000.0 / scale, 1600.0 / scale)
+                    cnt = {}
+                    for pc in pieces:
+                        for v in {v for t in pc for v in t[0]}:
+                            cnt[v] = cnt.get(v, 0) + 1
+                    lock = set(locked) | {v for v, k in cnt.items() if k > 1}
+                    out, changed = [], False
+                    for pc in pieces:
+                        r = decimate(owner, bin_no, [welded[v] for t in pc for v in t[0]]) if len(pc) >= 8 else None
+                        pick = None
+                        if r:
+                            lv = mesh_lod.simplify_levels(welded, pc, [e / scale for e in (5, 10, 20, 40, 80, 160, 320, 640, 1280)],
+                                                          lock, 1.0)
+                            pick = next((t for _, t in lv[1:] if t and len(t) <= r * len(pc)), None)
+                            if pick is not None and abs(surface(pick, welded)[0] - surface(pc, welded)[0]) > 0.10 * surface(pc, welded)[0]:
+                                pick = None
+                            if pick is None:
+                                decimated[2] += 1
+                        if pick is not None:
+                            decimated[0] += len(pc); decimated[1] += len(pick); out += pick; changed = True
+                        else:
+                            out += pc
+                    if changed:
+                        cluster_tris[n] = out
             built = []  # per cluster: [(error_model, tris)]
             for ct in cluster_tris:
                 if sub is not None:
@@ -1034,7 +1069,7 @@ def convert_lod(entries, color_scale, scales=None, px=2.0, eps_world=DEFAULT_EPS
     summary = dict(package_bytes=total, meshes=len(meshes), parts=len(parts), meshlets=len(meshlets),
                    vertices=len(vertices), strip_bytes=len(index_bytes), palette=len(palette),
                    clusters=len(clusters), levels=len(levels), substituted_parts=len(used_substitutes),
-                   replaced_bins=len(used_replacements), floor_triangles=floored, shared_vertices=shared_vertices,
+                   replaced_bins=len(used_replacements), floor_triangles=floored, decimated_triangles=decimated, shared_vertices=shared_vertices,
                    version=VERSION_SHARE if shared_vertices[1] else VERSION_LOD,
                    mesh_classes={name: [r["bin"] for r in report if r["mesh_class"] == code]
                                  for name, code in MESH_CLASSES.items()} if classes or class_auto else None,

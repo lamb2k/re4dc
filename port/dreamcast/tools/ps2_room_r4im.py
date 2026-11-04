@@ -761,6 +761,31 @@ def placement_scale(affine):
     return max(math.sqrt(sum(affine[r][c] ** 2 for r in range(3))) for c in range(3))
 
 
+def dec_fn(path, placements):
+    """roomscan decplan -> convert_lod decimate callable: a cluster at least dec25_mm (horizontal, minus its radius) from
+    every reachable floor cell under every placement of its mesh -> 0.25, at least dec50_mm -> 0.5; skipped meshes
+    (live scroll objects, hero meshes) never."""
+    plan = json.loads(Path(path).read_text())
+    floor = np.array(plan['floor'], dtype=np.float64).reshape(-1, 2)
+    skip = set(plan.get('skip_meshes', ()))
+    d50, d25 = float(plan['dec50_mm']), float(plan['dec25_mm'])
+    aff = collections.defaultdict(list)
+    for mi, _, A in placements:
+        aff[mi].append(np.array(A, dtype=np.float64).reshape(3, 4))
+    def f(owner, mi, pts):
+        if mi in skip or not len(floor):
+            return None
+        P = np.array(pts, dtype=np.float64)
+        lo, hi = P.min(0), P.max(0)
+        best = 1e18
+        for A in aff.get(mi, ()):
+            c = A[:, :3] @ ((lo + hi) / 2) + A[:, 3]
+            rad = float(np.linalg.norm(np.abs(A[:, :3]) @ ((hi - lo) / 2)))
+            best = min(best, float(np.min(np.hypot(floor[:, 0] - c[0], floor[:, 1] - c[2]))) - rad)
+        return 0.25 if best >= d25 else 0.5 if best >= d50 else None
+    return f
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('room')
@@ -792,6 +817,9 @@ def main():
     ap.add_argument('--lod-max-levels', type=int, default=4)
     ap.add_argument('--lod-floor', type=float, default=2.0)
     ap.add_argument('--lod-cluster', type=float, default=20000.0)
+    ap.add_argument('--decimate', type=Path, default=None,
+                    help='roomscan decplan JSON (reachable floor XZ, distances, skipped meshes): clusters far from every '
+                         'reachable floor cell simplified in place to 50%%/25%%, no LOD records added (default off)')
     ap.add_argument('--meshlet-vertices', type=int, default=64)
     ap.add_argument('--cutout-max-alpha', type=int, default=0,
                     help="0 (default, the historical packages): only textures whose alpha is exactly {0, 255} are "
@@ -860,7 +888,8 @@ def main():
     blob, summary = crb.convert_lod(entries, 1.0, scales=dict(scales), eps_world=eps, cluster_world=a.lod_cluster,
                                     min_gain=a.lod_min_gain, max_levels=a.lod_max_levels,
                                     floor={None: a.lod_floor} if a.lod_floor > 0 else None, share=True,
-                                    source=lambda token: sources[token.mesh], color_mode='prelit')
+                                    source=lambda token: sources[token.mesh], color_mode='prelit',
+                                    decimate=dec_fn(a.decimate, placements) if a.decimate else None)
     if summary['parts'] != len(parts_meta):
         raise SystemExit('part count %d != %d (an empty mesh was skipped)' % (summary['parts'], len(parts_meta)))
     body = b''.join(struct.pack('<IIHHBBBB', *m) for m in parts_meta)

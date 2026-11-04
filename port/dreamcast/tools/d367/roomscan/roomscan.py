@@ -257,11 +257,112 @@ def apply(a):
     print('applied %s: %d clusters capped, mesh %d bytes (unchanged size)' % (plan['room'], len(done), len(m)))
 
 
+def grid_floor(path, start=None, step_mm=600.0):
+    """XZ (mm) of the walkable floor cells of a room.r4rc GRID (the room's collision floor). With start (x, z mm, the
+    census warp position) only the cells reachable from it: 4-neighbour flood fill over floor cells whose floor heights
+    differ by at most step_mm (walls ignored; a cliff or a roof is a height jump), so unreachable terrain and roofs
+    around the play area count as far."""
+    b = open(path, 'rb').read()
+    _, _, _, _, n, _, _, W, H, cell, x0, z0 = struct.unpack_from('<4sHHIIIIHHIii', b, 0)
+    for i in range(n):
+        tag, ver, fl, off, nb, cnt, stride, al, _ = struct.unpack_from('<4sHHIIIIII', b, 64 + 32 * i)
+        if tag == b'GRID':
+            break
+    else:
+        return np.zeros((0, 2))
+    npl, nseg, ncombo, nwl, bw, bh, nblock, _ = struct.unpack_from('<8H', b, off)
+    btab = struct.unpack_from('<%dH' % (bw * bh), b, off + 16)
+    qb = off + ((16 + 2 * bw * bh + 3) // 4) * 4
+    qc = qb + 128 * nblock
+    qp = qc + ((6 * ncombo + 3) // 4) * 4
+    combo_plane = [struct.unpack_from('<H', b, qc + 6 * k)[0] for k in range(ncombo)]
+    planes = [struct.unpack_from('<3f', b, qp + 12 * k) for k in range(npl)]
+    y = {}
+    for z in range(H):
+        for x in range(W):
+            bi = btab[(z // 8) * bw + x // 8]
+            if bi == 0xFFFF:
+                continue
+            c = struct.unpack_from('<H', b, qb + 128 * bi + 2 * ((z % 8) * 8 + x % 8))[0]
+            if c == 0xFFFF or c >= ncombo:
+                continue
+            a_, c_, d_ = planes[combo_plane[c]]
+            px, pz = x0 + (x + 0.5) * cell, z0 + (z + 0.5) * cell
+            y[(x, z)] = a_ * px + c_ * pz + d_
+    keep = set(y)
+    if start is not None and y:
+        sx, sz = int((start[0] - x0) // cell), int((start[1] - z0) // cell)
+        seed = min(y, key=lambda k: (k[0] - sx) ** 2 + (k[1] - sz) ** 2)
+        keep, todo = {seed}, [seed]
+        while todo:
+            x, z = todo.pop()
+            for nx, nz in ((x + 1, z), (x - 1, z), (x, z + 1), (x, z - 1)):
+                if (nx, nz) in y and (nx, nz) not in keep and abs(y[(nx, nz)] - y[(x, z)]) <= step_mm:
+                    keep.add((nx, nz)); todo.append((nx, nz))
+    return np.array([(x0 + (x + 0.5) * cell, z0 + (z + 0.5) * cell) for x, z in sorted(keep)])
+
+DEC50, DEC25, HERO_MM = (float(os.environ.get('ROOMSCAN_DEC50_MM', 20000)), float(os.environ.get('ROOMSCAN_DEC25_MM', 35000)), 30000.0)
+
+
+def decplan(a):
+    """decplan (11-04, user "roomscan fixes should be used much more aggressively"): decimate in place, no LOD
+    records added. A mesh whose every placement is at least 20 m (horizontal) from every camera (--grid room.r4rc: every
+    walkable floor cell of the room's collision GRID; else the census warp plus 24 farthest-point samples) goes to 50% of its triangles, at least 35 m to 25%. Never: a placement bound
+    to a live scroll object (census PS2PART bind, ids < 250), a hero mesh (any placement wider than
+    30 m: landmarks, terrain, sky). Collision is not in the mesh. Output feeds ps2_room_r4im.py --decimate."""
+    W = read_world(a.world)
+    rows = W['rows']
+    if a.grid:
+        start = None
+        for line in open(a.warp) if a.warp else ():
+            t = line.split()
+            if t and t[0] == 'pos':
+                start = (float(t[1]), float(t[3]))
+        eyes = grid_floor(a.grid, start); cams = eyes   # every reachable floor cell is a camera
+    else:
+        cams = cameras(rows, a.warp, n=24)
+        eyes = np.array([c[1] for c in cams])[:, [0, 2]]
+    bound = set()
+    if a.bound and os.path.exists(a.bound):
+        bound = set(int(x, 16) for x in re.findall(r'PS2PART bind id=([0-9a-f]+)', open(a.bound, errors='replace').read()))
+    live = set(i for i in bound if i < 250)
+    near, wide, skip = {}, set(), set()
+    for r in rows:
+        mi, gi = W['pl'][r['pl']][0], W['pl'][r['pl']][1]
+        if r['rid'] in live:
+            skip.add(mi)
+        d = float(np.min(np.linalg.norm(eyes - r['ctr'][[0, 2]], axis=1))) - r['rad']
+        near[mi] = min(near.get(mi, 1e18), d)
+    for pi, (mi, gi, *aff) in enumerate(W['pl']):
+        me_rows = [r for r in rows if r['pl'] == pi]
+        if me_rows:
+            lo = np.min([r['ctr'] - r['half'] for r in me_rows], 0); hi = np.max([r['ctr'] + r['half'] for r in me_rows], 0)
+            if max(hi[0] - lo[0], hi[2] - lo[2]) > HERO_MM:
+                wide.add(mi)
+    meshes = {}
+    for mi, d in near.items():
+        if mi in skip or mi in wide:
+            continue
+        if d >= DEC25:
+            meshes[str(mi)] = 0.25
+        elif d >= DEC50:
+            meshes[str(mi)] = 0.5
+    # the converter decides per cluster (tools/ps2_room_r4im.py --decimate): it gets the reachable floor, the distances
+    # and the meshes never to touch; "meshes" is this tool's whole-mesh preview of the same rule
+    out = dict(room=a.room, world=a.world, rule=dict(dec50_m=DEC50 / 1000, dec25_m=DEC25 / 1000, hero_m=HERO_MM / 1000),
+               dec50_mm=DEC50, dec25_mm=DEC25, skip_meshes=sorted(skip | wide), floor=[[round(float(x)), round(float(z))] for x, z in eyes],
+               meshes=meshes, skipped_live=len(skip), skipped_hero=len(wide - skip), cameras=len(cams))
+    json.dump(out, open(a.out or '%s-dec.json' % a.room, 'w'))
+    print(json.dumps(dict(room=a.room, floor_cells=len(eyes), whole_mesh_dec50=sum(1 for v in meshes.values() if v == 0.5),
+                          whole_mesh_dec25=sum(1 for v in meshes.values() if v == 0.25), meshes=len(near),
+                          skipped_live=len(skip), skipped_hero=len(wide - skip))))
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
     s = sub.add_parser('scan'); s.add_argument('room'); s.add_argument('world'); s.add_argument('--warp')
     s.add_argument('--bound'); s.add_argument('--other-ms', type=float, default=30.0); s.add_argument('--out'); s.add_argument('--ref')
     p = sub.add_parser('apply'); p.add_argument('plan'); p.add_argument('world'); p.add_argument('out')
+    q = sub.add_parser('decplan'); q.add_argument('room'); q.add_argument('world'); q.add_argument('--warp'); q.add_argument('--bound'); q.add_argument('--grid'); q.add_argument('--out')
     a = ap.parse_args()
-    scan(a) if a.cmd == 'scan' else apply(a)
+    {'scan': scan, 'apply': apply, 'decplan': decplan}[a.cmd](a)
