@@ -287,7 +287,7 @@ def main(catalog, recipe_conf, out_dir):
             d2 = m.group(1).replace('${D2_DATA}', d2).replace('$D2_DATA', d2)
         names += [n for n in d2.split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
-    grafted = {}
+    grafted, tex_files = {}, []
     for n in names:
         if n not in mod.DATA:
             missing_sets.append(n); continue
@@ -298,6 +298,7 @@ def main(catalog, recipe_conf, out_dir):
                     if os.path.isdir(src):
                         for f in Path(src).rglob('*.re4tex'):
                             tex_loose[f.stem.lower()] = st
+                            tex_files.append((f.stem.lower(), f, st))
                 continue
             if k == 'graft':
                 # member-level graft (t11-fix.py graft_all): the set owns only the grafted members, never the archive
@@ -348,9 +349,25 @@ def main(catalog, recipe_conf, out_dir):
     gc_models = gc_model_digests(gc)
     proofs, unknown, counts = [], [], collections.Counter()
     whole_file = collections.Counter()
+    _lp = {}
+
+    def loose_ps2():
+        """(key, sha256) -> 'set (store)' for every loose picture a data set proves PS2 (read once, on first use)."""
+        if not _lp and tex_files:
+            for k, f, st in tex_files:
+                h = sha(f.read_bytes())
+                if st.prov(h, texture=True)[0] == 'ps2':
+                    _lp.setdefault((k, h), '%s (%s)' % (st.name, st.why))
+            _lp.setdefault(None, None)
+        return _lp
     for r in rows:
         src = r['source']
         path = src.split('#')[0].lower()
+        # An unowned st?/rXXX.arc is the castle fixture's copy of its .dar payload, and the catalog keeps the FIRST file
+        # holding a member's bytes ('.arc' sorts before '.dar'): such a row is judged by the .dar's owning sets, not by the
+        # GameCube St?/rXXX.das fallback (lane assets-dc 11-04; world-ch334 r20d 115db755).
+        if path.endswith('.arc') and not overlay.get(path) and overlay.get(path[:-4] + '.dar'):
+            path = path[:-4] + '.dar'
         prov, ev = 'unknown', ''
         rv = reviewed.get((r['kind'], r['sha256']))
         if rv:
@@ -370,6 +387,11 @@ def main(catalog, recipe_conf, out_dir):
                 ev = 'tex.pak key changed by ' + ev
             else:
                 ev = 'tex.pak key unchanged since the oldest readable pack (%s)' % first_pack
+            # Any set that proves PS2 for these exact bytes under this key wins (lane assets-dc 11-04): a loose PS2
+            # picture of a data set whose bytes a pack also carries (e.g. cgca34 tex/ = the pack's base bytes).
+            lp = loose_ps2().get((r['id'].lower(), r['sha256'])) if prov != 'ps2' else None
+            if lp:
+                prov, ev = 'ps2', 'tex.pak bytes = loose PS2 picture of ' + lp
         elif r['kind'] == 'texture' and r['id'].lower() in tex_loose and path.startswith('dc/tex'):
             prov, ev = tex_loose[r['id'].lower()].prov(r['sha256'], texture=True)
         elif r['kind'] == 'motion':
