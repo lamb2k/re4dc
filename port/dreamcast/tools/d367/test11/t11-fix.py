@@ -2106,7 +2106,7 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
 CGCA27BD = os.environ.get('CGCA27BD', '/root/re4data/private/cgca27b-20261103')
 if os.path.isdir(CGCA27BD):
     DATA['cgca27b'] = {'st2/%s' % _f: '%s/st2/%s' % (CGCA27BD, _f) for _f in ('r203.dar', 'r203.arc', 'r207.dar', 'r207.arc')}
-# cpic27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA, after cpic27; the last Disc 2 pack set): the r203 / r207 pictures
+# cpic27b (lane assets-dc 11-03, DISC 2 ONLY via D2_DATA; built on cpic34's pack 11-04, the last Disc 2 pack set): the r203 / r207 pictures
 # as PS2 pixels (assetsdc/ps2_source_pak.py --only-keys): 77c1171c b894c4b5 70524d21 = PS2 pl08.dat TPL 0 pictures 5 / 3 / 6;
 # 5224f21f 511673a2 = pl08.dat pictures 0 / 8 stored transposed on the PS2 (MAE 1.7 / 1.5); 72be589c = PS2 r10c.dat
 # picture 1, transposed (MAE 4.1). ADMIT 6/6. provenance.tsv names each PS2 file. Store: re4-assets-private/cpic27b-20261103.
