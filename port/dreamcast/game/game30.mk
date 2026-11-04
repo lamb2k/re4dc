@@ -2664,6 +2664,12 @@ endif
 # a KB read-ahead window (room/texture_package.hpp pack_window_*; a transient staging buffer from the current heap, freed
 # at the end of the pass). With tex.pak laid out in the rooms' preload order (tools/d367/texpak_order.py) a room's
 # pictures arrive in a few large reads instead of 2+ commands per picture. Exact: same bytes, same VRAM, same order.
+# TEX_PACK_HANDLE=1 (lane playreads 11-03; default 0 = image unchanged; needs TEX_PACK=1): one kept tex.pak handle for
+# texture package reads and pack index sectors instead of an fs_open (ISO directory walk) per load (room/texture_package.cpp).
+TEX_PACK_HANDLE ?= 0
+ifeq ($(TEX_PACK_HANDLE),1)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PACK_HANDLE=1
+endif
 TEX_PACK_WINDOW ?= 0
 ifneq ($(TEX_PACK_WINDOW),0)
 ifneq ($(TEX_PACK),1)

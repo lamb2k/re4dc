@@ -278,21 +278,58 @@ bool Package::open(const char* path) {
     return validate();
 }
 
+#if defined(RE4DC_TEX_PACK_HANDLE) && RE4DC_TEX_PACK_HANDLE
+// TEX_PACK_HANDLE (game30.mk; lane playreads 11-03): one tex.pak handle, opened once and kept, instead of an fs_open per
+// texture load and per index sector. Each open walks the ISO directory (KOS block cache, a GD command per miss): DRF
+// open_us showed tex.pak opens at ~157 ms of a 164 ms read window in r113. Every user seeks before it reads, so sharing
+// the position is safe on one thread; the handle belongs to the first thread that asks, other threads open their own
+// as before. A handle the disc layer broke (disc swap / Disc 2, drive reset) fails fs_total and is reopened.
+#include <kos/thread.h>
+#include <cstring>
+namespace {
+file_t g_pack_fd=FILEHND_INVALID;
+const char* g_pack_path=nullptr;
+kthread_t* g_pack_owner=nullptr;
+unsigned g_pack_opens,g_pack_reuses;
+file_t pack_shared(const char* path) {
+    if(!path || !std::strstr(path,"tex.pak")) return FILEHND_INVALID;
+    if(g_pack_owner && g_pack_owner!=thd_current) return FILEHND_INVALID;
+    if(g_pack_fd!=FILEHND_INVALID && !std::strcmp(g_pack_path,path) && fs_total(g_pack_fd)>0) { ++g_pack_reuses; return g_pack_fd; }
+    if(g_pack_fd!=FILEHND_INVALID) fs_close(g_pack_fd);
+    RE4DC_IO_SERIAL_WAIT();
+    g_pack_fd=fs_open(path,O_RDONLY);
+    g_pack_path=path;g_pack_owner=thd_current;++g_pack_opens;
+    return g_pack_fd;
+}
+}  // namespace
+void pack_handle_stats(unsigned* opens, unsigned* reuses) { *opens=g_pack_opens; *reuses=g_pack_reuses; }
+#define RE4DC_CLOSE_FILE() do { if(!file_shared_) fs_close(file_); file_shared_=false; } while(0)
+#else
+#define RE4DC_CLOSE_FILE() fs_close(file_)
+#endif
+
 #if RE4DC_TEX_PACK
 RangeRead read_file_range(const char* path, std::uint32_t offset, void* out, std::uint32_t bytes,
                           unsigned long long* file_bytes) {
-    RE4DC_IO_SERIAL_WAIT();
-    const file_t f=fs_open(path,O_RDONLY);
+#if defined(RE4DC_TEX_PACK_HANDLE) && RE4DC_TEX_PACK_HANDLE
+    const file_t sf=pack_shared(path);
+    const bool shared=sf!=FILEHND_INVALID;
+#else
+    const file_t sf=FILEHND_INVALID;
+    const bool shared=false;
+#endif
+    if(!shared) RE4DC_IO_SERIAL_WAIT();
+    const file_t f=shared?sf:fs_open(path,O_RDONLY);
     if(f==FILEHND_INVALID) return RangeRead::absent;
     const ssize_t total=fs_total(f);
     if(file_bytes) *file_bytes=total<0?0ULL:static_cast<unsigned long long>(total);
     if(total>=0 && static_cast<unsigned long long>(offset)+bytes>static_cast<unsigned long long>(total)) {
-        fs_close(f);
+        if(!shared) fs_close(f);
         return RangeRead::short_file;   // a truncated file stays truncated: not worth a retry
     }
     const bool ok=total>=0 && fs_seek(f,static_cast<off_t>(offset),SEEK_SET)==static_cast<off_t>(offset) &&
                   fs_read(f,out,bytes)==static_cast<ssize_t>(bytes);
-    fs_close(f);
+    if(!shared) fs_close(f);
     return ok?RangeRead::ok:RangeRead::io_error;
 }
 #if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
@@ -387,8 +424,15 @@ bool Package::open_streamed_impl(const char* path, std::uint32_t base, std::uint
     } else
 #endif
     {
+#if defined(RE4DC_TEX_PACK_HANDLE) && RE4DC_TEX_PACK_HANDLE
+    file_ = size ? pack_shared(path) : FILEHND_INVALID;
+    file_shared_ = file_ != FILEHND_INVALID;
+    if(!file_shared_)
+#endif
+    {
     RE4DC_IO_SERIAL_WAIT();
     file_ = fs_open(path,O_RDONLY);
+    }
     if(file_ == FILEHND_INVALID) { error_="open failed"; return false; }
     base_=base;
     }
@@ -1231,7 +1275,7 @@ bool Package::release_payload() {
         // A live pack window owns the handle. This package has none to close (any texture format; was TEX_PAL8_ALPHA only).
         if(file_ != FILEHND_INVALID)
 #endif
-        fs_close(file_);file_=FILEHND_INVALID;
+        RE4DC_CLOSE_FILE();file_=FILEHND_INVALID;
         size_=metadata_bytes_;payload_released_=true;return true;
     }
     const std::uint64_t descriptor_end =
@@ -1266,7 +1310,7 @@ bool Package::release_payload() {
     header_ = reinterpret_cast<const Header*>(copy);
     // The mapping, if there was one, backed the bytes just copied away.
     if(file_ != FILEHND_INVALID) {
-        fs_close(file_);
+        RE4DC_CLOSE_FILE();
         file_ = FILEHND_INVALID;
     }
     return true;
@@ -1338,7 +1382,7 @@ void Package::close() {
     vram_bytes_ = 0;
     shared_textures_ = 0;
     if(file_ != FILEHND_INVALID) {
-        fs_close(file_);
+        RE4DC_CLOSE_FILE();
     }
     file_ = FILEHND_INVALID;
     std::free(metadata_);

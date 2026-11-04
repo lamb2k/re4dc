@@ -196,6 +196,9 @@ private:
 #endif
 
     file_t file_ = FILEHND_INVALID;
+#if defined(RE4DC_TEX_PACK_HANDLE) && RE4DC_TEX_PACK_HANDLE
+    bool file_shared_ = false;   // TEX_PACK_HANDLE: file_ is the shared tex.pak handle (never closed here)
+#endif
     const std::uint8_t* data_ = nullptr;
     std::size_t size_ = 0;
     const Header* header_ = nullptr;
