@@ -92,16 +92,9 @@ for e in r304s00 r30as00 r30as10 r30bs00 r30cs00 r310s00; do
   put "$(src island-movies-20261104)/$e/$e.seq" "dc/movie/$e.seq"
   rm -f "$OUT/evd/$e.evd" "$OUT/evd/$e.evd.evq"
 done
-# Event-file lint (CH-FIXES-CARRY row 21): every evd is little-endian (EvtHeader nBin/binOfs read LE) with a .evq.
-for f in "$OUT"/evd/*.evd; do
-  [ -e "$f" ] || continue
-  [ -s "$f.evq" ] || { echo "d3-content: $f has no .evq" >&2; exit 1; }
-  python3 - "$f" <<'PY' || { echo "d3-content: $f is not a little-endian event file" >&2; exit 1; }
-import struct, sys
-b = open(sys.argv[1], 'rb').read()
-n, at = struct.unpack_from('<2I', b, 0x48)
-sys.exit(0 if b.startswith(b'event/') and 0 < n <= 4096 and 0x50 <= at and at + n * 0x40 <= len(b) else 1)
-PY
-done
+# r300s00 and r333s00 already play as route movies (r300.cpp / r333.cpp guards): their evds are dead weight too.
+for e in r300s00 r333s00; do rm -f "$OUT/evd/$e.evd" "$OUT/evd/$e.evd.evq"; done
+# Event-file lint (CH-FIXES-CARRY rows 21 / 23): little-endian with a .evq, and none a route movie already owns.
+python3 "$(dirname "$0")/evd_movie_lint.py" "$OUT" "$(cd "$(dirname "$0")/../../../../.." && pwd)"
 (cd "$OUT" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 echo "d3-content: $(wc -l < "$OUT/SHA256SUMS") files, $(du -sm "$OUT" | cut -f1) MB, SHA256SUMS $(sha256sum < "$OUT/SHA256SUMS" | cut -c1-16)"

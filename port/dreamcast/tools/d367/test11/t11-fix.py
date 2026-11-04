@@ -1460,6 +1460,13 @@ if os.path.isdir(DCF01D):
     DATA['dcf01'] = {'dc/tex.pak': DCF01D + '/dc/tex.pak'}
     PAK_DERIVED['dcf01'] = DCF01D + '/pak-derived.json'
     AFTER += [('dcf01', 'dcf03'), ('dcf01', 'leon28')]
+# d2evdrop (lane world-ch5 11-04, CH-FIXES-CARRY row 23; DISC 2 ONLY via D2_DATA): r203s00 and r206s20 play as route
+# movies on Disc 2 (r203.cpp R203_MOVIES_OWN, r206.cpp R206_MOVIES_OWN; dc/movie/r203s00.seq, r206s20.seq ship), so their
+# GameCube evds (+ .evq) are dead weight: castle_fixture.py 'remove' takes them off Disc 2. Store: d2evdrop-20261104
+# (RECIPE.txt, remove.txt). Reversible: leave the name out of D2_DATA.
+D2EVDROPD = os.environ.get('D2EVDROPD', '/root/re4data/private/d2evdrop-20261104')
+if os.path.isfile(D2EVDROPD + '/remove.txt'):
+    DATA['d2evdrop'] = {'remove': [l.strip() for l in open(D2EVDROPD + '/remove.txt') if l.strip() and not l.startswith('#')]}
 # dcf3isl (lane assets-dc 11-02, for lane world-ch5's D3_DATA; Disc 3 space): the island tree's loose dc/tex pictures
 # in Dreamcast form (assetsdc/dcform_dir.py over re4data/private/island-d3-20261102): 3,420 of 4,474 changed, 163.1 MB ->
 # 38.6 MB (raw 16-bit >= 64x64 -> VQ, + mips when square; small square / VQ -> + mips, base kept). Same paths, keys,

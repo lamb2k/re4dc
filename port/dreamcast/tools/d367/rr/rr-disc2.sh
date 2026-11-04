@@ -40,6 +40,7 @@ rm -rf "${W:?}/d2/d1"
 python3 "$F/fp_iso.py" extract "$CAND/gdemu/track03.bin" "$W/d2/d1/tree" --manifest "$W/d2/d1/manifest.json" --ipbin "$W/d2/d1/IP.BIN" | tail -1
 D2_DATA=${D2_DATA:-} python3 "$D/castle31/castle_fixture.py" "$W/d2/d1/tree" "$CT" "$W/d2/fx" | tail -3
 python3 "$D/discsets/mkdisc2.py" "$W/d2/d1/tree" "$W/d2/fx/castle-fixture.json" "$O" "$W/d2/out" "$S8" | tail -1
+python3 "$D/discsets/evd_movie_lint.py" "$W/d2/out/tree" "$TA" | tail -3 || { echo "rr-disc2: event-file lint FAILED"; exit 1; }
 rm -rf "${W:?}/d2/gdemu"
 (cd "$D" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$W/d2/out/tree" "$W/d2/gdemu" | tail -1)
 for prof in loader standard; do
