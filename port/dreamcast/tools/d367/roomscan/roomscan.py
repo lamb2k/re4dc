@@ -21,6 +21,12 @@ Planner, per 8 m cell, look-preserving first:
   Decimation only where a view is over budget, the costliest far cells first, never on a placement bound to a live
   scroll object (ids < 250 bound in the census log), visual mesh only (collision is not here). Only clusters that have
   coarser levels can change: build the room with the lod27 LOD settings first for more of them.
+Round 2 (11-04, the scan1 MODELLED A/B on 9 rooms): the vertex model above does not predict a rebuilt LOD mesh. Rooms
+rebuilt with the scan1 converter recipe (+700..1130 level records, +100..210 clusters) were +0.4..+1.7 ms slower at
+the bench warp although the model said -4..-11 ms; r119 was the only win (-4.5). Least squares over the 9 rooms (no
+intercept, r119 included): hw delta ~= 0.19 x model delta + 0.0013 x added level records (resid up to 2.5 ms, r119
+-4.3). So --ref <shipped world> reports that hw-fit delta, and the default plan for new rooms is caps only on the
+shipped mesh (no rebuild: 0 added records, mesh size unchanged).
 apply rewrites only the level records' error values and the body CRC: same file size, so the world
 arena layout is unchanged; every bound sidecar must then be regenerated (bakeall/post_room.sh) for the new mesh crc."""
 import argparse, json, math, os, re, struct, sys, zlib
@@ -32,6 +38,7 @@ FAR = 40000.0
 NEAR = 100.0
 HFOV, VFOV = math.radians(72) / 2, math.radians(56) / 2
 A_PL, A_DYN, C_PKG, C_SRC = 0.0045, 0.005, 0.367, 0.638
+HW_MODEL, HW_LEVEL = 0.19, 0.0013   # round-2 fit (see the docstring)
 FRAME_MS = 33.3
 CAPS = {1: (8000.0,), 2: (8000.0, 12000.0, 16000.0)}   # dec option -> switch distance of levels 1, 2, 3
 LIVE = set()          # scroll ids bound to a live object in this room (census PS2PART bind): never decimated
@@ -210,6 +217,15 @@ def scan(a):
     plan['summary'] = dict(mean_before=round(float(np.mean(b)), 2), mean_after=round(float(np.mean(f)), 2),
                            worst_before=round(max(b), 2), worst_after=round(max(f), 2), cells_decimated=len(shift),
                            mesh_bytes_delta=0)
+    if a.ref:
+        R = read_world(a.ref)
+        nlv = lambda w: struct.unpack_from('<5I', w['mesh'], 80)[1]
+        rmean = float(np.mean([fee_r + sum(cell_ms(c) for c in view(R['rows'], np.array(v['eye']), v['yaw']).values())
+                               for v in views for fee_r in [A_PL * R['npl'] + A_DYN * sum(1 for mi, gi, *_ in R['pl']
+                                                                       if 16 + gi < len(R['ids']) and R['ids'][16 + gi] < 250)]]))
+        dlv = nlv(W) - nlv(R)
+        plan['summary'].update(ref=a.ref, ref_mean=round(rmean, 2), added_level_records=dlv,
+                               hw_fit_delta_ms=round(HW_MODEL * (plan['summary']['mean_after'] - rmean) + HW_LEVEL * dlv, 2))
     out = a.out or '%s-plan.json' % a.room
     json.dump(plan, open(out, 'w'), indent=1)
     print(json.dumps(dict(room=a.room, **plan['summary'], budget=plan['budget_world_ms'], cells=plan['cells'])))
@@ -245,7 +261,7 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
     s = sub.add_parser('scan'); s.add_argument('room'); s.add_argument('world'); s.add_argument('--warp')
-    s.add_argument('--bound'); s.add_argument('--other-ms', type=float, default=30.0); s.add_argument('--out')
+    s.add_argument('--bound'); s.add_argument('--other-ms', type=float, default=30.0); s.add_argument('--out'); s.add_argument('--ref')
     p = sub.add_parser('apply'); p.add_argument('plan'); p.add_argument('world'); p.add_argument('out')
     a = ap.parse_args()
     scan(a) if a.cmd == 'scan' else apply(a)
