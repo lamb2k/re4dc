@@ -2031,6 +2031,10 @@ if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
     DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
+# res4 (lane world-ch4 11-04, DISC 2 ONLY, after res34): res34's resident.bin plus r21a r221 r228 r22a (vram/resident lists).
+RES4D = os.environ.get('RES4D', '/root/re4data/private/res4-20261104')
+if os.path.isfile(RES4D + '/RECIPE.txt'):
+    DATA['res4'] = {'dc/resident.bin': RES4D + '/dc/resident.bin'}
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
@@ -2078,6 +2082,12 @@ if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
     DATA['c4world'] = {'tex': (C4WTEXD if os.path.isfile(C4WTEXD + '/RECIPE.txt') else C4WORLDD) + '/tex'}
     for _f in sorted(Path(C4WORLDD, 'dc', 'native').glob('*/ps2-world.*')):
         DATA['c4world']['dc/native/%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+
+# c4anc (lane world-ch4 11-04; DISC 2 ONLY via D2_DATA): 34 chapter 4 room ancillary picture keys the Disc 2 census runs
+# opened and could not find (TEXCHK 'open failed'), hard links of Codex cxfix-replay-20261018 output/<room>/ancillary*/tex.
+C4ANCD = os.environ.get('C4ANCD', '/root/re4data/private/c4anc-20261104')
+if os.path.isfile(C4ANCD + '/RECIPE.txt'):
+    DATA['c4anc'] = {'tex': C4ANCD + '/tex'}
 
 # c4twins (lane world-ch4 11-02, coordinator decision; DISC 2 ONLY via D2_DATA): r224 El Gigante twins PS2 registry
 # package from Codex boss18-twins-approved-20261019 (receipt I-012; 235,776 B) + its 2 loose atlas keys. Runtime PS2_GIGANTE.

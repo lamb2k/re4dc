@@ -3,6 +3,8 @@ name w4-r227
 room 0x227
 chapter 13
 god
+# entry movie r227s00 (42 s) seen (bit 0, as JumpPoint 2 does) so the 60 s run judges play
+rsf 0x227 0
 pos 11655 63 -103
 ang -1.7213
 alivelog 300

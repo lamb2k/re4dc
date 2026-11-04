@@ -26,7 +26,9 @@ for room in sys.argv[1:]:
             p = s + 16 + i * 156
             if gd[p + 0x35] != 1:
                 continue
-            q = struct.unpack_from('>8f', gd, p + 8)
+            # AreaData body (lane world-ch4 11-04 fix): +0x08 floor y, +0x0C / +0x10 two heights (1000 / 750 on every door
+            # seen), +0x14..+0x33 the xz quad. The 11-02 version read the quad at +0x08, so cx / cz were wrong.
+            q = struct.unpack_from('>8f', gd, p + 0x14)
             xs, zs = q[0::2], q[1::2]
             cx, cz = (sum(xs) / 4, sum(zs) / 4) if all(map(math.isfinite, q)) else (float('nan'),) * 2
             d = p + 0x5C

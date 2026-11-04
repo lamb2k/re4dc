@@ -3,6 +3,9 @@ name w4-r22b
 room 0x22b
 chapter 10
 god
+# event-only room (chapter 4-1 end r22bs00): event seen (bit 0); Leon at door 0 to r220
+rsf 0x22b 0
+pos -689 0 -1688
 alivelog 300
 census 400
 dump

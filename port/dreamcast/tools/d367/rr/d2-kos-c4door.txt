@@ -1,5 +1,7 @@
 # Disc 2 KOS chapter 4 door scene (lane world-ch4 11-02): r213 (entered from r211, worldch4/warps/r213.txt) walked to its
-# door 1 (AEV area centre -26885 -14406, worldch4/doors-ch4.tsv) into r214 (the Novistador hall's exit)
+# door 1 into r214 (the Novistador hall's exit). AEV area quad x -20547..-19025, z -54247..-51895 (centre -19788 -53020;
+# 11-04: the old centre -26885 -14406 came from doors.py reading the quad 12 bytes early, so Leon walked past the door
+# and the scene never reached r214). Leon stops 1,000 short of the area and walks -z into it.
 name w4-r213-door
 room 0x213
 chapter 10
@@ -10,7 +12,7 @@ god
 alivelog 60
 census 200
 dump
-goto 300 -26885 1000 -14406 3.14 sub
+goto 300 -19788 0 -50900 3.14 sub
 act 420 fwd 40
 act 470 a 10
 act 510 a 10

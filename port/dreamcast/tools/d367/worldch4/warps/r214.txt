@@ -3,6 +3,8 @@ name w4-r214
 room 0x214
 chapter 10
 god
+# entry event r214s00 seen (Room_flg bit 5) so Leon is in play for LEON-GC
+rsf 0x214 5
 pos 8762 1505 39019
 ang -1.5641
 alivelog 300
