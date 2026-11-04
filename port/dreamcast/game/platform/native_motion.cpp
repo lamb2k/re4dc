@@ -280,7 +280,7 @@ void build() {
         const dirent_t* de=fs_readdir(d);if(!de)break;
         if((de->attr&O_DIR) || !parse(de->name,c,f))continue;
         const unsigned ext=fs_iso9660_last_extent(d),size=unsigned(de->size);
-        if(!base)base=ext;
+        if(!base)base=ext>32768U?ext-32768U:1U;    // keys sit together, not always in name order: room either side
         if(count>=cap || ext<base || ext-base>0xffffU || !size || size>0xffffU) { ++skipped;continue; }
         Ent e{c,(unsigned short)(ext-base),(unsigned short)size};
         unsigned j=count++;                        // insertion sort: the directory is nearly sorted already
