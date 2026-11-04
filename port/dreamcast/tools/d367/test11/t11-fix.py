@@ -2031,7 +2031,7 @@ if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
     DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
-# res4 (lane world-ch4 11-04, DISC 2 ONLY, after res34): res34's resident.bin plus r21a r221 r228 r22a (vram/resident lists).
+# res4 (lane world-ch4 11-04, DISC 2 ONLY, after res34): res34's resident.bin plus r21a r221 r228 r22a (vram/resident/castle18 lists).
 RES4D = os.environ.get('RES4D', '/root/re4data/private/res4-20261104')
 if os.path.isfile(RES4D + '/RECIPE.txt'):
     DATA['res4'] = {'dc/resident.bin': RES4D + '/dc/resident.bin'}
