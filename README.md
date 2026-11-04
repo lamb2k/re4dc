@@ -17,12 +17,12 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 
 - **The PS2 sky in normal play** in the outdoor rooms, not only in cutscenes.
 
-  ![The village: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-8570607f-20261104/docs/images/releases/test27/sky-normal-play.jpg)
+  ![The village: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-5ee5c33f-20261104/docs/images/releases/test27/sky-normal-play.jpg)
   <br>The village. Left before, right Test 27. Flycast capture.
 - **Boss fight fixes:** El Gigante's farm cutscenes and his fade at the village now use his PS2 model, and Del Lago
   keeps his textures after he dies.
 
-  ![El Gigante's fade: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-8570607f-20261104/docs/images/releases/test27/el-gigante-fade.jpg)
+  ![El Gigante's fade: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-5ee5c33f-20261104/docs/images/releases/test27/el-gigante-fade.jpg)
   <br>El Gigante after the fight. Left before (GameCube model), right Test 27 (PS2 model). Flycast capture.
 - **No more El Gigante slowdown** after he breaks objects.
 - **Save reload crash guard:** reloading a save after dying in the El Gigante fight with Ashley no longer crashes.
@@ -30,7 +30,7 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
   In normal play they open up when chapter 3-2 joins them in Test 28. The castle Zealots in the lever room and the
   Zealot chase now load without a stall.
 
-  ![A castle hall from chapter 3-3](https://github.com/lamb2k/re4dc/raw/test-8570607f-20261104/docs/images/releases/test27/castle-3-3.jpg)
+  ![A castle hall from chapter 3-3](https://github.com/lamb2k/re4dc/raw/test-5ee5c33f-20261104/docs/images/releases/test27/castle-3-3.jpg)
   <br>A castle hall from chapter 3-3. Flycast capture.
 - **Smoother castle rooms:** the big pauses in four chapter 3-1 rooms are gone (worst frame from up to 615 ms down
   to under 10 ms in three of them).
@@ -40,6 +40,7 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 28.
 
+- [ ] **The last castle Zealots on the Dreamcast character path:** the Zealot chase and two other castle rooms.
 - [ ] **Chapter 3-2** in the castle, which joins chapter 3-1 to the 3-3 and 3-4 rooms in normal play.
 - [ ] **Chapter 4.**
 - [ ] **Disc 3:** the island and the final chapter.
