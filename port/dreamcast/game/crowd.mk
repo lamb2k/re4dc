@@ -215,6 +215,32 @@ PLATFORM_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -I$(LEON_HEADLESS_DIR)
 $(OBJDIR)/coarse_actor.o: $(LEON_HEADLESS_DIR)/ps2leon_neck.h actor_material_records_leon_neck.inc actor_material_records_leon_headless_roles.inc actor_material_records_leon_head.inc
 endif
+# LEON_WOUND=1 (lane bosscast-wound, 2026-11-03; default 0: no effect; render only; needs LEON_HEADLESS=1 (with its
+#              ACTOR_PL08 PS2_LEON LEON_HAND_POSES) and LEON_WOUND_DIR, a space-free private dir holding ps2leon_wound.h
+#              from tools/d367/ps2leon/build_wound.py; the disc needs that data set's wound picture, dc/tex/8/
+#              8f359de1-44158660.re4tex, Disc 3 D3_DATA set wound): Leon's chapter 5 wound overlay draws natively.
+#              cPlLeon::setWound() (r317 after the Krauser knife fight, and setModel in every later room while
+#              Scenario_flg[0] & 0x20) appends player arc 0xE / TPL 0xF as a tenth info, which the 9-role pl08 plan
+#              declined, so the whole wounded Leon went to the GameCube path (rule 7; island18 r317). The pl08 owner plans
+#              appearance 0x10B instead: pl08's nine roles plus role 9, the PS2 disc's pl08 arc 0xE (5 triangles, bone 4)
+#              on its own material, the PS2 TPL 0xF pair (colour + mask alpha, 32 x 16 ARGB4444; GC identity rows from
+#              gen_wound_records.py: actor_material_records_leon_wound*.inc).
+LEON_WOUND ?= 0
+ifeq ($(filter $(LEON_WOUND),0 1),)
+$(error LEON_WOUND must be 0 or 1)
+endif
+ifeq ($(LEON_WOUND),1)
+ifneq ($(LEON_HEADLESS),1)
+$(error LEON_WOUND needs LEON_HEADLESS=1)
+endif
+ifndef LEON_WOUND_DIR
+$(error LEON_WOUND=1 needs LEON_WOUND_DIR (the private dir with ps2leon_wound.h))
+endif
+GAME_CPPFLAGS += -DRE4DC_LEON_WOUND=1
+PLATFORM_CPPFLAGS += -DRE4DC_LEON_WOUND=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -I$(LEON_WOUND_DIR)
+$(OBJDIR)/coarse_actor.o: $(LEON_WOUND_DIR)/ps2leon_wound.h actor_material_records_leon_wound.inc actor_material_records_leon_wound_roles.inc
+endif
 # AUX_OBJ_NATIVE=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_TRANSACTION=1): allowlisted
 #              ObjMgr objects that are character parts (first row: the Garrador core, em10SetParasite cObj16, id 0x16
 #              type 4, 14 parts) take the ordinary actor transaction through their own small per-frame presentation

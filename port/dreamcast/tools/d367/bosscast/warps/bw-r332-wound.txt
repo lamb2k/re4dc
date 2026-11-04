@@ -1,0 +1,13 @@
+name bw-r332-wound
+# bosscast-wound 11-03: bs-r332-fight + scenario 0 0x20 (Leon wounded, LEON_WOUND). r332 Saddler fight from the r331 door (final16 fx-r332-a1): R332EventS00 sets Saddler; START skips the
+# s00 movie when it is on the disc; god; em31 state every 60 room frames; census every 200; 60 s.
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
+scenario 0 0x20
+emlog 0x31 60
+chapter 17
+census 200
+alivelog 60

@@ -1,0 +1,12 @@
+name bw-r317-wound
+# bosscast-wound 11-03: r317 with Leon wounded from room entry (scenario 0 0x20 = the flag the knife fight sets;
+# cPlLeon::setModel then calls setWound: player arc 0xE / TPL 0xF as a tenth info). No fight; god; census every 200; 60 s.
+room 0x317
+pos -8209 -5100 167
+ang -0.2820
+inv default
+scenario 0 0x20
+god
+chapter 16
+census 200
+alivelog 60

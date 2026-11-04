@@ -44,6 +44,8 @@ BUNDLE = '/root/probe/lanes/play-actor-bundle'
 PRIVATE = {'PS2_LEON_DIR': 'ps2leon', 'PS2_GANADO_DIR': 'ps2ganado',
            'PS2_ENEMY_CH22_DIR': 'ps2enemych2', 'PS2_ENEMY_CH23_DIR': 'ps2enemych2',
            'ACTOR_GANADO_PS2_STUMP_DIR': 'ps2stump', 'LEON_HEADLESS_DIR': 'ps2leonhead',
+           # Disc 3 (lane bosscast-wound): Leon's chapter 5 wound overlay header ps2leon_wound.h (LEON_WOUND)
+           'LEON_WOUND_DIR': 'ps2leonwound',
            # Disc 2 (lane castle-disc2-26): the castle program's PS2 enemy rows (chapters 3 / 4)
            'PS2_ENEMY_CH3_DIR': 'ps2enemych3', 'PS2_ENEMY_CH4_DIR': 'ps2enemych4'}
 PRIVATE_FILES = {'GANADO_LOD_PACK': 'glod'}

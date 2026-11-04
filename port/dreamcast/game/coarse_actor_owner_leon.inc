@@ -174,6 +174,16 @@ const Re4dcUiImage hair_mask{&hair_tokens[2],nullptr,64,128,0,0xffffffffu,0};
 constexpr unsigned hair_colour_crc[2]={0xac381b1a,0x7a9de1fd},hair_colour_fnv[2]={0x3ade84b1,0x0e415f15};
 constexpr unsigned hair_pair_crc[2]={0xfc24a99c,0x9cf7f055},hair_pair_fnv[2]={0x03d13534,0xd40aae38};
 #endif
+#if RE4DC_LEON_WOUND
+// LEON_WOUND: the wound overlay's material (player TPL 0xF, 32 x 16): the GameCube colour (CMPR) and mask (I4) image
+// identities and the pair key their package is published under (dc/tex/8/8f359de1-44158660.re4tex: the PS2 TPL 0xF
+// colour with its mask's intensity as alpha, build_wound.py).
+unsigned wound_tokens[2];
+const Re4dcUiImage wound_colour{&wound_tokens[0],nullptr,32,16,14,0xffffffffu,0};
+const Re4dcUiImage wound_mask{&wound_tokens[1],nullptr,32,16,0,0xffffffffu,0};
+constexpr unsigned kWoundColourCrc=0xa2a757ad,kWoundColourFnv=0xe57c915b,kWoundMaskCrc=0x33f3f886,kWoundMaskFnv=0x08b6b4f3;
+constexpr unsigned kWoundPairCrc=0x8f359de1,kWoundPairFnv=0x44158660;
+#endif
 bool owner_leon_bind(cModel* m) {
     if(!m || m->id || m->nParts!=119 || !m->pList || !m->pParts || (m->be_flag&0x4000))return false;
     // Current dual archive/model adoption records supply exact role identity,
@@ -357,6 +367,13 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
     *out=p;return 1;
 }
 extern "C" int re4dc_actor_hair_texture_key(const Re4dcUiImage* i,unsigned* c,unsigned* f) {
+#if RE4DC_LEON_WOUND
+    if(i && c && f && !i->palette && !i->palette_bytes && i->palette_format==0xffffffffu && i->width==32 && i->height==16) {
+        if(i->pixels==wound_colour.pixels && i->format==14){*c=kWoundColourCrc;*f=kWoundColourFnv;return 1;}
+        if(i->pixels==wound_mask.pixels && i->format==0){*c=kWoundMaskCrc;*f=kWoundMaskFnv;return 1;}
+        return 0;
+    }
+#endif
     if(!i || !c || !f || i->palette || i->palette_bytes || i->palette_format!=0xffffffffu || i->width!=64 || i->height!=128)return 0;
     for(unsigned k=0;k<2;++k)if(i->pixels==hair_colours[k].pixels && i->format==14){*c=hair_colour_crc[k];*f=hair_colour_fnv[k];return 1;}
     if(i->pixels==hair_mask.pixels && i->format==0){*c=0x94e9dc56;*f=0x070dc44a;return 1;}
@@ -369,6 +386,23 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
     // The hair runs of the included header: 14 (leon_hair_runs.h), 2 with CHARBAKE_HAIR (leon_hair_runs_g2.h), the
     // arm's with PS2_LEON (ps2leon_hair_runs.h: 1 for A, 2 for B).
     constexpr unsigned kHair=leon_hair_runs::run_count;
+#if RE4DC_LEON_WOUND
+    // LEON_WOUND (0x10B): the 0x108 plan with role 9 appended: its one whole-chunk run last, on the last material (the
+    // wound pair, mask / second pass / no depth write as the hair pairs); everything before it is proved as 0x108.
+    if(p && p->appearance==0x10B) {
+        if(p->count!=10 || p->run_count!=9+kHair || p->material_count!=2+RE4DC_LEON_HAIR_MATERIALS || !p->info[9])return 0;
+        const unsigned wm=1+RE4DC_LEON_HAIR_MATERIALS;
+        const auto& r=p->runs[8+kHair];const auto& m=p->materials[wm];
+        if(r.role!=9 || r.material!=wm || r.triangles!=p->input[9].triangles || r.stream.data!=p->input[9].stream.data ||
+           r.uv.data!=p->input[9].uv.data || r.uv.size!=p->input[9].uv.size)return 0;
+        if(m.image.pixels!=wound_colour.pixels || m.mask.pixels!=wound_mask.pixels || m.crc!=kWoundPairCrc || m.fnv!=kWoundPairFnv ||
+           m.image.width!=32 || m.image.height!=16 || m.image.format!=14 || m.mask.width!=32 || m.mask.height!=16 || m.mask.format!=0 ||
+           m.material_flags!=4 || m.blend || m.depth_mode!=(RE4DC_ACTOR_LEON_NATIVE_LOOK?1u:0u) || m.mask_ref || m.mask_same_uv!=1 ||
+           m.wrap_s!=1 || m.wrap_t!=1)return 0;
+        Re4dcActorPlan q=*p;q.appearance=0x108;q.count=9;q.run_count=8+kHair;q.material_count=1+RE4DC_LEON_HAIR_MATERIALS;
+        return re4dc_actor_material_runs_capability(&q);
+    }
+#endif
 #if RE4DC_LEON_HEADLESS
     // LEON_HEADLESS (0x109, Leon after setHead(0)): seven roles, one whole-chunk run each in role order, no hair runs
     // (the hair info is gone), the one atlas material.
