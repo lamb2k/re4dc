@@ -202,6 +202,9 @@ void R333Init()
     }
     if (RsfCheck(G_ROOM_ID, 1) == 0) {
         SceAtDataSet_exec(2, 0x12, 0, (TaskFunc) R333EventS10, 0, 1);
+#if R333_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x33310))  // world-ch5 11-04: s10 by its PS2 movie
+#endif
         EvtMgr.EvtReadAram("event/evd/r333s10.evd", 0, 0, 0, 0);
     }
     if (RsfCheck(G_ROOM_ID, 3) == 0) {
@@ -334,6 +337,11 @@ void R333EventS10()
             EffectEfmDelete(1, 2, 0);
             ((cPl0e*) r333_work->em.getPtr())->stopEngine();
             SceEventStart(0);
+#if R333_ROUTE_MOVIES
+            if (re4dc_movie_available(0x33310)) {  // world-ch5 11-04: s10 by its PS2 movie (BIO4MOV.AFS r333s10.sfd)
+                RouteMoviePlay(0x33310, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R333S10_Func, 0);
+            } else
+#endif
             EvtMgr.EvtReadExec("event/evd/r333s10.evd", 0, 0);
             SceSleep(90);
             SetGameTime();

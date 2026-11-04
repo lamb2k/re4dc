@@ -92,8 +92,8 @@ for e in r304s00 r30as00 r30as10 r30bs00 r30cs00 r310s00; do
   put "$(src island-movies-20261104)/$e/$e.seq" "dc/movie/$e.seq"
   rm -f "$OUT/evd/$e.evd" "$OUT/evd/$e.evd.evq"
 done
-# r300s00 and r333s00 already play as route movies (r300.cpp / r333.cpp guards): their evds are dead weight too.
-for e in r300s00 r333s00; do rm -f "$OUT/evd/$e.evd" "$OUT/evd/$e.evd.evq"; done
+# r300s00, r333s00 and r333s10 play as route movies (r300.cpp / r333.cpp guards): their evds are dead weight too.
+for e in r300s00 r333s00 r333s10; do rm -f "$OUT/evd/$e.evd" "$OUT/evd/$e.evd.evq"; done
 # Event-file lint (CH-FIXES-CARRY rows 21 / 23): little-endian with a .evq, and none a route movie already owns.
 python3 "$(dirname "$0")/evd_movie_lint.py" "$OUT" "$(cd "$(dirname "$0")/../../../../.." && pwd)"
 (cd "$OUT" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
