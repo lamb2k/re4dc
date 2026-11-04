@@ -73,7 +73,10 @@ for r in r331 r332 r333; do
   for f in "$W/rooms/$r"/ps2-world.*; do put "$f" "dc/native/$r/${f##*/}"; done
   for t in "$W"/tex/*.re4tex; do [ -e "$t" ] || continue; f_=${t##*/}; put "$t" "dc/tex/${f_:0:1}/$f_"; done
 done
-for f in "$(src island18-final-source-20261018)"/source/evd/*.evd; do put "$f" "evd/${f##*/}"; done
+# island18-final-source evd/*.evd are raw GameCube (big-endian, no .evq): r331s00/s10 and r332s00/s10/s20 play as
+# route movies (dc/movie/r33xsNN.seq; r331.cpp / r332.cpp read an evd only without its movie), and r333s00/s10 come
+# converted from r333-transport below. They are not shipped (world-ch5 11-04: every event file a disc ships must be
+# little-endian with its .evq; the lint at the end checks it).
 for f in "$(src island18-r333-transport-20261018)"/evd/*; do put "$f" "evd/${f##*/}"; done
 put "$FS/em/em31.drs" em/em31.drs
 for f in "$(src island18-saddler-motion-20261018)"/prepared/mot/*.fcv; do put "$f" "dc/mot/${f##*/}"; done
@@ -81,5 +84,16 @@ put "$(src island18-r333-sound-20261018)/em/pl0e.drs" em/pl0e.drs
 for f in "$(src island18-r333-transport-20261018)"/prepared/mot/*.fcv; do [ -e "$f" ] && put "$f" "dc/mot/${f##*/}"; done
 for d in "$(src island18-final-movies-20261018)"/r33*; do [ -e "$d/$(basename "$d").seq" ] && put "$d/$(basename "$d").seq" "dc/movie/$(basename "$d").seq"; done
 fi
+# Event-file lint (CH-FIXES-CARRY row 21): every evd is little-endian (EvtHeader nBin/binOfs read LE) with a .evq.
+for f in "$OUT"/evd/*.evd; do
+  [ -e "$f" ] || continue
+  [ -s "$f.evq" ] || { echo "d3-content: $f has no .evq" >&2; exit 1; }
+  python3 - "$f" <<'PY' || { echo "d3-content: $f is not a little-endian event file" >&2; exit 1; }
+import struct, sys
+b = open(sys.argv[1], 'rb').read()
+n, at = struct.unpack_from('<2I', b, 0x48)
+sys.exit(0 if b.startswith(b'event/') and 0 < n <= 4096 and 0x50 <= at and at + n * 0x40 <= len(b) else 1)
+PY
+done
 (cd "$OUT" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 echo "d3-content: $(wc -l < "$OUT/SHA256SUMS") files, $(du -sm "$OUT" | cut -f1) MB, SHA256SUMS $(sha256sum < "$OUT/SHA256SUMS" | cut -c1-16)"

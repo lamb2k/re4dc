@@ -76,6 +76,16 @@ disc3_jobs() {
     job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"" $pad)"
     echo -n "$r " >> "$W/d3-census-rooms.txt"
   done < "$I5/rooms.tsv"
+  # island5/events.tsv (world-ch5 11-04): event play checks, each a <=60 s warp onto an event trigger on the d3c
+  # twin (name room chapter warp); the run log shows whether the route movie or the event file played.
+  if [ -s "$I5/events.tsv" ]; then
+    while read -r n r ch wf; do
+      case "$n" in ""|"#"*) continue ;; esac
+      { echo "name d3ev-$n"; echo "room 0x${r#r}"; grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'
+        echo "chapter $ch"; } > "$EVU/fixtures/d3ev-$n.txt"
+      job 1 d3ev-$n "$(run d3ev-$n d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3ev-$n.txt\"")"
+    done < "$I5/events.tsv"
+  fi
   job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"
   if [ -d "$EVU/_discs/d3a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" "$J/syms-d3a.txt"

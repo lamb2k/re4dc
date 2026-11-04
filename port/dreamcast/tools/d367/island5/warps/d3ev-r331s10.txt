@@ -1,0 +1,6 @@
+# world-ch5 11-04: r331 with Scenario_flg[0] 0x200 (count-down phase): R331Init starts the s10 event task at entry
+# (route movie 33110 when dc/movie/r331s10.seq is on the disc, else evd/r331s10.evd).
+jp 0
+inv default
+scenario 0 0x200
+god

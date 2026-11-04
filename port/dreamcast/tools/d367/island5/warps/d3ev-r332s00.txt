@@ -1,0 +1,6 @@
+# world-ch5 11-04: r332 at the r331 door with Scenario_flg[0] 0x200 clear: R332Init runs the s00 boss-appear event
+# (route movie 33200 when dc/movie/r332s00.seq is on the disc, else evd/r332s00.evd).
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
