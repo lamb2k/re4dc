@@ -270,8 +270,7 @@ void build() {
     const std::uint64_t t0=timer_us_gettime64();
     free(ents);ents=nullptr;count=0;base=0;built=true;++builds;
     const file_t d=fs_open("/cd/dc/mot",O_RDONLY|O_DIR);
-    if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot
-");return; }
+    if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot\n");return; }
     gen=fs_iso9660_generation();
     // One pass over the directory: a Joliet record of a key name is 80 bytes, so size/72 bounds the key count.
     const unsigned cap=unsigned(fs_total(d))/72U+1U;
@@ -294,8 +293,7 @@ void build() {
         if(k-i==1)ents[o++]=ents[i];else dups+=k-i;
         i=k;if(i>=count)count=o;
     }
-    re4dc_log("motion key index: keys=%u bytes=%u skipped=%u dup=%u base=%u gen=%u build=%u us=%u
-",count,cap*unsigned(sizeof(Ent)),
+    re4dc_log("motion key index: keys=%u bytes=%u skipped=%u dup=%u base=%u gen=%u build=%u us=%u\n",count,cap*unsigned(sizeof(Ent)),
               skipped,dups,base,gen,builds,unsigned(timer_us_gettime64()-t0));
 }
 const Ent* find(unsigned crc) {
