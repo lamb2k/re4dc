@@ -2023,6 +2023,10 @@ for _n, _env, _dflt in (('c4gca', 'C4GCAD', 'c4gca-20261102'), ('pmc4gca', 'PMC4
     _d = os.environ.get(_env, '/root/re4data/private/' + _dflt)
     if os.path.isfile(_d + '/RECIPE.txt'):
         DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        # c4gca tex: c4gtex-20261103 (11-03) = c4gca's keys minus 13 that cgca26 / cgca27 stage with other bytes
+        _gt = os.environ.get('C4GTEXD', '/root/re4data/private/c4gtex-20261103')
+        if _n == 'c4gca' and os.path.isfile(_gt + '/RECIPE.txt'):
+            DATA[_n]['tex'] = _gt + '/tex'
         for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')) + sorted(Path(_d, 'em').glob('*.drs')):
             DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
         if os.path.isdir(_d + '/dc/mot'):
