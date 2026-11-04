@@ -52,7 +52,7 @@ FP_TREE=$TB FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d3c KOS_WATCH=1 KOS
   NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 ${D3C_EXTRA:-} > "$W/twin-d3c.txt" 2>&1 || { echo "rr-disc3: census twin failed"; tail -3 "$W/twin-d3c.txt"; exit 1; }
 G=$W/gca3; rm -rf "${G:?}"; ga=0
 { PROVENANCE_D3=1 bash "$D/gc_port23/make_catalog.sh" "$CAND/disc3/gdemu/track03.bin" "$W/recipe.conf" "$G" | tail -1 &&
-  FP_TREE=$TA FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d3a GC_ASSET_GATE=1 GC_ASSET_CKPT_FIRST=30 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" > "$W/twin-d3a.txt" 2>&1; } || ga=1
+  FP_TREE=$TA FP_SKIP_IDENTITY=1 bash "$F/fp_twin.sh" "$O" ${L}d3a GC_ASSET_GATE=1 GC_ASSET_CKPT_FIRST=30 "GC_ASSET_CATALOG_PIN_FILE=$G/gc-assets.pin" ${D3A_EXTRA:-} > "$W/twin-d3a.txt" 2>&1; } || ga=1
 rc=0
 bash "$F/fp_master.sh" "$W/d3/out/tree" "$W/d3/out/manifest.json" "$W/d3/d1/IP.BIN" "$EVU/_discs/d3c" "$ROUTE/out-fp${L}d3cW" > "$W/master-d3c.txt" 2>&1 || rc=1
 tail -n 1 "$W/master-d3c.txt" | cut -c1-200
