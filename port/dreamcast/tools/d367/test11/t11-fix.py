@@ -2006,7 +2006,7 @@ if os.path.isdir(CPIC27D):
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
 # owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
-for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261103')),
                ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
     if os.path.isfile(_d + '/RECIPE.txt'):
         DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
