@@ -430,7 +430,10 @@ void emitted(Consumer consumer, const char* kind, const char* id, const Digest& 
     if(!active){re4dc_log("GC-ASSET-ERROR v=2 why=no-room\n");return;}
     emitted_checked(consumer,bind_checked(kind,id,digest));
 }
-void emitted_checked(Consumer consumer,CheckedAsset asset) {
+static void emitted_from(Consumer consumer,CheckedAsset asset,const CheckedAsset* geometry);
+void emitted_checked(Consumer consumer,CheckedAsset asset){emitted_from(consumer,asset,nullptr);}
+void emitted_layout(Consumer consumer,CheckedAsset layout,CheckedAsset geometry){emitted_from(consumer,layout,&geometry);}
+static void emitted_from(Consumer consumer,CheckedAsset asset,const CheckedAsset* geometry) {
     if(!active) { re4dc_log("GC-ASSET-ERROR v=2 why=no-room\n");return; }
     if(unsigned(consumer)>=ConsumerCount) { ++errors;return; }
     // gc-catalog24b: Motion's producer is members.cpp motion_use/motion_flush
@@ -454,6 +457,10 @@ void emitted_checked(Consumer consumer,CheckedAsset asset) {
     if(motion)motion_row[index/8]|=bit;
     if(motion!=(consumer==Motion)){unresolved(consumer,"kind-mismatch");return;}
     if(row.provenance==PS2 || row.provenance==Authored)return;
+    if(geometry && row.provenance==Unknown){
+        AssetDescription g;
+        if(describe_checked(*geometry,&g) && (g.provenance==PS2 || g.provenance==Authored))return;
+    }
     ++used;char sha[65];hex(row.digest,sha);
     re4dc_log("GC-ASSET v=2 %s visit=%u kind=%s id=%s sha256=%s provenance=%s consumer=%s action=emit\n",
         scope_text,visit,row.kind,row.id,sha,provenances[row.provenance],names[consumer]);

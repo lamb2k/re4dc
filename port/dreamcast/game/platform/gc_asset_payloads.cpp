@@ -58,7 +58,12 @@ void flush(PayloadProof& proof){
         // Revocation retains identities accepted BEFORE the overwrite. A zero
         // serial cannot admit a new use; these pending old uses remain valid.
         if(!proof.owner || !proof.asset.value)unresolved(Consumer(i),"retired-payload");
-        else {emitted_checked(Consumer(i),proof.asset);if(proof.layout_bytes || (!proof.layout && proof.layout_asset.value))emitted_checked(Consumer(i),proof.layout_asset);}
+        else {
+            emitted_checked(Consumer(i),proof.asset);
+            // lane assets-dc 11-04: a runtime layout (the sealed composite of this geometry's static manifest) is an
+            // interpretation of that geometry: an uncatalogued layout takes the geometry's provenance (emitted_layout).
+            if(proof.layout_bytes || (!proof.layout && proof.layout_asset.value))emitted_layout(Consumer(i),proof.layout_asset,proof.asset);
+        }
     }
 }
 }

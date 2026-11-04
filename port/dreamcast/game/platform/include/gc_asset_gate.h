@@ -56,6 +56,9 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_s
 bool checked_current(CheckedAsset); // memory only; no catalog read, hashing or logging
 bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog
 void emitted_checked(Consumer,CheckedAsset); // unlocked flush: first room use may read a record
+// A runtime layout row: as emitted_checked, but an uncatalogued (Unknown) layout takes the provenance of the geometry it
+// interprets when that geometry is PS2 or authored (lane assets-dc 11-04). A catalogued layout keeps its own row.
+void emitted_layout(Consumer,CheckedAsset layout,CheckedAsset geometry);
 // Catalog rows must be generated from reviewed payload hashes, never path names.
 // The caller owns this immutable table until the next install(). Null is valid:
 // every emission then has Unknown provenance, rather than silently becoming PS2.
