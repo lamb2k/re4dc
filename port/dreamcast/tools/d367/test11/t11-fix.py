@@ -2117,6 +2117,22 @@ if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
     for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
         DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
+# cgca32 / cpic32b (lane world-ch31 11-03, chapter 3-2 GC-ASSET for r20a / r20b; DISC 2 ONLY via D2_DATA, after cpic27):
+# cgca32 = pmcw32's st2/r205 r20a r20b .dar with the etc models the PS2 deleted from every ETM emptied (et1400 torch,
+# et0c00), r209's unchanged, each with its .arc (the catalog reads the .arc first), and Ashley's PS2 partner package for
+# r20a / r20b (ps2cast/ashley_reroom.py from the castle r201 one; PS2_ASHLEY_ROOMS). cpic32b = 5 tex.pak keys as PS2
+# pixels (em_eff_pics.py). Generator tools/d367/gca32/gen.sh. Stores: re4-assets-private/cgca32-20261103, cpic32b-20261103.
+CGCA32D = os.environ.get('CGCA32D', '/root/re4data/private/cgca32-20261103')
+if os.path.isfile(CGCA32D + '/RECIPE.txt'):
+    DATA['cgca32'] = {}
+    for _f in sorted(Path(CGCA32D, 'st2').glob('*.dar')) + sorted(Path(CGCA32D, 'st2').glob('*.arc')):
+        DATA['cgca32']['st2/' + _f.name] = str(_f)
+    for _f in sorted(Path(CGCA32D, 'dc', 'native').glob('r*/partner.re4nmr')):
+        DATA['cgca32']['dc/native/%s/partner.re4nmr' % _f.parent.name] = str(_f)
+CPIC32BD = os.environ.get('CPIC32BD', '/root/re4data/private/cpic32b-20261103')
+if os.path.isdir(CPIC32BD):
+    DATA['cpic32b'] = {'dc/tex.pak': CPIC32BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic32b'] = CPIC32BD + '/pak-derived.json'
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
