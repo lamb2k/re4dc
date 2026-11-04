@@ -36,6 +36,7 @@ for i, v in enumerate(views):
 PY
   while read -r R V <&3; do
     mkdir -p "$OUT/$R"
+    [ -s "$OUT/$R/$V-base.png" ] && [ -s "$OUT/$R/$V-plan.png" ] && { echo "$R $V: pair exists, skipped"; continue; }
     for X in "$XB" "$XP"; do
       N=rs-$X-$R-$V; S="$HW/scenarios/rrspeed-$N"; FIX=$W/stills/fix-$N.json
       python3 "$D367/test11/t11-fix.py" "${X}rW" "$FIX" --base payload --data "$(cat "$W/$X.data")" --warp "$W/stills/$R-$V.txt" > /dev/null
