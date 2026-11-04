@@ -7,8 +7,13 @@
 # ESP_POOL_CAP=<n> (0 = off): a room asks for at most n slots (min(cons, n)). A cap below a room's peak refuses
 #   sprites (PullEsp hands back the dummy esp, as the source does on a full pool), so a cap ships only with the
 #   peak survey and refusal count 0 (ESP_POOL_DIAG) on the gate runs.
+# ESP_POOL_ROOM_CAP=<n> (lane coldfix 2026-11-03, default 0 = image unchanged): the rooms in ESP_POOL_ROOM_CAP_LIST
+#   (default 0x202, the castle courtyard) ask for at most n slots: their measured peak (ESP_POOL_DIAG) plus a margin.
+#   Frees heap 4 for the r202 em11 motion pin. Gate: ESP_POOL_DIAG refusals 0 in the room's fight.
 ESP_POOL_DIAG ?= 0
 ESP_POOL_CAP ?= 0
+ESP_POOL_ROOM_CAP ?= 0
+ESP_POOL_ROOM_CAP_LIST ?= 0x202
 ifeq ($(filter $(ESP_POOL_DIAG),0 1),)
 $(error ESP_POOL_DIAG must be 0 or 1)
 endif
@@ -20,6 +25,9 @@ GAME_CPPFLAGS += -DRE4DC_ESP_POOL_DIAG=1
 endif
 ifneq ($(ESP_POOL_CAP),0)
 GAME_CPPFLAGS += -DRE4DC_ESP_POOL_CAP=$(ESP_POOL_CAP)
+endif
+ifneq ($(ESP_POOL_ROOM_CAP),0)
+GAME_CPPFLAGS += -DRE4DC_ESP_POOL_ROOM_CAP=$(ESP_POOL_ROOM_CAP) '-DRE4DC_ESP_POOL_ROOM_CAP_LIST=$(ESP_POOL_ROOM_CAP_LIST)'
 endif
 
 # Source failure-path fixes (2026-10-23), independently selectable and default off.
