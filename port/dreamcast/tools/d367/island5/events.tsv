@@ -1,3 +1,5 @@
 # name room chapter warp (rr-jobs.sh disc3_jobs d3ev-<name>): event play checks
+# r331s10: needs two-room route (re-enter r331 with 0x200 set), castle/island play-through; the single-room
+# warp sets flags after R331Init, so this run does not trigger it (code path: r331.cpp R331ExecEventS10 movie guard).
 r331s10 r331 17 warps/d3ev-r331s10.txt
 r332s00 r332 17 warps/d3ev-r332s00.txt
