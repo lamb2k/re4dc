@@ -267,14 +267,14 @@ bool parse(const char* s, unsigned& crc, unsigned& fnv) {   // "<8 hex>-<8 hex>.
 bool less(const Ent& a, const Ent& b) { return a.crc!=b.crc ? a.crc<b.crc : a.fnv<b.fnv; }
 void build() {
     const std::uint64_t t0=timer_us_gettime64();
-    std::free(ents);ents=nullptr;count=0;built=true;++builds;
+    free(ents);ents=nullptr;count=0;built=true;++builds;
     const file_t d=fs_open("/cd/dc/mot",O_RDONLY|O_DIR);
     if(d==FILEHND_INVALID) { re4dc_log("motion key index: no /cd/dc/mot\n");return; }
     gen=fs_iso9660_generation();
     unsigned n=0,c,f;
     while(const dirent_t* de=fs_readdir(d)) if(!(de->attr&O_DIR) && parse(de->name,c,f))++n;
     fs_rewinddir(d);
-    ents=n?static_cast<Ent*>(std::malloc(n*sizeof(Ent))):nullptr;
+    ents=n?static_cast<Ent*>(malloc(n*sizeof(Ent))):nullptr;
     if(ents) {
         while(count<n) {
             const dirent_t* de=fs_readdir(d);if(!de)break;
@@ -309,7 +309,7 @@ file_t open(const char* path) {
     static unsigned checked;
     if(checked<64) {
         ++checked;
-        unsigned char* a=static_cast<unsigned char*>(std::malloc(e->size+e->size));
+        unsigned char* a=static_cast<unsigned char*>(malloc(e->size+e->size));
         const file_t g=fs_open(path,O_RDONLY);
         int same=-1;
         if(a && g!=FILEHND_INVALID) {
@@ -318,7 +318,7 @@ file_t open(const char* path) {
             fs_seek(f,0,SEEK_SET);
         }
         if(g!=FILEHND_INVALID)fs_close(g);
-        std::free(a);
+        free(a);
         re4dc_log("motion key index verify: key=%08x-%08x extent=%u size=%u gen=%u %s\n",crc,fnv,e->extent,e->size,gen,
                   same==1?"same":same==0?"DIFFERENT":"unread");
     }
