@@ -1,0 +1,11 @@
+name bw-r317-cheekR0
+# bosscast-wound 11-04: the unwounded pair of bw-r317-cheekR (no scenario flag), same camera.
+room 0x317
+pos -8209 -5100 167
+ang -0.2820
+inv default
+god
+camfront 300 450 1660 -35
+chapter 16
+census 200
+alivelog 60
