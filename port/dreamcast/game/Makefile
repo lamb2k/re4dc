@@ -943,7 +943,9 @@ $(OBJDIR)/mod/st3_3/src/st3/r320.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/mod/st3_3/src/st3/r321.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/mod/st3_3/src/st3/r325.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/mod/st3_3/src/st3/r330.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
-ROUTE_MOVIE_GAME_ST3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o $(OBJDIR)/mod/st3_2/src/st3/r317.o $(OBJDIR)/mod/st3_2/src/st3/r31b.o $(OBJDIR)/mod/st3_2/src/st3/r31c.o $(OBJDIR)/mod/st3_3/src/st3/r320.o $(OBJDIR)/mod/st3_3/src/st3/r321.o $(OBJDIR)/mod/st3_3/src/st3/r325.o $(OBJDIR)/mod/st3_3/src/st3/r330.o
+# world-ch5 11-04: the island events the PS2 plays as movies (r304s00 r30as00/s10 r30bs00 r30cs00 r310s00).
+$(OBJDIR)/mod/st3_0/src/st3/r304.o $(OBJDIR)/mod/st3_0/src/st3/r30a.o $(OBJDIR)/mod/st3_0/src/st3/r30b.o $(OBJDIR)/mod/st3_0/src/st3/r30c.o $(OBJDIR)/mod/st3_1/src/st3/r310.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_ST3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o $(OBJDIR)/mod/st3_2/src/st3/r317.o $(OBJDIR)/mod/st3_2/src/st3/r31b.o $(OBJDIR)/mod/st3_2/src/st3/r31c.o $(OBJDIR)/mod/st3_3/src/st3/r320.o $(OBJDIR)/mod/st3_3/src/st3/r321.o $(OBJDIR)/mod/st3_3/src/st3/r325.o $(OBJDIR)/mod/st3_3/src/st3/r330.o $(OBJDIR)/mod/st3_0/src/st3/r304.o $(OBJDIR)/mod/st3_0/src/st3/r30a.o $(OBJDIR)/mod/st3_0/src/st3/r30b.o $(OBJDIR)/mod/st3_0/src/st3/r30c.o $(OBJDIR)/mod/st3_1/src/st3/r310.o
 # PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
 # the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
 # wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6. Bit 2: r327 (the PS2 camp: first table, late task, appear
