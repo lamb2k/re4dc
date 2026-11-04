@@ -1,6 +1,6 @@
 """lane lod27: one room's PS2 world from its recorded recipe (the shipped lineage), optionally with the lod27 LOD
 settings (3 m clusters, min gain 0.8, floor 60; no merge). Windows Python (numpy/PIL), like bakeall/conv_room.sh.
-  python conv_lod.py <room> <recipe ps2-world.json (any path)> <out dir> base|lod27|scan1|dec:<decplan.json>
+  python conv_lod.py <room> <recipe ps2-world.json (any path)> <out dir> base|lod27|scan1|dec:<decplan.json>|scan1+dec:<decplan.json>
 Prints the mesh sha256 so a base run can be checked against the shipped package."""
 import ast, hashlib, json, os, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -22,12 +22,13 @@ for k, v in a.items():
 if a.get('bake_static') == 'True':
     opts.append('--bake-static')
 cmd = [sys.executable, TOOL, room, a['src'], os.path.join(out, room)] + opts + ['--meshlet-vertices', str(a.get('meshlet_vertices', '64'))]
-if arm == 'lod27':
-    cmd += LOD27
-elif arm == 'scan1':
-    cmd += SCAN1
-elif arm.startswith('dec:'):   # roomscan decimate in place (roomscan.py decplan output), no LOD records added
-    cmd += ['--decimate', arm[4:]]
+for part in arm.split('+'):   # e.g. scan1+dec:<plan>: the scan1 levels plus decimation in place
+    if part == 'lod27':
+        cmd += LOD27
+    elif part == 'scan1':
+        cmd += SCAN1
+    elif part.startswith('dec:'):   # roomscan decimate in place (roomscan.py decplan output), no LOD records added
+        cmd += ['--decimate', part[4:]]
 os.makedirs(out, exist_ok=True)
 r = subprocess.run(cmd, capture_output=True, text=True)
 open(os.path.join(out, room + '.log'), 'w').write(' '.join(cmd) + '\n' + r.stdout[-2000:] + r.stderr[-3000:])

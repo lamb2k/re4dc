@@ -347,13 +347,35 @@ def decplan(a):
             meshes[str(mi)] = 0.25
         elif d >= DEC50:
             meshes[str(mi)] = 0.5
+    # --props <mm> (user 11-04 "much more aggressively"): small props (every placement of the mesh narrower than <mm>)
+    # at --props-ratio wherever they stand; never an addressable placement (ids < 250: doors, pickups, scroll
+    # objects, anything the player interacts with), a live one, or a hero mesh
+    props = {}
+    if a.props:
+        # addressable = an id < 250 that a live object binds in the census (doors, pickups, scroll objects in use);
+        # --props-strict also skips every id < 250 (in the village rooms nearly every placement has one)
+        addr = set(mi for mi, gi, *_ in W['pl'] if 16 + gi < len(W['ids']) and W['ids'][16 + gi] < 250
+                   and (a.props_strict or W['ids'][16 + gi] in live))
+        ext = {}
+        for r in rows:
+            mi = W['pl'][r['pl']][0]
+            e = 2 * float(max(r['half'][0], r['half'][2]))
+            ext.setdefault(mi, []).append((r['pl'], r['ctr'] - r['half'], r['ctr'] + r['half']))
+        for mi, boxes in ext.items():
+            if mi in skip or mi in wide or mi in addr:
+                continue
+            per = {}
+            for pi, lo, hi in boxes:
+                a0, b0 = per.get(pi, (lo, hi)); per[pi] = (np.minimum(a0, lo), np.maximum(b0, hi))
+            if all(max(hi[0] - lo[0], hi[2] - lo[2]) <= a.props for lo, hi in per.values()):
+                props[str(mi)] = a.props_ratio
     # the converter decides per cluster (tools/ps2_room_r4im.py --decimate): it gets the reachable floor, the distances
     # and the meshes never to touch; "meshes" is this tool's whole-mesh preview of the same rule
     out = dict(room=a.room, world=a.world, rule=dict(dec50_m=DEC50 / 1000, dec25_m=DEC25 / 1000, hero_m=HERO_MM / 1000),
-               dec50_mm=DEC50, dec25_mm=DEC25, skip_meshes=sorted(skip | wide), floor=[[round(float(x)), round(float(z))] for x, z in eyes],
+               dec50_mm=DEC50, dec25_mm=DEC25, skip_meshes=sorted(skip | wide), props=props, floor=[[round(float(x)), round(float(z))] for x, z in eyes],
                meshes=meshes, skipped_live=len(skip), skipped_hero=len(wide - skip), cameras=len(cams))
     json.dump(out, open(a.out or '%s-dec.json' % a.room, 'w'))
-    print(json.dumps(dict(room=a.room, floor_cells=len(eyes), whole_mesh_dec50=sum(1 for v in meshes.values() if v == 0.5),
+    print(json.dumps(dict(room=a.room, props=len(props), floor_cells=len(eyes), whole_mesh_dec50=sum(1 for v in meshes.values() if v == 0.5),
                           whole_mesh_dec25=sum(1 for v in meshes.values() if v == 0.25), meshes=len(near),
                           skipped_live=len(skip), skipped_hero=len(wide - skip))))
 
@@ -364,5 +386,6 @@ if __name__ == '__main__':
     s.add_argument('--bound'); s.add_argument('--other-ms', type=float, default=30.0); s.add_argument('--out'); s.add_argument('--ref')
     p = sub.add_parser('apply'); p.add_argument('plan'); p.add_argument('world'); p.add_argument('out')
     q = sub.add_parser('decplan'); q.add_argument('room'); q.add_argument('world'); q.add_argument('--warp'); q.add_argument('--bound'); q.add_argument('--grid'); q.add_argument('--out')
+    q.add_argument('--props', type=float, default=0.0); q.add_argument('--props-ratio', type=float, default=0.5); q.add_argument('--props-strict', action='store_true')
     a = ap.parse_args()
     {'scan': scan, 'apply': apply, 'decplan': decplan}[a.cmd](a)
