@@ -104,6 +104,7 @@ def main():
     ap.add_argument('--skip-keys', help='file of keys owned elsewhere (e.g. the HUD set)')
     ap.add_argument('--pvrtex', default=vq.PVRTEX)
     ap.add_argument('--dry', action='store_true')
+    ap.add_argument('--same-index-intensity', action='store_true', help='GC intensity pictures (I4/I8/IA4/IA8) take the PS2 picture at the same index when it is the same size and NCC >= --min-ncc; the MAE bound is skipped (GC intensity alpha vs PS2 RGBA differs by representation, lane island-interiors 11-04)')
     a = ap.parse_args()
     G, P, O = Path(a.gc_root), Path(a.ps2_dir), Path(a.out)
     (O / 'dc').mkdir(parents=True, exist_ok=True)
@@ -150,6 +151,9 @@ def main():
                 if not cand or gs is None:
                     row['note'] = 'no PS2 picture' if gs is not None else 'flat GC picture'; rows.append(row); continue
                 score, j = cand[0]
+                ia_same = False
+                if a.same_index_intensity and gim.format in (0, 1, 2, 3) and k_i < len(pimgs) and (pimgs[k_i]['width'], pimgs[k_i]['height']) == (gim.width, gim.height) and ncc(gs, psig[k_i]) >= a.min_ncc:
+                    j, score, ia_same = k_i, ncc(gs, psig[k_i]), True
                 second = cand[1][0] if len(cand) > 1 else -1.0
                 pim = pimgs[j]
                 r = hp.premul_resize(rgba(pim['width'], pim['height'], pim['rgba']), (gim.width, gim.height))
@@ -157,7 +161,8 @@ def main():
                            second=round(second, 3), mae=round(mae(r, gimg), 2))
                 # a runner-up that is the same picture (PS2 files repeat pictures) is no ambiguity
                 twin = len(cand) > 1 and ncc(psig[j], psig[cand[1][1]]) >= 0.995
-                if score < a.min_ncc or row['mae'] > a.max_mae or (score - second < a.margin and j != k_i and not twin):
+                if ia_same: row['note_pair'] = 'same index, intensity'
+                elif score < a.min_ncc or row['mae'] > a.max_mae or (score - second < a.margin and j != k_i and not twin):
                     row['note'] = 'no unique PS2 picture (ncc %.2f, second %.2f)' % (score, second); rows.append(row); continue
                 if a.dry:
                     row['note'] = 'dry'; rows.append(row); continue
