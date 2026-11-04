@@ -3525,6 +3525,12 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_HUD_LENS_ALPHA=$
 endif
 # MEMPROF=1 (diagnostic builds only): wrap memset/memcpy and log the heaviest call sites by bytes every
 # 120 frames (platform/memprof.cpp; logged from native_ps2_world.cpp's flush).
+# HEAP4_CENSUS_EVERY=<frames> (diagnostic builds only, lane coldfix 2026-11-03): the heap-4 census (cells by MAD tag)
+# every <frames> room frames, for heap-4 relief work (r202). Default 0 = image unchanged.
+HEAP4_CENSUS_EVERY ?= 0
+ifneq ($(HEAP4_CENSUS_EVERY),0)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_HEAP4_CENSUS_EVERY=$(HEAP4_CENSUS_EVERY)
+endif
 MEMPROF ?= 0
 ifneq ($(MEMPROF),0)
 GAME_LDFLAGS += -Wl,--wrap=memset -Wl,--wrap=memcpy
@@ -3551,6 +3557,10 @@ endif
 # padding cannot change a sample). Without such packages in dc/tex.pak the knob changes nothing.
 TEX_WRAP_SAFE ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_WRAP_SAFE=$(TEX_WRAP_SAFE)
+# PKG_PS2_SIZE=1 (render only, default 0; lane assets-dc 2026-11-02): texture packages with header flags bit 29 hold
+# the whole PS2 picture at the PS2's own size (data set dcf01); wrap and padded-UV checks accept them, UV scale 1.
+PKG_PS2_SIZE ?= 0
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PKG_PS2_SIZE=$(PKG_PS2_SIZE)
 # MODEL_DROP_LOG=1 (diagnostic, lane crowd12 2026-10-14; ledger G5/G6): MODELDROP lines, one per refused model
 # part (model, image, reason: state / guard / slab / texture / padded wrap / actor packet), with 600-frame sums.
 MODEL_DROP_LOG ?= 0

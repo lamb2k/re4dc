@@ -1432,6 +1432,34 @@ if os.path.isdir(LEON28D):
     DATA['leon28'] = {'dc/tex.pak': LEON28D + '/dc/tex.pak'}
     PAK_DERIVED['leon28'] = LEON28D + '/pak-derived.json'
     AFTER += [('leon28', 'font22b'), ('leon28', 'pl08n25'), ('leon28', 'leonatl24')]
+# dcf02 / dcf03 (lane assets-dc 11-02, user: "ensure all assets are Dreamcast optimized including mip maps"; data only,
+# no knob; default off = not in DATA): dc/tex.pak = leon28's pack with the PS2-sourced pictures re-encoded in Dreamcast form
+# (assetsdc/dcform_pak.py; same keys, material names, sizes and pixel formats): raw 16-bit >= 64x64 -> full-codebook VQ
+# (+ mips when square), smaller square raw 16-bit / VQ / PAL4 -> + mips (base texels kept). dcf02 = room objects and PS2
+# world pictures (material "PS2 r*", "ps2-source"; 944 keys), dcf03 = characters, items, weapons, breakables (110 keys;
+# Leon's two leon28 atlases left). Needs CAST_MIPMAP TEX_TWIDDLED_MIPMAP TEX_PAL4_MIPMAP (release ON). The LAST tex.pak
+# sets. Store: re4data/private/dcf02-20261102, dcf03-20261102 (report.json: per key how / bytes / PSNR).
+DCF02D = os.environ.get('DCF02D', '/root/re4data/private/dcf02-20261102')
+if os.path.isdir(DCF02D):
+    DATA['dcf02'] = {'dc/tex.pak': DCF02D + '/dc/tex.pak'}
+    PAK_DERIVED['dcf02'] = DCF02D + '/pak-derived.json'
+    AFTER += [('dcf02', 'leon28'), ('dcf02', 'glyph27')]   # built on glyph27's pack (glyph_protect keys skipped)
+DCF03D = os.environ.get('DCF03D', '/root/re4data/private/dcf03-20261102')
+if os.path.isdir(DCF03D):
+    DATA['dcf03'] = {'dc/tex.pak': DCF03D + '/dc/tex.pak'}
+    PAK_DERIVED['dcf03'] = DCF03D + '/pak-derived.json'
+    AFTER += [('dcf03', 'dcf02'), ('dcf03', 'leon28')]
+# dcf01 (lane assets-dc 11-02, no-GameCube-assets rule applied retroactively; data only, no knob): dc/tex.pak = dcf03's pack
+# with 416 GameCube-keyed "source" pictures as PS2 pixels in Dreamcast form (assetsdc/ps2_source_pak.py): the GC TPL image
+# of each key (GC disc st1/st2 .das decoded, em/*.drs, ss, etc, op, evd) matched to its PS2 twin file's picture (NCC
+# >= 0.97, unique best, MAE <= 30), resampled to the GC size, >= 64x64 -> VQ (+ mips when square), smaller -> 16-bit
+# twiddled (+ mips when square). Keys already PS2-proven in the catalog are left. provenance.tsv names each PS2 twin
+# file. Stages after dcf03. Store: re4data/private/dcf01-20261102.
+DCF01D = os.environ.get('DCF01D', '/root/re4data/private/dcf01-20261102')
+if os.path.isdir(DCF01D):
+    DATA['dcf01'] = {'dc/tex.pak': DCF01D + '/dc/tex.pak'}
+    PAK_DERIVED['dcf01'] = DCF01D + '/pak-derived.json'
+    AFTER += [('dcf01', 'dcf03'), ('dcf01', 'leon28')]
 # dcf3isl (lane assets-dc 11-02, for lane world-ch5's D3_DATA; Disc 3 space): the island tree's loose dc/tex pictures
 # in Dreamcast form (assetsdc/dcform_dir.py over re4data/private/island-d3-20261102): 3,420 of 4,474 changed, 163.1 MB ->
 # 38.6 MB (raw 16-bit >= 64x64 -> VQ, + mips when square; small square / VQ -> + mips, base kept). Same paths, keys,
@@ -1646,6 +1674,19 @@ DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 RES24GD = os.environ.get('RES24GD', '/root/re4data/private/res24g-20261024')
 if os.path.isdir(RES24GD):
     DATA['res24g'] = {'dc/resident.bin': RES24GD + '/resident.bin'}
+# res26pr (lane playreads 11-03, data only): res24g's dc/resident.bin + the keys lane coldread27's 60 s Flycast runs
+# loaded in play (DISC_READ_LOG=2, phase=play tex.pak reads) in r113 / r11e / r201 / r202 / r207 / r208, listed by
+# vram/resident_keys.py list into vram/resident/r*.tsv, then resident_keys.py extend <out> res24g/resident.bin
+# res24g/resident-remap.tsv vram/resident/r*.tsv: 5,596 records (137 added). res24g's remap table. After res24g.
+RES26PRD = os.environ.get('RES26PRD', '/root/re4data/private/res26pr-20261103')
+if os.path.isdir(RES26PRD):
+    DATA['res26pr'] = {'dc/resident.bin': RES26PRD + '/resident.bin'}
+# res26pr2 (lane playreads 11-03, DISC 2 ONLY via D2_DATA): the castle tree's dc/resident.bin + the r201 / r202 / r208
+# in-play keys of the same runs (only the keys new to vram/resident/r20x.tsv; resident_keys.py extend <out>
+# castle-d2-j/dc/resident.bin - new/r*.tsv): 5,959 records (77 added).
+RES26PR2D = os.environ.get('RES26PR2D', '/root/re4data/private/res26pr2-20261103')
+if os.path.isdir(RES26PR2D):
+    DATA['res26pr2'] = {'dc/resident.bin': RES26PR2D + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
@@ -2053,6 +2094,7 @@ if os.path.isdir(CGCA27BD):
 # as PS2 pixels (assetsdc/ps2_source_pak.py --only-keys): 77c1171c b894c4b5 70524d21 = PS2 pl08.dat TPL 0 pictures 5 / 3 / 6;
 # 5224f21f 511673a2 = pl08.dat pictures 0 / 8 stored transposed on the PS2 (MAE 1.7 / 1.5); 72be589c = PS2 r10c.dat
 # picture 1, transposed (MAE 4.1). ADMIT 6/6. provenance.tsv names each PS2 file. Store: re4-assets-private/cpic27b-20261103.
+# Also glyph27's grab-prompt stick cap 6d33c3f9-9f8cf668 (Disc 1 bytes): the Test 26 glyph fix reaches Disc 2 (11-03).
 CPIC27BD = os.environ.get('CPIC27BD', '/root/re4data/private/cpic27b-20261103')
 if os.path.isdir(CPIC27BD):
     DATA['cpic27b'] = {'dc/tex.pak': CPIC27BD + '/dc/tex.pak'}

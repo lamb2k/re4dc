@@ -52,7 +52,10 @@ def motion_keys(store):
             continue
         if f.suffix == '.fcv' and re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{8}', f.stem):
             keys.add(f.stem); continue
-        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat'):
+        # .arc too (lane assets-dc 11-03): pmrest25 proves r11e's clips with a staged st1/r11e.arc only (its .dar
+        # already held the same clips); with arcdrop that .arc leaves the disc and the catalog finds the clip in
+        # st1/r11e.dar, so the store's .arc keys must still credit the same key there.
+        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat', '.arc'):
             continue
         b = f.read_bytes()
         bodies = [b] + ([b[build_catalog.DRS_TABLE:]] if f.suffix == '.drs' and len(b) > build_catalog.DRS_TABLE else [])
@@ -319,6 +322,11 @@ def main(catalog, recipe_conf, out_dir):
             if k.lower() == 'dc/tex.pak' and os.path.isfile(src):
                 packs.append(st)
     tex_owner, first_pack = {}, None
+    # (key, sha256) -> the set whose pack first carried those bytes under that key (lane assets-dc 11-03): a disc pack
+    # composed from several chains (Disc 3: Disc 1's pack wins every shared key over the island pack, pak_keep) holds
+    # bytes an EARLIER set introduced; the same bytes get the same verdict on every disc, so a row is credited to the
+    # set that introduced its exact bytes, and only falls back to the key's last changer when no set did.
+    tex_intro = {}
     prev = None
     for st in packs:
         cur = {i: sha(d) for i, d, _o, _s in build_catalog.texpak_members(Path(st.src).read_bytes())}
@@ -328,6 +336,7 @@ def main(catalog, recipe_conf, out_dir):
             for k, h in cur.items():
                 if prev.get(k) != h:
                     tex_owner[k] = st
+                    tex_intro.setdefault((k, h), st)
         prev = cur
     ps2_motion = {}
     for st in stores.values():
@@ -362,7 +371,7 @@ def main(catalog, recipe_conf, out_dir):
         elif src.startswith('runtime-harvest:'):
             ev = 'runtime harvest'
         elif r['kind'] == 'texture' and path == 'dc/tex.pak':
-            st = tex_owner.get(r['id'].lower())
+            st = tex_intro.get((r['id'].lower(), r['sha256'])) or tex_owner.get(r['id'].lower())
             if st:
                 prov, ev = st.prov(r['sha256'], texture=True)
                 ev = 'tex.pak key changed by ' + ev

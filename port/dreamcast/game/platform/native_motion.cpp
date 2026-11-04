@@ -360,6 +360,16 @@ const unsigned char* record(const Binding& b,unsigned i) { return b.records+20*i
 bool pinned_key(const Binding& b,unsigned i) { return i<256 && (b.pin[i>>3]&(1u<<(i&7)))!=0; }
 // hot (archive flag) or pinned (motpin.tsv): never a slab user, never a first-choice victim
 bool key_hot(const Binding& b,unsigned i) { return word(record(b,i)+16)!=0 || pinned_key(b,i); }
+// MOTION_PIN on a bounded (v3) binding: only pin_apply / re4dc_motion_pin_restore read a pinned key into heap 4
+// (pin_loading); any other miss of that key, e.g. after a movie or weapon request evicted it, takes the reserved slabs
+// exactly as before, so the bounded profile's slab-only miss path is unchanged.
+bool pin_loading;
+bool slab_key(const Binding& b,unsigned i) {
+#if RE4DC_MOTION_BOUNDED_R11F
+    if(b.bounded)return !(pin_loading && pinned_key(b,i));
+#endif
+    return !key_hot(b,i);
+}
 #endif
 #if RE4DC_MOTION_RESERVE_PACK
 const unsigned char* reserved_base(const Binding& b,const unsigned char* p) {
@@ -675,13 +685,13 @@ unsigned* load(Binding& b,unsigned i) {
 #if RE4DC_MOTION_RESERVE
 #if RE4DC_SUBSCREEN
 #if RE4DC_MOTION_PIN
-        if(!hold && b.slab_bytes && !key_hot(b,i) && bytes<=b.slab_bytes) {
+        if(!hold && b.slab_bytes && slab_key(b,i) && bytes<=b.slab_bytes) {
 #else
         if(!hold && b.slab_bytes && !word(e+16) && bytes<=b.slab_bytes) {
 #endif
 #else
 #if RE4DC_MOTION_PIN
-        if(b.slab_bytes && !key_hot(b,i) && bytes<=b.slab_bytes) {
+        if(b.slab_bytes && slab_key(b,i) && bytes<=b.slab_bytes) {
 #else
         if(b.slab_bytes && !word(e+16) && bytes<=b.slab_bytes) {
 #endif
@@ -751,7 +761,11 @@ unsigned* load(Binding& b,unsigned i) {
 #endif
         }
 #if RE4DC_MOTION_BOUNDED_R11F
+#if RE4DC_MOTION_PIN
+        if(b.bounded && !data && !pin_loading)fail("bounded motion requires reserved slab");
+#else
         if(b.bounded && !data)fail("bounded motion requires reserved slab");
+#endif
 #endif
         if(!data)
 #endif
@@ -1037,9 +1051,6 @@ unsigned pin_dec(const char*& p) { unsigned v=0;while(*p>='0'&&*p<='9')v=v*10+un
 const char* pin_field(const char* p) { while(*p && *p!='\t' && *p!='\n')++p;return *p=='\t'?p+1:p; }
 void pin_apply(Binding& b,unsigned crc) {
     std::memset(b.pin,0,sizeof(b.pin));
-#if RE4DC_MOTION_BOUNDED_R11F
-    if(b.bounded)return;   // bounded (v3) archives only ever use their reserved slabs
-#endif
 #if RE4DC_SUBSCREEN
     if(hold)return;
 #endif
@@ -1081,7 +1092,7 @@ void pin_apply(Binding& b,unsigned crc) {
         if(re4dc_static_heap_free()<int(n+unsigned(RE4DC_MOTION_PIN)+96)) {
             b.pin[i>>3]&=(unsigned char)~(1u<<(i&7));++refused;refused_bytes+=n;continue;
         }
-        load(b,i);++keys;bytes+=n;
+        pin_loading=true;load(b,i);pin_loading=false;++keys;bytes+=n;
     }
     re4dc_log("motion pin: archive=%u pinned=%u bytes=%u refused=%u refused_bytes=%u heap4=%d margin=%u\n",b.bytes,keys,bytes,
               refused,refused_bytes,re4dc_static_heap_free(),unsigned(RE4DC_MOTION_PIN));
@@ -1100,14 +1111,11 @@ extern "C" unsigned re4dc_motion_pin_restore() {
     unsigned keys=0,bytes=0,refused=0;
     for(auto& b:bindings) {
         if(!b.archive)continue;
-#if RE4DC_MOTION_BOUNDED_R11F
-        if(b.bounded)continue;
-#endif
         for(unsigned i=0;i<b.count && i<256;++i) {
             if(!pinned_key(b,i) || b.slots[i].data)continue;
             const unsigned n=aligned(word(record(b,i)+4));
             if(re4dc_static_heap_free()<int(n+unsigned(RE4DC_MOTION_PIN)+96)){++refused;continue;}
-            load(b,i);++keys;bytes+=n;
+            pin_loading=true;load(b,i);pin_loading=false;++keys;bytes+=n;
         }
     }
     if(keys||refused)re4dc_log("motion pin: restored=%u bytes=%u refused=%u heap4=%d\n",keys,bytes,refused,re4dc_static_heap_free());

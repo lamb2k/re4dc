@@ -658,6 +658,14 @@ $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_ENT_MAX=$(AICA
 # r11f's Mendez music, 139,420 B at 8 kHz) goes to the top of the room arena, above the room's banks; a room bank that
 # later needs that space drops it (logged), the next room load frees it. Chapter 2 recipe only.
 AICA_SPILL ?= 0
+# AICA_STR_READ (lane playreads, 11-03; default 0 = image unchanged): the music stream refill reads whole sectors,
+# AICA_STR_READ_KB (default 24) per read, through a 32-byte aligned buffer and a handle opened per read (audio_aica.cpp
+# str_cache): one GD stream command per ring half instead of one block-cache sector read per 2 KB. +16 KB .bss at 24.
+AICA_STR_READ ?= 0
+AICA_STR_READ_KB ?= 24
+ifeq ($(AICA_STR_READ),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_READ=1 -DRE4DC_AICA_STR_READ_KB=$(AICA_STR_READ_KB)
+endif
 ifeq ($(AICA_SPILL),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
 endif
