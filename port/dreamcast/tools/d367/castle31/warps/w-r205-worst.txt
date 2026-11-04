@@ -1,0 +1,13 @@
+name rsc-r205-worst
+# lane roomscan-castle 11-04: r205 worst roomscan view (PREDICTED 16.6 ms world, eye [36000, -418, 10000] yaw 0.000; stills.sh placement)
+room 0x205
+pos 36000 -2018 12000
+ang 0.0000
+jp 0
+chapter 7
+inv default
+god
+stock
+alivelog 60
+census 300
+dump

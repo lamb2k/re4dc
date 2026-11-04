@@ -1,0 +1,13 @@
+name rsc-r20b-worst
+# lane roomscan-castle 11-04: r20b worst roomscan view (PREDICTED 20.2 ms world, eye [28000, 5600, 14000] yaw 3.142; stills.sh placement)
+room 0x20b
+pos 27999 4000 12000
+ang 3.1420
+jp 0
+chapter 7
+inv default
+god
+stock
+alivelog 60
+census 300
+dump
