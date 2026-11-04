@@ -2069,6 +2069,17 @@ if os.path.isdir(ISL15D):
 ISND300D = os.environ.get('ISND300D', '/root/re4data/private/isnd300-20261103')
 if os.path.isdir(ISND300D):
     DATA['isnd300'] = {'st3/r300.dar': ISND300D + '/st3/r300.dar'}
+# bossk / bosss (lane bosscast 11-03, release rule 7 + no-GameCube-assets; DISC 3 ONLY via D3_DATA): the last island characters
+# drawn from GameCube data. bossk = r31c Krauser: the room registry package (model-registry/ps2-ch5-r31ck.json: em39 types 1 / 2
+# with every hand / death info, cap, knife / gun / bow / arrow, plus the gunship em3a and its missile that the island tree's
+# cast16 r31c package held) + its 9 PS2 pictures loose + em/em39.drs with PS2 motion (motion/ps2_motion_prepared.py, slot map
+# GC i -> PS2 i+1 from 229; --clip-limit 131072: the 13 clips over 32 KiB stream cold; VERIFY PASS) and its 17 dc/mot keys; needs the program knob MOTION_LARGE_EM39=1 (Disc 3 D3REC). bosss = r332 Saddler: the room registry package
+# (model-registry/ps2-ch5-r332s.json: em31 types 0 / 1, weak point, tail) + its 5 PS2 pictures. em31 / em3a motion is already
+# PS2-identical (rewrite: 0 changed clips). Stores: re4-assets-private/bossk-20261103, bosss-20261103 (RECIPE.txt, manifest.tsv).
+for _n, _d in (('bossk', os.environ.get('BOSSKD', '/root/re4data/private/bossk-20261103')),
+               ('bosss', os.environ.get('BOSSSD', '/root/re4data/private/bosss-20261103'))):
+    if os.path.isfile(_d + '/manifest.tsv'):
+        DATA[_n] = {_l.strip(): _d + '/' + _l.strip() for _l in open(_d + '/manifest.tsv') if _l.strip()}
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from

@@ -3906,6 +3906,18 @@ $(error MOTION_LARGE_CLIPS needs ROUTE_CH3=1 MOTION_RESERVE=1)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_CLIPS=1
 endif
+# MOTION_LARGE_EM39=1 (lane bosscast 11-03): also admit the pinned em39 (Krauser) body of data set bossk, its 13 clips over
+# 32 KiB streamed cold (heap 4 r31c: body 1,423,712 -> 877,632 B, slabs 2x32,320 -> 2x65,440). Default 0.
+MOTION_LARGE_EM39 ?= 0
+ifeq ($(filter $(MOTION_LARGE_EM39),0 1),)
+$(error MOTION_LARGE_EM39 must be 0 or 1)
+endif
+ifeq ($(MOTION_LARGE_EM39),1)
+ifneq ($(MOTION_LARGE_CLIPS),1)
+$(error MOTION_LARGE_EM39 needs MOTION_LARGE_CLIPS=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_EM39=1
+endif
 
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
 # Two owned slabs per binding, existing global pressure cap, no spill for these profiles.
