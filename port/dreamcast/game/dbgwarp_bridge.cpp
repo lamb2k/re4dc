@@ -2511,6 +2511,7 @@ unsigned re4dc_warp_late_room(void)
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP
 
+#if RE4DC_DBG_WARP
 // `camfront` (test only, camera.cpp CameraMove under DBG_WARP): the camera in front of Leon at head height.
 // `camat`: p' = mat * (lt_inv_mat * p), n' = rot(mat) * rot(lt_inv_mat) * n (cParts: Mtx f32[3][4]).
 static void camat_xf(const Mtx m, const f32* v, f32 w, f32* o)
@@ -2559,3 +2560,4 @@ extern "C" int re4dc_warp_camfront(Vec* pos, Vec* at)
     pos->x = at->x + __builtin_sinf(a) * d; pos->y = at->y; pos->z = at->z + __builtin_cosf(a) * d;
     return 1;
 }
+#endif  // RE4DC_DBG_WARP (camfront / camat)
