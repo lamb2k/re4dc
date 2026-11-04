@@ -55,6 +55,9 @@
 //   <distance> in front of Leon, turned <yaw> around him, at <height> (default 1600) above his feet looking back level,
 //   or aimed at parts <bone>'s world position; the first use logs Leon's position and parts 4's (the head, the
 //   LEON_WOUND cheek wound's bone): face / wound stills) |
+//   camat <room frame> <distance> <bone> <x> <y> <z> <nx> <ny> <nz> (test only, wins over camfront: aim at the
+//   bind-pose point x y z (mm) skinned by parts <bone> (mat * lt_inv_mat), from <distance> along the skinned bind
+//   normal n (x 1000); the first use logs the skinned point and normal: wound placement / close-up stills) |
 //   setem <room frame> <esl index> [chkDead, default 1] (once: the setEm(index, -1, 0, 1, 1) work, as r104_execEvent20 sets the merchant 0x5E; census and
 //   still pairs of event-spawned characters without the event or its sub screen) |
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
@@ -294,6 +297,7 @@ struct Warp {
     u32 bring;  // `bring <distance> [side]` (still pairs): the handpose / kill target is moved this far in front of Leon
     s32 bring_side;  // (and `side` to his right), facing him
     bool headless, headless_done; u32 headless_frame;  // `headless <frame>`
+    bool camat, camat_logged; u32 camat_frame, camat_dist; s32 camat_bone; f32 camat_p[3], camat_n[3];  // `camat`
     bool camfront, camfront_logged; u32 camfront_frame, camfront_dist; s32 camfront_h, camfront_yaw, camfront_bone;  // `camfront <frame> <dist> [height] [yaw] [bone]`
     u32 hand_frame;
     int hand_type, hand_id;
@@ -645,6 +649,13 @@ void load()
             wp.setem_chkdead = n >= 4 ? (int) num(tok[3]) : 1;
         } else if (!strcmp(k, "headless") && n >= 2) {
             wp.headless = true; wp.headless_frame = num(tok[1]);
+        } else if (!strcmp(k, "camat") && n >= 10) {
+            wp.camat = true; wp.camat_frame = num(tok[1]); wp.camat_dist = num(tok[2]);
+            wp.camat_bone = (s32) strtol(tok[3], nullptr, 0);
+            for (int i = 0; i < 3; ++i) {
+                wp.camat_p[i] = (f32) strtol(tok[4 + i], nullptr, 0);
+                wp.camat_n[i] = (f32) strtol(tok[7 + i], nullptr, 0) / 1000.0f;
+            }
         } else if (!strcmp(k, "camfront") && n >= 3) {
             wp.camfront = true; wp.camfront_frame = num(tok[1]); wp.camfront_dist = num(tok[2]);
             wp.camfront_h = n >= 4 ? (s32) strtol(tok[3], nullptr, 0) : 1600;
@@ -2501,8 +2512,37 @@ unsigned re4dc_warp_late_room(void)
 #endif  // RE4DC_DBG_WARP
 
 // `camfront` (test only, camera.cpp CameraMove under DBG_WARP): the camera in front of Leon at head height.
+// `camat`: p' = mat * (lt_inv_mat * p), n' = rot(mat) * rot(lt_inv_mat) * n (cParts: Mtx f32[3][4]).
+static void camat_xf(const Mtx m, const f32* v, f32 w, f32* o)
+{
+    for (int r = 0; r < 3; ++r) o[r] = m[r][0] * v[0] + m[r][1] * v[1] + m[r][2] * v[2] + m[r][3] * w;
+}
+static int warp_camat(Vec* pos, Vec* at)
+{
+    if (!wp.active || !wp.camat || !pPL || wp.room_frames < wp.camat_frame) return 0;
+    cParts* bp = (cParts*) pPL->getPartsPtr(wp.camat_bone);
+    if (!bp) return 0;
+    f32 b[3], p[3], nb[3], nn[3];
+    camat_xf(bp->lt_inv_mat, wp.camat_p, 1.0f, b); camat_xf(bp->mat, b, 1.0f, p);
+    camat_xf(bp->lt_inv_mat, wp.camat_n, 0.0f, nb); camat_xf(bp->mat, nb, 0.0f, nn);
+    f32 l = __builtin_sqrtf(nn[0] * nn[0] + nn[1] * nn[1] + nn[2] * nn[2]);
+    if (l < 1e-6f) return 0;
+    const f32 d = (f32) wp.camat_dist / l;
+    at->x = p[0]; at->y = p[1]; at->z = p[2];
+    pos->x = p[0] + nn[0] * d; pos->y = p[1] + nn[1] * d; pos->z = p[2] + nn[2] * d;
+    if (!wp.camat_logged) {
+        wp.camat_logged = true;
+        re4dc_log("warp: camat at room frame %u bone=%d bind=%d,%d,%d skinned=%d,%d,%d normal=%d,%d,%d/1000 leon=%d,%d,%d ang=%d/1000\n",
+                  (unsigned) wp.room_frames, (int) wp.camat_bone, (int) wp.camat_p[0], (int) wp.camat_p[1], (int) wp.camat_p[2],
+                  (int) p[0], (int) p[1], (int) p[2], (int) (nn[0] * 1000.0f / l), (int) (nn[1] * 1000.0f / l), (int) (nn[2] * 1000.0f / l),
+                  (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z, (int) (pPL->ang.y * 1000.0f));
+    }
+    return 1;
+}
+
 extern "C" int re4dc_warp_camfront(Vec* pos, Vec* at)
 {
+    if (warp_camat(pos, at)) return 1;
     if (!wp.active || !wp.camfront || !pPL || wp.room_frames < wp.camfront_frame) return 0;
     const f32 a = pPL->ang.y + (f32) wp.camfront_yaw * (3.14159265f / 180.0f), d = (f32) wp.camfront_dist, h = (f32) wp.camfront_h;
     at->x = pPL->pos.x; at->y = pPL->pos.y + h; at->z = pPL->pos.z;
