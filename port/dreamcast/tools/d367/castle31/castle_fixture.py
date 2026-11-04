@@ -49,6 +49,7 @@ for k in sorted(C):
 # (t11-fix texdir); 'remove' = paths off Disc 2; any other key = whole-file replacement.
 D2 = [n for n in os.environ.get('D2_DATA', '').split(',') if n]
 d2paks = []
+pakdrop = set()
 if D2:
     import importlib.util, struct as _st
     sys.path[:0] = [os.path.join(HERE, '..', 'graft')]
@@ -81,6 +82,9 @@ if D2:
             elif k == 'remove':
                 for p_ in v:
                     rep.pop(p_, None); rem.append(p_)
+            elif k == 'pakdrop':   # prune set (lane world-ch4 11-03): keys to take out of the final composed pack
+                pakdrop.update(l.split()[0] for l in open(v) if l.strip() and not l.startswith('#'))
+                rec.append('%s pakdrop %d keys' % (n, len(pakdrop)))
             elif k == 'dc/tex.pak':   # pack set: only its pak-derived.json changed/added keys win (keys it did not touch
                 d2paks.append((n, v, t11.PAK_DERIVED[n]))   # keep the composed pack's bytes: a newer Disc 1 pack stays)
             else:
@@ -117,6 +121,23 @@ if d2paks:   # D2_DATA pack sets in order: each set's changed/added keys (pak-de
     crc = _s2.pack('<I', _z.crc32(blob[ioff:doff])); blob = blob[:24] + crc + crc + blob[32:]   # as pak_keep.py
     pak = os.path.join(work, 'tex-d2.pak'); open(pak, 'wb').write(blob)
     print('D2_DATA dc/tex.pak keys %d from %s' % (len(done), ','.join(n for n, _, _ in d2paks)))
+if pakdrop:   # D2_DATA prune set: drop listed keys from the composed pack (a key a later loose file holds still loads loose)
+    import struct as _s3, zlib as _z3
+    b = open(pak, 'rb').read(); _m, _v, cnt, ioff0, _d = _s3.unpack_from('<8s4I', b, 0)
+    ent = [_s3.unpack_from('<4I', b, ioff0 + 16 * i) for i in range(cnt)]
+    keep = [(c, f, b[o:o + n]) for c, f, o, n in ent if '%08x-%08x' % (c, f) not in pakdrop]
+    al = lambda x: (x + 2047) & ~2047
+    ioff = 0x800; doff = al(ioff + 16 * len(keep)); idx = []; data = bytearray(); pos = doff
+    for c, f, v in keep:
+        idx.append(_s3.pack('<4I', c, f, pos, len(v)))
+        data += v; pad = al(pos + len(v)) - (pos + len(v)); data += b'\x00' * pad; pos += len(v) + pad
+    blob = _s3.pack('<8s5I', b'RE4PAK1\x00', 1, len(keep), ioff, doff, 0)
+    blob = blob + b'\x00' * (ioff - len(blob)) + b''.join(idx)
+    blob += b'\x00' * (doff - len(blob)) + bytes(data)
+    crc = _s3.pack('<I', _z3.crc32(blob[ioff:doff])); blob = blob[:24] + crc + crc + blob[32:]   # as pak_keep.py
+    pak2 = os.path.join(work, 'tex-d2-pruned.pak'); open(pak2, 'wb').write(blob)
+    print('D2_DATA pakdrop: %d -> %d keys, %d -> %d bytes' % (cnt, len(keep), len(b), len(blob)))
+    pak = pak2
 rep['dc/tex.pak'] = pak
 import struct
 b = open(pak, 'rb').read(); _, _, cnt, ioff, _ = struct.unpack_from('<8s4I', b, 0)

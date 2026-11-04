@@ -2168,5 +2168,13 @@ D2ESLD = os.environ.get('D2ESLD', '/root/re4data/private/d2esl-20261103')
 if os.path.isfile(D2ESLD + '/RECIPE.txt'):
     DATA['d2esl'] = {'etc/emleon0%d.esl' % n: '%s/etc/emleon0%d.esl' % (D2ESLD, n) for n in range(5, 10)}
 
+# d2pakprune (lane world-ch4 11-03, coordinator: free Disc 2 sectors by a proven prune; DISC 2 ONLY via D2_DATA): 3,917
+# tex.pak keys no Disc 2 file can request (texpak_live.py over the combined Disc 2 tree, minus every key seen in a Disc 2 run
+# log, on a castle resident list or from an effect store), dropped from the composed pack by castle_fixture.py 'pakdrop'.
+# 55,839 sectors. Store: re4-assets-private/d2pakprune-20261103 (RECIPE.txt has the proof).
+D2PAKPRUNED = os.environ.get('D2PAKPRUNED', '/root/re4data/private/d2pakprune-20261103')
+if os.path.isfile(D2PAKPRUNED + '/RECIPE.txt'):
+    DATA['d2pakprune'] = {'pakdrop': D2PAKPRUNED + '/pakdrop.txt'}
+
 if __name__ == '__main__':
     main()
