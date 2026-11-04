@@ -1676,6 +1676,43 @@ void objTrans(cModel* m)
 // second time), 1 model table, 2 world, 3 / 4 / 5 fixed 0xB buckets, 6 table 0x10, 8 table 0x14;
 // frustum-culled by the light-info sphere (scaled). Then skins its vertices (commonScreenMat)
 // — a skinning failure removes the entry again.
+#if defined(RE4DC_CASTLE_ACTOR_PREGATE) && RE4DC_CASTLE_ACTOR_PREGATE
+// CASTLE_ACTOR_PREGATE=1 (castlebudget.mk; lane castlebudget 2026-11-04; render only, default 0): an ot_type 5 enemy
+// (kindid 0: the castle zealots em2d, the Verdugo em2c; AddOtDirect, so the game makes no view test for them) whose
+// light-position sphere (radius x 1.5 + 1 m) lies wholly outside the camera view frustum, or wholly beyond the fogged
+// view far, takes ot 0 / 1's "outside the view test" path: no OT entry, no screen matrices (skin), no light set, no
+// submit. Move, motion, parts world matrices, collision and AI run in the move pass and are untouched.
+#include "geometry.h"
+extern "C" float re4dc_fog_far_for_gate(float zfar);  // native_static.cpp
+static int castleActorPregateHidden(cModel* m, const Vec* pos, f32 radius)
+{
+    if (m->kindid != 0 || (pG->Status_flg[1] & 0x10000000) || (pG->Disp_flg & 0x4000)) {
+        return 0;  // not an enemy, or an event / cutscene holds the game: draw as before
+    }
+    if (radius > 50000.0f) {
+        return 0;
+    }
+    Camera* cam = &pG->Cam;
+    GeoSphere sph;
+    sph.pos = *pos;
+    sph.r = radius * 1.5f + 1000.0f;
+    if (!collision_sphere_hexahedron(&sph, (GeoHexahedron*) CameraViewFrustumPtr(cam))) {
+        return 1;
+    }
+    cLightEnv* env = LightMgr.getEnvPtr();
+    if (!(pG->Status_flg[1] & 0x04000000) && env->Fog.Type != 0) {
+        const f32 fogFar = re4dc_fog_far_for_gate(env->Fog.End * (1.0f - env->far_play_ratio) + 1.0f);
+        if (fogFar > 0.0f) {
+            const f32 dx = pos->x - cam->param.pos.x, dy = pos->y - cam->param.pos.y, dz = pos->z - cam->param.pos.z;
+            const f32 lim = fogFar + sph.r;
+            if (dx * dx + dy * dy + dz * dz > lim * lim) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+#endif
 void ModelTrans(cModel* m)
 {
     Vec pos;
@@ -1783,6 +1820,12 @@ void ModelTrans(cModel* m)
     case 5:
         ot = 0x10;
         LIGHT_POS(m, li, pos);
+#if defined(RE4DC_CASTLE_ACTOR_PREGATE) && RE4DC_CASTLE_ACTOR_PREGATE
+        if (castleActorPregateHidden(m, &pos, radius)) {
+            ret = 0xFFFF;   // as ot 0 / 1's view test: no OT entry, no screen matrices, no skin, no submit
+            break;
+        }
+#endif
         ret = AddOtDirect(0x10, m, (void (*)()) ModelRender, 0, 2, &pos, radius);
         break;
     case 6:
