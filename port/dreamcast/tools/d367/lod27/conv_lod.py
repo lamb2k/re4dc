@@ -27,6 +27,9 @@ for part in arm.split('+'):   # e.g. scan1+dec:<plan>: the scan1 levels plus dec
         cmd += LOD27
     elif part == 'scan1':
         cmd += SCAN1
+    elif part.startswith('x:'):   # explicit converter options, e.g. x:--lod-cluster=3000;--lod-uv-guard=0.2 (isolation runs)
+        for o in part[2:].split(';'):
+            cmd += o.split('=', 1)
     elif part.startswith('dec:'):   # roomscan decimate in place (roomscan.py decplan output), no LOD records added
         cmd += ['--decimate', part[4:]]
 os.makedirs(out, exist_ok=True)
