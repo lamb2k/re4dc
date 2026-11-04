@@ -34,7 +34,7 @@ for i, v in enumerate(views):
     open('%s/%s-%s.txt' % (sys.argv[3], room, name), 'w').write('\n'.join(lines) + '\n')
     print(room, name)
 PY
-  while read -r R V; do
+  while read -r R V <&3; do
     mkdir -p "$OUT/$R"
     for X in "$XB" "$XP"; do
       N=rs-$X-$R-$V; S="$HW/scenarios/rrspeed-$N"; FIX=$W/stills/fix-$N.json
@@ -44,11 +44,14 @@ PY
         cd "$HW" && RE4DC_DISCCACHE=/mnt/c/Flycast-Evidence/_disccache bash /root/probe/lanelock.sh python3 stage-scenario.py "rrspeed-$N" --arm "candidate-route${X}rW" \
           --programs "$HW/programs-route.json" --overlay /mnt/c/Flycast-Evidence/re4-dreamcast/r11-media-overlay-r1/payloads --fixture "$FIX" ) > "$W/stills/stage-$N.json" 2>&1 || true
       grep -q STAGED_PAYLOAD_IDENTITY_PASS "$W/stills/stage-$N.json" || { echo "$R $V $X: stage failed"; rm -rf "${S:?}"; continue; }
-      ( cd "$HW" && timeout 120 "$PY" run-emulator.py "rrspeed-$N" --seconds 40 --period 6 ) > "$W/stills/run-$N.txt" 2>&1 || true
-      LAST=$(ls -d "$S"/capture/shots/t* 2>/dev/null | sort | tail -1)
+      for TRY in $(seq 60); do  # the shared Flycast queue may be full: wait for a slot (up to ~10 min)
+        ( cd "$HW" && timeout 120 "$PY" run-emulator.py "rrspeed-$N" --seconds 40 --period 6 ) > "$W/stills/run-$N.txt" 2>&1 || true
+        grep -q "Emulator queue occupied" "$W/stills/run-$N.txt" || break; sleep 10
+      done
+      LAST=$(ls -d "$S"/capture/shots/t* 2>/dev/null | sort | tail -1 || true)
       if [ -n "$LAST" ] && [ -f "$LAST/frames/fb0.png" ]; then cp "$LAST/frames/fb0.png" "$OUT/$R/$V-$([ $X = "$XB" ] && echo base || echo plan).png"; fi
       echo "$R $V $X frozen=$(grep -ac 'warp: frozen' "$S/capture/run-output.txt" 2>/dev/null) halt=$(grep -ac HALT "$S/capture/run-output.txt" 2>/dev/null) shot=${LAST##*/}"
       rm -f "$S/disc/disc.bin"; rm -rf "${S:?}"
     done
-  done < "$W/stills/list.txt"
+  done 3< "$W/stills/list.txt"
 done
