@@ -2571,7 +2571,10 @@ def static_module_ids(extra=()):
     # Knob-conditional modules (`MODULES += ...` under WORLD_STAGE_MODULES=1, with #if-guarded registry rows) are
     # not part of the default image's static set this mirror compacts against.
     # `<mod>:ovl` (a room overlay, ROUTE_OVL) names the module <mod>.
-    conditional = {n.partition(':')[0] for line in re.findall(r'^MODULES \+= (.*)$', makefile, re.M)
+    # Included knob files (game/*.mk, e.g. wep_modules27.mk: MODULES += wep06 wep12) add conditional modules too
+    # (lane castlebudget 11-04: the Makefile-only scan refused every prepare after Build 27's weapon modules).
+    mk_text = makefile + ''.join(f.read_text() for f in sorted((root / 'port/dreamcast/game').glob('*.mk')))
+    conditional = {n.partition(':')[0] for line in re.findall(r'^MODULES \+= (.*)$', mk_text, re.M)
                    for n in line.split()}
     if set(extra) - conditional:
         raise ValueError('not a knob-conditional MODULES entry: ' + ', '.join(sorted(set(extra) - conditional)))
