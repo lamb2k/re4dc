@@ -34,3 +34,31 @@ $(error FX_POP_RATE must be 0 or 2..4 (got $(FX_POP_RATE)))
 endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_POP_RATE=$(FX_POP_RATE)
 endif
+#
+# PEN_CLOTH_CENSUS=1 (test only, default 0): "penc:" lines every 150 ticks, one per stepped pendulum chain (owner model,
+#   root position, links, camera) from src/game/pendulum.cpp.
+PEN_CLOTH_CENSUS ?= 0
+ifeq ($(PEN_CLOTH_CENSUS),1)
+$(OBJDIR)/src/game/pendulum.o: GAME_CPPFLAGS += -DRE4DC_PEN_CLOTH_CENSUS=1
+endif
+#
+# LIGHT_SET_REUSE=N (2..4; approximation, render only): cLightMgr::setModel2 reuses a model's light list for up to N-1
+#   ticks while it stays within 1 m in the same room (src/game/light.cpp).
+LIGHT_SET_REUSE ?= 0
+ifneq ($(LIGHT_SET_REUSE),0)
+ifneq ($(filter $(LIGHT_SET_REUSE),2 3 4),$(LIGHT_SET_REUSE))
+$(error LIGHT_SET_REUSE must be 0 or 2..4 (got $(LIGHT_SET_REUSE)))
+endif
+$(OBJDIR)/src/game/light.o: GAME_CPPFLAGS += -DRE4DC_LIGHT_SET_REUSE=$(LIGHT_SET_REUSE)
+endif
+#
+# DIST_POSE_LOD=N (2..4; approximation): far (> DIST_POSE_LOD_FAR, default 15000) or off-screen Ganados run the foot-IK
+#   pose pass every Nth tick (src/game/em.cpp marks, src/game/motion.cpp MotionMove skips IK).
+DIST_POSE_LOD ?= 0
+DIST_POSE_LOD_FAR ?= 15000
+ifneq ($(DIST_POSE_LOD),0)
+ifneq ($(filter $(DIST_POSE_LOD),2 3 4),$(DIST_POSE_LOD))
+$(error DIST_POSE_LOD must be 0 or 2..4 (got $(DIST_POSE_LOD)))
+endif
+$(OBJDIR)/src/game/em.o $(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_DIST_POSE_LOD=$(DIST_POSE_LOD) -DRE4DC_DIST_POSE_LOD_FAR=$(DIST_POSE_LOD_FAR)
+endif

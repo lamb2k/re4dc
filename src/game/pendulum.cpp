@@ -286,6 +286,25 @@ static int re4dc_pen_cloth_lod_skip(cModel* m, PenCloth* c)
 #define PEN_CLOTH_LOD_SKIP(m, c) 0
 #endif
 
+
+#if defined(RE4DC_PEN_CLOTH_CENSUS) && RE4DC_PEN_CLOTH_CENSUS
+// PEN_CLOTH_CENSUS=1 (test only, logicbudget.mk): every 150 ticks one "penc:" line per stepped chain: owner model,
+// its root world position, the link count, the camera position and the step variant.
+extern "C" void re4dc_log(const char* fmt, ...);
+static void re4dc_pen_cloth_census(cModel* m, PenCloth* c, int variant)
+{
+    if (((u32) pG->Frame_cnt % 150U) != 0) {
+        return;
+    }
+    const Vec* p = &m->getPartsPtr(0)->world;
+    re4dc_log("penc: f=%u room=%03x m=%08x v=%d n=%u pos=%d %d %d cam=%d %d %d\n", (unsigned) pG->Frame_cnt,
+        (unsigned) pG->room_id, (unsigned) (u32) m, variant, (unsigned) c->Num, (int) p->x, (int) p->y, (int) p->z,
+        (int) pG->Cam.param.pos.x, (int) pG->Cam.param.pos.y, (int) pG->Cam.param.pos.z);
+}
+#define PEN_CLOTH_CENSUS(m, c, v) re4dc_pen_cloth_census((m), (c), (v))
+#else
+#define PEN_CLOTH_CENSUS(m, c, v) ((void) 0)
+#endif
 // One simulation frame of a chain (called from the owner's move after the motion): floor from
 // parts 0 unless Flag 0x100, collision volumes unless Flag bit0, random-phase wind unless 0x40,
 // root speed / gravity unless 0x20; each link integrates its speed, is limited in angle and pulled
@@ -317,6 +336,7 @@ void PenClothMove(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+    PEN_CLOTH_CENSUS(m, c, 1);
     if (PEN_CLOTH_LOD_SKIP(m, c)) {
         return;
     }
@@ -634,6 +654,7 @@ void PenClothMove2(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+    PEN_CLOTH_CENSUS(m, c, 2);
     if (PEN_CLOTH_LOD_SKIP(m, c)) {
         return;
     }
@@ -936,6 +957,7 @@ void PenClothMove3(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
+    PEN_CLOTH_CENSUS(m, c, 3);
     if (PEN_CLOTH_LOD_SKIP(m, c)) {
         return;
     }
