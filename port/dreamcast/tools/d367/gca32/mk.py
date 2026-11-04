@@ -27,7 +27,7 @@ for s in (s1, s2):
 rows = []
 import subprocess
 iso = '/mnt/c/Game Dev/Emulators/re4_helpers/Resident Evil 4 (USA)/Resident Evil 4 (USA).iso'
-for r in ('r203', 'r205', 'r209', 'r20a', 'r20b'):
+for r in ('r205', 'r209', 'r20a', 'r20b'):
     fin = wk / 'obj' / ('%s.dar' % r)
     fin = fin if fin.exists() else pm / 'st2' / ('%s.dar' % r)
     if not (wk / 'ps2' / ('%s.dat' % r)).exists():
@@ -65,7 +65,7 @@ for t in sorted((wk / 'obj').glob('*.json')):
 (s1 / 'RECIPE.txt').write_text(
     'cgca32 (lane world-ch31, 2026-11-03): Disc 2 chapter 3-2 GC-ASSET for r20a / r20b from the PS2 version (DISC 2 ONLY,\n'
     'recipe.conf D2_DATA, after cw32 / pmcw32 / cpic32 / cpic27). PS2 source: Resident Evil 4 (USA) PS2 ISO, BIO4DAT.AFS\n'
-    'r203.dat (+ r203 from cgca27-20261103, coordinator 11-03) r205.dat r209.dat r20a.dat r20b.dat (ETM etc models: et1400 and et0c00 are in no PS2 ETM, so the GC copies are emptied,\n'
+    'r205.dat r209.dat r20a.dat r20b.dat (ETM etc models: et1400 and et0c00 are in no PS2 ETM, so the GC copies are emptied,\n'
     'ps2_objects.py --etm-empty) and pl11.dat (Ashley partner package, ps2cast/ashley_reroom.py from the castle r201\n'
     'package). Archives = pmcw32 (world-ch32) + those two models; .arc = each .dar\'s payload. Generator:\n'
     'tools/d367/gca32/gen.sh. provenance.tsv credits each model: ps2 where our PS2 conversion changed it, gc where\n'

@@ -21,14 +21,12 @@ PK=${CPIC27D:-/root/re4data/private/cpic27-20261102}/dc/tex.pak
 S1=/root/re4data/private/cgca32-$TAG; S2=/root/re4data/private/cpic32b-$TAG
 case "$WK" in /root/work/lanes/world-ch31-scratch/*) rm -rf "${WK:?}";; *) echo "refusing work dir $WK"; exit 1;; esac
 mkdir -p "$WK/obj" "$WK/ps2"
-python3 "$H/afsx.py" "$ISO" "$WK/ps2" em23.dat r20a.dat r20b.dat r203.dat
+python3 "$H/afsx.py" "$ISO" "$WK/ps2" em23.dat r20a.dat r20b.dat
 cd "$TW"
-C27=${CGCA27D:-/root/re4data/private/cgca27-20261103}
-# r203 (coordinator 11-03, chapter 3-1): cgca27's archive, the et1400 torch emptied the same way
-for spec in r203:et1400.bin r205:et1400.bin,et0c00.bin r20a:et1400.bin r20b:et1400.bin,et0c00.bin; do
+# (r203's torch: lane assets-dc's cgca27b, byte-identical to what this step made; D2_DATA carries it before cgca32)
+for spec in r205:et1400.bin,et0c00.bin r20a:et1400.bin r20b:et1400.bin,et0c00.bin; do
   r=${spec%%:*}; e=${spec#*:}
-  IN=$PM/st2/$r.dar; [ "$r" = r203 ] && IN=$C27/st2/$r.dar
-  python3 ps2_objects.py room --dar "$IN" --room "$r" --etm "$e" --etm-empty "$e" \
+  python3 ps2_objects.py room --dar "$PM/st2/$r.dar" --room "$r" --etm "$e" --etm-empty "$e" \
     --out "$WK/obj/$r.dar" --json "$WK/obj/$r.json" > "$WK/obj/$r.log" 2>&1 || { tail -5 "$WK/obj/$r.log"; exit 1; }
   echo "$r: $(tail -1 "$WK/obj/$r.log")"
 done
