@@ -1,0 +1,11 @@
+name rsc-r209
+# lane roomscan-castle 11-04: chapter 3-2 r209 census warp (Disc 2; room entry, cap 4 as recipe)
+room 0x209
+jp 0
+chapter 7
+inv default
+god
+stock
+alivelog 60
+census 300
+dump
