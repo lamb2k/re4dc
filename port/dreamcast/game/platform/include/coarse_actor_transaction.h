@@ -73,8 +73,9 @@ int re4dc_actor_transaction_candidate(cModel*);
 // LEON_HEADLESS (crowd.mk): 0x109 is pl08 after setHead(0) (seven infos, no face role: the neck has no shape).
 #if RE4DC_LEON_WOUND
 // LEON_WOUND (crowd.mk): 0x10B is pl08 with the wound overlay (ten infos; roles 0..8 exactly pl08's, face role 3).
-#define RE4DC_LEON_LIKE(app) ((app)==0x100u || (app)==0x108u || (app)==0x109u || (app)==0x10Bu)
-#define RE4DC_LEON_FACE_ROLE(p,i) (((p).count==8 || (p).appearance==0x108u || (p).appearance==0x10Bu) && (i)==3)
+// 0x10C is 0x109 plus the wound (eight infos; role 3 the neck, so no face role although count is 8).
+#define RE4DC_LEON_LIKE(app) ((app)==0x100u || (app)==0x108u || (app)==0x109u || (app)==0x10Bu || (app)==0x10Cu)
+#define RE4DC_LEON_FACE_ROLE(p,i) ((((p).count==8 && (p).appearance!=0x10Cu) || (p).appearance==0x108u || (p).appearance==0x10Bu) && (i)==3)
 #else
 #define RE4DC_LEON_LIKE(app) ((app)==0x100u || (app)==0x108u || (app)==0x109u)
 #define RE4DC_LEON_FACE_ROLE(p,i) (((p).count==8 || (p).appearance==0x108u) && (i)==3)

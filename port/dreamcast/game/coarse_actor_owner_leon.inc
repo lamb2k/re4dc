@@ -402,6 +402,18 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
         Re4dcActorPlan q=*p;q.appearance=0x108;q.count=9;q.run_count=8+kHair;q.material_count=1+RE4DC_LEON_HAIR_MATERIALS;
         return re4dc_actor_material_runs_capability(&q);
     }
+    // 0x10C (headless and wounded): the 0x109 plan with role 7, the wound, as one last run on material 1 (the wound pair).
+    if(p && p->appearance==0x10C) {
+        if(p->count!=8 || p->run_count!=8 || p->material_count!=2 || !p->info[7])return 0;
+        const auto& r=p->runs[7];const auto& m=p->materials[1];
+        if(r.role!=7 || r.material!=1 || r.triangles!=p->input[7].triangles || r.stream.data!=p->input[7].stream.data ||
+           r.uv.data!=p->input[7].uv.data || r.uv.size!=p->input[7].uv.size)return 0;
+        if(m.image.pixels!=wound_colour.pixels || m.mask.pixels!=wound_mask.pixels || m.crc!=kWoundPairCrc || m.fnv!=kWoundPairFnv ||
+           m.material_flags!=4 || m.blend || m.depth_mode!=(RE4DC_ACTOR_LEON_NATIVE_LOOK?1u:0u) || m.mask_ref || m.mask_same_uv!=1 ||
+           m.wrap_s!=1 || m.wrap_t!=1)return 0;
+        Re4dcActorPlan q=*p;q.appearance=0x109;q.count=7;q.run_count=7;q.material_count=1;
+        return re4dc_actor_material_runs_capability(&q);
+    }
 #endif
 #if RE4DC_LEON_HEADLESS
     // LEON_HEADLESS (0x109, Leon after setHead(0)): seven roles, one whole-chunk run each in role order, no hair runs

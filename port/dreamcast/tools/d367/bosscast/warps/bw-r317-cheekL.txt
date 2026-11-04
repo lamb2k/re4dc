@@ -1,0 +1,12 @@
+name bw-r317-cheekL
+# bosscast-wound 11-04: wounded Leon (scenario 0 0x20), camera 450 in front at cheek height turned 35 degrees: the PS2 cheek wound (pl08 arc 0xE, bone 4, bind 1678 mm up, 41 mm to the side).
+room 0x317
+pos -8209 -5100 167
+ang -0.2820
+inv default
+scenario 0 0x20
+god
+camfront 300 450 1660 35
+chapter 16
+census 200
+alivelog 60

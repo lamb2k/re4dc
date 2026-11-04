@@ -106,6 +106,9 @@ void CameraRoomInit()
 // Stop_flg 0x10000), the debug camera pad handling, projection (fovy 0 is an error -> 50), dist,
 // the look-at matrix, the view frustum and the camera debug text. Stop_flg 0x40000000 freezes
 // the controller.
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+extern "C" int re4dc_warp_camfront(Vec*, Vec*);  // dbgwarp_bridge.cpp `camfront` (test only)
+#endif
 void CameraMove()
 {
     Camera* cam = &pG->Cam;
@@ -125,6 +128,12 @@ void CameraMove()
         }
     }
     CamDbg.move(cam, &Joy[1], 0);
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+    {   // warp `camfront` (test only): face stills
+        Vec p, a;
+        if (re4dc_warp_camfront(&p, &a)) { cam->param.pos = p; cam->param.at = a; cam->param.roll = 0.0f; }
+    }
+#endif
     if (cam->param.fovy == 0.0f) {
         pLog->err(0, 0, "CameraMove(): Fovy = 0.0f");
         cam->param.fovy = 50.0f;

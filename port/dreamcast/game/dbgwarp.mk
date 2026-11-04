@@ -17,7 +17,7 @@ $(OBJDIR)/dbgwarp.h: dbgwarp-force
 	@rm -f $@.tmp
 $(OBJDIR)/platform/vi.o: $(OBJDIR)/dbgwarp.h
 $(OBJDIR)/platform/vi.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/dbgwarp.h
-DBGWARP_GAME = $(OBJDIR)/src/game/title.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/ui_bridge.o
+DBGWARP_GAME = $(OBJDIR)/src/game/title.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/ui_bridge.o $(OBJDIR)/src/game/camera.o
 $(DBGWARP_GAME): $(OBJDIR)/dbgwarp.h
 $(DBGWARP_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/dbgwarp.h
 # r108's bell task serves the rig's `bell108` requests (DBG_WARP=1 only; 0: the block compiles out)

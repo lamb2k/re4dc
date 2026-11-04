@@ -118,12 +118,28 @@ int owner_pl08_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) 
 }
 #include "ps2leon_neck.h"
 namespace {
+#if RE4DC_LEON_WOUND
+// LEON_WOUND: a wounded Leon who loses his head (death after r317) keeps the wound info: appearance 0x10C, the seven
+// 0x109 roles plus role 7, the PS2 wound on the wound pair material (as 0x10B's role 9).
+cModelInfo* pl08h_infos[8];
+const leon4k::Chunk* pl08h_cur[8];
+unsigned pl08h_n=7;
+#define RE4DC_PL08H_N pl08h_n
+#else
 cModelInfo* pl08h_infos[7];
 const leon4k::Chunk* pl08h_cur[7];
+#define RE4DC_PL08H_N 7
+#endif
 unsigned pl08h_key=0x80000001u;
 bool owner_pl08h_bind(cModel* m) {
     if(!m || m->id || m->nParts!=119 || !m->pList || !m->pParts || (m->be_flag&0x4000))return false;
+#if RE4DC_LEON_WOUND
+    pl08h_n=leon_wound_on(m)?8u:7u;
+    if(!re4dc_actor_role_bindings(m,pl08h_n==8u?0x10Cu:0x109u,pl08h_infos,pl08h_n) ||
+       !re4dc_actor::exact_infos(m->pModelInfo,pl08h_infos,pl08h_n))return false;
+#else
     if(!re4dc_actor_role_bindings(m,0x109,pl08h_infos,7) || !re4dc_actor::exact_infos(m->pModelInfo,pl08h_infos,7))return false;
+#endif
     const unsigned revision=re4dc_actor_binding_revision(m);if(!revision)return false;
     if(pl08_owner!=m || pl08_owner_serial!=m->serial || pl08_owner_parts!=m->pList || pl08_root_parts!=m->pParts ||
        pl08_binding_revision!=revision) {
@@ -146,8 +162,11 @@ int owner_pl08h_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output)
 #if RE4DC_ACTOR_PL08_PACK
     if(!pl08_pack.published)return 0;
 #endif
-    if(!owner_pl08h_bind(m) || !skin_build(pl08h_key,pl08h_cur,7))return 0;
-    for(unsigned i=0;i<7;++i)if(p.info[i]!=pl08h_infos[i] || !output[i])return 0;
+    if(!owner_pl08h_bind(m) || !skin_build(pl08h_key,pl08h_cur,RE4DC_PL08H_N))return 0;
+#if RE4DC_LEON_WOUND
+    if(p.count!=pl08h_n)return 0;
+#endif
+    for(unsigned i=0;i<RE4DC_PL08H_N;++i)if(p.info[i]!=pl08h_infos[i] || !output[i])return 0;
     Mtx inv;if(!PSMTXInverse(m->pParts->mat,inv))return 0;
     alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
     for(unsigned u=0;u<skin_used;++u) {
@@ -155,7 +174,7 @@ int owner_pl08h_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output)
         skin_jobs[u]={&pl08_parts[b]->mat[0][0],RE4DC_LEON_BIND_ROW(b,pl08_parts[b]),bone_T[b]};
     }
     re4dc_coarse_skin_bones(invx,skin_jobs,skin_used);
-    for(unsigned i=0;i<7;++i) {
+    for(unsigned i=0;i<RE4DC_PL08H_N;++i) {
         re4dc_coarse_skin_groups(skin_stream+skin_first[i],skin_groups[i],&bone_T[0][0],output[i],pl08h_cur[i]->palette_count);
         for(unsigned j=0;j<pl08h_cur[i]->palette_count*12;++j)if(!coarse_finite(output[i][j]))return 0;
     }
@@ -181,6 +200,14 @@ int pl08_headless_plan(cModel* m,Re4dcActorPlan* out) {
     pl08h_cur[0]=pl08_chunk[0];pl08h_cur[1]=pl08_chunk[1];pl08h_cur[2]=pl08_chunk[2];pl08h_cur[3]=&leon_neck::chunk;
     pl08h_cur[4]=hand5.chunk;pl08h_cur[5]=hand6.chunk;pl08h_cur[6]=pl08_chunk[8];
     pl08h_key=leon_hand_key(1,hand5.pose,hand6.pose)|0x80000000u;  // never a pl00 / pl08 key: the stream is rebuilt
+#if RE4DC_LEON_WOUND
+    const bool wound=pl08h_n==8u;
+    if(wound) {
+        p.count=8;p.appearance=0x10C;pl08h_key|=0x40000000u;
+        re4dc_actor::plan_chunk(p,7,pl08h_infos[7],leon_wound::chunk,RE4DC_OWNER_INPUT(leon_wound,w,leon_wound::chunk,119));
+        pl08h_cur[7]=&leon_wound::chunk;
+    }
+#endif
     p.material_count=1;
     p.materials[0].image=pl08_image;p.materials[0].crc=pl08_crc;p.materials[0].fnv=pl08_fnv;
     p.immutable_asset_id[0]=kActorPl08Asset0;p.immutable_asset_id[1]=kActorPl08Asset0+1u;p.immutable_asset_id[2]=3u;
@@ -190,6 +217,16 @@ int pl08_headless_plan(cModel* m,Re4dcActorPlan* out) {
         const auto& c=p.input[i];auto& r=p.runs[p.run_count++];
         r.role=i;r.immutable_asset_id=p.immutable_asset_id[i];r.triangles=c.triangles;r.uv=c.uv;r.stream=c.stream;
     }
+#if RE4DC_LEON_WOUND
+    if(wound) {
+        auto& mat=p.materials[p.material_count++];mat.image=wound_colour;mat.mask=wound_mask;mat.crc=kWoundPairCrc;mat.fnv=kWoundPairFnv;
+        mat.material_flags=4;mat.blend=0;mat.depth_mode=RE4DC_ACTOR_LEON_NATIVE_LOOK?1u:0u;
+        mat.mask_ref=0;mat.mask_same_uv=1;mat.wrap_s=mat.wrap_t=1;
+        p.immutable_asset_id[7]=kLeonWoundAsset;
+        const auto& c=p.input[7];auto& r=p.runs[p.run_count++];
+        r.role=7;r.material=1;r.immutable_asset_id=kLeonWoundAsset;r.triangles=c.triangles;r.uv=c.uv;r.stream=c.stream;
+    }
+#endif
     if(!p.palette_bytes || !p.workspace_bytes || (re4dc_actor_material_runs_capability(&p)&3u)!=3u)return 0;
     static unsigned logs;if(logs<4){++logs;re4dc_log("LEON_HEADLESS plan f=%u palette=%u workspace=%u neck_tris=%u\n",
         unsigned(pG->Frame_cnt),p.palette_bytes,p.workspace_bytes,leon_neck::chunk.triangles);}
