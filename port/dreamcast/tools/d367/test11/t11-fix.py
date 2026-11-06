@@ -1680,8 +1680,9 @@ DATA['scan1'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (SCAN1D, r, 
 # rs2 (lane roomscan 11-04, render only; needs WORLD_BAKE=4, never KSETS; user "roomscan fixes should be used much more
 # aggressively"): scan1 (r119 r111) plus prop decimation in place (r11d on scan1, r117 r10e r108 r103). One room can be
 # left out with RS2_ROOMS (its certificate rows must then be regenerated without it: lod27/post_lod.sh).
-RS2D = os.environ.get('RS2D', '/root/re4data/private/rs2-20261104')
-RS2_ROOMS = os.environ.get('RS2_ROOMS', 'r119 r111 r11d r117 r10e r108 r103').split()
+# uv set (t28-speed 11-06, replaces the rs2 rooms and scan1): r119 UV guard 0.2 + 3 m clusters; r103 r117 r11d UV guard 0.2.
+RS2D = os.environ.get('RS2D', '/root/re4data/private/uv-20261106')
+RS2_ROOMS = os.environ.get('RS2_ROOMS', 'r119 r103 r117 r11d').split()
 DATA['rs2'] = {'dc/native/%s/%s' % (r, f): '%s/dc/native/%s/%s' % (RS2D, r, f)
                for r in RS2_ROOMS
                for f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4tc', 'room.r4rc')
