@@ -109,7 +109,13 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
   job 1 gca-title "$(run gca-title a a 60 --warp "\"\$EVW\\fixtures\\gca-title-warp.txt\"" --pad "\"\$EVW\\fixtures\\gca-title-pad.txt\"" $VA)"
   for r in r100 r101 r103 r11e r11f; do
     tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/gca-$r.txt"
-    job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
+    # r101's room checkpoint falls right at 60 s (0101 visit 3 "no checkpoint": 4 of 10 runs cut by the deadline, user decision 11-06):
+    # stop on that checkpoint, 90 s only as the ceiling on that early stop
+    if [ "$r" = r101 ]; then
+      job 1 gca-$r "$(run gca-$r a a 90 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"" --stop "'GC-ASSET-CKPT .*room=0101 visit=3'" --grace 5)"
+    else
+      job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
+    fi
   done
   # gca-grenade (lane wep19-26 10-26): no other gca job equips a thrown weapon, so the grenade models (em/pl00.drs 0x6A
   # + its three pictures), the wep19 module and its motion were never judged. r101: equip, aim and throw the hand,
