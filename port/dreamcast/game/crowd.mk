@@ -616,7 +616,7 @@ ifeq ($(QA_PVRERR_ROW),1)
 ifneq ($(PVR_LATCH),2)
 $(error QA_PVRERR_ROW=1 needs PVR_LATCH=2)
 endif
-$(OBJDIR)/platform/native_ui.o: GAME_CPPFLAGS += -DRE4DC_QA_PVRERR_ROW=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_PVRERR_ROW=1
 endif
 LEON_LIGHT_DIR26 ?= 0
 ifeq ($(filter $(LEON_LIGHT_DIR26),0 1),)
