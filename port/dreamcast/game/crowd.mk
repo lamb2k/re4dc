@@ -596,6 +596,16 @@ endif
 #              changes): with ACTOR_LIGHT_FAST_ONLY=1 Leon gets his probe light back as a direction (probe direction +
 #              LEON_LIGHT_FILL camera fill + ambient, fast FIPR kernel per vertex, the Test 24b look) instead of one
 #              colour per part. Every other model keeps the fast-only part colour; no exact per-vertex evaluator.
+# SHAPE_TABLE_GUARD=1 (lane world-ch4 11-06; render only; default 0: no effect): a morph channel past the model's shape
+# table adds nothing, as on the GameCube (its big-endian stray count is negative). Calls 205 / 206 (r229, r214) corrupted
+# memory without it. Disc 2 recipe (castle31/build-disc2.sh).
+SHAPE_TABLE_GUARD ?= 0
+ifeq ($(filter $(SHAPE_TABLE_GUARD),0 1),)
+$(error SHAPE_TABLE_GUARD must be 0 or 1)
+endif
+ifeq ($(SHAPE_TABLE_GUARD),1)
+$(OBJDIR)/src/game/shape.o: GAME_CPPFLAGS += -DRE4DC_SHAPE_TABLE_GUARD=1
+endif
 # LEON_WEP_SWAP_GUARD=1 (GitHub #63; render only; default 0: no effect): the LEON_LIGHT_DIR26 held-weapon test does not
 # read pPL->Wep while a sub screen is requested or open; the room's works are swapped out then.
 LEON_WEP_SWAP_GUARD ?= 0

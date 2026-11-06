@@ -301,10 +301,8 @@ void re4dc_set_stage(unsigned long stage)
     re4dc_stage = stage;
 }
 
-extern "C" void re4dc_watch_logcheck(const char* fmt);
 void re4dc_log(const char* fmt, ...)
 {
-    re4dc_watch_logcheck(fmt);
 #if defined(RE4DC_LOG_PUBLICATION16) && RE4DC_LOG_PUBLICATION16
     using namespace re4dc::log_publication16;
     auto& state = re4dc_log_publication16_state;

@@ -108,3 +108,15 @@ r22c (castle hub, doors to r204 r211 r220 r305 r31d) is reachable from r211 / r2
   (missing world keys, none pruned: r205 r219 r211 r212 r213 r218 r22b r224 r225 r21b r226 r227 r22c); r229 FAULT, r22c HALT
   "DLL link/unlink failed"; KOS d2c4door; GC-ASSET: catalog over MAX_RECORDS 16,320 (gc_port23/catalog_index.py,
   runtime token width) with chapter 4.
+
+## Round 7 (2026-11-06, stopped by the user's stop order)
+- r229 / r214 cause found: calls ss_oc205 / ss_oc206 animate partner morph channels 9 and 10; the head's shape table has 9 rows.
+  Rows past the table are the first delta rows: little-endian count 65535 and wild writes; big-endian negative, so the GameCube
+  loop never ran. Flycast: radio replay of op 18 in r200 faults; skipping only the partner ShapeSet runs the call to its end.
+  All 24 ss_oc files scanned: only these two. Hunt tooling removed from the program again.
+- Fix: SHAPE_TABLE_GUARD=1 (crowd.mk, src/game/shape.cpp, default 0; on in castle31/build-disc2.sh). Built, NOT yet run.
+- c4anc-20261106c: 5 keys exact PS2, 15 closest-colour PS2 stand-ins (many visibly different: look decision pending,
+  E:/RE4DC-Lanes/world-ch4/c4anc-all/b/sheet-rank.png). Not yet on a tested disc.
+- trans4d2: 20 no-op R4TC rooms by proof; r211 r215 r227 r228 r229 r22a held for tier 2. Not yet on a tested disc.
+- Carry rows open: 6 cells (none), 22 roomscan (not on this branch), 10 for the 6 held rooms.
+- Next: build guard twin, run E:/RE4DC-Lanes/world-ch4/hunt/fx op17, op18, r229, r214; then one rr cycle under t28-cycle lock.

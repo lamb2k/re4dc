@@ -2061,6 +2061,14 @@ if os.path.isfile(TRANS34D2D + '/trclass.idx'):
     for _r in sorted(os.listdir(TRANS34D2D)):
         if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
             DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
+# trans4d2 (lane world-ch4 11-06, DISC 2 ONLY, after trans34d2; CH-FIXES-CARRY row 10): R4TC sidecars of the chapter 4 rooms
+# with no retargeted part under TRANS_POLICY=3 + dc/native/trclass.idx = trans34d2's index + those rooms.
+TRANS4D2D = os.environ.get('TRANS4D2D', '/root/re4data/private/trans4d2-20261106')
+if os.path.isfile(TRANS4D2D + '/trclass.idx'):
+    DATA['trans4d2'] = {'dc/native/trclass.idx': TRANS4D2D + '/trclass.idx'}
+    for _r in sorted(os.listdir(TRANS4D2D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r):
+            DATA['trans4d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS4D2D, _r)
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
@@ -2111,7 +2119,7 @@ if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
 
 # c4anc (lane world-ch4 11-04; DISC 2 ONLY via D2_DATA): 34 chapter 4 room ancillary picture keys the Disc 2 census runs
 # opened and could not find (TEXCHK 'open failed'), hard links of Codex cxfix-replay-20261018 output/<room>/ancillary*/tex.
-C4ANCD = os.environ.get('C4ANCD', '/root/re4data/private/c4anc-20261104b')
+C4ANCD = os.environ.get('C4ANCD', '/root/re4data/private/c4anc-20261106c')
 if os.path.isfile(C4ANCD + '/RECIPE.txt'):
     DATA['c4anc'] = {'tex': C4ANCD + '/tex'}
 

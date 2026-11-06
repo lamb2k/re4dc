@@ -96,10 +96,8 @@ static int g_threadCount;
 extern "C" {
 
 // ---------------------------------------------------------------- reporting
-extern "C" void re4dc_watch_logcheck(const char* fmt);
 void OSReport(const char* fmt, ...)
 {
-    re4dc_watch_logcheck(fmt);
     char line[256];
     va_list ap;
     va_start(ap, fmt);

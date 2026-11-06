@@ -49,33 +49,6 @@ extern "C" void re4dc_watch_set(const void* addr, unsigned long words)
               g_watchAddr[0], g_watchAddr[1], g_watchAddr[2], g_watchAddr[3]);
 }
 
-// WATCH_LOG (lane world-ch4 11-04, r229 FAULT hunt; DBG_WARP fixture key `watch <addr> <words>`): a snapshot of the
-// watched words and a check on every re4dc_log / OSReport line, so a change is pinned to the log line it precedes
-// (the vblank poll alone names only the frame). Off until a fixture arms it.
-static unsigned long g_watchSnap[4096];
-static volatile int g_watchLogBusy;
-extern "C" void re4dc_watch_arm_snap(const void* addr, unsigned long words)
-{
-    if (words > 4096) words = 4096;
-    for (unsigned long i = 0; i < words; i++) g_watchSnap[i] = ((const unsigned long*) addr)[i];
-    re4dc_watch_set(addr, words);
-}
-extern "C" void re4dc_watch_logcheck(const char* fmt)
-{
-    if (!g_watchArmed || g_watchLogBusy || irq_inside_int()) return;
-    if (watchSum() == g_watchSum) return;
-    g_watchArmed = 0; g_watchLogBusy = 1;
-    int shown = 0;
-    for (unsigned long i = 0; i < g_watchWords && shown < 8; i++)
-        if (g_watchAddr[i] != g_watchSnap[i]) {
-            re4dc_log("watch: DIFF %p was %08lx now %08lx\n", (void*) &g_watchAddr[i], g_watchSnap[i], (unsigned long) g_watchAddr[i]);
-            shown++;
-        }
-    re4dc_log("watch: CHANGED before log line \"%.60s\" vblank %lu stage %08lx thread %p pr %p\n", fmt ? fmt : "",
-              (unsigned long) g_retraceCount, (unsigned long) re4dc_stage, (void*) thd_get_current(), __builtin_return_address(0));
-    g_watchLogBusy = 0;
-}
-
 static void watchPoll(void)
 {
     if (!g_watchArmed) return;
