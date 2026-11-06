@@ -1,0 +1,11 @@
+name ch334-r206s00
+# lane world-ch334: r206 entry that plays the Luis event r206s00 (101 s movie, end of 3-3); not a census warp (60 s window)
+room 0x206
+jp 0
+chapter 8
+inv default
+god
+stock
+alivelog 60
+census 300
+dump

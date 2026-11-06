@@ -38,7 +38,7 @@ disc2_jobs() {
   local D2O=$ROUTE/out-fp${RR_PFX:-rr}${S7}d2cW CW31=$T/port/dreamcast/tools/d367/castle31/warps rw r seeds="1"
   [ -d "$EVU/_discs/d2c" ] && [ -s "$D2O/syms.txt" ] || { echo "rr-jobs: no Disc 2 census base" > "$W/d2-skip.txt"; return 0; }
   cp "$D2O/syms.txt" "$J/syms-d2c.txt"
-  for rw in r200:a-r200 r202:b-r202 r203:d-r203 r201:e-r201 r207:c-r207 r208:f-r208 r204:g-r204; do
+  for rw in r200:a-r200 r202:b-r202 r203:d-r203 r201:e-r201 r207:c-r207 r208:f-r208 r204:g-r204 r20c:h-r20c r20f:i-r20f r206:j-r206 r20d:l-r20d r20e:m-r20e; do
     r=${rw%%:*}; grep -v '^squeeze' "$CW31/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
@@ -48,7 +48,11 @@ disc2_jobs() {
     r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
-  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b" > "$W/d2-census-rooms.txt"
+  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
+  # ALIGN-CALL on Disc 2 (lane rel27, GitHub #63): r200 + the source radio call 0 replayed, align logger
+  { sed -E '/^(goto|act|entry) /,$d' "$EVU/fixtures/d2-r200.txt"; echo "radio 30 19"; } > "$EVU/fixtures/d2-align-call.txt"   # op 19 = ss_oc301, stage 3's first call: op 0's tables do not exist in op03.das (10 sub-files), its seq pointer is stray
+    # stops 25 s after the call opens; 120 s is only a ceiling (the 60 s deadline cut it off: opens at 47-62 s alone, up to 85 s under load, rel27 11-06)
+job 2 d2align-call "$(run d2align-call d2c d2c 120 --align --warp "\"\$EVW\\fixtures\\d2-align-call.txt\"" --stop "'subscreen backing: open type=20'" --grace 25)"
   # r207 hall clear rig (lane world-ch31): god + stock, the source damage path kills the nearest Ganado every 75 frames;
   # 180 s: the entry radio event alone runs to ~52 s wall; the log shows kills, cap holds/releases and the room flags (clear + doors). Judged by hand, not by rr-judge.
   if [ -s "$CW31/w31-r207-kill.txt" ]; then
@@ -60,7 +64,7 @@ disc2_jobs() {
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
@@ -139,7 +143,13 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
   job 1 gca-title "$(run gca-title a a 60 --warp "\"\$EVW\\fixtures\\gca-title-warp.txt\"" --pad "\"\$EVW\\fixtures\\gca-title-pad.txt\"" $VA)"
   for r in r100 r101 r103 r11e r11f; do
     tr -d '\r' < "$T/port/dreamcast/tools/d367/castgc/warps/$r.txt" > "$EVU/fixtures/gca-$r.txt"
-    job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
+    # r101's room checkpoint falls right at 60 s (0101 visit 3 "no checkpoint": 4 of 10 runs cut by the deadline, user decision 11-06):
+    # stop on that checkpoint, 90 s only as the ceiling on that early stop
+    if [ "$r" = r101 ]; then
+      job 1 gca-$r "$(run gca-$r a a 90 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"" --stop "'GC-ASSET-CKPT .*room=0101 visit=3'" --grace 5)"
+    else
+      job 1 gca-$r "$(run gca-$r a a 60 --warp "\"\$EVW\\fixtures\\gca-$r.txt\"")"
+    fi
   done
   # gca-grenade (lane wep19-26 10-26): no other gca job equips a thrown weapon, so the grenade models (em/pl00.drs 0x6A
   # + its three pictures), the wep19 module and its motion were never judged. r101: equip, aim and throw the hand,
@@ -152,6 +162,10 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
   # gca-grenade is judged (the boot run is gca-r101's path).
   job 1 gca-grenade "$(run gca-grenade-boot a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --stop "'phase=enter room=101'" --grace 2 --state-out "\"\$EVW\\gca-grenade-state\"") && $(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --state-in "\"\$EVW\\gca-grenade-state\"")"
 fi
+# ALIGN-CALL (lane rel27, GitHub #63): one radio call under the align logger, no button pressed; 0 MISALIGN allowed, every tier.
+tr -d '\r' < "$T/port/dreamcast/tools/d367/fullplay/segments/align-call-warp.txt" > "$EVU/fixtures/align-call.txt"
+# stops 25 s after the call opens; 120 s is only a ceiling (the 60 s deadline cut it off: opens at 47-62 s alone, up to 85 s under load, rel27 11-06)
+job 2 align-call "$(run align-call c c 120 --align --warp "\"\$EVW\\fixtures\\align-call.txt\"" --stop "'subscreen backing: open type=20'" --grace 25)"
 [ "${RR_DISC2:-0}" != 1 ] || disc2_jobs
 [ "${RR_DISC3:-0}" != 1 ] || disc3_jobs
 if [ "$TIER" = quick ]; then
