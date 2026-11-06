@@ -35,7 +35,7 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 - **Smoother castle rooms:** the big pauses in four chapter 3-1 rooms are gone (worst frame from up to 615 ms down
   to under 10 ms in three of them).
 - **Faster fights at the dam and the village,** and smoother music streaming with fewer disc reads.
-* **Radio call read fixed (issue #63):** an odd memory read when a radio call opens is gone. We have not yet confirmed that this was the crash reported in #63.
+* **Radio call read fixed (issue #63):** the tester's blue screens stop on an odd memory read, and that read no longer happens when a radio call opens. Not yet tested on a real console; please tell us if radio calls or merchant cutscenes still crash.
 
 ## Coming soon: Test 28
 
