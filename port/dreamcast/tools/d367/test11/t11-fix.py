@@ -2098,6 +2098,11 @@ EM14QD = os.environ.get('EM14QD', '/root/re4data/private/em14q-20261104/set-em14
 if os.path.isfile(EM14QD + '/dc/native/r20f/registry.re4nmr'):
     DATA['em14q'] = {os.path.relpath(os.path.join(_d, _f), EM14QD): os.path.join(_d, _f)
                      for _d, _, _fs in os.walk(EM14QD) for _f in _fs}
+# zeal28 (lane assets-dc 11-06, DISC 2 ONLY via D2_DATA, after r20dem19 / em14q): registry packages for the last castle Zealots
+# the ESL audit shows without a role (release rule 7): r204 chase, r206, r202 flag 0x4000 rows, r20d list 4 em11. Existing PS2 conversions.
+ZEAL28D = os.environ.get('ZEAL28D', '/root/re4data/private/zeal28-20261106/set-zeal28')
+if os.path.isfile(ZEAL28D + '/dc/native/r204/registry.re4nmr'):
+    DATA['zeal28'] = {'dc/native/r%s/registry.re4nmr' % _r: '%s/dc/native/r%s/registry.re4nmr' % (ZEAL28D, _r) for _r in ('202', '204', '206', '20d')}
 # res34 (lane world-ch334 11-03, DISC 2 ONLY): the castle resident.bin with r20c r20f r206 r20d r20e from vram/resident/castle18.
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
