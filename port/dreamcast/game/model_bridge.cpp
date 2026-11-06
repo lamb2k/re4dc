@@ -1410,6 +1410,11 @@ extern "C" unsigned re4dc_propprof_key(const void* model) {
 #include "player.h"
 // LEON_LIGHT_DIR26: 1 when the model is Leon's held weapon (pPL->Wep's weapon object or its second display part).
 extern "C" int re4dc_actor_is_leon_weapon(const void* model){
+#if defined(RE4DC_LEON_WEP_SWAP_GUARD) && RE4DC_LEON_WEP_SWAP_GUARD
+    // GitHub #63: while a sub screen is requested or open (radio call) the room's works are swapped out, so pPL->Wep is
+    // sub screen bytes (seen 0x02650267: an odd read here, an address error on a real SH-4; Flycast performs it silently).
+    if(pG->Status_flg[2]&0x04000000) return 0;
+#endif
     if(!model||!pPL||!pPL->Wep) return 0;
     const cPlWep* w=pPL->Wep;
     return (const void*)static_cast<const cModel*>(w->m_pWep)==model || (const void*)static_cast<const cModel*>(w->pObj2)==model;

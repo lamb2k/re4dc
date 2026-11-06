@@ -195,6 +195,14 @@ if build_ok and jobs:
             extra['kos_min_headroom'] += hr
             add('KOS 48 KiB ' + (n[4:] or 'fight'), 'GATE PASS' in lg, ', '.join(l.split(' held')[0] + ' headroom ' + (re.search(r'min_headroom=(\d*)', l).group(1) or '?')
                                                                    for l in lg.splitlines() if l.startswith(('PASS kos', 'FAIL kos'))) or lg.strip()[-120:])
+    # ALIGN-CALL (GitHub #63): the call must open under the align logger with 0 MISALIGN (a real SH-4 faults on each)
+    for n, lab in (('align-call', 'ALIGN-CALL radio call'), ('d2align-call', 'Disc 2 ALIGN-CALL radio call')):
+        if n in [j_[0] for j_ in jobs]:
+            ol = runlog(n)
+            ht = rd(EVU / n / 'hwtrace.log')
+            mis = re.findall(r'MISALIGN pc=(\w+)', ht)
+            opened = 'subscreen backing: open type=20' in ol
+            add(lab, bool(ht) and opened and not mis, '%d MISALIGN%s; call %s' % (len(mis), ' ' + ' '.join(sorted(set(mis))[:6]) if mis else '', 'opened' if opened else 'NOT reached'))
     # GDEMU
     for n, _, _, rc in jobs:
         if n.startswith('gdemu'):

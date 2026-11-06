@@ -220,6 +220,12 @@ $(OBJDIR)/platform/native_motion.o: $(OBJDIR)/platform/motpin_table.inc
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN) -I$(OBJDIR)/platform
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
 $(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
+# MOTION_PIN_CASTLE_MARGIN=1 (lane coldfix 2026-11-03, default 0 = image unchanged; needs MOTION_COLD_POOL_CASTLE): pin
+# admission in the castle rooms keeps the castle cold-pool margin instead of MOTION_PIN's (r202 em11 row).
+MOTION_PIN_CASTLE_MARGIN ?= 0
+ifneq ($(MOTION_PIN_CASTLE_MARGIN),0)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN_CASTLE_MARGIN=1
+endif
 endif
 # ESP_SPIKE_LOG=1 (lane motionpin 2026-11-02; log only, needs DISC_READ_METER=1, default 0 = image unchanged): an
 # effect-move phase over 20 ms logs "esp spike:" with the texture uploads, disc reads / blocked time and motion key
@@ -3525,6 +3531,12 @@ $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_HUD_LENS_ALPHA=$
 endif
 # MEMPROF=1 (diagnostic builds only): wrap memset/memcpy and log the heaviest call sites by bytes every
 # 120 frames (platform/memprof.cpp; logged from native_ps2_world.cpp's flush).
+# HEAP4_CENSUS_EVERY=<frames> (diagnostic builds only, lane coldfix 2026-11-03): the heap-4 census (cells by MAD tag)
+# every <frames> room frames, for heap-4 relief work (r202). Default 0 = image unchanged.
+HEAP4_CENSUS_EVERY ?= 0
+ifneq ($(HEAP4_CENSUS_EVERY),0)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_HEAP4_CENSUS_EVERY=$(HEAP4_CENSUS_EVERY)
+endif
 MEMPROF ?= 0
 ifneq ($(MEMPROF),0)
 GAME_LDFLAGS += -Wl,--wrap=memset -Wl,--wrap=memcpy

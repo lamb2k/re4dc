@@ -455,6 +455,20 @@ RE4_INLINE cModel* cModel::getPartsPtr(int no)
     if (be_flag & 0x2000) {
         p = (cModel*) ((cParts*) p + no);
     } else if (no--) {
+#if defined(RE4DC_PARTS_PTR_MEMO) && RE4DC_PARTS_PTR_MEMO
+        // PARTS_PTR_MEMO (logicbudget.mk): resume the chain walk from the last link this model's chain returned when
+        // the request is at or past it (cloth and skeleton loops ask for rising part numbers), instead of from the
+        // head. Same result while the chain is unchanged; the memo is keyed by model and head link.
+        static cModel* s_m;
+        static cModel* s_head;
+        static cModel* s_p;
+        static int s_no;
+        cModel* const head = p;
+        if (this == s_m && head == s_head && cnt > s_no && s_no > 0) {
+            p = s_p;
+            no = cnt - s_no - 1;
+        }
+#endif
         do {
             cModel* next = p->pParts;
             if (!PTR_OK(next)) {
@@ -463,6 +477,12 @@ RE4_INLINE cModel* cModel::getPartsPtr(int no)
             }
             p = next;
         } while (no--);
+#if defined(RE4DC_PARTS_PTR_MEMO) && RE4DC_PARTS_PTR_MEMO
+        s_m = this;
+        s_head = head;
+        s_p = p;
+        s_no = cnt;
+#endif
     }
     return p;
 }

@@ -1154,6 +1154,17 @@ int EspArrayAlloc(u32 n)
         }
     }
 #endif
+#if defined(RE4DC_ESP_POOL_ROOM_CAP) && RE4DC_ESP_POOL_ROOM_CAP
+    // ESP_POOL_ROOM_CAP (esppool.mk): the listed rooms ask for at most their measured peak plus a margin.
+    {
+        static const u16 caprooms[] = {RE4DC_ESP_POOL_ROOM_CAP_LIST};
+        for (u32 k = 0; k < sizeof(caprooms) / sizeof(caprooms[0]); k++) {
+            if (pG && caprooms[k] == (u16) pG->room_id && n > RE4DC_ESP_POOL_ROOM_CAP) {
+                n = RE4DC_ESP_POOL_ROOM_CAP;
+            }
+        }
+    }
+#endif
 #if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
     espd_n = n;
 #endif
