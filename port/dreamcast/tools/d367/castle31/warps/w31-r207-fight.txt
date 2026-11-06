@@ -1,0 +1,15 @@
+name w31-r207-hallfight
+room 0x207
+jp 0
+chapter 6
+status 3 0x04000000
+inv default
+god
+stock
+census 300
+dump
+goto 300 -9764 4149 -10683 0 sub
+act 900 a 10
+act 960 a 10
+entry 2
+alivelog 30

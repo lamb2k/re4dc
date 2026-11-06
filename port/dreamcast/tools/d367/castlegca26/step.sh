@@ -33,12 +33,14 @@ case "$1" in
   snd)
     SW=$2; WK=$3; CAT=${4:?}
     rm -rf "${SW:?}"; mkdir -p "$SW/tree/st2" "$SW/tree/em" "$SW/ps2"
-    for r in r201 r202 r204 r208; do cp "$WK/m/$r/em/$r.dar" "$SW/tree/st2/$r.dar"; done
-    for e in em19 em1a; do cp "$WK/m/$e/em/$e.drs" "$SW/tree/em/"; done
+    # GCA_ROOMS / GCA_SND_EMS (lane world-ch31 11-02): the rooms / enemy banks of this store; unset = cgca26 as before
+    SR=${GCA_ROOMS:-r201 r202 r204 r208}; SE=${GCA_SND_EMS-em19 em1a}; FL=""; PAT=("r20*.snd")
+    for r in $SR; do cp "$WK/m/$r/em/$r.dar" "$SW/tree/st2/$r.dar"; FL="$FL,st2/$r.dar"; done
+    for e in $SE; do cp "$WK/m/$e/em/$e.drs" "$SW/tree/em/"; FL="$FL,em/$e.drs"; PAT+=("$e.snd"); done
     cd "$TW"
-    python3 ps2_audio.py afs --iso "$ISO" --out "$SW/ps2" 'r20*.snd' 'em19.snd' 'em1a.snd' | tail -1
+    python3 ps2_audio.py afs --iso "$ISO" --out "$SW/ps2" "${PAT[@]}" | tail -1
     python3 ps2_audio.py banks --tree "$SW/tree" --ps2 "$SW/ps2" --out "$SW/ov" \
-      --files st2/r201.dar,st2/r202.dar,st2/r204.dar,st2/r208.dar,em/em19.drs,em/em1a.drs --json "$SW/banks-map.json" --jobs 4 > "$SW/banks.txt"
+      --files "${FL#,}" --json "$SW/banks-map.json" --jobs 4 > "$SW/banks.txt"
     tail -1 "$SW/banks.txt"
     python3 d367/snd28_store.py "$SW/tree" "$SW/ov" "$SW/banks-map.json" "$CAT" "$SW/store" "$SW/ps2" | tail -1
     cp "$SW/banks.txt" "$SW/store/_map/" ;;

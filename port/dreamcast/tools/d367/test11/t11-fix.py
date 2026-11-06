@@ -1620,6 +1620,19 @@ DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 RES24GD = os.environ.get('RES24GD', '/root/re4data/private/res24g-20261024')
 if os.path.isdir(RES24GD):
     DATA['res24g'] = {'dc/resident.bin': RES24GD + '/resident.bin'}
+# res26pr (lane playreads 11-03, data only): res24g's dc/resident.bin + the keys lane coldread27's 60 s Flycast runs
+# loaded in play (DISC_READ_LOG=2, phase=play tex.pak reads) in r113 / r11e / r201 / r202 / r207 / r208, listed by
+# vram/resident_keys.py list into vram/resident/r*.tsv, then resident_keys.py extend <out> res24g/resident.bin
+# res24g/resident-remap.tsv vram/resident/r*.tsv: 5,596 records (137 added). res24g's remap table. After res24g.
+RES26PRD = os.environ.get('RES26PRD', '/root/re4data/private/res26pr-20261103')
+if os.path.isdir(RES26PRD):
+    DATA['res26pr'] = {'dc/resident.bin': RES26PRD + '/resident.bin'}
+# res26pr2 (lane playreads 11-03, DISC 2 ONLY via D2_DATA): the castle tree's dc/resident.bin + the r201 / r202 / r208
+# in-play keys of the same runs (only the keys new to vram/resident/r20x.tsv; resident_keys.py extend <out>
+# castle-d2-j/dc/resident.bin - new/r*.tsv): 5,959 records (77 added).
+RES26PR2D = os.environ.get('RES26PR2D', '/root/re4data/private/res26pr2-20261103')
+if os.path.isdir(RES26PR2D):
+    DATA['res26pr2'] = {'dc/resident.bin': RES26PR2D + '/resident.bin'}
 # Lane fix-r10d-speed23 (10-23, #55 r10d merchant cave, approximation): r10dlod23 = r10d's PS2 world mesh rebuilt with
 # offline LOD for the clusters that had none and 3 m clusters (ps2_room_r4im.py, ch21l inputs and light, + --lod-cluster
 # 3000 --lod-min-gain 0.8 --lod-uv-guard 0.05 --lod-floor 60). Same parts and placements as ch21l (ps2-world.r4pw
@@ -1976,6 +1989,15 @@ if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
     for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
         DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
+# em14lc (lane castlebudget 11-04, DISC 2 ONLY via D2_DATA, after cgca26 / pmcgca26): em/em14.drs (the castle zealots,
+# r20f / r204) with its motion streamed cold: prepare_enemy_motions.py (all-cold hot audit, textures already on Disc 2),
+# cgca26's sound bank, PS2 BINs (ps2_ganado_bins.py), PS2 em14.dat motion (ps2_motion_prepared.py rewrite, VERIFY PASS)
+# + its 133 dc/mot keys. Body 3,884,384 -> 1,452,640 B: cgca26's copy never fit r20f / r204 heap 4 (DVD: Memory allocate
+# failed on em/em14.drs, rr 1104-0628). Generator tools/d367/castlebudget/em14p.sh. Store: re4-assets-private/em14lc-20261104.
+EM14LCD = os.environ.get('EM14LCD', '/root/re4data/private/em14lc-20261104')
+if os.path.isfile(EM14LCD + '/RECIPE.txt'):
+    DATA['em14lc'] = {'em/em14.drs': EM14LCD + '/em/em14.drs'}
+    DATA['em14lc'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (EM14LCD, _k) for _k in sorted(os.listdir(EM14LCD + '/dc/mot'))})
 # cpic26 (lane castle-gca-26 11-02, no-GameCube-assets rule; DISC 2 ONLY via D2_DATA, after pmcgca26): dc/tex.pak = the
 # Disc 2 composed pack with 5 castle enemy / r201 pictures as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes
 # and formats kept). castle_fixture merges it over its composed pack. Store: re4-assets-private/cpic26-20261102.
@@ -1997,13 +2019,84 @@ CPIC26CD = os.environ.get('CPIC26CD', '/root/re4data/private/cpic26c-20261102')
 if os.path.isdir(CPIC26CD):
     DATA['cpic26c'] = {'dc/tex.pak': CPIC26CD + '/dc/tex.pak'}
     PAK_DERIVED['cpic26c'] = CPIC26CD + '/pak-derived.json'
+# cpic27 (lane world-ch31 11-03, DISC 2 ONLY via D2_DATA, after cpic26c): r203 key 761e77f9 as PS2 pixels (r203.dat TPL 67t).
+CPIC27D = os.environ.get('CPIC27D', '/root/re4data/private/cpic27-20261102')
+if os.path.isdir(CPIC27D):
+    DATA['cpic27'] = {'dc/tex.pak': CPIC27D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic27'] = CPIC27D + '/pak-derived.json'
+# cpic34 (lane world-ch334 11-03, DISC 2 ONLY via D2_DATA, after cpic27): cpic27's pack with cgca34's 4 PS2 pictures the
+# composed pack had kept as base bytes (6596bca3 7eea0efc 8a87a40f fcb60a5d) and the r20e armor (em3c) registry package's 5
+# PS2 textures (3f0e6e6e b8a23b61 f8da1db6 fafe0c9d 9cec60e1; r20e TEXCHK "open failed"). castlegca34/mkcpic34.py.
+CPIC34D = os.environ.get('CPIC34D', '/root/re4data/private/cpic34-20261103')
+if os.path.isdir(CPIC34D):
+    DATA['cpic34'] = {'dc/tex.pak': CPIC34D + '/dc/tex.pak'}
+    PAK_DERIVED['cpic34'] = CPIC34D + '/pak-derived.json'
+# r20dem19 (lane world-ch334 11-03, DISC 2 ONLY via D2_DATA): r20d's registry package with zealot-em19-07q (07p + the
+# alternate accessory pool acc2-b 0x211|0x220, acc5-b 0x217|0x219; r20d em19 rows carry flag 0x4000), CAST-GC r20d.
+R20DEM19D = os.environ.get('R20DEM19D', '/root/re4data/private/castle34-em19-20261103/set-r20dem19')
+if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
+    DATA['r20dem19'] = {'dc/native/r20d/registry.re4nmr': R20DEM19D + '/dc/native/r20d/registry.re4nmr'}
+# em14q (lane em14q 11-04, DISC 2 ONLY via D2_DATA): r20f's registry package with zealot-em14-08q (08p + the alternate
+# accessory pool acc2-b 0x211|0x220, acc5-b 0x217|0x219; r20f's second type 8 row carries flag 0x4000), CAST-GC r20f.
+EM14QD = os.environ.get('EM14QD', '/root/re4data/private/em14q-20261104/set-em14q')
+# Also r203 / r207 (zealot-em11-07q) and r20c (zealot-em1b-07q): the same 0x4000 rows, from the Disc 2 static audit; any
+# dc/tex key the set adds ships loose.
+if os.path.isfile(EM14QD + '/dc/native/r20f/registry.re4nmr'):
+    DATA['em14q'] = {os.path.relpath(os.path.join(_d, _f), EM14QD): os.path.join(_d, _f)
+                     for _d, _, _fs in os.walk(EM14QD) for _f in _fs}
+# res34 (lane world-ch334 11-03, DISC 2 ONLY): the castle resident.bin with r20c r20f r206 r20d r20e from vram/resident/castle18.
+RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
+if os.path.isfile(RES34D + '/dc/resident.bin'):
+    DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
+# trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
+# that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
+# trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.
+TRANS34D2D = os.environ.get('TRANS34D2D', '/root/re4data/private/trans34d2-20261104')
+if os.path.isfile(TRANS34D2D + '/trclass.idx'):
+    DATA['trans34d2'] = {'dc/native/trclass.idx': TRANS34D2D + '/trclass.idx'}
+    for _r in sorted(os.listdir(TRANS34D2D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
+            DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
+# cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
+# sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
+# items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
+# owner world-ch31). Stores: re4-assets-private/cgca27-20261102, pmcgca27-20261102.
+for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca27-20261102')),
+               ('pmcgca27', os.environ.get('PMCGCA27D', '/root/re4data/private/pmcgca27-20261102'))):
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+
+# cgca34 / pmcgca34 (lane world-ch334 11-02, chapters 3-3 / 3-4; DISC 2 ONLY via D2_DATA, after cpic26c): the rooms r20c
+# r20f r206 r20d r20e and the enemy archives em11 em25 em3c from the PS2 version, same generator as cgca26
+# (castlegca34/gen-all.sh): PS2 objects / room BINs / items / debris / pictures / motion / room + enemy banks. Kept GC:
+# r206 BIN 0x32 (converter refuses: PS2 positions outside s16) and BIN 0x34..0x3a + FCV 0x3c..0x3e (no PS2 entry; the
+# PS2 r206.dat dropped them), em25 BIN 0x31 (rebuilt larger than its slot); kept GC samples in sound-kept-gc.tsv.
+# The game reads st2/*.dar (read.cpp ReadAreaData); castle_fixture keeps each .arc = its .dar payload, so the .arc rows are owned here too (11-04: unowned r20d.arc made r20d BIN 0x23 provenance=gc). Stores:
+# re4-assets-private/{cgca34,pmcgca34}-20261102.
+CGCA34D = os.environ.get('CGCA34D', '/root/re4data/private/cgca34-20261102')
+if os.path.isfile(CGCA34D + '/provenance.tsv'):
+    DATA['cgca34'] = {'tex': CGCA34D + '/tex'}
+    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'st2').glob('*.arc')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
+        DATA['cgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+PMCGCA34D = os.environ.get('PMCGCA34D', '/root/re4data/private/pmcgca34-20261102')
+if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
+    DATA['pmcgca34'] = {}
+    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
+        DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+    DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
 # the PS2 disc's room scenarios; rows.json = the room / row table; only rooms with a PS2 world package on the disc).
 # sky27 = the Disc 1 rooms (r1xx + r200; DATA), sky27c = the castle rooms (r2xx; Disc 2: D2_DATA). PS2 data only.
-# Store: re4-assets-private/sky27-20261102.
-SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27-20261102')
+# Store: re4-assets-private/sky27-20261102 (1024 x 256, 66 KiB a room). Default since lane house26 (11-02): sky27h, the
+# same panoramas at 1024 x 128 (34 KiB; resampled from the bake's pre-VQ source, rows / band / eye unchanged): the 66 KiB
+# r100 panorama gave h2 10 VRAM thrash-guard refusals (Test 26 full tier 8a628457), sky27h gives 0 over the whole h2.
+SKY27D = os.environ.get('SKY27D', '/root/re4data/private/sky27h-20261102')
 if os.path.isdir(SKY27D):
     _sky = sorted(r for r in os.listdir(SKY27D) if os.path.isfile('%s/%s/ps2-sky.r4sk' % (SKY27D, r)))
     DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
