@@ -52,7 +52,10 @@ def motion_keys(store):
             continue
         if f.suffix == '.fcv' and re.fullmatch(r'[0-9a-f]{8}-[0-9a-f]{8}', f.stem):
             keys.add(f.stem); continue
-        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat'):
+        # .arc too (lane assets-dc 11-03): pmrest25 proves r11e's clips with a staged st1/r11e.arc only (its .dar
+        # already held the same clips); with arcdrop that .arc leaves the disc and the catalog finds the clip in
+        # st1/r11e.dar, so the store's .arc keys must still credit the same key there.
+        if f.suffix.lower() not in ('.drs', '.dar', '.das', '.dat', '.arc'):
             continue
         b = f.read_bytes()
         bodies = [b] + ([b[build_catalog.DRS_TABLE:]] if f.suffix == '.drs' and len(b) > build_catalog.DRS_TABLE else [])
@@ -291,7 +294,7 @@ def main(catalog, recipe_conf, out_dir):
             d3 = m.group(1).replace('${D3_DATA}', d3).replace('$D3_DATA', d3)
         names += [n for n in d3.split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
-    grafted = {}
+    grafted, tex_files = {}, []
     for n in names:
         if n not in mod.DATA:
             missing_sets.append(n); continue
@@ -302,6 +305,7 @@ def main(catalog, recipe_conf, out_dir):
                     if os.path.isdir(src):
                         for f in Path(src).rglob('*.re4tex'):
                             tex_loose[f.stem.lower()] = st
+                            tex_files.append((f.stem.lower(), f, st))
                 continue
             if k == 'graft':
                 # member-level graft (t11-fix.py graft_all): the set owns only the grafted members, never the archive
@@ -319,6 +323,11 @@ def main(catalog, recipe_conf, out_dir):
             if k.lower() == 'dc/tex.pak' and os.path.isfile(src):
                 packs.append(st)
     tex_owner, first_pack = {}, None
+    # (key, sha256) -> the set whose pack first carried those bytes under that key (lane assets-dc 11-03): a disc pack
+    # composed from several chains (Disc 3: Disc 1's pack wins every shared key over the island pack, pak_keep) holds
+    # bytes an EARLIER set introduced; the same bytes get the same verdict on every disc, so a row is credited to the
+    # set that introduced its exact bytes, and only falls back to the key's last changer when no set did.
+    tex_intro = {}
     prev = None
     for st in packs:
         cur = {i: sha(d) for i, d, _o, _s in build_catalog.texpak_members(Path(st.src).read_bytes())}
@@ -328,6 +337,7 @@ def main(catalog, recipe_conf, out_dir):
             for k, h in cur.items():
                 if prev.get(k) != h:
                     tex_owner[k] = st
+                    tex_intro.setdefault((k, h), st)
         prev = cur
     ps2_motion = {}
     for st in stores.values():
@@ -346,9 +356,25 @@ def main(catalog, recipe_conf, out_dir):
     gc_models = gc_model_digests(gc)
     proofs, unknown, counts = [], [], collections.Counter()
     whole_file = collections.Counter()
+    _lp = {}
+
+    def loose_ps2():
+        """(key, sha256) -> 'set (store)' for every loose picture a data set proves PS2 (read once, on first use)."""
+        if not _lp and tex_files:
+            for k, f, st in tex_files:
+                h = sha(f.read_bytes())
+                if st.prov(h, texture=True)[0] == 'ps2':
+                    _lp.setdefault((k, h), '%s (%s)' % (st.name, st.why))
+            _lp.setdefault(None, None)
+        return _lp
     for r in rows:
         src = r['source']
         path = src.split('#')[0].lower()
+        # An unowned st?/rXXX.arc is the castle fixture's copy of its .dar payload, and the catalog keeps the FIRST file
+        # holding a member's bytes ('.arc' sorts before '.dar'): such a row is judged by the .dar's owning sets, not by the
+        # GameCube St?/rXXX.das fallback (lane assets-dc 11-04; world-ch334 r20d 115db755).
+        if path.endswith('.arc') and not overlay.get(path) and overlay.get(path[:-4] + '.dar'):
+            path = path[:-4] + '.dar'
         prov, ev = 'unknown', ''
         rv = reviewed.get((r['kind'], r['sha256']))
         if rv:
@@ -362,12 +388,17 @@ def main(catalog, recipe_conf, out_dir):
         elif src.startswith('runtime-harvest:'):
             ev = 'runtime harvest'
         elif r['kind'] == 'texture' and path == 'dc/tex.pak':
-            st = tex_owner.get(r['id'].lower())
+            st = tex_intro.get((r['id'].lower(), r['sha256'])) or tex_owner.get(r['id'].lower())
             if st:
                 prov, ev = st.prov(r['sha256'], texture=True)
                 ev = 'tex.pak key changed by ' + ev
             else:
                 ev = 'tex.pak key unchanged since the oldest readable pack (%s)' % first_pack
+            # Any set that proves PS2 for these exact bytes under this key wins (lane assets-dc 11-04): a loose PS2
+            # picture of a data set whose bytes a pack also carries (e.g. cgca34 tex/ = the pack's base bytes).
+            lp = loose_ps2().get((r['id'].lower(), r['sha256'])) if prov != 'ps2' else None
+            if lp:
+                prov, ev = 'ps2', 'tex.pak bytes = loose PS2 picture of ' + lp
         elif r['kind'] == 'texture' and r['id'].lower() in tex_loose and path.startswith('dc/tex'):
             prov, ev = tex_loose[r['id'].lower()].prov(r['sha256'], texture=True)
         elif r['kind'] == 'motion':

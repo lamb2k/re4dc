@@ -3563,6 +3563,10 @@ endif
 # padding cannot change a sample). Without such packages in dc/tex.pak the knob changes nothing.
 TEX_WRAP_SAFE ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_WRAP_SAFE=$(TEX_WRAP_SAFE)
+# PKG_PS2_SIZE=1 (render only, default 0; lane assets-dc 2026-11-02): texture packages with header flags bit 29 hold
+# the whole PS2 picture at the PS2's own size (data set dcf01); wrap and padded-UV checks accept them, UV scale 1.
+PKG_PS2_SIZE ?= 0
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PKG_PS2_SIZE=$(PKG_PS2_SIZE)
 # MODEL_DROP_LOG=1 (diagnostic, lane crowd12 2026-10-14; ledger G5/G6): MODELDROP lines, one per refused model
 # part (model, image, reason: state / guard / slab / texture / padded wrap / actor packet), with 600-frame sums.
 MODEL_DROP_LOG ?= 0

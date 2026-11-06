@@ -26,6 +26,9 @@ struct CatalogRow {
     const char* kind; const char* id; Digest digest; Provenance provenance;
 };
 struct CheckedAsset { unsigned value=0; };
+// Compact token = epoch<<CatalogTokenBits | row index (lane assets-dc 11-04: 14 -> 16 bits, Disc 2 + chapter 4 > 16,320 rows).
+constexpr unsigned CatalogTokenBits=16,CatalogTokenMask=(1U<<CatalogTokenBits)-1,CatalogUnknownLimit=64,
+    CatalogRowLimit=(1U<<CatalogTokenBits)-CatalogUnknownLimit,CatalogEpochLimit=1U<<(32-CatalogTokenBits);
 struct AssetDescription { char kind[16],id[48];Digest digest;Provenance provenance; };
 using CatalogReadAt = unsigned (*)(void* context,unsigned offset,void* destination,unsigned bytes);
 // One immutable read-only CD catalog per disc/source epoch. Room changes reset
@@ -56,6 +59,9 @@ CheckedAsset bind_checked(const char* kind,const char* id,const Digest& actual_s
 bool checked_current(CheckedAsset); // memory only; no catalog read, hashing or logging
 bool describe_checked(CheckedAsset,AssetDescription*); // safe boundaries only: may read the catalog
 void emitted_checked(Consumer,CheckedAsset); // unlocked flush: first room use may read a record
+// A runtime layout row: as emitted_checked, but an uncatalogued (Unknown) layout takes the provenance of the geometry it
+// interprets when that geometry is PS2 or authored (lane assets-dc 11-04). A catalogued layout keeps its own row.
+void emitted_layout(Consumer,CheckedAsset layout,CheckedAsset geometry);
 // Catalog rows must be generated from reviewed payload hashes, never path names.
 // The caller owns this immutable table until the next install(). Null is valid:
 // every emission then has Unknown provenance, rather than silently becoming PS2.
