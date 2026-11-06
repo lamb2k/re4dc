@@ -598,12 +598,25 @@ endif
 #              colour per part. Every other model keeps the fast-only part colour; no exact per-vertex evaluator.
 # LEON_WEP_SWAP_GUARD=1 (GitHub #63; render only; default 0: no effect): the LEON_LIGHT_DIR26 held-weapon test does not
 # read pPL->Wep while a sub screen is requested or open; the room's works are swapped out then.
+# LEON_WEP_SWAP_GUARD=2 (GitHub #63): as 1, plus pPL and pPL->Wep are followed only when aligned and inside main RAM.
 LEON_WEP_SWAP_GUARD ?= 0
-ifeq ($(filter $(LEON_WEP_SWAP_GUARD),0 1),)
-$(error LEON_WEP_SWAP_GUARD must be 0 or 1)
+ifeq ($(filter $(LEON_WEP_SWAP_GUARD),0 1 2),)
+$(error LEON_WEP_SWAP_GUARD must be 0, 1 or 2)
 endif
-ifeq ($(LEON_WEP_SWAP_GUARD),1)
-$(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_WEP_SWAP_GUARD=1
+ifneq ($(LEON_WEP_SWAP_GUARD),0)
+$(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_WEP_SWAP_GUARD=$(LEON_WEP_SWAP_GUARD)
+endif
+# QA_PVRERR_ROW=1 (GitHub #63 flicker, test discs only; default 0; needs PVR_LATCH=2): one row on every presented frame with
+# the hardware's SB_ISTERR counters, which Flycast never raises. PVR_LATCH already counts them; only the crash screen showed them.
+QA_PVRERR_ROW ?= 0
+ifeq ($(filter $(QA_PVRERR_ROW),0 1),)
+$(error QA_PVRERR_ROW must be 0 or 1)
+endif
+ifeq ($(QA_PVRERR_ROW),1)
+ifneq ($(PVR_LATCH),2)
+$(error QA_PVRERR_ROW=1 needs PVR_LATCH=2)
+endif
+$(OBJDIR)/platform/native_ui.o: GAME_CPPFLAGS += -DRE4DC_QA_PVRERR_ROW=1
 endif
 LEON_LIGHT_DIR26 ?= 0
 ifeq ($(filter $(LEON_LIGHT_DIR26),0 1),)

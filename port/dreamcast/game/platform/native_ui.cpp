@@ -3065,6 +3065,48 @@ void bench_banner_draw(){
     stream_send(packet,sizeof(packet));
 }
 #endif
+#if defined(RE4DC_QA_PVRERR_ROW) && RE4DC_QA_PVRERR_ROW
+// QA_PVRERR_ROW=1 (crowd.mk, GitHub #63): "I<isp total>+<last 60 frames> O<opb total>+<last 60> V<max vertex KB> P<max pool KB>"
+// white on black at y 60..88. Two textures, the idle one rewritten once a second and then shown, so a queued render
+// never reads a half written row. It is drawn last in the TR list: on a bad frame the row itself may be lost in a tile.
+pvr_ptr_t pverr_vram[2];bool pverr_failed;unsigned pverr_show,pverr_w,pverr_i0,pverr_o0,pverr_i,pverr_o,pverr_f;
+void pverr_row_draw(){
+    constexpr unsigned W=512,H=32;
+    if(pverr_failed)return;
+    if(!pverr_vram[0]){
+        pverr_vram[0]=pvr_mem_malloc(W*H*2);pverr_vram[1]=pverr_vram[0]?pvr_mem_malloc(W*H*2):nullptr;
+        if(!pverr_vram[1]){pverr_failed=true;re4dc_log("pverr row: no VRAM\n");return;}
+        pverr_f=frame-60U;
+    }
+    if(frame-pverr_f>=60U){
+        pverr_f=frame;
+        const unsigned ic=latch::err_count[0],oc=latch::err_count[3];
+        pverr_i=ic-pverr_i0;pverr_o=oc-pverr_o0;pverr_i0=ic;pverr_o0=oc;
+        char text[44];
+        snprintf(text,sizeof(text),"I%u+%u O%u+%u V%u P%u",ic,pverr_i,oc,pverr_o,latch::max_vtx/1024U,latch::max_opb/1024U);
+        const unsigned next=pverr_show^1U;
+        volatile unsigned short* t=reinterpret_cast<volatile unsigned short*>(pverr_vram[next]);
+        for(unsigned i=0;i<W*H;++i)t[i]=0U;
+        bfont_draw_str_ex(reinterpret_cast<unsigned short*>(pverr_vram[next])+4*W+8,W,0xFFFFU,0U,16,1,text);
+        pverr_w=std::min(W,unsigned(strlen(text))*12U+16U);pverr_show=next;
+        if(pverr_i|pverr_o)re4dc_log("pverr frame=%u %s\n",frame,text);
+    }
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,PVR_TXRFMT_RGB565|PVR_TXRFMT_NONTWIDDLED,W,H,pverr_vram[pverr_show],PVR_FILTER_NONE);
+    c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_ONE;c.blend.dst=PVR_BLEND_ZERO;c.gen.fog_type=PVR_FOG_DISABLE;
+    alignas(32) unsigned char packet[sizeof(pvr_poly_hdr_t)+4*sizeof(pvr_vertex_t)];
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(packet),&c);
+    auto* v=reinterpret_cast<pvr_vertex_t*>(packet+sizeof(pvr_poly_hdr_t));
+    const float w=float(pverr_w),x0=(640.0f-w)*0.5f,y0=60,h=28,u1=w/float(W),v0=2.0f/H,v1=30.0f/H;
+    const float xs[4]={x0,x0,x0+w,x0+w},ys[4]={y0+h,y0,y0+h,y0},us[4]={0,0,u1,u1},vs[4]={v1,v0,v1,v0};
+    const float layer=overlay_depth();
+    for(unsigned k=0;k<4;++k){
+        v[k].flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;v[k].x=RE4DC_UI_X(xs[k]);v[k].y=RE4DC_UI_Y(ys[k]);v[k].z=layer;
+        v[k].u=us[k];v[k].v=vs[k];v[k].argb=0xffffffffU;v[k].oargb=0;
+    }
+    stream_send(packet,sizeof(packet));
+}
+#endif
 #if defined(RE4DC_MCHECK_SAFE) && RE4DC_MCHECK_SAFE
 // MCHECK_SAFE=1 (mcheck.mk, test builds only): the bounding box (screen pixels) of every quad the speed display
 // flushes in a scene, logged at scene close with the render size, the tile grid and the tile rows LETTERBOX_CLIP
@@ -7055,6 +7097,9 @@ extern "C" void re4dc_ui_present(){
 #elif defined(RE4DC_QA_BANNER) && RE4DC_QA_BANNER
     if(!re4dc_vi_black() && !stream_aborted && re4dc_qa_banner_on())bench_banner_draw();   // qamenu.mk: title screens
 #endif
+#endif
+#if defined(RE4DC_QA_PVRERR_ROW) && RE4DC_QA_PVRERR_ROW && RE4DC_PVR_STREAM
+    if(!re4dc_vi_black() && !stream_aborted)pverr_row_draw();
 #endif
 #if RE4DC_PERF_HUD
     if(!re4dc_vi_black()){

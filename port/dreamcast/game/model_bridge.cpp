@@ -1415,6 +1415,15 @@ extern "C" int re4dc_actor_is_leon_weapon(const void* model){
     // sub screen bytes (seen 0x02650267: an odd read here, an address error on a real SH-4; Flycast performs it silently).
     if(pG->Status_flg[2]&0x04000000) return 0;
 #endif
+#if defined(RE4DC_LEON_WEP_SWAP_GUARD) && RE4DC_LEON_WEP_SWAP_GUARD>=2
+    // =2 (GitHub #63, tester photos addr e7392776 and 00cf0205 = junk Wep + 0x34): whatever the window holds, no pointer
+    // here is followed unless it is aligned main RAM, so no address error or TLB miss can come from this test.
+    {
+        const auto ram=[](const void* p,unsigned bytes){const unsigned u=unsigned(p),a=u&0x1fffffffU;
+            return !(u&3U) && (u>>29)==4U && a>=0x0c000000U && a+bytes<=0x0d000000U;};
+        if(!model||!ram(pPL,sizeof(cPlayer))||!ram(pPL->Wep,sizeof(cPlWep))) return 0;
+    }
+#endif
     if(!model||!pPL||!pPL->Wep) return 0;
     const cPlWep* w=pPL->Wep;
     return (const void*)static_cast<const cModel*>(w->m_pWep)==model || (const void*)static_cast<const cModel*>(w->pObj2)==model;
