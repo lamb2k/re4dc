@@ -19,7 +19,8 @@ CLI (WSL):
 import fcntl, json, os, shutil, sys, time
 from pathlib import Path
 
-ROOT = Path(os.environ.get('RE4DC_DISCCACHE', '/mnt/c/Flycast-Evidence/_disccache'))
+_ROOT_FILE = '/root/rr/state/disccache-root'   # jobs reach WSL through Git Bash, which drops the env var; rr27-style lanes pin the drive here
+ROOT = Path(os.environ.get('RE4DC_DISCCACHE') or (open(_ROOT_FILE).read().strip() if os.path.exists(_ROOT_FILE) else '/mnt/c/Flycast-Evidence/_disccache'))
 CAP = int(float(os.environ.get('RE4DC_DISCCACHE_CAP_GB', '6')) * 1024 ** 3)
 FLOOR = 16 * 1024 ** 3
 # the drive that receives the cache's bytes (lane world-ch31 11-03: the floor message said C: for a D: cache)
