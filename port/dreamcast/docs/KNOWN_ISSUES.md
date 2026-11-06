@@ -4,14 +4,17 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** November 2, 2026.
+**Last updated:** November 4, 2026.
 
-**Current build: Test 26** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). The castle starts on
-Disc 2 (chapter 3-1) with PS2 data, the PS2 sky in cutscenes, Leon's Test 23/24 lighting back (pistol included),
-faster farmhouse cutscenes and the Dreamcast stick back on the grab escape prompt. Disc 1 and Disc 2 come in the one game zip. A QA build for testers
-is the second download.
+**Current build: Test 27** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). The PS2 sky in normal
+play, El Gigante and Del Lago fixes, no El Gigante slowdown after he breaks objects, a save reload crash guard, more of
+the castle on Disc 2 (the rest of chapter 3-1, plus the chapter 3-3 and 3-4 rooms) and smoother castle rooms. Disc 1
+and Disc 2 come in the one game zip. A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
+
+- **Test 26:** the castle starts on Disc 2 (chapter 3-1) with PS2 data, the PS2 sky in cutscenes, Leon's Test 23/24
+lighting back (pistol included), faster farmhouse cutscenes and the Dreamcast stick back on the grab escape prompt.
 
 - **Test 25:** faster fights (one fast lighting path for every character, drawing speedups), Leon's dark clothes no
 longer crushed, PS2 sounds for the partners, crows and weapons, and everything from the unreleased Test 24b.
@@ -87,7 +90,8 @@ Not bugs: work that goes on from test to test.
 - **Frame rate.** It varies by scene, and the busiest fights are slowest. Speed work goes on in every test
   (history: [#29](https://github.com/lamb2k/re4dc/issues/29)).
 - **Pauses when entering rooms.** Rooms load their pictures and models at the door; this is getting shorter.
-- **Rooms not built yet.** The castle past chapter 3-1, the island and the final chapter are not on the discs yet.
+- **Rooms not built yet.** Castle chapter 3-2, chapter 4, the island and the final chapter are not on the discs yet.
+  The chapter 3-3 and 3-4 rooms are on Disc 2 and join normal play with chapter 3-2.
 - **Dark night rooms on some consoles.** Some players report them; our Flycast captures match the GameCube's
   brightness. We're checking.
 
@@ -95,12 +99,14 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
-| The first El Gigante fight (r119): the parasite and death cutscenes are skipped for lack of memory. The fight and its end still work | test 25, test 26 | 🛠️ In progress: also in Test 25; play continues; fixed in Test 27 | |
-| After Del Lago, arriving at the night lake shore (r11b): some room pictures load behind the chapter-change screen, and a few wait for a free block of video memory | test 25, test 26 | 🛠️ In progress: also in Test 25; play continues; fixed in Test 27 | |
-| El Gigante at the village (r11e): his body fades out drawn with the GameCube model | test 26 | 🛠️ In progress: a fix is built and waits for its look check (owner bossmem26) | |
-| The El Gigante fight slows down hard after he breaks objects (console report) | test 25, test 26 | 🔍 Investigating for Test 27 | |
-| Real console: reloading a save after dying in the El Gigante fight with Ashley can crash | test 26 | 🛠️ In progress: a guard comes in Test 27 | |
+| The first El Gigante fight (r119): the parasite and death cutscenes are skipped for lack of memory. The fight and its end still work | test 25, test 26 | 🟢 Fixed in test 27 | |
+| After Del Lago, arriving at the night lake shore (r11b): some room pictures load behind the chapter-change screen, and a few wait for a free block of video memory | test 25, test 26 | 🟢 Fixed in test 27 | |
+| El Gigante at the village (r11e): his body fades out drawn with the GameCube model | test 26 | 🟢 Fixed in test 27: he fades out with his PS2 model | |
+| The El Gigante fight slows down hard after he breaks objects (console report) | test 25, test 26 | 🟢 Fixed in test 27, needs console check: his animations stay in memory after objects break | |
+| Real console: reloading a save after dying in the El Gigante fight with Ashley can crash | test 26 | 🟢 Fixed in test 27, needs console check: a guard keeps the weapon memory safe on reload | |
 | Disc 2: the fight in r207 (castle, chapter 3-1) is not covered by our full no-warp run yet; our room checks pass there | test 26 | ⏸️ Open: covered in Test 27 testing | |
+| Disc 2: some castle pictures and room layouts have no recorded source yet in our asset check (PS2 or GameCube). They draw correctly; we are confirming each one comes from the PS2 version | test 27 | ⏸️ Open, not blocking: owner assets-dc, Test 28 | |
+| Disc 2: some castle Zealots have no Dreamcast character package yet (the Zealot chase, and two other castle rooms). A check of the enemy tables predicts they draw through the older GameCube path when they spawn; we have not watched it happen yet. They may look a little different and cost more speed. No crash, hang or stuck progress found | test 27 | 🛠️ In progress: first item of Test 28 | |
 | Equipping the Blacktail handgun stops the game with "DLL link/unlink failed" | test 23 | 🟢 Fixed in test 24: its weapon code is in the build again | [#58](https://github.com/lamb2k/re4dc/issues/58) |
 | Mendez freezes after grabbing Leon (chapter 2-3 barn, r11f) | test 22 and earlier | 🟢 Fixed in test 23: his state word was read in the wrong byte order; the bear hug holds and the fight goes on | [#55](https://github.com/lamb2k/re4dc/issues/55) |
 | A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🟢 Fixed in test 22: the death scene plays and Continue returns you to the room | |
@@ -131,6 +137,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| In some big castle rooms with no fog, far walls can show as a black gap past the view distance (seen in one Disc 2 hall). Options > View distance > Full reduces it, for that boot only | test 27 | ⏸️ Stays as is for now, to protect speed | |
 | First area (r100) on a real console: some textures look white or mismatched up to the village gate, the path back from the dog trap and the two wooden cabins by the bridge show without textures, and the village gate is missing | test 23 | 🔍 Investigating, not blocking: we are checking each on Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | In the village, the wooden box under the grenade on the shelf by the shotgun is not drawn | test 23 | 🔍 Investigating, not blocking | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | Radio calls run slowly, and a white background shows as Leon lifts the radio | test 23 and earlier | 🔍 Investigating, not blocking: the call portraits are PS2 since Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
