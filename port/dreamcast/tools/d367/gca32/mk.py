@@ -76,9 +76,9 @@ for n in ('tex.pak',):
 for n in ('pak-derived.json', 'report.json'):
     shutil.copyfile(wk / 'cpic' / n, s2 / n)
 (s2 / 'RECIPE.txt').write_text(
-    'cpic32b 2026-11-03 lane world-ch31 (no-GameCube-assets rule, Disc 2 only). provenance: ps2.\n'
-    'dc/tex.pak = cpic27\'s pack with 5 pictures as PS2 pixels under their keys, by tools/d367/ps2cast/em_eff_pics.py from\n'
+    'cpic32b lane world-ch31 / world-ch32 (no-GameCube-assets rule, Disc 2 only). provenance: ps2.\n'
+    'dc/tex.pak = cpic27b\'s pack with 4 pictures as PS2 pixels under their keys, by tools/d367/ps2cast/em_eff_pics.py from\n'
     'PS2 USA BIO4DAT.AFS: 3d9d333a-125fadf1 <- em23.dat TPL image 1 (NCC 1.000); e75f4f42-b5f65a4f <- r20b.dat image 108\n'
-    '(0.995); fcb60a5d-e940e957 <- r20a.dat image 157, 7b86c92d-e0871570 <- image 2, db1febac-00a38398 <- image 52 (1.000).\n'
+    '(0.995); 7b86c92d-e0871570 <- image 2, db1febac-00a38398 <- image 52 (1.000).\n'
     'castle_fixture merges its changed keys (pak-derived.json) over the composed pack. Generator: tools/d367/gca32/gen.sh.\n')
 print('mk: %d provenance rows (%d ps2)' % (len(rows), sum(1 for r in rows if r[3])))

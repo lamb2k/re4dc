@@ -17,7 +17,7 @@ H=$(cd "$(dirname "$0")" && pwd); TW=$(cd "$H/../.." && pwd)
 ISO=${PS2_ISO:-/mnt/c/Game Dev/Emulators/re4_helpers/Resident Evil 4 (USA)/Resident Evil 4 (USA).iso}
 PM=${PMCW32D:-/root/re4data/private/pmcw32-20261102}
 CT=${D2_CASTLE_TREE:-/root/re4data/private/castle-d2-j-20261021}
-PK=${CPIC27D:-/root/re4data/private/cpic27-20261102}/dc/tex.pak
+PK=${CPIC27D:-/root/re4data/private/cpic27b-20261103}/dc/tex.pak
 S1=/root/re4data/private/cgca32-$TAG; S2=/root/re4data/private/cpic32b-$TAG
 case "$WK" in /root/work/lanes/world-ch31-scratch/*) rm -rf "${WK:?}";; *) echo "refusing work dir $WK"; exit 1;; esac
 mkdir -p "$WK/obj" "$WK/ps2"
@@ -34,7 +34,7 @@ python3 d367/ps2cast/ashley_reroom.py make "$CT/dc/native/r201/partner.re4nmr" "
 python3 d367/ps2cast/em_eff_pics.py "$PK" "$WK/cpic" \
   --pair - "$WK/ps2/em23.dat" 3d9d333a-125fadf1:1 \
   --pair - "$WK/ps2/r20b.dat" e75f4f42-b5f65a4f:108 \
-  --pair - "$WK/ps2/r20a.dat" fcb60a5d-e940e957:157 7b86c92d-e0871570:2 db1febac-00a38398:52 | tail -6
+  --pair - "$WK/ps2/r20a.dat" 7b86c92d-e0871570:2 db1febac-00a38398:52 | tail -6
 for s in "$S1" "$S2"; do case "$s" in /root/re4data/private/cgca32-2*|/root/re4data/private/cpic32b-2*) rm -rf "${s:?}";; *) exit 1;; esac; done
 python3 "$H/mk.py" "$S1" "$S2" "$WK" "$PM" "$CT"
 for s in "$S1" "$S2"; do (cd "$s" && find . -type f ! -name SHA256SUMS.txt | sort | xargs sha256sum > SHA256SUMS.txt); done

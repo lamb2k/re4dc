@@ -2129,7 +2129,8 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
 # files. .dar only (the game reads st2/rNNN.dar, never the .arc: read.cpp ReadAreaData). Stores: re4-assets-private/cw32-20261103b, pmcw32-20261103b (prior textures: cgca26 + cgca27 only).
 CW32D = os.environ.get('CW32D', '/root/re4data/private/cw32-20261103b')
 if os.path.isfile(CW32D + '/provenance.tsv'):
-    DATA['cw32'] = {'tex': CW32D + '/tex'}
+    CW32TEXD = os.environ.get('CW32TEXD', '/root/re4data/private/cw32tex-20261106')   # cw32 loose keys minus 2 cgca34 stages as the same picture
+    DATA['cw32'] = {'tex': (CW32TEXD if os.path.isdir(CW32TEXD) else CW32D) + '/tex'}
     for _f in sorted(Path(CW32D, 'st2').glob('*.dar')) + sorted(Path(CW32D, 'em').glob('*.drs')):
         DATA['cw32']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 PMCW32D = os.environ.get('PMCW32D', '/root/re4data/private/pmcw32-20261103b')
@@ -2166,7 +2167,7 @@ if os.path.isfile(CGCA32D + '/RECIPE.txt'):
         DATA['cgca32']['st2/' + _f.name] = str(_f)
     for _f in sorted(Path(CGCA32D, 'dc', 'native').glob('r*/partner.re4nmr')):
         DATA['cgca32']['dc/native/%s/partner.re4nmr' % _f.parent.name] = str(_f)
-CPIC32BD = os.environ.get('CPIC32BD', '/root/re4data/private/cpic32b-20261103')
+CPIC32BD = os.environ.get('CPIC32BD', '/root/re4data/private/cpic32b-20261106')
 if os.path.isdir(CPIC32BD):
     DATA['cpic32b'] = {'dc/tex.pak': CPIC32BD + '/dc/tex.pak'}
     PAK_DERIVED['cpic32b'] = CPIC32BD + '/pak-derived.json'
