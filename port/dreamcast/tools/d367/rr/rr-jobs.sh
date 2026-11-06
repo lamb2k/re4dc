@@ -43,6 +43,9 @@ disc2_jobs() {
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
   echo "r200 r202 r203 r201 r207 r208 r204 r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
+  # ALIGN-CALL on Disc 2 (lane rel27, GitHub #63): r200 + the source radio call 0 replayed, align logger
+  { cat "$EVU/fixtures/d2-r200.txt"; echo "radio 30 0"; } > "$EVU/fixtures/d2-align-call.txt"
+  job 2 d2align-call "$(run d2align-call d2c d2c 60 --align --warp "\"\$EVW\\fixtures\\d2-align-call.txt\"")"
   # r207 hall clear rig (lane world-ch31): god + stock, the source damage path kills the nearest Ganado every 75 frames;
   # 180 s: the entry radio event alone runs to ~52 s wall; the log shows kills, cap holds/releases and the room flags (clear + doors). Judged by hand, not by rr-judge.
   if [ -s "$CW31/w31-r207-kill.txt" ]; then
@@ -119,6 +122,9 @@ if [ "$TIER" = quick ] && [ -d "$EVU/_discs/a" ] && [ -s "$ROUTE/out-fp${RR_PFX:
   # gca-grenade is judged (the boot run is gca-r101's path).
   job 1 gca-grenade "$(run gca-grenade-boot a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --stop "'phase=enter room=101'" --grace 2 --state-out "\"\$EVW\\gca-grenade-state\"") && $(run gca-grenade a a 60 --warp "\"\$EVW\\fixtures\\gca-grenade.txt\"" --state-in "\"\$EVW\\gca-grenade-state\"")"
 fi
+# ALIGN-CALL (lane rel27, GitHub #63): one radio call under the align logger, no button pressed; 0 MISALIGN allowed, every tier.
+tr -d '\r' < "$T/port/dreamcast/tools/d367/fullplay/segments/align-call-warp.txt" > "$EVU/fixtures/align-call.txt"
+job 2 align-call "$(run align-call c c 60 --align --warp "\"\$EVW\\fixtures\\align-call.txt\"")"
 [ "${RR_DISC2:-0}" != 1 ] || disc2_jobs
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fp${RR_PFX:-rr}${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
