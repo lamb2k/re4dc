@@ -4,7 +4,7 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** November 4, 2026.
+**Last updated:** November 6, 2026.
 
 **Current build: Test 27** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). The PS2 sky in normal
 play, El Gigante and Del Lago fixes, no El Gigante slowdown after he breaks objects, a save reload crash guard, more of
@@ -141,6 +141,7 @@ Not bugs: work that goes on from test to test.
 | First area (r100) on a real console: some textures look white or mismatched up to the village gate, the path back from the dog trap and the two wooden cabins by the bridge show without textures, and the village gate is missing | test 23 | 🔍 Investigating, not blocking: we are checking each on Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | In the village, the wooden box under the grenade on the shelf by the shotgun is not drawn | test 23 | 🔍 Investigating, not blocking | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | Radio calls run slowly, and a white background shows as Leon lifts the radio | test 23 and earlier | 🔍 Investigating, not blocking: the call portraits are PS2 since Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
+| Crash to a blue screen at radio calls and merchant cutscenes on a real Dreamcast, unless the cutscene is skipped; items and subtitles flicker | test 26 | 🔍 Investigating: Test 27 removes an odd memory read when a radio call opens. Whether that was this crash is not confirmed yet; the merchant cutscenes and the flicker are still open | [#63](https://github.com/lamb2k/re4dc/issues/63) |
 | The picture looks softer on a CRT than in early tests (Test 9 / 10) | test 10 and later | 🔍 Investigating, not blocking | [#61](https://github.com/lamb2k/re4dc/issues/61) |
 | The torch flames in the dam side room (r10d) look blue in our Flycast captures | test 24b | 🔍 Investigating: found in our release captures; please tell us their colour on a real console | |
 | The night road (r111) looks darker than in Test 22 | test 24b | 🛠️ In progress, not blocking | |
