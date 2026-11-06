@@ -398,7 +398,6 @@ The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.
 
 The full, current list is [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md). The top open items:
 
-- **Some effect sprites skipped for about a second** in r200, at the castle gate ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 - **Pauses when entering rooms.**
 
 ## Help out
