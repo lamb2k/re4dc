@@ -44,7 +44,7 @@ disc2_jobs() {
   done
   echo "r200 r202 r203 r201 r207 r208 r204 r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
   # ALIGN-CALL on Disc 2 (lane rel27, GitHub #63): r200 + the source radio call 0 replayed, align logger
-  { sed -E '/^(goto|act|entry) /,$d' "$EVU/fixtures/d2-r200.txt"; echo "radio 30 0"; } > "$EVU/fixtures/d2-align-call.txt"
+  { sed -E '/^(goto|act|entry) /,$d' "$EVU/fixtures/d2-r200.txt"; echo "radio 30 19"; } > "$EVU/fixtures/d2-align-call.txt"   # op 19 = ss_oc301, stage 3's first call: op 0's tables do not exist in op03.das (10 sub-files), its seq pointer is stray
   job 2 d2align-call "$(run d2align-call d2c d2c 60 --align --warp "\"\$EVW\\fixtures\\d2-align-call.txt\"")"
   # r207 hall clear rig (lane world-ch31): god + stock, the source damage path kills the nearest Ganado every 75 frames;
   # 180 s: the entry radio event alone runs to ~52 s wall; the log shows kills, cap holds/releases and the room flags (clear + doors). Judged by hand, not by rr-judge.
