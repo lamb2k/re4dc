@@ -23,6 +23,8 @@ New in test 27:
   The castle Zealots in the lever room and the Zealot chase load cleanly.
 * Smoother castle rooms, faster fights at the dam and the village, and
   smoother music streaming.
+* An odd memory read when a radio call opens is gone (issue #63; not yet
+  tested on a real console).
 * A QA build for testers is a separate download on the release page.
 
 Please tell us about any crash, freeze or missing texture, and where. Photos
