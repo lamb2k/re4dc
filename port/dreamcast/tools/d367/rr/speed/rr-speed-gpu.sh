@@ -47,7 +47,8 @@ scenes() { # <label>
   # Git Bash path of $EV on any drive (/mnt/d/x -> /d/x; house26: "/c/${EV#/mnt/c/}" broke SPEED_EV on D:)
   eg=${EV#/mnt/}; eg=/${eg%%/*}${EV#/mnt/"${eg%%/*}"}
   for sc in $SCENES; do
-    [ -s "$EV/stats/$x-$sc-cstat.txt" ] && continue
+    # a cut-off run leaves a header-only file: that is not a measurement (rel27 11-05: 42 bytes kept farm "not measured" 3 of 3)
+    [ "$(grep -c '^CSTAT frame' "$EV/stats/$x-$sc-cstat.txt" 2>/dev/null || true)" -ge "${SPEED_GPU_MIN_ROWS:-6}" ] && continue
     "$GITBASH" "//wsl.localhost/Ubuntu-24.04$HERE/gpu-scene.sh" "$gw" "$eg/disc-$x/syms.txt" "$eg" "$x" "$sc" \
       > "$W/gpu-$x-$sc.log" 2>&1 < /dev/null &
     pids+=($!); n=$((n + 1))

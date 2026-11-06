@@ -1989,6 +1989,15 @@ if os.path.isfile(PMCGCA26D + '/RECIPE.txt'):
     for _f in sorted(Path(PMCGCA26D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA26D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA26D, 'em').glob('*.drs')):
         DATA['pmcgca26']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca26'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA26D, _k) for _k in sorted(os.listdir(PMCGCA26D + '/dc/mot'))})
+# em14lc (lane castlebudget 11-04, DISC 2 ONLY via D2_DATA, after cgca26 / pmcgca26): em/em14.drs (the castle zealots,
+# r20f / r204) with its motion streamed cold: prepare_enemy_motions.py (all-cold hot audit, textures already on Disc 2),
+# cgca26's sound bank, PS2 BINs (ps2_ganado_bins.py), PS2 em14.dat motion (ps2_motion_prepared.py rewrite, VERIFY PASS)
+# + its 133 dc/mot keys. Body 3,884,384 -> 1,452,640 B: cgca26's copy never fit r20f / r204 heap 4 (DVD: Memory allocate
+# failed on em/em14.drs, rr 1104-0628). Generator tools/d367/castlebudget/em14p.sh. Store: re4-assets-private/em14lc-20261104.
+EM14LCD = os.environ.get('EM14LCD', '/root/re4data/private/em14lc-20261104')
+if os.path.isfile(EM14LCD + '/RECIPE.txt'):
+    DATA['em14lc'] = {'em/em14.drs': EM14LCD + '/em/em14.drs'}
+    DATA['em14lc'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (EM14LCD, _k) for _k in sorted(os.listdir(EM14LCD + '/dc/mot'))})
 # cpic26 (lane castle-gca-26 11-02, no-GameCube-assets rule; DISC 2 ONLY via D2_DATA, after pmcgca26): dc/tex.pak = the
 # Disc 2 composed pack with 5 castle enemy / r201 pictures as PS2 pixels under their keys (ps2cast/em_eff_pics.py; sizes
 # and formats kept). castle_fixture merges it over its composed pack. Store: re4-assets-private/cpic26-20261102.
@@ -2027,6 +2036,14 @@ if os.path.isdir(CPIC34D):
 R20DEM19D = os.environ.get('R20DEM19D', '/root/re4data/private/castle34-em19-20261103/set-r20dem19')
 if os.path.isfile(R20DEM19D + '/dc/native/r20d/registry.re4nmr'):
     DATA['r20dem19'] = {'dc/native/r20d/registry.re4nmr': R20DEM19D + '/dc/native/r20d/registry.re4nmr'}
+# em14q (lane em14q 11-04, DISC 2 ONLY via D2_DATA): r20f's registry package with zealot-em14-08q (08p + the alternate
+# accessory pool acc2-b 0x211|0x220, acc5-b 0x217|0x219; r20f's second type 8 row carries flag 0x4000), CAST-GC r20f.
+EM14QD = os.environ.get('EM14QD', '/root/re4data/private/em14q-20261104/set-em14q')
+# Also r203 / r207 (zealot-em11-07q) and r20c (zealot-em1b-07q): the same 0x4000 rows, from the Disc 2 static audit; any
+# dc/tex key the set adds ships loose.
+if os.path.isfile(EM14QD + '/dc/native/r20f/registry.re4nmr'):
+    DATA['em14q'] = {os.path.relpath(os.path.join(_d, _f), EM14QD): os.path.join(_d, _f)
+                     for _d, _, _fs in os.walk(EM14QD) for _f in _fs}
 # res34 (lane world-ch334 11-03, DISC 2 ONLY): the castle resident.bin with r20c r20f r206 r20d r20e from vram/resident/castle18.
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
@@ -2035,6 +2052,15 @@ if os.path.isfile(RES34D + '/dc/resident.bin'):
 RES4D = os.environ.get('RES4D', '/root/re4data/private/res4-20261104')
 if os.path.isfile(RES4D + '/RECIPE.txt'):
     DATA['res4'] = {'dc/resident.bin': RES4D + '/dc/resident.bin'}
+# trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
+# that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
+# trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.
+TRANS34D2D = os.environ.get('TRANS34D2D', '/root/re4data/private/trans34d2-20261104')
+if os.path.isfile(TRANS34D2D + '/trclass.idx'):
+    DATA['trans34d2'] = {'dc/native/trclass.idx': TRANS34D2D + '/trclass.idx'}
+    for _r in sorted(os.listdir(TRANS34D2D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
+            DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
@@ -2134,17 +2160,17 @@ if os.path.isdir(CPIC32D):
 # (castlegca34/gen-all.sh): PS2 objects / room BINs / items / debris / pictures / motion / room + enemy banks. Kept GC:
 # r206 BIN 0x32 (converter refuses: PS2 positions outside s16) and BIN 0x34..0x3a + FCV 0x3c..0x3e (no PS2 entry; the
 # PS2 r206.dat dropped them), em25 BIN 0x31 (rebuilt larger than its slot); kept GC samples in sound-kept-gc.tsv.
-# Ships st2/*.dar only (the game never opens the .arc: read.cpp ReadAreaData; Disc 2 space). Stores:
+# The game reads st2/*.dar (read.cpp ReadAreaData); castle_fixture keeps each .arc = its .dar payload, so the .arc rows are owned here too (11-04: unowned r20d.arc made r20d BIN 0x23 provenance=gc). Stores:
 # re4-assets-private/{cgca34,pmcgca34}-20261102.
 CGCA34D = os.environ.get('CGCA34D', '/root/re4data/private/cgca34-20261102')
 if os.path.isfile(CGCA34D + '/provenance.tsv'):
     DATA['cgca34'] = {'tex': CGCA34D + '/tex'}
-    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
+    for _f in sorted(Path(CGCA34D, 'st2').glob('*.dar')) + sorted(Path(CGCA34D, 'st2').glob('*.arc')) + sorted(Path(CGCA34D, 'em').glob('*.drs')):
         DATA['cgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
 PMCGCA34D = os.environ.get('PMCGCA34D', '/root/re4data/private/pmcgca34-20261102')
 if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
     DATA['pmcgca34'] = {}
-    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
+    for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
         DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
 # cgca32 / cpic32b (lane world-ch31 11-03, chapter 3-2 GC-ASSET for r20a / r20b; DISC 2 ONLY via D2_DATA, after cpic27):

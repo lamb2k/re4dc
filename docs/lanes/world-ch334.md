@@ -108,3 +108,31 @@ Disc 2 data_sectors 454735 (limit: disc_lint.py HD_END LBA 549150, track 3 at LB
   with those rooms replaced (every other room kept). On D2_DATA; its cycle did not run (C: 3 GB, lanelock refused).
 - Stores cpic34 / castle34-em19 / res34 / trans34 are in /root/re4data/private; the copy to re4-assets-private + manifest
   is pending (C: full).
+
+## 11-04: R4TC tier 2 look gate (CH-FIXES-CARRY row 10) and the Disc 1 GDEMU seed-1 fail
+Arms: A = t15/int 83c26c8ee (rr 1104-0106, sidecars off: "trans: classes=unlisted"), B = 82dbd3206 (rr 1104-0214,
+D2_DATA += trans34d2: "classes=ok"). Same Disc 2 census twin program; per room the census warp + `freeze 700` (r20f froze
+at 958), fp_run --period 4, the last frozen shot of each arm, tr_pixdiff.py (no mask). Stills + heat maps:
+re4-assets-private/trans34d2-20261104/look.
+| Room | changed | verdict |
+|---|---|---|
+| r20c | 0.0 % | tier 2 PASS |
+| r20f | 0.0 % | tier 2 PASS |
+| r20d | 0.0 % | tier 2 PASS |
+| r20e | 0.0 % | tier 2 PASS |
+| r206 | 13.2 % | held: the torch-flicker lighting keeps changing in the frozen frame (two frozen shots of the same arm differ by ~10 %; heat on the flames, Leon, the lit dais, the HUD), so the gate cannot separate the sidecar; the pair looks identical by eye |
+D2_DATA trans34d2 = the trans17 index + r20c r20f r20d r20e and their sidecars (r206 held; needs a flicker-free view or a
+TRANS_POLICY_DEBUG mask still). Cycle B verdict: 38/39, the one fail a Disc 2 GC-ASSET r200 "layout" row (3a00a62f,
+source geometry) seen because B's 60 s window reached a third r200 visit (A two); r200's sidecar and index entry are
+unchanged between arms.
+GDEMU (Disc 1, door103): seed 1 FAIL in 1103-2345 and 1104-0106, seeds 2 and 3 PASS (0 bad reads, r103 load 2.8 / 2.4 s).
+Seed 1's read-log.err is empty and it has 0 bad reads: the guest ran ~782 ticks in the 60 s host window (seeds 2/3 reach
+vbl 2478 by 41 s), so the door act (vbl ~1868) never came. Host throughput in the busy start of the cycle, not a disc read.
+
+## 11-04: r206 joins trans34d2 (proof, not a still)
+TRANS_POLICY=3 = kTpFlat|kTpCard (native_static.cpp: target() moves only FLAT / OPAQUE_IN_TR to pass 0 and CARD_NEAR to
+pass 1; DROP and FAR are off). trans34 classes of every 3-3 / 3-4 room: pass 0 OP, pass 2 SOFT / VA / UNKNOWN; none is
+FLAT, OPAQUE_IN_TR, CARD_NEAR or CARD_SOFTA (r206: OP 211, SOFT 6, VA 9, UNKNOWN 13). So the sidecar changes no draw pass
+in these rooms, and a TRANS_POLICY_DEBUG `transdbg 1` still (it hides FLAT / OPAQUE_IN_TR parts) would give an empty mask.
+The r206 13 % still diff is the torch flicker. trclass.idx = trans17 + r20c r20f r206 r20d r20e (31 rooms).
+These sidecars matter once a policy bit that moves SOFT / VA (or FAR) is turned on; that arm needs its own look check.

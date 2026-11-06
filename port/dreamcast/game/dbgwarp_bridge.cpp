@@ -1,3 +1,5 @@
+#include <dc/maple.h>
+#include <dc/maple/controller.h>
 // D367 test warp rig (DBG_WARP=1, test builds only; compiled out otherwise, and a disc without
 // /cd/dc/warp.txt boots normally). Starts the game in a chosen room with Leon placed and the
 // scenario state an event needs, within seconds of boot:
@@ -500,6 +502,12 @@ void load()
         } else if (!strcmp(k, "watch") && n >= 3) {
             // watch <addr> <words>: arm the vi.cpp memory watch now (r229 FAULT hunt, lane world-ch4 11-04)
             re4dc_watch_arm_snap((const void*) (uintptr_t) num(tok[1]), num(tok[2]));
+        } else if (!strcmp(k, "watchmaple") && n >= 1) {
+            // watchmaple: port 0's controller status words (idle in Flycast runs: a change = a stray write)
+            maple_device_t* d = maple_enum_type(0, MAPLE_FUNC_CONTROLLER);
+            if (d) re4dc_watch_arm_snap(maple_dev_status(d), 8);
+            re4dc_log("warp: watchmaple dev %p status %p
+", (void*) d, d ? maple_dev_status(d) : nullptr);
         } else if (!strcmp(k, "watchpad") && n >= 1) {
             // watchpad: 4 pages of code around pad.cpp scriptButtons (r229 FAULT pc), page aligned
             re4dc_watch_arm_snap((const void*) (((uintptr_t) re4dc_pad_code_anchor() & ~0xFFFu) - 0x2000), 4096);

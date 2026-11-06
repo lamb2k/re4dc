@@ -338,6 +338,15 @@ bool key_hot(const Binding& b,unsigned i) { return word(record(b,i)+16)!=0 || pi
 // (pin_loading); any other miss of that key, e.g. after a movie or weapon request evicted it, takes the reserved slabs
 // exactly as before, so the bounded profile's slab-only miss path is unchanged.
 bool pin_loading;
+// MOTION_PIN_CASTLE_MARGIN=1 (game30.mk, lane coldfix 2026-11-03): in the castle rooms (r2xx) pin admission keeps the
+// castle cold-pool margin (MOTION_COLD_POOL_CASTLE) instead of MOTION_PIN's, when that is smaller.
+unsigned pin_margin() {
+#if defined(RE4DC_MOTION_PIN_CASTLE_MARGIN) && RE4DC_MOTION_PIN_CASTLE_MARGIN && RE4DC_MOTION_COLD_POOL_CASTLE
+    if((re4dc_room_id_now()>>8)==2 && unsigned(RE4DC_MOTION_COLD_POOL_CASTLE)<unsigned(RE4DC_MOTION_PIN))
+        return unsigned(RE4DC_MOTION_COLD_POOL_CASTLE);
+#endif
+    return unsigned(RE4DC_MOTION_PIN);
+}
 bool slab_key(const Binding& b,unsigned i) {
 #if RE4DC_MOTION_BOUNDED_R11F
     if(b.bounded)return !(pin_loading && pinned_key(b,i));
@@ -1054,13 +1063,13 @@ void pin_apply(Binding& b,unsigned crc) {
         if(!pinned_key(b,i))continue;
         const unsigned n=aligned(word(record(b,i)+4));
         if(b.slots[i].data) { ++keys;bytes+=n;continue; }
-        if(re4dc_static_heap_free()<int(n+unsigned(RE4DC_MOTION_PIN)+96)) {
+        if(re4dc_static_heap_free()<int(n+pin_margin()+96)) {
             b.pin[i>>3]&=(unsigned char)~(1u<<(i&7));++refused;refused_bytes+=n;continue;
         }
         pin_loading=true;load(b,i);pin_loading=false;++keys;bytes+=n;
     }
     re4dc_log("motion pin: archive=%u pinned=%u bytes=%u refused=%u refused_bytes=%u heap4=%d margin=%u\n",b.bytes,keys,bytes,
-              refused,refused_bytes,re4dc_static_heap_free(),unsigned(RE4DC_MOTION_PIN));
+              refused,refused_bytes,re4dc_static_heap_free(),pin_margin());
 }
 }
 #endif
@@ -1079,7 +1088,7 @@ extern "C" unsigned re4dc_motion_pin_restore() {
         for(unsigned i=0;i<b.count && i<256;++i) {
             if(!pinned_key(b,i) || b.slots[i].data)continue;
             const unsigned n=aligned(word(record(b,i)+4));
-            if(re4dc_static_heap_free()<int(n+unsigned(RE4DC_MOTION_PIN)+96)){++refused;continue;}
+            if(re4dc_static_heap_free()<int(n+pin_margin()+96)){++refused;continue;}
             pin_loading=true;load(b,i);pin_loading=false;++keys;bytes+=n;
         }
     }

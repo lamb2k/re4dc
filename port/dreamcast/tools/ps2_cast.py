@@ -476,6 +476,20 @@ PRESETS['zealot-em1a-08q'] = dict(PRESETS['zealot-em1a-08p'],
 PRESETS['zealot-em19-07q'] = dict(PRESETS['zealot-em19-07p'],
     sections=PRESETS['zealot-em19-07p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
     rooms=['r20d'])
+# lane em14q (2026-11-04, Test 27): r20f's second em14 type 8 Zealot (emleon03, u4 20444030) carries flag 0x4000 without
+# 0x200000 (mot[38] BIN 0x217 + mot[40] TPL 0x219); zealot-em14-08p has no 0x217|0x219 role, so registry_bind refused it and
+# it drew GC (CAST-GC r20f). The same complete alternate pool as zealot-em19-07q / zealot-em1a-08q.
+PRESETS['zealot-em14-08q'] = dict(PRESETS['zealot-em14-08p'],
+    sections=PRESETS['zealot-em14-08p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
+    rooms=['r20f'])
+# lane em14q (2026-11-04): the same flag 0x4000 gap, found by the Disc 2 static audit: em11 type 7 rows in r202 / r203 / r207
+# (emleon02) and em1b type 7 rows in r20c (emleon03). Same complete alternate pool.
+PRESETS['zealot-em11-07q'] = dict(PRESETS['zealot-em11-07p'],
+    sections=PRESETS['zealot-em11-07p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
+    rooms=['r202', 'r203', 'r207'])
+PRESETS['zealot-em1b-07q'] = dict(PRESETS['zealot-em1b-07p'],
+    sections=PRESETS['zealot-em1b-07p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
+    rooms=['r20c'])
 PRESETS['zealot-em11-08h'] = dict(PRESETS['zealot-em11-08g'],
     sections=PRESETS['zealot-em11-08g']['sections'] + [(0x211, 'acc32-b', 0x220)], rooms=['r226'])
 # em3cModelInit attaches a weapon after body and chainmail: C/D for types 0/2, E/F for types 1/3.

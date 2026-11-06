@@ -220,6 +220,12 @@ $(OBJDIR)/platform/native_motion.o: $(OBJDIR)/platform/motpin_table.inc
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN) -I$(OBJDIR)/platform
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
 $(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_PIN=$(MOTION_PIN)
+# MOTION_PIN_CASTLE_MARGIN=1 (lane coldfix 2026-11-03, default 0 = image unchanged; needs MOTION_COLD_POOL_CASTLE): pin
+# admission in the castle rooms keeps the castle cold-pool margin instead of MOTION_PIN's (r202 em11 row).
+MOTION_PIN_CASTLE_MARGIN ?= 0
+ifneq ($(MOTION_PIN_CASTLE_MARGIN),0)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PIN_CASTLE_MARGIN=1
+endif
 endif
 # ESP_SPIKE_LOG=1 (lane motionpin 2026-11-02; log only, needs DISC_READ_METER=1, default 0 = image unchanged): an
 # effect-move phase over 20 ms logs "esp spike:" with the texture uploads, disc reads / blocked time and motion key
