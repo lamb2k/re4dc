@@ -1270,6 +1270,14 @@ static u32 s_esp_setup_trim_frame = ~0U, s_esp_setup_ess_frame = ~0U;
 #if defined(RE4DC_R117_FX_FALLBACK)
 static int Ps2fxPuzzleFallback(const cEsp* esp);
 #endif
+#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
+// #66 bug 1: r108 / r118 dial insignias are room EFF picture 0xE1 (7 frames, PS2 r108.dat / r118.dat #7): the clue of the
+// puzzle, not atmosphere. Essential cut them as the room's ambient table (owner 0x01). Their glows stay as they were.
+static inline int FxInsigniaKeep(const cEsp* esp)
+{
+    return (esp->m_Tex_id & 0xFF) == 0xE1 && (G_ROOM_ID == 0x108 || G_ROOM_ID == 0x118);
+}
+#endif
 static int FxEssentialCut(const cEsp* esp, int screen)
 {
 #if defined(RE4DC_ESP_ESSENTIAL_EARLY)
@@ -1289,6 +1297,9 @@ static int FxEssentialCut(const cEsp* esp, int screen)
     if (screen) return 0;
 #if defined(RE4DC_R117_FX_FALLBACK)
     if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
+#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
+    if (FxInsigniaKeep(esp)) return 0;
 #endif
     const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
     const int room = owner == 0x01 || owner == 0xD0;
@@ -1317,6 +1328,9 @@ static int FxEssentialSetupCut(const cEsp* esp, int screen)
     if (!s_ess_class[0x00]) return 0; // the first eligible late call initializes it
 #if defined(RE4DC_R117_FX_FALLBACK)
     if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
+#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
+    if (FxInsigniaKeep(esp)) return 0;
 #endif
     const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
     if (c == ESS_KEEP) return 0;

@@ -363,6 +363,15 @@ ifneq ($(FX_TRIM),1)
 $(error FX_TRIM_LOG=1 needs FX_TRIM=1)
 endif
 endif
+# FX_INSIGNIA_KEEP=1 (default 0; render only; #66 bug 1): under Essential keep picture 0xE1 in r108 / r118, the dial's
+#                    insignias. Without it the discs only glow and the puzzle's clue is gone.
+FX_INSIGNIA_KEEP ?= 0
+ifneq ($(filter-out 0 1,$(FX_INSIGNIA_KEEP)),)
+$(error FX_INSIGNIA_KEEP is 0 or 1)
+endif
+ifeq ($(FX_INSIGNIA_KEEP),1)
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_INSIGNIA_KEEP=1
+endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
 # frame, effect pool and live room generation. Successful replacement still suppresses the
