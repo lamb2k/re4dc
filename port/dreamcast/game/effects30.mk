@@ -381,19 +381,25 @@ endif
 ifeq ($(ID_ALPHA_SAT),1)
 $(OBJDIR)/src/game/id_sys.o: GAME_CPPFLAGS += -DRE4DC_ID_ALPHA_SAT=1
 endif
-# ITEM_VIEW_BG=1 (default 0; #66 bug 2): the item pickup view's background. The GameCube grabs the frame (GXCopyTex)
-# and draws it back behind the item; both are empty stubs here, so the view drew over whatever was left. The slot
-# (examine.cpp render, OT 0x12) now queues one darkened full-screen UI quad (ITEM_VIEW_BG_ARGB). Render only.
+# ITEM_VIEW_BG=1 (default 0; #66 bug 2): the item pickup view. The GameCube grabs the frame (GXCopyTex) and draws it
+# back behind the item; both are empty stubs here, so the view drew over whatever the frame held (bands on the
+# console). Before the view's first frame unit a full-screen panel is queued (ITEM_VIEW_BG_ARGB), and the message
+# panel picture (texture 0x61, CMPR: green noise over the "You got" text) is drawn as a plain dark panel
+# (ITEM_VIEW_PANEL_ARGB). Render only; needs ITEM_UI_ORDER=1 (ui_bridge.cpp).
 # ITEM_VIEW_DIAG=1 (test only): lists the pickup view's UI queue (IVD lines) every 60 frames. Needs ITEM_UI_ORDER=1.
 ITEM_VIEW_BG ?= 0
-ITEM_VIEW_BG_ARGB ?= 0xc0000000U
+ITEM_VIEW_BG_ARGB ?= 0xff000000U
+ITEM_VIEW_PANEL_ARGB ?= 0xe0101010U
 ITEM_VIEW_DIAG ?= 0
 ifneq ($(filter-out 0 1,$(ITEM_VIEW_BG) $(ITEM_VIEW_DIAG)),)
 $(error ITEM_VIEW_BG and ITEM_VIEW_DIAG are 0 or 1)
 endif
 ifeq ($(ITEM_VIEW_BG),1)
-$(OBJDIR)/src/game/examine.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1
-$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1 -DRE4DC_ITEM_VIEW_BG_ARGB=$(ITEM_VIEW_BG_ARGB)
+ifneq ($(ITEM_UI_ORDER),1)
+$(error ITEM_VIEW_BG needs ITEM_UI_ORDER=1)
+endif
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1 -DRE4DC_ITEM_VIEW_BG_ARGB=$(ITEM_VIEW_BG_ARGB) -DRE4DC_ITEM_VIEW_PANEL_ARGB=$(ITEM_VIEW_PANEL_ARGB)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1
 endif
 ifeq ($(ITEM_VIEW_DIAG),1)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_DIAG=1

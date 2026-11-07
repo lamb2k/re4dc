@@ -6804,6 +6804,9 @@ extern "C" void re4dc_ui_begin(){
     frame_header_hits=model_header_hits;frame_header_builds=model_header_builds;
     frame_pvr_calls=frame_pvr_bytes=frame_queue_peak=frame_queue_drops=0;
 }
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+extern "C" unsigned re4dc_ui_frame_no(){return frame;}
+#endif
 #if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
 // ITEM_VIEW_DIAG (test only): during the pickup view, every 60th frame lists the UI queue in submission order.
 extern "C" int re4dc_ivd_on(){return re4dc_item_ui_order() && frame%60==0;}
