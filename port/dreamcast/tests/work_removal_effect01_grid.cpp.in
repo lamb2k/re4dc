@@ -1,0 +1,145 @@
+// Both arms include actual production Esp1bGridDraw03 bodies. The reference is
+// the pinned baseline, while the candidate is the checked-out production file.
+// Texture, GX state and publication are boundary shims. No grid loop is copied.
+#include "native_ui.h"
+#include "native_draw_result.hpp"
+#include "effect_uv12.hpp"
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <limits>
+#include <vector>
+using u8=unsigned char;using u32=unsigned;using f32=float;
+using Mtx=float[3][4];struct Vec{float x,y,z;};struct GXColor{u8 r,g,b,a;};
+struct TEXHeader{void* data;unsigned width,height,format,wrapS,wrapT;};
+struct CLUT{};struct TEXDescriptor{TEXHeader* textureHeader;CLUT* CLUTHeader;};
+struct TEXPalette{unsigned numDescriptors;};
+struct EspTexWk{unsigned Owner;TEXPalette* pTpl;Mtx mtx;};
+struct System{EspTexWk Esp_tex_tbl[1];}system01,*g_pEspSys=&system01;
+struct cEsp{unsigned m_Tex_id=0,m_Ptn_no=0,m_Tool_flg=0,xA5=4,xA6=5;Mtx m_Mat{};alignas(4)u8 pad_EC[64]{};};
+@WORK_TYPE@
+bool eligible01=true;int Esp1bGridClass03(cEsp*){return eligible01;}
+TEXHeader header01;TEXDescriptor descriptor01;TEXPalette palette01{1};CLUT clut01;
+bool missing_descriptor01=false;TEXDescriptor* TEXGet(TEXPalette*,unsigned){return missing_descriptor01?nullptr:&descriptor01;}
+GXColor s_effect_col;float projection01[7],viewport01[6];
+#define RE4DC_FX_FLIP_PTN(p,n) (p)
+#define RE4DC_GXF_GET_PROJECTION(p) std::memcpy(p,projection01,sizeof projection01)
+#define RE4DC_GXF_GET_VIEWPORT(p) std::memcpy(p,viewport01,sizeof viewport01)
+unsigned position_calls01,matrix_calls01;
+void PSVECSubtract(const Vec* a,const Vec* b,Vec* o){const Vec v{a->x-b->x,a->y-b->y,a->z-b->z};*o=v;}
+void PSVECAdd(const Vec* a,const Vec* b,Vec* o){const Vec v{a->x+b->x,a->y+b->y,a->z+b->z};*o=v;}
+void PSVECScale(const Vec* a,Vec* o,float s){const Vec v{a->x*s,a->y*s,a->z*s};*o=v;}
+void PSMTXMultVec(const Mtx m,const Vec* a,Vec* o){++matrix_calls01;const Vec v{
+    m[0][0]*a->x+m[0][1]*a->y+m[0][2]*a->z+m[0][3],
+    m[1][0]*a->x+m[1][1]*a->y+m[1][2]*a->z+m[1][3],
+    m[2][0]*a->x+m[2][1]*a->y+m[2][2]*a->z+m[2][3]};*o=v;}
+@GETPOS_FUNCTION@
+void GetPosXY(Vec* p0,Vec* p1,Vec* p2,Vec* p3,float u,float v,Vec* out){
+    ++position_calls01;SourceGetPosXY01(p0,p1,p2,p3,u,v,out);
+}
+using O=re4dc::NativeDrawOutcome;using R=re4dc::NativeDrawResult;
+std::vector<Re4dcEffectQuad> emitted01;unsigned stop_at01;O stop_kind01,ordinary_kind01;
+bool poison01,validate_positions01;cEsp* live_effect01;
+extern "C" R re4dc_effect_quad_result(const Re4dcEffectQuad* q){
+    emitted01.push_back(*q);const unsigned at=emitted01.size();
+    // The actual producer already owns copies. Simulate unrelated live source
+    // mutation after its first callback without ever changing the const quad.
+    if(poison01 && at==1){std::memset(live_effect01->pad_EC,0,sizeof live_effect01->pad_EC);
+        for(auto& row:live_effect01->m_Mat)for(float& f:row)f=NAN;
+        for(auto& row:system01.Esp_tex_tbl[0].mtx)for(float& f:row)f=NAN;}
+    if(validate_positions01)for(const auto& row:q->positions)for(float f:row)
+        if(!std::isfinite(f))return {O::UnsupportedBeforePublication};
+    O kind=stop_at01 && at==stop_at01?stop_kind01:ordinary_kind01;
+    return {kind,kind==O::Submitted?1U:0U,kind==O::Queued?1U:0U};
+}
+#define Esp1bGridDraw03 ReferenceGrid01
+#include "grid-reference01.inc"
+#undef Esp1bGridDraw03
+#include "grid-candidate01.inc"
+struct Config01{
+    unsigned div=2,seed=0,bad=0,stop_at=0;O stop_kind=O::Refused,ordinary_kind=O::Queued;bool poison=false;
+};
+struct Observation01{R result;std::vector<Re4dcEffectQuad> quads;unsigned positions,matrices;};
+static Observation01 draw01(R(*draw)(cEsp*),const Config01& cfg){
+    cEsp effect;live_effect01=&effect;eligible01=true;missing_descriptor01=false;
+    header01={reinterpret_cast<void*>(1),64,32,4,0,0};descriptor01={&header01,nullptr};
+    auto& tw=system01.Esp_tex_tbl[0];tw={};tw.pTpl=&palette01;
+    const float scale=float(cfg.seed+1)/13;
+    Esp1bSpWork work{cfg.div,{scale,scale*3,-scale},{-scale*7,scale*.01f,scale*9},{-scale*2,scale*9,-scale}};
+    std::memcpy(effect.pad_EC+12,&work,sizeof work);
+    const Mtx transform={{scale,.01f,-.25f,300},{.04f,scale,-.01f,-250},{.05f,-.03f,scale,-10}};
+    std::memcpy(effect.m_Mat,transform,sizeof transform);
+    const Mtx uv={{scale,.2f,.5f,-.5f},{-.1f,scale,.25f,.5f},{0,0,1,0}};
+    std::memcpy(tw.mtx,uv,sizeof uv);
+    const float projection[]={0,1,0,1,0,-.01f,-1.01f},viewport[]={0,0,640,480,0,1};
+    std::memcpy(projection01,projection,sizeof projection);std::memcpy(viewport01,viewport,sizeof viewport);
+    s_effect_col={128,64,32,192};validate_positions01=false;
+    switch(cfg.bad){
+    case 0:break;case 1:eligible01=false;break;case 2:work.p3.z=NAN;std::memcpy(effect.pad_EC+12,&work,sizeof work);break;
+    case 3:effect.m_Mat[0][0]=NAN;break;case 4:tw.Owner=0xd2;break;case 5:tw.pTpl=nullptr;break;
+    case 6:effect.m_Ptn_no=1;break;case 7:missing_descriptor01=true;break;case 8:descriptor01.textureHeader=nullptr;break;
+    case 9:header01.data=nullptr;break;case 10:header01.width=0;break;case 11:header01.height=0;break;
+    case 12:header01.format=5;break;case 13:descriptor01.CLUTHeader=&clut01;break;case 14:header01.wrapS=1;break;
+    case 15:header01.wrapT=1;break;case 16:tw.mtx[1][2]=NAN;break;case 17:projection01[0]=1;break;
+    case 18:viewport01[2]=0;break;case 19:projection01[2]=NAN;break;case 20:viewport01[1]=NAN;break;
+    case 21:projection01[5]=1;break;case 22:projection01[6]=1.01f;break;
+    case 23:s_effect_col.a=0;break;case 24:s_effect_col.a=1;break;
+    case 25:effect.m_Tool_flg=0x20080;s_effect_col={128,64,32,1};break;
+    case 26:tw.mtx[0][0]=3e38f;tw.mtx[0][1]=0;tw.mtx[0][2]=0;tw.mtx[0][3]=1e38f;break;
+    case 27:effect.m_Mat[0][0]=3e38f;effect.m_Mat[0][3]=3e38f;validate_positions01=true;break;
+    case 28:effect.m_Mat[0][0]=-0.0f;effect.m_Mat[0][1]=-0.0f;tw.mtx[0][0]=-0.0f;break;
+    case 29:effect.m_Mat[0][0]=std::numeric_limits<float>::denorm_min();break;
+    default:assert(false);
+    }
+    stop_at01=cfg.stop_at;stop_kind01=cfg.stop_kind;ordinary_kind01=cfg.ordinary_kind;poison01=cfg.poison;
+    emitted01.clear();position_calls01=matrix_calls01=0;const auto result=draw(&effect);
+    assert(position_calls01==matrix_calls01);
+    return {result,emitted01,position_calls01,matrix_calls01};
+}
+static bool same_quad01(const Re4dcEffectQuad& a,const Re4dcEffectQuad& b){
+    return a.image.pixels==b.image.pixels && a.image.palette==b.image.palette &&
+        a.image.width==b.image.width && a.image.height==b.image.height && a.image.format==b.image.format &&
+        a.image.palette_format==b.image.palette_format && a.image.palette_bytes==b.image.palette_bytes &&
+        !std::memcmp(a.positions,b.positions,sizeof a.positions) && !std::memcmp(a.u,b.u,sizeof a.u) &&
+        !std::memcmp(a.v,b.v,sizeof a.v) && !std::memcmp(a.projection,b.projection,sizeof a.projection) &&
+        !std::memcmp(a.viewport,b.viewport,sizeof a.viewport) && a.color==b.color && a.src==b.src && a.dst==b.dst &&
+        a.wrap_s==b.wrap_s && a.wrap_t==b.wrap_t;
+}
+unsigned cases01,vertices01;
+static Observation01 compare01(const Config01& cfg){
+    const auto old=draw01(ReferenceGrid01,cfg),next=draw01(Esp1bGridDraw03,cfg);
+    assert(old.result.outcome==next.result.outcome && old.result.submitted==next.result.submitted && old.result.queued==next.result.queued);
+    assert(old.result.fallback_allowed()==next.result.fallback_allowed() && old.quads.size()==next.quads.size());
+    for(unsigned i=0;i<old.quads.size();++i)assert(same_quad01(old.quads[i],next.quads[i]));
+    assert(next.positions<=old.positions);++cases01;vertices01+=4*old.quads.size();return next;
+}
+int main(int argc,char**argv){
+    assert(argc==2);const bool enabled=std::strtoul(argv[1],nullptr,10)!=0;
+    unsigned full_cases=0;std::printf("{\"examples\":[");bool comma=false;
+    for(unsigned seed=0;seed<16;++seed)for(unsigned div=2;div<=64;++div){
+        Config01 cfg;cfg.div=div;cfg.seed=seed;const auto result=compare01(cfg);
+        const unsigned expected=enabled?2*div*(div+1):4*div*div;
+        assert(result.positions==expected && result.quads.size()==div*div && result.result.queued==div*div);++full_cases;
+        if(seed==0 && (div==2||div==8||div==16||div==64)){
+            std::printf("%s{\"div\":%u,\"baseline_corner_evals\":%u,\"candidate_corner_evals\":%u}",comma?",":"",div,4*div*div,result.positions);comma=true;}
+    }
+    for(unsigned bad=1;bad<=29;++bad){Config01 cfg;cfg.bad=bad;const auto result=compare01(cfg);
+        if(bad<=22)assert(result.quads.empty() && result.result.outcome==O::UnsupportedBeforePublication);
+        if(bad==23||bad==24)assert(result.quads.empty() && result.result.outcome==O::PolicySkip);
+        if(bad==25)assert(result.quads[0].color==0x04ffff80);
+        if(bad==26)assert(result.result.outcome==O::PartialAbort && result.result.queued==1 && result.quads.size()==1);
+    }
+    for(unsigned div:{0U,1U,65U,0xffffffffU}){Config01 cfg;cfg.div=div;const auto result=compare01(cfg);assert(result.quads.empty());}
+    for(O ordinary:{O::Queued,O::Submitted,O::Culled,O::PolicySkip}){
+        Config01 cfg;cfg.div=8;cfg.ordinary_kind=ordinary;compare01(cfg);
+        for(O kind:{O::Refused,O::UnsupportedBeforePublication,O::PartialAbort})for(unsigned stop:{1U,2U,64U}){
+            cfg.stop_kind=kind;cfg.stop_at=stop;const auto result=compare01(cfg);assert(result.quads.size()==stop);
+            if(stop>1 && (ordinary==O::Queued||ordinary==O::Submitted))assert(result.result.outcome==O::PartialAbort && !result.result.fallback_allowed());
+        }
+    }
+    Config01 poison;poison.div=8;poison.poison=true;const auto copied=compare01(poison);assert(copied.quads.size()==64 && copied.result.queued==64);
+    std::printf("],\"full_grid_cases\":%u,\"total_cases\":%u,\"vertices_compared\":%u,\"byte_mismatches\":0}\n",full_cases,cases01,vertices01);
+}

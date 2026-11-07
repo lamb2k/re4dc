@@ -2017,3 +2017,23 @@ Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 
 Owner source `58ece53a00e033d572daf197921fa5a480e475a7` landed by clean no-ff merge `8a7c123bb8d7750e1dfea5f65f87fd33bdbc0a33`. 9 full target arms including ordinary/legacy rows, collector combination, raw-pool compiler diagnostic and RTT, empty missing.txt and full OFF identity. Real Esp4e single-white8x8 RGB565/fullambient/emptylights/RGBA>=64 producer now yields source SCALE4 opaque white with source depth writes. Copied embedded GX words use effect/cloth lifetime; archive authority covers pixels only. Closed retirement/new-admission, grid/source/native-reset, owned-slot reuse, no stale replay and selected failure are tested. Material1 also handles Set allocation failure/caller cleanup and requires existing lighting ABI fix1. Strict host sanitizers exclude vptr only in legacy raw allocator adapter; new helper checks remain enabled. Debug pool restoration stays closed until completed Set; private reset proof is single-path only. Broader materials, actual incidence/GPU/look/STRICT/current memory/net cost/console remain open.
 
 Fresh-base origin-only push and remote readback PASS. Compatible ALLON QA_LINK1 compile, macro scope, empty missing.txt, loader+standard disc lint, ZIP and checksums PASS; track03 SHA256 `da87d27c8821344dfef733aebb5c83ee822581d11d1b2a32064fcf9505c82815`. Prepared only; no new runtime/Flycast/hardware, SD copy, release/default promotion or private asset publication. Prior scoped runtime observations stay bound to their original source/image. Remaining whole-card gates and explicit holds stay open.
+
+
+## Cloud activity: 2026-11-01 work-removal spikes (WIP)
+
+Base `65fe3d1f96ab269c136053725850101be9d3e692`; branch `codex/work-removal-spikes-20261101`. The latest user requests production spikes and local handoff for the source-grounded work-removal opportunities. See [exclusive worker matrix, scope and validation limits](work-removal-spikes-20261101.md). Existing results, blocked merges and acceptance holds above are unchanged. Root owns this report and shared build/tracking changes; source workers edit isolated assigned files. All new controls default0 and remain outside recipes. Implementation and public synthetic validation are underway; no target/full OFF/runtime/performance or console acceptance is claimed by this activity checkpoint.
+
+
+### Cloud 2026-11-01: C EFFECT_RECORD_PASS01
+
+A padding plus27337b42 correction passes172245 cases/15 line profiles. C EFFECT_RECORD_PASS01 implemented;29 host cases/arm and selector OFF host identity PASS. B corrected source, D grid and E world host-ready for publication; cloth fixture active. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: D ESP1B_EDGE_REUSE01
+
+A padding, B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01 and D ESP1B_EDGE_REUSE01 implemented/host PASS. Grid1082 cases/5728648 vertex records per arm, zero differences; default0. World host-ready; cloth active. See [bounded implementation, tests and remaining gates](work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+## Cloud 2026-11-01 final spike handoff to local
+
+Six bounded work-removal spikes are implemented and pushed (source bundle7b29e56d57203b8b521dae9c768f779bd8c72f47) with four reproducible public host suites. Actor A's initial inactive-parent location failure was corrected by27337b4284f505596755219b28578c6d1673185f; the initial A commit alone is superseded. All new controls default0. This closes the bounded source-spike delivery, not any whole EF card or target/runtime/performance gate. Local pickup is unobserved. [Draft PR62](https://github.com/lamb2k/re4dc/pull/62) and [full SHA matrix, worker state, qualification order and risk boundaries](work-removal-spikes-20261101.md) are the handoff. Existing holds/blocked merges and stopped emails remain.

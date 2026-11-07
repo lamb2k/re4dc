@@ -1,0 +1,93 @@
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <random>
+#include <vector>
+
+static unsigned reads, ram_calls, result_calls;
+struct Stream {
+    const unsigned char* bytes = nullptr;
+    unsigned available = 0;
+    bool admitted = true;
+    explicit operator bool() const { return bytes != nullptr; }
+    unsigned char operator[](unsigned i) const {
+        assert(bytes && admitted && i < available);
+        ++reads;
+        return bytes[i];
+    }
+};
+struct Re4dcModelPart { Stream stream; unsigned stream_bytes; };
+struct Stats { unsigned culled_parts; } stats{};
+static bool ram(const Stream& s, unsigned n) {
+    ++ram_calls;
+    return s.admitted && n <= s.available;
+}
+static void re4dc_model_result(unsigned a, unsigned b, unsigned c) {
+    assert(!a && !b && !c);
+    ++result_calls;
+}
+#define RE4DC_ACTOR_REPLAY_SKIN 1
+#define RE4DC_ACTOR_PADDING_FIRST01 0
+static int control(const Re4dcModelPart* part) {
+@ACTUAL_PADDING@
+    return 42; // Continue to the existing qualification/draw path.
+}
+#undef RE4DC_ACTOR_PADDING_FIRST01
+#define RE4DC_ACTOR_PADDING_FIRST01 1
+static int spike(const Re4dcModelPart* part) {
+@ACTUAL_PADDING@
+    return 42;
+}
+struct Result { int outcome; unsigned reads, ram_calls, result_calls, culled; };
+static Result run(bool enabled, const Re4dcModelPart* p) {
+    reads=ram_calls=result_calls=0;stats={};
+    const int outcome=enabled?spike(p):control(p);
+    return {outcome,reads,ram_calls,result_calls,stats.culled_parts};
+}
+static unsigned cases=0;
+static void check(const Re4dcModelPart* p) {
+    const Result a=run(false,p),b=run(true,p);
+    assert(a.outcome==b.outcome && a.ram_calls==b.ram_calls &&
+           a.result_calls==b.result_calls && a.culled==b.culled);
+    if(p && p->stream && p->stream_bytes>=32 && p->stream_bytes<=256 &&
+       p->stream.admitted && p->stream_bytes<=p->stream.available) {
+        assert(a.reads==p->stream_bytes);
+        assert(b.reads==(p->stream.bytes[0]?1U:p->stream_bytes));
+    } else assert(!a.reads && !b.reads);
+    ++cases;
+}
+int main() {
+    check(nullptr);
+    Re4dcModelPart empty{};check(&empty);
+    const unsigned values[]={1,0x80,0x98,0xfe,0xff};
+    for(unsigned n=32;n<=256;++n) {
+        // Offset the pointer by one to also exercise an unaligned source.
+        std::vector<unsigned char> bytes(n+1);
+        Re4dcModelPart p{{bytes.data()+1,n,true},n};
+        check(&p);
+        for(unsigned at=0;at<n;++at)for(unsigned x:values) {
+            bytes[at+1]=static_cast<unsigned char>(x);check(&p);bytes[at+1]=0;
+        }
+    }
+    std::mt19937 random(0x4df018);
+    for(unsigned i=0;i<10000;++i) {
+        const unsigned n=32+random()%225;
+        std::vector<unsigned char> bytes(n+1);
+        for(auto& b:bytes)b=static_cast<unsigned char>(random()%256);
+        Re4dcModelPart p{{bytes.data()+1,n,true},n};check(&p);
+    }
+    std::vector<unsigned char> bytes(512,0xfe);
+    for(unsigned n:{0U,1U,31U,257U,512U,1048577U}) {
+        Re4dcModelPart p{{bytes.data(),512,true},n};check(&p);
+    }
+    for(unsigned n:{32U,64U,128U,256U}) {
+        Re4dcModelPart invalid{{bytes.data(),512,false},n};check(&invalid);
+        Re4dcModelPart short_source{{bytes.data(),n-1,true},n};check(&short_source);
+        Re4dcModelPart null_source{{nullptr,0,true},n};check(&null_source);
+        Re4dcModelPart p{{bytes.data(),512,true},n};
+        const Result a=run(false,&p),b=run(true,&p);
+        std::printf("padding bytes=%u OFF reads=%u ON reads=%u\n",n,a.reads,b.reads);
+    }
+    std::printf("padding production cases=%u outcome/side-effect mismatches=0\n",cases);
+}
