@@ -2066,6 +2066,14 @@ DISC_READ_FALLBACK ?= 0
 ifneq ($(filter $(DISC_READ_FALLBACK),0 1 2 3),$(DISC_READ_FALLBACK))
 $(error DISC_READ_FALLBACK must be 0, 1, 2 or 3)
 endif
+# DISC_NOTREADY_RETRY=1 (#66 bug 3, default 0): before the DISC READ FAILED screen, wait up to 30 s for the drive,
+# re-initialising and reading each round. DISC_NOTREADY_TEST=<s> (test only, with DISC_FAIL_AFTER_S): every GD command
+# fails as "not ready" for that long.
+DISC_NOTREADY_RETRY ?= 0
+DISC_NOTREADY_TEST ?= 0
+ifneq ($(DISC_NOTREADY_RETRY)$(DISC_NOTREADY_TEST),00)
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_NOTREADY_RETRY=$(DISC_NOTREADY_RETRY) -DRE4DC_DISC_NOTREADY_TEST=$(DISC_NOTREADY_TEST)
+endif
 DISC_FAIL_AFTER_S ?= 0
 DISC_FAIL_TEST ?= 0
 DVD_READ_SAFE ?= 0

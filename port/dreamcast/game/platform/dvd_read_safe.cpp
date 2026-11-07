@@ -764,10 +764,27 @@ void abort_bounded(gdc_cmd_hnd_t h, const char* what, uint32_t lba)
     }
 }
 
+#if defined(RE4DC_DISC_NOTREADY_TEST) && RE4DC_DISC_NOTREADY_TEST
+// DISC_NOTREADY_TEST=<seconds> (test discs only): from the first GD command after DISC_FAIL_AFTER_S of uptime, every
+// command fails as the tester's did (sense 2, ERR_NO_DISC) for that many seconds. Then the drive answers again.
+bool notready_test_now()
+{
+    static uint64_t start;
+    const uint64_t now = ms();
+    if (now < 1000ULL * RE4DC_DISC_FAIL_AFTER_S) return false;
+    if (!start) { start = now; re4dc_log("DISCNOTE: (log only) not-ready test window opens at %u ms
+", (unsigned) now); }
+    return now - start < 1000ULL * RE4DC_DISC_NOTREADY_TEST;
+}
+#endif
+
 // One GD command to its end, polled from this thread with interrupts on. Lock held. busy_test: the command never
 // completes (a test hook). Returns ERR_OK / ERR_NO_DISC / ERR_DISC_CHG / ERR_SYS / ERR_TIMEOUT.
 int run(int cmd, void* params, unsigned timeout_ms, bool busy_test, const char* what, uint32_t lba)
 {
+#if defined(RE4DC_DISC_NOTREADY_TEST) && RE4DC_DISC_NOTREADY_TEST
+    if (notready_test_now()) return ERR_NO_DISC;
+#endif
     const uint64_t t0 = ms();
     gdc_cmd_hnd_t h = 0;
     for (;;) {
@@ -1016,6 +1033,43 @@ int read(void* buf, uint32_t lba, size_t cnt, bool dma)
         }
         re4dc_disc_note(3, "disc: pio read failed (%d) lba=%u", rv, (unsigned) lba);
     }
+#if defined(RE4DC_DISC_NOTREADY_RETRY) && RE4DC_DISC_NOTREADY_RETRY
+    // #66 bug 3: all three ways gave "drive not ready" within moments of each other on GDEMU, 930 s into play, so
+    // nothing ever waited for the drive. Keep trying for 30 s (re-init + read each round, a BIOS reset every 8 rounds)
+    // before giving up. Log only until then: the game's picture stays up. Reads stay on the bounded sector path.
+    {
+        const uint64_t t0 = ms();
+        unsigned round = 0;
+        re4dc_log("DISCNOTE: (log only) not ready recovery starts lba=%u rv=%d
+", (unsigned) lba, rv);
+        while (rv != ERR_OK && ms() - t0 < 30000) {
+            ++round;
+            thd_sleep(round < 4 ? 250 : 1000);
+            status("now: waiting for drive %u ms lba=%u", (unsigned) (ms() - t0), (unsigned) lba);
+            if (round % 8 == 0) {
+                lock("reset", lba);
+                syscall_gdrom_reset();
+                syscall_gdrom_init();
+                unlock();
+                thd_sleep(200);
+            }
+            if (reinit("not ready") != ERR_OK) continue;
+            rv = can_dma ? read_dma(buf, lba, cnt, "dma wait") : read_pio(buf, lba, cnt);
+        }
+        if (rv == ERR_OK) {
+            if (can_dma) ++g_dma; else ++g_pio;
+            g_use_pio = !can_dma && g_use_pio;
+            re4dc_log("DISCNOTE: (log only) not ready recovered lba=%u after %u ms, %u rounds
+", (unsigned) lba,
+                      (unsigned) (ms() - t0), round);
+            return rv;
+        }
+        cd_check_drive_status_t ds = {};
+        syscall_gdrom_check_drive(&ds);
+        re4dc_disc_note(3, "disc: waited %u ms, drive status %d type %d", (unsigned) (ms() - t0), (int) ds.status,
+                        (int) ds.disc_type);
+    }
+#endif
     fatal("disc: lba=%u n=%u: all 3 ways failed", (unsigned) lba, (unsigned) cnt);
 }
 
