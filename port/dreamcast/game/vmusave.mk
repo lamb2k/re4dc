@@ -17,6 +17,10 @@ VMU_SLOT_EST ?= 24
 VMU_GCRAW ?= 0
 CARD_FIXED_LATENCY ?= 0
 VMU_DEBUG_SLOT ?= 0
+# VMU_SAFE_IO=1 (#66): bounded VMU block IO (vmu_store.cpp), no VMU LCD packets during a card op, a damaged newest save
+# falls back to the older copy. VMU_IO_FAULT=N test discs only: hold maple sends 700 ms before the Nth block write.
+VMU_SAFE_IO ?= 0
+VMU_IO_FAULT ?= 0
 ifneq ($(VMU_GCRAW)$(VMU_DEBUG_SLOT),00)
 ifneq ($(VMU_SAVE),1)
 $(error VMU_GCRAW / VMU_DEBUG_SLOT need VMU_SAVE=1)
@@ -25,13 +29,19 @@ endif
 .PHONY: vmusave-force
 $(OBJDIR)/vmusave.h: vmusave-force
 	@mkdir -p $(dir $@)
-	@printf '#define RE4DC_VMU_SAVE %s\n#define RE4DC_VMU_SLOT_EST %s\n#define RE4DC_VMU_GCRAW %s\n#define RE4DC_CARD_FIXED_LATENCY %s\n#define RE4DC_VMU_DEBUG_SLOT %s\n' \
-	  '$(VMU_SAVE)' '$(VMU_SLOT_EST)' '$(VMU_GCRAW)' '$(CARD_FIXED_LATENCY)' '$(VMU_DEBUG_SLOT)' > $@.tmp
+	@printf '#define RE4DC_VMU_SAVE %s\n#define RE4DC_VMU_SLOT_EST %s\n#define RE4DC_VMU_GCRAW %s\n#define RE4DC_CARD_FIXED_LATENCY %s\n#define RE4DC_VMU_DEBUG_SLOT %s\n#define RE4DC_VMU_SAFE_IO %s\n#define RE4DC_VMU_IO_FAULT %s\n' \
+	  '$(VMU_SAVE)' '$(VMU_SLOT_EST)' '$(VMU_GCRAW)' '$(CARD_FIXED_LATENCY)' '$(VMU_DEBUG_SLOT)' '$(VMU_SAFE_IO)' '$(VMU_IO_FAULT)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 VMUSAVE_PLATFORM = $(OBJDIR)/platform/card.o $(OBJDIR)/platform/lz_small.o $(OBJDIR)/platform/vmu_store.o \
   $(OBJDIR)/platform/pad.o $(OBJDIR)/platform/fault.o $(OBJDIR)/platform/mem.o $(OBJDIR)/platform/os.o \
   $(OBJDIR)/platform/native_ui.o
+ifeq ($(VMU_SAFE_IO),1)
+GAME_LDFLAGS += -Wl,--wrap=vmu_block_write -Wl,--wrap=vmu_block_read
+VMUSAVE_PLATFORM += $(OBJDIR)/platform/vmu_lcd.o
+else ifneq ($(VMU_IO_FAULT),0)
+GAME_LDFLAGS += -Wl,--wrap=vmu_block_write
+endif
 $(VMUSAVE_PLATFORM): $(OBJDIR)/vmusave.h
 $(VMUSAVE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/vmusave.h
 $(OBJDIR)/ui_bridge.o: $(OBJDIR)/vmusave.h
