@@ -535,7 +535,13 @@ int titleMenuSelect(TitleWork* w)
 {
     int ret = 0;
 
+#if defined(RE4DC_TITLE_START_OK) && RE4DC_TITLE_START_OK
+    // TITLE_START_OK (#66 "START pressed twice"): the menu takes START as well as A. The GameCube menu reads
+    // A only, so a Dreamcast player pressing START on the menu saw nothing happen and pressed again.
+    if (Key.trg & (KEY_A | KEY_START)) {
+#else
     if (Key.trg & KEY_A) {
+#endif
         if (pSys->unlock_flg & 0x40000000) {
             switch (w->cursor) {
             case 0:

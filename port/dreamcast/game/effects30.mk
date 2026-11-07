@@ -381,6 +381,14 @@ endif
 ifeq ($(ID_ALPHA_SAT),1)
 $(OBJDIR)/src/game/id_sys.o: GAME_CPPFLAGS += -DRE4DC_ID_ALPHA_SAT=1
 endif
+# TITLE_START_OK=1 (default 0; #66 START twice): the title menu takes START as well as A (GameCube: A only).
+TITLE_START_OK ?= 0
+ifneq ($(filter-out 0 1,$(TITLE_START_OK)),)
+$(error TITLE_START_OK is 0 or 1)
+endif
+ifeq ($(TITLE_START_OK),1)
+$(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_START_OK=1
+endif
 # TITLE_ID_DIAG=1 (default 0; test only, #66 bug 6): logs the title / menu id units (TIDD lines).
 TITLE_ID_DIAG ?= 0
 ifeq ($(TITLE_ID_DIAG),1)
