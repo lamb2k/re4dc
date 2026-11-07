@@ -6153,6 +6153,9 @@ extern "C" void re4dc_ui_glyph(const Re4dcUiGlyph* g){
     if(stream_aborted)return;
 #endif
     ++glyph_total;
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD glyph n=%u at %d,%d argb=%08x\n",nquad,int(g->x0),int(g->y0),g->argb);
+#endif
     if((g->argb>>24)==0){++glyph_culled;return;}
     if(g->format!=8 || !g->sheet || g->cw<=0 || g->cw>32 || g->ch<=0 || g->ch>32 || !g->sheet_w || !g->sheet_h ||
        (g->sheet_w&7) || (g->sheet_h&7)){++glyph_unsupported;return;}
@@ -6798,9 +6801,17 @@ extern "C" void re4dc_ui_begin(){
     frame_header_hits=model_header_hits;frame_header_builds=model_header_builds;
     frame_pvr_calls=frame_pvr_bytes=frame_queue_peak=frame_queue_drops=0;
 }
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+// ITEM_VIEW_DIAG (test only): during the pickup view, every 60th frame lists the UI queue in submission order.
+extern "C" int re4dc_ivd_on(){return re4dc_item_ui_order() && frame%60==0;}
+#endif
 extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
     RE4DC_PROFILE_SCOPE(UiEnqueue);
     if(!frame_ready)return;
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD quad n=%u fmt=%u %ux%u pal=%x col=%08x blend=%u masked=%u xy=%d,%d-%d,%d\n",nquad,q->image.format,
+        q->image.width,q->image.height,q->image.palette_format,q->color,q->blend,q->masked,int(q->xy[0]),int(q->xy[1]),int(q->xy[4]),int(q->xy[5]));
+#endif
 #if RE4DC_PVR_STREAM
     if(stream_aborted)return;
 #endif
