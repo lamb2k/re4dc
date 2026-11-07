@@ -803,7 +803,7 @@ extern "C" int re4dc_quality_cfg_store(const Re4dcQualityCfg* rec)
     card_dialog_clear();
 #endif
 #if RE4DC_VMU_SAFE_IO == 0
-#line 768
+#line 767
 #endif
     u8* mem = (u8*) mem_alloc(kCfgBufBytes, __FILE__, __LINE__, 0, 13);
     if (!mem) {
