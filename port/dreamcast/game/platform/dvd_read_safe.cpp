@@ -772,8 +772,7 @@ bool notready_test_now()
     static uint64_t start;
     const uint64_t now = ms();
     if (now < 1000ULL * RE4DC_DISC_FAIL_AFTER_S) return false;
-    if (!start) { start = now; re4dc_log("DISCNOTE: (log only) not-ready test window opens at %u ms
-", (unsigned) now); }
+    if (!start) { start = now; re4dc_log("DISCNOTE: (log only) not-ready test window opens at %u ms\n", (unsigned) now); }
     return now - start < 1000ULL * RE4DC_DISC_NOTREADY_TEST;
 }
 #endif
@@ -1040,8 +1039,7 @@ int read(void* buf, uint32_t lba, size_t cnt, bool dma)
     {
         const uint64_t t0 = ms();
         unsigned round = 0;
-        re4dc_log("DISCNOTE: (log only) not ready recovery starts lba=%u rv=%d
-", (unsigned) lba, rv);
+        re4dc_log("DISCNOTE: (log only) not ready recovery starts lba=%u rv=%d\n", (unsigned) lba, rv);
         while (rv != ERR_OK && ms() - t0 < 30000) {
             ++round;
             thd_sleep(round < 4 ? 250 : 1000);
@@ -1059,8 +1057,7 @@ int read(void* buf, uint32_t lba, size_t cnt, bool dma)
         if (rv == ERR_OK) {
             if (can_dma) ++g_dma; else ++g_pio;
             g_use_pio = !can_dma && g_use_pio;
-            re4dc_log("DISCNOTE: (log only) not ready recovered lba=%u after %u ms, %u rounds
-", (unsigned) lba,
+            re4dc_log("DISCNOTE: (log only) not ready recovered lba=%u after %u ms, %u rounds\n", (unsigned) lba,
                       (unsigned) (ms() - t0), round);
             return rv;
         }
