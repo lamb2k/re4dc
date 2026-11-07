@@ -6118,6 +6118,12 @@ void glyph_draw_run(unsigned first,unsigned count){
         if(n+5>sizeof(buf)/sizeof(buf[0]))flush();
         if(g.bank!=bank){std::memcpy(&buf[n++],&glyph_header(g.bank),sizeof(pvr_vertex_t));bank=g.bank;}
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(i==first && re4dc_ivd_on())re4dc_log("IVD draw glyphs first=%u layer=%d list=%d\n",first,int(layer),int(stream_list));
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(i==first && re4dc_ivd_on())re4dc_log("IVD draw glyphs first=%u layer=%d list=%d\n",first,int(layer),int(stream_list));
+#endif
         constexpr float kH=float(kGlyphAtlasH);
         const float u0=float((g.cell&7)*32)/256.0f,v0=float((g.cell>>3)*32)/kH;
 #if RE4DC_UI_DRAW_LEAN
@@ -6934,6 +6940,9 @@ static void ui_draw_quad(unsigned i){
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
+#endif
 #if RE4DC_UI_DRAW_LEAN
         const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
@@ -7038,6 +7047,9 @@ extern "C" void re4dc_ui_present(){
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
+#endif
 #if RE4DC_UI_DRAW_LEAN
         const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
