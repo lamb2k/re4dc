@@ -390,6 +390,11 @@ void titleLogo(TitleWork* w)
 
     w->counter++;
     TITLE_ID_DIAG_CALL(w, 4);
+#if !defined(__PPC__) && defined(RE4DC_TITLE_ID_DIAG) && RE4DC_TITLE_ID_DIAG
+    if (Key.on || Key.trg)
+        re4dc_log("TKEY rno=%d/%d cnt=%d on=%08x trg=%08x sys=%08x\n", w->Rno0, w->Rno1, w->counter,
+                  (unsigned) Key.on, (unsigned) Key.trg, (unsigned) pG->System_flg);
+#endif
     switch (w->Rno1) {
     case 0:
         if (w->counter > 230) {
@@ -652,15 +657,8 @@ void titleMain(TitleWork* w)
     TITLE_ID_DIAG_CALL(w, 5);
 #if !defined(__PPC__) && defined(RE4DC_TITLE_ID_DIAG) && RE4DC_TITLE_ID_DIAG
     if (Key.on || Key.trg)
-        re4dc_log("TKEY rno=%d/%d cnt=%d on=%08x trg=%08x sys=%08x
-", w->Rno0, w->Rno1, w->counter, (unsigned) Key.on,
-                  (unsigned) Key.trg, (unsigned) pG->System_flg);
-#endif
-#if !defined(__PPC__) && defined(RE4DC_TITLE_ID_DIAG) && RE4DC_TITLE_ID_DIAG
-    if (Key.on || Key.trg)
-        re4dc_log("TKEY rno=%d/%d cnt=%d on=%08x trg=%08x sys=%08x
-", w->Rno0, w->Rno1, w->counter, (unsigned) Key.on,
-                  (unsigned) Key.trg, (unsigned) pG->System_flg);
+        re4dc_log("TKEY rno=%d/%d cnt=%d on=%08x trg=%08x sys=%08x\n", w->Rno0, w->Rno1, w->counter,
+                  (unsigned) Key.on, (unsigned) Key.trg, (unsigned) pG->System_flg);
 #endif
     if (!(pG->System_flg & 0x100) && (pSys->unlock_flg & 0x40000000)) {
         titleLoop(w);
