@@ -385,6 +385,9 @@ void store()
     }
 }
 
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+extern "C" void re4dc_item_view_bg();
+#endif
 // OT callback queued by move: draws the stored background (fog off), warning when the temp buffer
 // was taken by someone else.
 void render()
@@ -401,7 +404,7 @@ void render()
 #if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
     // ITEM_VIEW_BG (#66 bug 2): the GameCube copies the frame (GXCopyTex) and draws it back as a quad;
     // both are empty stubs on the Dreamcast, so the slot draws a darkened full-screen panel instead.
-    { extern "C" void re4dc_item_view_bg(); re4dc_item_view_bg(); }
+    re4dc_item_view_bg();
 #else
     drawBuffer();
 #endif
