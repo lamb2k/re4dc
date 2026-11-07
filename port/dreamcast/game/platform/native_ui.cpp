@@ -10037,6 +10037,11 @@ extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_ba
 #else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
 #endif
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    // ITEM_VIEW_BG: the pickup view's panel hides the room; its punch-through pass would open after the view's
+    // translucent quads, and the TA then keeps that list for the message glyphs (CLOSED_PASS_KEEP): no text.
+    if(re4dc_item_ui_order()){++ivbg_pt_skips;return 0;}
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::ForeignDirect);
 #endif
