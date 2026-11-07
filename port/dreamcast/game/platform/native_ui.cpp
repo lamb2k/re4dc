@@ -1024,6 +1024,9 @@ bool ui_order;unsigned quads_flushed;
 extern "C" int re4dc_ss_ui_order(); // actual swapped-area owner, not a UI guess
 #if RE4DC_ITEM_UI_ORDER
 extern "C" int re4dc_item_ui_order(); // source pickup presentation; no heap swap
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+extern "C" int re4dc_ivd_on();
+#endif
 #endif
 #endif
 #if RE4DC_D349_RENDERER_STACK
