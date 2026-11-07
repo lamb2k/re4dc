@@ -1024,6 +1024,9 @@ bool ui_order;unsigned quads_flushed;
 extern "C" int re4dc_ss_ui_order(); // actual swapped-area owner, not a UI guess
 #if RE4DC_ITEM_UI_ORDER
 extern "C" int re4dc_item_ui_order(); // source pickup presentation; no heap swap
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+static unsigned ivbg_pt_skips;
+#endif
 #if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
 extern "C" int re4dc_ivd_on();
 #endif
@@ -2597,6 +2600,15 @@ void stream_select(pvr_list_t list){
     desired_list=list;
     if(!stream_scene){stream_open();AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
     if(stream_list==list){AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD list %d->%d ra=%p ptskips=%u\n",int(stream_list),int(list),__builtin_return_address(0),
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+        ivbg_pt_skips
+#else
+        0U
+#endif
+        );
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::ListBoundary);
 #endif
@@ -8656,6 +8668,12 @@ extern "C" void re4dc_coarse_end(unsigned vertices){
 // (/cd/dc/tex/<crc>-<fnv>.re4tex); no source image exists for it.
 extern "C" void re4dc_static_flush_impostors();
 extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,unsigned height,int fog,Re4dcModelPacket* out){
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    // ITEM_VIEW_BG: the pickup view hides the room behind its panel. A scenery impostor packet here would open the
+    // punch-through list after the view's translucent quads; the TA then keeps that list for the message glyphs
+    // (CLOSED_PASS_KEEP), which draw under the panels: the missing "You got" text.
+    if(re4dc_item_ui_order()){++ivbg_pt_skips;return 0;}
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::CustomPacket); // no marked source-part begin
 #endif
