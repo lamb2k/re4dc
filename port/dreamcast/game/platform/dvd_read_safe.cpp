@@ -1283,6 +1283,9 @@ extern "C" int __wrap_cdrom_stream_request(void* buffer, size_t size, bool block
 #else
     int rv = __real_cdrom_stream_request(buffer, size, block);
 #endif
+#if defined(RE4DC_DISC_NOTREADY_TEST) && RE4DC_DISC_NOTREADY_TEST
+    if (v2::notready_test_now()) rv = ERR_NO_DISC;
+#endif
 #if defined(RE4DC_DISC_DMA_WAIT_TIMEOUT) && RE4DC_DISC_DMA_WAIT_TIMEOUT
     if (rv == ERR_TIMEOUT) dma_wait_timeout_log("a DMA stream request", (uint32_t) s_sector, size);
     dma_wait_note(size);
