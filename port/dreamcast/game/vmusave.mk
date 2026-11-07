@@ -21,6 +21,15 @@ VMU_DEBUG_SLOT ?= 0
 # falls back to the older copy. VMU_IO_FAULT=N test discs only: hold maple sends 700 ms before the Nth block write.
 VMU_SAFE_IO ?= 0
 VMU_IO_FAULT ?= 0
+# SAVE_ROW_FIX=1 (#66 bug 4): the save screen's write animation reads its key count in Dreamcast byte order, so the
+# saved row shows the new save count and time at once (was: the old ones until the screen was reopened).
+SAVE_ROW_FIX ?= 0
+ifneq ($(filter-out 0 1,$(SAVE_ROW_FIX)),)
+$(error SAVE_ROW_FIX is 0 or 1)
+endif
+ifeq ($(SAVE_ROW_FIX),1)
+$(OBJDIR)/src/game/card.o: GAME_CPPFLAGS += -DRE4DC_SAVE_ROW_FIX=1
+endif
 ifneq ($(VMU_GCRAW)$(VMU_DEBUG_SLOT),00)
 ifneq ($(VMU_SAVE),1)
 $(error VMU_GCRAW / VMU_DEBUG_SLOT need VMU_SAVE=1)

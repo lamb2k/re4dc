@@ -185,6 +185,36 @@ void titleInit(TitleWork* w)
     IdAllocBuffer();
 }
 
+#if !defined(__PPC__) && defined(RE4DC_TITLE_ID_DIAG) && RE4DC_TITLE_ID_DIAG
+// TITLE_ID_DIAG=1 (test only, #66 bug 6): every 30 calls, one line per live title / menu id unit.
+static void titleIdDiag(TitleWork* w, int state)
+{
+    static unsigned calls;
+    if ((calls++ % 30) != 0) return;
+    IdUnit* u = IdSys.pUnit;
+    for (int i = 0; i < IdSys.m_maxId; i++, u++) {
+        if (u->be_flag == 0xFF || (u->classNo != ID_TITLE && u->classNo != ID_MENU)) continue;
+        re4dc_log("TIDD st=%d cnt=%d i=%d be=%02x cls=%02x mark=%02x unit=%02x typ=%u par=%02x tex=%02x/%u tf=%02x tr=%u bl=%u col=%d,%d,%d,%d t=%d,%d,%d,%d end=%02x pos=%d,%d sz=%d,%d\n",
+            state, w->counter, i, u->be_flag, u->classNo, u->markNo, u->unitNo, u->type, u->parentNo, u->texId, u->texNo,
+            u->tex_flag, u->trans_type, u->blend_type, (int) u->col[0], (int) u->col[1], (int) u->col[2], (int) u->col[3],
+            (s16) u->timer[0], (s16) u->timer[1], (s16) u->timer[2], (s16) u->timer[3], u->end, (int) u->pos.x, (int) u->pos.y,
+            (int) u->sizeX, (int) u->size_H);
+        static unsigned char keys_done[256];
+        Hermite1* h = u->curve[2];
+        if (h && !keys_done[u->unitNo]) {
+            keys_done[u->unitNo] = 1;
+            for (int k = 0; k < h->num && k < 12; k++)
+                re4dc_log("TIDK unit=%02x num=%d k=%d t=%d v=%d out=%d in=%d col0a=%u col1=%08x\n", u->unitNo, (int) h->num, k,
+                          (int) h->key[k].t, (int) (h->key[k].v * 100.0f), (int) (h->key[k].out * 100.0f), (int) (h->key[k].in * 100.0f),
+                          u->col0[3], *(u32*) u->col1);
+        }
+    }
+}
+#define TITLE_ID_DIAG_CALL(w, st) titleIdDiag((w), (st))
+#else
+#define TITLE_ID_DIAG_CALL(w, st)
+#endif
+
 // Shows the title logo / background id layout (the alternate one once everything is unlocked,
 // unlock_flg 0x40000000) at animation time `time`.
 void titleSet(TitleWork* w, int time)
@@ -359,6 +389,7 @@ void titleLogo(TitleWork* w)
     FadeColor c1;
 
     w->counter++;
+    TITLE_ID_DIAG_CALL(w, 4);
     switch (w->Rno1) {
     case 0:
         if (w->counter > 230) {
@@ -618,6 +649,7 @@ void titleMain(TitleWork* w)
     FadeColor c1;
 
     pRK->title_shown = 1;
+    TITLE_ID_DIAG_CALL(w, 5);
     if (!(pG->System_flg & 0x100) && (pSys->unlock_flg & 0x40000000)) {
         titleLoop(w);
     }

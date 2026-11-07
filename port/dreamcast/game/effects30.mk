@@ -372,6 +372,20 @@ endif
 ifeq ($(FX_INSIGNIA_KEEP),1)
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_INSIGNIA_KEEP=1
 endif
+# ID_ALPHA_SAT=1 (default 0; render only; #66 bug 6): screen id colours convert to bytes with saturation (as on the
+#                GameCube), so the title logo (alpha curve to 314) stays at full strength on the menu instead of 58.
+ID_ALPHA_SAT ?= 0
+ifneq ($(filter-out 0 1,$(ID_ALPHA_SAT)),)
+$(error ID_ALPHA_SAT is 0 or 1)
+endif
+ifeq ($(ID_ALPHA_SAT),1)
+$(OBJDIR)/src/game/id_sys.o: GAME_CPPFLAGS += -DRE4DC_ID_ALPHA_SAT=1
+endif
+# TITLE_ID_DIAG=1 (default 0; test only, #66 bug 6): logs the title / menu id units (TIDD lines).
+TITLE_ID_DIAG ?= 0
+ifeq ($(TITLE_ID_DIAG),1)
+$(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_ID_DIAG=1
+endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
 # frame, effect pool and live room generation. Successful replacement still suppresses the
