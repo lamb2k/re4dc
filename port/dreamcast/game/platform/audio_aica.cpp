@@ -1643,12 +1643,33 @@ u8 g_strCacheRaw[RE4DC_AICA_STR_READ_KB * 1024 + 32] __attribute__((aligned(32))
 u8* const g_strCache = g_strCacheRaw + 4;   // header / hash reads (unaligned: the KOS sector cache path)
 u8* const g_strData = g_strCacheRaw;        // refill reads (32-byte aligned: one stream command)
 const u32 kStrCacheBytes = RE4DC_AICA_STR_READ_KB * 1024;
+// The stream reader thread runs on g_strStack (6 KB). KOS fs_open needs more than that: fs_hnd_open keeps
+// rfn[PATH_MAX] (4 KB) and fs_normalize_path -> realpath a second temp_path[PATH_MAX] (4 KB), so every fs_open here
+// ran ~2.5 KB below the stack into g_strCacheRaw. A preemption inside realpath (strtok / strcat) then switched the
+// thread out with its stack pointer under the stack base, and the next switch back stopped the console with KOS
+// "Thread stack underrun" (Test 27.1 reset check, card load screen; timing decides when, so earlier builds only
+// missed it). The file is opened through the /cd VFS handler directly: the same iso9660 open, no path buffers.
+file_t str_open()
+{
+    static vfs_handler_t* vfs;
+    if (!vfs) {
+        nmmgr_handler_t* n = nmmgr_lookup("/cd/bgm/aica_str.dat");
+        if (!n || n->type != NMMGR_TYPE_VFS) return -1;
+        vfs = (vfs_handler_t*) n;
+    }
+    if (!vfs->open) return -1;
+    void* h = vfs->open(vfs, "/bgm/aica_str.dat", O_RDONLY);
+    if (!h) return -1;
+    const file_t f = fs_open_handle(vfs, h);   // on a full fd table it closes h itself
+    return f;
+}
 #else
 u8 g_strCacheRaw[8 * 1024 + 32] __attribute__((aligned(32)));
 u8* const g_strCache = g_strCacheRaw + 4;   // 4-byte aligned for the G2 32-bit copy
 u8* const g_strData = g_strCache;
 const u32 kStrCacheBytes = 8 * 1024;
 #endif
+#line 1648
 u32 g_strCacheOfs = 0xFFFFFFFFu, g_strCacheLen;
 file_t g_strFile = -1;
 const u32* g_strMissShd;
@@ -1699,7 +1720,12 @@ void gcasset_stream_entry(const StrEnt* e)
 #endif
 bool str_index_load()
 {
+#if defined(RE4DC_AICA_STR_READ) && RE4DC_AICA_STR_READ
+    g_strFile = str_open();
+#else
     g_strFile = fs_open("/cd/bgm/aica_str.dat", O_RDONLY);
+#endif
+#line 1699
     if (g_strFile < 0) { re4dc_log("aica: no bgm/aica_str.dat, disc streams stay silent\n"); return false; }
     const u32* h = (const u32*) g_strCache;
     if (fs_read(g_strFile, g_strCache, 2048) != 2048 || h[0] != kStrMagic || h[1] > (u32) kStrEntMax) {
@@ -1826,7 +1852,7 @@ bool str_cache(u32 fofs, u32 fend)
 #endif
 #line 1785
 #if defined(RE4DC_AICA_STR_READ) && RE4DC_AICA_STR_READ
-    const file_t rf = fs_open("/cd/bgm/aica_str.dat", O_RDONLY);
+    const file_t rf = str_open();
     bool ok = rf >= 0 && fs_seek(rf, fofs, SEEK_SET) == (off_t) fofs && fs_read(rf, g_strData, len) == (ssize_t) len;
     if (rf >= 0) fs_close(rf);
 #else
