@@ -1643,7 +1643,9 @@ u8 g_strCacheRaw[RE4DC_AICA_STR_READ_KB * 1024 + 32] __attribute__((aligned(32))
 u8* const g_strCache = g_strCacheRaw + 4;   // header / hash reads (unaligned: the KOS sector cache path)
 u8* const g_strData = g_strCacheRaw;        // refill reads (32-byte aligned: one stream command)
 const u32 kStrCacheBytes = RE4DC_AICA_STR_READ_KB * 1024;
-// The stream reader thread runs on g_strStack (6 KB). KOS fs_open needs more than that: fs_hnd_open keeps
+#if defined(RE4DC_AICA_STR_VFS_OPEN) && RE4DC_AICA_STR_VFS_OPEN
+// AICA_STR_VFS_OPEN (Makefile; needs AICA_STR_READ=1): the stream reader thread runs on g_strStack (6 KB).
+// KOS fs_open needs more than that: fs_hnd_open keeps
 // rfn[PATH_MAX] (4 KB) and fs_normalize_path -> realpath a second temp_path[PATH_MAX] (4 KB), so every fs_open here
 // ran ~2.5 KB below the stack into g_strCacheRaw. A preemption inside realpath (strtok / strcat) then switched the
 // thread out with its stack pointer under the stack base, and the next switch back stopped the console with KOS
@@ -1663,6 +1665,7 @@ file_t str_open()
     const file_t f = fs_open_handle(vfs, h);   // on a full fd table it closes h itself
     return f;
 }
+#endif
 #else
 u8 g_strCacheRaw[8 * 1024 + 32] __attribute__((aligned(32)));
 u8* const g_strCache = g_strCacheRaw + 4;   // 4-byte aligned for the G2 32-bit copy
@@ -1720,7 +1723,7 @@ void gcasset_stream_entry(const StrEnt* e)
 #endif
 bool str_index_load()
 {
-#if defined(RE4DC_AICA_STR_READ) && RE4DC_AICA_STR_READ
+#if defined(RE4DC_AICA_STR_VFS_OPEN) && RE4DC_AICA_STR_VFS_OPEN
     g_strFile = str_open();
 #else
     g_strFile = fs_open("/cd/bgm/aica_str.dat", O_RDONLY);
@@ -1852,7 +1855,11 @@ bool str_cache(u32 fofs, u32 fend)
 #endif
 #line 1785
 #if defined(RE4DC_AICA_STR_READ) && RE4DC_AICA_STR_READ
+#if defined(RE4DC_AICA_STR_VFS_OPEN) && RE4DC_AICA_STR_VFS_OPEN
     const file_t rf = str_open();
+#else
+    const file_t rf = fs_open("/cd/bgm/aica_str.dat", O_RDONLY);
+#endif
     bool ok = rf >= 0 && fs_seek(rf, fofs, SEEK_SET) == (off_t) fofs && fs_read(rf, g_strData, len) == (ssize_t) len;
     if (rf >= 0) fs_close(rf);
 #else
