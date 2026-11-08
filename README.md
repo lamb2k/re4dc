@@ -17,21 +17,21 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 
 - **Church graveyard dial:** its symbols show again, not blank white discs.
 
-  ![The dial: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-a86a2c32-20261107-hotfix1/docs/images/releases/test27.1/dial-symbols.jpg)
+  ![The dial: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-7f139ac0-20261107-hotfix1/docs/images/releases/test27.1/dial-symbols.jpg)
   <br>The church graveyard dial. Left Test 27, right Test 27.1. Flycast capture.
 - **Title screen:** the "4" logo and "resident evil" show at full strength, and START on the menu starts the game
   (no second press).
 
-  ![Title menu: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-a86a2c32-20261107-hotfix1/docs/images/releases/test27.1/title-logo.jpg)
+  ![Title menu: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-7f139ac0-20261107-hotfix1/docs/images/releases/test27.1/title-logo.jpg)
   <br>The title menu. Left Test 27, right Test 27.1. Flycast capture.
 - **Item pickups:** the "You got" and "Take the ...?" text shows on a plain dark panel. The room behind the item is
   hidden while the panel is open.
 
-  ![Item pickup: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-a86a2c32-20261107-hotfix1/docs/images/releases/test27.1/item-pickup.jpg)
+  ![Item pickup: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-7f139ac0-20261107-hotfix1/docs/images/releases/test27.1/item-pickup.jpg)
   <br>Picking up pesetas. Left Test 27, right Test 27.1. Flycast capture.
 - **Save screen:** the saved row shows the new save count and time right away.
 
-  ![Save row: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-a86a2c32-20261107-hotfix1/docs/images/releases/test27.1/save-row.jpg)
+  ![Save row: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-7f139ac0-20261107-hotfix1/docs/images/releases/test27.1/save-row.jpg)
   <br>A second save in one visit. Left Test 27, right Test 27.1. Flycast capture.
 - **Safer saving:** a late VMU answer no longer hangs the save screen.
 - **Disc reads:** when the drive reports "not ready", the game waits up to 30 seconds before the DISC READ FAILED screen.
