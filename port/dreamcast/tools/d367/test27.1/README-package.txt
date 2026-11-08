@@ -20,6 +20,7 @@ New in test 27.1 (fixes for issue #66; everything else as in test 27):
 * A late VMU answer no longer hangs the save screen.
 * When the drive reports "not ready", the game waits up to 30 seconds
   before the DISC READ FAILED screen.
+* The title sky picture behind the logo comes from the PS2 version.
 Checked on Flycast, not yet on a real console.
 * A QA build for testers is a separate download on the release page.
 
