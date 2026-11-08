@@ -1024,6 +1024,12 @@ bool ui_order;unsigned quads_flushed;
 extern "C" int re4dc_ss_ui_order(); // actual swapped-area owner, not a UI guess
 #if RE4DC_ITEM_UI_ORDER
 extern "C" int re4dc_item_ui_order(); // source pickup presentation; no heap swap
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+static unsigned ivbg_pt_skips;
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+extern "C" int re4dc_ivd_on();
+#endif
 #endif
 #endif
 #if RE4DC_D349_RENDERER_STACK
@@ -2594,6 +2600,15 @@ void stream_select(pvr_list_t list){
     desired_list=list;
     if(!stream_scene){stream_open();AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
     if(stream_list==list){AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD list %d->%d ra=%p ptskips=%u\n",int(stream_list),int(list),__builtin_return_address(0),
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+        ivbg_pt_skips
+#else
+        0U
+#endif
+        );
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::ListBoundary);
 #endif
@@ -6115,6 +6130,12 @@ void glyph_draw_run(unsigned first,unsigned count){
         if(n+5>sizeof(buf)/sizeof(buf[0]))flush();
         if(g.bank!=bank){std::memcpy(&buf[n++],&glyph_header(g.bank),sizeof(pvr_vertex_t));bank=g.bank;}
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(i==first && re4dc_ivd_on())re4dc_log("IVD draw glyphs first=%u layer=%d list=%d\n",first,int(layer),int(stream_list));
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(i==first && re4dc_ivd_on())re4dc_log("IVD draw glyphs first=%u layer=%d list=%d\n",first,int(layer),int(stream_list));
+#endif
         constexpr float kH=float(kGlyphAtlasH);
         const float u0=float((g.cell&7)*32)/256.0f,v0=float((g.cell>>3)*32)/kH;
 #if RE4DC_UI_DRAW_LEAN
@@ -6153,6 +6174,9 @@ extern "C" void re4dc_ui_glyph(const Re4dcUiGlyph* g){
     if(stream_aborted)return;
 #endif
     ++glyph_total;
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD glyph n=%u at %d,%d argb=%08x\n",nquad,int(g->x0),int(g->y0),g->argb);
+#endif
     if((g->argb>>24)==0){++glyph_culled;return;}
     if(g->format!=8 || !g->sheet || g->cw<=0 || g->cw>32 || g->ch<=0 || g->ch>32 || !g->sheet_w || !g->sheet_h ||
        (g->sheet_w&7) || (g->sheet_h&7)){++glyph_unsupported;return;}
@@ -6798,9 +6822,20 @@ extern "C" void re4dc_ui_begin(){
     frame_header_hits=model_header_hits;frame_header_builds=model_header_builds;
     frame_pvr_calls=frame_pvr_bytes=frame_queue_peak=frame_queue_drops=0;
 }
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+extern "C" unsigned re4dc_ui_frame_no(){return frame;}
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+// ITEM_VIEW_DIAG (test only): during the pickup view, every 60th frame lists the UI queue in submission order.
+extern "C" int re4dc_ivd_on(){return re4dc_item_ui_order() && frame%60==0;}
+#endif
 extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
     RE4DC_PROFILE_SCOPE(UiEnqueue);
     if(!frame_ready)return;
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD quad n=%u fmt=%u %ux%u pal=%x col=%08x blend=%u masked=%u xy=%d,%d-%d,%d\n",nquad,q->image.format,
+        q->image.width,q->image.height,q->image.palette_format,q->color,q->blend,q->masked,int(q->xy[0]),int(q->xy[1]),int(q->xy[4]),int(q->xy[5]));
+#endif
 #if RE4DC_PVR_STREAM
     if(stream_aborted)return;
 #endif
@@ -6917,6 +6952,9 @@ static void ui_draw_quad(unsigned i){
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
+#endif
 #if RE4DC_UI_DRAW_LEAN
         const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
@@ -7021,6 +7059,9 @@ extern "C" void re4dc_ui_present(){
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
+#endif
 #if RE4DC_UI_DRAW_LEAN
         const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
@@ -8627,6 +8668,12 @@ extern "C" void re4dc_coarse_end(unsigned vertices){
 // (/cd/dc/tex/<crc>-<fnv>.re4tex); no source image exists for it.
 extern "C" void re4dc_static_flush_impostors();
 extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,unsigned height,int fog,Re4dcModelPacket* out){
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    // ITEM_VIEW_BG: the pickup view hides the room behind its panel. A scenery impostor packet here would open the
+    // punch-through list after the view's translucent quads; the TA then keeps that list for the message glyphs
+    // (CLOSED_PASS_KEEP), which draw under the panels: the missing "You got" text.
+    if(re4dc_item_ui_order()){++ivbg_pt_skips;return 0;}
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::CustomPacket); // no marked source-part begin
 #endif
@@ -9989,6 +10036,11 @@ extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_ba
     } failed_begin{batch};
 #else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+#endif
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    // ITEM_VIEW_BG: the pickup view's panel hides the room; its punch-through pass would open after the view's
+    // translucent quads, and the TA then keeps that list for the message glyphs (CLOSED_PASS_KEEP): no text.
+    if(re4dc_item_ui_order()){++ivbg_pt_skips;return 0;}
 #endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::ForeignDirect);

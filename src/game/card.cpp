@@ -3689,7 +3689,14 @@ void CardID::save(cCard* pCard)
 {
     IdUnit* u = IdSys.unitPtr(1, 0x10);
     Hermite1* h = u->curve[0];
+#if defined(RE4DC_SAVE_ROW_FIX) && RE4DC_SAVE_ROW_FIX
+    // SAVE_ROW_FIX (#66 bug 4): byte 3 of the key count is its low byte on the big-endian GameCube only.
+    // On the Dreamcast it is the high byte (0), so the loop never ran and the written row kept the old
+    // save count and time until the screen was opened again.
+    int n = (s8) h->num;
+#else
     int n = ((s8*) h)[3];
+#endif
     int i;
 
     if (pCard->m_Rno0 == 5) {

@@ -363,6 +363,62 @@ ifneq ($(FX_TRIM),1)
 $(error FX_TRIM_LOG=1 needs FX_TRIM=1)
 endif
 endif
+# FX_INSIGNIA_KEEP=1 (default 0; render only; #66 bug 1): under Essential keep picture 0xE1 in r108 / r118, the dial's
+#                    insignias. Without it the discs only glow and the puzzle's clue is gone.
+FX_INSIGNIA_KEEP ?= 0
+ifneq ($(filter-out 0 1,$(FX_INSIGNIA_KEEP)),)
+$(error FX_INSIGNIA_KEEP is 0 or 1)
+endif
+ifeq ($(FX_INSIGNIA_KEEP),1)
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_INSIGNIA_KEEP=1
+endif
+# ID_ALPHA_SAT=1 (default 0; render only; #66 bug 6): screen id colours convert to bytes with saturation (as on the
+#                GameCube), so the title logo (alpha curve to 314) stays at full strength on the menu instead of 58.
+ID_ALPHA_SAT ?= 0
+ifneq ($(filter-out 0 1,$(ID_ALPHA_SAT)),)
+$(error ID_ALPHA_SAT is 0 or 1)
+endif
+ifeq ($(ID_ALPHA_SAT),1)
+$(OBJDIR)/src/game/id_sys.o: GAME_CPPFLAGS += -DRE4DC_ID_ALPHA_SAT=1
+endif
+# ITEM_VIEW_BG=1 (default 0; #66 bug 2): the item pickup view. The GameCube grabs the frame (GXCopyTex) and draws it
+# back behind the item; both are empty stubs here, so the view drew over whatever the frame held (bands on the
+# console). Before the view's first frame unit a full-screen panel is queued (ITEM_VIEW_BG_ARGB), and the message
+# panel picture (texture 0x61, CMPR: green noise over the "You got" text) is drawn as a plain dark panel
+# (ITEM_VIEW_PANEL_ARGB). Render only; needs ITEM_UI_ORDER=1 (ui_bridge.cpp).
+# ITEM_VIEW_DIAG=1 (test only): lists the pickup view's UI queue (IVD lines) every 60 frames. Needs ITEM_UI_ORDER=1.
+ITEM_VIEW_BG ?= 0
+ITEM_VIEW_BG_ARGB ?= 0xff000000U
+ITEM_VIEW_PANEL_ARGB ?= 0xe0101010U
+ITEM_VIEW_DIAG ?= 0
+ifneq ($(filter-out 0 1,$(ITEM_VIEW_BG) $(ITEM_VIEW_DIAG)),)
+$(error ITEM_VIEW_BG and ITEM_VIEW_DIAG are 0 or 1)
+endif
+ifeq ($(ITEM_VIEW_BG),1)
+ifneq ($(ITEM_UI_ORDER),1)
+$(error ITEM_VIEW_BG needs ITEM_UI_ORDER=1)
+endif
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1 -DRE4DC_ITEM_VIEW_BG_ARGB=$(ITEM_VIEW_BG_ARGB) -DRE4DC_ITEM_VIEW_PANEL_ARGB=$(ITEM_VIEW_PANEL_ARGB)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1
+$(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1
+endif
+ifeq ($(ITEM_VIEW_DIAG),1)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_DIAG=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_DIAG=1
+endif
+# TITLE_START_OK=1 (default 0; #66 START twice): the title menu takes START as well as A (GameCube: A only).
+TITLE_START_OK ?= 0
+ifneq ($(filter-out 0 1,$(TITLE_START_OK)),)
+$(error TITLE_START_OK is 0 or 1)
+endif
+ifeq ($(TITLE_START_OK),1)
+$(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_START_OK=1
+endif
+# TITLE_ID_DIAG=1 (default 0; test only, #66 bug 6): logs the title / menu id units (TIDD lines).
+TITLE_ID_DIAG ?= 0
+ifeq ($(TITLE_ID_DIAG),1)
+$(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_ID_DIAG=1
+endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
 # frame, effect pool and live room generation. Successful replacement still suppresses the

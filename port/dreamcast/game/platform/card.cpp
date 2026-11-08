@@ -248,6 +248,19 @@ int op_mount()
 #endif
 }
 
+#if RE4DC_VMU_SAFE_IO
+// The newest copy of a save does not read back: use the older one still on the card (#66).
+bool use_older_copy(int file)
+{
+    if (!ss.stale[file]) return false;
+    const char bad = ss.live[file];
+    ss.live[file] = ss.stale[file];
+    ss.stale[file] = bad;
+    re4dc_log("card-vmu: file=%d copy %c damaged, using copy %c\n", file, bad, ss.live[file]);
+    return true;
+}
+#endif
+
 int live_index(int file)
 {
     char name[16];
@@ -263,9 +276,16 @@ int op_info()
     return gc_read(ss.file, ss.buf, ss.len, ss.ofs) == ss.len ? CARD_RESULT_READY : CARD_RESULT_IOERROR;
 #else
     u8* io = ss.work + kIoOff;
-    const int idx = live_index(ss.file);
+    int idx = live_index(ss.file);
     if (idx < 0) return CARD_RESULT_NOFILE;
-    const int rc = vmus_read(&ss.st, idx, io, kIoBytes, 3);
+    int rc = vmus_read(&ss.st, idx, io, kIoBytes, 3);
+#if RE4DC_VMU_SAFE_IO
+    if ((rc || memcmp(io + kVms, "R4DC", 4)) && use_older_copy(ss.file)) {
+        idx = live_index(ss.file);
+        if (idx < 0) return CARD_RESULT_NOFILE;
+        rc = vmus_read(&ss.st, idx, io, kIoBytes, 3);
+    }
+#endif
     if (rc) return map(rc);
     if (!memcmp(io + kVms, "R4DC", 4)) {
         const u32 seq = be32(io + kVms + 8);
@@ -287,11 +307,17 @@ int op_load()
     if (gc_read(ss.file, img, ss.len, 0) != ss.len) return CARD_RESULT_IOERROR;
 #else
     u8* io = ss.work + kIoOff;
+#if RE4DC_VMU_SAFE_IO
+    for (int attempt = 0;; ++attempt) {
+#endif
     const int idx = live_index(ss.file);
     if (idx < 0) return CARD_RESULT_NOFILE;
     const unsigned blocks = vmus_file_blocks(&ss.st, idx);
     if (blocks * 512 > kIoBytes) return CARD_RESULT_IOERROR;
     const int rc = vmus_read(&ss.st, idx, io, kIoBytes, 0);
+#if RE4DC_VMU_SAFE_IO
+    if (rc && !attempt && use_older_copy(ss.file)) continue;
+#endif
     if (rc) return map(rc);
     unsigned plen = 0;
     bool ok = vms_ok(io, blocks * 512, &plen) && !memcmp(io + kVms, "R4DC", 4) && io[kVms + 4] == 1 &&
@@ -301,6 +327,9 @@ int op_load()
         ok = lzs_decode(io + kStream, be32(io + kVms + 16), img + kPayload, kRaw) == (int) kRaw &&
              CRCCalc(img + kSaveHdr, kSaveCrc - kSaveHdr) == be32(io + kVms + 20);
     }
+#if RE4DC_VMU_SAFE_IO
+    if (!ok && !attempt && use_older_copy(ss.file)) continue;
+#endif
 #if RE4DC_VMU_DEBUG_SLOT
     if (ok && ss.live[ss.file] == 'D') {
         const unsigned extras = kStream + be32(io + kVms + 16);
@@ -311,6 +340,10 @@ int op_load()
     const u32 crc = CRCCalc(img, kSaveCrc);
     *(u32*) (img + kSaveCrc) = ok ? crc : ~crc;
     re4dc_log("card-vmu: load file=%d %s blocks=%u ok=%d\n", ss.file, ss.live[ss.file] == 'D' ? "RE4DCDBG" : "", blocks, ok);
+#if RE4DC_VMU_SAFE_IO
+    break;
+    }
+#endif
 #endif
     // Section digest for gate G1 (same bytes from either backend).
     u32 h = 2166136261U;
@@ -539,6 +572,10 @@ extern "C" {
 
 void CARDInit(void) {}
 
+#if RE4DC_VMU_SAFE_IO
+int re4dc_card_busy(void) { return ss.busy != 0; }
+#endif
+
 #if RE4DC_VMU_DIALOG
 int re4dc_vmu_dialog_snapshot(Re4dcVmuDialogSnapshot* out)
 {
@@ -764,6 +801,9 @@ extern "C" int re4dc_quality_cfg_store(const Re4dcQualityCfg* rec)
     // The independent title writer may change this device through another FAT.
     // Keep presentation counts unknown until the next fresh CARD mount.
     card_dialog_clear();
+#endif
+#if RE4DC_VMU_SAFE_IO == 0
+#line 767
 #endif
     u8* mem = (u8*) mem_alloc(kCfgBufBytes, __FILE__, __LINE__, 0, 13);
     if (!mem) {

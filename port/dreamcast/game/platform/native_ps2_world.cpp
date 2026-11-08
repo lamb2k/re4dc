@@ -727,6 +727,13 @@ extern "C" int re4dc_ps2_world_covers(unsigned room){
 #else
 extern "C" int re4dc_ps2_world_covers(unsigned room){return room==0x101;}
 #endif
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+// ITEM_VIEW_BG (#66 bug 2): while the pickup view is up (Status_flg[1] bit 1) its opaque full-screen panel hides the
+// room and native_ui.cpp refuses every PS2 world part (their PT pass sank the view text). The room is then not drawn
+// at all: no PS2 pass, no PT / TR flush and no GameCube world fallback (r11f False Eye pickup: reason 4 every frame).
+extern "C" int re4dc_item_ui_order();
+#define RE4DC_ITEM_VIEW_HIDES_ROOM() (re4dc_item_ui_order()!=0)
+#endif
 extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float far){
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
@@ -750,6 +757,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #if RE4DC_PS2_WORLD_MESH
     // PS2_WORLD_MESH: the converted R4IM package (native_static.cpp); the .r4p is never loaded.
     (void)screen;state.pending=false;
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    if(RE4DC_ITEM_VIEW_HIDES_ROOM())return 1;
+#endif
 #if RE4DC_PS2_WORLD_ROOMS
     if(!re4dc_ps2_world_covers(room)){if(!re4dc_ps2_mesh_failed(room))re4dc_ps2_mesh_retire();return 0;}
     re4dc_ps2_mesh_select(room);
@@ -844,6 +854,9 @@ extern "C" int re4dc_ps2_world_source_draw(){
 #endif
     using namespace re4dc::room::ps2;
     RE4DC_PS2_WORLD_FOG_LATCH();
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    if(RE4DC_ITEM_VIEW_HIDES_ROOM()){state.pending=false;return 1;}
+#endif
 #if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
     state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=re4dc_view_far(RE4DC_PS2_FAR);   // Options View distance
 #else

@@ -91,9 +91,67 @@ static void uql_check(f32 x, f32 y, f32 cx, f32 cy, const f32* pm)
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 extern "C" void re4dc_lbx_note(unsigned cls,unsigned tex_id,unsigned tex_no,unsigned argb,const float* xy);
 #endif
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+// ITEM_VIEW_BG (#66 bug 2): the pickup view (sceAtGetItem -> ItemExamine). The GameCube grabs the frame with
+// GXCopyTex and draws it back behind the view (examine.cpp drawBuffer); both are empty stubs here, so the view drew
+// over whatever the frame held (bands on the console). Before the view's first frame unit (class 0x26) this queues
+// one full-screen panel (ITEM_VIEW_BG_ARGB), and the message panel (texture 0x61, a 592x128 CMPR picture that
+// shows as green noise and hides the text) becomes a plain dark panel (ITEM_VIEW_PANEL_ARGB). Both use the
+// view's own plain picture (ID texture 0x0a no 0, the one its dark frame units draw), sampled at its centre and
+// tinted by the quad colour; a new picture would not resolve in the UI texture cache.
+static bool ivbg_image(Re4dcUiImage* im) {
+    TexWk* wk = IdGetTexWk(0x0a, 1);
+    if (!wk || !wk->pTpl || !wk->pTpl->numDescriptors) return false;
+    const TEXDescriptor* d = TEXGet(wk->pTpl, 0);
+    const TEXHeader* t = d->textureHeader;
+    im->pixels = t->data; im->width = t->width; im->height = t->height; im->format = t->format;
+    im->palette = nullptr; im->palette_bytes = 0; im->palette_format = 0xffffffffU;
+    if (d->CLUTHeader) {
+        im->palette = d->CLUTHeader->data; im->palette_format = d->CLUTHeader->format;
+        im->palette_bytes = d->CLUTHeader->numEntries * 2;
+    }
+    return true;
+}
+extern "C" unsigned re4dc_ui_frame_no();
+static unsigned ivbg_frame = ~0U;
+extern "C" void re4dc_item_view_bg() {
+    alignas(32) static const unsigned char white[8*8*2] = {
+#define W8 0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff
+#define W64 W8,W8,W8,W8,W8,W8,W8,W8
+        W64,W64
+#undef W64
+#undef W8
+    };
+    Re4dcUiQuad q = {};
+    if (!ivbg_image(&q.image)) return;
+    const float xy[8] = {0.0f,0.0f, 640.0f,0.0f, 640.0f,480.0f, 0.0f,480.0f};
+    for (unsigned i=0;i<8;++i) { q.xy[i]=xy[i]; q.uv[i]=0.5f; }
+    q.color = RE4DC_ITEM_VIEW_BG_ARGB; q.blend = 0; q.masked = 0;
+    re4dc_ui_submit(&q);
+}
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+#include "re4dc_platform.h"
+extern "C" int re4dc_ivd_on();
+#endif
 extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
     TexWk* wk = IdGetTexWk(u->texId, 1);
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if (re4dc_ivd_on()) {
+        const TEXHeader* th = (wk && wk->pTpl && u->texNo < wk->pTpl->numDescriptors) ? TEXGet(wk->pTpl, u->texNo)->textureHeader : 0;
+        re4dc_log("IVD id class=%02x mark=%02x tex=%02x/%u fmt=%d %ux%u col=%02x%02x%02x%02x blend=%u texf=%x trans=%u mask=%02x/%u\n",
+            u->classNo, u->markNo, u->texId, u->texNo, th ? (int)th->format : -1, th ? th->width : 0, th ? th->height : 0,
+            (u8)u->col[3], (u8)u->col[0], (u8)u->col[1], (u8)u->col[2], u->blend_type, u->tex_flag, u->trans_type, u->maskId, u->maskNo);
+    }
+#endif
     if (!wk || !wk->pTpl || u->texNo >= wk->pTpl->numDescriptors) return;
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    const bool ivbg_panel = u->classNo == 0x26 && re4dc_item_ui_order() && u->texId == 0x61;
+    if (u->classNo == 0x26 && re4dc_item_ui_order() && ivbg_frame != re4dc_ui_frame_no()) {
+        ivbg_frame = re4dc_ui_frame_no();
+        re4dc_item_view_bg();
+    }
+#endif
     const TEXDescriptor* descriptor = TEXGet(wk->pTpl, u->texNo);
     const TEXHeader* tex = descriptor->textureHeader;
 #if RE4DC_UI_DRAW_LEAN
@@ -157,6 +215,12 @@ extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
     q.color=((unsigned)(u8)u->col[3]<<24)|((unsigned)(u8)u->col[0]<<16)|
             ((unsigned)(u8)u->col[1]<<8)|(u8)u->col[2];
     q.blend=u->blend_type; q.masked=u->tex_flag & 1;
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    if (ivbg_panel && ivbg_image(&q.image)) {
+        for (unsigned i=0;i<8;++i) q.uv[i]=0.5f;
+        q.color = RE4DC_ITEM_VIEW_PANEL_ARGB; q.blend = 0;
+    }
+#endif
 #if RE4DC_UI_HUD_MASK
     // Source IdCommonTrans only: exact constant core colour + two HUD masks.
     // Keep live vertices/UV/colour/blend and the original OT callback order.

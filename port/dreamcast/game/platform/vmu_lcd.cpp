@@ -36,7 +36,13 @@ extern "C" void re4dc_vmu_debug(const void* frame){
     if(!frame){debug_enabled=false;return;}
     debug=(const uint8_t*)frame;debug_start=now_ms();debug_enabled=true;
 }
+#if defined(RE4DC_VMU_SAFE_IO) && RE4DC_VMU_SAFE_IO
+extern "C" int re4dc_card_busy(void);  // card.cpp: no LCD packets between the blocks of a card op
+#endif
 extern "C" void re4dc_vmu_poll(){
+#if defined(RE4DC_VMU_SAFE_IO) && RE4DC_VMU_SAFE_IO
+    if(re4dc_card_busy())return;
+#endif
     unsigned now=now_ms();
     // Even composition is limited to 10 Hz, including busy/no-device cases.
     if(rendered&&now-last_render<100)return;

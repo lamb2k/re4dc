@@ -7,8 +7,43 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 27](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 27.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 27.1
+
+Fixes for the console report in issue [#66](https://github.com/lamb2k/re4dc/issues/66). Everything else is as in Test 27.
+Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Church graveyard dial:** its symbols show again, not blank white discs.
+
+  ![The dial: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/dial-symbols.jpg)
+  <br>The church graveyard dial. Left Test 27, right Test 27.1. Flycast capture.
+- **Title screen:** the "4" logo and "resident evil" show at full strength, and START on the menu starts the game
+  (no second press).
+
+  ![Title menu: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/title-logo.jpg)
+  <br>The title menu. Left Test 27, right Test 27.1. Flycast capture.
+- **Item pickups:** the "You got" and "Take the ...?" text shows on a plain dark panel. The room behind the item is
+  hidden while the panel is open.
+
+  ![Item pickup: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/item-pickup.jpg)
+  <br>Picking up pesetas. Left Test 27, right Test 27.1. Flycast capture.
+- **Save screen:** the saved row shows the new save count and time right away.
+
+  ![Save row: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/save-row.jpg)
+  <br>A second save in one visit. Left Test 27, right Test 27.1. Flycast capture.
+- **Fewer crashes:** a rare crash on the memory card screen (after a reset, or with the save list open) is fixed.
+- **Safer saving:** a late VMU answer no longer hangs the save screen.
+- **Disc reads:** when the drive reports "not ready", the game waits up to 30 seconds before the DISC READ FAILED screen.
+- **The PS2 sky behind the boot screens** (WARNING, CAPCOM and the other logos), the last GameCube picture of the title
+  sequence; Test 27 showed a plain dark green there.
+
+  ![Boot screens and title: Test 27 left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/title-fade.jpg)
+  <br>The boot screens and the title menu. Left Test 27, right Test 27.1. Flycast capture.
+
+Checked on Flycast. Not yet tested on a real console; please tell us in [#66](https://github.com/lamb2k/re4dc/issues/66) how saving, pickups and the merchant
+cave play on yours.
 
 ## What's new in Test 27
 

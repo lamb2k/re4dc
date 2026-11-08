@@ -6,8 +6,9 @@
 
 For players. The full player guide is the [root README](../../README.md).
 
-- **Current build:** Test 27, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): the PS2 sky
-  in normal play, El Gigante and Del Lago fixes, no El Gigante slowdown, a save reload crash guard, more of the castle
+- **Current build:** Test 27.1, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): Test 27
+  plus the issue #66 fixes (graveyard dial symbols, title logo, item pickup text, save row, safer VMU saving, disc
+  not-ready retry, a memory card screen crash fix). Test 27 brought the PS2 sky in normal play, El Gigante and Del Lago fixes, no El Gigante slowdown, a save reload crash guard, more of the castle
   on Disc 2 and smoother castle rooms. Disc 1 and Disc 2 come in the one game zip.
 - **Playable:** New Game through chapter 2-3 on Disc 1, then the castle's chapter 3-1 on Disc 2. The chapter 3-3 and
   3-4 rooms are on Disc 2 and join the route with chapter 3-2 in Test 28.

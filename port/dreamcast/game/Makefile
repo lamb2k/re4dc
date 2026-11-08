@@ -666,6 +666,16 @@ AICA_STR_READ_KB ?= 24
 ifeq ($(AICA_STR_READ),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_READ=1 -DRE4DC_AICA_STR_READ_KB=$(AICA_STR_READ_KB)
 endif
+# AICA_STR_VFS_OPEN (Test 27.1 reset check, default 0 = image unchanged; needs AICA_STR_READ=1): the stream thread
+# opens bgm/aica_str.dat through the /cd VFS handler. KOS fs_open keeps two PATH_MAX (4 KB) path buffers on the
+# stack, more than the thread's 6 KB: each refill open ran below the stack ("Thread stack underrun" on a preemption).
+AICA_STR_VFS_OPEN ?= 0
+ifeq ($(AICA_STR_VFS_OPEN),1)
+ifneq ($(AICA_STR_READ),1)
+$(error AICA_STR_VFS_OPEN needs AICA_STR_READ=1)
+endif
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_VFS_OPEN=1
+endif
 ifeq ($(AICA_SPILL),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
 endif
@@ -2065,6 +2075,14 @@ endif
 DISC_READ_FALLBACK ?= 0
 ifneq ($(filter $(DISC_READ_FALLBACK),0 1 2 3),$(DISC_READ_FALLBACK))
 $(error DISC_READ_FALLBACK must be 0, 1, 2 or 3)
+endif
+# DISC_NOTREADY_RETRY=1 (#66 bug 3, default 0): before the DISC READ FAILED screen, wait up to 30 s for the drive,
+# re-initialising and reading each round. DISC_NOTREADY_TEST=<s> (test only, with DISC_FAIL_AFTER_S): every GD command
+# fails as "not ready" for that long.
+DISC_NOTREADY_RETRY ?= 0
+DISC_NOTREADY_TEST ?= 0
+ifneq ($(DISC_NOTREADY_RETRY)$(DISC_NOTREADY_TEST),00)
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_NOTREADY_RETRY=$(DISC_NOTREADY_RETRY) -DRE4DC_DISC_NOTREADY_TEST=$(DISC_NOTREADY_TEST)
 endif
 DISC_FAIL_AFTER_S ?= 0
 DISC_FAIL_TEST ?= 0
