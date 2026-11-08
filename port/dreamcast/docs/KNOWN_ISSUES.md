@@ -83,7 +83,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b / 27.1 | Fixed and checked in our tests; the problem was not console-only | 67 |
 | 🛠️ In progress | Being fixed now | 5 |
 | 🔍 Investigating | Being reproduced or traced | 10 |
-| ⏸️ Open | Known, not yet worked on | 16 |
+| ⏸️ Open | Known, not yet worked on | 17 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -110,6 +110,7 @@ Not bugs: work that goes on from test to test.
 | The El Gigante fight slows down hard after he breaks objects (console report) | test 25, test 26 | 🟢 Fixed in test 27, needs console check: his animations stay in memory after objects break | |
 | Real console: reloading a save after dying in the El Gigante fight with Ashley can crash | test 26 | 🟢 Fixed in test 27, needs console check: a guard keeps the weapon memory safe on reload | |
 | Disc 2: the fight in r207 (castle, chapter 3-1) is not covered by our full no-warp run yet; our room checks pass there | test 26 | ⏸️ Open: covered in Test 27 testing | |
+| Disc 1: one full-screen menu picture loaded at startup (1443d49e) has no recorded source yet in our asset check (PS2 or GameCube). It draws correctly; we are confirming it comes from the PS2 version | test 27.1 | ⏸️ Open, not blocking: owner assets-dc, Test 28 | |
 | Disc 2: some castle pictures and room layouts have no recorded source yet in our asset check (PS2 or GameCube). They draw correctly; we are confirming each one comes from the PS2 version | test 27 | ⏸️ Open, not blocking: owner assets-dc, Test 28 | |
 | Disc 2: some castle Zealots have no Dreamcast character package yet (the Zealot chase, and two other castle rooms). A check of the enemy tables predicts they draw through the older GameCube path when they spawn; we have not watched it happen yet. They may look a little different and cost more speed. No crash, hang or stuck progress found | test 27 | 🛠️ In progress: first item of Test 28 | |
 | Equipping the Blacktail handgun stops the game with "DLL link/unlink failed" | test 23 | 🟢 Fixed in test 24: its weapon code is in the build again | [#58](https://github.com/lamb2k/re4dc/issues/58) |
