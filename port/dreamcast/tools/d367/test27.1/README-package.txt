@@ -17,6 +17,8 @@ New in test 27.1 (fixes for issue #66; everything else as in test 27):
   starts the game with one press.
 * Item pickups show their "You got" text on a plain dark panel.
 * The save row shows the new save count and time right away.
+* A rare crash on the memory card screen (after a reset, or with the
+  save list open) is fixed.
 * A late VMU answer no longer hangs the save screen.
 * When the drive reports "not ready", the game waits up to 30 seconds
   before the DISC READ FAILED screen.

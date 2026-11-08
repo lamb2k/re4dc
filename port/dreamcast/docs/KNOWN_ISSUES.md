@@ -4,11 +4,11 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** November 7, 2026.
+**Last updated:** November 8, 2026.
 
 **Current build: Test 27.1** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). Test 27 plus the
-issue #66 fixes: the graveyard dial symbols, the title logo, item pickup text, the save row, safer VMU saving and a
-disc not-ready retry. Disc 1 and Disc 2 come in the one game zip. A QA build for testers is the second download.
+issue #66 fixes: the graveyard dial symbols, the title logo, item pickup text, the save row, safer VMU saving, a
+disc not-ready retry and a fix for a rare memory card screen crash. Disc 1 and Disc 2 come in the one game zip. A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
 
@@ -102,6 +102,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| A rare crash on the memory card screen: after a soft reset, or while the save list is open (the music stream thread ran past its stack) | test 27 | 🟢 Fixed in test 27.1 | |
 | Real console: saving can hang on the save screen when the VMU answers late | test 27 | 🟢 Fixed in test 27.1, needs console check: each VMU block read and write now gives up after a short wait, and the save reports the error instead of hanging | [#66](https://github.com/lamb2k/re4dc/issues/66) |
 | Real console: "DISC READ FAILED" at times, for example on the way to the merchant in the boat cave. Cause on the console not found yet | test 27 | 🟢 Fixed in test 27.1, needs console check: when the drive reports not ready, the game waits up to 30 seconds for it before the error screen | [#66](https://github.com/lamb2k/re4dc/issues/66) |
 | The first El Gigante fight (r119): the parasite and death cutscenes are skipped for lack of memory. The fight and its end still work | test 25, test 26 | 🟢 Fixed in test 27 | |

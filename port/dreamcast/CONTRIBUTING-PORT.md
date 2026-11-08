@@ -118,7 +118,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test27.1/release-knobs.txt` (test 27.1: test 27 plus the issue #66 switches `VMU_SAFE_IO`, `DISC_NOTREADY_RETRY`, `FX_INSIGNIA_KEEP`, `ID_ALPHA_SAT`, `SAVE_ROW_FIX`, `TITLE_START_OK` and `ITEM_VIEW_BG`; Disc 2 has `tools/d367/test27.1/release-knobs-disc2.txt`).
+`tools/d367/test27.1/release-knobs.txt` (test 27.1: test 27 plus the issue #66 switches `VMU_SAFE_IO`, `DISC_NOTREADY_RETRY`, `FX_INSIGNIA_KEEP`, `ID_ALPHA_SAT`, `SAVE_ROW_FIX`, `TITLE_START_OK`, `ITEM_VIEW_BG` and `AICA_STR_VFS_OPEN` (the music stream thread opens its file through the /cd handler, not the path lookup that overran its stack); Disc 2 has `tools/d367/test27.1/release-knobs-disc2.txt`).
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
