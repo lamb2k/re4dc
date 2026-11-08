@@ -35,7 +35,11 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
   <br>A second save in one visit. Left Test 27, right Test 27.1. Flycast capture.
 - **Safer saving:** a late VMU answer no longer hangs the save screen.
 - **Disc reads:** when the drive reports "not ready", the game waits up to 30 seconds before the DISC READ FAILED screen.
-- **Title sky picture from the PS2 version** behind the logo, the last GameCube picture on the title screen.
+- **The PS2 sky behind the boot screens** (WARNING, CAPCOM and the other logos), the last GameCube picture of the title
+  sequence; Test 27 showed a plain dark green there.
+
+  ![Boot screens and title: Test 27 left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-a0660f85-20261107-hotfix1/docs/images/releases/test27.1/title-fade.jpg)
+  <br>The boot screens and the title menu. Left Test 27, right Test 27.1. Flycast capture.
 
 Checked on Flycast. Not yet tested on a real console; please tell us in [#66](https://github.com/lamb2k/re4dc/issues/66) how saving, pickups and the merchant
 cave play on yours.
