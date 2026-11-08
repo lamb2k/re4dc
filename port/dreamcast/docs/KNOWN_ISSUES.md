@@ -4,15 +4,18 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** November 6, 2026.
+**Last updated:** November 7, 2026.
 
-**Current build: Test 27** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). The PS2 sky in normal
-play, El Gigante and Del Lago fixes, no El Gigante slowdown after he breaks objects, a save reload crash guard, more of
-the castle on Disc 2 (the rest of chapter 3-1, plus the chapter 3-3 and 3-4 rooms) and smoother castle rooms. Disc 1
-and Disc 2 come in the one game zip. A QA build for testers is the second download.
+**Current build: Test 27.1** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). Test 27 plus the
+issue #66 fixes: the graveyard dial symbols, the title logo, item pickup text, the save row, safer VMU saving and a
+disc not-ready retry. Disc 1 and Disc 2 come in the one game zip. A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
 
+- **Test 27:** the PS2 sky in normal
+play, El Gigante and Del Lago fixes, no El Gigante slowdown after he breaks objects, a save reload crash guard, more of
+the castle on Disc 2 (the rest of chapter 3-1, plus the chapter 3-3 and 3-4 rooms) and smoother castle rooms. Disc 1
+and Disc 2 come in the one game zip.
 - **Test 26:** the castle starts on Disc 2 (chapter 3-1) with PS2 data, the PS2 sky in cutscenes, Leon's Test 23/24
 lighting back (pistol included), faster farmhouse cutscenes and the Dreamcast stick back on the grab escape prompt.
 
@@ -76,8 +79,8 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | Status | Meaning | Count |
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
-| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b | Fixed and checked in our tests; the problem was not console-only | 63 |
+| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 13 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b / 27.1 | Fixed and checked in our tests; the problem was not console-only | 67 |
 | 🛠️ In progress | Being fixed now | 5 |
 | 🔍 Investigating | Being reproduced or traced | 10 |
 | ⏸️ Open | Known, not yet worked on | 16 |
@@ -99,6 +102,8 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| Real console: saving can hang on the save screen when the VMU answers late | test 27 | 🟢 Fixed in test 27.1, needs console check: each VMU block read and write now gives up after a short wait, and the save reports the error instead of hanging | [#66](https://github.com/lamb2k/re4dc/issues/66) |
+| Real console: "DISC READ FAILED" at times, for example on the way to the merchant in the boat cave. Cause on the console not found yet | test 27 | 🟢 Fixed in test 27.1, needs console check: when the drive reports not ready, the game waits up to 30 seconds for it before the error screen | [#66](https://github.com/lamb2k/re4dc/issues/66) |
 | The first El Gigante fight (r119): the parasite and death cutscenes are skipped for lack of memory. The fight and its end still work | test 25, test 26 | 🟢 Fixed in test 27 | |
 | After Del Lago, arriving at the night lake shore (r11b): some room pictures load behind the chapter-change screen, and a few wait for a free block of video memory | test 25, test 26 | 🟢 Fixed in test 27 | |
 | El Gigante at the village (r11e): his body fades out drawn with the GameCube model | test 26 | 🟢 Fixed in test 27: he fades out with his PS2 model | |
@@ -137,6 +142,11 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| The church graveyard dial (r108, r118) shows blank white discs instead of its symbols | test 23 to test 27 | 🟢 Fixed in test 27.1: the dial's symbol effect is kept at the Essential effects level | [#66](https://github.com/lamb2k/re4dc/issues/66) |
+| The title logo ("4" and "resident evil") is faint on the title menu | test 27 and earlier | 🟢 Fixed in test 27.1 | [#66](https://github.com/lamb2k/re4dc/issues/66) |
+| Item pickups: no "You got" text, a noisy panel (Flycast) or bands (real console) | test 27 and earlier | 🟢 Fixed in test 27.1, needs console check for the bands: the text shows on a plain dark panel; the room behind the item is hidden while the panel is open | [#66](https://github.com/lamb2k/re4dc/issues/66) |
+| The save row keeps the old save count and time right after a save | test 27 and earlier | 🟢 Fixed in test 27.1 | [#66](https://github.com/lamb2k/re4dc/issues/66) |
+| The title menu needs START pressed twice | test 27 and earlier | 🟢 Fixed in test 27.1: START on the menu starts the game | [#66](https://github.com/lamb2k/re4dc/issues/66) |
 | In some big castle rooms with no fog, far walls can show as a black gap past the view distance (seen in one Disc 2 hall). Options > View distance > Full reduces it, for that boot only | test 27 | ⏸️ Stays as is for now, to protect speed | |
 | First area (r100) on a real console: some textures look white or mismatched up to the village gate, the path back from the dog trap and the two wooden cabins by the bridge show without textures, and the village gate is missing | test 23 | 🔍 Investigating, not blocking: we are checking each on Test 25 | [#60](https://github.com/lamb2k/re4dc/issues/60) |
 | In the village, the wooden box under the grenade on the shelf by the shotgun is not drawn | test 23 | 🔍 Investigating, not blocking | [#60](https://github.com/lamb2k/re4dc/issues/60) |
