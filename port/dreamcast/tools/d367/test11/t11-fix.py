@@ -1444,16 +1444,6 @@ if os.path.isdir(GLYPH27D):
     PAK_DERIVED['glyph27'] = GLYPH27D + '/pak-derived.json'
     AFTER += [('glyph27', 'leon28')]
 
-# ttl271 (lane re4-rel-66 11-07, GC-ASSET @startup row once ID_ALPHA_SAT draws the title logo early): dc/tex.pak =
-# glyph27's pack with the title logo sky backdrop 1443d49e-e163a598 (ss/Eng/title.dat, 640x360) as PS2 title.dat
-# picture 48 (purgeui24/ps2_ui_map.tsv row; same size/format). Built on glyph27, stages after it, so the title27 /
-# font22 / glyph gates still hold. Store: re4data/private/ttl271-20261107.
-TTL271D = os.environ.get('TTL271D', '/root/re4data/private/ttl271-20261107')
-if os.path.isdir(TTL271D):
-    DATA['ttl271'] = {'dc/tex.pak': TTL271D + '/dc/tex.pak'}
-    PAK_DERIVED['ttl271'] = TTL271D + '/pak-derived.json'
-    AFTER += [('ttl271', 'glyph27')]
-
 
 def title27_gate(names, r, rec):
     # a set after title27 that stages dc/tex.pak would silently undo the user's title art (Test 24: pui24s did)

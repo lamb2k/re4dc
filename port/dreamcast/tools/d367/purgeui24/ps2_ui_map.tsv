@@ -23,4 +23,3 @@ b363dd20-79c95eb2	ss/Cmn/save_e.dat	save_e.dat	24	transpose	save frame handle (7
 2b19e82f-169ea5d5	ss/Cmn/save_e.dat	save_e.dat	23	90	save frame bar (42x245) <- PS2 128x32 turned
 3d5269eb-f15fef1e	ss/Cmn/save_e.dat	save_e.dat	31	0	save white dash (13x10) <- PS2 8x8
 59842d03-801cada7	ss/Cmn/save_e.dat	result.dat	13	0	pill bar (16x24; also result/omk/id22c) <- PS2 result.dat 16x16
-1443d49e-e163a598	ss/Eng/title.dat	title.dat	48	0	title logo backdrop (640x360) <- PS2 512x256
