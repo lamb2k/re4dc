@@ -3488,7 +3488,7 @@ $(OBJDIR)/pc-sampler.h: pc-sampler-force
 	@printf '#define RE4DC_PC_SAMPLER %s\n#define RE4DC_PC_SAMPLER_HZ %s\n#define RE4DC_PC_SAMPLER_BYTES %s\n' '$(PC_SAMPLER)' '$(PC_SAMPLER_HZ)' '$(PC_SAMPLER_BYTES)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
-PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o
+PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/qa_menu.o
 $(PC_SAMPLER_OBJS): $(OBJDIR)/pc-sampler.h platform/include/pc_sampler.h
 $(PC_SAMPLER_OBJS): PLATFORM_CPPFLAGS += -include $(OBJDIR)/pc-sampler.h
 # With NATIVE_RENDER_PROFILE=1 each sample also carries the active render stage.

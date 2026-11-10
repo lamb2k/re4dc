@@ -60,7 +60,7 @@ class Service:
             self.udp.sendto(b'h0 HELLO', addr)   # the console learns this address from it (default host = peer)
         self.write(kind, text)
         head = text.split('\n', 1)[0].split(' ')
-        if kind in 'ADR' and len(head) > 1:
+        if kind in 'ADRP' and len(head) > 1:   # P: PCS SNAP parts (lane perf30)
             with self.lock:
                 w = self.waiters.get(head[1])
                 if w is not None:
@@ -83,6 +83,8 @@ class Service:
                 wait = max(wait, int(command.split()[1]) / 25.0 + 10)   # ticks at >= 25 a second, plus slack
             except (IndexError, ValueError):
                 pass
+        if verb == 'PCS':   # lane perf30: SNAP answers after ~33 parts of 1 KiB (about 10 s at 33.6 kbps)
+            wait = max(wait, 120.0)
         if verb in ('GOTO', 'SCRIPT'):   # lane linkpad28: wait for the walk's DONE row (or an ERR)
             wait = max(wait, 70.0 if verb == 'GOTO' else 290.0)
         end = time.time() + wait

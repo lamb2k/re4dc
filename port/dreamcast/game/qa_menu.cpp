@@ -26,6 +26,7 @@
 // the fixture sets progress flags and the room loads its own enemy list; B = bare room jump, enemies may be missing).
 // The fixture is /cd/dc/qa/<file>. tools/d367/qa20/mkqa.py writes both.
 #include <kos.h>
+#include "platform/include/pc_sampler.h"   // PCS link command (lane perf30); inert when RE4DC_PC_SAMPLER=0
 #include <dc/maple.h>
 #include <dc/maple/controller.h>
 #include <dc/video.h>
@@ -1446,6 +1447,74 @@ int drive_row(char* out, int n) {
                            (int) (g_drv.cam * 1000.0f), (int) g_drv.free_now, g_drv.n, g_drv.cancels, st);
     return k < 0 ? 0 : k >= n ? n - 1 : k;
 }
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+// ---------------------------------------------------------------- PCS (lane perf30, 2026-11-10; PERF-PLAN-30FPS Phase 0)
+// The PC sampler's ring over the link, so a console session gives a per-function profile (until now only Flycast could
+// read the ring). Needs PC_SAMPLER=1 on a QA_LINK disc; with PC_SAMPLER=0 none of this is compiled.
+//   PCS SNAP    stops the sampler, sends the header + ring as P datagrams ("P <id> <part>/<parts>\n<hex>", 512 bytes a
+//               part, paced against the tx backlog, read straight from the ring: no RAM copy), answers
+//               "A <id> OK PCS SNAP ..." after the last part and restarts the sampler if it was running.
+//   PCS STATUS  header counters.   PCS START / PCS STOP  the sampler itself.
+// Host: tools/qalink/pcs_from_log.py turns the P parts (Pi log or `qalink.py send` output) into a read_pcs.py dump.
+extern "C" { extern uint32_t re4dc_pcs[]; }   // pc_sampler.cpp: header[32] + records, RE4DC_PC_SAMPLER_BYTES
+constexpr unsigned kPcsPart = 512;
+constexpr unsigned kPcsBytes = RE4DC_PCS_HEADER_WORDS * 4u + RE4DC_PC_SAMPLER_BYTES;
+struct PcsDump { char id[16]; unsigned part, parts; bool active, restart; } g_pcs;
+void pcs_status(const char* id, const char* what) {
+    const volatile uint32_t* h = re4dc_pcs;
+    link_reply(id, true, "PCS %s state=%u hz=%u cap=%u head=%u samples=%u markers=%u late=%u lat_max=%u frame=%u",
+               what, (unsigned) h[RE4DC_PCS_H_STATE], (unsigned) h[RE4DC_PCS_H_HZ], (unsigned) h[RE4DC_PCS_H_CAPACITY],
+               (unsigned) h[RE4DC_PCS_H_HEAD], (unsigned) h[RE4DC_PCS_H_SAMPLES], (unsigned) h[RE4DC_PCS_H_MARKERS],
+               (unsigned) h[RE4DC_PCS_H_LATE], (unsigned) h[RE4DC_PCS_H_LAT_MAX], (unsigned) h[RE4DC_PCS_H_LAST_FRAME]);
+}
+void pcs_finish(bool sent) {
+    if (!g_pcs.active) return;
+    g_pcs.active = false;
+    if (sent) pcs_status(g_pcs.id, "SNAP done");
+    if (g_pcs.restart) re4dc_pcs_start();
+}
+// Each link pass: up to two parts while the tx backlog has room (same 2400-byte bound as the DIAG snapshot).
+void pcs_step() {
+    if (!g_pcs.active) return;
+    if (!re4dc_qalink_up()) { pcs_finish(false); return; }
+    static const char kHex[] = "0123456789abcdef";
+    for (int k = 0; k < 2 && g_pcs.part < g_pcs.parts; ++k) {
+        char b[48 + 2 * kPcsPart];
+        unsigned tx, rx, drops, queued;
+        re4dc_qalink_counters(&tx, &rx, &drops, &queued);
+        if (queued + sizeof(b) + 2u > 2400u) return;
+        const unsigned off = g_pcs.part * kPcsPart, n = kPcsBytes - off < kPcsPart ? kPcsBytes - off : kPcsPart;
+        const int hl = snprintf(b, 48, "P %s %u/%u\n", g_pcs.id, g_pcs.part + 1, g_pcs.parts);
+        const volatile uint8_t* src = (const volatile uint8_t*) re4dc_pcs + off;
+        char* o = b + hl;
+        for (unsigned i = 0; i < n; ++i) { const unsigned v = src[i]; *o++ = kHex[v >> 4]; *o++ = kHex[v & 15]; }
+        if (!re4dc_qalink_send(b, (unsigned) (o - b))) return;   // ring full: same part next pass
+        ++g_pcs.part;
+    }
+    if (g_pcs.part >= g_pcs.parts) pcs_finish(true);
+}
+void pcs_command(const char* id, const char* rest) {
+    const volatile uint32_t* h = re4dc_pcs;
+    if (h[RE4DC_PCS_H_MAGIC] != RE4DC_PCS_MAGIC) { link_reply(id, false, "PCS: sampler never started"); return; }
+    if (rest && !strncasecmp(rest, "SNAP", 4)) {
+        if (g_pcs.active) { link_reply(id, false, "PCS: SNAP busy (%u/%u)", g_pcs.part, g_pcs.parts); return; }
+        g_pcs.restart = h[RE4DC_PCS_H_STATE] == RE4DC_PCS_RUNNING;
+        re4dc_pcs_stop();
+        strncpy(g_pcs.id, id, sizeof(g_pcs.id) - 1);
+        g_pcs.id[sizeof(g_pcs.id) - 1] = 0;
+        g_pcs.part = 0;
+        g_pcs.parts = (kPcsBytes + kPcsPart - 1) / kPcsPart;
+        g_pcs.active = true;
+        return;   // the answer follows the last part (pcs_step)
+    }
+    if (rest && !strncasecmp(rest, "START", 5)) { re4dc_pcs_start(); pcs_status(id, "START"); return; }
+    if (rest && !strncasecmp(rest, "STOP", 4)) {
+        if (g_pcs.active) { link_reply(id, false, "PCS: SNAP busy"); return; }
+        re4dc_pcs_stop(); pcs_status(id, "STOP"); return;
+    }
+    pcs_status(id, "STATUS");
+}
+#endif
 // One command datagram. in_menu: the in-game menu is open (MENU / RESUME differ).
 int link_command(char* line, bool in_menu) {
     char* save = nullptr;
@@ -1473,6 +1542,9 @@ int link_command(char* line, bool in_menu) {
         link_send_parts('D', id, g_diag, g_diag_len);
         return LA_NONE;
     }
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+    if (word_is(cmd, "PCS")) { pcs_command(id, rest); return LA_NONE; }
+#endif
     if (word_is(cmd, "RECORD")) {
         const int n = rest ? atoi(rest) : 0;
         if (n <= 0 || n > 1800) { link_reply(id, false, "RECORD needs 1..1800 ticks"); return LA_NONE; }
@@ -1524,6 +1596,9 @@ int link_pump(bool in_menu) {
         link_read_cfg();
         if (g_link.auto_start) re4dc_qalink_start();
     }
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+    pcs_step();
+#endif
 #if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
     if (!re4dc_qalink_up()) {
         g_review_snapshot.cancel();
