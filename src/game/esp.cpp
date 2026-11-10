@@ -539,7 +539,7 @@ static inline void fxEspMoveOne(cEspSystem* sys, u32 i, int pause, u32* cnt)
             return;
         }
     }
-    if (!ESP_LOD_SKIP(esp, i)) {
+    C30_ESP_LIVE(esp, !ESP_LOD_SKIP(esp, i)); if (!ESP_LOD_SKIP(esp, i)) {
         esp->move();
     }
     if (esp->m_Be_flg & 1) {
