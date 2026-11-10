@@ -43,6 +43,11 @@ PART = re.compile(r"^(T) (" + UINT + r") (" + UINT + r") (" + UINT + r")/(" + UI
 DIAG = re.compile(r"^D ([A-Za-z0-9_-]{1,15}) (" + UINT + r")/(" + UINT + r")$")
 ANSWER = re.compile(r"^A ([A-Za-z0-9_-]{1,15}) (OK|ERR)(?: (.*))?$", re.S)
 RECORD = re.compile(r"^R ([A-Za-z0-9_-]{1,15}) (" + UINT + r")$")
+# lane perf30: PCS SNAP parts ("P <id> <part>/<parts>" + one lowercase hex line of <= 512 bytes), answered by
+# "A <id> OK PCS SNAP done ..." after the last part. 16,512-byte ring = 33 parts.
+PCSPART = re.compile(r"^P ([A-Za-z0-9_-]{1,15}) (" + UINT + r")/(" + UINT + r")$")
+PCS_MAX_PARTS = 64
+PCS_PART_HEX = 1024
 LABEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,23}$")
 NUMBER = re.compile(r"^-?[0-9]+(?:\.[0-9]+)?$")
 
@@ -73,6 +78,8 @@ def wait_seconds(command, minimum=5.0):
         wait = max(wait, 290.0)
     elif verb == "DIAG":
         wait = max(wait, 30.0)
+    elif verb == "PCS":   # lane perf30: SNAP is ~33 x 1 KiB parts, about 10-15 s on the modem
+        wait = max(wait, 120.0)
     return min(MAX_WAIT, max(0.0, wait))
 
 
@@ -139,6 +146,23 @@ class Reply:
                 if not self.error and len(self.parts) == total:
                     self.event.set()
                 return
+            if text.startswith("P ") and self.verb == "PCS":
+                phead, sep, payload = text.partition("\n")
+                match = PCSPART.fullmatch(phead)
+                if not match or not sep:
+                    raise ValueError("malformed PCS part header")
+                if match[1] != self.cid:
+                    return
+                part, total = int(match[2]), int(match[3])
+                if (not 1 <= part <= total <= PCS_MAX_PARTS or len(payload) > PCS_PART_HEX or len(payload) % 2
+                        or not re.fullmatch(r"[0-9a-f]*", payload)):
+                    raise ValueError("PCS part bounds exceeded")
+                if self.total is not None and self.total != total:
+                    raise ValueError("conflicting PCS part total")
+                self.total = total
+                if self.retain(("P", part), text):
+                    self.parts[part] = len(payload)
+                return
             match = ANSWER.fullmatch(text)
             if match and match[1] == self.cid:
                 status, body = match[2], match[3] or ""
@@ -162,6 +186,9 @@ class Reply:
                             raise ValueError("RECORD tick count mismatch")
                         self.record_total = total
                         self.finish_record()
+                elif self.verb == "PCS" and body.startswith("PCS SNAP done") and (
+                        self.total is None or len(self.parts) != self.total):
+                    self.fail("PCS SNAP answered with %d of %s parts" % (len(self.parts), self.total))
                 elif self.verb != "DIAG":
                     self.event.set()
                 return
@@ -191,6 +218,9 @@ class Reply:
         if self.verb == "DIAG":
             lines = [text for key, text in self.messages.items() if key[0] != "D"]
             lines += [self.messages[("D", n)] for n in sorted(self.parts)]
+        elif self.verb == "PCS":   # answer first, then the parts in index order (pcs_from_log.py reads either)
+            lines = [text for key, text in self.messages.items() if key[0] != "P"]
+            lines += [self.messages[("P", n)] for n in sorted(self.parts)]
         else:
             lines = list(self.messages.values())
         if self.error:
@@ -239,7 +269,7 @@ def service_class(base):
             text = data.decode("latin-1")
             kind = text[:1]
             head = text.partition("\n")[0]
-            if kind not in ("T", "L", "B", "A", "D", "R", "M") or not text.startswith(kind + " "):
+            if kind not in ("T", "L", "B", "A", "D", "R", "M", "P") or not text.startswith(kind + " "):
                 self.dropped += 1
                 return
             now = time.monotonic()
@@ -252,7 +282,7 @@ def service_class(base):
                     hello = True
                 self.last_rx = now
                 fields = head.split(" ", 2)
-                if kind in ("A", "D", "R") and len(fields) > 1:
+                if kind in ("A", "D", "R", "P") and len(fields) > 1:
                     reply = self.waiters.get(fields[1])
                     if reply is not None:
                         reply.feed(text)
