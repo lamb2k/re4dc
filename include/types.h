@@ -87,4 +87,5 @@ extern "C" void* re4dc_em_must_end(void* em);
 #define EM_MUST(T, x) (x)
 #endif
 
+#include "census30.h"   // CENSUS30 (census30.mk): hook macros, ((void) 0) with the knob off
 #endif

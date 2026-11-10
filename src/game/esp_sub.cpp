@@ -266,7 +266,7 @@ extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,in
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 extern "C" int re4dc_esp_strip21_draw(cEsp* esp,int no,Vec* corners,u8 repeat,int direction){
     // This is routing ownership, never proof that a refused GX sink renders.
-    return !re4dc_esp_strip21_draw_result(esp,no,corners,repeat,direction).fallback_allowed();
+    return !C30_STRIPR(esp, re4dc_esp_strip21_draw_result(esp,no,corners,repeat,direction)).fallback_allowed();
 }
 #endif
 #undef RE4DC_STRIP21_RETURN
@@ -1393,7 +1393,7 @@ static int FxLevelSprite(const cEsp* esp, Re4dcEffectSprite* s)
 {
     const f32 area = FxTrimArea(s);
     const int why = FxTrimSprite(esp, s, area);
-    const int drawn = !why && FxLevelSpriteBase(esp, s);
+    const int drawn = !why && FxLevelSpriteBase(esp, s); C30_TRIMWHY(esp, why, drawn);
 #if defined(RE4DC_FX_TRIM_LOG) && RE4DC_FX_TRIM_LOG
     if (s_ftl_frame0 != pG->Frame_cnt) {
         s_ftl_frame0 = pG->Frame_cnt;
@@ -1835,7 +1835,7 @@ static u16 s_haze_cut_room = 0xffff;
 static u32 s_haze_cut_n;
 static void HazeCutNote(cEsp* esp)
 {
-    ++s_haze_cut_n;
+    ++s_haze_cut_n; C30_ESP_MARK(esp, C30_HAZE);
     if (esp && s_haze_cut_room != G_ROOM_ID) {   // one line per room (proof the cut is active; counts of the previous room)
         re4dc_log("haze cut: room=%03x first id=%02x owner=%02x tex=%02x (prev room %03x: %u sprites)\n",
                   (unsigned) G_ROOM_ID, (unsigned) esp->m_Id, (unsigned) esp->info.owner, (unsigned) esp->m_Tex_id,
@@ -1854,7 +1854,7 @@ static void EspSpriteEmit(cEsp* esp)
 {
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
     // Source OT callbacks keep their void ABI and existing state cadence.
-    (void)EspSpriteEmitResult03(esp);
+    (void)C30_EMITR(esp, EspSpriteEmitResult03(esp));
 #else
 #include "esp_sprite_outcomes03.inc"
 #endif
@@ -2665,7 +2665,7 @@ void EspCommonTrans(cEsp* esp)
     f32 ox;
     f32 oy;
 
-    ESPCT(0);
+    ESPCT(0); C30_ESP_MARK(esp, C30_TRANS);
     if (esp->m_Shimmer_type != 0) {
         EspCommonTransShimmer(esp, esp->m_Shimmer_pow, esp->m_Shimmer_type);
         return;
@@ -2827,7 +2827,7 @@ void EspCommonTrans(cEsp* esp)
 #if defined(RE4DC_ESP_ESSENTIAL_EARLY)
     // ChannelSet and the projection/animation cache updates already happened:
     // their state remains available to the next OT callback as before.
-    if (re4dc_fx_essential && FxEssentialSetupCut(esp, ESP_PARTS_SCREEN(esp))) return;
+    if (re4dc_fx_essential && FxEssentialSetupCut(esp, ESP_PARTS_SCREEN(esp))) { C30_ESP_MARK(esp, C30_ESS); return; }
 #endif
     sx = esp->m_Size_base_x * esp->m_Size_mul;
     sy = esp->m_Size_base_y * esp->m_Size_mul;

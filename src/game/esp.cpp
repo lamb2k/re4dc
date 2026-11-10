@@ -693,7 +693,7 @@ int EspMove()
                 continue;
             }
         }
-        if (!ESP_LOD_SKIP(esp, i)) {
+        C30_ESP_LIVE(esp, !ESP_LOD_SKIP(esp, i)); if (!ESP_LOD_SKIP(esp, i)) {
             esp->move();
         }
         if (esp->m_Be_flg & 1) {
@@ -903,7 +903,7 @@ int EspTrans()
         // game state) are capped; room effects (0x01, 0xD0) and Leon's (0x03) never. Capped effects move and live as before.
         if (trans == EspCommonTrans && esp->info.owner >= 0x10 && esp->info.owner < 0xD0) {
             u8* n = &espCapN[esp->m_Id & 0xFF];
-            if (*n >= RE4DC_ESP_TYPE_CAP) {
+            if (*n >= RE4DC_ESP_TYPE_CAP) { C30_ESP_MARK(esp, C30_TCAP);
                 continue;
             }
             ++*n;
@@ -932,7 +932,7 @@ int EspTrans()
             re4dc_esp_logic_queued = 1;
         }
 #endif
-        prio = 0x10;
+        C30_ESP_MARK(esp, (re4dc_pace_drop_models ? C30_LOGICQ : C30_QUEUED) | (trans != EspCommonTrans ? C30_CUSTOM : 0u)); prio = 0x10;
         if (trans == EspCommonTrans && esp->pad_EC[0] == 0 && !(esp->m_Tool_flg & 0x6000)) {
             prio = 8;
         }

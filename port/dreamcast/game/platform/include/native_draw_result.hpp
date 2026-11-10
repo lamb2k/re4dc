@@ -55,3 +55,10 @@ extern "C" re4dc::NativeDrawResult re4dc_water_layer_result(const Re4dcWaterLaye
 extern "C" re4dc::NativeDrawResult re4dc_effect_quad_result(const Re4dcEffectQuad*);
 extern "C" re4dc::NativeDrawResult re4dc_effect_mesh21_result(const Re4dcEffectMesh21*);
 #endif
+// CENSUS30 (census30.mk): the FX_PS2_NONE_CUT hook of native_effect_sprite03.inc; ((void) 0) with the knob off
+#if defined(RE4DC_CENSUS30) && RE4DC_CENSUS30
+extern "C" void re4dc_c30_cut(unsigned bit);
+#define C30_NATIVE_NONE() re4dc_c30_cut(0x0400u)
+#else
+#define C30_NATIVE_NONE() ((void) 0)
+#endif

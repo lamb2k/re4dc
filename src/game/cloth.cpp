@@ -874,7 +874,7 @@ void Cloth::move()
     int i;
     int j;
 
-    for (i = 0; i < divV; i++) {
+    C30_CLOTH(this); for (i = 0; i < divV; i++) {
         if (x70 == 0) {
             if (i == 0) {
                 continue;

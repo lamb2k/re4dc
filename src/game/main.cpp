@@ -336,7 +336,7 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
 #if RE4DC_PACE_CATCHUP
             // Draw or skip this iteration (re4dc_pace_skipping: Render_before, ModelRender,
             // Render_swap); the logic tick below runs in full either way.
-            re4dc_pace_begin();
+            re4dc_pace_begin(); C30_RENDER();
 #endif
             OTHER_PHASE(4); WC24_DECISION() DSA24_DECISION() DFA26_DECISION() // definitive bench_iter boundary: after pace_begin
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
@@ -364,7 +364,7 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
             MWC("clear");
             pG->Frame_cnt++;
             OTHER_PHASE(0);
-            TaskScheduler();
+            C30_TICK_OPEN(); TaskScheduler();
             OTHER_PHASE(4);
             MWC("tasks");
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
@@ -372,7 +372,7 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
 #endif
 #if RE4DC_PACE_CATCHUP
             re4dc_pace_test_tick();
-            re4dc_pace_decide_image();  // v2: whether this tick's image (models) is dropped
+            re4dc_pace_decide_image(); C30_DECIDED();  // v2: whether this tick's image (models) is dropped
 #endif
             ProcessTickGet(5, "TaskScheduler");
 #if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR

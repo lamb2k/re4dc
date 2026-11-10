@@ -477,7 +477,7 @@ u16 MotionMove(cModel* m)
     f32 rate;
     f32 inv;
 
-    if (MOTION(m)->blend != 0) {
+    C30_MOTION(m); if (MOTION(m)->blend != 0) {
         MOTION(m)->blend->Seq_speed = MOTION(m)->Seq_speed;
     }
     if (MOTION(m)->Mot_attr & 1) {
@@ -585,7 +585,7 @@ u16 MotionMove(cModel* m)
         PSMTXConcat(m->mat, tmp, tmp);
         MTX_COPY(tmp, m->mat);
         m->partsWorldCalc();
-        InverseKinematics(m, 1);
+        C30_IK(m); InverseKinematics(m, 1);
         MTX_COPY(save, m->mat);
         m->partsWorldCalc();
 #if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1

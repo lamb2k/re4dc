@@ -448,7 +448,7 @@ RE4_INLINE cModel* cModel::getPartsPtr(int no)
     if (no < 0) {
         return this;
     }
-    cnt = no;
+    cnt = no; C30_PTR();
     if (!PTR_OK(p)) {
         return 0;
     }
@@ -989,7 +989,7 @@ void cModel::partsWorldCalc()
 #if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
     elcPartsWorld(this);
 #endif
-    r_scale = scale;
+    C30_PWC(this); r_scale = scale;
     p = pList;
     if (!PTR_OK(p)) {
         pLog->err(2, 0, "partsWorldCalc() MODEL HAS NO PARTS");

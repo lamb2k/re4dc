@@ -96,7 +96,7 @@
 #endif
     if(fx_count>=RE4DC_EFFECT_SPRITE_MAX){++fx_capped;RE4DC_SPRITE03_RETURN(Refused,0,0,0);}
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
-    if(fxearly_known_cut(s->image)){++fxearly_skips;++fxnone_cuts;RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // FX_EARLY_CUT: no resolve
+    if(fxearly_known_cut(s->image)){++fxearly_skips;++fxnone_cuts;C30_NATIVE_NONE();RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // FX_EARLY_CUT: no resolve
     fxearly_armed=true;fxearly_hit=false;
 #endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
@@ -123,7 +123,7 @@
 #endif
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT && defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
     fxearly_armed=false;
-    if(!e && fxearly_hit){fxearly_hit=false;fxearly_remember(s->image);++fxnone_cuts;RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}
+    if(!e && fxearly_hit){fxearly_hit=false;fxearly_remember(s->image);++fxnone_cuts;C30_NATIVE_NONE();RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}
 #endif
     if(!e){++fx_missing;RE4DC_SPRITE03_RETURN(Refused,0,0,0);}
 #if defined(RE4DC_EFFECT_MASK12) && RE4DC_EFFECT_MASK12
@@ -137,9 +137,9 @@
 #endif
 #if defined(RE4DC_FX_PS2_NONE_CUT) && RE4DC_FX_PS2_NONE_CUT
 #if defined(RE4DC_FX_EARLY_CUT) && RE4DC_FX_EARLY_CUT
-    if(fx_none_cut(*e)){fxearly_remember(s->image);++fxnone_cuts;RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // resident already (e.g. drawn elsewhere)
+    if(fx_none_cut(*e)){fxearly_remember(s->image);++fxnone_cuts;C30_NATIVE_NONE();RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // resident already (e.g. drawn elsewhere)
 #else
-    if(fx_none_cut(*e)){++fxnone_cuts;RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // FX_PS2_NONE_CUT: a picture the PS2 dropped
+    if(fx_none_cut(*e)){++fxnone_cuts;C30_NATIVE_NONE();RE4DC_SPRITE03_RETURN(PolicySkip,0,0,0);}   // FX_PS2_NONE_CUT: a picture the PS2 dropped
 #endif
 #endif
 #if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_FX_PS2_PACK) && RE4DC_FX_PS2_PACK

@@ -336,8 +336,8 @@ void PenClothMove(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
-    PEN_CLOTH_CENSUS(m, c, 1);
-    if (PEN_CLOTH_LOD_SKIP(m, c)) {
+    PEN_CLOTH_CENSUS(m, c, 1); C30_PEN(m);
+    if (PEN_CLOTH_LOD_SKIP(m, c)) { C30_PENSKIP(m);
         return;
     }
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
@@ -654,8 +654,8 @@ void PenClothMove2(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
-    PEN_CLOTH_CENSUS(m, c, 2);
-    if (PEN_CLOTH_LOD_SKIP(m, c)) {
+    PEN_CLOTH_CENSUS(m, c, 2); C30_PEN(m);
+    if (PEN_CLOTH_LOD_SKIP(m, c)) { C30_PENSKIP(m);
         return;
     }
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
@@ -957,8 +957,8 @@ void PenClothMove3(cModel* m, PenCloth* c)
     if (c->Num == 0) {
         return;
     }
-    PEN_CLOTH_CENSUS(m, c, 3);
-    if (PEN_CLOTH_LOD_SKIP(m, c)) {
+    PEN_CLOTH_CENSUS(m, c, 3); C30_PEN(m);
+    if (PEN_CLOTH_LOD_SKIP(m, c)) { C30_PENSKIP(m);
         return;
     }
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35

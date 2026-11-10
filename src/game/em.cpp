@@ -665,7 +665,7 @@ void emMove(cEm* em)
         elcEmAfterMove(em);
     }
 #else
-    em->move();
+    C30_EM(em); em->move(); C30_EM(0);
 #endif
     if ((em->be_flag & 0x201) != 1) {
         return;
