@@ -48,6 +48,12 @@ mkdir -p "$R/pkgtree/dc/qa"; cp "$R"/qa/* "$R/pkgtree/dc/qa/"
 # the link pad pages exist from link28 on (the SPEED-GPU reference may predate it, like QL above)
 [ -z "$QL" ] || { mkdir -p "$R/pkgtree/dc/qa/pad"; cp "$TR"/port/dreamcast/tools/qalink/pad/*.txt "$R/pkgtree/dc/qa/pad/"; }
 [ ! -e "$R/pkgtree/dc/warp.txt" ] || { echo "warp.txt on the QA disc"; exit 1; }
+# RR_QA_HARNESS_WARP=<warp file> (lane perf30, 2026-11-10; harness twins only, never a tester disc): /dc/warp.txt, so
+#   the boot menu is skipped and the game warps straight in (Flycast link runs need a running game and no window input)
+if [ -n "${RR_QA_HARNESS_WARP:-}" ]; then
+  [ -n "${RR_QA_LINKTXT:-}" ] || { echo "RR_QA_HARNESS_WARP needs a harness twin (RR_QA_LINKTXT)"; exit 1; }
+  tr -d '\r' < "$RR_QA_HARNESS_WARP" > "$R/pkgtree/dc/warp.txt"
+fi
 (cd "$T" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$R/pkgtree" "$R/gdemu" | tail -1)
 for prof in loader standard; do
   python3 "$T/disc_lint.py" --profile $prof "$R/gdemu/disc.gdi" > "$R/logs/disc_lint-$prof.txt" \
