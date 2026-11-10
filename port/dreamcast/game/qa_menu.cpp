@@ -27,6 +27,9 @@
 // The fixture is /cd/dc/qa/<file>. tools/d367/qa20/mkqa.py writes both.
 #include <kos.h>
 #include "platform/include/pc_sampler.h"   // PCS link command (lane perf30); inert when RE4DC_PC_SAMPLER=0
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+extern "C" { extern uint32_t re4dc_pcs[]; }   // pc_sampler.cpp: header[32] + records (file scope: not in the anonymous namespace)
+#endif
 #include <dc/maple.h>
 #include <dc/maple/controller.h>
 #include <dc/video.h>
@@ -1456,7 +1459,6 @@ int drive_row(char* out, int n) {
 //               "A <id> OK PCS SNAP ..." after the last part and restarts the sampler if it was running.
 //   PCS STATUS  header counters.   PCS START / PCS STOP  the sampler itself.
 // Host: tools/qalink/pcs_from_log.py turns the P parts (Pi log or `qalink.py send` output) into a read_pcs.py dump.
-extern "C" { extern uint32_t re4dc_pcs[]; }   // pc_sampler.cpp: header[32] + records, RE4DC_PC_SAMPLER_BYTES
 constexpr unsigned kPcsPart = 512;
 constexpr unsigned kPcsBytes = RE4DC_PCS_HEADER_WORDS * 4u + RE4DC_PC_SAMPLER_BYTES;
 struct PcsDump { char id[16]; unsigned part, parts; bool active, restart; } g_pcs;
