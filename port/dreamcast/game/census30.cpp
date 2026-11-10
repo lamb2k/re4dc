@@ -457,7 +457,7 @@ extern "C" void re4dc_c30_esp_mark(const void* esp, unsigned bit)
     if (!esp) return;
     const u32 i = slotOf(esp);
     if (i == ~0u) return;
-    slotBits[i] |= (u16) bit;
+    slotBits[i] |= (u32) bit;
 }
 
 extern "C" void re4dc_c30_esp_cur(const void* esp)

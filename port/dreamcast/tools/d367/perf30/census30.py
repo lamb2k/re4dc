@@ -12,7 +12,8 @@ ap.add_argument('--skip', type=int, default=1)
 ap.add_argument('--out')
 a = ap.parse_args()
 room = int(a.room, 16)
-OUTS = ['drawn', 'tcap', 'haze', 'ess', 'trim', 'level', 'none', 'emit_np', 'strip_np', 'trans_ne', 'custom', 'notq']
+OUTS = ['drawn', 'tcap', 'haze', 'ess', 'trim', 'level', 'none', 'emit_np', 'strip_np', 'trans_ne', 'custom', 'nq_inact',
+        'nq_model', 'nq_notrans', 'nq_ghost', 'nq_core', 'nq_tool', 'notq']
 SKS = ['calls', 'parts', 'rep', 'mot', 'ik', 'pen', 'penskip', 'cloth', 'models']
 
 wins = []
