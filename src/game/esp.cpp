@@ -882,18 +882,18 @@ int EspTrans()
 #endif
 #endif
         if (!ESP_IsActive(esp)) {
-            continue;
+            C30_ESP_MARK(esp, C30_NQ_INACT); continue;
         }
         if (esp->m_pMod != NULL && !(esp->m_pMod->be_flag & 2) && esp->m_Release_time == 0xFF) {
-            continue;
+            C30_ESP_MARK(esp, C30_NQ_MODEL); continue;
         }
         trans = EspTransTbl[esp->m_Id];
         if (trans == NULL) {
-            continue;
+            C30_ESP_MARK(esp, C30_NQ_NOTRANS); continue;
         }
 #if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
         if (trans == EspCommonTrans && re4dc_esp_hit_ghost(esp)) {
-            continue;   // ESP_HIT_THIN: a ghost hit particle is not drawn
+            C30_ESP_MARK(esp, C30_NQ_GHOST); continue;   // ESP_HIT_THIN: a ghost hit particle is not drawn
         }
 #endif
 #if defined(RE4DC_ESP_TYPE_CAP) && RE4DC_ESP_TYPE_CAP
@@ -911,16 +911,16 @@ int EspTrans()
 #endif
         if (esp->info.Core_flg & 0x400) {
             if (pG->Status_flg[1] & 0x04000000) {
-                continue;
+                C30_ESP_MARK(esp, C30_NQ_CORE); continue;
             }
         }
         if (pG->Status_flg[0] & 0x8000) {
             if (esp->m_Tool_flg & 0x100) {
-                continue;
+                C30_ESP_MARK(esp, C30_NQ_TOOL); continue;
             }
         } else {
             if (esp->m_Tool_flg & 0x200) {
-                continue;
+                C30_ESP_MARK(esp, C30_NQ_TOOL); continue;
             }
         }
 #if RE4DC_PACE_TRANS_SKIP

@@ -48,6 +48,12 @@ extern int re4dc_pace_drop_models;                   // pace.cpp
 #define C30_DRAWN 0x1000u     // a sprite or strip published
 #define C30_LOGICQ 0x2000u    // queued by a logic-only (dropped picture) EspTrans pass
 #define C30_STRIP 0x4000u     // FX_STRIP21 strip entered
+#define C30_NQ_INACT 0x10000u   // EspTrans: not ESP_IsActive (live bit set, active test fails)
+#define C30_NQ_MODEL 0x20000u   // EspTrans: owner model not displayed and Release_time 0xFF
+#define C30_NQ_NOTRANS 0x40000u // EspTrans: no trans function for the id
+#define C30_NQ_GHOST 0x80000u   // EspTrans: ESP_HIT_THIN ghost
+#define C30_NQ_CORE 0x100000u   // EspTrans: Core_flg 0x400 while Status_flg[1] 0x04000000
+#define C30_NQ_TOOL 0x200000u   // EspTrans: Tool_flg 0x100 / 0x200 (first-person view filters)
 #if defined(RE4DC_CENSUS30) && RE4DC_CENSUS30
 #define C30_TICK_OPEN() re4dc_c30_tick_open()
 #define C30_DECIDED() re4dc_c30_decided(re4dc_pace_drop_models)

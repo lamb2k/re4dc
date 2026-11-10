@@ -30,9 +30,11 @@ extern cEm* pSubEm asm("pSUB");
 
 namespace {
 
-enum { O_DRAWN, O_TCAP, O_HAZE, O_ESS, O_TRIM, O_LEVEL, O_NONE, O_EMITNP, O_STRIPNP, O_TRANSNE, O_CUSTOM, O_NOTQ, NO };
+enum { O_DRAWN, O_TCAP, O_HAZE, O_ESS, O_TRIM, O_LEVEL, O_NONE, O_EMITNP, O_STRIPNP, O_TRANSNE, O_CUSTOM, O_NQINACT, O_NQMODEL,
+       O_NQNOTRANS, O_NQGHOST, O_NQCORE, O_NQTOOL, O_NOTQ, NO };
 const char* const kOut[NO] = {"drawn", "tcap", "haze", "ess", "trim", "level", "none", "emit_np", "strip_np",
-                              "trans_ne", "custom", "notq"};
+                              "trans_ne", "custom", "nq_inact", "nq_model", "nq_notrans", "nq_ghost", "nq_core", "nq_tool",
+                              "notq"};
 struct EId {
     u16 id, used;
     u32 liveD, liveX, moved, out[NO];
@@ -46,13 +48,14 @@ struct EOwn {
 const int NOWN = 40;
 EOwn eown[NOWN];
 const u32 NSLOT = 1536;
-u16 slotBits[NSLOT];
+u32 slotBits[NSLOT];
 
 enum { S_CALL, S_PARTS, S_REP, S_MOT, S_IK, S_PEN, S_PENSKIP, S_CLOTH, S_MODELS, NS };
 const char* const kSk[NS] = {"calls", "parts", "rep", "mot", "ik", "pen", "penskip", "cloth", "models"};
 struct SK {
     u8 own, self, ph, used;
     u32 c[2][NS];
+    u32 t[NS];   // this tick, moved into c[drop] at the tick's close
 };
 const int NSK = 64;
 SK sk[NSK];
@@ -68,6 +71,7 @@ struct RA {
     u32 ra;
     u8 kind, ph;   // kind 0 partsWorldCalc, 1 getPartsPtr
     u32 n[2];
+    u32 t;
 };
 const int NRA = 128;
 RA ra[NRA];
@@ -140,6 +144,12 @@ int outcome(u32 b)
     if (b & C30_STRIP) return O_STRIPNP;  // strip path, not published
     if (b & C30_TRANS) return O_TRANSNE;  // EspCommonTrans ran, no emit (ineligible / shimmer / nega / early return)
     if (b & C30_CUSTOM) return O_CUSTOM;  // queued with its own trans (models, lines, special draws): not classified
+    if (b & C30_NQ_INACT) return O_NQINACT;
+    if (b & C30_NQ_MODEL) return O_NQMODEL;
+    if (b & C30_NQ_NOTRANS) return O_NQNOTRANS;
+    if (b & C30_NQ_GHOST) return O_NQGHOST;
+    if (b & C30_NQ_CORE) return O_NQCORE;
+    if (b & C30_NQ_TOOL) return O_NQTOOL;
     return O_NOTQ;                        // never queued (hidden flags, release time, no trans, pause)
 }
 
@@ -189,15 +199,15 @@ void raNote(void* r, u8 kind)
     const u32 a = (u32) r;
     for (int i = 0; i < NRA; i++) {
         RA& e = ra[i];
-        if (e.n[0] + e.n[1] && e.ra == a && e.kind == kind && e.ph == phase) {
-            e.n[curDrop]++;
+        if (e.n[0] + e.n[1] + e.t && e.ra == a && e.kind == kind && e.ph == phase) {
+            e.t++;
             return;
         }
-        if (!(e.n[0] + e.n[1])) {
+        if (!(e.n[0] + e.n[1] + e.t)) {
             e.ra = a;
             e.kind = kind;
             e.ph = (u8) phase;
-            e.n[curDrop] = 1;
+            e.t = 1;
             return;
         }
     }
@@ -305,6 +315,19 @@ void closeTick()
     }
     totLive[d] += live;
     if (live > maxLive) maxLive = live;
+    // skeleton: this tick's counts go to the drawn / dropped columns now that the pacer has decided
+    for (int i = 0; i < NSK; i++) {
+        SK& k = sk[i];
+        if (!k.used) continue;
+        for (int j = 0; j < NS; j++) {
+            k.c[d][j] += k.t[j];
+            k.t[j] = 0;
+        }
+    }
+    for (int i = 0; i < NRA; i++) {
+        ra[i].n[d] += ra[i].t;
+        ra[i].t = 0;
+    }
     // skeleton: distinct models this tick, per key
     for (int i = 0; i < NMR; i++) {
         MR& r = mr[i];
@@ -352,14 +375,14 @@ extern "C" void re4dc_c30_pwc(void* m, void* r)
     SK* s = skFor(m);
     raNote(r, 0);
     if (!s) return;
-    s->c[curDrop][S_CALL]++;
-    s->c[curDrop][S_PARTS] += ((cModel*) m)->nParts;
+    s->t[S_CALL]++;
+    s->t[S_PARTS] += ((cModel*) m)->nParts;
     // repeats: the model's 2nd+ pass this tick
     int fr = -1;
     for (int i = 0; i < NMR; i++) {
         MR& e = mr[i];
         if (e.m == m && e.tick == tickNo) {
-            if (++e.n > 1) s->c[curDrop][S_REP]++;
+            if (++e.n > 1) s->t[S_REP]++;
             return;
         }
         if (fr < 0 && (e.m == 0 || e.tick != tickNo)) fr = i;
@@ -377,25 +400,25 @@ extern "C" void re4dc_c30_pwc(void* m, void* r)
 extern "C" void re4dc_c30_motion(void* m)
 {
     if (!tickNo) return;
-    if (SK* s = skFor(m)) s->c[curDrop][S_MOT]++;
+    if (SK* s = skFor(m)) s->t[S_MOT]++;
 }
 
 extern "C" void re4dc_c30_ik(void* m)
 {
     if (!tickNo) return;
-    if (SK* s = skFor(m)) s->c[curDrop][S_IK]++;
+    if (SK* s = skFor(m)) s->t[S_IK]++;
 }
 
 extern "C" void re4dc_c30_pen(void* m)
 {
     if (!tickNo) return;
-    if (SK* s = skFor(m)) s->c[curDrop][S_PEN]++;
+    if (SK* s = skFor(m)) s->t[S_PEN]++;
 }
 
 extern "C" void re4dc_c30_penskip(void* m)
 {
     if (!tickNo) return;
-    if (SK* s = skFor(m)) s->c[curDrop][S_PENSKIP]++;
+    if (SK* s = skFor(m)) s->t[S_PENSKIP]++;
 }
 
 extern "C" void re4dc_c30_trim(const void* esp, int why, int drawn)
@@ -413,7 +436,7 @@ extern "C" void re4dc_c30_cloth(void* c)
 {
     (void) c;
     if (!tickNo) return;
-    if (SK* s = skEntry(curEm ? ownId(curEm) : 0xFE, 0, (u8) phase)) s->c[curDrop][S_CLOTH]++;
+    if (SK* s = skEntry(curEm ? ownId(curEm) : 0xFE, 0, (u8) phase)) s->t[S_CLOTH]++;
 }
 
 extern "C" void re4dc_c30_ptr(void* r)
