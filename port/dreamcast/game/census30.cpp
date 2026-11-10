@@ -203,6 +203,12 @@ void raNote(void* r, u8 kind)
     }
 }
 
+void clearWords(void* p, u32 bytes)
+{
+    volatile u32* w = (volatile u32*) p;   // volatile: no memset call
+    for (u32 i = 0; i < bytes / 4; i++) w[i] = 0;
+}
+
 void flushWindow()
 {
     const u32 t = winTicks[0] + winTicks[1];
@@ -254,10 +260,10 @@ void flushWindow()
                       (unsigned) e.n[0], (unsigned) e.n[1]);
         }
     }
-    __builtin_memset(eid, 0, sizeof(eid));
-    __builtin_memset(eown, 0, sizeof(eown));
-    __builtin_memset(sk, 0, sizeof(sk));
-    __builtin_memset(ra, 0, sizeof(ra));
+    clearWords(eid, sizeof(eid));
+    clearWords(eown, sizeof(eown));
+    clearWords(sk, sizeof(sk));
+    clearWords(ra, sizeof(ra));
     winTicks[0] = winTicks[1] = 0;
     totLive[0] = totLive[1] = totDrawn = totQueued = maxLive = totEmit = 0;
     tickSkelMissed = 0;

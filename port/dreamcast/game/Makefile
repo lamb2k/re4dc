@@ -2525,6 +2525,7 @@ SDK_CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
 endif
 # Opt-in game-side CPU knobs and the determinism trace (default off: no effect).
 include game30.mk
+include census30.mk
 # Default-off Build29 distinct collision notes; all header consumers share the control.
 include atchk_distinct29.mk
 # BACKFACE_CONE=1 (backface.mk, lane backface-cone23): the world back-face cone is SCENERY_CONE=1 (scenery19.mk).
@@ -3713,7 +3714,6 @@ include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
 include logiclod20.mk
 include logicbudget.mk
-include census30.mk
 # Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
 include rigid20.mk
 include shotfx20.mk
