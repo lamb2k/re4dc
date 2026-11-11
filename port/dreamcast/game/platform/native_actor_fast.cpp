@@ -1849,11 +1849,45 @@ SkinEntry* find_skin(const void* info, const void* positions) {
     return find_ordinary_skin(info, positions);
 }
 #else
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+// PS31_SKIN_MEMO (partsetup31.mk; render only, exact): the registry's lazy (info, no arrays) lookups are memoized.
+// A part of a lazily skinned info asks the registry the same question four to six times per draw (qualifies' lazy_skin,
+// prepare_frame's palette and source, PROP_GATE, the owner source check), and each answer was a linear scan of up to
+// kSkins entries; the owner source scan never stops early for an info no owner holds (every room prop), so it read the
+// whole table every time (console p103h: re4dc_actor_owned_source 0.98 ms a picture, one source line).
+// skin_gen31 moves on every write to skins[] / skin_count / skin_frame / owned_skins[] (register, owned_skin_clear,
+// owned_skin_invalidate_frames: acquire and release end with it). While it stands still the table is unchanged, so a
+// memo of the scan (the first lazy entry of the info, and the first such entry an owner holds) is the scan's answer.
+// Two entries (parts arrive info by info). =2 (compare build): every lookup also scans; "PS31M bad=" must stay 0.
+static_assert(kSkins < 255U, "skin memo indices are bytes");
+unsigned skin_gen31 = 1;  // never 0: an unused memo entry (gen 0) never matches
+struct SkinMemo31 { const void* info; unsigned gen; u8 lazy, owned; };
+SkinMemo31 skin_memo31[2];
+unsigned skin_memo31_next;
+#if RE4DC_PS31_SKIN_MEMO == 2
+unsigned skin_memo31_lookups, skin_memo31_hits, skin_memo31_bad;
+#endif
+#define RE4DC_SKIN_GEN31_BUMP() (++skin_gen31 ? (void)0 : (void)(skin_gen31 = 1))
+// The registry's first lazy entry of info (kSkins: none), and (owned, after owned_skins exists) the first lazy entry
+// an owner holds. Defined after the owner registry.
+const SkinMemo31& skin_memo31_get(const void* info);
+SkinEntry* find_skin(const void* info, const void* positions) {
+    if (!positions) {
+        const unsigned i = skin_memo31_get(info).lazy;
+        return i < kSkins ? &skins[i] : nullptr;
+    }
+    for (unsigned i = 0; i < skin_count; ++i)
+        if (skins[i].info == info && skins[i].positions == positions) return &skins[i];
+    return nullptr;
+}
+#else
+#define RE4DC_SKIN_GEN31_BUMP() ((void)0)
 SkinEntry* find_skin(const void* info, const void* positions) {
     for (unsigned i = 0; i < skin_count; ++i)
         if (skins[i].info == info && skins[i].positions == positions) return &skins[i];
     return nullptr;
 }
+#endif
 #endif
 
 
@@ -1866,6 +1900,45 @@ SkinEntry* find_skin(const void* info, const void* positions) {
 #include "include/native_actor_skin_reserve.inc"
 #endif
 #endif
+#endif
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+const SkinMemo31& skin_memo31_get(const void* info) {
+#if RE4DC_PS31_SKIN_MEMO == 2
+    if ((++skin_memo31_lookups & 0x3FFFU) == 0)
+        re4dc_log("PS31M lookups=%u hits=%u bad=%u gen=%u\n", skin_memo31_lookups, skin_memo31_hits, skin_memo31_bad,
+                  skin_gen31);
+    SkinMemo31 scan{info, skin_gen31, u8(kSkins), u8(kSkins)};
+    for (unsigned i = 0; i < skin_count; ++i)
+        if (skins[i].info == info && !skins[i].positions) {
+            if (scan.lazy == kSkins) scan.lazy = u8(i);
+            if (owned_skins[i].serial) { scan.owned = u8(i); break; }
+        }
+#endif
+    for (const SkinMemo31& m : skin_memo31)
+        if (m.info == info && m.gen == skin_gen31) {
+#if RE4DC_PS31_SKIN_MEMO == 2
+            ++skin_memo31_hits;
+            if (m.lazy != scan.lazy || m.owned != scan.owned) {
+                ++skin_memo31_bad;
+                SkinMemo31& w = skin_memo31[&m - skin_memo31];
+                w = scan;  // the scan decides
+                return w;
+            }
+#endif
+            return m;
+        }
+    SkinMemo31& m = skin_memo31[skin_memo31_next];
+    skin_memo31_next ^= 1U;
+    m = SkinMemo31{info, skin_gen31, u8(kSkins), u8(kSkins)};
+    for (unsigned i = 0; i < skin_count; ++i)
+        if (skins[i].info == info && !skins[i].positions) {
+            if (m.lazy == kSkins) m.lazy = u8(i);
+#if RE4DC_ACTOR_TRANSACTION
+            if (owned_skins[i].serial) { m.owned = u8(i); break; }
+#endif
+        }
+    return m;
+}
 #endif
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
 #include "include/native_actor_skin_admit32.inc"
@@ -1976,6 +2049,16 @@ void screen_rows(const Re4dcModelPart& p, float M[3][4]) {
             M[r][c] = rows[r][0] * m[c] + rows[r][1] * m[4 + c] + rows[r][2] * m[8 + c];
 }
 
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+// PS31_CENSUS (lane partsetup31, diagnostic): what re4dc_actor_submit does per source frame on its own path (parts
+// past the Frame by mode, Frames prepared, skinned palette entries, meshlets / vertices drawn, lit parts, runs of
+// parts of one info). "PS31A" every 120 source frames.
+struct Ps31A {
+    unsigned f0, parts_skin, parts_rigid, parts_source, frames_prepared, skin_frames, skin_entries;
+    unsigned meshlets, vertices, lit, info_runs, culled;
+    const void* last_info;
+} ps31a;
+#endif
 Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_distance) {
     for (Frame& f : frames)
         if (f.frame == frame_serial && f.info == p.info &&
@@ -2071,6 +2154,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
     table14_enter(f);
 #endif
     ++stats.info_preparations;
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    ++ps31a.frames_prepared; if (f.mode == kSkin) { ++ps31a.skin_frames; ps31a.skin_entries += f.palette_entries; }
+#endif
     return &f;
 }
 
@@ -6192,6 +6278,11 @@ extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     if (skin_admission_pending.serial) return 0;
 #endif
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+    // PS31_SKIN_MEMO: every path below may write skins[] / skin_count / skin_frame, after its own lookups; the memo
+    // starts over on the way out (whatever the return), so no memo built inside survives the write.
+    struct Gen31 { ~Gen31() { RE4DC_SKIN_GEN31_BUMP(); } } gen31;
+#endif
     if (frame != skin_frame) {
 #if RE4DC_ACTOR_TRANSACTION
         owned_skin_clear();owned_skin_invalidate_frames();
@@ -6831,6 +6922,21 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         explicit_frame?*explicit_frame:
 #endif
         *prepare_frame(p, near_distance, far_distance);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    {
+        if (frame_serial - ps31a.f0 >= 120U) {
+            const unsigned fr = frame_serial - ps31a.f0;
+            re4dc_log("PS31A frame=%u frames=%u skin=%u rigid=%u source=%u prepared=%u skin_frames=%u skin_entries=%u "
+                      "meshlets=%u vertices=%u lit=%u info_runs=%u culled=%u\n", frame_serial, fr, ps31a.parts_skin,
+                      ps31a.parts_rigid, ps31a.parts_source, ps31a.frames_prepared, ps31a.skin_frames,
+                      ps31a.skin_entries, ps31a.meshlets, ps31a.vertices, ps31a.lit, ps31a.info_runs, ps31a.culled);
+            const void* li = ps31a.last_info;
+            ps31a = Ps31A{}; ps31a.f0 = frame_serial; ps31a.last_info = li;
+        }
+        if (f.mode == kSkin) ++ps31a.parts_skin; else if (f.mode == kRigid) ++ps31a.parts_rigid; else ++ps31a.parts_source;
+        if (p.info != ps31a.last_info) { ++ps31a.info_runs; ps31a.last_info = p.info; }
+    }
+#endif
 #if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
     // RIGID_CENSUS=2 (benchmark census discs, lane cache20): every rigid part is counted (re4dc_rigid_census: parts,
     // meshlets, vertices of the parts that reached here this frame; the biggest part's model) and is not drawn only while
@@ -7176,6 +7282,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    ++ps31a.lit;
+#endif
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
     if (!RE4DC_LEON_DIR26_FOLD(p, f, lights))
         B28_NOTE(p, fast_only_lights(p, f, blob->center, lights));
@@ -7295,6 +7404,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         const u8* index = lists + (lt ? lt[mi].index : m.index);
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+        ++ps31a.meshlets; ps31a.vertices += nv;
+#endif
 #if RE4DC_ACTOR_BACKFACE_CONE
         if (abc) {
             ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
@@ -7337,6 +7449,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         if (all & kOcCull) {
             C31_CULL(nv);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+            ++ps31a.culled;
+#endif
 #if RE4DC_ACTOR_CENSUS
             if (census_cur) census_cur->culled += nv;
 #endif
