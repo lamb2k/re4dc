@@ -9,6 +9,7 @@
 extern "C" void re4dc_c31_describe(const void* model, unsigned* key, int* pos);          // model_bridge.cpp
 extern "C" void re4dc_c31_model_counts(unsigned* parts, unsigned* other, unsigned* in, unsigned* out);  // native_ui.cpp
 extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_c31_ra_dump(unsigned frame);  // native_ui.cpp: results outside any guarded part, by caller
 namespace c31 {
 struct Row {
     const void* model; unsigned key; int pos[3];
@@ -60,6 +61,7 @@ void flush(unsigned frame) {
                       int(r.dmax), r.pos[0], r.pos[1], r.pos[2]);
             r.calls = 0;
         }
+        re4dc_c31_ra_dump(frame);
     }
     for (Row& r : rows) r = Row{};
     nrows = 0; started = true; frame0 = frame;
@@ -114,6 +116,7 @@ inline void kern(bool skin, bool s16, unsigned n) {
 }
 inline void cull(unsigned n) { if (cur) cur->cull_v += n; }
 }  // namespace c31
+extern "C" unsigned re4dc_c31_depth() { return c31::depth; }
 #define C31_GUARD(pp) c31::Guard c31_guard(pp)
 #define C31_KERN(skin, s16, n) c31::kern((skin), (s16), (n))
 #define C31_CULL(n) c31::cull(n)

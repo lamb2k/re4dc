@@ -7668,6 +7668,7 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
     re4dc_callprof_part(p.model, 1);
 #endif
     if (p.positions) return -1;
+    C31_GUARD(&p);
     ++stats.parts;
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
@@ -7683,6 +7684,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     re4dc::dsa24::count(re4dc::dsa24::Parts);
 #endif
     if (p.positions) return -1;
+    C31_GUARD(&p);
     APROF_SPAN(aprof_chunk, APROF_CHUNK);
     APROF_COUNT(APROF_N_CHUNKS, 1);
     ++stats.parts;

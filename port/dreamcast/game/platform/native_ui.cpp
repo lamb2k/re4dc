@@ -8061,8 +8061,21 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
 extern "C" void re4dc_c31_model_counts(unsigned* parts,unsigned* other,unsigned* in,unsigned* out){
     *parts=model_parts;*other=model_invalid+model_resource+model_overflow;*in=model_input;*out=model_output;
 }
+// Results committed outside any guarded actor part (static meshes, generic path), by return address.
+extern "C" unsigned re4dc_c31_depth();
+namespace c31ra { struct Row{const void* ra;unsigned parts,out_parts,tris_out;}; Row rows[16]; }
+static void c31_ra_note(const void* ra,unsigned reason,unsigned output){
+    if(re4dc_c31_depth())return;
+    for(auto& r:c31ra::rows)if(r.ra==ra||!r.ra){r.ra=ra;if(reason==0){++r.parts;if(output){++r.out_parts;r.tris_out+=output;}}return;}
+}
+extern "C" void re4dc_c31_ra_dump(unsigned f){
+    for(auto& r:c31ra::rows){if(r.ra)re4dc_log("C31R f=%u ra=%08x parts=%u out=%u tout=%u\n",f,(unsigned)r.ra,r.parts,r.out_parts,r.tris_out);r=c31ra::Row{};}
+}
 #endif
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+    c31_ra_note(__builtin_return_address(0),reason,output);
+#endif
 #if defined(RE4DC_MODEL_PART_DUMP)
     if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)
         re4dc_log("PARTDUMP f=%u key=%08x-%08x in=%u out=%u r=%u\n",frame,model_dump_crc,model_dump_fnv,input,output,reason);
