@@ -1191,6 +1191,11 @@ endif
 #                    hw ms vs the square order: house -1.00 / -0.16, fight -0.96 / -0.17, square -1.23 /
 #                    -0.27; H2 logic trace STRICT). The old order covered 47-57% of those windows' hw ms, the
 #                    new one 87-88% (all the placeable code).
+#                    link-order/console-20261111-c3-8k.ld (lane layout30, 11-11) is the first order built from CONSOLE
+#                    evidence: ordgen_c3.py --pcs on the slot-154 PC-sampler dumps of 6906ef03 (cross, farm, r100, barn),
+#                    clustered by thread, callee first, placed so loop partners do not share I-cache sets; hot KOS /
+#                    libc members (memcpy, memset) placed too. ordcheck.py --collide / --identity check it. Console A/B
+#                    pending (decision: PMC ev 24 per second at the cross <= 37 M from 43.5-44.4 M).
 LINK_ORDER ?=
 # LINK_ORDER_FILE: the file ld reads, LINK_ORDER itself or a knob's derived copy (GAME_ROT_FSCA).
 LINK_ORDER_FILE = $(LINK_ORDER)
