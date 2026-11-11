@@ -7,8 +7,19 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 27.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 27.2](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 27.2
+
+A fix for the save crash in issue [#66](https://github.com/lamb2k/re4dc/issues/66). Everything else is as in Test 27.1.
+Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Chapter-end save fixed:** saving after the chapter 1-1 results no longer freezes and then shows a blue screen.
+  The fix covers every chapter end that sends you on to a new area.
+
+Checked on Flycast with console-like disc timing. Not yet tested on a real console; please tell us in
+[#66](https://github.com/lamb2k/re4dc/issues/66) how the end-of-chapter save goes on yours.
 
 ## What's new in Test 27.1
 
@@ -77,6 +88,7 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 28.
 
 - [ ] **The last castle Zealots on the Dreamcast character path:** the Zealot chase and two other castle rooms.
+- [ ] **Disc 2 asset gap:** confirm the GameCube labels on castle models and animations, and replace what is really GameCube.
 - [ ] **Chapter 3-2** in the castle, which joins chapter 3-1 to the 3-3 and 3-4 rooms in normal play.
 - [ ] **Chapter 4.**
 - [ ] **Disc 3:** the island and the final chapter.
