@@ -105,10 +105,20 @@ def identity(a):
         fb = {os.path.relpath(f, a.identity_objdir): f for f in glob.glob(a.identity_objdir + "/**/*.o", recursive=True)}
         diff = [r for r in sorted(set(fa) & set(fb)) if P.obj_digest(fa[r]) != P.obj_digest(fb[r])]
         only = sorted(set(fa) ^ set(fb))
-        print("objects (all sections but debug info): %d compared, %d differ%s, %d only in one objdir%s" % (
-            len(set(fa) & set(fb)), len(diff), (": " + " ".join(diff[:8])) if diff else "", len(only),
-            (": " + " ".join(only[:8])) if only else ""))
-        bad += ["object differs: " + r for r in diff] + ["object only in one: " + r for r in only]
+        labels = []
+        for r in diff:
+            sa, sb = P.obj_sections(fa[r]), P.obj_sections(fb[r])
+            ds = sorted(n for n in set(sa) | set(sb) if sa.get(n) != sb.get(n))
+            # string literals only (a QA build's QA_SRC / QA_TEST label): allowed, listed
+            if all(re.match(r"^\.rodata\.str", n) for n in ds):
+                labels.append("%s (%s)" % (r, " ".join(n.split("#")[0] for n in ds)))
+            else:
+                bad.append("object differs: %s (%s)" % (r, " ".join(n.split("#")[0] for n in ds[:6])))
+        print("objects (all sections but debug info): %d compared, %d differ in code or data, %d in string literals only%s,"
+              " %d only in one objdir%s" % (len(set(fa) & set(fb)), len(diff) - len(labels), len(labels),
+                                            (": " + " ".join(labels)) if labels else "", len(only),
+                                            (": " + " ".join(only[:8])) if only else ""))
+        bad += ["object only in one: " + r for r in only]
 
     def symtab(E):
         d = {}
@@ -144,6 +154,25 @@ def identity(a):
             return (min(kv[j:i + 1]), x - v)          # aliases at one address: the smallest key
         return sym
     ra, rb = resolver(A, SA), resolver(B, SB)
+
+    def same_target(wa, xa, wb, xb):
+        """a word at wa (A) / wb (B): the same symbol + offset as an absolute address, or as a PC-relative one
+        (.eh_frame pcrel, bsrf / braf literals: target = anchor + value, the anchor at the same distance from the word
+        in both ELFs, searched within +-1 KB and accepted only on a symbol start)"""
+        sa = ra(xa)
+        if sa is not None and sa == rb(xb):
+            return "abs"
+        for d in range(-1024, 1026, 2):
+            ta, tb = ra((wa + d + xa) & 0xFFFFFFFF), rb((wb + d + xb) & 0xFFFFFFFF)
+            if ta is not None and ta == tb and ta[1] == 0:
+                return "rel"
+        return None
+
+    def text_word(xa, xb):
+        ok = lambda x: all(c == 0 or 32 <= c < 127 for c in struct.pack("<I", x)) and x != 0
+        return ok(xa) and ok(xb)
+
+    label_words = []
     n_fun = n_same = n_reloc = 0
     unexplained = []
     for k in sorted(ka & kb):
@@ -175,8 +204,7 @@ def identity(a):
             if 0 <= wo and wo + 4 <= sz and ((vb + wo) & 3) == 0:
                 xa, = struct.unpack_from("<I", ba, wo)
                 xb, = struct.unpack_from("<I", bb, wo)
-                sa, sb = ra(xa), rb(xb)
-                if sa is not None and sa == sb:
+                if same_target(va + wo, xa, vb + wo, xb):
                     ok_pos.update((wo, wo + 2))
                     continue
             unexplained.append("%s+%#x: %04x vs %04x" % (k[1], o, ha, hb))
@@ -200,24 +228,30 @@ def identity(a):
         if da == db:
             print("%s: %d B identical" % (name, size))
             continue
-        nrel, nbad = 0, []
+        nrel, nbad, nlab = 0, [], 0
         for o in range(0, size - 3, 4):
             if da[o:o + 4] == db[o:o + 4]:
                 continue
             xa, = struct.unpack_from("<I", da, o)
             xb, = struct.unpack_from("<I", db, o)
-            sa, sb = ra(xa), rb(xb)
-            if sa is not None and sa == sb:
+            if same_target(addr + o, xa, t[3] + o, xb):
                 nrel += 1
+            elif text_word(xa, xb):
+                nlab += 1
+                label_words.append("%s+%#x %r vs %r" % (name, o, struct.pack("<I", xa), struct.pack("<I", xb)))
             else:
                 sy = ra(addr + o)
                 nbad.append("%s+%#x (%s): %08x vs %08x" % (name, o, sy and "%s+%#x" % (sy[0][1], sy[1]), xa, xb))
-        print("%s: %d B, %d words differ only by relocated addresses, %d unexplained%s" % (
-            name, size, nrel, len(nbad), (": " + "; ".join(nbad[:6])) if nbad else ""))
+        print("%s: %d B, %d words differ only by relocated addresses, %d label-text words, %d unexplained%s" % (
+            name, size, nrel, nlab, len(nbad), (": " + "; ".join(nbad[:6])) if nbad else ""))
         bad += nbad
     print(".text size %d vs %d (%+d B of alignment padding)" % (A.text_hi - A.text_lo, B.text_hi - B.text_lo,
                                                               (B.text_hi - B.text_lo) - (A.text_hi - A.text_lo)))
-    print("IDENTITY %s (%d unexplained differences)" % ("PASS" if not bad else "FAIL", len(bad)))
+    if label_words:
+        print("label text (printable words that differ: build labels such as the QA overlay's source sha / test name):")
+        print("  " + "; ".join(label_words[:12]) + (" ..." if len(label_words) > 12 else ""))
+    print("IDENTITY %s (%d unexplained differences, %d label-text words)" % ("PASS" if not bad else "FAIL", len(bad),
+                                                                          len(label_words)))
     for b in bad[:30]:
         print("  " + b)
     return not bad

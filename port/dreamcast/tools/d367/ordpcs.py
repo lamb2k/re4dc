@@ -105,7 +105,18 @@ class Objects:
     def __init__(self, objdir, archives=(), tools=TOOLS):
         self.secs = {}                  # key -> dict(size, align, syms=[(name, value, global)])
         self.rel = {}                   # object -> its file name for the order rule
+        self.stems = {}                 # object -> source stems its local symbols come from
         objs = sorted(glob.glob(objdir + "/**/*.o", recursive=True))
+        # partial-link groups (game Makefile: mod/em10g.o = ld -r of mod/em10g/**/*.o): the group object is the link
+        # input, its members are not; its local symbols carry the members' FILE names
+        members = set()
+        for o in objs:
+            d = o[:-2]
+            if os.path.isdir(d):
+                ms = [m for m in objs if m.startswith(d + "/")]
+                members.update(ms)
+                self.stems[os.path.relpath(o, objdir)] = {stem(m) for m in ms} | {stem(o)}
+        objs = [o for o in objs if o not in members]
         base_n = collections.Counter(os.path.basename(o) for o in objs)
         for i in range(0, len(objs), 150):
             chunk = objs[i:i + 150]
@@ -170,7 +181,7 @@ class Layout:
                 if isglob:
                     a = glob_a.get(name)
                 else:
-                    c = loc_a.get((stem(k[0]), name), [])
+                    c = [v for s in objs.stems.get(k[0], {stem(k[0])}) for v in loc_a.get((s, name), [])]
                     a = c[0] if len(c) == 1 else None
                 if a is not None:
                     a -= val
@@ -449,19 +460,25 @@ def sha(path):
     return hashlib.sha256(open(path, "rb").read()).hexdigest()
 
 
-def obj_digest(path):
-    """sha256 of an object's sections other than debug info / .comment (debug info holds the build directory)"""
+def obj_sections(path):
+    """{section name: sha256} of an object's sections other than debug info / .comment (debug info holds the build
+    directory, which differs between two builds of the same source)"""
     b = open(path, "rb").read()
     shoff, = struct.unpack_from("<I", b, 0x20)
     shentsize, shnum, shstrndx = struct.unpack_from("<HHH", b, 0x2E)
     sh = [struct.unpack_from("<IIIIIIIIII", b, shoff + i * shentsize) for i in range(shnum)]
     so = sh[shstrndx][4]
-    h = hashlib.sha256()
-    for s in sh:
+    out = {}
+    for i, s in enumerate(sh):
         name = b[so + s[0]:b.index(b"\0", so + s[0])]
         if re.match(rb"^(\.rela?)?\.debug|^\.comment$", name):
             continue
-        h.update(name + b"\0" + struct.pack("<IIII", s[1], s[2], s[5], s[8]))
+        h = hashlib.sha256(struct.pack("<IIII", s[1], s[2], s[5], s[8]))
         if s[1] != 8:
             h.update(b[s[4]:s[4] + s[5]])
-    return h.hexdigest()
+        out["%s#%d" % (name.decode("latin-1"), i)] = h.hexdigest()
+    return out
+
+
+def obj_digest(path):
+    return hashlib.sha256("".join("%s=%s" % kv for kv in sorted(obj_sections(path).items())).encode()).hexdigest()
