@@ -110,7 +110,7 @@ def identity(a):
             sa, sb = P.obj_sections(fa[r]), P.obj_sections(fb[r])
             ds = sorted(n for n in set(sa) | set(sb) if sa.get(n) != sb.get(n))
             # string literals only (a QA build's QA_SRC / QA_TEST label): allowed, listed
-            if all(re.match(r"^\.rodata\.str", n) for n in ds):
+            if all(re.match(r"^\.rodata(\..*)?\.str\d", n) for n in ds):
                 labels.append("%s (%s)" % (r, " ".join(n.split("#")[0] for n in ds)))
             else:
                 bad.append("object differs: %s (%s)" % (r, " ".join(n.split("#")[0] for n in ds[:6])))
@@ -121,29 +121,34 @@ def identity(a):
         bad += ["object only in one: " + r for r in only]
 
     def symtab(E):
-        d = {}
+        d, allsyms = {}, collections.Counter()
         for name, val, sz, typ, bind, shn, f in E.syms:
             if shn == 0 or not name:
                 continue
             d.setdefault((f, name), (val, sz, typ))
-        return d
-    SA, SB = symtab(A), symtab(B)
+            allsyms[(f, name, sz, typ)] += 1
+        return d, allsyms
+    (SA, CA), (SB, CB) = symtab(A), symtab(B)
     ka, kb = set(SA), set(SB)
-    if ka != kb:
-        bad.append("symbol sets differ: %d only in A, %d only in B (%s)" % (
-            len(ka - kb), len(kb - ka), " ".join(n for f, n in sorted(ka ^ kb)[:6])))
-    sized = [k for k in ka & kb if SA[k][1] != SB[k][1]]
-    if sized:
-        bad.append("symbol sizes differ: %d (%s)" % (len(sized), " ".join(n for f, n in sized[:6])))
+    if CA != CB:
+        da, db = CA - CB, CB - CA
+        bad.append("symbol tables differ: %d entries only in A, %d only in B (%s)" % (
+            sum(da.values()), sum(db.values()), " ".join(k[1] for k in list(da)[:3] + list(db)[:3])))
 
-    def resolver(E, S):
+    def resolver(E):
         alloc = [(s[3], s[3] + s[5]) for s in E.alloc_sections()]
-        pts = sorted({(v, k) for k, (v, sz, t) in S.items()
-                      if any(lo <= v < hi for lo, hi in alloc) and t != 3})     # not STT_SECTION
+        top = max(hi for lo, hi in alloc)
+        # every symbol (duplicated local copies of one inline function resolve alike: (file, name)), plus the
+        # section starts, which anchor anonymous data (string literals before a section's first symbol)
+        pts = sorted({(val, (f, name)) for name, val, sz, typ, bind, shn, f in E.syms
+                      if shn and name and typ != 3 and any(lo <= val < hi for lo, hi in alloc)} |
+                     {(s[3], ("", "<%s>" % s[0])) for s in E.alloc_sections()})
         av = [p[0] for p in pts]
         kv = [p[1] for p in pts]
 
         def sym(x):
+            if top <= x < top + 0x10000:
+                return (("", "<image end>"), x - top)       # e.g. the KOS heap start (_end + n)
             if not any(lo <= x <= hi for lo, hi in alloc):
                 return None
             i = bisect.bisect_right(av, x) - 1
@@ -153,7 +158,11 @@ def identity(a):
             j = bisect.bisect_left(av, v)
             return (min(kv[j:i + 1]), x - v)          # aliases at one address: the smallest key
         return sym
-    ra, rb = resolver(A, SA), resolver(B, SB)
+    ra, rb = resolver(A), resolver(B)
+    # words that differ by design between two links: the image id the build patches in (ovl_id_patch: image hash and
+    # .text size, which the overlays check against)
+    EXPECTED = re.compile(r"^_re4dc_image_id$")
+    expected = []
 
     def same_target(wa, xa, wb, xb):
         """a word at wa (A) / wb (B): the same symbol + offset as an absolute address, or as a PC-relative one
@@ -241,7 +250,11 @@ def identity(a):
                 label_words.append("%s+%#x %r vs %r" % (name, o, struct.pack("<I", xa), struct.pack("<I", xb)))
             else:
                 sy = ra(addr + o)
-                nbad.append("%s+%#x (%s): %08x vs %08x" % (name, o, sy and "%s+%#x" % (sy[0][1], sy[1]), xa, xb))
+                line = "%s+%#x (%s): %08x vs %08x" % (name, o, sy and "%s+%#x" % (sy[0][1], sy[1]), xa, xb)
+                if sy and EXPECTED.search(sy[0][1]):
+                    expected.append(line)
+                else:
+                    nbad.append(line)
         print("%s: %d B, %d words differ only by relocated addresses, %d label-text words, %d unexplained%s" % (
             name, size, nrel, nlab, len(nbad), (": " + "; ".join(nbad[:6])) if nbad else ""))
         bad += nbad
@@ -250,6 +263,8 @@ def identity(a):
     if label_words:
         print("label text (printable words that differ: build labels such as the QA overlay's source sha / test name):")
         print("  " + "; ".join(label_words[:12]) + (" ..." if len(label_words) > 12 else ""))
+    if expected:
+        print("expected (differ by design: image id = image hash + .text size): " + "; ".join(expected))
     print("IDENTITY %s (%d unexplained differences, %d label-text words)" % ("PASS" if not bad else "FAIL", len(bad),
                                                                           len(label_words)))
     for b in bad[:30]:
