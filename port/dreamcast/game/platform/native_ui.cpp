@@ -91,6 +91,10 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_R
 extern "C" unsigned re4dc_room_id_now();
 extern "C" void re4dc_vram_pages_census(unsigned* out);
 #endif
+// lane disc31: a test allocation (allocate, then free) whose miss counts in vram_pages.cpp probe_fails, not fails.
+// Weak: without VRAM_PAGES the plain pvr_mem_malloc is used, as before.
+extern "C" pvr_ptr_t re4dc_vram_pages_probe(size_t size) __attribute__((weak));
+static inline pvr_ptr_t vram_probe(size_t size){return re4dc_vram_pages_probe?re4dc_vram_pages_probe(size):pvr_mem_malloc(size);}
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif
@@ -4382,7 +4386,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_TEX_RESIDENT
             // Evict until one contiguous block of the size fits, then read the
             // package once more (was: a full re-read per single eviction).
-            for(;;){pvr_ptr_t probe=pvr_mem_malloc(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
+            for(;;){pvr_ptr_t probe=vram_probe(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
 #endif
             ok=RE4DC_OPEN_PACKAGE() && slot->package.upload();
         }
@@ -5515,7 +5519,7 @@ int vram_claim(unsigned bytes,bool movie){
     ++vram_claims;
     unsigned released=0,released_bytes=0;
     // Probe only when the total would do: a failed pvr_mem_malloc() logs an error.
-    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=pvr_mem_malloc(bytes);if(!p)return false;pvr_mem_free(p);return true;};
+    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=vram_probe(bytes);if(!p)return false;pvr_mem_free(p);return true;};
     // Fragmented pool: re-probe only after each 64 KiB released, not after every small texture
     // (the sub screen's 1 MiB claim probed 146 times at r101, each failure a KOS "out of PVR
     // memory" line, warp-r101-pbdoor8); at most 64 KiB more is released than strictly needed.

@@ -69,6 +69,7 @@ int re4dc_tick_log_snapshot(const char** name, unsigned* avg_us, unsigned* max_u
     __attribute__((weak));                                                                     // tick_log.cpp
 void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room) __attribute__((weak));
 void re4dc_vram_pages_census(unsigned* out) __attribute__((weak));                             // vram_pages.cpp
+unsigned re4dc_vram_pages_probe_fails(void) __attribute__((weak));                             // vram_pages.cpp (disc31)
 void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigned long long* block_us)
     __attribute__((weak));                                                                     // dvd_read_safe.cpp
 extern unsigned long re4dc_fx_esp_live[32] __attribute__((weak));                            // esp.cpp (FX_SCAN)
@@ -489,7 +490,8 @@ void snap_diag() {
 #endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
     if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
-    if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u\n", o[3], o[4], o[10]); }
+    if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u probe_fails=%u\n", o[3], o[4], o[10],
+                re4dc_vram_pages_probe_fails ? re4dc_vram_pages_probe_fails() : 0u); }
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     {   // VRAM failures by room (the VRAMFAIL log lines carry each one's size, caller and texture key)
         unsigned lr = 0, ln = 0, rr[8], rc[8];
