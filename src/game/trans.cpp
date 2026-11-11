@@ -4450,7 +4450,17 @@ static int propGate(cModel* m, Mtx viewMat)
     u32 np = 0;
     Mtx inv;
     Mtx tmp;
+#if defined(RE4DC_PS31_GATE_MAT) && RE4DC_PS31_GATE_MAT
+    // PS31_GATE_MAT (partsetup31.mk; render only, exact): these are calcWeightMat's operations on the same matrices
+    // (RE4DC_RENDER_MTXInverse of the root, then two RE4DC_RENDER_MTXConcat per part, in its order), so they are written
+    // where calcWeightMat writes them (pG->mtxPalette) and SKIN_PALETTE_LAZY's memo then names this model: a kept
+    // model's palette resolves (same render call, same game frame) no longer run calcWeightMat again. A partial walk
+    // (more than kPgParts parts) leaves the memo cleared, as any other calcWeightMat does.
+    g_skinLazyMtx = 0;
+#define pal pG->mtxPalette[np]
+#else
     Mtx pal;
+#endif
     RE4DC_RENDER_MTXInverse(m->pParts->mat, inv);
     for (cPartsWk* p = (cPartsWk*) m->pParts; p != 0; p = p->next) {
         if (np == kPgParts) {
@@ -4469,6 +4479,34 @@ static int propGate(cModel* m, Mtx viewMat)
         t[np][2] = pal[2][3];
         np++;
     }
+#if defined(RE4DC_PS31_GATE_MAT) && RE4DC_PS31_GATE_MAT
+#undef pal
+#if RE4DC_PS31_GATE_MAT == 2
+    // Compare build: calcWeightMat itself over the same matrices must leave the same words ("PS31G ... bad=0").
+    {
+        static u32 checks, words_bad, models_bad, logf;
+        static Mtx keep[kPgParts];
+        memcpy(keep, pG->mtxPalette, np * sizeof(Mtx));
+        calcWeightMat(m);
+        u32 bad = 0;
+        const u32* a = (const u32*) keep;
+        const u32* b = (const u32*) pG->mtxPalette;
+        for (u32 k = 0; k < np * 12; k++) {
+            bad += a[k] != b[k];
+        }
+        checks++;
+        words_bad += bad;
+        models_bad += bad != 0;
+        if (pG->Frame_cnt - logf >= 600) {
+            logf = pG->Frame_cnt;
+            re4dc_log("PS31G frame=%u checks=%u bad=%u words_bad=%u\n", pG->Frame_cnt, checks, models_bad, words_bad);
+        }
+    }
+#endif
+    // The whole walk ran: pG->mtxPalette holds this model's calcWeightMat for this game frame.
+    g_skinLazyMtx = m;
+    g_skinLazyMtxFrame = pG->Frame_cnt;
+#endif
     if (!np || !(s2 < 1.0e30f)) {
         return propGateNo(2);
     }
@@ -6544,6 +6582,93 @@ static int skinDeferPending(cModel* m, cModelInfo* info, ModelData* d, int* mtxB
     return 1;
 }
 
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+// PS31_CENSUS (lane partsetup31, diagnostic): lazy palette resolves per frame and how many repeat a (model, weight
+// table, count) already resolved this frame (the same palette bytes rebuilt for another info). "PS31P" every 120.
+extern "C" void re4dc_log(const char* fmt, ...);
+static struct {
+    u32 frame, n, keys;
+    const void* m[64];
+    const void* w[64];
+    u32 ne[64];
+    u32 res, dup, ent, dupent, mtx, f0, frames;
+} g_ps31;
+static void ps31Note(const void* m, const void* w, u32 n_ext, int mtx)
+{
+    if (g_ps31.frame != pG->Frame_cnt) {
+        g_ps31.frame = pG->Frame_cnt;
+        g_ps31.keys = 0;
+        ++g_ps31.frames;
+        if (pG->Frame_cnt - g_ps31.f0 >= 120) {
+            re4dc_log("PS31P frame=%u frames=%u resolves=%u dup=%u entries=%u dup_entries=%u calcWeightMat=%u\n",
+                      pG->Frame_cnt, g_ps31.frames, g_ps31.res, g_ps31.dup, g_ps31.ent, g_ps31.dupent, g_ps31.mtx);
+            g_ps31.f0 = pG->Frame_cnt;
+            g_ps31.res = g_ps31.dup = g_ps31.ent = g_ps31.dupent = g_ps31.mtx = g_ps31.frames = 0;
+        }
+    }
+    ++g_ps31.res;
+    g_ps31.ent += n_ext & 0xFFFF;
+    g_ps31.mtx += mtx;
+    for (u32 k = 0; k < g_ps31.keys; k++) {
+        if (g_ps31.m[k] == m && g_ps31.w[k] == w && g_ps31.ne[k] == n_ext) {
+            ++g_ps31.dup;
+            g_ps31.dupent += n_ext & 0xFFFF;
+            return;
+        }
+    }
+    if (g_ps31.keys < 64) {
+        g_ps31.m[g_ps31.keys] = m;
+        g_ps31.w[g_ps31.keys] = w;
+        g_ps31.ne[g_ps31.keys] = n_ext;
+        ++g_ps31.keys;
+    }
+}
+// After the build: is this palette word-identical to the same (model, weight table)'s palette of the previous frame?
+// "PS31S" every 120 frames: built, same as last frame, entries of those.
+static struct {
+    const void* m[96];
+    const void* w[96];
+    u32 hash[96], frame[96];
+    u32 built, same, same_ent, ent, f0;
+} g_ps31s;
+static void ps31Static(const void* m, const void* w, const float* pal, u32 n)
+{
+    u32 h = 2166136261u;
+    const u32* p = (const u32*) pal;
+    for (u32 k = 0; k < n * 12; k++) {
+        h = (h ^ p[k]) * 16777619u;
+    }
+    if (pG->Frame_cnt - g_ps31s.f0 >= 120) {
+        re4dc_log("PS31S frame=%u built=%u same=%u entries=%u same_entries=%u\n", pG->Frame_cnt, g_ps31s.built,
+                  g_ps31s.same, g_ps31s.ent, g_ps31s.same_ent);
+        g_ps31s.f0 = pG->Frame_cnt;
+        g_ps31s.built = g_ps31s.same = g_ps31s.ent = g_ps31s.same_ent = 0;
+    }
+    ++g_ps31s.built;
+    g_ps31s.ent += n;
+    u32 slot = 96;
+    for (u32 k = 0; k < 96; k++) {
+        if (g_ps31s.m[k] == m && g_ps31s.w[k] == w) {
+            slot = k;
+            break;
+        }
+        if (slot == 96 && !g_ps31s.m[k]) {
+            slot = k;
+        }
+    }
+    if (slot == 96) {
+        return;
+    }
+    if (g_ps31s.m[slot] == m && g_ps31s.w[slot] == w && g_ps31s.hash[slot] == h && pG->Frame_cnt - g_ps31s.frame[slot] - 1 < 3) {
+        ++g_ps31s.same;
+        g_ps31s.same_ent += n;
+    }
+    g_ps31s.m[slot] = m;
+    g_ps31s.w[slot] = w;
+    g_ps31s.hash[slot] = h;
+    g_ps31s.frame[slot] = pG->Frame_cnt;
+}
+#endif
 // A render consumer is about to read `palette`: build it now if it is a pending SKIN_PALETTE_LAZY copy. The parts
 // matrices of one model are built once per game frame for its resolves; any other calcWeightMat clears the memo.
 extern "C" void re4dc_skin_palette_resolve(const float* palette)
@@ -6576,6 +6701,9 @@ extern "C" void re4dc_skin_palette_resolve(const float* palette)
     }
     memcpy(&h, palette, sizeof(h));  // a header of another frame (=2: stale=0) is built too, never read raw
 #endif
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    ps31Note(h.m, h.w, h.n_ext, g_skinLazyMtx != h.m || g_skinLazyMtxFrame != pG->Frame_cnt);
+#endif
     if (g_skinLazyMtx != h.m || g_skinLazyMtxFrame != pG->Frame_cnt) {
         calcWeightMat(h.m);
         g_skinLazyMtx = h.m;
@@ -6598,6 +6726,9 @@ extern "C" void re4dc_skin_palette_resolve(const float* palette)
     }
 #else
     skinLazyBuild(h.w, h.n_ext & 0xFFFF, h.n_ext >> 16, (void*) palette);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    ps31Static(h.m, h.w, palette, h.n_ext & 0xFFFF);
+#endif
 #endif
 }
 #if defined(RE4DC_SKIN_RECIPE32) && RE4DC_SKIN_RECIPE32

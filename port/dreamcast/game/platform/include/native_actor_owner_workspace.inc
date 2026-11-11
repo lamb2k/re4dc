@@ -5,13 +5,20 @@ unsigned workspace_scratch_limit() {
     const unsigned limit=reserve<=workspace_bytes?workspace_bytes-reserve:0;
     return workspace_end<limit?workspace_end:limit;
 }
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+// PS31_SKIN_MEMO: every owned registry change (acquire, release, clear) ends here; the lookup memo starts over.
+#define RE4DC_PS31_INVALIDATE_BUMP RE4DC_SKIN_GEN31_BUMP();
+#else
+#define RE4DC_PS31_INVALIDATE_BUMP
+#endif
 #if RE4DC_ACTOR_NO_CLEAR
 // ACTOR_NO_CLEAR: the cache's own drop (prepare_frame's "one skin table at a time"): no Frame matches again and
 // no skin table pointer survives; a dropped Frame is fully reset (Frame{}) when it is reused as the victim.
-void owned_skin_invalidate_frames(){for(auto& f:frames){f.frame=~0U;f.skin_positions=f.skin_dirs=nullptr;f.skin_ready=f.dirs_ready=nullptr;}}
+void owned_skin_invalidate_frames(){RE4DC_PS31_INVALIDATE_BUMP for(auto& f:frames){f.frame=~0U;f.skin_positions=f.skin_dirs=nullptr;f.skin_ready=f.dirs_ready=nullptr;}}
 #else
-void owned_skin_invalidate_frames(){for(auto& f:frames)f=Frame{};}
+void owned_skin_invalidate_frames(){RE4DC_PS31_INVALIDATE_BUMP for(auto& f:frames)f=Frame{};}
 #endif
+#undef RE4DC_PS31_INVALIDATE_BUMP
 extern "C" int re4dc_actor_workspace_acquire(unsigned bytes,Re4dcActorWorkspaceLease* out) {
     if(!out || !bytes || bytes>UINT32_MAX-31)return 0;
     bytes=(bytes+31)&~31u;
