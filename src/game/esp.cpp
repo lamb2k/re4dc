@@ -1323,8 +1323,7 @@ extern "C" void re4dc_fx31_stat(unsigned k)
     if (fx31Frame / 300 != (u32) pG->Frame_cnt / 300) {
         u32 live = 0;
         for (u32 w = 0; w < RE4DC_FX_ESP_WORDS; w++) live += __builtin_popcountl(re4dc_fx_esp_live[w]);
-        re4dc_log("fx31: f=%u room=%03x visit=%u dormrej=%u precut=%u dormclr=%u map=%u active=%u
-", (unsigned) pG->Frame_cnt,
+        re4dc_log("fx31: f=%u room=%03x visit=%u dormrej=%u precut=%u dormclr=%u map=%u active=%u\n", (unsigned) pG->Frame_cnt,
                   (unsigned) G_ROOM_ID, fx31N[0], fx31N[1], fx31N[2], fx31N[3], live, (unsigned) g_pEspSys->ActiveEspNum);
         fx31N[0] = fx31N[1] = fx31N[2] = fx31N[3] = 0;
         fx31Frame = pG->Frame_cnt;
