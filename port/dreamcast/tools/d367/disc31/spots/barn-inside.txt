@@ -1,0 +1,9 @@
+# lane disc31 (2026-11-11) perf spot: the console profiling session's TELEPORT POS spot as a full preset (room entry, so the
+# shoulder camera starts behind Leon). god = Leon takes no damage (as the speed warps rr/speed/warps/*.txt); no alert.
+# r103 farm barn inside, the dense scene (rr/speed/warps/barn.txt sky27-hwbarn).
+name perf-r103-barn-inside
+room 0x103
+pos -11000 163 -1000
+ang -1.1
+inv default
+god

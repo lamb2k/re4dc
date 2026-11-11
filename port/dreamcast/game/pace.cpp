@@ -446,8 +446,22 @@ namespace {
 // PMC_ROW (pace.mk): SH-4 performance counter 2, one event per one-second window.
 const unsigned kPmcEv[5] = {0x25, 0x24, 0x04, 0x05, 0x08};
 unsigned pmc_idx, pmc_ev, pmc_val10, pmc_started;
-void pmc_window(unsigned drawn)
+#if RE4DC_PMC_ROW >= 2
+// PMC_ROW=2 (lane disc31, 2026-11-11): counter 1 (PRFC0) as well, so stall and miss counts come from the same second.
+// The pinned KOS (804b3195) starts PRFC0 as an elapsed-time counter at init (perf_cntr_timer_enable) but reads it only
+// in perf_cntr_timer_ns() and perf_monitor, which this program never calls; timer_ns/us/ms_gettime64 are TMU2
+// (arch_timer_gettime). PRFC0 counts the partner of PRFC1's event in the same window: 25 <-> 24 (both freezes),
+// 04 / 05 (D misses) with 25, 08 (I misses) with 24. "PMC2:" log line; the screen row is unchanged.
+unsigned pmc2_ev;
+unsigned pmc2_partner(unsigned ev) { return ev == 0x25 || ev == 0x08 ? 0x24 : 0x25; }
+#endif
+void pmc_window(unsigned drawn, unsigned win_vb)
 {
+#if RE4DC_PMC_ROW >= 2
+    const unsigned long long c0 = perf_cntr_count(PRFC0);
+#else
+    (void) win_vb;
+#endif
     const unsigned long long c = perf_cntr_count(PRFC1);
     if (pmc_started) {
         const unsigned ev = kPmcEv[pmc_idx];
@@ -458,11 +472,21 @@ void pmc_window(unsigned drawn)
         re4dc_log("PMC: ev=%02x per_drawn=%llu total=%llu drawn=%u (%s)\n", ev, per, c, drawn,
                   ev == 0x25 ? "D-miss freeze cycles" : ev == 0x24 ? "I-miss freeze cycles" : ev == 0x04 ? "OC read misses"
                   : ev == 0x05 ? "OC write misses" : "IC misses");
+#if RE4DC_PMC_ROW >= 2
+        // both counters of one window: totals, drawn pictures and the window length (fields of 1/59.94 s)
+        re4dc_log("PMC2: ev=%02x+%02x total=%llu+%llu drawn=%u win_vb=%u\n", ev, pmc2_ev, c, c0, drawn, win_vb);
+#endif
         pmc_idx = (pmc_idx + 1) % 5;
     }
     perf_cntr_stop(PRFC1);
     perf_cntr_clear(PRFC1);
     perf_cntr_start(PRFC1, (perf_cntr_event_t) kPmcEv[pmc_idx], PMCR_COUNT_CPU_CYCLES);
+#if RE4DC_PMC_ROW >= 2
+    perf_cntr_stop(PRFC0);
+    perf_cntr_clear(PRFC0);
+    pmc2_ev = pmc2_partner(kPmcEv[pmc_idx]);
+    perf_cntr_start(PRFC0, (perf_cntr_event_t) pmc2_ev, PMCR_COUNT_CPU_CYCLES);
+#endif
     pmc_started = 1;
 }
 }  // namespace
@@ -571,7 +595,7 @@ void vmu_window(unsigned cost, u32 now)
     else re4dc_vmu_speed(nullptr, 0);
 #endif
 #if defined(RE4DC_PMC_ROW) && RE4DC_PMC_ROW
-    pmc_window(v_drawn);
+    pmc_window(v_drawn, dvb);
 #endif
 #if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER
     re4dc_disc_meter_window();

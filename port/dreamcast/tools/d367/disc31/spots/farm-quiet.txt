@@ -1,0 +1,9 @@
+# lane disc31 (2026-11-11) perf spot: the console profiling session's TELEPORT POS spot as a full preset (room entry, so the
+# shoulder camera starts behind Leon). god = Leon takes no damage (as the speed warps rr/speed/warps/*.txt); no alert.
+# r103 farm, a quiet corner (console session spot farm-quiet).
+name perf-r103-quiet
+room 0x103
+pos -44074 -9 5598
+ang -1.211
+inv default
+god

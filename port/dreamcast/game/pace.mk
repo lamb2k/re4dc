@@ -183,15 +183,20 @@ endif
 # frame), 0x04 operand-cache read misses, 0x05 operand-cache write misses, 0x08 instruction-cache misses (shown in
 # 0.1 k per drawn frame). The event code is drawn left of the value (25, 24, 4, 5, 8). A whole window per event
 # (not a per-tick rotation), so draw / skip ticks cannot alias with the event (10-04 hwcal trap). "PMC:" log line.
+# PMC_ROW=2 (lane disc31, 2026-11-11; log only beyond PMC_ROW=1): counter 1 (PRFC0) counts the partner event in the same
+# window, so stall and miss counts come from the same second ("PMC2: ev=<c2>+<c1> total=<c2>+<c1> drawn win_vb" line):
+# 25 with 24, 24 with 25, 04 / 05 with 25, 08 with 24. The note above is out of date for the pinned KOS 804b3195: its
+# timers (timer_ns/us/ms_gettime64) run on TMU2; PRFC0 is started at init but read only by perf_cntr_timer_ns() and
+# perf_monitor, which the game never calls (that function falls back to TMU2 once PRFC0 counts another event).
 PMC_ROW ?= 0
-ifneq ($(filter $(PMC_ROW),0 1),$(PMC_ROW))
-$(error PMC_ROW must be 0 or 1)
+ifneq ($(filter $(PMC_ROW),0 1 2),$(PMC_ROW))
+$(error PMC_ROW must be 0, 1 or 2)
 endif
-ifeq ($(PMC_ROW),1)
+ifneq ($(PMC_ROW),0)
 ifneq ($(PHASE_METER),1)
-$(error PMC_ROW=1 needs PHASE_METER=1)
+$(error PMC_ROW=$(PMC_ROW) needs PHASE_METER=1)
 endif
-$(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_PMC_ROW=1
+$(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_PMC_ROW=$(PMC_ROW)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PMC_ROW=1
 endif
 # DISC_READ_METER (Makefile, next to DVD_READ_SAFE) draws in the PHASE_METER column.

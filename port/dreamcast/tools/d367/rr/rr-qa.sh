@@ -37,7 +37,8 @@ RE4DC_RESIDENT_STRICT=1 python3 "$T/test11/t11-fix.py" "$L" "$R/fix/pkg-$L.json"
 PKG_K=$R python3 "$T/test8/t8-pkgtree.py" "$L" "$R/fix/pkg-$L.json" > "$R/logs/pkgtree.txt" 2>&1
 grep -q PKGTREE_OK "$R/logs/pkgtree.txt" || { tail -20 "$R/logs/pkgtree.txt"; exit 1; }
 python3 "$T/stage_route.py" --stage 1 --json "$R/sr1.json" > /dev/null
-python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" | tail -2
+# RR_QA_PERF=1 (lane disc31, 2026-11-11; console profiling discs only): mkqa --perf adds the PERF SPOTS chapter
+python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" $([ "${RR_QA_PERF:-0}" = 1 ] && echo --perf) | tail -2
 # RR_QA_PRESET_DIR (speed/rr-speed-gpu.sh, guards28 10-28): files that replace same-named mkqa presets (measurement discs only)
 if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [ -s "$R/qa/$(basename "$f")" ] || { echo "QA preset override: no $(basename "$f")"; exit 1; }; tr -d '\r' < "$f" > "$R/qa/$(basename "$f")"; done; fi
 # RR_QA_LINKTXT='auto 1\nhost <PC>\nlport 52042' (lane link28; harness twins only, never a tester disc): /dc/qa/link.txt,

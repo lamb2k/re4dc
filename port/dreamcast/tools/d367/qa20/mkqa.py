@@ -9,7 +9,10 @@ Sources (no new states are invented here):
   - stage_route.py door entries (dstPos / dstAngle) for route rooms without a census fixture (bare jumps).
 Lines only a measurement needs are dropped (god, alivelog, census, act, kill, bench, alert, dump, stills): the menu's
 toggles own invincibility, and the player owns the pad.
-Usage: mkqa.py <out dir> [--sr1 <stage_route --stage 1 --json file>]"""
+--perf (lane disc31, 2026-11-11; console profiling discs only, rr-qa.sh RR_QA_PERF=1): one more chapter, PERF SPOTS, with
+the profiling session's spots as full presets (disc31/spots/*.txt: room entry, so the camera starts behind Leon; they
+keep `god`). Tester QA discs leave it out.
+Usage: mkqa.py <out dir> [--sr1 <stage_route --stage 1 --json file>] [--perf]"""
 import json, re, subprocess, sys
 from pathlib import Path
 
@@ -98,6 +101,15 @@ def main():
             ('r200', 'S', 'R200 CASTLE GATE', cg('r200')),
         ]),
     ]
+    if '--perf' in sys.argv:
+        sp = lambda f: fixture('disc31/spots/%s.txt' % f, keep=('god',))
+        menu.append(('PERF SPOTS (PROFILING)', [
+            ('p101a', 'S', 'PERF R101 CROSS, TURNED AWAY', sp('cross-away')),
+            ('p103b', 'S', 'PERF R103 BARN INSIDE', sp('barn-inside')),
+            ('p103h', 'S', 'PERF R103 BY THE HAY-FORK GANADO', sp('barn-ganado')),
+            ('p103q', 'S', 'PERF R103 QUIET FARM', sp('farm-quiet')),
+            ('p100b', 'S', 'PERF R100 SPOT B', sp('r100-spotb')),
+        ]))
     out.mkdir(parents=True, exist_ok=True)
     lines = ['# QA disc presets (tools/d367/qa20/mkqa.py)']
     for ch, ps in menu:

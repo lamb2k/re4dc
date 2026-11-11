@@ -1,0 +1,9 @@
+# lane disc31 (2026-11-11) perf spot: the console profiling session's TELEPORT POS spot as a full preset (room entry, so the
+# shoulder camera starts behind Leon). god = Leon takes no damage (as the speed warps rr/speed/warps/*.txt); no alert.
+# r103 farm by the hay-forking Ganado (console session spot barn-ganado).
+name perf-r103-hayfork
+room 0x103
+pos -30717 32 -13585
+ang 2.784
+inv default
+god

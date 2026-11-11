@@ -119,6 +119,7 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include "re4dc_platform.h"
 #include "geometry.h"
 #include "camera.h"
+#include "cam_ctrl.h"   // QA_LINK TELEPORT POS: CamCtrl.m_QuasiFPS.setPlayerLocation
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1862,10 +1863,13 @@ bool qa_poll()
             if (re4dc_qa_link_tpos(tp, &has_ang)) {
                 Vec p = {tp[0], tp[1], tp[2]};
                 pPL->setPos(&p);
-                if (has_ang) {
-                    Vec a = {0.0f, tp[3], 0.0f};
-                    pPL->setAng(&a);
-                }
+                Vec a = pPL->ang;
+                if (has_ang) a = Vec{0.0f, tp[3], 0.0f};
+                pPL->setAng(&a);   // rebuilds Leon's matrix (also with no yaw given)
+                // lane disc31: re-seat the shoulder camera as the source's own position jump does (sce_at.cpp
+                // sceAtFunc_pos_jump: setPos, setAng, setPlayerLocation). cPlayer::move refreshes the camera's stored
+                // player matrix only when collision moves Leon, so a standing Leon kept the camera at the old spot.
+                CamCtrl.m_QuasiFPS.setPlayerLocation(pPL->mat, pPL->pFloor_norm);
                 char what[80];
                 snprintf(what, sizeof(what), "qa: teleport pos (link) %d,%d,%d", (int) p.x, (int) p.y, (int) p.z);
                 stamp(what);
@@ -2006,6 +2010,7 @@ void re4dc_warp_soft_reset(void)
         qa_next = nullptr;
         qa_pending = false;
         wp = Warp{};
+        re4dc_warp_god = 0;   // lane disc31: a `god` preset's damage hook ends with it (the next preset sets it again)
         if (path) { load(path); stamp("qa: preset armed at soft reset"); }
         else { wp.loaded = true; stamp("qa: title at soft reset"); }
         return;
