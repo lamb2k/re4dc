@@ -65,7 +65,8 @@ bool directory() {
         if(nlevels==caps::levels && h[4]
 #else
         if(nlevels && nlevels<=kMaxLevels && h[3]<=sizeof(buf) && h[4]
-#endif==64+nlevels*sizeof(LevelRec) && h[7]==kApps)why=0;
+#endif
+            ==64+nlevels*sizeof(LevelRec) && h[7]==kApps)why=0;
     }
     re4dc_log("GANADOLOD dir levels=%u file=%u buffer=%u why=%u\n",nlevels,file_bytes,unsigned(sizeof(buf)),why);
     if(why)return false;
