@@ -4,14 +4,15 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** November 8, 2026.
+**Last updated:** November 10, 2026.
 
-**Current build: Test 27.1** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). Test 27 plus the
-issue #66 fixes: the graveyard dial symbols, the title logo, item pickup text, the save row, safer VMU saving, a
-disc not-ready retry and a fix for a rare memory card screen crash. Disc 1 and Disc 2 come in the one game zip. A QA build for testers is the second download.
+**Current build: Test 27.2** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)). Test 27.1 plus a fix
+for the chapter-end save crash (issue #66). Disc 1 and Disc 2 come in the one game zip. A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
 
+- **Test 27.1:** the issue #66 fixes: the graveyard dial symbols, the title logo, item pickup text, the save row,
+safer VMU saving, a disc not-ready retry and a fix for a rare memory card screen crash.
 - **Test 27:** the PS2 sky in normal
 play, El Gigante and Del Lago fixes, no El Gigante slowdown after he breaks objects, a save reload crash guard, more of
 the castle on Disc 2 (the rest of chapter 3-1, plus the chapter 3-3 and 3-4 rooms) and smoother castle rooms. Disc 1
@@ -80,7 +81,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 13 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b / 27.1 | Fixed and checked in our tests; the problem was not console-only | 67 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 / 23 / 24 / 24b / 27.1 / 27.2 | Fixed and checked in our tests; the problem was not console-only | 68 |
 | 🛠️ In progress | Being fixed now | 5 |
 | 🔍 Investigating | Being reproduced or traced | 10 |
 | ⏸️ Open | Known, not yet worked on | 16 |
@@ -102,6 +103,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| Saving after the chapter 1-1 results freezes, then a blue screen ("MISSING movie world arena stale owner retirement"). The world drawing let go of the room's data while the save screen held it | test 27, test 27.1 | 🟢 Fixed in test 27.2 | [#66](https://github.com/lamb2k/re4dc/issues/66) |
 | A rare crash on the memory card screen: after a soft reset, or while the save list is open (the music stream thread ran past its stack) | test 27 | 🟢 Fixed in test 27.1 | |
 | Real console: saving can hang on the save screen when the VMU answers late | test 27 | 🟢 Fixed in test 27.1, needs console check: each VMU block read and write now gives up after a short wait, and the save reports the error instead of hanging | [#66](https://github.com/lamb2k/re4dc/issues/66) |
 | Real console: "DISC READ FAILED" at times, for example on the way to the merchant in the boat cave. Cause on the console not found yet | test 27 | 🟢 Fixed in test 27.1, needs console check: when the drive reports not ready, the game waits up to 30 seconds for it before the error screen | [#66](https://github.com/lamb2k/re4dc/issues/66) |
