@@ -3352,6 +3352,11 @@ struct MeshDraw : Emitter {
         else if(limit<re4dc::vp::kCacheSlots+64U)re4dc::dfa26::hit(re4dc::dfa26::WorldCacheCapacity);
 #endif
         if(!lut || limit<re4dc::vp::kCacheSlots+64U)return false; // small slab: per-corner path
+#if defined(RE4DC_WORLD_VCACHE_MOVCA) && RE4DC_WORLD_VCACHE_MOVCA
+        // WORLD_VCACHE_MOVCA: the kernels allocate each entry's line with movca.l, so an entry must be one whole line.
+        // The model slab is memalign(32) and its slots are 32 bytes, so this holds; refuse (per-corner path) if not.
+        if(reinterpret_cast<std::uintptr_t>(dst+limit-re4dc::vp::kCacheSlots)&31U)return false;
+#endif
         limit-=re4dc::vp::kCacheSlots;
         cache=dst+limit;outcodes=reinterpret_cast<std::uint8_t*>(cache+re4dc::vp::kCacheEntries);
 #if RE4DC_WORLD_SCRATCH
