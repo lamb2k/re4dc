@@ -419,6 +419,18 @@ TITLE_ID_DIAG ?= 0
 ifeq ($(TITLE_ID_DIAG),1)
 $(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_ID_DIAG=1
 endif
+# CHAPTER_END_HOLD=1 (default 0; #66, chapter 1-1 end save blue screen): while SceChapterEnd runs (results screen, save
+# prompt, card save) the native world keeps its room: a frame asking for the chapter door's destination (room_id holds
+# it for the save) or drawn with heap 4 suspended (cDataSwap) draws no world and frees no package. Was: the r106
+# package was freed with heap 4 suspended, "MISSING movie world arena stale owner retirement".
+CHAPTER_END_HOLD ?= 0
+ifneq ($(filter-out 0 1,$(CHAPTER_END_HOLD)),)
+$(error CHAPTER_END_HOLD is 0 or 1)
+endif
+ifeq ($(CHAPTER_END_HOLD),1)
+$(OBJDIR)/src/game/sce_com.o: GAME_CPPFLAGS += -DRE4DC_CHAPTER_END_HOLD=1
+$(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAPTER_END_HOLD=1
+endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
 # frame, effect pool and live room generation. Successful replacement still suppresses the

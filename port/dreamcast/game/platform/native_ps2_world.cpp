@@ -734,6 +734,29 @@ extern "C" int re4dc_ps2_world_covers(unsigned room){return room==0x101;}
 extern "C" int re4dc_item_ui_order();
 #define RE4DC_ITEM_VIEW_HIDES_ROOM() (re4dc_item_ui_order()!=0)
 #endif
+#if defined(RE4DC_CHAPTER_END_HOLD) && RE4DC_CHAPTER_END_HOLD
+// CHAPTER_END_HOLD=1 (#66: chapter 1-1 end save, blue screen "movie world arena stale owner retirement").
+// SceChapterEnd (src/game/sce_com.cpp) suspends heap 4 for the results screen (cDataSwap::SwapOut) and writes the
+// chapter door's destination into room_id for the save; room_id comes back only after the card save. A world draw in
+// that window asked ps2_open for the destination room, which freed this room's package while heap 4 was suspended.
+// While the hold is up, a frame whose room is not the held room, or any frame with heap 4 suspended, draws no world
+// and changes no package (the results and card screens cover the frame). Cleared at the end of SceChapterEnd and at
+// room retirement (a reset during the results).
+int memCheckHeapActive(int no);   // src/game/main_mem.cpp
+static unsigned chapter_hold_room,chapter_hold_frames;
+extern "C" void re4dc_chapter_end_hold(unsigned room){
+    if(room==chapter_hold_room)return;
+    re4dc_log("chapter end hold: %s room=%03x held=%u heap4=%d\n",room?"on":"off",room?room:chapter_hold_room,
+        chapter_hold_frames,memCheckHeapActive(4));
+    chapter_hold_room=room;chapter_hold_frames=0;
+}
+static inline bool chapter_end_held(unsigned room){
+    if(!chapter_hold_room || (room==chapter_hold_room && memCheckHeapActive(4)))return false;
+    if(chapter_hold_frames++==0)re4dc_log("chapter end hold: world held room=%03x held_room=%03x heap4=%d\n",room,
+        chapter_hold_room,memCheckHeapActive(4));
+    return true;
+}
+#endif
 extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float far){
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
@@ -759,6 +782,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
     (void)screen;state.pending=false;
 #if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
     if(RE4DC_ITEM_VIEW_HIDES_ROOM())return 1;
+#endif
+#if defined(RE4DC_CHAPTER_END_HOLD) && RE4DC_CHAPTER_END_HOLD
+    if(chapter_end_held(room))return 1;   // before any retire / select / open below
 #endif
 #if RE4DC_PS2_WORLD_ROOMS
     if(!re4dc_ps2_world_covers(room)){if(!re4dc_ps2_mesh_failed(room))re4dc_ps2_mesh_retire();return 0;}
@@ -1002,6 +1028,9 @@ extern "C" void re4dc_ps2_world_movie_discard(){
 }
 #endif
 extern "C" void re4dc_ps2_world_retire(){
+#if defined(RE4DC_CHAPTER_END_HOLD) && RE4DC_CHAPTER_END_HOLD
+    re4dc_chapter_end_hold(0);   // a reset during the results never leaves the hold up
+#endif
 #if RE4DC_PS2_WORLD_MESH
     re4dc_ps2_mesh_retire();
 #endif

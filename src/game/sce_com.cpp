@@ -757,6 +757,16 @@ static inline void U16Set(u16& d, u16 v) { d = v; }
 static inline void U32Set(u32& d, u32 v) { d = v; }
 static inline void U16Zero(u16& d) { d = 0; }  // HImode zero (its own `li`), reference store
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_CHAPTER_END_HOLD) && RE4DC_CHAPTER_END_HOLD
+// CHAPTER_END_HOLD=1 (#66, chapter 1-1 end save blue screen; platform/native_ps2_world.cpp): from here until the door
+// room is put back below, the native world keeps the room it has. Without it, the frames drawn while room_id names the
+// chapter door's destination (written for the save) freed the room's PS2 world package with heap 4 suspended by the
+// swap ("movie world arena stale owner retirement").
+extern "C" void re4dc_chapter_end_hold(unsigned room);
+#define RE4DC_CHAPTER_HOLD(room) re4dc_chapter_end_hold(room)
+#else
+#define RE4DC_CHAPTER_HOLD(room) ((void) 0)
+#endif
 // Chapter end task (SceSetChapterEnd): kills the running event, freezes the game, swaps the room
 // data out to load the chapter result id data ("SS/<lang>/chapNN.dat"), shows the ChapterEnd
 // screen with the "save?" message (0x80); with a door area the player is moved through it for
@@ -782,6 +792,7 @@ void SceChapterEnd()
     EventMgr* ev = &EvtMgr;
     u32* key = &ev->NowExeEvtKey;
 
+    RE4DC_CHAPTER_HOLD(pG->room_id);
     pG->chapter = SceSys.m_chapter_no + 1;
     if (ev->IsAliveEvt(key, 0, 1)) {
         ev->GetEvt(key, &evt);
@@ -893,6 +904,7 @@ void SceChapterEnd()
         FadeSetW(0x80000000, 10, 0, 0);
         SceSys.pause = 0;
     }
+    RE4DC_CHAPTER_HOLD(0);
 }
 
 // Room: end of chapter `chapter` — fades to black, stops the music, and runs SceChapterEnd as an
