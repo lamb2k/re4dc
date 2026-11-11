@@ -3724,6 +3724,8 @@ include bodysvc20.mk
 include knobs.mk
 include esppool.mk
 include mendezfx.mk
+# Lane chars31 (CHARS31_COUNT, CHAR_VIS31; default off: nothing built).
+include chars31.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)

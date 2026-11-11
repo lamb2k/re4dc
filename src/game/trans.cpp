@@ -4367,6 +4367,64 @@ struct PgStats {
 const void* g_pgWeights[32];  // weight tables already found convex with ids below their model's parts count
 u32 g_pgWeightParts[32], g_pgWeightsNum;
 }
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+// CHAR_VIS31=1 (chars31.mk; lane chars31 2026-11-11; render only; default 0): PROP_GATE's model also skips its draw
+// when it is kept by the fog bound but cannot be seen: its world bound lies wholly outside the camera view frustum
+// (exact), or the room's PS2 world hides it from the Trans eye: the interior cell (PS2_INTERIOR_ACTORS's
+// re4dc_ps2_interior_actor_hidden) or a large opaque occluder (ENEMY_VIS_CULL's re4dc_room_vis_hidden, only while the
+// fogged far is believed). The bound: the info's modelview applied to the parts' palette translations (the same t[]
+// PROP_GATE builds), grown by the largest palette scale x the info's bind ball. Draw only: PROP_GATE's own skip path
+// keeps the state the part walk leaves; move, motion, parts matrices and collision are untouched.
+#include "geometry.h"
+#include "room_vis.h"
+extern "C" int re4dc_ps2_interior_actor_hidden(const float lo[3], const float hi[3]);  // native_static.cpp
+namespace {
+struct CvStats { u32 tests, frustum, interior, occl, log; } g_cv;
+}
+static int charVisHidden(const Mtx pm, const f32 (*t)[3], u32 np, f32 smax, f32 R, f32 nearZ, f32 cullFar, int fogged)
+{
+    g_cv.tests++;
+    f32 s2 = 0.0f;
+    for (u32 c = 0; c < 3; c++) {
+        const f32 n2 = pm[0][c] * pm[0][c] + pm[1][c] * pm[1][c] + pm[2][c] * pm[2][c];
+        if (!(n2 <= s2)) s2 = n2;  // NaN propagates: the bound below fails (drawn)
+    }
+    const f32 sA = __builtin_sqrtf(s2);
+    const f32 r = sA * smax * R * 1.02f + 16.0f;
+    f32 lo[3] = {3.0e38f, 3.0e38f, 3.0e38f}, hi[3] = {-3.0e38f, -3.0e38f, -3.0e38f};
+    for (u32 j = 0; j < np; j++) {
+        for (u32 a = 0; a < 3; a++) {
+            const f32 w = pm[a][0] * t[j][0] + pm[a][1] * t[j][1] + pm[a][2] * t[j][2] + pm[a][3];
+            if (w < lo[a]) lo[a] = w;
+            if (w > hi[a]) hi[a] = w;
+        }
+    }
+    for (u32 a = 0; a < 3; a++) {
+        lo[a] -= r;
+        hi[a] += r;
+        if (!(hi[a] - lo[a] < 1.0e30f)) return 0;  // NaN / inf: draw
+    }
+    GeoSphere sph;
+    sph.pos.x = (lo[0] + hi[0]) * 0.5f;
+    sph.pos.y = (lo[1] + hi[1]) * 0.5f;
+    sph.pos.z = (lo[2] + hi[2]) * 0.5f;
+    const f32 hx = hi[0] - sph.pos.x, hy = hi[1] - sph.pos.y, hz = hi[2] - sph.pos.z;
+    sph.r = __builtin_sqrtf(hx * hx + hy * hy + hz * hz);
+    if (!collision_sphere_hexahedron(&sph, (GeoHexahedron*) CameraViewFrustumPtr(&pG->Cam))) {
+        g_cv.frustum++;
+        return 1;
+    }
+    if (re4dc_ps2_interior_actor_hidden(lo, hi)) {
+        g_cv.interior++;
+        return 1;
+    }
+    if (fogged && re4dc_room_vis_hidden(&pG->Cam.v_mat[0][0], nearZ, cullFar < 25000.0f ? cullFar : 25000.0f, lo, hi)) {
+        g_cv.occl++;
+        return 1;
+    }
+    return 0;
+}
+#endif
 static int propGateNo(int why)
 {
     g_pg.why[why]++;
@@ -4423,6 +4481,14 @@ static int propGate(cModel* m, Mtx viewMat)
         );
     }
     g_pg.tests++;
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+    if (pG->Frame_cnt - g_cv.log >= 600) {
+        g_cv.log = pG->Frame_cnt;
+        re4dc_log("CHAR_VIS31 models frame=%u tests=%u frustum=%u interior=%u occl=%u\n", pG->Frame_cnt, g_cv.tests,
+                  g_cv.frustum, g_cv.interior, g_cv.occl);
+    }
+    int cvFogged = 0;
+#endif
     if (m->kindid != 1 || m->ot_type == 7 || (MODEL_EXT(m)->pFootShadowTbl != 0 && (m->be_flag & 0x10)) ||
         (m->be_flag & 0x4000) || m->invisible_factor * m->invisible_factor2 != 1.0f || PTR_INVALID(m->pParts)) {
         return propGateNo(0);
@@ -4441,6 +4507,9 @@ static int propGate(cModel* m, Mtx viewMat)
         const f32 v = re4dc_fog_far_for_gate(View._zfar);
         if (v > nearZ && v < farZ) {
             cullFar = v;
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+            cvFogged = 1;
+#endif
         }
     }
     const f32 limit = cullFar * 1.001f + 10.0f;
@@ -4529,6 +4598,12 @@ static int propGate(cModel* m, Mtx viewMat)
         }
         const f32 depth = T - mz * smax * R;
         if (!(depth > limit)) {
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+            if (charVisHidden(pm, t, np, smax, R, nearZ, cullFar, cvFogged)) {
+                drawn = 1;
+                continue;
+            }
+#endif
             g_pg.kept++;
             return 0;
         }
