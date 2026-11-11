@@ -13,8 +13,8 @@ extern "C" void re4dc_cloth_esp4e_retire11(cEsp*);
 #endif
 #if (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31) || (defined(RE4DC_FX_DORMANT31) && RE4DC_FX_DORMANT31)
 // fx31.mk. Kept above `#line 1` so the knob-off file keeps its line numbers; the hooks are same-line macros.
-#if !(defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN) || !(defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2)
-#error FX_TRANS_SKIP31 / FX_DORMANT31 need GAME_FX_SCAN and FX_MIST_PS2
+#if !(defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN)
+#error FX_TRANS_SKIP31 / FX_DORMANT31 need GAME_FX_SCAN (and FX_MIST_PS2: re4dc_esp48_is_dormant, esp48.cpp)
 #endif
 class cEsp;
 extern "C" int re4dc_fx31_dormant(const cEsp* esp);       // a dormant sheet nothing reaches (end of file)
