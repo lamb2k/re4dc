@@ -6639,7 +6639,7 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }  // namespace
 #endif
 #if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
-// CHAR_VIS31=1 (chars31.mk; lane chars31 2026-11-11; render only, exact; default 0): a character-path part (props,
+// CHAR_VIS31=2 (chars31.mk; lane chars31 2026-11-11; render only, exact; default 0): a character-path part (props,
 // objects, animals, Leon, Ashley, any model reaching the native actor path) whose conservative view-space bound lies
 // wholly outside the left / right / top / bottom planes of the projection, or wholly behind the eye, draws nothing
 // (every vertex would take the same side outcode), so it skips positions, skin, light and packing. Rigid: the

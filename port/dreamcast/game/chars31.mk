@@ -13,25 +13,24 @@ $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_ui.o: PLATFORM_
 $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_CHARS31_COUNT=1
 $(OBJDIR)/platform/native_actor_fast.o: platform/include/chars31_count.inc
 endif
-# CHAR_VIS31=1 (render only, exact; default 0): character-path parts (props, objects, Leon, Ashley, every model on the
-#   native actor path) wholly outside the side planes of the view, or wholly behind the eye, skip positions, skin,
-#   light and packing (platform/native_actor_fast.cpp cv_hidden; port of lane castlebudget's ACTOR_PART_FRUSTUM).
-#   "CHAR_VIS31 frame= tests= culled=" lines every 600 frames.
+# CHAR_VIS31=1 (render only, exact; default 0; needs PROP_GATE=1 ENEMY_VIS_CULL=1 PS2_INTERIOR_ACTORS=2, the release
+#   recipe): a skinned room object PROP_GATE keeps by its fog bound skips its draw when its world bound is outside the
+#   view frustum, inside a hiding PS2 interior cell (PS2_INTERIOR_ACTORS) or behind a room OCCL occluder
+#   (ENEMY_VIS_CULL), through PROP_GATE's own skip path (src/game/trans.cpp charVisHidden; "CHAR_VIS31 models" lines
+#   every 600 frames). +~0.6 KiB.
+# CHAR_VIS31=2: also the part level: any native actor part (props, objects, Leon, Ashley) wholly outside the side planes
+#   of the view or behind the eye skips positions, skin, light and packing (platform/native_actor_fast.cpp cv_hidden;
+#   port of lane castlebudget's ACTOR_PART_FRUSTUM; "CHAR_VIS31 frame= tests= culled=" lines). +~2 KiB more.
 CHAR_VIS31 ?= 0
-ifeq ($(filter $(CHAR_VIS31),0 1),)
-$(error CHAR_VIS31 must be 0 or 1)
+ifeq ($(filter $(CHAR_VIS31),0 1 2),)
+$(error CHAR_VIS31 must be 0, 1 or 2)
 endif
-ifeq ($(CHAR_VIS31),1)
-$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAR_VIS31=1
+ifneq ($(CHAR_VIS31),0)
+ifneq ($(PROP_GATE)$(ENEMY_VIS_CULL)$(PS2_INTERIOR_ACTORS),112)
+$(error CHAR_VIS31 needs PROP_GATE=1 ENEMY_VIS_CULL=1 PS2_INTERIOR_ACTORS=2 (the release recipe))
 endif
-#   With PROP_GATE=1 it also covers the model level (src/game/trans.cpp charVisHidden): a skinned room object PROP_GATE
-#   keeps by its fog bound but whose world bound is outside the view frustum, inside a hiding interior cell
-#   (PS2_INTERIOR_ACTORS) or behind a room OCCL occluder (ENEMY_VIS_CULL) skips its draw ("CHAR_VIS31 models" lines).
-ifeq ($(CHAR_VIS31),1)
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_CHAR_VIS31=1
 endif
-ifeq ($(CHAR_VIS31),1)
-ifneq ($(PROP_GATE)$(ENEMY_VIS_CULL)$(PS2_INTERIOR_ACTORS),112)
-$(error CHAR_VIS31=1 needs PROP_GATE=1 ENEMY_VIS_CULL=1 PS2_INTERIOR_ACTORS=2 (the release recipe))
-endif
+ifeq ($(CHAR_VIS31),2)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAR_VIS31=1
 endif
