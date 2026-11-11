@@ -80,8 +80,15 @@ int re4dc_esp_hit_ghost(const cEsp* esp)
     return (slot % RE4DC_ESP_HIT_THIN) != 0;
 }
 #endif
+#if defined(RE4DC_ESP_NUMLIST31) && RE4DC_ESP_NUMLIST31
+// ESP_NUMLIST31=1 (lane all31, 2026-11-11; exact): the per-owner list only fed the debug page 0xE text, which eprintf
+// never shows on the Dreamcast; the 422-byte array and its counting are gone (TOTAL stays).
+#define ESP_NUMLIST_ADD(o) ((void) 0)
+#else
 // number of live effects per owner id (debug display)
 u16 esp_num_list[0xD3];
+#define ESP_NUMLIST_ADD(o) (esp_num_list[(o)]++)
+#endif
 EspTransFunc EspTransTbl[0xFF];
 #if RE4DC_PACE_TRANS_SKIP
 // Logic-only queueing (PACE_TRANS_SKIP bit 2048, trans.cpp: an image that draws no source visuals).
@@ -582,7 +589,7 @@ static inline void fxEspMoveOne(cEspSystem* sys, u32 i, int pause, u32* cnt)
     if (esp->m_Be_flg & 1) {
         (*cnt)++;
         if (pG->debug_mode == 0xE) {
-            esp_num_list[esp->info.owner]++;
+            ESP_NUMLIST_ADD(esp->info.owner);
         }
     }
 }
@@ -660,9 +667,11 @@ int EspMove()
     int color;
     int y;
 
+#if !(defined(RE4DC_ESP_NUMLIST31) && RE4DC_ESP_NUMLIST31)
     for (i = 0; i < 0xD3; i++) {
         esp_num_list[i] = 0;
     }
+#endif
     pause = 0;
     if (pG->Status_flg[1] & 2) {
         pause = 1;
@@ -736,7 +745,7 @@ int EspMove()
         if (esp->m_Be_flg & 1) {
             cnt++;
             if (pG->debug_mode == 0xE) {
-                esp_num_list[esp->info.owner]++;
+                ESP_NUMLIST_ADD(esp->info.owner);
             }
         }
     }
@@ -799,6 +808,7 @@ int EspMove()
         // y counts printed rows; `0x70 + y * 0x10` is a strength-reduced giv whose `li 0x70` init
         // is emitted by loop.c after the hoisted `lis`/`addi`s (a plain `y = 0x70; y += 0x10`
         // schedules the li before the call).
+#if !(defined(RE4DC_ESP_NUMLIST31) && RE4DC_ESP_NUMLIST31)
         y = 0;
         for (i = 0; i < 0xD3; i++) {
             if (esp_num_list[i] != 0) {
@@ -806,6 +816,7 @@ int EspMove()
                 y++;
             }
         }
+#endif
     }
     return 1;
 }

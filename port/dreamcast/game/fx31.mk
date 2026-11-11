@@ -20,3 +20,9 @@ FX31_STAT ?= 0
 ifneq ($(FX31_STAT),0)
 $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_FX31_STAT=1
 endif
+# ESP_NUMLIST31=1 (lane all31 2026-11-11; exact, decisions identical): drops esp_num_list (422 B .bss), which only fed the
+#   debug page 0xE per-owner text that eprintf never shows on the Dreamcast.
+ESP_NUMLIST31 ?= 0
+ifneq ($(ESP_NUMLIST31),0)
+$(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_ESP_NUMLIST31=1
+endif
