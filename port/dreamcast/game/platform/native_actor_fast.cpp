@@ -5446,7 +5446,7 @@ void window(unsigned frame) {
         for (unsigned l = 0; l < 4; ++l) parts += c.parts[t][l];
         if (!parts && !c.nolod_small[t]) continue;
         re4dc_log("LOD31 frame=%u tier=%u parts_pf=%u.%02u lvl_parts=%u/%u/%u/%u nv=%u/%u/%u/%u nv0=%u/%u/%u/%u "
-                  "nolod_big=%u nolod_big_nv=%u nolod_small=%u if4=%u if8=%u if16=%u (sums over %u frames)\n",
+                  "nolod_big=%u nolod_big_nv=%u nolod_small=%u lod_nv=%u if4=%u if8=%u if16=%u (sums over %u frames)\n",
                   frame, t, parts / frames, (parts % frames) * 100U / frames, c.parts[t][0], c.parts[t][1],
                   c.parts[t][2], c.parts[t][3], c.nv[t][0], c.nv[t][1], c.nv[t][2], c.nv[t][3], c.nv0[t][0],
                   c.nv0[t][1], c.nv0[t][2], c.nv0[t][3], c.nolod_big[t], c.nolod_big_nv[t], c.nolod_small[t],
