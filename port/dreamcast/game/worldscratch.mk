@@ -26,3 +26,15 @@ $(OBJDIR)/world_scratch.o: world_scratch.cpp world_scratch.h $(OBJDIR)/dbgwarp.h
 	kos-c++ $(KOS_CFLAGS) $(PLATFORM_CPPFLAGS) -MMD -MP -c $< -o $@
 -include $(OBJDIR)/world_scratch.d
 endif
+# WORLD_VCACHE_MOVCA (game30.mk): checked here, after frontend30.mk (HW_LEAN) and the defaults above.
+ifeq ($(WORLD_VCACHE_MOVCA),1)
+ifneq ($(HW_LEAN),1)
+$(error WORLD_VCACHE_MOVCA needs HW_LEAN=1 (HW_LEAN=0 keeps the original C kernel))
+endif
+ifneq ($(MESH_FASTPATH),1)
+$(error WORLD_VCACHE_MOVCA needs MESH_FASTPATH=1)
+endif
+ifneq ($(WORLD_SCRATCH),0)
+$(error WORLD_VCACHE_MOVCA needs WORLD_SCRATCH=0 (the scratch cache is not proven line-aligned))
+endif
+endif

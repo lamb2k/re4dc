@@ -3455,6 +3455,23 @@ MESH_VP_SCHED_SELECT ?= 0
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_MESH_VP_SCHED_SELECT=$(MESH_VP_SCHED_SELECT)
 endif
 endif
+# WORLD_VCACHE_MOVCA=1 (native_static.cpp, render only, exact, default 0; lane vbuf30 2026-11-11; needs MESH_VP_SCHED=1,
+# HW_LEAN=1, MESH_FASTPATH=1, WORLD_SCRATCH=0): the pipelined world transform kernels (room/mesh_fastpath_sched.hpp,
+# transform_sched / transform_sched_ix) allocate each 32-byte vertex cache entry's operand-cache line with movca.l
+# (no read of the line from RAM: the console's OC write misses, PMC ev 05) and write the entry's two constant words
+# (flags, oargb) themselves, so all eight words are written after the allocation. Same cache words, TA stream and
+# pixels; +6 instructions per transformed vertex. No memory. Judge on console (Flycast runs movca.l as a plain store).
+WORLD_VCACHE_MOVCA ?= 0
+ifneq ($(WORLD_VCACHE_MOVCA),0)
+ifneq ($(WORLD_VCACHE_MOVCA),1)
+$(error WORLD_VCACHE_MOVCA must be 0 or 1)
+endif
+ifneq ($(MESH_VP_SCHED),1)
+$(error WORLD_VCACHE_MOVCA needs MESH_VP_SCHED=1 (the pipelined kernels carry the movca.l))
+endif
+# HW_LEAN / MESH_FASTPATH / WORLD_SCRATCH are checked in worldscratch.mk (parsed after frontend30.mk).
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_VCACHE_MOVCA=1
+endif
 # MESH_STRIP_LEAN (native_static.cpp, default 0; independent of MESH_VP_SCHED): 1 = the meshlet strip walk for
 # kChecksAll meshlets on the store-queue sink (MESH_DIRECT, depth cull, SH4) with its counters in registers
 # and rescheduled outcode / store-queue copy loops (room/mesh_strip_lean.hpp): the same decisions, TA bursts
