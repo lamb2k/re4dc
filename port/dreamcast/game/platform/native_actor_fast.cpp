@@ -5400,6 +5400,65 @@ unsigned select_level(const Re4dcModelPart& p, const BlobHeader& b, float near_d
         if (dir[k - 1].error * pixels_per_unit <= tau) return k;
     return 0;
 }
+#if defined(RE4DC_LOD31_COUNT) && RE4DC_LOD31_COUNT
+// LOD31_COUNT (lod31.mk; diagnostic, log only, default 0): per 120 frames, the actor parts drawn by crowd tier
+// (0 full = not a Ganado-family model, 1 near, 2 mid, 3 far) and level, with the vertices drawn and the level-0
+// vertices of the same meshlets; parts without levels split by size (>= 24 triangles: a level could exist); and,
+// for parts with levels, the vertices each would draw if the level were picked at 4 / 8 / 16 px instead.
+namespace lod31 {
+constexpr float kTau[3] = {4.0f, 8.0f, 16.0f};
+struct Count { unsigned parts[4][4], nv[4][4], nv0[4][4], nolod_big[4], nolod_small[4], nolod_big_nv[4], what_if[4][4]; };  // what_if[t][0]: the drawn level
+Count c;
+unsigned frames;
+unsigned level_vertices(const BlobHeader& b, const u8* base, unsigned level) {
+    const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
+    const LevelInfo* li = level ? reinterpret_cast<const LevelInfo*>(base + b.lod4 * 4U) + (level - 1) : nullptr;
+    const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
+    unsigned v = 0;
+    for (unsigned mi = 0; mi < b.meshlets; ++mi) {
+        const Counts n = lt ? lt[mi].n : table[mi].n;
+        if (n.indices()) v += n.vertices();
+    }
+    return v;
+}
+void note(const Re4dcModelPart& p, const BlobHeader& b, unsigned tier, unsigned level, float near_distance) {
+    const u8* base = reinterpret_cast<const u8*>(&b);
+    tier &= 3U; level &= 3U;
+    const unsigned v = level_vertices(b, base, level), v0 = level ? level_vertices(b, base, 0) : v;
+    ++c.parts[tier][level]; c.nv[tier][level] += v; c.nv0[tier][level] += v0;
+    if (!b.levels) {
+        unsigned tris = 0;
+        const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
+        for (unsigned mi = 0; mi < b.meshlets; ++mi) tris += table[mi].n.triangles();
+        if (tris >= kLodMinTriangles) { ++c.nolod_big[tier]; c.nolod_big_nv[tier] += v; } else ++c.nolod_small[tier];
+        return;
+    }
+    c.what_if[tier][0] += v;
+    for (unsigned t = 0; t < 3; ++t) {
+        const unsigned k = tier == 3U ? b.levels : std::max(level, select_level(p, b, near_distance, kTau[t]));
+        c.what_if[tier][t + 1] += k == level ? v : level_vertices(b, base, k);
+    }
+}
+void window(unsigned frame) {
+    if (++frames < 120U) return;
+    for (unsigned t = 0; t < 4; ++t) {
+        unsigned parts = 0;
+        for (unsigned l = 0; l < 4; ++l) parts += c.parts[t][l];
+        if (!parts && !c.nolod_small[t]) continue;
+        re4dc_log("LOD31 frame=%u tier=%u parts_pf=%u.%02u lvl_parts=%u/%u/%u/%u nv=%u/%u/%u/%u nv0=%u/%u/%u/%u "
+                  "nolod_big=%u nolod_big_nv=%u nolod_small=%u if4=%u if8=%u if16=%u (sums over %u frames)\n",
+                  frame, t, parts / frames, (parts % frames) * 100U / frames, c.parts[t][0], c.parts[t][1],
+                  c.parts[t][2], c.parts[t][3], c.nv[t][0], c.nv[t][1], c.nv[t][2], c.nv[t][3], c.nv0[t][0],
+                  c.nv0[t][1], c.nv0[t][2], c.nv0[t][3], c.nolod_big[t], c.nolod_big_nv[t], c.nolod_small[t],
+                  c.what_if[t][0], c.what_if[t][1], c.what_if[t][2], c.what_if[t][3], frames);
+    }
+    c = Count{}; frames = 0;
+}
+}  // namespace lod31
+#define LOD31_NOTE(p, b, tier, level, nd) lod31::note((p), (b), (tier), (level), (nd));
+#else
+#define LOD31_NOTE(p, b, tier, level, nd)
+#endif
 
 // ---------------------------------------------------------------- crowd --
 // NATIVE_ACTOR_CROWD: every Ganado-family model (re4dc_actor_model_class 1/2)
@@ -6054,6 +6113,9 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     workspace_bytes = memory ? bytes & ~31U : 0;
     workspace_top = 0; workspace_end = workspace_bytes;
     ++frame_serial;
+#if defined(RE4DC_LOD31_COUNT) && RE4DC_LOD31_COUNT
+    lod31::window(frame_serial);
+#endif
     K45D_CENSUS()
     TINY31_CENSUS()
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
@@ -7191,6 +7253,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
+    LOD31_NOTE(p, *blob, tier, level, near_distance)
     bool ok = true;
 #if RE4DC_ACTOR_BACKFACE_CONE
     unsigned abc_cls;
@@ -8075,6 +8138,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
+    LOD31_NOTE(p, *blob, tier, level, near_distance)
     bool ok = true;
 #if RE4DC_ACTOR_BACKFACE_CONE
     unsigned abc_cls;

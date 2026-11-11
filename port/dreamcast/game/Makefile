@@ -3758,6 +3758,9 @@ include worldscratch.mk
 # Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
 include kos_cache_p2.mk
 
+# Lane lod31 character distance-level counters; default 0.
+include lod31.mk
+
 # World programme Gate 0, diagnostic only; default 0.
 include world_census24.mk
 include world_census24_errors.mk
