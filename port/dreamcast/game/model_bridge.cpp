@@ -1333,6 +1333,33 @@ extern "C" void re4dc_actor_census_describe(const void* model, unsigned verts) {
               w ? int(w[3]) : 0, w ? int(w[7]) : 0, w ? int(w[11]) : 0);
 }
 #endif
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+// CHARS31_COUNT (chars31.mk, diagnostic): a submitted part's model as class << 24 | nParts << 16 | kindid << 8 | id
+// (class 1 player, 2 partner (pSUB), 3 Ganado family (kind 0, id 0x10-0x20), 4 other kind-0 model, 5 cObj (kind 1),
+// 6 kind 2 (scroll / map object), 7 other, 8 Leon's held weapon) and its first part's world position.
+extern cEm* pSUB;
+#include "player.h"
+extern "C" int re4dc_actor_is_leon_weapon(const void* model);
+extern "C" void re4dc_c31_describe(const void* model, unsigned* key, int* pos) {
+    const cModel* m = static_cast<const cModel*>(model);
+    pos[0] = pos[1] = pos[2] = 0;
+    if (!m) { *key = 0; return; }
+    const unsigned kind = unsigned(m->kindid) & 0xffU, id = unsigned(m->id) & 0xffU;
+    unsigned cls = 7;
+    if (m == (const cModel*)pPL) cls = 1;
+    else if (pSUB && m == (const cModel*)pSUB) cls = 2;
+#if defined(RE4DC_LEON_LIGHT_DIR26) && RE4DC_LEON_LIGHT_DIR26
+    else if (re4dc_actor_is_leon_weapon(model)) cls = 8;
+#endif
+    else if (kind == 0 && id >= 0x10 && id <= 0x20) cls = 3;
+    else if (kind == 0) cls = 4;
+    else if (kind == 1) cls = 5;
+    else if (kind == 2) cls = 6;
+    *key = cls << 24 | (unsigned(m->nParts) & 0xffU) << 16 | kind << 8 | id;
+    const float* w = m->pParts ? &m->pParts->mat[0][0] : nullptr;
+    if (w) { pos[0] = int(w[3]); pos[1] = int(w[7]); pos[2] = int(w[11]); }
+}
+#endif
 #if defined(RE4DC_GC_ASSET_GATE) && RE4DC_GC_ASSET_GATE
 // Use the source declarations here; platform diagnostics never duplicate the
 // cModel/cModelInfo layout. The data pointer remains subject to member bounds

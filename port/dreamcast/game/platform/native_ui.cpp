@@ -8056,6 +8056,12 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
 #endif
     }
 }
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+// CHARS31_COUNT (chars31.mk, diagnostic): the boundary counters, read around each actor part.
+extern "C" void re4dc_c31_model_counts(unsigned* parts,unsigned* other,unsigned* in,unsigned* out){
+    *parts=model_parts;*other=model_invalid+model_resource+model_overflow;*in=model_input;*out=model_output;
+}
+#endif
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
 #if defined(RE4DC_MODEL_PART_DUMP)
     if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)

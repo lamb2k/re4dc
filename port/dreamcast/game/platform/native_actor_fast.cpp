@@ -6634,6 +6634,13 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }
 }  // namespace
 #endif
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+#include "include/chars31_count.inc"
+#else
+#define C31_GUARD(pp) do { } while (0)
+#define C31_KERN(skin, s16, n) do { } while (0)
+#define C31_CULL(n) do { } while (0)
+#endif
 #if RE4DC_NATIVE_FE_CONTINUATION
 static int actor_submit_impl(const Re4dcModelPart* part,Frame* explicit_frame,NativeContinuationProgress* progress) {
 #else
@@ -6650,6 +6657,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
     ++stats.parts;
+    C31_GUARD(part);
     PXF_BEGIN(part);
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(part ? part->model : nullptr, 0);
@@ -7246,10 +7254,12 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #else
         pass_positions(e, r, nv, k, s16_uv, all, any);
 #endif
+        C31_KERN(f.mode == kSkin, s16_uv, nv);
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
         if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
 #endif
         if (all & kOcCull) {
+            C31_CULL(nv);
 #if RE4DC_ACTOR_CENSUS
             if (census_cur) census_cur->culled += nv;
 #endif
@@ -8146,8 +8156,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #else
         pass_positions(e, r, nv, k, s16_uv, all, any);
 #endif
+        C31_KERN(f.mode == kSkin, s16_uv, nv);
         APROF_STOP(aprof_pos);
         if (all & kOcCull) {
+            C31_CULL(nv);
             ++stats.meshlets_culled;
             e.input += nt;
             continue;
@@ -8328,6 +8340,7 @@ extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* part, const Re4dcA
     OneWindow w;
     for (unsigned i = 0; i < n; ++i) {
         load(i);
+        C31_GUARD(&p);
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         one_tap = OneTap{}; one_tap.on = i < nref;
 #endif
