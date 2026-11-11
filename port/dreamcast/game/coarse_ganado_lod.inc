@@ -30,7 +30,16 @@ struct RoleRec { unsigned role,positions,normals,palettes,triangles,stream_bytes
 struct LevelRec { char name[8]; unsigned off32,bytes,skin_bytes,reserved; RoleRec roles[kApps*2]; };
 static_assert(sizeof(LevelRec)==caps::level_record,"ganado_lod.re4gl level record layout");
 constexpr unsigned kMaxLevels=8;
+#if defined(RE4DC_GANADO_LOD_BUF31) && RE4DC_GANADO_LOD_BUF31
+// GANADO_LOD_BUF31=1 (lane all31, 2026-11-11; exact for the shipped recipe): the buffer is sized to the boot level
+// (GANADO_LOD_LEVEL) instead of level 0. A request for a level that does not fit (warp `glod`, QA, event level 0)
+// loads the boot level instead of leaving the rows null (the slower source draw path).
+static_assert(RE4DC_GANADO_LOD_LEVEL < caps::levels, "GANADO_LOD_BUF31: boot level not in the package");
+constexpr unsigned kBootLevel=RE4DC_GANADO_LOD_LEVEL;
+alignas(32) unsigned char buf[(caps::level_bytes_of[kBootLevel]+31u)&~31u];
+#else
 alignas(32) unsigned char buf[caps::buffer_bytes];
+#endif
 unsigned nlevels,file_bytes;
 int dir_state;  // 0 not read, 1 ready, 2 failed
 unsigned level_req=RE4DC_GANADO_LOD_LEVEL,level_cur=~0u,level_tried=~0u,loads,fails;
@@ -51,7 +60,12 @@ bool directory() {
     if(read_at(0,reinterpret_cast<unsigned char*>(h),64) && h[0]==caps::magic && h[1]==caps::version) {
         why=2;
         nlevels=h[2];file_bytes=h[5];
-        if(nlevels && nlevels<=kMaxLevels && h[3]<=sizeof(buf) && h[4]==64+nlevels*sizeof(LevelRec) && h[7]==kApps)why=0;
+#if defined(RE4DC_GANADO_LOD_BUF31) && RE4DC_GANADO_LOD_BUF31
+        // the package the header was derived from (level sizes known); bigger levels fall back in load()
+        if(nlevels==caps::levels && h[4]
+#else
+        if(nlevels && nlevels<=kMaxLevels && h[3]<=sizeof(buf) && h[4]
+#endif==64+nlevels*sizeof(LevelRec) && h[7]==kApps)why=0;
     }
     re4dc_log("GANADOLOD dir levels=%u file=%u buffer=%u why=%u\n",nlevels,file_bytes,unsigned(sizeof(buf)),why);
     if(why)return false;
@@ -77,7 +91,15 @@ void forget() {
 // Load level `level` into the buffer and point the body / head rows at it. Callers hold no owned record on the old bytes.
 bool load(unsigned level) {
     if(!directory())return false;
+#if defined(RE4DC_GANADO_LOD_BUF31) && RE4DC_GANADO_LOD_BUF31
+    if(level>=nlevels || caps::level_bytes_of[level]>sizeof(buf)) {
+        re4dc_log("GANADOLOD level %u does not fit the buffer (%u): boot level %u\n",level,unsigned(sizeof(buf)),kBootLevel);
+        level=kBootLevel;
+        if(level_cur==level)return true;   // already drawn: no reload
+    }
+#else
     if(level>=nlevels){re4dc_log("GANADOLOD level %u not in the package (%u levels): level 0\n",level,nlevels);level=0;}
+#endif
     clear();
     forget();
     LevelRec L;   // the level's record, read per load (no resident directory)

@@ -184,6 +184,13 @@ def show(pkg):
     return n, big, napps, level_bytes
 
 
+def level_sizes(pkg):
+    b = Path(pkg).read_bytes()
+    n, napps = struct.unpack_from('<I', b, 8)[0], struct.unpack_from('<I', b, 28)[0]
+    level_bytes = 8 + 16 + 64 * 2 * napps
+    return [struct.unpack_from('<4I', b, 64 + i * level_bytes + 8)[1] for i in range(n)]
+
+
 def derive(bpath, pkg, out):
     out = Path(out); out.mkdir(parents=True, exist_ok=True)
     n, big, napps, level_bytes = show(pkg)
@@ -206,7 +213,11 @@ def derive(bpath, pkg, out):
     (out / 'ganado_cast_runtime_lod.h').write_text(t)
     (out / 'ganado_lod_caps.h').write_text('#pragma once\n// glod_pack.py derive from %s\nnamespace ganado_lod_caps {\n'
                                            'constexpr unsigned levels=%d,buffer_bytes=%d,magic=0x%08xu,version=%d,level_record=%d,'
-                                           'appearances=%d;\n}\n' % (Path(pkg).name, n, r32(big), MAGIC, VERSION, level_bytes, napps))
+                                           'appearances=%d;\n'
+                                           '// bytes of each level (GANADO_LOD_BUF31 sizes the buffer to the boot level)\n'
+                                           'constexpr unsigned level_bytes_of[]={%s};\n}\n'
+                                           % (Path(pkg).name, n, r32(big), MAGIC, VERSION, level_bytes, napps,
+                                              ','.join(str(x) for x in level_sizes(pkg))))
     print('derived into', out)
 
 
