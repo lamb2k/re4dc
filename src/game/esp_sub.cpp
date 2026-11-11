@@ -4718,3 +4718,30 @@ extern "C" const char* re4dc_fx_level_osd_text(void)
     return (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0 ? kFxLevelText[re4dc_fx_level % 3] : 0;
 }
 #endif
+#if defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && defined(RE4DC_ESP_ESSENTIAL_EARLY)
+// FX_TRANS_SKIP31 (fx31.mk): 1 when the coarse sprite pass need not queue `esp`: the queued EspCommonTrans would end in
+// FxEssentialSetupCut's stateless verdict, or (stamps not yet current) in FxEssentialCut's same verdict at the emit; cut
+// sprites never touch the layer / trim buckets, so the buckets read the same. Excluded, as their bodies draw something
+// else first or are not plain sprites: shimmer, nega, the r100 streak-anchor shape (Ps2fxClass 2 draws the shafts) and
+// the Esp1b grid. The caller keeps render targets (Tool_flg 0x10000) and screen sprites on the queue.
+extern "C" int re4dc_esp_ess_precut31(const cEsp* esp)
+{
+    if (!re4dc_fx_essential || esp->info.owner == 0x03 || esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e ||
+        esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x10000)) ||
+        ((s8) esp->m_Parts_no >= -8 && (s8) esp->m_Parts_no <= -3) ||
+        (esp->m_Id == 0 && esp->m_Life_max == 0 && esp->m_Blend_type == 1)) return 0;
+#if defined(RE4DC_EFFECT_TORCH) && RE4DC_EFFECT_TORCH
+    if (re4dc_esp0e_glow) return 0;
+#endif
+    if (!s_ess_class[0x00]) return 0;   // the first late FxEssentialCut initializes the table, as before
+#if defined(RE4DC_R117_FX_FALLBACK)
+    if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
+#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
+    if (FxInsigniaKeep(esp)) return 0;
+#endif
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    if (c == ESS_KEEP) return 0;
+    return c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 : esp->info.owner == 0x01 || esp->info.owner == 0xD0);
+}
+#endif

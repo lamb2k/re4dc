@@ -11,6 +11,43 @@ extern "C" void re4dc_cloth_esp4e_retire11(cEsp*);
 #define RE4DC_CLOTH_POOL_RETIRE11()
 #define RE4DC_CLOTH_SLOT_RETIRE11(e)
 #endif
+#if (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31) || (defined(RE4DC_FX_DORMANT31) && RE4DC_FX_DORMANT31)
+// fx31.mk. Kept above `#line 1` so the knob-off file keeps its line numbers; the hooks are same-line macros.
+#if !(defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN) || !(defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2)
+#error FX_TRANS_SKIP31 / FX_DORMANT31 need GAME_FX_SCAN and FX_MIST_PS2
+#endif
+class cEsp;
+extern "C" int re4dc_fx31_dormant(const cEsp* esp);       // a dormant sheet nothing reaches (end of file)
+extern "C" void re4dc_fx31_stat(unsigned k);
+#if defined(RE4DC_FX31_STAT) && RE4DC_FX31_STAT
+#define FX31_STAT(k) re4dc_fx31_stat(k)
+#else
+#define FX31_STAT(k) ((void) 0)
+#endif
+#endif
+#if defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31
+extern "C" int re4dc_esp_ess_precut31(const cEsp* esp);   // esp_sub.cpp
+extern "C" int re4dc_fx_esp_ready();
+// EspTrans: dead slots are stepped over through the live map (a clear bit fails both entry tests).
+#define FX31_TRANS_BEGIN() const int fx31Use = re4dc_fx_esp_ready(); const unsigned long fx31Gen = re4dc_fx_esp_gen;
+#define FX31_STEP(i)                                                             if (fx31Use && re4dc_fx_esp_gen == fx31Gen) {                                    unsigned long fx31M = re4dc_fx_esp_live[(i) >> 5] >> ((i) & 31);             if (fx31M == 0) { (i) |= 31; continue; }                                     (i) += re4dcFxCtz(fx31M);                                                }                                                                            FX31_STAT(0);
+// coarse sprite pass: a dormant sheet is never queued (re4dc_esp_coarse_sprite_visible), and nothing before that test
+// writes state for it (re4dc_fx31_dormant excludes the ESP_TYPE_CAP owners)
+#define FX31_SPRITE_DORMANT(esp) if (spritePass && re4dc_fx31_dormant(esp)) { FX31_STAT(1); continue; }
+// coarse sprite pass: an Essential cut is not queued (no OT entry, no EspCommonTrans)
+#define FX31_PRECUT(esp) if (spriteEntry && trans == EspCommonTrans && re4dc_esp_ess_precut31(esp)) { FX31_STAT(2); continue; }
+#else
+#define FX31_TRANS_BEGIN()
+#define FX31_STEP(i)
+#define FX31_SPRITE_DORMANT(esp)
+#define FX31_PRECUT(esp)
+#endif
+#if defined(RE4DC_FX_DORMANT31) && RE4DC_FX_DORMANT31
+// EspMove: a dormant sheet's live bit is cleared; its move() returns at once and the move can never push it.
+#define FX31_MOVE_DORMANT(esp, i)                                                    if (re4dc_fx31_dormant(esp)) {                                                       if ((i) < 32 * RE4DC_FX_ESP_WORDS) re4dc_fx_esp_live[(i) >> 5] &= ~(1ul << ((i) & 31));         FX31_STAT(3);                                                                    return;                                                                      }
+#else
+#define FX31_MOVE_DORMANT(esp, i)
+#endif
 #line 1
 // game/esp.cpp: the effect sprite (cEsp) pool. A cEsp is one live effect particle/sprite; the pool
 // (g_pEspSys->pEspBuf, nEsp slots of 0x150 bytes) is allocated per room from the cons value and
@@ -522,7 +559,7 @@ static inline void fxEspMoveOne(cEspSystem* sys, u32 i, int pause, u32* cnt)
 {
     cEsp* esp = (cEsp*) (sys->pEspBuf + i * 0x150);
 
-    if (!fxEspActive(esp)) {
+    FX31_MOVE_DORMANT(esp, i) if (!fxEspActive(esp)) {
         return;
     }
     if (esp->parent != pEffParentWorld) {
@@ -855,8 +892,8 @@ int EspTrans()
     } else {
         sys->CameraPan2 = -atan2f(dir.y, SQRTF(dir.x * dir.x + dir.z * dir.z)) * 57.295776f;
     }
-    for (i = 0; i < sys->nEsp; i++) {
-        esp = (cEsp*) (sys->pEspBuf + i * 0x150);
+    FX31_TRANS_BEGIN() for (i = 0; i < sys->nEsp; i++) {
+        FX31_STEP(i) esp = (cEsp*) (sys->pEspBuf + i * 0x150);
 #if RE4DC_PACE_TRANS_SKIP
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
         spriteEntry = 0;
@@ -864,7 +901,7 @@ int EspTrans()
             if (!(esp->m_Be_flg & 1)) {
                 continue;
             }
-            if (espLogicId(esp->m_Id)) {
+            FX31_SPRITE_DORMANT(esp) if (espLogicId(esp->m_Id)) {
                 logicLive++;
             } else if (spritePass && re4dc_esp_sprite_class(esp)) {
                 spriteEntry = 1;   // drawn, not state: does not hold a skipped iteration's Render()
@@ -959,7 +996,7 @@ int EspTrans()
             trans = EspCommonTrans;
         }
 #endif
-        if (pG->Status_flg[1] & 2) {
+        FX31_PRECUT(esp) if (pG->Status_flg[1] & 2) {
             if (!(esp->info.Core_flg & 0x8000)) {
                 continue;
             }
@@ -1265,3 +1302,34 @@ void EspAddOtAfterRender(cEsp* esp, void (*func)(cEsp*))
         AddOtDirect(0x16, esp, (void (*)()) func, 0, 0x20, NULL, 0.0f);
     }
 }
+
+#if (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31) || (defined(RE4DC_FX_DORMANT31) && RE4DC_FX_DORMANT31)
+// fx31: a live FX_MIST_PS2 dormant mist sheet (never moved, never offered to the sprite pass, set once in EspSeqSet and
+// cleared only by the slot's next PullEsp), world-parented (parent is set at creation only, so EspMove's dead-model push
+// can never take it) and not owned by an enemy / object (owner 0x10..0xCF would count in EspTrans's ESP_TYPE_CAP).
+extern "C" int re4dc_esp48_is_dormant(const cEsp* esp);
+extern "C" int re4dc_fx31_dormant(const cEsp* esp)
+{
+    return esp->m_Id == 0x48 && (esp->m_Be_flg & 1) && esp->parent == pEffParentWorld &&
+           (esp->info.owner < 0x10 || esp->info.owner >= 0xD0) && re4dc_esp48_is_dormant(esp);
+}
+#if defined(RE4DC_FX31_STAT) && RE4DC_FX31_STAT
+// FX31_STAT (measurement builds): per 300 frames, EspTrans slots visited, dormant sheets rejected, Essential cuts not
+// queued, EspMove dormant bits cleared; and the live map popcount.
+extern "C" void re4dc_log(const char* fmt, ...);
+static u32 fx31N[4], fx31Frame;
+extern "C" void re4dc_fx31_stat(unsigned k)
+{
+    if (fx31Frame / 300 != (u32) pG->Frame_cnt / 300) {
+        u32 live = 0;
+        for (u32 w = 0; w < RE4DC_FX_ESP_WORDS; w++) live += __builtin_popcountl(re4dc_fx_esp_live[w]);
+        re4dc_log("fx31: f=%u room=%03x visit=%u dormrej=%u precut=%u dormclr=%u map=%u active=%u
+", (unsigned) pG->Frame_cnt,
+                  (unsigned) G_ROOM_ID, fx31N[0], fx31N[1], fx31N[2], fx31N[3], live, (unsigned) g_pEspSys->ActiveEspNum);
+        fx31N[0] = fx31N[1] = fx31N[2] = fx31N[3] = 0;
+        fx31Frame = pG->Frame_cnt;
+    }
+    fx31N[k & 3]++;
+}
+#endif
+#endif
