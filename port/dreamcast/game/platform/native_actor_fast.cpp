@@ -1900,6 +1900,10 @@ struct Frame {  // per (info, matrices) per frame
 #if RE4DC_ACTOR_FOG_GATE
     bool gate_ready = false; float gate_T = 0.0f, gate_G = 0.0f;  // ACTOR_FOG_GATE skinned depth bound
 #endif
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+    // CHAR_VIS31: view-space box of the palette's bone origins and the largest palette scale (per Frame)
+    bool cv_ready = false; float cv_lo[3] = {}, cv_hi[3] = {}, cv_G = 0.0f;
+#endif
 };
 constexpr unsigned kFrames = 4;
 Frame frames[kFrames];
@@ -6634,6 +6638,78 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }
 }  // namespace
 #endif
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+// CHAR_VIS31=1 (chars31.mk; lane chars31 2026-11-11; render only, exact; default 0): a character-path part (props,
+// objects, animals, Leon, Ashley, any model reaching the native actor path) whose conservative view-space bound lies
+// wholly outside the left / right / top / bottom planes of the projection, or wholly behind the eye, draws nothing
+// (every vertex would take the same side outcode), so it skips positions, skin, light and packing. Rigid: the
+// bind-pose sphere (bind == drawn pose). Skinned: the box of the palette's bone origins grown by the largest palette
+// scale x (|bind centre| + bind radius), the bound ACTOR_FOG_GATE uses for depth. Margin x1.05 + 16 units. The Frame
+// (palette, the pose gameplay reads is never touched: palettes are draw-side copies) is still prepared.
+// Port of lane castlebudget's ACTOR_PART_FRUSTUM (fa2a62c35, pf_hidden), plus the behind-the-eye case.
+namespace {
+unsigned cv_tests, cv_culled, cv_log;
+inline bool cv_box_out(const float* P, const float* lo, const float* hi) {
+    const float sx = P[1], ox = P[2], sy = P[3], oy = P[4];
+    auto out = [](float a, float b, const float* lo_, const float* hi_, int k) {
+        const float v = a > 0.0f ? a * lo_[k] : a * hi_[k];   // min over the box of a * v[k] + b * z
+        const float z = b > 0.0f ? b * lo_[2] : b * hi_[2];
+        return v + z > 0.0f;
+    };
+    return lo[2] > 0.0f ||   // wholly behind the eye (the eye looks down -z)
+           out(sx, ox + 1.0f, lo, hi, 0) || out(-sx, 1.0f - ox, lo, hi, 0) ||
+           out(sy, oy + 1.0f, lo, hi, 1) || out(-sy, 1.0f - oy, lo, hi, 1);
+}
+bool cv_hidden(Frame& f, const Re4dcModelPart& p, const BlobHeader& b) {
+    const float* m = p.modelview; const float* c = b.center;
+    if (!(b.radius >= 0.0f) || p.projection[0] != 0.0f) return false;  // perspective only
+    float lo[3], hi[3];
+    if (f.mode != kSkin) {
+        const float s = std::sqrt(std::max(std::max(m[0] * m[0] + m[4] * m[4] + m[8] * m[8], m[1] * m[1] + m[5] * m[5] + m[9] * m[9]),
+                                           m[2] * m[2] + m[6] * m[6] + m[10] * m[10]));
+        const float r = s * b.radius * 1.05f + 16.0f;
+        for (int k = 0; k < 3; ++k) {
+            const float v = m[k * 4] * c[0] + m[k * 4 + 1] * c[1] + m[k * 4 + 2] * c[2] + m[k * 4 + 3];
+            lo[k] = v - r; hi[k] = v + r;
+        }
+    } else {
+        if (!f.palette || !f.palette_entries) return false;
+        if (!f.cv_ready) {
+            float L[3] = {3.0e38f, 3.0e38f, 3.0e38f}, H[3] = {-3.0e38f, -3.0e38f, -3.0e38f}, S = 0.0f;
+            const float* P = f.palette;
+            for (unsigned i = f.palette_entries; i; --i, P += 12) {
+                for (int k = 0; k < 3; ++k) {
+                    const float v = m[k * 4] * P[9] + m[k * 4 + 1] * P[10] + m[k * 4 + 2] * P[11] + m[k * 4 + 3];
+                    L[k] = std::min(L[k], v); H[k] = std::max(H[k], v);
+                }
+                S = std::max(S, P[0] * P[0] + P[1] * P[1] + P[2] * P[2]);
+                S = std::max(S, P[3] * P[3] + P[4] * P[4] + P[5] * P[5]);
+                S = std::max(S, P[6] * P[6] + P[7] * P[7] + P[8] * P[8]);
+            }
+            const float ms = std::sqrt(std::max(std::max(m[0] * m[0] + m[4] * m[4] + m[8] * m[8], m[1] * m[1] + m[5] * m[5] + m[9] * m[9]),
+                                                m[2] * m[2] + m[6] * m[6] + m[10] * m[10]));
+            for (int k = 0; k < 3; ++k) { f.cv_lo[k] = L[k]; f.cv_hi[k] = H[k]; }
+            f.cv_G = ms * std::sqrt(S); f.cv_ready = true;
+        }
+        if (!(f.cv_G >= 0.0f) || !(f.cv_G < 1.0e6f)) return false;
+        const float r = f.cv_G * (std::sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]) + b.radius) * 1.05f + 16.0f;
+        for (int k = 0; k < 3; ++k) { lo[k] = f.cv_lo[k] - r; hi[k] = f.cv_hi[k] + r; }
+    }
+    for (int k = 0; k < 3; ++k) if (!(lo[k] == lo[k]) || !(hi[k] == hi[k]) || !(hi[k] - lo[k] < 1.0e30f)) return false;  // NaN / inf: draw
+    ++cv_tests;
+    if (frame_serial - cv_log >= 600U) {
+        cv_log = frame_serial;
+        re4dc_log("CHAR_VIS31 frame=%u tests=%u culled=%u\n", frame_serial, cv_tests, cv_culled);
+    }
+    if (!cv_box_out(p.projection, lo, hi)) return false;
+    ++cv_culled;
+    return true;
+}
+}  // namespace
+#define CV31_GATE(f_, p_, b_) do { if (cv_hidden((f_), (p_), (b_))) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; } } while (0)
+#else
+#define CV31_GATE(f_, p_, b_) do { } while (0)
+#endif
 #if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
 #include "include/chars31_count.inc"
 #else
@@ -6968,6 +7044,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
         }
     }
+    CV31_GATE(f, p, *blob);
 #if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
     // RIGID_CHUNK: the size rule (native_actor_rigid.inc).
     const bool rigid = f.mode == kRigid;
@@ -7904,6 +7981,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     }
 #endif
     // (A skinned Frame: re4dc_actor_submit's rigid sphere test does not apply.)
+    CV31_GATE(f, p, *blob);
     // The most slots this chunk can send (a whole meshlet 3 per triangle at most, a clipped one 6): the
     // window stays inside the store-queue window of 32767 slots.
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
