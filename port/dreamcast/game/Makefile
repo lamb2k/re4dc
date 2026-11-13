@@ -676,6 +676,18 @@ $(error AICA_STR_VFS_OPEN needs AICA_STR_READ=1)
 endif
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_VFS_OPEN=1
 endif
+# STR_VOICE_PREEMPT (GitHub #66 bug 3, lane radio66; default 0 = image unchanged; needs AICA_STREAMS=1): the one AICA
+# stream ring plays one disc stream at a time and a stream asked for while another holds it stays silent. A radio call
+# ducks the room's music stream but does not stop it, so in rooms with streamed music (r101, r104, r108 ...) the call's
+# ring tone and voice were never heard. With the knob the radio call streams (1:3, 1:0x33 ring tones, 1:140..1:163
+# voices) take the ring from a music stream (block 0); the music is claimed again, from its start, after the call.
+STR_VOICE_PREEMPT ?= 0
+ifeq ($(filter $(STR_VOICE_PREEMPT),0 1),)
+$(error STR_VOICE_PREEMPT must be 0 or 1)
+endif
+ifeq ($(STR_VOICE_PREEMPT),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_VOICE_PREEMPT=1
+endif
 ifeq ($(AICA_SPILL),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
 endif

@@ -2067,6 +2067,18 @@ if os.path.isfile(TRANS34D2D + '/trclass.idx'):
     for _r in sorted(os.listdir(TRANS34D2D)):
         if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
             DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
+# call66 / call66d2 (lane radio66 11-12, GitHub #66 bug 3): bgm/aica_str.dat with the radio call voices the route runs never
+# requested ("stream sbb=... not in aica_str.dat, silent"), as PS2 ADX (comm1_NN / comm2_NN) in AICA ADPCM, appended so every
+# earlier entry and data byte is kept (tools/str_append.py). call66 (Disc 1, after ps2snd24): + 1:146 1:147 (r108 / r118),
+# 1:149 (r10c), 1:150 (r117), 1:151 (r11c): 57 entries, NEEDS AICA_STR_ENT_MAX >= 57 (at 56 the reader refuses the whole file
+# and every disc stream goes silent). call66d2 (DISC 2 ONLY via D2_DATA): castle-d2-j's file + 1:155 (r20b) 1:156 (r206)
+# 1:158 (r214): 79 entries (Disc 2 AICA_STR_ENT_MAX=80). Store: re4data/private/call66-20261112 (RECIPE.txt, SHA256SUMS).
+CALL66D = os.environ.get('CALL66D', '/root/re4data/private/call66-20261112')
+if os.path.isfile(CALL66D + '/d1/bgm/aica_str.dat'):
+    DATA['call66'] = {'bgm/aica_str.dat': CALL66D + '/d1/bgm/aica_str.dat'}
+    AFTER += [('call66', 'ps2snd24')]
+if os.path.isfile(CALL66D + '/d2/bgm/aica_str.dat'):
+    DATA['call66d2'] = {'bgm/aica_str.dat': CALL66D + '/d2/bgm/aica_str.dat'}
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
