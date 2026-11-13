@@ -1216,6 +1216,12 @@ struct Stream {
     u16 sent_tl[2];
 };
 Stream g_str;   // channels / voices are set at the claim (state idle until then)
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+volatile u8 g_strPreempt;   // STR_VOICE_PREEMPT: the reader asks the flush to release the ring (under g_lock)
+volatile u8 g_strPreOnly;   // STR_VOICE_PREEMPT: str_scan claims only radio call streams
+u32 g_strCallUntilMs;       // STR_VOICE_PREEMPT: music is not claimed again before this (g_nowMs)
+#endif
+#line 1219
 
 inline u32 str_key(const StrEnt& e) { return e.flags >> 8; }   // blk | no << 8
 
@@ -1241,6 +1247,26 @@ void str_flush(RegWriter& w)
     Stream& s = g_str;
     if (s.state == kStrIdle) return;
     u32 key = str_key(*s.e);
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+    // STR_VOICE_PREEMPT: the reader asked for the ring for a radio call stream. A music stream (block 0) is keyed
+    // off and left unclaimed (its work stays open, strm 1): str_scan claims the call stream first, then the music
+    // again (from its start) once the ring is free.
+    if (g_strPreempt) {
+        g_strPreempt = 0;
+        if (!s.dead && (key & 255) == 0) {
+            str_keyoff(w);
+            for (int c = 0; c < 2; c++)
+                if (s.v[c] && s.v[c]->vs.strm == 2) s.v[c]->vs.strm = 1;
+            s.gen = s.gen + 1;
+            s.state = kStrIdle;
+            s.want = 0;
+            re4dc_log("aica: t=%u stream %u:%u gives the ring to a radio call stream\n", (unsigned) g_nowMs,
+                      (unsigned) (key & 255), (unsigned) (key >> 8));
+            return;
+        }
+    }
+#endif
+#line 1244
     if (s.dead) {
         str_keyoff(w);
 #if RE4DC_MOVIE_DISC_QUIET
@@ -1772,6 +1798,35 @@ AXVPBView* vpb_of(void* p)
     return (AXVPBView*) p;
 }
 
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+// STR_VOICE_PREEMPT (Makefile; GitHub #66 bug 3): the radio call's streams, the ring tones (sscrn.cpp OpeSetOpenTerm
+// strTbl 3 / 0x33) and the call voices (ss_term.cpp term_ope_tbl mdtNo 0x8C..0xA3), all in block 1.
+bool str_preempts(const StrEnt* e)
+{
+    const u32 k = str_key(*e), blk = k & 255, no = k >> 8;
+    return blk == 1 && (no == 3 || no == 0x33 || (no >= 0x8C && no <= 0xA3));
+}
+// An open, unclaimed stream work whose entry is a radio call stream (reader thread; claims nothing).
+bool str_preempt_probe()
+{
+    for (int i = 0; i < 4; i++) {
+        const Re4dcStrWorkView& w = Snd_str_work[i];
+        if (!(w.status & 1) || !w.shd) continue;
+        u32 nch = (w.flag & 1) ? 2 : 1;
+        AXVPBView* vl = vpb_of(w.voiceL);
+        AXVPBView* vr = nch == 2 ? vpb_of(w.voiceR) : vl;
+        if (!vl || !vr || vl->vs.strm != 1 || vr->vs.strm != 1) continue;
+        for (u32 k = 0; k < g_strEntN; k++) {
+            const StrEnt& c = g_strEnt[k];
+            if (c.sbb_ofs == w.shd[7] && c.nch == nch && str_preempts(&c) &&
+                Snd_get_shd_adrs((u16) (c.flags >> 8 & 255), (u16) (c.flags >> 16)) == w.shd)
+                return true;
+        }
+    }
+    return false;
+}
+#endif
+#line 1775
 // An open stream work whose voices are the stream player's, matched to an entry.
 void str_scan()
 {
@@ -1802,6 +1857,12 @@ void str_scan()
             }
             continue;
         }
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+        // the radio call stream first; the music waits until 2 s after the call's last stream (ring tone -> voice gap)
+        if (g_strPreOnly ? !str_preempts(e) : ((str_key(*e) & 255) == 0 && (int) (g_strCallUntilMs - g_nowMs) > 0))
+            continue;
+#endif
+#line 1805
 #if RE4DC_GC_ASSET_GATE
         gcasset_stream_entry(e);   // first open of this entry: hash its record + payload, publish its identity
 #endif
@@ -1945,6 +2006,27 @@ __attribute__((unused)) void* str_main(void*)
         }
 #endif
         Stream& s = g_str;
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+        // STR_VOICE_PREEMPT: a radio call stream waits for the ring while the room's music (block 0) holds it: ask the
+        // flush to release the ring, fill nothing until it has, then claim the call stream before anything else.
+        if (g_strPreempt) {
+            if (s.state != kStrIdle) continue;
+            g_strPreempt = 0;   // the ring went idle another way
+        }
+        if (s.state != kStrIdle && s.e && str_preempts(s.e)) g_strCallUntilMs = g_nowMs + 2000;
+        if (s.state != kStrIdle && s.e && (str_key(*s.e) & 255) == 0 && str_preempt_probe()) {
+            mutex_lock(&g_lock);
+            if (s.state != kStrIdle && !s.dead) g_strPreempt = 1;
+            mutex_unlock(&g_lock);
+            continue;
+        }
+        if (s.state == kStrIdle) {
+            g_strPreOnly = 1;
+            str_scan();
+            g_strPreOnly = 0;
+        }
+#endif
+#line 1948
         if (s.state == kStrIdle) str_scan();
         u32 gen = s.gen;
 #if RE4DC_MOVIE_DISC_QUIET
