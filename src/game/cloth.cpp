@@ -31,6 +31,56 @@ void OSReport(const char* fmt, ...);
 }
 
 Cloth ClothWk[8];
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+#if !RE4DC_CLOTH_NATIVE || !RE4DC_NATIVE_DRAW_OUTCOMES
+#error CLOTH_NORMALS_DEFER01 requires CLOTH_NATIVE=1 NATIVE_DRAW_OUTCOMES=1
+#endif
+#include "cloth_normals_defer01.h"
+namespace {
+struct ClothNormals01 { unsigned revision, pending; };
+static ClothNormals01 cloth_normals01[8]={{1,0},{1,0},{1,0},{1,0},{1,0},{1,0},{1,0},{1,0}};
+static_assert(sizeof cloth_normals01==64,"eight out-of-band cloth normal states");
+static unsigned cloth_normals_slot01(const Cloth* cloth) {
+    const __UINTPTR_TYPE__ at=(__UINTPTR_TYPE__)cloth,base=(__UINTPTR_TYPE__)ClothWk;
+    if(at<base || at-base>=sizeof ClothWk || (at-base)%sizeof(Cloth))return 8;
+    return unsigned((at-base)/sizeof(Cloth));
+}
+static void cloth_normals_reset01(Cloth* cloth) {
+    const unsigned slot=cloth_normals_slot01(cloth);if(slot>=8)return;
+    auto& state=cloth_normals01[slot];state.pending=0;
+    if(state.revision)++state.revision; // exhaustion stays eager; never wrap into an old revision
+}
+static unsigned cloth_normals_revision01(const Cloth* cloth) {
+    const unsigned slot=cloth_normals_slot01(cloth);return slot<8?cloth_normals01[slot].revision:0;
+}
+static bool cloth_normals_resolve01(Cloth* cloth,unsigned observed) {
+    const unsigned slot=cloth_normals_slot01(cloth);
+    if(slot>=8 || !observed)return true; // off-pool/exhausted slots calculate at the original update
+    auto& state=cloth_normals01[slot];
+    // A native call can yield. Do not calculate/replay a retired, reused or
+    // updated slot, or clear that newer update's pending work.
+    if(state.revision!=observed)return false;
+    if(state.pending){
+        cloth->calcNormal();
+        // Normal diagnostics can call out. Keep a newer update pending and
+        // refuse replay if the source changed while calculating.
+        if(state.revision!=observed)return false;
+        state.pending=0;
+    }
+    return true;
+}
+}
+extern "C" void re4dc_cloth_normals_defer01(Cloth* cloth) {
+    const unsigned slot=cloth_normals_slot01(cloth);
+    if(slot<8) {
+        auto& state=cloth_normals01[slot];
+        if(state.revision && ++state.revision){state.pending=1;return;}
+        state.pending=0;
+    }
+    cloth->calcNormal(); // non-pool or exhausted: preserve the original eager calculation
+}
+#endif
+#line 26
 #if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
 #include <cstdint>
 // Render-only publication identity for the existing fixed cloth pool. Retiring
@@ -457,6 +507,10 @@ void ClothInit()
     int i;
 
     for (i = 0; i < 8; i++) {
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+        cloth_normals_reset01(&ClothWk[i]);
+#endif
+#line 452
         ClothWk[i].be_flag = 0;
     }
 }
@@ -485,6 +539,10 @@ static Vec* clothAllocNormal(Vec* dir)
 void Cloth::Set(Vec ang, Vec pos_, u8 nx_, u8 ny_, f32 w, GXTexObj* tex_, f32 h, void* p_, f32 d, GXTlutObj* tlut_,
                 int flag_)
 {
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+    cloth_normals_reset01(this);
+#endif
+#line 132
 #if defined(RE4DC_CLOTH_SHEET11) && RE4DC_CLOTH_SHEET11
     cloth11_replace(this);
 #endif
@@ -582,6 +640,10 @@ void Cloth::SetPosAng(Vec ang, Vec pos_)
 // Frees the grid memory and the work.
 void Cloth::Destroy()
 {
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+    cloth_normals_reset01(this);
+#endif
+#line 283
 #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
     re4dc::cloth_material11::close(cloth11_slot(this));
 #endif
@@ -1059,6 +1121,10 @@ void clothTrans(Cloth* pCL)
     commonClothLightSet(model.LightInfo.pLight, 8, model.pos, r);
 #endif
     GXSetChanMatColor(4, pCL->color);
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+    const unsigned normals_revision01=cloth_normals_revision01(pCL);
+#endif
+#line 768
 #if defined(RE4DC_CLOTH_NATIVE) && RE4DC_CLOTH_NATIVE
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
     const auto native_result=re4dc_cloth_native(pCL, model.LightInfo.pLight, &model.pos, r);
@@ -1069,6 +1135,10 @@ void clothTrans(Cloth* pCL)
         return;
     }
 #endif
+#if defined(RE4DC_CLOTH_NORMALS_DEFER01) && RE4DC_CLOTH_NORMALS_DEFER01 && !defined(__PPC__)
+    if(!cloth_normals_resolve01(pCL,normals_revision01))return;
+#endif
+#line 778
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
     re4dc::fa29::hit(re4dc::fa29::ClothLegacy);
 #endif

@@ -1,0 +1,222 @@
+// The actual propGate and propGateWeights bodies are injected by the Python
+// runner. Engine services are deterministic stubs; this is a branch/side-effect
+// and operation-count fixture, not a target numeric or rendering acceptance test.
+#include <cassert>
+#include <cmath>
+#include <cstdint>
+#include <cstdio>
+#include <cstring>
+#include <new>
+#include <sys/mman.h>
+#include <vector>
+
+using u8=uint8_t;using u16=uint16_t;using u32=uint32_t;using s32=int32_t;using f32=float;using Mtx=float[3][4];
+#define RE4_MEM_LO 0x8C000000U
+#define RE4_MEM_HI 0x8CFFFFFFU
+#define PTR_INVALID(p) ((uintptr_t)(p)<RE4_MEM_LO || (uintptr_t)(p)>RE4_MEM_HI)
+#define RE4DC_FRONT_TEXOBJ 0
+#define RE4DC_FRONT_TPL_OWNER 0
+#define RE4DC_FALLBACK_AUDIT35 0
+#ifndef PROP_MODE
+#define PROP_MODE 1
+#endif
+#define RE4DC_PROP_GATE PROP_MODE
+static unsigned inverse_calls,concat_calls,lazy_calls,weight_calls,source_draws;
+static bool lazy_known=true,bad_matrix=false;
+static std::vector<unsigned> events;
+static void identity(Mtx m){std::memset(m,0,sizeof(Mtx));for(unsigned i=0;i<3;++i)m[i][i]=1.0f;}
+static void inverse(const Mtx a,Mtx b){++inverse_calls;identity(b);(void)a;}
+static void concat(const Mtx a,const Mtx b,Mtx c){
+    Mtx d;
+    for(unsigned r=0;r<3;++r)for(unsigned k=0;k<4;++k)
+        d[r][k]=a[r][0]*b[0][k]+a[r][1]*b[1][k]+a[r][2]*b[2][k]+(k==3?a[r][3]:0.0f);
+    if(bad_matrix)d[0][0]=NAN;
+    std::memcpy(c,d,sizeof(d));++concat_calls;
+}
+#define RE4DC_RENDER_MTXInverse inverse
+#define RE4DC_RENDER_MTXConcat concat
+struct ModelPart{u8 pad[24];u32 size;u32 tail;};
+static_assert(sizeof(ModelPart)==32);
+struct ModelData {
+    u32 weight_ext_num,shapeOfs,weight_palette_num,nParts,nTex,displist_num,flags;
+    void* pWeight;ModelPart* pParts;
+};
+struct cModelInfo {
+    u32 be_flag;ModelData* pData;float invisible_factor;void* pPosBuf[2];
+    cModelInfo* pList;Mtx x5C;u8 color[4];void* tpl_addr;void* pAddTpl;u32 nAddTex;
+};
+struct cPartsWk;
+struct cModel {
+    Mtx mat;u32 kindid,ot_type,be_flag;float invisible_factor,invisible_factor2;
+    cPartsWk* pParts;cModelInfo* pModelInfo;int TevScaleGroup;
+};
+struct cPartsWk : cModel {cPartsWk* next;Mtx bindMat;};
+struct GXTexObj{};
+struct TexChanges {void move(GXTexObj*){events.push_back(5);}};
+struct Ext{void* pFootShadowTbl;TexChanges* pTexChg;};static Ext ext{};
+#define MODEL_EXT(m) (&ext)
+struct Global {u32 Frame_cnt,vtx_buf_no;};static Global globals{};static Global* pG=&globals;
+struct ViewT{float _zfar;};static ViewT View{100.0f};
+static void re4dc_log(const char*,...){}
+static bool bad_projection=false;
+static void GXGetProjectionv(float* p){
+    const float vals[7]={bad_projection?1.0f:0.0f,1,0,1,0,-1,-2};
+    std::memcpy(p,vals,sizeof(vals));
+}
+static unsigned re4dc_fog_enabled(){return 0;}
+static float re4dc_fog_far_for_gate(float f){return f;}
+static void re4dc_fog_note_far(float){events.push_back(6);}
+static int re4dc_actor_skin_lazy_known(const void*){++lazy_calls;return lazy_known;}
+struct Weight{u32 num,id[3],wht[3];};
+const u32 kPgParts=64;
+struct PgStats{u32 tests,culled,kept,why[10],log,chk_models,chk_parts,chk_fogged;}g_pg{};
+static const void* g_pgWeights[32];
+static u32 g_pgWeightParts[32],g_pgWeightsNum;
+static int propGateNo(int why){++g_pg.why[why];return 0;}
+static unsigned re4dc_pg_expect,re4dc_pg_fogged;
+static void frontNativeModelTrans(cModel* m,Mtx,int){
+    ++source_draws;
+    if(re4dc_pg_expect)for(auto* i=m->pModelInfo;i;i=i->pList)
+        if(i->be_flag&8)re4dc_pg_fogged+=i->pData->displist_num;
+}
+struct GxWork{GXTexObj texObj[256];};static GxWork fixture_gx{};
+#define GXWORK() (&fixture_gx)
+static void* g_pShdMng;
+static void* g_prev_tpl_addr;
+static void* g_prev_add_tpl_addr;
+static unsigned gxCsScale[2];
+#define PSet(dst,v) ((dst)=(v))
+struct GXColor{u8 r,g,b,a;};
+static void GXSetChanMatColor(int,GXColor){events.push_back(1);}
+static void GXSetTevColorOp(int,int,int,int,int,int){events.push_back(2);}
+struct TEXHeader{void* data;u32 width,height,format,wrapS,wrapT,minLOD,maxLOD;};
+struct TEXDescriptor{TEXHeader* textureHeader;};
+struct TEXPalette{u32 numDescriptors;};
+static TEXDescriptor* TEXGet(void*,u32){assert(false);return nullptr;}
+static void GXInitTexObj(GXTexObj*,void*,u32,u32,u32,u32,u32,u32){events.push_back(4);}
+
+@ACTUAL_WEIGHTS@
+static int propGateWeights(const Weight* w,u32 n,u32 parts){
+    ++weight_calls;return propGateWeights_body(w,n,parts);
+}
+#define RE4DC_PROP_GATE_EARLY01 0
+@ACTUAL_CONTROL@
+#undef RE4DC_PROP_GATE_EARLY01
+#define RE4DC_PROP_GATE_EARLY01 1
+@ACTUAL_SPIKE@
+
+struct Result{
+    int outcome;unsigned inverses,concats,lazy,weights,draws,why,kept,culled,chk_models,chk_parts,chk_fogged,weight_memos;
+    std::vector<unsigned> events;
+};
+static Result run(bool on,cModel* m,Mtx view){
+    inverse_calls=concat_calls=lazy_calls=weight_calls=source_draws=0;
+    g_pg={};g_pgWeightsNum=0;std::memset(g_pgWeights,0,sizeof(g_pgWeights));
+    std::memset(g_pgWeightParts,0,sizeof(g_pgWeightParts));
+    re4dc_pg_expect=re4dc_pg_fogged=0;events.clear();
+    g_prev_tpl_addr=g_prev_add_tpl_addr=g_pShdMng=nullptr;
+    int outcome=on?propGate_spike(m,view):propGate_control(m,view);
+    // The existing frontNativeRender continuation: a refusal still renders.
+    if(!outcome)frontNativeModelTrans(m,view,0);
+    unsigned why=99;for(unsigned i=0;i<10;++i)if(g_pg.why[i])why=i;
+    return {outcome,inverse_calls,concat_calls,lazy_calls,weight_calls,source_draws,why,g_pg.kept,g_pg.culled,
+            g_pg.chk_models,g_pg.chk_parts,g_pg.chk_fogged,g_pgWeightsNum,events};
+}
+static unsigned cases;
+static void same_output(const Result& a,const Result& b){
+    assert(a.outcome==b.outcome && a.draws==b.draws && a.kept==b.kept && a.culled==b.culled &&
+           a.chk_models==b.chk_models && a.chk_parts==b.chk_parts && a.chk_fogged==b.chk_fogged &&
+           a.weight_memos==b.weight_memos && a.events==b.events);
+    ++cases;
+}
+struct Payload{ModelPart p;u8 bytes[32];};
+struct Fixture{
+    cModel model;cModelInfo info,second;ModelData data;Weight weights[2];
+    Payload payload;cPartsWk bones[65];TEXPalette tpl;
+};
+static void init(Fixture& f,unsigned bones=4){
+    f={};identity(f.model.mat);
+    for(unsigned i=0;i<bones;++i){identity(f.bones[i].mat);identity(f.bones[i].bindMat);
+        f.bones[i].next=i+1<bones?&f.bones[i+1]:nullptr;}
+    f.model.kindid=1;f.model.invisible_factor=f.model.invisible_factor2=1;
+    f.model.pParts=f.bones;f.model.pModelInfo=&f.info;
+    f.info.be_flag=8;f.info.pData=&f.data;f.info.invisible_factor=1;identity(f.info.x5C);
+    f.info.tpl_addr=&f.tpl;
+    f.data.weight_palette_num=2;f.data.nParts=2;f.data.displist_num=1;
+    f.data.pWeight=f.weights;f.data.pParts=&f.payload.p;
+    for(auto& w:f.weights){w.num=1;w.id[0]=0;}
+    f.payload.p.size=32;f.payload.bytes[0]=0xfe;f.payload.bytes[1]=3;
+    const float bounds[4]={0,0,0,1};std::memcpy(f.payload.bytes+16,bounds,sizeof(bounds));
+    globals={};bad_matrix=bad_projection=false;lazy_known=true;ext={};
+}
+static void early_case(Fixture& f,Mtx view,unsigned expected_reason,unsigned bones=4){
+    const Result a=run(false,&f.model,view),b=run(true,&f.model,view);
+    same_output(a,b);
+    assert(!b.outcome && b.draws==1 && b.why==expected_reason && b.inverses==0 && b.concats==0);
+    assert(a.inverses==1 && a.concats==2*bones);
+    assert(a.lazy==b.lazy && a.weights==b.weights);
+}
+static void unchanged_case(Fixture& f,Mtx view){
+    const Result a=run(false,&f.model,view),b=run(true,&f.model,view);
+    same_output(a,b);
+    assert(a.why==b.why && a.inverses==b.inverses && a.concats==b.concats &&
+           a.lazy==b.lazy && a.weights==b.weights);
+}
+int main(){
+    void* region=mmap(reinterpret_cast<void*>(uintptr_t(RE4_MEM_LO)),0x1000000,PROT_READ|PROT_WRITE,
+                      MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED_NOREPLACE,-1,0);
+    if(region==MAP_FAILED){std::perror("fixture cached-RAM mapping");return 2;}
+    Fixture& f=*new(static_cast<unsigned char*>(region)+4096)Fixture{};
+    Mtx view;identity(view);
+    // Every hoisted reason-4 clause, including the NaN comparison, and both buffer slots.
+    for(unsigned n=1;n<=64;++n){
+        init(f,n);f.model.pModelInfo=nullptr;early_case(f,view,8,n);
+        init(f,n);f.info.be_flag|=2;early_case(f,view,4,n);
+        init(f,n);f.data.weight_ext_num=256;early_case(f,view,4,n);
+        init(f,n);f.data.shapeOfs=1;early_case(f,view,4,n);
+        init(f,n);f.data.weight_palette_num=1;f.data.nParts=1;early_case(f,view,4,n);
+        init(f,n);f.info.invisible_factor=0.5f;early_case(f,view,4,n);
+        init(f,n);f.info.invisible_factor=NAN;early_case(f,view,4,n);
+        init(f,n);f.data.nTex=248;early_case(f,view,4,n);
+        for(unsigned slot=0;slot<2;++slot){init(f,n);globals.vtx_buf_no=slot;
+            f.info.pPosBuf[slot]=&f.payload;early_case(f,view,5,n);}
+    }
+    // Valid near/far inputs keep the complete current gate, checker and state postlude.
+    init(f);unchanged_case(f,view);
+    init(f);f.info.x5C[2][3]=-100;unchanged_case(f,view);
+    // Leading hidden info is not walked early, even if the later info will refuse.
+    init(f);f.second=f.info;f.info.be_flag=0;f.info.pList=&f.second;f.second.be_flag|=2;unchanged_case(f,view);
+    // No new stream/header or weight-memo path, even for a late GX-header decline.
+    init(f);f.payload.bytes[0]=0x98;unchanged_case(f,view);
+    init(f);f.payload.p.size=31;unchanged_case(f,view);
+    init(f);f.weights[1].num=4;unchanged_case(f,view);
+    init(f);lazy_known=false;unchanged_case(f,view);
+    // Existing model/projection refusals retain precedence and never inspect the head info.
+    init(f);f.model.kindid=2;f.info.be_flag|=2;unchanged_case(f,view);
+    init(f);bad_projection=true;f.info.be_flag|=2;unchanged_case(f,view);
+    // Unknown/malformed head/data spans are not read early: an invalid pose exits first.
+    const uintptr_t invalids[]={1,RE4_MEM_LO-1,RE4_MEM_HI,RE4_MEM_HI-sizeof(cModelInfo)+2,
+                                RE4_MEM_HI+uintptr_t(1),reinterpret_cast<uintptr_t>(&f.info)+1};
+    for(uintptr_t p:invalids){
+        init(f,65);f.model.pModelInfo=reinterpret_cast<cModelInfo*>(p);unchanged_case(f,view);
+    }
+    const uintptr_t data_invalids[]={0,1,RE4_MEM_HI,RE4_MEM_HI-sizeof(ModelData)+2,
+                                    RE4_MEM_HI+uintptr_t(1),reinterpret_cast<uintptr_t>(&f.data)+1};
+    for(uintptr_t p:data_invalids){
+        init(f,65);f.info.pData=reinterpret_cast<ModelData*>(p);unchanged_case(f,view);
+    }
+    init(f,65);globals.vtx_buf_no=2;unchanged_case(f,view);
+    // Multiple faults: only diagnostic precedence changes, always continuation/no cull.
+    init(f);bad_matrix=true;f.info.be_flag|=2;
+    {const Result a=run(false,&f.model,view),b=run(true,&f.model,view);same_output(a,b);
+     assert(a.why==2 && b.why==4 && !b.inverses && !b.concats);}
+    init(f,65);f.info.pPosBuf[0]=&f.payload;
+    {const Result a=run(false,&f.model,view),b=run(true,&f.model,view);same_output(a,b);
+     assert(a.why==2 && b.why==5 && !b.inverses && !b.concats);}
+    init(f,65);f.model.pModelInfo=nullptr;
+    {const Result a=run(false,&f.model,view),b=run(true,&f.model,view);same_output(a,b);
+     assert(a.why==2 && b.why==8 && !b.inverses && !b.concats);}
+    std::printf("prop mode=%u actual-production cases=%u outcome/postlude/checker mismatches=0\n",PROP_MODE,cases);
+    std::puts("prop early refusals bones=1..64: OFF inverse=1 concat=2B; ON inverse=0 concat=0");
+    munmap(region,0x1000000);
+}

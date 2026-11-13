@@ -1,0 +1,76 @@
+// Actual EspEstSetSelect is inserted below. Constructor boundary and platform
+// services are shims; native_effect.cpp and native_effect_source.h are real.
+#include "native_effect.h"
+#include <cassert>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iterator>
+#include <stdexcept>
+#include <vector>
+#include <zlib.h>
+using u8=unsigned char;using s8=signed char;using u16=unsigned short;using s16=short;
+using u32=unsigned;using f32=float;struct Vec{float x,y,z;};using Mtx=float[3][4];
+@RECORD_TYPES@
+@INFO_TYPE@
+#include "native_effect_source.h"
+struct cModel{};struct EspSeqOpt{};struct cEsp{unsigned id;};
+unsigned timer_calls,errors,constructor_calls;int constructor_return=1;
+std::uint64_t timer_us_gettime64(){return ++timer_calls;}
+std::uint32_t net_crc32le(const std::uint8_t* p,int n){return ::crc32(0,p,n);}
+extern "C" void re4dc_log(const char*,...){}
+extern "C" void re4dc_missing(const char* why){throw std::runtime_error(why);}
+struct Log{void err(int,int,const char*,...){++errors;}}log01,*pLog=&log01;
+EspSeqData* selected_head;const unsigned char* expected_record;void* expected_raw;
+unsigned expected_core;bool retained;void* retained_record; cEsp effect01{};
+EspSeqData* EspGetEstAddr(int owner,int id,int quiet){assert(owner==7 && id==9 && quiet==0);return selected_head;}
+void PSMTXIdentity(Mtx m){std::memset(m,0,sizeof(Mtx));for(unsigned i=0;i<3;++i)m[i][i]=1;}
+void memclr_asm(void* p,unsigned n){std::memset(p,0,n);}
+int EspSeqSet(EspGenWork* rec,EspInfo* info,u32* seed,cModel* model,Mtx* matrix,int flag,float angle,
+              cEsp** out,EspSeqOpt* opt,Vec* pos){
+    ++constructor_calls;assert(*seed==0x12345678 && !model && !flag && angle==0 && !opt && !pos);
+    EspInfo expected{};expected.Core_flg=expected_core;assert(!std::memcmp(info,&expected,sizeof expected));
+    for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)assert((*matrix)[r][c]==float(r==c));
+    // Preserve source semantics for the raw retaining class: the same archive
+    // address reaches its constructor, and may outlive EspEstSetSelect's stack.
+    if(retained){assert(rec==expected_raw);retained_record=rec;}
+    EspGenWork scratch;auto* decoded=re4dc_effect_read(rec,scratch);
+    assert(!std::memcmp(decoded,expected_record,300));
+    effect01.id=decoded->Id;*out=&effect01;return constructor_return;
+}
+@SELECT_FUNCTION@
+std::vector<unsigned char> bytes(const char* path){std::ifstream f(path,std::ios::binary);return {std::istreambuf_iterator<char>(f),{}};}
+int main(int argc,char**argv){
+    assert(argc==4);const unsigned expected_decodes=std::strtoul(argv[3],nullptr,10);
+    auto archive=bytes(argv[1]),original=archive,reference=bytes(argv[2]);assert(re4dc_effect_bind(archive.data(),archive.size()));
+    auto* head=reinterpret_cast<EspSeqData*>(archive.data()+64);selected_head=head;
+    unsigned cases=0,packed_decodes=0,packed_timers=0;
+    for(unsigned row:{0U,1U})for(int keep:{-1,0,1,2})for(int result:{0,1,2}){
+        retained=row==1;retained_record=nullptr;expected_raw=re4dc_effect_ref(head,row);
+        assert(bool(reinterpret_cast<std::uintptr_t>(expected_raw)&1)!=retained);
+        expected_record=reference.data()+48+row*300;expected_core=keep==1;
+        constructor_return=result;const unsigned before=constructor_calls,t0=timer_calls;Re4dcEffectStats s0{},s1{};
+        re4dc_effect_get_stats(&s0);cEsp* out=nullptr;
+        assert(EspEstSetSelect(7,9,int(row),&out,keep)==int(result==1));
+        re4dc_effect_get_stats(&s1);assert(constructor_calls==before+1 && out==&effect01);
+        if(retained){assert(retained_record==expected_raw && s1.reads==s0.reads && timer_calls==t0);
+            assert(!std::memcmp(retained_record,expected_record,300));}
+        else{assert(s1.reads-s0.reads==expected_decodes && timer_calls-t0==2*expected_decodes);
+            packed_decodes+=s1.reads-s0.reads;packed_timers+=timer_calls-t0;}
+        ++cases;
+    }
+    // Generator and invalid kinds are rejected before construction; invalid
+    // indices and absent tables do not issue a decoder read or constructor.
+    for(int row:{2,3,-1,4}){
+        const unsigned before=constructor_calls,err=errors; cEsp* out=nullptr;
+        assert(!EspEstSetSelect(7,9,row,&out,0));assert(constructor_calls==before && errors==err+1 && !out);++cases;
+    }
+    selected_head=nullptr;const unsigned before=constructor_calls,err=errors;cEsp* out=nullptr;
+    assert(!EspEstSetSelect(7,9,0,&out,0) && constructor_calls==before && errors==err+1 && !out);++cases;
+    assert(archive==original);void* token=re4dc_effect_ref(head,0);re4dc_effect_unbind(archive.data());
+    bool stale=false;EspGenWork scratch;try{re4dc_effect_read(static_cast<EspGenWork*>(token),scratch);}
+    catch(const std::runtime_error&){stale=true;}assert(stale);
+    std::printf("{\"cases\":%u,\"packed_selects\":12,\"packed_decodes\":%u,\"packed_timer_calls\":%u,\"retired_tag_rejected\":true}\n",cases,packed_decodes,packed_timers);
+}

@@ -47,7 +47,24 @@ static re4dc::NativeDrawResult Esp1bGridDraw03(cEsp* esp){
             const float u1=u+step,tu1=tu+step;
             const float us[4]={u,u1,u1,u},vs[4]={v,v,v1,v1};
             const float ts[4]={tu,tu1,tu1,tu},tt[4]={tv,tv,tv1,tv1};
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ESP1B_EDGE_REUSE01) && RE4DC_ESP1B_EDGE_REUSE01
+            // The previous cell's right edge is this cell's left edge. These
+            // values use the same captured controls/matrices and repeated-add
+            // coordinates. The quad emitter only reads q. Keep the values in
+            // its existing slots, before either right-hand slot is overwritten.
+            if(j){
+                for(unsigned axis=0;axis<3;++axis){
+                    q.positions[0][axis]=q.positions[1][axis];
+                    q.positions[3][axis]=q.positions[2][axis];
+                }
+                q.u[0]=q.u[1];q.v[0]=q.v[1];q.u[3]=q.u[2];q.v[3]=q.v[2];
+            }
+            for(unsigned k=j?1:0,end=j?3:4;k<end;++k){
+#else
+#line 50
             for(unsigned k=0;k<4;++k){
+#endif
+#line 51
                 Vec local,view;GetPosXY(&p0,&p1,&p2,&p3,us[k],vs[k],&local);
                 PSMTXMultVec(transform,&local,&view);
                 q.positions[k][0]=view.x;q.positions[k][1]=view.y;q.positions[k][2]=view.z;

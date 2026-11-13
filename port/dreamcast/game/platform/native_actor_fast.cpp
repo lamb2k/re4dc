@@ -6686,11 +6686,24 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     // empty 32-byte lists replayed after the codec screen took the generic path, which carries no member proof, and
     // the re-registered palette of their info was then materialized for the generic walker).
     if (part && part->stream && part->stream_bytes >= 32 && part->stream_bytes <= 256 && ram(part->stream, part->stream_bytes)) {
+#if defined(RE4DC_ACTOR_PADDING_FIRST01) && RE4DC_ACTOR_PADDING_FIRST01 && !defined(__PPC__)
+        // The first byte already disproves an empty padding list. Keep all
+        // source/range guards above and the full zero proof for a zero prefix.
+        if (!part->stream[0]) {
+            unsigned any = 0;
+            for (unsigned i = 1; i < part->stream_bytes; ++i) any |= part->stream[i];
+            if (!any) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; }
+        }
+#else
+#line 6630
         unsigned any = 0;
         for (unsigned i = 0; i < part->stream_bytes; ++i) any |= part->stream[i];
         if (!any) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; }
+#endif
+#line 6633
     }
 #endif
+#line 6635
     if (!part || !qualifies(*part
 #if RE4DC_NATIVE_FE_CONTINUATION
         ,explicit_frame!=nullptr

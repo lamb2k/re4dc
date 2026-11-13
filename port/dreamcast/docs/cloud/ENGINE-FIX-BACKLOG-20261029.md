@@ -660,3 +660,56 @@ Paths name current implementations and functions, not measurements of their impo
 [XM]: ../../../../include/re4dc_xm.h
 [TRANS]: ../../../../src/game/trans.cpp
 [MEM]: ../../game/platform/mem.cpp
+
+
+## Work-removal spike activity, 2026-11-01
+
+User-requested bounded follow-ups on current origin/t15/int `65fe3d1f96ab269c136053725850101be9d3e692` are active
+on `codex/work-removal-spikes-20261101`: actor padding/prop early eligibility (existing Build32),
+immediate effect decode and horizontal grid reuse (Build29), deferred cloth normals
+(Build32/EF11) and empty-pick geometry preparation after binding (Build31/EF08-09).
+This supplements the ranked backlog; it does not close an EF card or alter any existing
+landed/default/acceptance marker. See [the worker matrix and local handback](handbacks/work-removal-spikes-20261101.md).
+Only the padding production-fragment host slice is ready for root review at this
+checkpoint. Other spikes remain WIP; all target/full OFF/runtime/cost/console gates
+are pending. No new build number, recipe enablement, private publication or email.
+
+
+### 2026-11-01 bounded slice A
+
+ACTOR_PADDING_FIRST01 is implemented default0 on the spike branch, with main Makefile wiring and172245 actual-detector host cases passing. Existing range/all-zero and disabled diagnostic contracts are retained; measured synthetic byte visits fall to1 for a nonzero first byte. Integration44a073ca was fetched and preserved (rr-qa-only change). This does not close EF04/14 or establish target binary identity or game cost; the existing private/runtime/console holds remain. Full details: [work-removal handback](handbacks/work-removal-spikes-20261101.md#slice-a--actor-padding-first-byte-implemented-public-host-gates-pass).
+
+
+### 2026-11-01 actor OFF-source correction
+
+Independent review caught an inactive ACTOR_REPLAY_SKIN parent line shift in initial d72663fa. The corrective slice restores the outer line and passes15 active-token logical-location profiles plus172245 production cases. The initial A commit alone is superseded; use its correction/final topic tip. Full target OFF identity remains required and the judge is unchanged. See [correction evidence](handbacks/work-removal-spikes-20261101.md#slice-a-corrective-review--disabled-parent-features).
+
+
+### Cloud 2026-11-01: C EFFECT_RECORD_PASS01
+
+A padding plus27337b42 correction passes172245 cases/15 line profiles. C EFFECT_RECORD_PASS01 implemented;29 host cases/arm and selector OFF host identity PASS. B corrected source, D grid and E world host-ready for publication; cloth fixture active. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: B PROP_GATE_EARLY01
+
+A padding plus27337b42 correction, B PROP_GATE_EARLY01 and C EFFECT_RECORD_PASS01 implemented/host PASS. B has665 cases in each PROP1/2 and33 inactive-parent line profiles. Grid/world host-ready; cloth active. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: D ESP1B_EDGE_REUSE01
+
+A padding, B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01 and D ESP1B_EDGE_REUSE01 implemented/host PASS. Grid1082 cases/5728648 vertex records per arm, zero differences; default0. World host-ready; cloth active. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: E WORLD_EMPTY_PREP01
+
+A actor padding (corrected), B PROP_GATE_EARLY01, C EFFECT_RECORD_PASS01, D ESP1B_EDGE_REUSE01 and E WORLD_EMPTY_PREP01 implemented/published with host gates. All default0; cloth producer/lifecycle fixture still active. Full target/runtime/cost/console gates open. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+### Cloud 2026-11-01: F CLOTH_NORMALS_DEFER01
+
+All six bounded spikes A-F implemented/published with public host gates: ACTOR_PADDING_FIRST01 (requires27337b42 correction), PROP_GATE_EARLY01, EFFECT_RECORD_PASS01, ESP1B_EDGE_REUSE01, WORLD_EMPTY_PREP01, CLOTH_NORMALS_DEFER01. Cloth46752 assertions in each spring0/1/2 and24 OFF source profiles/file pass;64-byte state. Target/full OFF/runtime/net cost/console pending; no recipe promotion. See [bounded implementation, tests and remaining gates](handbacks/work-removal-spikes-20261101.md). Source/host evidence only; default0, no recipe or target/runtime acceptance.
+
+
+## Cloud 2026-11-01 final spike handoff to local
+
+Six bounded work-removal spikes are implemented and pushed (source bundle7b29e56d57203b8b521dae9c768f779bd8c72f47) with four reproducible public host suites. Actor A's initial inactive-parent location failure was corrected by27337b4284f505596755219b28578c6d1673185f; the initial A commit alone is superseded. All new controls default0. This closes the bounded source-spike delivery, not any whole EF card or target/runtime/performance gate. Local pickup is unobserved. [Draft PR62](https://github.com/lamb2k/re4dc/pull/62) and [full SHA matrix, worker state, qualification order and risk boundaries](handbacks/work-removal-spikes-20261101.md) are the handoff. Existing holds/blocked merges and stopped emails remain.
