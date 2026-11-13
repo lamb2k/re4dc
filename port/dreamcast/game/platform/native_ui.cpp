@@ -6225,7 +6225,8 @@ extern "C" void re4dc_ui_glyph_fonts_changed(){
 #error PVR_MID_FENCE waits in present_fence: needs PVR_PIPELINE
 #endif
 #if RE4DC_RES_MODES
-#if RE4DC_TA_BIN_DIAG || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
+// STREAM_PEAK_LOG (cave66.mk) test builds may model the Standard 640x480 mode's tiles with TA_BIN_DIAG.
+#if (RE4DC_TA_BIN_DIAG && !(defined(RE4DC_STREAM_PEAK_LOG) && RE4DC_STREAM_PEAK_LOG)) || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
 #error RES_MODES needs PVR_STREAM=1, PVR_PIPELINE=2, TA_HEADROOM>=1 (ta_vertex_bytes) and TA_BIN_DIAG=0 (its 20x15 tile replay)
 #endif
 extern "C" unsigned re4dc_res_params(pvr_init_params_t* p);
@@ -7126,6 +7127,15 @@ extern "C" void re4dc_ui_present(){
     if(movie_texture && movie_picture && movie_shown_serial!=movie_upload_serial){
         movie_shown_serial=movie_upload_serial;++movie_presentations;
         if(!movie_first_picture_us)movie_first_picture_us=timer_us_gettime64();
+    }
+#endif
+#if defined(RE4DC_STREAM_PEAK_LOG) && RE4DC_STREAM_PEAK_LOG
+    {   // STREAM_PEAK_LOG (cave66.mk): heavy model streams by frame, for placing TA-heavy views
+        static unsigned spk_win,spk_last;
+        if(stream_model_bytes>spk_win)spk_win=stream_model_bytes;
+        if(stream_model_bytes>=unsigned(RE4DC_STREAM_PEAK_LOG)*1024U && frame-spk_last>=4){
+            spk_last=frame;re4dc_log("SPK: frame=%u bytes=%u\n",frame,stream_model_bytes);}
+        if(frame%30==0){re4dc_log("SPK win: frame=%u max=%u\n",frame,spk_win);spk_win=0;}
     }
 #endif
     if(stream_model_bytes && model_presented++<3)
