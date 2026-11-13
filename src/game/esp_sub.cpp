@@ -394,6 +394,16 @@ static int EspSpriteEligible(cEsp* esp)
         return ok;
     }
 #endif
+#if defined(RE4DC_HARPOON_SIGHT) && RE4DC_HARPOON_SIGHT
+    // HARPOON_SIGHT (effects30.mk; lane dellago66, GitHub #66 bug 7): the boat's harpoon sight (pl0f EST 0xF/6: a red
+    // ring, tex b5, and four ticks, tex b6, screen parts 0xFD at the aim point) is a screen sprite of effect owner 0x0F,
+    // which is not on the owner whitelist, so the Del Lago fight had no aiming mark. Owner 0x0F screen sprites
+    // (parts 0xF8..0xFD) are admitted with the same mask / render-target / blend checks; the boat's world effects
+    // (splashes, wakes) stay as they were. Draw time only: no effect state, spawn or Rnd() change.
+    if (owner == 0x0F && (u8) esp->m_Parts_no >= 0xF8 && (u8) esp->m_Parts_no <= 0xFD) {
+        return !((RE4DC_ELIG_TOOL12 & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
+    }
+#endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     // EFFECT_ROOM (bit mask, effects30.mk): plus the room's own effects. 1: est sets of the room owner
     // (0x01; r101's pyre); 2: the room effect sets SstSet starts at room init (0xd0; glows, light

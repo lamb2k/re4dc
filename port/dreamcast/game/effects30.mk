@@ -431,6 +431,28 @@ ifeq ($(CHAPTER_END_HOLD),1)
 $(OBJDIR)/src/game/sce_com.o: GAME_CPPFLAGS += -DRE4DC_CHAPTER_END_HOLD=1
 $(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAPTER_END_HOLD=1
 endif
+# HARPOON_SIGHT=1 (default 0; render only; lane dellago66, #66 bug 7; needs EFFECT_SPRITES=1): the Del Lago fight's harpoon
+# sight is drawn. It is a screen sprite of effect owner 0x0F (the boat, pl0f EST 0xF/6), which the owner whitelist of
+# EspSpriteEligible left out, so aiming showed no mark. Owner 0x0F screen sprites are admitted (esp_sub.cpp).
+HARPOON_SIGHT ?= 0
+ifneq ($(HARPOON_SIGHT),0)
+ifneq ($(HARPOON_SIGHT)$(EFFECT_SPRITES),11)
+$(error HARPOON_SIGHT is 0 or 1 and needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HARPOON_SIGHT=1
+endif
+# DELLAGO_DIAG=1 (test only, default 0; lane dellago66, #66 bug 7): "dl66" log lines in r10b (harpoon sight EST, falls,
+# the swim back, the monster's attacks on the swimmer) and a "swim" padscript state. DELLAGO_AUTOMASH=N (test only, needs
+# DELLAGO_DIAG): the swim's action key every N frames. DELLAGO_LIFE=N (test only): Leon's life set to N (boat hp 800) as
+# he falls, the hurt second fall.
+DELLAGO_DIAG ?= 0
+DELLAGO_AUTOMASH ?= 0
+DELLAGO_LIFE ?= 0
+ifneq ($(DELLAGO_DIAG),0)
+$(OBJDIR)/mod/pl0f/src/pl0f/pl0f.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1 -DRE4DC_DELLAGO_AUTOMASH=$(DELLAGO_AUTOMASH) \
+	-DRE4DC_DELLAGO_LIFE=$(DELLAGO_LIFE)
+$(OBJDIR)/mod/em2f/src/em2f/em2f.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
+endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
 # frame, effect pool and live room generation. Successful replacement still suppresses the
