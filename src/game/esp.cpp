@@ -11,6 +11,14 @@ extern "C" void re4dc_cloth_esp4e_retire11(cEsp*);
 #define RE4DC_CLOTH_POOL_RETIRE11()
 #define RE4DC_CLOTH_SLOT_RETIRE11(e)
 #endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+class cEsp;
+typedef void (*EspTransFunc)(cEsp*);
+extern "C" void re4dc_dl66_fx(cEsp*, EspTransFunc);
+#define DL66_FX(e, t) re4dc_dl66_fx(e, t)
+#else
+#define DL66_FX(e, t)
+#endif
 #line 1
 // game/esp.cpp: the effect sprite (cEsp) pool. A cEsp is one live effect particle/sprite; the pool
 // (g_pEspSys->pEspBuf, nEsp slots of 0x150 bytes) is allocated per room from the cons value and
@@ -887,7 +895,7 @@ int EspTrans()
         if (esp->m_pMod != NULL && !(esp->m_pMod->be_flag & 2) && esp->m_Release_time == 0xFF) {
             continue;
         }
-        trans = EspTransTbl[esp->m_Id];
+        trans = EspTransTbl[esp->m_Id]; DL66_FX(esp, trans);
         if (trans == NULL) {
             continue;
         }

@@ -36,7 +36,10 @@ fi
 RE4DC_RESIDENT_STRICT=1 python3 "$T/test11/t11-fix.py" "$L" "$R/fix/pkg-$L.json" --base payload --data "$DATA" | tail -1 | cut -c1-200
 PKG_K=$R python3 "$T/test8/t8-pkgtree.py" "$L" "$R/fix/pkg-$L.json" > "$R/logs/pkgtree.txt" 2>&1
 grep -q PKGTREE_OK "$R/logs/pkgtree.txt" || { tail -20 "$R/logs/pkgtree.txt"; exit 1; }
+# RR_SR1_CACHE=<sr1.json> (dl66b: the host lost its PowerPC gcc, so the room scan cannot decode the GC rooms): reuse a door graph
+if [ -n "${RR_SR1_CACHE:-}" ]; then cp "$RR_SR1_CACHE" "$R/sr1.json"; else
 python3 "$T/stage_route.py" --stage 1 --json "$R/sr1.json" > /dev/null
+fi
 python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" | tail -2
 # RR_QA_PRESET_DIR (speed/rr-speed-gpu.sh, guards28 10-28): files that replace same-named mkqa presets (measurement discs only)
 if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [ -s "$R/qa/$(basename "$f")" ] || { echo "QA preset override: no $(basename "$f")"; exit 1; }; tr -d '\r' < "$f" > "$R/qa/$(basename "$f")"; done; fi

@@ -404,6 +404,22 @@ static int EspSpriteEligible(cEsp* esp)
         return !((RE4DC_ELIG_TOOL12 & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
     }
 #endif
+#if defined(RE4DC_DELLAGO_FX) && RE4DC_DELLAGO_FX
+    // DELLAGO_FX (effects30.mk; lane dl66b, GitHub #66 bug 7): the Del Lago fight's other dropped effects, admitted in r10b
+    // only with the same mask / render-target / blend checks (Essential, the FX_LEVEL=3 filter, and the PS2 none-cut still
+    // decide at emit what is kept). Bits: 1 = owner 0x27 (the monster's own effect sets, em2f: splashes, spray, mist, flashes);
+    // 2 = owner 0x0F world sprites (the boat: wake, ripples, splashes, the light beam of EST 0xF/0xF; the screen sprites
+    // are HARPOON_SIGHT's); 4 = owner 0x1F (the harpoon's hits). Draw time only: no effect state, spawn or Rnd() change.
+    if (G_ROOM_ID == 0x10B) {
+        const u8 part = (u8) esp->m_Parts_no;
+        const int want = (owner == 0x27 && (RE4DC_DELLAGO_FX & 1)) ||
+                         (owner == 0x0F && (RE4DC_DELLAGO_FX & 2) && !(part >= 0xF8 && part <= 0xFD)) ||
+                         (owner == 0x1F && (RE4DC_DELLAGO_FX & 4));
+        if (want) {
+            return !((RE4DC_ELIG_TOOL12 & (0x4000 | 0x10000)) || RE4DC_SPLINE_BLOCK03 || esp->xA4 != 1);
+        }
+    }
+#endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     // EFFECT_ROOM (bit mask, effects30.mk): plus the room's own effects. 1: est sets of the room owner
     // (0x01; r101's pyre); 2: the room effect sets SstSet starts at room init (0xd0; glows, light
@@ -454,6 +470,81 @@ static int Esp1bGridClass03(cEsp* esp){
         esp->xA5==4 && esp->xA6==5 && EspSpriteEligible(esp,true);
 }
 static re4dc::NativeDrawResult Esp1bGridDraw03(cEsp*);
+#endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+// DELLAGO_DIAG=1 (test only, lane dl66b, GitHub #66 bug 7): a census of every effect the pool dispatches in r10b, by
+// (owner, id, tex, parts, trans kind): how often it reached its trans function, whether the sprite eligibility
+// admits it (EspCommonTrans only) and how often the native sprite was published. "dl66 fx" lines every 150 frames.
+extern "C" void re4dc_log(const char* fmt, ...);
+struct Dl66FxKey { u8 owner, id, tex, parts, kind, elig, blend, pad; u32 seen, pub, tool; };
+static Dl66FxKey s_dl66fx[160];
+static u32 s_dl66fx_n, s_dl66fx_last, s_dl66fx_lost;
+static Dl66FxKey* dl66FxFindRaw(u8 o, u8 id, u8 tex, u8 pt, int kind, u8 blend, u32 tool)
+{
+    for (u32 i = 0; i < s_dl66fx_n; i++) {
+        Dl66FxKey* k = &s_dl66fx[i];
+        if (k->owner == o && k->id == id && k->tex == tex && k->parts == pt && k->kind == kind) return k;
+    }
+    if (s_dl66fx_n >= 160) { s_dl66fx_lost++; return 0; }
+    Dl66FxKey* k = &s_dl66fx[s_dl66fx_n++];
+    k->owner = o; k->id = id; k->tex = tex; k->parts = pt; k->kind = (u8) kind; k->elig = 0; k->blend = blend;
+    k->seen = k->pub = 0; k->tool = tool;
+    return k;
+}
+static Dl66FxKey* dl66FxFind(cEsp* esp, int kind)
+{
+    return dl66FxFindRaw((u8) esp->info.owner, (u8) esp->m_Id, (u8) esp->m_Tex_id, (u8) esp->m_Parts_no, kind, esp->xA4,
+                         esp->m_Tool_flg);
+}
+// kind 3: EspSeqSet attempts, 4: refused (texture not initialised), 5: effect models (Efm), 6: no free pool slot.
+static void dl66Seq(const EspGenWork* rec, const EspInfo* info, int kind)
+{
+    if (G_ROOM_ID != 0x10B) return;
+    Dl66FxKey* k = dl66FxFindRaw((u8) info->owner, rec->Id, rec->Tex_id, rec->Parts_no, kind, rec->Blend_type, rec->Tool_flg);
+    if (k) k->seen++;
+}
+extern "C" void re4dc_dl66_fx(cEsp* esp, EspTransFunc trans)
+{
+    if (G_ROOM_ID != 0x10B || !trans) return;
+    static u32 s_dump_i, s_dump_f;
+    if (s_dump_i < 64 && s_dump_f != pG->Frame_cnt) {   // one est set per frame (the log ring is small)
+        s_dump_f = pG->Frame_cnt;
+        const int grp = (s_dump_i & 32) ? 0x27 : 0x0F, no = (int) (s_dump_i & 31);
+        s_dump_i++;
+        EspSeqData* h = EspGetEstAddr(grp, no, 1);
+        if (h && h->num) {
+            re4dc_log("dl66 est %02x/%02x: num=%d\n", grp, no, (int) h->num);
+            for (int r = 0; r < (int) h->num && r < 12; r++) {
+                const EspGenWork* g = &h->rec[r];
+                re4dc_log("dl66 est %02x/%02x rec %d: id=%02x tex=%02x type=%02x be=%02x set=%u parts=%u tool=%08x size=%d,%d "
+                          "col=%u,%u,%u,%u life=%u\n", grp, no, r, g->Id, g->Tex_id, g->Type, g->Be_flg, g->Set_time,
+                          g->Parts_no, (unsigned) g->Tool_flg, (int) g->Size_base_x, (int) g->Size_base_y, g->Col_start_r,
+                          g->Col_start_g, g->Col_start_b, g->Col_start_a, g->Life_max);
+            }
+        }
+    }
+    const int common = trans == EspCommonTrans;
+    Dl66FxKey* k = dl66FxFind(esp, common ? 1 : 2);
+    if (k) { k->seen++; if (common) k->elig = (u8) (EspSpriteEligible(esp) ? 1 : 0); }
+    if (pG->Frame_cnt - s_dl66fx_last >= 150) {
+        s_dl66fx_last = pG->Frame_cnt;
+        for (u32 i = 0; i < s_dl66fx_n; i++) {
+            Dl66FxKey* q = &s_dl66fx[i];
+            if (!q->seen) continue;
+            re4dc_log("dl66 fx: f=%u owner=%02x id=%02x tex=%02x parts=%02x %s elig=%d blend=%d tool=%08x seen=%u pub=%u\n",
+                      (unsigned) pG->Frame_cnt, q->owner, q->id, q->tex, q->parts, q->kind == 1 ? "common" : q->kind == 2 ? "other " : q->kind == 3 ? "seqset" : q->kind == 4 ? "TEXFAIL" : q->kind == 5 ? "efm   " : "NOSLOT ",
+                      q->elig, q->blend, (unsigned) q->tool, q->seen, q->pub);
+            q->seen = q->pub = 0;
+        }
+        if (s_dl66fx_lost) re4dc_log("dl66 fx: lost keys %u\n", (unsigned) s_dl66fx_lost);
+    }
+}
+static void dl66FxPub(cEsp* esp, int published)
+{
+    if (G_ROOM_ID != 0x10B) return;
+    Dl66FxKey* k = dl66FxFind(esp, 1);
+    if (k && published) k->pub++;
+}
 #endif
 #if RE4DC_PS2FX_DRAW
 #include "player.h"
@@ -1864,7 +1955,11 @@ static void EspSpriteEmit(cEsp* esp)
 {
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
     // Source OT callbacks keep their void ABI and existing state cadence.
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+    dl66FxPub(esp, EspSpriteEmitResult03(esp).published());
+#else
     (void)EspSpriteEmitResult03(esp);
+#endif
 #else
 #include "esp_sprite_outcomes03.inc"
 #endif
@@ -4229,7 +4324,13 @@ int EspSeqSet(EspGenWork* rec, EspInfo* info, u32* seed, cModel* model, Mtx* mtx
     int ret;
     cModel* parts;
 
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+    dl66Seq(rec, info, 3);
+#endif
     if ((u8) (rec->Id + 4) <= 3) {
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+        dl66Seq(rec, info, 5);
+#endif
         EfmSeqSet(rec, (EfmCore*) info, seed, model, *mtx, 0, 0.0f, pos);
         *out = EspGetDmyPtr();
         return 1;
@@ -4241,6 +4342,9 @@ int EspSeqSet(EspGenWork* rec, EspInfo* info, u32* seed, cModel* model, Mtx* mtx
     }
     if (rec->Id != 3 && rec->Id != 9 && rec->Id != 0xC && !EspChkTexId(rec->Tex_id)) {
         pLog->err(0, 0, "ESP : TEX_ID[%x] not initialized.", rec->Tex_id);
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+        dl66Seq(rec, info, 4);
+#endif
         *out = EspGetDmyPtr();
         return 0;
     }
