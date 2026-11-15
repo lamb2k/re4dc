@@ -145,6 +145,12 @@ extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
     }
 #endif
     if (!wk || !wk->pTpl || u->texNo >= wk->pTpl->numDescriptors) return;
+    // #66 bug 5 "EXIT EXIT" (options opened from the title): every option layout (group 0x2A) carries pulse-colour helper
+    // units (marks 8 and 0x0e, the EXIT picture 61x25) parked at y = -221, below the 448-line GameCube picture; option.cpp
+    // only reads their colour (setColor). The Dreamcast draws the full 480 lines, so from the title (no letterbox bar over
+    // the bottom rows, the pause menu has one) they showed as a stray yellow and a grey "EXIT" over the help text.
+    // Nothing legitimate in this group sits below -200, so those quads are not drawn.
+    if (u->classNo == 0x2A && u->pos.y < -200.0f) return;
 #if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
     const bool ivbg_panel = u->classNo == 0x26 && re4dc_item_ui_order() && u->texId == 0x61;
     if (u->classNo == 0x26 && re4dc_item_ui_order() && ivbg_frame != re4dc_ui_frame_no()) {
