@@ -33,6 +33,8 @@ enum { RE4DC_MOVIE_CANCEL_CLIP = 0x1000000 };
 int re4dc_movie_play_until(unsigned id, unsigned mask, RouteMoviePictureTick tick, unsigned stop_at);
 int re4dc_movie_play_stepped(unsigned id);
 int re4dc_movie_step(RouteMoviePictureTick tick);
+// ROUTE_QTE_CLOCK: the open movie's picture clock (index of the next picture; 0 when no movie is open).
+unsigned re4dc_movie_clock(void);
 int re4dc_movie_end(void);
 // Index of the last presented picture; 0 before the first.
 unsigned re4dc_movie_picture(void);

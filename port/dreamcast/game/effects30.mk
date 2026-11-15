@@ -441,6 +441,35 @@ $(error HARPOON_SIGHT is 0 or 1 and needs EFFECT_SPRITES=1)
 endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HARPOON_SIGHT=1
 endif
+# ROUTE_QTE_CLOCK=1 (default 0; render timing only; lane dl66b, #66 "CUT" freeze at the rope; needs ROUTE_CH13=1): the r10b rope QTE
+# (s20, picture 515 on) counts its 285 frames on the movie's picture clock instead of per game frame. The movie runs on the retrace
+# clock (sound too); with a game frame slower than two fields it ended before the QTE did and its last picture stayed frozen
+# under the "CUT" prompt. Frame numbers the movie passed in a slow game frame are still run once each (frame 100 starts the
+# prompt); the A-press count reads the pad once per game frame; the outcome (s21 / s22) rule is unchanged. 30 fps: no change.
+# Logs "route QTE: ... clock=1 frames game_frames catch_up fields slow_frames max_gap_fields".
+ROUTE_QTE_CLOCK ?= 0
+ifneq ($(ROUTE_QTE_CLOCK),0)
+ifneq ($(ROUTE_QTE_CLOCK)$(ROUTE_CH13),11)
+$(error ROUTE_QTE_CLOCK is 0 or 1 and needs ROUTE_CH13=1)
+endif
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_QTE_CLOCK=1
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_QTE_CLOCK=1
+endif
+# DELLAGO_FX=<mask> (default 0; render only; lane dl66b, #66 bug 7 follow-up; needs EFFECT_SPRITES=1): more of the Del Lago fight's
+# effects, which the owner whitelist of EspSpriteEligible dropped, are drawn in r10b (esp_sub.cpp). Bit 1: owner 0x27, the monster's
+# own effect sets (em2f: splashes, spray, mist, flashes); bit 2: owner 0x0F world sprites (the boat's wake, ripples, splashes and
+# the light beam of EST 0xF/0xF); bit 4: owner 0x1F, the harpoon's hits. The red ring and rope arrows (screen sprites) are
+# HARPOON_SIGHT's. Essential (FX_LEVEL=3) and the PS2 none-cut still decide at emit. 7 = all.
+DELLAGO_FX ?= 0
+ifneq ($(DELLAGO_FX),0)
+ifneq ($(filter 1 2 3 4 5 6 7,$(DELLAGO_FX)),$(DELLAGO_FX))
+$(error DELLAGO_FX is a mask 0..7)
+endif
+ifneq ($(EFFECT_SPRITES),1)
+$(error DELLAGO_FX needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_FX=$(DELLAGO_FX)
+endif
 # DELLAGO_DIAG=1 (test only, default 0; lane dellago66, #66 bug 7): "dl66" log lines in r10b (harpoon sight EST, falls,
 # the swim back, the monster's attacks on the swimmer) and a "swim" padscript state. DELLAGO_AUTOMASH=N (test only, needs
 # DELLAGO_DIAG): the swim's action key every N frames. DELLAGO_LIFE=N (test only): Leon's life set to N (boat hp 800) as
@@ -452,6 +481,12 @@ ifneq ($(DELLAGO_DIAG),0)
 $(OBJDIR)/mod/pl0f/src/pl0f/pl0f.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1 -DRE4DC_DELLAGO_AUTOMASH=$(DELLAGO_AUTOMASH) \
 	-DRE4DC_DELLAGO_LIFE=$(DELLAGO_LIFE)
 $(OBJDIR)/mod/em2f/src/em2f/em2f.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
+# DELLAGO_QTE_BURN=<us> (test only, needs DELLAGO_DIAG): the rope QTE's game frames busy-wait this long each, standing in for a
+# slower console; DELLAGO_DIAG also logs "dl66 qte" lines (route_movie_bridge.cpp) from the QTE loop.
+DELLAGO_QTE_BURN ?= 0
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1 -DRE4DC_QTE_BURN_US=$(DELLAGO_QTE_BURN)
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
 endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
