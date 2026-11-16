@@ -684,6 +684,16 @@ enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
 #define QA_WS_ROW
 #define QA_WS_ENUM
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+extern "C" void re4dc_leon_lod_set(unsigned level);   // coarse_actor_leon_lod.inc (ps2leon.mk LEON_LOD)
+extern "C" unsigned re4dc_leon_lod_requested();
+extern "C" unsigned re4dc_leon_lod_count();
+#define QA_LL_ROW A_LLOD,
+#define QA_LL_ENUM , A_LLOD
+#else
+#define QA_LL_ROW
+#define QA_LL_ENUM
+#endif
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
 #define QA_LINK_ROW A_LINK,
 #define QA_LINK_ENUM , A_LINK
@@ -698,19 +708,19 @@ enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED,
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     , A_CENSUS
 #endif
-    QA_WS_ENUM QA_LINK_ENUM
+    QA_WS_ENUM QA_LINK_ENUM QA_LL_ENUM
 };
 struct Menu {
     bool boot;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     int screen, sel[6], chap, qr_page, census_page;
-    int items[18], nitems;
+    int items[20], nitems;
 #else
     int screen, sel[5], chap, qr_page;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    int items[16], nitems;
+    int items[18], nitems;
 #else
-    int items[12], nitems;
+    int items[14], nitems;
 #endif
 #endif
 };
@@ -739,6 +749,10 @@ void item_text(int a, char* out, unsigned n) {
     case A_PVS: {unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);snprintf(out,n,"WORLD PVS (THIS BOOT): %s",state[0]==1?(state[1]?"ON / GUARDED":"ON / DRAW ALL"):"OFF");break;}
 #endif
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+    case A_LLOD: {static const char* const nm[]={"0 FULL","1 LEGS","2 BODY","3 ALL"};const unsigned q=re4dc_leon_lod_requested();
+        snprintf(out, n, "LEON LEVEL (NEXT ROOM): %s", q<4?nm[q]:"?"); break;}
+#endif
     case A_WSCR: snprintf(out, n, "WORLD SCRATCH: %s", re4dc_world_scratch_live == 2 ? "C SCRATCH" :
                           re4dc_world_scratch_live == 1 ? "B HALF CACHE" : "A NORMAL"); break;
 #endif
@@ -1812,6 +1826,13 @@ int run(Menu& m, bool boot) {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 else if (a == A_CENSUS) { m.census_page = 0; m.screen = M_CENSUS; }
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+                else if (a == A_LLOD) {   // Leon's mesh level for the next room enter (cutscenes keep level 0)
+                    const unsigned n = re4dc_leon_lod_count();
+                    re4dc_leon_lod_set((re4dc_leon_lod_requested() + 1) % (n ? n : 4));
+                    re4dc_log("qa: leon level %u (next room enter)\n", re4dc_leon_lod_requested());
+                }
+#endif
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
                 else if (a == A_LINK) link_toggle();
@@ -1998,10 +2019,10 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #endif
     static Menu m;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW
                          A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -2071,10 +2092,10 @@ int re4dc_qa_menu(const char** path) {
     m.boot = false;
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW
                          A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));

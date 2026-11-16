@@ -117,6 +117,9 @@ $(LEON_LOD_HDR): $(LEON_HAND_PACK_HDR) $(PS2_LEON_DIR)/ps2leon_hair_runs.h $(LEO
 $(OBJDIR)/coarse_actor.o: $(LEON_LOD_HDR)
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_LOD=1 -DRE4DC_LEON_LOD_LEVEL=$(LEON_LOD_LEVEL) -I$(OBJDIR)/leon_lod
 $(OBJDIR)/ui_bridge.o $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_LOD=1
+ifeq ($(QA_MENU),1)
+$(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_LOD=1
+endif
 endif
 # GANADO_LOD=1 (lane leonlod, 2026-10-15; default 0: no effect; render only; needs PS2_GANADO=1 ACTOR_TRANSACTION=1
 #              COARSE_SKIN_FTRV=1, no CROWD_FAR tier): the PS2 cast Ganados' body / head meshes from one disc package,

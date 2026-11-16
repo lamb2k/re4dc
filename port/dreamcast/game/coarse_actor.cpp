@@ -141,10 +141,17 @@ const re4dc::render::SourceLighting leon_flat_light=[]{re4dc::render::SourceLigh
 unsigned attempts, drawn, fallback, rejected, missing_texture;
 #if RE4DC_COARSE_SKIN_FTRV
 // FTRV palettes: entries built once from the generated weights; T only for the bones they use.
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+#include "leon_lod_caps.h"
+// LEON_LOD: the rig's palette programs need 6,328 B (pl00, level 0) / 5,456 B (pl08); every rung needs less
+// (lod_pack.py pack asserts it). The 24,576 B stream of the other builds is 18 KB of the character data block's padding.
+constexpr unsigned kSkinStream = leon_lod_caps::skin_stream;
+#else
 constexpr unsigned kSkinStream = 24576;
 #if RE4DC_PS2_LEON
 // The arm's FTRV palette programs (pl00 and, under ACTOR_PL08, pl08 with the arm's shared roles 2..7) fit today's stream.
 static_assert(leon4k::skin_stream_bytes <= kSkinStream, "PS2_LEON arm needs a larger skin stream");
+#endif
 #endif
 alignas(32) unsigned char skin_stream[kSkinStream];
 alignas(32) float bone_T[119][12];

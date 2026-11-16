@@ -337,6 +337,10 @@ DATA['cast15']['tex'] = ['%s/conv-t14/reg-%s/tex' % (C15D, g) if g != '118pc' el
 # on the disc the LOD code never runs (no GANADOLOD log line: the poc101 bench trap).
 GLOD = os.environ.get('GLOD', '/root/probe/lanes-20261015/t15k/data/glod/ganado_lod.re4gl')
 DATA['glod'] = {'dc/native/ganado/ganado_lod.re4gl': GLOD}
+# LEON_LOD=<n> (lane leonlod 2026-11-16): Leon's rig mesh rungs (tools/d367/leonlod/rig/README.md; lod_pack.py pack). Without it on the
+# disc a LEON_LOD build draws Leon through the source path (no rung loaded: LEONLOD dir why=1 in the log).
+LLOD = os.environ.get('LLOD', '/root/re4data/private/leonlod-rig-20261116/leon_lod.re4lp')
+DATA['leonlod'] = {'dc/native/pl00/leon_lod.re4lp': LLOD}
 T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,fsh'  # vq16w + water16i (lane water16b) replace vq16cs + water16h; fsh (lane farshell16) last: the far shells of r100 / r101; res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; water16h (lane water16) after res16h: res16h + the WATER_PS2 room water pictures; wv32r101 (world32, ChatGPT) replaces bake13 r101 world files and adds variant 5
 # Test 15 HUD fix (t15/hud, CORE_PIN=2): res16 = res14r3 + the two HUD pictures the r101 post-bell radio call's frag window
 # released (test 14's open VRAM item): afa4bc82-306be3e3 (44x44) and bf17fc06-c975b3a7 (48x48), in the core set r000.tsv.
