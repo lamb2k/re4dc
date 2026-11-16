@@ -285,6 +285,33 @@ static int re4dc_pen_cloth_lod_skip(cModel* m, PenCloth* c)
 #else
 #define PEN_CLOTH_LOD_SKIP(m, c) 0
 #endif
+#if defined(RE4DC_R10B_ROPE_HALF) && RE4DC_R10B_ROPE_HALF
+// R10B_ROPE_HALF (effects30.mk; lane lake66q, #66 Del Lago slowdown; an APPROXIMATION, default 0): r10b's 30-link anchor rope
+// (pl0f.cpp pl0fLongRopeSet: Num 30, Flag 0x108) steps every other tick, staggered by its address. A skipped tick draws only the
+// wind phase from the shared random stream (as PEN_CLOTH_LOD's skip and PenClothSkipTick do), so every later fRand caller sees the
+// same sequence; the chain keeps its pose and speed. A warped model (be_flag 0x00200000) always steps. The rope draws and
+// collides with the boat only: no gameplay volume reads it.
+static int re4dc_r10b_rope_skip(cModel* m, PenCloth* c)
+{
+    if (G_ROOM_ID != 0x10B || c->Num != 30 || c->Flag != 0x108 || (m->be_flag & 0x00200000)) {
+        return 0;
+    }
+    if ((((u32) pG->Frame_cnt + ((u32) c >> 4)) & 1) == 0) {
+        return 0;
+    }
+    if (!(c->Flag & 0x40)) {
+        c->WindSin += fRand0_1() * GlobalWindAdd;
+        c->WindSin = LIMIT_ANGLE(c->WindSin);
+    }
+    return 1;
+}
+#undef PEN_CLOTH_LOD_SKIP
+#if defined(RE4DC_PEN_CLOTH_LOD) && RE4DC_PEN_CLOTH_LOD > 1
+#define PEN_CLOTH_LOD_SKIP(m, c) (re4dc_pen_cloth_lod_skip((m), (c)) || re4dc_r10b_rope_skip((m), (c)))
+#else
+#define PEN_CLOTH_LOD_SKIP(m, c) re4dc_r10b_rope_skip((m), (c))
+#endif
+#endif
 
 
 #if defined(RE4DC_PEN_CLOTH_CENSUS) && RE4DC_PEN_CLOTH_CENSUS
