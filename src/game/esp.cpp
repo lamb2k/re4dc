@@ -23,6 +23,20 @@ extern "C" void re4dc_dl66_fx(cEsp*, EspTransFunc);
 class cEsp;
 extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // esp_sub.cpp
 #endif
+#if defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS
+extern "C" unsigned short re4dc_rnd_state(void);   // rnd.cpp
+#endif
+#if defined(RE4DC_R10B_FX_SPAWNCAP) && RE4DC_R10B_FX_SPAWNCAP
+// R10B_FX_SPAWNCAP (effects30.mk; esp_sub.cpp re4dc_r10b_spawncap): PushEsp gives a counted sprite's layer slot back, EspArrayAlloc clears the counts.
+class cEsp;
+extern "C" void re4dc_r10b_spawncap_free(cEsp* esp);
+extern "C" void re4dc_r10b_spawncap_reset();
+#define R10B_SPAWNCAP_FREE(esp) if ((esp)->m_Be_flg & 0x40) { re4dc_r10b_spawncap_free(esp); }
+#define R10B_SPAWNCAP_RESET() re4dc_r10b_spawncap_reset();
+#else
+#define R10B_SPAWNCAP_FREE(esp)
+#define R10B_SPAWNCAP_RESET()
+#endif
 // R10B_FX_DEAD (effects30.mk; esp_sub.cpp re4dc_r10b_fx_dead). The macros expand to nothing with the switch off, so the
 // switch-off code is token for token the source's (the knob-off image is identical).
 #if defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 2)
@@ -577,6 +591,7 @@ static inline int re4dc_esp_lod_skip(const cEsp* esp, u32 i)
 void PushEsp(cEsp* esp)
 {
     if (esp->m_Be_flg & 1) {
+        R10B_SPAWNCAP_FREE(esp)
 #if defined(RE4DC_ESP_OWNER) && RE4DC_ESP_OWNER
         if (re4dc_esp_own_valid) {
             re4dc_esp_own[re4dcEspOwnB(esp->info.Core_pEm)]--;
@@ -845,6 +860,9 @@ int EspMove()
             }
             re4dc_log("espc: f=%u room=%03x live=%u %s%s\n", (unsigned) pG->Frame_cnt, (unsigned) G_ROOM_ID,
                       (unsigned) live, pass ? "own" : "id", buf);
+        }
+        {
+            re4dc_log("espr: f=%u rnd=%04x\n", (unsigned) pG->Frame_cnt, (unsigned) re4dc_rnd_state());
         }
     }
 #endif
@@ -1291,6 +1309,7 @@ int EspArrayAlloc(u32 n)
     }
     sys->nEsp = n;
     memclr_asm(p, size);
+    R10B_SPAWNCAP_RESET()
     return 1;
 }
 

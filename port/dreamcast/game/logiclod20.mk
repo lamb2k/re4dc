@@ -36,6 +36,7 @@ endif
 ESP_CENSUS ?= 0
 ifeq ($(ESP_CENSUS),1)
 $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_CENSUS=1
+$(OBJDIR)/src/game/rnd.o: GAME_CPPFLAGS += -DRE4DC_ESP_CENSUS=1
 endif
 #
 # ESP_CUT_EARLY=1 (render only, exact; needs HAZE_SPRITE_CUT=1): sprites HAZE_SPRITE_CUT never draws (mist sheets, haze

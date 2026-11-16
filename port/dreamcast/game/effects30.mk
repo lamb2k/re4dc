@@ -536,6 +536,18 @@ $(error R10B_FX_UNLIVE needs R10B_FX_DEAD=2 or 3)
 endif
 $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_UNLIVE=1
 endif
+# R10B_FX_SPAWNCAP=<n> (default 0 = off; 1..255; an APPROXIMATION; lane lake66s, #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and ROUTE_CH13=1;
+# acts in r10b only, while the Essential filter is on): the spawn-side layer cap. The fight's own sprites (owners 0x0F / 0x27, ids 0x00 / 0x40:
+# Rnd()-free, no children) are asked by EspMove / EspTrans every tick although Essential draws 2 of a (owner, texture) layer per frame. At the end
+# of EspSeqSet (every seed draw and override already made) the (n+1)th live sprite of an Essential-capped layer is released at once with the
+# success return and the dummy esp, so no generator stalls and the seed streams are unchanged; only pool slot order and the live count change.
+R10B_FX_SPAWNCAP ?= 0
+ifneq ($(R10B_FX_SPAWNCAP),0)
+ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
+$(error R10B_FX_SPAWNCAP needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_SPAWNCAP=$(R10B_FX_SPAWNCAP)
+endif
 # R10B_ROPE_HALF=1 (default 0; an APPROXIMATION, look check; lane lake66q, #66 Del Lago slowdown): the 3.4 ms a tick that lake66p
 # MODELLED as "Leon's cloth" is the boat's anchor rope (pl0f.cpp pl0fLongRopeSet: a 30-link obj1d chain, Bundle_num 100, collides
 # with the boat; PenClothMove, 525 k instructions a tick; Leon's own cloth is a few hundred). In r10b that chain steps every other

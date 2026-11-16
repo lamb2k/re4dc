@@ -37,6 +37,12 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // end of this file (R10B_FX_DEA
 #else
 #define R10B_DEAD_MARK(p)
 #endif
+#if defined(RE4DC_R10B_FX_SPAWNCAP) && RE4DC_R10B_FX_SPAWNCAP
+extern "C" int re4dc_r10b_spawncap(cEsp* esp);   // end of this file (R10B_FX_SPAWNCAP)
+#define R10B_SPAWN_CAP(p, out, ret) if (re4dc_r10b_spawncap(p)) { PushEsp(p); *(out) = EspGetDmyPtr(); return (ret); }
+#else
+#define R10B_SPAWN_CAP(p, out, ret)
+#endif
 #line 34
 
 // game/trans_lit.cpp
@@ -4671,7 +4677,7 @@ int EspSeqSet(EspGenWork* rec, EspInfo* info, u32* seed, cModel* model, Mtx* mtx
         re4dc_esp48_dormant(e.p);
     }
 #endif
-    R10B_DEAD_MARK(e.p) *out = e.p;
+    R10B_SPAWN_CAP(e.p, out, ret) R10B_DEAD_MARK(e.p) *out = e.p;
     return ret;
 }
 
@@ -5118,6 +5124,75 @@ R10B_CUT_DEF(cEsp* esp, int mode)
             }
         }
     }
+    return 0;
+}
+#endif
+#if defined(RE4DC_R10B_FX_SPAWNCAP) && RE4DC_R10B_FX_SPAWNCAP
+#if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE
+#error R10B_FX_SPAWNCAP needs EFFECT_SPRITES and WATER45_NATIVE
+#endif
+// R10B_FX_SPAWNCAP=<n> (effects30.mk; lane lake66s, #66 Del Lago slowdown; an APPROXIMATION, r10b only): the spawn-side layer cap.
+// The fight's own sprites (owners 0x0F boat / Leon and 0x27 the monster, ids 0x00 and 0x40) are asked every tick by EspMove / EspTrans
+// but Essential (FX_LEVEL=3) draws at most kEssLayer = 2 sprites of one (owner, texture) layer per frame (~48 live sprites of the
+// busiest layer, 0.4 published a frame). At the end of EspSeqSet, after every seed draw and every EspSeqOpt override (so the
+// generator's seed stream is exactly as before), a sprite that would be the (n+1)th live sprite of its layer is released at once:
+// PushEsp, the dummy esp, and the success return (as the Efm branch above does), so no caller stalls or retries (espgen10 would
+// stall on a failure return and draw more seeds). The slot is the next one PullEsp hands out. Ids 0x00 / 0x40 draw no Rnd() (Esp00 /
+// Esp40::move = CommonMove + AnmMove, SetFreeWork has no draw, no child is spawned from them), so Rnd() is untouched; only the pool
+// slot order and the number of live sprites change. m_Be_flg 0x40 marks a counted sprite (0x20: owner 0x27's table), xF3 its texture
+// id; PushEsp (esp.cpp) gives the count back, EspArrayAlloc clears the table.
+static u8 s_spawncap_n[2][256];
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+static u32 s_spawncap_ok, s_spawncap_drop, s_spawncap_f;
+#endif
+extern "C" void re4dc_r10b_spawncap_reset()
+{
+    for (int i = 0; i < 256; i++) {
+        s_spawncap_n[0][i] = 0;
+        s_spawncap_n[1][i] = 0;
+    }
+}
+extern "C" void re4dc_r10b_spawncap_free(cEsp* esp)
+{
+    u8* n = &s_spawncap_n[(esp->m_Be_flg & 0x20) ? 1 : 0][esp->xF3];
+    if (*n) {
+        --*n;
+    }
+    esp->m_Be_flg &= ~0x60;
+}
+extern "C" int re4dc_r10b_spawncap(cEsp* esp)
+{
+    const u32 id = esp->m_Id;
+    const u32 owner = esp->info.owner;
+    if (G_ROOM_ID != 0x10B || (id != 0x00 && id != 0x40) || (owner != 0x0F && owner != 0x27) || !re4dc_fx_essential ||
+        !s_ess_class[0x00] || esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x10000)) || ESP_PARTS_SCREEN(esp)) {
+        return 0;
+    }
+    // the layers Essential caps (not keep / cut / glow), as R10B_FX_CUT bit 4 counts them
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    if (c == ESS_KEEP || c == ESS_CUT || c == ESS_GLOW) {
+        return 0;
+    }
+    u8* n = &s_spawncap_n[owner == 0x27 ? 1 : 0][esp->m_Tex_id & 0xFF];
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+    if ((u32) (pG->Frame_cnt - s_spawncap_f) >= 150) {
+        s_spawncap_f = (u32) pG->Frame_cnt;
+        re4dc_log("r10bsc: f=%u spawned=%u capped=%u\n", (unsigned) pG->Frame_cnt, s_spawncap_ok, s_spawncap_drop);
+        s_spawncap_ok = s_spawncap_drop = 0;
+    }
+#endif
+    if (*n >= RE4DC_R10B_FX_SPAWNCAP) {
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+        s_spawncap_drop++;
+#endif
+        return 1;
+    }
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+    s_spawncap_ok++;
+#endif
+    ++*n;
+    esp->xF3 = (u8) esp->m_Tex_id;
+    esp->m_Be_flg |= owner == 0x27 ? 0x60 : 0x40;
     return 0;
 }
 #endif
