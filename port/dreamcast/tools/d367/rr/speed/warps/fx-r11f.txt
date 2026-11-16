@@ -1,0 +1,14 @@
+# lane castgc17 CAST-GC census warp for r11f (<= 60 s): tools/d367/ch2/warps/e-r11f.txt; still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name ch2-entry-r11f
+# lane ch2code16: entry smoke (Codex cx-r11f source arrival), Ashley found + following, god, alive census
+room 0x11f
+pos 7720 -1020 -10620
+ang 1.4730
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+alivelog 150
+census 300
+act 360 fwd 12

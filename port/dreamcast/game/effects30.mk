@@ -553,6 +553,33 @@ endif
 # with the boat; PenClothMove, 525 k instructions a tick; Leon's own cloth is a few hundred). In r10b that chain steps every other
 # tick (staggered by its address; the skipped tick keeps the wind's shared-random draw, as PEN_CLOTH_LOD's skip does) and keeps its
 # pose on the skipped tick. A warped model always steps. Needs nothing else (PEN_CLOTH_LOD is separate).
+# FXCUT_ROOMS=<mask> (default 0; render only; lane fxcensus, 2026-11-16; needs EFFECT_SPRITES=1 and the Essential filter, FX_LEVEL=3): the
+# room-list / global form of R10B_FX_CUT's two EXACT bits (r10b keeps its own R10B_FX_CUT): bit 1 the Essential filter's stateless cuts, bit 2
+# faded out or wholly outside the view (full pass). A plain sprite either declines is not queued; moves, generators, slots, Rnd() untouched.
+# FXCUT_ROOM_LIST=<hex,hex,...|all> (default all but r10b: r10b has R10B_FX_CUT): the rooms it acts in, no spaces (0x101,0x103).
+FXCUT_ROOMS ?= 0
+FXCUT_ROOM_LIST ?= all
+ifneq ($(FXCUT_ROOMS),0)
+ifneq ($(filter 1 2 3,$(FXCUT_ROOMS)),$(FXCUT_ROOMS))
+$(error FXCUT_ROOMS is a mask 1..3 (the exact bits))
+endif
+ifneq ($(EFFECT_SPRITES),1)
+$(error FXCUT_ROOMS needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOMS=$(FXCUT_ROOMS)
+ifeq ($(FXCUT_ROOM_LIST),all)
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOM_ALL=1
+else
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOM_LIST=$(FXCUT_ROOM_LIST)
+endif
+endif
+# ESP_ROOM_CENSUS=1 (test only, default 0; lane fxcensus): "fxc:" lines in every room (every 20 EspTrans passes: pool size, live peak / mean,
+# sprites asked at the queue, published, and what R10B_FX_CUT's three bits WOULD decline, dry run: nothing is cut) and "fxcd:" lines (sprite
+# keys queued but never published). No effect on the game.
+ESP_ROOM_CENSUS ?= 0
+ifneq ($(ESP_ROOM_CENSUS),0)
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_ESP_ROOM_CENSUS=1
+endif
 R10B_ROPE_HALF ?= 0
 ifneq ($(R10B_ROPE_HALF),0)
 $(OBJDIR)/src/game/pendulum.o: GAME_CPPFLAGS += -DRE4DC_R10B_ROPE_HALF=1

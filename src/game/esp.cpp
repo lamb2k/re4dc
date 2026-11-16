@@ -82,6 +82,32 @@ extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode);   // esp_sub.cpp
 #else
 #define R10B_FX_CUT(trans, esp)
 #endif
+#if (defined(RE4DC_FXCUT_ROOMS) && RE4DC_FXCUT_ROOMS) || (defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS)
+// FXCUT_ROOMS / ESP_ROOM_CENSUS (effects30.mk; esp_sub.cpp re4dc_fxc_ask): the room-list form of R10B_FX_CUT bits 1 and 2, and the census.
+class cEsp;
+extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common);   // esp_sub.cpp
+#if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+extern "C" void re4dc_fxc_frame(unsigned nEsp, unsigned live);
+#endif
+#if defined(RE4DC_PACE_TRANS_SKIP) && RE4DC_PACE_TRANS_SKIP
+#if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
+#define FXC_MODE() (!logicOnly ? 1 : spriteEntry ? 2 : 0)
+#else
+#define FXC_MODE() (!logicOnly ? 1 : 0)
+#endif
+#else
+#define FXC_MODE() 1
+#endif
+#define FXC_CUT(trans, esp) if (re4dc_fxc_ask((esp), FXC_MODE(), (trans) == EspCommonTrans)) { continue; }
+#if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+#define FXC_FRAME(sys) re4dc_fxc_frame((sys)->nEsp, (sys)->ActiveEspNum);
+#else
+#define FXC_FRAME(sys)
+#endif
+#else
+#define FXC_CUT(trans, esp)
+#define FXC_FRAME(sys)
+#endif
 #if (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31) || (defined(RE4DC_FX_DORMANT31) && RE4DC_FX_DORMANT31)
 // fx31.mk. Kept above `#line 1` so the knob-off file keeps its line numbers; the hooks are same-line macros.
 #if !(defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN)
@@ -983,7 +1009,7 @@ int EspTrans()
     } else {
         sys->CameraPan2 = -atan2f(dir.y, SQRTF(dir.x * dir.x + dir.z * dir.z)) * 57.295776f;
     }
-    FX31_TRANS_BEGIN() for (i = 0; i < sys->nEsp; i++) {
+    FXC_FRAME(sys) FX31_TRANS_BEGIN() for (i = 0; i < sys->nEsp; i++) {
         FX31_STEP(i) esp = (cEsp*) (sys->pEspBuf + i * 0x150); R10B_SKIP_DORMANT(esp)
 #if RE4DC_PACE_TRANS_SKIP
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
@@ -1060,7 +1086,7 @@ int EspTrans()
             re4dc_esp_logic_queued = 1;
         }
 #endif
-        R10B_FX_CUT(trans, esp) prio = 0x10;
+        R10B_FX_CUT(trans, esp) FXC_CUT(trans, esp) prio = 0x10;
         if (trans == EspCommonTrans && esp->pad_EC[0] == 0 && !(esp->m_Tool_flg & 0x6000)) {
             prio = 8;
         }

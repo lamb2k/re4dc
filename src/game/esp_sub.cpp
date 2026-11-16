@@ -1964,6 +1964,9 @@ static void HazeCutNote(cEsp* esp)
     }
 }
 #endif
+#if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+extern "C" void re4dc_fxc_pub(cEsp* esp, int published);   // end of this file
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 static re4dc::NativeDrawResult EspSpriteEmitResult03(cEsp* esp){
 #include "esp_sprite_outcomes03.inc"
@@ -1975,6 +1978,8 @@ static void EspSpriteEmit(cEsp* esp)
     // Source OT callbacks keep their void ABI and existing state cadence.
 #if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
     dl66FxPub(esp, EspSpriteEmitResult03(esp).published());
+#elif defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+    re4dc_fxc_pub(esp, EspSpriteEmitResult03(esp).published());
 #else
     (void)EspSpriteEmitResult03(esp);
 #endif
@@ -4876,7 +4881,7 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
     return esp->info.owner == 0x01 && tex == 0;
 }
 #endif
-#if (defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT) || (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && defined(RE4DC_ESP_ESSENTIAL_EARLY))
+#if (defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT) || (defined(RE4DC_FXCUT_ROOMS) && RE4DC_FXCUT_ROOMS) || (defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS) || (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && defined(RE4DC_ESP_ESSENTIAL_EARLY))
 // Essential's stateless cut verdict (lake66r: one body for lane fx31's coarse-pass precut and lane lake66q's R10B_FX_CUT bit 1; lake66q
 // had copied fx31's test). 1 when the queued EspCommonTrans would end in FxEssentialSetupCut's verdict, or (stamps not yet current)
 // in FxEssentialCut's same verdict at the emit; cut sprites never touch the layer / trim buckets, so the buckets read the same.
@@ -4913,9 +4918,9 @@ extern "C" int re4dc_esp_ess_precut31(const cEsp* esp) { return espEssStateless(
 // census / trim-log builds turn the early Essential decline off: the coarse pass queues as before (fx31 left this undefined: link error)
 extern "C" int re4dc_esp_ess_precut31(const cEsp*) { return 0; }
 #endif
-#if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
+#if (defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT) || (defined(RE4DC_FXCUT_ROOMS) && RE4DC_FXCUT_ROOMS) || (defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS)
 #if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE
-#error R10B_FX_CUT needs EFFECT_SPRITES and WATER45_NATIVE
+#error R10B_FX_CUT / FXCUT_ROOMS / ESP_ROOM_CENSUS need EFFECT_SPRITES and WATER45_NATIVE
 #endif
 // R10B_FX_CUT=<mask> (effects30.mk; lane lake66q, #66 Del Lago slowdown; render only, nothing a move or a generator reads): the
 // fight's own effects (owners 0x0F / 0x27 / 0x01: the boss's splashes, spray and wake) are mostly never published, yet each was
@@ -5040,6 +5045,7 @@ static int r10bViewClass(const cEsp* esp, int wide)
     }
     return 0;
 }
+#if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
 #if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
 static u32 s_r10bcut_n[5], s_r10bcut_f;
 #define R10B_CUT_NOTE(k) (s_r10bcut_n[k]++)
@@ -5126,7 +5132,161 @@ R10B_CUT_DEF(cEsp* esp, int mode)
     }
     return 0;
 }
+#endif   // R10B_FX_CUT
+#if (defined(RE4DC_FXCUT_ROOMS) && RE4DC_FXCUT_ROOMS) || (defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS)
+// FXCUT_ROOMS=<mask> / ESP_ROOM_CENSUS=1 (effects30.mk; lane fxcensus, 2026-11-16): R10B_FX_CUT's verdicts without the r10b room test.
+//   FXCUT_ROOMS bit 1 / bit 2 (both EXACT, as in r10b): a plain sprite the Essential filter's stateless cuts decline, or that is faded out /
+//   wholly outside the view (full pass), is not queued, in the rooms of FXCUT_ROOM_LIST (default every room except r10b, which has R10B_FX_CUT).
+//   ESP_ROOM_CENSUS: the same verdicts, plus bit 4's layer rule, only COUNTED (dry run, nothing is cut), per 20 EspTrans passes, in every room.
+extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common);
+#if defined(RE4DC_FXCUT_ROOMS) && RE4DC_FXCUT_ROOMS
+static int fxcRoomOn()
+{
+    static u16 s_room = 0xFFFF;
+    static u8 s_on;
+    if (s_room != (u16) G_ROOM_ID) {
+        s_room = (u16) G_ROOM_ID;
+#if defined(RE4DC_FXCUT_ROOM_ALL) && RE4DC_FXCUT_ROOM_ALL
+        s_on = s_room != 0x10B;
+#else
+        static const u16 kRooms[] = {RE4DC_FXCUT_ROOM_LIST};
+        s_on = 0;
+        for (unsigned i = 0; i < sizeof(kRooms) / sizeof(kRooms[0]); ++i) {
+            if (kRooms[i] == s_room) s_on = 1;
+        }
 #endif
+    }
+    return s_on;
+}
+#endif
+// 1 when the sprite is declined by `mask` (1 stateless Essential, 2 view, 4 layer rule); *why = the bit that declined it.
+static int fxcVerdict(cEsp* esp, int mode, unsigned mask, int* why)
+{
+    if (!re4dc_fx_essential || mode == 0) {
+        return 0;
+    }
+    if ((mask & 1) && espEssStateless(esp)) {
+        *why = 1;
+        return 1;
+    }
+    if (!(mask & (2 | 4)) || esp->m_Id == 0x15 || esp->m_Id == 0x48) {
+        return 0;
+    }
+    bool early_live = false;
+    if ((mask & 2) && mode == 1) {
+        if (r10bViewClass(esp, 1)) {
+            *why = 2;
+            return 1;
+        }
+        early_live = true;
+    }
+    if ((mask & 4) && esp->info.owner != 0x03 && esp->info.owner != 0x01 && esp->info.owner != 0xD0 && !ESP_PARTS_SCREEN(esp) &&
+        esp->m_Shimmer_type == 0 && !(esp->m_Tool_flg & (0x2000 | 0x10000)) && esp->m_Id != 0x0e && esp->m_Id != 0x1b && s_ess_class[0x00]) {
+        const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+        if (c != ESS_KEEP && c != ESS_CUT && c != ESS_GLOW && (early_live || !r10bViewClass(esp, 0))) {
+            static u8 s_layer[256];
+            static u32 s_layer_frame = ~0U;
+            if (s_layer_frame != (u32) pG->Frame_cnt) {
+                s_layer_frame = (u32) pG->Frame_cnt;
+                for (int i = 0; i < 256; ++i) s_layer[i] = 0;
+            }
+            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= kEssQueue) {
+                *why = 4;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+#if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+struct FxcKey { u8 owner, id, tex, parts; u32 seen, pub, cut; };
+static FxcKey s_fxck[192];
+static u32 s_fxck_n, s_fxck_lost;
+static u32 s_fxc_pass, s_fxc_frame_last = ~0U;
+static u32 s_fxc_win[12];   // 0 asks (all trans), 1 common asks, 2 published, 3 ess, 4 view, 5 layer, 6 live sum, 7 live max, 8 frames, 9 dead asks
+static u32 s_fxc_pool, s_fxc_room_seen = 0xFFFF;
+static FxcKey* fxcFind(const cEsp* e)
+{
+    for (u32 i = 0; i < s_fxck_n; i++) {
+        FxcKey* k = &s_fxck[i];
+        if (k->owner == (u8) e->info.owner && k->id == (u8) e->m_Id && k->tex == (u8) e->m_Tex_id && k->parts == (u8) e->m_Parts_no) return k;
+    }
+    if (s_fxck_n >= 192) { s_fxck_lost++; return 0; }
+    FxcKey* k = &s_fxck[s_fxck_n++];
+    k->owner = (u8) e->info.owner; k->id = (u8) e->m_Id; k->tex = (u8) e->m_Tex_id; k->parts = (u8) e->m_Parts_no;
+    k->seen = k->pub = k->cut = 0;
+    return k;
+}
+extern "C" void re4dc_fxc_frame(unsigned nEsp, unsigned live)
+{
+    if (s_fxc_room_seen != (u32) G_ROOM_ID) {
+        s_fxc_room_seen = (u32) G_ROOM_ID;
+        for (int i = 0; i < 12; i++) s_fxc_win[i] = 0;
+        s_fxck_n = 0; s_fxck_lost = 0; s_fxc_pass = 0;
+    }
+    s_fxc_pool = nEsp;
+    s_fxc_win[6] += live;
+    if (live > s_fxc_win[7]) s_fxc_win[7] = live;
+    s_fxc_win[8]++;
+    if (++s_fxc_pass % 20 == 0) {
+        re4dc_log("fxc: r=%03x f=%u pool=%u n=%u live=%u max=%u asks=%u com=%u pub=%u ess=%u view=%u layer=%u\n", (unsigned) G_ROOM_ID,
+                  (unsigned) pG->Frame_cnt, nEsp, s_fxc_win[8], s_fxc_win[6] / (s_fxc_win[8] ? s_fxc_win[8] : 1), s_fxc_win[7], s_fxc_win[0],
+                  s_fxc_win[1], s_fxc_win[2], s_fxc_win[3], s_fxc_win[4], s_fxc_win[5]);
+        for (int i = 0; i < 12; i++) s_fxc_win[i] = 0;
+    }
+    if (s_fxc_pass % 100 == 0) {
+        // keys queued often but never published and never declined by a verdict: dead sprites (a draw-dead sheet like r10b's)
+        u32 dead = 0, deadkeys = 0;
+        for (u32 i = 0; i < s_fxck_n; i++) {
+            const FxcKey* k = &s_fxck[i];
+            if (k->seen >= 20 && k->pub == 0 && k->cut == 0) { dead += k->seen; deadkeys++; }
+        }
+        re4dc_log("fxcd: r=%03x f=%u pool=%u keys=%u lost=%u dead_asks=%u dead_keys=%u\n", (unsigned) G_ROOM_ID, (unsigned) pG->Frame_cnt, nEsp,
+                  s_fxck_n, s_fxck_lost, dead, deadkeys);
+        for (u32 i = 0; i < s_fxck_n; i++) {
+            const FxcKey* k = &s_fxck[i];
+            if (k->seen >= 20 && k->pub == 0 && k->cut == 0) {
+                re4dc_log("fxcd: r=%03x key owner=%02x id=%02x tex=%02x parts=%02x seen=%u\n", (unsigned) G_ROOM_ID, k->owner, k->id, k->tex, k->parts, k->seen);
+            }
+        }
+        for (u32 i = 0; i < s_fxck_n; i++) { s_fxck[i].seen = s_fxck[i].pub = s_fxck[i].cut = 0; }
+    }
+}
+extern "C" void re4dc_fxc_pub(cEsp* esp, int published)
+{
+    if (!published) return;
+    s_fxc_win[2]++;
+    FxcKey* k = fxcFind(esp);
+    if (k) k->pub++;
+}
+#endif
+extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
+{
+#if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+    if (mode) {
+        s_fxc_win[0]++;
+        if (common) {
+            s_fxc_win[1]++;
+            FxcKey* k = fxcFind(esp);
+            if (k) k->seen++;
+            int why = 0;
+            if (fxcVerdict(esp, mode, 7, &why)) {
+                if (why == 1) s_fxc_win[3]++; else if (why == 2) s_fxc_win[4]++; else s_fxc_win[5]++;
+                if (k) k->cut++;
+            }
+        }
+    }
+    return 0;
+#else
+    if (!common || !fxcRoomOn()) {
+        return 0;
+    }
+    int why = 0;
+    return fxcVerdict(esp, mode, RE4DC_FXCUT_ROOMS, &why);
+#endif
+}
+#endif   // FXCUT_ROOMS / ESP_ROOM_CENSUS
+#endif   // R10B_FX_CUT || FXCUT_ROOMS || ESP_ROOM_CENSUS (helpers)
 #if defined(RE4DC_R10B_FX_SPAWNCAP) && RE4DC_R10B_FX_SPAWNCAP
 #if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE
 #error R10B_FX_SPAWNCAP needs EFFECT_SPRITES and WATER45_NATIVE
