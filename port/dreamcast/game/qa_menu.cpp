@@ -748,11 +748,11 @@ void item_text(int a, char* out, unsigned n) {
     case A_WSHELL: snprintf(out, n, "FAR SHELL: %s", wm_shell_name()); break;
     case A_PVS: {unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);snprintf(out,n,"WORLD PVS (THIS BOOT): %s",state[0]==1?(state[1]?"ON / GUARDED":"ON / DRAW ALL"):"OFF");break;}
 #endif
-#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
 #if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
     case A_LLOD: {static const char* const nm[]={"0 FULL","1 LEGS","2 BODY","3 ALL"};const unsigned q=re4dc_leon_lod_requested();
         snprintf(out, n, "LEON LEVEL (NEXT ROOM): %s", q<4?nm[q]:"?"); break;}
 #endif
+#if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
     case A_WSCR: snprintf(out, n, "WORLD SCRATCH: %s", re4dc_world_scratch_live == 2 ? "C SCRATCH" :
                           re4dc_world_scratch_live == 1 ? "B HALF CACHE" : "A NORMAL"); break;
 #endif
