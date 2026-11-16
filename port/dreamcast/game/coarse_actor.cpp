@@ -468,7 +468,11 @@ const void* portrait_hair_info;unsigned portrait_hair_frame=~0u,portrait_hair_dr
 #if RE4DC_NATIVE_FE_CONTINUATION
 const void* portrait_failed_info;unsigned portrait_failed_frame=~0u,portrait_hair_queued;
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+alignas(32) float portrait_palette[leon_hair_runs::boot_palette_count][12];  // LEON_LOD: the largest rung's hair (level 0; a rung never has more)
+#else
 alignas(32) float portrait_palette[RE4DC_LEON_HAIR_PALETTES][12];
+#endif
 }
 extern "C" int re4dc_portrait_hair(const void* model,const void* info_ptr,const Re4dcModelPart* src) {
     auto* m=(const cModel*)model;auto* info=(const cModelInfo*)info_ptr;
@@ -508,7 +512,7 @@ extern "C" int re4dc_portrait_hair(const void* model,const void* info_ptr,const 
     Re4dcModelPart p=*src;
     p.info=&c;p.part=&c;p.positions=nullptr;p.normals=nullptr;p.colors=nullptr;
     p.position_count=c.position_count;p.normal_count=c.normal_count;p.position_stride=6;p.normal_stride=6;p.normal_shift=14;
-    p.shift=4;p.stream=run.stream;p.stream_bytes=run.bytes;p.uv=leon_hair_runs::uv;p.uv_offset[0]=p.uv_offset[1]=0;
+    p.shift=4;p.stream=run.stream;p.stream_bytes=run.bytes;p.uv=RE4DC_LEON_HAIR_UV_DATA;p.uv_offset[0]=p.uv_offset[1]=0;
     p.static_geometry=0;p.cull=0;p.flags=0;  // the arm stream layout (as the coarse path: u16 indices, 1.15 UVs)
     // The owner path's hair material (coarse_actor_owner_leon.inc): colour pair 0 with its same-UV I4 mask, repeat.
     p.image=hair_colours[0];p.mask=hair_mask;p.mask_ref=0;p.mask_same_uv=1;p.material_flags=4;p.blend=0;p.wrap_s=p.wrap_t=1;
