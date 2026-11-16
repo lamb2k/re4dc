@@ -91,12 +91,17 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_R
 extern "C" unsigned re4dc_room_id_now();
 extern "C" void re4dc_vram_pages_census(unsigned* out);
 #endif
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31   // DISC31_VRAM_PROBE (default 0: vram_probe is plain pvr_mem_malloc)
 // lane disc31: a test allocation (allocate, then free) whose miss counts in vram_pages.cpp probe_fails, not fails.
 // Weak: without VRAM_PAGES the plain pvr_mem_malloc is used, as before.
 // (void* / __SIZE_TYPE__: KOS's pvr_ptr_t and size_t, whose headers are not included yet here)
 extern "C" void* re4dc_vram_pages_probe(__SIZE_TYPE__ size) __attribute__((weak));
 extern "C" void* pvr_mem_malloc(__SIZE_TYPE__ size);
 static inline void* vram_probe(__SIZE_TYPE__ size){return re4dc_vram_pages_probe?re4dc_vram_pages_probe(size):pvr_mem_malloc(size);}
+#else
+#define vram_probe(size) pvr_mem_malloc(size)
+#endif
+#line 94
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif

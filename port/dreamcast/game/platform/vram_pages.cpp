@@ -33,9 +33,12 @@ std::uintptr_t base; std::uint32_t pool, free_bytes;
 bool free_place;   // set only inside re4dc_vram_pages_malloc_any: this request needs no page
 #endif
 unsigned fails, peak_alloc, peak_free;
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31   // DISC31_VRAM_PROBE (default 0: this block is absent)
 // lane disc31 (2026-11-11): test allocations (re4dc_vram_pages_probe: allocate-and-free to find out whether a block of
 // the size fits) that miss are counted here, not in `fails`, so `fails` means a real allocation failed.
 unsigned probe_fails; bool probing;
+#endif
+#line 36
 #if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
 // OVL_GUARD=3 (lane mipfault22, console diagnostic): the last 12 texture-RAM operations for the crash screen.
 // op: A alloc / F free (VRAM offset, bytes, arena class, caller), U upload (key crc, VRAM bytes, main-RAM package).
@@ -124,10 +127,19 @@ __attribute__((noinline)) void note_fail(std::size_t size, void* caller) {
     ++fail_head;
 }
 }
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31
 #define RE4DC_VRAM_FAIL(sz) (probing ? (void) ++probe_fails : note_fail((sz), __builtin_return_address(0)))
 #else
-#define RE4DC_VRAM_FAIL(sz) (probing ? (void) ++probe_fails : (void) ++fails)
+#define RE4DC_VRAM_FAIL(sz) note_fail((sz), __builtin_return_address(0))
 #endif
+#else
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31
+#define RE4DC_VRAM_FAIL(sz) (probing ? (void) ++probe_fails : (void) ++fails)
+#else
+#define RE4DC_VRAM_FAIL(sz) (++fails)
+#endif
+#endif
+#line 128
 
 extern "C" {
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
@@ -156,6 +168,7 @@ pvr_ptr_t re4dc_vram_pages_malloc_any(size_t size) {
     return p;
 }
 #endif
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31
 // A test allocation: the same pvr_mem_malloc (same placement, same result); a miss counts in probe_fails. The flag is
 // set and cleared with interrupts off, so no other thread's request can see it (as re4dc_vram_pages_malloc_any).
 pvr_ptr_t re4dc_vram_pages_probe(size_t size) {
@@ -166,6 +179,8 @@ pvr_ptr_t re4dc_vram_pages_probe(size_t size) {
     return p;
 }
 unsigned re4dc_vram_pages_probe_fails(void) { return probe_fails; }
+#endif
+#line 156
 void pvr_mem_initialize(pvr_ptr_t texture_base, size_t available) {
     base = reinterpret_cast<std::uintptr_t>(texture_base);
     pool = std::uint32_t(available) & ~(kGran - 1);

@@ -3160,6 +3160,20 @@ ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
 $(error VRAM_PAGES_VQ_ONLY=1 needs VRAM_PAGES=1 UI_VRAM=1)
 endif
 endif
+# DISC31_VRAM_PROBE=1 (lane all31g 2026-11-16; diagnostic, default 0 = image unchanged; needs VRAM_PAGES=1): the VRAM
+# fit tests of native_ui.cpp (load() eviction probe, vram_claim fits) allocate through re4dc_vram_pages_probe, whose
+# misses count in probe_fails (QA menu "vram free= big= fails= probe_fails=" line), not in `fails`. Landed unguarded in
+# lane disc31 (+192 B .text in every build); now guarded so knob-off equals the pre-disc31 image.
+DISC31_VRAM_PROBE ?= 0
+ifneq ($(filter-out 0 1,$(DISC31_VRAM_PROBE)),)
+$(error DISC31_VRAM_PROBE must be 0 or 1)
+endif
+ifeq ($(DISC31_VRAM_PROBE),1)
+ifneq ($(VRAM_PAGES),1)
+$(error DISC31_VRAM_PROBE=1 needs VRAM_PAGES=1)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_PROBE31=1
+endif
 # VRAM_ROOM_LOG=1 (lane vram12 D4, render/log only, default 0 = image unchanged; needs UI_VRAM=1 VRAM_PAGES=1): the
 # per-room VRAM report of the CLAUDE.md graphics memory rule (native_ui.cpp: "vram room:" pinned / dynamic / other /
 # free / largest free block, "vram gaps:" refusals, thrash-guard skips, no contiguous block, GameCube effect pictures,
