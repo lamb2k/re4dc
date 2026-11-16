@@ -486,6 +486,32 @@ $(error R10B_FX_DEAD needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
 endif
 $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_DEAD=$(R10B_FX_DEAD)
 endif
+# R10B_FX_CUT=<mask> (default 0; render only; lane lake66q, #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and ROUTE_CH13=1, and acts only
+# while the Essential filter is on, FX_LEVEL=3): the fight's own effects (owners 0x0F / 0x27 / 0x01) are ~85% never published, yet each
+# was queued into the ordering table and dispatched (Ps2fxClass, EspSpriteEligible, ChannelSet) before the Essential filter or the
+# projection declined it. In r10b, EspTrans does not queue a plain sprite that: bit 1 the Essential filter's stateless cuts decline
+# (exact; = lane fx31's precut31 verdicts), bit 2 is faded out or wholly outside the view (exact), bit 4 Essential's per-layer
+# sprite cap would decline, counted at the queue in pool order instead of at the draw in table order (an APPROXIMATION: the same
+# number of sprites of a layer, a different pick). Moves, generators, slots and Rnd() are untouched. 3 = exact, 7 = all.
+R10B_FX_CUT ?= 0
+ifneq ($(R10B_FX_CUT),0)
+ifneq ($(filter 1 2 3 4 5 6 7,$(R10B_FX_CUT)),$(R10B_FX_CUT))
+$(error R10B_FX_CUT is a mask 1..7)
+endif
+ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
+$(error R10B_FX_CUT needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_CUT=$(R10B_FX_CUT)
+endif
+# R10B_ROPE_HALF=1 (default 0; an APPROXIMATION, look check; lane lake66q, #66 Del Lago slowdown): the 3.4 ms a tick that lake66p
+# MODELLED as "Leon's cloth" is the boat's anchor rope (pl0f.cpp pl0fLongRopeSet: a 30-link obj1d chain, Bundle_num 100, collides
+# with the boat; PenClothMove, 525 k instructions a tick; Leon's own cloth is a few hundred). In r10b that chain steps every other
+# tick (staggered by its address; the skipped tick keeps the wind's shared-random draw, as PEN_CLOTH_LOD's skip does) and keeps its
+# pose on the skipped tick. A warped model always steps. Needs nothing else (PEN_CLOTH_LOD is separate).
+R10B_ROPE_HALF ?= 0
+ifneq ($(R10B_ROPE_HALF),0)
+$(OBJDIR)/src/game/pendulum.o: GAME_CPPFLAGS += -DRE4DC_R10B_ROPE_HALF=1
+endif
 # DELLAGO_DIAG=1 (test only, default 0; lane dellago66, #66 bug 7): "dl66" log lines in r10b (harpoon sight EST, falls,
 # the swim back, the monster's attacks on the swimmer) and a "swim" padscript state. DELLAGO_AUTOMASH=N (test only, needs
 # DELLAGO_DIAG): the swim's action key every N frames. DELLAGO_LIFE=N (test only): Leon's life set to N (boat hp 800) as

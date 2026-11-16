@@ -4865,3 +4865,141 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
     return esp->info.owner == 0x01 && tex == 0;
 }
 #endif
+#if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
+#if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE
+#error R10B_FX_CUT needs EFFECT_SPRITES and WATER45_NATIVE
+#endif
+// R10B_FX_CUT=<mask> (effects30.mk; lane lake66q, #66 Del Lago slowdown; render only, nothing a move or a generator reads): the
+// fight's own effects (owners 0x0F / 0x27 / 0x01: the boss's splashes, spray and wake) are mostly never published, yet each was
+// queued into the ordering table and dispatched through EspCommonTrans (Ps2fxClass, EspSpriteEligible, ChannelSet) before the
+// Essential filter or the projection declined it. EspTrans (esp.cpp R10B_FX_CUT) asks re4dc_r10b_fx_cut before queueing a plain
+// sprite in r10b, in a full pass (mode 1) and for the coarse pass's sprite entries (mode 2). The sprite still moves and lives
+// (slots, Rnd() and EstSet calls unchanged: Esp40 / Esp49 release themselves and spawn).
+//   bit 1 (exact): the cuts FxEssentialSetupCut / FxEssentialCut make without any frame state (the dust and ring classes, glows,
+//         the room owners' non-keep sprites), the same verdicts as lane fx31's re4dc_esp_ess_precut31;
+//   bit 2 (exact; full pass only, the coarse pass has the same test): a faded-out sprite, or a world-placed one wholly behind the
+//         camera, beyond the fogged View far or outside the wide view cone (re4dc_esp_coarse_sprite_visible's test);
+//   bit 4 (an APPROXIMATION): Essential's layer rule (kEssLayer sprites of one owner / texture layer per frame) applied at the
+//         queue to the visible sprites in pool order instead of at the draw in ordering-table order: the same number of sprites
+//         of a layer is drawn, a different pick of them.
+static int r10bEssStateless(const cEsp* esp)
+{
+    if (!re4dc_fx_essential || esp->info.owner == 0x03 || esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e ||
+        esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x10000)) ||
+        ESP_PARTS_SCREEN(esp) || (esp->m_Id == 0 && esp->m_Life_max == 0 && esp->m_Blend_type == 1)) {
+        return 0;
+    }
+#if defined(RE4DC_EFFECT_TORCH) && RE4DC_EFFECT_TORCH
+    if (re4dc_esp0e_glow) return 0;
+#endif
+    if (!s_ess_class[0x00]) return 0;   // the first late FxEssentialCut initializes the table, as before
+#if defined(RE4DC_R117_FX_FALLBACK)
+    if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
+#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
+    if (FxInsigniaKeep(esp)) return 0;
+#endif
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    if (c == ESS_KEEP) return 0;
+    return c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 : esp->info.owner == 0x01 || esp->info.owner == 0xD0);
+}
+// 1: the sprite draws nothing this frame (faded out / wholly outside the view); the test of re4dc_esp_coarse_sprite_visible.
+extern "C" float re4dc_fog_gate_far() __attribute__((weak));
+static int r10bViewDead(const cEsp* esp)
+{
+    if (esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x19 || esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 ||
+        (esp->m_Tool_flg & (0x2000 | 0x10000))) {
+        return 0;
+    }
+    if (!(esp->m_Flg & 1) && esp->m_Col_a < 1.0f) {
+        return 1;
+    }
+    if ((u8) (esp->m_Parts_no + 8) <= 5 || (esp->m_Tool_flg & (0x1000 | 0x400000 | 0x400 | 0x800)) || (esp->m_Flg & 8)) {
+        return 0;
+    }
+    Vec w, v;
+    if (esp->parent && esp->parent != pEffParentWorld) {
+        PSMTXMultVec(esp->parent->mat, &esp->m_Pos, &w);
+    } else {
+        w = esp->m_Pos;
+    }
+    PSMTXMultVec(pG->Cam.v_mat, &w, &v);
+    const f32 bx = esp->m_Size_base_x, by = esp->m_Size_base_y;
+    const f32 r = 2.0f * (bx > by ? bx : by) * esp->m_Size_mul + 100.0f;
+    const f32 d = -v.z;
+    if (d + r < 0.0f) {
+        return 1;
+    }
+    static u32 s_far_frame = ~0U;
+    static f32 s_far;
+    if (s_far_frame != (u32) pG->Frame_cnt) {
+        s_far_frame = (u32) pG->Frame_cnt;
+        s_far = re4dc_fog_gate_far ? re4dc_fog_gate_far() : 0.0f;
+    }
+    if (s_far > 0.0f && d - r > s_far) {
+        return 1;
+    }
+    if (d > r && ((v.x < 0.0f ? -v.x : v.x) - r > 1.2f * d || (v.y < 0.0f ? -v.y : v.y) - r > 0.9f * d)) {
+        return 1;
+    }
+    return 0;
+}
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+static u32 s_r10bcut_n[5], s_r10bcut_f;
+#define R10B_CUT_NOTE(k) (s_r10bcut_n[k]++)
+#else
+#define R10B_CUT_NOTE(k) ((void) 0)
+#endif
+extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode)
+{
+    if (!re4dc_fx_essential || G_ROOM_ID != 0x10B || mode == 0) {
+        return 0;
+    }
+    const int mask = RE4DC_R10B_FX_CUT;
+    R10B_CUT_NOTE(0);
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+    if ((u32) (pG->Frame_cnt - s_r10bcut_f) >= 150) {
+        s_r10bcut_f = (u32) pG->Frame_cnt;
+        re4dc_log("r10bcut: f=%u asked=%u ess=%u view=%u layer=%u\n", (unsigned) pG->Frame_cnt, s_r10bcut_n[0], s_r10bcut_n[1],
+                  s_r10bcut_n[2], s_r10bcut_n[3]);
+        for (int i = 0; i < 5; i++) s_r10bcut_n[i] = 0;
+    }
+#endif
+    if ((mask & 1) && r10bEssStateless(esp)) {
+        R10B_CUT_NOTE(1);
+        return 1;
+    }
+    if (!(mask & (2 | 4))) {
+        return 0;
+    }
+    if (esp->m_Id == 0x15 || esp->m_Id == 0x48) {
+        return 0;
+    }
+    int vd = -1;   // r10bViewDead, computed at most once
+    if ((mask & 2) && mode == 1) {
+        vd = r10bViewDead(esp);
+        if (vd) {
+            R10B_CUT_NOTE(2);
+            return 1;
+        }
+    }
+    if ((mask & 4) && re4dc_fx_essential && esp->info.owner != 0x03 && esp->info.owner != 0x01 && esp->info.owner != 0xD0 &&
+        !ESP_PARTS_SCREEN(esp) && esp->m_Shimmer_type == 0 && !(esp->m_Tool_flg & (0x2000 | 0x10000)) && esp->m_Id != 0x0e &&
+        esp->m_Id != 0x1b && s_ess_class[0x00]) {
+        const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+        if (c != ESS_KEEP && c != ESS_CUT && c != ESS_GLOW && (vd >= 0 ? !vd : !r10bViewDead(esp))) {   // a layer or unknown id, as FxEssentialCut's bucket
+            static u8 s_layer[256];
+            static u32 s_layer_frame = ~0U;
+            if (s_layer_frame != (u32) pG->Frame_cnt) {
+                s_layer_frame = (u32) pG->Frame_cnt;
+                for (int i = 0; i < 256; ++i) s_layer[i] = 0;
+            }
+            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= kEssLayer) {
+                R10B_CUT_NOTE(3);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+#endif

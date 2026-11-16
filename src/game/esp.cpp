@@ -39,6 +39,24 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // esp_sub.cpp
 #else
 #define R10B_SKIP_QUEUE(trans, esp)
 #endif
+#if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
+// R10B_FX_CUT (effects30.mk; esp_sub.cpp re4dc_r10b_fx_cut): a plain sprite the Essential filter or the view declines is not
+// queued (render only). mode 1: a full pass; 2: the coarse pass's sprite entry; 0: a logic-only entry (never touched).
+class cEsp;
+extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode);   // esp_sub.cpp
+#if defined(RE4DC_PACE_TRANS_SKIP) && RE4DC_PACE_TRANS_SKIP
+#if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
+#define R10B_CUT_MODE() (!logicOnly ? 1 : spriteEntry ? 2 : 0)
+#else
+#define R10B_CUT_MODE() (!logicOnly ? 1 : 0)
+#endif
+#else
+#define R10B_CUT_MODE() 1
+#endif
+#define R10B_FX_CUT(trans, esp) if ((trans) == EspCommonTrans && re4dc_r10b_fx_cut((esp), R10B_CUT_MODE())) { continue; }
+#else
+#define R10B_FX_CUT(trans, esp)
+#endif
 #line 1
 // game/esp.cpp: the effect sprite (cEsp) pool. A cEsp is one live effect particle/sprite; the pool
 // (g_pEspSys->pEspBuf, nEsp slots of 0x150 bytes) is allocated per room from the cons value and
@@ -960,7 +978,7 @@ int EspTrans()
             re4dc_esp_logic_queued = 1;
         }
 #endif
-        prio = 0x10;
+        R10B_FX_CUT(trans, esp) prio = 0x10;
         if (trans == EspCommonTrans && esp->pad_EC[0] == 0 && !(esp->m_Tool_flg & 0x6000)) {
             prio = 8;
         }
