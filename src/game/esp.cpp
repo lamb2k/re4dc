@@ -861,8 +861,13 @@ int EspMove()
             re4dc_log("espc: f=%u room=%03x live=%u %s%s\n", (unsigned) pG->Frame_cnt, (unsigned) G_ROOM_ID,
                       (unsigned) live, pass ? "own" : "id", buf);
         }
-        {
-            re4dc_log("espr: f=%u rnd=%04x\n", (unsigned) pG->Frame_cnt, (unsigned) re4dc_rnd_state());
+    }
+    {
+        // the global Rnd() state once per game frame (a capped sprite that drew one would show as a divergence): R10B_FX_SPAWNCAP proof
+        static u32 s_espr_f = ~0U;
+        if (s_espr_f != (u32) pG->Frame_cnt) {
+            s_espr_f = (u32) pG->Frame_cnt;
+            re4dc_log("espr: f=%u rnd=%04x live=%u\n", (unsigned) pG->Frame_cnt, (unsigned) re4dc_rnd_state(), (unsigned) sys->ActiveEspNum);
         }
     }
 #endif

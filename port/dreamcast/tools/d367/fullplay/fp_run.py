@@ -277,6 +277,7 @@ def main():
                     mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
                     full = (cap / 'run-output.txt').read_text(errors='replace')
                     fb = re.findall(r'fb=[0-9a-f]+,[0-9a-f]+', full)
+                    fr0 = re.findall(r'espr: f=(\d+)', full[-20000:])   # lane lake66s: the game frame before / after the shot (ESP_CENSUS builds)
                     if fb:
                         shot = cap / 'shots' / ('t%04d' % int(el)); shot.mkdir(parents=True)
                         for nm in ('emu.cfg', 'flycast.log', 'flycast.pid'):
@@ -284,6 +285,8 @@ def main():
                                 shutil.copyfile(cap / nm, shot / nm)
                         (shot / 'boot.log').write_text(fb[-1] + '\n', encoding='utf-16')
                         mod.capture(shot, shot / 'frames')
+                        fr1 = re.findall(r'espr: f=(\d+)', (cap / 'run-output.txt').read_text(errors='replace')[-20000:])
+                        (shot / 'frame.txt').write_text('%s %s\n' % (fr0[-1] if fr0 else '-', fr1[-1] if fr1 else '-'))
                 except Exception as exc:
                     rep['errors'].append(dict(kind='screenshot', error=str(exc)))
             time.sleep(0.5)

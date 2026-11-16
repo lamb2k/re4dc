@@ -5135,30 +5135,37 @@ R10B_CUT_DEF(cEsp* esp, int mode)
 // The fight's own sprites (owners 0x0F boat / Leon and 0x27 the monster, ids 0x00 and 0x40) are asked every tick by EspMove / EspTrans
 // but Essential (FX_LEVEL=3) draws at most kEssLayer = 2 sprites of one (owner, texture) layer per frame (~48 live sprites of the
 // busiest layer, 0.4 published a frame). At the end of EspSeqSet, after every seed draw and every EspSeqOpt override (so the
-// generator's seed stream is exactly as before), a sprite that would be the (n+1)th live sprite of its layer is released at once:
+// generator's seed stream is exactly as before), a sprite that would be the (n+1)th live sprite of its emitter layer (see
+// spawncapKey) is released at once:
 // PushEsp, the dummy esp, and the success return (as the Efm branch above does), so no caller stalls or retries (espgen10 would
 // stall on a failure return and draw more seeds). The slot is the next one PullEsp hands out. Ids 0x00 / 0x40 draw no Rnd() (Esp00 /
 // Esp40::move = CommonMove + AnmMove, SetFreeWork has no draw, no child is spawned from them), so Rnd() is untouched; only the pool
-// slot order and the number of live sprites change. m_Be_flg 0x40 marks a counted sprite (0x20: owner 0x27's table), xF3 its texture
-// id; PushEsp (esp.cpp) gives the count back, EspArrayAlloc clears the table.
-static u8 s_spawncap_n[2][256];
+// slot order and the number of live sprites change. m_Be_flg 0x40 marks a counted sprite, xF3 holds its layer key;
+// PushEsp (esp.cpp) gives the count back, EspArrayAlloc clears the table.
+static u8 s_spawncap_n[256];
+// the layer key: one emitter record (owner, texture, id, parts it rides on) is one layer; a hash into 256 counters (a clash only
+// merges two layers' counts), kept in the sprite's xF3. Per (owner, texture) alone one emitter's constant stream filled the cap and
+// starved the visible emitters of the same texture (owner 0x27 tex 9e: 4 emitters, the ones on the boss's body parts published 5 / 6).
+static inline u32 spawncapKey(const cEsp* e)
+{
+    return ((e->m_Tex_id * 7u) ^ ((u32) e->m_Parts_no * 13u) ^ (e->m_Id ? 0x55u : 0u) ^ (e->info.owner == 0x27 ? 0xA5u : 0u)) & 0xFFu;
+}
 #if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
 static u32 s_spawncap_ok, s_spawncap_drop, s_spawncap_f;
 #endif
 extern "C" void re4dc_r10b_spawncap_reset()
 {
     for (int i = 0; i < 256; i++) {
-        s_spawncap_n[0][i] = 0;
-        s_spawncap_n[1][i] = 0;
+        s_spawncap_n[i] = 0;
     }
 }
 extern "C" void re4dc_r10b_spawncap_free(cEsp* esp)
 {
-    u8* n = &s_spawncap_n[(esp->m_Be_flg & 0x20) ? 1 : 0][esp->xF3];
+    u8* n = &s_spawncap_n[esp->xF3];
     if (*n) {
         --*n;
     }
-    esp->m_Be_flg &= ~0x60;
+    esp->m_Be_flg &= ~0x40;
 }
 extern "C" int re4dc_r10b_spawncap(cEsp* esp)
 {
@@ -5173,7 +5180,8 @@ extern "C" int re4dc_r10b_spawncap(cEsp* esp)
     if (c == ESS_KEEP || c == ESS_CUT || c == ESS_GLOW) {
         return 0;
     }
-    u8* n = &s_spawncap_n[owner == 0x27 ? 1 : 0][esp->m_Tex_id & 0xFF];
+    const u32 key = spawncapKey(esp);
+    u8* n = &s_spawncap_n[key];
 #if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
     if ((u32) (pG->Frame_cnt - s_spawncap_f) >= 150) {
         s_spawncap_f = (u32) pG->Frame_cnt;
@@ -5191,8 +5199,8 @@ extern "C" int re4dc_r10b_spawncap(cEsp* esp)
     s_spawncap_ok++;
 #endif
     ++*n;
-    esp->xF3 = (u8) esp->m_Tex_id;
-    esp->m_Be_flg |= owner == 0x27 ? 0x60 : 0x40;
+    esp->xF3 = (u8) key;
+    esp->m_Be_flg |= 0x40;
     return 0;
 }
 #endif
