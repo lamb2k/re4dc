@@ -1278,6 +1278,23 @@ extern "C" int re4dc_water45_hides(const f32 (*corner)[3])
     }
     return 1;
 }
+
+// R10B_FX_CUT (esp_sub.cpp r10bViewClass): 1 when the r10b surface is drawn natively, the eye is above the plane and a sprite
+// centred at world `w` with every corner within `radius` of it is wholly under it: re4dc_water45_hides's verdict, known at the
+// queue (the plane is world y = h; the eye is above when its height is, d = eye_y - h).
+extern "C" int re4dc_water45_below(const Vec* w, f32 radius)
+{
+    EspgenWork* wk = g_pWater45;
+    if (wk == NULL || !(wk->flag & 1) || (wk->flag & 2) || G_ROOM_ID != 0x10b) {
+        return 0;
+    }
+    Espgen42Work* p = (Espgen42Work*) wk->work;
+    const Mtx& V = pG->Cam.v_mat;
+    const f32 h = p->mat[1][3];
+    const f32 nx = V[0][1], ny = V[1][1], nz = V[2][1];
+    const f32 d = -(nx * (V[0][1] * h + V[0][3]) + ny * (V[1][1] * h + V[1][3]) + nz * (V[2][1] * h + V[2][3]));
+    return d > 0.0f && w->y + radius < h;
+}
 #endif
 
 // EspgenTransTbl entry: queues Espgen45_TransSub in OT layer 0x10 (drawn after the opaque scene) and

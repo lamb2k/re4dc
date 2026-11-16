@@ -1359,7 +1359,7 @@ static void FxEssInit()
     for (unsigned i = 0; i < sizeof(cut); ++i) s_ess_class[cut[i]] = ESS_CUT;
     for (unsigned i = 0; i < sizeof(glow); ++i) s_ess_class[glow[i]] = ESS_GLOW;
 }
-enum { kEssLayer = 2 };
+enum { kEssLayer = 2, kEssQueue = 4 };   // kEssQueue: R10B_FX_CUT bit 4 queue-time cap (pool order picks differ from emit order, so it keeps more)
 extern "C" {
 u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
 }
@@ -4879,9 +4879,10 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
 //         the room owners' non-keep sprites), the same verdicts as lane fx31's re4dc_esp_ess_precut31;
 //   bit 2 (exact; full pass only, the coarse pass has the same test): a faded-out sprite, or a world-placed one wholly behind the
 //         camera, beyond the fogged View far or outside the wide view cone (re4dc_esp_coarse_sprite_visible's test);
-//   bit 4 (an APPROXIMATION): Essential's layer rule (kEssLayer sprites of one owner / texture layer per frame) applied at the
-//         queue to the visible sprites in pool order instead of at the draw in ordering-table order: the same number of sprites
-//         of a layer is drawn, a different pick of them.
+//   bit 4 (an APPROXIMATION): Essential's layer rule applied at the queue to the sprites that pass ChannelSet, the water test and
+//         the near/far planes, in pool order instead of at the draw in ordering-table order, with a looser cap (kEssQueue = 4 per
+//         owner / texture layer per frame; the draw still keeps kEssLayer = 2): the pick of the layer's sprites differs, and about
+//         7 % fewer sprites of the smoke / dust layers publish over the Del Lago fight (Flycast count, 9675 of 10355).
 static int r10bEssStateless(const cEsp* esp)
 {
     if (!re4dc_fx_essential || esp->info.owner == 0x03 || esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e ||
@@ -4903,19 +4904,65 @@ static int r10bEssStateless(const cEsp* esp)
     if (c == ESS_KEEP) return 0;
     return c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 : esp->info.owner == 0x01 || esp->info.owner == 0xD0);
 }
-// 1: the sprite draws nothing this frame (faded out / wholly outside the view): the test of re4dc_esp_coarse_sprite_visible.
-// 2: it is inside that wide cone but outside the camera's own frustum (vertical fovy, 4:3, 10 % margin, the sprite radius added):
-//    the projection clips it, so it never spends a layer bucket either. 0: in view (or not testable: screen / direct-OT sprites).
+// r10bViewClass: 1 when the sprite is declined before it can spend an Essential layer bucket or draw a pixel: ChannelSet's alpha is 0,
+// it is wholly under r10b's water seen from above (both before FxEssentialCut in the real path), or, with `wide`, faded out / wholly
+// outside re4dc_esp_coarse_sprite_visible's wide view cone. 0: not declined, or not testable (screen / direct-OT sprites).
 extern "C" float re4dc_fog_gate_far() __attribute__((weak));
-extern "C" f32 tanf(f32 x);
-static int r10bViewClass(const cEsp* esp)
+extern "C" int re4dc_water45_below(const Vec* w, f32 radius);   // espgen45.cpp
+// 1 when cEsp::ChannelSet would return 0 for `esp` (world position w): its alpha (the colour alpha, the final colour, the
+// Del_far / Del_near distance fade) ends at 0, so EspCommonTrans returns before any cut or layer bucket. The same arithmetic as
+// ChannelSet; a negative fade rate without EFFECT_FADE_CLAMP (a wrapped u8 there) is not judged.
+static int r10bFaded(const cEsp* esp, const Vec* w)
+{
+    if (esp->m_Flg & 1) {
+        return 0;   // alpha stays 0xFF
+    }
+    u32 a = (u8) esp->m_Col_a;
+    if (!(esp->m_Flg & 4) && EffIsSetFinalCol()) {
+        GXColor fin;
+        EffGetFinalCol(&fin);
+        a = (u8) (a * fin.a >> 8);
+    }
+    if (a == 0) {
+        return 1;
+    }
+    if (esp->m_Del_far == 0) {
+        return 0;
+    }
+    static u32 s_dir_frame = ~0U;
+    static Vec s_dir;
+    Camera* cam = &pG->Cam;
+    if (s_dir_frame != (u32) pG->Frame_cnt) {
+        s_dir_frame = (u32) pG->Frame_cnt;
+        s_dir.x = cam->param.at.x - cam->param.pos.x;
+        s_dir.y = cam->param.at.y - cam->param.pos.y;
+        s_dir.z = cam->param.at.z - cam->param.pos.z;
+        VECNormalize(&s_dir, &s_dir);
+    }
+    Vec d;
+    d.x = w->x - cam->param.pos.x;
+    d.y = w->y - cam->param.pos.y;
+    d.z = w->z - cam->param.pos.z;
+    const f32 dot = PSVECDotProduct(&s_dir, &d);
+    if (dot < esp->m_Del_far * 10.0f) {
+        f32 rate = 1.0f - (esp->m_Del_far * 10.0f - dot) / ((esp->m_Del_far - esp->m_Del_near) * 10.0f);
+        if (rate < 0.0f) {
+#if RE4DC_EFFECT_FADE_CLAMP
+            if (re4dc_ps2fx & PS2FX_CLAMP) {
+                return 1;   // clamped to 0: alpha 0
+            }
+#endif
+            return 0;
+        }
+        return (u8) (a * rate) == 0;
+    }
+    return 0;
+}
+static int r10bViewClass(const cEsp* esp, int wide)
 {
     if (esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x19 || esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 ||
         (esp->m_Tool_flg & (0x2000 | 0x10000))) {
         return 0;
-    }
-    if (!(esp->m_Flg & 1) && esp->m_Col_a < 1.0f) {
-        return 1;
     }
     if ((u8) (esp->m_Parts_no + 8) <= 5 || (esp->m_Tool_flg & (0x1000 | 0x400000 | 0x400 | 0x800)) || (esp->m_Flg & 8)) {
         return 0;
@@ -4926,29 +4973,43 @@ static int r10bViewClass(const cEsp* esp)
     } else {
         w = esp->m_Pos;
     }
-    PSMTXMultVec(pG->Cam.v_mat, &w, &v);
+    if (r10bFaded(esp, &w)) {
+        return 1;   // ChannelSet's alpha is 0: EspCommonTrans returns before any cut or bucket
+    }
     const f32 bx = esp->m_Size_base_x, by = esp->m_Size_base_y;
+    if (re4dc_water45_below(&w, (bx + by) * esp->m_Size_mul)) {
+        return 1;   // wholly under r10b's water seen from above: re4dc_water45_hides declines it at the emit
+    }
+    PSMTXMultVec(pG->Cam.v_mat, &w, &v);
+    if (!wide) {
+        // the layer count only: EspSpriteEmit's "near/far crossing: drop" (the projection's planes, judged at the centre) comes
+        // before FxEssentialCut too; the sprites it drops must not spend a queue slot either
+        static u32 s_nf_frame = ~0U;
+        static f32 s_near, s_far_d;
+        if (s_nf_frame != (u32) pG->Frame_cnt) {
+            s_nf_frame = (u32) pG->Frame_cnt;
+            const f32 m22 = pG->Cam.ProjMat[2][2], m23 = pG->Cam.ProjMat[2][3];
+            s_near = m23 / (m22 - 1.0f);
+            s_far_d = m23 / m22;
+        }
+        return -v.z < s_near || -v.z > s_far_d;
+    }
     const f32 r = 2.0f * (bx > by ? bx : by) * esp->m_Size_mul + 100.0f;
     const f32 d = -v.z;
     if (d + r < 0.0f) {
         return 1;
     }
     static u32 s_frame = ~0U;
-    static f32 s_far, s_tv;
+    static f32 s_far;
     if (s_frame != (u32) pG->Frame_cnt) {
         s_frame = (u32) pG->Frame_cnt;
         s_far = re4dc_fog_gate_far ? re4dc_fog_gate_far() : 0.0f;
-        s_tv = tanf(pG->Cam.param.fovy * 0.5f * 0.017453292f) * 1.1f;
     }
     if (s_far > 0.0f && d - r > s_far) {
         return 1;
     }
-    const f32 ax = v.x < 0.0f ? -v.x : v.x, ay = v.y < 0.0f ? -v.y : v.y;
-    if (d > r && (ax - r > 1.2f * d || ay - r > 0.9f * d)) {
+    if (d > r && ((v.x < 0.0f ? -v.x : v.x) - r > 1.2f * d || (v.y < 0.0f ? -v.y : v.y) - r > 0.9f * d)) {
         return 1;
-    }
-    if (d > r && (ax - r > s_tv * 1.3334f * d || ay - r > s_tv * d)) {
-        return 2;
     }
     return 0;
 }
@@ -4958,7 +5019,28 @@ static u32 s_r10bcut_n[5], s_r10bcut_f;
 #else
 #define R10B_CUT_NOTE(k) ((void) 0)
 #endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+static int r10bFxCut(cEsp* esp, int mode);
+// DIAG: per (owner, tex) the sprites asked and queued, "r10bk:" lines with the cut line (compare with "dl66 fx" pub).
+struct R10bKey { u8 o, t; u32 asked, queued; };
+static R10bKey s_r10bk[48];
+static u32 s_r10bk_n;
 extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode)
+{
+    const int r = r10bFxCut(esp, mode);
+    if (G_ROOM_ID == 0x10B && mode) {
+        R10bKey* k = 0;
+        for (u32 i = 0; i < s_r10bk_n; i++) if (s_r10bk[i].o == esp->info.owner && s_r10bk[i].t == (u8) esp->m_Tex_id) k = &s_r10bk[i];
+        if (!k && s_r10bk_n < 48) { k = &s_r10bk[s_r10bk_n++]; k->o = (u8) esp->info.owner; k->t = (u8) esp->m_Tex_id; k->asked = k->queued = 0; }
+        if (k) { k->asked++; if (!r) k->queued++; }
+    }
+    return r;
+}
+#define R10B_CUT_DEF static int r10bFxCut
+#else
+#define R10B_CUT_DEF extern "C" int re4dc_r10b_fx_cut
+#endif
+R10B_CUT_DEF(cEsp* esp, int mode)
 {
     if (!re4dc_fx_essential || G_ROOM_ID != 0x10B || mode == 0) {
         return 0;
@@ -4971,6 +5053,11 @@ extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode)
         re4dc_log("r10bcut: f=%u asked=%u ess=%u view=%u layer=%u\n", (unsigned) pG->Frame_cnt, s_r10bcut_n[0], s_r10bcut_n[1],
                   s_r10bcut_n[2], s_r10bcut_n[3]);
         for (int i = 0; i < 5; i++) s_r10bcut_n[i] = 0;
+        for (u32 i = 0; i < s_r10bk_n; i++) {
+            if (s_r10bk[i].asked) re4dc_log("r10bk: f=%u owner=%02x tex=%02x asked=%u queued=%u\n", (unsigned) pG->Frame_cnt, s_r10bk[i].o,
+                                            s_r10bk[i].t, s_r10bk[i].asked, s_r10bk[i].queued);
+            s_r10bk[i].asked = s_r10bk[i].queued = 0;
+        }
     }
 #endif
     if ((mask & 1) && r10bEssStateless(esp)) {
@@ -4983,26 +5070,28 @@ extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode)
     if (esp->m_Id == 0x15 || esp->m_Id == 0x48) {
         return 0;
     }
-    int vc = -1;   // r10bViewClass, computed at most once
+    bool early_live = false;   // r10bViewClass(esp, 0) known to be 0
     if ((mask & 2) && mode == 1) {
-        vc = r10bViewClass(esp);
-        if (vc == 1) {
+        if (r10bViewClass(esp, 1)) {
             R10B_CUT_NOTE(2);
             return 1;
         }
+        early_live = true;
     }
     if ((mask & 4) && re4dc_fx_essential && esp->info.owner != 0x03 && esp->info.owner != 0x01 && esp->info.owner != 0xD0 &&
         !ESP_PARTS_SCREEN(esp) && esp->m_Shimmer_type == 0 && !(esp->m_Tool_flg & (0x2000 | 0x10000)) && esp->m_Id != 0x0e &&
         esp->m_Id != 0x1b && s_ess_class[0x00]) {
         const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
-        if (c != ESS_KEEP && c != ESS_CUT && c != ESS_GLOW && (vc >= 0 ? vc == 0 : r10bViewClass(esp) == 0)) {   // a layer or unknown id in view, as FxEssentialCut's bucket
+        // a layer or unknown id that reaches FxEssentialCut's bucket: every sprite that passes ChannelSet and the water test spends
+        // one there, on screen or not (the screen cull comes after it), so the queue counts the same sprites
+        if (c != ESS_KEEP && c != ESS_CUT && c != ESS_GLOW && (early_live || !r10bViewClass(esp, 0))) {
             static u8 s_layer[256];
             static u32 s_layer_frame = ~0U;
             if (s_layer_frame != (u32) pG->Frame_cnt) {
                 s_layer_frame = (u32) pG->Frame_cnt;
                 for (int i = 0; i < 256; ++i) s_layer[i] = 0;
             }
-            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= kEssLayer) {
+            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= kEssQueue) {
                 R10B_CUT_NOTE(3);
                 return 1;
             }
