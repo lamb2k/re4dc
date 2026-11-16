@@ -31,6 +31,13 @@ static unsigned re4dc_esp_ct[4];
 #include "db_log.h"
 #include "tpl.h"
 #include "trans_ot.h"
+#if defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 2)
+extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // end of this file (R10B_FX_DEAD)
+#define R10B_DEAD_MARK(p) if (re4dc_r10b_fx_dead(p)) { (p)->m_Be_flg |= 0x80; }
+#else
+#define R10B_DEAD_MARK(p)
+#endif
+#line 34
 
 // game/trans_lit.cpp
 extern "C" void commonEspLightSet(cLight** list, int n);
@@ -4659,7 +4666,7 @@ int EspSeqSet(EspGenWork* rec, EspInfo* info, u32* seed, cModel* model, Mtx* mtx
         re4dc_esp48_dormant(e.p);
     }
 #endif
-    *out = e.p;
+    R10B_DEAD_MARK(e.p) *out = e.p;
     return ret;
 }
 
@@ -4830,5 +4837,31 @@ extern "C" const char* re4dc_fx_level_osd_text(void)
     if (re4dc_fx_essential && (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0) return "FX level 3: essential only";
 #endif
     return (int) (s_fx_level_osd_until - re4dc_vi_retrace_count()) > 0 ? kFxLevelText[re4dc_fx_level % 3] : 0;
+}
+#endif
+#if defined(RE4DC_R10B_FX_DEAD) && RE4DC_R10B_FX_DEAD
+#if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE
+#error R10B_FX_DEAD needs EFFECT_SPRITES and WATER45_NATIVE
+#endif
+// R10B_FX_DEAD (effects30.mk; lane lake66p, GitHub #66 Del Lago slowdown): 1 for an r10b effect that EspCommonTrans's
+// WATER45_NATIVE cut always declines: the room's SST sheets (owner 0xD0, textures f2 / f6 / cb / 1d / ff: the mist,
+// cliff / backdrop sheets, glows and screen tint the PS2 release deleted from r10b) and est 0x23's white square (owner 0x01,
+// tex 0), both id 0. Only plain sprites: a shimmer or frame-buffer ("nega") sprite takes a different trans path, and
+// Ps2fxClass never draws in r10b (its only draw verdict, the streak anchor, is r100). They never reach a draw, whatever
+// the camera sees, so this is a function of the sprite's record alone. Bit 2 (EspSeqSet) marks such a sprite dormant
+// (m_Be_flg 0x80: it keeps its pool slot, so the pool and every other effect are as before) and esp.cpp's EspMove and
+// EspTrans step over a dormant sprite; bit 1 (EspTrans) only declines to queue one.
+extern EspTransFunc EspTransTbl[0xFF];
+extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
+{
+    if (G_ROOM_ID != 0x10B || esp->m_Id != 0 || EspTransTbl[0] != EspCommonTrans || esp->m_Shimmer_type != 0 ||
+        (esp->m_Tool_flg & 0x2000)) {
+        return 0;
+    }
+    const u32 tex = esp->m_Tex_id;
+    if (esp->info.owner == 0xD0) {
+        return tex == 0xf2 || tex == 0xf6 || tex == 0xcb || tex == 0x1d || tex == 0xff;
+    }
+    return esp->info.owner == 0x01 && tex == 0;
 }
 #endif

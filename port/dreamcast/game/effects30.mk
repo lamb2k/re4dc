@@ -470,6 +470,22 @@ $(error DELLAGO_FX needs EFFECT_SPRITES=1)
 endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_FX=$(DELLAGO_FX)
 endif
+# R10B_FX_DEAD=<mask> (default 0; draw-dead effects only; lane lake66p, GitHub #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and
+# ROUTE_CH13=1 / WATER45_NATIVE=1): r10b keeps ~765 permanent room sprites (owner 0xD0 SST sheets, tex f2 / f6 / cb / 1d / ff, and est
+# 0x23's square) that EspCommonTrans's WATER45_NATIVE cut never draws (the PS2 release deleted them): each still moved, was queued into the
+# ordering table and dispatched every tick. Bit 1: they are not queued (render only, exact). Bit 2: they are released the moment
+# EspSeqSet has built them (all seed and Rnd() draws made as before), so they never move, queue or take a scan slot (the pool's slot
+# order changes; no Rnd(), no state anything reads). 3 = both. r10b only.
+R10B_FX_DEAD ?= 0
+ifneq ($(R10B_FX_DEAD),0)
+ifneq ($(filter 1 2 3,$(R10B_FX_DEAD)),$(R10B_FX_DEAD))
+$(error R10B_FX_DEAD is a mask 1..3)
+endif
+ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
+$(error R10B_FX_DEAD needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_DEAD=$(R10B_FX_DEAD)
+endif
 # DELLAGO_DIAG=1 (test only, default 0; lane dellago66, #66 bug 7): "dl66" log lines in r10b (harpoon sight EST, falls,
 # the swim back, the monster's attacks on the swimmer) and a "swim" padscript state. DELLAGO_AUTOMASH=N (test only, needs
 # DELLAGO_DIAG): the swim's action key every N frames. DELLAGO_LIFE=N (test only): Leon's life set to N (boat hp 800) as

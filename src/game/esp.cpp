@@ -19,6 +19,26 @@ extern "C" void re4dc_dl66_fx(cEsp*, EspTransFunc);
 #else
 #define DL66_FX(e, t)
 #endif
+#if defined(RE4DC_R10B_FX_DEAD) && RE4DC_R10B_FX_DEAD
+class cEsp;
+extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // esp_sub.cpp
+#endif
+// R10B_FX_DEAD (effects30.mk; esp_sub.cpp re4dc_r10b_fx_dead). The macros expand to nothing with the switch off, so the
+// switch-off code is token for token the source's (the knob-off image is identical).
+#if defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 2)
+// bit 2: EspSeqSet marks a draw-dead r10b sprite dormant (m_Be_flg 0x80); it keeps its slot and moves / queues no more.
+#define R10B_OR_DORMANT_CNT(esp, cnt) || (((esp)->m_Be_flg & 0x80) ? ((cnt)++, 1) : 0)
+#define R10B_SKIP_DORMANT(esp) if ((esp)->m_Be_flg & 0x80) { continue; }
+#else
+#define R10B_OR_DORMANT_CNT(esp, cnt)
+#define R10B_SKIP_DORMANT(esp)
+#endif
+#if defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 1)
+// bit 1: a draw-dead sprite is not queued.
+#define R10B_SKIP_QUEUE(trans, esp) if ((trans) == EspCommonTrans && re4dc_r10b_fx_dead(esp)) { continue; }
+#else
+#define R10B_SKIP_QUEUE(trans, esp)
+#endif
 #line 1
 // game/esp.cpp: the effect sprite (cEsp) pool. A cEsp is one live effect particle/sprite; the pool
 // (g_pEspSys->pEspBuf, nEsp slots of 0x150 bytes) is allocated per room from the cons value and
@@ -530,7 +550,7 @@ static inline void fxEspMoveOne(cEspSystem* sys, u32 i, int pause, u32* cnt)
 {
     cEsp* esp = (cEsp*) (sys->pEspBuf + i * 0x150);
 
-    if (!fxEspActive(esp)) {
+    if (!fxEspActive(esp) R10B_OR_DORMANT_CNT(esp, *cnt)) {
         return;
     }
     if (esp->parent != pEffParentWorld) {
@@ -684,7 +704,7 @@ int EspMove()
 #else
     for (i = 0; i < sys->nEsp; i++) {
         esp = (cEsp*) (sys->pEspBuf + i * 0x150);
-        if (!ESP_IsActive(esp)) {
+        if (!ESP_IsActive(esp) R10B_OR_DORMANT_CNT(esp, cnt)) {
             continue;
         }
         if (esp->parent != pEffParentWorld) {
@@ -864,7 +884,7 @@ int EspTrans()
         sys->CameraPan2 = -atan2f(dir.y, SQRTF(dir.x * dir.x + dir.z * dir.z)) * 57.295776f;
     }
     for (i = 0; i < sys->nEsp; i++) {
-        esp = (cEsp*) (sys->pEspBuf + i * 0x150);
+        esp = (cEsp*) (sys->pEspBuf + i * 0x150); R10B_SKIP_DORMANT(esp)
 #if RE4DC_PACE_TRANS_SKIP
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
         spriteEntry = 0;
@@ -895,7 +915,7 @@ int EspTrans()
         if (esp->m_pMod != NULL && !(esp->m_pMod->be_flag & 2) && esp->m_Release_time == 0xFF) {
             continue;
         }
-        trans = EspTransTbl[esp->m_Id]; DL66_FX(esp, trans);
+        trans = EspTransTbl[esp->m_Id]; R10B_SKIP_QUEUE(trans, esp) DL66_FX(esp, trans);
         if (trans == NULL) {
             continue;
         }
