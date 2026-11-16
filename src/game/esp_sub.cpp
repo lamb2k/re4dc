@@ -4903,9 +4903,12 @@ static int r10bEssStateless(const cEsp* esp)
     if (c == ESS_KEEP) return 0;
     return c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 : esp->info.owner == 0x01 || esp->info.owner == 0xD0);
 }
-// 1: the sprite draws nothing this frame (faded out / wholly outside the view); the test of re4dc_esp_coarse_sprite_visible.
+// 1: the sprite draws nothing this frame (faded out / wholly outside the view): the test of re4dc_esp_coarse_sprite_visible.
+// 2: it is inside that wide cone but outside the camera's own frustum (vertical fovy, 4:3, 10 % margin, the sprite radius added):
+//    the projection clips it, so it never spends a layer bucket either. 0: in view (or not testable: screen / direct-OT sprites).
 extern "C" float re4dc_fog_gate_far() __attribute__((weak));
-static int r10bViewDead(const cEsp* esp)
+extern "C" f32 tanf(f32 x);
+static int r10bViewClass(const cEsp* esp)
 {
     if (esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x19 || esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 ||
         (esp->m_Tool_flg & (0x2000 | 0x10000))) {
@@ -4930,17 +4933,22 @@ static int r10bViewDead(const cEsp* esp)
     if (d + r < 0.0f) {
         return 1;
     }
-    static u32 s_far_frame = ~0U;
-    static f32 s_far;
-    if (s_far_frame != (u32) pG->Frame_cnt) {
-        s_far_frame = (u32) pG->Frame_cnt;
+    static u32 s_frame = ~0U;
+    static f32 s_far, s_tv;
+    if (s_frame != (u32) pG->Frame_cnt) {
+        s_frame = (u32) pG->Frame_cnt;
         s_far = re4dc_fog_gate_far ? re4dc_fog_gate_far() : 0.0f;
+        s_tv = tanf(pG->Cam.param.fovy * 0.5f * 0.017453292f) * 1.1f;
     }
     if (s_far > 0.0f && d - r > s_far) {
         return 1;
     }
-    if (d > r && ((v.x < 0.0f ? -v.x : v.x) - r > 1.2f * d || (v.y < 0.0f ? -v.y : v.y) - r > 0.9f * d)) {
+    const f32 ax = v.x < 0.0f ? -v.x : v.x, ay = v.y < 0.0f ? -v.y : v.y;
+    if (d > r && (ax - r > 1.2f * d || ay - r > 0.9f * d)) {
         return 1;
+    }
+    if (d > r && (ax - r > s_tv * 1.3334f * d || ay - r > s_tv * d)) {
+        return 2;
     }
     return 0;
 }
@@ -4975,10 +4983,10 @@ extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode)
     if (esp->m_Id == 0x15 || esp->m_Id == 0x48) {
         return 0;
     }
-    int vd = -1;   // r10bViewDead, computed at most once
+    int vc = -1;   // r10bViewClass, computed at most once
     if ((mask & 2) && mode == 1) {
-        vd = r10bViewDead(esp);
-        if (vd) {
+        vc = r10bViewClass(esp);
+        if (vc == 1) {
             R10B_CUT_NOTE(2);
             return 1;
         }
@@ -4987,7 +4995,7 @@ extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode)
         !ESP_PARTS_SCREEN(esp) && esp->m_Shimmer_type == 0 && !(esp->m_Tool_flg & (0x2000 | 0x10000)) && esp->m_Id != 0x0e &&
         esp->m_Id != 0x1b && s_ess_class[0x00]) {
         const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
-        if (c != ESS_KEEP && c != ESS_CUT && c != ESS_GLOW && (vd >= 0 ? !vd : !r10bViewDead(esp))) {   // a layer or unknown id, as FxEssentialCut's bucket
+        if (c != ESS_KEEP && c != ESS_CUT && c != ESS_GLOW && (vc >= 0 ? vc == 0 : r10bViewClass(esp) == 0)) {   // a layer or unknown id in view, as FxEssentialCut's bucket
             static u8 s_layer[256];
             static u32 s_layer_frame = ~0U;
             if (s_layer_frame != (u32) pG->Frame_cnt) {
