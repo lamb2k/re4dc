@@ -118,6 +118,8 @@ bool ready() {
 // Run-time gameplay level (poc101 rows, warp `leonlod <n>`): applied at the next room enter or actor retirement.
 extern "C" void re4dc_leon_lod_set(unsigned level) {leon_lod::level_req=level;}
 extern "C" unsigned re4dc_leon_lod_level() {return leon_lod::level_cur;}
+extern "C" unsigned re4dc_leon_lod_requested() {return leon_lod::level_req;}   // qa_menu.cpp: the level asked for (applies at the next room enter)
+extern "C" unsigned re4dc_leon_lod_count() {return leon_lod::dir_state==1?leon_lod::nlevels:0;}
 extern "C" void re4dc_leon_lod_room_enter() {
     using namespace leon_lod;
     if(level_cur==want())return;   // the first room enter loads the boot level; ready() retries a failed load
