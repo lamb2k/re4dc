@@ -3500,7 +3500,7 @@ $(OBJDIR)/pc-sampler.h: pc-sampler-force
 	@printf '#define RE4DC_PC_SAMPLER %s\n#define RE4DC_PC_SAMPLER_HZ %s\n#define RE4DC_PC_SAMPLER_BYTES %s\n' '$(PC_SAMPLER)' '$(PC_SAMPLER_HZ)' '$(PC_SAMPLER_BYTES)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
-PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o
+PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/qa_menu.o
 $(PC_SAMPLER_OBJS): $(OBJDIR)/pc-sampler.h platform/include/pc_sampler.h
 $(PC_SAMPLER_OBJS): PLATFORM_CPPFLAGS += -include $(OBJDIR)/pc-sampler.h
 # With NATIVE_RENDER_PROFILE=1 each sample also carries the active render stage.
@@ -3705,6 +3705,8 @@ include actor_ganado_ps2_stump.mk
 include native_model_registry.mk
 # Lane actorplan17: ACTOR_PLAN (character draw plan) and ACTOR_PROF (diagnostic profiler); default off: no effect.
 include actorplan.mk
+# Lane partsetup31: character per-part setup (PS31_CENSUS diagnostic; default off: no effect).
+include partsetup31.mk
 # Lane qws19: QUICK_WEAPON (X + D-pad weapon shortcuts; default off: no effect).
 include quickweapon.mk
 # D367 charbake (CHARBAKE_HAIR, CHARBAKE_TOGGLE; default off: no effect).
@@ -3724,6 +3726,7 @@ include worldopt26.mk
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
 include logiclod20.mk
+include fx31.mk
 include logicbudget.mk
 # Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
 include rigid20.mk
@@ -3736,6 +3739,8 @@ include bodysvc20.mk
 include knobs.mk
 include esppool.mk
 include mendezfx.mk
+# Lane chars31 (CHARS31_COUNT, CHAR_VIS31; default off: nothing built).
+include chars31.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)

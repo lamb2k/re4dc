@@ -7,6 +7,7 @@ bool owned_submission;
 void owned_skin_clear() {
     // This path is only retirement before the primitive owner frees storage.
     // Do not read any borrowed palette/record while revoking the registry.
+    RE4DC_SKIN_GEN31_BUMP();  // PS31_SKIN_MEMO: the registry changes
     for(unsigned i=0;i<kSkins;++i)if(owned_skins[i].serial){
         if(skins[i].palette==owned_skins[i].palette)skins[i]={};
         owned_skins[i]={};
@@ -172,9 +173,17 @@ extern "C" int re4dc_actor_skin_release(Re4dcActorSkinLease* lease) {
     }
     owned_skin_invalidate_frames();return 1;
 }
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+const SkinMemo31& skin_memo31_get(const void* info);
+#endif
 extern "C" int re4dc_actor_owned_source(const void* info,unsigned source_frame,Re4dcActorSource* out) {
     if(!info || !out || skin_frame!=source_frame)return 0;
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+    // PS31_SKIN_MEMO: the scan below, memoized while the registry is unchanged (native_actor_fast.cpp skin_memo31_get)
+    if(const unsigned i=skin_memo31_get(info).owned;i<kSkins){
+#else
     for(unsigned i=0;i<skin_count;++i)if(skins[i].info==info && !skins[i].positions && owned_skins[i].serial){
+#endif
         if(skins[i].materialized || skins[i].palette!=owned_skins[i].palette || skins[i].entries!=owned_skins[i].entries)return 0;
         *out=owned_skins[i].source;return 1;
     }

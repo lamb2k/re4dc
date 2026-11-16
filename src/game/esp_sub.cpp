@@ -4865,6 +4865,39 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
     return esp->info.owner == 0x01 && tex == 0;
 }
 #endif
+#if (defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT) || (defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && defined(RE4DC_ESP_ESSENTIAL_EARLY))
+// Essential's stateless cut verdict (lake66r: one body for lane fx31's coarse-pass precut and lane lake66q's R10B_FX_CUT bit 1; lake66q
+// had copied fx31's test). 1 when the queued EspCommonTrans would end in FxEssentialSetupCut's verdict, or (stamps not yet current)
+// in FxEssentialCut's same verdict at the emit; cut sprites never touch the layer / trim buckets, so the buckets read the same.
+// Excluded, as their bodies draw something else first or are not plain sprites: shimmer, nega, the r100 streak-anchor shape
+// (Ps2fxClass 2 draws the shafts) and the Esp1b grid. The caller keeps render targets (Tool_flg 0x10000) and screen sprites queued.
+static int espEssStateless(const cEsp* esp)
+{
+    if (!re4dc_fx_essential || esp->info.owner == 0x03 || esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e ||
+        esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x10000)) ||
+        ((s8) esp->m_Parts_no >= -8 && (s8) esp->m_Parts_no <= -3) ||
+        (esp->m_Id == 0 && esp->m_Life_max == 0 && esp->m_Blend_type == 1)) {
+        return 0;
+    }
+#if defined(RE4DC_EFFECT_TORCH) && RE4DC_EFFECT_TORCH
+    if (re4dc_esp0e_glow) return 0;
+#endif
+    if (!s_ess_class[0x00]) return 0;   // the first late FxEssentialCut initializes the table, as before
+#if defined(RE4DC_R117_FX_FALLBACK)
+    if (Ps2fxPuzzleFallback(esp)) return 0;
+#endif
+#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
+    if (FxInsigniaKeep(esp)) return 0;
+#endif
+    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
+    if (c == ESS_KEEP) return 0;
+    return c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 : esp->info.owner == 0x01 || esp->info.owner == 0xD0);
+}
+#endif
+#if defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && defined(RE4DC_ESP_ESSENTIAL_EARLY)
+// FX_TRANS_SKIP31 (fx31.mk): the coarse sprite pass need not queue `esp` (see espEssStateless).
+extern "C" int re4dc_esp_ess_precut31(const cEsp* esp) { return espEssStateless(esp); }
+#endif
 #if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
 #if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE
 #error R10B_FX_CUT needs EFFECT_SPRITES and WATER45_NATIVE
@@ -4883,27 +4916,6 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
 //         the near/far planes, in pool order instead of at the draw in ordering-table order, with a looser cap (kEssQueue = 4 per
 //         owner / texture layer per frame; the draw still keeps kEssLayer = 2): the pick of the layer's sprites differs, and about
 //         7 % fewer sprites of the smoke / dust layers publish over the Del Lago fight (Flycast count, 9675 of 10355).
-static int r10bEssStateless(const cEsp* esp)
-{
-    if (!re4dc_fx_essential || esp->info.owner == 0x03 || esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e ||
-        esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x10000)) ||
-        ESP_PARTS_SCREEN(esp) || (esp->m_Id == 0 && esp->m_Life_max == 0 && esp->m_Blend_type == 1)) {
-        return 0;
-    }
-#if defined(RE4DC_EFFECT_TORCH) && RE4DC_EFFECT_TORCH
-    if (re4dc_esp0e_glow) return 0;
-#endif
-    if (!s_ess_class[0x00]) return 0;   // the first late FxEssentialCut initializes the table, as before
-#if defined(RE4DC_R117_FX_FALLBACK)
-    if (Ps2fxPuzzleFallback(esp)) return 0;
-#endif
-#if defined(RE4DC_FX_INSIGNIA_KEEP) && RE4DC_FX_INSIGNIA_KEEP
-    if (FxInsigniaKeep(esp)) return 0;
-#endif
-    const unsigned c = s_ess_class[esp->m_Tex_id & 0xFF];
-    if (c == ESS_KEEP) return 0;
-    return c == ESS_CUT || (c == ESS_GLOW ? esp->info.owner != 0x00 : esp->info.owner == 0x01 || esp->info.owner == 0xD0);
-}
 // r10bViewClass: 1 when the sprite is declined before it can spend an Essential layer bucket or draw a pixel: ChannelSet's alpha is 0,
 // it is wholly under r10b's water seen from above (both before FxEssentialCut in the real path), or, with `wide`, faded out / wholly
 // outside re4dc_esp_coarse_sprite_visible's wide view cone. 0: not declined, or not testable (screen / direct-OT sprites).
@@ -5060,7 +5072,7 @@ R10B_CUT_DEF(cEsp* esp, int mode)
         }
     }
 #endif
-    if ((mask & 1) && r10bEssStateless(esp)) {
+    if ((mask & 1) && espEssStateless(esp)) {
         R10B_CUT_NOTE(1);
         return 1;
     }

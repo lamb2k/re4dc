@@ -91,6 +91,12 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_R
 extern "C" unsigned re4dc_room_id_now();
 extern "C" void re4dc_vram_pages_census(unsigned* out);
 #endif
+// lane disc31: a test allocation (allocate, then free) whose miss counts in vram_pages.cpp probe_fails, not fails.
+// Weak: without VRAM_PAGES the plain pvr_mem_malloc is used, as before.
+// (void* / __SIZE_TYPE__: KOS's pvr_ptr_t and size_t, whose headers are not included yet here)
+extern "C" void* re4dc_vram_pages_probe(__SIZE_TYPE__ size) __attribute__((weak));
+extern "C" void* pvr_mem_malloc(__SIZE_TYPE__ size);
+static inline void* vram_probe(__SIZE_TYPE__ size){return re4dc_vram_pages_probe?re4dc_vram_pages_probe(size):pvr_mem_malloc(size);}
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif
@@ -4424,7 +4430,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_TEX_RESIDENT
             // Evict until one contiguous block of the size fits, then read the
             // package once more (was: a full re-read per single eviction).
-            for(;;){pvr_ptr_t probe=pvr_mem_malloc(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
+            for(;;){pvr_ptr_t probe=vram_probe(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
 #endif
             ok=RE4DC_OPEN_PACKAGE() && slot->package.upload();
         }
@@ -5557,7 +5563,7 @@ int vram_claim(unsigned bytes,bool movie){
     ++vram_claims;
     unsigned released=0,released_bytes=0;
     // Probe only when the total would do: a failed pvr_mem_malloc() logs an error.
-    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=pvr_mem_malloc(bytes);if(!p)return false;pvr_mem_free(p);return true;};
+    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=vram_probe(bytes);if(!p)return false;pvr_mem_free(p);return true;};
     // Fragmented pool: re-probe only after each 64 KiB released, not after every small texture
     // (the sub screen's 1 MiB claim probed 146 times at r101, each failure a KOS "out of PVR
     // memory" line, warp-r101-pbdoor8); at most 64 KiB more is released than strictly needed.
@@ -8105,7 +8111,26 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
 #endif
     }
 }
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+// CHARS31_COUNT (chars31.mk, diagnostic): the boundary counters, read around each actor part.
+extern "C" void re4dc_c31_model_counts(unsigned* parts,unsigned* other,unsigned* in,unsigned* out){
+    *parts=model_parts;*other=model_invalid+model_resource+model_overflow;*in=model_input;*out=model_output;
+}
+// Results committed outside any guarded actor part (static meshes, generic path), by return address.
+extern "C" unsigned re4dc_c31_depth();
+namespace c31ra { struct Row{const void* ra;unsigned parts,out_parts,tris_out;}; Row rows[16]; }
+static void c31_ra_note(const void* ra,unsigned reason,unsigned output){
+    if(re4dc_c31_depth())return;
+    for(auto& r:c31ra::rows)if(r.ra==ra||!r.ra){r.ra=ra;if(reason==0){++r.parts;if(output){++r.out_parts;r.tris_out+=output;}}return;}
+}
+extern "C" void re4dc_c31_ra_dump(unsigned f){
+    for(auto& r:c31ra::rows){if(r.ra)re4dc_log("C31R f=%u ra=%08x parts=%u out=%u tout=%u\n",f,(unsigned)r.ra,r.parts,r.out_parts,r.tris_out);r=c31ra::Row{};}
+}
+#endif
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+    c31_ra_note(__builtin_return_address(0),reason,output);
+#endif
 #if defined(RE4DC_MODEL_PART_DUMP)
     if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)
         re4dc_log("PARTDUMP f=%u key=%08x-%08x in=%u out=%u r=%u\n",frame,model_dump_crc,model_dump_fnv,input,output,reason);

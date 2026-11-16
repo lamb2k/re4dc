@@ -155,6 +155,17 @@ endif
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_EVENT_KEEP_LOD=1
 endif
 
+# GANADO_LOD_BUF31=1 (lane all31, 2026-11-11; default 0; exact for the shipped recipe): ganado_lod::buf sized to the
+# boot level GANADO_LOD_LEVEL (level 3: 57,088 B) instead of level 0 (106,112 B); the freed .bss goes to the KOS heap.
+# Requests for a bigger level (warp `glod`, QA, event level 0 without GANADO_EVENT_KEEP_LOD) load the boot level.
+GANADO_LOD_BUF31 ?= 0
+ifneq ($(GANADO_LOD_BUF31),0)
+ifneq ($(GANADO_LOD),1)
+$(error GANADO_LOD_BUF31 needs GANADO_LOD=1)
+endif
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD_BUF31=1
+endif
+
 # Selected square128 Leon body tile isolation. Experimental, render only.
 # No production recipe enables this. Data is emitted by texture_atlas21/runtime_header.py.
 LEON_ATLAS_SPLIT ?= 0

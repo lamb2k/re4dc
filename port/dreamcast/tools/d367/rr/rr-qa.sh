@@ -40,7 +40,8 @@ grep -q PKGTREE_OK "$R/logs/pkgtree.txt" || { tail -20 "$R/logs/pkgtree.txt"; ex
 if [ -n "${RR_SR1_CACHE:-}" ]; then cp "$RR_SR1_CACHE" "$R/sr1.json"; else
 python3 "$T/stage_route.py" --stage 1 --json "$R/sr1.json" > /dev/null
 fi
-python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" | tail -2
+# RR_QA_PERF=1 (lane disc31, 2026-11-11; console profiling discs only): mkqa --perf adds the PERF SPOTS chapter
+python3 "$T/qa20/mkqa.py" "$R/qa" --sr1 "$R/sr1.json" $([ "${RR_QA_PERF:-0}" = 1 ] && echo --perf) | tail -2
 # RR_QA_PRESET_DIR (speed/rr-speed-gpu.sh, guards28 10-28): files that replace same-named mkqa presets (measurement discs only)
 if [ -n "${RR_QA_PRESET_DIR:-}" ]; then for f in "$RR_QA_PRESET_DIR"/*.txt; do [ -s "$R/qa/$(basename "$f")" ] || { echo "QA preset override: no $(basename "$f")"; exit 1; }; tr -d '\r' < "$f" > "$R/qa/$(basename "$f")"; done; fi
 # RR_QA_LINKTXT='auto 1\nhost <PC>\nlport 52042' (lane link28; harness twins only, never a tester disc): /dc/qa/link.txt,
@@ -51,6 +52,12 @@ mkdir -p "$R/pkgtree/dc/qa"; cp "$R"/qa/* "$R/pkgtree/dc/qa/"
 # the link pad pages exist from link28 on (the SPEED-GPU reference may predate it, like QL above)
 [ -z "$QL" ] || { mkdir -p "$R/pkgtree/dc/qa/pad"; cp "$TR"/port/dreamcast/tools/qalink/pad/*.txt "$R/pkgtree/dc/qa/pad/"; }
 [ ! -e "$R/pkgtree/dc/warp.txt" ] || { echo "warp.txt on the QA disc"; exit 1; }
+# RR_QA_HARNESS_WARP=<warp file> (lane perf30, 2026-11-10; harness twins only, never a tester disc): /dc/warp.txt, so
+#   the boot menu is skipped and the game warps straight in (Flycast link runs need a running game and no window input)
+if [ -n "${RR_QA_HARNESS_WARP:-}" ]; then
+  [ -n "${RR_QA_LINKTXT:-}" ] || { echo "RR_QA_HARNESS_WARP needs a harness twin (RR_QA_LINKTXT)"; exit 1; }
+  tr -d '\r' < "$RR_QA_HARNESS_WARP" > "$R/pkgtree/dc/warp.txt"
+fi
 (cd "$T" && LAYOUT=standard bash mkgdi.sh "$O/re4dc-game.elf" "$R/pkgtree" "$R/gdemu" | tail -1)
 for prof in loader standard; do
   python3 "$T/disc_lint.py" --profile $prof "$R/gdemu/disc.gdi" > "$R/logs/disc_lint-$prof.txt" \

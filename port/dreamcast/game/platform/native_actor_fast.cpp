@@ -1849,11 +1849,45 @@ SkinEntry* find_skin(const void* info, const void* positions) {
     return find_ordinary_skin(info, positions);
 }
 #else
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+// PS31_SKIN_MEMO (partsetup31.mk; render only, exact): the registry's lazy (info, no arrays) lookups are memoized.
+// A part of a lazily skinned info asks the registry the same question four to six times per draw (qualifies' lazy_skin,
+// prepare_frame's palette and source, PROP_GATE, the owner source check), and each answer was a linear scan of up to
+// kSkins entries; the owner source scan never stops early for an info no owner holds (every room prop), so it read the
+// whole table every time (console p103h: re4dc_actor_owned_source 0.98 ms a picture, one source line).
+// skin_gen31 moves on every write to skins[] / skin_count / skin_frame / owned_skins[] (register, owned_skin_clear,
+// owned_skin_invalidate_frames: acquire and release end with it). While it stands still the table is unchanged, so a
+// memo of the scan (the first lazy entry of the info, and the first such entry an owner holds) is the scan's answer.
+// Two entries (parts arrive info by info). =2 (compare build): every lookup also scans; "PS31M bad=" must stay 0.
+static_assert(kSkins < 255U, "skin memo indices are bytes");
+unsigned skin_gen31 = 1;  // never 0: an unused memo entry (gen 0) never matches
+struct SkinMemo31 { const void* info; unsigned gen; u8 lazy, owned; };
+SkinMemo31 skin_memo31[2];
+unsigned skin_memo31_next;
+#if RE4DC_PS31_SKIN_MEMO == 2
+unsigned skin_memo31_lookups, skin_memo31_hits, skin_memo31_bad;
+#endif
+#define RE4DC_SKIN_GEN31_BUMP() (++skin_gen31 ? (void)0 : (void)(skin_gen31 = 1))
+// The registry's first lazy entry of info (kSkins: none), and (owned, after owned_skins exists) the first lazy entry
+// an owner holds. Defined after the owner registry.
+const SkinMemo31& skin_memo31_get(const void* info);
+SkinEntry* find_skin(const void* info, const void* positions) {
+    if (!positions) {
+        const unsigned i = skin_memo31_get(info).lazy;
+        return i < kSkins ? &skins[i] : nullptr;
+    }
+    for (unsigned i = 0; i < skin_count; ++i)
+        if (skins[i].info == info && skins[i].positions == positions) return &skins[i];
+    return nullptr;
+}
+#else
+#define RE4DC_SKIN_GEN31_BUMP() ((void)0)
 SkinEntry* find_skin(const void* info, const void* positions) {
     for (unsigned i = 0; i < skin_count; ++i)
         if (skins[i].info == info && skins[i].positions == positions) return &skins[i];
     return nullptr;
 }
+#endif
 #endif
 
 
@@ -1866,6 +1900,45 @@ SkinEntry* find_skin(const void* info, const void* positions) {
 #include "include/native_actor_skin_reserve.inc"
 #endif
 #endif
+#endif
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+const SkinMemo31& skin_memo31_get(const void* info) {
+#if RE4DC_PS31_SKIN_MEMO == 2
+    if ((++skin_memo31_lookups & 0x3FFFU) == 0)
+        re4dc_log("PS31M lookups=%u hits=%u bad=%u gen=%u\n", skin_memo31_lookups, skin_memo31_hits, skin_memo31_bad,
+                  skin_gen31);
+    SkinMemo31 scan{info, skin_gen31, u8(kSkins), u8(kSkins)};
+    for (unsigned i = 0; i < skin_count; ++i)
+        if (skins[i].info == info && !skins[i].positions) {
+            if (scan.lazy == kSkins) scan.lazy = u8(i);
+            if (owned_skins[i].serial) { scan.owned = u8(i); break; }
+        }
+#endif
+    for (const SkinMemo31& m : skin_memo31)
+        if (m.info == info && m.gen == skin_gen31) {
+#if RE4DC_PS31_SKIN_MEMO == 2
+            ++skin_memo31_hits;
+            if (m.lazy != scan.lazy || m.owned != scan.owned) {
+                ++skin_memo31_bad;
+                SkinMemo31& w = skin_memo31[&m - skin_memo31];
+                w = scan;  // the scan decides
+                return w;
+            }
+#endif
+            return m;
+        }
+    SkinMemo31& m = skin_memo31[skin_memo31_next];
+    skin_memo31_next ^= 1U;
+    m = SkinMemo31{info, skin_gen31, u8(kSkins), u8(kSkins)};
+    for (unsigned i = 0; i < skin_count; ++i)
+        if (skins[i].info == info && !skins[i].positions) {
+            if (m.lazy == kSkins) m.lazy = u8(i);
+#if RE4DC_ACTOR_TRANSACTION
+            if (owned_skins[i].serial) { m.owned = u8(i); break; }
+#endif
+        }
+    return m;
+}
 #endif
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
 #include "include/native_actor_skin_admit32.inc"
@@ -1899,6 +1972,10 @@ struct Frame {  // per (info, matrices) per frame
 #endif
 #if RE4DC_ACTOR_FOG_GATE
     bool gate_ready = false; float gate_T = 0.0f, gate_G = 0.0f;  // ACTOR_FOG_GATE skinned depth bound
+#endif
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+    // CHAR_VIS31: view-space box of the palette's bone origins and the largest palette scale (per Frame)
+    bool cv_ready = false; float cv_lo[3] = {}, cv_hi[3] = {}, cv_G = 0.0f;
 #endif
 };
 constexpr unsigned kFrames = 4;
@@ -1972,6 +2049,16 @@ void screen_rows(const Re4dcModelPart& p, float M[3][4]) {
             M[r][c] = rows[r][0] * m[c] + rows[r][1] * m[4 + c] + rows[r][2] * m[8 + c];
 }
 
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+// PS31_CENSUS (lane partsetup31, diagnostic): what re4dc_actor_submit does per source frame on its own path (parts
+// past the Frame by mode, Frames prepared, skinned palette entries, meshlets / vertices drawn, lit parts, runs of
+// parts of one info). "PS31A" every 120 source frames.
+struct Ps31A {
+    unsigned f0, parts_skin, parts_rigid, parts_source, frames_prepared, skin_frames, skin_entries;
+    unsigned meshlets, vertices, lit, info_runs, culled;
+    const void* last_info;
+} ps31a;
+#endif
 Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_distance) {
     for (Frame& f : frames)
         if (f.frame == frame_serial && f.info == p.info &&
@@ -2067,6 +2154,9 @@ Frame* prepare_frame(const Re4dcModelPart& p, float near_distance, float far_dis
     table14_enter(f);
 #endif
     ++stats.info_preparations;
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    ++ps31a.frames_prepared; if (f.mode == kSkin) { ++ps31a.skin_frames; ps31a.skin_entries += f.palette_entries; }
+#endif
     return &f;
 }
 
@@ -6188,6 +6278,11 @@ extern "C" int re4dc_actor_skin_register(unsigned frame, const void* info, const
 #if defined(RE4DC_SKIN_ADMISSION32) && RE4DC_SKIN_ADMISSION32
     if (skin_admission_pending.serial) return 0;
 #endif
+#if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
+    // PS31_SKIN_MEMO: every path below may write skins[] / skin_count / skin_frame, after its own lookups; the memo
+    // starts over on the way out (whatever the return), so no memo built inside survives the write.
+    struct Gen31 { ~Gen31() { RE4DC_SKIN_GEN31_BUMP(); } } gen31;
+#endif
     if (frame != skin_frame) {
 #if RE4DC_ACTOR_TRANSACTION
         owned_skin_clear();owned_skin_invalidate_frames();
@@ -6634,6 +6729,85 @@ void abc_verify(Part& e, const Records& r, unsigned nv, const PosConst& k, bool 
 }
 }  // namespace
 #endif
+#if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
+// CHAR_VIS31=2 (chars31.mk; lane chars31 2026-11-11; render only, exact; default 0): a character-path part (props,
+// objects, animals, Leon, Ashley, any model reaching the native actor path) whose conservative view-space bound lies
+// wholly outside the left / right / top / bottom planes of the projection, or wholly behind the eye, draws nothing
+// (every vertex would take the same side outcode), so it skips positions, skin, light and packing. Rigid: the
+// bind-pose sphere (bind == drawn pose). Skinned: the box of the palette's bone origins grown by the largest palette
+// scale x (|bind centre| + bind radius), the bound ACTOR_FOG_GATE uses for depth. Margin x1.05 + 16 units. The Frame
+// (palette, the pose gameplay reads is never touched: palettes are draw-side copies) is still prepared.
+// Port of lane castlebudget's ACTOR_PART_FRUSTUM (fa2a62c35, pf_hidden), plus the behind-the-eye case.
+namespace {
+unsigned cv_tests, cv_culled, cv_log;
+inline bool cv_box_out(const float* P, const float* lo, const float* hi) {
+    const float sx = P[1], ox = P[2], sy = P[3], oy = P[4];
+    auto out = [](float a, float b, const float* lo_, const float* hi_, int k) {
+        const float v = a > 0.0f ? a * lo_[k] : a * hi_[k];   // min over the box of a * v[k] + b * z
+        const float z = b > 0.0f ? b * lo_[2] : b * hi_[2];
+        return v + z > 0.0f;
+    };
+    return lo[2] > 0.0f ||   // wholly behind the eye (the eye looks down -z)
+           out(sx, ox + 1.0f, lo, hi, 0) || out(-sx, 1.0f - ox, lo, hi, 0) ||
+           out(sy, oy + 1.0f, lo, hi, 1) || out(-sy, 1.0f - oy, lo, hi, 1);
+}
+bool cv_hidden(Frame& f, const Re4dcModelPart& p, const BlobHeader& b) {
+    const float* m = p.modelview; const float* c = b.center;
+    if (!(b.radius >= 0.0f) || p.projection[0] != 0.0f) return false;  // perspective only
+    float lo[3], hi[3];
+    if (f.mode != kSkin) {
+        const float s = std::sqrt(std::max(std::max(m[0] * m[0] + m[4] * m[4] + m[8] * m[8], m[1] * m[1] + m[5] * m[5] + m[9] * m[9]),
+                                           m[2] * m[2] + m[6] * m[6] + m[10] * m[10]));
+        const float r = s * b.radius * 1.05f + 16.0f;
+        for (int k = 0; k < 3; ++k) {
+            const float v = m[k * 4] * c[0] + m[k * 4 + 1] * c[1] + m[k * 4 + 2] * c[2] + m[k * 4 + 3];
+            lo[k] = v - r; hi[k] = v + r;
+        }
+    } else {
+        if (!f.palette || !f.palette_entries) return false;
+        if (!f.cv_ready) {
+            float L[3] = {3.0e38f, 3.0e38f, 3.0e38f}, H[3] = {-3.0e38f, -3.0e38f, -3.0e38f}, S = 0.0f;
+            const float* P = f.palette;
+            for (unsigned i = f.palette_entries; i; --i, P += 12) {
+                for (int k = 0; k < 3; ++k) {
+                    const float v = m[k * 4] * P[9] + m[k * 4 + 1] * P[10] + m[k * 4 + 2] * P[11] + m[k * 4 + 3];
+                    L[k] = std::min(L[k], v); H[k] = std::max(H[k], v);
+                }
+                S = std::max(S, P[0] * P[0] + P[1] * P[1] + P[2] * P[2]);
+                S = std::max(S, P[3] * P[3] + P[4] * P[4] + P[5] * P[5]);
+                S = std::max(S, P[6] * P[6] + P[7] * P[7] + P[8] * P[8]);
+            }
+            const float ms = std::sqrt(std::max(std::max(m[0] * m[0] + m[4] * m[4] + m[8] * m[8], m[1] * m[1] + m[5] * m[5] + m[9] * m[9]),
+                                                m[2] * m[2] + m[6] * m[6] + m[10] * m[10]));
+            for (int k = 0; k < 3; ++k) { f.cv_lo[k] = L[k]; f.cv_hi[k] = H[k]; }
+            f.cv_G = ms * std::sqrt(S); f.cv_ready = true;
+        }
+        if (!(f.cv_G >= 0.0f) || !(f.cv_G < 1.0e6f)) return false;
+        const float r = f.cv_G * (std::sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]) + b.radius) * 1.05f + 16.0f;
+        for (int k = 0; k < 3; ++k) { lo[k] = f.cv_lo[k] - r; hi[k] = f.cv_hi[k] + r; }
+    }
+    for (int k = 0; k < 3; ++k) if (!(lo[k] == lo[k]) || !(hi[k] == hi[k]) || !(hi[k] - lo[k] < 1.0e30f)) return false;  // NaN / inf: draw
+    ++cv_tests;
+    if (frame_serial - cv_log >= 600U) {
+        cv_log = frame_serial;
+        re4dc_log("CHAR_VIS31 frame=%u tests=%u culled=%u\n", frame_serial, cv_tests, cv_culled);
+    }
+    if (!cv_box_out(p.projection, lo, hi)) return false;
+    ++cv_culled;
+    return true;
+}
+}  // namespace
+#define CV31_GATE(f_, p_, b_) do { if (cv_hidden((f_), (p_), (b_))) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; } } while (0)
+#else
+#define CV31_GATE(f_, p_, b_) do { } while (0)
+#endif
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+#include "include/chars31_count.inc"
+#else
+#define C31_GUARD(pp) do { } while (0)
+#define C31_KERN(skin, s16, n) do { } while (0)
+#define C31_CULL(n) do { } while (0)
+#endif
 #if RE4DC_NATIVE_FE_CONTINUATION
 static int actor_submit_impl(const Re4dcModelPart* part,Frame* explicit_frame,NativeContinuationProgress* progress) {
 #else
@@ -6650,6 +6824,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     re4dc_gcasset::MotionUnknownScope gcasset_motion_scope(re4dc_gcasset::motion_model_reason());
 #endif
     ++stats.parts;
+    C31_GUARD(part);
     PXF_BEGIN(part);
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(part ? part->model : nullptr, 0);
@@ -6747,6 +6922,21 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         explicit_frame?*explicit_frame:
 #endif
         *prepare_frame(p, near_distance, far_distance);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    {
+        if (frame_serial - ps31a.f0 >= 120U) {
+            const unsigned fr = frame_serial - ps31a.f0;
+            re4dc_log("PS31A frame=%u frames=%u skin=%u rigid=%u source=%u prepared=%u skin_frames=%u skin_entries=%u "
+                      "meshlets=%u vertices=%u lit=%u info_runs=%u culled=%u\n", frame_serial, fr, ps31a.parts_skin,
+                      ps31a.parts_rigid, ps31a.parts_source, ps31a.frames_prepared, ps31a.skin_frames,
+                      ps31a.skin_entries, ps31a.meshlets, ps31a.vertices, ps31a.lit, ps31a.info_runs, ps31a.culled);
+            const void* li = ps31a.last_info;
+            ps31a = Ps31A{}; ps31a.f0 = frame_serial; ps31a.last_info = li;
+        }
+        if (f.mode == kSkin) ++ps31a.parts_skin; else if (f.mode == kRigid) ++ps31a.parts_rigid; else ++ps31a.parts_source;
+        if (p.info != ps31a.last_info) { ++ps31a.info_runs; ps31a.last_info = p.info; }
+    }
+#endif
 #if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
     // RIGID_CENSUS=2 (benchmark census discs, lane cache20): every rigid part is counted (re4dc_rigid_census: parts,
     // meshlets, vertices of the parts that reached here this frame; the biggest part's model) and is not drawn only while
@@ -6960,6 +7150,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
         }
     }
+    CV31_GATE(f, p, *blob);
 #if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
     // RIGID_CHUNK: the size rule (native_actor_rigid.inc).
     const bool rigid = f.mode == kRigid;
@@ -7091,6 +7282,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+    ++ps31a.lit;
+#endif
 #if RE4DC_ACTOR_LIGHT_FAST_ONLY
     if (!RE4DC_LEON_DIR26_FOLD(p, f, lights))
         B28_NOTE(p, fast_only_lights(p, f, blob->center, lights));
@@ -7210,6 +7404,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         const u8* index = lists + (lt ? lt[mi].index : m.index);
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+        ++ps31a.meshlets; ps31a.vertices += nv;
+#endif
 #if RE4DC_ACTOR_BACKFACE_CONE
         if (abc) {
             ++abc_tests[abc_cls]; abc_verts[abc_cls] += nv;
@@ -7246,10 +7443,15 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #else
         pass_positions(e, r, nv, k, s16_uv, all, any);
 #endif
+        C31_KERN(f.mode == kSkin, s16_uv, nv);
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
         if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
 #endif
         if (all & kOcCull) {
+            C31_CULL(nv);
+#if defined(RE4DC_PS31_CENSUS) && RE4DC_PS31_CENSUS
+            ++ps31a.culled;
+#endif
 #if RE4DC_ACTOR_CENSUS
             if (census_cur) census_cur->culled += nv;
 #endif
@@ -7658,6 +7860,7 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
     re4dc_callprof_part(p.model, 1);
 #endif
     if (p.positions) return -1;
+    C31_GUARD(&p);
     ++stats.parts;
     const SkinEntry* se = nullptr;
     Re4dcActorSource src{};
@@ -7673,6 +7876,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     re4dc::dsa24::count(re4dc::dsa24::Parts);
 #endif
     if (p.positions) return -1;
+    C31_GUARD(&p);
     APROF_SPAN(aprof_chunk, APROF_CHUNK);
     APROF_COUNT(APROF_N_CHUNKS, 1);
     ++stats.parts;
@@ -7892,6 +8096,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     }
 #endif
     // (A skinned Frame: re4dc_actor_submit's rigid sphere test does not apply.)
+    CV31_GATE(f, p, *blob);
     // The most slots this chunk can send (a whole meshlet 3 per triangle at most, a clipped one 6): the
     // window stays inside the store-queue window of 32767 slots.
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
@@ -8146,8 +8351,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #else
         pass_positions(e, r, nv, k, s16_uv, all, any);
 #endif
+        C31_KERN(f.mode == kSkin, s16_uv, nv);
         APROF_STOP(aprof_pos);
         if (all & kOcCull) {
+            C31_CULL(nv);
             ++stats.meshlets_culled;
             e.input += nt;
             continue;
@@ -8328,6 +8535,7 @@ extern "C" unsigned re4dc_actor_submit_chunks(Re4dcModelPart* part, const Re4dcA
     OneWindow w;
     for (unsigned i = 0; i < n; ++i) {
         load(i);
+        C31_GUARD(&p);
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         one_tap = OneTap{}; one_tap.on = i < nref;
 #endif
