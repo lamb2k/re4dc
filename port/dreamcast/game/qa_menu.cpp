@@ -72,7 +72,10 @@ void re4dc_vram_pages_census(unsigned* out) __attribute__((weak));              
 unsigned re4dc_vram_pages_probe_fails(void) __attribute__((weak));                             // vram_pages.cpp (disc31)
 void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigned long long* block_us)
     __attribute__((weak));                                                                     // dvd_read_safe.cpp
-extern unsigned long re4dc_fx_esp_live[32] __attribute__((weak));                            // esp.cpp (FX_SCAN)
+#ifndef RE4DC_FX_ESP_WORDS
+#define RE4DC_FX_ESP_WORDS 32
+#endif
+extern unsigned long re4dc_fx_esp_live[RE4DC_FX_ESP_WORDS] __attribute__((weak));                            // esp.cpp (FX_SCAN)
 extern volatile unsigned re4dc_qa_shore_far_mm __attribute__((weak));                      // native_static.cpp (LAKE_FAR)
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 // WORLD_METER (game30.mk): the world rows (0 = the game's own) and the VRAM failure rooms.
@@ -509,7 +512,7 @@ void snap_diag() {
     a = addf(a, "ganados_alive=%d\n", g_game.alive);
     if (re4dc_fx_esp_live) {
         unsigned n = 0;
-        for (int i = 0; i < 32; ++i) n += (unsigned) __builtin_popcountl(re4dc_fx_esp_live[i]);
+        for (int i = 0; i < RE4DC_FX_ESP_WORDS; ++i) n += (unsigned) __builtin_popcountl(re4dc_fx_esp_live[i]);
         a = addf(a, "fx_live=%u\n", n);
     }
     g_diag_stats = a;

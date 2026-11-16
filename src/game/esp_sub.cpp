@@ -1359,7 +1359,12 @@ static void FxEssInit()
     for (unsigned i = 0; i < sizeof(cut); ++i) s_ess_class[cut[i]] = ESS_CUT;
     for (unsigned i = 0; i < sizeof(glow); ++i) s_ess_class[glow[i]] = ESS_GLOW;
 }
+#if defined(RE4DC_R10B_FX_QCAP)
+// R10B_FX_QCAP=<n> (effects30.mk; lane lake66r): the queue-time layer cap of R10B_FX_CUT bit 4 (default 4 = lake66q's build).
+enum { kEssLayer = 2, kEssQueue = RE4DC_R10B_FX_QCAP };
+#else
 enum { kEssLayer = 2, kEssQueue = 4 };   // kEssQueue: R10B_FX_CUT bit 4 queue-time cap (pool order picks differ from emit order, so it keeps more)
+#endif
 extern "C" {
 u8 re4dc_fx_essential = RE4DC_FX_ESSENTIAL_BOOT;
 }
@@ -4871,7 +4876,7 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp)
 // in FxEssentialCut's same verdict at the emit; cut sprites never touch the layer / trim buckets, so the buckets read the same.
 // Excluded, as their bodies draw something else first or are not plain sprites: shimmer, nega, the r100 streak-anchor shape
 // (Ps2fxClass 2 draws the shafts) and the Esp1b grid. The caller keeps render targets (Tool_flg 0x10000) and screen sprites queued.
-static int espEssStateless(const cEsp* esp)
+static inline __attribute__((always_inline)) int espEssStateless(const cEsp* esp)
 {
     if (!re4dc_fx_essential || esp->info.owner == 0x03 || esp->m_Id == 0x15 || esp->m_Id == 0x48 || esp->m_Id == 0x0e ||
         esp->m_Id == 0x1b || esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x10000)) ||
@@ -4897,6 +4902,10 @@ static int espEssStateless(const cEsp* esp)
 #if defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && defined(RE4DC_ESP_ESSENTIAL_EARLY)
 // FX_TRANS_SKIP31 (fx31.mk): the coarse sprite pass need not queue `esp` (see espEssStateless).
 extern "C" int re4dc_esp_ess_precut31(const cEsp* esp) { return espEssStateless(esp); }
+#endif
+#if defined(RE4DC_FX_TRANS_SKIP31) && RE4DC_FX_TRANS_SKIP31 && !defined(RE4DC_ESP_ESSENTIAL_EARLY)
+// census / trim-log builds turn the early Essential decline off: the coarse pass queues as before (fx31 left this undefined: link error)
+extern "C" int re4dc_esp_ess_precut31(const cEsp*) { return 0; }
 #endif
 #if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
 #if !RE4DC_EFFECT_SPRITES || !RE4DC_WATER45_NATIVE

@@ -473,9 +473,8 @@ endif
 # R10B_FX_DEAD=<mask> (default 0; draw-dead effects only; lane lake66p, GitHub #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and
 # ROUTE_CH13=1 / WATER45_NATIVE=1): r10b keeps ~765 permanent room sprites (owner 0xD0 SST sheets, tex f2 / f6 / cb / 1d / ff, and est
 # 0x23's square) that EspCommonTrans's WATER45_NATIVE cut never draws (the PS2 release deleted them): each still moved, was queued into the
-# ordering table and dispatched every tick. Bit 1: they are not queued (render only, exact). Bit 2: they are released the moment
-# EspSeqSet has built them (all seed and Rnd() draws made as before), so they never move, queue or take a scan slot (the pool's slot
-# order changes; no Rnd(), no state anything reads). 3 = both. r10b only.
+# ordering table and dispatched every tick. Bit 1: they are not queued (render only, exact). Bit 2: EspSeqSet marks them dormant after
+# all seed and Rnd() draws (m_Be_flg 0x80, the slot is kept: the pool is as before), EspMove and EspTrans step over them. 3 = both. r10b only.
 R10B_FX_DEAD ?= 0
 ifneq ($(R10B_FX_DEAD),0)
 ifneq ($(filter 1 2 3,$(R10B_FX_DEAD)),$(R10B_FX_DEAD))
@@ -502,6 +501,40 @@ ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
 $(error R10B_FX_CUT needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
 endif
 $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_CUT=$(R10B_FX_CUT)
+endif
+# ESP_MAP_WORDS=<n> (default 32 = unchanged image; exact; lane lake66r; needs GAME_FX_SCAN): GAME_FX_SCAN's live / owner slot maps hold
+# 32 words = 1024 slots and switch themselves off (re4dc_fx_esp_ok) for a larger pool. r10b's pool is 1800 slots, so in the Del Lago
+# fight the scan maps were off: EspMove, EspTrans and EspDelete visited every slot, and fx31's FX_TRANS_SKIP31 / FX_DORMANT31 and
+# R10B_FX_UNLIVE had nothing to step over. 57 words = 1824 slots turn them on there (+6.4 KB .bss: ownmap is 64 rows).
+ESP_MAP_WORDS ?= 32
+ifneq ($(ESP_MAP_WORDS),32)
+ifeq ($(GAME_FX_SCAN),0)
+$(error ESP_MAP_WORDS needs GAME_FX_SCAN=1 or 2)
+endif
+GAME_CPPFLAGS += -DRE4DC_FX_ESP_WORDS=$(ESP_MAP_WORDS)
+PLATFORM_CPPFLAGS += -DRE4DC_FX_ESP_WORDS=$(ESP_MAP_WORDS)
+endif
+# R10B_FX_QCAP=<n> (default 4; 1..8; lane lake66r; only with R10B_FX_CUT bit 4): the queue-time Essential layer cap per (owner, texture)
+# layer per frame. 4 is lake66q's build; the draw itself keeps 2, so 2 is the draw's own count taken in pool order (an APPROXIMATION, as bit 4).
+R10B_FX_QCAP ?= 4
+ifneq ($(R10B_FX_QCAP),4)
+ifeq ($(filter 1 2 3 4 5 6 7 8,$(R10B_FX_QCAP)),)
+$(error R10B_FX_QCAP is 1..8)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_QCAP=$(R10B_FX_QCAP)
+endif
+# R10B_FX_UNLIVE=1 (default 0; exact, render and scan only; lane lake66r; needs R10B_FX_DEAD bit 2, GAME_FX_SCAN and FX_TRANS_SKIP31): the
+# 766 dormant room sprites R10B_FX_DEAD leaves in the pool clear their GAME_FX_SCAN live bit at the first EspMove visit, so EspMove's
+# scan and EspTrans's stepper stop reading their slots (250 KB of data cache a tick, 2 x 766 slot touches). No Rnd(), no state read.
+R10B_FX_UNLIVE ?= 0
+ifneq ($(R10B_FX_UNLIVE),0)
+ifneq ($(FX_TRANS_SKIP31),1)
+$(error R10B_FX_UNLIVE needs FX_TRANS_SKIP31=1 (EspTrans's live-map stepper))
+endif
+ifeq ($(filter 2 3,$(R10B_FX_DEAD)),)
+$(error R10B_FX_UNLIVE needs R10B_FX_DEAD=2 or 3)
+endif
+$(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_UNLIVE=1
 endif
 # R10B_ROPE_HALF=1 (default 0; an APPROXIMATION, look check; lane lake66q, #66 Del Lago slowdown): the 3.4 ms a tick that lake66p
 # MODELLED as "Leon's cloth" is the boat's anchor rope (pl0f.cpp pl0fLongRopeSet: a 30-link obj1d chain, Bundle_num 100, collides

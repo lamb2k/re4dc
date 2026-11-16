@@ -306,7 +306,9 @@ static inline unsigned long re4dcEspOwnB(unsigned long pEm)
 // call is seen or skipped exactly as the source loop would, and after a pool change the rest of the
 // pass tests every slot.
 #if defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN
-#define RE4DC_FX_ESP_WORDS 32
+#ifndef RE4DC_FX_ESP_WORDS
+#define RE4DC_FX_ESP_WORDS 32   // ESP_MAP_WORDS (effects30.mk; lane lake66r): 57 covers r10b's 1800-slot pool
+#endif
 extern "C" unsigned long re4dc_fx_esp_live[RE4DC_FX_ESP_WORDS];
 extern "C" unsigned long re4dc_fx_esp_ownmap[64][RE4DC_FX_ESP_WORDS];
 extern "C" unsigned long re4dc_fx_esp_ok;

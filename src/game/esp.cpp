@@ -39,6 +39,17 @@ extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // esp_sub.cpp
 #else
 #define R10B_SKIP_QUEUE(trans, esp)
 #endif
+#if defined(RE4DC_R10B_FX_UNLIVE) && RE4DC_R10B_FX_UNLIVE
+// R10B_FX_UNLIVE (effects30.mk; lane lake66r): a dormant R10B_FX_DEAD sprite (m_Be_flg 0x80, kept slot) clears its GAME_FX_SCAN live bit the
+// first time EspMove visits it, so EspMove's scan and EspTrans's stepper (FX_TRANS_SKIP31) never read its 336-byte slot again (766 slots
+// in r10b: 250 KB of data cache a tick). A pool resync sets the bit again and the next EspMove visit clears it again, as FX_DORMANT31 does.
+#if !(defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN) || !(defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 2))
+#error R10B_FX_UNLIVE needs GAME_FX_SCAN and R10B_FX_DEAD bit 2
+#endif
+#define R10B_MOVE_UNLIVE(esp, i) if (((esp)->m_Be_flg & 0x81) == 0x81 && ((esp)->m_Be_flg & 0x80)) {                  if ((i) < 32 * RE4DC_FX_ESP_WORDS) re4dc_fx_esp_live[(i) >> 5] &= ~(1ul << ((i) & 31));                 return;                                                                                              }
+#else
+#define R10B_MOVE_UNLIVE(esp, i)
+#endif
 #if defined(RE4DC_R10B_FX_CUT) && RE4DC_R10B_FX_CUT
 // R10B_FX_CUT (effects30.mk; esp_sub.cpp re4dc_r10b_fx_cut): a plain sprite the Essential filter or the view declines is not
 // queued (render only). mode 1: a full pass; 2: the coarse pass's sprite entry; 0: a logic-only entry (never touched).
@@ -612,7 +623,7 @@ static inline void fxEspMoveOne(cEspSystem* sys, u32 i, int pause, u32* cnt)
 {
     cEsp* esp = (cEsp*) (sys->pEspBuf + i * 0x150);
 
-    FX31_MOVE_DORMANT(esp, i) if (!fxEspActive(esp) R10B_OR_DORMANT_CNT(esp, *cnt)) {
+    FX31_MOVE_DORMANT(esp, i) R10B_MOVE_UNLIVE(esp, i) if (!fxEspActive(esp) R10B_OR_DORMANT_CNT(esp, *cnt)) {
         return;
     }
     if (esp->parent != pEffParentWorld) {
