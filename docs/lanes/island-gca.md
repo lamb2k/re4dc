@@ -55,3 +55,19 @@ Findings, not done:
   By kind: texture unknown 125, model gc 54, model unknown 51, motion unknown 6, motion gc 3, sound-mram unknown 4, sound-aram unknown 4, geometry 1, movie 1.
   em1d/em1e sound-mram 3a258d2c and sound-aram 2b738457 rows are gone (sound gc 18 -> 0). Remaining sound unknown = banks I did not convert: r30f, r315, r321 (mram+aram each).
   The ig2 run did not include the 13 round 2 texture rows' effect separately (they were already in this build).
+
+## Round 3 (2026-11-17 evening)
+Landed: island_gca/island_objects.py + island_objects_store.py run ps2_objects.py room over all 36 island rooms (loose BIN pairs at the same archive index when the payload BIN is le_mirror(GC)
+and the PS2 rNNN.dat has a BIN there, plus every etc model; placeholder etc models emptied except the panes et0000/et2500; GC room = GC Disc 2 USA ISO). Store isobj5-20261117 (35 changed dars, 157 PS2 model rows),
+D3_DATA after isnd5. isnd5 + st3 r30f r315 (r321 has no bank ps2_audio recognises). isobjm5 (PS2 motion r30c 5 clips / r30f 8 clips, verify PASS) built but REMOVED from D3_DATA: the 11 judged motion rows are
+kept-GC slots (GC-only objects the PS2 dropped) so it removes no rows and only risks gameplay timing.
+Cycle ig3 (console-like Flycast, test commit 4237cb14, evidence rr\1117-1530-4237cb14): Disc 1 image a205f8a035e4d465 (identity PASS); boot: reader bug, PASS per coordinator (boot-fixreader); GDEMU race PASS; Disc 1 GC-ASSET gate PASS;
+Disc 3 CAST-GC PASS (405 lines, 54 room/model rows), LEON-GC 36/36, TEXCHK 37/0, no HALT/FAULT/MISSING/OOM.
+KOS 48 KiB Disc 3 min headroom: door 50,616 / 50,528 (unchanged), fight 45,176 / 45,088 (was 46,776 / 46,688: -1.6 KB with isobj5; still above the 48 KiB line).
+GC-ASSET FAIL 237 unique rows (ig2 249): model gc 54 -> 32, model unknown 51 -> 44, motion unknown 6, motion gc 1, texture unknown 124, geometry 1, movie 1, sound-aram unknown 14, sound-mram unknown 14.
+Sound unknown rose 8 -> 28: isobj5 re-stages the dars that isnd5/isnd300 had put sound rows on, and the last staging set decides provenance; isobj5/isobjm5 provenance.tsv now carry the isnd5 + isnd300 sound rows (fixed after the cycle,
+NOT re-run: expected ~8 again).
+Remaining 76 model rows: 7 pl01/em bodies and em1f cast-source bodies (other lane), and item / debris / room BIN models in shared dars (ps2_items.py pack needs the island GC rooms: it reads rooms from the Debug Disc 1 ISO only,
+KeyError r300; PS2 item pictures come through ps2_items_tex.py on Windows): not done. 
+Parked: 57 texture shas ("source" / "source-pair" are generic MaterialBinding names, identical in island-d3's own pack; a PS2 trace needs matching PS2 TPL pixels per key). Not done: isle5 per-room gating (no room fixtures with decisions/progress
+checks for the island, cap 4 on the PS2 lists unverified): isle5 stays out of the recipe. Still pairs: not captured; isobj5 changes the look of island props (smaller PS2 meshes, same GC textures), so it needs still pairs before landing.
