@@ -22,6 +22,13 @@
 #define ROUTE_SCE_MODE(flags) 0
 #endif
 extern "C" void re4dc_log(const char* fmt, ...);
+#if (defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG) || (defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK)
+extern "C" unsigned re4dc_vi_retrace_count(void);
+#endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+#include <arch/timer.h>
+extern "C" void re4dc_movie_diag(unsigned*, unsigned*, unsigned*, unsigned*, unsigned*, int*, int*, unsigned*);
+#endif
 
 // Source Evt_*_Func handlers read only funcMode (and NowCut/NowFrame in mode 1)
 // in the begin/end/cancel modes used here; no event body exists to fetch.
@@ -155,7 +162,51 @@ int RouteMoviePlayQte(unsigned id, unsigned flags, RouteEvtFunc func, unsigned q
     qte_frames = RE4DC_ROUTE_QTE_FRAMES;  // test builds: hold the cut for a timed screenshot
 #endif
     unsigned f = 0;
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+    // ROUTE_QTE_CLOCK: the r10b rope QTE (ROUTE_MOVIE_ACT_COUNT) counts its frames on the movie's picture clock, not per game
+    // frame. The movie runs on the retrace clock (one picture per 2 fields, its sound too), so a game frame slower than that
+    // let the movie end before the QTE's 285 frames did: its last picture stayed frozen under the "CUT" prompt (GitHub #66).
+    // Frames the movie moved on in one game frame are not skipped (the event func sees every frame number once, e.g. frame
+    // 100 starts the prompt); the A-press count still reads the pad once per game frame. At 30 fps nothing changes. The
+    // log line says how long the QTE's game frames really took.
+    const bool qclock = (flags & ROUTE_MOVIE_ACT_COUNT) != 0 && open;
+    const unsigned ls_vi0 = re4dc_vi_retrace_count();
+    unsigned ls_prev = ls_vi0, ls_slow = 0, ls_max = 0, ls_game = 0, ls_skipped = 0;
+#endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+    // DELLAGO_DIAG (test only, lane dl66b, #66 "CUT" freeze): one line per 15 QTE game frames: the retrace count, the
+    // movie's picture counters, how many fields each game frame took; RE4DC_QTE_BURN_US busy-waits per frame to stand in
+    // for a slower console.
+    unsigned dbg_prev_vi = re4dc_vi_retrace_count(), dbg_vi0 = dbg_prev_vi, dbg_held_f = 0, dbg_max_gap = 0;
+    unsigned long long dbg_t0 = timer_us_gettime64();
+#endif
     for (; f < qte_frames; ++f) {
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+        {
+            unsigned k, shown, dropped, late, starved, v0; int held, pending;
+            re4dc_movie_diag(&k, &shown, &dropped, &late, &starved, &held, &pending, &v0);
+            const unsigned vi = re4dc_vi_retrace_count();
+            if (vi - dbg_prev_vi > dbg_max_gap) dbg_max_gap = vi - dbg_prev_vi;
+            dbg_prev_vi = vi;
+            if (held && !dbg_held_f) { dbg_held_f = f; re4dc_log("dl66 qte: picture held (movie ended) at game frame %u vi+%u\n", f, vi - dbg_vi0); }
+            if ((f % 15) == 0)
+                re4dc_log("dl66 qte: f=%u vi+%u t+%ums k=%u shown=%u dropped=%u late=%u starved=%u held=%d pending=%d due=%d maxgap=%u presses=%d\n",
+                          f, vi - dbg_vi0, (unsigned) ((timer_us_gettime64() - dbg_t0) / 1000), k, shown, dropped, late, starved, held,
+                          pending, (int) (vi - (v0 + 2 * k)), dbg_max_gap, (int) e->actBtnCount);
+#if defined(RE4DC_QTE_BURN_US) && RE4DC_QTE_BURN_US
+            { const unsigned long long b0 = timer_us_gettime64(); while (timer_us_gettime64() - b0 < RE4DC_QTE_BURN_US) {} }
+#endif
+        }
+#endif
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+        {
+            const unsigned vi = re4dc_vi_retrace_count();
+            if (ls_game && vi - ls_prev > 2) ++ls_slow;
+            if (ls_game && vi - ls_prev > ls_max) ls_max = vi - ls_prev;
+            ls_prev = vi;
+            ++ls_game;
+        }
+#endif
         e->NowFrame = f;
         func(e);
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
@@ -173,7 +224,23 @@ int RouteMoviePlayQte(unsigned id, unsigned flags, RouteEvtFunc func, unsigned q
             }
         }
         SceSleep(1);
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+        if (qclock) {
+            const unsigned clk = re4dc_movie_clock();
+            const unsigned want = clk > qte_picture ? clk - qte_picture : 0;   // the QTE frame the movie has reached
+            while (f + 1 < want && f + 1 < qte_frames && !(e->StatusFlag & 0x4000)) {
+                ++f;
+                ++ls_skipped;
+                e->NowFrame = f;
+                func(e);   // a frame number the movie passed during a slow game frame: run it, no pad read
+            }
+        }
+#endif
     }
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+    re4dc_log("route QTE: id=%05x clock=%d frames=%u game_frames=%u catch_up=%u fields=%u (30 fps = %u) slow_frames=%u max_gap_fields=%u\n", id,
+              qclock ? 1 : 0, f, ls_game, ls_skipped, re4dc_vi_retrace_count() - ls_vi0, 2 * f, ls_slow, ls_max);
+#endif
     re4dc_log("route QTE: id=%05x cut=%#x frames=%u/%u passed=%d room0=%08x picture=%s\n", id, qte_cut, f, qte_frames,
               (e->StatusFlag & 0x4000) != 0, pG->Room_flg[0], open ? "movie" : "none");
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13

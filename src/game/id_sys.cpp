@@ -1133,6 +1133,16 @@ void idSysMove02(IdUnit* u)
     }
     if (u->pParent != 0) {
         IdUnit* p = u->pParent;
+#if defined(RE4DC_ID_ALPHA_SAT) && RE4DC_ID_ALPHA_SAT
+        // ID_ALPHA_SAT (#66 bug 6): a curve-only alpha is not clamped (title logo group: 0 -> 314 by
+        // time 645), so the byte conversion wrapped 314 to 58 and the logo faded out on the menu.
+        // The GameCube shows the logo at full strength: convert with saturation to 0..255.
+        for (int c = 0; c < 4; ++c) {
+            f32 v = u->col[c] * p->col[c] / 255.0f;
+            u->col[c] = v >= 255.0f ? 255.0f : v <= 0.0f ? 0.0f : (f32) (u8) v;
+        }
+        return;
+#endif
         u->col[0] = (f32) (u8) (u->col[0] * p->col[0] / 255.0f);
         u->col[1] = (f32) (u8) (u->col[1] * p->col[1] / 255.0f);
         u->col[2] = (f32) (u8) (u->col[2] * p->col[2] / 255.0f);

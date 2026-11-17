@@ -141,10 +141,17 @@ const re4dc::render::SourceLighting leon_flat_light=[]{re4dc::render::SourceLigh
 unsigned attempts, drawn, fallback, rejected, missing_texture;
 #if RE4DC_COARSE_SKIN_FTRV
 // FTRV palettes: entries built once from the generated weights; T only for the bones they use.
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+#include "leon_lod_caps.h"
+// LEON_LOD: the rig's palette programs need 6,328 B (pl00, level 0) / 5,456 B (pl08); every rung needs less
+// (lod_pack.py pack asserts it). The 24,576 B stream of the other builds is 18 KB of the character data block's padding.
+constexpr unsigned kSkinStream = leon_lod_caps::skin_stream;
+#else
 constexpr unsigned kSkinStream = 24576;
 #if RE4DC_PS2_LEON
 // The arm's FTRV palette programs (pl00 and, under ACTOR_PL08, pl08 with the arm's shared roles 2..7) fit today's stream.
 static_assert(leon4k::skin_stream_bytes <= kSkinStream, "PS2_LEON arm needs a larger skin stream");
+#endif
 #endif
 alignas(32) unsigned char skin_stream[kSkinStream];
 alignas(32) float bone_T[119][12];
@@ -468,7 +475,11 @@ const void* portrait_hair_info;unsigned portrait_hair_frame=~0u,portrait_hair_dr
 #if RE4DC_NATIVE_FE_CONTINUATION
 const void* portrait_failed_info;unsigned portrait_failed_frame=~0u,portrait_hair_queued;
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+alignas(32) float portrait_palette[leon_hair_runs::boot_palette_count][12];  // LEON_LOD: the largest rung's hair (level 0; a rung never has more)
+#else
 alignas(32) float portrait_palette[RE4DC_LEON_HAIR_PALETTES][12];
+#endif
 }
 extern "C" int re4dc_portrait_hair(const void* model,const void* info_ptr,const Re4dcModelPart* src) {
     auto* m=(const cModel*)model;auto* info=(const cModelInfo*)info_ptr;
@@ -508,7 +519,7 @@ extern "C" int re4dc_portrait_hair(const void* model,const void* info_ptr,const 
     Re4dcModelPart p=*src;
     p.info=&c;p.part=&c;p.positions=nullptr;p.normals=nullptr;p.colors=nullptr;
     p.position_count=c.position_count;p.normal_count=c.normal_count;p.position_stride=6;p.normal_stride=6;p.normal_shift=14;
-    p.shift=4;p.stream=run.stream;p.stream_bytes=run.bytes;p.uv=leon_hair_runs::uv;p.uv_offset[0]=p.uv_offset[1]=0;
+    p.shift=4;p.stream=run.stream;p.stream_bytes=run.bytes;p.uv=RE4DC_LEON_HAIR_UV_DATA;p.uv_offset[0]=p.uv_offset[1]=0;
     p.static_geometry=0;p.cull=0;p.flags=0;  // the arm stream layout (as the coarse path: u16 indices, 1.15 UVs)
     // The owner path's hair material (coarse_actor_owner_leon.inc): colour pair 0 with its same-UV I4 mask, repeat.
     p.image=hair_colours[0];p.mask=hair_mask;p.mask_ref=0;p.mask_same_uv=1;p.material_flags=4;p.blend=0;p.wrap_s=p.wrap_t=1;

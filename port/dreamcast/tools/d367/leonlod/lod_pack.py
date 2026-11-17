@@ -28,6 +28,7 @@ from pathlib import Path
 MAGIC, VERSION = 0x31504C4C, 1
 ROLES = (0, 1, 2, 3, 4, 7)
 LEVEL_BYTES = 448
+SKIN_STREAM = 7168   # the game's FTRV palette stream under LEON_LOD (coarse_actor.cpp kSkinStream); the rig's level 0 needs 6,328 B
 ARRAY = re.compile(r'alignas\(32\)\s+static\s+(?:const\s+)?unsigned\s+char\s+(\w+)\[\]\s*=\s*\{([^}]*)\};', re.S)
 WEIGHTS = re.compile(r'static const (?:leon4k::)?Weight (\w+)_weights\[\] = \{(.*?)\n\};', re.S)
 ROW = re.compile(r'^\{(\d+),(\d+),(\d+),(\d+),(\d+),(\d+),(\w+),(\w+),(\w+),(\w+),(\w+)\},$', re.M)
@@ -72,6 +73,10 @@ def const(text, name):
 
 
 def level(name, d):
+    import json
+    rep = json.loads((Path(d) / 'report.json').read_text())
+    need = max(rep['skin_stream_pl00'], rep['skin_stream_pl08'])
+    assert need <= SKIN_STREAM, (name, 'palette program needs %d B, the LEON_LOD skin stream is %d' % (need, SKIN_STREAM))
     rt = (Path(d) / 'ps2leon_runtime.h').read_text()
     hr = (Path(d) / 'ps2leon_hair_runs.h').read_text()
     A, Wt = arrays(rt), weights(rt)
@@ -170,8 +175,8 @@ def derive(rt_path, hair_path, pkg, out):
           'static constexpr unsigned role=7,run_count=1,material_mask=2,boot_palette_count=%d;\n}\n') % (asset.group(1), asset.group(2), pc)
     (out / 'ps2leon_hair_runs_lod.h').write_text(hd)
     (out / 'leon_lod_caps.h').write_text('#pragma once\n// lod_pack.py derive from %s\nnamespace leon_lod_caps {\n'
-                                         'constexpr unsigned levels=%d,buffer_bytes=%d,magic=0x%08xu,version=%d,level_record=%d;\n}\n'
-                                         % (Path(pkg).name, n, r32(big), MAGIC, VERSION, LEVEL_BYTES))
+                                         'constexpr unsigned levels=%d,buffer_bytes=%d,magic=0x%08xu,version=%d,level_record=%d,skin_stream=%d;\n}\n'
+                                         % (Path(pkg).name, n, r32(big), MAGIC, VERSION, LEVEL_BYTES, SKIN_STREAM))
     print('derived into', out)
 
 

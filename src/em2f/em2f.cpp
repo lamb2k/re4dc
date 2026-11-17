@@ -39,6 +39,13 @@
 asm(".comm common_em2f,52,4");
 
 extern "C" void OSReport(const char* fmt, ...);
+// DELLAGO_DIAG=1 (test only, lane dellago66): "dl66 boss" lines when the monster goes for the swimmer and when it
+// catches him.
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+#define DL66_BOSS(what, r) OSReport("dl66 boss %s: routine=%d frame=%u\n", what, (int) (r), (unsigned) pG->Frame_cnt)
+#else
+#define DL66_BOSS(what, r)
+#endif
 extern void (*EmInitFunc)(cEm* em);   // game/em.cpp
 
 // motion.h declares the one-argument form; the enemies pass a second argument.
@@ -840,7 +847,7 @@ static void em2f_R1_RisingDragon(cEm2f* em)
         } else {
             if (em->seFlags28B & 1) {
                 if (pG->Status_flg[1] & 0x00400000) {
-                    EmRoutineSet(pPL, r, 0xF, 9, r);
+                    EmRoutineSet(pPL, r, 0xF, 9, r); DL66_BOSS("catch", 7);
                     SndCall(8, 0x1E, &em->pos, em->id, 0, em);
                     SndCall(8, 0x1F, &pPL->pos, em->id, 0, pPL);
                 }
@@ -952,7 +959,7 @@ static void em2f_R1_Packman(cEm2f* em)
         } else {
             if (em->seFlags28B & 1) {
                 if (pG->Status_flg[1] & 0x00400000) {
-                    EmRoutineSet(pPL, r, 0xF, 9, r);
+                    EmRoutineSet(pPL, r, 0xF, 9, r); DL66_BOSS("catch", 8);
                     pPL->be_flag &= ~2;
                     SndCall(8, 0x1E, &em->pos, em->id, 0, em);
                 }
@@ -1676,12 +1683,12 @@ int em2fRisingDragonCk(cEm2f* em)
             if (Rnd() & 3) {
                 w->rndFlag = 0;
             }
-            EmRoutineSet(em, one, 7, 0, 0);
+            EmRoutineSet(em, one, 7, 0, 0); DL66_BOSS("attack", 7);
         } else {
             if (Rnd() & 3) {
                 w->rndFlag = one;
             }
-            EmRoutineSet(em, one, 8, 0, 0);
+            EmRoutineSet(em, one, 8, 0, 0); DL66_BOSS("attack", 8);
         }
         return 1;
     }

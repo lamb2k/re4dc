@@ -22,6 +22,162 @@
 
 extern "C" uint16_t net_crc16ccitt(const uint8_t* data, int size, uint16_t start);
 
+// VMU_SAFE_IO=1 (issue #66 bug 5): KOS vmu_block_write / vmu_block_read over the wrapped symbols (vmufs.c calls them too).
+// KOS waits 100 ms for each maple answer. If that runs out the frame is still on the maple queue, but the next
+// maple_frame_init clears frame->queued, so maple_queue_frame inserts it a second time: the frame then links to itself and
+// maple_queue_flush spins forever in the vblank interrupt. The whole console stops, the crash watchdog included, in the
+// middle of a VMU write; a torn FAT or directory block can then read back as corrupt. Here a late answer takes the frame
+// off the queue before it is reused, every wait is bounded, and a block that cannot be written is an error the game shows.
+// VMU_IO_FAULT=N (test discs only): before the Nth block write since boot, maple sends are held off for 700 ms.
+#if (defined(RE4DC_VMU_SAFE_IO) && RE4DC_VMU_SAFE_IO) || (defined(RE4DC_VMU_IO_FAULT) && RE4DC_VMU_IO_FAULT)
+#include <kos/genwait.h>
+#include <arch/irq.h>
+#include <arch/timer.h>
+extern "C" {
+int __wrap_vmu_block_write(maple_device_t* dev, uint16_t blocknum, const uint8_t* buffer);
+int __real_vmu_block_write(maple_device_t* dev, uint16_t blocknum, const uint8_t* buffer);
+int __wrap_vmu_block_read(maple_device_t* dev, uint16_t blocknum, uint8_t* buffer);
+}
+namespace {
+#if RE4DC_VMU_IO_FAULT
+unsigned s_writes;
+void* fault_end(void*)
+{
+    thd_sleep(700);
+    maple_state.dma_in_progress = 0;
+    return nullptr;
+}
+void fault_maybe(unsigned blk)
+{
+    if (++s_writes != RE4DC_VMU_IO_FAULT) return;
+    while (maple_state.dma_in_progress) thd_pass();
+    maple_state.dma_in_progress = 1;
+    thd_create(1, fault_end, nullptr);
+    re4dc_log("card-vmu: fault test: maple sends held 700 ms at write %u block %u\n", s_writes, blk);
+}
+#endif
+#if RE4DC_VMU_SAFE_IO
+constexpr unsigned kAnswerMs = 500, kFrameMs = 2000, kDmaEndMs = 1000;
+volatile int s_answered;
+unsigned s_late;
+uint64_t now_ms() { return timer_ms_gettime64(); }
+void answered_cb(maple_state_t*, maple_frame_t* f)
+{
+    s_answered = 1;
+    genwait_wake_all(f);
+}
+bool frame_take(maple_frame_t* f)
+{
+    const uint64_t t0 = now_ms();
+    while (maple_frame_trylock(f) < 0) {
+        if (now_ms() - t0 > kFrameMs) return false;
+        thd_sleep(2);
+    }
+    return true;
+}
+void frame_release(maple_frame_t* f) { f->state = MAPLE_FRAME_VACANT; }
+// Off the queue, and no DMA still landing in its buffer, before anyone reuses the frame.
+void frame_abandon(maple_frame_t* f, const char* what, unsigned blk)
+{
+    ++s_late;
+    maple_queue_remove(f);
+    const uint64_t t0 = now_ms();
+    while (maple_state.dma_in_progress && now_ms() - t0 < kDmaEndMs) thd_sleep(2);
+    frame_release(f);
+    re4dc_log("card-vmu: %s block %u got no answer in %u ms (late %u)\n", what, blk, kAnswerMs, s_late);
+}
+bool send_and_wait(maple_frame_t* f)
+{
+    const uint64_t t0 = now_ms();
+    const int o = irq_disable();
+    s_answered = 0;
+    f->callback = answered_cb;
+    maple_queue_frame(f);
+    while (!s_answered && now_ms() - t0 < kAnswerMs) genwait_wait(f, "vmu_safe_io", 20);
+    const bool got = s_answered;
+    irq_restore(o);
+    return got;
+}
+int write_once(maple_device_t* dev, uint16_t blk, const uint8_t* in)
+{
+    maple_frame_t* f = &dev->frame;
+    if (!frame_take(f)) return MAPLE_ETIMEOUT;
+    int rv = MAPLE_EOK;
+    for (int phase = 0; phase < 5; ++phase) {
+        f->state = MAPLE_FRAME_UNSENT;
+        maple_frame_init(f);
+        f->send_buf[0] = MAPLE_FUNC_MEMCARD;
+        f->send_buf[1] = ((blk & 0xFF) << 24) | ((blk >> 8) << 16) | (phase << 8);
+        if (phase < 4) {
+            memcpy(f->send_buf + 2, in + 128 * phase, 128);
+            f->cmd = MAPLE_COMMAND_BWRITE;
+            f->length = 2 + 128 / 4;
+        } else {
+            f->cmd = MAPLE_COMMAND_BSYNC;
+            f->length = 2;
+        }
+        f->dst_port = dev->port;
+        f->dst_unit = dev->unit;
+        if (!send_and_wait(f)) {
+            frame_abandon(f, "write", blk);
+            return MAPLE_ETIMEOUT;
+        }
+        if (phase < 4 && ((maple_response_t*) f->recv_buf)->response != MAPLE_RESPONSE_OK) rv = MAPLE_EFAIL;
+    }
+    frame_release(f);
+    return rv;
+}
+#endif
+}  // namespace
+int __wrap_vmu_block_write(maple_device_t* dev, uint16_t blocknum, const uint8_t* buffer)
+{
+#if RE4DC_VMU_IO_FAULT
+    fault_maybe(blocknum);
+#endif
+#if RE4DC_VMU_SAFE_IO
+    int rv = MAPLE_EFAIL;
+    for (int i = 0; i < 4; ++i) {
+        rv = write_once(dev, blocknum, buffer);
+        if (rv == MAPLE_EOK) return rv;
+        thd_sleep(100);
+    }
+    re4dc_log("card-vmu: write block %u failed rc=%d\n", (unsigned) blocknum, rv);
+    return rv;
+#else
+    return __real_vmu_block_write(dev, blocknum, buffer);
+#endif
+}
+#if RE4DC_VMU_SAFE_IO
+int __wrap_vmu_block_read(maple_device_t* dev, uint16_t blocknum, uint8_t* buffer)
+{
+    maple_frame_t* f = &dev->frame;
+    if (!frame_take(f)) return MAPLE_ETIMEOUT;
+    const uint32_t id = ((blocknum & 0xFF) << 24) | ((blocknum >> 8) << 16);
+    f->state = MAPLE_FRAME_UNSENT;
+    maple_frame_init(f);
+    f->send_buf[0] = MAPLE_FUNC_MEMCARD;
+    f->send_buf[1] = id;
+    f->cmd = MAPLE_COMMAND_BREAD;
+    f->length = 2;
+    f->dst_port = dev->port;
+    f->dst_unit = dev->unit;
+    if (!send_and_wait(f)) {
+        frame_abandon(f, "read", blocknum);
+        return MAPLE_ETIMEOUT;
+    }
+    const maple_response_t* r = (const maple_response_t*) f->recv_buf;
+    const uint32_t* d = (const uint32_t*) r->data;
+    int rv = MAPLE_EFAIL;
+    if (r->response == MAPLE_RESPONSE_DATATRF && d[0] == MAPLE_FUNC_MEMCARD && d[1] == id) {
+        memcpy(buffer, d + 2, 512);
+        rv = MAPLE_EOK;
+    }
+    frame_release(f);
+    return rv;
+}
+#endif
+#endif
+
 namespace {
 maple_device_t* dev_of(const VmuStore* s) { return static_cast<maple_device_t*>(s->dev); }
 vmu_root_t* root_of(const VmuStore* s) { return reinterpret_cast<vmu_root_t*>(s->root); }

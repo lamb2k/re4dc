@@ -91,6 +91,17 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_R
 extern "C" unsigned re4dc_room_id_now();
 extern "C" void re4dc_vram_pages_census(unsigned* out);
 #endif
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31   // DISC31_VRAM_PROBE (default 0: vram_probe is plain pvr_mem_malloc)
+// lane disc31: a test allocation (allocate, then free) whose miss counts in vram_pages.cpp probe_fails, not fails.
+// Weak: without VRAM_PAGES the plain pvr_mem_malloc is used, as before.
+// (void* / __SIZE_TYPE__: KOS's pvr_ptr_t and size_t, whose headers are not included yet here)
+extern "C" void* re4dc_vram_pages_probe(__SIZE_TYPE__ size) __attribute__((weak));
+extern "C" void* pvr_mem_malloc(__SIZE_TYPE__ size);
+static inline void* vram_probe(__SIZE_TYPE__ size){return re4dc_vram_pages_probe?re4dc_vram_pages_probe(size):pvr_mem_malloc(size);}
+#else
+#define vram_probe(size) pvr_mem_malloc(size)
+#endif
+#line 94
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif
@@ -1024,6 +1035,12 @@ bool ui_order;unsigned quads_flushed;
 extern "C" int re4dc_ss_ui_order(); // actual swapped-area owner, not a UI guess
 #if RE4DC_ITEM_UI_ORDER
 extern "C" int re4dc_item_ui_order(); // source pickup presentation; no heap swap
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+static unsigned ivbg_pt_skips;
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+extern "C" int re4dc_ivd_on();
+#endif
 #endif
 #endif
 #if RE4DC_D349_RENDERER_STACK
@@ -2594,6 +2611,15 @@ void stream_select(pvr_list_t list){
     desired_list=list;
     if(!stream_scene){stream_open();AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
     if(stream_list==list){AVD_IF_EVENT(avd_note,ListResult,nullptr,nullptr,unsigned(list));return;}
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD list %d->%d ra=%p ptskips=%u\n",int(stream_list),int(list),__builtin_return_address(0),
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+        ivbg_pt_skips
+#else
+        0U
+#endif
+        );
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::ListBoundary);
 #endif
@@ -3056,6 +3082,48 @@ void bench_banner_draw(){
     pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(packet),&c);
     auto* v=reinterpret_cast<pvr_vertex_t*>(packet+sizeof(pvr_poly_hdr_t));
     const float w=float(bench_w),x0=(640.0f-w)*0.5f,y0=32,h=28,u1=w/float(W),v0=2.0f/H,v1=30.0f/H;
+    const float xs[4]={x0,x0,x0+w,x0+w},ys[4]={y0+h,y0,y0+h,y0},us[4]={0,0,u1,u1},vs[4]={v1,v0,v1,v0};
+    const float layer=overlay_depth();
+    for(unsigned k=0;k<4;++k){
+        v[k].flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;v[k].x=RE4DC_UI_X(xs[k]);v[k].y=RE4DC_UI_Y(ys[k]);v[k].z=layer;
+        v[k].u=us[k];v[k].v=vs[k];v[k].argb=0xffffffffU;v[k].oargb=0;
+    }
+    stream_send(packet,sizeof(packet));
+}
+#endif
+#if defined(RE4DC_QA_PVRERR_ROW) && RE4DC_QA_PVRERR_ROW
+// QA_PVRERR_ROW=1 (crowd.mk, GitHub #63): "I<isp total>+<last 60 frames> O<opb total>+<last 60> V<max vertex KB> P<max pool KB>"
+// white on black at y 60..88. Two textures, the idle one rewritten once a second and then shown, so a queued render
+// never reads a half written row. It is drawn last in the TR list: on a bad frame the row itself may be lost in a tile.
+pvr_ptr_t pverr_vram[2];bool pverr_failed;unsigned pverr_show,pverr_w,pverr_i0,pverr_o0,pverr_i,pverr_o,pverr_f;
+void pverr_row_draw(){
+    constexpr unsigned W=512,H=32;
+    if(pverr_failed)return;
+    if(!pverr_vram[0]){
+        pverr_vram[0]=pvr_mem_malloc(W*H*2);pverr_vram[1]=pverr_vram[0]?pvr_mem_malloc(W*H*2):nullptr;
+        if(!pverr_vram[1]){pverr_failed=true;re4dc_log("pverr row: no VRAM\n");return;}
+        pverr_f=frame-60U;
+    }
+    if(frame-pverr_f>=60U){
+        pverr_f=frame;
+        const unsigned ic=latch::err_count[0],oc=latch::err_count[3];
+        pverr_i=ic-pverr_i0;pverr_o=oc-pverr_o0;pverr_i0=ic;pverr_o0=oc;
+        char text[44];
+        snprintf(text,sizeof(text),"I%u+%u O%u+%u V%u P%u",ic,pverr_i,oc,pverr_o,latch::max_vtx/1024U,latch::max_opb/1024U);
+        const unsigned next=pverr_show^1U;
+        volatile unsigned short* t=reinterpret_cast<volatile unsigned short*>(pverr_vram[next]);
+        for(unsigned i=0;i<W*H;++i)t[i]=0U;
+        bfont_draw_str_ex(reinterpret_cast<unsigned short*>(pverr_vram[next])+4*W+8,W,0xFFFFU,0U,16,1,text);
+        pverr_w=std::min(W,unsigned(strlen(text))*12U+16U);pverr_show=next;
+        if(pverr_i|pverr_o)re4dc_log("pverr frame=%u %s\n",frame,text);
+    }
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,PVR_TXRFMT_RGB565|PVR_TXRFMT_NONTWIDDLED,W,H,pverr_vram[pverr_show],PVR_FILTER_NONE);
+    c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_ONE;c.blend.dst=PVR_BLEND_ZERO;c.gen.fog_type=PVR_FOG_DISABLE;
+    alignas(32) unsigned char packet[sizeof(pvr_poly_hdr_t)+4*sizeof(pvr_vertex_t)];
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(packet),&c);
+    auto* v=reinterpret_cast<pvr_vertex_t*>(packet+sizeof(pvr_poly_hdr_t));
+    const float w=float(pverr_w),x0=(640.0f-w)*0.5f,y0=60,h=28,u1=w/float(W),v0=2.0f/H,v1=30.0f/H;
     const float xs[4]={x0,x0,x0+w,x0+w},ys[4]={y0+h,y0,y0+h,y0},us[4]={0,0,u1,u1},vs[4]={v1,v0,v1,v0};
     const float layer=overlay_depth();
     for(unsigned k=0;k<4;++k){
@@ -4367,7 +4435,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_TEX_RESIDENT
             // Evict until one contiguous block of the size fits, then read the
             // package once more (was: a full re-read per single eviction).
-            for(;;){pvr_ptr_t probe=pvr_mem_malloc(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
+            for(;;){pvr_ptr_t probe=vram_probe(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
 #endif
             ok=RE4DC_OPEN_PACKAGE() && slot->package.upload();
         }
@@ -5500,7 +5568,7 @@ int vram_claim(unsigned bytes,bool movie){
     ++vram_claims;
     unsigned released=0,released_bytes=0;
     // Probe only when the total would do: a failed pvr_mem_malloc() logs an error.
-    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=pvr_mem_malloc(bytes);if(!p)return false;pvr_mem_free(p);return true;};
+    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=vram_probe(bytes);if(!p)return false;pvr_mem_free(p);return true;};
     // Fragmented pool: re-probe only after each 64 KiB released, not after every small texture
     // (the sub screen's 1 MiB claim probed 146 times at r101, each failure a KOS "out of PVR
     // memory" line, warp-r101-pbdoor8); at most 64 KiB more is released than strictly needed.
@@ -6115,6 +6183,12 @@ void glyph_draw_run(unsigned first,unsigned count){
         if(n+5>sizeof(buf)/sizeof(buf[0]))flush();
         if(g.bank!=bank){std::memcpy(&buf[n++],&glyph_header(g.bank),sizeof(pvr_vertex_t));bank=g.bank;}
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(i==first && re4dc_ivd_on())re4dc_log("IVD draw glyphs first=%u layer=%d list=%d\n",first,int(layer),int(stream_list));
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(i==first && re4dc_ivd_on())re4dc_log("IVD draw glyphs first=%u layer=%d list=%d\n",first,int(layer),int(stream_list));
+#endif
         constexpr float kH=float(kGlyphAtlasH);
         const float u0=float((g.cell&7)*32)/256.0f,v0=float((g.cell>>3)*32)/kH;
 #if RE4DC_UI_DRAW_LEAN
@@ -6153,6 +6227,9 @@ extern "C" void re4dc_ui_glyph(const Re4dcUiGlyph* g){
     if(stream_aborted)return;
 #endif
     ++glyph_total;
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD glyph n=%u at %d,%d argb=%08x\n",nquad,int(g->x0),int(g->y0),g->argb);
+#endif
     if((g->argb>>24)==0){++glyph_culled;return;}
     if(g->format!=8 || !g->sheet || g->cw<=0 || g->cw>32 || g->ch<=0 || g->ch>32 || !g->sheet_w || !g->sheet_h ||
        (g->sheet_w&7) || (g->sheet_h&7)){++glyph_unsupported;return;}
@@ -6201,7 +6278,8 @@ extern "C" void re4dc_ui_glyph_fonts_changed(){
 #error PVR_MID_FENCE waits in present_fence: needs PVR_PIPELINE
 #endif
 #if RE4DC_RES_MODES
-#if RE4DC_TA_BIN_DIAG || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
+// STREAM_PEAK_LOG (cave66.mk) test builds may model the Standard 640x480 mode's tiles with TA_BIN_DIAG.
+#if (RE4DC_TA_BIN_DIAG && !(defined(RE4DC_STREAM_PEAK_LOG) && RE4DC_STREAM_PEAK_LOG)) || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
 #error RES_MODES needs PVR_STREAM=1, PVR_PIPELINE=2, TA_HEADROOM>=1 (ta_vertex_bytes) and TA_BIN_DIAG=0 (its 20x15 tile replay)
 #endif
 extern "C" unsigned re4dc_res_params(pvr_init_params_t* p);
@@ -6798,9 +6876,20 @@ extern "C" void re4dc_ui_begin(){
     frame_header_hits=model_header_hits;frame_header_builds=model_header_builds;
     frame_pvr_calls=frame_pvr_bytes=frame_queue_peak=frame_queue_drops=0;
 }
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+extern "C" unsigned re4dc_ui_frame_no(){return frame;}
+#endif
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+// ITEM_VIEW_DIAG (test only): during the pickup view, every 60th frame lists the UI queue in submission order.
+extern "C" int re4dc_ivd_on(){return re4dc_item_ui_order() && frame%60==0;}
+#endif
 extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
     RE4DC_PROFILE_SCOPE(UiEnqueue);
     if(!frame_ready)return;
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+    if(re4dc_ivd_on())re4dc_log("IVD quad n=%u fmt=%u %ux%u pal=%x col=%08x blend=%u masked=%u xy=%d,%d-%d,%d\n",nquad,q->image.format,
+        q->image.width,q->image.height,q->image.palette_format,q->color,q->blend,q->masked,int(q->xy[0]),int(q->xy[1]),int(q->xy[4]),int(q->xy[5]));
+#endif
 #if RE4DC_PVR_STREAM
     if(stream_aborted)return;
 #endif
@@ -6917,6 +7006,9 @@ static void ui_draw_quad(unsigned i){
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
+#endif
 #if RE4DC_UI_DRAW_LEAN
         const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
@@ -7021,6 +7113,9 @@ extern "C" void re4dc_ui_present(){
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
+#if defined(RE4DC_ITEM_VIEW_DIAG) && RE4DC_ITEM_VIEW_DIAG
+        if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
+#endif
 #if RE4DC_UI_DRAW_LEAN
         const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
@@ -7056,6 +7151,9 @@ extern "C" void re4dc_ui_present(){
     if(!re4dc_vi_black() && !stream_aborted && re4dc_qa_banner_on())bench_banner_draw();   // qamenu.mk: title screens
 #endif
 #endif
+#if defined(RE4DC_QA_PVRERR_ROW) && RE4DC_QA_PVRERR_ROW && RE4DC_PVR_STREAM
+    if(!re4dc_vi_black() && !stream_aborted)pverr_row_draw();
+#endif
 #if RE4DC_PERF_HUD
     if(!re4dc_vi_black()){
         pvr_stats_t hud_stats;pvr_get_stats(&hud_stats);
@@ -7085,6 +7183,15 @@ extern "C" void re4dc_ui_present(){
     if(movie_texture && movie_picture && movie_shown_serial!=movie_upload_serial){
         movie_shown_serial=movie_upload_serial;++movie_presentations;
         if(!movie_first_picture_us)movie_first_picture_us=timer_us_gettime64();
+    }
+#endif
+#if defined(RE4DC_STREAM_PEAK_LOG) && RE4DC_STREAM_PEAK_LOG
+    {   // STREAM_PEAK_LOG (cave66.mk): heavy model streams by frame, for placing TA-heavy views
+        static unsigned spk_win,spk_last;
+        if(stream_model_bytes>spk_win)spk_win=stream_model_bytes;
+        if(stream_model_bytes>=unsigned(RE4DC_STREAM_PEAK_LOG)*1024U && frame-spk_last>=4){
+            spk_last=frame;re4dc_log("SPK: frame=%u bytes=%u\n",frame,stream_model_bytes);}
+        if(frame%30==0){re4dc_log("SPK win: frame=%u max=%u\n",frame,spk_win);spk_win=0;}
     }
 #endif
     if(stream_model_bytes && model_presented++<3)
@@ -8009,7 +8116,26 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
 #endif
     }
 }
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+// CHARS31_COUNT (chars31.mk, diagnostic): the boundary counters, read around each actor part.
+extern "C" void re4dc_c31_model_counts(unsigned* parts,unsigned* other,unsigned* in,unsigned* out){
+    *parts=model_parts;*other=model_invalid+model_resource+model_overflow;*in=model_input;*out=model_output;
+}
+// Results committed outside any guarded actor part (static meshes, generic path), by return address.
+extern "C" unsigned re4dc_c31_depth();
+namespace c31ra { struct Row{const void* ra;unsigned parts,out_parts,tris_out;}; Row rows[16]; }
+static void c31_ra_note(const void* ra,unsigned reason,unsigned output){
+    if(re4dc_c31_depth())return;
+    for(auto& r:c31ra::rows)if(r.ra==ra||!r.ra){r.ra=ra;if(reason==0){++r.parts;if(output){++r.out_parts;r.tris_out+=output;}}return;}
+}
+extern "C" void re4dc_c31_ra_dump(unsigned f){
+    for(auto& r:c31ra::rows){if(r.ra)re4dc_log("C31R f=%u ra=%08x parts=%u out=%u tout=%u\n",f,(unsigned)r.ra,r.parts,r.out_parts,r.tris_out);r=c31ra::Row{};}
+}
+#endif
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+    c31_ra_note(__builtin_return_address(0),reason,output);
+#endif
 #if defined(RE4DC_MODEL_PART_DUMP)
     if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)
         re4dc_log("PARTDUMP f=%u key=%08x-%08x in=%u out=%u r=%u\n",frame,model_dump_crc,model_dump_fnv,input,output,reason);
@@ -8627,6 +8753,12 @@ extern "C" void re4dc_coarse_end(unsigned vertices){
 // (/cd/dc/tex/<crc>-<fnv>.re4tex); no source image exists for it.
 extern "C" void re4dc_static_flush_impostors();
 extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,unsigned height,int fog,Re4dcModelPacket* out){
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    // ITEM_VIEW_BG: the pickup view hides the room behind its panel. A scenery impostor packet here would open the
+    // punch-through list after the view's translucent quads; the TA then keeps that list for the message glyphs
+    // (CLOSED_PASS_KEEP), which draw under the panels: the missing "You got" text.
+    if(re4dc_item_ui_order()){++ivbg_pt_skips;return 0;}
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::CustomPacket); // no marked source-part begin
 #endif
@@ -9989,6 +10121,11 @@ extern "C" __attribute__((noinline,noclone)) int re4dc_ps2_world_direct_begin_ba
     } failed_begin{batch};
 #else
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
+#endif
+#if defined(RE4DC_ITEM_VIEW_BG) && RE4DC_ITEM_VIEW_BG
+    // ITEM_VIEW_BG: the pickup view's panel hides the room; its punch-through pass would open after the view's
+    // translucent quads, and the TA then keeps that list for the message glyphs (CLOSED_PASS_KEEP): no text.
+    if(re4dc_item_ui_order()){++ivbg_pt_skips;return 0;}
 #endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::ForeignDirect);

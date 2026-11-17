@@ -7,8 +7,43 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 27](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 27.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 27.1
+
+Fixes for the console report in issue [#66](https://github.com/lamb2k/re4dc/issues/66). Everything else is as in Test 27.
+Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Church graveyard dial:** its symbols show again, not blank white discs.
+
+  ![The dial: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/dial-symbols.jpg)
+  <br>The church graveyard dial. Left Test 27, right Test 27.1. Flycast capture.
+- **Title screen:** the "4" logo and "resident evil" show at full strength, and START on the menu starts the game
+  (no second press).
+
+  ![Title menu: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/title-logo.jpg)
+  <br>The title menu. Left Test 27, right Test 27.1. Flycast capture.
+- **Item pickups:** the "You got" and "Take the ...?" text shows on a plain dark panel. The room behind the item is
+  hidden while the panel is open.
+
+  ![Item pickup: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/item-pickup.jpg)
+  <br>Picking up pesetas. Left Test 27, right Test 27.1. Flycast capture.
+- **Save screen:** the saved row shows the new save count and time right away.
+
+  ![Save row: before left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/save-row.jpg)
+  <br>A second save in one visit. Left Test 27, right Test 27.1. Flycast capture.
+- **Fewer crashes:** a rare crash on the memory card screen (after a reset, or with the save list open) is fixed.
+- **Safer saving:** a late VMU answer no longer hangs the save screen.
+- **Disc reads:** when the drive reports "not ready", the game waits up to 30 seconds before the DISC READ FAILED screen.
+- **The PS2 sky behind the boot screens** (WARNING, CAPCOM and the other logos), the last GameCube picture of the title
+  sequence; Test 27 showed a plain dark green there.
+
+  ![Boot screens and title: Test 27 left, Test 27.1 right](https://github.com/lamb2k/re4dc/raw/test-2ea2d641-20261108-hotfix1/docs/images/releases/test27.1/title-fade.jpg)
+  <br>The boot screens and the title menu. Left Test 27, right Test 27.1. Flycast capture.
+
+Checked on Flycast. Not yet tested on a real console; please tell us in [#66](https://github.com/lamb2k/re4dc/issues/66) how saving, pickups and the merchant
+cave play on yours.
 
 ## What's new in Test 27
 
@@ -17,12 +52,12 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
 
 - **The PS2 sky in normal play** in the outdoor rooms, not only in cutscenes.
 
-  ![The village: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-5ee5c33f-20261104/docs/images/releases/test27/sky-normal-play.jpg)
+  ![The village: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-bd28471a-20261106/docs/images/releases/test27/sky-normal-play.jpg)
   <br>The village. Left before, right Test 27. Flycast capture.
 - **Boss fight fixes:** El Gigante's farm cutscenes and his fade at the village now use his PS2 model, and Del Lago
   keeps his textures after he dies.
 
-  ![El Gigante's fade: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-5ee5c33f-20261104/docs/images/releases/test27/el-gigante-fade.jpg)
+  ![El Gigante's fade: before left, Test 27 right](https://github.com/lamb2k/re4dc/raw/test-bd28471a-20261106/docs/images/releases/test27/el-gigante-fade.jpg)
   <br>El Gigante after the fight. Left before (GameCube model), right Test 27 (PS2 model). Flycast capture.
 - **No more El Gigante slowdown** after he breaks objects.
 - **Save reload crash guard:** reloading a save after dying in the El Gigante fight with Ashley no longer crashes.
@@ -30,11 +65,12 @@ Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases
   In normal play they open up when chapter 3-2 joins them in Test 28. The castle Zealots in the lever room and the
   Zealot chase now load without a stall.
 
-  ![A castle hall from chapter 3-3](https://github.com/lamb2k/re4dc/raw/test-5ee5c33f-20261104/docs/images/releases/test27/castle-3-3.jpg)
+  ![A castle hall from chapter 3-3](https://github.com/lamb2k/re4dc/raw/test-bd28471a-20261106/docs/images/releases/test27/castle-3-3.jpg)
   <br>A castle hall from chapter 3-3. Flycast capture.
 - **Smoother castle rooms:** the big pauses in four chapter 3-1 rooms are gone (worst frame from up to 615 ms down
   to under 10 ms in three of them).
 - **Faster fights at the dam and the village,** and smoother music streaming with fewer disc reads.
+* **Radio call read fixed (issue #63):** the tester's blue screens stop on an odd memory read, and that read no longer happens when a radio call opens. Not yet tested on a real console; please tell us if radio calls or merchant cutscenes still crash.
 
 ## Coming soon: Test 28
 

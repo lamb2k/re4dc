@@ -81,26 +81,34 @@ $(error LEON_PS2_PORTRAIT_HAIR needs LEON_PS2_RIG=1)
 endif
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_PS2_PORTRAIT_HAIR=1
 endif
-# LEON_LOD=1 (lane leonlod, 2026-10-15; default 0: no effect; render only; needs PS2_LEON=1 LEON_HAND_PACK=1): Leon's
-#              render mesh rungs from one disc package, dc/native/pl00/leon_lod.re4lp (tools/d367/leonlod/lod_pack.py
-#              pack; LEON_LOD_PACK names the host copy the image header is derived from). Roles 0-4 / 7 and the hair run
-#              leave the image (lod_pack.py derive) and one buffer the size of the largest rung (arm A, today's Leon)
-#              holds the rung drawn now: memory neutral. The level is a run-time variable: re4dc_leon_lod_set(n)
-#              (warp `leonlod <n>`, poc101 rows) applies at the next room enter; LEON_LOD_LEVEL is the boot level
-#              (default 0 = arm A, today's mesh). Package level order (lod_pack.py show): 0 A, 1 sel, 2 sel30, 3 u85,
-#              4 u70, 5 u55, 6 u40. Skeleton, animation, hands and game state are untouched.
+# LEON_LOD=<n> (lane leonlod, 2026-10-15, rig rungs 2026-11-16; default 0: no effect; render only; needs PS2_LEON=1
+#              LEON_HAND_PACK=1; with LEON_PS2_RIG=1 the rungs must be reduced from the rig arm): Leon's render mesh
+#              rungs from one disc package, dc/native/pl00/leon_lod.re4lp (tools/d367/leonlod/lod_pack.py pack;
+#              LEON_LOD_PACK names the host copy the image header is derived from). n is the gameplay level, in package
+#              order. The rig package (tools/d367/leonlod/rig/README.md): 0 A (the full PS2 rig Leon), 1 lg65 (legs and
+#              the hidden head triangles only), 2 bd70 (body, jacket, knife; face, hair, hands untouched), 3 u70 (all
+#              roles, face and hair too: not for close-ups). Roles 0-4 / 7 and the hair run leave the image
+#              (lod_pack.py derive) and one buffer the size of the largest rung (A, today's Leon) holds the rung drawn
+#              now: memory neutral. Selection rule: gameplay draws level n; while an in-engine event / cutscene holds
+#              the game the full level 0 is drawn (a load at the next actor retirement). The level is also a run-time
+#              variable: re4dc_leon_lod_set(n) (warp `leonlod <n>`, `lodat`) applies at the next room enter;
+#              LEON_LOD_LEVEL overrides the boot level (default n). Skeleton, animation, hands and game state are
+#              untouched. LEON_LOD=1 meant "package on, boot level 0" before 2026-11-16; set LEON_LOD_LEVEL=0 for that.
 LEON_LOD ?= 0
-LEON_LOD_LEVEL ?= 0
+LEON_LOD_LEVEL ?=
 LEON_LOD_PACK ?=
-ifeq ($(filter $(LEON_LOD),0 1),)
-$(error LEON_LOD must be 0 or 1)
+ifeq ($(filter $(LEON_LOD),0 1 2 3 4 5 6 7),)
+$(error LEON_LOD must be 0 (off) or the gameplay level 1..7)
 endif
-ifeq ($(LEON_LOD),1)
+ifneq ($(LEON_LOD),0)
+ifeq ($(strip $(LEON_LOD_LEVEL)),)
+LEON_LOD_LEVEL := $(LEON_LOD)
+endif
 ifneq ($(PS2_LEON)$(LEON_HAND_PACK),11)
 $(error LEON_LOD needs PS2_LEON=1 LEON_HAND_PACK=1)
 endif
 ifeq ($(strip $(LEON_LOD_PACK)),)
-$(error LEON_LOD=1 needs LEON_LOD_PACK (the leon_lod.re4lp staged at dc/native/pl00))
+$(error LEON_LOD needs LEON_LOD_PACK (the leon_lod.re4lp staged at dc/native/pl00))
 endif
 LEON_LOD_HDR := $(OBJDIR)/leon_lod/ps2leon_runtime_lod.h
 $(LEON_LOD_HDR): $(LEON_HAND_PACK_HDR) $(PS2_LEON_DIR)/ps2leon_hair_runs.h $(LEON_LOD_PACK) ../tools/d367/leonlod/lod_pack.py
@@ -109,6 +117,9 @@ $(LEON_LOD_HDR): $(LEON_HAND_PACK_HDR) $(PS2_LEON_DIR)/ps2leon_hair_runs.h $(LEO
 $(OBJDIR)/coarse_actor.o: $(LEON_LOD_HDR)
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_LOD=1 -DRE4DC_LEON_LOD_LEVEL=$(LEON_LOD_LEVEL) -I$(OBJDIR)/leon_lod
 $(OBJDIR)/ui_bridge.o $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_LOD=1
+ifeq ($(QA_MENU),1)
+$(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_LOD=1
+endif
 endif
 # GANADO_LOD=1 (lane leonlod, 2026-10-15; default 0: no effect; render only; needs PS2_GANADO=1 ACTOR_TRANSACTION=1
 #              COARSE_SKIN_FTRV=1, no CROWD_FAR tier): the PS2 cast Ganados' body / head meshes from one disc package,
@@ -153,6 +164,17 @@ ifneq ($(GANADO_LOD),1)
 $(error GANADO_EVENT_KEEP_LOD needs GANADO_LOD=1)
 endif
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_EVENT_KEEP_LOD=1
+endif
+
+# GANADO_LOD_BUF31=1 (lane all31, 2026-11-11; default 0; exact for the shipped recipe): ganado_lod::buf sized to the
+# boot level GANADO_LOD_LEVEL (level 3: 57,088 B) instead of level 0 (106,112 B); the freed .bss goes to the KOS heap.
+# Requests for a bigger level (warp `glod`, QA, event level 0 without GANADO_EVENT_KEEP_LOD) load the boot level.
+GANADO_LOD_BUF31 ?= 0
+ifneq ($(GANADO_LOD_BUF31),0)
+ifneq ($(GANADO_LOD),1)
+$(error GANADO_LOD_BUF31 needs GANADO_LOD=1)
+endif
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD_BUF31=1
 endif
 
 # Selected square128 Leon body tile isolation. Experimental, render only.
