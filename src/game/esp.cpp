@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "fallback_audit29.h"
 #endif
@@ -49,7 +52,7 @@ extern "C" void re4dc_r10b_spawncap_reset();
 #endif
 #if defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 1)
 // bit 1: a draw-dead sprite is not queued.
-#define R10B_SKIP_QUEUE(trans, esp) if ((trans) == EspCommonTrans && re4dc_r10b_fx_dead(esp)) { continue; }
+#define R10B_SKIP_QUEUE(trans, esp) if (LABI(LK_FXDEAD, 1) (trans) == EspCommonTrans && re4dc_r10b_fx_dead(esp)) { continue; }
 #else
 #define R10B_SKIP_QUEUE(trans, esp)
 #endif
@@ -60,7 +63,7 @@ extern "C" void re4dc_r10b_spawncap_reset();
 #if !(defined(RE4DC_FX_SCAN) && RE4DC_FX_SCAN) || !(defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 2))
 #error R10B_FX_UNLIVE needs GAME_FX_SCAN and R10B_FX_DEAD bit 2
 #endif
-#define R10B_MOVE_UNLIVE(esp, i) if (((esp)->m_Be_flg & 0x81) == 0x81 && ((esp)->m_Be_flg & 0x80)) {                  if ((i) < 32 * RE4DC_FX_ESP_WORDS) re4dc_fx_esp_live[(i) >> 5] &= ~(1ul << ((i) & 31));                 return;                                                                                              }
+#define R10B_MOVE_UNLIVE(esp, i) if (LABI(LK_UNLIVE, 1) ((esp)->m_Be_flg & 0x81) == 0x81 && ((esp)->m_Be_flg & 0x80)) {                  if ((i) < 32 * RE4DC_FX_ESP_WORDS) re4dc_fx_esp_live[(i) >> 5] &= ~(1ul << ((i) & 31));                 return;                                                                                              }
 #else
 #define R10B_MOVE_UNLIVE(esp, i)
 #endif
@@ -78,7 +81,7 @@ extern "C" int re4dc_r10b_fx_cut(cEsp* esp, int mode);   // esp_sub.cpp
 #else
 #define R10B_CUT_MODE() 1
 #endif
-#define R10B_FX_CUT(trans, esp) if ((trans) == EspCommonTrans && re4dc_r10b_fx_cut((esp), R10B_CUT_MODE())) { continue; }
+#define R10B_FX_CUT(trans, esp) if (LABI(LK_FXCUT, 7) (trans) == EspCommonTrans && re4dc_r10b_fx_cut((esp), R10B_CUT_MODE())) { continue; }
 #else
 #define R10B_FX_CUT(trans, esp)
 #endif
@@ -98,7 +101,7 @@ extern "C" void re4dc_fxc_frame(unsigned nEsp, unsigned live);
 #else
 #define FXC_MODE() 1
 #endif
-#define FXC_CUT(trans, esp) if (re4dc_fxc_ask((esp), FXC_MODE(), (trans) == EspCommonTrans)) { continue; }
+#define FXC_CUT(trans, esp) if (LABI(LK_FXROOMS, 3) re4dc_fxc_ask((esp), FXC_MODE(), (trans) == EspCommonTrans)) { continue; }
 #if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
 #define FXC_FRAME(sys) re4dc_fxc_frame((sys)->nEsp, (sys)->ActiveEspNum);
 #else
@@ -126,13 +129,13 @@ extern "C" void re4dc_fx31_stat(unsigned k);
 extern "C" int re4dc_esp_ess_precut31(const cEsp* esp);   // esp_sub.cpp
 extern "C" int re4dc_fx_esp_ready();
 // EspTrans: dead slots are stepped over through the live map (a clear bit fails both entry tests).
-#define FX31_TRANS_BEGIN() const int fx31Use = re4dc_fx_esp_ready(); const unsigned long fx31Gen = re4dc_fx_esp_gen;
+#define FX31_TRANS_BEGIN() const int fx31Use = LABI(LK_FXSKIP31, 1) re4dc_fx_esp_ready(); const unsigned long fx31Gen = re4dc_fx_esp_gen;
 #define FX31_STEP(i)                                                             if (fx31Use && re4dc_fx_esp_gen == fx31Gen) {                                    unsigned long fx31M = re4dc_fx_esp_live[(i) >> 5] >> ((i) & 31);             if (fx31M == 0) { (i) |= 31; continue; }                                     (i) += re4dcFxCtz(fx31M);                                                }                                                                            FX31_STAT(0);
 // coarse sprite pass: a dormant sheet is never queued (re4dc_esp_coarse_sprite_visible), and nothing before that test
 // writes state for it (re4dc_fx31_dormant excludes the ESP_TYPE_CAP owners)
-#define FX31_SPRITE_DORMANT(esp) if (spritePass && re4dc_fx31_dormant(esp)) { FX31_STAT(1); continue; }
+#define FX31_SPRITE_DORMANT(esp) if (LABI(LK_FXSKIP31, 1) spritePass && re4dc_fx31_dormant(esp)) { FX31_STAT(1); continue; }
 // coarse sprite pass: an Essential cut is not queued (no OT entry, no EspCommonTrans)
-#define FX31_PRECUT(esp) if (spriteEntry && trans == EspCommonTrans && re4dc_esp_ess_precut31(esp)) { FX31_STAT(2); continue; }
+#define FX31_PRECUT(esp) if (LABI(LK_FXSKIP31, 1) spriteEntry && trans == EspCommonTrans && re4dc_esp_ess_precut31(esp)) { FX31_STAT(2); continue; }
 #else
 #define FX31_TRANS_BEGIN()
 #define FX31_STEP(i)
@@ -141,7 +144,7 @@ extern "C" int re4dc_fx_esp_ready();
 #endif
 #if defined(RE4DC_FX_DORMANT31) && RE4DC_FX_DORMANT31
 // EspMove: a dormant sheet's live bit is cleared; its move() returns at once and the move can never push it.
-#define FX31_MOVE_DORMANT(esp, i)                                                    if (re4dc_fx31_dormant(esp)) {                                                       if ((i) < 32 * RE4DC_FX_ESP_WORDS) re4dc_fx_esp_live[(i) >> 5] &= ~(1ul << ((i) & 31));         FX31_STAT(3);                                                                    return;                                                                      }
+#define FX31_MOVE_DORMANT(esp, i)                                                    if (LABI(LK_FXDORM31, 1) re4dc_fx31_dormant(esp)) {                                                       if ((i) < 32 * RE4DC_FX_ESP_WORDS) re4dc_fx_esp_live[(i) >> 5] &= ~(1ul << ((i) & 31));         FX31_STAT(3);                                                                    return;                                                                      }
 #else
 #define FX31_MOVE_DORMANT(esp, i)
 #endif
@@ -305,7 +308,7 @@ extern "C" void re4dc_fx_esp_sync()
     fxEspBuf = sys->pEspBuf;
     fxEspN = sys->nEsp;
     re4dc_fx_esp_gen++;
-    re4dc_fx_esp_ok = sys->pEspBuf != NULL && sys->nEsp <= 32 * RE4DC_FX_ESP_WORDS;
+    re4dc_fx_esp_ok = sys->pEspBuf != NULL && sys->nEsp <= 32 * LAB_ESPWORDS();
     for (i = 0; sys->pEspBuf != NULL && i < sys->nEsp; i++) {
         cEsp* esp = (cEsp*) (sys->pEspBuf + i * 0x150);
         if (esp->m_Be_flg & 1) {

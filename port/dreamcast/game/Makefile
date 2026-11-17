@@ -2535,6 +2535,8 @@ GAME_CPPFLAGS += $(NO_EH_FLAGS)
 PLATFORM_CPPFLAGS += $(NO_EH_FLAGS)
 SDK_CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
 endif
+# lab32.mk (console lab disc, LAB32=1): run-time speed switches; sets the knobs game30.mk and the later .mk files read.
+include lab32.mk
 # Opt-in game-side CPU knobs and the determinism trace (default off: no effect).
 include game30.mk
 # Default-off Build29 distinct collision notes; all header consumers share the control.

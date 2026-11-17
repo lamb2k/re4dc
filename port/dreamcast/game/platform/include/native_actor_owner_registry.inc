@@ -180,7 +180,14 @@ extern "C" int re4dc_actor_owned_source(const void* info,unsigned source_frame,R
     if(!info || !out || skin_frame!=source_frame)return 0;
 #if defined(RE4DC_PS31_SKIN_MEMO) && RE4DC_PS31_SKIN_MEMO
     // PS31_SKIN_MEMO: the scan below, memoized while the registry is unchanged (native_actor_fast.cpp skin_memo31_get)
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    unsigned ownedLab=kSkins;
+    if(re4dc_lab32_k[LK_PSMEMO])ownedLab=skin_memo31_get(info).owned;
+    else for(unsigned k=0;k<skin_count;++k)if(skins[k].info==info && !skins[k].positions && owned_skins[k].serial){ownedLab=k;break;}
+    if(const unsigned i=ownedLab;i<kSkins){
+#else
     if(const unsigned i=skin_memo31_get(info).owned;i<kSkins){
+#endif
 #else
     for(unsigned i=0;i<skin_count;++i)if(skins[i].info==info && !skins[i].positions && owned_skins[i].serial){
 #endif

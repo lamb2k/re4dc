@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
 #include "fallback_audit35.h"
 #endif
@@ -1821,7 +1824,7 @@ void ModelTrans(cModel* m)
         ot = 0x10;
         LIGHT_POS(m, li, pos);
 #if defined(RE4DC_CASTLE_ACTOR_PREGATE) && RE4DC_CASTLE_ACTOR_PREGATE
-        if (castleActorPregateHidden(m, &pos, radius)) {
+        if (LABI(LK_PREGATE, 1) castleActorPregateHidden(m, &pos, radius)) {
             ret = 0xFFFF;   // as ot 0 / 1's view test: no OT entry, no screen matrices, no skin, no submit
             break;
         }
@@ -4569,7 +4572,12 @@ static int propGate(cModel* m, Mtx viewMat)
     // model's palette resolves (same render call, same game frame) no longer run calcWeightMat again. A partial walk
     // (more than kPgParts parts) leaves the memo cleared, as any other calcWeightMat does.
     g_skinLazyMtx = 0;
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    Mtx palLab;
+#define pal (re4dc_lab32_k[LK_PSGATE] ? pG->mtxPalette[np] : palLab)
+#else
 #define pal pG->mtxPalette[np]
+#endif
 #else
     Mtx pal;
 #endif
@@ -4616,8 +4624,10 @@ static int propGate(cModel* m, Mtx viewMat)
     }
 #endif
     // The whole walk ran: pG->mtxPalette holds this model's calcWeightMat for this game frame.
-    g_skinLazyMtx = m;
-    g_skinLazyMtxFrame = pG->Frame_cnt;
+    if (LABGATE(LK_PSGATE)) {
+        g_skinLazyMtx = m;
+        g_skinLazyMtxFrame = pG->Frame_cnt;
+    }
 #endif
     if (!np || !(s2 < 1.0e30f)) {
         return propGateNo(2);
@@ -4680,7 +4690,7 @@ static int propGate(cModel* m, Mtx viewMat)
         const f32 depth = T - mz * smax * R;
         if (!(depth > limit)) {
 #if defined(RE4DC_CHAR_VIS31) && RE4DC_CHAR_VIS31
-            if (charVisHidden(pm, t, np, smax, R, nearZ, cullFar, cvFogged)) {
+            if (LABI(LK_CHARVIS, 3) charVisHidden(pm, t, np, smax, R, nearZ, cullFar, cvFogged)) {
                 drawn = 1;
                 continue;
             }

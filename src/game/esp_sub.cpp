@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #if defined(RE4DC_DRAW_FALLBACK_AUDIT) && RE4DC_DRAW_FALLBACK_AUDIT
 #include "draw_fallback_audit.h"
 #endif
@@ -40,13 +43,13 @@ extern "C" void re4dc_fxw(cEsp* esp, int why);   // end of this file: FXDEAD rea
 #include "trans_ot.h"
 #if defined(RE4DC_R10B_FX_DEAD) && (RE4DC_R10B_FX_DEAD & 2)
 extern "C" int re4dc_r10b_fx_dead(cEsp* esp);   // end of this file (R10B_FX_DEAD)
-#define R10B_DEAD_MARK(p) if (re4dc_r10b_fx_dead(p)) { (p)->m_Be_flg |= 0x80; }
+#define R10B_DEAD_MARK(p) if (LABI(LK_FXDEAD, 2) re4dc_r10b_fx_dead(p)) { (p)->m_Be_flg |= 0x80; }
 #else
 #define R10B_DEAD_MARK(p)
 #endif
 #if defined(RE4DC_R10B_FX_SPAWNCAP) && RE4DC_R10B_FX_SPAWNCAP
 extern "C" int re4dc_r10b_spawncap(cEsp* esp);   // end of this file (R10B_FX_SPAWNCAP)
-#define R10B_SPAWN_CAP(p, out, ret) if (re4dc_r10b_spawncap(p)) { PushEsp(p); *(out) = EspGetDmyPtr(); return (ret); }
+#define R10B_SPAWN_CAP(p, out, ret) if (LABI(LK_SPAWNCAP, 0xFF) re4dc_r10b_spawncap(p)) { PushEsp(p); *(out) = EspGetDmyPtr(); return (ret); }
 #else
 #define R10B_SPAWN_CAP(p, out, ret)
 #endif
@@ -5086,7 +5089,7 @@ R10B_CUT_DEF(cEsp* esp, int mode)
     if (!re4dc_fx_essential || G_ROOM_ID != 0x10B || mode == 0) {
         return 0;
     }
-    const int mask = RE4DC_R10B_FX_CUT;
+    const int mask = LAB_FXCUT(RE4DC_R10B_FX_CUT);
     R10B_CUT_NOTE(0);
 #if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
     if ((u32) (pG->Frame_cnt - s_r10bcut_f) >= 150) {
@@ -5132,7 +5135,7 @@ R10B_CUT_DEF(cEsp* esp, int mode)
                 s_layer_frame = (u32) pG->Frame_cnt;
                 for (int i = 0; i < 256; ++i) s_layer[i] = 0;
             }
-            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= kEssQueue) {
+            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= LAB_QCAP(kEssQueue)) {
                 R10B_CUT_NOTE(3);
                 return 1;
             }
@@ -5259,7 +5262,7 @@ static int fxcVerdict(cEsp* esp, int mode, unsigned mask, int* why)
                 s_layer_frame = (u32) pG->Frame_cnt;
                 for (int i = 0; i < 256; ++i) s_layer[i] = 0;
             }
-            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= kEssQueue) {
+            if (s_layer[(esp->info.owner * 31U + esp->m_Tex_id) & 0xFF]++ >= LAB_QCAP(kEssQueue)) {
                 *why = 4;
                 return 1;
             }
@@ -5369,13 +5372,13 @@ extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
     }
     return 0;
 #else
-    if (!common || !fxcRoomOn()) {
+    if (!common || LABN(LK_FXROOMS) !fxcRoomOn()) {
         return 0;
     }
     const int on = fxcRoomOn();
     int why = 0;
 #if (RE4DC_FXCUT_ROOMS & 7)
-    if ((on & 1) && fxcVerdict(esp, mode, RE4DC_FXCUT_ROOMS & 7, &why)) {
+    if ((on & 1) && fxcVerdict(esp, mode, LAB_FXROOMS(RE4DC_FXCUT_ROOMS & 7), &why)) {
         return 1;
     }
 #endif
@@ -5457,7 +5460,7 @@ extern "C" int re4dc_r10b_spawncap(cEsp* esp)
         s_spawncap_ok = s_spawncap_drop = 0;
     }
 #endif
-    if (*n >= RE4DC_R10B_FX_SPAWNCAP) {
+    if (*n >= LAB_SPAWNCAP(RE4DC_R10B_FX_SPAWNCAP)) {
 #if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
         s_spawncap_drop++;
 #endif

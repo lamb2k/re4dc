@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
 #include "fallback_audit35.h"
 #endif
@@ -258,7 +261,7 @@ static int re4dc_pen_cloth_lod_skip(cModel* m, PenCloth* c)
     // PEN_CLOTH_LOD_SUB=1 (castlebudget.mk; lane castlebudget 2026-11-04; approximation, default 0): Ashley (pSUB) takes
     // the same off-screen / far rule as other chains (her skirt 48 + hair 21 + sweater 8 links; stepped twice a tick
     // while she is held in cSubChar::moveEvent, as on the GameCube). Leon is still never skipped.
-    if ((cModel*) pPL == m || (m->be_flag & 0x00200000)) {
+    if ((cModel*) pPL == m || ((cModel*) pSUB == m && LAB_PENSUB_KEEP(m)) || (m->be_flag & 0x00200000)) {
         return 0;
     }
 #else
@@ -302,7 +305,7 @@ static int re4dc_pen_cloth_lod_skip(cModel* m, PenCloth* c)
 // collides with the boat only: no gameplay volume reads it.
 static int re4dc_r10b_rope_skip(cModel* m, PenCloth* c)
 {
-    if (G_ROOM_ID != 0x10B || c->Num != 30 || c->Flag != 0x108 || (m->be_flag & 0x00200000)) {
+    if (LABN(LK_ROPE) G_ROOM_ID != 0x10B || c->Num != 30 || c->Flag != 0x108 || (m->be_flag & 0x00200000)) {
         return 0;
     }
     if ((((u32) pG->Frame_cnt + ((u32) c >> 4)) & 1) == 0) {

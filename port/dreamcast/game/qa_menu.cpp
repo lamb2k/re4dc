@@ -1,4 +1,8 @@
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "platform/include/lab32.h"
+extern "C" volatile unsigned char re4dc_lab32_k[LK_N] = {0, 0, 4};   // lab32: boot = control (the release behaviour)
+#endif
 #include "platform/include/fallback_audit29.h"
 #endif
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK && defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
@@ -947,6 +951,89 @@ int link_qa_row(const char* id, const char* row, const char* v) {
     link_reply(id, false, "QA: unknown row %s", row);
     return LA_NONE;
 }
+#if defined(RE4DC_LAB32) && RE4DC_LAB32 && defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
+// ---------------------------------------------------------------- lab32: run-time speed switches (platform/include/lab32.h)
+// KNOB <name> <value> | KNOB PRESET <control|fix4|fxcut3|...> | KNOBS (list). The byte table re4dc_lab32_k is read by the gated
+// hooks in esp.cpp / esp_sub.cpp / trans.cpp / motion.cpp / pendulum.cpp / native_actor_fast.cpp; boot state = control (release).
+namespace {
+struct LabKnob { const char* name; unsigned char max, boot; };
+const LabKnob kLab[LK_N] = {
+    {"FXDEAD", 3, 0}, {"FXCUT", 7, 0}, {"QCAP", 8, 4}, {"SPAWNCAP", 255, 0}, {"UNLIVE", 1, 0}, {"FXROOMS", 3, 0},
+    {"MAPW", 1, 0}, {"FXSKIP31", 1, 0}, {"FXDORM31", 1, 0}, {"PSMEMO", 1, 0}, {"PSGATE", 1, 0}, {"CHARVIS", 2, 0},
+    {"SKELIK", 1, 0}, {"ROPE", 1, 0}, {"PREGATE", 1, 0}, {"PENSUB", 1, 0}, {"MOVCA", 1, 0}};
+struct LabPreset { const char* name; unsigned char v[LK_N]; int leon; };
+//                              DEAD CUT QCAP SPWN UNLV ROOM MAPW SK31 DM31 PSMM PSGT CVIS SKIK ROPE PREG PENS MOVC
+const LabPreset kPre[] = {
+    {"control",  {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
+    {"fix4",     {3, 7, 2, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}, 2},   // fix disc 4: R10B_FX_*, ESP_MAP_WORDS, all31 set, LEON_LOD 2
+    {"all31",    {0, 0, 4, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, 0},   // the all31 exact set (CHAR_VIS31=1)
+    {"fxcut3",   {0, 0, 4, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0},   // FXCUT_ROOMS=3 in the recommended room list (+ map words)
+    {"r10b",     {3, 7, 2, 8, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0}, 0},   // the Del Lago switches only
+    {"spawn4",   {3, 7, 4, 4, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
+    {"spawn8",   {3, 7, 4, 8, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
+    {"charvis2", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0}, 0},   // CHAR_VIS31=2 (part frustum)
+    {"ps31",     {0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}, 0},
+    {"castle",   {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 0}, 0},
+    {"movca",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
+};
+int lab_leon = 0;
+int lab_find(const char* n) {
+    for (int i = 0; i < LK_N; ++i) if (!strcasecmp(kLab[i].name, n)) return i;
+    return -1;
+}
+void lab_text(char* o, unsigned n) {
+    unsigned k = 0;
+    for (int i = 0; i < LK_N && k + 16 < n; ++i) k += (unsigned) snprintf(o + k, n - k, "%s=%u ", kLab[i].name, (unsigned) re4dc_lab32_k[i]);
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+    snprintf(o + k, n - k, "LEON_LOD=%u", re4dc_leon_lod_requested());
+#else
+    o[k] = 0;
+#endif
+}
+void lab_command(const char* id, char* rest) {
+    char* s2 = nullptr;
+    char* a = rest ? strtok_r(rest, " ", &s2) : nullptr;
+    char* b = a ? strtok_r(nullptr, " ", &s2) : nullptr;
+    char txt[200];
+    if (!a) { lab_text(txt, sizeof(txt)); link_reply(id, true, "KNOBS %s", txt); return; }
+    if (word_is(a, "PRESET")) {
+        for (const LabPreset& p : kPre) if (b && !strcasecmp(p.name, b)) {
+            for (int i = 0; i < LK_N; ++i) re4dc_lab32_k[i] = p.v[i];
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+            re4dc_leon_lod_set((unsigned) p.leon);
+#endif
+            lab_text(txt, sizeof(txt));
+            re4dc_log("lab32: preset %s %s
+", p.name, txt);
+            link_reply(id, true, "KNOB PRESET %s: %s (room-entry knobs apply at the next teleport)", p.name, txt);
+            return;
+        }
+        link_reply(id, false, "KNOB PRESET control|fix4|all31|fxcut3|r10b|spawn4|spawn8|charvis2|ps31|castle|movca");
+        return;
+    }
+    if (word_is(a, "LEON_LOD")) {
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+        const int v = b ? atoi(b) : -1;
+        if (v < 0 || v > 3) { link_reply(id, false, "KNOB LEON_LOD 0..3"); return; }
+        re4dc_leon_lod_set((unsigned) v);
+        link_reply(id, true, "KNOB LEON_LOD %d (applies at the next room enter)", v);
+#else
+        link_reply(id, false, "KNOB LEON_LOD: not in this build");
+#endif
+        return;
+    }
+    const int k = lab_find(a);
+    if (k < 0 || !b) { link_reply(id, false, "KNOB <name> <value> (KNOBS lists the names)"); return; }
+    const int v = atoi(b);
+    if (v < 0 || v > kLab[k].max) { link_reply(id, false, "KNOB %s 0..%u", kLab[k].name, (unsigned) kLab[k].max); return; }
+    re4dc_lab32_k[k] = (unsigned char) v;
+    lab_text(txt, sizeof(txt));
+    re4dc_log("lab32: %s=%d %s
+", kLab[k].name, v, txt);
+    link_reply(id, true, "KNOB %s=%d: %s", kLab[k].name, v, txt);
+}
+}  // namespace
+#endif
 #if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
 // Build 28: explicit DIAG preempts telemetry, but an accepted DIAG remains
 // immutable until all parts have entered the bounded transport queue.
@@ -1565,6 +1652,9 @@ int link_command(char* line, bool in_menu) {
     }
 #if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
     if (word_is(cmd, "PCS")) { pcs_command(id, rest); return LA_NONE; }
+#endif
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    if (word_is(cmd, "KNOB") || word_is(cmd, "KNOBS")) { lab_command(id, rest); return LA_NONE; }
 #endif
     if (word_is(cmd, "RECORD")) {
         const int n = rest ? atoi(rest) : 0;

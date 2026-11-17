@@ -3357,6 +3357,9 @@ struct MeshDraw : Emitter {
         // The model slab is memalign(32) and its slots are 32 bytes, so this holds; refuse (per-corner path) if not.
         if(reinterpret_cast<std::uintptr_t>(dst+limit-re4dc::vp::kCacheSlots)&31U)return false;
 #endif
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+        if(re4dc_lab32_k[LK_MOVCA] && (reinterpret_cast<std::uintptr_t>(dst+limit-re4dc::vp::kCacheSlots)&31U))return false;   // lab32: the movca kernels need whole lines
+#endif
         limit-=re4dc::vp::kCacheSlots;
         cache=dst+limit;outcodes=reinterpret_cast<std::uint8_t*>(cache+re4dc::vp::kCacheEntries);
 #if RE4DC_WORLD_SCRATCH

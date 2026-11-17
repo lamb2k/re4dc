@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "fallback_audit29.h"
 #endif
@@ -744,7 +747,7 @@ u16 MotionMove(cModel* m)
         PSMTXConcat(m->mat, tmp, tmp);
         MTX_COPY(tmp, m->mat);
 #if defined(RE4DC_SKEL_IK_PASS) && RE4DC_SKEL_IK_PASS
-        skikPartsWorldCalc(m);
+        if (LABGATE(LK_SKELIK)) { skikPartsWorldCalc(m); } else { m->partsWorldCalc(); }
 #else
         m->partsWorldCalc();
 #endif

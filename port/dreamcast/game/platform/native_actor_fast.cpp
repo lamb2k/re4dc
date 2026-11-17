@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "include/lab32.h"
+#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
 #include "include/actor_format32_uv.hpp"
 extern "C" void re4dc_log(const char*, ...);
@@ -1873,6 +1876,13 @@ unsigned skin_memo31_lookups, skin_memo31_hits, skin_memo31_bad;
 const SkinMemo31& skin_memo31_get(const void* info);
 SkinEntry* find_skin(const void* info, const void* positions) {
     if (!positions) {
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+        if (!re4dc_lab32_k[LK_PSMEMO]) {
+            for (unsigned k = 0; k < skin_count; ++k)
+                if (skins[k].info == info && !skins[k].positions) return &skins[k];
+            return nullptr;
+        }
+#endif
         const unsigned i = skin_memo31_get(info).lazy;
         return i < kSkins ? &skins[i] : nullptr;
     }
@@ -6797,7 +6807,7 @@ bool cv_hidden(Frame& f, const Re4dcModelPart& p, const BlobHeader& b) {
     return true;
 }
 }  // namespace
-#define CV31_GATE(f_, p_, b_) do { if (cv_hidden((f_), (p_), (b_))) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; } } while (0)
+#define CV31_GATE(f_, p_, b_) do { if (LABI(LK_CHARVIS, 2) cv_hidden((f_), (p_), (b_))) { ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1; } } while (0)
 #else
 #define CV31_GATE(f_, p_, b_) do { } while (0)
 #endif
