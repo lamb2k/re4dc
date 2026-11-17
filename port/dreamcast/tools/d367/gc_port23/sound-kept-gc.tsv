@@ -404,3 +404,7 @@ em/em36.drs	EM0	20	no PS2 match at matcher floor	island-gca
 em/em36.drs	EM0	21	no PS2 match at matcher floor	island-gca
 em/em36.drs	EM0	34	no PS2 match at matcher floor	island-gca
 em/em39.drs	EM0	66	no PS2 match at matcher floor	island-gca
+# island-gca 11-17 round 3: + st3 r30f r315 (isnd5)
+st3/r30f.dar	ROOM	12	no PS2 match at matcher floor	island-gca
+st3/r30f.dar	ROOM	17	no PS2 match at matcher floor	island-gca
+st3/r30f.dar	FOOT	13	no PS2 match at matcher floor	island-gca
