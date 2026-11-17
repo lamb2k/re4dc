@@ -1,8 +1,8 @@
-#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #if defined(RE4DC_LAB32) && RE4DC_LAB32
 #include "platform/include/lab32.h"
 extern "C" volatile unsigned char re4dc_lab32_k[LK_N] = {0, 0, 4};   // lab32: boot = control (the release behaviour)
 #endif
+#if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "platform/include/fallback_audit29.h"
 #endif
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK && defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
