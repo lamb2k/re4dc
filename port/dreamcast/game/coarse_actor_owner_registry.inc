@@ -1125,12 +1125,19 @@ extern "C" int re4dc_registry_merchant_robe(unsigned appearance,unsigned role,un
 #else
 #define RE4DC_REGISTRY_OT_BASE(m,desc) (!(m)->ot_type)
 #endif
+#if defined(RE4DC_NMR_CLOAK) && RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK (lane world-ch32 11-17): em2dCamouflageMove sets ot_type 5 (one direct source call, like the
+// Verdugo's) while the info colour alpha is below 255; the owner path draws the body through the fade ticket then.
+#define RE4DC_REGISTRY_OT_CLOAK(m,desc) ((m)->ot_type==5 && (desc)->model_id==0x2du)
+#else
+#define RE4DC_REGISTRY_OT_CLOAK(m,desc) false
+#endif
 #if defined(RE4DC_NMR_OT5) && RE4DC_NMR_OT5
 // NATIVE_MODEL_REGISTRY_OT5: the Verdugo (em2c, model 0x2c) is ot_type 5 (ModelTrans: AddOtDirect(0x10, ModelRender,
 // 0, 2), one source call per frame); the owner path draws inside that callback, so the order is kept.
-#define RE4DC_REGISTRY_OT_OK(m,desc) (RE4DC_REGISTRY_OT_BASE(m,desc) || ((m)->ot_type==5 && (desc)->model_id==0x2cu))
+#define RE4DC_REGISTRY_OT_OK(m,desc) (RE4DC_REGISTRY_OT_BASE(m,desc) || RE4DC_REGISTRY_OT_CLOAK(m,desc) || ((m)->ot_type==5 && (desc)->model_id==0x2cu))
 #else
-#define RE4DC_REGISTRY_OT_OK(m,desc) RE4DC_REGISTRY_OT_BASE(m,desc)
+#define RE4DC_REGISTRY_OT_OK(m,desc) (RE4DC_REGISTRY_OT_BASE(m,desc) || RE4DC_REGISTRY_OT_CLOAK(m,desc))
 #endif
 extern "C" int re4dc_registry_model(const cModel* m,const Re4dcActorPlan* p) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
