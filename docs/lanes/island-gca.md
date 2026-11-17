@@ -46,3 +46,12 @@ Findings, not done:
 - 57 texture shas: material strings are the generic "source" / "source-pair" binding names (prepare_native_ui / pack merge), identical in island-d3's own pack; no PS2 trace without matching PS2 TPL pixels. Unproven.
 - Not started: ETM props regeneration (r300/r309), r300 PROF probe, isle5 per-room gating (r301 r30a r30c r311 r320 r327 r330 r331; r334 parked) and the D3_DATA entry. isle5 stays out of the recipe.
 - Trap: /tmp is shared between lanes (another lane overwrote /tmp/w.sh and /tmp/a.sh); keep lane scripts in the scratchpad.
+
+### Cycle ig2 result (console-like Flycast, finished; evidence rr\1117-1100-7ddfc1d8, test commit 7ddfc1d85)
+- Disc 1 image a205f8a035e4d465 = world-ch5 head identity: PASS. GDEMU race PASS. Disc 1 lines "boot to title" and "no checkpoint" FAIL as in world-ch5 round 4 (Disc 1, load-sensitive).
+- Disc 3: CAST-GC PASS (400 census lines, 54 room/model rows, 0 GC), LEON-GC 36/36, TEXCHK 37/0, no HALT/FAULT/MISSING/OOM.
+- KOS 48 KiB Disc 3 (both fragmentation levels): door r300->r301 min headroom 50,528 / 50,616; fight r30f 46,688 / 46,776. Judged by reading d3kos.
+- GC-ASSET FAIL: 249 unique rows (round 1: 269; world-ch5 start 590), 611 failure lines = 249 rows + 360 r300 unmapped-texture-address + 2 no-checkpoint (r301 v5, r310 v3).
+  By kind: texture unknown 125, model gc 54, model unknown 51, motion unknown 6, motion gc 3, sound-mram unknown 4, sound-aram unknown 4, geometry 1, movie 1.
+  em1d/em1e sound-mram 3a258d2c and sound-aram 2b738457 rows are gone (sound gc 18 -> 0). Remaining sound unknown = banks I did not convert: r30f, r315, r321 (mram+aram each).
+  The ig2 run did not include the 13 round 2 texture rows' effect separately (they were already in this build).
