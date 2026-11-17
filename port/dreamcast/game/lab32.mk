@@ -7,6 +7,8 @@
 #   layout only; ON in the lab ELF), LAKE_FAR / CPU_BACKFACE / VIEW and other room-table switches.
 #   Needs QA_MENU=1 (the link) and the knobs below at their widest; `LAB32_FXCUT_LIST` is the FXCUT_ROOMS room list.
 LAB32 ?= 0
+# LAB32_BOOT=<n> (gate twins only, default 0): the knob bytes start at preset n of qa_menu.cpp kPre (1 = fix4, 2 = all31, ...), not control.
+LAB32_BOOT ?= 0
 ifneq ($(filter $(LAB32),0 1),$(LAB32))
 $(error LAB32 must be 0 or 1)
 endif
@@ -37,4 +39,7 @@ WORLD_STILL ?= 1
 LAB32_OBJS_GAME := $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/motion.o $(OBJDIR)/src/game/pendulum.o
 $(LAB32_OBJS_GAME): GAME_CPPFLAGS += -DRE4DC_LAB32=1 -I$(CURDIR)/platform/include
 $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LAB32=1 -I$(CURDIR)/platform/include
+ifneq ($(LAB32_BOOT),0)
+$(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LAB32_BOOT=$(LAB32_BOOT)
+endif
 endif

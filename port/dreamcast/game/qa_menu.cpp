@@ -979,6 +979,12 @@ const LabPreset kPre[] = {
     {"leon3",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 3},   // LEON_LOD 3 (ALL) alone
 };
 int lab_leon = 0;
+#if defined(RE4DC_LAB32_BOOT) && RE4DC_LAB32_BOOT
+// LAB32_BOOT=<preset index> (gate twins only; 1 = fix4): the knob bytes start at that preset instead of control.
+struct LabBoot {
+    LabBoot() { for (int i = 0; i < LK_N; ++i) re4dc_lab32_k[i] = kPre[RE4DC_LAB32_BOOT].v[i]; }
+} lab_boot;
+#endif
 int lab_find(const char* n) {
     for (int i = 0; i < LK_N; ++i) if (!strcasecmp(kLab[i].name, n)) return i;
     return -1;
