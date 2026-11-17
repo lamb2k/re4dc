@@ -557,6 +557,8 @@ endif
 # room-list / global form of R10B_FX_CUT's two EXACT bits (r10b keeps its own R10B_FX_CUT): bit 1 the Essential filter's stateless cuts, bit 2
 # faded out or wholly outside the view (full pass). A plain sprite either declines is not queued; moves, generators, slots, Rnd() untouched.
 # FXCUT_ROOM_LIST=<hex,hex,...|all> (default all but r10b: r10b has R10B_FX_CUT): the rooms it acts in, no spaces (0x101,0x103).
+# Recommended (lane fxcensus, MODELLED -0.2 to -0.7 ms effects, -34 k to -86 k instructions, STRICT identical): FXCUT_ROOMS=3
+# FXCUT_ROOM_LIST=0x105,0x108,0x10a,0x10d,0x118,0x11a,0x11b,0x200 (the rooms with >= ~95 Essential-declined sprites / frame; census table E:\RE4DC-Lanesxcensus\CENSUS.md).
 FXCUT_ROOMS ?= 0
 FXCUT_ROOM_LIST ?= all
 ifneq ($(FXCUT_ROOMS),0)
