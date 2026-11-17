@@ -566,6 +566,7 @@ FXCUT_ROOM_LIST ?= all
 # Bit 1 (the one with an effect): an id 0x15 camera-haze sprite in a room without a HW_FOG_HAZE row (needs HAZE_SPRITE_CUT: EspSpriteEmit never publishes it,
 # re4dc_hwfog_haze keeps a note only for the rows of hwfog.cpp). Bit 2: not eligible for the native path (needs ESP_SPRITE_FAST). Bit 4: ESP_CUT_EARLY's
 # haze / mist cut (needs ESP_CUT_EARLY). Bits 2 and 4 matched no sprite in the 26-room census (empty). Proofs: PROOF.md of lane fxdead.
+# NOT RECOMMENDED (lane fxdead, MODELLED): exact and gated, but no measurable gain (effects +2..7 k insn / tick of hook, work within +-0.7 ms layout noise, the barn control moves the same); keep 0.
 # FXDEAD_ROOM_LIST=<hex,hex,...|all> (default all but r10b): the rooms it acts in, no spaces.
 FXDEAD_ROOMS ?= 0
 FXDEAD_ROOM_LIST ?= all
