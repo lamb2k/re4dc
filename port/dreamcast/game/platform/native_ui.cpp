@@ -553,7 +553,7 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     const bool cacheable=bytes!=0;
     FpCache& slot=fp_cache[(key.crc^key.fnv^offset)&63U];
     if(cacheable && slot.token && slot.crc==key.crc && slot.fnv==key.fnv && slot.offset==offset && slot.bytes==bytes &&
-       (slot.token>>14)==re4dc_gcasset::catalog_generation()){
+       (slot.token>>15)==re4dc_gcasset::catalog_generation()){
         entry.asset.value=slot.token;return true;
     }
     if(streamed){

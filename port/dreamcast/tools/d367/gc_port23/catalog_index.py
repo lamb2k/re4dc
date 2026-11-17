@@ -5,7 +5,7 @@ import struct
 MAGIC = b'GCIDX001'
 HEADER = struct.Struct('<8s4I104s')
 RECORD = struct.Struct('<16s48s32sB15s')
-MAX_RECORDS = 16320  # 64 remaining compact-token indices are unknown quarantine
+MAX_RECORDS = 32704  # 15-bit token index (was 14 bit, 16320); 64 remaining compact-token indices are unknown quarantine
 ORIGINS = {'unknown': 0, 'gc': 1, 'ps2': 2, 'authored': 3}
 
 
@@ -133,11 +133,11 @@ class Epochs:
                     raise ValueError('unknown quarantine overflow')
                 self.unknown.append(row)
             index = self.reader.count + self.unknown.index(row)
-        return self.epoch << 14 | index
+        return self.epoch << 15 | index
 
     def resolve(self, token):
-        index = token & ((1 << 14)-1)
-        if not self.epoch or token >> 14 != self.epoch or self.reader is None:
+        index = token & ((1 << 15)-1)
+        if not self.epoch or token >> 15 != self.epoch or self.reader is None:
             raise ValueError('stale catalog token')
         if index < self.reader.count:
             return self.reader.record(index)

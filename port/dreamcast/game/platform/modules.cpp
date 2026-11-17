@@ -541,10 +541,16 @@ RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39)
 #endif
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
-#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
-RouteOverlay g_stage_ovl[14];
+// st2_4 (r22c) takes one more slot only with ROUTE_CH41, so a Disc 1 build (ROUTE_CH41=0) keeps its old bss (knob-off identity).
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
+#define STAGE_OVL_CH41 1
 #else
-RouteOverlay g_stage_ovl[10];
+#define STAGE_OVL_CH41 0
+#endif
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+RouteOverlay g_stage_ovl[13 + STAGE_OVL_CH41];
+#else
+RouteOverlay g_stage_ovl[9 + STAGE_OVL_CH41];
 #endif
 inline int stageSlot(u32 id)
 {
@@ -552,10 +558,12 @@ inline int stageSlot(u32 id)
     case 74: return 0; case 73: return 1; case 78: return 2; case 86: return 3;   // st1_0 st1_1 st1_2 st1_3
     case 75: return 4; case 82: return 5; case 83: return 6; case 97: return 7;   // st2_0 st2_1 st2_2 st2_3
     case 96: return 8;                                                           // st4_0
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     case 118: return 13;                                                         // st2_4 (r22c)
 #else
     case 118: return 9;                                                          // st2_4 (r22c)
+#endif
 #endif
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     case 76: return 9; case 87: return 10; case 88: return 11; case 101: return 12; // st3_0 st3_1 st3_2 st3_3 (ROUTE_CH3)

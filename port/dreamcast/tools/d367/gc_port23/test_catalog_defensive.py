@@ -177,7 +177,7 @@ class DefensiveCatalogTests(unittest.TestCase):
         gate=(PLATFORM/'gc_asset_gate.cpp').read_text();index=(PLATFORM/'include/gc_asset_index.inc').read_text();disc=(PLATFORM/'gc_asset_disc.cpp').read_text()
         mutations=[('unowned_cursor',None,None,disc.replace('if(!guard.held){disc_failed();return 0;}','if(!guard.held){}'),1),
                    ('callback_epoch',gate.replace('if(active || !index_generation(epoch))return false;','if(active)return false;').replace('if(!parse.complete(expected) || !index_generation(epoch))return false;','if(!parse.complete(expected))return false;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,20),
-                   ('bind_global_epoch',gate.replace('if(!catalog_ok || !index_generation(epoch))return {};','if(!catalog_ok)return {};').replace('return {epoch<<14|index};','return {catalog_epoch<<14|index};').replace('const unsigned epoch=catalog_epoch,rows=catalog_rows;','const unsigned epoch=catalog_epoch,rows=catalog_rows;(void)epoch;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,16),
+                   ('bind_global_epoch',gate.replace('if(!catalog_ok || !index_generation(epoch))return {};','if(!catalog_ok)return {};').replace('return {epoch<<15|index};','return {catalog_epoch<<15|index};').replace('const unsigned epoch=catalog_epoch,rows=catalog_rows;','const unsigned epoch=catalog_epoch,rows=catalog_rows;(void)epoch;'),index.replace('return index_generation(epoch)?count:0;','return count;').replace('if(!read || !index_generation(epoch))return 0;','(void)epoch;if(!read)return 0;').replace('if(!index_generation(epoch))return false;','if(false)return false;').replace('catalog_ok && index_generation(epoch);','true;'),None,16),
                    ('busy_retire_reopens',None,None,disc.replace('if(!guard.held)return; // exact busy fd stays retained; no deferred auto-close','if(!guard.held){disc_state.store(FreshInstall);return;}'),7),
                    ('unsafe_busy_close',None,None,disc.replace('if(!guard.held)return; // exact busy fd stays retained; no deferred auto-close','if(!guard.held){} // mutant closes an owned reader'),2)]
         # Whole old gate/index ensures the reproduced late-description false
@@ -212,7 +212,7 @@ int main(){
  assert(r.fired&&catalog_epoch==terminal&&!catalog_ok);
  assert(!install_index(independent_read,&r,file.size(),pin));
  const CatalogRow row={"geometry","a",digest(0),PS2};
- assert(!install(&row,1)&&!bind_a().value&&!checked_current({terminal<<14}));
+ assert(!install(&row,1)&&!bind_a().value&&!checked_current({terminal<<15}));
  retire_catalog();assert(catalog_epoch==terminal&&!catalog_ok);
 }
 '''
