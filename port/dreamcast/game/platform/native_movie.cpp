@@ -1413,6 +1413,17 @@ extern "C" int re4dc_movie_step(RouteMoviePictureTick tick){
     }
     return st;
 }
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+// ROUTE_QTE_CLOCK (lane dl66b, GitHub #66 "CUT" freeze; route_movie_bridge.cpp): the open stepped movie's picture clock, the
+// index of the next picture (shown or dropped): the rope QTE reads it to run its frame counter on the movie's clock.
+extern "C" unsigned re4dc_movie_clock(void){return m.entered&&!m.terminal?m.k:0;}
+#endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+// DELLAGO_DIAG (test only, lane dl66b): the open movie's picture counters for the rope QTE trace (route_movie_bridge.cpp).
+extern "C" void re4dc_movie_diag(unsigned* k,unsigned* shown,unsigned* dropped,unsigned* late,unsigned* starved,int* held,int* pending,unsigned* v0){
+    *k=m.k;*shown=m.shown;*dropped=m.dropped;*late=m.late;*starved=m.starved;*held=m.held_end?1:0;*pending=m.pending?1:0;*v0=m.v0;
+}
+#endif
 // Retires an open (handed-off or stepped) movie.
 extern "C" int re4dc_movie_end(void){
 #if RE4DC_CABIN_SOURCE
@@ -1470,5 +1481,8 @@ extern "C" int re4dc_movie_cancel(){return RE4DC_MOVIE_CANCEL;}
 extern "C" int re4dc_movie_play_until(unsigned,unsigned,RouteMoviePictureTick,unsigned){return RE4DC_MOVIE_UNHANDLED;}
 extern "C" int re4dc_movie_play_stepped(unsigned){return RE4DC_MOVIE_UNHANDLED;}
 extern "C" int re4dc_movie_step(RouteMoviePictureTick){return RE4DC_MOVIE_ERROR;}
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+extern "C" unsigned re4dc_movie_clock(void){return 0;}
+#endif
 extern "C" int re4dc_movie_end(void){return RE4DC_MOVIE_ERROR;}
 #endif

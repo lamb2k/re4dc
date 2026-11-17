@@ -363,6 +363,218 @@ ifneq ($(FX_TRIM),1)
 $(error FX_TRIM_LOG=1 needs FX_TRIM=1)
 endif
 endif
+# FX_INSIGNIA_KEEP=1 (default 0; render only; #66 bug 1): under Essential keep picture 0xE1 in r108 / r118, the dial's
+#                    insignias. Without it the discs only glow and the puzzle's clue is gone.
+FX_INSIGNIA_KEEP ?= 0
+ifneq ($(filter-out 0 1,$(FX_INSIGNIA_KEEP)),)
+$(error FX_INSIGNIA_KEEP is 0 or 1)
+endif
+ifeq ($(FX_INSIGNIA_KEEP),1)
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_INSIGNIA_KEEP=1
+endif
+# ID_ALPHA_SAT=1 (default 0; render only; #66 bug 6): screen id colours convert to bytes with saturation (as on the
+#                GameCube), so the title logo (alpha curve to 314) stays at full strength on the menu instead of 58.
+ID_ALPHA_SAT ?= 0
+ifneq ($(filter-out 0 1,$(ID_ALPHA_SAT)),)
+$(error ID_ALPHA_SAT is 0 or 1)
+endif
+ifeq ($(ID_ALPHA_SAT),1)
+$(OBJDIR)/src/game/id_sys.o: GAME_CPPFLAGS += -DRE4DC_ID_ALPHA_SAT=1
+endif
+# ITEM_VIEW_BG=1 (default 0; #66 bug 2): the item pickup view. The GameCube grabs the frame (GXCopyTex) and draws it
+# back behind the item; both are empty stubs here, so the view drew over whatever the frame held (bands on the
+# console). Before the view's first frame unit a full-screen panel is queued (ITEM_VIEW_BG_ARGB), and the message
+# panel picture (texture 0x61, CMPR: green noise over the "You got" text) is drawn as a plain dark panel
+# (ITEM_VIEW_PANEL_ARGB). Render only; needs ITEM_UI_ORDER=1 (ui_bridge.cpp).
+# ITEM_VIEW_DIAG=1 (test only): lists the pickup view's UI queue (IVD lines) every 60 frames. Needs ITEM_UI_ORDER=1.
+ITEM_VIEW_BG ?= 0
+ITEM_VIEW_BG_ARGB ?= 0xff000000U
+ITEM_VIEW_PANEL_ARGB ?= 0xe0101010U
+ITEM_VIEW_DIAG ?= 0
+ifneq ($(filter-out 0 1,$(ITEM_VIEW_BG) $(ITEM_VIEW_DIAG)),)
+$(error ITEM_VIEW_BG and ITEM_VIEW_DIAG are 0 or 1)
+endif
+ifeq ($(ITEM_VIEW_BG),1)
+ifneq ($(ITEM_UI_ORDER),1)
+$(error ITEM_VIEW_BG needs ITEM_UI_ORDER=1)
+endif
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1 -DRE4DC_ITEM_VIEW_BG_ARGB=$(ITEM_VIEW_BG_ARGB) -DRE4DC_ITEM_VIEW_PANEL_ARGB=$(ITEM_VIEW_PANEL_ARGB)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1
+$(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_BG=1
+endif
+ifeq ($(ITEM_VIEW_DIAG),1)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ITEM_VIEW_DIAG=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ITEM_VIEW_DIAG=1
+endif
+# TITLE_START_OK=1 (default 0; #66 START twice): the title menu takes START as well as A (GameCube: A only).
+TITLE_START_OK ?= 0
+ifneq ($(filter-out 0 1,$(TITLE_START_OK)),)
+$(error TITLE_START_OK is 0 or 1)
+endif
+ifeq ($(TITLE_START_OK),1)
+$(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_START_OK=1
+endif
+# TITLE_ID_DIAG=1 (default 0; test only, #66 bug 6): logs the title / menu id units (TIDD lines).
+TITLE_ID_DIAG ?= 0
+ifeq ($(TITLE_ID_DIAG),1)
+$(OBJDIR)/src/game/title.o: GAME_CPPFLAGS += -DRE4DC_TITLE_ID_DIAG=1
+endif
+# CHAPTER_END_HOLD=1 (default 0; #66, chapter 1-1 end save blue screen): while SceChapterEnd runs (results screen, save
+# prompt, card save) the native world keeps its room: a frame asking for the chapter door's destination (room_id holds
+# it for the save) or drawn with heap 4 suspended (cDataSwap) draws no world and frees no package. Was: the r106
+# package was freed with heap 4 suspended, "MISSING movie world arena stale owner retirement".
+CHAPTER_END_HOLD ?= 0
+ifneq ($(filter-out 0 1,$(CHAPTER_END_HOLD)),)
+$(error CHAPTER_END_HOLD is 0 or 1)
+endif
+ifeq ($(CHAPTER_END_HOLD),1)
+$(OBJDIR)/src/game/sce_com.o: GAME_CPPFLAGS += -DRE4DC_CHAPTER_END_HOLD=1
+$(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAPTER_END_HOLD=1
+endif
+# HARPOON_SIGHT=1 (default 0; render only; lane dellago66, #66 bug 7; needs EFFECT_SPRITES=1): the Del Lago fight's harpoon
+# sight is drawn. It is a screen sprite of effect owner 0x0F (the boat, pl0f EST 0xF/6), which the owner whitelist of
+# EspSpriteEligible left out, so aiming showed no mark. Owner 0x0F screen sprites are admitted (esp_sub.cpp).
+HARPOON_SIGHT ?= 0
+ifneq ($(HARPOON_SIGHT),0)
+ifneq ($(HARPOON_SIGHT)$(EFFECT_SPRITES),11)
+$(error HARPOON_SIGHT is 0 or 1 and needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HARPOON_SIGHT=1
+endif
+# ROUTE_QTE_CLOCK=1 (default 0; render timing only; lane dl66b, #66 "CUT" freeze at the rope; needs ROUTE_CH13=1): the r10b rope QTE
+# (s20, picture 515 on) counts its 285 frames on the movie's picture clock instead of per game frame. The movie runs on the retrace
+# clock (sound too); with a game frame slower than two fields it ended before the QTE did and its last picture stayed frozen
+# under the "CUT" prompt. Frame numbers the movie passed in a slow game frame are still run once each (frame 100 starts the
+# prompt); the A-press count reads the pad once per game frame; the outcome (s21 / s22) rule is unchanged. 30 fps: no change.
+# Logs "route QTE: ... clock=1 frames game_frames catch_up fields slow_frames max_gap_fields".
+ROUTE_QTE_CLOCK ?= 0
+ifneq ($(ROUTE_QTE_CLOCK),0)
+ifneq ($(ROUTE_QTE_CLOCK)$(ROUTE_CH13),11)
+$(error ROUTE_QTE_CLOCK is 0 or 1 and needs ROUTE_CH13=1)
+endif
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_QTE_CLOCK=1
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_QTE_CLOCK=1
+endif
+# DELLAGO_FX=<mask> (default 0; render only; lane dl66b, #66 bug 7 follow-up; needs EFFECT_SPRITES=1): more of the Del Lago fight's
+# effects, which the owner whitelist of EspSpriteEligible dropped, are drawn in r10b (esp_sub.cpp). Bit 1: owner 0x27, the monster's
+# own effect sets (em2f: splashes, spray, mist, flashes); bit 2: owner 0x0F world sprites (the boat's wake, ripples, splashes and
+# the light beam of EST 0xF/0xF); bit 4: owner 0x1F, the harpoon's hits. The red ring and rope arrows (screen sprites) are
+# HARPOON_SIGHT's. Essential (FX_LEVEL=3) and the PS2 none-cut still decide at emit. 7 = all.
+DELLAGO_FX ?= 0
+ifneq ($(DELLAGO_FX),0)
+ifneq ($(filter 1 2 3 4 5 6 7,$(DELLAGO_FX)),$(DELLAGO_FX))
+$(error DELLAGO_FX is a mask 0..7)
+endif
+ifneq ($(EFFECT_SPRITES),1)
+$(error DELLAGO_FX needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_FX=$(DELLAGO_FX)
+endif
+# R10B_FX_DEAD=<mask> (default 0; draw-dead effects only; lane lake66p, GitHub #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and
+# ROUTE_CH13=1 / WATER45_NATIVE=1): r10b keeps ~765 permanent room sprites (owner 0xD0 SST sheets, tex f2 / f6 / cb / 1d / ff, and est
+# 0x23's square) that EspCommonTrans's WATER45_NATIVE cut never draws (the PS2 release deleted them): each still moved, was queued into the
+# ordering table and dispatched every tick. Bit 1: they are not queued (render only, exact). Bit 2: EspSeqSet marks them dormant after
+# all seed and Rnd() draws (m_Be_flg 0x80, the slot is kept: the pool is as before), EspMove and EspTrans step over them. 3 = both. r10b only.
+R10B_FX_DEAD ?= 0
+ifneq ($(R10B_FX_DEAD),0)
+ifneq ($(filter 1 2 3,$(R10B_FX_DEAD)),$(R10B_FX_DEAD))
+$(error R10B_FX_DEAD is a mask 1..3)
+endif
+ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
+$(error R10B_FX_DEAD needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_DEAD=$(R10B_FX_DEAD)
+endif
+# R10B_FX_CUT=<mask> (default 0; render only; lane lake66q, #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and ROUTE_CH13=1, and acts only
+# while the Essential filter is on, FX_LEVEL=3): the fight's own effects (owners 0x0F / 0x27 / 0x01) are ~85% never published, yet each
+# was queued into the ordering table and dispatched (Ps2fxClass, EspSpriteEligible, ChannelSet) before the Essential filter or the
+# projection declined it. In r10b, EspTrans does not queue a plain sprite that: bit 1 the Essential filter's stateless cuts decline
+# (exact; = lane fx31's precut31 verdicts), bit 2 is faded out or wholly outside the view (exact), bit 4 Essential's per-layer
+# sprite cap would decline, counted at the queue in pool order instead of at the draw in table order (an APPROXIMATION: the same
+# number of sprites of a layer, a different pick). Moves, generators, slots and Rnd() are untouched. 3 = exact, 7 = all.
+R10B_FX_CUT ?= 0
+ifneq ($(R10B_FX_CUT),0)
+ifneq ($(filter 1 2 3 4 5 6 7,$(R10B_FX_CUT)),$(R10B_FX_CUT))
+$(error R10B_FX_CUT is a mask 1..7)
+endif
+ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
+$(error R10B_FX_CUT needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_CUT=$(R10B_FX_CUT)
+endif
+# ESP_MAP_WORDS=<n> (default 32 = unchanged image; exact; lane lake66r; needs GAME_FX_SCAN): GAME_FX_SCAN's live / owner slot maps hold
+# 32 words = 1024 slots and switch themselves off (re4dc_fx_esp_ok) for a larger pool. r10b's pool is 1800 slots, so in the Del Lago
+# fight the scan maps were off: EspMove, EspTrans and EspDelete visited every slot, and fx31's FX_TRANS_SKIP31 / FX_DORMANT31 and
+# R10B_FX_UNLIVE had nothing to step over. 57 words = 1824 slots turn them on there (+6.4 KB .bss: ownmap is 64 rows).
+ESP_MAP_WORDS ?= 32
+ifneq ($(ESP_MAP_WORDS),32)
+ifeq ($(GAME_FX_SCAN),0)
+$(error ESP_MAP_WORDS needs GAME_FX_SCAN=1 or 2)
+endif
+GAME_CPPFLAGS += -DRE4DC_FX_ESP_WORDS=$(ESP_MAP_WORDS)
+PLATFORM_CPPFLAGS += -DRE4DC_FX_ESP_WORDS=$(ESP_MAP_WORDS)
+endif
+# R10B_FX_QCAP=<n> (default 4; 1..8; lane lake66r; only with R10B_FX_CUT bit 4): the queue-time Essential layer cap per (owner, texture)
+# layer per frame. 4 is lake66q's build; the draw itself keeps 2, so 2 is the draw's own count taken in pool order (an APPROXIMATION, as bit 4).
+R10B_FX_QCAP ?= 4
+ifneq ($(R10B_FX_QCAP),4)
+ifeq ($(filter 1 2 3 4 5 6 7 8,$(R10B_FX_QCAP)),)
+$(error R10B_FX_QCAP is 1..8)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_QCAP=$(R10B_FX_QCAP)
+endif
+# R10B_FX_UNLIVE=1 (default 0; exact, render and scan only; lane lake66r; needs R10B_FX_DEAD bit 2, GAME_FX_SCAN and FX_TRANS_SKIP31): the
+# 766 dormant room sprites R10B_FX_DEAD leaves in the pool clear their GAME_FX_SCAN live bit at the first EspMove visit, so EspMove's
+# scan and EspTrans's stepper stop reading their slots (250 KB of data cache a tick, 2 x 766 slot touches). No Rnd(), no state read.
+R10B_FX_UNLIVE ?= 0
+ifneq ($(R10B_FX_UNLIVE),0)
+ifneq ($(FX_TRANS_SKIP31),1)
+$(error R10B_FX_UNLIVE needs FX_TRANS_SKIP31=1 (EspTrans's live-map stepper))
+endif
+ifeq ($(filter 2 3,$(R10B_FX_DEAD)),)
+$(error R10B_FX_UNLIVE needs R10B_FX_DEAD=2 or 3)
+endif
+$(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_UNLIVE=1
+endif
+# R10B_FX_SPAWNCAP=<n> (default 0 = off; 1..255; an APPROXIMATION; lane lake66s, #66 Del Lago slowdown; needs EFFECT_SPRITES=1 and ROUTE_CH13=1;
+# acts in r10b only, while the Essential filter is on): the spawn-side layer cap. The fight's own sprites (owners 0x0F / 0x27, ids 0x00 / 0x40:
+# Rnd()-free, no children) are asked by EspMove / EspTrans every tick although Essential draws 2 of a (owner, texture) layer per frame. At the end
+# of EspSeqSet (every seed draw and override already made) the (n+1)th live sprite of an Essential-capped layer is released at once with the
+# success return and the dummy esp, so no generator stalls and the seed streams are unchanged; only pool slot order and the live count change.
+R10B_FX_SPAWNCAP ?= 0
+ifneq ($(R10B_FX_SPAWNCAP),0)
+ifneq ($(EFFECT_SPRITES)$(ROUTE_CH13),11)
+$(error R10B_FX_SPAWNCAP needs EFFECT_SPRITES=1 and ROUTE_CH13=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_R10B_FX_SPAWNCAP=$(R10B_FX_SPAWNCAP)
+endif
+# R10B_ROPE_HALF=1 (default 0; an APPROXIMATION, look check; lane lake66q, #66 Del Lago slowdown): the 3.4 ms a tick that lake66p
+# MODELLED as "Leon's cloth" is the boat's anchor rope (pl0f.cpp pl0fLongRopeSet: a 30-link obj1d chain, Bundle_num 100, collides
+# with the boat; PenClothMove, 525 k instructions a tick; Leon's own cloth is a few hundred). In r10b that chain steps every other
+# tick (staggered by its address; the skipped tick keeps the wind's shared-random draw, as PEN_CLOTH_LOD's skip does) and keeps its
+# pose on the skipped tick. A warped model always steps. Needs nothing else (PEN_CLOTH_LOD is separate).
+R10B_ROPE_HALF ?= 0
+ifneq ($(R10B_ROPE_HALF),0)
+$(OBJDIR)/src/game/pendulum.o: GAME_CPPFLAGS += -DRE4DC_R10B_ROPE_HALF=1
+endif
+# DELLAGO_DIAG=1 (test only, default 0; lane dellago66, #66 bug 7): "dl66" log lines in r10b (harpoon sight EST, falls,
+# the swim back, the monster's attacks on the swimmer) and a "swim" padscript state. DELLAGO_AUTOMASH=N (test only, needs
+# DELLAGO_DIAG): the swim's action key every N frames. DELLAGO_LIFE=N (test only): Leon's life set to N (boat hp 800) as
+# he falls, the hurt second fall.
+DELLAGO_DIAG ?= 0
+DELLAGO_AUTOMASH ?= 0
+DELLAGO_LIFE ?= 0
+ifneq ($(DELLAGO_DIAG),0)
+$(OBJDIR)/mod/pl0f/src/pl0f/pl0f.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1 -DRE4DC_DELLAGO_AUTOMASH=$(DELLAGO_AUTOMASH) \
+	-DRE4DC_DELLAGO_LIFE=$(DELLAGO_LIFE)
+$(OBJDIR)/mod/em2f/src/em2f/em2f.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
+# DELLAGO_QTE_BURN=<us> (test only, needs DELLAGO_DIAG): the rope QTE's game frames busy-wait this long each, standing in for a
+# slower console; DELLAGO_DIAG also logs "dl66 qte" lines (route_movie_bridge.cpp) from the QTE loop.
+DELLAGO_QTE_BURN ?= 0
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1 -DRE4DC_QTE_BURN_US=$(DELLAGO_QTE_BURN)
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_DELLAGO_DIAG=1
+endif
 # R117_FX_QUALIFIED_FALLBACK=1 (default 0; render only): if a complete church puzzle colour's
 # PS2 replacement batch is refused, let only its matching GC copies pass Essential for that
 # frame, effect pool and live room generation. Successful replacement still suppresses the

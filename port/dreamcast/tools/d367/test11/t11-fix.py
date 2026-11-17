@@ -337,6 +337,10 @@ DATA['cast15']['tex'] = ['%s/conv-t14/reg-%s/tex' % (C15D, g) if g != '118pc' el
 # on the disc the LOD code never runs (no GANADOLOD log line: the poc101 bench trap).
 GLOD = os.environ.get('GLOD', '/root/probe/lanes-20261015/t15k/data/glod/ganado_lod.re4gl')
 DATA['glod'] = {'dc/native/ganado/ganado_lod.re4gl': GLOD}
+# LEON_LOD=<n> (lane leonlod 2026-11-16): Leon's rig mesh rungs (tools/d367/leonlod/rig/README.md; lod_pack.py pack). Without it on the
+# disc a LEON_LOD build draws Leon through the source path (no rung loaded: LEONLOD dir why=1 in the log).
+LLOD = os.environ.get('LLOD', '/root/re4data/private/leonlod-rig-20261116/leon_lod.re4lp')
+DATA['leonlod'] = {'dc/native/pl00/leon_lod.re4lp': LLOD}
 T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,fsh'  # vq16w + water16i (lane water16b) replace vq16cs + water16h; fsh (lane farshell16) last: the far shells of r100 / r101; res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; water16h (lane water16) after res16h: res16h + the WATER_PS2 room water pictures; wv32r101 (world32, ChatGPT) replaces bake13 r101 world files and adds variant 5
 # Test 15 HUD fix (t15/hud, CORE_PIN=2): res16 = res14r3 + the two HUD pictures the r101 post-bell radio call's frag window
 # released (test 14's open VRAM item): afa4bc82-306be3e3 (44x44) and bf17fc06-c975b3a7 (48x48), in the core set r000.tsv.
@@ -1498,6 +1502,16 @@ if os.path.isdir(GLYPH27D):
     PAK_DERIVED['glyph27'] = GLYPH27D + '/pak-derived.json'
     AFTER += [('glyph27', 'leon28')]
 
+# ttl271 (lane re4-rel-66 11-07, GC-ASSET @startup row once ID_ALPHA_SAT draws the title logo early): dc/tex.pak =
+# glyph27's pack with the title logo sky backdrop 1443d49e-e163a598 (ss/Eng/title.dat, 640x360) as PS2 title.dat
+# picture 48 (purgeui24/ps2_ui_map.tsv row; same size/format). Built on glyph27, stages after it, so the title27 /
+# font22 / glyph gates still hold. Store: re4data/private/ttl271-20261107.
+TTL271D = os.environ.get('TTL271D', '/root/re4data/private/ttl271-20261107')
+if os.path.isdir(TTL271D):
+    DATA['ttl271'] = {'dc/tex.pak': TTL271D + '/dc/tex.pak'}
+    PAK_DERIVED['ttl271'] = TTL271D + '/pak-derived.json'
+    AFTER += [('ttl271', 'glyph27')]
+
 
 def title27_gate(names, r, rec):
     # a set after title27 that stages dc/tex.pak would silently undo the user's title art (Test 24: pui24s did)
@@ -2111,6 +2125,18 @@ if os.path.isfile(TRANS34D2D + '/trclass.idx'):
     for _r in sorted(os.listdir(TRANS34D2D)):
         if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
             DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
+# call66 / call66d2 (lane radio66 11-12, GitHub #66 bug 3): bgm/aica_str.dat with the radio call voices the route runs never
+# requested ("stream sbb=... not in aica_str.dat, silent"), as PS2 ADX (comm1_NN / comm2_NN) in AICA ADPCM, appended so every
+# earlier entry and data byte is kept (tools/str_append.py). call66 (Disc 1, after ps2snd24): + 1:146 1:147 (r108 / r118),
+# 1:149 (r10c), 1:150 (r117), 1:151 (r11c): 57 entries, NEEDS AICA_STR_ENT_MAX >= 57 (at 56 the reader refuses the whole file
+# and every disc stream goes silent). call66d2 (DISC 2 ONLY via D2_DATA): castle-d2-j's file + 1:155 (r20b) 1:156 (r206)
+# 1:158 (r214): 79 entries (Disc 2 AICA_STR_ENT_MAX=80). Store: re4data/private/call66-20261112 (RECIPE.txt, SHA256SUMS).
+CALL66D = os.environ.get('CALL66D', '/root/re4data/private/call66-20261112')
+if os.path.isfile(CALL66D + '/d1/bgm/aica_str.dat'):
+    DATA['call66'] = {'bgm/aica_str.dat': CALL66D + '/d1/bgm/aica_str.dat'}
+    AFTER += [('call66', 'ps2snd24')]
+if os.path.isfile(CALL66D + '/d2/bgm/aica_str.dat'):
+    DATA['call66d2'] = {'bgm/aica_str.dat': CALL66D + '/d2/bgm/aica_str.dat'}
 # cgca27 / pmcgca27 (lane world-ch31 11-02, chapter 3-1 GC-ASSET for r203 and r207; DISC 2 ONLY via D2_DATA, after the cgca26
 # sets): the same castlegca26 pipeline for st2/r203 and st2/r207 (GCA_ROOMS="r203 r207", no enemy archives): PS2 objects,
 # items + debris, pictures (loose keys), PS2 PCM in the room banks (r207 FOOT keeps 5 GC samples: sound-kept-gc.tsv rows,
