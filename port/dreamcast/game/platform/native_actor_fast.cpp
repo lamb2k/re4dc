@@ -1,6 +1,4 @@
-#if defined(RE4DC_LAB32) && RE4DC_LAB32
 #include "include/lab32.h"
-#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
 #include "include/actor_format32_uv.hpp"
 extern "C" void re4dc_log(const char*, ...);

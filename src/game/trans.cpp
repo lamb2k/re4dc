@@ -1,6 +1,4 @@
-#if defined(RE4DC_LAB32) && RE4DC_LAB32
 #include "lab32.h"
-#endif
 #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
 #include "fallback_audit35.h"
 #endif

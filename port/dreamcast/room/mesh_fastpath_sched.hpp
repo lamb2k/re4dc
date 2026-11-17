@@ -17,8 +17,8 @@
 // two LUT words, the same PREF addresses); no read past the meshlet.
 #include "mesh_fastpath.hpp"
 
-#if defined(RE4DC_LAB32) && RE4DC_LAB32
 #include "../game/platform/include/lab32.h"
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
 #define VPS_FN(n) n##_a
 #else
 #define VPS_FN(n) n
