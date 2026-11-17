@@ -22,3 +22,13 @@ Branch lane/island-gca from lane/world-ch5 ee61884ce. Goal: GC-ASSET on Disc 3 (
 - r300 133 unmapped-texture-address: only r300 (--DOORDEMO); needs a GC_ASSET_PROF probe build.
 - Chapter 5 spawn logic as one unit: PS2_ENEMY_ST3=23 (bits r30f, r301, r327, r311 skip) already in D3REC; lists (isle5) and r30c/r320/r330/r331 room code not ported or run.
 - Still pairs, r332 TEXCHK keys: not run.
+
+## Gate result (Disc 3 rr cycle ig1, test commit 9dc1e475 = lane head 392c124f0 + RR_DISC3, Flycast plain, other lanes running; evidence E:\RE4DC-Lanes\island-gca\rr\1117-0849-9dc1e475)
+Judge: E:\RE4DC-Lanes\world-ch5\rr\judge-d3.sh (rr-judge has no Disc 3 rows). Not the console-like profile: plain 60 s runs as in world-ch5 round 4.
+- CAST-GC PASS (243 census lines, 50 room/model rows, 0 GC or MIXED); LEON-GC 36/36 PASS; TEXCHK 37 pass 0 fail; HALT/FAULT/MISSING/OOM none; 36/36 rooms entered.
+- GC-ASSET still FAIL. Unique unreviewed rows 590 -> 269 (and 13 of the 269 are proven by the round 2 reviewed rows added after, so 256 expected on the next cycle). Failures lines 945 -> 631
+  (631 = 269 rows over rooms + 362 non-row: r300 unmapped-texture-address 351 and two new "no checkpoint" lines r301 visit 5, r310 visit 3; those two are cycle timing next to 2 other lanes' Flycasts, not asset rows).
+  By kind (unique rows, before -> after): texture unknown 440 -> 138 (124 are the 57 unproven shas across rooms, 14 new draws, 13 of them now proven), model gc 54 -> 54, model unknown 36 -> 51 (coverage variance:
+  same shas as before plus 1 new), motion unknown 16 -> 5, motion gc 3 -> 1, sound-mram/aram unknown 20 -> 8, sound gc 18 -> 8 (em1d 3a258d2c is gone; 8 sound-aram gc rows remain, other em1d aram image, to trace), texture gc 1 -> 2, geometry 1, movie 1.
+- Not run in this cycle: KOS 48 KiB door + fight on Disc 3 (the d3kos dirs exist; the cycle did not judge them: read d3kos/kos in the evidence dir), Disc 1 knob-off identity (recipe unchanged for Disc 1; D3_DATA and gc_port23 tables only; image not compared). Re-run before landing.
+- The Disc 3 image was NOT given the em1d sound set as verified by ear or look: ps2_audio in-place PCM, same file sizes; only the census (HALT 0) and the catalog rows prove it loads.
