@@ -968,9 +968,9 @@ const LabPreset kPre[] = {
     {"fix4",     {3, 7, 2, 8, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}, 2},   // fix disc 4: R10B_FX_*, ESP_MAP_WORDS, all31 set, LEON_LOD 2
     {"all31",    {0, 0, 4, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, 0},   // the all31 exact set (CHAR_VIS31=1)
     {"fxcut3",   {0, 0, 4, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0},   // FXCUT_ROOMS=3 in the recommended room list (+ map words)
-    {"r10b",     {3, 7, 2, 8, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0}, 0},   // the Del Lago switches only
-    {"spawn4",   {3, 7, 4, 4, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
-    {"spawn8",   {3, 7, 4, 8, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
+    {"r10b",     {3, 7, 2, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0}, 0},   // the Del Lago effect switches without the spawn cap
+    {"spawn4",   {3, 7, 2, 4, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0}, 0},   // r10b + SPAWNCAP 4
+    {"spawn8",   {3, 7, 2, 8, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0}, 0},   // r10b + SPAWNCAP 8
     {"charvis2", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0}, 0},   // CHAR_VIS31=2 (part frustum)
     {"ps31",     {0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}, 0},
     {"castle",   {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 0}, 0},
