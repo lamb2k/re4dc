@@ -389,7 +389,7 @@ namespace {
 // current visit (bound + latched, or its fault counted). A clip is hashed and bound
 // once per visit, never per evaluated frame. 16 x 52 B; pointers outside any
 // adopted archive or not at an FCV/SEQ entry go to a 16-slot fault ring.
-constexpr unsigned MotionPendingCount=48,MotionDoneEntries=384,MotionFaultRing=8;   // em12: 347 entries
+constexpr unsigned MotionPendingCount=192,MotionDoneEntries=384,MotionFaultRing=8;   // em12: 347 entries; pending 48 -> 192 (lane world-ch4 11-17: Disc 2 castle rooms filled the 48 and logged 10^5 motion-capacity retries)
 struct MotionDone{unsigned generation;unsigned char bits[MotionDoneEntries/8];};
 MotionDone motion_done[ArchiveCount];
 const void* motion_fault_ring[MotionFaultRing];unsigned motion_fault_next;
