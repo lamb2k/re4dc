@@ -5188,8 +5188,9 @@ static int fxcRoomOn()
 //     sprite (a sprite with no PS2 recipe row: the first test; with a row: HazeCutNote + PolicySkip after the fog feed), and the only
 //     thing a recipe haze sprite leaves behind is re4dc_hwfog_haze's note (hwfog.cpp: it records only for the rooms of kRows). Excluded:
 //     the rooms with a row (re4dc_hwfog_has_row), EFFECT_HAZE_LEAN M3's rooms (Ps2fxEvery2 writes the fog table's haze key in
-//     Ps2fxClass), r11b (SHORE_FX_LEVEL: FxLevelThin sets the room's FX level at the first Ps2fxClass call), PS2_FX_POPULATION builds
-//     (the population build is a dispatch effect).
+//     Ps2fxClass), r11b (SHORE_FX_LEVEL: FxLevelThin sets the room's FX level at the first Ps2fxClass call). PS2_FX_POPULATION: the per-frame
+//     population build (state read only by haze sprites: Ps2fxClass, the ChannelSet-fail test, the coarse test) simply happens at the first
+//     remaining asker of the frame; its input is the pool at that moment, the same frame state either way.
 //   2 not eligible for the native path (EspSpriteEligible; ESP_SPRITE_FAST returns before anything else);
 //   4 ESP_CUT_EARLY's haze / mist cut (id 0x48, or id 0x15 without a PS2 recipe row).
 // (2 and 4 are empty in practice: the census found no such sprite reaching a full pass in any of 26 rooms.)
@@ -5199,7 +5200,7 @@ static int fxdClass(cEsp* esp)
         return 0;
     }
     int c = 0;
-#if defined(RE4DC_HAZE_SPRITE_CUT) && !RE4DC_PS2_FX_POPULATION
+#if defined(RE4DC_HAZE_SPRITE_CUT)
     if (esp->m_Id == 0x15) {
         const u16 room = G_ROOM_ID;
         int fed = 0;
