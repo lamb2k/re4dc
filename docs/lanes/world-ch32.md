@@ -57,3 +57,23 @@ rr-jobs.sh disc2_jobs: d2cg / d2gca jobs for r205 r209 r209s00 r20a r20b (warps 
    r20b 388). Not on the disc yet: the Disc 2 trclass.idx adds a room only after its tier 2 look gate (needs Flycast
    runs; held until "release done").
 5. Fixed, not yet run: cpic32 (r20a 72be589c), GC-ASSET member table 512 (r209 / r20b coverage).
+
+## Round 3 (2026-11-17)
+- Knob-off Disc 1 identity: this lane matches a205f8a035e4d465 (_end 8c4264f4), the accepted knob-off baseline for lines
+  that include the assets-dc merge (island-gca and world-ch5 judge against it). ec270e303e2170f3 is the baseline for
+  fix66d only, which lacks assets-dc. The RE4DC_WRAP_OK / RE4DC_CW / RE4DC_CH knob-off forms were dropped, not landed.
+- Ashley heap 4 (r205 / r209), Flycast on a scratch Disc 2 with the partner packages and res32, all unlanded:
+  - r209a, ESP_POOL_ROOM_CAP=320 (pool peak 160, refused 0): em/pl11.drs still short by 116,512 B (free 295,232 of 411,744).
+  - r209a, ESP 320 + PRIM cap 311,296 B (peak 254,368, overflow 0): pl11 reads (free 14,496 after), then the room halts
+    ("invalid prepared enemy motion archive": native motion residency 25,472 B refused).
+  - r205a, PRIM cap 393,216 B alone: pl11 reads (free 76,576 after), then "route overlay does not fit heap 4" (short 11,136 B,
+    native parts runs still to come). ESP cap 320 refuses in r205a (peak >= 416 slots), so r205 stays at 1024.
+  - Heap holes: heap 2->3 and 3->4 chains are contiguous (no hole); heap 3's 323,200 B (roomdata.cpp(484) 206,752,
+    route overlay 115,872) is live. Heaps 0 and 1 list only the top 4 cells, not measured.
+  - Neither ESP + PRIM caps (a, c) nor KOS-area reads (b, 76 KB headroom) close Ashley in r209a; the post-pl11
+    demand (motion residency, route overlay, parts runs) is larger than the recoverable bytes. The PRIM_CAP_R205 /
+    PRIM_CAP_R209 knobs were not landed (patch: E:\RE4DC-Lanes\world-ch32\round2\prim-cap-r205-r209-unlanded.patch).
+    Ashley following is unchanged.
+- Cloak: a mid-fade Novistador is caught on the native arm at 34 s of the r205 cloak-0 fixture (Flycast):
+  E:\RE4DC-Lanes\world-ch32\round2\r205-cloak-native-t34.png and r205-cloak-native-t34-crop.png (see-through outline
+  behind Leon; fully visible at 38 s). The GC arm has no frame at that time.
