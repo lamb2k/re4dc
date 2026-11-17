@@ -2191,6 +2191,14 @@ if os.path.isdir(ISL15D):
 ISND300D = os.environ.get('ISND300D', '/root/re4data/private/isnd300-20261103')
 if os.path.isdir(ISND300D):
     DATA['isnd300'] = {'st3/r300.dar': ISND300D + '/st3/r300.dar'}
+# isnd5 (lane island-gca 11-17, for world-ch5's D3_DATA; Disc 3 space): PS2 PCM in place (ps2_audio.py banks) for the island enemy bank
+# em/em1d.drs (GameCube sound-mram 3a258d2c / sound-aram 2b738457 in 10 rooms) and the room banks st3/r30a r311 r317 r31b r31c r320 r327 r333 .dar:
+# 466 of 501 samples PS2, 35 keep GC (gc_port23/sound-kept-gc.tsv). No RECIPE on purpose (snd28_store.py provenance rows decide).
+# Store: re4data/private/isnd5-20261117 (README-isnd5.txt, provenance.tsv, _map/).
+ISND5D = os.environ.get('ISND5D', '/root/re4data/private/isnd5-20261117')
+if os.path.isdir(ISND5D + '/em'):
+    DATA['isnd5'] = {'em/em1d.drs': ISND5D + '/em/em1d.drs'}
+    DATA['isnd5'].update({'st3/%s.dar' % _r: ISND5D + '/st3/%s.dar' % _r for _r in ('r30a', 'r311', 'r317', 'r31b', 'r31c', 'r320', 'r327', 'r333')})
 # bossk / bosss (lane bosscast 11-03, release rule 7 + no-GameCube-assets; DISC 3 ONLY via D3_DATA): the last island characters
 # drawn from GameCube data. bossk = r31c Krauser: the room registry package (model-registry/ps2-ch5-r31ck.json: em39 types 1 / 2
 # with every hand / death info, cap, knife / gun / bow / arrow, plus the gunship em3a and its missile that the island tree's
