@@ -8209,8 +8209,7 @@ void note(const float* view,const float* P,const float* vp,float cull_far,unsign
     }
     last_key=k;have=true;last_f=f;
     if(f-log_f>=120U){
-        re4dc_log("WSTILL frame=%u room=%03x drawn=%u still=%u pct=%u run_max=%u runs2_3=%u runs4_7=%u runs8_15=%u runs16p=%u
-",f,room,drawn,still,
+        re4dc_log("WSTILL frame=%u room=%03x drawn=%u still=%u pct=%u run_max=%u runs2_3=%u runs4_7=%u runs8_15=%u runs16p=%u\n",f,room,drawn,still,
             drawn?still*100U/drawn:0U,run_max,runs2,runs4,runs8,runs16);
         log_f=f;drawn=still=run_max=runs2=runs4=runs8=runs16=0;
     }
