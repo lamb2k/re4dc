@@ -2198,12 +2198,21 @@ if os.path.isdir(ISND300D):
 ISND5D = os.environ.get('ISND5D', '/root/re4data/private/isnd5-20261117')
 if os.path.isdir(ISND5D + '/em'):
     DATA['isnd5'] = {'em/em1d.drs': ISND5D + '/em/em1d.drs'}
-    DATA['isnd5'].update({'st3/%s.dar' % _r: ISND5D + '/st3/%s.dar' % _r for _r in ('r30a', 'r311', 'r317', 'r31b', 'r31c', 'r320', 'r327', 'r333')})
+    DATA['isnd5'].update({'st3/%s.dar' % _r: ISND5D + '/st3/%s.dar' % _r for _r in ('r30a', 'r30f', 'r311', 'r315', 'r317', 'r31b', 'r31c', 'r320', 'r327', 'r333')})
     DATA['isnd5'].update({'em/%s.drs' % _e: ISND5D + '/em/%s.drs' % _e for _e in ('em1e', 'em1f', 'em31', 'em32', 'em36', 'em3a', 'pl0e')})
 # isnd5b (island-gca 11-17): em/em39.drs (bossk copy) with PS2 PCM in place; after bossk in D3_DATA.
 ISND5BD = os.environ.get('ISND5BD', '/root/re4data/private/isnd5b-20261117')
 if os.path.isdir(ISND5BD + '/em'):
     DATA['isnd5b'] = {'em/em39.drs': ISND5BD + '/em/em39.drs'}
+# isobj5 (lane island-gca round 3, for world-ch5's D3_DATA; Disc 3 space): the island room archives with PS2 geometry for the room objects (ps2_objects.py room;
+# island_gca/island_objects.py), after isnd300 / isnd5 (it carries their sound). Store: re4data/private/isobj5-20261117 (README-isobj5.txt, provenance.tsv).
+ISOBJ5D = os.environ.get('ISOBJ5D', '/root/re4data/private/isobj5-20261117')
+if os.path.isdir(ISOBJ5D + '/st3'):
+    DATA['isobj5'] = {'st3/' + _f: ISOBJ5D + '/st3/' + _f for _f in sorted(os.listdir(ISOBJ5D + '/st3'))}
+# isobjm5 (lane island-gca round 3; Disc 3 space): st3/r30c.dar and r30f.dar (isobj5 copies) with PS2 motion for the clips the PS2 changed (kept-GC slots stay GC). After isobj5.
+ISOBJM5D = os.environ.get('ISOBJM5D', '/root/re4data/private/isobjm5-20261117')
+if os.path.isdir(ISOBJM5D + '/st3'):
+    DATA['isobjm5'] = {'st3/' + _f: ISOBJM5D + '/st3/' + _f for _f in sorted(os.listdir(ISOBJM5D + '/st3'))}
 # isle5 (lane island-gca 11-17; Disc 3 only, parked: not in D3_DATA until the per-room decisions / progress checks pass): the PS2 USA island enemy
 # lists etc/emleon06.esl / emleon07.esl instead of the GameCube lists (island-esl). Store: re4data/private/isle5-20261117 (README-isle5.txt).
 ISLE5D = os.environ.get('ISLE5D', '/root/re4data/private/isle5-20261117')

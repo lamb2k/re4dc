@@ -32,3 +32,26 @@ Judge: E:\RE4DC-Lanes\world-ch5\rr\judge-d3.sh (rr-judge has no Disc 3 rows). No
   same shas as before plus 1 new), motion unknown 16 -> 5, motion gc 3 -> 1, sound-mram/aram unknown 20 -> 8, sound gc 18 -> 8 (em1d 3a258d2c is gone; 8 sound-aram gc rows remain, other em1d aram image, to trace), texture gc 1 -> 2, geometry 1, movie 1.
 - Not run in this cycle: KOS 48 KiB door + fight on Disc 3 (the d3kos dirs exist; the cycle did not judge them: read d3kos/kos in the evidence dir), Disc 1 knob-off identity (recipe unchanged for Disc 1; D3_DATA and gc_port23 tables only; image not compared). Re-run before landing.
 - The Disc 3 image was NOT given the em1d sound set as verified by ear or look: ps2_audio in-place PCM, same file sizes; only the census (HALT 0) and the catalog rows prove it loads.
+
+## Round 2 (2026-11-17 afternoon, coordinator decisions)
+Landed (lane/island-gca 7831dec83, pushed): d17e9c56-fa23c229 allowlist rows for the 24 Disc 3 rooms (reason "user-approved font22 pad picture (10-22)", owner island-gca);
+isnd5 now covers em1d em1e em1f em31 em32 em36 em3a pl0e + the 8 room banks; isnd5b = em39 (bossk copy) PS2 PCM, D3_DATA after bossk. The 8 rooms still showing sound-aram 2b738457 (r301 r305 r30b r30c r30e r311 r316 r330)
+use em1e, which shares em1d's GameCube aram image: expected cleared on the next cycle (not yet proven).
+Banks changed on Disc 3 (PS2 PCM in place, same sizes; no ear check possible): em/em1d em1e em1f em31 em32 em36 em3a em39 pl0e; st3 r30a r311 r317 r31b r31c r320 r327 r333 (plus isnd300's r300). 38+ samples keep GC (sound-kept-gc.tsv).
+Cycle ig2 (console-like Flycast: RE4DC_EMU=console RE4DC_GD_PROFILE=gdemu, test commit 7ddfc1d85, driver E:\RE4DC-Lanes\island-gca\rr\run-ig2.sh, evidence rr\1117-1100-7ddfc1d8) was started 11:00; at 13:30 it was still in the disc3 step
+waiting on fp_iso extract from E: (three lanes in D-state on the same disk). NOT judged. When ALLDONE is in rr\run-ig2.out: bash E:\RE4DC-Lanes\world-ch5\rr\judge-d3.sh <evidence dir> /root/work/lanes/island-gca-rrsrc, then read the d3kos / kos dirs for the 48 KiB door + fight, and compare the Disc 1 image to a205f8a035e4d465.
+Findings, not done:
+- r30c: ps2_motion_prepared.py rewrite --keep-gc 28 -> 5 clips PS2-changed (real motion replacement; needs the gameplay-equivalence gate); r30f: --keep-gc needs 25 slots (37-43 46-63), 8 clips PS2-changed. 8f1d9147 (r30c) is a kept-GC slot (stays GC, PS2 has no entry); 27ce1add (r30f) is a PS2-changed clip.
+  pm*-named store provenance would credit the kept-GC keys too, so use reviewed rows by sha after the rewritten dars exist. Three new unproven keys 13fa4799-fb06fa62, 77903604-c5f8ac6e, f1ad500d-868a5a9f not located.
+- 57 texture shas: material strings are the generic "source" / "source-pair" binding names (prepare_native_ui / pack merge), identical in island-d3's own pack; no PS2 trace without matching PS2 TPL pixels. Unproven.
+- Not started: ETM props regeneration (r300/r309), r300 PROF probe, isle5 per-room gating (r301 r30a r30c r311 r320 r327 r330 r331; r334 parked) and the D3_DATA entry. isle5 stays out of the recipe.
+- Trap: /tmp is shared between lanes (another lane overwrote /tmp/w.sh and /tmp/a.sh); keep lane scripts in the scratchpad.
+
+### Cycle ig2 result (console-like Flycast, finished; evidence rr\1117-1100-7ddfc1d8, test commit 7ddfc1d85)
+- Disc 1 image a205f8a035e4d465 = world-ch5 head identity: PASS. GDEMU race PASS. Disc 1 lines "boot to title" and "no checkpoint" FAIL as in world-ch5 round 4 (Disc 1, load-sensitive).
+- Disc 3: CAST-GC PASS (400 census lines, 54 room/model rows, 0 GC), LEON-GC 36/36, TEXCHK 37/0, no HALT/FAULT/MISSING/OOM.
+- KOS 48 KiB Disc 3 (both fragmentation levels): door r300->r301 min headroom 50,528 / 50,616; fight r30f 46,688 / 46,776. Judged by reading d3kos.
+- GC-ASSET FAIL: 249 unique rows (round 1: 269; world-ch5 start 590), 611 failure lines = 249 rows + 360 r300 unmapped-texture-address + 2 no-checkpoint (r301 v5, r310 v3).
+  By kind: texture unknown 125, model gc 54, model unknown 51, motion unknown 6, motion gc 3, sound-mram unknown 4, sound-aram unknown 4, geometry 1, movie 1.
+  em1d/em1e sound-mram 3a258d2c and sound-aram 2b738457 rows are gone (sound gc 18 -> 0). Remaining sound unknown = banks I did not convert: r30f, r315, r321 (mram+aram each).
+  The ig2 run did not include the 13 round 2 texture rows' effect separately (they were already in this build).
