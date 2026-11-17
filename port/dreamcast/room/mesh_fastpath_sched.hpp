@@ -386,16 +386,9 @@ inline void VPS_FN(transform_sched_ix)(const Vertex12* base,const std::uint16_t*
 #undef VPS_FLAGS
 #undef VPS_NEXT
 static_assert(PVR_CMD_VERTEX==0xe0000000U,"VPS_FLAGS builds PVR_CMD_VERTEX as -32 << 24");
-#define VPS_ALLOC "mov     #0,r0
-	" "movca.l r0,@%[dst]
-	"
-#define VPS_FLAGS "mov     #-32,r0
-	" "shll16  r0
-	" "shll8   r0
-	" "mov.l   r0,@-%[dst]
-	"
-#define VPS_NEXT  "add     #60,%[dst]
-	"
+#define VPS_ALLOC "mov     #0,r0\n\t" "movca.l r0,@%[dst]\n\t"
+#define VPS_FLAGS "mov     #-32,r0\n\t" "shll16  r0\n\t" "shll8   r0\n\t" "mov.l   r0,@-%[dst]\n\t"
+#define VPS_NEXT  "add     #60,%[dst]\n\t"
 template<unsigned Checks>
 inline void transform_sched_mc(const Vertex12* in,unsigned count,pvr_vertex_t* cache,std::uint8_t* oc,const Constants& k){
     if constexpr(Checks!=kChecksAll){transform<Checks>(in,count,cache,oc,k);return;}

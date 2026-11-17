@@ -975,6 +975,8 @@ const LabPreset kPre[] = {
     {"ps31",     {0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0}, 0},
     {"castle",   {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 0}, 0},
     {"movca",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
+    {"leon2",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 2},   // LEON_LOD 2 (BODY) alone
+    {"leon3",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 3},   // LEON_LOD 3 (ALL) alone
 };
 int lab_leon = 0;
 int lab_find(const char* n) {
@@ -1003,12 +1005,11 @@ void lab_command(const char* id, char* rest) {
             re4dc_leon_lod_set((unsigned) p.leon);
 #endif
             lab_text(txt, sizeof(txt));
-            re4dc_log("lab32: preset %s %s
-", p.name, txt);
+            re4dc_log("lab32: preset %s %s\n", p.name, txt);
             link_reply(id, true, "KNOB PRESET %s: %s (room-entry knobs apply at the next teleport)", p.name, txt);
             return;
         }
-        link_reply(id, false, "KNOB PRESET control|fix4|all31|fxcut3|r10b|spawn4|spawn8|charvis2|ps31|castle|movca");
+        link_reply(id, false, "KNOB PRESET control|fix4|all31|fxcut3|r10b|spawn4|spawn8|charvis2|ps31|castle|movca|leon2|leon3");
         return;
     }
     if (word_is(a, "LEON_LOD")) {
@@ -1028,8 +1029,7 @@ void lab_command(const char* id, char* rest) {
     if (v < 0 || v > kLab[k].max) { link_reply(id, false, "KNOB %s 0..%u", kLab[k].name, (unsigned) kLab[k].max); return; }
     re4dc_lab32_k[k] = (unsigned char) v;
     lab_text(txt, sizeof(txt));
-    re4dc_log("lab32: %s=%d %s
-", kLab[k].name, v, txt);
+    re4dc_log("lab32: %s=%d %s\n", kLab[k].name, v, txt);
     link_reply(id, true, "KNOB %s=%d: %s", kLab[k].name, v, txt);
 }
 }  // namespace
