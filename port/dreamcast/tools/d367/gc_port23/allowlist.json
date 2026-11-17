@@ -439,6 +439,246 @@
    "reason": "PS2 draws no intact pane; user requires glass and bars (10-26) [pane picture, et0000.tpl image 0]",
    "room": "0204",
    "sha256": "afd0d9f20df8562c41a2db82d2d5433ae49b9aae9d5edba33a13fb83f942b4e7"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0300",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0301",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0304",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0305",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "030a",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "030b",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "030c",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "030e",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "030f",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0310",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0311",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0315",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0316",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0317",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "031b",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "031c",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "031d",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0320",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0321",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0327",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0330",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0331",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0332",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
+  },
+  {
+   "evidence": "font22-20261027 RECIPE (Test 22 a2477bd2 disc dc/tex.pak package); source=dc/tex.pak key d17e9c56-fa23c229 bytes=2192",
+   "id": "d17e9c56-fa23c229",
+   "kind": "texture",
+   "owner": "island-gca",
+   "provenance": "gc",
+   "reason": "user-approved font22 pad picture (10-22): GC-derived A pad label drawn in action prompts",
+   "room": "0333",
+   "sha256": "15fae7f7bca585c5a88ccc7031a794cf05cfd567caf99aa77d31fa00a06ce61a"
   }
  ],
  "schema": 1
