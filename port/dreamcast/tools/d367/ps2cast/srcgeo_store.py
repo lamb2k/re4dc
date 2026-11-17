@@ -48,6 +48,18 @@ def convertible(release, gc_path, tree):
     return None if not keep else (','.join('%x' % a for a in allarcs if a not in keep) or '0')
 
 
+def engine_crc_pins(tree):
+    """Whole-archive CRC32 constants the motion binder qualifies archives by (native_motion.cpp v2_clip_limit: em39 / em32;
+    native_motion_r11f_profiles.inc body_crc: em35 and the pl11 rows). Any changed byte of such an archive makes
+    re4dc_motion_bind refuse it ('invalid prepared enemy motion archive', r31c Krauser halt in the 11-17 s1 cycle)."""
+    import re
+    out = set()
+    g = Path(tree) / 'port/dreamcast/game/platform'
+    for f in ('native_motion.cpp', 'native_motion_r11f_profiles.inc'):
+        out |= {int(x, 16) for x in re.findall(r'0x([0-9a-fA-F]{8})u', (g / f).read_text())}
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
@@ -70,9 +82,18 @@ def main():
     iso = open(a.ps2_iso, 'rb')
     work = Path(tempfile.mkdtemp(prefix='srcgeo-'))
     arcspec, procs = [], []
+    import zlib
+    import ps2_accessories as pa0  # noqa: E402
+    pins = engine_crc_pins(a.tree)
+    skipped = {}
     for spec in a.arch:
         name, rel = spec.split('=', 1)
-        ents = [e for e in afs.get(name + '.dat', []) if e[1] > 0]
+        crc = zlib.crc32(bytes(pa0.Payload(Path(rel).read_bytes()).body)) & 0xffffffff
+        if crc in pins:
+            skipped[name] = 'engine pins the whole-archive CRC %08x (native_motion): left GameCube until the pin accepts the converted archive' % crc
+            print('%s: skipped, %s' % (name, skipped[name]))
+            continue
+        ents =[e for e in afs.get(name + '.dat', []) if e[1] > 0]
         gp = gc.find('em/%s.drs' % name) or gc.find('em/%s.das' % name)
         if not ents or not gp:
             raise SystemExit('%s: no PS2 dat or GC archive' % name)
@@ -138,6 +159,7 @@ def main():
     (out / 'FOLLOW_BYTES').write_text('rows this set did not change keep the previous owner\'s provenance (gc_port23/provenance.py)\n')
     (out / 'manifest.tsv').write_text('\n'.join(manifest) + '\n')
     (out / 'summary.json').write_text(json.dumps(summary, indent=1) + '\n')
+    (out / 'report' / 'skipped-archives.json').write_text(json.dumps(skipped, indent=1) + '\n')
     subprocess.run('cd %s && find em dc -type f | sort | xargs sha256sum > SHA256SUMS.txt' % out, shell=True, check=True)
 
 
