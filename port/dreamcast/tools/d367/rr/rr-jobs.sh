@@ -44,9 +44,17 @@ disc2_jobs() {
   done
   # chapter 3-2 (lane world-ch32 11-02): r205 r209 r20a r20b + the r209 door-4 s00 trigger (etcdoor), warps in worldch32/warps
   local CW32=$T/port/dreamcast/tools/d367/worldch32/warps
-  for rw in r205:h-r205 r205a:h2-r205-ashley r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b; do
+  for rw in r205:h-r205 r205a:h2-r205-ashley r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b r209a:i3-r209-ashley r20aa:j2-r20a-ashley r20ba:k2-r20b-ashley; do
     r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
+  done
+  # 3-2 door chain (lane world-ch32 11-17): each door area's SceAt centre (the census `dump` lists them; `pos` for the r205 pit door,
+  # whose area sits on the upper floor) + A presses, stopping at the next room's entry. Doors still gated by key / event / wave
+  # (r204 -> r209, r209 -> r20a, r20a -> r20b) need the play-through and are not here.
+  for dw in r204-r205:205 r205-r204:204 r209-r204:204 r20a-r209:209 r20b-r20a:20a; do
+    dn=${dw%%:*}; dt=${dw#*:}
+    tr -d '\r' < "$CW32/door-$dn.txt" > "$EVU/fixtures/d2-door-$dn.txt"
+    job 1 d2door-$dn "$(run d2door-$dn d2c d2c 75 --warp "\"\$EVW\\fixtures\\d2-door-$dn.txt\"" --stop "'phase=enter room=$dt'" --grace 8)"
   done
   echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
   # ALIGN-CALL on Disc 2 (lane rel27, GitHub #63): r200 + the source radio call 0 replayed, align logger

@@ -1815,15 +1815,6 @@ if os.path.isdir(SMDREL26D):
 # composed st2/r200.dar as the recipe stands. Summary of convert_room_bins.py on the GC r200.das, same options.
 if os.path.isfile(SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'):
     DATA['smdrel26b'] = {'smdrel': {'st2/r200.dar': SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'}}
-# smdrel32 (lane world-ch32 11-17, DISC 2 ONLY via D2_DATA; r205 heap 4 with Ashley following): the same SMD BIN release
-# for the four chapter 3-2 PS2 world rooms st2/r205 r209 r20a r20b (PS2MESH draws the room; 'native mesh: no-std ...
-# scenery package not opened'). Summaries of convert_room_bins.py on the GC r205 r209 r20a r20b .das with the smdrel26b
-# options (tools/d367/worldch32/gen-smdrel32.sh). smdrel_all runs after every set and graft. Store: smdrel32-20261117.
-SMDREL32D = os.environ.get('SMDREL32D', '/root/re4data/private/smdrel32-20261117')
-if os.path.isfile(SMDREL32D + '/r205/MAINSCENARIO.re4mesh.json'):
-    DATA['smdrel32'] = {'smdrel': {'st2/%s.dar' % _r: '%s/%s/MAINSCENARIO.re4mesh.json' % (SMDREL32D, _r)
-                                   for _r in ('r205', 'r209', 'r20a', 'r20b')
-                                   if os.path.isfile('%s/%s/MAINSCENARIO.re4mesh.json' % (SMDREL32D, _r))}}
 
 # snd60 (lane fix60b-26 11-01, GitHub #60 item 6, console A/B candidate): the r100 room bank's looped ambient samples
 # (the river / bridge loops: PS2 r100.snd VAG 13 and 10 loops land on GC sample 75, an odd AICA start at the 2x
@@ -2132,6 +2123,14 @@ if os.path.isfile(RES34D + '/dc/resident.bin'):
 RES32D = os.environ.get('RES32D', '/root/re4data/private/res32-20261117')
 if os.path.isfile(RES32D + '/dc/resident.bin'):
     DATA['res32'] = {'dc/resident.bin': RES32D + '/dc/resident.bin'}
+# ashpart32 (lane world-ch32 11-17, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 4): Ashley's PS2 partner package for r205 and
+# r209 (cgca32 made r20a / r20b only; "NMRPACK room=0205 none (/cd/dc/native/r205/partner.re4nmr)": with Ashley following, e.g. the
+# r206 -> r20f -> r20c -> r20a -> r209 -> r204 -> r205 backtrack, she drew the GameCube pl11 model there). ps2cast/ashley_reroom.py
+# make from the castle r201 package, as gca32/gen.sh step 2. Store: ashpart32-20261117.
+ASHPART32D = os.environ.get('ASHPART32D', '/root/re4data/private/ashpart32-20261117')
+if os.path.isdir(ASHPART32D + '/dc/native'):
+    DATA['ashpart32'] = {os.path.relpath(os.path.join(_d, _f), ASHPART32D): os.path.join(_d, _f)
+                         for _d, _, _fs in os.walk(ASHPART32D + '/dc/native') for _f in _fs if _f == 'partner.re4nmr'}
 # trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
 # that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
 # trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.
