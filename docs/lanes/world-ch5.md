@@ -107,3 +107,33 @@ the gate the merge changed the release image (re4dc_audio_arq +400 B: island18 c
   gc_port23 owner. The 34 Flycast jobs (33 census rooms + KOS) are queued behind /root/probe/lane-rr.lock, 2 slots.
 - **Routes (item 5):** island5/routes.txt: chapter 5-1..5-4 leg lists (start save -> end save, doors / event jumps).
   Per-room navplan goto paths still to generate.
+
+## Round 4 (2026-11-17, after the 11-06 stop; Flycast console-like timing profile not used, plain Flycast 60 s runs; no console)
+
+Branch merged with lane/assets-dc 5f634d0e8 and lane/fix66d d990b8be5 (head: see git log). Test cycle: world-ch5 + `RR_DISC2=0 RR_DISC3=1`
+(test only, branch lane/world-ch5-rr, not pushed), evidence E:\RE4DC-Lanes\world-ch5\rr\1117-0632-61ef6374 (Disc 1 quick tier) and
+rr\d3-1117 (Disc 3), logs kept in logs-keep\wc5t28.
+
+- **Disc 1 knob-off identity:** image of lane/fix66d alone = ec270e303e2170f3. fix66d + assets-dc merge = a205f8a035e4d465 (assets-dc's own change,
+  not ours). lane/world-ch5 head = a205f8a035e4d465 = identical to the merged baseline (island switches off): PASS.
+  Disc 1 quick tier on the candidate: all gates PASS except "boot to title: no title line" and "GC-ASSET gate: 011e visit 3 no checkpoint"
+  (Disc 1 lines, not island; cycle ran beside 3 other lanes' Flycasts).
+- **Disc 3 build:** program wc561ef637d3rP missing 0; disc_lint loader + standard PASS; 3207 files.
+- **Merge note:** an earlier "kept ours" merge had dropped `res26pr` from recipe.conf DATA; the package resident gate fails without it (restored).
+- **Disc 3 gates (Flycast 60 s, 36 rooms):** CAST-GC PASS (408 census lines, 55 room/model rows, 0 GC or MIXED); LEON-GC 36/36 PASS;
+  TEXCHK 36/36 PASS; HALT/FAULT/MISSING/OOM 0 in every room; VRAM no-contiguous 0; cap-rule class peak (em10..em2f) <= 4 in every room;
+  KOS 48 KiB: door r300->r301 min headroom 50,272 B (both fragmentation levels), fight r30f 46,432 B (kills 17/13, 0 OOM);
+  event runs d3ev r30as10 / r30cs00 / r310s00 / r332s00 route movie plays, r331s10 enters.
+- **GC-ASSET (d3gca, 24 rooms): FAIL, 945 unreviewed rows (11-04: 1,014; allowlist rows used 590).** Per kind: texture unknown 440, model gc 54, model
+  unknown 36, motion unknown 16, sound unknown 20, sound gc 18, motion gc 3, texture gc 1, layout/geometry/movie unknown. r300 has 133
+  runtime unmapped-texture-address errors (unchanged since 11-04).
+  - texture unknown: provenance reasons "tex.pak key unchanged since the oldest readable pack (ch2)" (shared Disc 1 pack keys with no source) and
+    "key changed by set=dcf3pak / pak17" (converted pictures that lost their source key): assets-dc provenance work.
+  - real GameCube data still drawn on Disc 3: em/em1d.drs sound bank (sound-mram 3a258d2c + sound-aram 2b738457 in 10 rooms) and em1d body 49a59e4e
+    (r301 r330); em/pl01.drs bodies dc550af6 17c2d1a1 9d447531 ddfc4b21 (r30c r311 r315 r333); island ETM props taken from GameCube village
+    room files via le_mirror (c8719df3 = r101 et1100, eaea211d = r100 et0200, 18f19ade = r20f et3500) in st3/r300.dar and r309.dar;
+    em39 (Krauser) motion clips fa418a32 5e560e7d 1401f8e8 (r31c); texture d17e9c56-fa23c229 (r300).
+- **Harness notes:** rr-judge.py has no Disc 3 rows (CAST-GC / LEON-GC / TEXCHK / cap / GC-ASSET judged by E:\RE4DC-Lanes\world-ch5\rr\judge-d3.sh);
+  rr-cycle ran the Disc 3 arm but the census twin build failed once because the user's 11-17 probe purge removed the
+  /root/probe/lanes/play-actor-bundle link (route-build.sh ASSETS); relinked to re4-assets-private/play-actor-bundle-20260928.
+  rr-clean-builds.sh removes out-fp<pfx><sha7>d3cW at cycle end, so run d3kos before it (or recreate out-fp...d3cW/syms.txt).
