@@ -1,0 +1,10 @@
+# lane disc31 (2026-11-11) perf spot: the console profiling session's TELEPORT POS spot as a full preset (room entry, so the
+# shoulder camera starts behind Leon). god = Leon takes no damage (as the speed warps rr/speed/warps/*.txt); no alert.
+# r101 square by the cross, turned away from the square (benchpub/scene1-warp.txt / r101x with the yaw reversed).
+name perf-r101-cross-away
+room 0x101
+pos -7914 0 2000
+ang -1.5708
+find 0x00002000
+inv default
+god

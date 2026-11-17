@@ -1562,6 +1562,14 @@ $(OBJDIR)/platform/pwc_sh4.o: platform/pwc_sh4.S
 	kos-cc $(KOS_CFLAGS) -c $< -o $@
 $(OBJDIR)/src/game/model.o: GAME_CPPFLAGS += -DRE4DC_PWC_KERNEL=$(GAME_PWC_KERNEL)
 endif
+# SKEL_IK_PASS=1 (lane skel31 2026-11-11; exact): MotionMove's first (pre-IK) part-world pass computes only the IK
+#                    chains and their ancestors (src/game/motion.cpp skikPartsWorldCalc); the post-IK pass recomputes
+#                    every part as before. =2: check build (skipped parts poisoned with NaN, "SKIK" leak counter).
+#                    Gate: LOGIC_TRACE STRICT + decisions, off vs 1 and off vs 2.
+SKEL_IK_PASS ?= 0
+ifneq ($(SKEL_IK_PASS),0)
+$(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_SKEL_IK_PASS=$(SKEL_IK_PASS)
+endif
 # GAME_ROT_FSCA=1 (lane fm 2026-10-05; last-bit FP policy, NOT exact; needs GAME_PMC_KERNEL=1 and
 #                    GAME_FP_CONTRACT=off): platform/pmc_fsca_sh4.S replaces pmc_sh4.S as re4dc_pmc_run and runs
 #                    every part of cModel::partsMatCalc (no memo, no miss path) as one hand-scheduled SH-4 loop:

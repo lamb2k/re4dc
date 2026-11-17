@@ -57,6 +57,92 @@ u16 MotionMoveF(cModel* m, int flag) asm("MotionMove");   // MotionMove called w
 // appended to .bss by snmakerel.
 asm(".comm common_pl0f,48,4");
 
+// DELLAGO_DIAG=1 (test only, lane dellago66, #66 bug 7; effects30.mk): "dl66" log lines for the harpoon sight, the falls
+// and the swim back (energy, distance to the boat, life, Game_level), a "swim" padscript state, and with
+// DELLAGO_AUTOMASH=N the swim's action key pressed every N frames; DELLAGO_LIFE=N sets Leon's life (and the boat's hp to
+// 800) as he falls, the hurt second fall. The hooks sit on existing lines so the source line numbers stay the same.
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+#include "espgen.h"
+extern "C" void re4dc_fixture_state(const char* name, int a, int b);
+static u32 dl66_sight_n, dl66_swim_f;
+static inline void dl66Sight(cPlayer* pl)
+{
+    if ((dl66_sight_n++ % 60) == 0) {
+        EspSeqData* h = EspGetEstAddr(0xF, 6, 1);
+        OSReport("dl66 sight: n=%u est=%p num=%d rate=%d blend=%d frame=%u\n", (unsigned) dl66_sight_n, (void*) h,
+                 h ? (int) h->num : -1, (int) (pl->sightRate * 1000.0f), (int) pl->blendRate500, (unsigned) pG->Frame_cnt);
+        for (int r = 0; h && r < (int) h->num && r < 8; r++) {
+            const EspGenWork* g = &h->rec[r];
+            OSReport("dl66 sight rec %d: be=%02x id=%02x tex=%02x type=%02x set=%u parts=%u tool=%08x size=%d,%d col=%u,%u,%u,%u "
+                     "life=%u\n", r, g->Be_flg, g->Id, g->Tex_id, g->Type, g->Set_time, g->Parts_no, (unsigned) g->Tool_flg,
+                     (int) g->Size_base_x, (int) g->Size_base_y, g->Col_start_r, g->Col_start_g, g->Col_start_b,
+                     g->Col_start_a, g->Life_max);
+        }
+        cEspSystem* sys = g_pEspSys;
+        u32 live = 0;
+        for (u32 i = 0; sys && sys->pEspBuf && i < sys->nEsp; i++) {
+            if (((cEsp*) (sys->pEspBuf + i * 0x150))->m_Be_flg & 1) ++live;
+        }
+        OSReport("dl66 sight pool: live=%u of %u\n", (unsigned) live, sys ? (unsigned) sys->nEsp : 0U);
+        for (u32 i = 0; sys && sys->pEspBuf && i < sys->nEsp; i++) {
+            cEsp* e = (cEsp*) (sys->pEspBuf + i * 0x150);
+            if ((e->m_Be_flg & 1) && e->info.owner == 0x0F && e->info.Core_pEm == (u32) pl) {
+                OSReport("dl66 sight esp: slot=%u id=%02x tex=%02x type=%02x rno=%u/%u core=%04x kind=%u tool=%08x flg=%04x "
+                         "pos=%d,%d,%d size=%d,%d col=%d,%d,%d,%d life=%u/%u parts=%u blend=%u\n", (unsigned) i,
+                         e->m_Id, e->m_Tex_id, e->m_Type, e->m_Rno0, e->m_Rno1, e->info.Core_flg, e->info.Core_kind,
+                         (unsigned) e->m_Tool_flg, e->m_Flg, (int) e->m_Pos.x, (int) e->m_Pos.y, (int) e->m_Pos.z,
+                         (int) (e->m_Size_base_x * 100.0f), (int) (e->m_Size_base_y * 100.0f), (int) e->m_Col_r,
+                         (int) e->m_Col_g, (int) e->m_Col_b, (int) e->m_Col_a, e->m_Life_time, e->m_Life_max,
+                         e->m_Parts_no, e->m_Blend_type);
+            }
+        }
+    }
+}
+static inline void dl66Fall(cPlayer* pl)
+{
+    cPl0f* boat = (cPl0f*) pl->m_pBoat;
+#if defined(RE4DC_DELLAGO_LIFE) && RE4DC_DELLAGO_LIFE
+    pG->pl_life = RE4DC_DELLAGO_LIFE;
+    if (boat) boat->hp = 800;
+#endif
+    OSReport("dl66 fall: frame=%u life=%d boat_hp=%d lvl=%d\n", (unsigned) pG->Frame_cnt, (int) (s16) pG->pl_life,
+             boat ? (int) (s16) boat->hp : -1, (int) pG->Game_level);
+}
+static inline void dl66SwimStart(cPlayer* pl)
+{
+    dl66_swim_f = 0;
+    re4dc_fixture_state("swim", 1, -1);
+    OSReport("dl66 swim start: frame=%u dist=%d life=%d lvl=%d\n", (unsigned) pG->Frame_cnt,
+             (int) PSVECDistance(&pl->pos, &pl->m_pBoat->pos), (int) (s16) pG->pl_life, (int) pG->Game_level);
+}
+static inline void dl66Swim(cPlayer* pl)
+{
+#if defined(RE4DC_DELLAGO_AUTOMASH) && RE4DC_DELLAGO_AUTOMASH
+    if ((dl66_swim_f % RE4DC_DELLAGO_AUTOMASH) == 0) Key.trg |= 0x80000;
+#endif
+    if ((dl66_swim_f++ % 15) == 0) {
+        OSReport("dl66 swim: f=%u energy=%d charge=%d dist=%d trg=%d\n", (unsigned) dl66_swim_f, (int) pl->m_Work0,
+                 (int) pl->m_Work4, (int) PSVECDistance(&pl->pos, &pl->m_pBoat->pos), (Key.trg & 0x80000) != 0);
+    }
+}
+static inline void dl66Climb()
+{
+    re4dc_fixture_state("swim", 0, -1);
+    OSReport("dl66 climb in: frame=%u swim_frames=%u\n", (unsigned) pG->Frame_cnt, (unsigned) dl66_swim_f);
+}
+#define DL66_SIGHT(pl) dl66Sight(pl)
+#define DL66_FALL(pl) dl66Fall(pl)
+#define DL66_SWIM_START(pl) dl66SwimStart(pl)
+#define DL66_SWIM(pl) dl66Swim(pl)
+#define DL66_CLIMB() dl66Climb()
+#else
+#define DL66_SIGHT(pl)
+#define DL66_FALL(pl)
+#define DL66_SWIM_START(pl)
+#define DL66_SWIM(pl)
+#define DL66_CLIMB()
+#endif
+
 #line 1 "D:/Bio4/Prog/pl0f.cpp"
 
 typedef void (*Pl0fFunc)(cPl0f*);
@@ -2530,7 +2616,7 @@ static void plboat_R2_FallWater(cPlayer* pl)
         pl->ang.x = 0.0f;
         pl->ang.z = 0.0f;
         pl->blendRate500 = 0.0f;
-        LifeDownSet2(pl, 500, 0, 1);
+        DL66_FALL(pl); LifeDownSet2(pl, 500, 0, 1);
         VibSetData(VIB_TBL, 0xB, 1);
         if (pl->pSpear) {
             pl->pSpear->setLost();
@@ -2625,7 +2711,7 @@ static void plboat_R2_Swim(cPlayer* pl)
     case 0:
         pl->ang.x = 0.0f;
         pl->ang.z = 0.0f;
-        pl0fSwimPosSet(pl);
+        pl0fSwimPosSet(pl); DL66_SWIM_START(pl);
         EffectEspDelete(0, 0x34, (u32) pl, 0);
         EffectEspgenDelete(0, 0x34, (int) pl);
         EffectEfmDelete(0, 0x34, (int) pl);
@@ -2728,7 +2814,7 @@ static void plboat_R2_Swim(cPlayer* pl)
         if (pG->Game_level > 6) {
             lim = 4;
         }
-        pl->m_Work4++;
+        pl->m_Work4++; DL66_SWIM(pl);
         if (pl->m_Work4 > lim) {
             pl->m_Work4 = lim;
             if (pl->m_Work0) {
@@ -2756,7 +2842,7 @@ static void plboat_R2_Swim(cPlayer* pl)
         pl->pos.y = h - 100.0f;
     }
     if (pl->m_pBoat->plDist2 < 3240000.0f) {
-        PlRoutineSet(pPL, 0, 0xF, 8, 0);
+        PlRoutineSet(pPL, 0, 0xF, 8, 0); DL66_CLIMB();
         pl->m_pBoat->r_no_0 = 1;
         pl->m_pBoat->r_no_1 = 5;
         pl->m_pBoat->r_no_2 = 0;
@@ -3469,7 +3555,7 @@ void plboatSightCurMove(cPlayer* pl)
     Vec p;
 
     plboatSightCurGet(pl, &p);
-    EstSet(0, -1, &p, 0, 0xF, 6, 0, 0x35, (u32) pl, 0);
+    EstSet(0, -1, &p, 0, 0xF, 6, 0, 0x35, (u32) pl, 0); DL66_SIGHT(pl);
 }
 
 // Throws the held harpoon: the target is 25 m along the camera ray through the sight cursor, the

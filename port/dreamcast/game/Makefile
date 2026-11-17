@@ -666,6 +666,28 @@ AICA_STR_READ_KB ?= 24
 ifeq ($(AICA_STR_READ),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_READ=1 -DRE4DC_AICA_STR_READ_KB=$(AICA_STR_READ_KB)
 endif
+# AICA_STR_VFS_OPEN (Test 27.1 reset check, default 0 = image unchanged; needs AICA_STR_READ=1): the stream thread
+# opens bgm/aica_str.dat through the /cd VFS handler. KOS fs_open keeps two PATH_MAX (4 KB) path buffers on the
+# stack, more than the thread's 6 KB: each refill open ran below the stack ("Thread stack underrun" on a preemption).
+AICA_STR_VFS_OPEN ?= 0
+ifeq ($(AICA_STR_VFS_OPEN),1)
+ifneq ($(AICA_STR_READ),1)
+$(error AICA_STR_VFS_OPEN needs AICA_STR_READ=1)
+endif
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_VFS_OPEN=1
+endif
+# STR_VOICE_PREEMPT (GitHub #66 bug 3, lane radio66; default 0 = image unchanged; needs AICA_STREAMS=1): the one AICA
+# stream ring plays one disc stream at a time and a stream asked for while another holds it stays silent. A radio call
+# ducks the room's music stream but does not stop it, so in rooms with streamed music (r101, r104, r108 ...) the call's
+# ring tone and voice were never heard. With the knob the radio call streams (1:3, 1:0x33 ring tones, 1:140..1:163
+# voices) take the ring from a music stream (block 0); the music is claimed again, from its start, after the call.
+STR_VOICE_PREEMPT ?= 0
+ifeq ($(filter $(STR_VOICE_PREEMPT),0 1),)
+$(error STR_VOICE_PREEMPT must be 0 or 1)
+endif
+ifeq ($(STR_VOICE_PREEMPT),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_VOICE_PREEMPT=1
+endif
 ifeq ($(AICA_SPILL),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
 endif
@@ -2163,6 +2185,14 @@ DISC_READ_FALLBACK ?= 0
 ifneq ($(filter $(DISC_READ_FALLBACK),0 1 2 3),$(DISC_READ_FALLBACK))
 $(error DISC_READ_FALLBACK must be 0, 1, 2 or 3)
 endif
+# DISC_NOTREADY_RETRY=1 (#66 bug 3, default 0): before the DISC READ FAILED screen, wait up to 30 s for the drive,
+# re-initialising and reading each round. DISC_NOTREADY_TEST=<s> (test only, with DISC_FAIL_AFTER_S): every GD command
+# fails as "not ready" for that long.
+DISC_NOTREADY_RETRY ?= 0
+DISC_NOTREADY_TEST ?= 0
+ifneq ($(DISC_NOTREADY_RETRY)$(DISC_NOTREADY_TEST),00)
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_NOTREADY_RETRY=$(DISC_NOTREADY_RETRY) -DRE4DC_DISC_NOTREADY_TEST=$(DISC_NOTREADY_TEST)
+endif
 DISC_FAIL_AFTER_S ?= 0
 DISC_FAIL_TEST ?= 0
 DVD_READ_SAFE ?= 0
@@ -3239,6 +3269,20 @@ ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
 $(error VRAM_PAGES_VQ_ONLY=1 needs VRAM_PAGES=1 UI_VRAM=1)
 endif
 endif
+# DISC31_VRAM_PROBE=1 (lane all31g 2026-11-16; diagnostic, default 0 = image unchanged; needs VRAM_PAGES=1): the VRAM
+# fit tests of native_ui.cpp (load() eviction probe, vram_claim fits) allocate through re4dc_vram_pages_probe, whose
+# misses count in probe_fails (QA menu "vram free= big= fails= probe_fails=" line), not in `fails`. Landed unguarded in
+# lane disc31 (+192 B .text in every build); now guarded so knob-off equals the pre-disc31 image.
+DISC31_VRAM_PROBE ?= 0
+ifneq ($(filter-out 0 1,$(DISC31_VRAM_PROBE)),)
+$(error DISC31_VRAM_PROBE must be 0 or 1)
+endif
+ifeq ($(DISC31_VRAM_PROBE),1)
+ifneq ($(VRAM_PAGES),1)
+$(error DISC31_VRAM_PROBE=1 needs VRAM_PAGES=1)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_PROBE31=1
+endif
 # VRAM_ROOM_LOG=1 (lane vram12 D4, render/log only, default 0 = image unchanged; needs UI_VRAM=1 VRAM_PAGES=1): the
 # per-room VRAM report of the CLAUDE.md graphics memory rule (native_ui.cpp: "vram room:" pinned / dynamic / other /
 # free / largest free block, "vram gaps:" refusals, thrash-guard skips, no contiguous block, GameCube effect pictures,
@@ -3574,7 +3618,7 @@ $(OBJDIR)/pc-sampler.h: pc-sampler-force
 	@printf '#define RE4DC_PC_SAMPLER %s\n#define RE4DC_PC_SAMPLER_HZ %s\n#define RE4DC_PC_SAMPLER_BYTES %s\n' '$(PC_SAMPLER)' '$(PC_SAMPLER_HZ)' '$(PC_SAMPLER_BYTES)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
-PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o
+PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/qa_menu.o
 $(PC_SAMPLER_OBJS): $(OBJDIR)/pc-sampler.h platform/include/pc_sampler.h
 $(PC_SAMPLER_OBJS): PLATFORM_CPPFLAGS += -include $(OBJDIR)/pc-sampler.h
 # With NATIVE_RENDER_PROFILE=1 each sample also carries the active render stage.
@@ -3779,6 +3823,8 @@ include actor_ganado_ps2_stump.mk
 include native_model_registry.mk
 # Lane actorplan17: ACTOR_PLAN (character draw plan) and ACTOR_PROF (diagnostic profiler); default off: no effect.
 include actorplan.mk
+# Lane partsetup31: character per-part setup (PS31_CENSUS diagnostic; default off: no effect).
+include partsetup31.mk
 # Lane qws19: QUICK_WEAPON (X + D-pad weapon shortcuts; default off: no effect).
 include quickweapon.mk
 # D367 charbake (CHARBAKE_HAIR, CHARBAKE_TOGGLE; default off: no effect).
@@ -3798,6 +3844,7 @@ include worldopt26.mk
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
 include logiclod20.mk
+include fx31.mk
 include logicbudget.mk
 # Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
 include rigid20.mk
@@ -3810,6 +3857,8 @@ include bodysvc20.mk
 include knobs.mk
 include esppool.mk
 include mendezfx.mk
+# Lane chars31 (CHARS31_COUNT, CHAR_VIS31; default off: nothing built).
+include chars31.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
@@ -3872,6 +3921,7 @@ include skin_recipe32.mk
 include skin_table_reuse14.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
+include cave66.mk
 # WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).
 ifeq ($(WEAPON_WEP04_OVL),1)
 export RE4DC_LINK_OVERLAY += .ovl_wep04

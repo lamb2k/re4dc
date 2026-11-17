@@ -41,6 +41,165 @@ extern const Vec vecZero;
 #if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
 extern "C" cModel* re4dc_dist_pose_lod_model;   // em.cpp
 #endif
+#if defined(RE4DC_SKEL_IK_PASS) && RE4DC_SKEL_IK_PASS
+// SKEL_IK_PASS (game30.mk; lane skel31, exact): MotionMove's first part-world pass (the unscaled pose the leg IK
+// reads) only computes the parts InverseKinematics reads: every IK chain (the root flagged bit 2 and the four parts
+// after it in the list, which covers root / joint / effector / toe and the 0x80 extra joint) and all their ancestors.
+// The second pass right after the IK recomputes every part from the restored model matrix, so the first pass's
+// other results are dead. Two more parts are kept so the second pass reads exactly what it reads now:
+//   - a part whose parent comes later in the list (the second pass would read that parent's first-pass matrix);
+//   - flag bit 30 (addRot): the full first pass applies and clears it, so a skipped part only has it cleared.
+// The skipped parts get flag bit 1 (the "skip" bit every partsWorldCalc path tests first) for the duration of the
+// call, so the computed parts go through the build's own partsWorldCalc (kernel or C), byte for byte.
+// Parts not in one sequential array, or more than 256 of them: the full pass.
+//   =2: check build: the skipped parts' mat / world / r_scale are poisoned with NaN after the first pass, and after
+//       the second pass every part's mat / l_mat / world / r_scale / pos is scanned for non-finite words ("SKIK"
+//       log line: leaks must stay 0). Poisoned words are dead if the claim holds, so the run stays STRICT.
+static_assert(sizeof(cParts) == 0x1D8, "SKEL_IK_PASS: cParts stride");
+#define SKIK_MAX 256
+static inline int skikIndex(cParts* first, int n, const cCoord* c)
+{
+    const u32 off = (u32) ((const u8*) c - (const u8*) first);
+    if ((const u8*) c < (const u8*) first || off >= (u32) n * sizeof(cParts) || off % sizeof(cParts) != 0) {
+        return -1;
+    }
+    return (int) (off / sizeof(cParts));
+}
+#if RE4DC_SKEL_IK_PASS == 2
+extern "C" void re4dc_log(const char*, ...);
+static u32 skikCalls, skikParts, skikComputed, skikFull, skikLeakWords, skikLeakCalls, skikPoisonWords;
+#define SKIK_CLS 24
+static struct {
+    u32 vp, calls, parts, computed;
+} skikCls[SKIK_CLS];
+static inline bool skikFinite(f32 v)
+{
+    u32 b;
+    __builtin_memcpy(&b, &v, 4);
+    return (b & 0x7F800000u) != 0x7F800000u;
+}
+static u32 skikScan(cModel* m)
+{
+    u32 bad = 0;
+    for (cParts* q = m->pList; q; q = q->pList) {
+        const f32* a = &q->mat[0][0];
+        const f32* l = &q->l_mat[0][0];
+        for (int j = 0; j < 12; j++) {
+            bad += !skikFinite(a[j]);
+            bad += !skikFinite(l[j]);
+        }
+        bad += !skikFinite(q->world.x) + !skikFinite(q->world.y) + !skikFinite(q->world.z);
+        bad += !skikFinite(q->r_scale.x) + !skikFinite(q->r_scale.y) + !skikFinite(q->r_scale.z);
+        bad += !skikFinite(q->pos.x) + !skikFinite(q->pos.y) + !skikFinite(q->pos.z);
+    }
+    return bad;
+}
+#endif
+static void skikPartsWorldCalc(cModel* m)
+{
+    cParts* first = m->pList;
+    int n = 0;
+    u32 need[SKIK_MAX / 32];
+    u32 held[SKIK_MAX / 32];
+    // partsWorldCalc's own error paths (model.cpp PTR_OK)
+    if ((u32) first < RE4_MEM_LO || (u32) first > RE4_MEM_HI || (u32) first->pParent < RE4_MEM_LO ||
+        (u32) first->pParent > RE4_MEM_HI) {
+        m->partsWorldCalc();
+        return;
+    }
+    for (cParts* q = first; q; q = q->pList, n++) {
+        if (n >= SKIK_MAX || q != first + n) {
+#if RE4DC_SKEL_IK_PASS == 2
+            skikFull++;
+#endif
+            m->partsWorldCalc();
+            return;
+        }
+    }
+    for (int k = 0; k < SKIK_MAX / 32; k++) {
+        need[k] = 0;
+        held[k] = 0;
+    }
+    for (int i = 0; i < n; i++) {
+        if (first[i].motParts.flags & 4) {   // IK chain root (ik.cpp IKInit)
+            for (int j = i; j < n && j <= i + 4; j++) {
+                need[j >> 5] |= 1u << (j & 31);
+            }
+        }
+        const int pi = skikIndex(first, n, first[i].pParent);
+        if (pi > i) {   // parent later in the list: the second pass reads its first-pass matrix
+            need[pi >> 5] |= 1u << (pi & 31);
+        }
+    }
+    for (int i = 0; i < n; i++) {   // ancestors of every kept part
+        if (!(need[i >> 5] & (1u << (i & 31)))) {
+            continue;
+        }
+        int a = skikIndex(first, n, first[i].pParent);
+        for (int guard = 0; a >= 0 && guard < n; guard++) {
+            need[a >> 5] |= 1u << (a & 31);
+            a = skikIndex(first, n, first[a].pParent);
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        if (need[i >> 5] & (1u << (i & 31))) {
+            continue;
+        }
+        u32* f = &first[i].motParts.flags;
+        if (*f & 2) {
+            held[i >> 5] |= 1u << (i & 31);   // skipped by every pass anyway: left exactly as it is
+        } else {
+            *f |= 2;
+        }
+    }
+    m->partsWorldCalc();
+#if RE4DC_SKEL_IK_PASS == 2
+    u32 computed = 0;
+#endif
+    for (int i = 0; i < n; i++) {
+        const u32 bit = 1u << (i & 31);
+        if ((need[i >> 5] & bit) || (held[i >> 5] & bit)) {
+#if RE4DC_SKEL_IK_PASS == 2
+            computed += (need[i >> 5] & bit) && !(held[i >> 5] & bit) ? 1 : 0;
+#endif
+            continue;
+        }
+        first[i].motParts.flags &= ~(0x40000000u | 2u);
+#if RE4DC_SKEL_IK_PASS == 2
+        {
+            const u32 nan = 0x7FC00000u;
+            f32 v;
+            __builtin_memcpy(&v, &nan, 4);
+            f32* a = &first[i].mat[0][0];
+            for (int j = 0; j < 12; j++) {
+                a[j] = v;
+            }
+            first[i].world.x = first[i].world.y = first[i].world.z = v;
+            first[i].r_scale.x = first[i].r_scale.y = first[i].r_scale.z = v;
+            skikPoisonWords += 18;
+        }
+#endif
+    }
+#if RE4DC_SKEL_IK_PASS == 2
+    skikCalls++;
+    skikParts += (u32) n;
+    skikComputed += computed;
+    {   // per class (vtable) table: which models run the IK pass, and how much of it is kept
+        u32 vp;
+        __builtin_memcpy(&vp, (const u8*) m + 8, 4);   // cUnit's vptr at 0x8 (cManager.h)
+        for (int k = 0; k < SKIK_CLS; k++) {
+            if (skikCls[k].vp == vp || skikCls[k].vp == 0) {
+                skikCls[k].vp = vp;
+                skikCls[k].calls++;
+                skikCls[k].parts += (u32) n;
+                skikCls[k].computed += computed;
+                break;
+            }
+        }
+    }
+#endif
+}
+#endif
 extern "C" void* memset(void* dst, int c, unsigned int n);
 
 // Matrix copy written out as loops (the original never calls PSMTXCopy for these).
@@ -584,10 +743,32 @@ u16 MotionMove(cModel* m)
         }
         PSMTXConcat(m->mat, tmp, tmp);
         MTX_COPY(tmp, m->mat);
+#if defined(RE4DC_SKEL_IK_PASS) && RE4DC_SKEL_IK_PASS
+        skikPartsWorldCalc(m);
+#else
         m->partsWorldCalc();
+#endif
         InverseKinematics(m, 1);
         MTX_COPY(save, m->mat);
         m->partsWorldCalc();
+#if defined(RE4DC_SKEL_IK_PASS) && RE4DC_SKEL_IK_PASS == 2
+        {
+            const u32 bad = skikScan(m);
+            skikLeakWords += bad;
+            skikLeakCalls += bad != 0;
+            static u32 skikScans;
+            if ((++skikScans & 0x3FF) == 0) {
+                re4dc_log("SKIK calls=%u parts=%u computed=%u full=%u poison_words=%u leak_calls=%u leak_words=%u\n",
+                          skikCalls, skikParts, skikComputed, skikFull, skikPoisonWords, skikLeakCalls, skikLeakWords);
+            }
+            if ((skikScans & 0x1FFF) == 0) {
+                for (int k = 0; k < SKIK_CLS && skikCls[k].vp; k++) {
+                    re4dc_log("SKIKC vp=%08x calls=%u parts=%u computed=%u\n", skikCls[k].vp, skikCls[k].calls,
+                              skikCls[k].parts, skikCls[k].computed);
+                }
+            }
+        }
+#endif
 #if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
         }
 #endif
