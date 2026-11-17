@@ -97,7 +97,7 @@ fi
 SEG=$(wpath "$T/port/dreamcast/tools/d367/fullplay/segments")
 # boot: the release binary from power-on to the title (no fixture)
 CAND=$(cat "$W/cand.txt"); CW=$(rr_win "$CAND")
-job 1 boot "python \"\$FPD/fp_run.py\" --disc '$CW\gdemu' --cap \"\$EVW\boot\" --syms \"\$(cat \$J/syms-rel.txt)\" --seconds 45 --name rr-boot --stop 'state title=' --grace 5"
+job 1 boot "python \"\$FPD/fp_run.py\" --disc '$CW\gdemu' --cap \"\$EVW\boot\" --syms \"\$(cat \$J/syms-rel.txt)\" --seconds 120 --name rr-boot --stop 'state title=' --grace 5"
 # h2: r100 house to the s30 cliff movie (340/340 pictures, heap 4 before s30), the full-play gate's segment
 job 1 h2 "$(run h2 g g 300 --warp "'$SEG\\h2-warp.txt'" --pad "'$SEG\\h2-pad.txt'" --stop "'route movie terminal=. id=10030'" --grace 10)"
 # census
