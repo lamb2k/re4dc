@@ -3786,6 +3786,9 @@ include qalink.mk
 # Isolated bounded A/B/C memory experiment; default 0.
 include worldscratch.mk
 
+# World still-camera census (lane worlddraw); default 0.
+include worldstill.mk
+
 # Pinned KOS whole-cache writeback repair; default 0, shared KOS untouched.
 include kos_cache_p2.mk
 

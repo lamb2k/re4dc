@@ -8186,6 +8186,37 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 }
 #endif
+// WORLD_STILL=1 (lane worlddraw, census only, default 0 = compiled out): how often the world pass sees exactly the same camera
+// inputs as the previous drawn frame (view, projection, viewport, cull_far, fog, room). Those frames redo identical work on
+// static scenery (select + transform + strip walk), the input a recorded-TA-stream replay would need. Logged "WSTILL".
+#if defined(RE4DC_WORLD_STILL) && RE4DC_WORLD_STILL
+namespace wstill {
+struct Key { float view[12],P[7],vp[6],cull_far; unsigned room; FogState fog; };
+Key last_key; bool have=false; unsigned last_f=~0U;
+unsigned drawn=0,still=0,run=0,runs2=0,runs4=0,runs8=0,runs16=0,run_max=0,log_f=0,skipped_gap=0;
+void note(const float* view,const float* P,const float* vp,float cull_far,unsigned room){
+    const unsigned f=re4dc_ui_frame();
+    if(f==last_f)return; // pass 0 more than once per frame
+    Key k;std::memset(&k,0,sizeof(k));
+    std::memcpy(k.view,view,sizeof(k.view));std::memcpy(k.P,P,sizeof(k.P));std::memcpy(k.vp,vp,sizeof(k.vp));
+    k.cull_far=cull_far;k.room=room;std::memcpy(&k.fog,&fog_now,sizeof(k.fog));
+    ++drawn;
+    const bool same=have && !std::memcmp(&last_key,&k,sizeof(k));
+    if(same){++still;++run;if(run>run_max)run_max=run;}
+    else{
+        if(run>=16)++runs16;else if(run>=8)++runs8;else if(run>=4)++runs4;else if(run>=2)++runs2;
+        run=0;
+    }
+    last_key=k;have=true;last_f=f;
+    if(f-log_f>=120U){
+        re4dc_log("WSTILL frame=%u room=%03x drawn=%u still=%u pct=%u run_max=%u runs2_3=%u runs4_7=%u runs8_15=%u runs16p=%u
+",f,room,drawn,still,
+            drawn?still*100U/drawn:0U,run_max,runs2,runs4,runs8,runs16);
+        log_f=f;drawn=still=run_max=runs2=runs4=runs8=runs16=0;
+    }
+}
+}
+#endif
 int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_WORLD_MUTATION31
     // A failed in-place reload can leave the old package object's pointers
@@ -8281,6 +8312,9 @@ int ps2_pass(unsigned pass,float zfar){
     if(pass){const float f=foliage_far;if(f>near && f<cull_far)cull_far=f;}
 #endif
     c.near=near;c.far=far;c.cull_far=cull_far;
+#if defined(RE4DC_WORLD_STILL) && RE4DC_WORLD_STILL
+    if(!pass)wstill::note(ps2w.view,P,ps2w.viewport,cull_far,ps2w.room);
+#endif
 #if defined(RE4DC_SKY_PLAY) && RE4DC_SKY_PLAY
     // SKY_PLAY: the plane's depth is this far, so the PVR clips what lies past it per pixel (fully fogged silhouettes
     // of the parts that reach past the cut would stand in front of the sky)
