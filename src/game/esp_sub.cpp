@@ -14,6 +14,13 @@ static unsigned re4dc_esp_ct[4];
 #else
 #define ESPCT(i) ((void) 0)
 #endif
+#if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
+class cEsp;
+extern "C" void re4dc_fxw(cEsp* esp, int why);   // end of this file: FXDEAD reason census (test only)
+#define FXW(n) re4dc_fxw(esp, n);
+#else
+#define FXW(n)
+#endif
 #include "atari.h"
 #include "light.h"
 #include "gx.h"
@@ -2796,11 +2803,11 @@ void EspCommonTrans(cEsp* esp)
     ESPCT(0);
     if (esp->m_Shimmer_type != 0) {
         EspCommonTransShimmer(esp, esp->m_Shimmer_pow, esp->m_Shimmer_type);
-        return;
+        FXW(1) return;
     }
     if (esp->m_Tool_flg & 0x2000) {
         EspCommonTransNega(esp, 2);
-        return;
+        FXW(2) return;
     }
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
     // ESP_SPRITE_FAST (effects30.mk): under EFFECT_LEAN nothing draws a sprite the native path does not take
@@ -2814,7 +2821,7 @@ void EspCommonTrans(cEsp* esp)
 #endif
         s_proj_type = -1;
         s_tex_no = -1;
-        return;
+        FXW(3) return;
     }
 #endif
 #if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
@@ -2824,7 +2831,7 @@ void EspCommonTrans(cEsp* esp)
         HazeCutNote(esp);
         s_proj_type = -1;
         s_tex_no = -1;
-        return;
+        FXW(4) return;
     }
 #endif
 #if RE4DC_EFFECT_SPRITES && RE4DC_PS2FX_DRAW
@@ -2843,7 +2850,7 @@ void EspCommonTrans(cEsp* esp)
                 s_tex_no = -1;
             }
 #endif
-            return;
+            FXW(5) return;
         }
     }
 #endif
@@ -2858,7 +2865,7 @@ void EspCommonTrans(cEsp* esp)
          (esp->info.owner == 0x01 && esp->m_Id == 0 && esp->m_Tex_id == 0))) {
         s_proj_type = -1;
         s_tex_no = -1;
-        return;
+        FXW(6) return;
     }
 #endif
 #if RE4DC_EFFECT_SPRITES && defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 1)
@@ -2878,7 +2885,7 @@ void EspCommonTrans(cEsp* esp)
         }
         s_proj_type = -1;
         s_tex_no = -1;
-        return;
+        FXW(7) return;
     }
 #endif
 #if !RE4DC_EFFECT_LEAN
@@ -2897,7 +2904,7 @@ void EspCommonTrans(cEsp* esp)
         if (!EspGetAnmAddr(esp->m_Tex_id, &s_pAnm)) {
             pLog->err(0, 0, "ESP : TexId[%x] no data", esp->m_Tex_id);
             s_tex_no = -1;
-            return;
+            FXW(8) return;
         }
 #if !RE4DC_EFFECT_LEAN
         EspTexSet(esp->m_Tex_id, esp->m_Ptn_no);
@@ -2932,7 +2939,7 @@ void EspCommonTrans(cEsp* esp)
             if (!EspGetAnmAddr(esp->m_Tex_id, &s_pAnm)) {
                 pLog->err(0, 0, "ESP : TexId[%x] no data", esp->m_Tex_id);
                 s_tex_no = -1;
-                return;
+                FXW(8) return;
             }
         }
         if (s_tex_no != esp->m_Tex_id || s_ptn_no != esp->m_Ptn_no) {
@@ -2949,13 +2956,13 @@ void EspCommonTrans(cEsp* esp)
 #else
     if (!esp->ChannelSet()) {
 #endif
-        return;
+        FXW(9) return;
     }
     ESPCT(2);
 #if defined(RE4DC_ESP_ESSENTIAL_EARLY)
     // ChannelSet and the projection/animation cache updates already happened:
     // their state remains available to the next OT callback as before.
-    if (re4dc_fx_essential && FxEssentialSetupCut(esp, ESP_PARTS_SCREEN(esp))) return;
+    if (re4dc_fx_essential && FxEssentialSetupCut(esp, ESP_PARTS_SCREEN(esp))) { FXW(10) return; }
 #endif
     sx = esp->m_Size_base_x * esp->m_Size_mul;
     sy = esp->m_Size_base_y * esp->m_Size_mul;
@@ -5140,25 +5147,68 @@ R10B_CUT_DEF(cEsp* esp, int mode)
 //   ESP_ROOM_CENSUS: the same verdicts, plus bit 4's layer rule, only COUNTED (dry run, nothing is cut), per 20 EspTrans passes, in every room.
 extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common);
 #if defined(RE4DC_FXCUT_ROOMS) && RE4DC_FXCUT_ROOMS
+// RE4DC_FXCUT_ROOMS = FXCUT_ROOMS (bits 0..3) | FXDEAD_ROOMS << 4 (lane fxdead); the result: bit 0 the cut list holds this room, bit 1 the dead list.
 static int fxcRoomOn()
 {
     static u16 s_room = 0xFFFF;
     static u8 s_on;
     if (s_room != (u16) G_ROOM_ID) {
         s_room = (u16) G_ROOM_ID;
+        s_on = 0;
+#if (RE4DC_FXCUT_ROOMS & 15)
 #if defined(RE4DC_FXCUT_ROOM_ALL) && RE4DC_FXCUT_ROOM_ALL
-        s_on = s_room != 0x10B;
+        if (s_room != 0x10B) s_on |= 1;
 #else
         static const u16 kRooms[] = {RE4DC_FXCUT_ROOM_LIST};
-        s_on = 0;
         for (unsigned i = 0; i < sizeof(kRooms) / sizeof(kRooms[0]); ++i) {
-            if (kRooms[i] == s_room) s_on = 1;
+            if (kRooms[i] == s_room) s_on |= 1;
         }
+#endif
+#endif
+#if (RE4DC_FXCUT_ROOMS >> 4)
+#if defined(RE4DC_FXDEAD_ROOM_ALL) && RE4DC_FXDEAD_ROOM_ALL
+        if (s_room != 0x10B) s_on |= 2;
+#else
+        static const u16 kDead[] = {RE4DC_FXDEAD_ROOM_LIST};
+        for (unsigned i = 0; i < sizeof(kDead) / sizeof(kDead[0]); ++i) {
+            if (kDead[i] == s_room) s_on |= 2;
+        }
+#endif
 #endif
     }
     return s_on;
 }
 #endif
+// FXDEAD (lane fxdead, 2026-11-17; exact): 1 when EspCommonTrans, run on this sprite in the same frame, would return in one of its early
+// record-only branches and write nothing but its static projection / texture cache, so queueing it (an OT entry, the later dispatch) is waste.
+// Same tests, same order as EspCommonTrans:
+//   class 1: the native sprite path does not take it (EspSpriteEligible: owner whitelist, mask / render-target / blend restrictions; ESP_SPRITE_FAST
+//            returns before anything else);
+//   class 2: ESP_CUT_EARLY's haze / mist cut (id 0x48, or id 0x15 with no PS2 recipe row: Ps2fxHazeFor);
+// Plain sprites only (no shimmer, no nega, no mask stage 0x4000, no render target 0x10000, which have state-dependent paths). The result is a
+// function of the sprite's own fields, the room and re4dc_ps2fx, evaluated where EspCommonTrans would evaluate it. A sprite that fails both
+// tests (the ChannelSet / Essential / EspSpriteEmit declines, the ps2fx class with its per-frame budget and population) is left to the dispatch.
+static int fxdClass(cEsp* esp)
+{
+    if (esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x4000 | 0x10000))) {
+        return 0;
+    }
+#if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
+#if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
+    if (!EspSpriteEligible(esp) && !Esp1bGridClass03(esp)) {
+#else
+    if (!EspSpriteEligible(esp)) {
+#endif
+        return 1;
+    }
+#endif
+#if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
+        return 2;
+    }
+#endif
+    return 0;
+}
 // 1 when the sprite is declined by `mask` (1 stateless Essential, 2 view, 4 layer rule); *why = the bit that declined it.
 static int fxcVerdict(cEsp* esp, int mode, unsigned mask, int* why)
 {
@@ -5199,11 +5249,11 @@ static int fxcVerdict(cEsp* esp, int mode, unsigned mask, int* why)
     return 0;
 }
 #if defined(RE4DC_ESP_ROOM_CENSUS) && RE4DC_ESP_ROOM_CENSUS
-struct FxcKey { u8 owner, id, tex, parts; u32 seen, pub, cut; };
+struct FxcKey { u8 owner, id, tex, parts; u32 seen, pub, cut; u32 why[12]; u32 tool, flg, core, blend_life; u8 xa4, cls1, cls2, pad; };
 static FxcKey s_fxck[192];
 static u32 s_fxck_n, s_fxck_lost;
 static u32 s_fxc_pass, s_fxc_frame_last = ~0U;
-static u32 s_fxc_win[12];   // 0 asks (all trans), 1 common asks, 2 published, 3 ess, 4 view, 5 layer, 6 live sum, 7 live max, 8 frames, 9 dead asks
+static u32 s_fxc_win[16];   // 0 asks (all trans), 1 common asks, 2 published, 3 ess, 4 view, 5 layer, 6 live sum, 7 live max, 8 frames, 9 dead asks
 static u32 s_fxc_pool, s_fxc_room_seen = 0xFFFF;
 static FxcKey* fxcFind(const cEsp* e)
 {
@@ -5215,13 +5265,15 @@ static FxcKey* fxcFind(const cEsp* e)
     FxcKey* k = &s_fxck[s_fxck_n++];
     k->owner = (u8) e->info.owner; k->id = (u8) e->m_Id; k->tex = (u8) e->m_Tex_id; k->parts = (u8) e->m_Parts_no;
     k->seen = k->pub = k->cut = 0;
+    for (int i = 0; i < 12; i++) k->why[i] = 0;
+    k->cls1 = k->cls2 = 0;
     return k;
 }
 extern "C" void re4dc_fxc_frame(unsigned nEsp, unsigned live)
 {
     if (s_fxc_room_seen != (u32) G_ROOM_ID) {
         s_fxc_room_seen = (u32) G_ROOM_ID;
-        for (int i = 0; i < 12; i++) s_fxc_win[i] = 0;
+        for (int i = 0; i < 16; i++) s_fxc_win[i] = 0;
         s_fxck_n = 0; s_fxck_lost = 0; s_fxc_pass = 0;
     }
     s_fxc_pool = nEsp;
@@ -5232,7 +5284,7 @@ extern "C" void re4dc_fxc_frame(unsigned nEsp, unsigned live)
         re4dc_log("fxc: r=%03x f=%u pool=%u n=%u live=%u max=%u asks=%u com=%u pub=%u ess=%u view=%u layer=%u\n", (unsigned) G_ROOM_ID,
                   (unsigned) pG->Frame_cnt, nEsp, s_fxc_win[8], s_fxc_win[6] / (s_fxc_win[8] ? s_fxc_win[8] : 1), s_fxc_win[7], s_fxc_win[0],
                   s_fxc_win[1], s_fxc_win[2], s_fxc_win[3], s_fxc_win[4], s_fxc_win[5]);
-        for (int i = 0; i < 12; i++) s_fxc_win[i] = 0;
+        for (int i = 0; i < 16; i++) s_fxc_win[i] = 0;
     }
     if (s_fxc_pass % 100 == 0) {
         // keys queued often but never published and never declined by a verdict: dead sprites (a draw-dead sheet like r10b's)
@@ -5247,17 +5299,29 @@ extern "C" void re4dc_fxc_frame(unsigned nEsp, unsigned live)
             const FxcKey* k = &s_fxck[i];
             if (k->seen >= 20 && k->pub == 0 && k->cut == 0) {
                 re4dc_log("fxcd: r=%03x key owner=%02x id=%02x tex=%02x parts=%02x seen=%u\n", (unsigned) G_ROOM_ID, k->owner, k->id, k->tex, k->parts, k->seen);
+                re4dc_log("fxdw: r=%03x key %02x/%02x/%02x/%02x seen=%u shim=%u nega=%u inel=%u cut15=%u ps2fx=%u water=%u hzlean=%u noanm=%u chan=%u esscut=%u emit=%u tool=%08x flg=%08x core=%08x xa4=%u cls1=%u cls2=%u\n",
+                          (unsigned) G_ROOM_ID, k->owner, k->id, k->tex, k->parts, k->seen, k->why[1], k->why[2], k->why[3], k->why[4], k->why[5], k->why[6],
+                          k->why[7], k->why[8], k->why[9], k->why[10], k->why[11], (unsigned) k->tool, (unsigned) k->flg, (unsigned) k->core, (unsigned) k->xa4,
+                          (unsigned) k->cls1, (unsigned) k->cls2);
             }
         }
-        for (u32 i = 0; i < s_fxck_n; i++) { s_fxck[i].seen = s_fxck[i].pub = s_fxck[i].cut = 0; }
+        for (u32 i = 0; i < s_fxck_n; i++) { FxcKey* q = &s_fxck[i]; q->seen = q->pub = q->cut = 0; for (int j = 0; j < 12; j++) q->why[j] = 0; q->cls1 = q->cls2 = 0; }
     }
 }
 extern "C" void re4dc_fxc_pub(cEsp* esp, int published)
 {
+    FxcKey* k = fxcFind(esp);
+    if (k) k->why[11]++;
     if (!published) return;
     s_fxc_win[2]++;
-    FxcKey* k = fxcFind(esp);
     if (k) k->pub++;
+}
+// EspCommonTrans's early exits, as dispatched (FXW in esp_sub.cpp): 1 shimmer 2 nega 3 not eligible 4 ESP_CUT_EARLY 5 Ps2fxClass 6 r10b WATER45 7 HAZE_LEAN
+// 8 no anim data 9 ChannelSet alpha 0 10 Essential setup cut (11 = reached EspSpriteEmit)
+extern "C" void re4dc_fxw(cEsp* esp, int why)
+{
+    FxcKey* k = fxcFind(esp);
+    if (k) k->why[why]++;
 }
 #endif
 extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
@@ -5268,7 +5332,14 @@ extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
         if (common) {
             s_fxc_win[1]++;
             FxcKey* k = fxcFind(esp);
-            if (k) k->seen++;
+            if (k) {
+                k->seen++;
+                k->tool = esp->m_Tool_flg; k->flg = esp->m_Flg; k->core = esp->info.Core_flg; k->xa4 = (u8) esp->xA4;
+                if (mode == 1) {
+                    const int c = fxdClass(esp);
+                    if (c == 1) { k->cls1++; s_fxc_win[10]++; } else if (c == 2) { k->cls2++; s_fxc_win[11]++; }
+                }
+            }
             int why = 0;
             if (fxcVerdict(esp, mode, 7, &why)) {
                 if (why == 1) s_fxc_win[3]++; else if (why == 2) s_fxc_win[4]++; else s_fxc_win[5]++;
@@ -5281,8 +5352,25 @@ extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
     if (!common || !fxcRoomOn()) {
         return 0;
     }
+    const int on = fxcRoomOn();
     int why = 0;
-    return fxcVerdict(esp, mode, RE4DC_FXCUT_ROOMS, &why);
+#if (RE4DC_FXCUT_ROOMS & 7)
+    if ((on & 1) && fxcVerdict(esp, mode, RE4DC_FXCUT_ROOMS & 7, &why)) {
+        return 1;
+    }
+#endif
+#if (RE4DC_FXCUT_ROOMS >> 4)
+    if ((on & 2) && mode == 1) {
+        const int c = fxdClass(esp);
+        if (c & (RE4DC_FXCUT_ROOMS >> 4)) {
+#if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
+            if (c == 2) HazeCutNote(esp);   // the note EspCommonTrans would have made
+#endif
+            return 1;
+        }
+    }
+#endif
+    return 0;
 #endif
 }
 #endif   // FXCUT_ROOMS / ESP_ROOM_CENSUS

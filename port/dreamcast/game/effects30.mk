@@ -561,18 +561,34 @@ endif
 # FXCUT_ROOM_LIST=0x105,0x108,0x10a,0x10d,0x118,0x11a,0x11b,0x200 (the rooms with >= ~95 Essential-declined sprites / frame; census table E:\RE4DC-Lanesxcensus\CENSUS.md).
 FXCUT_ROOMS ?= 0
 FXCUT_ROOM_LIST ?= all
-ifneq ($(FXCUT_ROOMS),0)
-ifneq ($(filter 1 2 3,$(FXCUT_ROOMS)),$(FXCUT_ROOMS))
+# FXDEAD_ROOMS=<mask 1..3> (default 0; render only, EXACT; lane fxdead, 2026-11-17; needs EFFECT_SPRITES=1): in the rooms of FXDEAD_ROOM_LIST a plain
+# sprite that EspCommonTrans would decline in its first record-only branches is not queued: bit 1 the sprite is not eligible for the native path
+# (EspSpriteEligible; needs ESP_SPRITE_FAST), bit 2 ESP_CUT_EARLY's haze / mist cut (id 0x48, or id 0x15 without a PS2 recipe row; needs ESP_CUT_EARLY
+# and HAZE_SPRITE_CUT). Same tests as the dispatch, evaluated at the queue: moves, generators, slots, Rnd() untouched. Per-key proofs: PROOF.md of lane fxdead.
+# FXDEAD_ROOM_LIST=<hex,hex,...|all> (default all but r10b): the rooms it acts in, no spaces.
+FXDEAD_ROOMS ?= 0
+FXDEAD_ROOM_LIST ?= all
+FXC_MASK := $(shell expr $(FXCUT_ROOMS) + 16 '*' $(FXDEAD_ROOMS))
+ifneq ($(FXC_MASK),0)
+ifneq ($(filter 0 1 2 3,$(FXCUT_ROOMS)),$(FXCUT_ROOMS))
 $(error FXCUT_ROOMS is a mask 1..3 (the exact bits))
 endif
-ifneq ($(EFFECT_SPRITES),1)
-$(error FXCUT_ROOMS needs EFFECT_SPRITES=1)
+ifneq ($(filter 0 1 2 3,$(FXDEAD_ROOMS)),$(FXDEAD_ROOMS))
+$(error FXDEAD_ROOMS is a mask 1..3)
 endif
-$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOMS=$(FXCUT_ROOMS)
+ifneq ($(EFFECT_SPRITES),1)
+$(error FXCUT_ROOMS / FXDEAD_ROOMS need EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOMS=$(FXC_MASK)
 ifeq ($(FXCUT_ROOM_LIST),all)
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOM_ALL=1
 else
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FXCUT_ROOM_LIST=$(FXCUT_ROOM_LIST)
+endif
+ifeq ($(FXDEAD_ROOM_LIST),all)
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FXDEAD_ROOM_ALL=1
+else
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FXDEAD_ROOM_LIST=$(FXDEAD_ROOM_LIST)
 endif
 endif
 # ESP_ROOM_CENSUS=1 (test only, default 0; lane fxcensus): "fxc:" lines in every room (every 20 EspTrans passes: pool size, live peak / mean,
