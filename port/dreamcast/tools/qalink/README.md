@@ -268,3 +268,17 @@ The fixture executes the actual Python implementation, including local TCP/UDP, 
 duplicate parts, complete 1800-tick recordings, deadline/teardown paths, capture limits and child-process pipe bounds.
 It also compares all original non-`main` function/class ASTs and compiled code objects against the named base. These
 host fixtures do not qualify DreamPi, a real modem, physical Dreamcast performance, or an end-to-end capture.
+
+## Console lab (LAB32=1; lane lab32, 2026-11-17)
+
+One QA disc, no disc swap: `LAB32=1` (QA discs only, game/lab32.mk) compiles every speed switch that can be chosen at run
+time at its widest setting and gates it by one byte of `re4dc_lab32_k[]` (platform/include/lab32.h). The link command
+`KNOB <name> <value>` sets one byte, `KNOB PRESET <control|fix4|all31|fxcut3|r10b|spawn4|spawn8|charvis2|ps31|castle|movca|leon2|leon3>`
+sets a whole arm, `KNOBS` lists them (and `KNOB LEON_LOD 0..3` the Leon mesh level). The boot state is `control` (the Test 27.2
+release behaviour). Knobs that act at a room entry (effects spawn marks, map words, Leon level) apply at the next TELEPORT.
+Both arms are the same ELF, so build-layout noise cancels. Compile-time only (not arms): GANADO_LOD_BUF31 / ESP_NUMLIST31
+(memory layout, ON in the lab ELF), room tables and LAKE_FAR / CPU_BACKFACE style switches.
+
+`lab32_session.py` drives a whole A/B list with nobody at the controls (see its docstring): per scene preset and arm it
+teleports, settles, captures fps / speed / PMC counters (per-second totals), takes PCS snaps (symbolised against nm.txt) and
+writes results.tsv / results.md / profiles.md / wstill.md; `--dry-run` prints the plan and the time.
