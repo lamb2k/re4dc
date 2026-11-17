@@ -1815,6 +1815,15 @@ if os.path.isdir(SMDREL26D):
 # composed st2/r200.dar as the recipe stands. Summary of convert_room_bins.py on the GC r200.das, same options.
 if os.path.isfile(SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'):
     DATA['smdrel26b'] = {'smdrel': {'st2/r200.dar': SMDREL26D + '/r200/MAINSCENARIO.re4mesh.json'}}
+# smdrel32 (lane world-ch32 11-17, DISC 2 ONLY via D2_DATA; r205 heap 4 with Ashley following): the same SMD BIN release
+# for the four chapter 3-2 PS2 world rooms st2/r205 r209 r20a r20b (PS2MESH draws the room; 'native mesh: no-std ...
+# scenery package not opened'). Summaries of convert_room_bins.py on the GC r205 r209 r20a r20b .das with the smdrel26b
+# options (tools/d367/worldch32/gen-smdrel32.sh). smdrel_all runs after every set and graft. Store: smdrel32-20261117.
+SMDREL32D = os.environ.get('SMDREL32D', '/root/re4data/private/smdrel32-20261117')
+if os.path.isfile(SMDREL32D + '/r205/MAINSCENARIO.re4mesh.json'):
+    DATA['smdrel32'] = {'smdrel': {'st2/%s.dar' % _r: '%s/%s/MAINSCENARIO.re4mesh.json' % (SMDREL32D, _r)
+                                   for _r in ('r205', 'r209', 'r20a', 'r20b')
+                                   if os.path.isfile('%s/%s/MAINSCENARIO.re4mesh.json' % (SMDREL32D, _r))}}
 
 # snd60 (lane fix60b-26 11-01, GitHub #60 item 6, console A/B candidate): the r100 room bank's looped ambient samples
 # (the river / bridge loops: PS2 r100.snd VAG 13 and 10 loops land on GC sample 75, an odd AICA start at the 2x
@@ -2116,6 +2125,13 @@ if os.path.isfile(EM14QD + '/dc/native/r20f/registry.re4nmr'):
 RES34D = os.environ.get('RES34D', '/root/re4data/private/res34-20261103')
 if os.path.isfile(RES34D + '/dc/resident.bin'):
     DATA['res34'] = {'dc/resident.bin': RES34D + '/dc/resident.bin'}
+# res32 (lane world-ch32 11-17, DISC 2 ONLY via D2_DATA, after res34; CH-FIXES-CARRY row 15): res34's resident.bin with the
+# r205 r209 r20a r20b records replaced by vram/resident/castle18/<room>.tsv (resident_keys.py list merged from the rr
+# 1117-0603-3c754539 d2cg runs: the late first-sight loads, 24 / 31 / 14 / 23 per room, join the room-entry preload).
+# castlegca34/res34.py <res34 resident.bin> <out> <lists>.
+RES32D = os.environ.get('RES32D', '/root/re4data/private/res32-20261117')
+if os.path.isfile(RES32D + '/dc/resident.bin'):
+    DATA['res32'] = {'dc/resident.bin': RES32D + '/dc/resident.bin'}
 # trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
 # that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
 # trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.

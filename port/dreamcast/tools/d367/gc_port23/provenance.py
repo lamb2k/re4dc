@@ -284,6 +284,13 @@ def main(catalog, recipe_conf, out_dir):
     if os.environ.get('PROVENANCE_D2') == '1':
         d2 = ''
         for m in re.finditer(r'^D2_DATA="([^"]*)"', conf, re.M):
+            # world-ch32 11-17: the recipe's bash substitution line D2_DATA="${D2_DATA/pmcgca26,/pmcgca26,em14lc,}" (lane castlebudget
+            # 11-04) was read as a fresh assignment, which dropped every earlier D2_DATA set (cw32 pmcw32 pmcgca26 ...) from the
+            # Disc 2 provenance and made their rows gc ("no PS2 motion set stages it").
+            sub = re.fullmatch(r'\$\{D2_DATA/([^/]*)/([^}]*)\}', m.group(1))
+            if sub:
+                d2 = d2.replace(sub.group(1), sub.group(2), 1)
+                continue
             d2 = m.group(1).replace('${D2_DATA}', d2).replace('$D2_DATA', d2)
         names += [n for n in d2.split(',') if n]
     # PROVENANCE_D3=1 (lane world-ch5 11-02, rr-disc3.sh's Disc 3 catalog only): the recipe's D3_DATA sets (island Disc 3

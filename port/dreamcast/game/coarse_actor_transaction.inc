@@ -150,11 +150,17 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 // NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk): the Novistador camouflage blend (em2dCamouflageMove, blendRatio /
 // blendType non-zero while it changes) draws as the base textures too (approximation: no texture cross-fade).
 #define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl)
+// The camouflage also moves the info's blendRatio / blendType and color2 (em2dCamouflageMove: the GC's TEV colour for its blend
+// table); the PS2 draw ignores them, so the material certificate (coarse_actor_material.inc) must too, for this table only.
+#define RE4DC_NMR_CLOAK_TBL(info,app) RE4DC_NMR_BLEND_IDLE0(info,app)
 #else
 #define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
 #endif
 #else
 #define RE4DC_NMR_BLEND_IDLE0(info,app) false
+#endif
+#ifndef RE4DC_NMR_CLOAK_TBL
+#define RE4DC_NMR_CLOAK_TBL(info,app) false
 #endif
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
 // PVR_RTT (pvr_rtt.mk): a registry info showing a render target through TexRenderModSet's table ({1, 0, ?, ?, 0xF7,
