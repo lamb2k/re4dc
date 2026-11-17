@@ -38,6 +38,9 @@ static int HermiteInterpolationClamped(HermitePrm*, Vec*, u16*);
 #endif
 
 extern const Vec vecZero;
+#if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
+extern "C" cModel* re4dc_dist_pose_lod_model;   // em.cpp
+#endif
 extern "C" void* memset(void* dst, int c, unsigned int n);
 
 // Matrix copy written out as loops (the original never calls PSMTXCopy for these).
@@ -568,6 +571,11 @@ u16 MotionMove(cModel* m)
         Mtx tmp;
         Mtx save;
 
+#if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
+        if (m == re4dc_dist_pose_lod_model) {   // DIST_POSE_LOD (em.cpp): far / off-screen Ganado, no IK this tick
+            m->partsWorldCalc();
+        } else {
+#endif
         MTX_COPY(m->mat, save);
         if (m->scale.x != 0.0f || m->scale.y != 0.0f || m->scale.z != 0.0f) {
             PSMTXScale(tmp, 1.0f / m->scale.x, 1.0f / m->scale.y, 1.0f / m->scale.z);
@@ -580,6 +588,9 @@ u16 MotionMove(cModel* m)
         InverseKinematics(m, 1);
         MTX_COPY(save, m->mat);
         m->partsWorldCalc();
+#if defined(RE4DC_DIST_POSE_LOD) && RE4DC_DIST_POSE_LOD > 1
+        }
+#endif
     }
     if (MOTION(m)->Hokan_cnt != 0) {
         MotionHokan(m, MOTION(m));

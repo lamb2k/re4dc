@@ -510,6 +510,40 @@ void Light00_Move(cLight* l)
 // Picks the lights for a model: every alive, enabled light (xF mask vs EnableMask, kind on, not a
 // foot-shadow type 4, SelectMask bit, non-black colour, volume hit test) up to 8, stored in
 // LightInfo.pLight; during an event only lights on event-flagged parents.
+#if defined(RE4DC_LIGHT_SET_REUSE) && RE4DC_LIGHT_SET_REUSE > 1
+// LIGHT_SET_REUSE=N (logicbudget.mk; lane logicbudget 2026-11-03; an APPROXIMATION, default 0 = off; 2..4): a model
+// keeps the light list setModel2 picked for it for up to N-1 more ticks while it stays in the same room, within 1 m
+// of where the list was picked and the light pool is the same size. A light switched on or off in between reaches
+// the model up to N-1 ticks late. Render-side approximation (look check). 64-entry table keyed by model address.
+struct Re4dcLightReuse {
+    cModel* m;
+    u32 frame;
+    Vec pos;
+    u32 n_array;
+    u16 room;
+};
+static Re4dcLightReuse s_light_reuse[64];
+static int re4dc_light_reuse(cModel* m, u32 n_array)
+{
+    Re4dcLightReuse* e = &s_light_reuse[((u32) m >> 4) & 63];
+    const u32 now = (u32) pG->Frame_cnt;
+    if (e->m == m && e->room == (u16) pG->room_id && e->n_array == n_array &&
+        (u32) (now - e->frame) < (u32) RE4DC_LIGHT_SET_REUSE) {
+        const f32 dx = m->pos.x - e->pos.x;
+        const f32 dy = m->pos.y - e->pos.y;
+        const f32 dz = m->pos.z - e->pos.z;
+        if (dx * dx + dy * dy + dz * dz < 1000.0f * 1000.0f) {
+            return 1;
+        }
+    }
+    e->m = m;
+    e->frame = now;
+    e->pos = m->pos;
+    e->n_array = n_array;
+    e->room = (u16) pG->room_id;
+    return 0;
+}
+#endif
 void cLightMgr::setModel2(cModel* m)
 {
     cLight* l;
@@ -519,6 +553,11 @@ void cLightMgr::setModel2(cModel* m)
     int hit;
     f32 pri[8];
 
+#if defined(RE4DC_LIGHT_SET_REUSE) && RE4DC_LIGHT_SET_REUSE > 1
+    if (re4dc_light_reuse(m, nArray)) {
+        return;
+    }
+#endif
     memclr_asm(m->LightInfo.pLight, sizeof(m->LightInfo.pLight));
     for (i = 0; i < nArray; i++) {
         l = (cLight*) ((u8*) pArray + size * i);

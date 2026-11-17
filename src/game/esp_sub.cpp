@@ -607,7 +607,26 @@ static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
         return NULL;
     }
     const u16 room = G_ROOM_ID;
+#if defined(RE4DC_FX_HAZE_ROOM_INDEX) && RE4DC_FX_HAZE_ROOM_INDEX
+    // FX_HAZE_ROOM_INDEX (logicbudget.mk, exact): the scan starts at the room's first table row and stops after its
+    // last one; both are found once per room change instead of scanning the whole table for every haze sprite.
+    static u16 s_hz_room = 0xFFFF;
+    static int s_hz_first, s_hz_end;
+    if (s_hz_room != room) {
+        s_hz_room = room;
+        s_hz_first = PS2FX_HAZE_ROOMS;
+        s_hz_end = 0;
+        for (int k = 0; k < PS2FX_HAZE_ROOMS; ++k) {
+            if (kPs2Haze[k].room == room) {
+                if (k < s_hz_first) s_hz_first = k;
+                s_hz_end = k + 1;
+            }
+        }
+    }
+    for (int i = s_hz_first; i < s_hz_end; ++i) {
+#else
     for (int i = 0; i < PS2FX_HAZE_ROOMS; ++i) {
+#endif
         if (kPs2Haze[i].room == room) {
 #if RE4DC_PS2_FX_ROOMS
             if (kPs2Haze[i].gc_range != 0.0f) {
@@ -723,7 +742,13 @@ static void Ps2fxPopulationBuild()
 static int Ps2fxPopulationState(cEsp* esp, const Ps2fxHaze* h)
 {
     if (!h || !h->gc_count) return -1;
+#if defined(RE4DC_FX_POP_RATE) && RE4DC_FX_POP_RATE > 1
+    // FX_POP_RATE=N (logicbudget.mk, approximation, render only): the PS2 haze population selection is rebuilt every
+    // Nth tick; between rebuilds a sprite keeps the previous selection (a new sprite reads as not selected).
+    if (!s_fx_population_valid || (u32)(pG->Frame_cnt - s_fx_population_frame) >= (u32) RE4DC_FX_POP_RATE ||
+#else
     if (!s_fx_population_valid || s_fx_population_frame != pG->Frame_cnt ||
+#endif
         s_fx_population_room != G_ROOM_ID || !g_pEspSys ||
         s_fx_population_pool != g_pEspSys->pEspBuf || s_fx_population_slots != g_pEspSys->nEsp ||
         s_fx_population_mask != re4dc_ps2fx) Ps2fxPopulationBuild();

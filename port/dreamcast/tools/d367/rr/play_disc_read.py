@@ -24,7 +24,7 @@ import argparse, json, os, re, sys
 
 PACE = re.compile(r'^PACE vmu t=(\d+) win_vb=(\d+) drawn=(\d+)')
 WIN = re.compile(r'^DISCRD: window_ms=(\d+) reads=(\d+) kb=(\d+) block_ms=(\d+) .*other=(\S+)(?: phase=(\w+))?')
-DRF = re.compile(r'^DRF: phase=\w+ file=(\S+) reads=(\d+) kb=(\d+) ms=(\d+) thr=(\S+)')
+DRF = re.compile(r'^DRF: phase=\w+ file=(\S+) reads=(\d+) kb=(\d+) ms=(\d+)(?: us=\d+)?(?: open_us=(\d+))? thr=(\S+)')
 ROOM = re.compile(r'^DISCRD: room=([0-9a-f]+) load_ms=(\d+)')
 MOT = re.compile(r'^MOTSTAT: window_ms=\d+ misses=(\d+) evictions=(\d+) kb=(\d+) .*heap4=(-?\d+)')
 PRE = re.compile(r'^native texture preload: .* us=(\d+)')
@@ -79,7 +79,7 @@ def windows(path):
             continue
         m = DRF.match(l)
         if m:
-            cur['files'].append('%s:%sms/%sKB/%s' % (m.group(1), m.group(4), m.group(3), m.group(5)))
+            cur['files'].append('%s:%sms%s/%sKB/%s' % (m.group(1), m.group(4), '+open%dms' % (int(m.group(5)) // 1000) if m.group(5) else '', m.group(3), m.group(6)))
             continue
         m = PRE.match(l)
         if m and int(m.group(1)) >= 200000:
@@ -123,8 +123,10 @@ def main():
         res.append(r)
         bad += bool(over)
         for w in over:
-            print('PLAY-DISC-READ over room=%s t=%d block_ms/s=%d reads=%d kb=%d motion_misses=%d motion_kb=%d heap4=%s drawn=%d waited=%s files=%s run=%s'
-                  % (w['room'], w['t'], w['block'], w['reads'], w['kb'], w['miss'], w['mkb'], w['heap4'], w['drawn'], w['other'],
+            # miss / mkb / heap4 stay None in a build without MOTSTAT lines (no motion meter): printed as '-'
+            v = {k: ('-' if w[k] is None else w[k]) for k in ('miss', 'mkb', 'heap4')}
+            print('PLAY-DISC-READ over room=%s t=%d block_ms/s=%d reads=%d kb=%d motion_misses=%s motion_kb=%s heap4=%s drawn=%d waited=%s files=%s run=%s'
+                  % (w['room'], w['t'], w['block'], w['reads'], w['kb'], v['miss'], v['mkb'], v['heap4'], w['drawn'], w['other'],
                      ','.join(w['files'][:4]) or '-', f))
     print('PLAY-DISC-READ %s: %d metered runs, %d with a gameplay window over %d ms/s (Flycast)'
           % ('FAIL' if bad else 'PASS', metered, bad, a.ms))

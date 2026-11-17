@@ -8,8 +8,8 @@ set -euo pipefail
 W=${1:?work}; TA=${2:?tree}; SHA=${3:?sha}; ID=${4:?id}
 BIN=$(cd "$(dirname "$0")" && pwd)
 S7=${SHA:0:7}
-EVQ=/mnt/c/Flycast-Evidence/re4-dreamcast/rr/$ID-qa
-EVQW='C:\Flycast-Evidence\re4-dreamcast\rr\'$ID-qa
+EVQ=${RR_EBASE:-/mnt/c/Flycast-Evidence/re4-dreamcast/rr}/$ID-qa
+EVQW=$(d=${EVQ#/mnt/}; d=${d%%/*}; echo "${d^^}:${EVQ#/mnt/$d}" | tr / "\\")
 GITBASH="/mnt/c/Program Files/Git/bin/bash.exe"
 CAND=$(cat "$W/cand.txt")
 mkdir -p "$EVQ/_jobs" "$EVQ/fixtures"
@@ -20,7 +20,7 @@ printf 'qa-disc\t%s\t%s\t%s\n' "$t0" "$(date +%s)" "$rc" > "$W/qa-steps.tsv"
 if [ "$rc" = 0 ]; then
   t0=$(date +%s)
   if bash "$BIN/rr-jobs.sh" qa "$W" "$TA" "$S7" "$EVQ" "$EVQW" > /dev/null; then
-    "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "/c/${EVQ#/mnt/c/}" 3 || true
+    "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "/${EVQ#/mnt/}" 3 || true
   fi
   printf 'qa-flycast\t%s\t%s\t0\n' "$t0" "$(date +%s)" >> "$W/qa-steps.tsv"
 fi

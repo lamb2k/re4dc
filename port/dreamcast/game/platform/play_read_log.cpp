@@ -15,7 +15,7 @@ extern "C" ssize_t __real_fs_read(file_t hnd, void* buffer, size_t cnt);
 namespace {
 constexpr unsigned kHandles = 32, kFiles = 24, kTail = 31;
 struct Handle { file_t fd; bool used; char path[kTail + 1]; };
-struct Row { char path[kTail + 1]; char thr[12]; unsigned n, bytes; unsigned long long us; };
+struct Row { char path[kTail + 1]; char thr[12]; unsigned n, bytes; unsigned long long us, ous; };
 Handle handles[kHandles];
 Row rows[kFiles];
 unsigned nrows, dropped;
@@ -34,7 +34,11 @@ Row* row_for(const char* path)
 
 extern "C" file_t __wrap_fs_open(const char* fn, int mode)
 {
+    // open_us (lane playreads 11-03): an open's directory-sector reads (KOS block cache, one GD command per miss)
+    // stall the caller too and were not in any row: windows showed 200-400 ms/s blocked with every file at 0 ms.
+    const unsigned long long t0 = timer_us_gettime64();
     const file_t fd = __real_fs_open(fn, mode);
+    const unsigned long long ous = timer_us_gettime64() - t0;
     if (fd < 0 || !fn) return fd;
     const size_t len = strlen(fn);
     const int o = irq_disable();
@@ -46,6 +50,7 @@ extern "C" file_t __wrap_fs_open(const char* fn, int mode)
     slot->used = true;
     strncpy(slot->path, len > kTail ? fn + len - kTail : fn, kTail);
     slot->path[kTail] = 0;
+    if (Row* w = row_for(slot->path)) w->ous += ous;
     irq_restore(o);
     return fd;
 }
@@ -74,12 +79,13 @@ extern "C" void re4dc_play_read_window(const char* phase)
     memcpy(copy, rows, sizeof(Row) * n);
     nrows = dropped = 0;
     irq_restore(o);
+    // ms rounds up (sub-ms stream-path reads, music refill / motion files, printed 0; lane playreads 11-03); us = exact.
     for (unsigned k = 0; k < 8 && k < n; ++k) {
         unsigned best = k;
-        for (unsigned i = k + 1; i < n; ++i) if (copy[i].us > copy[best].us) best = i;
+        for (unsigned i = k + 1; i < n; ++i) if (copy[i].us + copy[i].ous > copy[best].us + copy[best].ous) best = i;
         const Row t = copy[k]; copy[k] = copy[best]; copy[best] = t;
-        re4dc_log("DRF: phase=%s file=%s reads=%u kb=%u ms=%u thr=%s\n", phase, copy[k].path, copy[k].n,
-                  (copy[k].bytes + 1023) / 1024, (unsigned) (copy[k].us / 1000), copy[k].thr);
+        re4dc_log("DRF: phase=%s file=%s reads=%u kb=%u ms=%u us=%u open_us=%u thr=%s\n", phase, copy[k].path, copy[k].n,
+                  (copy[k].bytes + 1023) / 1024, (unsigned) ((copy[k].us + 999) / 1000), (unsigned) copy[k].us, (unsigned) copy[k].ous, copy[k].thr);
     }
     if (n > 8 || d) re4dc_log("DRF: phase=%s more_files=%u dropped=%u\n", phase, n > 8 ? n - 8 : 0, d);
 }

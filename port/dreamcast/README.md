@@ -6,12 +6,13 @@
 
 For players. The full player guide is the [root README](../../README.md).
 
-- **Current build:** Test 26, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): the castle
-  starts on Disc 2 with PS2 data, the PS2 sky in cutscenes, Leon's Test 23/24 lighting back, faster farmhouse
-  cutscenes, and the Dreamcast stick back on the grab escape prompt. Disc 1 and Disc 2 come in the one game zip.
-- **Playable:** New Game through chapter 2-3 on Disc 1, then the castle's chapter 3-1 on Disc 2.
+- **Current build:** Test 27, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest): the PS2 sky
+  in normal play, El Gigante and Del Lago fixes, no El Gigante slowdown, a save reload crash guard, more of the castle
+  on Disc 2 and smoother castle rooms. Disc 1 and Disc 2 come in the one game zip.
+- **Playable:** New Game through chapter 2-3 on Disc 1, then the castle's chapter 3-1 on Disc 2. The chapter 3-3 and
+  3-4 rooms are on Disc 2 and join the route with chapter 3-2 in Test 28.
 - **Testers:** the release also has a **QA build for testers** with teleports and a Diagnostics page.
-- **Next:** Test 27, see [Coming soon: Test 27](../../README.md#coming-soon-test-27).
+- **Next:** Test 28, see [Coming soon: Test 28](../../README.md#coming-soon-test-28).
 - **Runs on:** a real Dreamcast with GDEMU, or Flycast.
 - **Problems:** see [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and report new ones with the
   [Game bug form](https://github.com/lamb2k/re4dc/issues/new/choose).

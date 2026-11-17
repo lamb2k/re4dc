@@ -1,0 +1,48 @@
+#!/bin/bash
+# gen-all.sh <Disc 2 tex.pak (WSL)> <Disc 1 release tree (WSL)> [tag]   (Git Bash on the Windows host; lane castle-gca-26, generalised by lane world-ch334)
+# world-ch334: chapters 3-3 / 3-4 rooms (ROOMS) and their enemies (CEM) -> cgca34 + pmcgca34. Was: the Disc 2 data sets cgca26 + pmcgca26 (recipe.conf D2_DATA; user 11-01 "Convert in Test 26") from the
+# castle content (D2_CASTLE_TREE) and the PS2 USA ISO, in one command:
+#   1. step.sh itemlib   ps2_items.py convert (castle rooms' ITM items + EFF debris, PS2) into <work>/itemlib
+#   2. per room          step.sh objects (ps2_objects.py ETM all + room BIN pairs [+ --etm-from], ps2_items.py pack), then
+#                        Windows python ps2_objects_tex.py (PS2 pictures; <pak> = the Disc 2 tex.pak for material pairs)
+#   3. ps2_items_tex.py  the item / debris picture packages (Windows python)
+#   4. gen-em.sh         em19 em1a em1b em1c em14 PS2 BINs; PS2 motion for the em archives, em3b and the rooms
+#   5. step.sh snd       ps2_audio.py banks (PS2 PCM in place) on the room archives + em19 / em1a; snd28_store.py rows
+#   6. step.sh final     mkfinal.py -> /root/re4data/private/{cgca26,pmcgca26}-<tag>; seal (SHA256SUMS.txt)
+# Room specs room|ETM|PAIRS|ETM-FROM or empty:NAMES (castle content GC BIN index : PS2 .dat index). et1400 (+ et14.eff):
+# the torch etc model the PS2 deleted from every ETM (r201 r202, also r10c): emptied (ps2_objects.py --etm-empty), the
+# PS2 draws the torch with its world and the room EFF fire (pfire26 / PS2_FIRE_SST).
+set -euo pipefail
+PAK=${1:?Disc 2 tex.pak}; D1=${2:?Disc 1 tree}; TAG=${3:-20261101}
+# Pairs from the GC / PS2 archive BIN census (same index): r206 GC BIN 34 36 38 3a have no PS2 entry (kept GC);
+# r206 32:32 is refused by the converter (PS2 position outside the s16 range at shift 4): kept GC, listed as a gap.
+SPECS=${SPECS:-"r20c|all|1f:1f|- r20f|all|1f:1f|- r206|all|2f:2f|- r20d|all|23:23,29:29|- r20e|all|-|-"}
+export ROOMS=${ROOMS:-"r20c r20f r206 r20d r20e"} CEM=${CEM:-"em11 em25 em3c"} SET=${SET:-cgca34}
+export WSLENV=ROOMS:CEM:SET${WSLENV:+:$WSLENV}
+CT=${D2_CASTLE_TREE:-/root/re4data/private/castle-d2-j-20261021}
+WK=${WK:-/root/work/lanes/world-ch334-scratch/work}
+TW=${TW:-/root/work/lanes/world-ch334/port/dreamcast/tools}
+H=$TW/d367/castlegca34
+WS=//wsl.localhost/Ubuntu-24.04
+GI="C:/Game Dev/Emulators/Resident Evil 4 Debug (Disc 1)/Resident Evil 4 Debug (Disc 1).iso"
+PI="C:/Game Dev/Emulators/re4_helpers/Resident Evil 4 (USA)/Resident Evil 4 (USA).iso"
+W() { MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 -u root -- bash "$@"; }
+S1=/root/re4data/private/$SET-$TAG; S2=/root/re4data/private/pm$SET-$TAG
+W "$H/step.sh" itemlib "$WK/itemlib" "${ROOMS// /,}"
+for spec in $SPECS; do
+  IFS='|' read -r r etm pairs from <<< "$spec"
+  O=$WK/obj/$r
+  W "$H/step.sh" objects "$r" "$etm" "$pairs" "$from" "$O" "$CT" "$WK/itemlib"
+  (cd "$WS$TW" && MSYS_NO_PATHCONV=1 py ps2_objects_tex.py --room "$r" --dar "$WS$O/i/$r.dar" --report "$WS$O/$r.json" \
+    --out "$WS$O/x/$r.dar" --texdir "$WS$O/x/tex" --json "$WS$O/x/tex.json" --pak "$WS$PAK" --gc-room "$WS$WK/obj/gcroom/$r.arc" \
+    --gc-iso "$GI" --ps2-iso "$PI" > "$WS$O/x/tex.log" 2>&1) || { echo "$r: tex step failed"; tail -5 "$WS$O/x/tex.log"; exit 1; }
+  echo "$r $(tail -1 "$WS$O/x/tex.log")"
+done
+(cd "$WS$TW" && MSYS_NO_PATHCONV=1 py ps2_items_tex.py "$WS$WK/itemlib" > "$WS$WK/itemlib/tex.log" 2>&1) || { tail -5 "$WS$WK/itemlib/tex.log"; exit 1; }
+echo "items tex: $(tail -1 "$WS$WK/itemlib/tex.log")"
+W "$H/gen-em.sh" "$WK" "$D1"
+W "$H/step.sh" snd "$WK/snd" "$WK" "${BASECAT:-/root/work/lanes/castle-disc2-26/rrhome/work/1101-1407-1409ac5e/gca2/catalog/catalog.json}"
+echo "$D1" > "$WS$WK/d1tree.txt"
+W "$H/step.sh" clean "$S1" "$S2"
+W "$H/step.sh" final "$S1" "$S2" "$WK"
+W "$H/step.sh" seal "$S1" "$S2"

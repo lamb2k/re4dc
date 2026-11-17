@@ -326,3 +326,16 @@ em/em19.drs	EM0	39	no PS2 match at matcher floor	castle-gca-26
 em/em19.drs	EM0	65	no PS2 match at matcher floor	castle-gca-26
 em/em1a.drs	EM0	39	no PS2 match at matcher floor	castle-gca-26
 em/em1a.drs	EM0	65	no PS2 match at matcher floor	castle-gca-26
+# world-ch334 11-02: Disc 2 chapters 3-3 / 3-4 banks st2/r20c r20f r206 r20d r20e.dar + em/em11 em25 em3c.drs (store cgca34-20261102/reports/snd-map): 12 rows keep GC
+st2/r20c.dar	ROOM	0	no PS2 match at matcher floor	world-ch334
+st2/r20c.dar	ROOM	1	no PS2 match at matcher floor	world-ch334
+st2/r20c.dar	FOOT	6	no PS2 match at matcher floor	world-ch334
+st2/r20c.dar	FOOT	7	no PS2 match at matcher floor	world-ch334
+st2/r20f.dar	FOOT	6	no PS2 match at matcher floor	world-ch334
+st2/r20f.dar	FOOT	7	no PS2 match at matcher floor	world-ch334
+st2/r206.dar	ROOM	10	no PS2 match at matcher floor	world-ch334
+em/em11.drs	EM0	39	no PS2 match at matcher floor	world-ch334
+em/em11.drs	EM0	65	no PS2 match at matcher floor	world-ch334
+em/em25.drs	EM0	0	no PS2 match at matcher floor	world-ch334
+em/em25.drs	EM0	1	no PS2 match at matcher floor	world-ch334
+em/em3c.drs	EM0	2	no PS2 match at matcher floor	world-ch334
