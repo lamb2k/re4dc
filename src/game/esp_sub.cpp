@@ -716,6 +716,7 @@ public:
 #endif
 #if defined(RE4DC_HW_FOG_HAZE) && RE4DC_HW_FOG_HAZE
 extern "C" int re4dc_hwfog_haze(unsigned room, float depth, float indoor);   // game/hwfog.cpp (hwfog.mk)
+extern "C" int re4dc_hwfog_has_row(unsigned room);   // hwfog.cpp: 1 when re4dc_hwfog_haze notes this room (FXDEAD)
 #endif
 static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
 {
@@ -5179,35 +5180,52 @@ static int fxcRoomOn()
     return s_on;
 }
 #endif
-// FXDEAD (lane fxdead, 2026-11-17; exact): 1 when EspCommonTrans, run on this sprite in the same frame, would return in one of its early
-// record-only branches and write nothing but its static projection / texture cache, so queueing it (an OT entry, the later dispatch) is waste.
-// Same tests, same order as EspCommonTrans:
-//   class 1: the native sprite path does not take it (EspSpriteEligible: owner whitelist, mask / render-target / blend restrictions; ESP_SPRITE_FAST
-//            returns before anything else);
-//   class 2: ESP_CUT_EARLY's haze / mist cut (id 0x48, or id 0x15 with no PS2 recipe row: Ps2fxHazeFor);
-// Plain sprites only (no shimmer, no nega, no mask stage 0x4000, no render target 0x10000, which have state-dependent paths). The result is a
-// function of the sprite's own fields, the room and re4dc_ps2fx, evaluated where EspCommonTrans would evaluate it. A sprite that fails both
-// tests (the ChannelSet / Essential / EspSpriteEmit declines, the ps2fx class with its per-frame budget and population) is left to the dispatch.
+// FXDEAD (lane fxdead, 2026-11-17; exact): a bit mask of the classes for which EspCommonTrans, run on this sprite in the same frame, can
+// publish nothing and write nothing but render state (GX calls, s_effect_col, the static projection / texture cache), so queueing it (an
+// OT entry, the later dispatch) is waste. Plain sprites only (no shimmer, no nega, no mask stage 0x4000, no render target 0x10000: those
+// have their own paths); all tests are functions of the sprite's fields, the room and the build, evaluated where the dispatch would.
+//   1 haze without a feed: id 0x15 in a room with no HW_FOG_HAZE row. Under HAZE_SPRITE_CUT EspSpriteEmit never publishes an id 0x15
+//     sprite (a sprite with no PS2 recipe row: the first test; with a row: HazeCutNote + PolicySkip after the fog feed), and the only
+//     thing a recipe haze sprite leaves behind is re4dc_hwfog_haze's note (hwfog.cpp: it records only for the rooms of kRows). Excluded:
+//     the rooms with a row (re4dc_hwfog_has_row), EFFECT_HAZE_LEAN M3's rooms (Ps2fxEvery2 writes the fog table's haze key in
+//     Ps2fxClass), r11b (SHORE_FX_LEVEL: FxLevelThin sets the room's FX level at the first Ps2fxClass call), PS2_FX_POPULATION builds
+//     (the population build is a dispatch effect).
+//   2 not eligible for the native path (EspSpriteEligible; ESP_SPRITE_FAST returns before anything else);
+//   4 ESP_CUT_EARLY's haze / mist cut (id 0x48, or id 0x15 without a PS2 recipe row).
+// (2 and 4 are empty in practice: the census found no such sprite reaching a full pass in any of 26 rooms.)
 static int fxdClass(cEsp* esp)
 {
     if (esp->m_Shimmer_type != 0 || (esp->m_Tool_flg & (0x2000 | 0x4000 | 0x10000))) {
         return 0;
     }
+    int c = 0;
+#if defined(RE4DC_HAZE_SPRITE_CUT) && !RE4DC_PS2_FX_POPULATION
+    if (esp->m_Id == 0x15) {
+        const u16 room = G_ROOM_ID;
+        int fed = 0;
+#if defined(RE4DC_HW_FOG_HAZE) && RE4DC_HW_FOG_HAZE
+        fed = re4dc_hwfog_has_row(room);
+#endif
+#if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 2)
+        fed |= Ps2fxEvery2(room) != 0;
+#endif
+#if defined(RE4DC_SHORE_FX_LEVEL)
+        fed |= room == 0x11b;
+#endif
+        if (!fed) c |= 1;
+    }
+#endif
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
 #if defined(RE4DC_ESP1B_GRID03) && RE4DC_ESP1B_GRID03
-    if (!EspSpriteEligible(esp) && !Esp1bGridClass03(esp)) {
+    if (!EspSpriteEligible(esp) && !Esp1bGridClass03(esp)) c |= 2;
 #else
-    if (!EspSpriteEligible(esp)) {
+    if (!EspSpriteEligible(esp)) c |= 2;
 #endif
-        return 1;
-    }
 #endif
 #if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
-    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
-        return 2;
-    }
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) c |= 4;
 #endif
-    return 0;
+    return c;
 }
 // 1 when the sprite is declined by `mask` (1 stateless Essential, 2 view, 4 layer rule); *why = the bit that declined it.
 static int fxcVerdict(cEsp* esp, int mode, unsigned mask, int* why)
@@ -5337,7 +5355,8 @@ extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
                 k->tool = esp->m_Tool_flg; k->flg = esp->m_Flg; k->core = esp->info.Core_flg; k->xa4 = (u8) esp->xA4;
                 if (mode == 1) {
                     const int c = fxdClass(esp);
-                    if (c == 1) { k->cls1++; s_fxc_win[10]++; } else if (c == 2) { k->cls2++; s_fxc_win[11]++; }
+                    if (c & 1) { k->cls1++; s_fxc_win[10]++; }
+                    if (c & 6) { k->cls2++; s_fxc_win[11]++; }
                 }
             }
             int why = 0;
@@ -5364,7 +5383,7 @@ extern "C" int re4dc_fxc_ask(cEsp* esp, int mode, int common)
         const int c = fxdClass(esp);
         if (c & (RE4DC_FXCUT_ROOMS >> 4)) {
 #if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
-            if (c == 2) HazeCutNote(esp);   // the note EspCommonTrans would have made
+            if (c & 5) HazeCutNote(esp);   // the note the dispatch would have made
 #endif
             return 1;
         }

@@ -124,6 +124,15 @@ extern "C" int re4dc_hwfog_haze(unsigned room, float depth, float indoor)
     return 0;
 }
 
+// FXDEAD (esp_sub.cpp fxdClass): 1 when re4dc_hwfog_haze keeps a note for this room (it is a table row), so its haze sprites feed the fog.
+extern "C" int re4dc_hwfog_has_row(unsigned room)
+{
+    for (unsigned i = 0; i < kRowCount; ++i) {
+        if (kRows[i].room == room) return 1;
+    }
+    return 0;
+}
+
 extern "C" unsigned re4dc_hwfog_key(void)
 {
     const unsigned frame = re4dc_ui_frame();

@@ -561,10 +561,11 @@ endif
 # FXCUT_ROOM_LIST=0x105,0x108,0x10a,0x10d,0x118,0x11a,0x11b,0x200 (the rooms with >= ~95 Essential-declined sprites / frame; census table E:\RE4DC-Lanesxcensus\CENSUS.md).
 FXCUT_ROOMS ?= 0
 FXCUT_ROOM_LIST ?= all
-# FXDEAD_ROOMS=<mask 1..3> (default 0; render only, EXACT; lane fxdead, 2026-11-17; needs EFFECT_SPRITES=1): in the rooms of FXDEAD_ROOM_LIST a plain
-# sprite that EspCommonTrans would decline in its first record-only branches is not queued: bit 1 the sprite is not eligible for the native path
-# (EspSpriteEligible; needs ESP_SPRITE_FAST), bit 2 ESP_CUT_EARLY's haze / mist cut (id 0x48, or id 0x15 without a PS2 recipe row; needs ESP_CUT_EARLY
-# and HAZE_SPRITE_CUT). Same tests as the dispatch, evaluated at the queue: moves, generators, slots, Rnd() untouched. Per-key proofs: PROOF.md of lane fxdead.
+# FXDEAD_ROOMS=<mask 1..7> (default 0; render only, EXACT; lane fxdead, 2026-11-17; needs EFFECT_SPRITES=1): in the rooms of FXDEAD_ROOM_LIST a plain sprite
+# that EspCommonTrans could only decline, publishing nothing and writing only render state, is not queued (moves, generators, slots, Rnd() untouched).
+# Bit 1 (the one with an effect): an id 0x15 camera-haze sprite in a room without a HW_FOG_HAZE row (needs HAZE_SPRITE_CUT: EspSpriteEmit never publishes it,
+# re4dc_hwfog_haze keeps a note only for the rows of hwfog.cpp). Bit 2: not eligible for the native path (needs ESP_SPRITE_FAST). Bit 4: ESP_CUT_EARLY's
+# haze / mist cut (needs ESP_CUT_EARLY). Bits 2 and 4 matched no sprite in the 26-room census (empty). Proofs: PROOF.md of lane fxdead.
 # FXDEAD_ROOM_LIST=<hex,hex,...|all> (default all but r10b): the rooms it acts in, no spaces.
 FXDEAD_ROOMS ?= 0
 FXDEAD_ROOM_LIST ?= all
@@ -573,8 +574,8 @@ ifneq ($(FXC_MASK),0)
 ifneq ($(filter 0 1 2 3,$(FXCUT_ROOMS)),$(FXCUT_ROOMS))
 $(error FXCUT_ROOMS is a mask 1..3 (the exact bits))
 endif
-ifneq ($(filter 0 1 2 3,$(FXDEAD_ROOMS)),$(FXDEAD_ROOMS))
-$(error FXDEAD_ROOMS is a mask 1..3)
+ifneq ($(filter 0 1 2 3 4 5 6 7,$(FXDEAD_ROOMS)),$(FXDEAD_ROOMS))
+$(error FXDEAD_ROOMS is a mask 1..7)
 endif
 ifneq ($(EFFECT_SPRITES),1)
 $(error FXCUT_ROOMS / FXDEAD_ROOMS need EFFECT_SPRITES=1)
