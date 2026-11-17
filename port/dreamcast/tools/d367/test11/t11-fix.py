@@ -2209,11 +2209,19 @@ if os.path.isdir(ISND5BD + '/em'):
 ISOBJ5D = os.environ.get('ISOBJ5D', '/root/re4data/private/isobj5-20261117')
 if os.path.isdir(ISOBJ5D + '/st3'):
     DATA['isobj5'] = {'st3/' + _f: ISOBJ5D + '/st3/' + _f for _f in sorted(os.listdir(ISOBJ5D + '/st3'))}
+# isitem5 (lane island-gca round 4; Disc 3 space): the island item and debris models with PS2 geometry (ps2_items.py pack on the isobj5 dars; PS2ITEMS_GC_ISO2 = GC Disc 2 for r3xx) plus
+# their PS2 pictures (ps2_items_tex.py, loose dc/tex). After isobj5. Store: re4data/private/isitem5-20261117 (provenance.tsv carries isobj5's rows).
+ISITEM5D = os.environ.get('ISITEM5D', '/root/re4data/private/isitem5-20261117')
+if os.path.isdir(ISITEM5D + '/st3'):
+    DATA['isitem5'] = {'st3/' + _f: ISITEM5D + '/st3/' + _f for _f in sorted(os.listdir(ISITEM5D + '/st3'))}
+    for _c in sorted(os.listdir(ISITEM5D + '/dc/tex')):
+        for _f in sorted(os.listdir(ISITEM5D + '/dc/tex/' + _c)):
+            DATA['isitem5']['dc/tex/%s/%s' % (_c, _f)] = '%s/dc/tex/%s/%s' % (ISITEM5D, _c, _f)
 # isobjm5 (lane island-gca round 3; Disc 3 space): st3/r30c.dar and r30f.dar (isobj5 copies) with PS2 motion for the clips the PS2 changed (kept-GC slots stay GC). After isobj5.
 ISOBJM5D = os.environ.get('ISOBJM5D', '/root/re4data/private/isobjm5-20261117')
 if os.path.isdir(ISOBJM5D + '/st3'):
     DATA['isobjm5'] = {'st3/' + _f: ISOBJM5D + '/st3/' + _f for _f in sorted(os.listdir(ISOBJM5D + '/st3'))}
-# isle5 (lane island-gca 11-17; Disc 3 only, parked: not in D3_DATA until the per-room decisions / progress checks pass): the PS2 USA island enemy
+# isle5 (lane island-gca 11-17; Disc 3 only; in D3_DATA from round 4 for the ig4 per-room decisions/progress gate, dropped again if a room fails): the PS2 USA island enemy
 # lists etc/emleon06.esl / emleon07.esl instead of the GameCube lists (island-esl). Store: re4data/private/isle5-20261117 (README-isle5.txt).
 ISLE5D = os.environ.get('ISLE5D', '/root/re4data/private/isle5-20261117')
 if os.path.isdir(ISLE5D + '/etc'):
