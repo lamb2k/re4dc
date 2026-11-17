@@ -120,3 +120,17 @@ r22c (castle hub, doors to r204 r211 r220 r305 r31d) is reachable from r211 / r2
 - trans4d2: 20 no-op R4TC rooms by proof; r211 r215 r227 r228 r229 r22a held for tier 2. Not yet on a tested disc.
 - Carry rows open: 6 cells (none), 22 roomscan (not on this branch), 10 for the 6 held rooms.
 - Next: build guard twin, run E:/RE4DC-Lanes/world-ch4/hunt/fx op17, op18, r229, r214; then one rr cycle under t28-cycle lock.
+
+## Round 8 (2026-11-17, resumed after the stop)
+- Merged lane/fix66d d990b8be5 (one conflict, t11-fix.py DATA sets, both kept). Disc 1 knob-off identity: the Disc 1 build was
+  512 B larger (g_stage_ovl[] got an st2_4 slot); the slot is now ROUTE_CH41 only, rr image ec270e303e2170f3 = fix66d.
+- rr cycle 1117-1431-aa7f5e4d on aa7f5e4da (Flycast, evidence E:/RE4DC-Lanes/world-ch4/rr): Disc 2 census 42/42 with no
+  HALT/FAULT/MISSING (SHAPE_TABLE_GUARD fixed r229 / r214 / r22c), LEON-GC / CAST-GC 42/42, cap 4 held, VRAM no-contig 0,
+  KOS d2c4door / d2c4fight and GDEMU race PASS, Disc 1 h2 340/340 heap 86688.
+- GC-ASSET on Disc 2 ran for the first time: catalog 17,303 rows needed a 15-bit token index (32,704 rows) and SparseKeys 512 (the 256
+  keys overran with 64-row blocks; startup "internal" errors gone). Gate-ON twins only; Disc 1 gate errors stay 0.
+- res4b-20261117: r21b / r22b / r224 resident lists lose three HUD pictures no disc holds (r21b r22b fixed; r224 and r205 TEXCHK
+  still fail).
+- Open: GC-ASSET inventory GCA-CH4-INVENTORY-20261117.tsv (34 GC model, 35 unknown texture, 15 layout, 2 GC motion rows; motion-capacity /
+  busy / unbound errors); TEXCHK r224 / r205; packaged-disc boot job never logs "state title=" (h2 reaches title at frame 38);
+  c4anc stand-ins parked for the user; carry rows 6 / 10 / 22.
