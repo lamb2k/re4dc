@@ -44,8 +44,8 @@ bool index_read_row(CatalogReadAt read,void* context,unsigned epoch,unsigned row
 }
 // Sparse resident index (gc-catalog24b): the 16-byte order-preserving prefix of
 // the first row of each block, built in the install pass. A bind binary-searches
-// the candidate block(s) with single 112-byte row reads (~6). BSS: 4096 + 3584 B.
-constexpr unsigned SparseKeys=256,SparseKeyBytes=16,BufferRows=32;
+// the candidate block(s) with single 112-byte row reads (~6). BSS: 8192 + 3584 B (SparseKeys 256 -> 512, lane world-ch4 11-17: Disc 2 catalog 17,303 rows overran the 256 keys, 64-row blocks cover 32,768 rows).
+constexpr unsigned SparseKeys=512,SparseKeyBytes=16,BufferRows=32;
 unsigned char sparse_key[SparseKeys][SparseKeyBytes];
 unsigned sparse_blocks,sparse_block_rows;
 unsigned char block_buffer[BufferRows*112];
