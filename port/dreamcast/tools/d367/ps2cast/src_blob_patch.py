@@ -117,6 +117,29 @@ def patch(pkg, arcs, le_mirror):
         # the 13 material bytes of every part are kept by rebuild; the proof compares them
         if [x[0] for x in nf['parts']] != [x[0] for x in gf['parts']]:
             raise SystemExit('bin %#x: part material bytes changed' % bn)
+        # The row names one digest for every archive that carries these GameCube bytes: another listed archive with the same
+        # old BIN (em1d / em1e / em1f share some) must rebuild to the same new BIN, or the cast would adopt one and not the other.
+        clash = None
+        for other in arcs:
+            if other is hit or bn - 4 >= other['old'].count or other['old'].tags[bn - 4] != 'BIN':
+                continue
+            oe = other['old'].entry(bn)
+            if len(oe) < nbytes or mr.digest(oe[:nbytes]) != want:
+                continue
+            ot, op = other['ps2'].get(bn, ('', b''))
+            try:
+                if ot != 'BIN':
+                    raise ValueError('no PS2 BIN')
+                onb, _ost = po.rebuild(g, op)
+                same = po.to_le(onb, 'ps2%x' % bn) == new_le
+            except Exception as e:  # noqa
+                same, clash = False, 'archive %s: %s' % (other['name'], e)
+            if not same:
+                clash = clash or 'archive %s rebuilds differently' % other['name']
+                break
+        if clash:
+            rep['kept_gc'].append(dict(bin=bn, archive=hit['name'], why='shared GameCube BIN, ' + clash))
+            continue
         first = cur[22]
         row = [*nf['header'], *nf['positions'], *nf['normals'], *nf['weights'], *nf['uv']]
         struct.pack_into('<24I', b, mrow, *row, first, len(nf['parts']))
@@ -133,6 +156,36 @@ def patch(pkg, arcs, le_mirror):
     struct.pack_into('<I', head, 44, 0)
     struct.pack_into('<I', b, 44, zlib.crc32(bytes(head)) & 0xffffffff)
     return bytes(b), rep
+
+
+def verify_rows(pkg, arcs):
+    """What re4dc_actor_archive_adopt will see: every SBlob row of the (patched) package against the converted archives.
+    ok-new = an output archive carries the digested bytes (the PS2-derived BIN); ok-gc = the row digests GameCube bytes the output
+    archive still carries; CLASH = the row digests GameCube bytes whose archive BIN was converted (the cast would decline it: a
+    CAST-GC regression); external = no listed archive has that BIN (an archive this set does not carry)."""
+    b = bytes(pkg)
+    sb_off, _, sb_cnt = struct.unpack_from('<4I', b, 64 + 16 * 11)[1:4]
+    out = dict(ok_new=0, ok_gc=0, clash=[], external=[])
+    for u in range(sb_cnt):
+        _fm, _fam, bn, n, c, f, _, _ = struct.unpack_from('<8I', b, sb_off + 32 * u)
+        want, verdict = [n, c, f], None
+        for a in arcs:
+            if bn - 4 >= a['new'].count or a['new'].tags[bn - 4] != 'BIN':
+                continue
+            ne = a['new'].entry(bn)
+            if len(ne) >= n and mr.digest(ne[:n]) == want:
+                verdict = 'ok_gc' if bn - 4 < a['old'].count and a['old'].entry(bn)[:n] == ne[:n] else 'ok_new'
+                break
+            oe = a['old'].entry(bn) if bn - 4 < a['old'].count and a['old'].tags[bn - 4] == 'BIN' else b''
+            if len(oe) >= n and mr.digest(oe[:n]) == want:
+                verdict = 'clash'
+        if verdict in ('ok_new', 'ok_gc'):
+            out[verdict] += 1
+        elif verdict == 'clash':
+            out['clash'].append(bn)
+        else:
+            out['external'].append(bn)
+    return out
 
 
 def main():

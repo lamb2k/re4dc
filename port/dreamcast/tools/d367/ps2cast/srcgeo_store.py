@@ -19,6 +19,35 @@ def sha(b):
     return hashlib.sha256(b).hexdigest()
 
 
+def base_rows(tree):
+    """{(arc): [(bytes, crc, fnv), ...]} of the ELF's compiled family-2 source blob rows (actor_material_records.inc)."""
+    import re
+    text = (Path(tree) / 'port/dreamcast/game/actor_material_records.inc').read_text()
+    out = {}
+    for _m, bn, n, c, f in re.findall(r'\{&m_(\w+),2u,(\d+)u,\{(\d+)u,(\d+)u,(\d+)u\}\}', text):
+        out.setdefault(int(bn), []).append((int(n), int(c), int(f)))
+    return out
+
+
+def convertible(release, gc_path, tree):
+    """ps2_ganado_bins --only list: every GC BIN of the release archive except those a compiled base row digests, or None
+    (no restriction) when no BIN of the archive is bound by a base row."""
+    import model_registry as mr
+    import ps2_accessories as pa
+    rows = base_rows(tree)
+    P = pa.Payload(Path(release).read_bytes())
+    gc = pa.gc_entries(str(gc_path))
+    keep, allarcs = set(), []
+    for arc, (t, _g) in sorted(gc.items()):
+        if t != 'BIN' or arc - 4 >= P.count or not P.tags[arc - 4]:
+            continue
+        allarcs.append(arc)
+        e = P.entry(arc)
+        if any(len(e) >= n and mr.digest(e[:n]) == [n, c, f] for n, c, f in rows.get(arc, [])):
+            keep.add(arc)
+    return None if not keep else (','.join('%x' % a for a in allarcs if a not in keep) or '0')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
@@ -50,7 +79,11 @@ def main():
         iso.seek(ents[0][0])
         (work / (name + '.dat')).write_bytes(iso.read(ents[0][1]))
         (work / (name + '.gc.drs')).write_bytes(gc.read(gp))
+        # BINs the ELF's own base rows bind (actor_material_records.inc source_blobs, family 2: em11..em17) keep their GameCube
+        # bytes wherever the archive still holds the bytes those rows digest: code constants, not package rows.
+        only = convertible(rel, work / (name + '.gc.drs'), a.tree)
         cmd = [sys.executable, str(HERE / 'ps2_ganado_bins.py'), 'build', '--release', rel, '--gc', str(work / (name + '.gc.drs')),
+               *(['--only', only] if only is not None else []),
                '--ps2', str(work / (name + '.dat')), '--out', str(out / 'em' / (name + '.drs')),
                '--json', str(out / 'report' / (name + '.json'))]
         procs.append((name, subprocess.Popen(cmd, stdout=open(out / 'report' / (name + '.log'), 'w'), stderr=subprocess.STDOUT)))

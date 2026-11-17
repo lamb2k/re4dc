@@ -7,7 +7,7 @@
 set -euo pipefail
 D=${1:?2 or 3}; O=${2:?out store dir}; AFS=${3:-/root/srcgeo-scratch/afs-fixed.json}; shift 3 || true
 H=$(cd "$(dirname "$0")" && pwd); T=$(cd "$H/../../../../.." && pwd)
-python3 "$H/chain.py" "$D" > "$O.chain" 2> "$O.chain.err" || { cat "$O.chain.err"; exit 1; }
+python3 "$H/chain.py" "$D" ${D1TREE:+--d1tree "$D1TREE"} > "$O.chain" 2> "$O.chain.err" || { cat "$O.chain.err"; exit 1; }
 ARCH=(); PKG=()
 want=" $* "
 while read -r kind name path who; do

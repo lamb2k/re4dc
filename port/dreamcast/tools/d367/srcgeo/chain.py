@@ -31,6 +31,18 @@ for f in sorted(tree.rglob('*')):
         rel = f.relative_to(tree).as_posix()
         if re.fullmatch(r'em/[a-z0-9]+\.drs|dc/native/r[0-9a-f]+/(registry|partner)\.re4nmr', rel):
             final[rel] = (str(f), 'tree')
+if disc == '2' and '--d1tree' in sys.argv:
+    # castle31/castle_fixture.py: Disc 1's copy of a shared file wins unless the file is castle-owned (r2xx rooms, dc/native/r2xx,
+    # em/pl01.drs); D1_ROOMS (default r200) keep Disc 1's files; castle-only files (Disc 1 lacks them) come from the castle tree.
+    d1 = Path(sys.argv[sys.argv.index('--d1tree') + 1])
+    own = re.compile(r'(^|/)(r2[0-9a-f]{2})[^/]*$|^dc/native/r2[0-9a-f]{2}/|^em/pl01\.drs$')
+    d1re = re.compile(r'(^|/)(r200)([^0-9a-f/][^/]*)?$|^dc/native/(r200)/')
+    cand = set(final) | {f.relative_to(d1).as_posix() for f in d1.rglob('*') if f.is_file() and f.suffix in ('.drs', '.re4nmr')}
+    for rel in sorted(cand):
+        if not re.fullmatch(r'em/[a-z0-9]+\.drs|dc/native/r[0-9a-f]+/(registry|partner)\.re4nmr', rel):
+            continue
+        if (d1 / rel).is_file() and (rel not in final or not own.search(rel) or d1re.search(rel)):
+            final[rel] = (str(d1 / rel), 'disc1')
 missing = []
 for n in names:
     if n not in mod.DATA:
