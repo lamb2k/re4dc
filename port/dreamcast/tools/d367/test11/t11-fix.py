@@ -2199,6 +2199,11 @@ ISND5D = os.environ.get('ISND5D', '/root/re4data/private/isnd5-20261117')
 if os.path.isdir(ISND5D + '/em'):
     DATA['isnd5'] = {'em/em1d.drs': ISND5D + '/em/em1d.drs'}
     DATA['isnd5'].update({'st3/%s.dar' % _r: ISND5D + '/st3/%s.dar' % _r for _r in ('r30a', 'r311', 'r317', 'r31b', 'r31c', 'r320', 'r327', 'r333')})
+# isle5 (lane island-gca 11-17; Disc 3 only, parked: not in D3_DATA until the per-room decisions / progress checks pass): the PS2 USA island enemy
+# lists etc/emleon06.esl / emleon07.esl instead of the GameCube lists (island-esl). Store: re4data/private/isle5-20261117 (README-isle5.txt).
+ISLE5D = os.environ.get('ISLE5D', '/root/re4data/private/isle5-20261117')
+if os.path.isdir(ISLE5D + '/etc'):
+    DATA['isle5'] = {'etc/emleon06.esl': ISLE5D + '/etc/emleon06.esl', 'etc/emleon07.esl': ISLE5D + '/etc/emleon07.esl'}
 # bossk / bosss (lane bosscast 11-03, release rule 7 + no-GameCube-assets; DISC 3 ONLY via D3_DATA): the last island characters
 # drawn from GameCube data. bossk = r31c Krauser: the room registry package (model-registry/ps2-ch5-r31ck.json: em39 types 1 / 2
 # with every hand / death info, cap, knife / gun / bow / arrow, plus the gunship em3a and its missile that the island tree's
