@@ -88,12 +88,15 @@ disc3_jobs() {
       if [ "$wf" != - ]; then grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'; else echo "jp 0"; echo "inv default"; echo "god"; fi
       echo "chapter $ch"; echo "census 200"; echo "alivelog 60"; } > "$EVU/fixtures/d3-$r.txt"
     pad=""; if [ -f "$I5/warps/d3-$r-pad.txt" ]; then tr -d '\r' < "$I5/warps/d3-$r-pad.txt" > "$EVU/fixtures/d3-$r-pad.txt"; pad="--pad \"\$EVW\\fixtures\\d3-$r-pad.txt\""; fi
-    job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"" $pad)"
+    # island-gca round 4: RR_D3_STILLS="r311 r316 ..." takes a Flycast still every 12 s in those rooms (fp_run --period; shots/tNNNN/frames);
+    # RR_D3_ONLY=1 runs only those rooms (the GC arm of a still pair: a cycle built without the converted objects).
+    still=""; case " ${RR_D3_STILLS:-} " in *" $r "*) still="--period 12" ;; *) [ "${RR_D3_ONLY:-0}" = 1 ] && continue ;; esac
+    job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"" $pad $still)"
     echo -n "$r " >> "$W/d3-census-rooms.txt"
   done < "$I5/rooms.tsv"
   # island5/events.tsv (world-ch5 11-04): event play checks, each a <=60 s warp onto an event trigger on the d3c
   # twin (name room chapter warp); the run log shows whether the route movie or the event file played.
-  if [ -s "$I5/events.tsv" ]; then
+  if [ -s "$I5/events.tsv" ] && [ "${RR_D3_ONLY:-0}" != 1 ]; then
     while read -r n r ch wf; do
       case "$n" in ""|"#"*) continue ;; esac
       { echo "name d3ev-$n"; echo "room 0x${r#r}"; grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'
@@ -102,8 +105,8 @@ disc3_jobs() {
       job 1 d3ev-$n "$(run d3ev-$n d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3ev-$n.txt\"" $pad)"
     done < "$I5/events.tsv"
   fi
-  job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"
-  if [ -d "$EVU/_discs/d3a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" ]; then
+  [ "${RR_D3_ONLY:-0}" = 1 ] || job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"
+  if [ "${RR_D3_ONLY:-0}" != 1 ] && [ -d "$EVU/_discs/d3a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" "$J/syms-d3a.txt"
     while read -r r ch wf g; do
       case "$r" in r3*) [ "$g" = 1 ] || continue ;; *) continue ;; esac

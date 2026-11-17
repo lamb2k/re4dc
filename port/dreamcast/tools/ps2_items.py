@@ -155,9 +155,16 @@ class Sources:
         self.ps2_iso = ps2_iso
         self.ix = pb.afs_index(ps2_iso)
         self.rooms = dict((r, k) for r, k in self.g.rooms())
+        # PS2ITEMS_GC_ISO2 (lane island-gca round 4): a second GameCube disc whose rooms the first lacks (the island r3xx rooms are on the
+        # GC Disc 2 USA ISO, not on the Debug Disc 1 ISO). A room found on both keeps the first disc's copy.
+        self.g2, self.rooms2 = None, {}
+        iso2 = os.environ.get('PS2ITEMS_GC_ISO2')
+        if iso2:
+            self.g2 = GcIso(iso2)
+            self.rooms2 = dict((r, k) for r, k in self.g2.rooms() if r not in self.rooms)
 
     def gc_room(self, room):
-        d = self.g.read(self.rooms[room])
+        d = self.g.read(self.rooms[room]) if room in self.rooms else self.g2.read(self.rooms2[room])
         return rs.decode_das(d) if d[:32] == rs.CONTAINER_MAGIC else d
 
     def ps2_room(self, room):
@@ -754,6 +761,9 @@ def pack_payload(pay, room, lib, classes, rep):
             pos = {i: k for k, i in enumerate(ids)}
             nofit = []
             for a in by['ITM']:
+                if a['locator']['id'] not in pos:   # island-gca round 4: an item id the room's payload table no longer holds
+                    rep.append(dict(name=a['name'], result='absent-in-payload'))
+                    continue
                 k = pos[a['locator']['id']]
                 P.asset(a, s + bo[k], s + end[bo[k]], s + to[k])
                 if rep[-1].get('result') == 'nofit':
@@ -765,6 +775,9 @@ def pack_payload(pay, room, lib, classes, rep):
             b = bytes(pay[s:e])
             efm = {i: (mo, to) for i, mo, to in eff_efm(b, '<')}
             for a in mine:
+                if a['locator']['id'] not in efm:
+                    rep.append(dict(name=a['name'], result='absent-in-payload'))
+                    continue
                 mo, to = efm[a['locator']['id']]
                 P.asset(a, s + mo, s + to, s + to)
             effk += 1
