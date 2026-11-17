@@ -13,7 +13,10 @@ want=" $* "
 while read -r kind name path who; do
   if [ "$kind" = arch ]; then
     if [ -n "$*" ]; then case "$want" in *" $name "*) ;; *) continue;; esac
-    else python3 -c "import json,sys;a=json.load(open('$AFS'));sys.exit(0 if [e for e in a.get('$name.dat',[]) if e[1]>0] else 1)" || continue
+    else
+      # default: enemy archives with a PS2 dat (+ the island's pl0e); never Leon / Ashley / weapon archives (compiled player rows)
+      case "$name" in em[0-9a-f][0-9a-f]) ;; pl0e) [ "$D" = 3 ] || continue ;; *) continue ;; esac
+      python3 -c "import json,sys;a=json.load(open('$AFS'));sys.exit(0 if [e for e in a.get('$name.dat',[]) if e[1]>0] else 1)" || continue
     fi
     ARCH+=(--arch "$name=$path")
   elif [ "$kind" = pkg ]; then PKG+=(--pkg "$name=$path"); fi

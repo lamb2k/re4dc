@@ -89,8 +89,10 @@ def main():
         procs.append((name, subprocess.Popen(cmd, stdout=open(out / 'report' / (name + '.log'), 'w'), stderr=subprocess.STDOUT)))
         arcspec.append((name, rel, str(out / 'em' / (name + '.drs')), str(work / (name + '.gc.drs')), str(work / (name + '.dat'))))
     for name, p in procs:
-        if p.wait():
-            raise SystemExit('ps2_ganado_bins failed for ' + name)
+        rc = p.wait()
+        if rc:
+            tail = (out / 'report' / (name + '.log')).read_text()[-600:]
+            raise SystemExit('ps2_ganado_bins failed for %s (rc=%s):\n%s' % (name, rc, tail))
     import model_registry as mr  # noqa: E402
     import src_blob_patch as sp  # noqa: E402
     _a, _t, le_mirror = mr.archive_facts(a.tree)

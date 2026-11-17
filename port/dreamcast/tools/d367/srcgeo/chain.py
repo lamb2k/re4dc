@@ -41,6 +41,8 @@ if disc == '2' and '--d1tree' in sys.argv:
     for rel in sorted(cand):
         if not re.fullmatch(r'em/[a-z0-9]+\.drs|dc/native/r[0-9a-f]+/(registry|partner)\.re4nmr', rel):
             continue
+        if re.match(r'dc/native/r1[0-9a-f]{2}/', rel):
+            continue  # village-only rooms (st1, r100-r11f) are pruned from Disc 2 (mkdisc2.py)
         if (d1 / rel).is_file() and (rel not in final or not own.search(rel) or d1re.search(rel)):
             final[rel] = (str(d1 / rel), 'disc1')
 missing = []

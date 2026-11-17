@@ -294,6 +294,7 @@ def main(catalog, recipe_conf, out_dir):
         d2 = ''
         for m in re.finditer(r'^D2_DATA="([^"]*)"', conf, re.M):
             d2 = m.group(1).replace('${D2_DATA}', d2).replace('$D2_DATA', d2)
+            d2 = re.sub(r'\$\{(\w+):\+([^}]*)\}', lambda x: x.group(2) if os.environ.get(x.group(1)) else '', d2)  # srcgeo2 (default off)
         names += [n for n in d2.split(',') if n]
     # PROVENANCE_D3=1 (lane world-ch5 11-02, rr-disc3.sh's Disc 3 catalog only): the recipe's D3_DATA sets (island Disc 3
     # data over the D3_ISLAND_TREE content), last. Empty today: the island tree's files keep their store rows.
