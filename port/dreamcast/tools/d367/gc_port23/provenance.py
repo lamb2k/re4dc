@@ -182,6 +182,9 @@ class Store:
     def __init__(self, name, src, lines):
         self.name, self.src = name, src
         self.root, files = store_files(src)
+        # FOLLOW_BYTES marker file in the store root (lane srcgeo 11-17): this set rewrites whole files that earlier sets and the
+        # stager base already own, so its rows are byte-followed (follow_bytes) even without PROVENANCE_FOLLOW_BYTES=1.
+        self.follow = bool(self.root and (self.root / 'FOLLOW_BYTES').is_file())
         self.tsv = {}
         if 'provenance.tsv' in files:
             for r in csv.DictReader(io.StringIO(files['provenance.tsv'].read_text(errors='replace')), delimiter='\t'):
@@ -250,6 +253,12 @@ def follow_bytes(sets, path, digest):
     return None, False
 
 
+def last_follows(sets):
+    """True when the last non-motion set staging a path carries the FOLLOW_BYTES marker (Store.follow)."""
+    own = [st for st in sets if not MOTION_SET.match(st.name)]
+    return bool(own) and own[-1].follow
+
+
 REVIEWED = Path(__file__).resolve().parent / 'provenance-reviewed.tsv'
 
 
@@ -292,6 +301,8 @@ def main(catalog, recipe_conf, out_dir):
         d3 = ''
         for m in re.finditer(r'^D3_DATA="([^"]*)"', conf, re.M):
             d3 = m.group(1).replace('${D3_DATA}', d3).replace('$D3_DATA', d3)
+            # ${VAR:+text} (lane srcgeo 11-17): a default-off set, in only when the environment sets VAR non-empty
+            d3 = re.sub(r'\$\{(\w+):\+([^}]*)\}', lambda x: x.group(2) if os.environ.get(x.group(1)) else '', d3)
         names += [n for n in d3.split(',') if n]
     stores, overlay, tex_loose, packs, missing_sets = {}, {}, {}, [], []
     grafted, tex_files = {}, []
@@ -412,13 +423,13 @@ def main(catalog, recipe_conf, out_dir):
                 prov, ev = 'gc', 'GameCube motion: clip of GameCube disc file %s, no PS2 motion set stages it' % gc_file(path)
             else:
                 ev = 'motion clip: no PS2 motion set, not on the GameCube disc'
-        elif FOLLOW_BYTES and follow_bytes(overlay.get(path, []), path, r['sha256'])[0] is not None:
+        elif (FOLLOW_BYTES or last_follows(overlay.get(path, []))) and follow_bytes(overlay.get(path, []), path, r['sha256'])[0] is not None:
             st, whole = follow_bytes(overlay[path], path, r['sha256'])
             prov, ev = st.prov(r['sha256'], gc_file(path))
             if whole and r['sha256'] not in st.tsv:
                 whole_file[(st.name, path, prov)] += 1
                 ev += ' (first copy of the file: whole-file credit)'
-        elif not FOLLOW_BYTES and [st for st in overlay.get(path, []) if not MOTION_SET.match(st.name)]:
+        elif not FOLLOW_BYTES and not last_follows(overlay.get(path, [])) and [st for st in overlay.get(path, []) if not MOTION_SET.match(st.name)]:
             st = [st for st in overlay[path] if not MOTION_SET.match(st.name)][-1]
             prov, ev = st.prov(r['sha256'], gc_file(path))
         elif gc_file(path) is not None:

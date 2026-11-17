@@ -2219,6 +2219,15 @@ for _n, _d in (('bossk', os.environ.get('BOSSKD', '/root/re4data/private/bossk-2
                ('wound', os.environ.get('WOUNDD', '/root/re4data/private/wound-20261103'))):
     if os.path.isfile(_d + '/manifest.tsv'):
         DATA[_n] = {_l.strip(): _d + '/' + _l.strip() for _l in open(_d + '/manifest.tsv') if _l.strip()}
+# srcgeo / srcgeo2 (lane srcgeo 11-17; default OFF: recipe D3_SRCGEO / D2_SRCGEO, after every set that writes the same files):
+# the enemy archives with every GameCube BIN member rebuilt from the PS2 enemy model of the same ARC, and the room registry packages whose
+# source rows (SBlob digest + model / part facts) name those rebuilt BINs, so the native cast adopts the rebuilt BIN instead
+# of the GameCube bytes (ps2cast/src_blob_patch.py, srcgeo_store.py, srcgeo/gen3.sh). The cast still draws the package's own
+# geometry. Stores: re4data/private/srcgeo-20261117 (Disc 3), srcgeo2-20261117 (Disc 2); provenance.tsv + FOLLOW_BYTES marker.
+for _n, _d in (('srcgeo', os.environ.get('SRCGEOD', '/root/re4data/private/srcgeo-20261117')),
+               ('srcgeo2', os.environ.get('SRCGEO2D', '/root/re4data/private/srcgeo2-20261117'))):
+    if os.path.isfile(_d + '/manifest.tsv'):
+        DATA[_n] = {_l.strip(): _d + '/' + _l.strip() for _l in open(_d + '/manifest.tsv') if _l.strip()}
 # cgca34 / pmcgca34 (lane world-ch334 11-02, chapters 3-3 / 3-4; DISC 2 ONLY via D2_DATA, after cpic26c): the rooms r20c
 # r20f r206 r20d r20e and the enemy archives em11 em25 em3c from the PS2 version, same generator as cgca26
 # (castlegca34/gen-all.sh): PS2 objects / room BINs / items / debris / pictures / motion / room + enemy banks. Kept GC:
