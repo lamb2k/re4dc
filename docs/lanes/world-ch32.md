@@ -81,3 +81,5 @@ rr-jobs.sh disc2_jobs: d2cg / d2gca jobs for r205 r209 r209s00 r20a r20b (warps 
   is set in r203 (3-1) and cleared by r204 s00 (End of Chapter 3-1), the 3-2 save start. r205 / r209 have no Ashley code; after the
   reunion (Scenario_flg[0] 0x10000000) stage 2 rooms up to r210 use emleon04, which has 0 entries for r205 and r209 (GC and PS2).
   r205a / r209a are artificial: rr-jobs.sh runs them only with RR_ASHLEY_ARTIFICIAL=1.
+- Play-through checklist addition (coordinator 2026-11-17): 4-1 backtrack to r205 / r209 with Ashley following (after r210 is reached,
+  walk back through the castle if the doors allow it; check the rooms load, stay empty, and Ashley's partner package fits heap 4).
