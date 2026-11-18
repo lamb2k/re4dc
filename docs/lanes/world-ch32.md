@@ -77,3 +77,7 @@ rr-jobs.sh disc2_jobs: d2cg / d2gca jobs for r205 r209 r209s00 r20a r20b (warps 
 - Cloak: a mid-fade Novistador is caught on the native arm at 34 s of the r205 cloak-0 fixture (Flycast):
   E:\RE4DC-Lanes\world-ch32\round2\r205-cloak-native-t34.png and r205-cloak-native-t34-crop.png (see-through outline
   behind Leon; fully visible at 38 s). The GC arm has no frame at that time.
+- Ashley in r205 / r209 (2026-11-17, room scripts and ESL data): the real game never puts her there in 3-2. Status_flg[3] 0x04000000
+  is set in r203 (3-1) and cleared by r204 s00 (End of Chapter 3-1), the 3-2 save start. r205 / r209 have no Ashley code; after the
+  reunion (Scenario_flg[0] 0x10000000) stage 2 rooms up to r210 use emleon04, which has 0 entries for r205 and r209 (GC and PS2).
+  r205a / r209a are artificial: rr-jobs.sh runs them only with RR_ASHLEY_ARTIFICIAL=1.

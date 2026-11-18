@@ -44,7 +44,12 @@ disc2_jobs() {
   done
   # chapter 3-2 (lane world-ch32 11-02): r205 r209 r20a r20b + the r209 door-4 s00 trigger (etcdoor), warps in worldch32/warps
   local CW32=$T/port/dreamcast/tools/d367/worldch32/warps
-  for rw in r205:h-r205 r205a:h2-r205-ashley r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b r209a:i3-r209-ashley r20aa:j2-r20a-ashley r20ba:k2-r20b-ashley; do
+  # r205a / r209a (Ashley placed in r205 / r209) are ARTIFICIAL fixtures (lane world-ch32 11-17, from the room scripts and ESL data):
+  # Status_flg[3] 0x04000000 (Ashley following) is set in r203 and cleared by r204 s00 (end of 3-1) before the 3-2 route starts at
+  # r204 -> r205, and r205 / r209 have no Ashley code and no enemy list after the reunion (emleon04: 0 entries in r205 / r209, GC and PS2).
+  # They are not in d2-census-rooms.txt (never judged); default off, RR_ASHLEY_ARTIFICIAL=1 runs them for a heap diagnosis.
+  local ASH32="r205a:h2-r205-ashley r209a:i3-r209-ashley"; [ -n "${RR_ASHLEY_ARTIFICIAL:-}" ] || ASH32=""
+  for rw in r205:h-r205 r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b $ASH32 r20aa:j2-r20a-ashley r20ba:k2-r20b-ashley; do
     r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
