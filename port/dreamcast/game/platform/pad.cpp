@@ -272,6 +272,19 @@ static bool g_disc2Steering;
 // The ordinary fixture fits in one text page. A chapter route can occupy the
 // full padscript extent in the full-play diagnostic image.
 static char g_disc2Text[8192];
+
+// Full-play masters reserve another independent extent for fixture text.
+// The castle replay reads this page only on an explicit page instruction.
+extern "C" char* re4dc_disc2_next_page()
+{
+    file_t f = fs_open("/cd/dc/w11.txt", O_RDONLY);
+    if (f < 0) return nullptr;
+    ssize_t n = fs_read(f, g_disc2Text, sizeof(g_disc2Text)-1);
+    fs_close(f);
+    if (n <= 0) return nullptr;
+    g_disc2Text[n] = 0;
+    return g_disc2Text[0] ? g_disc2Text : nullptr;
+}
 #endif
 static int g_scriptCount = -1;  // -1: not loaded yet
 static u32 g_lastDelivered;
