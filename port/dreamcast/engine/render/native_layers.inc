@@ -7,7 +7,7 @@ static void submit_header(const Scene* s,unsigned index){
 }
 static uint32_t argb4(const float* c){
     uint32_t v=0;
-    for(unsigned i=0;i<4;i++)v=(v<<8)|(unsigned)fmaxf(0,fminf(255,c[(i+3)&3]));
+    for(unsigned i=0;i<4;i++)v=(v<<8)|m1_byte(c[(i+3)&3]);
     return v;
 }
 static void rectangle(float x,float y,float z,float dx,float dy,float angle,const float uv[4],unsigned color){
@@ -30,8 +30,8 @@ void native_sky(NativeScene* s){
         for(unsigned j=0;j<129;j++){
             float d=j<128?(float)(1u<<(j>>4))*(1.f+(j&15)/16.f):256.f;
             float z=far/d;
-            float f=fminf(1,fmaxf(0,(z-env[4])/fmaxf(1,env[5]-env[4])));
-            float ramp=fminf(1,fmaxf(0,(z/far-.78f)/.22f));
+            float f=m1_clampf((z-env[4])/m1_maxf(1,env[5]-env[4]),0,1);
+            float ramp=m1_clampf((z/far-.78f)/.22f,0,1);
             table[j]=f+(1-f)*ramp*ramp*(3-2*ramp);
         }
         pvr_fog_table_color(1,rgba[0]/255.f,rgba[1]/255.f,rgba[2]/255.f);

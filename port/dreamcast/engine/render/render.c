@@ -1,9 +1,11 @@
 #include "replay.h"
+#include "fastm.h"
 #include <sh4zam/shz_xmtrx.h>
 #include <dc/sq.h>
 #include <math.h>
 #include <string.h>
 typedef struct {float x,y,w,u,v; unsigned color;} Corner;
+#ifndef M1_NATIVE /* the M1 recorded-draw path; the native bench keeps only the shared emit and clip helpers */
 
 typedef struct {
     shz_mat4x4_t m;
@@ -115,11 +117,12 @@ static inline Corner transform(const Vertex* v,const Light* light){
     shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v->x,v->y,v->z,1));
     return (Corner){q.x,q.y,q.w,v->u,v->v,light?shade(v,light):v->color};
 }
+#endif
 static inline void advance(pvr_vertex_t **sq){
     sq_flush(*sq);*sq=(pvr_vertex_t*)((uintptr_t)*sq^32);
 }
 static inline void emit(pvr_vertex_t **sq,Corner v,int end){
-    pvr_vertex_t *dst=*sq;float iw=1.f/v.w;
+    pvr_vertex_t *dst=*sq;float iw=m1_rcp_pos(v.w);
     dst->flags=end?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
     dst->x=v.x*iw;dst->y=v.y*iw;dst->z=iw;dst->u=v.u;dst->v=v.v;
     dst->argb=v.color;dst->oargb=0;advance(sq);
@@ -129,7 +132,7 @@ static Corner intersect(Corner a,Corner b,float near){
     Corner out={a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,near,a.u+(b.u-a.u)*t,a.v+(b.v-a.v)*t,0};
     for(unsigned shift=0;shift<32;shift+=8){
         float start=(a.color>>shift)&255,stop=(b.color>>shift)&255;
-        out.color|=(unsigned)(start+(stop-start)*t)<<shift;
+        out.color|=(uint32_t)(int)(start+(stop-start)*t)<<shift;
     }
     return out;
 }
@@ -144,6 +147,7 @@ static void clipped(pvr_vertex_t **sq,Corner a,Corner b,Corner c,float near){
     emit(sq,out[0],0);emit(sq,out[1],0);
     if(n==4){emit(sq,out[3],0);emit(sq,out[2],1);}else emit(sq,out[2],1);
 }
+#ifndef M1_NATIVE
 #if M1_STREAM_STRIPS
 static void stream_clipped(pvr_vertex_t **sq, Transform *x, const Strip *s, const Vertex *v, const Light *light){
     Corner a={0},b={0};
@@ -260,6 +264,7 @@ void draw_shadows(const Picture *pic){
     }
     sq_wait();sq_unlock();pvr_list_finish();
 }
+#endif
 #ifdef M1_NATIVE
 #include "native_draw.inc"
 #include "native_actor.inc"

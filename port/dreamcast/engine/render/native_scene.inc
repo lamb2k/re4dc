@@ -14,7 +14,7 @@ static int validate_patch(const uint32_t* p,unsigned n,unsigned *maximum){
     }
     return 1;
 }
-void native_update(NativeScene* s,unsigned frame){
+__attribute__((optimize("O2"))) void native_update(NativeScene* s,unsigned frame){
     const uint32_t* refs=row(&s->frames,frame);
     for(unsigned k=0;k<8;k++){
         const uint32_t* p=row(s->delta+k,refs[k+1]);
@@ -25,7 +25,7 @@ void native_update(NativeScene* s,unsigned frame){
         s->words[k]=next;
         while(p<end){
             uint32_t* dest=s->state[k]+*p++;unsigned bits=*p++;
-            while(bits){unsigned bit=__builtin_ctz(bits);dest[bit]=*p++;bits&=bits-1;}
+            for(;bits;bits>>=1,dest++)if(bits&1)*dest=*p++;
         }
     }
 }
@@ -91,6 +91,7 @@ static int valid_inputs(NativeScene* s){
 }
 void native_close(NativeScene* s){
     for(unsigned k=0;k<8;k++)free(s->state[k]);
+    native_actor_close(s);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
 int native_open(NativeScene* s,const char* name){
@@ -143,6 +144,7 @@ int native_open(NativeScene* s,const char* name){
     }
     m1_load_status[0]=5;if(!valid_inputs(s))return 0;
     m1_load_status[0]=6;if(!uploads(&s->assets))return 0;
+    m1_load_status[0]=8;if(!native_actor_open(s))return 0;
     m1_load_status[0]=7;
     struct mallinfo heap=mallinfo();
     m1_ram[0]=size;m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;

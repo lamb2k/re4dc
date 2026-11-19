@@ -74,11 +74,16 @@ static int grid_class(const NativeFrustum* f,const uint8_t* r,float* nearest){
     for(unsigned i=0;i<3;i++){float a=u16(r+2*i),b=u16(r+6+2*i);c[i]=(a+b)*.5f;h[i]=(b-a)*.5f;}
     return classify(f,c,h,nearest);
 }
-int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
+void native_world_frustum(const float* camera,NativeFrustum* world){
     const float* p=camera+12;
     float near=p[6]/(p[5]-1),far=camera[25];
-    NativeFrustum view={{{0,0,-1,-near},{0,0,1,far},{p[1],0,p[2]-1,0},{-p[1],0,-p[2]-1,0},{0,p[3],p[4]-1,0},{0,-p[3],-p[4]-1,0}}},world;
-    compose(&world,&view,camera);
+    NativeFrustum view={{{0,0,-1,-near},{0,0,1,far},{p[1],0,p[2]-1,0},{-p[1],0,-p[2]-1,0},{0,p[3],p[4]-1,0},{0,-p[3],-p[4]-1,0}}};
+    compose(world,&view,camera);
+}
+int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
+    const float* p=camera+12;
+    float near=p[6]/(p[5]-1);
+    NativeFrustum world;native_world_frustum(camera,&world);
     const uint8_t* m=w->mesh;
     const uint8_t *meshes=m+u32(m+40),*plod=m+u32(m+88),*clusters=m+u32(m+92),*levels=m+u32(m+96),*meshlets=m+u32(m+48);
     unsigned count=0;

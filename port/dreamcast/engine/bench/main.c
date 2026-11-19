@@ -16,7 +16,8 @@ int __wrap_cdrom_read_toc(cd_toc_t *toc,bool hd){
 
 volatile uint32_t m1_frame __attribute__((aligned(32)));
 volatile uint32_t m1_state[8]; /* scene, picture, still request, ack, framebuffer, stage, completed windows, delay */
-static uint32_t timing[600][8], sorted[600];
+volatile uint32_t m1_timing[600][8];
+static uint32_t sorted[600];
 volatile uint32_t m1_results[2][14];
 volatile uint32_t m1_pmc[2][5];
 char m1_log[2][512];
@@ -27,9 +28,9 @@ static int exists(const char *p){FILE *f=fopen(p,"rb");if(!f)return 0;fclose(f);
 static int cmp(const void *a,const void *b){uint32_t x=*(const uint32_t*)a,y=*(const uint32_t*)b;return (x>y)-(x<y);}
 static void summary(unsigned scene){
     volatile uint32_t *out=m1_results[scene];
-    for(unsigned k=0;k<8;k++){uint64_t sum=0;for(unsigned i=0;i<600;i++)sum+=timing[i][k];out[k]=sum/600;}
+    for(unsigned k=0;k<8;k++){uint64_t sum=0;for(unsigned i=0;i<600;i++)sum+=m1_timing[i][k];out[k]=sum/600;}
     unsigned over20=0,over26=0,over33=0;
-    for(unsigned i=0;i<600;i++){unsigned v=timing[i][7];sorted[i]=v;over20+=v>20000;over26+=v>26000;over33+=v>33333;}
+    for(unsigned i=0;i<600;i++){unsigned v=m1_timing[i][7];sorted[i]=v;over20+=v>20000;over26+=v>26000;over33+=v>33333;}
     qsort(sorted,600,4,cmp);out[8]=sorted[593];out[9]=sorted[599];out[10]=over20;out[11]=over26;out[12]=over33;out[13]=600;
     snprintf(m1_log[scene],512,
              "M1 %s n=600 ms world %.3f actor %.3f PT %.3f TR %.3f FX %.3f HUD %.3f wait %.3f mean %.3f p99 %.3f worst %.3f over20/26/33 %lu/%lu/%lu\n"
@@ -74,7 +75,7 @@ int main(void){
         for(unsigned i=0;i<600;i++){
             if(i%120==0){perf_cntr_stop(PRFC1);perf_cntr_clear(PRFC1);perf_cntr_start(PRFC1,(perf_cntr_event_t)events[i/120],PMCR_COUNT_CPU_CYCLES);}
             m1_frame++;m1_state[1]=i+1;uint64_t begin=timer_us_gettime64();
-            pvr_wait_ready();uint64_t now=timer_us_gettime64();timing[i][6]=now-begin;
+            pvr_wait_ready();uint64_t now=timer_us_gettime64();m1_timing[i][6]=now-begin;
 #ifdef M1_NATIVE
             native_update(&native,i%300);
             const float* camera=(const float*)native.state[0];
@@ -101,10 +102,10 @@ int main(void){
 #else
                 if(k==1)native_shadows(&native);
 #endif
-                timing[i][k]=timer_us_gettime64()-t;
+                m1_timing[i][k]=timer_us_gettime64()-t;
             }
             if(delay){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<5000){}}
-            pvr_scene_finish();timing[i][7]=timer_us_gettime64()-now;
+            pvr_scene_finish();m1_timing[i][7]=timer_us_gettime64()-now;
             if(i%120==119)m1_pmc[scene][i/120]=perf_cntr_count(PRFC1)/120;
             if(i%120==119)printf("PMC: ev=%02x per_drawn=%llu drawn=120\n",events[i/120],(unsigned long long)perf_cntr_count(PRFC1)/120);
             if(stills && (

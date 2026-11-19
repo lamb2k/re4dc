@@ -15,3 +15,4 @@ typedef struct { unsigned placement,part,meshlet,header,near_class,groups; } Nat
 typedef struct { float p[6][4]; } NativeFrustum;
 int native_world_open(NativeWorld*,const void*,size_t);
 int native_world_select(const NativeWorld*,const float*,float,NativePiece*,unsigned);
+void native_world_frustum(const float* camera,NativeFrustum* world);

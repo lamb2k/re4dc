@@ -1,19 +1,37 @@
 OUT ?= build
 SHZ := ../../game/third_party/sh4zam/include
-FLAGS := -std=gnu11 -O2 -Wall -fno-strict-aliasing -I../render -I$(SHZ)
+# Engine image build (E0): fast math with the SH-4 sine/cosine and reciprocal-root instructions, no debug
+# asserts, link-time optimisation; size-optimised by default, the hot render files speed-optimised.
+# -Wdouble-promotion lists every float promoted to double (a slow path under -m4-single).
+COMMON := -std=gnu11 -Wall -Wdouble-promotion -fno-strict-aliasing -ffast-math -mfsca -mfsrra -DNDEBUG \
+          -flto -fipa-pta -I../render -I$(SHZ)
+SIZE := -Os
+HOT := -O2
+DEFS := -DRE4DC_ACTOR_LIGHT_N16=1
 .PHONY: all packs
-all: packs $(OUT)/m1.elf
+all: native
 packs:
 	@test -s "$(PRIVATE_PACK_DIR)/cross-m1.pak" -a -s "$(PRIVATE_PACK_DIR)/hayfork-m1.pak" || { echo "M1 missing private packs in PRIVATE_PACK_DIR"; exit 1; }
 $(OUT):
 	mkdir -p $@
 $(OUT)/m1.elf: main.c ../../game/platform/avk_sh4.S ../render/render.c ../render/replay_pack.c ../render/replay.h ../render/indexed.inc | $(OUT)
-	kos-cc $(FLAGS) $(EXTRA) -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
+	kos-cc -std=gnu11 -O2 -Wall -fno-strict-aliasing -I../render -I$(SHZ) $(EXTRA) $(DEFS) $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
 
-.PHONY: native
+.PHONY: native native-packs
 native: native-packs $(OUT)/native.elf
-.PHONY: native-packs
 native-packs:
 	@test -s "$(PRIVATE_PACK_DIR)/cross.pak" -a -s "$(PRIVATE_PACK_DIR)/hayfork.pak" || { echo "M1 missing native packs in PRIVATE_PACK_DIR"; exit 1; }
-$(OUT)/native.elf: main.c ../render/render.c ../render/replay_pack.c ../render/native_world.c ../../game/platform/avk_sh4.S ../render/native_scene.inc ../render/native_draw.inc ../render/native_actor.inc ../render/native_layers.inc ../render/native_world.h ../render/native_scene.h | $(OUT)
-	kos-cc $(FLAGS) $(EXTRA) -DM1_NATIVE -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
+RENDER_DEPS := $(wildcard ../render/*.inc ../render/*.h)
+$(OUT)/main.o: main.c $(RENDER_DEPS) | $(OUT)
+	kos-cc $(COMMON) $(SIZE) $(EXTRA) $(DEFS) -DM1_NATIVE -c $< -o $@
+$(OUT)/replay_pack.o: ../render/replay_pack.c $(RENDER_DEPS) | $(OUT)
+	kos-cc $(COMMON) $(SIZE) $(EXTRA) $(DEFS) -DM1_NATIVE -c $< -o $@
+$(OUT)/render.o: ../render/render.c $(RENDER_DEPS) | $(OUT)
+	kos-cc $(COMMON) $(HOT) $(EXTRA) $(DEFS) -DM1_NATIVE -c $< -o $@
+$(OUT)/native_world.o: ../render/native_world.c $(RENDER_DEPS) | $(OUT)
+	kos-cc $(COMMON) $(HOT) $(EXTRA) $(DEFS) -DM1_NATIVE -c $< -o $@
+$(OUT)/avk_sh4.o: ../../game/platform/avk_sh4.S | $(OUT)
+	kos-cc -c $< -o $@
+NATIVE_OBJS := $(addprefix $(OUT)/,main.o replay_pack.o render.o native_world.o avk_sh4.o)
+$(OUT)/native.elf: $(NATIVE_OBJS)
+	kos-cc $(COMMON) $(SIZE) $(EXTRA) $^ -Wl,--wrap=cdrom_read_toc -o $@ -lm
