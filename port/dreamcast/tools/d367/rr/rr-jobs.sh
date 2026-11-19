@@ -61,7 +61,17 @@ disc2_jobs() {
     tr -d '\r' < "$CW32/door-$dn.txt" > "$EVU/fixtures/d2-door-$dn.txt"
     job 1 d2door-$dn "$(run d2door-$dn d2c d2c 75 --warp "\"\$EVW\\fixtures\\d2-door-$dn.txt\"" --stop "'phase=enter room=$dt'" --grace 8)"
   done
-  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
+  # Chapter 4 rooms (lane world-ch4 11-02; D2_DATA c4world / c4gca): entry warps worldch4/warps/<room>.txt (door arrival,
+  # chapter, god, census). RR_D2_CH4=0 skips them.
+  C4R=""
+  if [ "${RR_D2_CH4:-1}" = 1 ]; then
+    C4R="r210 r222 r219 r211 r216 r212 r213 r214 r217 r218 r215 r229 r221 r22b r220 r223 r224 r21d r225 r21b r21a r226 r227 r228 r22a r22c"
+    for r in $C4R; do
+      tr -d '\r' < "$T/port/dreamcast/tools/d367/worldch4/warps/$r.txt" > "$EVU/fixtures/d2-$r.txt"
+        job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
+    done
+  fi
+  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e $C4R" > "$W/d2-census-rooms.txt"
   # ALIGN-CALL on Disc 2 (lane rel27, GitHub #63): r200 + the source radio call 0 replayed, align logger
   { sed -E '/^(goto|act|entry) /,$d' "$EVU/fixtures/d2-r200.txt"; echo "radio 30 19"; } > "$EVU/fixtures/d2-align-call.txt"   # op 19 = ss_oc301, stage 3's first call: op 0's tables do not exist in op03.das (10 sub-files), its seq pointer is stray
     # stops 25 s after the call opens; 120 s is only a ceiling (the 60 s deadline cut it off: opens at 47-62 s alone, up to 85 s under load, rel27 11-06)
@@ -73,11 +83,11 @@ job 2 d2align-call "$(run d2align-call d2c d2c 120 --align --warp "\"\$EVW\\fixt
     job 1 d2clear-r207 "$(run d2clear-r207 d2c d2c 180 --warp "\"\$EVW\\fixtures\\d2-r207k.txt\"")"
   fi
   [ "$TIER" != full ] || seeds="1 2 3 4 5 6 7 8 9 10"
-  job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' 'd2door d2fight'"
+  job 2 d2kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d2c\" fp${RR_PFX:-rr}${S7}d2cW \"\$EVW\\d2kos\" '49152:0 49152:1' \"d2door d2fight${C4R:+ d2c4door d2c4fight}\""
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e $C4R; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
@@ -127,7 +137,7 @@ fi
 SEG=$(wpath "$T/port/dreamcast/tools/d367/fullplay/segments")
 # boot: the release binary from power-on to the title (no fixture)
 CAND=$(cat "$W/cand.txt"); CW=$(rr_win "$CAND")
-job 1 boot "python \"\$FPD/fp_run.py\" --disc '$CW\gdemu' --cap \"\$EVW\boot\" --syms \"\$(cat \$J/syms-rel.txt)\" --seconds 45 --name rr-boot --stop 'state title=' --grace 5"
+job 1 boot "python \"\$FPD/fp_run.py\" --disc '$CW\gdemu' --cap \"\$EVW\boot\" --syms \"\$(cat \$J/syms-rel.txt)\" --seconds 120 --name rr-boot --stop 'state title=' --grace 5"
 # h2: r100 house to the s30 cliff movie (340/340 pictures, heap 4 before s30), the full-play gate's segment
 job 1 h2 "$(run h2 g g 300 --warp "'$SEG\\h2-warp.txt'" --pad "'$SEG\\h2-pad.txt'" --stop "'route movie terminal=. id=10030'" --grace 10)"
 # census

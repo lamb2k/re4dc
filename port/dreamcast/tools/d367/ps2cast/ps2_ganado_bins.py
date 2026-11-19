@@ -138,6 +138,30 @@ def build(a):
             if ok:
                 break
         if not ok:
+            # (lane world-ch4 11-02) no window holds it: the reduction ladder ps2_objects uses for room objects (mesh_lod
+            # at LOD_LADDER scales) until the rebuild fits its own slot (em24 0x19 was +32 B, em25 0x31 +64 B). Only
+            # members that used to stay GameCube reach this, so every earlier output is unchanged.
+            i = arc - 4
+            start, end = P.offs[i], P.end(i)
+            g, p = gc[arc][1], ps2[arc][1]
+            for sc in po.LOD_LADDER[1:]:
+                po.LOD_SCALE = sc
+                try:
+                    n2, s2 = po.rebuild(g, p)
+                except Exception:  # noqa
+                    continue
+                finally:
+                    po.LOD_SCALE = 1.0
+                l2 = po.to_le(n2, 'ps2%x' % arc)
+                if len(l2) <= end - start:
+                    P.body[start:end] = l2 + bytes(end - start - len(l2))
+                    done[arc] = l2
+                    row.update(out_tris=s2['out_tris'], out_verts=s2['out_vertices'], out_bytes=len(l2),
+                               out_sha256=sha(l2), lod_scale=sc)
+                    rep['converted']['%#x' % arc] = row
+                    ok = True
+                    break
+        if not ok:
             rep['left']['%#x' % arc] = 'rebuilt BIN %d B > slot %d B and no window of <= 9 entries holds it' % (len(le), row['slot'])
     why = pa.adopt_check(bytes(P.body))
     if why:

@@ -2131,6 +2131,10 @@ ASHPART32D = os.environ.get('ASHPART32D', '/root/re4data/private/ashpart32-20261
 if os.path.isdir(ASHPART32D + '/dc/native'):
     DATA['ashpart32'] = {os.path.relpath(os.path.join(_d, _f), ASHPART32D): os.path.join(_d, _f)
                          for _d, _, _fs in os.walk(ASHPART32D + '/dc/native') for _f in _fs if _f == 'partner.re4nmr'}
+# res4 (lane world-ch4 11-04, DISC 2 ONLY, after res34): res34's resident.bin plus r21a r221 r228 r22a (vram/resident/castle18 lists).
+RES4D = os.environ.get('RES4D', '/root/re4data/private/res4b-20261117')   # res4b 11-17: res4 minus 3 absent HUD pictures (r21b r22b r224)
+if os.path.isfile(RES4D + '/RECIPE.txt'):
+    DATA['res4'] = {'dc/resident.bin': RES4D + '/dc/resident.bin'}
 # trans34d2 (lane world-ch334 11-04, DISC 2 ONLY via D2_DATA; CH-FIXES-CARRY row 10): R4TC sidecars of the 3-3 / 3-4 rooms
 # that passed the tier 2 look gate (sidecars off vs on, frozen-frame stills, tr_pixdiff) and dc/native/trclass.idx = the
 # trans17 index + those rooms. TRANS34D2_ROOMS (default all five) limits the rooms for a gate arm.
@@ -2140,6 +2144,15 @@ if os.path.isfile(TRANS34D2D + '/trclass.idx'):
     for _r in sorted(os.listdir(TRANS34D2D)):
         if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)):
             DATA['trans34d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS34D2D, _r)
+# trans4d2 (lane world-ch4 11-06, DISC 2 ONLY, after trans34d2; CH-FIXES-CARRY row 10): R4TC sidecars of the chapter 4 rooms
+# with no retargeted part under TRANS_POLICY=3 + dc/native/trclass.idx = trans34d2's index + those rooms.
+TRANS4D2D = os.environ.get('TRANS4D2D', '/root/re4data/private/trans4d2-20261106')
+if os.path.isfile(TRANS4D2D + '/trclass.idx'):
+    DATA['trans4d2'] = {'dc/native/trclass.idx': TRANS4D2D + '/trclass.idx'}
+    for _r in sorted(os.listdir(TRANS4D2D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r):
+            DATA['trans4d2']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS4D2D, _r)
+
 # call66 / call66d2 (lane radio66 11-12, GitHub #66 bug 3): bgm/aica_str.dat with the radio call voices the route runs never
 # requested ("stream sbb=... not in aica_str.dat, silent"), as PS2 ADX (comm1_NN / comm2_NN) in AICA ADPCM, appended so every
 # earlier entry and data byte is kept (tools/str_append.py). call66 (Disc 1, after ps2snd24): + 1:146 1:147 (r108 / r118),
@@ -2164,6 +2177,60 @@ for _n, _d in (('cgca27', os.environ.get('CGCA27D', '/root/re4data/private/cgca2
             DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
         if os.path.isdir(_d + '/dc/mot'):
             DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+# c4gca / pmc4gca (lane world-ch4 11-02, user 11-02 "remainder of disc 2 build today"; DISC 2 ONLY via D2_DATA, after the
+# castle-gca-26 sets): the chapter 4 rooms (4-1..4-4: r210 .. r22a, 24 rooms; the castle content tree had none of their
+# st2 archives) and the chapter 4 enemy archives, PS2 objects / items / pictures / motion / PCM over the GameCube-prepared
+# base archives, the castlegca26 pipeline per room (worldch4/gen-all.sh, inputs worldch4/env.sh). Same layout as
+# cgca26 / pmcgca26. Stores: /root/re4data/private/{c4gca,pmc4gca}-20261102 (RECIPE.txt, SHA256SUMS.txt).
+for _n, _env, _dflt in (('c4gca', 'C4GCAD', 'c4gca-20261102'), ('pmc4gca', 'PMC4GCAD', 'pmc4gca-20261102')):
+    _d = os.environ.get(_env, '/root/re4data/private/' + _dflt)
+    if os.path.isfile(_d + '/RECIPE.txt'):
+        DATA[_n] = {'tex': _d + '/tex'} if os.path.isdir(_d + '/tex') else {}
+        # c4gca tex: c4gtex-20261103 (11-03) = c4gca's keys minus 13 that cgca26 / cgca27 stage with other bytes
+        _gt = os.environ.get('C4GTEXD', '/root/re4data/private/c4gtex-20261103')
+        if _n == 'c4gca' and os.path.isfile(_gt + '/RECIPE.txt'):
+            DATA[_n]['tex'] = _gt + '/tex'
+        for _f in sorted(Path(_d, 'st2').glob('*.dar')) + sorted(Path(_d, 'st2').glob('*.arc')) + sorted(Path(_d, 'em').glob('*.drs')):
+            DATA[_n]['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+        if os.path.isdir(_d + '/dc/mot'):
+            DATA[_n].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (_d, _k) for _k in sorted(os.listdir(_d + '/dc/mot'))})
+# c4mov (same lane 11-02, DISC 2 ONLY via D2_DATA; program ROUTE_MOVIES_CH4B=1): the PS2 movies of r213 s00, r22b s00
+# and r22a s00 (convert_route_movies.py), so Disc 2 needs no GameCube evd for them. Store /root/re4data/private/c4mov-20261102.
+C4MOVD = os.environ.get('C4MOVD', '/root/re4data/private/c4mov-20261102')
+if os.path.isfile(C4MOVD + '/RECIPE.txt'):
+    DATA['c4mov'] = {'dc/movie/' + _k: '%s/dc/movie/%s' % (C4MOVD, _k) for _k in sorted(os.listdir(C4MOVD + '/dc/movie'))}
+# d2noarc (same lane 11-02, DISC 2 ONLY via D2_DATA, capacity): takes every castle room's st2/rNNN.arc off Disc 2. The game
+# opens only st2/rNNN.dar (src/game/read.cpp ReadAreaData: "never fall back to ... an unqualified .arc sidecar"); the .arc
+# (the .dar's type-0 payload copy) is read by tools only. Remove-only: no store. Disc 1 keeps its .arc files.
+DATA['d2noarc'] = {'remove': ['st2/r2%02x.arc' % _i for _i in range(0x00, 0x10)]}   # r200..r20f: the castle content's .arc files
+# c4world (same lane 11-02, DISC 2 ONLY via D2_DATA): the chapter 4 PS2 room worlds (ps2lib/world/<room>: ps2-world.re4mesh /
+# r4pw / ids, UV guard .002, tr4, cutout224) for r210 .. r22c and their loose picture keys; the castle content tree had none.
+C4WORLDD = os.environ.get('C4WORLDD', '/root/re4data/private/c4world-20261102')
+if os.path.isfile(C4WORLDD + '/RECIPE.txt'):
+    # tex: c4wtex-20261103 (11-03) = c4world's keys minus the 8 the castle tree carries as smaller palettized copies
+    C4WTEXD = os.environ.get('C4WTEXD', '/root/re4data/private/c4wtex-20261103')
+    DATA['c4world'] = {'tex': (C4WTEXD if os.path.isfile(C4WTEXD + '/RECIPE.txt') else C4WORLDD) + '/tex'}
+    for _f in sorted(Path(C4WORLDD, 'dc', 'native').glob('*/ps2-world.*')):
+        DATA['c4world']['dc/native/%s/%s' % (_f.parent.name, _f.name)] = str(_f)
+
+# c4anc (lane world-ch4 11-04; DISC 2 ONLY via D2_DATA): 34 chapter 4 room ancillary picture keys the Disc 2 census runs
+# opened and could not find (TEXCHK 'open failed'), hard links of Codex cxfix-replay-20261018 output/<room>/ancillary*/tex.
+C4ANCD = os.environ.get('C4ANCD', '/root/re4data/private/c4anc-20261106c')
+if os.path.isfile(C4ANCD + '/RECIPE.txt'):
+    DATA['c4anc'] = {'tex': C4ANCD + '/tex'}
+
+# c4twins (lane world-ch4 11-02, coordinator decision; DISC 2 ONLY via D2_DATA): r224 El Gigante twins PS2 registry
+# package from Codex boss18-twins-approved-20261019 (receipt I-012; 235,776 B) + its 2 loose atlas keys. Runtime PS2_GIGANTE.
+C4TWINSD = os.environ.get('C4TWINSD', '/root/re4data/private/c4twins-20261102')
+if os.path.isfile(C4TWINSD + '/RECIPE.txt'):
+    DATA['c4twins'] = {'tex': C4TWINSD + '/tex', 'dc/native/r224/registry.re4nmr': C4TWINSD + '/dc/native/r224/registry.re4nmr'}
+# em2dres32 (lane world-ch32 11-03, r205 stall fix "Option A"; DISC 2 ONLY, after cw32 / pmcw32 when listed on D2_DATA):
+# em/em2d.drs with every motion resident (textures-only body 2,542,976 B, ch3found16 contract em2d-native-textures-v1) +
+# PS2 em2d.dat BIN geometry / motion, replacing the streamed-motion cache (castle18-em2d-motion) r205 stalls on.
+# Store: re4-assets-private/em2dres32-20261103.
+EM2DRES32D = os.environ.get('EM2DRES32D', '/root/re4data/private/em2dres32-20261103')
+if os.path.isfile(EM2DRES32D + '/RECIPE.txt'):
+    DATA['em2dres32'] = {'em/em2d.drs': EM2DRES32D + '/em/em2d.drs'}
 # cw32 / pmcw32 (lane world-ch32 11-02, chapter 3-2 on Disc 2; DISC 2 ONLY via D2_DATA, after cpic26c): the 3-2 rooms r205
 # r209 r20a r20b and enemy archives em2d em23 em18 em22 from the PS2 version (worldch32/gen-all.sh, the castlegca26
 # method): PS2 objects, items, debris, pictures (loose keys), motion and PCM; pmcw32 = the PS2 motion store of the same
@@ -2300,6 +2367,22 @@ if os.path.isfile(PMCGCA34D + '/RECIPE.txt'):
     for _f in sorted(Path(PMCGCA34D, 'st2').glob('*.dar')) + sorted(Path(PMCGCA34D, 'st2').glob('*.arc')) + sorted(Path(PMCGCA34D, 'em').glob('*.drs')):
         DATA['pmcgca34']['%s/%s' % (_f.parent.name, _f.name)] = str(_f)
     DATA['pmcgca34'].update({'dc/mot/' + _k: '%s/dc/mot/%s' % (PMCGCA34D, _k) for _k in sorted(os.listdir(PMCGCA34D + '/dc/mot'))})
+# cgca32 / cpic32b (lane world-ch31 11-03, chapter 3-2 GC-ASSET for r20a / r20b; DISC 2 ONLY via D2_DATA, after cpic27):
+# cgca32 = pmcw32's st2/r205 r20a r20b .dar with the etc models the PS2 deleted from every ETM emptied (et1400 torch,
+# et0c00), r209's unchanged, each with its .arc (the catalog reads the .arc first), and Ashley's PS2 partner package for
+# r20a / r20b (ps2cast/ashley_reroom.py from the castle r201 one; PS2_ASHLEY_ROOMS). cpic32b = 5 tex.pak keys as PS2
+# pixels (em_eff_pics.py). Generator tools/d367/gca32/gen.sh. Stores: re4-assets-private/cgca32-20261103, cpic32b-20261103.
+CGCA32D = os.environ.get('CGCA32D', '/root/re4data/private/cgca32-20261103')
+if os.path.isfile(CGCA32D + '/RECIPE.txt'):
+    DATA['cgca32'] = {}
+    for _f in sorted(Path(CGCA32D, 'st2').glob('*.dar')) + sorted(Path(CGCA32D, 'st2').glob('*.arc')):
+        DATA['cgca32']['st2/' + _f.name] = str(_f)
+    for _f in sorted(Path(CGCA32D, 'dc', 'native').glob('r*/partner.re4nmr')):
+        DATA['cgca32']['dc/native/%s/partner.re4nmr' % _f.parent.name] = str(_f)
+CPIC32BD = os.environ.get('CPIC32BD', '/root/re4data/private/cpic32b-20261103')
+if os.path.isdir(CPIC32BD):
+    DATA['cpic32b'] = {'dc/tex.pak': CPIC32BD + '/dc/tex.pak'}
+    PAK_DERIVED['cpic32b'] = CPIC32BD + '/pak-derived.json'
 
 # sky27 (lane sky27 11-02, user "Yes fix the sky"; needs SKY_PLAY=1, no effect without it): dc/native/rXXX/ps2-sky.r4sk,
 # each room's PS2 sky / backdrop rows baked into one panorama for the PVR background plane (tools/ps2_sky_bake.py from
@@ -2314,6 +2397,30 @@ if os.path.isdir(SKY27D):
     DATA['sky27'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky
                      if r.startswith('r1') or r == 'r200'}
     DATA['sky27c'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (SKY27D, r) for r in _sky if r.startswith('r2')}
+
+# c4sky (lane world-ch4 11-03, CH-FIXES-CARRY row 9; DISC 2 ONLY via D2_DATA; needs SKY_PLAY=1): the chapter 4 outdoor rooms'
+# PS2 sky panoramas (ps2_sky_bake.py v2 on the sky27 extract, shrunk to 1024 x 128 like sky27h: 34,816 B VRAM a room).
+# 17 rooms with sky rows; the others keep the clear colour. Store: re4-assets-private/c4sky-20261103.
+C4SKYD = os.environ.get('C4SKYD', '/root/re4data/private/c4sky-20261103')
+if os.path.isdir(C4SKYD):
+    DATA['c4sky'] = {'dc/native/%s/ps2-sky.r4sk' % r: '%s/%s/ps2-sky.r4sk' % (C4SKYD, r) for r in sorted(os.listdir(C4SKYD))
+                     if os.path.isfile('%s/%s/ps2-sky.r4sk' % (C4SKYD, r))}
+
+# d2esl (lane world-ch4 11-03, coordinator; DISC 2 ONLY via D2_DATA): little-endian etc/emleon05..09.esl. The castle tree's
+# copies (castle_fixture.py takes emleon03..09) are raw GameCube big-endian, so readEmList byte-swapped every room field
+# and EmSetFromList refused every chapter 4 list entry (emleon05). tools/le_mirror.py of those five; same bytes as
+# island-esl-20261103 (Disc 3). Store: re4-assets-private/d2esl-20261103.
+D2ESLD = os.environ.get('D2ESLD', '/root/re4data/private/d2esl-20261103')
+if os.path.isfile(D2ESLD + '/RECIPE.txt'):
+    DATA['d2esl'] = {'etc/emleon0%d.esl' % n: '%s/etc/emleon0%d.esl' % (D2ESLD, n) for n in range(5, 10)}
+
+# d2pakprune (lane world-ch4 11-03, coordinator: free Disc 2 sectors by a proven prune; DISC 2 ONLY via D2_DATA): 3,917
+# tex.pak keys no Disc 2 file can request (texpak_live.py over the combined Disc 2 tree, minus every key seen in a Disc 2 run
+# log, on a castle resident list or from an effect store), dropped from the composed pack by castle_fixture.py 'pakdrop'.
+# 55,839 sectors. Store: re4-assets-private/d2pakprune-20261103 (RECIPE.txt has the proof).
+D2PAKPRUNED = os.environ.get('D2PAKPRUNED', '/root/re4data/private/d2pakprune-20261103')
+if os.path.isfile(D2PAKPRUNED + '/RECIPE.txt'):
+    DATA['d2pakprune'] = {'pakdrop': D2PAKPRUNED + '/pakdrop.txt'}
 
 if __name__ == '__main__':
     main()

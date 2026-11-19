@@ -821,12 +821,15 @@ Key room_pin_key{};
 // own size (dcf01) carries header flags bit 29: the whole picture is the source image's UV 0..1, scaled. It is never
 // padded, so repeat wrap is safe and the UV scale is 1 (cover = the package texture size).
 #define RE4DC_PS2SZ(pkg) ((((pkg).header().flags>>29)&1U)!=0U)
-#else
-#define RE4DC_PS2SZ(pkg) false
-#endif
 #define RE4DC_WRAP_OK(pkg) (RE4DC_WRAP_SAFE(pkg) || RE4DC_PS2SZ(pkg))
 #define RE4DC_CW(pkg,iw) (RE4DC_PS2SZ(pkg)?unsigned((pkg).textures()[0].width):unsigned(RE4DC_COVER_W(pkg,iw)))
 #define RE4DC_CH(pkg,ih) (RE4DC_PS2SZ(pkg)?unsigned((pkg).textures()[0].height):unsigned(RE4DC_COVER_H(pkg,ih)))
+#else
+#define RE4DC_PS2SZ(pkg) false
+#define RE4DC_WRAP_OK(pkg) RE4DC_WRAP_SAFE(pkg)
+#define RE4DC_CW(pkg,iw) RE4DC_COVER_W(pkg,iw)
+#define RE4DC_CH(pkg,ih) RE4DC_COVER_H(pkg,ih)
+#endif
 #if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
 extern "C" void re4dc_ovl_watch(const char* where);
 #define OVLW(x) re4dc_ovl_watch(x)

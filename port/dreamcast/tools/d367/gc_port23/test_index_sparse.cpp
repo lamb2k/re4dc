@@ -91,6 +91,7 @@ int main(int argc, char** argv) {
     make_blob(make_rows(7901, 1)); check_all("synthetic-7901");
     make_blob(make_rows(16320, 2)); check_all("synthetic-16320 (64-row blocks)");
     make_blob(make_rows(CatalogRowLimit, 2)); check_all("synthetic-65472 (256-row blocks)");
+    make_blob(make_rows(32704, 2)); check_all("synthetic-32704 (64-row blocks)");
     make_blob(make_rows(1, 3)); check_all("synthetic-1");
     make_blob(make_rows(33, 4)); check_all("synthetic-33");
     // tamper: same verdicts as before (pin mismatch / disorder refused)

@@ -266,6 +266,14 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                 if (info->shapeFlags & 8) {
                     v *= 1.37f;
                 }
+#if defined(RE4DC_SHAPE_TABLE_GUARD) && RE4DC_SHAPE_TABLE_GUARD
+                // SHAPE_TABLE_GUARD (lane world-ch4 11-06): calls ss_oc205 / ss_oc206 animate channels 9 and 10 of a partner
+                // head whose table has 9 rows, so these "entries" are the first delta rows. Read big-endian on the GameCube
+                // their count is negative and the loop never runs; little-endian it is 65535 (0xFFFF) wild writes (r229, r214).
+                if (w->idx[i] >= ((const u32*) tbl)[-1]) {
+                    v = 0.0f;
+                }
+#endif
                 if (v != 0.0f) {
                     ShapeEntry* e = (ShapeEntry*) (w->idx[i] * 8 + (u32) tbl);
                     s16* src = (s16*) (e->ofs + (u32) tbl);

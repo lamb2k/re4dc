@@ -1,0 +1,15 @@
+# Disc 2 KOS chapter 4 fight scene (lane world-ch4 11-02): ch4found16's dec-r226 kill rig (statue hall, em11 Zealots,
+# PS2_CH4_ENEMY B3 / B5 sends) without a squeeze line
+name w4-r226-fight
+room 0x226
+chapter 13
+pos -3507 5000 21665
+ang 3.0630
+inv default
+rsf 0x226 9
+god
+alivelog 300
+goto 300 0 5000 -1000
+kill 0x11 360 0x226
+killrep 14 90
+dump

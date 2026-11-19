@@ -887,6 +887,11 @@ $(error ROUTE_CH41 must be 0 or 1 and needs ROUTE_CH32=1 WORLD_ROOM_MODULES=1)
 endif
 MODULES += em1c st2_3 em2c:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em2c
+# + st2_4 (118: r22c, the castle shooting gallery hub) and em3e (94: its targets, cEmMark, room overlay) (lane world-ch4
+#   11-04: r22c HALTed "module: id 118 not in the image"). Lint: em3e value-init fixed by assetpipe fix_module.
+MODULES += st2_4 em3e
+# em3e is in the image and st2_4 a room overlay: em3e reaches R22cHitMark / R22cHitEffect through pointers R22cInit sets.
+$(OBJDIR)/mod/em3e/src/em3e/em3e.o $(OBJDIR)/mod/st2_4/src/st2/r22c.o: GAME_CPPFLAGS += -DRE4DC_R22C_HOOKS=1
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH41=1
 # The PS2 world registry predates the r222 / r22b packages: ROUTE_CH41 lists both (native_static.cpp).
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH41=1
@@ -2431,6 +2436,18 @@ endif
 ROUTE_MOVIE_GAME_CH4 = $(OBJDIR)/mod/st2_2/src/st2/r212.o $(OBJDIR)/mod/st2_2/src/st2/r214.o $(OBJDIR)/mod/st2_2/src/st2/r215.o     $(OBJDIR)/mod/st2_3/src/st2/r227.o $(OBJDIR)/mod/st2_3/src/st2/r228.o
 $(ROUTE_MOVIE_GAME_CH4): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH4=1
 endif
+# ROUTE_MOVIES_CH4B=1 (lane world-ch4 2026-11-02; default 0: no effect; needs ROUTE_MOVIES_CH4=1): the three chapter 4
+# in-engine events the PS2 also plays as movies, r213 s00 (the Novistador hall), r22b s00 (end of 4-1) and r22a s00 (end
+# of 4-4), presented by their PS2 movies (BIO4MOV.AFS r213s00 / r22bs00 / r22as00.sfd -> convert_route_movies.py) like
+# ROUTE_MOVIES_CH4's: no GameCube evd on Disc 2 (no-GameCube-assets rule); a missing movie falls back to the evd.
+ROUTE_MOVIES_CH4B ?= 0
+ifneq ($(ROUTE_MOVIES_CH4B),0)
+ifneq ($(ROUTE_MOVIES_CH4B)$(ROUTE_MOVIES_CH4),11)
+$(error ROUTE_MOVIES_CH4B must be 0 or 1 and needs ROUTE_MOVIES_CH4=1)
+endif
+ROUTE_MOVIE_GAME_CH4B = $(OBJDIR)/mod/st2_2/src/st2/r213.o $(OBJDIR)/mod/st2_3/src/st2/r22a.o $(OBJDIR)/mod/st2_3/src/st2/r22b.o
+$(ROUTE_MOVIE_GAME_CH4B): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH4B=1
+endif
 # ROUTE_MOVIE_DIAG=1: test builds log the movie loop's per-picture timing and the failing step.
 #   2/3/4 are test-only proofs of the route movie VRAM claim (platform/native_ui.cpp; 0 and 1 compile
 #   them out): 2 = the movie claim's normal pass releases nothing, so only its fallback (end this
@@ -2545,7 +2562,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_ST3) $(ROUTE_MOVIE_GAME_CH4)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_ST3) $(ROUTE_MOVIE_GAME_CH4) $(ROUTE_MOVIE_GAME_CH4B)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h
@@ -2894,7 +2911,7 @@ ifneq ($(STAGE_OVL),0)
 ifneq ($(STAGE_OVL),1)
 $(error STAGE_OVL must be 0 or 1)
 endif
-STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st4_0 st3_0 st3_1 st3_2 st3_3,$(MODULES)))
+STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st2_4 st4_0 st3_0 st3_1 st3_2 st3_3,$(MODULES)))
 MODULES := $(filter-out $(STAGE_OVL_NAMES),$(MODULES)) $(addsuffix :ovl,$(STAGE_OVL_NAMES))
 export RE4DC_LINK_OVERLAY += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
 export RE4DC_OVL_HELPERS_SAFE += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
@@ -2904,7 +2921,7 @@ $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STAGE_OVL=1
 GAME_SRCS += $(ROOT)/src/Tools/db_toolbase.cpp
 $(TARGET): $(OBJDIR)/src/Tools/db_toolbase.o
 endif
-STAGE_OVL_AUDITED_MODULES = $(if $(filter 1,$(STAGE_OVL)),st1_0:ovl st1_1:ovl st1_2:ovl st1_3:ovl st2_0:ovl st2_1:ovl st2_2:ovl st2_3:ovl st4_0:ovl)
+STAGE_OVL_AUDITED_MODULES = $(if $(filter 1,$(STAGE_OVL)),st1_0:ovl st1_1:ovl st1_2:ovl st1_3:ovl st2_0:ovl st2_1:ovl st2_2:ovl st2_3:ovl st4_0:ovl $(if $(filter 1,$(ROUTE_CH41)),st2_4:ovl))
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 # CH23 em3b/em35: guarded default-initialization and sparse scans reviewed; stage st2_0 already audited.
@@ -2917,7 +2934,7 @@ CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
 # CH32 (castle lane): em2d / em25 / em19 / em3c after assets.sh discover --fix (em2d 4 + em3c 3 slot-math sites,
 # value-init in all four); discover reports no other lint for r205 r20a r20c r20f r20d r20e.
 CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3c:ovl)
-CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
+CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 st2_4 em2c:ovl em3e)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
 CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl $(if $(filter 1,$(ROUTE_FINAL)),em31:ovl pl0e:ovl))

@@ -1,0 +1,10 @@
+name w4-r226
+# lane world-ch4: r226 entry from r225 (door 1), chapter 4-4
+room 0x226
+chapter 13
+god
+pos -3507 5000 21665
+ang 3.0632
+alivelog 300
+census 400
+dump
