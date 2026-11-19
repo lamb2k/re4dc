@@ -81,7 +81,7 @@ M1 numbers (one table, 2026-11-19):
 
 | Step | Bar |
 |---|---|
-| Console entry | Modelled drawing at the cross at or under 10 ms (half of the 20 ms target), like for like with the game: same scope, one logic tick a picture, no one-off loads. After at most three model rounds the bench goes to the console anyway |
+| Console entry | Modelled drawing at the cross at or under 10 ms (half of the 20 ms target), absolute. The bench takes logic outputs only and does all drawing work itself. After at most three model rounds the bench goes to the console anyway |
 | M1 pass | Console drawing at the cross at or under 20 ms per picture (p99), hay-fork reported |
 | M1 stop | Console drawing at the cross above 26 ms after two genuinely different designs; the owner then chooses between content cuts and a lower floor |
 
@@ -108,6 +108,11 @@ The fixed benchmark: village cross, bell fight, farm entry, farm hay-fork view, 
 Knob-off identity and STRICT stay available as debugging tools. They gate only hotfixes on the frozen release line.
 
 ## 6. What stops now
+
+Owner (11-19): "I don't want to pile on improvement for old work - ensure we are following the guidance and lessons learned to go native."
+- **No work to improve, re-measure or re-profile the old drawing path.** The new path is judged against the budget in absolute numbers, never as a percentage of the old game. The one console reading of today's game is the M0 core session (off arms), which sets the budget split.
+- **No old-switch A/B on console.** The lab disc's backlog arms are not run.
+- **Disc 2 on the old line:** only the play-through tool and the list of logic blockers carry over. Rendering, texture, memory and asset-row issues there are recorded, not fixed; the rooms are re-baked in M5.
 
 - New default-off speed switches in the legacy image.
 - Speed lanes judged only on the model, and chains of model-only follow-ups.

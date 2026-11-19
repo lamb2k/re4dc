@@ -33,6 +33,13 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - **A new measuring tool needs a control** that makes it read wrong on purpose, before its numbers are used.
 - **Speed is the game's own tick and picture counters,** never the display's refresh.
 
+- **Go native.** The new path is measured against the budget, not against the old game. No lane re-times, re-profiles or improves the old drawing path. The lessons from our other ports are part of every brief:
+  - the console decides, and models under-read it by 1.3 to 2x;
+  - remove repeated work first, with change flags per picture;
+  - no disc reads in play;
+  - the engine image links no original game code;
+  - every check ships with an input that fails it.
+
 ## 4. Gates
 
 - Gates are per milestone and are listed in the plan, section 5. They run once, on the final image.
