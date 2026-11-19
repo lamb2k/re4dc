@@ -61,7 +61,6 @@ static int uploads(Scene* s) {
         if(bytes(&s->header,i)!=36)return 0;
         uint32_t *h=row(&s->header,i);
         if(h[0]>=s->texture.n)return 0;
-        unsigned cull=(h[2]>>27)&3; if(cull)h[2]=(h[2]&~(3u<<27))|((cull+1)<<27);
         h[4]|=((uintptr_t)m1_textures[h[0]]&0x7fffff)>>3 | palette_bits[h[0]];
     }
     return 1;
@@ -70,6 +69,39 @@ void open_picture(const Scene *s,unsigned i,Picture* f){
     const unsigned *p=row(&s->frame,i);
     f->camera=(const float*)p;p+=25;
     for(int j=0;j<6;j++){ f->count[j]=*p++;f->ids[j]=p;p+=f->count[j];}
+}
+static int bones_valid(const Scene *s){
+    /* Geometry and pose rows are shared across pictures. Check bone indices
+       once per unique geometry, then check each binding against its palette. */
+    unsigned *maximum=calloc(s->geometry.n,sizeof(*maximum));
+    if(!maximum)return 0;
+    for(unsigned i=0;i<s->geometry.n;i++){
+        const uint8_t *p=row(&s->geometry,i),*end=p+bytes(&s->geometry,i);
+        while(p<end){
+            const Strip *strip=(const Strip*)p;
+            const Vertex *v=(const Vertex*)(strip+1);
+            for(unsigned j=0;j<strip->n;j++){
+                if(v[j].bone>maximum[i])maximum[i]=v[j].bone;
+                if(strip->bone!=65535 && strip->bone!=v[j].bone){free(maximum);return 0;}
+            }
+            p=(const uint8_t*)(v+strip->n);
+        }
+    }
+    int ok=1;
+    for(unsigned i=0;ok && i<s->draw.n;i++){
+        const unsigned *d=row(&s->draw,i);
+        unsigned n=bytes(&s->pose,d[2])/48;
+        if((n<=1 && maximum[d[1]]!=0) || (n>1 && maximum[d[1]]>=n-1))ok=0;
+        if(n>1 && bytes(&s->light,d[3])){
+            const uint8_t *p=row(&s->geometry,d[1]),*end=p+bytes(&s->geometry,d[1]);
+            while(p<end && ok){
+                const Strip *strip=(const Strip*)p;const Vertex *v=(const Vertex*)(strip+1);
+                for(unsigned j=0;j<strip->n;j++)if((v[j].color&255)>=n-1){ok=0;break;}
+                p=(const uint8_t*)(v+strip->n);
+            }
+        }
+    }
+    free(maximum);return ok;
 }
 static int validate(Scene* s){
     if(s->frame.n!=300)return 0;
@@ -95,7 +127,7 @@ static int validate(Scene* s){
             left-=n;while(n--)if(*p++>=s->draw.n)return 0;}
         if(left)return 0;
     }
-    return 1;
+    return bones_valid(s);
 }
 int open_scene(Scene* s,const char* path){
     m1_state[1]=1;

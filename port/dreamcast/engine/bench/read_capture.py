@@ -6,6 +6,8 @@ from PIL import Image
 root = Path(__file__).resolve().parents[4]
 sys.path.insert(0,str(root/"port/dreamcast/tools/flycast-harness"))
 from read_pcs import Guest
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"bake"))
+from geometry import actor_strips
 ev,room,symbol=Path(sys.argv[1]),int(sys.argv[2],16),int(sys.argv[3],16)
 deadline=time.monotonic()+600
 while not ((ev/"flycast.pid").exists() and (ev/"flycast.log").exists()):
@@ -55,10 +57,17 @@ def actors(data):
             model,info,part,pos,uv,serial,pals,stream_size,flags=struct.unpack_from("<9I",item)
             stream,norm,pc,nc,ps,ns,lod,crc,fnv,cull,blend=struct.unpack_from("<11I",item,84)
             blob=ram(stream,stream_size)
-            # FE v3 compact records contain the UV coordinates inline (bf16 or s16).
-            # Preserve the source UV table prefix used by these parts separately when present.
             ids=dict(stream=save_asset(blob),position=save_asset(ram(pos,pc*ps)),
                      normal=save_asset(ram(norm,nc*ns)) if norm and nc else None)
+            # Coarse role descriptors alias info and part and submit unsigned UVs.
+            # Native ModelData owns the signed/unsigned flag for its pTex.
+            signed=False
+            if info!=part:
+                data=struct.unpack("<I",ram(info+12,4))[0]
+                if data and struct.unpack("<I",ram(data+16,4))[0]==uv:
+                    signed=bool(struct.unpack("<I",ram(data+32,4))[0]&0x80000000)
+            last=max((ti for strip in actor_strips(blob,lod,signed) for _,_,ti in strip),default=-1)
+            ids["uv_signed" if signed else "uv_unsigned"]=save_asset(ram(uv,4*(last+1)) if last>=0 else b"")
             records.append(ids)
         i+=8+n
     return records

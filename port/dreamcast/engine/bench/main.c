@@ -15,6 +15,9 @@ volatile uint32_t m1_frame __attribute__((aligned(32)));
 volatile uint32_t m1_state[8]; /* scene, picture, still request, ack, framebuffer, stage, completed windows, delay */
 static uint32_t timing[600][8], sorted[600];
 volatile uint32_t m1_results[2][14];
+volatile uint32_t m1_pmc[2][5];
+char m1_log[2][512];
+
 static const char *names[]={"CROSS","FARM"};
 static const unsigned events[]={0x25,0x24,0x04,0x05,0x08};
 static int exists(const char *p){FILE *f=fopen(p,"rb");if(!f)return 0;fclose(f);return 1;}
@@ -25,18 +28,24 @@ static void summary(unsigned scene){
     unsigned over20=0,over26=0,over33=0;
     for(unsigned i=0;i<600;i++){unsigned v=timing[i][7];sorted[i]=v;over20+=v>20000;over26+=v>26000;over33+=v>33333;}
     qsort(sorted,600,4,cmp);out[8]=sorted[593];out[9]=sorted[599];out[10]=over20;out[11]=over26;out[12]=over33;out[13]=600;
-    printf("M1 %s us world %lu actor %lu PT %lu TR %lu FX %lu HUD %lu wait %lu mean %lu p99 %lu worst %lu over20/26/33 %lu/%lu/%lu\n",names[scene],out[0],out[1],out[2],out[3],out[4],out[5],out[6],out[7],out[8],out[9],out[10],out[11],out[12]);
+    snprintf(m1_log[scene],512,
+             "M1 %s n=600 ms world %.3f actor %.3f PT %.3f TR %.3f FX %.3f HUD %.3f wait %.3f mean %.3f p99 %.3f worst %.3f over20/26/33 %lu/%lu/%lu\n"
+             "PMC_ROW per picture ev25 %lu ev24 %lu ev04 %lu ev05 %lu ev08 %lu\n",
+             names[scene],out[0]/1000.,out[1]/1000.,out[2]/1000.,out[3]/1000.,out[4]/1000.,out[5]/1000.,
+             out[6]/1000.,out[7]/1000.,out[8]/1000.,out[9]/1000.,out[10],out[11],out[12],
+             m1_pmc[scene][0],m1_pmc[scene][1],m1_pmc[scene][2],m1_pmc[scene][3],m1_pmc[scene][4]);
+    puts(m1_log[scene]);
 }
 static void display(unsigned scene){
     volatile uint32_t *v=m1_results[scene];char line[75];vid_waitvbl();
     unsigned offset=(*(volatile uint32_t*)0xa05f8050)&0x7ffffc;
     uint16_t *fb=(uint16_t*)(0xa5000000u+offset);
-    snprintf(line,sizeof(line),"%s / 600 pictures  us",names[scene]);bfont_draw_str(fb+640*16+16,640,1,line);
+    snprintf(line,sizeof(line),"%s / 600 pictures  ms",names[scene]);bfont_draw_str(fb+640*16+16,640,1,line);
     for(unsigned i=0;i<4;i++){
         static const char *const labels[]={"world/actor","PT/TR","FX/HUD","wait/mean"};
-        snprintf(line,sizeof(line),"%s %lu / %lu",labels[i],v[2*i],v[2*i+1]);bfont_draw_str(fb+640*(44+28*i)+16,640,1,line);
+        snprintf(line,sizeof(line),"%s %.3f / %.3f",labels[i],v[2*i]/1000.,v[2*i+1]/1000.);bfont_draw_str(fb+640*(44+28*i)+16,640,1,line);
     }
-    snprintf(line,sizeof(line),"p99/worst %lu / %lu   over 20ms %lu",v[8],v[9],v[10]);bfont_draw_str(fb+640*160+16,640,1,line);
+    snprintf(line,sizeof(line),"p99/worst %.2f / %.2f   over 20ms %lu",v[8]/1000.,v[9]/1000.,v[10]);bfont_draw_str(fb+640*160+16,640,1,line);
     thd_sleep(1000);
 }
 int main(void){
@@ -44,8 +53,9 @@ int main(void){
     m1_state[5]=1;if(pvr_init(&params)<0||pvr_set_vbuf_doublebuf(true)<0){m1_state[5]=90;return 1;}
     pvr_set_zclip(0.0f);
     int stills=exists("/cd/STILLS"),delay=exists("/cd/DELAY5");m1_state[7]=delay;
+    unsigned farm_first=exists("/cd/FARM1");
     for(unsigned pass=0;;pass++){
-        unsigned scene=pass%2;Scene s={0};m1_state[0]=scene;m1_state[5]=2;
+        unsigned scene=(pass+farm_first)%2;Scene s={0};m1_state[0]=scene;m1_state[5]=2;
         if(!open_scene(&s,scene?"/cd/FARM.PAK":"/cd/CROSS.PAK")){m1_state[5]=91;for(;;)thd_sleep(100);}
         m1_state[5]=3;
         for(unsigned i=0;i<600;i++){
@@ -61,6 +71,7 @@ int main(void){
             }
             if(delay){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<5000){}}
             pvr_scene_finish();timing[i][7]=timer_us_gettime64()-now;
+            if(i%120==119)m1_pmc[scene][i/120]=perf_cntr_count(PRFC1)/120;
             if(i%120==119)printf("PMC: ev=%02x per_drawn=%llu drawn=120\n",events[i/120],(unsigned long long)perf_cntr_count(PRFC1)/120);
             if(stills&&(i==0||i==149||i==299)){
                 pvr_wait_render_done();vid_waitvbl();vid_waitvbl();
@@ -71,6 +82,7 @@ int main(void){
         pvr_wait_ready();pvr_wait_render_done();summary(scene);m1_state[6]++;display(scene);close_scene(&s);
     }
 }
+
 
 
 

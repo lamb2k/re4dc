@@ -25,7 +25,7 @@ class Baker:
         self.lookup={(a,b):(c,d) for a,b,c,d in struct.iter_unpack("<4I",self.texpack[idx:idx+16*count])}
         self.textures=Table();self.headers=Table();self.geometry=Table();self.poses=Table();self.lights=Table();self.draws=Table()
         self.wcache={};self.acache={};self.frames=[]
-        self.ram=next(scene.glob("resource-ram-*.raw")).read_bytes()
+        self.ram=None
         self.assets={}
         sky=(disc/f"native/r{room:x}/ps2-sky.r4sk").read_bytes()
         w,h,n,self.top,self.bottom=unpack("HHI2f",sky,8)
@@ -35,6 +35,7 @@ class Baker:
         self.sky=self.textures.add(pack("8s10I",b"RE4DCTX",2,48,96,1,48,144,n,zlib.crc32(sky[at:]),1,0)+desc+sky[at:])
         self.skyhdr=self.headers.add(pack("9I",self.sky,0x8084000a,0xc2000000,0x2080a440|((w.bit_length()-4)<<3)|(h.bit_length()-4),0x48000000,0,0,0,0))
     def source(self,addr,n):
+        if self.ram is None:self.ram=next(self.path.glob("resource-ram-*.raw")).read_bytes()
         at=(addr&0x1fffffff)-0xc000000
         if at<0 or at+n>len(self.ram): raise ValueError(f"unavailable source range {addr:x}+{n}")
         return self.ram[at:at+n]
@@ -48,7 +49,7 @@ class Baker:
         li=[0,0,4,2,2,2][phase]
         src,dst=blend or ((1,0) if li==0 else (4,5))
         cmd=0x8084000a|(li<<24)
-        pm1=((7 if phase==5 else 6)<<29)|(cull<<27)|(1<<25)|(int(li==2)<<26)
+        pm1=((7 if phase==5 else 6)<<29)|((cull+bool(cull))<<27)|(1<<25)|(int(li==2)<<26)
         pm2=(src<<29)|(dst<<26)|(2<<22)|(int(li!=0)<<20)|(1<<13)|(4<<8)|((3 if li else 1)<<6)|((w.bit_length()-4)<<3)|(h.bit_length()-4)
         fmtbits=(1,0,2,5,5,6)[fmt]<<27 | ((payload==2)<<30) | (bool(flags&4)<<31)
         return self.headers.add(pack("9I",tid,cmd,pm1,pm2,fmtbits,0,0,0,0))
@@ -68,11 +69,15 @@ class Baker:
         model,info,part,pos,uv,serial,pals,size,flags=unpack("9I",d)
         stream,norm,pc,nc,ps,ns,lod,crc,fnv,cull,blend=unpack("11I",d,84)
         q,nq,du,dv=unpack("4f",d,128)
-        data=unpack("I",self.source(info+12,4))[0]
-        model_tex=unpack("I",self.source(data+16,4))[0]
+        side=ids.get("uv_signed") or ids.get("uv_unsigned")
+        if side:
+            signed="uv_signed" in ids
+        else:
+            data=unpack("I",self.source(info+12,4))[0]
+            model_tex=unpack("I",self.source(data+16,4))[0]
         # Coarse replacement views may point at a different geometry/UV stream
         # than the source model; the submitted part's UV pointer is authoritative.
-        signed=bool(unpack("I",self.source(data+32,4))[0]&0x80000000) if model_tex==uv else False
+            signed=bool(unpack("I",self.source(data+32,4))[0]&0x80000000) if model_tex==uv else False
         cache=(tuple(ids.values()),lod,uv,signed,q,nq,du,dv,bool(pals))
         if cache not in self.acache:
             blob=self.asset(ids["stream"]); posdata=self.asset(ids["position"]); normal=self.asset(ids["normal"]) if ids["normal"] else b""
@@ -83,10 +88,13 @@ class Baker:
                     vi &= 16383; ni &= 16383
                     x,y,z=unpack("3h",posdata,vi*ps)
                     bone=unpack("H",posdata,vi*ps+6)[0] if pals and ps==8 else 0
-                    a,b=unpack("2h" if signed else "2H",self.source(uv+ti*4,4))
+                    a,b=unpack("2h" if signed else "2H",self.asset(side),ti*4) if side else unpack("2h" if signed else "2H",self.source(uv+ti*4,4))
                     scale=256 if signed else 32768
                     nx,ny,nz=unpack("3b" if ns==4 else "3h",normal,ni*ns) if normal else (0,0,0)
-                    verts.append((x*q,y*q,z*q,a/scale+du,b/scale+dv,0xffffffff,bone if bone<pals else 0,
+                    normal_bone=0
+                    if pals and ns in (4,8) and normal:
+                        normal_bone=unpack("B" if ns==4 else "H",normal,ni*ns+ns- (1 if ns==4 else 2))[0]
+                    verts.append((x*q,y*q,z*q,a/scale+du,b/scale+dv,0xffffff00 | (normal_bone if normal_bone<pals else 0),bone if bone<pals else 0,
                                   *(max(-32767,min(32767,round(v*nq*32767))) for v in (nx,ny,nz))))
                 strips.append(verts)
             self.acache[cache]=self.geo(strips,True)

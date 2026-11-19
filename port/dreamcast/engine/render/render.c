@@ -4,16 +4,35 @@
 #include <math.h>
 #include <string.h>
 typedef struct {float x,y,w,u,v; unsigned color;} Corner;
-static Corner clip_cache[1024];
+
 typedef struct {
     shz_mat4x4_t m;
     const float *pose,*camera,*bone_rows;
     unsigned bones,current;
     float near;
 } Transform;
+/* Design B retains the last two corners of the current strip to end or
+   restart it at a near-plane crossing. Reuse composed bone transforms until
+   the pose changes. Design A instead expands mixed strips through triangles. */
+#ifndef M1_STREAM_STRIPS
+#define M1_STREAM_STRIPS 1
+#endif
+#if M1_STREAM_STRIPS
+static shz_mat4x4_t pose_matrix[256] __attribute__((aligned(32)));
+static unsigned matrix_stamp[256],generation;
+#endif
+#if !M1_STREAM_STRIPS
+static Corner clip_cache[1024];
+#endif
 static void matrix(Transform *x,unsigned bone) {
     if(x->current==bone)return;
-    x->current=bone;const float *a=x->pose,*p=x->camera+12,*v=p+7;
+    x->current=bone;
+#if M1_STREAM_STRIPS
+    if(bone<256 && matrix_stamp[bone]==generation){
+        x->m=pose_matrix[bone];shz_xmtrx_load_4x4(&x->m);return;
+    }
+#endif
+    const float *a=x->pose,*p=x->camera+12,*v=p+7;
     float cx=640*(v[0]+.5f*v[2])/v[2],cy=480*(v[1]+.5f*v[3])/v[3];
     const float *b=x->bones?x->bone_rows+12*bone:NULL;
     for(unsigned c=0;c<4;c++){
@@ -28,33 +47,69 @@ static void matrix(Transform *x,unsigned bone) {
         x->m.elem[c*4+1]=-240*p[3]*ey+(-240*p[4]-cy)*ez;
         x->m.elem[c*4+2]=ez;x->m.elem[c*4+3]=-ez;
     }
+#if M1_STREAM_STRIPS
+    if(bone<256){pose_matrix[bone]=x->m;matrix_stamp[bone]=generation;}
+#endif
     shz_xmtrx_load_4x4(&x->m);
 }
-typedef struct {uint32_t ambient;float gain[3];unsigned enabled;} Light;
-static Light lighting(const uint8_t *p,unsigned n){
-    Light l={0xffffff,{0,0,0},0};
-    if(!n)return l;
-    const unsigned char *ambient=p+464,*mat=p+468;
+typedef struct { float dir[3],rgb[3]; } Lamp;
+typedef struct {
+    const float *bones;
+    unsigned n;
+    float ambient[3],limit[3];
+    Lamp lamp[8];
+} Light;
+static Light lighting(const uint8_t *p,unsigned bytes,const Transform *x){
+    Light out={0};
+    if(!bytes)return out;
+    out.bones=x->bones?x->bone_rows:NULL;
     const unsigned *flags=(const unsigned*)(p+472);
     const float scale=*(const float*)(p+496);
-    unsigned rgb[3];
     for(unsigned c=0;c<3;c++){
-        float value=(flags[1]?ambient[c]/255.f:1.f)*mat[c]*scale;
-        rgb[c]=(unsigned)fminf(255,value);
-        for(unsigned i=0;flags[1] && i<8;i++)
-            if(flags[0]&(1u<<i))l.gain[c]+=p[52*i+48+c]*(mat[c]/255.f)*scale;
+        out.limit[c]=p[468+c]*scale;
+        out.ambient[c]=out.limit[c]*(flags[1]?p[464+c]/255.f:1.f);
     }
-    l.ambient=(rgb[0]<<16)|(rgb[1]<<8)|rgb[2];l.enabled=flags[1] && flags[0];return l;
+    const float *normal=(const float*)(p+416);
+    if(normal[3]>1e29f)normal=x->pose;
+    for(unsigned i=0;flags[1] && i<8;i++){
+        if(!(flags[0]&(1u<<i)))continue;
+        const float *l=(const float*)(p+52*i);
+        float dx=l[0]-x->pose[3],dy=l[1]-x->pose[7],dz=l[2]-x->pose[11];
+        float d2=dx*dx+dy*dy+dz*dz,d=sqrtf(d2),inv=d>0?1.f/d:0;
+        dx*=inv;dy*=inv;dz*=inv;
+        float gain=1;
+        if(flags[5]==1){
+            float cos=fmaxf(0,dx*l[3]+dy*l[4]+dz*l[5]);
+            float den=l[9]+l[10]*d+l[11]*d2;
+            gain=den>0?fmaxf(0,l[6]+cos*(l[7]+cos*l[8]))/den:0;
+        }
+        if(gain<=0)continue;
+        Lamp *lamp=&out.lamp[out.n];
+        for(unsigned c=0;c<3;c++){
+            lamp->dir[c]=(normal[c]*dx+normal[4+c]*dy+normal[8+c]*dz)/32767.f;
+            lamp->rgb[c]=out.limit[c]*p[52*i+48+c]*(gain/255.f);
+            if(!flags[4])out.ambient[c]+=lamp->rgb[c];
+        }
+        if(flags[4])out.n++;
+    }
+    return out;
 }
 static inline unsigned shade(const Vertex *v,const Light* l){
-    unsigned rgb=l->ambient;
-    if(l->enabled){
-        float d=fmaxf(0,v->normal[1]/32767.f);
-        unsigned r=fminf(255,(rgb>>16)+d*l->gain[0]);
-        unsigned g=fminf(255,((rgb>>8)&255)+d*l->gain[1]);
-        unsigned b=fminf(255,(rgb&255)+d*l->gain[2]);rgb=(r<<16)|(g<<8)|b;
+    float rgb[3]={l->ambient[0],l->ambient[1],l->ambient[2]};
+    float nx=v->normal[0],ny=v->normal[1],nz=v->normal[2];
+    if(l->n && l->bones){
+        const float *b=l->bones+12*(v->color&255U);
+        float a=b[0]*nx+b[3]*ny+b[6]*nz,c=b[1]*nx+b[4]*ny+b[7]*nz;
+        nz=b[2]*nx+b[5]*ny+b[8]*nz;nx=a;ny=c;
     }
-    return (v->color&0xff000000)|rgb;
+    for(unsigned i=0;i<l->n;i++){
+        const Lamp *p=&l->lamp[i];
+        float dot=fmaxf(0,nx*p->dir[0]+ny*p->dir[1]+nz*p->dir[2]);
+        for(unsigned c=0;c<3;c++)rgb[c]+=dot*p->rgb[c];
+    }
+    unsigned packed=0xff;
+    for(unsigned c=0;c<3;c++)packed=(packed<<8)|(unsigned)fminf(255,fminf(l->limit[c],rgb[c]));
+    return packed;
 }
 static inline Corner transform(const Vertex* v,const Light* light){
     shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v->x,v->y,v->z,1));
@@ -89,6 +144,33 @@ static void clipped(pvr_vertex_t **sq,Corner a,Corner b,Corner c,float near){
     emit(sq,out[0],0);emit(sq,out[1],0);
     if(n==4){emit(sq,out[3],0);emit(sq,out[2],1);}else emit(sq,out[2],1);
 }
+#if M1_STREAM_STRIPS
+static void stream_clipped(pvr_vertex_t **sq, Transform *x, const Strip *s, const Vertex *v, const Light *light){
+    Corner a={0},b={0};
+    int open=0;
+    for(unsigned i=0;i<s->n;i++){
+        __builtin_prefetch(v+i+2);
+        if(s->bone==65535)matrix(x,v[i].bone);
+        Corner c=transform(v+i,light);
+        if(i>=2){
+            int inside=a.w>=x->near && b.w>=x->near && c.w>=x->near;
+            if(inside){
+                if(!open){
+                    if(i&1)emit(sq,a,0);
+                    emit(sq,a,0);
+                }
+                emit(sq,b,0);open=1;
+            }else{
+                if(open){emit(sq,b,1);open=0;}
+                if(a.w>=x->near || b.w>=x->near || c.w>=x->near)
+                    clipped(sq,i&1?b:a,i&1?a:b,c,x->near);
+            }
+        }
+        a=b;b=c;
+    }
+    if(open)emit(sq,b,1);
+}
+#endif
 static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned size,const Light* light,int screen){
     const uint8_t* end=begin+size;
     while(begin<end){
@@ -117,6 +199,9 @@ static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned 
                 emit(sq,transform(v+i,light),i+1==s->n);
             }
         }else{
+#if M1_STREAM_STRIPS
+            stream_clipped(sq,x,s,v,light);
+#else
             for(unsigned i=0;i<s->n;i++){
                 if(s->bone==65535)matrix(x,v[i].bone);
                 clip_cache[i]=transform(v+i,light);
@@ -125,6 +210,7 @@ static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned 
                 unsigned a=i-2,b=i-1;
                 clipped(sq,clip_cache[i&1?b:a],clip_cache[i&1?a:b],clip_cache[i],x->near);
             }
+#endif
         }
     }
 }
@@ -140,10 +226,13 @@ void render_phase(const Scene* scene,const Picture* pic,unsigned phase){
             memcpy(sq,hdr,32);advance(&sq);
         }
         if(last_pose!=draw[2]){
+            #if M1_STREAM_STRIPS
+            ++generation;
+#endif
             last_pose=draw[2];x.pose=row(&scene->pose,last_pose);x.bone_rows=x.pose+12;
             x.bones=bytes(&scene->pose,last_pose)/48;x.bones-=x.bones!=0;x.current=~0u;
         }
-        unsigned lbytes=bytes(&scene->light,draw[3]);Light light=lighting(row(&scene->light,draw[3]),lbytes);
+        unsigned lbytes=bytes(&scene->light,draw[3]);Light light=lighting(row(&scene->light,draw[3]),lbytes,&x);
         strips(&sq,&x,row(&scene->geometry,draw[1]),bytes(&scene->geometry,draw[1]),lbytes?&light:NULL,!bytes(&scene->pose,draw[2]));
     }
     sq_wait();sq_unlock();
