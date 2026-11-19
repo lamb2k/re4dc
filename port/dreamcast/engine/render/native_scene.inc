@@ -16,7 +16,7 @@ static int validate_patch(const uint32_t* p,unsigned n,unsigned *maximum){
 }
 __attribute__((optimize("O2"))) void native_update(NativeScene* s,unsigned frame){
     const uint32_t* refs=row(&s->frames,frame);
-    for(unsigned k=0;k<8;k++){
+    for(unsigned k=0;k<9;k++){
         const uint32_t* p=row(s->delta+k,refs[k+1]);
         const uint32_t* end=p+bytes(s->delta+k,refs[k+1])/4;
         unsigned next=*p++;
@@ -34,9 +34,78 @@ volatile uint32_t m1_room_serial;
 volatile uint32_t m1_load_status[8];
 static uint8_t* resident_pack;
 static unsigned resident_capacity;
-static unsigned file_size(const char* path){
+volatile uint32_t m1_texture_bytes[M1_TEXTURE_LIMIT];   /* VRAM bytes of each uploaded texture (memory map) */
+/* ---- pack load (eng-e0b): no texture copy stays in main RAM ----
+   NAT3 file: 20-byte header, root table (15 sections, 68 bytes), section 0 = textures, sections 1-14 = the rest.
+   The texture section is streamed into VRAM one texture at a time through the start of the resident buffer;
+   then the rest of the file is read into the resident buffer behind a copy of the root table whose texture
+   section is empty (same offsets modulo 32 as the original layout). The CRC covers the whole file as before and
+   is computed while reading. The resident buffer is sized once for the larger room's non-texture part. */
+static uint32_t crc_lut[256];
+static uint32_t crc_update(uint32_t c,const uint8_t* p,unsigned n){
+    if(!crc_lut[1])for(unsigned i=0;i<256;i++){unsigned v=i;for(int k=0;k<8;k++)v=(v>>1)^((0-(v&1))&0xedb88320);crc_lut[i]=v;}
+    c=~c;while(n--)c=(c>>8)^crc_lut[(c^*p++)&255];return ~c;
+}
+static int read_crc(file_t f,uint8_t* dst,unsigned n,uint32_t* crc){
+    unsigned got=0;
+    while(got<n){int r=fs_read(f,dst+got,n-got>65536?65536:n-got);if(r<=0)return 0;got+=r;}
+    if(crc)*crc=crc_update(*crc,dst,n);
+    return 1;
+}
+typedef struct { uint32_t head[5],root[17],size,texsize,tn,maxblob,rest; } PackInfo;
+static uint32_t tex_offsets[M1_TEXTURE_LIMIT+2];
+/* Header, root table and texture table of a pack (f positioned at 0); leaves f after the texture table. */
+static int pack_info(file_t f,PackInfo* pi,uint32_t* crc){
+    pi->size=fs_total(f);
+    if(pi->size<20+68+8||!read_crc(f,(uint8_t*)pi->head,20,NULL)||memcmp(pi->head,"NAT3",4)||pi->head[1]!=4||pi->head[3]!=pi->size-20)return 0;
+    if(!read_crc(f,(uint8_t*)pi->root,68,crc)||pi->root[0]!=15||pi->root[1]!=0)return 0;
+    for(unsigned k=1;k<=15;k++)if(pi->root[k+1]<pi->root[k]||pi->root[k+1]%4)return 0;
+    if(pi->root[16]!=pi->size-88)return 0;
+    pi->texsize=pi->root[2];
+    uint32_t tn;if(pi->texsize<8||!read_crc(f,(uint8_t*)&tn,4,crc)||tn>M1_TEXTURE_LIMIT||8+4*tn>pi->texsize)return 0;
+    pi->tn=tn;
+    if(!read_crc(f,(uint8_t*)tex_offsets,4*(tn+1),crc)||tex_offsets[0]!=0||tex_offsets[tn]!=pi->texsize-8-4*tn)return 0;
+    pi->maxblob=0;
+    for(unsigned i=0;i<tn;i++){if(tex_offsets[i+1]<tex_offsets[i]||tex_offsets[i+1]%4)return 0;
+        unsigned b=tex_offsets[i+1]-tex_offsets[i];if(b>pi->maxblob)pi->maxblob=b;}
+    pi->rest=pi->size-88-pi->texsize;
+    return 1;
+}
+static unsigned pack_need(const char* path){
     file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
-    unsigned bytes=fs_total(f);fs_close(f);return bytes;
+    PackInfo pi;int ok=pack_info(f,&pi,NULL);fs_close(f);if(!ok)return 0;
+    unsigned need=31+68+pi.rest;return need>pi.maxblob?need:pi.maxblob;
+}
+static unsigned tex_palette_bits[M1_TEXTURE_LIMIT];
+/* One texture blob (the format of uploads()) into VRAM. */
+static int upload_one(unsigned i,const uint32_t* p,unsigned size){
+    if(size<144 || memcmp(p,"RE4DCTX",7) || p[5]!=1 || p[6]>size-96)return 0;
+    const uint32_t *t=p+p[6]/4+16;
+    unsigned fmt=t[2],at=t[3],len=t[4];
+    if(at>size || len>size-at || len==0)return 0;
+    const uint8_t *data=(const uint8_t*)p+at;
+    tex_palette_bits[i]=0;
+    if(fmt==4){
+        unsigned tail=t[5]&8?64:32;
+        if(len<=tail)return 0;
+        len-=tail;
+        uint32_t colors[16];
+        for(unsigned j=0;j<16;j++){
+            if(tail==64) memcpy(colors+j,data+len+4*j,4);
+            else {uint16_t c;memcpy(&c,data+len+2*j,2);
+                colors[j]=((c>>12)*17u<<24)|(((c>>8)&15)*17u<<16)|(((c>>4)&15)*17u<<8)|((c&15)*17u);}
+        }
+        unsigned bank=0;
+        while(bank<banks && memcmp(colors,palette[bank],64))bank++;
+        if(bank==64)return 0;
+        if(bank==banks){memcpy(palette[banks++],colors,64);for(unsigned j=0;j<16;j++)pvr_set_pal_entry(bank*16+j,colors[j]);}
+        tex_palette_bits[i]=PVR_TXRFMT_4BPP_PAL(bank);
+    } else if(fmt>2)return 0;
+    m1_texture_bytes[i]=(len+31)&~31u;
+    m1_textures[i]=pvr_mem_malloc(m1_texture_bytes[i]);
+    if(!m1_textures[i])return 0;
+    pvr_txr_load(data,m1_textures[i],len);
+    return 1;
 }
 static int valid_model(const Table* tab,unsigned id,unsigned headers){
     const uint32_t* h=row(tab,id);unsigned size=bytes(tab,id);
@@ -69,15 +138,15 @@ static int valid_model(const Table* tab,unsigned id,unsigned headers){
 static int valid_inputs(NativeScene* s){
     for(unsigned frame=0;frame<300;frame++){
         native_update(s,frame);
-        if(s->words[0]!=26||s->words[1]%16||s->words[2]%13||s->words[3]%37||
-           s->words[4]%5||s->words[5]<4||(s->words[5]-4)%24||s->words[6]%15||s->words[7]!=7)return 0;
+        if(s->words[0]!=26||s->words[1]%16||s->words[2]%18||s->words[3]%38||
+           s->words[4]%5||s->words[5]<4||(s->words[5]-4)%24||s->words[6]%15||s->words[7]!=7||s->words[8]%17)return 0;
         unsigned bone=0;
         for(unsigned i=0;i<s->words[1];i+=16){
             const uint32_t* p=s->state[1]+i;
             if(p[3]==0)bone=0;
             if(p[3]!=bone++ || p[0]>2 || (p[0]==2 && (p[2]<6||p[2]>=s->models.n)))return 0;
         }
-        for(unsigned i=0;i<s->words[3];i+=37){
+        for(unsigned i=0;i<s->words[3];i+=38){
             unsigned h=s->state[3][i+32];if(h!=~0u && h>=s->assets.header.n)return 0;
         }
         for(unsigned i=4;i<s->words[5];i+=24){
@@ -90,40 +159,50 @@ static int valid_inputs(NativeScene* s){
     }
     return 1;
 }
+void native_reset(NativeScene* s){(void)s;m1_room_serial++;}
 void native_close(NativeScene* s){
-    for(unsigned k=0;k<8;k++)free(s->state[k]);
-    native_actor_close(s);native_world_free(&s->world);free(s->vis_data);
+    for(unsigned k=0;k<9;k++)free(s->state[k]);
+    native_actor_close(s);native_world_free(&s->world);native_vis_close(&s->vis);free(s->vis_data);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
 int native_open(NativeScene* s,const char* name){
     m1_load_status[0]=1;m1_room_serial++;
     if(!resident_pack){
-        unsigned a=file_size("/cd/CROSS.PAK"),b=file_size("/cd/FARM.PAK");
+        unsigned a=pack_need("/cd/CROSS.PAK"),b=pack_need("/cd/FARM.PAK");
         if(!a||!b)return 0;
-        resident_capacity=a>b?a:b;
+        resident_capacity=(a>b?a:b)+31&~31u;
         if(resident_capacity>=13*1024*1024)return 0;
         resident_pack=memalign(32,resident_capacity);
         if(!resident_pack)return 0;
     }
     file_t f=fs_open(name,O_RDONLY);
     if(f<0){printf("M1 missing pack %s\n",name);return 0;}
-    unsigned size=fs_total(f),got=0;
-    uint8_t* data=size>=20 && size<=resident_capacity ? resident_pack:NULL;
-    while(data && got<size){
-        int n=fs_read(f,data+got,size-got>65536?65536:size-got);if(n<=0)break;got+=n;
+    PackInfo pi;uint32_t crc=0;Table root;
+    m1_load_status[0]=2;
+    if(!pack_info(f,&pi,&crc)){fs_close(f);return 0;}
+    unsigned size=pi.size,tn=pi.tn,pad=(20+pi.texsize)&31;   /* keeps every section's offset modulo 32 */
+    m1_load_status[1]=size;m1_load_status[2]=pi.texsize;
+    if(pi.maxblob>resident_capacity||pad+68+pi.rest>resident_capacity){fs_close(f);return 0;}
+    m1_load_status[0]=6;
+    pvr_set_pal_format(PVR_PAL_ARGB8888);
+    for(unsigned i=0;i<tn;i++){
+        unsigned blob=tex_offsets[i+1]-tex_offsets[i];
+        if(!read_crc(f,resident_pack,blob,&crc)||!upload_one(i,(const uint32_t*)resident_pack,blob)){fs_close(f);return 0;}
     }
-    fs_close(f);s->assets.storage=data;
-    const unsigned* h=(const void*)data;Table root;
-    m1_load_status[0]=2;m1_load_status[1]=size;m1_load_status[2]=got;
-    if(!data||got!=size||memcmp(data,"NAT3",4)||h[1]!=3||h[3]!=size-20 ||
-       crc32(data+20,size-20)!=h[4]||!table(&root,data+20,size-20)||root.n!=14)return 0;
+    uint8_t* data=resident_pack+pad;uint32_t* r=(uint32_t*)data;
+    r[0]=15;r[1]=0;for(unsigned k=1;k<=15;k++)r[k+1]=pi.root[k+1]-pi.texsize;
+    int ok=read_crc(f,data+68,pi.rest,&crc);
+    fs_close(f);s->assets.storage=resident_pack;
+    const uint32_t* h=pi.head;
+    if(!ok||crc!=h[4]||!table(&root,data,68+pi.rest)||root.n!=15||bytes(&root,0))return 0;
     m1_load_status[0]=3;
-    if(bytes(&root,13)!=8)return 0;
-    memcpy(&s->sky_top,row(&root,13),8);
-    if(!table(&s->models,row(&root,12),bytes(&root,12))||s->models.n<6)return 0;
-    Table* assets[]={&s->assets.texture,&s->assets.header,&s->frames};
-    unsigned ids[]={0,1,3};
-    for(unsigned i=0;i<3;i++)if(!table(assets[i],row(&root,ids[i]),bytes(&root,ids[i])))return 0;
+    if(bytes(&root,14)!=8)return 0;
+    memcpy(&s->sky_top,row(&root,14),8);
+    if(!table(&s->models,row(&root,13),bytes(&root,13))||s->models.n<6)return 0;
+    s->assets.texture=(Table){tn,NULL,NULL};
+    Table* assets[]={&s->assets.header,&s->frames};
+    unsigned ids[]={1,3};
+    for(unsigned i=0;i<2;i++)if(!table(assets[i],row(&root,ids[i]),bytes(&root,ids[i])))return 0;
     if(!native_world_open(&s->world,row(&root,2),bytes(&root,2))||s->frames.n!=300)return 0;
     if(!native_world_runtime(&s->world))return 0;
     for(unsigned i=0;i<((const unsigned*)s->world.mesh)[5];i++)
@@ -131,7 +210,7 @@ int native_open(NativeScene* s,const char* name){
     m1_load_status[0]=4;
     for(unsigned j=0;j<s->models.n;j++)if(!valid_model(&s->models,j,s->assets.header.n))return 0;
     unsigned logic_bytes=0;
-    for(unsigned k=0;k<8;k++){
+    for(unsigned k=0;k<9;k++){
         Table* tab=s->delta+k;unsigned maximum=0;
         if(!table(tab,row(&root,4+k),bytes(&root,4+k)))return 0;
         for(unsigned i=0;i<tab->n;i++)if(!validate_patch(row(tab,i),bytes(tab,i)/4,&maximum))return 0;
@@ -139,13 +218,19 @@ int native_open(NativeScene* s,const char* name){
     }
     for(unsigned i=0;i<300;i++){
         const uint32_t* refs=row(&s->frames,i);
-        if(bytes(&s->frames,i)!=36)return 0;
-        for(unsigned k=0;k<8;k++)if(refs[k+1]>=s->delta[k].n)return 0;
+        if(bytes(&s->frames,i)!=40)return 0;
+        for(unsigned k=0;k<9;k++)if(refs[k+1]>=s->delta[k].n)return 0;
         const unsigned* camera=row(s->delta,refs[1]);
         if(camera[0]!=26)return 0;
     }
     m1_load_status[0]=5;if(!valid_inputs(s))return 0;
-    m1_load_status[0]=6;if(!uploads(&s->assets))return 0;
+    m1_load_status[0]=6;
+    for(unsigned i=0;i<s->assets.header.n;i++){   /* bind each material header to its texture in VRAM */
+        if(bytes(&s->assets.header,i)!=36)return 0;
+        uint32_t *hd=row(&s->assets.header,i);
+        if(hd[0]>=tn)return 0;
+        hd[4]|=((uintptr_t)m1_textures[hd[0]]&0x7fffff)>>3 | tex_palette_bits[hd[0]];
+    }
     m1_load_status[0]=8;if(!native_actor_open(s))return 0;
     m1_load_status[0]=9;
     {   /* baked visibility: <ROOM>.VIS beside the pack, unless /cd/NOVIS (the full-set arm of the pixel check) */
@@ -163,7 +248,7 @@ int native_open(NativeScene* s,const char* name){
     }
     m1_load_status[0]=7;
     struct mallinfo heap=mallinfo();
-    m1_ram[0]=size;m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
+    m1_ram[0]=size-pi.texsize;m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
     m1_ram[3]=heap.uordblks;m1_ram[4]=heap.fordblks;m1_ram[5]=pvr_mem_available();m1_ram[6]=resident_capacity;
     return 1;
 }

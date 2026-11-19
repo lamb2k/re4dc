@@ -8,21 +8,17 @@ COMMON := -g -std=gnu11 -Wall -Wdouble-promotion -fno-strict-aliasing -ffast-mat
 SIZE := -Os
 HOT := -O2
 DEFS := -DRE4DC_ACTOR_LIGHT_N16=1
-.PHONY: all packs
+.PHONY: all
 all: native
-packs:
-	@test -s "$(PRIVATE_PACK_DIR)/cross-m1.pak" -a -s "$(PRIVATE_PACK_DIR)/hayfork-m1.pak" || { echo "M1 missing private packs in PRIVATE_PACK_DIR"; exit 1; }
 $(OUT):
 	mkdir -p $@
-$(OUT)/m1.elf: main.c ../../game/platform/avk_sh4.S ../render/render.c ../render/replay_pack.c ../render/replay.h ../render/indexed.inc | $(OUT)
-	kos-cc -std=gnu11 -O2 -Wall -fno-strict-aliasing -I../render -I$(SHZ) $(EXTRA) $(DEFS) $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
 
 .PHONY: native native-packs
 native: native-packs $(OUT)/native.elf
 native-packs:
 	@test -s "$(PRIVATE_PACK_DIR)/cross.pak" -a -s "$(PRIVATE_PACK_DIR)/hayfork.pak" || { echo "M1 missing native packs in PRIVATE_PACK_DIR"; exit 1; }
 RENDER_DEPS := $(wildcard ../render/*.inc ../render/*.h)
-$(OUT)/main.o: main.c $(RENDER_DEPS) | $(OUT)
+$(OUT)/main.o: main.c memmap.h $(RENDER_DEPS) | $(OUT)
 	kos-cc $(COMMON) $(SIZE) $(EXTRA) $(DEFS) -DM1_NATIVE -c $< -o $@
 $(OUT)/replay_pack.o: ../render/replay_pack.c $(RENDER_DEPS) | $(OUT)
 	kos-cc $(COMMON) $(SIZE) $(EXTRA) $(DEFS) -DM1_NATIVE -c $< -o $@
@@ -36,4 +32,4 @@ $(OUT)/stage_sh4.o: ../render/stage_sh4.S | $(OUT)
 	kos-cc -c $< -o $@
 NATIVE_OBJS := $(addprefix $(OUT)/,main.o replay_pack.o render.o native_world.o avk_sh4.o stage_sh4.o)
 $(OUT)/native.elf: $(NATIVE_OBJS)
-	kos-cc $(COMMON) $(SIZE) $(EXTRA) $^ -Wl,--wrap=cdrom_read_toc -o $@ -lm
+	kos-cc $(COMMON) $(SIZE) $(EXTRA) $^ -Wl,--wrap=cdrom_read_toc -Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free -o $@ -lm

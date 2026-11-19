@@ -55,7 +55,7 @@ def models(disc, private_tables, cloth_bind, material):
                     u,vv=struct.unpack_from("<2H",uv,t*4)
                     strips+=struct.pack("<4H",vector(vertices,pos,v&16383),vector(normals,nrm,n&16383),u,vv)
             key=(0xfc24a99c,0x03d13534) if leon and role==7 else texture
-            header=material(key,3 if leon and role==7 else 1)
+            header=material(key,2 if leon and role==7 else 1)   # hair: punch-through (alpha test), eng-e0b
             bindings.append((role,header,start,len(strips)-start))
         first=0 if leon else 119+(model-1)*34
         bones=119 if leon else 34

@@ -10,7 +10,6 @@
    6. emit strips: inside parts with no tests, boundary parts with per-strip outcodes and near clipping.
    The pack's model catalogue is converted at load (conversion cost is outside the picture). */
 typedef struct {unsigned role,index,identity,bone; float world[12];} ActorPose;
-typedef struct {unsigned flags,type,kind,spot;float pos[3],dir[3],radius,intensity;uint8_t rgb[4];} NativeLamp;
 typedef struct {uint8_t bone[3],count;float w[3];} SkinWeight;
 typedef struct {unsigned role,hdr,at,size;} NativePart;
 typedef struct {float dir[3],rgb[3];} Incident;
@@ -24,7 +23,7 @@ typedef struct {
 extern unsigned re4dc_avk_pos_skin_u16(const PositionPass*);
 _Static_assert(sizeof(PositionPass)==72,"AVK ABI");
 
-typedef struct {uint16_t bone,pad;float c[3],r;} PartSphere;      /* raw position units, model space */
+#include "part_cull.h"
 typedef struct {
     const NativePart* src;
     uint16_t pos_first,pos_count,nrm_first,nrm_count;
@@ -37,21 +36,12 @@ typedef struct {
 } RtModel;
 typedef struct {unsigned n; RtModel m[];} RtCatalog;
 
-/* Actor light model: 0 = linear fold (ambient + lamp (flat + .3 n.d)), 1 = ambient + sum lamp max(0, n.d).
-   Calibrated on the source stills over six timed pictures (evidence/look/light-*): the linear fold scaled by 0.55
-   by 0.42 gave the lowest frame and Leon-region error (frame MAE 8.81, region ratios 0.66-1.37); the clamped form ranged 0.38-1.52. */
-#ifndef M1_LIGHT_MODEL
-#define M1_LIGHT_MODEL 0
-#endif
-#ifndef M1_LIGHT_SCALE
-#define M1_LIGHT_SCALE 0.42f
-#endif
 #define ACTOR_POS_LIMIT 4096
 #define ACTOR_WS_LIMIT 256
+#include "source_light.inc"
 static uint16_t pos_records[ACTOR_POS_LIMIT+2][4] __attribute__((aligned(32)));
 static const uint16_t dummy_uv[2];
 static shz_mat4x4_t skin_project[ACTOR_WS_LIMIT] __attribute__((aligned(32)));
-static shz_mat4x4_t skin_light[ACTOR_WS_LIMIT] __attribute__((aligned(32)));
 static float skin_world[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
 static float bone_rows[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
 static float bone_scale[ACTOR_WS_LIMIT];
@@ -73,16 +63,7 @@ static float column_scale(const float* m){
     float a=m[0]*m[0]+m[4]*m[4]+m[8]*m[8],b=m[1]*m[1]+m[5]*m[5]+m[9]*m[9],c=m[2]*m[2]+m[6]*m[6]+m[10]*m[10];
     return sqrtf(m1_maxf(a,m1_maxf(b,c)));
 }
-/* Bitmask of frustum planes the sphere lies wholly outside; *inside cleared unless it lies wholly inside all. */
-static inline unsigned sphere_planes(const float* c,float r,int* inside){
-    unsigned out=0;
-    for(unsigned j=0;j<6;j++){
-        float d=frustum[j][0]*c[0]+frustum[j][1]*c[1]+frustum[j][2]*c[2]+frustum[j][3];
-        if(d<-r)out|=1u<<j;
-        if(d<r)*inside=0;
-    }
-    return out;
-}
+static inline unsigned sphere_planes(const float* c,float r,int* inside){return sphere_planes6((const float (*)[4])frustum,c,r,inside);}
 static unsigned model_lights(const NativeScene* s,const ActorPose* pose,Incident* lamps){
     unsigned used=0;float strength[3]={};
     const NativeLamp* source=(const void*)s->state[2];
@@ -224,17 +205,23 @@ int native_actor_open(NativeScene* s){
 }
 
 /* ---- per picture ---- */
+/* The player's stance from the HUD head record (life, maximum, weapon, stance): 1 while the knife is in hand. */
+static int knife_stance(const NativeScene* s){return s->words[5]>=4 && s->state[5][3]==0x10;}
 volatile uint32_t m1_vis_actors;
 /* Baked visibility: an actor is skipped when every 2 m cube its bone-sphere box touches is hidden from the camera's cell. */
+/* Actor columns exist only where actors can stand, each with a cube range; an actor is skipped when every
+   column its bone-sphere box touches is hidden and the box stays inside those columns' ranges. Anything else
+   (outside the room box, a column with no range, above or below the range) keeps it visible. */
 static int actor_hidden(const NativeVis* v,const uint8_t* cubes,const float* lo,const float* hi){
     int a[3],b[3];const unsigned dim[3]={v->ax,v->ay,v->az};
     for(unsigned i=0;i<3;i++){
         float l=(lo[i]-v->alo[i])/v->acube,h=(hi[i]-v->alo[i])/v->acube;
-        if(l<0||h>=dim[i])return 0;              /* outside the baked room box: visible */
+        if(!(l>=0)||!(h<dim[i]))return 0;
         a[i]=(int)l;b[i]=(int)h;
     }
-    for(int z=a[2];z<=b[2];z++)for(int y=a[1];y<=b[1];y++)for(int x=a[0];x<=b[0];x++){
-        unsigned q=x+v->ax*(y+v->ay*z);if(!(cubes[q>>3]>>(q&7)&1))return 0;
+    for(int z=a[2];z<=b[2];z++)for(int x=a[0];x<=b[0];x++){
+        const NativeVisColumn* col=v->cols+x+v->ax*z;
+        if(a[1]<col->y0 || b[1]>=col->y0+col->ny || !(cubes[col->bit>>3]>>(col->bit&7)&1))return 0;
     }
     return 1;
 }
@@ -250,9 +237,10 @@ static void actor_frame_setup(const NativeScene* s){
     static const float identity[]={1,0,0,0,0,1,0,0,0,0,1,0};
     view_project=projection_grid(camera,identity);
     for(unsigned c=0;c<4;c++)view_project.elem[4*c+2]=view_project.elem[4*c+3];   /* z = w for the kernel */
+    lamps_frame(s);
 }
-/* Blend one weight set, project it for the position kernel and fold the actor's lamps into its colour matrix. */
-static void build_ws(const RtModel* m,unsigned i,const Incident* lamps,unsigned nl,const uint8_t* ambient,float flat){
+/* Blend one weight set, project it for the position kernel and evaluate the model's lights for it. */
+static void build_ws(const RtModel* m,unsigned i){
     const SkinWeight* w=m->w+i;float* out=skin_world[i];
     if(w->count==1 && w->w[0]==1.f)memcpy(out,bone_rows[w->bone[0]],48);
     else for(unsigned j=0;j<12;j++){float sum=0;for(unsigned k=0;k<w->count;k++)sum+=w->w[k]*bone_rows[w->bone[k]][j];out[j]=sum;}
@@ -262,62 +250,8 @@ static void build_ws(const RtModel* m,unsigned i,const Incident* lamps,unsigned 
         shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[c],out[4+c],out[8+c],c==3?1.f:0.f));
         pm->elem[4*c]=v.x;pm->elem[4*c+1]=v.y;pm->elem[4*c+2]=v.z;pm->elem[4*c+3]=v.w;
     }
-#if M1_LIGHT_MODEL==1
-    /* Lamp directions moved into this weight set's model space once (normalised for raw s16 normals); the
-       per-normal loop takes ambient + sum lamp max(0, n.d). */
-    {
-        shz_mat4x4_t* f=skin_light+i;const float inv=1.f/(16384.f*.0625f);
-        for(unsigned j=0;j<3;j++){
-            const float* d=lamps[j].dir;
-            for(unsigned k=0;k<3;k++)f->elem[4*j+k]=j<nl?(out[k]*d[0]+out[k+4]*d[1]+out[k+8]*d[2])*inv:0.f;
-            f->elem[4*j+3]=0;
-        }
-        ws_ready[i]=1;return;
-    }
-#endif
-    /* Light fold: colour = ambient + sum lamp (flat + .3 n.d); n is a raw s16 normal in this set's model space. */
-    shz_mat4x4_t* f=skin_light+i;
-    for(unsigned c=0;c<3;c++){f->elem[c]=f->elem[4+c]=f->elem[8+c]=0;f->elem[12+c]=ambient[c];}
-    f->elem[3]=f->elem[7]=f->elem[11]=0;f->elem[15]=1;
-    const float inv=.3f/(16384.f*.0625f);   /* skin_world carries the position quantum */
-    for(unsigned j=0;j<nl;j++){
-        const float* d=lamps[j].dir;
-        float md[3];for(unsigned k=0;k<3;k++)md[k]=(out[k]*d[0]+out[k+4]*d[1]+out[k+8]*d[2])*inv;
-        for(unsigned c=0;c<3;c++){
-            float color=lamps[j].rgb[c];
-            f->elem[12+c]+=color*flat;
-            for(unsigned k=0;k<3;k++)f->elem[4*k+c]+=color*md[k];
-        }
-    }
-    for(unsigned k=0;k<15;k++)if((k&3)!=3)f->elem[k]*=M1_LIGHT_SCALE;
+    ws_light(i,out);
     ws_ready[i]=1;
-}
-static float lamp_amb[3],lamp_rgb[3][3];   /* this actor's ambient and lamp colours, times M1_LIGHT_SCALE */
-static void light_setup(const Incident* lamps,unsigned nl,const uint8_t* ambient){
-    for(unsigned c=0;c<3;c++){lamp_amb[c]=ambient[c]*M1_LIGHT_SCALE;for(unsigned j=0;j<3;j++)lamp_rgb[j][c]=j<nl?lamps[j].rgb[c]*M1_LIGHT_SCALE:0.f;}
-}
-static void light_normals_lambert(const SourceVector* v,unsigned n,uint32_t* out){
-    unsigned last=~0u;float a[12];
-    const float ar=lamp_amb[0],ag=lamp_amb[1],ab=lamp_amb[2];
-    for(unsigned i=0;i<n;i++,v++){
-        if(last!=v->bone){last=v->bone;memcpy(a,skin_light[last].elem,48);}
-        float x=v->xyz[0],y=v->xyz[1],z=v->xyz[2];
-        float d0=m1_maxf(0,x*a[0]+y*a[1]+z*a[2]),d1=m1_maxf(0,x*a[4]+y*a[5]+z*a[6]),d2=m1_maxf(0,x*a[8]+y*a[9]+z*a[10]);
-        float r=ar+d0*lamp_rgb[0][0]+d1*lamp_rgb[1][0]+d2*lamp_rgb[2][0];
-        float g=ag+d0*lamp_rgb[0][1]+d1*lamp_rgb[1][1]+d2*lamp_rgb[2][1];
-        float b=ab+d0*lamp_rgb[0][2]+d1*lamp_rgb[1][2]+d2*lamp_rgb[2][2];
-        out[i]=0xff000000|m1_byte(r)<<16|m1_byte(g)<<8|m1_byte(b);
-    }
-}
-static void light_normals(const SourceVector* v,unsigned n,uint32_t* out){
-    if(M1_LIGHT_MODEL==1){light_normals_lambert(v,n,out);return;}
-    unsigned last=~0u;
-    for(unsigned i=0;i<n;i++,v++){
-        if(last!=v->bone){last=v->bone;shz_xmtrx_load_4x4(skin_light+last);}
-        __builtin_prefetch(v+4);
-        shz_vec4_t rgb=shz_xmtrx_transform_vec4(shz_vec4_init(v->xyz[0],v->xyz[1],v->xyz[2],1));
-        out[i]=0xff000000|m1_byte(rgb.x)<<16|m1_byte(rgb.y)<<8|m1_byte(rgb.z);
-    }
 }
 static const pvr_vertex_t* cur_projected;static const uint32_t* cur_lit;static const uint8_t* cur_codes;
 static const SourceVector* cur_pos;
@@ -398,24 +332,18 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         /* 3. parts */
         unsigned visible=0;
         for(unsigned p=0;p<h[4];p++){
-            const RtPart* rp=m->parts+p;unsigned out=63;int inside=1;
-            for(unsigned k=0;k<rp->sphere_count && out;k++){
-                const PartSphere* sp=m->spheres+rp->sphere_first+k;const float* r=bone_rows[sp->bone];
-                float c[3];
-                for(unsigned a=0;a<3;a++)c[a]=r[4*a]*sp->c[0]+r[4*a+1]*sp->c[1]+r[4*a+2]*sp->c[2]+r[4*a+3];
-                out&=sphere_planes(c,sp->r*bone_scale[sp->bone],&inside);
-            }
-            state[p]=out?0:inside?1:2;visible+=!out;
-            if(out)census[1]++;
+            const RtPart* rp=m->parts+p;
+            unsigned st=part_class((const float (*)[4])frustum,m->spheres+rp->sphere_first,rp->sphere_count,(const float (*)[12])bone_rows,bone_scale);
+            state[p]=st;visible+=st!=0;
+            if(!st)census[1]++;
         }
         if(!visible)continue;
         /* 4. weight sets used by visible parts */
-        Incident lamps[3];unsigned nl=model_lights(s,actor,lamps);
-        const uint8_t* ambient=(const uint8_t*)s->state[7]+4;float flat=actor->role==0?.57f:.3f;
-        memset(ws_ready,0,h[1]);light_setup(lamps,nl,ambient);
+        source_lights(s,actor,h[0],model_light(s,actor),&cur_lights);
+        memset(ws_ready,0,h[1]);
         for(unsigned p=0;p<h[4];p++){
             if(!state[p])continue;const RtPart* rp=m->parts+p;
-            for(unsigned k=0;k<rp->ws_count;k++){unsigned i=m->part_ws[rp->ws_first+k];if(!ws_ready[i])build_ws(m,i,lamps,nl,ambient,flat);}
+            for(unsigned k=0;k<rp->ws_count;k++){unsigned i=m->part_ws[rp->ws_first+k];if(!ws_ready[i])build_ws(m,i);}
         }
         /* 5. positions and normals of visible parts */
         for(unsigned p=0;p<h[4];p++){
@@ -426,16 +354,15 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
                             skin_project[0].elem,ws_ready,h[1],640,480,near,far,0,0,0,0};
             re4dc_avk_pos_skin_u16(&a);
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
-            light_normals(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+            light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
         }
         /* 6. opaque parts now; hair (role 7) in the translucent pass from the same pools */
         unsigned emitted=0;
         for(unsigned p=0;p<h[4];p++){
             if(!state[p] || m->parts[p].src->role==7)continue;
-            /* Leon's role-2 part is the knife in hand (still probe evidence/look/weapon-zoom.png). The game draws it only
-               in the knife stance, a player routine the recorded inputs do not carry yet (E1 hosts the player), so it is
-               not drawn: with the handgun out (HUD weapon 2 in both scenes) the source stills show no blade. */
-            if(!model && m->parts[p].src->role==2)continue;
+            /* Leon's role-2 part is the knife in hand: drawn in the knife stance only (eng-e0b: the recorded stance,
+               PlGetWeaponNo() == 0x10). */
+            if(!model && m->parts[p].src->role==2 && knife_stance(s)==0)continue;
             unsigned before=emitted;sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             if(emitted==before)census[1]++;
         }

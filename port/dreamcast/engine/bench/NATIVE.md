@@ -33,3 +33,29 @@ The sample-store observer in model_profile.py takes the path to hwmodel/hwsim.c 
 - `host_world.c`: host replay of the world selection over a pack (per-picture meshlet, vertex and corner counts).
 - `model_profile.py` treats operand-cache RAM (0x7C000000-0x7FFFFFFF) as one-cycle RAM for arm (a); run the observer with
   `--oc-kb 8` for that arm.
+
+## E0b additions (lane eng-e0b)
+
+- Pack format 4 (NAT3 version 4): fifteen root sections, nine logic streams. Stream 9 (`state[8]`) carries each
+  player/enemy/prop model's light inputs (17 words: light volume shape, parts, EnableMask, SelectMask, offset, size,
+  material colour, TEV scale group, AddAmb, the game's own last light pick for the test, room status). Lights
+  (`state[2]`) are 18 words: + array index, xF / Attribute / Priority / kind-enabled, spot A0, fade A1, parent.
+  Effects (`state[3]`) are 38 words: + the GX blend (type, src, dst, op). The HUD head's fourth word is the stance
+  (`PlGetWeaponNo()`, 0x10 = knife in hand). The capture switch writes them (`r3_inputs.inc`, `src/game/esp.cpp`).
+- Room load streams the texture section into VRAM through the start of the resident buffer, one texture at a time;
+  the buffer holds only the rest of the pack (CRC still over the whole file). No texture copy stays in main RAM.
+- Actor lighting follows the source rule (`render/source_light.inc`): setModel2's selection, LightSetModel's
+  per-type brightness, GX per-vertex diffuse, material colour x TEV scale. Hair (role 7) is drawn alpha-tested in
+  the punch-through list; Leon's knife part only in the knife stance; HUD widgets with a mask use a texture baked
+  from widget texture x mask alpha (`bake/dctex.py`), masked backdrops first, deepest level first.
+- Baked visibility VIS2 (`bench/bake_vis.c`): whole reachable room, 2 m camera cells with a camera height band,
+  actor columns (2 m) over every floor column, masks stored once (raw or run-length) and merged by intersection
+  into a 256 KiB budget. Anything the table does not cover draws everything. `--control <vis> N` writes the
+  wrong-entry control for a pack's route; `--survey` prints the domain and route coverage.
+- `main.c` runs a schedule of 600-picture windows in one boot (`/cd/SCHEDULE.TXT`, default
+  `c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh`): rooms c/f, arms 0/a/b, `n` no visibility, `d` 5 ms delay, `h` hold
+  picture 300 for 40 ms. Raw rows per picture in `m1_rows` (draw us, PVR wait us, presented fields, two counters,
+  visibility state), summaries in `m1_windows`, printed as `WINDOW` / `ROW` lines on serial and on screen.
+  Counter calibration at boot in `m1_calib` (`CALIB` lines). Memory map per room in `m1_mem` (`MEM`, `VRAM`,
+  `MEMBLK` lines; `memmap.h`: malloc wrappers, stack paint and guard).
+- Tests: `bench/test_part_clip.c` (near-plane part class; `-DM1_PART_LOOP_E0` is the failing control).

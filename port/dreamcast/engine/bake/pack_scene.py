@@ -24,7 +24,7 @@ class Baker:
         self.environment=Table();self.volumes=Table();self.bounds={}; self.pools={}
         self.path=scene
         self.world=World(disc/f"native/r{room:x}")
-        self.texpack=(disc/"tex.pak").read_bytes()
+        self.texpack=bytearray((disc/"tex.pak").read_bytes())   # bytearray: the bake may append composites
         count,idx=unpack("2I",self.texpack,12)
         self.lookup={(a,b):(c,d) for a,b,c,d in struct.iter_unpack("<4I",self.texpack[idx:idx+16*count])}
         self.textures=Table();self.headers=Table();self.geometry=Table();self.poses=Table();self.lights=Table();self.draws=Table()
@@ -47,7 +47,7 @@ class Baker:
         if digest not in self.assets:self.assets[digest]=(self.path/"resources"/digest).read_bytes()
         return self.assets[digest]
     def header(self,key,phase,cull=0,blend=None,world=False,fog=False,actor_state=None):
-        off,size=self.lookup[key];pkg=self.texpack[off:off+size]
+        off,size=self.lookup[key];pkg=bytes(self.texpack[off:off+size])
         tid=self.textures.add(pkg)
         at=unpack("I",pkg,24)[0]; w,h,fmt,_,_,flags,payload,_=unpack("8I",pkg,at+64)
         li=[0,0,4,2,2,2][phase]
@@ -209,7 +209,7 @@ class Baker:
                     src,dst=((4,5),(4,1),(1,1),(2,1),(2,0))[mode]
                     verts=[(xyuv[2*j],xyuv[2*j+1],1.,xyuv[8+2*j],xyuv[9+2*j],color,0,0,0,0) for j in (0,1,3,2)]
                 if k==7:
-                    off,size=self.lookup[key];pkg=self.texpack[off:off+size]
+                    off,size=self.lookup[key];pkg=bytes(self.texpack[off:off+size])
                     flags=unpack("I",pkg,44)[0]
                     iw,ih=unpack("2I",d,8)
                     if flags>>31:iw,ih=flags&2047,(flags>>11)&2047
