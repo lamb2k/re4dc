@@ -215,6 +215,20 @@ int native_actor_open(NativeScene* s){
 }
 
 /* ---- per picture ---- */
+volatile uint32_t m1_vis_actors;
+/* Baked visibility: an actor is skipped when every 2 m cube its bone-sphere box touches is hidden from the camera's cell. */
+static int actor_hidden(const NativeVis* v,const uint8_t* cubes,const float* lo,const float* hi){
+    int a[3],b[3];const unsigned dim[3]={v->ax,v->ay,v->az};
+    for(unsigned i=0;i<3;i++){
+        float l=(lo[i]-v->alo[i])/v->acube,h=(hi[i]-v->alo[i])/v->acube;
+        if(l<0||h>=dim[i])return 0;              /* outside the baked room box: visible */
+        a[i]=(int)l;b[i]=(int)h;
+    }
+    for(int z=a[2];z<=b[2];z++)for(int y=a[1];y<=b[1];y++)for(int x=a[0];x<=b[0];x++){
+        unsigned q=x+v->ax*(y+v->ay*z);if(!(cubes[q>>3]>>(q&7)&1))return 0;
+    }
+    return 1;
+}
 
 static unsigned actor_serial;
 static void actor_frame_setup(const NativeScene* s){
@@ -324,12 +338,14 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         }
         unsigned considered=h[4];census[0]+=considered;
         /* 1. whole actor: spheres around bone origins */
-        unsigned all=63;
-        for(unsigned i=0;i<m->nbones_used && all;i++){
+        unsigned all=63;float lo[3]={1e30f,1e30f,1e30f},hi[3]={-1e30f,-1e30f,-1e30f};
+        for(unsigned i=0;i<m->nbones_used;i++){
             unsigned b=m->bones_used[i];const float* wm=actor[b+1].world;int dummy=1;
-            float c[3]={wm[3],wm[7],wm[11]};
-            all&=sphere_planes(c,m->bone_radius[b]*column_scale(wm)*1.02f+1,&dummy);
+            float c[3]={wm[3],wm[7],wm[11]},r=m->bone_radius[b]*column_scale(wm)*1.02f+1;
+            all&=sphere_planes(c,r,&dummy);
+            for(unsigned a=0;a<3;a++){lo[a]=m1_minf(lo[a],c[a]-r);hi[a]=m1_maxf(hi[a],c[a]+r);}
         }
+        if(!all && s->world.vis_cubes && actor_hidden(s->world.vis,s->world.vis_cubes,lo,hi)){all=1;m1_vis_actors++;}
         if(all){memset(state,0,h[4]);census[1]+=considered;continue;}
         /* 2. bones: pose x inverse bind x quantum */
         for(unsigned i=0;i<m->nbones_used;i++){

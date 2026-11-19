@@ -182,6 +182,38 @@ int native_world_runtime(NativeWorld* w){
     w->rt_vertices=total;w->rt_duplicates=dup;w->rt_full=full;
     return 1;
 }
+int native_vis_open(NativeVis* v,const void* data,size_t size,const NativeWorld* w){
+    const uint32_t* h=data;const float* f=(const float*)(h+16);
+    if(size<96||h[0]!=0x31534956||h[9]!=w->place_count)return 0;
+    v->ninst=h[1];v->ncube=h[2];v->ncell=h[3];v->cx=h[4];v->cz=h[5];v->ax=h[6];v->ay=h[7];v->az=h[8];v->nplace=h[9];
+    v->ibytes=h[10];v->cbytes=h[11];
+    v->org[0]=f[0];v->org[1]=f[1];v->cell=f[2];v->alo[0]=f[3];v->alo[1]=f[4];v->alo[2]=f[5];v->acube=f[6];
+    v->place_base=h+24;v->mesh_first=v->place_base+v->nplace+1;v->used=(const uint8_t*)(v->mesh_first+v->nplace);
+    v->bits=v->used+v->ncell;
+    if(v->ncell!=v->cx*v->cz||v->ncube!=v->ax*v->ay*v->az||v->ibytes!=(v->ninst+7)/8||v->cbytes!=(v->ncube+7)/8||
+       (size_t)(v->bits-(const uint8_t*)data)+(size_t)v->ncell*(v->ibytes+v->cbytes)!=size||v->place_base[v->nplace]!=v->ninst)return 0;
+    /* every placement's cluster range must match the world */
+    const uint8_t* m=w->mesh;const uint8_t *meshes=m+u32(m+40),*plod=m+u32(m+88);
+    for(unsigned j=0;j<v->nplace;j++){
+        if(w->places[j].sky){if(v->place_base[j+1]!=v->place_base[j])return 0;continue;}
+        const uint8_t* mh=meshes+68*w->places[j].mesh;unsigned first=u32(mh+12),end=first+u32(mh+16),lo=~0u,hi=0;
+        for(unsigned part=first;part<end;part++){unsigned a=u32(plod+8*part),b=a+u32(plod+8*part+4);if(b>a){if(a<lo)lo=a;if(b>hi)hi=b;}}
+        if(lo==~0u){lo=hi=0;}
+        if(v->mesh_first[j]!=lo||v->place_base[j+1]-v->place_base[j]!=hi-lo)return 0;
+    }
+    return 1;
+}
+void native_vis_select(NativeWorld* w,const float* c){
+    w->vis_inst=w->vis_cubes=NULL;
+    const NativeVis* v=w->vis;if(!v)return;
+    float x=-(c[0]*c[3]+c[4]*c[7]+c[8]*c[11]),z=-(c[2]*c[3]+c[6]*c[7]+c[10]*c[11]);
+    float fx=(x-v->org[0])/v->cell,fz=(z-v->org[1])/v->cell;
+    if(fx<0||fz<0)return;
+    unsigned cx=(unsigned)fx,cz=(unsigned)fz;
+    if(cx>=v->cx||cz>=v->cz)return;
+    unsigned cell=cz*v->cx+cx;if(!v->used[cell])return;
+    w->vis_inst=v->bits+(size_t)cell*(v->ibytes+v->cbytes);w->vis_cubes=w->vis_inst+v->ibytes;
+}
 void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
 int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
     const float* p=camera+12;
@@ -197,6 +229,7 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
             const NativePlacement* place=w->places+j;unsigned pm;
             if(place->sky||!box_test(&world,cm,place->center,place->half,&pm,&z))continue;
             NativeFrustum local;compose(&local,&world,place->grid);
+            const uint8_t* hidden=w->vis_inst;unsigned hidden_base=hidden?w->vis->place_base[j]-w->vis->mesh_first[j]:0;
             const uint8_t* mesh=meshes+68*place->mesh;
             unsigned first=u32(mesh+12),end=first+u32(mesh+16);
             float lod=fabsf(p[1])*320*place->scale/pixels;
@@ -206,6 +239,7 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
                 unsigned header=w->materials[part].header;
                 for(unsigned k=a;k<b;k++){
                     const uint8_t* cl=clusters+20*k;unsigned km;
+                    if(hidden){unsigned q=hidden_base+k;if(hidden[q>>3]>>(q&7)&1)continue;}
                     if(!grid_test(&local,pm,cl,&km,&z))continue;
                     unsigned lev=u32(cl+12),last=lev+u32(cl+16);
                     while(lev+1<last && f32(levels+12*(lev+1)+8)*lod<=z+near)++lev;

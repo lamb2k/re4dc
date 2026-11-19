@@ -5,6 +5,12 @@ typedef struct { uint16_t mesh,index,source,sky; float grid[12],center[3],half[3
 typedef struct { uint32_t first,count; float center[3],half[3]; } NativeCell;
 typedef struct { uint32_t header; uint8_t phase,flags; uint16_t reserved; } NativeMaterial;
 typedef struct { uint32_t remap,nonempty; uint8_t count,full,pad[2]; } NativeMeshletRt;
+/* Baked visibility (bench/bake_vis.c): per camera cell, cluster instances and actor cubes that cannot be seen. */
+typedef struct {
+    uint32_t ninst,ncube,ncell,cx,cz,ax,ay,az,nplace,ibytes,cbytes;
+    float org[2],cell,alo[3],acube;
+    const uint32_t *place_base,*mesh_first; const uint8_t *used,*bits;
+} NativeVis;
 typedef struct {
     const uint8_t *mesh,*groups;
     const NativeMaterial *materials;
@@ -13,6 +19,7 @@ typedef struct {
     unsigned cell_count,place_count,group_bytes;
     unsigned group_count,rt_vertices,rt_duplicates,rt_full;
     NativeMeshletRt* rt; uint16_t* rt_remap; uint8_t* rt_range; uint32_t* rt_color; unsigned rt_flag_conflicts;
+    const NativeVis* vis; const uint8_t *vis_inst,*vis_cubes;   /* this picture's hidden sets, or NULL */
 } NativeWorld;
 typedef struct { unsigned placement,part,meshlet,header,near_class,groups; } NativePiece;
 typedef struct { float p[6][4]; } NativeFrustum;
@@ -25,4 +32,6 @@ int native_world_open(NativeWorld*,const void*,size_t);
 int native_world_select(const NativeWorld*,const float*,float,NativePiece*,unsigned);
 void native_world_frustum(const float* camera,NativeFrustum* world);
 int native_world_runtime(NativeWorld*);
+int native_vis_open(NativeVis*,const void*,size_t,const NativeWorld*);
+void native_vis_select(NativeWorld*,const float* camera);
 void native_world_free(NativeWorld*);

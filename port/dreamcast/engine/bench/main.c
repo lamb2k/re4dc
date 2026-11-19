@@ -79,6 +79,7 @@ int main(void){
 #ifdef M1_NATIVE
             native_update(&native,i%300);
             const float* camera=(const float*)native.state[0];
+            native_vis_select(&native.world,camera);
             if(!native_prepare_world(&native.world,camera,native.assets.header.n)){m1_state[5]=92;return 1;}
 #else
             Picture pic;open_picture(&s,i%300,&pic);

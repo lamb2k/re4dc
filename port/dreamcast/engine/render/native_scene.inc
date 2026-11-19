@@ -92,7 +92,7 @@ static int valid_inputs(NativeScene* s){
 }
 void native_close(NativeScene* s){
     for(unsigned k=0;k<8;k++)free(s->state[k]);
-    native_actor_close(s);native_world_free(&s->world);
+    native_actor_close(s);native_world_free(&s->world);free(s->vis_data);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
 int native_open(NativeScene* s,const char* name){
@@ -147,6 +147,20 @@ int native_open(NativeScene* s,const char* name){
     m1_load_status[0]=5;if(!valid_inputs(s))return 0;
     m1_load_status[0]=6;if(!uploads(&s->assets))return 0;
     m1_load_status[0]=8;if(!native_actor_open(s))return 0;
+    m1_load_status[0]=9;
+    {   /* baked visibility: <ROOM>.VIS beside the pack, unless /cd/NOVIS (the full-set arm of the pixel check) */
+        char vis[32];unsigned n=strlen(name);
+        if(n<sizeof(vis)&&n>4){memcpy(vis,name,n-3);memcpy(vis+n-3,"VIS",4);}else vis[0]=0;
+        file_t nv=fs_open("/cd/NOVIS",O_RDONLY);
+        if(nv>=0){fs_close(nv);vis[0]=0;}
+        file_t vf=vis[0]?fs_open(vis,O_RDONLY):-1;
+        if(vf>=0){
+            unsigned vs=fs_total(vf);s->vis_data=vs?memalign(32,vs):NULL;
+            int got=s->vis_data?fs_read(vf,s->vis_data,vs):-1;fs_close(vf);
+            if(got!=(int)vs||!native_vis_open(&s->vis,s->vis_data,vs,&s->world))return 0;
+            s->world.vis=&s->vis;m1_ram[7]=vs;
+        }
+    }
     m1_load_status[0]=7;
     struct mallinfo heap=mallinfo();
     m1_ram[0]=size;m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
