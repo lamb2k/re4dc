@@ -1,54 +1,73 @@
-# eng-bench M1 handback, 2026-11-19
+# eng-bench M1 handback, round 3
 
-**STEER-003 hand-back condition met.** The indexed renderer reduced mean modelled drawing at the cross from 27.526 to 13.298 ms (51.7%) and at hayfork from 49.679 to 27.023 ms (45.6%). The cross remains above the brief’s 10 ms console-entry threshold.
+Renderer commit `863efd1e6`. The timing window covers drawing from resident tick inputs through PVR scene finish. PVR readiness waits and room load are outside the interval. Console drawing remains unmeasured.
 
-Renderer and capture source commit `deb10de2c09f59fc6b92dd31e3cdf13b28265741` on `lane/eng-bench`.
+## Absolute drawing budget
 
-## Matched SH7091 model
+| Scene | Tier | Pictures | Mean ms | p99 ms | Worst ms | Over budget | Budget ms |
+|---|---|---:|---:|---:|---:|---:|---:|
+| cross | MODELLED | 25 | 45.759 | 54.319 | 54.319 | 25 | 10 |
+| cross | Flycast guest timer | 300 | 43.523 | 50.207 | 53.947 | 300 | 20 |
+| hayfork | MODELLED | 25 | 100.485 | 118.350 | 118.350 | 25 | 10 |
+| hayfork | Flycast guest timer | 300 | 100.290 | 104.767 | 117.226 | 300 | 20 |
 
-Nominal 200 MHz, five pictures per room (19, 43, 67, 91, 115). The difference is indexed minus game. Times are milliseconds per picture. The nearest-rank p99 is the largest of these five samples. Counts use 20, 26 and 33.333 ms.
+Model uses the nominal 200 MHz SH-4 simulator. The 20 ms comparator in the Flycast rows is the console target applied to guest-clock observations. Nearest-rank p99 equals the maximum at this model sample size. The staged Flycast rows use the first 300 pictures.
 
-| Scene | Tier / path | World | Actors | PT | TR | Effects | HUD | Mean | p99 | Worst | Over 20 / 26 / 33.333 |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| cross | indexed / model | 5.343 | 6.414 | 0.160 | 1.241 | 0.067 | 0.075 | 13.298 | 14.328 | 14.328 | 0 / 0 / 0 |
-| cross | game / model | 10.626 | 10.778 | 0.732 | 0.298 | 3.686 | 1.406 | 27.526 | 34.333 | 34.333 | 5 / 1 / 1 |
-| cross | Difference | -5.283 | -4.364 | -0.572 | 0.943 | -3.620 | -1.331 | -14.227 | -20.005 | -20.005 | -5 / -1 / -1 |
-| hayfork | indexed / model | 3.958 | 20.844 | 1.066 | 1.028 | 0.045 | 0.083 | 27.023 | 27.296 | 27.296 | 5 / 5 / 0 |
-| hayfork | game / model | 6.081 | 34.755 | 1.564 | 0.169 | 6.741 | 0.368 | 49.679 | 49.913 | 49.913 | 5 / 5 / 5 |
-| hayfork | Difference | -2.123 | -13.912 | -0.498 | 0.858 | -6.697 | -0.286 | -22.656 | -22.617 | -22.617 | 0 / 0 / -5 |
+## MODELLED mean by drawing phase
 
-The capture and timing runs restored the same pre-draw states in the interpreter. Verification reproduced each original picture record byte for byte. Recording was disabled before each timed draw. The same nominal simulator ran through the complete guest trace, including intervening work that affects cache state. Drawing totals exclude game logic and presentation waits. The bench charges modifier-volume submission to characters and masked hair to TR. The game profiles modifier volumes in effects.
+| Phase | Cross ms | Hayfork ms |
+|---|---:|---:|
+| Setup and opaque world | 14.669 | 10.421 |
+| Characters and modifier volumes | 27.363 | 84.282 |
+| Punch-through world | 0.328 | 2.868 |
+| Translucent world and hair | 2.369 | 1.773 |
+| Effects | 0.714 | 0.828 |
+| HUD | 0.314 | 0.311 |
+| Scene finish | 0.002 | 0.002 |
 
-Cross character draw is 6.414 ms against 10.778 ms for the matched game scope (−4.364 ms). It also clears the steer’s separate 8.8 ms character target. Hayfork retains the ten barn props and all submitted actor records. Its character draw still takes 20.844 ms against the matched 34.755 ms (−13.911 ms).
+## Windows and per-function profiles
 
-## Staged Flycast replay
+- cross used pictures 1, 11, 23, 35, 47, 59, 71, 83, 95, 107, 119, 131, 143, 155, 167, 179, 191, 203, 215, 227, 239, 251, 263, 275, 287. The staged Flycast maximum was picture 1 (53.947 ms). The capture contains 111 distinct cameras. 9 model samples fall on camera changes.
+- hayfork used pictures 11, 23, 35, 47, 59, 61, 71, 83, 95, 107, 119, 131, 143, 155, 167, 179, 191, 203, 215, 227, 239, 251, 263, 275, 287. The staged Flycast maximum was picture 61 (117.226 ms). The capture contains 100 distinct cameras. 10 model samples fall on camera changes.
 
-Each staged image replayed the 300 pictures twice. This tier compares both bench images on Flycast’s guest timer. The 600-picture comparison uses the earlier staged strip renderer as its reference. The matched-game comparison is the five-picture model table above.
+- cross leading drawing functions, ms per sample: `native_actor_pass` 13.98, `native_world_pass` 7.50, `__fpclassifyf` 5.34, `fmaxf` 2.84, `clipped` 2.77.
+- hayfork leading drawing functions, ms per sample: `native_actor_pass` 40.65, `__fpclassifyf` 18.70, `fmaxf` 9.91, `fminf` 9.72, `native_world_pass` 8.97.
 
-| Scene | Tier / path | World | Actors | PT | TR | Effects | HUD | Mean | p99 | Worst | Over 20 / 26 / 33.333 |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| cross | Indexed / Flycast | 3.261 | 3.948 | 0.093 | 0.731 | 0.015 | 0.033 | 8.090 | 9.997 | 11.486 | 0 / 0 / 0 |
-| cross | Strip B / Flycast | 8.059 | 34.088 | 0.213 | 0.001 | 0.024 | 0.056 | 42.446 | 50.217 | 51.606 | 600 / 600 / 600 |
-| cross | Difference | -4.798 | -30.140 | -0.120 | 0.730 | -0.009 | -0.023 | -34.356 | -40.220 | -40.120 | -600 / -600 / -600 |
-| hayfork | Indexed / Flycast | 2.386 | 13.986 | 0.625 | 0.608 | 0.022 | 0.035 | 17.668 | 20.094 | 20.241 | 11 / 0 / 0 |
-| hayfork | Strip B / Flycast | 5.888 | 105.667 | 1.516 | 0.001 | 0.037 | 0.055 | 113.169 | 116.260 | 116.267 | 600 / 600 / 600 |
-| hayfork | Difference | -3.502 | -91.681 | -0.891 | 0.607 | -0.015 | -0.020 | -95.501 | -96.166 | -96.026 | -589 / -600 / -600 |
+Complete per-function profiles, including instruction-cache and data-cache costs, are in each room’s `full/functions.txt`, `world/functions.txt` and `characters/functions.txt` under the evidence directory. Each `timed-pictures.csv` records the seven phase spans, both still hashes and the matching logic tick.
 
-## Profiles and visual evidence
+The host replay of the same C selector supplies the meshlet counts in `world-piece-counts.csv`. The following ratios include input decode, selection, sky and masked hair charged in the respective intervals. They are inclusive workload ratios.
 
-- Full ten-row per-function tables for world and characters in both rooms and both designs are in `port/dreamcast/engine/bench/PROFILE.md`. Each row records exclusive cycles, instruction misses, data read/write misses and the work performed. The original design repeats shading on strip corners and calls libm for strip bounds and colour clamps. The indexed design uses separate bone-sorted position and normal streams, shared per-picture bone matrices and projected positions, the existing skinned and rigid SH-4 position kernels, and the n16 light kernels. Part colour, direction, alpha and material bindings come from the source draw.
-- The baker removes empty world pieces and marks the pieces wholly in front of the near plane for each recorded view. Material headers are baked, texture addresses are relocated at load and sequential strip reads use prefetch. Boundary pieces still clip. Indexed emission, matrix composition and skinned positions remain the leading costs at hayfork.
-- Three new still pairs per room are in `runs/mat003-pairs/{cross,hayfork}.png`. Full-size images are in `runs/mat003-smoke` and `runs/eng-bench-{cross,hayfork}-4`. Cross picture 150 shows the contact shadows on the ground. Picture 1’s sampled skyline patch matches every RGB pixel and its hair patch matches 99.95%. Six full gameplay-area RGB mean absolute differences range from 0.258 to 0.721 on the 0–255 scale. `pixel-comparison.txt` lists per-picture results. Owner visual approval is pending.
-- Original captures cover game frames 466–765. The matching supplements in `runs/mat003-{cross,hayfork}` compare the original camera, effective pick fields, actor transforms, palettes, source lights, texture keys, effect and HUD records on all 600 pictures. They add the actual fog registers, sky far depth, modifier packets, paired texture keys, submission lists and per-part light folds. Private baked packs are in `build/indexed`.
-- Timing evidence under `E:\RE4DC-Lanes\eng-bench` includes `runs/baseline003-{cross,hayfork}-timed`, `baseline003-cross-verify2` and `baseline003-hayfork-verify3`. The strip profiles are in `runs/bench-model-matched-b` and `runs/bench-model-final-farm`. The indexed profiles are in `runs/mat003-model-cross` and `runs/mat003-farm`. Each phase003 directory retains hwreport symbol tables and miss counts. `build/final-bars003.json` holds the per-picture totals.
+- cross selected 180?326 meshlets over the route. The three world-bearing model intervals averaged 77.9 microseconds per selected meshlet across the timed sample.
+- hayfork selected 202?269 meshlets over the route. The three world-bearing model intervals averaged 65.2 microseconds per selected meshlet across the timed sample.
 
-## Disc and controls
+## Resident memory
 
-- Private staged standard GDEMU image `build/M1-GDEMU-mat003/disc.gdi`. Its `SHA256SUMS` covers all four files. Track 03 SHA-256 `b1389e7804f4303f6a596e53ae62ba596548a502c3523bf2b60a581b2bcdff33`. The disc passed standard lint and both 600-picture Flycast windows (`runs/mat003-standard`).
-- Renderer ELF SHA-256 `33de2a79aebc940dc9dcc079c4ce36cff1cccc924bf894004a0e4d6abae51e87`. The clean checkout reproduced the boot binary SHA-256 `7c0fa5d750f0ec837c774018470b875df5e4aa8bc3ab91239b17859f71aac1a1`. The missing-pack build refused to proceed. A corrupted frame-list index with a recomputed valid CRC was refused by guest validation before replay (stage 91, `runs/mat003-bad`).
-- With the 5 ms delay enabled, mean Flycast draw times at cross and hayfork were 13.098 vs 8.090 (+5.008) ms, 22.664 vs 17.664 (+5.000) ms. The original dropped-picture control refused picture 2. Guest PMC events 25, 24, 04, 05 and 08 returned zero in Flycast. Model miss counts come from the nominal SH7091 simulator.
-- SH4ZAM remains pinned to cff97e8 (previously 33fa485). The compatibility game build linked with zero unresolved symbols. The indexed design reuses existing game assembly alongside upstream SH4ZAM matrix helpers. There is no isolated SH4ZAM speedup claim.
+| Room | Whole world bytes | Texture packages bytes | Model catalogue bytes | Recorded input tables bytes | Pack bytes | Live input scratch bytes | KOS allocated heap bytes | VRAM free bytes |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| cross | 1,424,536 | 1,860,520 | 289,556 | 4,155,912 | 7,743,584 | 86,260 | 9,314,620 | 3,093,064 |
+| hayfork | 1,089,740 | 1,908,716 | 899,604 | 5,230,236 | 9,134,836 | 117,488 | 9,346,052 | 3,024,072 |
 
-## Remaining scope
+The boot reserves one 9,134,836-byte pack buffer for room changes. The linked span from the boot address through static storage is 1,016,220 bytes. Adding that span, 65,536 bytes below the boot address, and the sampled KOS heap gives cross 9.91 MiB of 16 MiB, hayfork 9.94 MiB of 16 MiB. This accounting excludes reservations outside those counters, including stack space. Video memory is separate. The rehearsal pack includes 300 recorded ticks. A live game would supply its own logic state and would have to budget that separately.
 
-Console timing and owner visual acceptance remain open. The optional QA-link phase switches were omitted. The staged image is local to the lane.
+Heap 4 in the source room map spans 0x8c8ab500–0x8cfbf420 (7,421,728 bytes) in both reference snapshots. The source world mesh, placement and available strip-group files total 1,417,772 bytes at r101 and 1,085,960 bytes at r103. The native cell and placement bounds cover 223 placements at r101 and 134 at r103. The renderer loads the room before picture one and keeps the TA vertex buffer double-buffered.
+
+## Coverage and controls
+
+- cross considered 33–33 actor parts per picture and rejected 17–21 after runtime projection. The logic capture emitted 0 queued glyph records over 300 ticks.
+- hayfork considered 148–148 actor parts per picture and rejected 28–135 after runtime projection. The logic capture emitted 0 queued glyph records over 300 ticks.
+- The hayfork input includes all ten 34-joint barn props. Their geometry comes from the immutable source model parts. The bench projects shared model positions before part rejection. Source-side drawing was not timed or profiled.
+- The private staged standard GDI booted both rooms for 600 pictures each. Clean-checkout boot bytes matched. The missing-pack build failed, and a deliberately invalid frame reference with a valid CRC was refused before drawing.
+- The 5 ms delay control increased the paired cross guest-clock drawing time by 4.999 ms median and 4.992 ms mean over 300 pictures.
+- The code uses the pinned SH4ZAM matrix load and FTRV operations. No SH4ZAM library kernel was added. The complete on-target cost of selection, projection and per-model lighting is included in the model traces.
+
+## Visual and console status
+
+Paired stills show the cross, flames, characters, scenery and moving hayfork view. Leon’s hair and lighting, the held weapon silhouette, the HUD mask and ammunition readout differ visibly from the source stills. Effect classes use a common native billboard path. Glyph replay has no natural on-screen sample in these windows. The packed model catalogue uses standard hand assets. Sprite-class specialization, exact masked HUD compositing, and character lighting parity remain open. Some selection, HUD and projection work repeats on unchanged input, so the timings include this repeated work. Owner visual approval and the 20 ms console measurement are outstanding. The actor rejection counts describe the native renderer. Historical game-side cull counts were not collected under the owner’s restriction on old-path profiling.
+
+## Deliverables
+
+- Staged disc: `E:\RE4DC-Lanes\eng-bench\build\M1-GDEMU-m1r3b\disc.gdi`. Track 3 SHA256 `e420b4cce94553be4cbdd2f0c21cf684071b18e05d3caf07f3467ae840092d98`. The neighbouring SHA256SUMS covers the descriptor and all three tracks.
+- Boot SHA256 `077d5c10d6bee4f3f038e29f4ba2ff70e7e7e60c4c1dd4b991ab7c484fb32fbf`.
+- Evidence: `E:\RE4DC-Lanes\eng-bench\runs\m1r3b-evidence`, with paired stills under each room’s `pairs` directory. The standard-disc observations are in `runs/m1r3b-standard`. Private capture and disc data stay in the lane.
+
+Both scenes exceeded 10 ms on every timed picture. This is the final model-only handback under STEER-005. The staged image is available to the integrator for console measurement.
