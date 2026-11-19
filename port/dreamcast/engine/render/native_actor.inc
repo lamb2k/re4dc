@@ -37,6 +37,15 @@ typedef struct {
 } RtModel;
 typedef struct {unsigned n; RtModel m[];} RtCatalog;
 
+/* Actor light model: 0 = linear fold (ambient + lamp (flat + .3 n.d)), 1 = ambient + sum lamp max(0, n.d).
+   Calibrated on the source stills over six timed pictures (evidence/look/light-*): the linear fold scaled by 0.55
+   by 0.42 gave the lowest frame and Leon-region error (frame MAE 8.81, region ratios 0.66-1.37); the clamped form ranged 0.38-1.52. */
+#ifndef M1_LIGHT_MODEL
+#define M1_LIGHT_MODEL 0
+#endif
+#ifndef M1_LIGHT_SCALE
+#define M1_LIGHT_SCALE 0.42f
+#endif
 #define ACTOR_POS_LIMIT 4096
 #define ACTOR_WS_LIMIT 256
 static uint16_t pos_records[ACTOR_POS_LIMIT+2][4] __attribute__((aligned(32)));
@@ -253,6 +262,19 @@ static void build_ws(const RtModel* m,unsigned i,const Incident* lamps,unsigned 
         shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[c],out[4+c],out[8+c],c==3?1.f:0.f));
         pm->elem[4*c]=v.x;pm->elem[4*c+1]=v.y;pm->elem[4*c+2]=v.z;pm->elem[4*c+3]=v.w;
     }
+#if M1_LIGHT_MODEL==1
+    /* Lamp directions moved into this weight set's model space once (normalised for raw s16 normals); the
+       per-normal loop takes ambient + sum lamp max(0, n.d). */
+    {
+        shz_mat4x4_t* f=skin_light+i;const float inv=1.f/(16384.f*.0625f);
+        for(unsigned j=0;j<3;j++){
+            const float* d=lamps[j].dir;
+            for(unsigned k=0;k<3;k++)f->elem[4*j+k]=j<nl?(out[k]*d[0]+out[k+4]*d[1]+out[k+8]*d[2])*inv:0.f;
+            f->elem[4*j+3]=0;
+        }
+        ws_ready[i]=1;return;
+    }
+#endif
     /* Light fold: colour = ambient + sum lamp (flat + .3 n.d); n is a raw s16 normal in this set's model space. */
     shz_mat4x4_t* f=skin_light+i;
     for(unsigned c=0;c<3;c++){f->elem[c]=f->elem[4+c]=f->elem[8+c]=0;f->elem[12+c]=ambient[c];}
@@ -267,9 +289,28 @@ static void build_ws(const RtModel* m,unsigned i,const Incident* lamps,unsigned 
             for(unsigned k=0;k<3;k++)f->elem[4*k+c]+=color*md[k];
         }
     }
+    for(unsigned k=0;k<15;k++)if((k&3)!=3)f->elem[k]*=M1_LIGHT_SCALE;
     ws_ready[i]=1;
 }
+static float lamp_amb[3],lamp_rgb[3][3];   /* this actor's ambient and lamp colours, times M1_LIGHT_SCALE */
+static void light_setup(const Incident* lamps,unsigned nl,const uint8_t* ambient){
+    for(unsigned c=0;c<3;c++){lamp_amb[c]=ambient[c]*M1_LIGHT_SCALE;for(unsigned j=0;j<3;j++)lamp_rgb[j][c]=j<nl?lamps[j].rgb[c]*M1_LIGHT_SCALE:0.f;}
+}
+static void light_normals_lambert(const SourceVector* v,unsigned n,uint32_t* out){
+    unsigned last=~0u;float a[12];
+    const float ar=lamp_amb[0],ag=lamp_amb[1],ab=lamp_amb[2];
+    for(unsigned i=0;i<n;i++,v++){
+        if(last!=v->bone){last=v->bone;memcpy(a,skin_light[last].elem,48);}
+        float x=v->xyz[0],y=v->xyz[1],z=v->xyz[2];
+        float d0=m1_maxf(0,x*a[0]+y*a[1]+z*a[2]),d1=m1_maxf(0,x*a[4]+y*a[5]+z*a[6]),d2=m1_maxf(0,x*a[8]+y*a[9]+z*a[10]);
+        float r=ar+d0*lamp_rgb[0][0]+d1*lamp_rgb[1][0]+d2*lamp_rgb[2][0];
+        float g=ag+d0*lamp_rgb[0][1]+d1*lamp_rgb[1][1]+d2*lamp_rgb[2][1];
+        float b=ab+d0*lamp_rgb[0][2]+d1*lamp_rgb[1][2]+d2*lamp_rgb[2][2];
+        out[i]=0xff000000|m1_byte(r)<<16|m1_byte(g)<<8|m1_byte(b);
+    }
+}
 static void light_normals(const SourceVector* v,unsigned n,uint32_t* out){
+    if(M1_LIGHT_MODEL==1){light_normals_lambert(v,n,out);return;}
     unsigned last=~0u;
     for(unsigned i=0;i<n;i++,v++){
         if(last!=v->bone){last=v->bone;shz_xmtrx_load_4x4(skin_light+last);}
@@ -371,7 +412,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         /* 4. weight sets used by visible parts */
         Incident lamps[3];unsigned nl=model_lights(s,actor,lamps);
         const uint8_t* ambient=(const uint8_t*)s->state[7]+4;float flat=actor->role==0?.57f:.3f;
-        memset(ws_ready,0,h[1]);
+        memset(ws_ready,0,h[1]);light_setup(lamps,nl,ambient);
         for(unsigned p=0;p<h[4];p++){
             if(!state[p])continue;const RtPart* rp=m->parts+p;
             for(unsigned k=0;k<rp->ws_count;k++){unsigned i=m->part_ws[rp->ws_first+k];if(!ws_ready[i])build_ws(m,i,lamps,nl,ambient,flat);}
@@ -391,6 +432,10 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         unsigned emitted=0;
         for(unsigned p=0;p<h[4];p++){
             if(!state[p] || m->parts[p].src->role==7)continue;
+            /* Leon's role-2 part is the knife in hand (still probe evidence/look/weapon-zoom.png). The game draws it only
+               in the knife stance, a player routine the recorded inputs do not carry yet (E1 hosts the player), so it is
+               not drawn: with the handgun out (HUD weapon 2 in both scenes) the source stills show no blade. */
+            if(!model && m->parts[p].src->role==2)continue;
             unsigned before=emitted;sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             if(emitted==before)census[1]++;
         }
