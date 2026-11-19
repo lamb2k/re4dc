@@ -2,14 +2,14 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19):** plan approved by the owner. `engine` branch created. Lanes lab33 (M0) and eng-bench (M1) running. M0 console session waits for the owner's SD card.
+**State (2026-11-19 10:30):** plan approved. M0 lab disc v2 is ready and waits for the owner's SD card. eng-bench (M1) is at the renderer step. disc2-play (game track) started.
 
 ## Milestones
 
 | # | Slice | State | Console run |
 |---|---|---|---|
-| M0 | Console truth (lab session) | lab33 running: lab disc v2. Session waits for the owner's SD card | Not run |
-| M1 | Bench: cross and worst farm view on the new renderer | eng-bench running | Not run |
+| M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
+| M1 | Bench: cross and worst farm view on the new renderer | eng-bench: SH4ZAM at cff97e8 links clean; capture 300 pictures + stills at both scenes; packs baked; renderer next | Not run |
 | M2 | Drive: village and farm in the game image | Not started | Not run |
 | M3 | Fights hold the floor | Not started | Not run |
 | M4 | Disc 1 on the engine line | Not started | Not run |
@@ -27,21 +27,21 @@ Only the integrator edits this file. Keep it under 80 lines.
 | Lake fight | not measured | |
 | Castle hall | not measured | |
 
-p99 and worst interval: never measured.
+p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 ## Lanes
 
-| Lane | Milestone | Branch | Started | Agent | Evidence |
-|---|---|---|---|---|---|
-| lab33 | M0: lab disc v2 (off arms, A/A, p99 and worst rows) | lane/lab33 from lane/lab32 aa622c2e5 | 11-19 09:08 | Codex gpt-6.2-astra medium, session 01a1f422-e8ce | E:\RE4DC-Lanes\lab33 |
-| eng-bench | M1: bench image, SH4ZAM to upstream, frame-list capture, bake, renderer | lane/eng-bench from engine 7c0f05711 | 11-19 09:08 | Codex gpt-6.2-astra medium, session 01a1f422-e8d6 | E:\RE4DC-Lanes\eng-bench |
+| Lane | Work | Branch | Agent | Evidence |
+|---|---|---|---|---|
+| eng-bench | M1 bench image | lane/eng-bench from engine 7c0f05711 | Codex gpt-6.2-astra medium, session 01a1f422-e8d6 | E:\RE4DC-Lanes\eng-bench |
+| disc2-play | Disc 2 chapters 3-1 to 4-4: merge ch32 + ch4, inventory, no-warp play-through tooling, 3-1 first | lane/disc2-play from t15/int a5aca9cf9 | Codex gpt-6.2-astra medium | E:\RE4DC-Lanes\disc2-play |
 
-Next lane when lab33 hands back: one Disc 2 room lane (enter and play-through), decision 6.
+Closed: lab33 (M0 tool), handed back 11-19. Integrator accepted its one open item: off arms moved quiet-farm logic by 0.13 to 0.17 ms/tick against a 0.125 ms repeat spread (Flycast). The A/A visit read as low, so visit order explains most of it, and the console session brackets every arm. Lake fight preset left out (it lands in the boat-death state).
 
-## Run-time lab arms
+## Run-time lab arms (lab disc v2)
 
-None on the engine line yet.
+noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
 ## Waiting on the owner
 
-The decisions listed in hand-over H-001.
+- SD card in, then one evening with the console and DreamPi on (core tier first, 85 min).
