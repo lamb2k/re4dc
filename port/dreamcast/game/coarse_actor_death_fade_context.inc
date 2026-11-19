@@ -34,7 +34,27 @@ bool actor_fade_eligible_g1(cModel* m,const Re4dcActorPlan& p) {
     return re4dc_fade::state_allows(*m,p.appearance,static_cast<cEm*>(m)->hp);
 #endif
 }
+#if RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk; render only): the Novistador (em2d) camouflage drawn as the PS2
+// draws it. em2d (GC and PS2 alike) sets Shader_type 1 while Refract_ratio < 0xFF and moves its model info colour alpha
+// (0.9 x + 3.2 -> 32 cloaked, 0.9 x + 12.8 -> 128 while it hums, +0x18 per frame back to 255). The GC draws a
+// refraction shader (trans.cpp RefractShaderSetup); the PS2 renderer never reads Shader_type or Refract_ratio (no
+// load of either field in SLUS_211.34 outside em2d's own hit effect) and draws the body with the info colour alpha.
+// The native plan draws the body through the fade ticket (TR list, source FIFO position) with that alpha.
+inline bool actor_nmr_cloak(const cModel* m) {
+    return m && m->kindid==0 && m->id==0x2D && m->pModelInfo &&
+        ((m->Shader_type==1 && m->Refract_ratio!=0xFF) || m->pModelInfo->color[3]!=255) &&
+        (m->Shader_type==0 || m->Shader_type==1) &&
+        m->invisible_factor==1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255 && !m->z_mode && !m->CullMode &&
+        !(pG->Status_flg[1]&0x04000000);
+}
+inline unsigned actor_nmr_cloak_alpha(const cModel* m) { return m->pModelInfo->color[3]; }
+#define RE4DC_NMR_SHADER_BAD(m) ((m)->Shader_type && !actor_nmr_cloak(m))
+#endif
 bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
+#if RE4DC_NMR_CLOAK
+    if(actor_nmr_cloak(m) && p.appearance>=nmr::appearance_first)return true;
+#endif
 #if RE4DC_NMR_DYING
     // NATIVE_MODEL_REGISTRY_DYING (native_model_registry.mk): a Ganado-class enemy (em10.cpp family, ids 0x10..0x20,
     // one source pass) planned by the PS2 Ganado cast or a registry descriptor, while its whole-model fade runs (death:

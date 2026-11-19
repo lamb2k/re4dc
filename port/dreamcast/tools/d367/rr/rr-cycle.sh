@@ -226,6 +226,8 @@ else
   # Disc 2 (lane castle-disc2-26, recipe.conf RR_DISC2=1): the castle disc of this commit beside the Disc 1 candidate
   # (<cand>/disc2/gdemu) and its census / GC-ASSET bases; rr-judge.py fails the cycle when it did not build (disc2.ok)
   if [ $ok = 1 ] && [ "${RR_DISC2:-0}" = 1 ]; then step disc2 bash "$BIN/rr-disc2.sh" "$W" "$TA" "$TB" "$S7" "$EVU" || echo "Disc 2 arm failed: its row reports it"; fi
+  # Disc 3 (lane world-ch5, recipe.conf RR_DISC3=1, default 0): the island disc beside Disc 1 and Disc 2 (<cand>/disc3/gdemu)
+  if [ $ok = 1 ] && [ "${RR_DISC3:-0}" = 1 ]; then step disc3 bash "$BIN/rr-disc3.sh" "$W" "$TA" "$TB" "$S7" "$EVU" || echo "Disc 3 arm failed"; fi
 fi
 if [ $ok = 1 ]; then
   if [ "$TIER" = full ]; then step jobs jobs_full || ok=0; else step jobs jobs_quick || ok=0; fi

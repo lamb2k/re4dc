@@ -91,6 +91,17 @@ extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_R
 extern "C" unsigned re4dc_room_id_now();
 extern "C" void re4dc_vram_pages_census(unsigned* out);
 #endif
+#if defined(RE4DC_VRAM_PROBE31) && RE4DC_VRAM_PROBE31   // DISC31_VRAM_PROBE (default 0: vram_probe is plain pvr_mem_malloc)
+// lane disc31: a test allocation (allocate, then free) whose miss counts in vram_pages.cpp probe_fails, not fails.
+// Weak: without VRAM_PAGES the plain pvr_mem_malloc is used, as before.
+// (void* / __SIZE_TYPE__: KOS's pvr_ptr_t and size_t, whose headers are not included yet here)
+extern "C" void* re4dc_vram_pages_probe(__SIZE_TYPE__ size) __attribute__((weak));
+extern "C" void* pvr_mem_malloc(__SIZE_TYPE__ size);
+static inline void* vram_probe(__SIZE_TYPE__ size){return re4dc_vram_pages_probe?re4dc_vram_pages_probe(size):pvr_mem_malloc(size);}
+#else
+#define vram_probe(size) pvr_mem_malloc(size)
+#endif
+#line 94
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 extern "C" volatile unsigned re4dc_vram_key_crc,re4dc_vram_key_fnv;   // vram_pages.cpp (WORLD_METER VRAMFAIL lines)
 #endif
@@ -542,7 +553,7 @@ bool gcasset_texture_fingerprint(Entry& entry,const Key& key,const char* path,un
     const bool cacheable=bytes!=0;
     FpCache& slot=fp_cache[(key.crc^key.fnv^offset)&63U];
     if(cacheable && slot.token && slot.crc==key.crc && slot.fnv==key.fnv && slot.offset==offset && slot.bytes==bytes &&
-       (slot.token>>14)==re4dc_gcasset::catalog_generation()){
+       (slot.token>>16)==re4dc_gcasset::catalog_generation()){
         entry.asset.value=slot.token;return true;
     }
     if(streamed){
@@ -805,6 +816,17 @@ Key room_pin_key{};
 #else
 #define RE4DC_WRAP_SAFE(pkg) false
 #endif
+#if defined(RE4DC_PKG_PS2_SIZE) && RE4DC_PKG_PS2_SIZE
+// PKG_PS2_SIZE=1 (game30.mk; render only, lane assets-dc 2026-11-02): a package built from the PS2 picture at the PS2's
+// own size (dcf01) carries header flags bit 29: the whole picture is the source image's UV 0..1, scaled. It is never
+// padded, so repeat wrap is safe and the UV scale is 1 (cover = the package texture size).
+#define RE4DC_PS2SZ(pkg) ((((pkg).header().flags>>29)&1U)!=0U)
+#else
+#define RE4DC_PS2SZ(pkg) false
+#endif
+#define RE4DC_WRAP_OK(pkg) (RE4DC_WRAP_SAFE(pkg) || RE4DC_PS2SZ(pkg))
+#define RE4DC_CW(pkg,iw) (RE4DC_PS2SZ(pkg)?unsigned((pkg).textures()[0].width):unsigned(RE4DC_COVER_W(pkg,iw)))
+#define RE4DC_CH(pkg,ih) (RE4DC_PS2SZ(pkg)?unsigned((pkg).textures()[0].height):unsigned(RE4DC_COVER_H(pkg,ih)))
 #if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
 extern "C" void re4dc_ovl_watch(const char* where);
 #define OVLW(x) re4dc_ovl_watch(x)
@@ -3080,6 +3102,48 @@ void bench_banner_draw(){
     stream_send(packet,sizeof(packet));
 }
 #endif
+#if defined(RE4DC_QA_PVRERR_ROW) && RE4DC_QA_PVRERR_ROW
+// QA_PVRERR_ROW=1 (crowd.mk, GitHub #63): "I<isp total>+<last 60 frames> O<opb total>+<last 60> V<max vertex KB> P<max pool KB>"
+// white on black at y 60..88. Two textures, the idle one rewritten once a second and then shown, so a queued render
+// never reads a half written row. It is drawn last in the TR list: on a bad frame the row itself may be lost in a tile.
+pvr_ptr_t pverr_vram[2];bool pverr_failed;unsigned pverr_show,pverr_w,pverr_i0,pverr_o0,pverr_i,pverr_o,pverr_f;
+void pverr_row_draw(){
+    constexpr unsigned W=512,H=32;
+    if(pverr_failed)return;
+    if(!pverr_vram[0]){
+        pverr_vram[0]=pvr_mem_malloc(W*H*2);pverr_vram[1]=pverr_vram[0]?pvr_mem_malloc(W*H*2):nullptr;
+        if(!pverr_vram[1]){pverr_failed=true;re4dc_log("pverr row: no VRAM\n");return;}
+        pverr_f=frame-60U;
+    }
+    if(frame-pverr_f>=60U){
+        pverr_f=frame;
+        const unsigned ic=latch::err_count[0],oc=latch::err_count[3];
+        pverr_i=ic-pverr_i0;pverr_o=oc-pverr_o0;pverr_i0=ic;pverr_o0=oc;
+        char text[44];
+        snprintf(text,sizeof(text),"I%u+%u O%u+%u V%u P%u",ic,pverr_i,oc,pverr_o,latch::max_vtx/1024U,latch::max_opb/1024U);
+        const unsigned next=pverr_show^1U;
+        volatile unsigned short* t=reinterpret_cast<volatile unsigned short*>(pverr_vram[next]);
+        for(unsigned i=0;i<W*H;++i)t[i]=0U;
+        bfont_draw_str_ex(reinterpret_cast<unsigned short*>(pverr_vram[next])+4*W+8,W,0xFFFFU,0U,16,1,text);
+        pverr_w=std::min(W,unsigned(strlen(text))*12U+16U);pverr_show=next;
+        if(pverr_i|pverr_o)re4dc_log("pverr frame=%u %s\n",frame,text);
+    }
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,PVR_TXRFMT_RGB565|PVR_TXRFMT_NONTWIDDLED,W,H,pverr_vram[pverr_show],PVR_FILTER_NONE);
+    c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_ONE;c.blend.dst=PVR_BLEND_ZERO;c.gen.fog_type=PVR_FOG_DISABLE;
+    alignas(32) unsigned char packet[sizeof(pvr_poly_hdr_t)+4*sizeof(pvr_vertex_t)];
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(packet),&c);
+    auto* v=reinterpret_cast<pvr_vertex_t*>(packet+sizeof(pvr_poly_hdr_t));
+    const float w=float(pverr_w),x0=(640.0f-w)*0.5f,y0=60,h=28,u1=w/float(W),v0=2.0f/H,v1=30.0f/H;
+    const float xs[4]={x0,x0,x0+w,x0+w},ys[4]={y0+h,y0,y0+h,y0},us[4]={0,0,u1,u1},vs[4]={v1,v0,v1,v0};
+    const float layer=overlay_depth();
+    for(unsigned k=0;k<4;++k){
+        v[k].flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;v[k].x=RE4DC_UI_X(xs[k]);v[k].y=RE4DC_UI_Y(ys[k]);v[k].z=layer;
+        v[k].u=us[k];v[k].v=vs[k];v[k].argb=0xffffffffU;v[k].oargb=0;
+    }
+    stream_send(packet,sizeof(packet));
+}
+#endif
 #if defined(RE4DC_MCHECK_SAFE) && RE4DC_MCHECK_SAFE
 // MCHECK_SAFE=1 (mcheck.mk, test builds only): the bounding box (screen pixels) of every quad the speed display
 // flushes in a scene, logged at scene close with the render size, the tile grid and the tile rows LETTERBOX_CLIP
@@ -4382,7 +4446,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_TEX_RESIDENT
             // Evict until one contiguous block of the size fits, then read the
             // package once more (was: a full re-read per single eviction).
-            for(;;){pvr_ptr_t probe=pvr_mem_malloc(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
+            for(;;){pvr_ptr_t probe=vram_probe(need);if(probe){pvr_mem_free(probe);break;}if(!evict())break;}
 #endif
             ok=RE4DC_OPEN_PACKAGE() && slot->package.upload();
         }
@@ -4759,6 +4823,11 @@ constexpr unsigned kWorldNewKeys=16,kWorldNewBytes=84448;
 unsigned world_new_n,world_new_bytes;
 std::uint64_t world_new_mask,world_seen_mask,world_capped_mask;
 #endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+// NMR_PRELOAD_SKIP (Makefile): the enemy pass leaves out the GC identities the room's registry package replaces.
+extern "C" int re4dc_registry_replaces_key(unsigned crc,unsigned fnv);  // coarse_actor.cpp
+bool preload_enemy_pass; unsigned preload_nmr_skipped,preload_nmr_skipped_bytes;
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
 // TEX_PKG_SKIP (native_model_registry.mk): a source texture of the room package's role rows (the GC TPLs its
 // descriptors replace) is not uploaded at room entry; the package draws its own atlas. A source draw (fallback)
@@ -4782,6 +4851,11 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
         if(!table.record(i,crc,fnv,width,height,format) || !width || !height || width>1024 || height>1024)continue;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
         if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
+#endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+        if(preload_enemy_pass && re4dc_registry_replaces_key(crc,fnv)) {
+            ++preload_nmr_skipped;preload_nmr_skipped_bytes+=preload_least(width,height);continue;
+        }
 #endif
 #if RE4DC_QUALITY_ASSETS
         if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue; RE4DC_GCIDLE_SKIP(crc,fnv)
@@ -4889,6 +4963,14 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             // TPLs, 16 uploads in play). Core keys (room 0) keep the skip.
             if(!r.room && RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
             if(r.room && re4dc_registry_source_key(r.crc,r.fnv))++pkg_listed_kept;
+#elif defined(RE4DC_RESIDENT_SHARED_R327) && RE4DC_RESIDENT_SHARED_R327
+            // r327 registry appearance202 body BIN22b/TPL22c lists this source key, but live play
+            // still uses it. The explicit resident list is authoritative for this one audited record.
+            // Keep other role-package skips and inferred enemy preloads intact (island18 res2).
+            const bool shared_r327=src.room==0x327u && r.room==0x327u &&
+                r.width==256u && r.height==256u && r.format==14u &&
+                r.crc==0x1aad1b6cu && r.fnv==0xe247646eu;
+            if(!shared_r327 && RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
 #else
             if(RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
 #endif
@@ -4899,6 +4981,17 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             for(const auto& m:missing_keys)if(!known && (m.crc|m.fnv) && m==key)known=true;
             for(unsigned k=0;k<n && !known;++k)if(preload_picks[k].key==key)known=true;
             const unsigned least=preload_least(r.width,r.height);
+#if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_RESIDENT_SKIP_LOG) && RE4DC_RESIDENT_SKIP_LOG
+            // RESIDENT_SKIP_LOG=1 only (compiled out otherwise): why a listed key was not picked (lane ch5found16, r327 1aad1b6c).
+            if(known || bytes+least>byte_limit){
+                bool in_entries=false,in_missing=false,in_picks=false;
+                for(const auto& e:entries)if(e.valid && e.key==key){in_entries=true;break;}
+                for(const auto& m:missing_keys)if((m.crc|m.fnv) && m==key)in_missing=true;
+                for(unsigned k=0;k<n;++k)if(preload_picks[k].key==key){in_picks=true;break;}
+                re4dc_log("native texture preload: resident skip %08x-%08x %ux%u room=%03x known=%d (entry=%d missing=%d picked=%d) bytes=%u+%u limit=%u n=%u resident=%u slots=%u\n",
+                          key.crc,key.fnv,(unsigned)r.width,(unsigned)r.height,src.room,known?1:0,in_entries?1:0,in_missing?1:0,in_picks?1:0,bytes,least,byte_limit,n,resident,limit);
+            }
+#endif
             if(known || bytes+least>byte_limit)continue;
             preload_picks[n++]={key,r.width,r.height,r.format};bytes+=least;++resident_picked;
         }
@@ -5012,12 +5105,22 @@ void preload_identities(){
 #if RE4DC_PS2_PRELOAD_LEAN
     }
 #endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+    const unsigned nmr_skipped0=preload_nmr_skipped,nmr_bytes0=preload_nmr_skipped_bytes;
+    preload_enemy_pass=true;
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
     {const unsigned s0=pkg_skips;
      for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit,true);
      re4dc_log("TEXPKG preload enemy skips=%u total=%u\n",pkg_skips-s0,pkg_skips);}
 #else
     for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit);
+#endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+    preload_enemy_pass=false;
+    if(preload_nmr_skipped!=nmr_skipped0)
+        re4dc_log("NMR preload skip: run=%u keys=%u bytes=%u (registry-replaced GC enemy textures; total %u)\n",preload_runs,
+                  preload_nmr_skipped-nmr_skipped0,preload_nmr_skipped_bytes-nmr_bytes0,preload_nmr_skipped);
 #endif
     preload_select(player_identities,n,resident,bytes,limit,byte_limit);preload_select(weapon_identities,n,resident,bytes,limit,byte_limit);
 #if RE4DC_COARSE_WORLD & 64
@@ -5515,7 +5618,7 @@ int vram_claim(unsigned bytes,bool movie){
     ++vram_claims;
     unsigned released=0,released_bytes=0;
     // Probe only when the total would do: a failed pvr_mem_malloc() logs an error.
-    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=pvr_mem_malloc(bytes);if(!p)return false;pvr_mem_free(p);return true;};
+    auto fits=[bytes]{if(pvr_mem_available()<bytes)return false;pvr_ptr_t p=vram_probe(bytes);if(!p)return false;pvr_mem_free(p);return true;};
     // Fragmented pool: re-probe only after each 64 KiB released, not after every small texture
     // (the sub screen's 1 MiB claim probed 146 times at r101, each failure a KOS "out of PVR
     // memory" line, warp-r101-pbdoor8); at most 64 KiB more is released than strictly needed.
@@ -6225,7 +6328,8 @@ extern "C" void re4dc_ui_glyph_fonts_changed(){
 #error PVR_MID_FENCE waits in present_fence: needs PVR_PIPELINE
 #endif
 #if RE4DC_RES_MODES
-#if RE4DC_TA_BIN_DIAG || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
+// STREAM_PEAK_LOG (cave66.mk) test builds may model the Standard 640x480 mode's tiles with TA_BIN_DIAG.
+#if (RE4DC_TA_BIN_DIAG && !(defined(RE4DC_STREAM_PEAK_LOG) && RE4DC_STREAM_PEAK_LOG)) || !RE4DC_PVR_STREAM || RE4DC_PVR_PIPELINE!=2 || !RE4DC_TA_HEADROOM
 #error RES_MODES needs PVR_STREAM=1, PVR_PIPELINE=2, TA_HEADROOM>=1 (ta_vertex_bytes) and TA_BIN_DIAG=0 (its 20x15 tile replay)
 #endif
 extern "C" unsigned re4dc_res_params(pvr_init_params_t* p);
@@ -6956,9 +7060,9 @@ static void ui_draw_quad(unsigned i){
         if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
 #endif
 #if RE4DC_UI_DRAW_LEAN
-        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+        const float cover_w=float(RE4DC_CW(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
-                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    cover_h=float(RE4DC_CH(handles[i]->package,q.image.height)),
                     texture_h=float(t.height);
 #endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
@@ -6966,7 +7070,7 @@ static void ui_draw_quad(unsigned i){
 #if RE4DC_UI_DRAW_LEAN
             v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
 #else
-            v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+            v[n].u=q.uv[2*j]*RE4DC_CW(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_CH(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
 #endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
@@ -7063,9 +7167,9 @@ extern "C" void re4dc_ui_present(){
         if(re4dc_ivd_on())re4dc_log("IVD draw quad %u layer=%d list=%d\n",i,int(layer),int(stream_list));
 #endif
 #if RE4DC_UI_DRAW_LEAN
-        const float cover_w=float(RE4DC_COVER_W(handles[i]->package,q.image.width)),
+        const float cover_w=float(RE4DC_CW(handles[i]->package,q.image.width)),
                     texture_w=float(t.width),
-                    cover_h=float(RE4DC_COVER_H(handles[i]->package,q.image.height)),
+                    cover_h=float(RE4DC_CH(handles[i]->package,q.image.height)),
                     texture_h=float(t.height);
 #endif
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
@@ -7073,7 +7177,7 @@ extern "C" void re4dc_ui_present(){
 #if RE4DC_UI_DRAW_LEAN
             v[n].u=q.uv[2*j]*cover_w/texture_w;v[n].v=q.uv[2*j+1]*cover_h/texture_h;v[n].argb=q.color;v[n].oargb=0;}
 #else
-            v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
+            v[n].u=q.uv[2*j]*RE4DC_CW(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_CH(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
 #endif
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
@@ -7096,6 +7200,9 @@ extern "C" void re4dc_ui_present(){
 #elif defined(RE4DC_QA_BANNER) && RE4DC_QA_BANNER
     if(!re4dc_vi_black() && !stream_aborted && re4dc_qa_banner_on())bench_banner_draw();   // qamenu.mk: title screens
 #endif
+#endif
+#if defined(RE4DC_QA_PVRERR_ROW) && RE4DC_QA_PVRERR_ROW && RE4DC_PVR_STREAM
+    if(!re4dc_vi_black() && !stream_aborted)pverr_row_draw();
 #endif
 #if RE4DC_PERF_HUD
     if(!re4dc_vi_black()){
@@ -7126,6 +7233,15 @@ extern "C" void re4dc_ui_present(){
     if(movie_texture && movie_picture && movie_shown_serial!=movie_upload_serial){
         movie_shown_serial=movie_upload_serial;++movie_presentations;
         if(!movie_first_picture_us)movie_first_picture_us=timer_us_gettime64();
+    }
+#endif
+#if defined(RE4DC_STREAM_PEAK_LOG) && RE4DC_STREAM_PEAK_LOG
+    {   // STREAM_PEAK_LOG (cave66.mk): heavy model streams by frame, for placing TA-heavy views
+        static unsigned spk_win,spk_last;
+        if(stream_model_bytes>spk_win)spk_win=stream_model_bytes;
+        if(stream_model_bytes>=unsigned(RE4DC_STREAM_PEAK_LOG)*1024U && frame-spk_last>=4){
+            spk_last=frame;re4dc_log("SPK: frame=%u bytes=%u\n",frame,stream_model_bytes);}
+        if(frame%30==0){re4dc_log("SPK win: frame=%u max=%u\n",frame,spk_win);spk_win=0;}
     }
 #endif
     if(stream_model_bytes && model_presented++<3)
@@ -7577,7 +7693,7 @@ extern "C" int re4dc_model_header_preview(const Re4dcModelPart* p,void* out){
     Entry* handle=resolve_peek(p->image,(p->material_flags&4)?p:nullptr);
     if(!handle)return 0;
     const auto& t=handle->package.textures()[0];
-    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(handle->package))return 0;
+    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(handle->package))return 0;
     unsigned fmt=re4dc::texture::pvr_format(t);
     const pvr_list_t list=select_model_pass(p);
     pvr_poly_hdr_t header;
@@ -7663,7 +7779,7 @@ Entry* prepared_entry34(const Re4dcModelPart* p,const Re4dcModelPreparedBinding3
        e.package.header().texture_count!=1 || !e.package.pvr_texture(0))return nullptr;
     const auto& t=e.package.textures()[0];
     if(t.width!=b->width || t.height!=b->height ||
-       ((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(e.package))return nullptr;
+       ((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(e.package))return nullptr;
     return &e;
 }
 }
@@ -7705,14 +7821,14 @@ extern "C" int re4dc_model_packet_prepare34(const Re4dcModelPart* p,unsigned uv_
        e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
     const auto& t=e->package.textures()[0];
     if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) &&
-       !RE4DC_WRAP_SAFE(e->package))return 0;
+       !RE4DC_WRAP_OK(e->package))return 0;
     b.entry=unsigned(e-entries);b.upload=e->upload_incarnation;
     b.crc=e->key.crc;b.fnv=e->key.fnv;b.width=t.width;b.height=t.height;
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
-    b.u_scale=float(int(p->image.width))/float(int(t.width));
-    b.v_scale=float(int(p->image.height))/float(int(t.height));
+    b.u_scale=float(int(RE4DC_CW(e->package,p->image.width)))/float(int(t.width));
+    b.v_scale=float(int(RE4DC_CH(e->package,p->image.height)))/float(int(t.height));
 #else
-    b.u_scale=float(p->image.width)/t.width;b.v_scale=float(p->image.height)/t.height;
+    b.u_scale=float(RE4DC_CW(e->package,p->image.width))/t.width;b.v_scale=float(RE4DC_CH(e->package,p->image.height))/t.height;
 #endif
     if(!actor_texture_leases.acquire(b.entry,frame,b.texture))return -1;
     b.active=1;
@@ -7820,9 +7936,9 @@ if(!handle){
     // Repeating a padded image would repeat its border. Reject, never change wrap.
 #if RE4DC_MESH_TEXTURES
     // A baked texture is addressed 0..1 as authored: no source image size to match.
-    if(!model_texture && (((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(handle->package))){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
+    if(!model_texture && (((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(handle->package))){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
 #else
-    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_SAFE(handle->package)){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
+    if(((p->wrap_s && t.width!=p->image.width)||(p->wrap_t && t.height!=p->image.height)) && !RE4DC_WRAP_OK(handle->package)){RE4DC_DROP(p,'w',t.width,t.height,handle->key.crc,handle->key.fnv);++model_wrap_rejects;return 0;}
 #endif
     unsigned fmt=re4dc::texture::pvr_format(t);
     pvr_list_t list=PVR_LIST_TR_POLY;
@@ -7929,13 +8045,14 @@ if(!handle){
 #endif
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
     {   // G1_FP_UNSIGNED: sizes <= 1024 (reserve checked them; t is a loaded texture): the same floats through int, once
-        const float us=float(int(p->image.width))/float(int(t.width)),vs=float(int(p->image.height))/float(int(t.height));
+        const float us=float(int(RE4DC_CW(handle->package,p->image.width)))/float(int(t.width)),vs=float(int(RE4DC_CH(handle->package,p->image.height)))/float(int(t.height));
         if(out->u_scale!=us || out->v_scale!=vs)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
         out->u_scale=us;out->v_scale=vs;
     }
 #else
-    if(out->u_scale!=float(p->image.width)/t.width || out->v_scale!=float(p->image.height)/t.height)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
-    out->u_scale=float(p->image.width)/t.width;out->v_scale=float(p->image.height)/t.height;
+    const float ps2u=float(RE4DC_CW(handle->package,p->image.width))/t.width,ps2v=float(RE4DC_CH(handle->package,p->image.height))/t.height;
+    if(out->u_scale!=ps2u || out->v_scale!=ps2v)DFA26_COUNT(model_scale_rebuilds,PacketUvScale);
+    out->u_scale=ps2u;out->v_scale=ps2v;
 #endif
 #if RE4DC_MESH_TEXTURES
     }
@@ -8050,7 +8167,26 @@ extern "C" void re4dc_model_packet_commit(unsigned count){
 #endif
     }
 }
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+// CHARS31_COUNT (chars31.mk, diagnostic): the boundary counters, read around each actor part.
+extern "C" void re4dc_c31_model_counts(unsigned* parts,unsigned* other,unsigned* in,unsigned* out){
+    *parts=model_parts;*other=model_invalid+model_resource+model_overflow;*in=model_input;*out=model_output;
+}
+// Results committed outside any guarded actor part (static meshes, generic path), by return address.
+extern "C" unsigned re4dc_c31_depth();
+namespace c31ra { struct Row{const void* ra;unsigned parts,out_parts,tris_out;}; Row rows[16]; }
+static void c31_ra_note(const void* ra,unsigned reason,unsigned output){
+    if(re4dc_c31_depth())return;
+    for(auto& r:c31ra::rows)if(r.ra==ra||!r.ra){r.ra=ra;if(reason==0){++r.parts;if(output){++r.out_parts;r.tris_out+=output;}}return;}
+}
+extern "C" void re4dc_c31_ra_dump(unsigned f){
+    for(auto& r:c31ra::rows){if(r.ra)re4dc_log("C31R f=%u ra=%08x parts=%u out=%u tout=%u\n",f,(unsigned)r.ra,r.parts,r.out_parts,r.tris_out);r=c31ra::Row{};}
+}
+#endif
 extern "C" void re4dc_model_result(unsigned reason,unsigned input,unsigned output){
+#if defined(RE4DC_CHARS31_COUNT) && RE4DC_CHARS31_COUNT
+    c31_ra_note(__builtin_return_address(0),reason,output);
+#endif
 #if defined(RE4DC_MODEL_PART_DUMP)
     if(frame>=unsigned(RE4DC_MODEL_PART_DUMP) && frame<unsigned(RE4DC_MODEL_PART_DUMP)+3)
         re4dc_log("PARTDUMP f=%u key=%08x-%08x in=%u out=%u r=%u\n",frame,model_dump_crc,model_dump_fnv,input,output,reason);
@@ -8402,8 +8538,8 @@ extern "C" int re4dc_leon_direct_capture(const Re4dcModelPart* p,Re4dcLeonHeader
     while(width<p->image.width)width*=2;
     while(height<p->image.height)height*=2;
     const auto& t=model_handle->package.textures()[0];
-    out->scale_rebuild=(float(p->image.width)/width!=float(p->image.width)/t.width ||
-                        float(p->image.height)/height!=float(p->image.height)/t.height)?1u:0u;
+    out->scale_rebuild=(float(p->image.width)/width!=float(RE4DC_CW(model_handle->package,p->image.width))/t.width ||
+                        float(p->image.height)/height!=float(RE4DC_CH(model_handle->package,p->image.height))/t.height)?1u:0u;
     out->entry=model_handle;out->list=list;out->key=key;out->valid=1;
     return 1;
 }
@@ -8472,7 +8608,7 @@ extern "C" int re4dc_actor_texture_acquire(const Re4dcUiImage* image,unsigned cr
     const Key key{crc,fnv};Entry* e=load(*image,false,&key);
     if(!e || !e->valid || !(e->key==key) || !e->package.upload_complete() || e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
     const auto& t=e->package.textures()[0];
-    if(t.width!=image->width || t.height!=image->height || t.format>re4dc::texture::kArgb4444)return 0;
+    if(((t.width!=image->width || t.height!=image->height) && !RE4DC_PS2SZ(e->package)) || t.format>re4dc::texture::kArgb4444)return 0;
 #if RE4DC_ACTOR_TEX_PREP && RE4DC_ACTOR_TEX_PREP_DIAG
     if(!actor_texture_leases.acquire(unsigned(e-entries),frame,*out))return 0;
     actor_tex_prep_bound(key);return 1;
@@ -8486,7 +8622,7 @@ extern "C" int re4dc_actor_texture_acquire_next(const Re4dcUiImage* image,unsign
     const Key key{crc,fnv};Entry* e=load(*image,false,&key);
     if(!e || !e->valid || !(e->key==key) || !e->package.upload_complete() || e->package.header().texture_count!=1 || !e->package.pvr_texture(0))return 0;
     const auto& t=e->package.textures()[0];
-    if(t.width!=image->width || t.height!=image->height || t.format>re4dc::texture::kArgb4444)return 0;
+    if(((t.width!=image->width || t.height!=image->height) && !RE4DC_PS2SZ(e->package)) || t.format>re4dc::texture::kArgb4444)return 0;
     return actor_texture_leases.acquire(unsigned(e-entries),frame+1,*out)?1:0;
 }
 extern "C" int re4dc_actor_texture_validate_key(const Re4dcActorTextureLease* lease,unsigned crc,unsigned fnv){
@@ -9022,10 +9158,10 @@ void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     static const unsigned char order[8]={0,1,7,2,6,3,5,4};
 #if defined(RE4DC_G1_FP_UNSIGNED) && RE4DC_G1_FP_UNSIGNED
     // G1_FP_UNSIGNED: picture and texture sizes are < 2^31 (a loaded texture), so the signed conversion is the same float.
-    const float su=float(int(RE4DC_COVER_W(e->package,s.image.width)))/float(int(t.width)),
-                sv=float(int(RE4DC_COVER_H(e->package,s.image.height)))/float(int(t.height));
+    const float su=float(int(RE4DC_CW(e->package,s.image.width)))/float(int(t.width)),
+                sv=float(int(RE4DC_CH(e->package,s.image.height)))/float(int(t.height));
 #else
-    const float su=float(RE4DC_COVER_W(e->package,s.image.width))/t.width,sv=float(RE4DC_COVER_H(e->package,s.image.height))/t.height;
+    const float su=float(RE4DC_CW(e->package,s.image.width))/t.width,sv=float(RE4DC_CH(e->package,s.image.height))/t.height;
 #endif
     auto* v=reinterpret_cast<pvr_vertex_t*>(out+sizeof(pvr_poly_hdr_t));
     for(unsigned i=0;i<8;++i){
@@ -9132,7 +9268,7 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     pvr_sprite_compile(h,&c);h->argb=s.color;h->oargb=0;
 #endif
     auto* b=reinterpret_cast<pvr_sprite_txr_t*>(out+sizeof(pvr_poly_hdr_t));
-    const float su=float(RE4DC_COVER_W(e->package,s.image.width))/t.width,sv=float(RE4DC_COVER_H(e->package,s.image.height))/t.height;
+    const float su=float(RE4DC_CW(e->package,s.image.width))/t.width,sv=float(RE4DC_CH(e->package,s.image.height))/t.height;
     b->flags=PVR_CMD_VERTEX_EOL;
     b->ax=s.x[0];b->ay=s.y[0];b->az=s.z[0];b->bx=s.x[1];b->by=s.y[1];b->bz=s.z[1];
     b->cx=s.x[2];b->cy=s.y[2];b->cz=s.z[2];b->dx=s.x[3];b->dy=s.y[3];b->dummy=0;
@@ -9743,7 +9879,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
     Entry* handle=load(image,false,&key);
     if(!handle || !frame_ready || stream_aborted || direct_open){++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
-    if(t.width!=width || t.height!=height)return 0; // repeated UVs cannot use padding
+    if((t.width!=width || t.height!=height) && !RE4DC_PS2SZ(handle->package))return 0; // repeated UVs cannot use padding
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
 #if RE4DC_WORLD_AUTOSORT
@@ -9795,7 +9931,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
     Entry* handle=load(image,false,&key);
     if(!handle || !frame_ready || stream_aborted || direct_open){++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
-    if(t.width!=width || t.height!=height)return 0; // repeated UVs cannot use padding
+    if((t.width!=width || t.height!=height) && !RE4DC_PS2SZ(handle->package))return 0; // repeated UVs cannot use padding
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
 #if RE4DC_WORLD_AUTOSORT
@@ -10366,7 +10502,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #if RE4DC_WORLD_RECT21
     if(!rect_scale(*handle)){RE4DC_WHD(7);return 0;}
 #else
-    if(t.width!=k[2] || t.height!=k[3]){RE4DC_WHD(7);return 0;} // repeated UVs cannot use padding
+    if((t.width!=k[2] || t.height!=k[3]) && !RE4DC_PS2SZ(handle->package)){RE4DC_WHD(7);return 0;} // repeated UVs cannot use padding
 #endif
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;

@@ -596,6 +596,23 @@ bool adopt_memo(const cModelInfo* p,bool note) {
 }
 } }
 #endif
+#if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC && defined(RE4DC_LEON_HAND_POSES) && RE4DC_LEON_HAND_POSES
+// MCHECK_LEONGC (world-ch5 11-03, test builds only): the player's role-binding decline 23 names its info list once per
+// cause (bounded 16 lines): position, info, pData, whether it is the current right / left hand, its record role.
+static void leongc_bind_dump(cModel* m,unsigned appearance,unsigned pos,unsigned role,unsigned seen,const char* path) {
+    using namespace re4dc_material;using namespace life;
+    static unsigned lines;if(!pPL || m!=(cModel*)pPL || lines>=16u)return;
+    re4dc_log("LEONGC bind23 path=%s app=%u pos=%u role=%u seen=%x right=%p left=%p\n",path,appearance,pos,role,seen,
+              pPL->Body?(void*)pPL->Body->pRight:nullptr,pPL->Body?(void*)pPL->Body->pLeft:nullptr);++lines;
+    unsigned k=0;
+    for(auto* q=m->pModelInfo;q && lines<16u;q=q->pList,++k){auto* qi=find_info(q);unsigned rr=99;
+        if(qi)for(unsigned r=0;r<RE4DC_ROLE_COUNT;++r)if(RE4DC_ROLE(r).appearance==appearance && info_current(*qi,r)){rr=RE4DC_ROLE(r).role;break;}
+        re4dc_log("LEONGC bind23  %u info=%p data=%p hand=%u rec=%u role=%u\n",k,(void*)q,(void*)q->pData,re4dc_leon_hand_role(m,q),unsigned(qi!=nullptr),rr);++lines;}
+}
+#define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) leongc_bind_dump(m,a,pos,role,seen,path)
+#else
+#define LEONGC_BIND_DUMP(m,a,pos,role,seen,path) ((void)0)
+#endif
 #if RE4DC_ACTOR_PLAN
 // ACTOR_PLAN: a successful re4dc_actor_role_bindings result for (model, appearance, count) is kept while the lifetime
 // serial stands (see RowMemo: the tables are unchanged). A reuse walks the model's info list again (the same infos in
@@ -715,7 +732,7 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
 #if RE4DC_LEON_HEADLESS
             if(appearance==265)--hand;  // LEON_HEADLESS: 0x109's compact roles 4 / 5 are the right / left hands
 #endif
-            if(hand>=count || (seen&(1u<<hand))){ATD(m,23,appearance,(n-1)*256+hand);return 0;}
+            if(hand>=count || (seen&(1u<<hand))){LEONGC_BIND_DUMP(m,appearance,n-1,hand,seen,"hand");ATD(m,23,appearance,(n-1)*256+hand);return 0;}
             out[hand]=p;seen|=1u<<hand;continue;
         }
 #endif
@@ -766,7 +783,7 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
                     re4dc_log("I26  list %u info=%p data=%p rec=%u role=%u\n",k,q,q->pData,unsigned(qi!=nullptr),rr);}
             }
 #endif
-            ATD(m,23,appearance,(n-1)*256+role);return 0;}
+            LEONGC_BIND_DUMP(m,appearance,n-1,role,seen,"role");ATD(m,23,appearance,(n-1)*256+role);return 0;}
         out[role]=p;seen|=1u<<role;
     }
     if(n!=count || seen!=((1u<<count)-1)){ATD(m,25,n,seen);return 0;}return 1;

@@ -1,0 +1,138 @@
+{
+  "schema": "boss18-source-presets-1",
+  "scope": "Full original independent r31c support models; explicit offline source configuration, not a production room selection or look approval",
+  "inputs": {
+    "em39.dat": "cfd4b1a848027bb08fcd75e29d287b68c3bd2dc21b7f9008dbe66e6448c52f41",
+    "em39.drs": "b71ccd178fb3a7d1f7fd6994feccf6916afb4efdf6a393cd38d91ee02a6159be",
+    "em3a.dat": "1b8b809416061fa75c7e6a79ddf82644fd330afab480ae55af4e782b56ee1d54",
+    "em3a.drs": "24718101a9cb137c507d089b863597166ab1bfd7ebfb504e88c476ca95b53ddc"
+  },
+  "presets": {
+    "kr-cap-obj12": {
+      "archive": "em39",
+      "sections": [
+        [
+          22,
+          "body"
+        ]
+      ],
+      "tpl": 25,
+      "rooms": [
+        "r31c"
+      ],
+      "types": [
+        0
+      ],
+      "category": "registry",
+      "model_id": 18,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    },
+    "kr-knife-wep42": {
+      "archive": "em39",
+      "sections": [
+        [
+          38,
+          "body"
+        ]
+      ],
+      "tpl": 37,
+      "rooms": [
+        "r31c"
+      ],
+      "types": [
+        0
+      ],
+      "category": "registry",
+      "model_id": 66,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    },
+    "kr-gun-wep42": {
+      "archive": "em39",
+      "sections": [
+        [
+          44,
+          "body"
+        ]
+      ],
+      "tpl": 43,
+      "rooms": [
+        "r31c"
+      ],
+      "types": [
+        0
+      ],
+      "category": "registry",
+      "model_id": 66,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    },
+    "kr-bow-wep42": {
+      "archive": "em39",
+      "sections": [
+        [
+          50,
+          "body"
+        ]
+      ],
+      "tpl": 49,
+      "rooms": [
+        "r31c"
+      ],
+      "types": [
+        0
+      ],
+      "category": "registry",
+      "model_id": 66,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    },
+    "kr-arr-wep42": {
+      "archive": "em39",
+      "sections": [
+        [
+          55,
+          "body"
+        ]
+      ],
+      "tpl": 56,
+      "rooms": [
+        "r31c"
+      ],
+      "types": [
+        0
+      ],
+      "category": "registry",
+      "model_id": 66,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    },
+    "kr-miss-obj38": {
+      "archive": "em3a",
+      "sections": [
+        [
+          9,
+          "body"
+        ]
+      ],
+      "tpl": 10,
+      "rooms": [
+        "r31c"
+      ],
+      "types": [
+        1
+      ],
+      "category": "registry",
+      "model_id": 56,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    }
+  }
+}

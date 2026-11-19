@@ -1,0 +1,10 @@
+name ch32-r205-ashley-diag
+room 0x205
+jp 0
+chapter 7
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 300
+dump

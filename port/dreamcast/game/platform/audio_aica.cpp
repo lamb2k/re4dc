@@ -565,21 +565,58 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
     if (!blk_wavetable(t, smp, adpcm, n)) return false;
     u32 total = 0;
     for (u32 i = 0; i < n; i++) total += sample_bytes(smp[i], sample_shift(smp[i], h.cap_hz));
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
+    // AICA_SHARED_BGM1 (island18 c0819831; needs AICA_SPILL): a bio4midi member can serve either source BGM channel. Keep its checked
+    // prebuilt image when BGM1 shares BGM0's bank and the frozen layout has no
+    // BGM1 slot; the existing high arena block owns its lifetime.
+    const bool shared_bgm1 = t == 4 && h.slot == 3 && h.slot_bytes[4] == 0;
+#endif
     const char* bad = h.version != 1 ? "version" : h.nsamples != n ? "sample count"
                     : fnv1a((const u8*) smp, n * sizeof(WTSAMPLE)) != h.fnv ? "wavetable hash"
                     : ((h.gc_size + 31) & ~31u) != UseAramSize[t] ? "part size"
-                    : total != h.total ? "image size" : h.slot != slot_of(t) ? "slot" : nullptr;
+                    : total != h.total ? "image size" : h.slot != slot_of(t)
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
+                    && !shared_bgm1
+#endif
+                    ? "slot" : nullptr;
     if (bad) {
         re4dc_log("aica: blk %d converted bank rejected (%s), block silent\n", t, bad);
         ++S.blocks_skipped;
         return false;
     }
     if (!layout_init(h)) { ++S.blocks_skipped; return false; }
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
+    if (shared_bgm1 && g_slot[4].size) {
+        re4dc_log("aica: blk %d shared bank requires the frozen zero BGM1 slot, block silent\n", t);
+        ++S.blocks_skipped;
+        return false;
+    }
+#endif
     blk_prepare(t, dst);
     if (g_mapUsed + n > kMapMax) { re4dc_log("aica: map pool full\n"); return false; }
     Slot& sl = g_slot[h.slot];
     u32 base;
 #if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+#if defined(RE4DC_AICA_SHARED_BGM1) && RE4DC_AICA_SHARED_BGM1
+    if (shared_bgm1) {
+        const u32 need = (total + 31) & ~31u;
+        const Slot& arena = g_slot[8];
+        if (!need || need < total || !arena.base || g_highBlk >= 0 ||
+            g_arenaNext > arena.size || need > arena.size - g_arenaNext) {
+            re4dc_log("aica: blk %d shared bank (%u bytes) does not fit the arena top (%u of %u used), block silent\n",
+                      t, (unsigned) total, (unsigned) g_arenaNext, (unsigned) arena.size);
+            ++S.blocks_skipped;
+            return false;
+        }
+        g_arenaTop = arena.size - need;
+        g_highBlk = t;
+        base = arena.base + g_arenaTop;
+        re4dc_log("aica: blk %d shared prebuilt bank (%u bytes at %u Hz) goes to the arena top at %06x "
+                  "(arena %u of %u used)\n", t, (unsigned) total, (unsigned) h.cap_hz, (unsigned) base,
+                  (unsigned) g_arenaNext, (unsigned) arena.size);
+        goto placed;
+    }
+#endif
     // A BGM0 bank about to overwrite a room-arena bank spilled into its slot's tail silences that bank first.
     if (h.slot == 3 && g_spillBlk >= 0 && g_blk[g_spillBlk].valid
         && g_slot[3].base + ((total + 31) & ~31u) > g_blk[g_spillBlk].aica) {
@@ -1216,6 +1253,12 @@ struct Stream {
     u16 sent_tl[2];
 };
 Stream g_str;   // channels / voices are set at the claim (state idle until then)
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+volatile u8 g_strPreempt;   // STR_VOICE_PREEMPT: the reader asks the flush to release the ring (under g_lock)
+volatile u8 g_strPreOnly;   // STR_VOICE_PREEMPT: str_scan claims only radio call streams
+u32 g_strCallUntilMs;       // STR_VOICE_PREEMPT: music is not claimed again before this (g_nowMs)
+#endif
+#line 1219
 
 inline u32 str_key(const StrEnt& e) { return e.flags >> 8; }   // blk | no << 8
 
@@ -1241,6 +1284,26 @@ void str_flush(RegWriter& w)
     Stream& s = g_str;
     if (s.state == kStrIdle) return;
     u32 key = str_key(*s.e);
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+    // STR_VOICE_PREEMPT: the reader asked for the ring for a radio call stream. A music stream (block 0) is keyed
+    // off and left unclaimed (its work stays open, strm 1): str_scan claims the call stream first, then the music
+    // again (from its start) once the ring is free.
+    if (g_strPreempt) {
+        g_strPreempt = 0;
+        if (!s.dead && (key & 255) == 0) {
+            str_keyoff(w);
+            for (int c = 0; c < 2; c++)
+                if (s.v[c] && s.v[c]->vs.strm == 2) s.v[c]->vs.strm = 1;
+            s.gen = s.gen + 1;
+            s.state = kStrIdle;
+            s.want = 0;
+            re4dc_log("aica: t=%u stream %u:%u gives the ring to a radio call stream\n", (unsigned) g_nowMs,
+                      (unsigned) (key & 255), (unsigned) (key >> 8));
+            return;
+        }
+    }
+#endif
+#line 1244
     if (s.dead) {
         str_keyoff(w);
 #if RE4DC_MOVIE_DISC_QUIET
@@ -1772,6 +1835,35 @@ AXVPBView* vpb_of(void* p)
     return (AXVPBView*) p;
 }
 
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+// STR_VOICE_PREEMPT (Makefile; GitHub #66 bug 3): the radio call's streams, the ring tones (sscrn.cpp OpeSetOpenTerm
+// strTbl 3 / 0x33) and the call voices (ss_term.cpp term_ope_tbl mdtNo 0x8C..0xA3), all in block 1.
+bool str_preempts(const StrEnt* e)
+{
+    const u32 k = str_key(*e), blk = k & 255, no = k >> 8;
+    return blk == 1 && (no == 3 || no == 0x33 || (no >= 0x8C && no <= 0xA3));
+}
+// An open, unclaimed stream work whose entry is a radio call stream (reader thread; claims nothing).
+bool str_preempt_probe()
+{
+    for (int i = 0; i < 4; i++) {
+        const Re4dcStrWorkView& w = Snd_str_work[i];
+        if (!(w.status & 1) || !w.shd) continue;
+        u32 nch = (w.flag & 1) ? 2 : 1;
+        AXVPBView* vl = vpb_of(w.voiceL);
+        AXVPBView* vr = nch == 2 ? vpb_of(w.voiceR) : vl;
+        if (!vl || !vr || vl->vs.strm != 1 || vr->vs.strm != 1) continue;
+        for (u32 k = 0; k < g_strEntN; k++) {
+            const StrEnt& c = g_strEnt[k];
+            if (c.sbb_ofs == w.shd[7] && c.nch == nch && str_preempts(&c) &&
+                Snd_get_shd_adrs((u16) (c.flags >> 8 & 255), (u16) (c.flags >> 16)) == w.shd)
+                return true;
+        }
+    }
+    return false;
+}
+#endif
+#line 1775
 // An open stream work whose voices are the stream player's, matched to an entry.
 void str_scan()
 {
@@ -1802,6 +1894,12 @@ void str_scan()
             }
             continue;
         }
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+        // the radio call stream first; the music waits until 2 s after the call's last stream (ring tone -> voice gap)
+        if (g_strPreOnly ? !str_preempts(e) : ((str_key(*e) & 255) == 0 && (int) (g_strCallUntilMs - g_nowMs) > 0))
+            continue;
+#endif
+#line 1805
 #if RE4DC_GC_ASSET_GATE
         gcasset_stream_entry(e);   // first open of this entry: hash its record + payload, publish its identity
 #endif
@@ -1945,6 +2043,27 @@ __attribute__((unused)) void* str_main(void*)
         }
 #endif
         Stream& s = g_str;
+#if defined(RE4DC_STR_VOICE_PREEMPT) && RE4DC_STR_VOICE_PREEMPT
+        // STR_VOICE_PREEMPT: a radio call stream waits for the ring while the room's music (block 0) holds it: ask the
+        // flush to release the ring, fill nothing until it has, then claim the call stream before anything else.
+        if (g_strPreempt) {
+            if (s.state != kStrIdle) continue;
+            g_strPreempt = 0;   // the ring went idle another way
+        }
+        if (s.state != kStrIdle && s.e && str_preempts(s.e)) g_strCallUntilMs = g_nowMs + 2000;
+        if (s.state != kStrIdle && s.e && (str_key(*s.e) & 255) == 0 && str_preempt_probe()) {
+            mutex_lock(&g_lock);
+            if (s.state != kStrIdle && !s.dead) g_strPreempt = 1;
+            mutex_unlock(&g_lock);
+            continue;
+        }
+        if (s.state == kStrIdle) {
+            g_strPreOnly = 1;
+            str_scan();
+            g_strPreOnly = 0;
+        }
+#endif
+#line 1948
         if (s.state == kStrIdle) str_scan();
         u32 gen = s.gen;
 #if RE4DC_MOVIE_DISC_QUIET

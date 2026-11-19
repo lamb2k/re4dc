@@ -40,6 +40,14 @@ and the base rows counted against them include the pl08 rows (actor_material_rec
 as the runtime's kBaseBlobs / kBaseRoles do. The runtime pack check (coarse_actor_registry_pack_check.inc) still
 bounds a room package by kRoomBlobs / kRoomRoles of the image it loads into.
 
+Descriptor source_owner_contract (optional, default unchanged): {"path": <manifest>, "sha256": <pin>}.
+The re4dc-source-body-owner-1 manifest pins canonical source.json / source-bindings.json, the exact native header,
+the original PS2 DAT and GC archive, and the first modelInit BIN. model_registry_owner.py independently re-reads
+all original BINs, every partial/duplicate metadata record, actual PS2 weighted ids and the unchanged GC owner's
+hierarchy/rest. Only proved addModel sections use that owner. Raw source part/material facts and every runtime
+skeleton/certificate/capacity check remain unchanged. Cannot combine with another skeleton projection. This is
+an offline ownership proof, not animated retarget or complete death/body-swap admission.
+
 --source-normal-length (2026-10-04, default off: the output is byte-identical to before): every cast normal keeps
 its direction and takes the length of its SOURCE BIN's normals. GX transforms normals without renormalising and
 lights with n.l, and its normal fraction is fixed by the type (s8: 6 bits, s16: 14 bits), so the source's stored
@@ -598,6 +606,17 @@ def main():
         if not ROLE_TEXTURES5:
             sys.exit('model_registry: --role-tex23 needs --roles5')
         ROLE_TEX23 = True
+    if '--stress-saddler' in args:
+        # --stress-saddler (lane stress16b 2026-10-16; the model-only Saddler stress disc, STRESS_SADDLER images only:
+        # coarse_actor_registry_pack_check.inc): Saddler full + two gameplay levels in one room package: 256 part facts
+        # (body 83 + head 83 + tentacle 60), a 1 MiB package + skin ceiling. Needs --pool.
+        args.remove('--stress-saddler')
+        if not POOL:
+            sys.exit('model_registry: --stress-saddler needs --pool')
+        PACK_CAPACITY['fpart'] = 256
+        PACK_MAX_BYTES = 1024 * 1024
+        global STRESS_SADDLER
+        STRESS_SADDLER = True
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -696,6 +715,16 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         luis = luis_coverage(inputs, d, src, binds, arc, arcname)
         if luis and L['header_sha256'] != LUIS_COVERAGE_HEADERS[luis['reviewed_manifest_sha256']]:
             raise Fail('Luis native header differs from the proved complete source triangle set')
+        source_owner = None
+        if d.get('source_owner_contract'):
+            if luis or d.get('partial_sections') or src.get('draw_slots') is not None:
+                raise Fail(f'{name}: source owner contract cannot combine with another skeleton projection')
+            from model_registry_owner import prove as prove_source_owner
+            try:
+                owner_chunks, _ = parse_header(hdr)
+                source_owner = prove_source_owner(inputs, d, src, binds, arc, audit[arcname]['sha256'], hdr, owner_chunks)
+            except (ValueError, KeyError, IndexError, TypeError) as exc:
+                raise Fail(f'{name}: source owner contract: {exc}') from exc
         # ---- skeleton (one per model; every section's bone table agrees)
         pb = binds[0]['part_bindings']
         bones = len(pb)
@@ -713,7 +742,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         # partial_sections (descriptor opt-in; lane ps2cast-st3, the stage-3 soldiers): a head / hand BIN may carry
         # only the parts it weights (or repeat a hand root by attach id: em11 type 7), each attached to the body part of its attach id (GC calcWeightMat); its parents
         # name body parts (a section root: -1). The registry skins every section from the body's parts either way.
-        partial = set()
+        partial = set(range(1, len(binds))) if source_owner else set()
         if d.get('partial_sections'):
             for k, b in enumerate(binds[1:], 1):
                 q = b['part_bindings']
@@ -955,6 +984,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                      position_shift=int(e.get('position_shift', 4)))
         if luis:
             entry['source_coverage_manifest_sha256'] = luis['reviewed_manifest_sha256']
+        if source_owner:
+            entry['source_owner_contract'] = source_owner
         if pool:
             entry['pool'] = True
         if d.get('lod_of'):
@@ -1224,6 +1255,7 @@ PACK_MAX_BYTES = 192 * 1024  # coarse_actor_registry_pack_check.inc kPackMaxByte
 # source blobs are bounded by the lifetime masks (MATERIAL_ROWS / SOURCE_BLOBS minus the reviewed rows, checked above).
 PACK_BONES = 48
 PACK_CAPACITY = dict(desc=16, ref=32, geom=32, tex=16, fmodel=8, fpart=32, ftex=16)
+STRESS_SADDLER = False  # --stress-saddler (lane stress16b)
 
 
 def align32(n):
@@ -1361,6 +1393,8 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                     role_texture_max = 23  # RE4DC_NMR_ROLE_TEX23 (the r320 helicopter em3d TPL 6)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
+            if STRESS_SADDLER:
+                role_texture_max = 17  # the POOL image's RE4DC_NMR_ROLE_TEXTURES (em31 TPL 7 has 11 images)
             if len(tpls[tk]['textures']) > role_texture_max:
                 raise Fail(f'package {r["name"]}: source TPL has {len(tpls[tk]["textures"])} images > {role_texture_max}')
             if mk not in fm_index:

@@ -1,0 +1,13 @@
+name ch32-door-r205-r204
+room 0x205
+jp 0
+chapter 7
+inv default
+god
+ang 4.7124
+pos 7314 9995 42846
+act 40 a 10
+act 90 a 10
+act 140 a 10
+act 190 a 10
+alivelog 60

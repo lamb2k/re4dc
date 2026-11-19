@@ -1,0 +1,12 @@
+name ch32-door-r20b-r20a
+room 0x20b
+jp 0
+chapter 7
+inv default
+god
+area 1
+act 60 a 10
+act 120 a 10
+act 180 a 10
+act 240 a 10
+alivelog 60

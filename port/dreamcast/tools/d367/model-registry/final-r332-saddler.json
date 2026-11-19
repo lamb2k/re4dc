@@ -1,0 +1,46 @@
+{
+ "registry": "final-r332-saddler",
+ "about": "lane final16 (2026-10-16): Saddler's final form (em31) in his own room r332 (ROUTE_FINAL): PS2 body + head (ps2_cast.py saddler-em31-00) and tentacle (saddler-em31-01) from lane stress16b's casts, full meshes only (stress16b: the gameplay levels save ~2.8 of 9.9 Flycast ms, so no level pick). Package: model_registry.py --stress-saddler (the 1 MiB / 256 part fact ceilings; ROUTE_FINAL's RE4DC_SADDLER_NMR). source_drops bump / mask = SADDLER_MASK_OPAQUE (visible approximation, default off).",
+ "cast_dir": "/mnt/c/Game Dev/Emulators/stress16b-20261016/regcast",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em31: the constant registry colour (no source-light bit for em31)",
+ "descriptors": [
+  {
+   "name": "saddler-em31-00",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    0
+   ],
+   "module": "src/em31/em31.cpp type 0 (Saddler's final form, the body) modelInit(ARC 4, ARC 7) + ModInfoMgr.create(ARC 5, ARC 7)",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  },
+  {
+   "name": "saddler-em31-01",
+   "archive": "em31",
+   "model_id": "0x31",
+   "source_types": [
+    1
+   ],
+   "module": "src/em31/em31.cpp type 1 (the tentacle on its back) modelInit(ARC 8, ARC 7)",
+   "source_drops": [
+    "bump",
+    "mask"
+   ]
+  }
+ ],
+ "room_packages": {
+  "332": {
+   "descriptors": [
+    "saddler-em31-00",
+    "saddler-em31-01"
+   ],
+   "evidence": "final16: r332, the final boss room (list 0xA8 body / 0xA9 tentacle)"
+  }
+ }
+}

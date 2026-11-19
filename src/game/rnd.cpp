@@ -6,7 +6,7 @@
 
 static u16 Random;
 
-#if defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE
+#if (defined(RE4DC_LOGIC_TRACE) && RE4DC_LOGIC_TRACE) || (defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS)
 // Determinism trace only (LOGIC_TRACE=1): the generator is seeded once (main.cpp RndInit), so its
 // state is a running fingerprint of how many Rnd() draws the game made.
 extern "C" unsigned short re4dc_rnd_state(void) { return Random; }

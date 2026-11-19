@@ -1,0 +1,15 @@
+name bk-r31c-kill
+# bosscast 11-03: as bk-r31c-fight plus the handgun kill rig on em39 from room frame 600 (hit reactions, arm form, death).
+room 0x31c
+pos 41694 4000 38880
+ang -3.0840
+inv default
+god
+act 90 start 6 ev
+act 150 start 6 ev
+act 360 fwd 12
+emlog 0x39 60
+kill 0x39 600
+chapter 16
+census 200
+alivelog 60

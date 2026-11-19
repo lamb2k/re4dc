@@ -1,0 +1,9 @@
+name ch32-r209-hall
+room 0x209
+jp 0
+chapter 7
+inv default
+god
+alivelog 60
+census 300
+dump

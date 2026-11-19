@@ -1,0 +1,20 @@
+name fx-r332-m4
+# final16: as m3 (s00 skipped, up-cut dismissed), then Leon runs at Saddler (b+fwd) and back to provoke close-range
+# attacks / grabs; god; em31 state every 30 room frames; kill rig from 1000
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
+emlog 0x31 30
+act 40 a 4 ev
+act 80 a 4 ev
+act 120 a 4 ev
+act 160 a 4 ev
+act 200 a 4 ev
+act 260 b+fwd 60
+act 400 b+back 30
+act 500 fwd 90
+act 700 b+left 40
+act 800 fwd 60
+kill 0x31 1000

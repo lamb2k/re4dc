@@ -363,10 +363,10 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     if(ashley_face)expected|=2;
 #endif
     if((i->be_flag&~8u)!=expected)return Error::PassGroup;
-    if(i->invisible_factor!=1.0f || i->blend_mode || i->colorWord!=0xffffffffu ||
-       i->color2[0] || i->color2[1] || i->color2[2] || i->color2[3] ||
+    if(i->invisible_factor!=1.0f || i->blend_mode || !RE4DC_NMR_COLOR_OK(i) ||
+       ((i->color2[0] || i->color2[1] || i->color2[2] || i->color2[3]) && !RE4DC_NMR_CLOAK_TBL(i,row.appearance)) ||
        (i->flagsDC && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pAddTpl || i->nAddTex ||
-       ((i->blendRatio || i->blendType) && !RE4DC_NMR_BLEND_ICE(i,row.appearance)) ||
+       ((i->blendRatio || i->blendType) && !RE4DC_NMR_BLEND_ICE(i,row.appearance) && !RE4DC_NMR_CLOAK_TBL(i,row.appearance)) ||
        (i->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pTexAnim || i->uvU || i->uvV || i->uvScrollU || i->uvScrollV)return Error::LiveModifier;
     if(i->be_flag&2) {
         // shape.cpp writes the prepared destination buffer, not vtxOrig.
@@ -494,7 +494,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
         (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type)))) {
         out.error=Error::UnknownAppearance;return out;
     }
-    if(m->pTexChg || m->Shader_type || m->CullMode ||
+    if(m->pTexChg || RE4DC_NMR_SHADER_BAD(m) || m->CullMode ||
        (!registry && !source_appearance_type(p->appearance,m->id,m->type)) ||
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
        ((!actor_fade_eligible(m,*p)) && (m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f)) || m->alpha_omit!=255 ||
@@ -723,6 +723,13 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // path: bumpSetup only reaches the GX stubs) and its folded wing as the solid PS2 wing (the GC I4 mask pass and its
     // second pass are replaced, an accepted visible approximation): model_registry.py source_drops "bump", "mask".
     if(registry && m->id==0x23)implemented|=Bump|Mask|SourcePass;
+#endif
+#if (defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER) || (defined(RE4DC_SADDLER_MASK_OPAQUE) && RE4DC_SADDLER_MASK_OPAQUE)
+    // STRESS_SADDLER (lane stress16b, the model-only stress disc, NOT a play image) / SADDLER_MASK_OPAQUE (ROUTE_FINAL,
+    // visible approximation, default off): Saddler (em31, 0x31) draws no bump
+    // stage (as the source path: bumpSetup reaches only the GX stubs) and its I4-masked parts as the opaque PS2 sections
+    // (the crow rule; a visible approximation on a measurement disc): model_registry.py source_drops "bump", "mask".
+    if(registry && m->id==0x31)implemented|=Bump|Mask|SourcePass;
 #endif
 #if RE4DC_NMR_MASK
     // NATIVE_MODEL_REGISTRY_MASK: a registry plan whose masked sections draw their colour + I4 mask pair run (TR, blended,

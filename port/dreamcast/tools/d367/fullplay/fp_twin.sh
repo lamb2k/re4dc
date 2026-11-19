@@ -36,7 +36,7 @@ git -C $T submodule update --init --recursive >/dev/null 2>&1 || { echo "fp_twin
 # The release command line minus nothing: route-build.sh prepends its own defaults, the candidate's later tokens win.
 REC=$(cat $OUT/candidate.txt)
 G=$T/port/dreamcast/game
-DIAG="DBG_WARP=1 WARP_JUMP=1 PC_SAMPLER=0"
+DIAG="DBG_WARP=1 WARP_JUMP=1 PC_SAMPLER=${FP_PC_SAMPLER:-0}"   # FP_PC_SAMPLER=1 (lane world-ch32 11-03): a sampled twin for one diagnosis run; default unchanged
 grep -q '^TEX_CHECK' $G/Makefile $G/*.mk 2>/dev/null && DIAG="$DIAG TEX_CHECK=1"
 if grep -q '^MCHECK_LEONGC' $G/*.mk 2>/dev/null && grep -q '^ACTOR_TRANSACTION=1' $OUT/resolved-knobs.txt; then DIAG="$DIAG MCHECK_LEONGC=1"; fi
 TOOL=/opt/toolchains/dc/sh-elf/bin

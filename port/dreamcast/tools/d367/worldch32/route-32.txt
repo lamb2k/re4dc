@@ -1,0 +1,9 @@
+# Chapter 3-2 route (lane world-ch32, 2026-11-02): from the 3-2 start save (after r204 s00, End of Chapter 3-1) to the
+# 3-2 end save (r20b s00, End of Chapter 3-2). One line per segment: room | goal | how the play-through reaches it | warp
+# preset (worldch32/warps) for a direct check. Order from CASTLE-ROUTE-20261015 "Route order" (stage_route.py --stage 2).
+r204 | start: load the 3-2 start save (typewriter after r204 s00) | exit to r205 (pendulum hall door) | castle31/warps/g-r204.txt
+r205 | the pendulum pit: two Ganados 0x6C 0x6D + 0x57 0x70, drain lever (area 8), waves per r205_rsfTbl | doors 0x13 / 0x14 open after their waves; back to r204 | h-r205.txt
+r204 | part 1 again (key / gate now open) | door to r209 | castle31/warps/g-r204.txt
+r209 | Zealot hall: salon key door (area 2), picture lift (0x9D..0xA2), leader chase (0x7D), bridge panel puzzle | door 4 opens -> r209 s00 movie + 2nd battle (bowgun), then door to r20a | i-r209.txt, i2-r209-s00.txt (etcdoor 60 4 0x10000000 = door 4 opened)
+r20a | Novistador room (em2d, em23) | door to r20b | j-r20a.txt
+r20b | merchant + hall waves (PS2_ENEMY_CASTLE 0x02) | r20b s00 movie -> End of Chapter 3-2 (end save at the typewriter) | k-r20b.txt

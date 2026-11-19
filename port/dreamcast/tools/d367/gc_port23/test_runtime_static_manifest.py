@@ -101,6 +101,8 @@ int main(){memset(geometry,17,sizeof geometry);memset(side,23,sizeof side);memse
  auto m=build();Digest digest;assert(static_manifest_seal(m,digest));char hex[65];text(digest,hex);assert(std::string(hex)=="EXPECTED");
  // Whole geometry PS2 cannot hide the independently GC interpretation asset.
  catalog(m,GameCube);begin(0x111,1,Required);assert(payload_capture_composite(proof,&owner,geometry,sizeof geometry,side,sizeof side,m));ack(proof,&owner);flush();end(1);assert(logs.find("kind=layout")!=std::string::npos && logs.find("provenance=gc")!=std::string::npos);payload_retire(proof);
+ // lane assets-dc 11-04: an unknown layout of PS2 geometry takes the geometry's provenance (no layout row).
+ logs.clear();catalog(m,Unknown);begin(0x111,1,Required);assert(payload_capture_composite(proof,&owner,geometry,sizeof geometry,side,sizeof side,m));ack(proof,&owner);flush();end(1);assert(logs.find("kind=layout")==std::string::npos);payload_retire(proof);
  // All twelve roles, exact state/extent/version/flags/profile and original
  // byte digests participate. Changed role files cannot match the old catalog.
  catalog(m,PS2);for(unsigned role=0;role<StaticRoleCount;++role){auto changed=m;changed.data[64+role*52+20]^=1;Digest next;assert(static_manifest_seal(changed,next));assert(memcmp(next.bytes,digest.bytes,32));}

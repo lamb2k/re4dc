@@ -1,0 +1,5 @@
+# world-ch5 11-03: r333 census entry, s00 (ride start) marked done (R333Init: RsfCheck(room, 0)); jump point 0.
+jp 0
+rsf 0x333 0
+inv default
+god

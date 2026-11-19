@@ -5,7 +5,8 @@ import struct
 MAGIC = b'GCIDX001'
 HEADER = struct.Struct('<8s4I104s')
 RECORD = struct.Struct('<16s48s32sB15s')
-MAX_RECORDS = 16320  # 64 remaining compact-token indices are unknown quarantine
+TOKEN_BITS = 16  # runtime CatalogTokenBits (gc_asset_gate.h)
+MAX_RECORDS = (1 << TOKEN_BITS) - 64  # 64 remaining compact-token indices are unknown quarantine
 ORIGINS = {'unknown': 0, 'gc': 1, 'ps2': 2, 'authored': 3}
 
 
@@ -117,7 +118,7 @@ class Epochs:
         self.unknown = []
 
     def install(self, reader):
-        if self.epoch >= (1 << 18)-2:
+        if self.epoch >= (1 << (32-TOKEN_BITS))-2:
             raise ValueError('catalog epoch exhausted')
         self.epoch += 1
         self.reader, self.unknown = reader, []
@@ -133,11 +134,11 @@ class Epochs:
                     raise ValueError('unknown quarantine overflow')
                 self.unknown.append(row)
             index = self.reader.count + self.unknown.index(row)
-        return self.epoch << 14 | index
+        return self.epoch << TOKEN_BITS | index
 
     def resolve(self, token):
-        index = token & ((1 << 14)-1)
-        if not self.epoch or token >> 14 != self.epoch or self.reader is None:
+        index = token & ((1 << TOKEN_BITS)-1)
+        if not self.epoch or token >> TOKEN_BITS != self.epoch or self.reader is None:
             raise ValueError('stale catalog token')
         if index < self.reader.count:
             return self.reader.record(index)

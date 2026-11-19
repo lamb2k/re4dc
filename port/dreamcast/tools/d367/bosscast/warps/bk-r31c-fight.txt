@@ -1,0 +1,15 @@
+name bk-r31c-fight
+# bosscast 11-03: r31c Krauser fight entry from the r31d door (ch5found cx-r31c-r2 position); START during the s00 event
+# skips it; god; em39 / em3a state every 60 room frames; census (CAST-GC, NMRS rows) every 200; 60 s.
+room 0x31c
+pos 41694 4000 38880
+ang -3.0840
+inv default
+god
+act 90 start 6 ev
+act 150 start 6 ev
+act 360 fwd 12
+emlog 0x39 60
+chapter 16
+census 200
+alivelog 60

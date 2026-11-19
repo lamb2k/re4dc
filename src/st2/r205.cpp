@@ -156,9 +156,16 @@ void R205Init()
         SetSstDispFlag(0xD, 1);
         SceAtSetEnable(0x15, 0);
     }
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x10)
+    // PS2_ENEMY_CASTLE bit 0x10 (lane world-ch32; PS2 USA st2_1 R205Init 0x6b40, PS2-ENEMY-CODE-DIFF r205): the PS2
+    // dropped the area-3 "enemies appear" camera cut (no SceAtDataSet_exec(3, ...)); it sends no enemy, so the
+    // Normal count is unchanged (0x6C 0x6D 0x57 0x70 as on the GC).
+    (void) &r205_EnemyAppear;
+#else
     if (RsfCheck(G_ROOM_ID, 9) == 0) {
         SceAtDataSet_exec(3, SCE_LEVEL10, 0, (TaskFunc) r205_EnemyAppear, 0, 1);
     }
+#endif
     r205_work.p->pend[0].obj = SmdGetObjPtr(5);
     r205_work.p->pend[1].obj = SmdGetObjPtr(6);
     r205_work.p->pend[2].obj = SmdGetObjPtr(7);

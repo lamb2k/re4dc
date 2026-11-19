@@ -288,7 +288,7 @@ endif
 #   C:\Game Dev\Emulators\CASTLE-ROUTE-20261015.md) plus the cap on top. It forces PS2_ENEMY_RULES=1; adopts the PS2
 #   emleon02 / emleon03 rows of r201 r203 r207 r208 / r204 r20e (platform/ps2_enemy_ch3.cpp, private table
 #   PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc from tools/d367/castle/ps2_enemy_ch3.py; every baseline byte checked);
-#   ORs PS2_ENEMY_CASTLE with 0x03 (r208 room code, r20b waves); sets ALIVE_CAP=6 when not given. Chapter 3 rooms
+#   ORs PS2_ENEMY_CASTLE with 0x13 (r208 room code, r20b waves, r205 area-3 cut: world-ch32); sets ALIVE_CAP=6 when not given. Chapter 3 rooms
 #   hold only (no ALIVE_CAP_PARK: their code keeps wrap pointers). Not ported on purpose: Easy-only branches; r205
 #   (Normal result identical: the PS2 list holds 0x57 / 0x6D and R205Init sends both); r209 (same as GC).
 PS2_CH3_ENEMY ?= 0
@@ -301,7 +301,7 @@ ifeq ($(wildcard $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc),)
 $(error PS2_CH3_ENEMY needs PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc (tools/d367/castle/ps2_enemy_ch3.py))
 endif
 override PS2_ENEMY_RULES := 1
-override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0x03 )))
+override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0x13 )))
 ifeq ($(or $(ALIVE_CAP),0),0)
 override ALIVE_CAP := 6
 endif
@@ -522,7 +522,9 @@ endif
 #   0x02 r20b: the hall waves never send list row 3 (em[1]); the random wave (Rnd() % 6, same draw) sends one
 #        Ganado in cases 0-2 (0x14 / 0x15 / 0x16) where the GC sends two (st2_1 R20bEmSetMain 0x14618..0x14da8)
 #   0x04 r216: the init sends only the display armor 0xE8 (armor[3]); the GC sends 0xE5..0xE8 (st2_2 R216Init 0x10e58)
-#   0x08 r21a (reserved: alive-gated waves), 0x10 r205 (reserved: +0x57)
+#   0x08 r21a (reserved: alive-gated waves)
+#   0x10 r205 (lane world-ch32; st2_1 R205Init 0x6b40): the area-3 "enemies appear" camera cut is not armed (the PS2
+#        dropped it); no enemy is sent there, the Normal count is unchanged
 #   0x20 r226 (lane ch4found16; st2_3 R226Main 0x1a07c): after the statue wakes (Rsf 9), in area flag 71 / 72 and
 #        below 11 alive, 0xB3 then 0xB5 are sent once more (PS2-only Rsf 18 / 19 / 20 latches); GC: none
 #   0x40 r227 (lane ch4found16; st2_3 task 0x1eaf8, started by both far-side setups 0x201a8 / 0x20348): 0xF7 then
@@ -536,7 +538,7 @@ ifneq ($(PS2_ENEMY_CASTLE),0)
 ifneq ($(PS2_ENEMY_RULES),1)
 $(error PS2_ENEMY_CASTLE needs PS2_ENEMY_RULES=1)
 endif
-$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o $(OBJDIR)/mod/st2_3/src/st2/r223.o $(OBJDIR)/mod/st2_3/src/st2/r226.o $(OBJDIR)/mod/st2_3/src/st2/r227.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
+$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r205.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o $(OBJDIR)/mod/st2_3/src/st2/r223.o $(OBJDIR)/mod/st2_3/src/st2/r226.o $(OBJDIR)/mod/st2_3/src/st2/r227.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
 endif
 # R101_ALIVE_CAP=N (lane crowd12 2026-10-14; CHANGES GAMEPLAY by design; default 0 = off; needs PS2_ENEMY_ROOMS bit 0x02):
 #   at most N Ganados alive at once in the r101 village fight. Start-list Ganados beyond N are held at room entry
@@ -676,13 +678,58 @@ $(error AICA_STR_VFS_OPEN needs AICA_STR_READ=1)
 endif
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_STR_VFS_OPEN=1
 endif
+# STR_VOICE_PREEMPT (GitHub #66 bug 3, lane radio66; default 0 = image unchanged; needs AICA_STREAMS=1): the one AICA
+# stream ring plays one disc stream at a time and a stream asked for while another holds it stays silent. A radio call
+# ducks the room's music stream but does not stop it, so in rooms with streamed music (r101, r104, r108 ...) the call's
+# ring tone and voice were never heard. With the knob the radio call streams (1:3, 1:0x33 ring tones, 1:140..1:163
+# voices) take the ring from a music stream (block 0); the music is claimed again, from its start, after the call.
+STR_VOICE_PREEMPT ?= 0
+ifeq ($(filter $(STR_VOICE_PREEMPT),0 1),)
+$(error STR_VOICE_PREEMPT must be 0 or 1)
+endif
+ifeq ($(STR_VOICE_PREEMPT),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_VOICE_PREEMPT=1
+endif
 ifeq ($(AICA_SPILL),1)
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
+endif
+# AICA_SHARED_BGM1 (island18 c0819831, gated by lane world-ch5 2026-11-02; default 0 = image unchanged; needs
+# AICA_SPILL=1): a checked prebuilt bio4midi bank that BGM1 shares with BGM0's slot (final chapter r332) goes to the
+# room arena top. Disc 3 recipe only (island5/build-disc3.sh).
+AICA_SHARED_BGM1 ?= 0
+ifeq ($(AICA_SHARED_BGM1),1)
+ifneq ($(AICA_SPILL),1)
+$(error AICA_SHARED_BGM1=1 needs AICA_SPILL=1)
+endif
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SHARED_BGM1=1
 endif
 export RE4DC_LINK_OVERLAY += .ovl_pl11
 $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o
 endif
+endif
+# STRESS_SADDLER=1 (lane stress16b 2026-10-16; default 0: no effect; stress disc only, never a play image; needs
+#   ROUTE_CH21=1 without ROUTE_CH22 / ROUTE_CH23, DBG_WARP=1): the model-only Saddler stress disc ("RE4DC Saddler Stress (NOT
+#   THE GAME)"). em31 (module 89, Saddler's final form: body type 0 + the tentacle on its back, type 1; r332 on GC Disc 2)
+#   is a sixth room overlay (em31.ovl, linked after pl11 so the earlier overlays keep their bytes). The warp line
+#   `saddler <room frame> x y z ang [lod]` creates both parts in the warp room through EmSetEvent (no list entry, no room
+#   code); under the knob em31 runs no boss logic: idle and one attack loop (body HeadAtk, tentacle T_Atk), with its
+#   per-frame parts / cloth / collision / route work as in the fight. `lod`: 0 full PS2 mesh, 1 / 2 the package's first /
+#   second gameplay level (NATIVE_MODEL_REGISTRY_LOD; g70 / g50 on the stress disc).
+STRESS_SADDLER ?= 0
+ifneq ($(STRESS_SADDLER),0)
+ifneq ($(STRESS_SADDLER)$(ROUTE_CH21)$(ROUTE_OVL)$(DBG_WARP),1111)
+$(error STRESS_SADDLER must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1 DBG_WARP=1)
+endif
+ifneq ($(filter 1,$(ROUTE_CH22) $(ROUTE_CH23)),)
+$(error STRESS_SADDLER=1 is for the test 15 recipe (ROUTE_CH21 only): its overlay slot follows the five CH21 slots)
+endif
+MODULES += em31:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em31
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
+$(OBJDIR)/mod/em31/src/em31/em31.o $(OBJDIR)/dbgwarp_bridge.o $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
+# with BENCHMARK=1 (bench.mk): four scenes (full, g70, g50, full again) under the stress disc's own name
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=4 '-DRE4DC_BENCH_NAME="SADDLER STRESS"' '-DRE4DC_BENCH_MENU="X: FULL ONLY  Y: G70 ONLY  B: G50 ONLY"'
 endif
 # ROUTE_CH22=1 (default 0): chapter 2-2 room adapters and Luis' cabin overlay.
 # The overlay follows the five CH21 slots; the chapter movie list remains explicit.
@@ -935,6 +982,57 @@ $(OBJDIR)/mod/st3_3/src/st3/r327.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2
 endif
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
+endif
+# ROUTE_FINAL=1 (lane final16 2026-10-16, default 0: no effect; needs ROUTE_CH3=1 STAGE_OVL=1; not with STRESS_SADDLER):
+#   the final boss room r332 (st3_3) with Saddler's real fight. em31 (module 89, Saddler's final form: body type 0 +
+#   tentacle type 1, r332 list entries 0xA8 / 0xA9) is a room overlay (em31.ovl) running its full routine tables (no
+#   stress loop). r331 / r332 get RE4DC_ROUTE_CH3 so their round-10 event hooks present s00 / s10 (r331) and s00 / s10 /
+#   s20 (r332) as PS2 route movies when the disc carries them (source path otherwise). The registry package ceilings and
+#   part facts for Saddler's PS2 cast (body 83 + head 83 + tentacle 60 parts, ~0.4-0.9 MB) follow STRESS_SADDLER's
+#   (RE4DC_SADDLER_NMR in coarse_actor.cpp); no level pick (the full PS2 mesh always).
+#   SADDLER_MASK_OPAQUE=1 (needs ROUTE_FINAL=1; VISIBLE APPROXIMATION, default 0): the registry draws Saddler (0x31) with
+#   no bump stage and its I4-masked parts as opaque PS2 sections (the crow rule; STRESS_SADDLER's material certificate).
+#   Without it the registry plan declines em31 and the GC model path draws him.
+# NMR_PRELOAD_SKIP=1 (lane final16 2026-10-16; render only, default 0; needs NATIVE_MODEL_REGISTRY=1): the room-entry
+#   texture preload (native_ui.cpp preload_identities, TEX_RESIDENT) leaves out an enemy archive's GameCube texture
+#   identities that the room's registry package replaces (its role rows' source texture facts: the textures the PS2
+#   cast's atlases stand in for). The registry draws those actors from its own atlases, so the GC model textures were
+#   pinned in VRAM and never drawn (Saddler: the em31 model TPL, 2 x 512x512 + 5 x 256x256 16-bit = ~1.7 MB). A source
+#   draw that still asks for one (a registry decline) loads it on first sight, as any unlisted key ("NMR preload skip"
+#   counts per pass).
+NMR_PRELOAD_SKIP ?= 0
+ifneq ($(NMR_PRELOAD_SKIP),0)
+ifneq ($(NMR_PRELOAD_SKIP)$(NATIVE_MODEL_REGISTRY),11)
+$(error NMR_PRELOAD_SKIP must be 0 or 1 and needs NATIVE_MODEL_REGISTRY=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PRELOAD_SKIP=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NMR_PRELOAD_SKIP=1
+endif
+ROUTE_FINAL ?= 0
+SADDLER_MASK_OPAQUE ?= 0
+ifneq ($(ROUTE_FINAL),0)
+ifneq ($(ROUTE_FINAL)$(ROUTE_CH3)$(STAGE_OVL),111)
+$(error ROUTE_FINAL must be 0 or 1 and needs ROUTE_CH3=1 STAGE_OVL=1)
+endif
+ifneq ($(STRESS_SADDLER),0)
+$(error ROUTE_FINAL and STRESS_SADDLER are exclusive (both link em31.ovl))
+endif
+MODULES += em31:ovl pl0e:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em31 .ovl_pl0e
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_FINAL=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_NMR=1
+# S00 source effects follow the movie clock, including dropped pictures.
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_SOURCE_CURSOR=1
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOVIE_SOURCE_CURSOR=1
+$(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o $(OBJDIR)/mod/st3_3/src/st3/r333.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_ST3 += $(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o $(OBJDIR)/mod/st3_3/src/st3/r333.o
+ifeq ($(SADDLER_MASK_OPAQUE),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_MASK_OPAQUE=1
+else ifneq ($(SADDLER_MASK_OPAQUE),0)
+$(error SADDLER_MASK_OPAQUE must be 0 or 1)
+endif
+else ifneq ($(SADDLER_MASK_OPAQUE),0)
+$(error SADDLER_MASK_OPAQUE needs ROUTE_FINAL=1)
 endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
@@ -1298,6 +1396,17 @@ $(error DISC_SET must be 0 or 1 and excludes DISC2=1)
 endif
 $(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_SET=1
 $(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/dvd.o: GAME_CPPFLAGS += -DRE4DC_DISC_SET=1
+endif
+# DISC3_MODULES=1 (lane world-ch5, 2026-11-02; default 0: no effect; needs DISC_SET=1 ROUTE_CH3=1): the Disc 3 (island)
+# program of the three-disc set drops the same stage-1 modules as DISC2=1 (their bytes return to heap 4: r320 / r30f
+# lows), but keeps DISC_SET's disc identity (dc/disc.id) instead of DISC2's fixed GameCube disc 2 id. modules.o only.
+DISC3_MODULES ?= 0
+ifneq ($(DISC3_MODULES),0)
+ifneq ($(DISC3_MODULES)$(DISC_SET)$(ROUTE_CH3)$(DISC2),1110)
+$(error DISC3_MODULES must be 0 or 1 and needs DISC_SET=1 ROUTE_CH3=1, not DISC2=1)
+endif
+MODULES := $(filter-out st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e em16,$(MODULES))
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
 endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
@@ -2811,9 +2920,9 @@ CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
-CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
+CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl $(if $(filter 1,$(ROUTE_FINAL)),em31:ovl pl0e:ovl))
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep04:ovl wep05 wep07 wep09 wep11 wep13 wep19 $(WEP27_AUDITED_MODULES) $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep04 wep04:ovl wep05 wep07 wep09 wep11 wep13 wep19 $(WEP27_AUDITED_MODULES) $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES) $(if $(filter 1,$(STRESS_SADDLER)),em31:ovl),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
@@ -3160,6 +3269,20 @@ ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
 $(error VRAM_PAGES_VQ_ONLY=1 needs VRAM_PAGES=1 UI_VRAM=1)
 endif
 endif
+# DISC31_VRAM_PROBE=1 (lane all31g 2026-11-16; diagnostic, default 0 = image unchanged; needs VRAM_PAGES=1): the VRAM
+# fit tests of native_ui.cpp (load() eviction probe, vram_claim fits) allocate through re4dc_vram_pages_probe, whose
+# misses count in probe_fails (QA menu "vram free= big= fails= probe_fails=" line), not in `fails`. Landed unguarded in
+# lane disc31 (+192 B .text in every build); now guarded so knob-off equals the pre-disc31 image.
+DISC31_VRAM_PROBE ?= 0
+ifneq ($(filter-out 0 1,$(DISC31_VRAM_PROBE)),)
+$(error DISC31_VRAM_PROBE must be 0 or 1)
+endif
+ifeq ($(DISC31_VRAM_PROBE),1)
+ifneq ($(VRAM_PAGES),1)
+$(error DISC31_VRAM_PROBE=1 needs VRAM_PAGES=1)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_PROBE31=1
+endif
 # VRAM_ROOM_LOG=1 (lane vram12 D4, render/log only, default 0 = image unchanged; needs UI_VRAM=1 VRAM_PAGES=1): the
 # per-room VRAM report of the CLAUDE.md graphics memory rule (native_ui.cpp: "vram room:" pinned / dynamic / other /
 # free / largest free block, "vram gaps:" refusals, thrash-guard skips, no contiguous block, GameCube effect pictures,
@@ -3196,6 +3319,12 @@ endif
 ifeq ($(KOS_SQUEEZE),1)
 $(OBJDIR)/platform/os.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_SQUEEZE=1 -DRE4DC_KOS_SQUEEZE_BYTES=$(KOS_SQUEEZE_BYTES) -DRE4DC_KOS_SQUEEZE_FRAG=$(KOS_SQUEEZE_FRAG)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_KOS_SQUEEZE=1
+endif
+# RESIDENT_SKIP_LOG=1 (lane ch5found16, log only, default 0 = image unchanged): preload_resident logs why each listed key
+# it does not pick was skipped (known / entry / missing / picked / byte limit). Needs VRAM_ROOM_LOG=1.
+RESIDENT_SKIP_LOG ?= 0
+ifneq ($(filter-out 0 1,$(RESIDENT_SKIP_LOG)),)
+$(error RESIDENT_SKIP_LOG must be 0 or 1)
 endif
 VRAM_ROOM_LOG ?= 0
 ifneq ($(filter-out 0 1,$(VRAM_ROOM_LOG)),)
@@ -3382,6 +3511,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_PAGES_VQ_ONLY %s\n' '$(VRAM_PAGES_VQ_ONLY)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_ROOM_LOG %s\n' '$(VRAM_ROOM_LOG)' >> $@.tmp
+	@printf '#define RE4DC_RESIDENT_SKIP_LOG %s\n' '$(RESIDENT_SKIP_LOG)' >> $@.tmp
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
 	@printf '#define RE4DC_ROOM_RESIDENT %s\n' '$(ROOM_RESIDENT)' >> $@.tmp
@@ -3488,7 +3618,7 @@ $(OBJDIR)/pc-sampler.h: pc-sampler-force
 	@printf '#define RE4DC_PC_SAMPLER %s\n#define RE4DC_PC_SAMPLER_HZ %s\n#define RE4DC_PC_SAMPLER_BYTES %s\n' '$(PC_SAMPLER)' '$(PC_SAMPLER_HZ)' '$(PC_SAMPLER_BYTES)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
-PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o
+PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/qa_menu.o
 $(PC_SAMPLER_OBJS): $(OBJDIR)/pc-sampler.h platform/include/pc_sampler.h
 $(PC_SAMPLER_OBJS): PLATFORM_CPPFLAGS += -include $(OBJDIR)/pc-sampler.h
 # With NATIVE_RENDER_PROFILE=1 each sample also carries the active render stage.
@@ -3693,6 +3823,8 @@ include actor_ganado_ps2_stump.mk
 include native_model_registry.mk
 # Lane actorplan17: ACTOR_PLAN (character draw plan) and ACTOR_PROF (diagnostic profiler); default off: no effect.
 include actorplan.mk
+# Lane partsetup31: character per-part setup (PS31_CENSUS diagnostic; default off: no effect).
+include partsetup31.mk
 # Lane qws19: QUICK_WEAPON (X + D-pad weapon shortcuts; default off: no effect).
 include quickweapon.mk
 # D367 charbake (CHARBAKE_HAIR, CHARBAKE_TOGGLE; default off: no effect).
@@ -3712,6 +3844,7 @@ include worldopt26.mk
 include chardraw19.mk
 # Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
 include logiclod20.mk
+include fx31.mk
 include logicbudget.mk
 # Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
 include rigid20.mk
@@ -3724,6 +3857,8 @@ include bodysvc20.mk
 include knobs.mk
 include esppool.mk
 include mendezfx.mk
+# Lane chars31 (CHARS31_COUNT, CHAR_VIS31; default off: nothing built).
+include chars31.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
@@ -3786,6 +3921,7 @@ include skin_recipe32.mk
 include skin_table_reuse14.mk
 # GC-ASSET diagnostics: default 0, no linked object/flags when off.
 include gc_asset_gate.mk
+include cave66.mk
 # WEAPON_WEP04_OVL (above): the Blacktail overlay section goes last, after every other overlay (route, stage, sub screen).
 ifeq ($(WEAPON_WEP04_OVL),1)
 export RE4DC_LINK_OVERLAY += .ovl_wep04

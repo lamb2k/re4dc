@@ -74,18 +74,27 @@ if [ -s "$P/disc2/gdemu/track03.bin" ]; then
   (cd "$P/disc2/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  disc2/#') >> $R/SHA256SUMS-inner.txt
   D2Z=1; echo "Disc 2 joins the game zip: $(grep -c '  disc2/' $R/SHA256SUMS-inner.txt) files"
 fi
+# Disc 3 (lane world-ch5; recipe.conf RR_DISC3=1, rr-disc3.sh): <cand>/disc3/gdemu joins the same zip under disc3/.
+D3Z=0
+if [ -s "$P/disc3/gdemu/track03.bin" ]; then
+  (cd "$P/disc3/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  disc3/#') >> $R/SHA256SUMS-inner.txt
+  D3Z=1; echo "Disc 3 joins the game zip: $(grep -c '  disc3/' $R/SHA256SUMS-inner.txt) files"
+fi
 if [ "${NOZIP:-0}" != 1 ]; then
   cd "$P"
   rm -f RE4DC-Console-Test-*-GDEMU.zip RE4DC-Test$TN-*-Build-Assets.zip
-  python3 - "$P" "$Z" "$R/SHA256SUMS-inner.txt" "$D2Z" <<'E'
+  python3 - "$P" "$Z" "$R/SHA256SUMS-inner.txt" "$D2Z" "$D3Z" <<'E'
 import sys, zipfile, os
-p, z, sums, d2 = sys.argv[1:5]
+p, z, sums, d2, d3 = sys.argv[1:6]
 with zipfile.ZipFile(os.path.join(p, z), 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
     for f in ('disc.gdi', 'track01.bin', 'track02.raw', 'track03.bin'):
         zf.write(os.path.join(p, 'gdemu', f), 'gdemu/' + f)
     if d2 == '1':
         for f in ('disc.gdi', 'track01.bin', 'track02.raw', 'track03.bin'):
             zf.write(os.path.join(p, 'disc2', 'gdemu', f), 'disc2/' + f)
+    if d3 == '1':
+        for f in ('disc.gdi', 'track01.bin', 'track02.raw', 'track03.bin'):
+            zf.write(os.path.join(p, 'disc3', 'gdemu', f), 'disc3/' + f)
     zf.write(os.path.join(p, 'README.txt'), 'README.txt')
     zf.write(sums, 'SHA256SUMS.txt')
 print('zip ok')

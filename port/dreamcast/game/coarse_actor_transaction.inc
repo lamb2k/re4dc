@@ -130,14 +130,37 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 #include "coarse_actor_death_fade_context.inc"
 #endif
+#if RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK: the camouflage moves only the info colour alpha (the fade ticket draws it); the info
+// carries em2d's texture blend table (flagsDC 4).
+#define RE4DC_NMR_COLOR_OK(i) ((i)->colorWord==0xffffffffu || \
+    (((i)->colorWord|0xff000000u)==0xffffffffu && (i)->flagsDC==4u && (i)->texBlendTbl))
+#else
+#define RE4DC_NMR_COLOR_OK(i) ((i)->colorWord==0xffffffffu)
+#endif
+#ifndef RE4DC_NMR_SHADER_BAD
+#define RE4DC_NMR_SHADER_BAD(m) ((m)->Shader_type)
+#endif
 #if RE4DC_NMR_BLENDTBL
 // NATIVE_MODEL_REGISTRY_BLENDTBL (native_model_registry.mk): a registry actor's info with a texture blend table installed
 // but idle (cModelInfo::setTexBlendTbl sets flagsDC 4; blendRatio 0 and blendType 0: trans.cpp TextureBlend adds no
 // stage, the base textures show) draws as the base: the Novistador (em2d) keeps its table for the whole fight and
 // blends only while its camouflage changes (em2dCamouflageMove).
+#if RE4DC_NMR_CLOAK
+// NATIVE_MODEL_REGISTRY_CLOAK (native_model_registry.mk): the Novistador camouflage blend (em2dCamouflageMove, blendRatio /
+// blendType non-zero while it changes) draws as the base textures too (approximation: no texture cross-fade).
+#define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl)
+// The camouflage also moves the info's blendRatio / blendType and color2 (em2dCamouflageMove: the GC's TEV colour for its blend
+// table); the PS2 draw ignores them, so the material certificate (coarse_actor_material.inc) must too, for this table only.
+#define RE4DC_NMR_CLOAK_TBL(info,app) RE4DC_NMR_BLEND_IDLE0(info,app)
+#else
 #define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
+#endif
 #else
 #define RE4DC_NMR_BLEND_IDLE0(info,app) false
+#endif
+#ifndef RE4DC_NMR_CLOAK_TBL
+#define RE4DC_NMR_CLOAK_TBL(info,app) false
 #endif
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
 // PVR_RTT (pvr_rtt.mk): a registry info showing a render target through TexRenderModSet's table ({1, 0, ?, ?, 0xF7,
@@ -157,6 +180,33 @@ inline int re4dc_nmr_ice_slot(const cModelInfo* info) {
 #define RE4DC_NMR_BLEND_ICE(info,app) false
 #define RE4DC_NMR_BLEND_IDLE(info,app) RE4DC_NMR_BLEND_IDLE0(info,app)
 #endif
+#if RE4DC_ACTOR_TRANSACTION_DIAG || RE4DC_ACTOR_CAST_SHADOW_EMPTY
+// Source shadow.cpp GetCastShadowMngPtr's pre-frustum tests. Omitting checkKind/frustum is conservative:
+// any possible candidate keeps the source receive-pass contract. Never call the source function here;
+// it allocates/registers managers. -1 means an unproved manager, and must never admit a native plan.
+int actor_shadow_candidates(const cModel* m) {
+    if(!m || LightMgr.nArray>1024 ||
+       (LightMgr.nArray && (!LightMgr.pArray || LightMgr.size!=sizeof(cLight))))return -1;
+    unsigned candidates=0;
+    for(unsigned i=0;i<LightMgr.nArray;++i){
+        const auto* light=(const cLight*)((const u8*)LightMgr.pArray+LightMgr.size*i);
+        if((light->be_flag&3)!=3 || light->Type!=4 || light->xD!=2 ||
+           !(light->xF&m->LightInfo.EnableMask) ||
+           (i<32 && !(m->LightInfo.SelectMask&(1u<<i))))continue;
+        const auto* work=(const ShadowLightWork*)light->work;
+        if(!work)return -1;
+        if(work->mode<1 || work->mode>4)continue;
+        ++candidates;
+    }
+    return (int)candidates;
+}
+#endif
+#if RE4DC_ACTOR_CAST_SHADOW_EMPTY
+bool actor_shadow_empty_leon(cModel* m,const Re4dcActorPlan& p) {
+    return m==(cModel*)pPL && !m->id && (p.appearance==0x100u || p.appearance==0x108u) &&
+           actor_shadow_candidates(m)==0;
+}
+#endif
 bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
     if(!m->pParts || !p.count || p.count>kRe4dcActorRoles || !p.palettes ||
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
@@ -164,21 +214,25 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
 #else
        m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f || m->alpha_omit!=255 ||
 #endif
-       m->z_mode!=0 || m->CullMode || m->Shader_type || m->AddAmb_r || m->AddAmb_g || m->AddAmb_b ||
+       m->z_mode!=0 || m->CullMode || RE4DC_NMR_SHADER_BAD(m) || m->AddAmb_r || m->AddAmb_g || m->AddAmb_b ||
        (m->be_flag&(0x4000u|0x00020000u)) ||
        !re4dc_actor::exact_infos(m->pModelInfo,p.info,p.count) ||
        !p.material_count || p.material_count>kRe4dcActorMaterials || !p.run_count || p.run_count>kRe4dcActorRuns)return false;
     // Shadow/depth, special rendering and texture modifications remain source.
     if(pG->Status_flg[1]&0x100)return false;
     if((pG->Status_flg[2]&0x00100000) && (m->be_flag&0x02000000) &&
-       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200))return false;
+       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200)
+#if RE4DC_ACTOR_CAST_SHADOW_EMPTY
+       && !actor_shadow_empty_leon(m,p)
+#endif
+       )return false;
     unsigned palette_bytes=0,workspace_bytes=0;
     for(unsigned i=0;i<p.count;++i) {
         auto* info=p.info[i];
         // Hidden infos were still prepared and animated by the source callback.
         // They participate in the certificate and lease proof too.
         if(!info || !info->pData || info->invisible_factor!=1.0f || info->blend_mode ||
-           info->colorWord!=0xffffffffu || (info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pAddTpl || info->nAddTex ||
+           !RE4DC_NMR_COLOR_OK(info) || (info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pAddTpl || info->nAddTex ||
            (info->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pTexAnim || info->uvU || info->uvV || info->uvScrollU || info->uvScrollV ||
            ((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i)))return false;
         re4dc_source::ChunkProof proof{};
@@ -229,7 +283,7 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
     if(m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f)return 3;
 #endif
     if(m->alpha_omit!=255){*detail=m->alpha_omit;return 4;}
-    if(m->z_mode!=0 || m->CullMode || m->Shader_type){*detail=(unsigned(m->z_mode)<<16)|(unsigned(m->CullMode)<<8)|unsigned(m->Shader_type);return 5;}
+    if(m->z_mode!=0 || m->CullMode || RE4DC_NMR_SHADER_BAD(m)){*detail=(unsigned(m->z_mode)<<16)|(unsigned(m->CullMode)<<8)|unsigned(m->Shader_type);return 5;}
     if(m->AddAmb_r || m->AddAmb_g || m->AddAmb_b){*detail=(unsigned(m->AddAmb_r)<<16)|(unsigned(m->AddAmb_g)<<8)|unsigned(m->AddAmb_b);return 6;}
     if(m->be_flag&(0x4000u|0x00020000u)){*detail=m->be_flag;return 7;}
     if(!re4dc_actor::exact_infos(m->pModelInfo,p.info,p.count)){
@@ -239,14 +293,24 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
     if(!p.material_count || p.material_count>kRe4dcActorMaterials || !p.run_count || p.run_count>kRe4dcActorRuns)return 9;
     if(pG->Status_flg[1]&0x100)return 10;
     if((pG->Status_flg[2]&0x00100000) && (m->be_flag&0x02000000) &&
-       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200))return 11;
+       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200)){
+#if RE4DC_ACTOR_CAST_SHADOW_EMPTY
+        if(!actor_shadow_empty_leon(m,p))
+#endif
+        {
+        // high16=array size, low16=source pre-frustum candidates (ffff: invalid/unproved).
+        const int candidates=actor_shadow_candidates(m);
+        *detail=(LightMgr.nArray<<16)|(candidates<0?0xffffu:(unsigned)candidates&0xffffu);
+        return 11;
+        }
+    }
     unsigned palette_bytes=0,workspace_bytes=0;
     for(unsigned i=0;i<p.count;++i) {
         auto* info=p.info[i];*detail=i;
         if(!info || !info->pData)return 12;
         if(info->invisible_factor!=1.0f)return 13;
         if(info->blend_mode){*detail=i<<16|info->blend_mode;return 14;}
-        if(info->colorWord!=0xffffffffu){*detail=info->colorWord;return 15;}
+        if(!RE4DC_NMR_COLOR_OK(info)){*detail=info->colorWord;return 15;}
         if(info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)){*detail=i<<16|info->flagsDC;return 16;}
         if(info->pAddTpl || info->nAddTex)return 17;
         if((info->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pTexAnim)return 18;
@@ -479,6 +543,9 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
         {r->lit=captured->lit;b.lighting=&r->lit;}
     } else if(actor_fade_eligible(m,p)) {
         b.alpha_state=re4dc_fade::alpha(m->invisible_factor,m->invisible_factor2,1.0f,255);
+#if RE4DC_NMR_CLOAK
+        if(actor_nmr_cloak(m))b.alpha_state=actor_nmr_cloak_alpha(m);
+#endif
         b.source_key[2]=re4dc_fog_enabled();
     }
 #endif

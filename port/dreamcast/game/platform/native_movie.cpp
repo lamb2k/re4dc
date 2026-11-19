@@ -956,6 +956,10 @@ extern "C" unsigned re4dc_movie_picture(){return m.shown?m.shown-1:0;}
 // every picture held exactly two fields. Decode of k+1 overlaps the display
 // of k; a picture two fields late is dropped (never shown late) so audio and
 // picture stay on one clock.
+#if RE4DC_MOVIE_SOURCE_CURSOR
+#include "include/movie_source_cursor.h"
+namespace { RouteMoviePictureTick source_picture_tick = nullptr; }
+#endif
 namespace {
 // Opens the movie and primes audio + picture 0; the picture clock starts here.
 int start(unsigned id,unsigned mask){
@@ -993,6 +997,12 @@ int start(unsigned id,unsigned mask){
 // frame draws the picture behind its UI (re4dc_ui_movie_background); no skip key (the source
 // event's cancel cut is not cancellable); the end holds the last picture until re4dc_movie_end.
 int iterate(RouteMoviePictureTick tick,bool stepped){
+#if RE4DC_MOVIE_SOURCE_CURSOR
+    // Source EventMgr runs mode1 before testing cancel. This clock is not m.k
+    // (decode may lag) or m.shown (late pictures can be dropped).
+    if(source_picture_tick && !stepped)
+        source_picture_tick(re4dc_movie_source_picture(re4dc_vi_retrace_count(),m.v0,m.expected_frames));
+#endif
     if(!stepped){
         const unsigned b=re4dc_pad_movie_buttons(),pressed=b&~m.held;m.held=b;
         if(!(b&m.mask))m.armed=true;
@@ -1339,6 +1349,16 @@ extern "C" int re4dc_movie_play(unsigned id,unsigned mask,RouteMoviePictureTick 
     return re4dc_movie_play_until(id,mask,tick,~0u);
 #endif
 }
+#if RE4DC_MOVIE_SOURCE_CURSOR
+extern "C" int re4dc_movie_play_source(unsigned id,unsigned mask,RouteMoviePictureTick tick,
+                                      RouteMoviePictureTick source_tick){
+    if(source_picture_tick || m.entered)return RE4DC_MOVIE_ERROR;
+    source_picture_tick=source_tick;
+    const int result=re4dc_movie_play(id,mask,tick);
+    source_picture_tick=nullptr;
+    return result;
+}
+#endif
 // As re4dc_movie_play up to picture `stop_at` (not shown): RE4DC_MOVIE_RUNNING leaves the
 // movie open, its sound playing, for re4dc_movie_step / re4dc_movie_end (route lane: r104s00's
 // QTE cut runs as game frames over the rest of the movie, the PS2 pattern).
@@ -1393,6 +1413,17 @@ extern "C" int re4dc_movie_step(RouteMoviePictureTick tick){
     }
     return st;
 }
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+// ROUTE_QTE_CLOCK (lane dl66b, GitHub #66 "CUT" freeze; route_movie_bridge.cpp): the open stepped movie's picture clock, the
+// index of the next picture (shown or dropped): the rope QTE reads it to run its frame counter on the movie's clock.
+extern "C" unsigned re4dc_movie_clock(void){return m.entered&&!m.terminal?m.k:0;}
+#endif
+#if defined(RE4DC_DELLAGO_DIAG) && RE4DC_DELLAGO_DIAG
+// DELLAGO_DIAG (test only, lane dl66b): the open movie's picture counters for the rope QTE trace (route_movie_bridge.cpp).
+extern "C" void re4dc_movie_diag(unsigned* k,unsigned* shown,unsigned* dropped,unsigned* late,unsigned* starved,int* held,int* pending,unsigned* v0){
+    *k=m.k;*shown=m.shown;*dropped=m.dropped;*late=m.late;*starved=m.starved;*held=m.held_end?1:0;*pending=m.pending?1:0;*v0=m.v0;
+}
+#endif
 // Retires an open (handed-off or stepped) movie.
 extern "C" int re4dc_movie_end(void){
 #if RE4DC_CABIN_SOURCE
@@ -1450,5 +1481,8 @@ extern "C" int re4dc_movie_cancel(){return RE4DC_MOVIE_CANCEL;}
 extern "C" int re4dc_movie_play_until(unsigned,unsigned,RouteMoviePictureTick,unsigned){return RE4DC_MOVIE_UNHANDLED;}
 extern "C" int re4dc_movie_play_stepped(unsigned){return RE4DC_MOVIE_UNHANDLED;}
 extern "C" int re4dc_movie_step(RouteMoviePictureTick){return RE4DC_MOVIE_ERROR;}
+#if defined(RE4DC_ROUTE_QTE_CLOCK) && RE4DC_ROUTE_QTE_CLOCK
+extern "C" unsigned re4dc_movie_clock(void){return 0;}
+#endif
 extern "C" int re4dc_movie_end(void){return RE4DC_MOVIE_ERROR;}
 #endif

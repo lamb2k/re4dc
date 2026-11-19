@@ -26,6 +26,10 @@
 // the fixture sets progress flags and the room loads its own enemy list; B = bare room jump, enemies may be missing).
 // The fixture is /cd/dc/qa/<file>. tools/d367/qa20/mkqa.py writes both.
 #include <kos.h>
+#include "platform/include/pc_sampler.h"   // PCS link command (lane perf30); inert when RE4DC_PC_SAMPLER=0
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+extern "C" { extern uint32_t re4dc_pcs[]; }   // pc_sampler.cpp: header[32] + records (file scope: not in the anonymous namespace)
+#endif
 #include <dc/maple.h>
 #include <dc/maple/controller.h>
 #include <dc/video.h>
@@ -65,9 +69,13 @@ int re4dc_tick_log_snapshot(const char** name, unsigned* avg_us, unsigned* max_u
     __attribute__((weak));                                                                     // tick_log.cpp
 void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room) __attribute__((weak));
 void re4dc_vram_pages_census(unsigned* out) __attribute__((weak));                             // vram_pages.cpp
+unsigned re4dc_vram_pages_probe_fails(void) __attribute__((weak));                             // vram_pages.cpp (disc31)
 void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigned long long* block_us)
     __attribute__((weak));                                                                     // dvd_read_safe.cpp
-extern unsigned long re4dc_fx_esp_live[32] __attribute__((weak));                            // esp.cpp (FX_SCAN)
+#ifndef RE4DC_FX_ESP_WORDS
+#define RE4DC_FX_ESP_WORDS 32
+#endif
+extern unsigned long re4dc_fx_esp_live[RE4DC_FX_ESP_WORDS] __attribute__((weak));                            // esp.cpp (FX_SCAN)
 extern volatile unsigned re4dc_qa_shore_far_mm __attribute__((weak));                      // native_static.cpp (LAKE_FAR)
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
 // WORLD_METER (game30.mk): the world rows (0 = the game's own) and the VRAM failure rooms.
@@ -485,7 +493,8 @@ void snap_diag() {
 #endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
     if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
-    if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u\n", o[3], o[4], o[10]); }
+    if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u probe_fails=%u\n", o[3], o[4], o[10],
+                re4dc_vram_pages_probe_fails ? re4dc_vram_pages_probe_fails() : 0u); }
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
     {   // VRAM failures by room (the VRAMFAIL log lines carry each one's size, caller and texture key)
         unsigned lr = 0, ln = 0, rr[8], rc[8];
@@ -503,7 +512,7 @@ void snap_diag() {
     a = addf(a, "ganados_alive=%d\n", g_game.alive);
     if (re4dc_fx_esp_live) {
         unsigned n = 0;
-        for (int i = 0; i < 32; ++i) n += (unsigned) __builtin_popcountl(re4dc_fx_esp_live[i]);
+        for (int i = 0; i < RE4DC_FX_ESP_WORDS; ++i) n += (unsigned) __builtin_popcountl(re4dc_fx_esp_live[i]);
         a = addf(a, "fx_live=%u\n", n);
     }
     g_diag_stats = a;
@@ -675,6 +684,16 @@ enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
 #define QA_WS_ROW
 #define QA_WS_ENUM
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+extern "C" void re4dc_leon_lod_set(unsigned level);   // coarse_actor_leon_lod.inc (ps2leon.mk LEON_LOD)
+extern "C" unsigned re4dc_leon_lod_requested();
+extern "C" unsigned re4dc_leon_lod_count();
+#define QA_LL_ROW A_LLOD,
+#define QA_LL_ENUM , A_LLOD
+#else
+#define QA_LL_ROW
+#define QA_LL_ENUM
+#endif
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
 #define QA_LINK_ROW A_LINK,
 #define QA_LINK_ENUM , A_LINK
@@ -689,19 +708,19 @@ enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED,
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     , A_CENSUS
 #endif
-    QA_WS_ENUM QA_LINK_ENUM
+    QA_WS_ENUM QA_LINK_ENUM QA_LL_ENUM
 };
 struct Menu {
     bool boot;
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
     int screen, sel[6], chap, qr_page, census_page;
-    int items[18], nitems;
+    int items[20], nitems;
 #else
     int screen, sel[5], chap, qr_page;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    int items[16], nitems;
+    int items[18], nitems;
 #else
-    int items[12], nitems;
+    int items[14], nitems;
 #endif
 #endif
 };
@@ -728,6 +747,10 @@ void item_text(int a, char* out, unsigned n) {
     case A_WXLU: snprintf(out, n, "TRANSLUCENT WORLD: %s", wm_xlu_name()); break;
     case A_WSHELL: snprintf(out, n, "FAR SHELL: %s", wm_shell_name()); break;
     case A_PVS: {unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);snprintf(out,n,"WORLD PVS (THIS BOOT): %s",state[0]==1?(state[1]?"ON / GUARDED":"ON / DRAW ALL"):"OFF");break;}
+#endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+    case A_LLOD: {static const char* const nm[]={"0 FULL","1 LEGS","2 BODY","3 ALL"};const unsigned q=re4dc_leon_lod_requested();
+        snprintf(out, n, "LEON LEVEL (NEXT ROOM): %s", q<4?nm[q]:"?"); break;}
 #endif
 #if defined(RE4DC_WORLD_SCRATCH) && RE4DC_WORLD_SCRATCH
     case A_WSCR: snprintf(out, n, "WORLD SCRATCH: %s", re4dc_world_scratch_live == 2 ? "C SCRATCH" :
@@ -1446,6 +1469,73 @@ int drive_row(char* out, int n) {
                            (int) (g_drv.cam * 1000.0f), (int) g_drv.free_now, g_drv.n, g_drv.cancels, st);
     return k < 0 ? 0 : k >= n ? n - 1 : k;
 }
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+// ---------------------------------------------------------------- PCS (lane perf30, 2026-11-10; PERF-PLAN-30FPS Phase 0)
+// The PC sampler's ring over the link, so a console session gives a per-function profile (until now only Flycast could
+// read the ring). Needs PC_SAMPLER=1 on a QA_LINK disc; with PC_SAMPLER=0 none of this is compiled.
+//   PCS SNAP    stops the sampler, sends the header + ring as P datagrams ("P <id> <part>/<parts>\n<hex>", 512 bytes a
+//               part, paced against the tx backlog, read straight from the ring: no RAM copy), answers
+//               "A <id> OK PCS SNAP ..." after the last part and restarts the sampler if it was running.
+//   PCS STATUS  header counters.   PCS START / PCS STOP  the sampler itself.
+// Host: tools/qalink/pcs_from_log.py turns the P parts (Pi log or `qalink.py send` output) into a read_pcs.py dump.
+constexpr unsigned kPcsPart = 512;
+constexpr unsigned kPcsBytes = RE4DC_PCS_HEADER_WORDS * 4u + RE4DC_PC_SAMPLER_BYTES;
+struct PcsDump { char id[16]; unsigned part, parts; bool active, restart; } g_pcs;
+void pcs_status(const char* id, const char* what) {
+    const volatile uint32_t* h = re4dc_pcs;
+    link_reply(id, true, "PCS %s state=%u hz=%u cap=%u head=%u samples=%u markers=%u late=%u lat_max=%u frame=%u",
+               what, (unsigned) h[RE4DC_PCS_H_STATE], (unsigned) h[RE4DC_PCS_H_HZ], (unsigned) h[RE4DC_PCS_H_CAPACITY],
+               (unsigned) h[RE4DC_PCS_H_HEAD], (unsigned) h[RE4DC_PCS_H_SAMPLES], (unsigned) h[RE4DC_PCS_H_MARKERS],
+               (unsigned) h[RE4DC_PCS_H_LATE], (unsigned) h[RE4DC_PCS_H_LAT_MAX], (unsigned) h[RE4DC_PCS_H_LAST_FRAME]);
+}
+void pcs_finish(bool sent) {
+    if (!g_pcs.active) return;
+    g_pcs.active = false;
+    if (sent) pcs_status(g_pcs.id, "SNAP done");
+    if (g_pcs.restart) re4dc_pcs_start();
+}
+// Each link pass: up to two parts while the tx backlog has room (same 2400-byte bound as the DIAG snapshot).
+void pcs_step() {
+    if (!g_pcs.active) return;
+    if (!re4dc_qalink_up()) { pcs_finish(false); return; }
+    static const char kHex[] = "0123456789abcdef";
+    for (int k = 0; k < 2 && g_pcs.part < g_pcs.parts; ++k) {
+        char b[48 + 2 * kPcsPart];
+        unsigned tx, rx, drops, queued;
+        re4dc_qalink_counters(&tx, &rx, &drops, &queued);
+        if (queued + sizeof(b) + 2u > 2400u) return;
+        const unsigned off = g_pcs.part * kPcsPart, n = kPcsBytes - off < kPcsPart ? kPcsBytes - off : kPcsPart;
+        const int hl = snprintf(b, 48, "P %s %u/%u\n", g_pcs.id, g_pcs.part + 1, g_pcs.parts);
+        const volatile uint8_t* src = (const volatile uint8_t*) re4dc_pcs + off;
+        char* o = b + hl;
+        for (unsigned i = 0; i < n; ++i) { const unsigned v = src[i]; *o++ = kHex[v >> 4]; *o++ = kHex[v & 15]; }
+        if (!re4dc_qalink_send(b, (unsigned) (o - b))) return;   // ring full: same part next pass
+        ++g_pcs.part;
+    }
+    if (g_pcs.part >= g_pcs.parts) pcs_finish(true);
+}
+void pcs_command(const char* id, const char* rest) {
+    const volatile uint32_t* h = re4dc_pcs;
+    if (h[RE4DC_PCS_H_MAGIC] != RE4DC_PCS_MAGIC) { link_reply(id, false, "PCS: sampler never started"); return; }
+    if (rest && !strncasecmp(rest, "SNAP", 4)) {
+        if (g_pcs.active) { link_reply(id, false, "PCS: SNAP busy (%u/%u)", g_pcs.part, g_pcs.parts); return; }
+        g_pcs.restart = h[RE4DC_PCS_H_STATE] == RE4DC_PCS_RUNNING;
+        re4dc_pcs_stop();
+        strncpy(g_pcs.id, id, sizeof(g_pcs.id) - 1);
+        g_pcs.id[sizeof(g_pcs.id) - 1] = 0;
+        g_pcs.part = 0;
+        g_pcs.parts = (kPcsBytes + kPcsPart - 1) / kPcsPart;
+        g_pcs.active = true;
+        return;   // the answer follows the last part (pcs_step)
+    }
+    if (rest && !strncasecmp(rest, "START", 5)) { re4dc_pcs_start(); pcs_status(id, "START"); return; }
+    if (rest && !strncasecmp(rest, "STOP", 4)) {
+        if (g_pcs.active) { link_reply(id, false, "PCS: SNAP busy"); return; }
+        re4dc_pcs_stop(); pcs_status(id, "STOP"); return;
+    }
+    pcs_status(id, "STATUS");
+}
+#endif
 // One command datagram. in_menu: the in-game menu is open (MENU / RESUME differ).
 int link_command(char* line, bool in_menu) {
     char* save = nullptr;
@@ -1473,6 +1563,9 @@ int link_command(char* line, bool in_menu) {
         link_send_parts('D', id, g_diag, g_diag_len);
         return LA_NONE;
     }
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+    if (word_is(cmd, "PCS")) { pcs_command(id, rest); return LA_NONE; }
+#endif
     if (word_is(cmd, "RECORD")) {
         const int n = rest ? atoi(rest) : 0;
         if (n <= 0 || n > 1800) { link_reply(id, false, "RECORD needs 1..1800 ticks"); return LA_NONE; }
@@ -1524,6 +1617,9 @@ int link_pump(bool in_menu) {
         link_read_cfg();
         if (g_link.auto_start) re4dc_qalink_start();
     }
+#if defined(RE4DC_PC_SAMPLER) && RE4DC_PC_SAMPLER
+    pcs_step();
+#endif
 #if defined(RE4DC_QA_LINK_REVIEW28) && RE4DC_QA_LINK_REVIEW28
     if (!re4dc_qalink_up()) {
         g_review_snapshot.cancel();
@@ -1730,6 +1826,13 @@ int run(Menu& m, bool boot) {
 #if defined(RE4DC_WORLD_CENSUS24) && RE4DC_WORLD_CENSUS24
                 else if (a == A_CENSUS) { m.census_page = 0; m.screen = M_CENSUS; }
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+                else if (a == A_LLOD) {   // Leon's mesh level for the next room enter (cutscenes keep level 0)
+                    const unsigned n = re4dc_leon_lod_count();
+                    re4dc_leon_lod_set((re4dc_leon_lod_requested() + 1) % (n ? n : 4));
+                    re4dc_log("qa: leon level %u (next room enter)\n", re4dc_leon_lod_requested());
+                }
+#endif
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
 #if defined(RE4DC_QA_LINK) && RE4DC_QA_LINK
                 else if (a == A_LINK) link_toggle();
@@ -1916,10 +2019,10 @@ int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
 #endif
     static Menu m;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW
                          A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
@@ -1989,10 +2092,10 @@ int re4dc_qa_menu(const char** path) {
     m.boot = false;
     if (m.screen != M_MAIN) m.screen = M_MAIN;
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE,
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW
                          A_WOPQ, A_WXLU, A_WSHELL, QA_LINK_ROW QA_WS_ROW A_TITLE};
 #else
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LINK_ROW QA_WS_ROW A_TITLE};
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, QA_CENSUS_ROW A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, QA_LL_ROW QA_LINK_ROW QA_WS_ROW A_TITLE};
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));

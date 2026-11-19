@@ -42,7 +42,26 @@ disc2_jobs() {
     r=${rw%%:*}; grep -v '^squeeze' "$CW31/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
     job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
   done
-  echo "r200 r202 r203 r201 r207 r208 r204 r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
+  # chapter 3-2 (lane world-ch32 11-02): r205 r209 r20a r20b + the r209 door-4 s00 trigger (etcdoor), warps in worldch32/warps
+  local CW32=$T/port/dreamcast/tools/d367/worldch32/warps
+  # r205a / r209a (Ashley placed in r205 / r209) are ARTIFICIAL fixtures (lane world-ch32 11-17, from the room scripts and ESL data):
+  # Status_flg[3] 0x04000000 (Ashley following) is set in r203 and cleared by r204 s00 (end of 3-1) before the 3-2 route starts at
+  # r204 -> r205, and r205 / r209 have no Ashley code and no enemy list after the reunion (emleon04: 0 entries in r205 / r209, GC and PS2).
+  # They are not in d2-census-rooms.txt (never judged); default off, RR_ASHLEY_ARTIFICIAL=1 runs them for a heap diagnosis.
+  local ASH32="r205a:h2-r205-ashley r209a:i3-r209-ashley"; [ -n "${RR_ASHLEY_ARTIFICIAL:-}" ] || ASH32=""
+  for rw in r205:h-r205 r209:i-r209 r209s00:i2-r209-s00 r20a:j-r20a r20b:k-r20b $ASH32 r20aa:j2-r20a-ashley r20ba:k2-r20b-ashley; do
+    r=${rw%%:*}; grep -v '^squeeze' "$CW32/${rw#*:}.txt" | tr -d '\r' > "$EVU/fixtures/d2-$r.txt"
+    job 1 d2cg-$r "$(run d2cg-$r d2c d2c 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"
+  done
+  # 3-2 door chain (lane world-ch32 11-17): each door area's SceAt centre (the census `dump` lists them; `pos` for the r205 pit door,
+  # whose area sits on the upper floor) + A presses, stopping at the next room's entry. Doors still gated by key / event / wave
+  # (r204 -> r209, r209 -> r20a, r20a -> r20b) need the play-through and are not here.
+  for dw in r204-r205:205 r205-r204:204 r209-r204:204 r20a-r209:209 r20b-r20a:20a; do
+    dn=${dw%%:*}; dt=${dw#*:}
+    tr -d '\r' < "$CW32/door-$dn.txt" > "$EVU/fixtures/d2-door-$dn.txt"
+    job 1 d2door-$dn "$(run d2door-$dn d2c d2c 75 --warp "\"\$EVW\\fixtures\\d2-door-$dn.txt\"" --stop "'phase=enter room=$dt'" --grace 8)"
+  done
+  echo "r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e" > "$W/d2-census-rooms.txt"
   # ALIGN-CALL on Disc 2 (lane rel27, GitHub #63): r200 + the source radio call 0 replayed, align logger
   { sed -E '/^(goto|act|entry) /,$d' "$EVU/fixtures/d2-r200.txt"; echo "radio 30 19"; } > "$EVU/fixtures/d2-align-call.txt"   # op 19 = ss_oc301, stage 3's first call: op 0's tables do not exist in op03.das (10 sub-files), its seq pointer is stray
     # stops 25 s after the call opens; 120 s is only a ceiling (the 60 s deadline cut it off: opens at 47-62 s alone, up to 85 s under load, rel27 11-06)
@@ -58,10 +77,37 @@ job 2 d2align-call "$(run d2align-call d2c d2c 120 --align --warp "\"\$EVW\\fixt
   job 2 d2gdemu "GG_ROOM=202 MAXP=2 bash \"\$FPD/gdemu_gate.sh\" rrd2 \"\$EVW\\d2gdemu\" \"\$EVW\\_discs\\d2c\" \"\$(cat \$J/syms-d2c.txt)\" \"\$EVW\\fixtures\\d2-r200.txt\" $seeds"
   if [ -d "$EVU/_discs/d2a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" ]; then
     cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d2aW/syms.txt" "$J/syms-d2a.txt"
-    for r in r200 r202 r203 r201 r207 r208 r204 r20c r20f r206 r20d r20e; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
+    for r in r200 r202 r203 r201 r207 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e; do job 1 d2gca-$r "$(run d2gca-$r d2a d2a 60 --warp "\"\$EVW\\fixtures\\d2-$r.txt\"")"; done
   fi
 }
 if [ "$TIER" = d2 ]; then disc2_jobs; wc -l < "$J/list.txt"; exit 0; fi
+# Disc 3 (lane world-ch5; recipe.conf RR_DISC3=1, rr-disc3.sh made _discs/d3c and _discs/d3a): census of every island room
+# (island5/rooms.tsv: CAST-GC / LEON-GC / TEXCHK / VRAM, cap 4 peak), each warp = the ch5found16 room rig + its chapter
+# (pG->chapter 14..17, so the DISC_SET check asks for no swap) + census; KOS 48 KiB on the r300 -> r301 door and the
+# r30f fight; GC-ASSET gate rooms on the d3a twin. Tier d3: only these jobs.
+disc3_jobs() {
+  local D3O=$ROUTE/out-fp${RR_PFX:-rr}${S7}d3cW I5=$T/port/dreamcast/tools/d367/island5 r ch wf g
+  [ -d "$EVU/_discs/d3c" ] && [ -s "$D3O/syms.txt" ] || { echo "rr-jobs: no Disc 3 census base" > "$W/d3-skip.txt"; return 0; }
+  cp "$D3O/syms.txt" "$J/syms-d3c.txt"
+  : > "$W/d3-census-rooms.txt"
+  while read -r r ch wf g; do
+    case "$r" in r3*) ;; *) continue ;; esac
+    { echo "name d3-$r"; echo "room 0x${r#r}"
+      if [ "$wf" != - ]; then grep -v -E '^(name|room|squeeze|chapter) ' "$I5/$wf" | tr -d '\r'; else echo "jp 0"; echo "inv default"; echo "god"; fi
+      echo "chapter $ch"; echo "census 200"; echo "alivelog 60"; } > "$EVU/fixtures/d3-$r.txt"
+    job 1 d3cg-$r "$(run d3cg-$r d3c d3c 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"")"
+    echo -n "$r " >> "$W/d3-census-rooms.txt"
+  done < "$I5/rooms.tsv"
+  job 2 d3kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\d3c\" fp${RR_PFX:-rr}${S7}d3cW \"\$EVW\\d3kos\" '49152:0 49152:1' 'd3door d3fight'"
+  if [ -d "$EVU/_discs/d3a" ] && [ -s "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" ]; then
+    cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}d3aW/syms.txt" "$J/syms-d3a.txt"
+    while read -r r ch wf g; do
+      case "$r" in r3*) [ "$g" = 1 ] || continue ;; *) continue ;; esac
+      job 1 d3gca-$r "$(run d3gca-$r d3a d3a 60 --warp "\"\$EVW\\fixtures\\d3-$r.txt\"")"
+    done < "$I5/rooms.tsv"
+  fi
+}
+if [ "$TIER" = d3 ]; then disc3_jobs; wc -l < "$J/list.txt"; exit 0; fi
 for x in g c; do cp "$ROUTE/out-fp${RR_PFX:-rr}${S7}${x}W/syms.txt" "$J/syms-$x.txt"; done
 cp "$ROUTE/out-${RR_PFX:-rr}${S7}rP/syms.txt" "$J/syms-rel.txt"
 if [ "$TIER" = qa ]; then
@@ -134,6 +180,7 @@ tr -d '\r' < "$T/port/dreamcast/tools/d367/fullplay/segments/align-call-warp.txt
 # stops 25 s after the call opens; 120 s is only a ceiling (the 60 s deadline cut it off: opens at 47-62 s alone, up to 85 s under load, rel27 11-06)
 job 2 align-call "$(run align-call c c 120 --align --warp "\"\$EVW\\fixtures\\align-call.txt\"" --stop "'subscreen backing: open type=20'" --grace 25)"
 [ "${RR_DISC2:-0}" != 1 ] || disc2_jobs
+[ "${RR_DISC3:-0}" != 1 ] || disc3_jobs
 if [ "$TIER" = quick ]; then
   job 2 kos "bash \"\$FPD/kos_squeeze.sh\" \"\$EVW\\_discs\\c\" fp${RR_PFX:-rr}${S7}cW \"\$EVW\\kos\" '49152:0 49152:1' fight"
   job 1 gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rr \"\$EVW\\gdemu\" \"\$EVW\\_discs\\g\" \"\$(cat \$J/syms-g.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"

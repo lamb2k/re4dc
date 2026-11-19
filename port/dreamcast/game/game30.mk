@@ -1562,6 +1562,14 @@ $(OBJDIR)/platform/pwc_sh4.o: platform/pwc_sh4.S
 	kos-cc $(KOS_CFLAGS) -c $< -o $@
 $(OBJDIR)/src/game/model.o: GAME_CPPFLAGS += -DRE4DC_PWC_KERNEL=$(GAME_PWC_KERNEL)
 endif
+# SKEL_IK_PASS=1 (lane skel31 2026-11-11; exact): MotionMove's first (pre-IK) part-world pass computes only the IK
+#                    chains and their ancestors (src/game/motion.cpp skikPartsWorldCalc); the post-IK pass recomputes
+#                    every part as before. =2: check build (skipped parts poisoned with NaN, "SKIK" leak counter).
+#                    Gate: LOGIC_TRACE STRICT + decisions, off vs 1 and off vs 2.
+SKEL_IK_PASS ?= 0
+ifneq ($(SKEL_IK_PASS),0)
+$(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_SKEL_IK_PASS=$(SKEL_IK_PASS)
+endif
 # GAME_ROT_FSCA=1 (lane fm 2026-10-05; last-bit FP policy, NOT exact; needs GAME_PMC_KERNEL=1 and
 #                    GAME_FP_CONTRACT=off): platform/pmc_fsca_sh4.S replaces pmc_sh4.S as re4dc_pmc_run and runs
 #                    every part of cModel::partsMatCalc (no memo, no miss path) as one hand-scheduled SH-4 loop:
@@ -3563,6 +3571,10 @@ endif
 # padding cannot change a sample). Without such packages in dc/tex.pak the knob changes nothing.
 TEX_WRAP_SAFE ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_WRAP_SAFE=$(TEX_WRAP_SAFE)
+# PKG_PS2_SIZE=1 (render only, default 0; lane assets-dc 2026-11-02): texture packages with header flags bit 29 hold
+# the whole PS2 picture at the PS2's own size (data set dcf01); wrap and padded-UV checks accept them, UV scale 1.
+PKG_PS2_SIZE ?= 0
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PKG_PS2_SIZE=$(PKG_PS2_SIZE)
 # MODEL_DROP_LOG=1 (diagnostic, lane crowd12 2026-10-14; ledger G5/G6): MODELDROP lines, one per refused model
 # part (model, image, reason: state / guard / slab / texture / padded wrap / actor packet), with 600-frame sums.
 MODEL_DROP_LOG ?= 0
@@ -3904,6 +3916,38 @@ endif
 ifneq ($(TEX_MIP_DADJ),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_MIP_DADJ=$(TEX_MIP_DADJ)
 GAME_LDFLAGS += -Wl,--wrap=pvr_poly_compile -Wl,--wrap=pvr_sprite_compile -Wl,--wrap=pvr_poly_mod_compile
+endif
+
+# MOTION_LARGE_CLIPS=1 (island18): sealed em32 all-cold v2 body only, clips up to 128 KiB.
+# Existing two slabs scale to the largest actual clip (102336 B); all other v2/v3 admission stays unchanged.
+MOTION_LARGE_CLIPS ?= 0
+ifeq ($(filter $(MOTION_LARGE_CLIPS),0 1),)
+$(error MOTION_LARGE_CLIPS must be 0 or 1)
+endif
+ifeq ($(MOTION_LARGE_CLIPS),1)
+ifneq ($(MOTION_RESERVE),1)
+$(error MOTION_LARGE_CLIPS needs MOTION_RESERVE=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_CLIPS=1
+endif
+# MOTION_LARGE_FILES=<names> (lane world-ch32 11-04, generalising bosscast MOTION_LARGE_EM39): pinned v2 bodies whose clips
+# over 32 KiB stream cold (native_motion.cpp v2_clip_limit rows): em39 (Krauser, data set bossk: body 1,423,712 -> 877,632 B,
+# r31c heap 4), em2d (Novistador, cw32 / pmcw32: 1,699,136 -> 1,514,944 B, r205 heap 4). Needs MOTION_LARGE_CLIPS=1.
+# Default empty. MOTION_LARGE_EM39=1 (bosscast, Disc 3 D3REC) = em39 in the list.
+MOTION_LARGE_FILES ?=
+MOTION_LARGE_EM39 ?= 0
+ifeq ($(filter $(MOTION_LARGE_EM39),0 1),)
+$(error MOTION_LARGE_EM39 must be 0 or 1)
+endif
+MOTION_LARGE_LIST := $(sort $(MOTION_LARGE_FILES) $(if $(filter 1,$(MOTION_LARGE_EM39)),em39))
+ifneq ($(filter-out em39 em2d,$(MOTION_LARGE_LIST)),)
+$(error MOTION_LARGE_FILES: unknown $(filter-out em39 em2d,$(MOTION_LARGE_LIST)) (known: em39 em2d))
+endif
+ifneq ($(MOTION_LARGE_LIST),)
+ifneq ($(MOTION_LARGE_CLIPS),1)
+$(error MOTION_LARGE_FILES needs MOTION_LARGE_CLIPS=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += $(if $(filter em39,$(MOTION_LARGE_LIST)),-DRE4DC_MOTION_LARGE_EM39=1) $(if $(filter em2d,$(MOTION_LARGE_LIST)),-DRE4DC_MOTION_LARGE_EM2D=1)
 endif
 
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
