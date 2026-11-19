@@ -31,6 +31,17 @@ int ConsInitRoom(ConsRoom* p);   // cons.cpp
 bool host_load_core(const char* tree);
 bool host_load_player(const char* tree, int type, int costume);
 bool host_load_room(const char* tree, unsigned room_id);
+#include "dmg.h"
+#include "em_set.h"
+// host_actors.cpp (lane eng-host2)
+extern "C" void host_actors_tree(const char* tree);
+extern "C" int host_load_esl(int no);
+extern "C" cEm* host_spawn_entry(unsigned entry);
+extern "C" cEm* host_spawn_partner(const float* pos, float ang);
+extern "C" int host_hit(unsigned entry, unsigned type);
+extern "C" void host_trace_actors(unsigned t);
+extern "C" void host_control_follow(float k);
+void EmSetRoomInit();   // em_set.cpp
 
 static HostFixture g_fx;
 static HostOptions g_opt;
@@ -84,6 +95,10 @@ void UpdateNearClipDist()
 static bool room_init(const char* tree)
 {
     if (!host_load_core(tree) || !host_load_player(tree, 0, 0) || !host_load_room(tree, g_fx.room)) return false;
+    // StageSet's readEmList (before gameRoomInit): the room's enemy list, when the fixture names one
+    host_actors_tree(tree);
+    if (g_fx.esl >= 0 && !host_load_esl(g_fx.esl)) return false;
+    pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points
     ConsInitRoom((ConsRoom*) GetDataExt(pG->pRoom, "CNS", 0));
     ModInfoMgr.roomInit();
     ModInfoMgr.arrayAlloc(ConsGetRoomValue(7));
@@ -93,6 +108,8 @@ static bool room_init(const char* tree)
     EmMgr.arrayAlloc(ConsGetRoomValue(0));
     ObjMgr.roomInit();
     ObjMgr.arrayAlloc(ConsGetRoomValue(1));
+    DmgMgr.roomInit();   // dmg.cpp (hosted since lane eng-host2), game.cpp's order and size
+    DmgMgr.arrayAlloc(20);
     {
         Vec pos = {0.0f, 0.0f, 0.0f};
         Vec rot = {0.0f, 0.0f, 0.0f};
@@ -120,6 +137,7 @@ static bool room_init(const char* tree)
     if (cam) CamCtrl.RoomDataRead((CameraDataHeader*) cam);
     else pG->pCamRoom = cam;
     CamCtrl.CoreDataRead((CameraDataHeader*) (pG->pArc->ofs_30 + (u32) pG->pArc));
+    EmSetRoomInit();   // game.cpp, after the camera: the list's "set" bits cleared for the new room
     CamCtrl.roomInit();
     View.roomInit();
     return true;
@@ -263,27 +281,72 @@ int main(int argc, char** argv)
         if (g_fx.resume_clear_event) p->be_flag &= ~0x04000000u;
         p->matUpdate();
     }
+    // The partner (Ashley), as the room scripts create her at room entry (pl_sub.cpp SubCharInit), at the
+    // fixture's recorded position.
+    host_rnd_owner = 4;
+    if (g_fx.nsub) host_spawn_partner(g_fx.sub_pos, g_fx.sub_ang);
+    host_rnd_owner = 0;
     host_trace_header(&g_opt, &g_fx, HOST_FP_NAME);
     PADStatus none;
     __builtin_memset(&none, 0, sizeof none);
     trace_tick(0, none);   // t=0: the state after construction (startUp ran one move)
+    host_trace_actors(0);
+
+    // --rng-feed: the old run's generator state at the start of each tick (the reference's own actors
+    // then draw the numbers the old game's actors drew, as long as they draw first in the tick)
+    static unsigned short feed[1u << 16];
+    static unsigned char have[1u << 16];
+    if (g_opt.rng_feed) {
+        const int n = host_load_rng_feed(g_opt.rng_feed, feed, have, 1u << 16);
+        host_log("rng feed: %d ticks from %s (offset %d)", n, g_opt.rng_feed, g_opt.rng_offset);
+        if (n <= 0) return 2;
+    }
 
     bool rng_dropped = false;
     for (unsigned t = 1; t <= g_fx.ticks; t++) {
         host_stub_tick_reset();
+        host_rnd_owner = 0;
+        if (g_opt.rng_feed) {
+            const long ot = (long) t + g_opt.rng_offset;
+            if (ot >= 0 && ot < (1l << 16) && have[ot]) RndInit(feed[ot]);
+        }
         g_pad = pad_for(t);
         const Vec before = pPL->pos;
         const u16 rng0 = host_rnd_state();
+        // fixture events before the tick's pass: creations (as the room scripts call EmSetFromList), hits
+        host_rnd_owner = 4;
+        for (unsigned i = 0; i < g_fx.nactors; i++)
+            if (g_fx.actors[i].tick == t && !g_fx.actors[i].post) host_spawn_entry(g_fx.actors[i].entry);
+        host_rnd_owner = 0;
+        for (unsigned i = 0; i < g_fx.nhits; i++) {
+            const unsigned at = g_fx.hits[i].tick + (g_opt.control == HOST_CTL_LATE_HIT ? g_opt.shift : 0);
+            if (at == t) host_hit(g_fx.hits[i].entry, g_fx.hits[i].type);
+        }
+        if (g_opt.control == HOST_CTL_DROP_RNG_ACTOR && t == g_opt.tick) host_rnd_drop_owner = 5;   // A k=0
+        if (g_fx.god) pG->pl_life = pG->pl_life_max;   // the old fixtures' warp `god`
         PadRead();
         pG->Frame_cnt++;
         // gameMainLoop (game.cpp), the hosted part, in its order
         UpdateNearClipDist();
+        EmMgr.move();   // the characters: partner and enemies (the player's own move is below)
+        EmListWaitDelete();
+        pG->Status_flg[1] &= ~0x20000000;
+        host_rnd_owner = 4;
+        for (unsigned i = 0; i < g_fx.nactors; i++)
+            if (g_fx.actors[i].tick == t && g_fx.actors[i].post) host_spawn_entry(g_fx.actors[i].entry);
+        host_rnd_owner = 1;
         if (!(pG->Stop_flg & 0x10000000) && (pPL->be_flag & 0x20) &&
             (!(pG->Status_flg[1] & 0x10000000) || (pPL->be_flag & 0x800))) {
             pPL->move();
         }
+        host_rnd_owner = 3;
+        pG->Status_flg[2] &= ~0x8000000;
         if (!(pG->Stop_flg & 0x4000000)) ObjMgr.move();
+        host_rnd_owner = 2;
         CameraMove();
+        host_rnd_owner = 0;
+        DmgMgr.move();   // the damage records (game.cpp: after effects and lights, which are not hosted)
+        if (g_opt.control == HOST_CTL_FOLLOW_DIST) host_control_follow(g_opt.k);
         // controls (each must make the comparison fail; PLAYS_RIGHT.md)
         if (g_opt.control == HOST_CTL_WALK_SPEED && pPL->r_no_0 == 0 && pPL->r_no_1 == 1) {
             // an engine whose walk covers k times the ground per tick
@@ -299,9 +362,12 @@ int main(int argc, char** argv)
             rng_dropped = true;
         }
         trace_tick(t, g_pad);
+        host_trace_actors(t);
     }
     if (g_opt.control == HOST_CTL_DROP_RNG && !rng_dropped)
         host_log("control drop-rng: no generator call at or after tick %u (nothing dropped)", g_opt.tick);
+    if (g_opt.control == HOST_CTL_DROP_RNG_ACTOR && !host_rnd_dropped)
+        host_log("control drop-rng-actor: actor 0 made no generator call from tick %u (nothing dropped)", g_opt.tick);
     host_close_outputs();
     return 0;
 }

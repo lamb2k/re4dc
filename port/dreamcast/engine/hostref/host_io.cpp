@@ -29,8 +29,9 @@ extern FILE* host_log_file;
 static FILE* g_out;
 
 static const char* kUsage =
-    "usage: re4ref --tree DIR --fixture FILE [--out TRACE] [--log LOG]\n"
-    "              [--control walk-speed[=k] | drop-rng[=tick] | shift-input[=n]]\n";
+    "usage: re4ref --tree DIR --fixture FILE [--out TRACE] [--log LOG] [--rng-feed LOGIC_TRACE[:offset]]\n"
+    "              [--control walk-speed[=k] | drop-rng[=tick] | shift-input[=n]\n"
+    "                         | drop-rng-actor[=tick] | follow-dist[=k] | late-hit[=n]]\n";
 
 extern "C" int host_parse_args(int argc, char** argv, HostOptions* o)
 {
@@ -46,9 +47,22 @@ extern "C" int host_parse_args(int argc, char** argv, HostOptions* o)
             const char* c = argv[++i];
             const char* eq = strchr(c, '=');
             if (!strncmp(c, "walk-speed", 10)) { o->control = HOST_CTL_WALK_SPEED; if (eq) o->k = strtof(eq + 1, 0); }
-            else if (!strncmp(c, "drop-rng", 8)) { o->control = HOST_CTL_DROP_RNG; if (eq) o->tick = strtoul(eq + 1, 0, 0); }
+            else if (!strncmp(c, "drop-rng", 8) && (c[8] == 0 || c[8] == '=')) { o->control = HOST_CTL_DROP_RNG; if (eq) o->tick = strtoul(eq + 1, 0, 0); }
             else if (!strncmp(c, "shift-input", 11)) { o->control = HOST_CTL_SHIFT_INPUT; if (eq) o->shift = atoi(eq + 1); }
+            else if (!strncmp(c, "drop-rng-actor", 14)) { o->control = HOST_CTL_DROP_RNG_ACTOR; if (eq) o->tick = strtoul(eq + 1, 0, 0); }
+            else if (!strncmp(c, "follow-dist", 11)) { o->control = HOST_CTL_FOLLOW_DIST; o->k = 1.1f; if (eq) o->k = strtof(eq + 1, 0); }
+            else if (!strncmp(c, "late-hit", 8)) { o->control = HOST_CTL_LATE_HIT; if (eq) o->shift = atoi(eq + 1); }
             else { fprintf(stderr, "re4ref: unknown control %s\n%s", c, kUsage); return 0; }
+        } else if (!strcmp(argv[i], "--rng-feed") && i + 1 < argc) {
+            // the old trace path, optionally :offset (old tick = reference tick + offset)
+            static char path[1024];
+            snprintf(path, sizeof path, "%s", argv[++i]);
+            char* colon = strrchr(path, ':');
+            if (colon && colon != path && colon[1] && strspn(colon + 1, "-0123456789") == strlen(colon + 1)) {
+                o->rng_offset = atoi(colon + 1);
+                *colon = 0;
+            }
+            o->rng_feed = path;
         } else {
             fputs(kUsage, stderr);
             return 0;
@@ -76,6 +90,7 @@ extern "C" int host_parse_fixture(const char* path, HostFixture* fx)
     fx->room = 0x101;
     fx->weapon_no = 2;
     fx->ticks = 300;
+    fx->esl = -1;
     FILE* f = fopen(path, "r");
     if (!f) { fprintf(stderr, "re4ref: cannot open %s\n", path); return 0; }
     char line[512];
@@ -92,6 +107,50 @@ extern "C" int host_parse_fixture(const char* path, HostFixture* fx)
         else if (!strcmp(key, "weapon")) sscanf(rest, "%d %d", &fx->weapon_no, &fx->weapon_type);
         else if (!strcmp(key, "seed")) fx->seed = strtoul(rest, 0, 0);
         else if (!strcmp(key, "ticks")) fx->ticks = strtoul(rest, 0, 0);
+        else if (!strcmp(key, "esl")) fx->esl = (int) strtol(rest, 0, 0);
+        else if (!strcmp(key, "god")) fx->god = 1;
+        else if (!strcmp(key, "actor")) {
+            // actor <entry> [tick [post]]: create enemy-list entry <entry> (EmSetFromList2) before tick's pass
+            // (default 1); `post`: after the tick's EmMgr.move (a room task that runs after the characters)
+            unsigned e = 0, t = 1;
+            char a[32] = "", b[32] = "", c[32] = "";
+            int n = sscanf(rest, "%31s %31s %31s", a, b, c);
+            if (n >= 1) e = strtoul(a, 0, 0);
+            if (n >= 2) t = strtoul(b, 0, 0);
+            fx->actors[fx->nactors].post = n >= 3 && !strcmp(c, "post");
+            if (n < 1 || fx->nactors >= sizeof fx->actors / sizeof fx->actors[0]) {
+                fprintf(stderr, "re4ref: bad actor line: %s\n", line);
+                ok = 0;
+                break;
+            }
+            fx->actors[fx->nactors].entry = e;
+            fx->actors[fx->nactors].tick = t;
+            fx->nactors++;
+        } else if (!strcmp(key, "hit")) {
+            // hit <tick> <entry> [weapon type]: a weapon hit on the actor of that list entry (pl_wep's dmg.set)
+            char a[32] = "", b[32] = "", c[32] = "";
+            int n = sscanf(rest, "%31s %31s %31s", a, b, c);
+            if (n < 2 || fx->nhits >= sizeof fx->hits / sizeof fx->hits[0]) {
+                fprintf(stderr, "re4ref: bad hit line: %s\n", line);
+                ok = 0;
+                break;
+            }
+            fx->hits[fx->nhits].tick = strtoul(a, 0, 0);
+            fx->hits[fx->nhits].entry = strtoul(b, 0, 0);
+            fx->hits[fx->nhits].type = n >= 3 ? strtoul(c, 0, 0) : 1;
+            fx->nhits++;
+        } else if (!strcmp(key, "sub")) {
+            // sub x y z ay: the partner placed after her creation (an old trace's position), as resume does for Leon
+            char a[4][32];
+            if (sscanf(rest, "%31s %31s %31s %31s", a[0], a[1], a[2], a[3]) < 4) {
+                fprintf(stderr, "re4ref: bad sub line: %s\n", line);
+                ok = 0;
+                break;
+            }
+            for (int i = 0; i < 3; i++) fx->sub_pos[i] = fx_float(a[i]);
+            fx->sub_ang = fx_float(a[3]);
+            fx->nsub = 1;
+        }
         else if (!strcmp(key, "resume")) {
             char a[5][32], ev[16] = "";
             if (sscanf(rest, "%31s %31s %31s %31s %31s %15s", a[0], a[1], a[2], a[3], a[4], ev) < 5) {
@@ -139,14 +198,60 @@ extern "C" int host_open_outputs(const HostOptions* o)
 
 extern "C" void host_trace_header(const HostOptions* o, const HostFixture* f, const char* fp)
 {
-    static const char* const kCtl[] = {"none", "walk-speed", "drop-rng", "shift-input"};
-    fprintf(g_out, "# re4ref trace v1\n");
+    static const char* const kCtl[] = {"none", "walk-speed", "drop-rng", "shift-input", "drop-rng-actor",
+                                       "follow-dist", "late-hit"};
+    // v2 (lane eng-host2) adds the A (actor) and R (generator calls per caller) lines; the T line is v1's.
+    fprintf(g_out, "# re4ref trace v2\n");
     fprintf(g_out, "H fixture=%s room=%04x seed=%04x ticks=%u fp=%s control=%s", o->fixture, f->room, f->seed,
             f->ticks, fp, kCtl[o->control]);
-    if (o->control == HOST_CTL_WALK_SPEED) fprintf(g_out, ",%g", (double) o->k);
-    if (o->control == HOST_CTL_DROP_RNG) fprintf(g_out, ",%u", o->tick);
-    if (o->control == HOST_CTL_SHIFT_INPUT) fprintf(g_out, ",%d", o->shift);
+    if (o->control == HOST_CTL_WALK_SPEED || o->control == HOST_CTL_FOLLOW_DIST) fprintf(g_out, ",%g", (double) o->k);
+    if (o->control == HOST_CTL_DROP_RNG || o->control == HOST_CTL_DROP_RNG_ACTOR) fprintf(g_out, ",%u", o->tick);
+    if (o->control == HOST_CTL_SHIFT_INPUT || o->control == HOST_CTL_LATE_HIT) fprintf(g_out, ",%d", o->shift);
+    if (f->esl >= 0) fprintf(g_out, " esl=%d", f->esl);
+    for (unsigned i = 0; i < f->nactors; i++) fprintf(g_out, " actor=%02x@%u", f->actors[i].entry, f->actors[i].tick);
+    if (o->rng_feed) fprintf(g_out, " rng_feed=%s:%d", o->rng_feed, o->rng_offset);
     fputc('\n', g_out);
+}
+
+// A: one hosted actor (an enemy-list work other than the player), after the tick's pass.
+//   A t=<tick> k=<alive-list index> id=<enemy id> e=<list entry> p=<x,y,z> a=<x,y,z> m=<motion>,<frame>,<state>
+//     r=<r_no_0..3> hp=<life> be=<be_flag> f=<actor flags> ps=<discrete hash> rc=<generator calls it made>
+extern "C" void host_actor_write(const HostActorRecord* r)
+{
+    fprintf(g_out, "A t=%u k=%u id=%02x e=%02x p=%08x,%08x,%08x a=%08x,%08x,%08x m=%s,%08x,%x r=%02x%02x%02x%02x "
+                   "hp=%d be=%08x f=%08x ps=%08x rc=%u\n",
+            r->t, r->k, r->id, r->entry, r->pos[0], r->pos[1], r->pos[2], r->ang[0], r->ang[1], r->ang[2], r->mot,
+            r->frame, r->mstate, r->rno[0], r->rno[1], r->rno[2], r->rno[3], r->hp, r->be, r->flags, r->ps,
+            r->rng_calls);
+}
+
+// R: generator calls this tick by caller: other, player, camera, objects, spawn, then each actor (k order).
+extern "C" void host_rng_write(unsigned t, const unsigned* calls, int n)
+{
+    fprintf(g_out, "R t=%u other=%u pl=%u cam=%u obj=%u spawn=%u em=", t, calls[0], calls[1], calls[2], calls[3],
+            calls[4]);
+    for (int i = 5; i < n; i++) fprintf(g_out, i > 5 ? ",%u" : "%u", calls[i]);
+    if (n <= 5) fputc('-', g_out);
+    fputc('\n', g_out);
+}
+
+// The generator state at the start of each tick of an old logic trace (LT t=<tick> ... r=<state>).
+extern "C" int host_load_rng_feed(const char* path, unsigned short* states, unsigned char* have, unsigned max)
+{
+    FILE* f = fopen(path, "r");
+    if (!f) { fprintf(stderr, "re4ref: cannot open the rng feed %s\n", path); return 0; }
+    char line[1024];
+    int n = 0;
+    while (fgets(line, sizeof line, f)) {
+        unsigned t, nn, r;
+        if (sscanf(line, "LT t=%u n=%u r=%x", &t, &nn, &r) == 3 && t < max && !have[t]) {
+            states[t] = (unsigned short) r;
+            have[t] = 1;
+            n++;
+        }
+    }
+    fclose(f);
+    return n;
 }
 
 extern "C" void host_trace_write(const HostTickRecord* r)
