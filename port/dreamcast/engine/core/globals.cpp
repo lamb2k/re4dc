@@ -6,6 +6,7 @@
 #include "db_log.h"
 #include "e1_engine.h"
 #include "e1_core.h"
+#include "rnd.h"
 #include "e1_kos.h"
 #include <stdarg.h>
 #include <stdio.h>
@@ -83,4 +84,11 @@ void e1_room_globals(const E1Route& r)
     pG->game_mode = 5;          // gameInit: a new game
     pG->mot_speed = 1.0f;       // gameInit: the global motion speed
     pG->System_flg |= 0x800;    // gameRoomInit (Debug_flg[3] bit 27 off); the reference trace reads sy=00000800
+    // Boot options (empty files in the disc root), for the plays-right controls:
+    //   CTRLSPD  the global motion speed 0.97 instead of 1.0: every motion, the walk included, runs 3% slow (must fail)
+    //   SEED     the shared generator starts from 0x5A5A instead of 0 (shows which fields depend on its draws)
+    file_t f = fs_open("/cd/CTRLSPD", O_RDONLY);
+    if (f >= 0) { fs_close(f); pG->mot_speed = 0.97f; e1_log("E1 CONTROL: motion speed 0.97\n"); }
+    f = fs_open("/cd/SEED", O_RDONLY);
+    if (f >= 0) { fs_close(f); RndInit(0x5A5A); e1_log("E1 SEED: generator 5a5a\n"); }
 }

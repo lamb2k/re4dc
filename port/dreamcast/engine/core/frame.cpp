@@ -16,6 +16,7 @@ extern "C" unsigned short e1_rnd_state(void);
 extern "C" unsigned e1_rnd_draws;
 extern cModInfoMgr ModInfoMgr;
 extern cPartsMgr PartsMgr;
+void e1_prof_report();
 
 void e1_managers_room_init()
 {
@@ -77,6 +78,9 @@ static uint32_t motion_id(cModel* m)
 }
 void e1_trace_tick(unsigned tick)
 {
+    static int notrace = -1;   // NOTRACE boot option: timing runs print no per-tick line (serial printing is slow)
+    if (notrace < 0) { file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f); }
+    if (notrace) return;
     cPlayer* p = pPL;
     unsigned draws = e1_rnd_draws - last_draws;
     last_draws = e1_rnd_draws;
@@ -111,6 +115,7 @@ void e1_report()
 {
     e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
     e1_stub_report();
+    e1_prof_report();
     for (int i = 0; i < 13; i++)
         if (e1_arena.heap_hi[i])
             e1_log("E1 ARENA heap %d %08lx-%08lx used %lu peak %lu fails %lu\n", i, (unsigned long) e1_arena.heap_lo[i],
@@ -120,8 +125,10 @@ void e1_report()
     unsigned n = e1_state[2] < E1_TICKS ? e1_state[2] : E1_TICKS;
     for (unsigned i = 0; i < n; i++) {
         const E1Timing& t = e1_timing[i];
-        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu\n", i + 1,
+        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu\n", i + 1,
                (unsigned long) t.input_us, (unsigned long) t.tick_us, (unsigned long) t.services_us, (unsigned long) t.trace_us,
-               (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields);
+               (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields,
+               (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us);
     }
+    e1_log("E1 END\n");
 }

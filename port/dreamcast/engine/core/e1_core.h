@@ -5,7 +5,7 @@
 
 #define E1_TICKS 1024
 struct E1Timing {
-    uint32_t input_us, tick_us, services_us, trace_us, draw_us, wait_us, frame_us, fields;
+    uint32_t input_us, tick_us, services_us, trace_us, draw_us, wait_us, frame_us, fields, player_us, obj_us, cam_us;
 };
 extern E1Timing e1_timing[E1_TICKS];
 extern volatile uint32_t e1_state[8];

@@ -79,11 +79,17 @@ static void game_tick(E1Timing& tm)
     e1_svc_begin();
     if (!(pG->Stop_flg & 0x10000000) && (pPL->be_flag & 0x20) &&
         (!(pG->Status_flg[1] & 0x10000000) || (pPL->be_flag & 0x800))) {
+        uint64_t t = now_us();
         pPL->move();
+        tm.player_us = now_us() - t;
     }
     BitOff(pG->Status_flg[2], 0x8000000);
+    uint64_t t1 = now_us();
     if (!(pG->Stop_flg & 0x4000000)) ObjMgr.move();
+    uint64_t t2 = now_us();
     CameraMove();
+    tm.obj_us = t2 - t1;
+    tm.cam_us = now_us() - t2;
     tm.services_us = e1_svc_end();
 }
 
