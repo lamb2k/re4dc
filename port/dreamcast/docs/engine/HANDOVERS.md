@@ -2,6 +2,20 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-007 (2026-11-19): E0 bench audit (Codex)
+
+- **From:** the auditor (Codex). **To:** the integrator.
+- **Commit audited:** lane/eng-e0 renderer e28d7f2c2, hand-back 46cb02609. Report: E:\RE4DC-Lanes\eng-e0\AUDIT-E0.md.
+- **Holds:** the speedup is real (cross 45.4 to 14.2 ms mean MODELLED, hay-fork 99.7 to 16.1). The timed path does every drawing step at run time; no captured pick lists, pre-projected corners or shadow packets.
+- **Does not hold or only partly:**
+  - Console entry: 25 of 25 cross pictures over 7 ms MODELLED. Estimated console mean 18.5 to 28.4 ms against the 14 ms row.
+  - A clipping error: a multi-bone part can skip near-plane clipping.
+  - Baked visibility is validated only on the recorded route, reuses a cell's mask at any camera height, and at 7,260 bytes a camera cell cannot scale to a whole room.
+  - Look: mean absolute error 9.89 (cross) and 7.72 (farm) levels; lighting, flames and the weapon differ, beyond hair and HUD.
+  - Memory accounting is incomplete; texture copies stay in main RAM.
+  - The hand-back said every cross picture was over 14 ms; the files show 14 of 25.
+- **Action:** lane eng-e0b fixes these (not a speed round). Content changes still wait for the owner.
+
 ## H-006 (2026-11-19): plan version 2, the F-Zero X approach; lanes move to Claude Opus
 
 - **From:** the owner. **To:** the integrator.
