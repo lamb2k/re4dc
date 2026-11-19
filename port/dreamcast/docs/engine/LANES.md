@@ -21,6 +21,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - Lanes run as Claude Opus agents; Codex audits each milestone.
 - A lane uses its own build folder and its own evidence folder. It deletes only inside them, by literal path.
 - Processes are stopped by pid, never by name.
+- A staged disc that is queued for the console gets a `KEEP` file in its folder. The hourly cleanup deletes disc images (`track0*`, `disc.gdi`) untouched for 6 hours unless the folder or a parent has one.
 - Flycast runs only from fixed slot folders that the integrator provisions once per lane (`fly1`, `fly2` console-like; `std1`, `std2` standard harness; see the lane's SLOTS.txt). Copying configs and data inside a slot is fine; a copy of flycast.exe at any other path is not. GDB off unless needed.
 - A lane that waits on the console does not chain into model-only work. It hands back and stops.
 
@@ -103,3 +104,4 @@ Hand back: table (scene, mean, p99, worst, over-budget count, tier), commit, ima
 | Reviewer estimates of 2 to 14 ms that the console did not confirm | Section 5, audit evidence, not ideas |
 | Rule files a month behind the owner's direction | Section 6, four-file boot set |
 | eng-bench handed back after two tries at its own capture tool, reading it as a gate (11-19) | Section 4, gate rule scope |
+| The lab disc lost three files to the hourly cleanup while it waited for the console (11-19) | Section 2, `KEEP` on queued discs |

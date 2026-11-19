@@ -2,14 +2,14 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 18:00):** E0 bench audited by Codex (H-007). Lane eng-e0b (Opus) is fixing the audit findings so the console run measures a correct picture. Plan version 2 waits on the owner (H-006). The SD card is the gate for M0 and E0.
+**State (2026-11-19 21:00):** E0 bench is console-ready (audit fixes merged). No lane is running. The SD card is the gate for M0 and E0. Plan version 2 waits on the owner (H-006).
 
 ## Milestones
 
 | # | Slice | State | Console run |
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
-| E0 | Walkabout and the drawing row (budget 14 ms console) | Bench, all drawing work at run time, MODELLED 25 pictures: cross 14.2 mean / 19.6 worst, hay-fork 16.1 / 18.4 (start of round 45.4 and 99.7). Codex audit (E:\RE4DC-Lanes\eng-e0\AUDIT-E0.md): speedup real, scope holds; console estimate 18.5 to 28.4 ms mean at the cross, over budget; a near-plane clipping error; visibility only validated on the recorded route and its table cannot scale to a whole room; look differs beyond hair and HUD (lighting, flames). eng-e0b fixing | Waits for SD card |
+| E0 | Walkabout and the drawing row (budget 14 ms console) | Console-ready disc E:\RE4DC-Lanes\eng-e0build\E0-GDEMU-e0b (renderer 1edab55a8, merged). MODELLED 25 pictures: cross 16.3 mean / 22.0 worst, hay-fork 18.8 / 21.1 (the source lighting rule added 1.7 to 2.3 ms). Fixed: near-plane clipping (with a test the old loop fails); visibility safe in unknown cells and heights, whole room in 256 KiB; texture copies released; raw rows per picture with A/B/A arms in one boot. Partly: look (MAE 8.6 cross / 6.2 farm; pyre glow and hair open); unseen cross route differs on 8 of 300 pictures by 1 to 2 pixels. Over budget on the model; content changes wait for the owner | Waits for SD card |
 | E1 | Leon on the engine, behaviour hosted through setters, no publication layer | Groundwork done: SHELL_MAP.md merged (measured budget rows, boundary, memory map, E1 link closure 22 files / 104 KB code, 175 engine entry points, order and risks) | Not run |
 | E2 | Fight: four Ganados on native services | Not started | Not run |
 | E3 | Chapter 1 end to end, lake boss, first engine release | Not started | Not run |
@@ -33,7 +33,9 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-e0b | E0 audit fixes: clipping, room-wide safe visibility in 256 KiB, look parity, raw console rows, memory map, prop roster | lane/eng-e0b from engine 23e3468b5 | Claude Opus | E:\RE4DC-Lanes\eng-e0b |
+| (none running) | | | | |
+
+Closed: eng-e0b (Opus), handed back 11-19, merged (code 1edab55a8). Console report: one screen line per 600-picture window (mean, p99, worst, count over 14, count over 33.3, presented intervals over 2 fields); raw rows over serial and in memory tables.
 
 Closed: eng-e0 (Opus), handed back 11-19, merged. Survey arms MODELLED (cross / hay-fork): default 13.9 / 15.9; cache-RAM staging 14.2 / 16.1; three short loops in C 15.4 / 18.5. Both arms are boot options on the disc for the console to judge.
 
