@@ -8,9 +8,13 @@ namespace m1capture {
 struct Buffer {
     volatile unsigned sequence;
     unsigned magic, room, picture, game_frame, bytes, overflow;
-    unsigned char payload[65536];
+    unsigned char* payload;
+    unsigned capacity, framebuffer;
+    volatile unsigned ack;
 };
 extern "C" Buffer m1_capture;
+extern "C" void* re4dc_static_alloc(unsigned);
+extern "C" void re4dc_static_free(void*);
 inline bool active, camera_written;
 struct Prior { unsigned offset, bytes; };
 inline Prior prior[2][64];
@@ -22,8 +26,8 @@ enum Kind : unsigned { Camera=1, World, Actor, Palette, Light, Sprite, Hud };
 inline void append(Kind kind, const void* data, unsigned bytes) {
     if (!active || m1_capture.overflow) return;
     const unsigned used = m1_capture.bytes;
-    if (bytes > sizeof(m1_capture.payload) - used ||
-        sizeof(m1_capture.payload) - used - bytes < 8) {
+    if (bytes > m1_capture.capacity - used ||
+        m1_capture.capacity - used - bytes < 8) {
         m1_capture.overflow = 1;
         return;
     }
@@ -52,9 +56,14 @@ inline void begin(unsigned room, unsigned frame) {
     active = false;
     if (room != room_seen) { warmup = completed = 0; room_seen = room; }
     if ((room != 0x101 && room != 0x103) || completed == 300 || warmup < 300) return;
+    if (!m1_capture.payload) {
+        m1_capture.capacity = 384 * 1024;
+        m1_capture.payload = static_cast<unsigned char*>(re4dc_static_alloc(m1_capture.capacity));
+        if (!m1_capture.payload) m1_capture.capacity = 0;
+    }
     if (!(m1_capture.sequence & 1)) m1_capture.sequence = m1_capture.sequence + 1;
     asm volatile("" ::: "memory");
-    m1_capture.magic = 0x31434d46;
+    m1_capture.magic = 0x32434d46;
     m1_capture.room = room;
     m1_capture.game_frame = frame;
     m1_capture.picture = completed + 1;

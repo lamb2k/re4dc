@@ -1905,15 +1905,22 @@ struct Frame {  // per (info, matrices) per frame
 #endif
 };
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-void m1_actor(const Re4dcModelPart& part, const Frame& frame, unsigned submitted) {
+extern "C" void m1_texture_key(const Re4dcUiImage&, unsigned*);
+void m1_actor(const Re4dcModelPart& part, const Frame& frame, unsigned level, unsigned submitted) {
     if (!submitted || !m1capture::active) return;
     struct Actor {
         const void *model, *info, *part, *positions, *uv;
         unsigned serial, palette_count, stream_bytes, material_flags;
         float modelview[12];
+        const void *stream, *normals;
+        unsigned pos_count, norm_count, pos_stride, norm_stride, level, tex[2], cull, blend;
+        float q, nq, uv_offset[2];
     };
-    Actor a{part.model, part.info, part.part, part.positions, part.uv, part.serial,
-            frame.palette_entries, part.stream_bytes, part.material_flags, {}};
+    Actor a{part.model, part.info, part.part, frame.positions, part.uv, part.serial,
+            frame.palette_entries, part.stream_bytes, part.material_flags, {}, part.stream,frame.normals,frame.position_count,frame.normal_count,
+            frame.position_stride,frame.normal_stride,level,{},part.cull,part.blend,frame.q,frame.nq,
+            {part.uv_offset[0],part.uv_offset[1]}};
+    m1_texture_key(part.image,a.tex);
     std::memcpy(a.modelview, part.modelview, sizeof(a.modelview));
     m1capture::append(m1capture::Actor, &a, sizeof(a));
     if (frame.palette && frame.palette_entries)
@@ -7378,7 +7385,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         }
 #endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1_actor(p, f, ok ? e.slots : 0);
+        m1_actor(p, f, level, ok ? e.slots : 0);
 #endif
         re4dc_model_result(ok ? 0 : 3, e.input, ok ? e.output : 0);
         PXF_EXIT(kDraw);
@@ -7402,7 +7409,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     }
 #endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-    m1_actor(p, f, e.output);
+    m1_actor(p, f, level, e.output);
 #endif
     re4dc_model_result(0, e.input, e.output);
     PXF_EXIT(kDraw);
@@ -8284,7 +8291,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             return 1;
         }
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1_actor(p, f, e.output);
+        m1_actor(p, f, level, e.output);
 #endif
         re4dc_model_result(0, e.input, e.output);
         return 1;
@@ -8296,7 +8303,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     }
     re4dc_model_packet_commit(e.used);
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-    m1_actor(p, f, e.output);
+    m1_actor(p, f, level, e.output);
 #endif
     re4dc_model_result(0, e.input, e.output);
     return 1;

@@ -2834,11 +2834,23 @@ void stream_close(bool present) {
 #if RE4DC_PVR_PIPELINE
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
     const bool captured = m1capture::active && present && !stream_aborted;
-    m1capture::end(present && !stream_aborted);
+
 #endif
     present_submit(present,ta_faults); // resolved by the presenter; fenced before reuse
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-    if (captured) thd_sleep(80);
+    if (captured) {
+        present_fence();
+        m1capture::m1_capture.framebuffer = reinterpret_cast<unsigned>(pvr_get_front_buffer());
+    }
+    m1capture::end(present && !stream_aborted);
+    if (captured) {
+        auto& record = m1capture::m1_capture;
+        while (record.ack != record.sequence) thd_sleep(1);
+        if (record.picture == 300 && record.payload) {
+            m1capture::re4dc_static_free(record.payload);
+            record.payload = nullptr;
+        }
+    }
 #endif
 #else
     {
@@ -6940,7 +6952,11 @@ static void ui_draw_quad(unsigned i){
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);return;}
 #endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Hud, &quads[i], sizeof(quads[i]));
+        if (m1capture::active) {
+            auto quad = quads[i];
+            std::memcpy(&quad.image, &handles[i]->key, 8);
+            m1capture::append(m1capture::Hud, &quad, sizeof(quad));
+        }
 #endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS
@@ -7050,7 +7066,11 @@ extern "C" void re4dc_ui_present(){
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);continue;}
 #endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Hud, &quads[i], sizeof(quads[i]));
+        if (m1capture::active) {
+            auto quad = quads[i];
+            std::memcpy(&quad.image, &handles[i]->key, 8);
+            m1capture::append(m1capture::Hud, &quad, sizeof(quad));
+        }
 #endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS
@@ -11354,5 +11374,11 @@ extern "C" void re4dc_esp_spike_end(){
     if(++esp_spikes<=64 || (esp_spikes&63)==0)
         re4dc_log("esp spike #%u: us=%u tex_uploads=%u disc_reads=%u kb=%u block_us=%u motion_misses=%u\n",esp_spikes,
                   unsigned(us),loads-esp_l0,r-esp_r0,unsigned((k-esp_k0)>>10),unsigned(b-esp_b0),m.misses-esp_m0);
+}
+#endif
+
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+extern "C" void m1_texture_key(const Re4dcUiImage& image, unsigned* out) {
+    Key k{}; image_key(image,k); out[0]=k.crc; out[1]=k.fnv;
 }
 #endif

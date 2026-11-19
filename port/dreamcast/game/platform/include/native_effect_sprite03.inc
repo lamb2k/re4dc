@@ -182,7 +182,11 @@
             stream_send(packet,kFxOctPacket);
 #endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Sprite, s, sizeof(*s));
+        if (m1capture::active) {
+            auto sprite = *s;
+            std::memcpy(&sprite.image, &e->key, 8);
+            m1capture::append(m1capture::Sprite, &sprite, sizeof(sprite));
+        }
 #endif
             ++fx_direct;++fx_count;RE4DC_SPRITE03_DIRECT();
         }
@@ -208,7 +212,11 @@
         fx_peak=std::max(fx_peak,fx_count);
         frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Sprite, s, sizeof(*s));
+        if (m1capture::active) {
+            auto sprite = *s;
+            std::memcpy(&sprite.image, &e->key, 8);
+            m1capture::append(m1capture::Sprite, &sprite, sizeof(sprite));
+        }
 #endif
         RE4DC_SPRITE03_RETURN(Queued,1,0,1);
     }
@@ -235,7 +243,11 @@
             stream_send(packet,kOctPacket);
 #endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Sprite, s, sizeof(*s));
+        if (m1capture::active) {
+            auto sprite = *s;
+            std::memcpy(&sprite.image, &e->key, 8);
+            m1capture::append(m1capture::Sprite, &sprite, sizeof(sprite));
+        }
 #endif
             ++fx_direct;++fx_count;RE4DC_SPRITE03_DIRECT();
         }
@@ -262,7 +274,11 @@
         fx_peak=std::max(fx_peak,fx_count);
         frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Sprite, s, sizeof(*s));
+        if (m1capture::active) {
+            auto sprite = *s;
+            std::memcpy(&sprite.image, &e->key, 8);
+            m1capture::append(m1capture::Sprite, &sprite, sizeof(sprite));
+        }
 #endif
         RE4DC_SPRITE03_RETURN(Queued,1,0,1);
     }
@@ -281,7 +297,11 @@
 #endif
         stream_select(PVR_LIST_TR_POLY);fx_send(packet,s->screen);
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Sprite, s, sizeof(*s));
+        if (m1capture::active) {
+            auto sprite = *s;
+            std::memcpy(&sprite.image, &e->key, 8);
+            m1capture::append(m1capture::Sprite, &sprite, sizeof(sprite));
+        }
 #endif
         ++fx_direct;++fx_count;RE4DC_SPRITE03_DIRECT();
     }
@@ -323,7 +343,11 @@
     fx_peak=std::max(fx_peak,fx_count);
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
-        m1capture::append(m1capture::Sprite, s, sizeof(*s));
+        if (m1capture::active) {
+            auto sprite = *s;
+            std::memcpy(&sprite.image, &e->key, 8);
+            m1capture::append(m1capture::Sprite, &sprite, sizeof(sprite));
+        }
 #endif
     RE4DC_SPRITE03_RETURN(Queued,1,0,1);
 
