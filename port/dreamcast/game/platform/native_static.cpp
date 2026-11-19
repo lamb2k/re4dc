@@ -1,5 +1,6 @@
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
 #include "../../engine/bench/capture.hpp"
+#include <dc/pvr/pvr_regs.h>
 #endif
 #ifndef RE4DC_WORLD_PREPARED09
 #define RE4DC_WORLD_PREPARED09 0
@@ -8655,6 +8656,11 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
             if (m1capture::active && result > 0) {
                 if (!m1capture::camera_written) {
+                    struct Atmosphere { float far; unsigned color,density,fog,table[128]; } env;
+                    env.far=cull_far;env.color=PVR_GET(PVR_FOG_TABLE_COLOR);
+                    env.density=PVR_GET(PVR_FOG_DENSITY);env.fog=re4dc_fog_enabled();
+                    for(unsigned i=0;i<128;i++)env.table[i]=PVR_GET(PVR_FOG_TABLE_BASE+4*i);
+                    m1capture::append(m1capture::Atmosphere,&env,sizeof(env));
                     m1capture::camera_written=true;
                     struct Camera { float view[12], projection[7], viewport[6]; } camera;
                     std::memcpy(camera.view, ps2w.view, sizeof(camera.view));

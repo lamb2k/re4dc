@@ -55,6 +55,10 @@ def check(path, expected_room):
                 prior[off-28] = typ
             elif typ in (12,13):
                 if size != 4 or prior.get(struct.unpack("<I",data)[0]) != typ-8: raise ValueError("invalid back-reference")
+            elif typ in (14,15,16,17):
+                if typ==15:
+                    if size<64 or size%32:raise ValueError("invalid shadow packet size")
+                elif size!={14:136,16:528,17:32}[typ]:raise ValueError("invalid supplement size")
             elif typ not in (3,6,7): raise ValueError(f"unknown record {typ}")
             off += size
         if pending is not None or fields[1] != 1 or not fields[2] or not fields[3]:

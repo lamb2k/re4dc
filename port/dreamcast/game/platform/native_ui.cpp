@@ -8371,6 +8371,9 @@ extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSub
 extern "C" int re4dc_ui_mv_send(const void* data,unsigned bytes){
     if(!stream_scene || stream_aborted || direct_open || !bytes || (bytes&31))return 0;
     if(!mv_open){stream_select(PVR_LIST_OP_MOD);if(stream_aborted || stream_list!=PVR_LIST_OP_MOD)return 0;mv_open=true;}
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    m1capture::append(m1capture::Volume,data,bytes);
+#endif
     stream_send(data,bytes);
     ++mv_sends;mv_bytes+=bytes;
     return 1;
@@ -11378,6 +11381,13 @@ extern "C" void re4dc_esp_spike_end(){
 #endif
 
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+extern "C" void m1_part_material(const Re4dcModelPart& p) {
+    Key key{};
+    if(p.material_flags&4)model_mask_key(&p,key);else image_key(p.image,key);
+    const unsigned values[]={key.crc,key.fnv,unsigned(stream_list),p.depth_mode,p.wrap_s,p.wrap_t,
+                             unsigned(p.source_key[2]!=0),unsigned((p.material_flags&4)!=0)};
+    m1capture::append(m1capture::Material,values,sizeof(values));
+}
 extern "C" void m1_texture_key(const Re4dcUiImage& image, unsigned* out) {
     Key k{}; image_key(image,k); out[0]=k.crc; out[1]=k.fnv;
 }

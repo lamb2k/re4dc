@@ -171,7 +171,7 @@ static void stream_clipped(pvr_vertex_t **sq, Transform *x, const Strip *s, cons
     if(open)emit(sq,b,1);
 }
 #endif
-static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned size,const Light* light,int screen){
+static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned size,const Light* light,int screen,int whole){
     const uint8_t* end=begin+size;
     while(begin<end){
         const Strip *s=(const Strip*)begin;
@@ -184,14 +184,14 @@ static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned 
             }
             continue;
         }
-        int front=0;
+        int front=whole;
         if(s->bone!=65535){
             matrix(x,s->bone);
-            float min=x->m.elem[15],max=min;
+            if(!whole){float min=x->m.elem[15],max=min;
             for(unsigned j=0;j<3;j++){float w=x->m.elem[j*4+3],a=s->low[j]*w,b=s->high[j]*w;
-                min+=fminf(a,b);max+=fmaxf(a,b);}
+                if(w>=0){min+=a;max+=b;}else{min+=b;max+=a;}}
             if(max<x->near)continue;
-            front=min>=x->near;
+            front=min>=x->near;}
         }
         if(front){
             for(unsigned i=0;i<s->n;i++){
@@ -214,13 +214,23 @@ static void strips(pvr_vertex_t **sq,Transform *x,const uint8_t* begin,unsigned 
         }
     }
 }
+#include "indexed.inc"
+
 void render_phase(const Scene* scene,const Picture* pic,unsigned phase){
+    static const unsigned *last_env;
+    if(phase==0)++picture_serial;
+    if(phase==0 && pic->atmosphere && (pic->atmosphere!=last_env || pic->camera==row(&scene->frame,0))){
+        const unsigned *env=pic->atmosphere;last_env=env;
+        PVR_SET(PVR_FOG_TABLE_COLOR,env[1]);PVR_SET(PVR_FOG_DENSITY,env[2]);
+        for(unsigned j=0;j<128;j++)PVR_SET(PVR_FOG_TABLE_BASE+4*j,env[4+j]);
+    }
     pvr_vertex_t *sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
     unsigned last=~0u,last_pose=~0u;
     const float* p=pic->camera+12;
     Transform x={.camera=pic->camera,.current=~0u,.near=p[6]/(p[5]-1.f)};
     for(unsigned i=0;i<pic->count[phase];i++){
-        const unsigned* draw=row(&scene->draw,pic->ids[phase][i]);
+        unsigned id=pic->ids[phase][i];
+        const unsigned* draw=row(&scene->draw,id&0x7fffffff);
         if(draw[0]!=last){
             last=draw[0];const unsigned *hdr=(unsigned*)row(&scene->header,last)+1;
             memcpy(sq,hdr,32);advance(&sq);
@@ -232,8 +242,21 @@ void render_phase(const Scene* scene,const Picture* pic,unsigned phase){
             last_pose=draw[2];x.pose=row(&scene->pose,last_pose);x.bone_rows=x.pose+12;
             x.bones=bytes(&scene->pose,last_pose)/48;x.bones-=x.bones!=0;x.current=~0u;
         }
-        unsigned lbytes=bytes(&scene->light,draw[3]);Light light=lighting(row(&scene->light,draw[3]),lbytes,&x);
-        strips(&sq,&x,row(&scene->geometry,draw[1]),bytes(&scene->geometry,draw[1]),lbytes?&light:NULL,!bytes(&scene->pose,draw[2]));
+        unsigned lbytes=bytes(&scene->light,draw[3]);Light light;
+        if(lbytes==500)light=lighting(row(&scene->light,draw[3]),lbytes,&x);
+        const IndexedPart *g=row(&scene->geometry,draw[1]);
+        if(bytes(&scene->geometry,draw[1])>=4 && g->magic==INDEX_MAGIC){indexed_part(&sq,&x,g,lbytes==500?&light:NULL,lbytes==136?row(&scene->light,draw[3]):NULL,bytes(&scene->draw,id&0x7fffffff)==24?draw+4:NULL);continue;}
+        strips(&sq,&x,row(&scene->geometry,draw[1]),bytes(&scene->geometry,draw[1]),lbytes?&light:NULL,!bytes(&scene->pose,draw[2]),id>>31);
     }
     sq_wait();sq_unlock();
+}
+
+void draw_shadows(const Picture *pic){
+    if(!pic->volume_bytes)return;
+    pvr_list_begin(PVR_LIST_OP_MOD);
+    pvr_vertex_t *sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
+    for(unsigned i=0;i<pic->volume_bytes/4;i+=8){
+        memcpy(sq,pic->volume+i,32);advance(&sq);
+    }
+    sq_wait();sq_unlock();pvr_list_finish();
 }

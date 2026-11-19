@@ -22,7 +22,7 @@ inline unsigned prior_count[2];
 
 inline unsigned room_seen, warmup, completed;
 
-enum Kind : unsigned { Camera=1, World, Actor, Palette, Light, Sprite, Hud };
+enum Kind : unsigned { Camera=1, World, Actor, Palette, Light, Sprite, Hud, Fold=14, Volume=15, Atmosphere=16, Material=17 };
 inline void append(Kind kind, const void* data, unsigned bytes) {
     if (!active || m1_capture.overflow) return;
     const unsigned used = m1_capture.bytes;

@@ -7,6 +7,6 @@ packs:
 	@test -s "$(PRIVATE_PACK_DIR)/cross-m1.pak" -a -s "$(PRIVATE_PACK_DIR)/hayfork-m1.pak" || { echo "M1 missing private packs in PRIVATE_PACK_DIR"; exit 1; }
 $(OUT):
 	mkdir -p $@
-$(OUT)/m1.elf: main.c ../render/render.c ../render/replay_pack.c ../render/replay.h | $(OUT)
-	kos-cc $(FLAGS) $(EXTRA) $(filter %.c,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
+$(OUT)/m1.elf: main.c ../../game/platform/avk_sh4.S ../render/render.c ../render/replay_pack.c ../render/replay.h ../render/indexed.inc | $(OUT)
+	kos-cc $(FLAGS) $(EXTRA) -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
 

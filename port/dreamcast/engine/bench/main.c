@@ -49,9 +49,9 @@ static void display(unsigned scene){
     thd_sleep(1000);
 }
 int main(void){
-    pvr_init_params_t params={.opb_sizes={PVR_BINSIZE_16,0,PVR_BINSIZE_16,0,PVR_BINSIZE_16},.vertex_buf_size=1024*1024,.vbuf_doublebuf_disabled=0};
+    pvr_init_params_t params={.opb_sizes={PVR_BINSIZE_16,PVR_BINSIZE_8,PVR_BINSIZE_16,0,PVR_BINSIZE_16},.vertex_buf_size=1024*1024,.vbuf_doublebuf_disabled=0};
     m1_state[5]=1;if(pvr_init(&params)<0||pvr_set_vbuf_doublebuf(true)<0){m1_state[5]=90;return 1;}
-    pvr_set_zclip(0.0f);
+    PVR_SET(PVR_PT_ALPHA_REF,128);pvr_set_zclip(0.0f);pvr_set_shadow_scale(true,0.5f);
     int stills=exists("/cd/STILLS"),delay=exists("/cd/DELAY5");m1_state[7]=delay;
     unsigned farm_first=exists("/cd/FARM1");
     for(unsigned pass=0;;pass++){
@@ -67,6 +67,7 @@ int main(void){
                 uint64_t t=timer_us_gettime64();
                 if(k==0||k==2||k==3)pvr_list_begin(k==0?PVR_LIST_OP_POLY:k==2?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY);
                 render_phase(&s,&pic,k);if(k==1||k==2||k==5)pvr_list_finish();
+                if(k==1)draw_shadows(&pic);
                 timing[i][k]=timer_us_gettime64()-t;
             }
             if(delay){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<5000){}}
