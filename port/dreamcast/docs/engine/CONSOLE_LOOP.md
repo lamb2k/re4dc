@@ -18,7 +18,7 @@ Tool: `E:\RE4DC-Lanes\eng-loop\s\throughput.py` and `perfile.py`.
 
 | Direction | Number | Tier | How |
 |---|---|---|---|
-| Console to Pi, line full | **1.38 to 1.39 KB/s** UDP payload | console | 9 captures where `PCS SNAP` parts kept the console's send queue full (bulk skips rising): 1376 to 1393 B/s at the Pi, each over 23 to 25 s |
+| Console to Pi, line full | **1.36 to 1.39 KB/s** UDP payload | console | 10 captures where `PCS SNAP` parts kept the console's send queue full (bulk skips rising): 1357 to 1393 B/s at the Pi, each over 22 to 25 s (two more with idle gaps read 0.79 and 0.81) |
 | Console to Pi, normal play | 1.2 to 1.3 KB/s | console | 40 other captures (telemetry plus log lines, 31 to 33 s each) |
 | Console to Pi, 1 s intervals with the queue full | median 1379, p10 1062, p90 1804 B/s | console | 137 intervals of the `link tx=` counter (the 1 KiB modem buffer adds jitter) |
 | Pi to console | **not measured** | - | only commands ever travelled down (at most 44 B/s seen). The loader's first transfer is the measurement |
@@ -164,8 +164,9 @@ uses only the verified buffer.
 - The screen: title and build, link state (`DIALLING 1/3`, `PPP`, `UP <ip> TO <pi>`), `WAITING FOR THE PC` with a
   turning marker and the beacon count, transfer progress (chunks, KB, KB/s), `VERIFYING`, the verdict, the last run's
   result.
-- Program size limit: the image must end below 0x8CFE0000 and the compressed plus raw copies must fit in the
-  loader's heap: about 7 MB raw for a deflated image.
+- Program size limit: the image must end 0x11000 below the hand-off area (the loader's stack holds the exec
+  trampoline during the copy), and the compressed plus raw copies must fit in the loader's heap: about 9 MB raw for
+  a deflated image.
 
 ## 6. What it does not do
 
@@ -174,13 +175,38 @@ uses only the verified buffer.
 - It does not send room packs (section 1). A program that needs new packs needs a new loader disc.
 - It does not prove anything about the console's frame budget. It only removes the disc swap.
 
-## 7. Checks still to run
+## 7. Host tests (PC, done)
 
-**Flycast (modem emulation, PC as the PPP peer; `LINK.TXT` with `host <PC>` and `lport 52062`):**
+`tools/consoleloop/test_consoleloop.py`: the loader's own `cl_core.c` / `cl_util.c` built for the PC (`cl_host`,
+AddressSanitizer and UBSan), the real `consoleloop.py`, and `simlink.py` between them (loss, one-bit corruption,
+duplicates, reordering, a rate-limited line with a bounded queue, dead windows). Program: the E0 bench image
+(270,300 bytes, deflated to 178,817). 16 of 16 pass (commit 907bb1a24, `E:\RE4DC-Lanes\eng-loop\evidence\host-q3`).
+
+| Case | Result |
+|---|---|
+| Inflate equals zlib: 5 inputs x 6 encodings (stored, fixed, dynamic, Huffman-only, RLE) | 30 / 30 |
+| Inflate on 155 malformed streams (truncations, random bytes) | all refused, no crash, no truncated stream accepted |
+| SHA-256 equals hashlib; datagram CRC catches all 8,352 one-bit flips of a data datagram | pass |
+| Clean line: send, verify, run, report back | image byte-identical, report CRC ok |
+| 10% loss, 5% corruption, 5% duplicates, 150 ms reordering, both ways | pass; the console dropped 8 corrupt datagrams on CRC |
+| Line dead for 12 s mid-transfer | resumed with `LOAD`, pass |
+| PC sender killed halfway, restarted with a new session | console held 82 of 175 chunks; only the rest travelled |
+| **Control:** stream damaged after its CRC was taken | `VERDICT stream crc`, `RUN` refused, nothing ran |
+| **Control:** a valid stream of different bytes under the declared SHA-256 | `VERDICT sha256`, `RUN` refused, nothing ran |
+| **Control:** the right bytes under a wrong declared SHA-256 | `VERDICT sha256`, `RUN` refused, nothing ran |
+| **Control:** image larger than the console allows | refused at `LOAD` |
+| Outcomes through the hand-off area: crash, deadline, no client | `CRASHED`, `TIMEOUT`, `LOST` |
+| Line at the measured 1390 B/s each way, 300 ms latency, 1% loss, 60 KB image | 1263 B/s of program bytes: 96% of what the line carries (host model) |
+
+## 8. Checks still to run
+
+**Flycast (modem emulation, PC as the PPP peer; the staged `flycast` image has `LINK.TXT` with `host 192.168.1.191`
+(the PC in the lab33 twin; change it if the PC moved) and `lport 52062`; the sender runs `--udp 127.0.0.1:52062 --bind 52060`):**
 1. The disc boots to `DIALLING`, then `UP`, then `WAITING FOR THE PC` with the beacon count rising.
 2. `consoleloop.py --udp <flycast>` `status` sees `HELLO`; `run` sends the client test program, the console shows the
    progress, `VERDICT 0`, `EXEC`, and the test program's report comes back after the loader redials.
-3. Control: `run --corrupt-image` is refused with `VERDICT sha256` and the screen never leaves the loader.
+3. Control: `run testprog.elf --corrupt payload` is refused with `VERDICT sha256` (and `--corrupt stream` with
+   `stream crc`); the screen shows `REFUSED` and never leaves the loader.
 4. Crash control: `run` the test program with `crash` in its arguments: the report says `CRASHED` with a PC value.
 5. Deadline control: `hang` with a 20 s deadline: the report says `TIMEOUT`.
 6. Resume: kill the PC sender halfway and start it again; only the missing chunks travel.
@@ -193,7 +219,7 @@ uses only the verified buffer.
 5. A BIOS reboot (`reboot` argument to the test program): does GDEMU boot the loader again or openMenu?
 6. The E0 bench image (no client) runs from the loader as it does from its own disc; then power cycle.
 
-## 8. Next steps (not built)
+## 9. Next steps (not built)
 
 - Delta transfer against the last image the console ran (the hand-off area could keep its hash; the image itself
   would need RAM the program does not use).

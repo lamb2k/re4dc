@@ -8,7 +8,7 @@ Brief 2026-11-19 (integrator). Kind: PC-only tooling. Design: [../CONSOLE_LOOP.m
 - Loader (`engine/loader/`): KOS d367, 262 KB `LOADER.BIN`. The QA link's console transport copied to `link.c`.
 - PC sender (`tools/consoleloop/consoleloop.py`): ELF or bin, deflate, windowed chunks, resume, run, report.
 - Host tests (`tools/consoleloop/test_consoleloop.py`): the loader's own protocol code built for the PC (`cl_host`,
-  ASan + UBSan) behind a simulated bad line. 16 of 16 pass, including the corruption controls.
+  ASan + UBSan) behind a simulated bad line. 16 of 16 pass (commit 907bb1a24), including the corruption controls. Discs staged; see the hand-back.
 
 ## Numbers
 
