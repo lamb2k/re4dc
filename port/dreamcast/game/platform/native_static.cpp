@@ -1,3 +1,10 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../engine/bench/r3_capture.hpp"
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+#include "../../engine/bench/capture.hpp"
+#include <dc/pvr/pvr_regs.h>
+#endif
 #ifndef RE4DC_WORLD_PREPARED09
 #define RE4DC_WORLD_PREPARED09 0
 #endif
@@ -8187,6 +8194,14 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if RE4DC_M1_LOGIC_CAPTURE
+    if(pass==0 && m1r3::recording){
+        struct {float view[12],projection[7],viewport[6],far;} camera;
+        memcpy(camera.view,ps2w.view,48);memcpy(camera.projection,ps2w.projection,28);
+        memcpy(camera.viewport,ps2w.viewport,24);camera.far=zfar;
+        m1r3::append(m1r3::Camera,&camera,sizeof(camera));
+    }
+#endif
 #if RE4DC_WORLD_MUTATION31
     // A failed in-place reload can leave the old package object's pointers
     // intact until unpublication. Never enter a prepared or ordinary read.
@@ -8648,6 +8663,29 @@ int ps2_pass(unsigned pass,float zfar){
             const int result=e.chunk_emit(cpk+x.first,x.count,next<npk?cpk+next:nullptr);
 #else
             const int result=e.chunk_emit(cpk+x.first,x.count);
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+            if (m1capture::active && result > 0) {
+                if (!m1capture::camera_written) {
+                    struct Atmosphere { float far; unsigned color,density,fog,table[128]; } env;
+                    env.far=cull_far;env.color=PVR_GET(PVR_FOG_TABLE_COLOR);
+                    env.density=PVR_GET(PVR_FOG_DENSITY);env.fog=re4dc_fog_enabled();
+                    for(unsigned i=0;i<128;i++)env.table[i]=PVR_GET(PVR_FOG_TABLE_BASE+4*i);
+                    m1capture::append(m1capture::Atmosphere,&env,sizeof(env));
+                    m1capture::camera_written=true;
+                    struct Camera { float view[12], projection[7], viewport[6]; } camera;
+                    std::memcpy(camera.view, ps2w.view, sizeof(camera.view));
+                    std::memcpy(camera.projection, ps2w.projection, sizeof(camera.projection));
+                    std::memcpy(camera.viewport, ps2w.viewport, sizeof(camera.viewport));
+                    m1capture::append(m1capture::Camera, &camera, sizeof(camera));
+                }
+
+                struct WorldPart { unsigned part, pass, count; float mvq[12]; };
+                WorldPart record{x.index,pass,x.count,{}};
+                std::memcpy(record.mvq,x.mvq,sizeof(record.mvq));
+                m1capture::append(m1capture::World, &record, sizeof(record));
+                m1capture::append(m1capture::World, cpk+x.first, sizeof(*cpk)*x.count);
+            }
 #endif
             // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();

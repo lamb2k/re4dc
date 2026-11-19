@@ -1,3 +1,10 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../engine/bench/r3_capture.hpp"
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+#include "../../engine/bench/capture.hpp"
+namespace m1capture { extern "C" { Buffer m1_capture{}; } }
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #include "include/native_draw_result.hpp"
 #endif
@@ -2485,7 +2492,13 @@ unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownershi
 #if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
 extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
 #endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+extern "C" unsigned re4dc_room_id_now();
+#endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    m1capture::begin(re4dc_room_id_now(), frame);
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::SceneBoundary);
 #endif
@@ -2822,7 +2835,35 @@ void stream_close(bool present) {
     latch::put(present?'c':'d');latch::bump(latch::kC);
 #endif
 #if RE4DC_PVR_PIPELINE
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    const bool captured = m1capture::active && present && !stream_aborted;
+
+#endif
     present_submit(present,ta_faults); // resolved by the presenter; fenced before reuse
+#if RE4DC_M1_LOGIC_CAPTURE
+    if(present && !stream_aborted){
+        m1r3::present();
+        if(m1r3::recording){
+            present_fence();
+            m1r3::m1r3_control.framebuffer=(unsigned)pvr_get_front_buffer();
+        }
+    }
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    if (captured) {
+        present_fence();
+        m1capture::m1_capture.framebuffer = reinterpret_cast<unsigned>(pvr_get_front_buffer());
+    }
+    m1capture::end(present && !stream_aborted);
+    if (captured) {
+        auto& record = m1capture::m1_capture;
+        while (record.ack != record.sequence) thd_sleep(1);
+        if (record.picture == 300 && record.payload) {
+            m1capture::re4dc_static_free(record.payload);
+            record.payload = nullptr;
+        }
+    }
+#endif
 #else
     {
 #if RE4DC_PVR_FAST_WAKE
@@ -6922,6 +6963,13 @@ static void ui_draw_quad(unsigned i){
 #if RE4DC_NATIVE_MES
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);return;}
 #endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+        if (m1capture::active) {
+            auto quad = quads[i];
+            std::memcpy(&quad.image, &handles[i]->key, 8);
+            m1capture::append(m1capture::Hud, &quad, sizeof(quad));
+        }
+#endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS
         // Stable HUD/UI elements: the header (texture binding, blend) is compiled
@@ -7028,6 +7076,13 @@ extern "C" void re4dc_ui_present(){
         if(!handles[i])continue;
 #if RE4DC_NATIVE_MES
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);continue;}
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+        if (m1capture::active) {
+            auto quad = quads[i];
+            std::memcpy(&quad.image, &handles[i]->key, 8);
+            m1capture::append(m1capture::Hud, &quad, sizeof(quad));
+        }
 #endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS
@@ -8328,6 +8383,9 @@ extern "C" void re4dc_ps2_world_direct_end_batch(unsigned vertices,Re4dcWorldSub
 extern "C" int re4dc_ui_mv_send(const void* data,unsigned bytes){
     if(!stream_scene || stream_aborted || direct_open || !bytes || (bytes&31))return 0;
     if(!mv_open){stream_select(PVR_LIST_OP_MOD);if(stream_aborted || stream_list!=PVR_LIST_OP_MOD)return 0;mv_open=true;}
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    m1capture::append(m1capture::Volume,data,bytes);
+#endif
     stream_send(data,bytes);
     ++mv_sends;mv_bytes+=bytes;
     return 1;
@@ -11332,4 +11390,21 @@ extern "C" void re4dc_esp_spike_end(){
         re4dc_log("esp spike #%u: us=%u tex_uploads=%u disc_reads=%u kb=%u block_us=%u motion_misses=%u\n",esp_spikes,
                   unsigned(us),loads-esp_l0,r-esp_r0,unsigned((k-esp_k0)>>10),unsigned(b-esp_b0),m.misses-esp_m0);
 }
+#endif
+
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+extern "C" void m1_part_material(const Re4dcModelPart& p) {
+    Key key{};
+    if(p.material_flags&4)model_mask_key(&p,key);else image_key(p.image,key);
+    const unsigned values[]={key.crc,key.fnv,unsigned(stream_list),p.depth_mode,p.wrap_s,p.wrap_t,
+                             unsigned(p.source_key[2]!=0),unsigned((p.material_flags&4)!=0)};
+    m1capture::append(m1capture::Material,values,sizeof(values));
+}
+extern "C" void m1_texture_key(const Re4dcUiImage& image, unsigned* out) {
+    Key k{}; image_key(image,k); out[0]=k.crc; out[1]=k.fnv;
+}
+#endif
+
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../engine/bench/r3_guest.inc"
 #endif

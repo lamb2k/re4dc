@@ -1,3 +1,6 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../port/dreamcast/engine/bench/r3_capture.hpp"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "fallback_audit29.h"
 #endif
@@ -833,6 +836,34 @@ int EspTrans()
     static u8 espCapN[256];
     for (i = 0; i < 256; i++) {
         espCapN[i] = 0;
+    }
+#endif
+#if RE4DC_M1_LOGIC_CAPTURE
+    if(m1r3::recording) {
+        for(int slot=0;slot<sys->nEsp;++slot) {
+            cEsp* particle=(cEsp*)(sys->pEspBuf+slot*0x150);
+            if(!(particle->m_Be_flg&1))continue;
+            struct { unsigned slot,id,texture,type,animation,flags,tool;
+                     Vec position,angle; float size[3],rgba[4],parent[12]; } fx={
+                (unsigned)slot,particle->m_Id,particle->m_Tex_id,particle->m_Type,
+                particle->m_Anm_cnt,particle->m_Flg,particle->m_Tool_flg,
+                particle->m_Pos,particle->m_Ang,
+                {particle->m_Size_base_x,particle->m_Size_base_y,particle->m_Size_mul},
+                {particle->m_Col_r,particle->m_Col_g,particle->m_Col_b,particle->m_Col_a},
+                {1,0,0,0,0,1,0,0,0,0,1,0}};
+            if(particle->parent && particle->parent!=pEffParentWorld)
+                __builtin_memcpy(fx.parent,particle->parent->mat,sizeof(fx.parent));
+            struct { decltype(fx) state; unsigned key[2],pattern,width,height; } rec={fx,{},particle->m_Ptn_no,0,0};
+            EspTexWk* source=&sys->Esp_tex_tbl[particle->m_Tex_id];
+            if(source->pTpl && source->Owner!=0xd2 && rec.pattern<source->pTpl->numDescriptors){
+                const auto* td=TEXGet(source->pTpl,rec.pattern);
+                if(td && td->textureHeader){
+                    rec.width=td->textureHeader->width;rec.height=td->textureHeader->height;
+                    m1r3::texture_key(td,rec.key);
+                }
+            }
+            m1r3::append(m1r3::Effect,&rec,sizeof(rec));
+        }
     }
 #endif
     LightMgr.setEsp(&sys->lightList, 8);

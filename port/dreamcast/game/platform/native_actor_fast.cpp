@@ -1,3 +1,6 @@
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+#include "../../engine/bench/capture.hpp"
+#endif
 #if defined(RE4DC_ACTOR_FORMAT32) && RE4DC_ACTOR_FORMAT32 && RE4DC_ACTOR_UV16
 #include "include/actor_format32_uv.hpp"
 extern "C" void re4dc_log(const char*, ...);
@@ -1901,6 +1904,33 @@ struct Frame {  // per (info, matrices) per frame
     bool gate_ready = false; float gate_T = 0.0f, gate_G = 0.0f;  // ACTOR_FOG_GATE skinned depth bound
 #endif
 };
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+extern "C" void m1_part_material(const Re4dcModelPart&);
+extern "C" void m1_texture_key(const Re4dcUiImage&, unsigned*);
+void m1_actor(const Re4dcModelPart& part, const Frame& frame, unsigned level, unsigned submitted) {
+    if (!submitted || !m1capture::active) return;
+    struct Actor {
+        const void *model, *info, *part, *positions, *uv;
+        unsigned serial, palette_count, stream_bytes, material_flags;
+        float modelview[12];
+        const void *stream, *normals;
+        unsigned pos_count, norm_count, pos_stride, norm_stride, level, tex[2], cull, blend;
+        float q, nq, uv_offset[2];
+    };
+    Actor a{part.model, part.info, part.part, frame.positions, part.uv, part.serial,
+            frame.palette_entries, part.stream_bytes, part.material_flags, {}, part.stream,frame.normals,frame.position_count,frame.normal_count,
+            frame.position_stride,frame.normal_stride,level,{},part.cull,part.blend,frame.q,frame.nq,
+            {part.uv_offset[0],part.uv_offset[1]}};
+    m1_texture_key(part.image,a.tex);
+    std::memcpy(a.modelview, part.modelview, sizeof(a.modelview));
+    m1capture::append(m1capture::Actor, &a, sizeof(a));
+    if (frame.palette && frame.palette_entries)
+        m1capture::intern(m1capture::Palette, frame.palette, frame.palette_entries * 48);
+    if (part.lighting)
+        m1capture::intern(m1capture::Light, part.lighting, sizeof(*part.lighting));
+    m1_part_material(part);
+}
+#endif
 constexpr unsigned kFrames = 4;
 Frame frames[kFrames];
 unsigned frame_victim = 0;
@@ -2221,6 +2251,26 @@ struct Lights {
 #endif
 #endif
 };
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+// Record the fold actually consumed by the submitted part, including constant
+// crowd tiers and the Leon texture-headroom conversion.
+static void m1_fold(const Lights& l,unsigned alpha,unsigned submitted,float us,float vs){
+    if(!submitted || !m1capture::active)return;
+    struct Fold { unsigned flat,rgb,alpha,half;float dir[12],color[16],us,vs; } out{};
+    out.us=us;out.vs=vs;
+    out.flat=l.constant;
+    out.rgb=l.constant_rgb;
+    out.alpha=alpha;
+#if RE4DC_LEON_LIGHT_HEADROOM
+    out.half=l.half_post;
+#endif
+    if(!l.constant){
+        std::memcpy(out.dir,l.dir,sizeof(out.dir));
+        std::memcpy(out.color,l.color,sizeof(out.color));
+    }
+    m1capture::append(m1capture::Fold,&out,sizeof(out));
+}
+#endif
 // The fold's start state. MEMSET_LEAN=1 (crowd.mk; render only): every field but `prepared` is reset; prepared is
 // read only by pass_lights_exact (a fold that returned false), and the callers assign it on that return.
 #if RE4DC_ACTOR_NO_CLEAR
@@ -7356,6 +7406,10 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             else if(e.slots){progress->result.outcome=re4dc::NativeDrawOutcome::Submitted;progress->result.submitted=1;}
         }
 #endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+        m1_actor(p, f, level, ok ? e.slots : 0);
+        m1_fold(lights,e.alpha,ok ? e.slots : 0,e.packet.u_scale,e.packet.v_scale);
+#endif
         re4dc_model_result(ok ? 0 : 3, e.input, ok ? e.output : 0);
         PXF_EXIT(kDraw);
         return 1;
@@ -7376,6 +7430,10 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         Re4dcActorStreamState state{};
         if(!re4dc_actor_stream_state(&state))native_refused(progress);
     }
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    m1_actor(p, f, level, e.output);
+        m1_fold(lights,e.alpha,e.output,e.packet.u_scale,e.packet.v_scale);
 #endif
     re4dc_model_result(0, e.input, e.output);
     PXF_EXIT(kDraw);
@@ -8256,6 +8314,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             re4dc_model_result(3, e.input, 0);
             return 1;
         }
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+        m1_actor(p, f, level, e.output);
+        m1_fold(lights,e.alpha,e.output,e.packet.u_scale,e.packet.v_scale);
+#endif
         re4dc_model_result(0, e.input, e.output);
         return 1;
     }
@@ -8265,6 +8327,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         return 1;
     }
     re4dc_model_packet_commit(e.used);
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    m1_actor(p, f, level, e.output);
+        m1_fold(lights,e.alpha,e.output,e.packet.u_scale,e.packet.v_scale);
+#endif
     re4dc_model_result(0, e.input, e.output);
     return 1;
 }

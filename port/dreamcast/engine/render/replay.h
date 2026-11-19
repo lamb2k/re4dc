@@ -1,0 +1,37 @@
+#pragma once
+#include <kos.h>
+typedef struct {
+    uint32_t n;
+    const unsigned* offset;
+    uint8_t* base;
+} Table;
+typedef struct { Table texture, header, geometry, pose, light, draw, frame, environment, volumes; void* storage; } Scene;
+static inline void* row(const Table *t, unsigned i) { return t->base+t->offset[i]; }
+static inline unsigned bytes(const Table *t,unsigned i) { return t->offset[i+1]-t->offset[i]; }
+typedef struct { float x,y,z,u,v; uint32_t color; uint16_t bone; int16_t normal[3]; } Vertex;
+typedef struct { uint16_t n,bone; float low[3],high[3]; } Strip;
+typedef struct { const unsigned *ids[6]; unsigned count[6]; const float *camera; const unsigned *atmosphere,*volume; unsigned volume_bytes; } Picture;
+int open_scene(Scene*,const char*);
+void close_scene(Scene*);
+void open_picture(const Scene*,unsigned,Picture*);
+void render_phase(const Scene*,const Picture*,unsigned);
+#ifdef M1_NATIVE
+#define M1_TEXTURE_LIMIT 512
+#else
+#define M1_TEXTURE_LIMIT 256
+#endif
+extern pvr_ptr_t m1_textures[M1_TEXTURE_LIMIT];
+
+
+#define INDEX_MAGIC 0x32584449u
+#define INDEX_LIMIT 2048
+#define PALETTE_LIMIT 256
+typedef struct {
+    uint32_t magic, positions, normals, strips;
+    float q,nq,du,dv;
+    uint32_t signed_uv;
+} IndexedPart;
+typedef struct { int16_t xyz[3]; uint16_t bone; } SourceVector;
+typedef struct { uint16_t position, normal, u, v; } IndexCorner;
+
+void draw_shadows(const Picture*);

@@ -1,3 +1,6 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../port/dreamcast/engine/bench/r3_capture.hpp"
+#endif
 // game/mes: in-game message system (D:/Bio4/Prog/mes.cpp).
 #include "types.h"
 #include "vec.h"
@@ -1098,6 +1101,21 @@ void draw(MesQue* q)
     u8 cellW, cellH;
 
     font->getSize(q->code, &l, &r);
+#if RE4DC_M1_LOGIC_CAPTURE
+    if(m1r3::recording){
+        static unsigned last_tick=~0u,run;
+        static int last_x,last_y;
+        bool start=last_tick!=m1r3::m1r3_control.tick || q->y!=last_y || q->x<=last_x;
+        if(last_tick!=m1r3::m1r3_control.tick)run=0;
+        if(start)++run;
+        last_tick=m1r3::m1r3_control.tick;last_x=q->x;last_y=q->y;
+        unsigned text[]={q->code,run,start?(unsigned)(int)q->x:0,start?(unsigned)(int)q->y:0,
+                         q->w,q->h,col,0,0,font->m_tex_w,font->m_tex_h,font->m_char_w,font->m_char_h,
+                         (unsigned)(int)l,(unsigned)(int)r};
+        unsigned key[2];m1r3::texture_key(font->m_tpl->descriptorArray,key);text[7]=key[0];text[8]=key[1];
+        m1r3::append(m1r3::Glyph,text,sizeof(text));
+    }
+#endif
     cellW = font->m_char_w;
     cols = font->m_tex_w / cellW;
     cw = r - l;
