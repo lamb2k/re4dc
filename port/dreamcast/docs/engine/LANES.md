@@ -20,6 +20,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - PC-only lanes (bakers, converters, host tests) do not count as build lanes, but may not start an emulator.
 - A lane uses its own build folder and its own evidence folder. It deletes only inside them, by literal path.
 - Processes are stopped by pid, never by name.
+- Flycast runs only from fixed slot folders (`E:\RE4DC-Lanes\<lane>ly1`, `fly2`). A copy of flycast.exe at a new path is a new program to Windows and raises a firewall pop-up for the owner. GDB off unless needed.
 - A lane that waits on the console does not chain into model-only work. It hands back and stops.
 
 ## 3. Measuring
