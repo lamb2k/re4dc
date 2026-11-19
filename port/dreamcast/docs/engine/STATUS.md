@@ -2,14 +2,14 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 11:15):** plan approved. M0 lab disc v2 ready, waits for the owner's SD card. eng-bench (M1) round 2. disc2-play (game track) running.
+**State (2026-11-19 11:15):** plan approved. M0 lab disc v2 ready, waits for the owner's SD card. eng-bench (M1) round 2 handed back; audit running. disc2-play (game track) running.
 
 ## Milestones
 
 | # | Slice | State | Console run |
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
-| M1 | Bench: cross and worst farm view on the new renderer | Round 1 (11-19): capture, bake, bench disc and controls work. First renderer MODELLED cross: characters 41.3 ms vs 8.8 ms in today's game, world 10.9 vs 10.8. Integrator withdrew the stop (one design, two strip modes); round 2 steered: baseline at the same pictures, per-function profile, existing SH-4 skin kernels, world per-piece cost, look fixes | Not run |
+| M1 | Bench: cross and worst farm view on the new renderer | Round 2 (11-19, lane/eng-bench 0b6f207ca): MODELLED drawing at the same 5 pictures, game -> bench: cross 27.5 -> 13.3 ms (-52%), hay-fork 49.7 -> 27.0 ms (-46%). Indexed renderer on the existing SH-4 skin and light kernels + SH4ZAM matrices. Still pairs match (mean abs diff 0.26-0.72 / 255). Independent audit (Claude) running. Bench disc staged: E:\RE4DC-Lanes\eng-benchuild\M1-GDEMU-mat003 | Waits for SD card |
 | M2 | Drive: village and farm in the game image | Not started | Not run |
 | M3 | Fights hold the floor | Not started | Not run |
 | M4 | Disc 1 on the engine line | Not started | Not run |
