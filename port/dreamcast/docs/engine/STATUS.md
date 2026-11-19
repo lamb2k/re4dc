@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 21:00):** E0 bench is console-ready (audit fixes merged). No lane is running. The SD card is the gate for M0 and E0. Plan version 2 waits on the owner (H-006).
+**State (2026-11-19 21:30):** owner away ("What can we do ahead of me making changes on my end I'm not home and want progress"). Four Opus lanes started on work that needs neither the console nor an owner decision; their results feed the console evening and the look approvals. Plan version 2 waits on the owner (H-006).
 
 ## Milestones
 
@@ -10,7 +10,7 @@ Only the integrator edits this file. Keep it under 80 lines.
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
 | E0 | Walkabout and the drawing row (budget 14 ms console) | Console-ready disc E:\RE4DC-Lanes\eng-e0build\E0-GDEMU-e0b (renderer 1edab55a8, merged). MODELLED 25 pictures: cross 16.3 mean / 22.0 worst, hay-fork 18.8 / 21.1 (the source lighting rule added 1.7 to 2.3 ms). Fixed: near-plane clipping (with a test the old loop fails); visibility safe in unknown cells and heights, whole room in 256 KiB; texture copies released; raw rows per picture with A/B/A arms in one boot. Partly: look (MAE 8.6 cross / 6.2 farm; pyre glow and hair open); unseen cross route differs on 8 of 300 pictures by 1 to 2 pixels. Over budget on the model; content changes wait for the owner | Waits for SD card |
-| E1 | Leon on the engine, behaviour hosted through setters, no publication layer | Groundwork done: SHELL_MAP.md merged (measured budget rows, boundary, memory map, E1 link closure 22 files / 104 KB code, 175 engine entry points, order and risks) | Not run |
+| E1 | Leon on the engine, behaviour hosted through setters, no publication layer | eng-e1 (Opus) running: core loop and memory, actor table with native skeleton, collision, player and camera hosted, scripted village route; plays-right against the old game's trace. eng-host (Opus, PC-only) building the PC reference | Not run |
 | E2 | Fight: four Ganados on native services | Not started | Not run |
 | E3 | Chapter 1 end to end, lake boss, first engine release | Not started | Not run |
 | E4 | The rest of the game, by chapter | Not started | Not run |
@@ -33,7 +33,10 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| (none running) | | | | |
+| eng-e1 | E1 first slice: Leon on the engine in the village | lane/eng-e1 | Claude Opus | E:\RE4DC-Lanes\eng-e1 |
+| eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
+| eng-host | PC-only: PC build of the player code and the plays-right tool | lane/eng-host | Claude Opus | E:\RE4DC-Lanes\eng-host |
+| eng-loop | PC-only: loader disc for sending programs to the console over the DreamPi link | lane/eng-loop | Claude Opus | E:\RE4DC-Lanes\eng-loop |
 
 Closed: eng-e0b (Opus), handed back 11-19, merged (code 1edab55a8). Console report: one screen line per 600-picture window (mean, p99, worst, count over 14, count over 33.3, presented intervals over 2 fields); raw rows over serial and in memory tables.
 
