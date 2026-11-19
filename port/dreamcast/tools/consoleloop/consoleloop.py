@@ -253,6 +253,7 @@ class Loop:
         self.t = transport
         self.log = log
         self.verbose = verbose
+        self.wmax = 16
         self.hello = None
         self.stats = {'tx_pkts': 0, 'tx_bytes': 0, 'rx_pkts': 0, 'rx_bytes': 0, 'rx_bad': 0}
 
@@ -309,7 +310,7 @@ class Loop:
         inflight = set()
         retx = []                 # chunks to send again, oldest first
         seq = 0                   # send order, for loss detection from the ack bitmap
-        window, wmax, wmin = 4.0, 16.0, 2.0
+        window, wmax, wmin = 4.0, float(self.wmax), 2.0
         srtt, rto, min_rtt = None, 2.0, 1e9
         resent = fast = timeouts = 0
         cut_at = 0.0
@@ -396,7 +397,7 @@ class Loop:
                     timeouts += 1
                     cut(now)
             if all(acked):
-                m = self.wait(lambda m: m if m[1] == session and m[0] in (VERDICT, ERR) else None, 10.0,
+                m = self.wait(lambda m: m if m[1] == session and m[0] in (VERDICT, ERR) else None, 60.0,
                               every=2.0, poke=lambda: self.send(VERIFY, session))
                 if m is None:
                     raise RuntimeError('all chunks acknowledged but no verdict')
@@ -524,6 +525,7 @@ def main(argv=None):
         s.add_argument('--out', default='.')
         s.add_argument('--wait', type=float, default=900.0, help='seconds to wait for the console after EXEC')
         s.add_argument('--no-collect', action='store_true')
+        s.add_argument('--wmax', type=int, default=16, help='most chunks in flight (default 16)')
     r = sub.add_parser('report')
     r.add_argument('--out', default='.')
     sub.add_parser('relay', help='print the relay program the ssh mode runs on the Pi')
@@ -567,6 +569,7 @@ def session_main(a, loop, stamp):
         if h['report_state'] not in (0, 1) and not a.corrupt:
             rep = loop.fetch_report(h, a.out)
             stamp('earlier report collected first: %s %s' % (rep['state'], rep['path']))
+        loop.wmax = max(2, a.wmax)
         raw = load_program(a.program)
         if LOAD_ADDR + len(raw) + 4 > IMAGE_END:
             stamp('program too large: %d bytes' % len(raw))
@@ -584,7 +587,8 @@ def session_main(a, loop, stamp):
             r = loop.run_verified(session)
             stamp('run: %s' % r)
             result['run'] = r
-            if r == 'exec' and not a.no_collect:
+            if r in ('exec', 'no answer') and not a.no_collect:
+                # 'no answer': EXEC may have been lost on the line while the console jumped; its next beacon says
                 b0 = (loop.hello or {}).get('boot_count')
                 t0 = time.time()
                 hb = loop.wait_hello(a.wait, lambda h: h['boot_count'] != b0 or h['uptime_ms'] < 1000 * (time.time() - t0))
@@ -606,7 +610,7 @@ def session_main(a, loop, stamp):
                                                                          rep['bytes'], rep['crc_ok'], rep['path']))
                     if not rep['crc_ok'] or rep['state'] != 'DONE':
                         rc = 5
-            elif r != 'exec':
+            elif r not in ('exec', 'no answer'):
                 rc = 3
         result['link'] = loop.stats
         os.makedirs(a.out, exist_ok=True)

@@ -46,6 +46,7 @@ void cl_report_bytes(const void *p, size_t n) {
     if (n > CL_REPORT_MAX - len) n = CL_REPORT_MAX - len;
     memcpy(H->report + len, p, n);
     H->h.report_len = len + (uint32_t)n;
+    cl_handoff_seal(H);   /* the header stays valid at every moment: a reboot or power-off mid-run reads as LOST */
 }
 void cl_report(const char *fmt, ...) {
     if (!g_active) return;
@@ -184,6 +185,7 @@ int cl_init(unsigned flags) {
     g_active = cl_handoff_valid(H) && H->h.state == CL_RUN_RUNNING;
     if (!g_active) return 0;
     H->h.report_len = 0;
+    cl_handoff_seal(H);
     if (!(flags & CL_NO_PRELOAD)) preload();
     irq_set_handler(EXC_UNHANDLED_EXC, crash_handler, NULL);
     irq_set_handler(EXC_DOUBLE_FAULT, crash_handler, NULL);
