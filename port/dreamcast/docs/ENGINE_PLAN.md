@@ -42,20 +42,27 @@ Same as F-Zero X, adapted to "original behaviour hosted on the engine" (the owne
 7. **Plays right against a reference,** with tolerances agreed before each checkpoint (section 8).
 8. **SH4ZAM for all math and kernels,** improved in its own style where it falls short.
 
-## 4. Whole-frame budget (proposal, 33.3 ms a picture, one logic tick a picture)
+## 4. Whole-frame budget (33.3 ms a picture, one logic tick a picture)
 
-Today's column is console at the village cross, 4 Ganados, from sample shares of a 56 ms picture. It is approximate. The M0 console session replaces it with subtraction numbers.
+Measured on console (session 2026-11-12, Test 27.1, cap 4): each row's share of the profiler samples times that capture's ms a picture. Method, function lists and the rule for each borderline function are in [engine/SHELL_MAP.md](engine/SHELL_MAP.md) section 0. These are means; the samples are too few for a worst interval per row.
 
-| Row | What it is | Today (console shares; the split between rows is an estimate) | Budget |
-|---|---|---:|---:|
-| Behaviour (hosted original) | AI decisions, player, events, scripts | about 5 | 5 |
-| Services | Skeleton and pose, effect simulation, collision queries, managers | about 14 | 6 |
-| Publication | Original state converted to draw data: selection, light and model setup, effect transforms, per-part bookkeeping | about 15 | 0 by design |
-| Drawing | Transform, light, clip, submit | about 18 | 14 |
-| System | Audio, input, loading, pacer | about 3 | 3 |
-| Margin | Headroom for the worst interval | | 5 |
+| Row | What it is | Cross | Bell fight | Hay-fork view | Quiet farm | Budget |
+|---|---|---:|---:|---:|---:|---:|
+| Behaviour (hosted original) | AI decisions, player, events, scripts | 1.6 | 1.6 | 1.5 | 0.7 | 2 |
+| Services | Skeleton and pose, effect simulation, collision queries, managers | 15.5 | 17.9 | 26.3 | 13.0 | 9 |
+| Publication | Original state converted to draw data: selection, light and model setup, effect transforms, per-part bookkeeping | 16.3 | 17.5 | 31.4 | 8.7 | 0 by design |
+| Drawing | Transform, light, clip, submit | 17.8 | 19.7 | 30.6 | 9.0 | 14 |
+| System | KOS, audio, link, idle | 3.9 | 4.3 | 5.6 | 2.9 | 3.5 |
+| Margin | Headroom for the worst interval | | | | | 4.8 |
+| **Total** | | **55.1** | **61.1** | **95.4** | **34.4** | **33.3** |
 
-Rule: a row over budget on console is that lane's problem before anything else moves. If hosted behaviour itself stays over its row after milestone 3, the owner decides whether specific behaviours get native versions checked by the plays-right fixtures.
+What the measurement says:
+- **The original decision code costs almost nothing:** 0.7 to 1.0 ms a tick. Hosting it is not the problem, and rewriting it would buy nothing.
+- **Publication plus services are 32 of the 55 ms at the cross,** and 58 of the 95 ms at the worst view. That is where the frame is won.
+- **Publication is flat:** 378 functions, the top 12 only about 30% of it. It cannot be tuned away function by function. It goes by design.
+- **Services need the biggest real cut:** skeleton and collision are called from inside behaviour, 6.7 ms a tick at the cross.
+
+Rule: a row over budget on console is that lane's problem before anything else moves.
 
 ## 5. Architecture
 
