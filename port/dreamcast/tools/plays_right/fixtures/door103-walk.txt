@@ -1,0 +1,25 @@
+# door103-walk: the old game's door103 gate fixture (lab32 kit fixtures/door103.txt, "r101-post-bell-door"),
+# from the end of the radio call to the door, on the hosted player and camera only.
+# Village square (r101), Leon at the door to the farm path after the bell. The old game's logic trace of
+# this fixture (cachefoot gates st-door103-a, 2026-11-03) records, per tick t: the call ends at t=739
+# (endEvent: idle footwork from frame 0); the idle loops every 90 ticks; A at 871 and 991 (4 ticks
+# each); the stick forward (80) at 1111 for 25 ticks (Leon walks 1112-1135); A at 1151 opens the door
+# (the room change starts at 1152; door code is not hosted).
+# The reference resumes from t=829 (a loop restart, no blend from the call's pose); its first tick redoes
+# that restart, so tick n here = t 828+n (plays_right.py --offset 828).
+room 0x101
+pos 39372 3201 -26667        # the warp spot (the old run's placement); replaced by resume
+ang 1.6378
+weapon 2 0                   # Punisher (the default inventory's handgun)
+seed 0x0d37
+resume 0x4719cc45 0x4541d79e 0xc6d04e35 0x3fd1a36e 0 event   # t=829: p, a.y, footwork frame 0
+ticks 348                    # to t=1176 (the first tick in the farm, r103)
+pad 0 0x0000 0 0
+pad 43 0x0100 0 0            # A (t=871)
+pad 47 0x0000 0 0
+pad 163 0x0100 0 0           # A (t=991)
+pad 167 0x0000 0 0
+pad 283 0x0000 0 80          # stick forward (t=1111..1135)
+pad 308 0x0000 0 0
+pad 323 0x0100 0 0           # A: the door (t=1151)
+pad 327 0x0000 0 0
