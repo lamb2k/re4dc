@@ -3,7 +3,8 @@
 # (ENGINE_PLAN.md section 8 "Plays right"; docs/engine/PLAYS_RIGHT.md).
 #
 #   make            -> $(BUILD)/plain/re4ref   (SSE single precision, no fused multiply-add)
-#   make fma        -> $(BUILD)/fma/re4ref     (-mfma -ffp-contract=fast: a*b+c fused, like SH-4 fmac)
+#   make fma        -> $(BUILD)/fma/re4ref     (-mfma -ffp-contract=fast: a*b+c fused, like SH-4 fmac;
+#                                              GCC forms FMAs only with -fexpensive-optimizations)
 #   make clean
 #
 # i386 (-m32) code, run on x86-64 Linux: the game's structures, its data files and its u32 pointer casts
@@ -72,7 +73,7 @@ PCFLAGS := -isystem /usr/include/x86_64-linux-gnu/c++/13 -std=gnu++20 -Wall -fno
 LDFLAGS := -m32 -no-pie -Wl,--gc-sections -lm
 
 FP_plain := -ffp-contract=off '-DHOST_FP_NAME="plain"'
-FP_fma   := -mfma -ffp-contract=fast '-DHOST_FP_NAME="fma"'
+FP_fma   := -mfma -ffp-contract=fast -fexpensive-optimizations '-DHOST_FP_NAME="fma"'
 
 all: $(BUILD)/plain/re4ref
 fma: $(BUILD)/fma/re4ref

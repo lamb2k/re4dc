@@ -121,6 +121,14 @@ def load(path):
     return kind, recs
 
 
+def ulps(x, y):
+    """Distance between two floats in single-precision steps (sign-magnitude order)."""
+    def key(f):
+        i = struct.unpack('<i', struct.pack('<f', f))[0]
+        return i if i >= 0 else -(i & 0x7FFFFFFF)
+    return abs(key(x) - key(y))
+
+
 def angdiff_deg(a, b):
     d = (a - b + math.pi) % (2 * math.pi) - math.pi
     return abs(math.degrees(d))
@@ -210,6 +218,13 @@ def main():
         over = [r for r in rows if r[2]]
         summary[f] = {'compared': len(rows), 'over': len(over), 'max': worst[1], 'max_at': worst[0],
                       'first_over': over[0][0] if over else None}
+        if f in ('p', 'a', 'mf', 'cam'):
+            # float exactness: ticks whose values are bit-identical, and the largest distance in float steps
+            def as_list(v):
+                return v if isinstance(v, list) else [v]
+            us = [max(ulps(x, y) for x, y in zip(as_list(r[3]), as_list(r[4]))) for r in rows]
+            summary[f]['bit_identical'] = sum(1 for u in us if u == 0)
+            summary[f]['max_ulps'] = max(us)
     verdict = 'PASS' if first is None and compared else ('NO-OVERLAP' if not compared else 'DIVERGED')
     report = {'a': args.a, 'b': args.b, 'kinds': [ka, kb], 'offset': args.offset, 'window': window,
               'tolerances': tol, 'ticks_compared': compared, 'verdict': verdict, 'summary': summary}
@@ -233,8 +248,9 @@ def main():
             else:
                 mx = s['max']
                 mxs = f'{mx:.4f}' if isinstance(mx, float) else str(mx)
+                bits = (f" bit-identical {s['bit_identical']} max {s['max_ulps']} ulps" if 'max_ulps' in s else '')
                 print(f"  {f:4s} compared {s['compared']:5d} over {s['over']:5d} max {mxs} at {s['max_at']}"
-                      + (f" first over {s['first_over']}" if s['first_over'] is not None else ''))
+                      + (f" first over {s['first_over']}" if s['first_over'] is not None else '') + bits)
     if args.json:
         with open(args.json, 'w') as f:
             json.dump(report, f, indent=1)
