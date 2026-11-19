@@ -10,7 +10,7 @@ Only the integrator edits this file. Keep it under 80 lines.
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
 | E0 | Walkabout and the drawing row (budget 14 ms console) | Console-ready disc E:\RE4DC-Lanes\eng-e0build\E0-GDEMU-e0b (renderer 1edab55a8, merged). MODELLED 25 pictures: cross 16.3 mean / 22.0 worst, hay-fork 18.8 / 21.1 (the source lighting rule added 1.7 to 2.3 ms). Fixed: near-plane clipping (with a test the old loop fails); visibility safe in unknown cells and heights, whole room in 256 KiB; texture copies released; raw rows per picture with A/B/A arms in one boot. Partly: look (MAE 8.6 cross / 6.2 farm; pyre glow and hair open); unseen cross route differs on 8 of 300 pictures by 1 to 2 pixels. Over budget on the model; content changes wait for the owner | Waits for SD card |
-| E1 | Leon on the engine, behaviour hosted through setters, no publication layer | eng-e1 (Opus) running: core loop and memory, actor table with native skeleton, collision, player and camera hosted, scripted village route; plays-right against the old game's trace. eng-host (Opus, PC-only) building the PC reference | Not run |
+| E1 | Leon and Ashley on the engine | Leon slice done (eng-e1, merged, code 1d41500d6): engine image boots in the village square; Leon's original player and camera code hosted on the engine's actor table; 640-tick scripted route. Plays right against the old game: motion exact 641/641, angle 641/641 within 1 deg, position 616/641 within 1 unit (bit-identical to tick 484; later drift from the shared random generator, which the old village draws about 205 times a tick). Flycast busy picture 15.15 ms mean / 22.80 worst (behaviour 0.21, services 4.64, publication 0, drawing 10.18). Behaviour arena high water 170 KB. Skeleton and collision are the original units behind the engine boundary, not yet re-laid-out. Ashley: closure measured (24 files, 112 KB), not built. Disc E:\RE4DC-Lanes\eng-e1uild\E1-GDEMU-e1a | Waits for SD card |
 | E2 | Fight: four Ganados on native services | Not started | Not run |
 | E3 | Chapter 1 end to end, lake boss, first engine release | Not started | Not run |
 | E4 | The rest of the game, by chapter | Not started | Not run |
@@ -33,7 +33,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-e1 | E1 first slice: Leon on the engine in the village | lane/eng-e1 | Claude Opus | E:\RE4DC-Lanes\eng-e1 |
+| eng-boss | E2: first Disc 1 boss on the bench, then hosted on the E1 shell | lane/eng-boss from engine | Claude Opus | E:\RE4DC-Lanes\eng-boss |
 | eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
 | eng-host2 | PC-only: extend the plays-right reference to Ashley (partner) and one Ganado | lane/eng-host2 | Claude Opus | E:\RE4DC-Lanes\eng-host2 |
 
@@ -55,7 +55,7 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
-Queued for the next free emulator slots: eng-boss (first boss on the bench, then hosted), then the loader's Flycast proof.
+Queued for the next free emulator slots: eng-e1b (Ashley hosted, native skeleton and collision re-layout, generator-exact plays right), then the loader's Flycast proof.
 
 ## Waiting on the owner
 
