@@ -2,14 +2,14 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 11:15):** plan approved. M0 lab disc v2 ready, waits for the owner's SD card. eng-bench (M1) round 2 handed back; audit running. disc2-play (game track) running.
+**State (2026-11-19 11:15):** plan approved. M0 lab disc v2 ready, waits for the owner's SD card. eng-bench (M1) round 3 running after the audit. disc2-play (game track) running.
 
 ## Milestones
 
 | # | Slice | State | Console run |
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
-| M1 | Bench: cross and worst farm view on the new renderer | Round 2 (11-19, lane/eng-bench 0b6f207ca): MODELLED drawing at the same 5 pictures, game -> bench: cross 27.5 -> 13.3 ms (-52%), hay-fork 49.7 -> 27.0 ms (-46%). Indexed renderer on the existing SH-4 skin and light kernels + SH4ZAM matrices. Still pairs match (mean abs diff 0.26-0.72 / 255). Independent audit (Claude) running. Bench disc staged: E:\RE4DC-Lanes\eng-benchuild\M1-GDEMU-mat003 | Waits for SD card |
+| M1 | Bench: cross and worst farm view on the new renderer | Round 2 claimed MODELLED -52% / -46%. Independent audit (Claude, 11-19, E:\RE4DC-Lanes\eng-bench\AUDIT-M1-R2.md): not like for like (capture gave the bench world selection, light folds, effect projection; baseline had 2 skeleton passes and a one-off UI load; world bake 3.39 MB vs 1.28 MB). Like for like about -3 to -5.5 ms cross (18-30%), -8 to -10.5 ms hay-fork (22-28%). Round 3 running: bench computes the whole drawing path at runtime from logic outputs, fair one-tick baseline, whole-room compact bakes | Not run |
 | M2 | Drive: village and farm in the game image | Not started | Not run |
 | M3 | Fights hold the floor | Not started | Not run |
 | M4 | Disc 1 on the engine line | Not started | Not run |
