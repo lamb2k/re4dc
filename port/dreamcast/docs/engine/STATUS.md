@@ -36,7 +36,8 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 | eng-e1 | E1 first slice: Leon on the engine in the village | lane/eng-e1 | Claude Opus | E:\RE4DC-Lanes\eng-e1 |
 | eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
 | eng-host | PC-only: PC build of the player code and the plays-right tool | lane/eng-host | Claude Opus | E:\RE4DC-Lanes\eng-host |
-| eng-loop | PC-only: loader disc for sending programs to the console over the DreamPi link | lane/eng-loop | Claude Opus | E:\RE4DC-Lanes\eng-loop |
+
+Closed: eng-loop (Opus, PC-only), handed back 11-19, merged (907bb1a24). Remote console loader over the DreamPi link: 16/16 host tests through a simulated bad line (loss, corruption, reorder, dead line, sender restart); corrupted or wrong-hash images refused before RUN. Measured uplink 1.36 KB/s; downlink never measured. Estimates at that rate: E0 bench 2.2 min deflated, game image 24 min, room packs 42 min (packs stay on disc). Disc E:\RE4DC-Lanes\eng-loop\disc (KEEP, SD-README). Next: Flycast proof run (queued for the next free emulator slot), then the owner adds it to the SD card once.
 
 Closed: eng-e0b (Opus), handed back 11-19, merged (code 1edab55a8). Console report: one screen line per 600-picture window (mean, p99, worst, count over 14, count over 33.3, presented intervals over 2 fields); raw rows over serial and in memory tables.
 
@@ -51,6 +52,8 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 ## Run-time lab arms (lab disc v2)
 
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
+
+Queued for the next free emulator slots: eng-boss (first boss on the bench, then hosted), then the loader's Flycast proof.
 
 ## Waiting on the owner
 
