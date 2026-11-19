@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 // D367 frame pacing: render skip with catch-up (PACE_CATCHUP, pace.mk; design-pacing DESIGN.md).
 //
 // The game runs one 30 Hz logic tick per frame-loop iteration and has no delta time, so without
@@ -857,10 +860,58 @@ extern "C" int re4dc_pace_itask(void)
 #endif
 }
 
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include <stdio.h>
+namespace {
+struct LabWindow {
+    unsigned count, ticks, previous, total, over33, over50, top[7], phases[4];
+    bool running, anchored;
+} window;
+}
+extern "C" unsigned re4dc_lab_phase_start() {
+    return window.running && window.anchored ? (unsigned)timer_us_gettime64() : 0;
+}
+extern "C" void re4dc_lab_phase_end(unsigned phase, unsigned start) {
+    if (start) window.phases[phase] += (unsigned)timer_us_gettime64() - start;
+}
+extern "C" void re4dc_lab_window(char* text, unsigned size, bool reset) {
+    if (reset) { window = {}; window.running = true; }
+    snprintf(text,size,"INTERVAL n=%u ticks=%u sum=%u p99=%u worst=%u over33=%u over50=%u world=%u chars=%u fx=%u hud=%u",
+        window.count,window.ticks,window.total,window.top[6],window.top[0],window.over33,window.over50,
+        window.phases[0],window.phases[1],window.phases[2],window.phases[3]);
+}
+static void lab_tick(bool drawn) {
+    if (!window.running) return;
+    if (window.anchored) ++window.ticks;
+    if (!drawn) return;
+    unsigned now = (unsigned)timer_us_gettime64();
+    if (window.anchored && re4dc_lab32_k[LK_DELAY] && window.count % 10 == 9) {
+        const unsigned start = now;
+        do { now = (unsigned)timer_us_gettime64(); } while (now - start < 10000);
+    }
+    if (window.anchored) {
+        unsigned delta = now - window.previous;
+        window.total += delta;
+        window.over33 += delta > 33300;
+        window.over50 += delta > 50000;
+        // Nearest rank 594 of 600 is the seventh largest.
+        for (unsigned& peak : window.top) {
+            if (delta > peak) { const unsigned old = peak; peak = delta; delta = old; }
+        }
+        if (++window.count == 600) window.running = false;
+    }
+    window.previous = now;
+    window.anchored = true;
+}
+#endif
+
 // End of the iteration's work (after Render_swap): 1 when this waited on the anchor clock, 0 when
 // the caller must run the original vsync_cnt wait (pacing inactive).
 extern "C" int re4dc_pace_end(void)
 {
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    lab_tick(!re4dc_pace_skipping);
+#endif
     const unsigned long long us = timer_us_gettime64();
 #if RE4DC_PACE_STEADY
     // A wait for a Steady picture's target field (pace_present.cpp queue full or a fence) is not work.

@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 // COARSE=1 (30 fps rethink, step 2): the coarse complete square. In-room play runs unchanged
 // (enemies, events, HUD, audio); each image is drawn here from gameplay records instead of the
 // source visual pipeline:
@@ -559,6 +562,9 @@ void draw_blocks(Out& o, cSat* sat, const cSatBlock* b, const PieceView& pv, con
 
 void draw_world(Out& o)
 {
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabWorld, );
+#endif
 #if RE4DC_COARSE_SAT_SCENERY_ONLY
     bool scenery_drawn = false;
 #if RE4DC_PS2_WORLD_DRAW
@@ -737,6 +743,9 @@ void draw_model(Out& o, cModel* m, std::uint32_t rgb, float t)
 
 void draw_actors(Out& o)
 {
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabChars, );
+#endif
 #if RE4DC_COARSE_GANADO
     re4dc_coarse_ganado_begin();
 #endif
@@ -770,6 +779,9 @@ extern "C" int re4dc_esp_sprite_class(cEsp* esp);   // esp_sub.cpp (COARSE_FX_SP
 #endif
 void draw_effects(Out& o)
 {
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabFx, );
+#endif
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES >= 2
     return;   // the sprite classes draw in the effect OT; no markers for the rest
 #endif

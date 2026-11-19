@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 // game/id_sys: the "ID" 2D sprite system (D:/Bio4/Prog/id_sys.cpp) that draws the HUD, menus and
 // sub-screen graphics. An id data table (IdData/IdData2 records built by the ID tool) describes
 // units: a textured quad or a group node with position/size/colour/rotation Hermite curves, an
@@ -1582,6 +1585,9 @@ void IDSystem::unitTrans(IdUnit* u)
 void IdGeneralTrans(IdUnit* u)
 {
     u->be_flag &= ~0x10;
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabHud, );
+#endif
     if (u->texId == 0xFF) {
         return;
     }

@@ -2990,6 +2990,13 @@ void ModelRender(cModel* m)
     if(sourceWorldModelBlocked(m))return;
 #endif
 #endif
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    // Scenery model callbacks dispatch the PS2 world from inside this function.
+    // Leave those callbacks to the world phase and retain revoked-address checks above.
+    const bool scenery = m->kindid == 2;
+    if (!scenery && (re4dc_lab32_k[LK_DRAW_MASK] & (1u << LabChars))) return;
+    const LabScope characterScope(LabChars, !scenery);
+#endif
     static int modeltransalphaupdate = 1;
 
 #if RE4DC_PACE_CATCHUP

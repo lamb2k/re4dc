@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #include "include/native_draw_result.hpp"
 #endif
@@ -3190,6 +3193,9 @@ extern "C" int re4dc_pace_hud(unsigned v[2]);      // pace.cpp: game speed %, dr
 #define RE4DC_PACE_HUD_ROW 0
 #endif
 void hud_draw(unsigned flip_us,unsigned render_us,unsigned wait_us,unsigned ta_bytes,unsigned ta_capacity,bool ta_fault){
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabHud, );
+#endif
     HudBatch& b=hud_batch;b.n=1;
     pvr_poly_cxt_t c;pvr_poly_cxt_col(&c,PVR_LIST_TR_POLY);
     c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;

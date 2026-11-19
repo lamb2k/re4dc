@@ -1,28 +1,7 @@
 #!/usr/bin/env python3
-"""lab32_session.py: the scripted console lab session (lane lab32, 2026-11-17). PC side; Python 3 standard library only.
-
-The console boots the lab QA disc (LAB32=1; REMOTE LINK ON), the DreamPi runs `qalink_pi.py serve --review28`, and this
-script drives the whole A/B list over the QA link with no disc swap and no one at the controls:
-
-  per scene (a camera-correct preset)
-    per arm  (a `KNOB PRESET <arm>` on the same ELF; the speed switches are run-time bytes)
-      KNOB PRESET <arm> -> TELEPORT <preset> (a full room entry, so room-entry knobs apply) -> wait until landed + free play
-      -> settle -> capture <capture> s (fps / speed / PT rows / PMC counters) -> PCS SNAP x <snaps> (symbolised)
-    the control arm is repeated at the end of the scene (drift / noise estimate)
-  then a free-play window per scene (control arm) whose WORLD_STILL log lines give the real-play still-camera share.
-
-Outputs in --out (default E:\\RE4DC-Lanes\\lab32\\session-<date>): one row per scene x arm in results.tsv, results.md (a table
-per scene with per-second counter totals, not per-picture, and the delta against the scene's control), profiles.md (top
-functions and area shares per snap, symbolised with --nm), wstill.md, the raw capture logs, DIAG snapshots and .pcs dumps.
-A run can be resumed: finished (scene, arm) rows in results.tsv are skipped.
-
-  python lab32_session.py --pi re4pi --nm E:\\RE4DC-Lanes\\lab32\\lab\\nm.txt                     (the whole plan)
-  python lab32_session.py --pi re4pi --nm ... --scenes cross,p103h --arms control,fix4         (a subset)
-  python lab32_session.py --pi re4pi --dry-run                                                 (print the plan and the times)
-  python lab32_session.py --local <pi.log> --settle 5 --capture 8 --free 20 --snaps 1 ...      (Flycast, modem emulation)
-  python lab32_session.py --report DIR --nm ...                                                (rebuild the tables from a run)
-
-Labels: every number in the tables is console unless the run was --local (Flycast: counts and flow only, never timing).
+"""Lab33 console session. Each bracket shares its closing control with the next bracket.
+A window is 600 complete drawn-picture intervals following the confirmed preset landing.
+Use --dry-run for the plan and --local for a Flycast modem run.
 """
 import argparse, collections, datetime, glob, os, re, statistics, struct, subprocess, sys, time
 
@@ -31,39 +10,56 @@ QALINK = os.path.join(HERE, 'qalink.py')
 PCS_FROM_LOG = os.path.join(HERE, 'pcs_from_log.py')
 
 # arm groups (KNOB PRESET names in qa_menu.cpp; `KNOBS` on the link lists the bytes)
-TIERS = {   # --tier: arms per scene family (control is repeated last as control#2 unless --no-repeat)
-    'core': {'v': ['control', 'fix4'], 'l': ['control', 'fix4'], 'c': ['control', 'fix4']},
-    'std': {'v': ['control', 'fix4', 'all31', 'movca', 'leon3'], 'l': ['control', 'fix4', 'spawn4', 'spawn8'],
-            'c': ['control', 'fxcut3', 'castle', 'fix4']},
-    'full': {'v': ['control', 'all31', 'fix4', 'charvis2', 'ps31', 'movca', 'leon2', 'leon3'],
-             'l': ['control', 'r10b', 'spawn4', 'spawn8', 'fix4', 'fxcut3', 'leon3'],
-             'c': ['control', 'fxcut3', 'castle', 'charvis2', 'fix4']},
-}
-VILLAGE, LAKE, CASTLE = 'v', 'l', 'c'
-# name, preset id (mkqa), room (hex, for the landed check), arms
+CORE = ['noworld', 'nochars', 'nofx', 'nohud', 'nodraw', 'aa']
+STD = CORE + ['fix4', 'all31', 'charvis2', 'ps31', 'leon2', 'leon3', 'spawn4', 'movca']
+TIERS = {'core': CORE, 'std': STD}
 SCENES = [
-    ('cross',      'r101x', '101', VILLAGE),
-    ('bell',       'r101',  '101', VILLAGE),
-    ('farm-entry', 'r103',  '103', VILLAGE),
-    ('hayfork',    'p103h', '103', VILLAGE),
-    ('quiet-farm', 'p103q', '103', VILLAGE),
-    ('r100-entry', 'r100',  '100', VILLAGE),
-    ('r100-spotB', 'p100b', '100', VILLAGE),
-    ('dellago-boat', 'r10b', '10b', LAKE),
-    ('dellago-fight', 'r10bd', '10b', LAKE),
-    ('castle-gate', 'r200', '200', CASTLE),
+    ('cross', 'r101x', '101'),
+    ('bell', 'r101', '101'),
+    ('hayfork', 'p103h', '103'),
+    ('quiet-farm', 'p103q', '103'),
+    ('farm-entry', 'r103', '103'),
+    ('r100-entry', 'r100', '100'),
 ]
 EV = {'24': 'Istall', '25': 'Dstall', '04': 'OCrd', '05': 'OCwr', '08': 'Imiss'}
 COLS = [('fps', 'fps', '%.1f', 1), ('fps.speed', 'speed%', '%.0f', 1), ('ms10.logic', 'logic ms', '%.1f', 0.1),
         ('ms10.fx', 'fx ms', '%.1f', 0.1), ('pmc.Istall', 'I stall M/s', '%.1f', 1e-6), ('pmc.Dstall', 'D stall M/s', '%.1f', 1e-6),
         ('pmc.OCrd', 'OC rd M/s', '%.2f', 1e-6), ('pmc.OCwr', 'OC wr k/s', '%.0f', 1e-3), ('pmc.Imiss', 'I miss M/s', '%.2f', 1e-6),
         ('kos.free', 'kos free', '%.0f', 1), ('fx_live', 'fx live', '%.0f', 1), ('still_pct', 'still %', '%.0f', 1)]
+COLS += [(k, k + ' ms', '%.2f', 1) for k in ('mean', 'p99', 'worst','world','chars','fx','hud')]
+COLS += [(k, k, '%.0f', 1) for k in ('pictures','ticks','over33','over50')]
+
+def get_window(run):
+    end = time.monotonic() + 240
+    while time.monotonic() < end:
+        rc, reply = run.send('INTERVAL READ')
+        m = re.search(r'\bINTERVAL n=600 ticks=(\d+) sum=(\d+) p99=(\d+) worst=(\d+) over33=(\d+) over50=(\d+) world=(\d+) chars=(\d+) fx=(\d+) hud=(\d+)', reply)
+        if not rc and m:
+            ticks, total, p99, worst, over33, over50, *phase = map(int,m.groups())
+            if ticks < 600 or not 0 < p99 <= worst or not 0 <= over50 <= over33 <= 600:
+                raise RuntimeError('invalid interval row: ' + m.group())
+            row = dict(pictures=600,ticks=ticks,mean=total/600000,p99=p99/1000,worst=worst/1000,over33=over33,over50=over50)
+            row.update(zip(('world','chars','fx','hud'), (v/600000 for v in phase)))
+            return row, reply
+        time.sleep(3)
+    raise RuntimeError('600-picture window missing')
+
 AREAS = [('world draw', r'vp::|walk_lean|ps2_pass|chunk_|strips_|clip_strip|MeshDraw|scenery|world|Scenery|sg_|ps2w'),
          ('pose/skeleton', r'pwc|pmc_run|Motion|InverseKin|partsWorld|skik|PSMTX|Parts'),
          ('characters draw', r'avk_|skin|light_|propGate|actor|Actor|Model|al4|L_al'),
          ('effects', r'Esp|Ps2fx|Fx|fx_|cEsp|Effect'),
          ('collision', r'line_leaf|Collision|collision|Hit|hit_|Line|col_')]
 
+
+# Full room-entry preset positions and Leon yaw (milliradians) from mkqa.
+POSE = {'r101x':(-7914,2000,1571), 'r101':(-7914,-254,2960),
+        'p103h':(-30717,-13585,2784), 'p103q':(-44074,5598,-1211),
+        'r103':(-47609,7084,1889), 'r100':(-82910,-38480,-129)}
+
+def near_preset(preset,m):
+    x,z,yaw = POSE[preset]
+    angle_error = (int(m[5])-yaw+3142)%6283-3142
+    return abs(int(m[2])-x)<500 and abs(int(m[4])-z)<500 and abs(angle_error)<300
 
 class Run:
     def __init__(self, a):
@@ -86,7 +82,10 @@ class Run:
         else:
             cmd += ['--pi', self.a.pi]
         cmd += ['--review28', '--out', self.out] + list(words)
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        env = os.environ.copy()
+        if self.a.local:
+            env['USERPROFILE' if os.name == 'nt' else 'HOME'] = os.path.abspath(self.out)
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, env=env)
         return r.returncode, (r.stdout or '') + (r.stderr or '')
 
     def send(self, text, timeout=420):
@@ -106,9 +105,10 @@ class Run:
         while time.time() - t0 < limit:
             _, o = self.send('DIAG')
             if re.search(r'^room=%s preset=%s\b' % (room, re.escape(preset)), o, re.M) and \
-               re.search(r'^fps=[0-9.]+ speed=(9[0-9]|1[0-9][0-9])', o, re.M):
-                drv = [l for l in o.splitlines() if l.startswith('drv ')]
-                if not drv or 'free=1' in drv[0]:
+               re.search(r'^fps=[1-9][0-9.]* speed=[1-9]', o, re.M):
+                rc, pos = self.send('LABPOS')
+                m = re.search(r'drv room=(\w+) pos=(-?\d+),(-?\d+),(-?\d+) ang=(-?\d+).*? free=1\b', pos)
+                if not rc and m and m.group(1) == room and near_preset(preset,m):
                     return int(time.time() - t0)
             time.sleep(3)
         return None
@@ -231,7 +231,7 @@ def read_rows(path):
 def write_tables(out, rows, local):
     """results.md: one table per scene (arm rows, control first) with the delta against the scene's first control row."""
     tag = 'Flycast (counts and flow only, no timing)' if local else 'console'
-    L = ['# lab32 session tables (%s)' % tag, '', 'Per-second counter totals (PMC2 total x 59.94 / win_vb), not per picture. Logic / fx in ms per tick.', '']
+    L = ['# lab33 session tables (%s)' % tag, '', 'Per-second counter totals (PMC2 total x 59.94 / win_vb), not per picture. Logic / fx in ms per tick.', '']
     scenes = []
     for r in rows:
         if r['scene'] not in scenes:
@@ -257,7 +257,7 @@ def write_tables(out, rows, local):
             for k, sc_ in (('fps', 1), ('pmc.Dstall', 1e-6), ('pmc.Istall', 1e-6)):
                 a, b = num(r, k), num(base, k) if base else None
                 d.append('-' if a is None or b is None else '%+.2f' % ((a - b) * sc_))
-            L.append('| %s | %s | %s |' % (r['arm'] + ('#2' if r.get('rep') == '2' else ''), ' | '.join(cells), ' | '.join(d)))
+            L.append('| %s | %s | %s |' % (r['arm'] + (('#' + r['rep']) if r.get('rep', '1') != '1' else ''), ' | '.join(cells), ' | '.join(d)))
         L.append('')
     open(os.path.join(out, 'results.md'), 'w', encoding='utf-8', newline='\n').write('\n'.join(L) + '\n')
 
@@ -269,12 +269,12 @@ def main():
     ap.add_argument('--out', default='')
     ap.add_argument('--nm', default='', help='sh-elf-nm -n -S -C output of the lab ELF (nm.txt next to the staged disc)')
     ap.add_argument('--scenes', default='', help='comma list of scene names or preset ids (default all)')
-    ap.add_argument('--tier', default='std', choices=sorted(TIERS), help='arm set per scene family (core ~2 h, std ~4 h, full ~6 h)')
+    ap.add_argument('--tier', default='core', choices=sorted(TIERS), help='four core scenes or six standard scenes')
     ap.add_argument('--arms', default='', help='comma list of KNOB PRESET names (default the scene\'s own list)')
-    ap.add_argument('--settle', type=int, default=20)
+    ap.add_argument('--settle', type=int, default=5)
     ap.add_argument('--capture', type=int, default=30)
-    ap.add_argument('--snaps', type=int, default=2)
-    ap.add_argument('--free', type=int, default=180, help='free-play window per scene in seconds (0 = none)')
+    ap.add_argument('--snaps', type=int, default=0)
+    ap.add_argument('--free', type=int, default=0, help='free-play window per scene in seconds (0 = none)')
     ap.add_argument('--free-mode', default='script', choices=['idle', 'script', 'user'],
                     help='script: look-around / aim-hold pad scripts; idle: no input (best case for stillness); user: you play')
     ap.add_argument('--no-repeat', action='store_true', help='do not repeat the control arm at the end of each scene')
@@ -284,7 +284,7 @@ def main():
     if a.report:
         a.out = a.report
     if not a.out:
-        a.out = os.path.join(r'E:\RE4DC-Lanes\lab32', 'session-' + datetime.date.today().strftime('%Y%m%d'))
+        a.out = os.path.join(r'E:\RE4DC-Lanes\lab33', 'session-' + datetime.date.today().strftime('%Y%m%d'))
     run = Run(a)
     nm = load_nm_sized(a.nm) if a.nm and os.path.exists(a.nm) else None
     tsv = os.path.join(a.out, 'results.tsv')
@@ -294,23 +294,36 @@ def main():
         print('tables rebuilt in', a.out)
         return 0
     want_s = [s for s in a.scenes.split(',') if s]
-    scenes = [s for s in SCENES if not want_s or s[0] in want_s or s[1] in want_s]
-    want_a = [x for x in a.arms.split(',') if x]
-    per = 60 + a.settle + a.capture + 40 * a.snaps
+    known = {v for scene in SCENES for v in scene[:2]}
+    if set(want_s) - known:
+        ap.error('unknown scene ' + ','.join(sorted(set(want_s) - known)))
+    scenes = [s for s in SCENES if s[0] in want_s or s[1] in want_s] if want_s else SCENES[:4 if a.tier == 'core' else 6]
+    targets = a.arms.split(',') if a.arms else TIERS[a.tier]
+    allowed = set(STD) | {'control', 'delay10'}
+    if set(targets) - allowed:
+        ap.error('unknown arm ' + ','.join(sorted(set(targets) - allowed)))
     total = 0
     plan = []
-    for name, preset, room, arms in scenes:
-        al = [x for x in (want_a or TIERS[a.tier][arms])]
-        if not a.no_repeat and 'control' in al:
-            al = al + ['control#2']
-        plan.append((name, preset, room, al))
-        total += per * len(al) + (a.free + 60 if a.free else 0)
+    for name, preset, room in scenes:
+        bracket = targets if a.no_repeat else ['control']
+        if not a.no_repeat:
+            for arm in targets:
+                if arm != 'control':
+                    bracket.extend([arm,'control'])
+        counts = collections.Counter()
+        al = []
+        for arm in bracket:
+            counts[arm] += 1
+            al.append(arm if counts[arm] == 1 else '%s#%d' % (arm, counts[arm]))
+        plan.append((name,preset,room,al))
+        fps = {'cross':18.4,'bell':16.5,'hayfork':10.4,'quiet-farm':29.3,'farm-entry':18.4,'r100-entry':21.9}[name]
+        total += (55 + a.settle + max(a.capture,600/fps) + 40*a.snaps) * len(al) + (a.free + 60 if a.free else 0)
     if a.dry_run:
         for name, preset, room, al in plan:
             print('%-14s %-6s room %s: %s' % (name, preset, room, ' '.join(al)))
         print('about %d min' % (total // 60))
         return 0
-    done = {(r['scene'], r['arm'] + ('#2' if r.get('rep') == '2' else '')) for r in read_rows(tsv)}
+    done = {(r['scene'], r['arm'] + (('#' + r['rep']) if r.get('rep', '1') != '1' else '')) for r in read_rows(tsv)}
     if not os.path.exists(tsv):
         open(tsv, 'w', encoding='utf-8', newline='\n').write('\t'.join(keys) + '\n')
     rc, o = run.send('PING')
@@ -326,7 +339,7 @@ def main():
         run.say('=== scene %s (preset %s, room %s)' % (name, preset, room))
         for arm in arms:
             real = arm.split('#')[0]
-            rep = '2' if '#' in arm else '1'
+            rep = arm.partition('#')[2] or '1'
             if (name, arm) in done:
                 run.say('skip %s / %s (done)' % (name, arm))
                 continue
@@ -334,21 +347,35 @@ def main():
             run.idle()
             rc, o = run.send('KNOB PRESET ' + real)
             run.say('%s: %s' % (arm, (o.strip().splitlines() or ['?'])[-1][:200]))
-            if rc or ' ERR ' in o:
-                run.say('KNOB PRESET failed (is this the lab disc?); skipping the arm')
-                continue
-            run.send('TELEPORT ' + preset)
+            if rc or ('OK KNOB PRESET ' + real + ':') not in o:
+                run.say('KNOB PRESET failed')
+                return 1
+            rc, reply = run.send('TELEPORT ' + preset)
+            if rc or 'OK TELEPORT' not in reply:
+                return 1
             ld = run.landed(preset, room)
             if ld is None:
                 run.say('NOT LANDED: %s / %s; skipping' % (name, arm))
-                continue
+                return 1
             time.sleep(a.settle)
             run.send('DIAG')  # warm
             _, d0 = run.send('DIAG')
             open(os.path.join(a.out, label + '-diag-start.txt'), 'w', encoding='utf-8').write(d0)
-            run.q('capture', 'start', label)
-            time.sleep(a.capture)
-            run.q('capture', 'stop', label)
+            rc, reply = run.q('capture','start',label)
+            if rc:
+                raise RuntimeError('capture start failed: ' + reply)
+            try:
+                rc, reply = run.send('INTERVAL START')
+                if rc or 'INTERVAL n=0 ' not in reply:
+                    raise RuntimeError('interval start failed: ' + reply)
+                time.sleep(a.capture)
+                window, raw = get_window(run)
+                with open(os.path.join(a.out,label+'-interval.txt'),'w') as f:
+                    f.write(raw)
+            finally:
+                rc, reply = run.q('capture','stop',label)
+            if rc:
+                raise RuntimeError('capture stop failed: ' + reply)
             _, d1 = run.send('DIAG')
             open(os.path.join(a.out, label + '-diag-end.txt'), 'w', encoding='utf-8').write(d1)
             snaps = []
@@ -362,6 +389,9 @@ def main():
                                capture_output=True, text=True)
                 snaps += glob.glob(os.path.join(a.out, '%s-snap%d-*.pcs' % (label, k + 1)))
             row = parse_capture(a.out, label) or {}
+            if 'ms10.logic' not in row:
+                raise RuntimeError('capture missing logic measurement: ' + label)
+            row.update(window)
             row.update(scene=name, preset=preset, arm=real, rep=rep, landed_s=ld)
             open(tsv, 'a', encoding='utf-8', newline='\n').write(
                 '\t'.join('' if row.get(k) is None else ('%.4g' % row[k] if isinstance(row[k], float) else str(row[k])) for k in keys) + '\n')

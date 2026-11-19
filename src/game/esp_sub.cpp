@@ -2422,6 +2422,9 @@ extern "C" unsigned re4dc_ps2_fx_stage1_image(Re4dcUiImage* image)
 extern "C" void re4dc_ps2_fx_stage1_render(int coarse,int skipping)
 {
     const Ps2fxStage1Pending ticket=s_stage1_pending;s_stage1_pending={};
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabFx, );
+#endif
     // Consume first. A duplicate call cannot replay or revoke a committed colour.
     if(!ticket.pending || !coarse || skipping || !pG || !g_pEspSys ||
        ticket.frame!=(u32)pG->Frame_cnt || ticket.room!=G_ROOM_ID ||
@@ -2792,6 +2795,9 @@ extern "C" void re4dc_log(const char* fmt, ...);
 #endif
 void EspCommonTrans(cEsp* esp)
 {
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabFx, );
+#endif
     static int s_proj_type;
     static int s_tex_no;
     static EspAnmData* s_pAnm;

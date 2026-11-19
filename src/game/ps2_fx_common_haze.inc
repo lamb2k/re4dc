@@ -316,6 +316,9 @@ static void Ps2fxCommonHazePrepare()
 extern "C" void re4dc_ps2_fx_common_render(int coarse,int skipping)
 {
     const Ps2fxCommonPending ticket=s_common_pending;s_common_pending={};
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabFx, );
+#endif
     // Consume before every refusal; duplicate calls neither replay the batch
     // nor undo its accepted suppression before the queued source callbacks.
     if(!ticket.pending || !coarse || skipping || !pG || !g_pEspSys ||

@@ -24,9 +24,21 @@ enum {
     LK_PREGATE,     // CASTLE_ACTOR_PREGATE 0/1
     LK_PENSUB,      // PEN_CLOTH_LOD_SUB 0/1
     LK_MOVCA,       // WORLD_VCACHE_MOVCA 0/1 (second set of kernels)
+    LK_DRAW_MASK, LK_DELAY,
     LK_N
 };
 extern "C" volatile unsigned char re4dc_lab32_k[LK_N];
+enum LabPhase { LabWorld, LabChars, LabFx, LabHud };
+extern "C" unsigned re4dc_lab_phase_start();
+extern "C" void re4dc_lab_phase_end(unsigned phase, unsigned start);
+extern "C" void re4dc_lab_window(char* text, unsigned size, bool reset);
+struct LabScope {
+    LabPhase phase;
+    unsigned start;
+    explicit LabScope(LabPhase p, bool measure=true): phase(p), start(measure ? re4dc_lab_phase_start() : 0) {}
+    ~LabScope() { re4dc_lab_phase_end(phase,start); }
+};
+#define LAB_PHASE(p, result) if (re4dc_lab32_k[LK_DRAW_MASK] & (1u << p)) return result; LabScope labScope(p)
 #define LABI(i, m) ((re4dc_lab32_k[i] & (m)) != 0) &&
 #define LABN(i) (re4dc_lab32_k[i] == 0) ||
 #define LABGATE(i) (re4dc_lab32_k[i] != 0)
@@ -37,6 +49,7 @@ extern "C" volatile unsigned char re4dc_lab32_k[LK_N];
 #define LAB_FXROOMS(c) ((int) re4dc_lab32_k[LK_FXROOMS])
 #define LAB_PENSUB_KEEP(m) (!re4dc_lab32_k[LK_PENSUB])
 #else
+#define LAB_PHASE(p, result)
 #define LABI(i, m)
 #define LABN(i)
 #define LABGATE(i) 1

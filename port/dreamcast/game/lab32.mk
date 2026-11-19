@@ -9,7 +9,7 @@
 LAB32 ?= 0
 # LAB32_BOOT=<n> (gate twins only, default 0): the knob bytes start at preset n of qa_menu.cpp kPre (1 = fix4, 2 = all31, ...), not control.
 LAB32_BOOT ?= 0
-LAB32_OBJS_GAME := $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/motion.o $(OBJDIR)/src/game/pendulum.o
+LAB32_OBJS_GAME := $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/motion.o $(OBJDIR)/src/game/pendulum.o $(OBJDIR)/src/game/id_sys.o $(OBJDIR)/pace.o $(OBJDIR)/coarse.o
 # the hooks in those files expand to nothing outside LAB32 builds; lab32.h is found through this include path in every build
 $(LAB32_OBJS_GAME): GAME_CPPFLAGS += -I$(CURDIR)/platform/include
 ifneq ($(filter $(LAB32),0 1),$(LAB32))
@@ -40,7 +40,7 @@ CASTLE_ACTOR_PREGATE ?= 1
 PEN_CLOTH_LOD_SUB ?= 1
 WORLD_STILL ?= 1
 $(LAB32_OBJS_GAME): GAME_CPPFLAGS += -DRE4DC_LAB32=1
-$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LAB32=1 -I$(CURDIR)/platform/include
+$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LAB32=1 -I$(CURDIR)/platform/include
 ifneq ($(LAB32_BOOT),0)
 $(OBJDIR)/qa_menu.o: PLATFORM_CPPFLAGS += -DRE4DC_LAB32_BOOT=$(LAB32_BOOT)
 endif

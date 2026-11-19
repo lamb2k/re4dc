@@ -960,7 +960,7 @@ struct LabKnob { const char* name; unsigned char max, boot; };
 const LabKnob kLab[LK_N] = {
     {"FXDEAD", 3, 0}, {"FXCUT", 7, 0}, {"QCAP", 8, 4}, {"SPAWNCAP", 255, 0}, {"UNLIVE", 1, 0}, {"FXROOMS", 3, 0},
     {"MAPW", 1, 0}, {"FXSKIP31", 1, 0}, {"FXDORM31", 1, 0}, {"PSMEMO", 1, 0}, {"PSGATE", 1, 0}, {"CHARVIS", 2, 0},
-    {"SKELIK", 1, 0}, {"ROPE", 1, 0}, {"PREGATE", 1, 0}, {"PENSUB", 1, 0}, {"MOVCA", 1, 0}};
+    {"SKELIK", 1, 0}, {"ROPE", 1, 0}, {"PREGATE", 1, 0}, {"PENSUB", 1, 0}, {"MOVCA", 1, 0}, {"DRAW_MASK", 15, 0}, {"DELAY", 1, 0}};
 struct LabPreset { const char* name; unsigned char v[LK_N]; int leon; };
 //                              DEAD CUT QCAP SPWN UNLV ROOM MAPW SK31 DM31 PSMM PSGT CVIS SKIK ROPE PREG PENS MOVC
 const LabPreset kPre[] = {
@@ -977,6 +977,13 @@ const LabPreset kPre[] = {
     {"movca",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
     {"leon2",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 2},   // LEON_LOD 2 (BODY) alone
     {"leon3",    {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 3},   // LEON_LOD 3 (ALL) alone
+    {"aa", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
+    {"noworld", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0}, 0},
+    {"nochars", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0}, 0},
+    {"nofx", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0}, 0},
+    {"nohud", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0}, 0},
+    {"nodraw", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0}, 0},
+    {"delay10", {0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
 };
 int lab_leon = 0;
 #if defined(RE4DC_LAB32_BOOT) && RE4DC_LAB32_BOOT
@@ -1002,7 +1009,7 @@ void lab_command(const char* id, char* rest) {
     char* s2 = nullptr;
     char* a = rest ? strtok_r(rest, " ", &s2) : nullptr;
     char* b = a ? strtok_r(nullptr, " ", &s2) : nullptr;
-    char txt[200];
+    char txt[288];
     if (!a) { lab_text(txt, sizeof(txt)); link_reply(id, true, "KNOBS %s", txt); return; }
     if (word_is(a, "PRESET")) {
         for (const LabPreset& p : kPre) if (b && !strcasecmp(p.name, b)) {
@@ -1015,7 +1022,7 @@ void lab_command(const char* id, char* rest) {
             link_reply(id, true, "KNOB PRESET %s: %s (room-entry knobs apply at the next teleport)", p.name, txt);
             return;
         }
-        link_reply(id, false, "KNOB PRESET control|fix4|all31|fxcut3|r10b|spawn4|spawn8|charvis2|ps31|castle|movca|leon2|leon3");
+        link_reply(id, false, "unknown KNOB PRESET: %s", b ? b : "(missing)");
         return;
     }
     if (word_is(a, "LEON_LOD")) {
@@ -1660,6 +1667,23 @@ int link_command(char* line, bool in_menu) {
     if (word_is(cmd, "PCS")) { pcs_command(id, rest); return LA_NONE; }
 #endif
 #if defined(RE4DC_LAB32) && RE4DC_LAB32
+    if (word_is(cmd, "LABPOS")) {
+        char text[160];
+        drive_row(text,sizeof(text));
+        link_reply(id,true,"%s",text);
+        return LA_NONE;
+    }
+    if (word_is(cmd, "INTERVAL")) {
+        bool start = rest && word_is(rest, "START");
+        if (!start && !(rest && word_is(rest, "READ"))) {
+            link_reply(id,false,"INTERVAL START|READ");
+        } else {
+            char text[240];
+            re4dc_lab_window(text,sizeof(text),start);
+            link_reply(id,true,"%s",text);
+        }
+        return LA_NONE;
+    }
     if (word_is(cmd, "KNOB") || word_is(cmd, "KNOBS")) { lab_command(id, rest); return LA_NONE; }
 #endif
     if (word_is(cmd, "RECORD")) {

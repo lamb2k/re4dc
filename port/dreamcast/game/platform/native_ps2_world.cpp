@@ -1,3 +1,6 @@
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+#include "lab32.h"
+#endif
 #include "include/movie_world_arena.h"
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
 #include "include/ps2_source_world.h"
@@ -758,6 +761,9 @@ static inline bool chapter_end_held(unsigned room){
 }
 #endif
 extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float far){
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabWorld, 1);
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
 #endif
@@ -861,6 +867,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 // PS2_WORLD_ROOMS=2, an image the coarse path does not draw (native_static.cpp re4dc_ps2_mesh_source, camera
 // already set): pass 0 now; re4dc_ps2_world_flush draws PT / TR as for a coarse image.
 extern "C" int re4dc_ps2_world_source_draw(){
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabWorld, 1);
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldOpaque);
 #endif
@@ -922,6 +931,9 @@ extern "C" int re4dc_ps2_world_pending(){
     return state.pending && state.frame==re4dc_ui_frame() && state.flushed!=state.frame;
 }
 extern "C" void re4dc_ps2_world_flush(){
+#if defined(RE4DC_LAB32) && RE4DC_LAB32
+    LAB_PHASE(LabWorld, );
+#endif
 #if defined(RE4DC_DRAW_SETUP_AUDIT) && RE4DC_DRAW_SETUP_AUDIT
     const re4dc::dsa24::Scope dsa_world(re4dc::dsa24::WorldTranslucent);
 #endif
