@@ -2,14 +2,14 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 15:30):** plan version 2 waits on the owner (H-006). Bench round 3 handed back far over budget; lane eng-e0 (Opus) took it over. M0 lab disc ready, waits for the SD card.
+**State (2026-11-19 17:15):** E0 bench round done on Opus and merged; Codex audit running. Next step for E0 is the console. Plan version 2 waits on the owner (H-006). M0 lab disc and the E0 bench disc both wait for the SD card.
 
 ## Milestones
 
 | # | Slice | State | Console run |
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
-| E0 | Walkabout and the drawing row (budget 14 ms console, 7 ms MODELLED entry) | Bench round 3 (Codex, lane/eng-bench 68510dd38), everything computed at runtime: cross 45.8 ms mean / 54.3 worst, hay-fork 100.5 / 118.4, MODELLED. Causes in its own profile: libm min/max in hot loops (10.9 and 38.3 ms), characters off the SH-4 kernels (14.0 and 40.7 ms), parts skinned then rejected, 13,000+ cycles per world meshlet, repeated work. RAM 9.9 MiB of 16 for a whole room. Now: eng-e0 | Not run |
+| E0 | Walkabout and the drawing row (budget 14 ms console, 7 ms MODELLED entry) | eng-e0 (Opus, renderer e28d7f2c2, merged): all drawing work at run time, MODELLED 25 pictures: cross 14.2 mean / 19.6 worst (was 45.4), hay-fork 16.1 / 18.4 (was 99.7). Flycast 600 pictures: 11.2 / 15.8 and 12.9 / 16.6. Not at the 7 ms entry line; the round rule says console next. Baked visibility conservative on 300 of 300 pictures. Disc: E:\RE4DC-Lanes\eng-e0uild\E0-GDEMU-e0fin. Open: hair, HUD mask, ammunition readout; visibility table only covers the recorded route. Codex audit: AUDIT-E0.md pending | Waits for SD card |
 | E1 | Leon on the engine, behaviour hosted through setters, no publication layer | Groundwork done: SHELL_MAP.md merged (measured budget rows, boundary, memory map, E1 link closure 22 files / 104 KB code, 175 engine entry points, order and risks) | Not run |
 | E2 | Fight: four Ganados on native services | Not started | Not run |
 | E3 | Chapter 1 end to end, lake boss, first engine release | Not started | Not run |
@@ -33,7 +33,8 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-e0 | E0: build settings, characters on SH-4 kernels, meshlet clip classes, change flags, baked visibility, two survey arms, look fixes | lane/eng-e0 from lane/eng-bench 68510dd38 | Claude Opus | E:\RE4DC-Lanes\eng-e0 |
+
+Closed: eng-e0 (Opus), handed back 11-19, merged. Survey arms MODELLED (cross / hay-fork): default 13.9 / 15.9; cache-RAM staging 14.2 / 16.1; three short loops in C 15.4 / 18.5. Both arms are boot options on the disc for the console to judge.
 
 Closed: eng-shell-map (Opus), handed back 11-19, merged (lane commit 673a891e9). Console budget rows at the cross, ms a picture: behaviour 1.6, services 15.5, publication 16.3, drawing 17.8, system 3.9. Open: heap census run for the behaviour arena size; worst interval per row.
 
