@@ -35,7 +35,9 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 |---|---|---|---|---|
 | eng-e1 | E1 first slice: Leon on the engine in the village | lane/eng-e1 | Claude Opus | E:\RE4DC-Lanes\eng-e1 |
 | eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
-| eng-host | PC-only: PC build of the player code and the plays-right tool | lane/eng-host | Claude Opus | E:\RE4DC-Lanes\eng-host |
+| eng-host2 | PC-only: extend the plays-right reference to Ashley (partner) and one Ganado | lane/eng-host2 | Claude Opus | E:\RE4DC-Lanes\eng-host2 |
+
+Closed: eng-host (Opus, PC-only), handed back 11-19, merged (41c045240). re4ref: PC build of the 20-file player and camera closure; plays_right.py with tolerances and three failing controls (walk speed +2%, one generator call dropped, input one tick late: all fail as they must). Agreement with the old game's door103 walk: 323 ticks within tolerance, discrete fields exact, position bit-identical on 272 ticks. Found a real bug: cAtariInfo::init declared with float arguments first. Doc: PLAYS_RIGHT.md.
 
 Closed: eng-loop (Opus, PC-only), handed back 11-19, merged (907bb1a24). Remote console loader over the DreamPi link: 16/16 host tests through a simulated bad line (loss, corruption, reorder, dead line, sender restart); corrupted or wrong-hash images refused before RUN. Measured uplink 1.36 KB/s; downlink never measured. Estimates at that rate: E0 bench 2.2 min deflated, game image 24 min, room packs 42 min (packs stay on disc). Disc E:\RE4DC-Lanes\eng-loop\disc (KEEP, SD-README). Next: Flycast proof run (queued for the next free emulator slot), then the owner adds it to the SD card once.
 
