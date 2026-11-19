@@ -76,9 +76,18 @@ static uint32_t motion_id(cModel* m)
         return 0x20000000 | (uint32_t) (d - (const uint8_t*) pG->pWep);
     return 0xF0000000;
 }
+// The trace lines go to a RAM buffer during the run (no serial time inside the pictures) and are printed with the
+// report; with the NOTRACE boot option they are not formatted at all.
+static char trace_buf[192 * 1024];
+static unsigned trace_len;
+void e1_trace_flush()
+{
+    fwrite(trace_buf, 1, trace_len, stdout);
+    trace_len = 0;
+}
 void e1_trace_tick(unsigned tick)
 {
-    static int notrace = -1;   // NOTRACE boot option: timing runs print no per-tick line (serial printing is slow)
+    static int notrace = -1;
     if (notrace < 0) { file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f); }
     if (notrace) return;
     cPlayer* p = pPL;
@@ -88,7 +97,8 @@ void e1_trace_tick(unsigned tick)
     Fnv ps, pf, pm, cam;
     model_state(ps, pf, pm, p);
     cam.words(&pG->Cam.param, 32);
-    printf("LT t=%u r=%04x d=%u p=%08lx,%08lx,%08lx a=%08lx,%08lx,%08lx m=%08lx/%x st=%08lx mi=%08lx k=%08lx ps=%08x pf=%08x pm=%08x c=%08x\n", tick,
+    if (trace_len + 256 > sizeof(trace_buf)) e1_trace_flush();
+    trace_len += snprintf(trace_buf + trace_len, sizeof(trace_buf) - trace_len, "LT t=%u r=%04x d=%u p=%08lx,%08lx,%08lx a=%08lx,%08lx,%08lx m=%08lx/%x st=%08lx mi=%08lx k=%08lx ps=%08x pf=%08x pm=%08x c=%08x\n", tick,
            e1_rnd_state(), draws, (unsigned long) bits(p->pos.x), (unsigned long) bits(p->pos.y), (unsigned long) bits(p->pos.z),
            (unsigned long) bits(p->ang.x), (unsigned long) bits(p->ang.y), (unsigned long) bits(p->ang.z),
            (unsigned long) bits(p->Motion.Mot_frame), (unsigned) p->Motion.Mot_state, (unsigned long) p->stat,
@@ -113,6 +123,7 @@ void e1_pace_end(E1Timing& tm)
 
 void e1_report()
 {
+    e1_trace_flush();
     e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
     e1_stub_report();
     e1_prof_report();
@@ -125,10 +136,10 @@ void e1_report()
     unsigned n = e1_state[2] < E1_TICKS ? e1_state[2] : E1_TICKS;
     for (unsigned i = 0; i < n; i++) {
         const E1Timing& t = e1_timing[i];
-        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu\n", i + 1,
+        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu\n", i + 1,
                (unsigned long) t.input_us, (unsigned long) t.tick_us, (unsigned long) t.services_us, (unsigned long) t.trace_us,
                (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields,
-               (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us);
+               (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us, (unsigned long) t.pvr_us);
     }
     e1_log("E1 END\n");
 }

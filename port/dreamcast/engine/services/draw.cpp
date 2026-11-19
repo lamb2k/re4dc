@@ -49,5 +49,5 @@ void e1_draw_picture(E1Timing& tm)
     uint32_t wait = 0, draw = 0;
     e1_draw_picture_c(cam, hud, pPL, identity, &wait, &draw);
     tm.draw_us = draw;
-    tm.wait_us = wait;
+    tm.pvr_us = wait;   // PVR readiness wait (the graphics chip, not CPU work)
 }
