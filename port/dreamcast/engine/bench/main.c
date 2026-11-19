@@ -126,7 +126,9 @@ static void calibrate(void){
 }
 
 /* ---- per-window report ---- */
-static void line(uint16_t* fb,unsigned row,const char* s){bfont_draw_str(fb+640*(8+26*row)+8,640,1,s);}
+/* 18 rows of 26 pixels from y = 8: the last ends at y = 474, inside the 480-line frame buffer (text drawn past
+   its end lands in the texture memory that follows it). */
+static void line(uint16_t* fb,unsigned row,const char* s){if(row<18)bfont_draw_str(fb+640*(8+26*row)+8,640,1,s);}
 static void report(unsigned w,unsigned n_flips){
     volatile uint32_t* out=m1_windows[w];const Window* sw=schedule+w;
     uint64_t sum=0,wait=0,ev0=0;unsigned over14=0,over33=0,worst=0,wi=0,over2=0,wf=0,wfi=0,mask=0;
@@ -156,13 +158,13 @@ static void report(unsigned w,unsigned n_flips){
     uint16_t* fb=(uint16_t*)(0xa5000000u+((*(volatile uint32_t*)0xa05f8050)&0x7ffffc));
     char s[64];
     snprintf(s,sizeof(s),"E0 bench  window %u/%lu  ms, 600 pictures",w+1,(unsigned long)m1_schedule_n);line(fb,0,s);
-    for(unsigned k=0;k<=w && k<16;k++){
+    for(unsigned k=(w>15?w-15:0);k<=w;k++){
         const volatile uint32_t* v=m1_windows[k];
         snprintf(s,sizeof(s),"%c%c%s m%.2f p%.2f w%.2f@%lu/%lu %lu|%lu f%lu",names[v[0]][0],arms[v[1]],v[2]&1?"n":v[2]&2?"d":v[2]&4?"h":" ",
                  v[4]/1000.,v[5]/1000.,v[6]/1000.,(unsigned long)v[7],(unsigned long)v[8],(unsigned long)v[9],(unsigned long)v[10],(unsigned long)v[13]);
-        line(fb,1+k,s);
+        line(fb,1+k-(w>15?w-15:0),s);
     }
-    line(fb,18,"m mean p p99 w worst@pic/lap >14|>33.3 f >2 fields");
+    line(fb,17,"m mean p p99 w worst@pic/lap >14|>33.3 f >2 fields");
     thd_sleep(1500);
 }
 

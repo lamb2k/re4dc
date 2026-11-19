@@ -16,7 +16,8 @@
    For each baked cell, sample eyes on a 3 x 3 grid that includes the cell's edges, at the band's bottom,
    middle and top (27 eyes), render six 90-degree depth faces of the opaque world from each, and mark a query
    hidden only when no eye sees any of it: world cluster instances (placement x cluster, by their world box) and
-   2 m actor cubes. Actor cubes exist only where actors can stand: reachable columns, from CUBE_BELOW under
+   2 m actor cubes. Actor cubes exist only where actors can stand: columns with a floor (reachable on foot or
+   not: the barn interior holds props the camera never reaches), from CUBE_BELOW under
    the lowest floor to CUBE_ABOVE over the highest surface (roof tops: birds). The table stores one bit per
    column: hidden when every cube of the column is hidden (an actor is skipped when every column its box touches
    is hidden and its box stays inside those columns' cube range; anything else keeps it visible). Queries are dilated by MARGIN and pass on depth ties, so the table errs toward visible.
@@ -478,7 +479,7 @@ int main(int argc,char** argv){
         float x0=rlo[0]+x*ACUBE,z0=rlo[2]+z*ACUBE;
         int cx0=(int)floorf((x0-org[0])/CELL),cx1=(int)floorf((x0+ACUBE-1-org[0])/CELL),cz0=(int)floorf((z0-org[1])/CELL),cz1=(int)floorf((z0+ACUBE-1-org[1])/CELL);
         for(int b=cz0;b<=cz1;b++)for(int a=cx0;a<=cx1;a++){if(a<0||b<0||a>=nx||b>=nz)continue;const CamCell* o=cc+b*nx+a;
-            if(o->reach){lo=fminf(lo,o->fmin);hi=fmaxf(hi,o->top);}}
+            if(o->core){lo=fminf(lo,o->fmin);hi=fmaxf(hi,o->top);}}   /* any floor: actors stand where cameras cannot walk (the barn) */
         unsigned c=z*adim[0]+x;
         if(lo>hi)continue;
         int y0=(int)floorf((lo-CUBE_BELOW-rlo[1])/ACUBE),y1=(int)floorf((hi+CUBE_ABOVE-rlo[1])/ACUBE);
