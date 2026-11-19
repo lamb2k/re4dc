@@ -24,7 +24,7 @@ typedef struct {
 extern unsigned re4dc_avk_pos_skin_u16(const PositionPass*);
 _Static_assert(sizeof(PositionPass)==72,"AVK ABI");
 
-typedef struct {uint16_t bone,pad;float c[3],r;} PartSphere;      /* raw position units, model space */
+#include "part_cull.h"
 typedef struct {
     const NativePart* src;
     uint16_t pos_first,pos_count,nrm_first,nrm_count;
@@ -73,16 +73,7 @@ static float column_scale(const float* m){
     float a=m[0]*m[0]+m[4]*m[4]+m[8]*m[8],b=m[1]*m[1]+m[5]*m[5]+m[9]*m[9],c=m[2]*m[2]+m[6]*m[6]+m[10]*m[10];
     return sqrtf(m1_maxf(a,m1_maxf(b,c)));
 }
-/* Bitmask of frustum planes the sphere lies wholly outside; *inside cleared unless it lies wholly inside all. */
-static inline unsigned sphere_planes(const float* c,float r,int* inside){
-    unsigned out=0;
-    for(unsigned j=0;j<6;j++){
-        float d=frustum[j][0]*c[0]+frustum[j][1]*c[1]+frustum[j][2]*c[2]+frustum[j][3];
-        if(d<-r)out|=1u<<j;
-        if(d<r)*inside=0;
-    }
-    return out;
-}
+static inline unsigned sphere_planes(const float* c,float r,int* inside){return sphere_planes6((const float (*)[4])frustum,c,r,inside);}
 static unsigned model_lights(const NativeScene* s,const ActorPose* pose,Incident* lamps){
     unsigned used=0;float strength[3]={};
     const NativeLamp* source=(const void*)s->state[2];
@@ -398,15 +389,10 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         /* 3. parts */
         unsigned visible=0;
         for(unsigned p=0;p<h[4];p++){
-            const RtPart* rp=m->parts+p;unsigned out=63;int inside=1;
-            for(unsigned k=0;k<rp->sphere_count && out;k++){
-                const PartSphere* sp=m->spheres+rp->sphere_first+k;const float* r=bone_rows[sp->bone];
-                float c[3];
-                for(unsigned a=0;a<3;a++)c[a]=r[4*a]*sp->c[0]+r[4*a+1]*sp->c[1]+r[4*a+2]*sp->c[2]+r[4*a+3];
-                out&=sphere_planes(c,sp->r*bone_scale[sp->bone],&inside);
-            }
-            state[p]=out?0:inside?1:2;visible+=!out;
-            if(out)census[1]++;
+            const RtPart* rp=m->parts+p;
+            unsigned st=part_class((const float (*)[4])frustum,m->spheres+rp->sphere_first,rp->sphere_count,(const float (*)[12])bone_rows,bone_scale);
+            state[p]=st;visible+=st!=0;
+            if(!st)census[1]++;
         }
         if(!visible)continue;
         /* 4. weight sets used by visible parts */
