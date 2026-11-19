@@ -118,8 +118,13 @@ static inline Corner transform(const Vertex* v,const Light* light){
     return (Corner){q.x,q.y,q.w,v->u,v->v,light?shade(v,light):v->color};
 }
 #endif
+/* Store-queue burst of the 32 bytes just written. The asm names those bytes as its input instead of clobbering all
+   memory (KOS sq_flush), so the compiler keeps pointers and loop state in registers across corners. */
+typedef struct { uint32_t w[8]; } SqLine;
 static inline void advance(pvr_vertex_t **sq){
-    sq_flush(*sq);*sq=(pvr_vertex_t*)((uintptr_t)*sq^32);
+    pvr_vertex_t* p=*sq;
+    __asm__ __volatile__("pref @%1"::"m"(*(const SqLine*)p),"r"(p));
+    *sq=(pvr_vertex_t*)((uintptr_t)p^32);
 }
 static inline void emit(pvr_vertex_t **sq,Corner v,int end){
     pvr_vertex_t *dst=*sq;float iw=m1_rcp_pos(v.w);

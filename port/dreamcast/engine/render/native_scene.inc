@@ -91,7 +91,7 @@ static int valid_inputs(NativeScene* s){
 }
 void native_close(NativeScene* s){
     for(unsigned k=0;k<8;k++)free(s->state[k]);
-    native_actor_close(s);
+    native_actor_close(s);native_world_free(&s->world);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
 int native_open(NativeScene* s,const char* name){
@@ -124,6 +124,7 @@ int native_open(NativeScene* s,const char* name){
     unsigned ids[]={0,1,3};
     for(unsigned i=0;i<3;i++)if(!table(assets[i],row(&root,ids[i]),bytes(&root,ids[i])))return 0;
     if(!native_world_open(&s->world,row(&root,2),bytes(&root,2))||s->frames.n!=300)return 0;
+    if(!native_world_runtime(&s->world))return 0;
     for(unsigned i=0;i<((const unsigned*)s->world.mesh)[5];i++)
         if(s->world.materials[i].header>=s->assets.header.n||s->world.materials[i].phase>=3)return 0;
     m1_load_status[0]=4;

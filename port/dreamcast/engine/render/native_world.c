@@ -1,9 +1,12 @@
 #include "native_world.h"
 #include <math.h>
 #include <string.h>
-static uint32_t u32(const void* p){uint32_t x;memcpy(&x,p,4);return x;}
-static uint16_t u16(const void* p){uint16_t x;memcpy(&x,p,2);return x;}
-static float f32(const void* p){float x;memcpy(&x,p,4);return x;}
+#include <stdlib.h>
+/* The pack is 32-byte aligned and every R4IM / R4SG field is naturally aligned (strides 68, 36, 28, 20, 16, 12, 8):
+   direct loads. (memcpy-based reads became a libc call per field, 10,000 a picture.) */
+static inline uint32_t u32(const void* p){return *(const uint32_t*)p;}
+static inline uint16_t u16(const void* p){return *(const uint16_t*)p;}
+static inline float f32(const void* p){return *(const float*)p;}
 static int range(unsigned off,unsigned count,unsigned stride,unsigned size){
     return off<=size && count<=(size-off)/stride;
 }
@@ -58,21 +61,32 @@ static void compose(NativeFrustum* out,const NativeFrustum* in,const float* m){
     for(unsigned p=0;p<6;p++)for(unsigned j=0;j<4;j++)
         out->p[p][j]=in->p[p][0]*m[j]+in->p[p][1]*m[j+4]+in->p[p][2]*m[j+8]+(j==3?in->p[p][3]:0);
 }
-static int classify(const NativeFrustum* f,const float* c,const float* h,float* nearest){
-    int cls=1;
-    for(unsigned i=0;i<6;i++){
+/* Box against the planes in 'in'; returns 0 when outside one of them, else stores in *mask the planes the box
+   straddles. Children of a box test only the planes their parent straddled. Plane 0 (near) always gives the
+   box's nearest distance for the level choice. */
+static inline int box_test(const NativeFrustum* f,unsigned in,const float* c,const float* h,unsigned* mask,float* nearest){
+    unsigned m=0;
+    {
+        const float* p=f->p[0];
+        float s=p[0]*c[0]+p[1]*c[1]+p[2]*c[2]+p[3];
+        float r=fabsf(p[0])*h[0]+fabsf(p[1])*h[1]+fabsf(p[2])*h[2];
+        *nearest=s-r;
+        if(in&1){if(s+r<0)return 0;if(s<r)m=1;}
+    }
+    for(unsigned i=1;i<6;i++){
+        if(!(in&(1u<<i)))continue;
         const float* p=f->p[i];
         float s=p[0]*c[0]+p[1]*c[1]+p[2]*c[2]+p[3];
         float r=fabsf(p[0])*h[0]+fabsf(p[1])*h[1]+fabsf(p[2])*h[2];
         if(s+r<0)return 0;
-        if(i==0){*nearest=s-r;if(s<r)cls=2;}
+        if(s<r)m|=1u<<i;
     }
-    return cls;
+    *mask=m;return 1;
 }
-static int grid_class(const NativeFrustum* f,const uint8_t* r,float* nearest){
+static inline int grid_test(const NativeFrustum* f,unsigned in,const uint8_t* r,unsigned* mask,float* nearest){
     float c[3],h[3];
     for(unsigned i=0;i<3;i++){float a=u16(r+2*i),b=u16(r+6+2*i);c[i]=(a+b)*.5f;h[i]=(b-a)*.5f;}
-    return classify(f,c,h,nearest);
+    return box_test(f,in,c,h,mask,nearest);
 }
 void native_world_frustum(const float* camera,NativeFrustum* world){
     const float* p=camera+12;
@@ -80,19 +94,108 @@ void native_world_frustum(const float* camera,NativeFrustum* world){
     NativeFrustum view={{{0,0,-1,-near},{0,0,1,far},{p[1],0,p[2]-1,0},{-p[1],0,-p[2]-1,0},{0,p[3],p[4]-1,0},{0,-p[3],-p[4]-1,0}}};
     compose(world,&view,camera);
 }
+/* Load-time layout for the draw: per meshlet, each strip group gets its own contiguous vertex range (vertices
+   shared between groups are listed once per group), so a picture stages only the selected groups' vertices, once
+   each. Strip indices are rewritten in place to the new order. A meshlet whose grouped list would pass 255
+   keeps its order and stages whole. */
+int native_world_runtime(NativeWorld* w){
+    const uint8_t* m=w->mesh;unsigned nm=u32(m+24);
+    unsigned G=w->group_bytes?u32(w->groups+12):1;
+    w->group_count=G;
+    w->rt=calloc(nm,sizeof(NativeMeshletRt));w->rt_range=malloc(2*nm*G+2);
+    if(!w->rt||!w->rt_range)return 0;
+    unsigned total=0,dup=0,full=0;
+    static int16_t map[256];
+    for(int pass=0;pass<2;pass++){
+        unsigned at=0;
+        for(unsigned l=0;l<nm;l++){
+            const uint8_t* info=m+u32(m+48)+28*l;
+            unsigned start=u32(info+4),span=u32(info+8),verts=u16(info+12);int indexed=u16(info+14)&32768;
+            uint8_t* strip=(uint8_t*)(m+u32(m+56)+start);const uint16_t* src=indexed?(const uint16_t*)strip:NULL;
+            if(indexed)strip+=2*verts;
+            NativeMeshletRt* rt=w->rt+l;uint8_t* range=w->rt_range+2*G*l;
+            unsigned n=0,before=0,nonempty=0;
+            for(unsigned g=0;g<G;g++){
+                unsigned after=w->group_bytes?u16(w->groups+32+16*(l*G+g)+12):span;
+                if(after>before)nonempty|=1u<<g;
+                for(unsigned i=0;i<256;i++)map[i]=-1;
+                unsigned first=n;
+                for(unsigned j=before;j<after;){unsigned len=strip[j++];
+                    for(unsigned k=0;k<len;k++,j++){unsigned v=strip[j];if(map[v]<0)map[v]=n++;}}
+                range[2*g]=first>255?255:first;range[2*g+1]=n-first>255?255:n-first;
+                before=after;
+            }
+            rt->nonempty=nonempty;
+            if(n>255){rt->full=1;n=verts;for(unsigned g=0;g<G;g++){range[2*g]=0;range[2*g+1]=verts;}}
+            rt->count=n;rt->remap=at;
+            if(pass){
+                if(rt->full){for(unsigned i=0;i<verts;i++)w->rt_remap[at+i]=src?src[i]:i;full++;}
+                else{
+                    before=0;
+                    for(unsigned g=0;g<G;g++){
+                        unsigned after=w->group_bytes?u16(w->groups+32+16*(l*G+g)+12):span;
+                        for(unsigned i=0;i<256;i++)map[i]=-1;
+                        unsigned next=range[2*g];
+                        for(unsigned j=before;j<after;){unsigned len=strip[j++];
+                            for(unsigned k=0;k<len;k++,j++){unsigned v=strip[j];
+                                if(map[v]<0){map[v]=next;w->rt_remap[at+next]=src?src[v]:v;next++;}
+                                strip[j]=map[v];}}
+                        before=after;
+                    }
+                    dup+=n-verts;
+                }
+            }
+            at+=n;
+        }
+        if(!pass){total=at;w->rt_remap=malloc(2*total+2);if(!w->rt_remap)return 0;}
+    }
+    /* Vertex colours in TA form per staged vertex (the material decides 4444 or 555), in staging order. */
+    w->rt_color=malloc(4*total+8);if(!w->rt_color)return 0;
+    uint8_t* flags=calloc(nm,1);if(!flags)return 0;
+    const uint8_t *meshes=m+u32(m+40),*plod=m+u32(m+88),*clusters=m+u32(m+92),*levels=m+u32(m+96);
+    unsigned conflicts=0;
+    for(unsigned part=0;part<u32(m+20);part++){
+        unsigned f=(w->materials[part].flags&1)|2;
+        unsigned a=u32(plod+8*part),b=a+u32(plod+8*part+4);
+        for(unsigned k=a;k<b;k++){
+            const uint8_t* cl=clusters+20*k;unsigned lev=u32(cl+12),last=lev+u32(cl+16);
+            for(;lev<last;lev++){unsigned l=u32(levels+12*lev),stop=l+u32(levels+12*lev+4);
+                for(;l<stop;l++){if(flags[l] && flags[l]!=f)conflicts++;flags[l]=f;}}
+        }
+    }
+    (void)meshes;
+    for(unsigned l=0;l<nm;l++){
+        const uint8_t* info=m+u32(m+48)+28*l;
+        const uint16_t* vertices=(const uint16_t*)(m+u32(m+52)+12*u32(info));
+        for(unsigned i=0;i<w->rt[l].count;i++)
+            w->rt_color[w->rt[l].remap+i]=world_color(vertices[6*w->rt_remap[w->rt[l].remap+i]+5],flags[l]&1);
+    }
+    free(flags);w->rt_flag_conflicts=conflicts;
+    {
+        uint16_t* v=(uint16_t*)(m+u32(m+52));unsigned n=u32(m+28);
+        for(unsigned i=0;i<n;i++,v+=6){v[0]^=0x8000;v[1]^=0x8000;v[2]^=0x8000;v[3]^=0x8000;v[4]^=0x8000;}
+        for(unsigned part=0;part<u32(m+20);part++){
+            float* uv=(float*)(m+u32(m+44)+36*part+20);
+            uv[0]+=32768.f*uv[2];uv[1]+=32768.f*uv[3];
+        }
+    }
+    w->rt_vertices=total;w->rt_duplicates=dup;w->rt_full=full;
+    return 1;
+}
+void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
 int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
     const float* p=camera+12;
     float near=p[6]/(p[5]-1);
     NativeFrustum world;native_world_frustum(camera,&world);
     const uint8_t* m=w->mesh;
     const uint8_t *meshes=m+u32(m+40),*plod=m+u32(m+88),*clusters=m+u32(m+92),*levels=m+u32(m+96),*meshlets=m+u32(m+48);
-    unsigned count=0;
+    unsigned count=0,G=w->group_count;
     for(unsigned i=0;i<w->cell_count;i++){
-        float z;const NativeCell* cell=w->cells+i;
-        if(!classify(&world,cell->center,cell->half,&z))continue;
+        float z;unsigned cm;const NativeCell* cell=w->cells+i;
+        if(!box_test(&world,63,cell->center,cell->half,&cm,&z))continue;
         for(unsigned j=cell->first;j<cell->first+cell->count;j++){
-            const NativePlacement* place=w->places+j;
-            if(place->sky||!classify(&world,place->center,place->half,&z))continue;
+            const NativePlacement* place=w->places+j;unsigned pm;
+            if(place->sky||!box_test(&world,cm,place->center,place->half,&pm,&z))continue;
             NativeFrustum local;compose(&local,&world,place->grid);
             const uint8_t* mesh=meshes+68*place->mesh;
             unsigned first=u32(mesh+12),end=first+u32(mesh+16);
@@ -100,29 +203,26 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
             for(unsigned part=first;part<end;part++){
                 const uint8_t* span=plod+8*part;
                 unsigned a=u32(span),b=a+u32(span+4);
+                unsigned header=w->materials[part].header;
                 for(unsigned k=a;k<b;k++){
-                    const uint8_t* cl=clusters+20*k;
-                    if(!grid_class(&local,cl,&z))continue;
+                    const uint8_t* cl=clusters+20*k;unsigned km;
+                    if(!grid_test(&local,pm,cl,&km,&z))continue;
                     unsigned lev=u32(cl+12),last=lev+u32(cl+16);
                     while(lev+1<last && f32(levels+12*(lev+1)+8)*lod<=z+near)++lev;
                     unsigned l=u32(levels+12*lev),stop=l+u32(levels+12*lev+4);
                     for(;l<stop;l++){
-                        int cls=grid_class(&local,meshlets+28*l+16,&z);
-                        if(!cls)continue;
+                        unsigned lm=0;
+                        if(km && !grid_test(&local,km,meshlets+28*l+16,&lm,&z))continue;
                         if(count>=capacity)return -1;
-                        unsigned mask=~0u;
-                        if(w->group_bytes){
-                            unsigned groups=u32(w->groups+12);mask=0;
-                            const uint8_t* group=w->groups+32+16*(l*groups);
-                            unsigned before=0;
-                            for(unsigned g=0;g<groups;g++,group+=16){
-                                unsigned after=u16(group+12);
-                                if(after>before && grid_class(&local,group,&z))mask|=1u<<g;
-                                before=after;
-                            }
+                        unsigned mask=w->rt[l].nonempty;
+                        if(lm && w->group_bytes){
+                            const uint8_t* group=w->groups+32+16*(l*G);unsigned keep=0;
+                            for(unsigned g=0;g<G;g++,group+=16){unsigned gm;
+                                if((mask>>g&1) && grid_test(&local,lm,group,&gm,&z))keep|=1u<<g;}
+                            mask=keep;
                             if(!mask)continue;
                         }
-                        out[count++]=(NativePiece){j,part,l,w->materials[part].header,cls,mask};
+                        out[count++]=(NativePiece){j,part,l,header,lm&1?2:1,mask};
                     }
                 }
             }
