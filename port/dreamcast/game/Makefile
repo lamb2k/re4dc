@@ -52,6 +52,11 @@ ifeq ($(M1_FRAME_CAPTURE),1)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_M1_FRAME_CAPTURE=1
 endif
 
+ifeq ($(M1_FRAME_CAPTURE),3)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_M1_LOGIC_CAPTURE=1
+$(OBJDIR)/src/game/main.o $(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/mv_shadow.o $(OBJDIR)/ui_bridge.o $(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_M1_LOGIC_CAPTURE=1
+endif
+
 # Diagnostic only: exact player life/damage/death callers. Default 0 changes no game code.
 # Keep this define on the three traced source units; no platform, overlay or recipe default change.
 DEATH_TRACE ?= 0

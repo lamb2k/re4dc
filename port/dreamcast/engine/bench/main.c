@@ -1,4 +1,7 @@
 #include "replay.h"
+#ifdef M1_NATIVE
+#include "native_scene.h"
+#endif
 #include <dc/perfctr.h>
 #include <dc/biosfont.h>
 #include <stdio.h>
@@ -55,19 +58,43 @@ int main(void){
     int stills=exists("/cd/STILLS"),delay=exists("/cd/DELAY5");m1_state[7]=delay;
     unsigned farm_first=exists("/cd/FARM1");
     for(unsigned pass=0;;pass++){
-        unsigned scene=(pass+farm_first)%2;Scene s={0};m1_state[0]=scene;m1_state[5]=2;
+        unsigned scene=(pass+farm_first)%2;
+#ifdef M1_NATIVE
+        NativeScene native={0};
+#else
+        Scene s={0};
+#endif
+        m1_state[0]=scene;m1_state[5]=2;
+        #ifdef M1_NATIVE
+        if(!native_open(&native,scene?"/cd/FARM.PAK":"/cd/CROSS.PAK")){printf("M1 native pack REFUSED\n");m1_state[5]=91;for(;;)thd_sleep(100);}
+#else
         if(!open_scene(&s,scene?"/cd/FARM.PAK":"/cd/CROSS.PAK")){m1_state[5]=91;for(;;)thd_sleep(100);}
+#endif
         m1_state[5]=3;
         for(unsigned i=0;i<600;i++){
             if(i%120==0){perf_cntr_stop(PRFC1);perf_cntr_clear(PRFC1);perf_cntr_start(PRFC1,(perf_cntr_event_t)events[i/120],PMCR_COUNT_CPU_CYCLES);}
-            m1_frame++;m1_state[1]=i+1;Picture pic;uint64_t begin=timer_us_gettime64();
+            m1_frame++;m1_state[1]=i+1;uint64_t begin=timer_us_gettime64();
             pvr_wait_ready();uint64_t now=timer_us_gettime64();timing[i][6]=now-begin;
-            open_picture(&s,i%300,&pic);pvr_scene_begin();
+#ifdef M1_NATIVE
+            native_update(&native,i%300);
+            const float* camera=(const float*)native.state[0];
+            if(!native_prepare_world(&native.world,camera,native.assets.header.n)){m1_state[5]=92;return 1;}
+#else
+            Picture pic;open_picture(&s,i%300,&pic);
+#endif
+            pvr_scene_begin();
             for(unsigned k=0;k<6;k++){
                 uint64_t t=timer_us_gettime64();
                 if(k==0||k==2||k==3)pvr_list_begin(k==0?PVR_LIST_OP_POLY:k==2?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY);
-                render_phase(&s,&pic,k);if(k==1||k==2||k==5)pvr_list_finish();
+#ifdef M1_NATIVE
+                if(k==0||k==2||k==3)native_world_pass(&native.assets,&native.world,camera,k==0?0:k-1);
+#else
+                render_phase(&s,&pic,k);
+#endif
+                if(k==1||k==2||k==5)pvr_list_finish();
+#ifndef M1_NATIVE
                 if(k==1)draw_shadows(&pic);
+#endif
                 timing[i][k]=timer_us_gettime64()-t;
             }
             if(delay){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<5000){}}
@@ -80,7 +107,12 @@ int main(void){
                 m1_state[2]=scene*600+i+1;while(m1_state[3]!=m1_state[2])thd_pass();
             }
         }
-        pvr_wait_ready();pvr_wait_render_done();summary(scene);m1_state[6]++;display(scene);close_scene(&s);
+        pvr_wait_ready();pvr_wait_render_done();summary(scene);m1_state[6]++;display(scene);
+#ifdef M1_NATIVE
+        native_close(&native);
+#else
+        close_scene(&s);
+#endif
     }
 }
 

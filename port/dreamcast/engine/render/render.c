@@ -260,3 +260,6 @@ void draw_shadows(const Picture *pic){
     }
     sq_wait();sq_unlock();pvr_list_finish();
 }
+#ifdef M1_NATIVE
+#include "native_draw.inc"
+#endif

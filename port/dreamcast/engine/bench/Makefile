@@ -10,3 +10,7 @@ $(OUT):
 $(OUT)/m1.elf: main.c ../../game/platform/avk_sh4.S ../render/render.c ../render/replay_pack.c ../render/replay.h ../render/indexed.inc | $(OUT)
 	kos-cc $(FLAGS) $(EXTRA) -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
 
+.PHONY: native
+native: $(OUT)/native.elf
+$(OUT)/native.elf: main.c ../render/render.c ../render/replay_pack.c ../render/native_world.c ../../game/platform/avk_sh4.S ../render/native_scene.inc ../render/native_draw.inc ../render/native_world.h ../render/native_scene.h | $(OUT)
+	kos-cc $(FLAGS) $(EXTRA) -DM1_NATIVE -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm

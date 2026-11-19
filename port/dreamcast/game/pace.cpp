@@ -724,6 +724,9 @@ extern "C" void re4dc_pace_begin(void)
     test_toggle(now);
 #endif
     const int vcnt = GetSystemVcnt();
+#if RE4DC_M1_LOGIC_CAPTURE
+    re4dc_pace_mode=PACE_OFF;
+#endif
     ok_now = vcnt == 2 && re4dc_pace_mode != PACE_OFF && context_ok();
     int skip = 0;
     if (!ok_now) {

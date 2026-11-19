@@ -1,3 +1,6 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../port/dreamcast/engine/bench/r3_capture.hpp"
+#endif
 #if defined(RE4DC_FALLBACK_AUDIT29) && RE4DC_FALLBACK_AUDIT29
 #include "fallback_audit29.h"
 #endif
@@ -274,6 +277,11 @@ static void systemScreenInit();
 // render set-up, TaskScheduler (game logic), id sprites, Trans (3D draw), DVD/sound watchers,
 // fades, messages, cinescope, the 2D OT, log flush, interrupt tasks, render done, vsync wait
 // (GetSystemVcnt frames), buffer swap and systemResetCheck (soft reset -> RESTART).
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "player.h"
+#include "../../port/dreamcast/engine/bench/r3_inputs.inc"
+#endif
+
 int main()
 {
     int i;
@@ -347,6 +355,9 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
 #endif
 #endif
 #line 131
+#if RE4DC_M1_LOGIC_CAPTURE
+            m1r3::begin(unsigned(pG->room_id),pG->Frame_cnt);
+#endif
             StopwatchInit();
             ProcessTickInit(); DSA24_SETUP_BEGIN()
             MWC("top");
@@ -366,6 +377,9 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
             OTHER_PHASE(0);
             TaskScheduler();
             OTHER_PHASE(4);
+#if RE4DC_M1_LOGIC_CAPTURE
+            if(m1r3::recording) m1r3_snapshot_inputs();
+#endif
             MWC("tasks");
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
             re4dc_vmu_snapshot();
@@ -444,6 +458,9 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
 #endif
             { WC24_WAIT() RE4DC_DOORSPIN(0); while (vsync_cnt < GetSystemVcnt() - 1) {} RE4DC_DOORSPIN(1); }
             Render_swap();
+#if RE4DC_M1_LOGIC_CAPTURE
+            m1r3::finish();
+#endif
             PPCSync();
 #if RE4DC_PACE_CATCHUP
             // The anchor clock (29.97 ticks/s) replaces the per-iteration wait while pacing.

@@ -1,3 +1,6 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../engine/bench/r3_capture.hpp"
+#endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
 #include "../../engine/bench/capture.hpp"
 namespace m1capture { extern "C" { Buffer m1_capture{}; } }
@@ -2837,6 +2840,15 @@ void stream_close(bool present) {
 
 #endif
     present_submit(present,ta_faults); // resolved by the presenter; fenced before reuse
+#if RE4DC_M1_LOGIC_CAPTURE
+    if(present && !stream_aborted){
+        m1r3::present();
+        if(m1r3::recording){
+            present_fence();
+            m1r3::m1r3_control.framebuffer=(unsigned)pvr_get_front_buffer();
+        }
+    }
+#endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
     if (captured) {
         present_fence();
@@ -11391,4 +11403,8 @@ extern "C" void m1_part_material(const Re4dcModelPart& p) {
 extern "C" void m1_texture_key(const Re4dcUiImage& image, unsigned* out) {
     Key k{}; image_key(image,k); out[0]=k.crc; out[1]=k.fnv;
 }
+#endif
+
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../engine/bench/r3_guest.inc"
 #endif

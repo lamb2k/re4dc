@@ -222,3 +222,6 @@ void close_scene(Scene* s){
 
 
 
+#ifdef M1_NATIVE
+#include "native_scene.inc"
+#endif

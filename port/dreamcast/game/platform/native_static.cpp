@@ -1,3 +1,6 @@
+#if RE4DC_M1_LOGIC_CAPTURE
+#include "../../engine/bench/r3_capture.hpp"
+#endif
 #if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
 #include "../../engine/bench/capture.hpp"
 #include <dc/pvr/pvr_regs.h>
@@ -8191,6 +8194,14 @@ static void note(unsigned pass,unsigned drawn_pass){
 }
 #endif
 int ps2_pass(unsigned pass,float zfar){
+#if RE4DC_M1_LOGIC_CAPTURE
+    if(pass==0 && m1r3::recording){
+        struct {float view[12],projection[7],viewport[6],far;} camera;
+        memcpy(camera.view,ps2w.view,48);memcpy(camera.projection,ps2w.projection,28);
+        memcpy(camera.viewport,ps2w.viewport,24);camera.far=zfar;
+        m1r3::append(m1r3::Camera,&camera,sizeof(camera));
+    }
+#endif
 #if RE4DC_WORLD_MUTATION31
     // A failed in-place reload can leave the old package object's pointers
     // intact until unpublication. Never enter a prepared or ordinary read.
