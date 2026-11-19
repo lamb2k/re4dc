@@ -94,7 +94,7 @@ end of chapter 2, Disc 1, `st1`) is the candidate; not verified. Generic hosting
 `pG->pl_type` (the actor-table constructor already switches on it), `ReadPlayerData` for her archive (0x22), her weapon
 set (none), the camera and HUD inputs per character, her collision volumes; the castle section itself is Disc 2.
 
-## 7. Staged disc
+## 7. Staged disc (commit 1d41500d6 code; boot 1ST_READ.BIN fa92b4a5...; disc.gdi 02551655..., track03.bin 57148cb5...)
 
 `E:\RE4DC-Lanes\eng-e1\build\E1-GDEMU-e1a` (KEEP, SHA256SUMS, SHA256SUMS.boot, disc_lint PASS). One boot: the route,
 then the report on serial (`LT` trace lines, `ROW` timing lines, `E1 SVC`, `E1 MEM`, stub counts).
