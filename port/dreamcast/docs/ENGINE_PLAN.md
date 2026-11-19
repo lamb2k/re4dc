@@ -153,7 +153,29 @@ Stop rules:
 1. Approve the milestones E0 to E4 and the budget rows in section 4.
 2. The content items in section 6 as a class, with the lowest step of each approved from still pairs.
 3. The SD card and one console evening for M0 and the bench disc.
+4. Hardware for an automatic console loop: do you have a Dreamcast broadband adapter or a serial cable, and a smart plug? If not, the loader can use the existing DreamPi link (slower: about 5 to 10 minutes per program).
 
-## 13. Open-source Dreamcast survey
+## 13. What open-source Dreamcast projects do that we do not (survey, 2026-11-19)
 
-Pending. A survey of open-source Dreamcast ports and engines is running; its findings on what we are missing are added here when it reports.
+Sources: the GTA III / Vice City ports (DCA3), Doom 64 and Wipeout for Dreamcast, the N64 decompilation ports, DMS-Engine, Simulant and GLdc, KallistiOS 2.1 to 2.2, SH4ZAM's own tips page, and the dreamcast.wiki hardware notes. Fps claims in those sources are their authors' own. Links are in `engine/SURVEY_20261119.md`.
+
+Checked against our build first:
+- **Data cache:** a KallistiOS bug (late 2023 to mid 2024) left programs with half the data cache. We are not affected: our KallistiOS is 2.2.2 and its cache default has the full 16 KB on.
+- **Already have:** store-queue submission, double-buffered vertex buffer, console performance counters, an on-console sampling profiler, compact vertices, offline conversion.
+
+| # | Gap | What the others do | Where it goes |
+|---|---|---|---|
+| 1 | **No automatic console loop** | One project power-cycles the console with a smart plug, uploads the new program over the network loader, and logs to a file. Program changes never need a card swap | Tooling lane, before E1. Needs the owner's hardware answer (section 12) |
+| 2 | **Vertex staging in cache RAM, sized right** | DCA3 freezes half the data cache as an 8 KB work area, runs each stage in place over a meshlet of at most 128 vertices, and submits from it. Our earlier trial (bigger pieces, old port) lost 8.2 ms on console | E0 arm on the bench, console decides |
+| 3 | **Small stage loops over small blocks** | Several small loops (positions, then lights, then UVs) over blocks of about 32 vertices, not one big per-vertex loop | E0 arm |
+| 4 | **Clip class per meshlet by bounding sphere** | Outside: skipped. Inside: a no-clip loop. Only boundary meshlets clip | E0 (partly built in round 3) |
+| 5 | **Compiler settings** | Size-optimised everywhere with speed-optimised hot files, link-time optimisation, fast math, no debug asserts. DCA3 was within 1 fps of full speed-optimised at nearly 1 MB less code. Watch for slow double-precision paths | Engine build from E0. Our old port had none of these |
+| 6 | **Store-queue waits counted apart from cache stalls** | A queue flush can wait up to 500 bus cycles when the chip is busy; interleave work between flushes | M0 session: add the counter events that separate the two |
+| 7 | **Stall counters per subsystem** | KallistiOS 2.2 scope probes count two chosen events per code block | Engine core from E0 |
+| 8 | **Memory hygiene rules** | 32-byte-aligned matrices; co-used data within 2 KB; no two hot buffers 16 KB apart (they evict each other) | Bake and engine tables |
+| 9 | **Compacting VRAM allocator** | Evict least used, defragment with a move callback, report largest free block | Engine core, E3 |
+| 10 | **Disc streaming by DMA** | KallistiOS 2.2 has interrupt-driven disc reads with a completion callback | Engine core, E3 |
+| 11 | **Lights in model space** | Move each light into model space once per draw, so normals are never transformed | E1 characters |
+| 12 | **Emulator as a rule checker** | Every hardware mistake found becomes an emulator assert; a PC build runs under memory checkers | E1 onward |
+
+Not found anywhere: a Dreamcast project that documents baked visibility, portals or occluders. Our baked visibility per cell (section 6) has no public model to copy; it is ours to build and prove.
