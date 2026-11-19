@@ -38,6 +38,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - A lane's own merge gate is the smallest set that proves its change: it builds, it boots, the benchmark does not get worse, and its own check passes and can fail.
 - Every check ships with an input that makes it fail.
 - A failing gate gets two distinct hypotheses tested. Then the blocker is written as a hand-over. No tolerance is loosened to pass.
+- That rule is for milestone and merge gates. A lane's own tools (capture, bake, checkers) are its work: keep building them until they work. Hand back early only for the brief's stop rule, a console need, or a blocker outside the lane's own files.
 - Byte identity with a previous build is not a gate on the engine line.
 
 ## 5. Audits and hand-overs
@@ -83,3 +84,4 @@ Hand back: table (scene, mean, p99, worst, over-budget count, tier), commit, ima
 | A cleanup deleted a harness folder another lane was using | Section 2, own folders only |
 | Reviewer estimates of 2 to 14 ms that the console did not confirm | Section 5, audit evidence, not ideas |
 | Rule files a month behind the owner's direction | Section 6, four-file boot set |
+| eng-bench handed back after two tries at its own capture tool, reading it as a gate (11-19) | Section 4, gate rule scope |
