@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19):** plan proposed, waiting on the owner. RE4 work is on hold. No lane is running. The `engine` branch does not exist yet.
+**State (2026-11-19):** plan approved by the owner. `engine` branch created. Lanes lab33 (M0) and eng-bench (M1) being briefed. M0 console session waits for the owner's SD card.
 
 ## Milestones
 

@@ -3,8 +3,7 @@
 Applies to every agent, Claude or Codex. Rewritten 2026-11-19. The earlier text is kept as history in
 `port/dreamcast/docs/history/AGENTS_TO_20261015.md` and is not instruction.
 
-**State:** the engine plan is a proposal waiting on the owner, and RE4 work is on hold. Do not start a lane until
-`port/dreamcast/docs/engine/STATUS.md` says the plan is approved.
+**State:** the owner approved the engine plan on 2026-11-19. Lanes start only from a brief written by the integrator.
 
 ## Outside contributors start here
 
@@ -39,6 +38,7 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 - **Console decides.** Every number is labelled console, MODELLED, Flycast or estimate. Before a console number exists, a modelled or emulator figure counts only if it fits in half the budget.
 - **Judge the whole picture** on the fixed benchmark: mean, p99, worst interval, count over 33.3 ms. A gain that does not show there does not merge.
 - **First remove repeated work, fix data layout, batch, and convert offline.** Add SH-4 assembly only where the console profile shows the cost and a simpler fix is not enough. Write down why.
+- **SH4ZAM is the math and kernel base** (owner 2026-11-19: "the engine needs to leverage sh4zam or improve upon it if there are shortcomings"). Build kernels on it. Where it falls short, improve it in SH4ZAM's own style and offer the change upstream; posting to `gyrovorbis/sh4zam` needs the owner's OK.
 - **A change merges switched on, or it does not merge.** No default-off speed switches on the engine line.
 - **The release line is frozen to hotfixes.** Do not tune the old drawing path. Do not add engine features to it as switches.
 

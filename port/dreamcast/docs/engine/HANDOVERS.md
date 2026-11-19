@@ -2,6 +2,14 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-002 (2026-11-19): plan approved
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** "get to work", then, asked to confirm, "Yes, all 10 as recommended". All ten recommended answers in H-001 stand.
+- **Added the same day:** "the engine needs to leverage sh4zam or improve upon it if there are shortcomings" (ENGINE_PLAN.md section 3, AGENTS.md).
+- **Console:** "Later, prepare it and wait". The lab disc is prepared; it goes on the SD card when the owner says the card is in.
+- **Next:** `engine` branch from this commit; lanes lab33 (M0) and eng-bench (M1).
+
 ## H-001 (2026-11-19): plan proposed, owner decisions needed
 
 - **From:** Claude (self-assessment session). **To:** the owner.

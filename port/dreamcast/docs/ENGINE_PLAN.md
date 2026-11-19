@@ -1,7 +1,7 @@
 # RE4 Dreamcast engine plan (2026-11-19)
 
-Status: **proposal, waiting on the owner.** No lane starts until the owner approves it.
-This plan replaces the performance sections of older plan documents once approved. The release line and its rules stay as they are.
+Status: **approved by the owner on 2026-11-19** ("get to work", then confirmed: "Yes, all 10 as recommended", for the ten decisions in hand-over H-001). SH4ZAM rule added the same day.
+This plan replaces the performance sections of older plan documents. The release line and its rules stay as they are.
 
 Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC hardware model), **Flycast**, or **estimate**.
 
@@ -42,6 +42,13 @@ Keep the original game logic. Replace the drawing path. Prove it outside the gam
 | **Logic** | SH-4, original code | Unchanged behaviour. Each tick it emits a **frame list**: camera, visible cells, actors (model, level, bone matrices, lights), effect sprites, HUD items |
 | **Renderer** | SH-4, new, small | Runs the frame list one phase at a time: world, characters, punch-through, translucent and effects, HUD. Each phase is one tight loop: cull, transform and light, clip class, straight to the chip through the store queues. One pass per vertex. Validation happens at load, room entry and owner change, not per tick |
 | **Pacer and governor** | SH-4 | One logic tick a picture. A frame-time governor steps detail down and back up to hold the floor |
+
+**Math and kernels: SH4ZAM** (owner 2026-11-19: "the engine needs to leverage sh4zam or improve upon it if there are shortcomings").
+- Every engine kernel (transform, skin, light, clip class, matrix stack, vector and trig math) is built on SH4ZAM (`gyrovorbis/sh4zam`). The engine does not grow a second math library.
+- The port pins SH4ZAM 33fa485 (2026-10-15). Upstream is 54 commits ahead (cff97e8, 2026-11-18). The engine line moves to current upstream first, then pins it.
+- Where SH4ZAM falls short of what the engine needs (a missing primitive, a slower path on console, a precision gap), the engine improves it in SH4ZAM's own style, naming, header layout, tests and benchmarks. Each improvement is a candidate upstream pull request; posting one to `gyrovorbis/sh4zam` needs the owner's OK.
+- Console facts to start from: SH4ZAM arms ran 1.25 to 1.32 times their MODELLED time on console against 1.10 for plain C (enemy demo, 10-19); per-triangle back-face culling with SH4ZAM was slower on console (15.4 against 18.9 fps, 10-23). Both point at memory traffic around the math, which the engine's data layout must fix, not at SH4ZAM's arithmetic.
+- The port's existing SH4ZAM kernels (`sh4zam_skin.c`, `sh4zam_direct.c`, `sh4_approx.c`) are the starting point.
 
 Two images are built from the engine line:
 1. **Bench image.** The renderer plus a room pack plus recorded frame lists from the benchmark scenes. No game code. It boots in seconds, runs unattended over the QA link, and is the permanent console benchmark.
@@ -127,6 +134,9 @@ Full rules: [engine/LANES.md](engine/LANES.md).
 | 10-28 | "we need a better loop to not miss these things" | Nothing lands switched off |
 | 11-17 | Lab yes, 30 fps, governor OK, island in parallel | M0, the floor, M3 |
 | 11-17 | "lets put the re4 work on hold for now" | On hold until this plan is approved |
+| 11-19 | "get to work", then confirmed: "Yes, all 10 as recommended" | Plan approved; the recommended answers to all ten decisions in H-001 stand |
+| 11-19 | "the engine needs to leverage sh4zam or improve upon it if there are shortcomings" | SH4ZAM is the engine's math and kernel base |
+| 11-19 | Console session: "Later, prepare it and wait" | M0 lab disc is prepared; staging waits for the owner's SD card |
 
 ## 9. Sources
 
