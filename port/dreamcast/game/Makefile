@@ -48,6 +48,9 @@ SDK_UNITS = mtx mtxvec mtx44 vec quat OSAlloc
 SDK_GEN = $(addprefix platform/sdk/gen/,$(addsuffix .c,$(SDK_UNITS)))
 
 OBJDIR = obj
+ifeq ($(M1_FRAME_CAPTURE),1)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_M1_FRAME_CAPTURE=1
+endif
 
 # Diagnostic only: exact player life/damage/death callers. Default 0 changes no game code.
 # Keep this define on the three traced source units; no platform, overlay or recipe default change.

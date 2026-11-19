@@ -1,3 +1,7 @@
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+#include "../../engine/bench/capture.hpp"
+namespace m1capture { extern "C" { Buffer m1_capture{}; } }
+#endif
 #if defined(RE4DC_NATIVE_DRAW_OUTCOMES) && RE4DC_NATIVE_DRAW_OUTCOMES
 #include "include/native_draw_result.hpp"
 #endif
@@ -2485,7 +2489,13 @@ unsigned pvs23_scene_epoch=0; // observation identity only; no renderer ownershi
 #if defined(RE4DC_BACKFACE_ROOMS) && RE4DC_BACKFACE_ROOMS
 extern "C" void re4dc_bf_room_update();   // native_static.cpp (BACKFACE_ROOMS, lane fix-hideout23)
 #endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+extern "C" unsigned re4dc_room_id_now();
+#endif
 void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    m1capture::begin(re4dc_room_id_now(), frame);
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH33) && RE4DC_STATIC_OBJ_BATCH33
     sob33_barrier(re4dc::sob33::SceneBoundary);
 #endif
@@ -2822,7 +2832,14 @@ void stream_close(bool present) {
     latch::put(present?'c':'d');latch::bump(latch::kC);
 #endif
 #if RE4DC_PVR_PIPELINE
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    const bool captured = m1capture::active && present && !stream_aborted;
+    m1capture::end(present && !stream_aborted);
+#endif
     present_submit(present,ta_faults); // resolved by the presenter; fenced before reuse
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+    if (captured) thd_sleep(80);
+#endif
 #else
     {
 #if RE4DC_PVR_FAST_WAKE
@@ -6922,6 +6939,9 @@ static void ui_draw_quad(unsigned i){
 #if RE4DC_NATIVE_MES
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);return;}
 #endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+        m1capture::append(m1capture::Hud, &quads[i], sizeof(quads[i]));
+#endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS
         // Stable HUD/UI elements: the header (texture binding, blend) is compiled
@@ -7028,6 +7048,9 @@ extern "C" void re4dc_ui_present(){
         if(!handles[i])continue;
 #if RE4DC_NATIVE_MES
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);continue;}
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+        m1capture::append(m1capture::Hud, &quads[i], sizeof(quads[i]));
 #endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS

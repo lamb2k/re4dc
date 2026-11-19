@@ -1,3 +1,6 @@
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+#include "../../engine/bench/capture.hpp"
+#endif
 #ifndef RE4DC_WORLD_PREPARED09
 #define RE4DC_WORLD_PREPARED09 0
 #endif
@@ -8648,6 +8651,24 @@ int ps2_pass(unsigned pass,float zfar){
             const int result=e.chunk_emit(cpk+x.first,x.count,next<npk?cpk+next:nullptr);
 #else
             const int result=e.chunk_emit(cpk+x.first,x.count);
+#endif
+#if defined(RE4DC_M1_FRAME_CAPTURE) && RE4DC_M1_FRAME_CAPTURE
+            if (m1capture::active && result > 0) {
+                if (!m1capture::camera_written) {
+                    m1capture::camera_written=true;
+                    struct Camera { float view[12], projection[7], viewport[6]; } camera;
+                    std::memcpy(camera.view, ps2w.view, sizeof(camera.view));
+                    std::memcpy(camera.projection, ps2w.projection, sizeof(camera.projection));
+                    std::memcpy(camera.viewport, ps2w.viewport, sizeof(camera.viewport));
+                    m1capture::append(m1capture::Camera, &camera, sizeof(camera));
+                }
+
+                struct WorldPart { unsigned part, pass, count; float mvq[12]; };
+                WorldPart record{x.index,pass,x.count,{}};
+                std::memcpy(record.mvq,x.mvq,sizeof(record.mvq));
+                m1capture::append(m1capture::World, &record, sizeof(record));
+                m1capture::append(m1capture::World, cpk+x.first, sizeof(*cpk)*x.count);
+            }
 #endif
             // PORTAL_COMPLETION_FLUSH_BEGIN
             e.end_direct();
