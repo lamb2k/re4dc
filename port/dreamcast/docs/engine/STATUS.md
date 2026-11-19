@@ -2,18 +2,18 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 13:00):** scope widened by the owner: all of the game in a native engine, original behaviour hosted on it (H-005). No work on the old path. M0 lab disc ready, waits for the SD card. eng-bench on its last model-only round. eng-shell-map started.
+**State (2026-11-19 14:00):** plan version 2 (the F-Zero X approach) written and waiting on the owner (H-006). Lanes run as Claude Opus agents; Codex audits. M0 lab disc ready, waits for the SD card.
 
 ## Milestones
 
 | # | Slice | State | Console run |
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
-| M1 | Bench: cross and worst farm view on the native drawing path | Round 2 audited (like for like about -18 to -30% cross, -22 to -28% hay-fork, MODELLED). Round 3 running under STEER-005: logic outputs in, all drawing work at runtime on SH4ZAM, whole-room compact bakes, judged on the absolute budget (10 ms MODELLED, 20 ms console). Last model-only round | Not run |
-| M2 | Engine shell: village and farm run on the engine, behaviour hosted | Groundwork: eng-shell-map (service boundary, memory map, M2 design) | Not run |
-| M3 | Native services round 1 (effects, skeleton, collision); fights hold the floor | Not started | Not run |
-| M4 | Disc 1 on the engine, bosses included | Not started | Not run |
-| M5 | The rest of the game on the engine (Disc 2 and 3) | Not started | Not run |
+| E0 | Walkabout: engine image, world from the whole-room bake, recorded camera path | eng-bench round 3 running (Codex session finishing its round; next round on Opus): whole-room bakes village 1.42 MB, farm 1.09 MB; logic-only capture works. Last model-only round | Not run |
+| E1 | Leon on the engine, behaviour hosted through setters, no publication layer | Groundwork: eng-shell-map (Opus): measured budget rows, boundary, memory map, E1 link closure | Not run |
+| E2 | Fight: four Ganados on native services | Not started | Not run |
+| E3 | Chapter 1 end to end, lake boss, first engine release | Not started | Not run |
+| E4 | The rest of the game, by chapter | Not started | Not run |
 
 ## Benchmark, latest console numbers (Test 27.1, 2026-11-11, means only)
 
@@ -33,8 +33,8 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-bench | M1 bench image | lane/eng-bench from engine 7c0f05711 | Codex gpt-6.2-astra medium, session 01a1f422-e8d6 | E:\RE4DC-Lanes\eng-bench |
-| eng-shell-map | M2 groundwork, PC-only: SHELL_MAP.md (boundary inventory, frame, memory map, services ranked by console cost, M2 design, equivalence checks) | lane/eng-shell-map from engine | Codex gpt-6.2-astra medium | E:\RE4DC-Lanes\eng-shell-map |
+| eng-bench | E0 start: bench round 3 | lane/eng-bench | Codex gpt-6.2-astra (this round), then Claude Opus | E:\RE4DC-Lanes\eng-bench |
+| eng-shell-map | E1 groundwork, PC-only: SHELL_MAP.md | lane/eng-shell-map | Claude Opus | E:\RE4DC-Lanes\eng-shell-map |
 
 Closed: lab33 (M0 tool), handed back 11-19. Integrator accepted its one open item: off arms moved quiet-farm logic by 0.13 to 0.17 ms/tick against a 0.125 ms repeat spread (Flycast). The A/A visit read as low, so visit order explains most of it, and the console session brackets every arm. Lake fight preset left out (it lands in the boat-death state).
 
@@ -46,4 +46,5 @@ noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, 
 
 ## Waiting on the owner
 
+- Plan version 2: approve milestones E0 to E4, the budget rows, and the content look calls as a class.
 - SD card in, then one evening with the console and DreamPi on: lab disc core tier (85 min) plus the bench disc.
