@@ -16,8 +16,9 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 ## 2. Lane limits
 
-- At most **two build lanes** at once, plus **one** lab or release lane.
-- PC-only lanes (bakers, converters, host tests) do not count as build lanes, but may not start an emulator.
+- At most **two lanes that build or run emulators** at once, plus up to **two PC-only lanes** (bakers, analysis, PC tests), plus the lab or release lane when a console session or release is due. The machine is shared with other projects.
+- PC-only lanes may not start an emulator.
+- Lanes run as Claude Opus agents; Codex audits each milestone.
 - A lane uses its own build folder and its own evidence folder. It deletes only inside them, by literal path.
 - Processes are stopped by pid, never by name.
 - Flycast runs only from fixed slot folders that the integrator provisions once per lane (`fly1`, `fly2` console-like; `std1`, `std2` standard harness; see the lane's SLOTS.txt). Copying configs and data inside a slot is fine; a copy of flycast.exe at any other path is not. GDB off unless needed.
@@ -27,7 +28,8 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 - **Tiers:** every number is labelled console, MODELLED, Flycast or estimate.
 - **The benchmark is fixed:** village cross, bell fight, farm entry, farm hay-fork view, farm quiet view, lake fight, castle hall. Same presets, cap 4.
-- **Report the whole picture:** mean, p99, worst interval and count over 33.3 ms, over 600 pictures. Never a subsystem number on its own.
+- **Report the whole picture:** mean, p99, worst interval and count over 33.3 ms, over 600 pictures, against the lane's budget row. The floor is at most two fields between presented pictures.
+- **One model-only round per milestone.** After it, the next step is the console.
 - **A/B on console is one image:** two arms switched at run time in the same boot, in A/B/A order. Never two builds, never two sessions.
 - **Before a console number exists,** a modelled or emulator figure counts only if it fits in half the budget.
 - **A new measuring tool needs a control** that makes it read wrong on purpose, before its numbers are used.
@@ -42,7 +44,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 ## 4. Gates
 
-- Gates are per milestone and are listed in the plan, section 5. They run once, on the final image.
+- Gates are per milestone and are listed in the plan, section 8. They run once, on the final image.
 - A lane's own merge gate is the smallest set that proves its change: it builds, it boots, the benchmark does not get worse, and its own check passes and can fail.
 - Every check ships with an input that makes it fail.
 - A failing gate gets two distinct hypotheses tested. Then the blocker is written as a hand-over. No tolerance is loosened to pass.

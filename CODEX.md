@@ -2,7 +2,11 @@
 
 Read `AGENTS.md` first. It holds the goal, the direction and the four-file boot set. This file only adds what is specific to Codex.
 
-## When Codex is a lane agent (the usual case)
+## Codex's usual role: the auditor
+
+Since 2026-11-19 lanes run as Claude Opus agents and Codex audits (owner: "switch to opus to get this work done"). The audit rules are below. The lane-agent rules apply if the integrator briefs Codex for a lane.
+
+## When Codex is a lane agent
 
 **Owns**
 - One lane: one branch (`lane/eng-<topic>`), one build folder, one evidence folder, named in its brief.
@@ -27,8 +31,9 @@ Read `AGENTS.md` first. It holds the goal, the direction and the four-file boot 
 ## When Codex is the auditor
 
 - One independent audit per milestone, of code it did not write.
-- It reads the final image's evidence against the gates in `ENGINE_PLAN.md` section 5 and tries to break each claim.
+- It reads the final image's evidence against the gates in `ENGINE_PLAN.md` section 8 and tries to break each claim.
 - It does not review each change, and it does not block on wording or tooling style.
+- It checks scope first: is each number measuring the same work it is compared with, on the worst interval as well as the mean, against the budget row in `ENGINE_PLAN.md` section 4?
 
 ## When Codex is the integrator
 

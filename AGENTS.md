@@ -3,7 +3,7 @@
 Applies to every agent, Claude or Codex. Rewritten 2026-11-19. The earlier text is kept as history in
 `port/dreamcast/docs/history/AGENTS_TO_20261015.md` and is not instruction.
 
-**State:** the owner approved the engine plan on 2026-11-19. Lanes start only from a brief written by the integrator.
+**State:** the owner approved the engine line on 2026-11-19 and asked for the F-Zero X approach. Plan version 2 is in `port/dreamcast/docs/ENGINE_PLAN.md`. Lanes start only from a brief written by the integrator.
 
 ## Outside contributors start here
 
@@ -34,10 +34,13 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 
 ## Direction
 
-- **The engine is the program; the original game supplies behaviour** (owner 2026-11-19: "I want all of the game in a new native improved engine"). The engine owns the main loop, memory map, loading, renderer, effects, skeleton and collision services. The original AI, event and script code is hosted on it. Each hot system under that code becomes a native service, one at a time, in console-profile order, each proven to play the same before the old code is deleted. Behaviour code itself is not rewritten.
+- **The engine is the program; the original game supplies behaviour** (owner 2026-11-19: "I want all of the game in a new native improved engine"). The engine owns the main loop, memory map, loading, renderer, effects, skeleton and collision services, native from the start of each milestone. Only decision code (AI, player, events, scripts) stays original, hosted through thin setters.
+- **No publication layer.** Engine state is draw state. Behaviour code never hands the engine an object to convert; it sets position, animation, flags, spawn and kill on engine tables. The skeleton is evaluated once, into the matrices the skinning uses.
+- **Budget first.** Every lane reports against its row of the whole-frame budget in `ENGINE_PLAN.md` section 4 (behaviour, services, publication, drawing, system, margin), in absolute ms, on the worst interval as well as the mean.
+- **Content built for this console.** The graphics chip has headroom and the CPU does not. Use baked visibility, distance levels, caps and baked lighting, each approved by the owner from a still pair. Do not draw the PS2 content one for one.
 - **No work on the old path** (owner 2026-11-19). Do not improve, re-measure or re-profile the old drawing path. The engine is judged on the absolute budget, never as a percentage of the old game.
 - **Console decides.** Every number is labelled console, MODELLED, Flycast or estimate. Before a console number exists, a modelled or emulator figure counts only if it fits in half the budget.
-- **Judge the whole picture** on the fixed benchmark: mean, p99, worst interval, count over 33.3 ms. A gain that does not show there does not merge.
+- **Judge the whole picture** on the fixed benchmark: mean, p99, worst interval, count over budget. The floor is at most two 60 Hz fields between presented pictures. One model-only round per milestone at most; then the console.
 - **First remove repeated work, fix data layout, batch, and convert offline.** Add SH-4 assembly only where the console profile shows the cost and a simpler fix is not enough. Write down why.
 - **SH4ZAM is the math and kernel base** (owner 2026-11-19: "the engine needs to leverage sh4zam or improve upon it if there are shortcomings"). Build kernels on it. Where it falls short, improve it in SH4ZAM's own style and offer the change upstream; posting to `gyrovorbis/sh4zam` needs the owner's OK.
 - **A change merges switched on, or it does not merge.** No default-off speed switches on the engine line.
@@ -45,16 +48,16 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 
 ## Roles
 
-| Role | Does | Never does |
-|---|---|---|
-| **Owner** (the user) | Sets goal and bar; approves the plan, look steps and releases; boots the console | |
-| **Integrator** (the agent that resumes) | Merges lanes into `engine` on passing gates; keeps `STATUS.md`; writes briefs; runs console lab sessions; ships hotfixes on the release line | Lane work while lanes are running; edits to a lane's branch |
-| **Lane agent** | One lane, one branch, one build folder; hands back in the template | Merging; other lanes' files; `STATUS.md`; deleting outside its own folders |
-| **Auditor** | One independent audit per milestone, by an agent that did not write the code | Reviewing each change; blocking on wording |
+| Role | Who | Does | Never does |
+|---|---|---|---|
+| **Owner** | the user | Sets goal and bar; approves the plan, look steps and releases; boots the console | |
+| **Integrator** | the Claude session that resumes | Merges lanes into `engine` on passing gates; keeps `STATUS.md`; writes briefs and steers; runs console sessions; ships hotfixes on the release line | Lane work while lanes are running; edits to a lane's branch |
+| **Lane agent** | Claude Opus agents (owner 2026-11-19: "switch to opus to get this work done") | One lane, one branch, one build folder; hands back in the template | Merging; other lanes' files; `STATUS.md`; deleting outside its own folders |
+| **Auditor** | Codex | One independent audit per milestone, of work it did not write; an extra check on any number about to drive a decision | Reviewing each change; blocking on wording |
 
 ## Gates
 
-Per milestone, once, on the final image. Full table: `ENGINE_PLAN.md` section 5.
+Per milestone, once, on the final image. Full table: `ENGINE_PLAN.md` section 8.
 
 - Frame floor on the console. Plays right. Determinism of one build against itself. Looks right. Memory floors. Disc reads. Asset source.
 - Every check ships with an input that makes it fail.

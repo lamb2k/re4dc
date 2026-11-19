@@ -2,6 +2,14 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-006 (2026-11-19): plan version 2, the F-Zero X approach; lanes move to Claude Opus
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** "Write a plan for the right path forward - we should take the same approach as the fzero session can you ask it how it won", then "Update instructions and switch to opus to get this work done".
+- **What the F-Zero coordinator said (11-19, all emulator numbers, no hardware run yet):** about 37 ms of its gain came from no longer hosting the original simulation (22.1 ms) and the publication layer that converts original state into draw data (17.3 ms); changing what is drawn bought the last 5 to 8 ms. It says RE4 is probably missing a whole-frame budget with hosted-original rows, owner-approved content changes, a worst-interval floor gate, and an early console run of the bench.
+- **Changed:** ENGINE_PLAN.md rewritten as version 2 (budget rows, no publication layer, host only decisions, content for this console, milestones E0 to E4). AGENTS.md, CLAUDE.md, CODEX.md and LANES.md updated: lanes run as Claude Opus agents, Codex audits each milestone, one model-only round per milestone, lane limits two build plus two PC-only.
+- **Waiting on the owner:** approval of E0 to E4 and the budget rows; the content look calls; the SD card.
+
 ## H-005 (2026-11-19): scope widened to the whole game in a native engine
 
 - **From:** the owner. **To:** the integrator.
