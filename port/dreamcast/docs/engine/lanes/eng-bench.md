@@ -1,39 +1,54 @@
 # eng-bench M1 handback, 2026-11-19
 
-**Stopped at the renderer stop rule.** At the village cross, the matched nominal 200 MHz SH-4 model measured **60.804 ms for design A** and **52.597 ms for design B**. Both exceeded 13 ms. The console-entry threshold was 10 ms. No console run requested.
+**STEER-003 hand-back condition met.** The indexed renderer reduced mean modelled drawing at the cross from 27.526 to 13.298 ms (51.7%) and at hayfork from 49.679 to 27.023 ms (45.6%). The cross remains above the brief’s 10 ms console-entry threshold.
 
-## Timing
+Renderer and capture source commit `deb10de2c09f59fc6b92dd31e3cdf13b28265741` on `lane/eng-bench`.
 
-Phase times and totals are milliseconds per picture. PT and TR are punch-through and translucent geometry. The count column gives pictures over 20 / 26 / 33.333 ms.
+## Matched SH7091 model
 
-| Scene | Design / tier | Pictures | World | Actors | PT | TR | Effects | HUD | Mean | p99 | Worst | Over budget |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| r101 cross | A / Flycast | 600 | 8.062 | 40.290 | 0.211 | 0.001 | 0.025 | 0.055 | 48.649 | 56.999 | 61.071 | 600 / 600 / 600 |
-| r103 hayfork | A / Flycast | 600 | 5.868 | 131.172 | 1.502 | 0.001 | 0.037 | 0.059 | 138.643 | 141.672 | 141.691 | 600 / 600 / 600 |
-| r101 cross | B / Flycast, staged GDI | 600 | 8.059 | 34.088 | 0.213 | 0.001 | 0.024 | 0.056 | 42.446 | 50.217 | 51.606 | 600 / 600 / 600 |
-| r103 hayfork | B / Flycast, staged GDI | 600 | 5.888 | 105.667 | 1.516 | 0.001 | 0.037 | 0.055 | 113.169 | 116.260 | 116.267 | 600 / 600 / 600 |
-| r101 cross | A / hardware model | 5 | 11.018 | 49.327 | 0.267 | 0.004 | 0.078 | 0.106 | 60.804 | 65.874 | 65.874 | 5 / 5 / 5 |
-| r101 cross | B / hardware model | 5 | 10.852 | 41.269 | 0.272 | 0.004 | 0.083 | 0.112 | 52.597 | 56.779 | 56.779 | 5 / 5 / 5 |
-| r103 hayfork | A / hardware model | 5 | 8.245 | 165.883 | 2.113 | 0.005 | 0.055 | 0.099 | 176.405 | 176.723 | 176.723 | 5 / 5 / 5 |
-| r103 hayfork | B / hardware model | 5 | 8.055 | 133.425 | 2.088 | 0.005 | 0.060 | 0.103 | 143.740 | 143.874 | 143.874 | 5 / 5 / 5 |
+Nominal 200 MHz, five pictures per room (19, 43, 67, 91, 115). The difference is indexed minus game. Times are milliseconds per picture. The nearest-rank p99 is the largest of these five samples. Counts use 20, 26 and 33.333 ms.
 
-Flycast windows replayed the 300-picture input twice. Draw time starts after the PVR-ready wait and ends at submission. The staged image reported a mean ready wait below 0.001 ms in both rooms. Guest PMC rows rotated through events 25, 24, 04, 05 and 08 (hex). Flycast returned zero on all five.
+| Scene | Tier / path | World | Actors | PT | TR | Effects | HUD | Mean | p99 | Worst | Over 20 / 26 / 33.333 |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| cross | indexed / model | 5.343 | 6.414 | 0.160 | 1.241 | 0.067 | 0.075 | 13.298 | 14.328 | 14.328 | 0 / 0 / 0 |
+| cross | game / model | 10.626 | 10.778 | 0.732 | 0.298 | 3.686 | 1.406 | 27.526 | 34.333 | 34.333 | 5 / 1 / 1 |
+| cross | Difference | -5.283 | -4.364 | -0.572 | 0.943 | -3.620 | -1.331 | -14.227 | -20.005 | -20.005 | -5 / -1 / -1 |
+| hayfork | indexed / model | 3.958 | 20.844 | 1.066 | 1.028 | 0.045 | 0.083 | 27.023 | 27.296 | 27.296 | 5 / 5 / 0 |
+| hayfork | game / model | 6.081 | 34.755 | 1.564 | 0.169 | 6.741 | 0.368 | 49.679 | 49.913 | 49.913 | 5 / 5 / 5 |
+| hayfork | Difference | -2.123 | -13.912 | -0.498 | 0.858 | -6.697 | -0.286 | -22.656 | -22.617 | -22.617 | 0 / 0 / -5 |
 
-Model rows use five full interpreter traces per scene and design at markers 20, 44, 68, 92 and 116. Guest timing stores identify replay pictures 19, 43, 67, 91 and 115. The model mean includes the whole traced picture. Phase spans run between guest timing-row stores, with setup charged to world. The nearest-rank sample p99 is the sample worst. The instruction totals agree with the trace recorder for every run.
+The capture and timing runs restored the same pre-draw states in the interpreter. Verification reproduced each original picture record byte for byte. Recording was disabled before each timed draw. The same nominal simulator ran through the complete guest trace, including intervening work that affects cache state. Drawing totals exclude game logic and presentation waits. The bench charges modifier-volume submission to characters and masked hair to TR. The game profiles modifier volumes in effects.
 
-## Builds and evidence
+Cross character draw is 6.414 ms against 10.778 ms for the matched game scope (−4.364 ms). It also clears the steer’s separate 8.8 ms character target. Hayfork retains the ten barn props and all submitted actor records. Its character draw still takes 20.844 ms against the matched 34.755 ms (−13.911 ms).
 
-- Renderer commit 476d66b55bc8239e85f3b8621b5d2539f4722433 on lane/eng-bench. A expands mixed strips through triangles with M1_STREAM_STRIPS=0. B streams near-plane crossings, preserves visible strip runs and reuses composed bone matrices. Both comparison builds use the same source, captures, packs and lighting.
-- Design B ELF SHA-256 62dc17496fa7a64952513a025f404a30c3f2fef7649f9196f391bf6bd227e4a4. Design A ELF SHA-256 6d0183e48e91da7c59e7318f3b9d807a0775b31ac8ff890c5247d578be7863c2.
-- Private evidence root is E:\RE4DC-Lanes\eng-bench. The staged standard GDEMU image is build/M1-GDEMU/disc.gdi. SHA256SUMS alongside it covers the descriptor and all three tracks. Track 03 SHA-256 c6f18fda41e4de2c416411942f499fa895e5981deb4fffdbe66b690ac37624ce. Standard disc lint passed with zero violations. runs/bench-standard contains its two 600-picture Flycast windows.
-- A clean local checkout with the pinned dependency and private pack path reproduced boot binary SHA-256 3bc5e226695d6cf7611bee07ce3729362b6644ae16072b953511456b47b07139. Missing packs stopped the build with the path diagnostic in build/missing-control.log. Changing a byte in the frame-list section of CROSS.PAK caused the guest to refuse it at the checksum gate, stage 91, before replay (runs/bench-corrupt).
-- runs/eng-bench-cross-4 and runs/eng-bench-hayfork-4 each contain 300 contiguous picture records and 300 corresponding 640×480 stills, game frames 466–765. Record peaks were 42,028 and 104,624 bytes. The dropped-picture control failed on picture 2. Private packs are in build/cross-m1.pak and build/hayfork-m1.pak.
-- The 5 ms busy-wait shifted mean draw time by +5.007 ms at the cross and +5.012 ms at hayfork. See runs/bench-b2/bench.log and runs/bench-delay-final/bench.log. KOS vertex double buffering was checked at startup.
-- Model traces, observed phase-store cycles, per-frame rows and ELF copies are in runs/bench-model-matched-a, runs/bench-model-matched-b, runs/bench-model-matched-a-farm and runs/bench-model-final-farm.
-- runs/still-pairs/cross.png and runs/still-pairs/hayfork.png pair pictures 1, 150 and 300. Full-size replay stills are in runs/bench-b2. The cross picture 150 ground shadow is missing. The cross skyline shows stray polygons, and Leon’s lighting differs in both rooms. Owner visual approval remains open.
+## Staged Flycast replay
 
-## SH4ZAM and remaining scope
+Each staged image replayed the 300 pictures twice. This tier compares both bench images on Flycast’s guest timer. The 600-picture comparison uses the earlier staged strip renderer as its reference. The matched-game comparison is the five-picture model table above.
 
-SH4ZAM advanced from 33fa485 to cff97e8 in a808450f3. The existing game build with GAME_SH4ZAM=1 linked with zero unresolved symbols. Both bench arms use upstream matrix primitives. The lane added no SH4ZAM kernel and measured no isolated library speedup.
+| Scene | Tier / path | World | Actors | PT | TR | Effects | HUD | Mean | p99 | Worst | Over 20 / 26 / 33.333 |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| cross | Indexed / Flycast | 3.261 | 3.948 | 0.093 | 0.731 | 0.015 | 0.033 | 8.090 | 9.997 | 11.486 | 0 / 0 / 0 |
+| cross | Strip B / Flycast | 8.059 | 34.088 | 0.213 | 0.001 | 0.024 | 0.056 | 42.446 | 50.217 | 51.606 | 600 / 600 / 600 |
+| cross | Difference | -4.798 | -30.140 | -0.120 | 0.730 | -0.009 | -0.023 | -34.356 | -40.220 | -40.120 | -600 / -600 / -600 |
+| hayfork | Indexed / Flycast | 2.386 | 13.986 | 0.625 | 0.608 | 0.022 | 0.035 | 17.668 | 20.094 | 20.241 | 11 / 0 / 0 |
+| hayfork | Strip B / Flycast | 5.888 | 105.667 | 1.516 | 0.001 | 0.037 | 0.055 | 113.169 | 116.260 | 116.267 | 600 / 600 / 600 |
+| hayfork | Difference | -3.502 | -91.681 | -0.891 | 0.607 | -0.015 | -0.020 | -95.501 | -96.166 | -96.026 | -589 / -600 / -600 |
 
-The bench provides six replay phases, on-screen timing summaries, guest logs and rotating PMC rows. The optional QA-link phase knobs were omitted. Physical-console timings and owner visual acceptance remain open. The SD card was untouched.
+## Profiles and visual evidence
+
+- Full ten-row per-function tables for world and characters in both rooms and both designs are in `port/dreamcast/engine/bench/PROFILE.md`. Each row records exclusive cycles, instruction misses, data read/write misses and the work performed. The original design repeats shading on strip corners and calls libm for strip bounds and colour clamps. The indexed design uses separate bone-sorted position and normal streams, shared per-picture bone matrices and projected positions, the existing skinned and rigid SH-4 position kernels, and the n16 light kernels. Part colour, direction, alpha and material bindings come from the source draw.
+- The baker removes empty world pieces and marks the pieces wholly in front of the near plane for each recorded view. Material headers are baked, texture addresses are relocated at load and sequential strip reads use prefetch. Boundary pieces still clip. Indexed emission, matrix composition and skinned positions remain the leading costs at hayfork.
+- Three new still pairs per room are in `runs/mat003-pairs/{cross,hayfork}.png`. Full-size images are in `runs/mat003-smoke` and `runs/eng-bench-{cross,hayfork}-4`. Cross picture 150 shows the contact shadows on the ground. Picture 1’s sampled skyline patch matches every RGB pixel and its hair patch matches 99.95%. Six full gameplay-area RGB mean absolute differences range from 0.258 to 0.721 on the 0–255 scale. `pixel-comparison.txt` lists per-picture results. Owner visual approval is pending.
+- Original captures cover game frames 466–765. The matching supplements in `runs/mat003-{cross,hayfork}` compare the original camera, effective pick fields, actor transforms, palettes, source lights, texture keys, effect and HUD records on all 600 pictures. They add the actual fog registers, sky far depth, modifier packets, paired texture keys, submission lists and per-part light folds. Private baked packs are in `build/indexed`.
+- Timing evidence under `E:\RE4DC-Lanes\eng-bench` includes `runs/baseline003-{cross,hayfork}-timed`, `baseline003-cross-verify2` and `baseline003-hayfork-verify3`. The strip profiles are in `runs/bench-model-matched-b` and `runs/bench-model-final-farm`. The indexed profiles are in `runs/mat003-model-cross` and `runs/mat003-farm`. Each phase003 directory retains hwreport symbol tables and miss counts. `build/final-bars003.json` holds the per-picture totals.
+
+## Disc and controls
+
+- Private staged standard GDEMU image `build/M1-GDEMU-mat003/disc.gdi`. Its `SHA256SUMS` covers all four files. Track 03 SHA-256 `b1389e7804f4303f6a596e53ae62ba596548a502c3523bf2b60a581b2bcdff33`. The disc passed standard lint and both 600-picture Flycast windows (`runs/mat003-standard`).
+- Renderer ELF SHA-256 `33de2a79aebc940dc9dcc079c4ce36cff1cccc924bf894004a0e4d6abae51e87`. The clean checkout reproduced the boot binary SHA-256 `7c0fa5d750f0ec837c774018470b875df5e4aa8bc3ab91239b17859f71aac1a1`. The missing-pack build refused to proceed. A corrupted frame-list index with a recomputed valid CRC was refused by guest validation before replay (stage 91, `runs/mat003-bad`).
+- With the 5 ms delay enabled, mean Flycast draw times at cross and hayfork were 13.098 vs 8.090 (+5.008) ms, 22.664 vs 17.664 (+5.000) ms. The original dropped-picture control refused picture 2. Guest PMC events 25, 24, 04, 05 and 08 returned zero in Flycast. Model miss counts come from the nominal SH7091 simulator.
+- SH4ZAM remains pinned to cff97e8 (previously 33fa485). The compatibility game build linked with zero unresolved symbols. The indexed design reuses existing game assembly alongside upstream SH4ZAM matrix helpers. There is no isolated SH4ZAM speedup claim.
+
+## Remaining scope
+
+Console timing and owner visual acceptance remain open. The optional QA-link phase switches were omitted. The staged image is local to the lane.

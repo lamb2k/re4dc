@@ -90,3 +90,88 @@ Rows are exclusive symbol costs per sampled picture. Cycles are reconstructed fr
 The cross world loop includes 11,425 divides, 11,262 prefetch instructions and 4,504 data-read misses per picture. Strip-bound libm comparisons and classification alone take 4.400 ms. Headers are already baked and relocated at load. Their copies and the selection table reads are included in the main loop. The profile cannot isolate a header-only cost.
 
 Private evidence under the lane folder includes baseline003-{cross,hayfork}-timed, baseline003-cross-verify2, baseline003-hayfork-verify3 and the phase003-{0,1} directories under each bench-model run. Phase-filtered hwreport runs simulated the full instruction stream to preserve cache and dependency history.
+
+## Indexed renderer
+
+The same ten game pictures and hwmodel configuration were used for both implementations. The renderer ran from commit `deb10de2c`. Times below are per picture. Modifier-volume submission falls in the bench character interval and in the game effects interval. Masked actor parts fall in the bench translucent interval. The drawing total includes all six intervals in both runs.
+
+| Room / phase | Indexed ms | Game ms | Difference ms |
+|---|---:|---:|---:|
+| cross World | 5.343 | 10.626 | -5.283 |
+| cross Characters | 6.414 | 10.778 | -4.364 |
+| cross PT | 0.160 | 0.732 | -0.572 |
+| cross TR | 1.241 | 0.298 | +0.943 |
+| cross Effects | 0.067 | 3.686 | -3.620 |
+| cross HUD | 0.075 | 1.406 | -1.331 |
+| cross Total | 13.298 | 27.526 | -14.227 |
+| hayfork World | 3.958 | 6.081 | -2.123 |
+| hayfork Characters | 20.844 | 34.755 | -13.912 |
+| hayfork PT | 1.066 | 1.564 | -0.498 |
+| hayfork TR | 1.028 | 0.169 | +0.858 |
+| hayfork Effects | 0.045 | 6.741 | -6.697 |
+| hayfork HUD | 0.083 | 0.368 | -0.286 |
+| hayfork Total | 27.023 | 49.679 | -22.656 |
+
+### cross world
+
+| Function | Mean cycles | I misses | DR misses | DW misses | Work |
+|---|---:|---:|---:|---:|---|
+| render_phase | 936,860 | 248.8 | 3823.4 | 68.0 | Indexed strip classification, projected-corner and UV gathers, SQ emission, light-direction setup and phase dispatch. World uses material-ordered draws, preclassified pieces and streamed boundary strips. |
+| matrix | 83,420 | 28.6 | 307.8 | 202.6 | Compose a pose or bone with the view and projection for this picture. |
+| clipped | 36,360 | 30.6 | 24.6 | 73.6 | Clip a boundary triangle against the near plane and emit its surviving polygon. |
+| L_al4both_loop | 3,000 | 0.0 | 74.6 | 0.0 | Aligned longword copy, including header and matrix transfers. |
+| memcpy | 1,480 | 49.2 | 0.0 | 0.0 | Dispatch block copies. |
+| L_cleanup | 840 | 49.2 | 0.0 | 0.0 | Copy the tail of a block. |
+| L_even | 700 | 41.2 | 0.0 | 0.0 | Align a block copy. |
+| handler_irq9 | 560 | 4.0 | 2.0 | 2.0 | Interrupt service within the sampled scope. |
+| L_al4both | 540 | 41.2 | 0.0 | 0.0 | Alignment setup before word copies. |
+| open_picture | 500 | 5.0 | 11.8 | 2.2 | Read picture spans and its atmosphere and modifier-volume bindings. |
+
+### cross characters
+
+| Function | Mean cycles | I misses | DR misses | DW misses | Work |
+|---|---:|---:|---:|---:|---|
+| render_phase | 826,780 | 285.2 | 10190.2 | 796.2 | Indexed strip classification, projected-corner and UV gathers, SQ emission, light-direction setup and phase dispatch. World uses material-ordered draws, preclassified pieces and streamed boundary strips. |
+| re4dc_avk_light_skin_n16 | 176,820 | 191.4 | 1652.2 | 2692.8 | Light each unique part normal through its bone directions and the captured part colour matrix. |
+| re4dc_avk_pos_skin_u16 | 171,100 | 35.4 | 794.2 | 2625.2 | Transform each distinct skinned position in the shared pose pool. |
+| matrix | 93,620 | 22.2 | 421.8 | 409.2 | Compose a pose or bone with the view and projection for this picture. |
+| re4dc_avk_pos_rigid_u16 | 3,860 | 25.0 | 5.2 | 83.0 | Transform each distinct rigid position. |
+| L_al4both_loop | 2,520 | 0.0 | 44.4 | 21.8 | Aligned longword copy, including header and matrix transfers. |
+| handler_irq9 | 760 | 5.2 | 3.2 | 2.0 | Interrupt service within the sampled scope. |
+| memcpy | 580 | 13.8 | 0.0 | 0.0 | Dispatch block copies. |
+| mutex_unlock | 560 | 11.0 | 6.6 | 1.2 | Release a KOS lock inside the interval. |
+| L_cleanup | 440 | 11.8 | 0.0 | 0.0 | Copy the tail of a block. |
+
+### hayfork world
+
+| Function | Mean cycles | I misses | DR misses | DW misses | Work |
+|---|---:|---:|---:|---:|---|
+| render_phase | 689,720 | 148.8 | 2875.8 | 64.8 | Indexed strip classification, projected-corner and UV gathers, SQ emission, light-direction setup and phase dispatch. World uses material-ordered draws, preclassified pieces and streamed boundary strips. |
+| matrix | 65,020 | 18.8 | 230.6 | 187.6 | Compose a pose or bone with the view and projection for this picture. |
+| clipped | 30,500 | 30.8 | 21.0 | 69.8 | Clip a boundary triangle against the near plane and emit its surviving polygon. |
+| L_al4both_loop | 1,420 | 0.0 | 40.0 | 0.0 | Aligned longword copy, including header and matrix transfers. |
+| memcpy | 780 | 26.0 | 0.0 | 0.0 | Dispatch block copies. |
+| open_picture | 460 | 5.0 | 11.0 | 1.6 | Read picture spans and its atmosphere and modifier-volume bindings. |
+| L_cleanup | 380 | 26.0 | 0.0 | 0.0 | Copy the tail of a block. |
+| L_even | 360 | 21.8 | 0.0 | 0.0 | Align a block copy. |
+| L_al4both | 280 | 21.8 | 0.0 | 0.0 | Alignment setup before word copies. |
+| __dreamcast_get_ticks | 220 | 2.0 | 3.6 | 0.0 | Read the guest clock at the phase boundary. |
+
+### hayfork characters
+
+| Function | Mean cycles | I misses | DR misses | DW misses | Work |
+|---|---:|---:|---:|---:|---|
+| render_phase | 2,693,940 | 597.6 | 18620.2 | 3046.2 | Indexed strip classification, projected-corner and UV gathers, SQ emission, light-direction setup and phase dispatch. World uses material-ordered draws, preclassified pieces and streamed boundary strips. |
+| matrix | 643,540 | 165.2 | 3120.6 | 2706.0 | Compose a pose or bone with the view and projection for this picture. |
+| re4dc_avk_pos_skin_u16 | 604,580 | 57.8 | 3184.2 | 9238.8 | Transform each distinct skinned position in the shared pose pool. |
+| re4dc_avk_light_skin_n16 | 177,880 | 201.4 | 1670.2 | 2713.8 | Light each unique part normal through its bone directions and the captured part colour matrix. |
+| L_al4both_loop | 7,480 | 0.0 | 161.4 | 20.2 | Aligned longword copy, including header and matrix transfers. |
+| L_store_long_loop | 7,300 | 0.8 | 0.0 | 0.0 | Clear aligned storage. |
+| re4dc_avk_pos_rigid_u16 | 3,380 | 38.0 | 13.2 | 35.0 | Transform each distinct rigid position. |
+| handler_irq9 | 2,580 | 19.0 | 9.6 | 6.4 | Interrupt service within the sampled scope. |
+| memcpy | 2,420 | 58.4 | 0.0 | 0.0 | Dispatch block copies. |
+| thd_schedule | 1,860 | 29.2 | 30.4 | 3.6 | KOS periodic thread scheduling. |
+
+The original per-corner clamp/classification and per-strip libm bounds helpers left the top ten. The baker strips out empty world draws, groups by material and classifies the entire selected piece against the recorded near plane. Fully forward strips emit directly. Intersecting pieces keep a runtime bounds test and clipper. Store-queue headers are precompiled and relocated once on load. On hayfork the remaining character cost is concentrated in indexed emission and part setup, followed by matrix composition and the skinned position pass. All captured actor parts, including barn-interior props, remain in the frame lists.
+
+Full symbol tables with dependency-stall and cache columns are in the two indexed run folders, under phase003-0 and phase003-1. The game and bench implement different functions, so the phase and total tables give the comparable differences. The five-picture model has no calibrated mapping to physical frame rate.
