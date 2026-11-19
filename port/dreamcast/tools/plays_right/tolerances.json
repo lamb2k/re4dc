@@ -1,0 +1,13 @@
+{
+  "_about": "Plays-right tolerances for Leon (player and camera), agreed in the brief (lane eng-host, 2026-11-19). Why each value: docs/engine/PLAYS_RIGHT.md section 5.",
+  "pos": 1.0,
+  "_pos": "units (1 unit = 1 mm); per axis",
+  "ang_deg": 1.0,
+  "_ang_deg": "degrees, wrapped; yaw, pitch and roll",
+  "frame": 0.0,
+  "_frame": "motion frame: exact (frames advance by whole steps; a frame off is a tick off)",
+  "cam": 1.0,
+  "_cam": "units; camera eye and target, per axis",
+  "cam_fovy_deg": 0.1,
+  "_exact": "motion id, motion state, routine (r_no_0..3), discrete hash and generator state are compared exactly"
+}

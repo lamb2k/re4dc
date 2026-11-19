@@ -1,0 +1,149 @@
+// hostref (game side): everything the player and camera call that the E1 reference does not host. Each
+// body logs the call (host_stub_hit: counted per tick, names hashed in call order, written to the trace)
+// and returns the neutral answer: no hit, no item, no water, no partner, nothing drawn or played.
+// Categories follow SHELL_MAP.md section 5 (closure-iface-B.tsv): HUD and 2D, audio, effects, lights,
+// drawing, debug, pad rumble, files the room does not need, other behaviour (the 72 E1 stubs).
+#include "hostref.h"
+#include "global.h"
+#include "main.h"
+#include "joy.h"
+#include "model.h"
+#include "em.h"
+#include "player.h"
+#include "act_btn.h"
+#include "dmg.h"
+#include "item.h"
+#include "obj.h"
+#include "light.h"
+#include "db_cam.h"
+#include "cockpit.h"
+#include "mes.h"
+#include "id_sys.h"
+#include "db_log.h"
+#include "snd.h"
+#include "emwindow.h"
+#include "emrack.h"
+#include "pendulum.h"
+#include "pl_wep.h"
+#include "pl_npc.h"
+
+#define HOST_STUB(n) host_stub_hit(n)
+
+// ---------------- C linkage ----------------
+extern "C" {
+// effects
+void AddSandPower(Vec*, f32) { HOST_STUB("AddSandPower"); }
+void AddWaterPower(Vec*, f32) { HOST_STUB("AddWaterPower"); }
+int ChkWaterEffectEnable(Vec*) { HOST_STUB("ChkWaterEffectEnable"); return 0; }
+void EffectEfmDelete(int, int, int) { HOST_STUB("EffectEfmDelete"); }
+void EffectEspDelete(int, int, u32, cModel*) { HOST_STUB("EffectEspDelete"); }
+void EffectEspgenDelete(int, int, int) { HOST_STUB("EffectEspgenDelete"); }
+int EspDataLoad(u32, u32, int) { HOST_STUB("EspDataLoad"); return 1; }
+int EspDataRelease(u32, int, int) { HOST_STUB("EspDataRelease"); return 1; }
+void EspSetEatEffect(Vec*, Vec*, int, int) { HOST_STUB("EspSetEatEffect"); }
+void EspSetWaterHitmark(Vec*) { HOST_STUB("EspSetWaterHitmark"); }
+void EstSet(int, int, Vec*, Vec*, int, int, int, int, u32, void*) { HOST_STUB("EstSet"); }
+int GetWaterCrossPos(Vec*, Vec*, Vec*) { HOST_STUB("GetWaterCrossPos"); return 0; }
+void QuakeMove() { HOST_STUB("QuakeMove"); }
+void PenClothMove(cModel*, PenCloth*) { HOST_STUB("PenClothMove"); }
+void PenClothMove3(cModel*, PenCloth*) { HOST_STUB("PenClothMove3"); }
+void PenClothSet(cModel*, PenCloth*, f32) { HOST_STUB("PenClothSet"); }
+// other behaviour (enemies, scenario, windows, racks, items, score)
+int ChkWindow(cModel*, Vec*, Vec*, int, u16*, Vec*, Vec*, cEmWindow**) { HOST_STUB("ChkWindow"); return 0; }
+int EmRackCk(cEm*, Vec*, f32) { HOST_STUB("EmRackCk"); return 0; }
+void* EmReadSearch(u8, int, int) { HOST_STUB("EmReadSearch"); return 0; }
+void EmScenario(cEm*) { HOST_STUB("EmScenario"); }
+void EmYarareDisp(cEm*) { HOST_STUB("EmYarareDisp"); }
+void GameAddPoint(int) { HOST_STUB("GameAddPoint"); }
+u32 GetWepTargetList2(Vec*, Vec*, void*, u32, Vec*, Vec*, u32*, int, int, int) { HOST_STUB("GetWepTargetList2"); return 0; }
+int GetWepTargetListBomb(Vec*, f32, void*, int, int, int) { HOST_STUB("GetWepTargetListBomb"); return 0; }
+int GetWepTargetPos(Vec*, Vec*, int, int, cEm** outEm, int* outAttr)
+{
+    HOST_STUB("GetWepTargetPos");
+    if (outEm) *outEm = 0;
+    if (outAttr) *outAttr = 0;
+    return 0;
+}
+int LifeDownSet2(cEm*, int, int, int) { HOST_STUB("LifeDownSet2"); return 0; }
+void* SceExec(int, void*, int, u8, int, void*) { HOST_STUB("SceExec"); return 0; }
+int emLineCubeCrossCk(Vec*, Vec*, Mtx, f32, f32, f32, void*, Vec*) { HOST_STUB("emLineCubeCrossCk"); return 0; }
+int ExeWindowEventTask(void*) asm("ExeWindowEvent__9cEmWindow");
+int ExeWindowEventTask(void*) { HOST_STUB("cEmWindow::ExeWindowEvent"); return 0; }
+void SubCharRegistPlAction(void*, Vec*, int, f32) asm("registPlAction__8cSubCharP3Vecf");
+void SubCharRegistPlAction(void*, Vec*, int, f32) { HOST_STUB("cSubChar::registPlAction"); }
+// pad rumble, performance counters
+u32 PPCMfpmc1() { return 0; }
+void PPCMtmmcr0(u32) {}
+void PPCMtmmcr1(u32) {}
+void PPCMtpmc1(u32) {}
+void PPCMtpmc2(u32) {}
+void PPCMtpmc3(u32) {}
+void PPCMtpmc4(u32) {}
+// drawing and debug primitives
+void Draw_cylinder(Vec*, f32, f32, u32) { HOST_STUB("Draw_cylinder"); }
+void Draw_line3d(Vec*, Vec*, u32, int) { HOST_STUB("Draw_line3d"); }
+void Draw_line3d_local(Vec*, Vec*, Mtx, u32, int) { HOST_STUB("Draw_line3d_local"); }
+void Draw_local_pos(Vec*, int, Mtx) { HOST_STUB("Draw_local_pos"); }
+void Draw_poly(Vec*, u32, int) { HOST_STUB("Draw_poly"); }
+void Draw_poly_local(Vec*, Mtx, u32, int) { HOST_STUB("Draw_poly_local"); }
+void Draw_pos(Vec*, int) { HOST_STUB("Draw_pos"); }
+void Draw_quad(Vec*, Vec*, u32) { HOST_STUB("Draw_quad"); }
+void Draw_sphere(Vec*, f32, u32, int, int) { HOST_STUB("Draw_sphere"); }
+void Filter01SetParam(int, int, u8, f32) { HOST_STUB("Filter01SetParam"); }
+void GXSetLineWidth(u8, int) {}
+int EspEstSetSelect(int, int, int, void** out, int) { HOST_STUB("EspEstSetSelect"); if (out) *out = 0; return 0; }
+void EspDrawLaserLine(Vec, Vec, f32) { HOST_STUB("EspDrawLaserLine"); }
+// HUD textures
+int IdTexDataLoad(void*, int) { HOST_STUB("IdTexDataLoad"); return 1; }
+void IdTexRelease(int) { HOST_STUB("IdTexRelease"); }
+// old-port hooks reached with every knob off
+void re4dc_model_assets_changed() {}
+int re4dc_motion_acquire(const void*, unsigned**) { return 0; }   // 0: the archive's own keys are used
+void re4dc_motion_release(int) {}
+void re4dc_halt(const char* file, int line) { host_fatal(4, "HALT %s(%d)", file, line); }
+void* _impure_ptr;
+}
+
+// ---------------- C++ linkage ----------------
+void CameraDebugInformation() { HOST_STUB("CameraDebugInformation"); }
+int GetWaterHeight(Vec*, f32*) { HOST_STUB("GetWaterHeight"); return 0; }
+u32 SubCharGetStatus() { HOST_STUB("SubCharGetStatus"); return 0; }
+void TaskSleep(int) { HOST_STUB("TaskSleep"); }
+void QuakeInit() { HOST_STUB("QuakeInit"); }
+int BtoX(int bits) { return bits; }   // eprintf.cpp: pad debug page only
+void eprintf(int, int, int, int, const char*, ...) { HOST_STUB("eprintf"); }
+void eprintf2(int, int, int, int, int, int, const char*, ...) { HOST_STUB("eprintf2"); }
+u32 SndCall(u16, u16, Vec*, int, int, cUnit*) { HOST_STUB("SndCall"); return 0; }
+int SndStop(u32, int) { HOST_STUB("SndStop"); return 0; }
+
+void cActionButton::set(int, int, int, int, int, int, int, int) { HOST_STUB("cActionButton::set"); }
+int cDmgMgr::hitCheck(Vec*, Vec*) { HOST_STUB("cDmgMgr::hitCheck"); return 0; }
+u16 cItemMgr::bulletNum() { HOST_STUB("cItemMgr::bulletNum"); return 0; }
+u32 cItemMgr::bulletNumCurrent() { HOST_STUB("cItemMgr::bulletNumCurrent"); return 0; }
+int cItemMgr::num(int, u8) { HOST_STUB("cItemMgr::num"); return 0; }
+int cLightMgr::update(int, int) { HOST_STUB("cLightMgr::update"); return 0; }
+cLightInfo::cLightInfo() {}
+int cLightInfo::init2(int, int, const Vec*, const Vec*, int) { HOST_STUB("cLightInfo::init2"); return 1; }
+void cLightInfo::updateMatrix(cModel*) { HOST_STUB("cLightInfo::updateMatrix"); }
+void debugCamera::move(Camera*, JOY*, int) { HOST_STUB("debugCamera::move"); }
+void Cockpit::lifeMeterDisp(int) { HOST_STUB("Cockpit::lifeMeterDisp"); }
+void Cockpit::roomInit() { HOST_STUB("Cockpit::roomInit"); }
+void cLog::err(int, int, const char* fmt, ...)
+{
+    host_log("cLog::err: %s", fmt);
+    HOST_STUB("cLog::err");
+}
+void cLog::mes(int, int, const char*, ...) { HOST_STUB("cLog::mes"); }
+int cEmRack::adjustRange(u8) { HOST_STUB("cEmRack::adjustRange"); return 0; }
+int cEmWindow::ChkBreakDir(Vec*) { HOST_STUB("cEmWindow::ChkBreakDir"); return 0; }
+int cEmWindow::ChkStatus() { HOST_STUB("cEmWindow::ChkStatus"); return 0; }
+int cItemMgr::reload() { HOST_STUB("cItemMgr::reload"); return 0; }
+int cItemMgr::trigger() { HOST_STUB("cItemMgr::trigger"); return 0; }
+cObj* SetObj10(void*, void*, Vec*, Vec*, Vec*, f32, f32, int, int) { HOST_STUB("SetObj10"); return 0; }
+void Obj10SetEst(cObj*, int, int, u32, int, int, int, int, int, int) { HOST_STUB("Obj10SetEst"); }
+int cItemMgr::reloadable() { HOST_STUB("cItemMgr::reloadable"); return 0; }
+void cObjLauncher::grip(int) { HOST_STUB("cObjLauncher::grip"); }
+void cObjLauncher::gripBack() { HOST_STUB("cObjLauncher::gripBack"); }
+void cSubChar::control(int) { HOST_STUB("cSubChar::control"); }
+void cLog::warn(int, int, const char*, ...) { HOST_STUB("cLog::warn"); }
+void cLog::vwarn(int, int, const char*, char*) { HOST_STUB("cLog::vwarn"); }
