@@ -26,6 +26,8 @@ static inline PcStat *PS(''') if 'static inline PcStat *PS(' in src else None
             fprintf(stderr,"M1STAMP %u %u %.0f\\n",i,k,t);
             phase=k==6?0:k==7?7:k+1;
         }''')
+    # operand-cache RAM (0x7C000000-0x7FFFFFFF, survey arm a) never misses: one-cycle access, no cache traffic
+    replace('        if (cached_area(a)) {', '        if ((a >> 26) == 0x1F) { /* OCRAM */ }\n        else if (cached_area(a)) {')
     return src
 if __name__=="__main__":
     p=argparse.ArgumentParser()

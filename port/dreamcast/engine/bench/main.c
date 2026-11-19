@@ -58,6 +58,9 @@ int main(void){
     PVR_SET(PVR_PT_ALPHA_REF,128);pvr_set_zclip(0.0f);pvr_set_shadow_scale(true,0.5f);
     int stills=exists("/cd/STILLS"),delay=exists("/cd/DELAY5");m1_state[7]=delay;
     unsigned farm_first=exists("/cd/FARM1");
+#ifdef M1_NATIVE
+    native_select_arm(exists("/cd/ARMA")?1:exists("/cd/ARMB")?2:0);   /* survey arms, console decides */
+#endif
     for(unsigned pass=0;;pass++){
         unsigned scene=(pass+farm_first)%2;
 #ifdef M1_NATIVE

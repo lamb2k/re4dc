@@ -21,7 +21,29 @@ static shz_mat4x4_t projection_grid(const float* camera,const float* grid){
 }
 /* The stage: one picture-ready TA vertex per selected vertex of the current meshlet (x/w, y/w, 1/w, u, v, argb),
    written once and copied to the store queue for every strip corner that uses it. 256 x 32 bytes = 8 KB. */
-static pvr_vertex_t stage[256] __attribute__((aligned(32)));
+static pvr_vertex_t stage_ram[256] __attribute__((aligned(32)));
+/* Survey arm (a): the stage in operand-cache RAM (8 KB, half the data cache), selected by /cd/ARMA at boot. */
+#include <dc/cache.h>
+__ocram static pvr_vertex_t stage_oc[256];
+static pvr_vertex_t* stage=stage_ram;
+/* 0: one stage loop per vertex (stage_sh4.S); 1: arm (a) OCRAM stage; 2: arm (b) small loops over 32-vertex blocks */
+volatile uint32_t m1_arm;
+void native_select_arm(unsigned arm){
+    m1_arm=arm;
+    if(arm==1){dcache_toggle_ocram(true);stage=stage_oc;}else stage=stage_ram;
+}
+/* Survey arm (b): three short loops over blocks of 32 vertices (transform; divide; attributes) in place of one. */
+static void stage_blocks(pvr_vertex_t* st,const uint16_t* r,const int16_t* vtx,const uint32_t* c,unsigned n,const float* uv){
+    static shz_vec4_t tmp[32] __attribute__((aligned(32)));
+    float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
+    for(unsigned b=0;b<n;b+=32,st+=32,r+=32,c+=32){
+        unsigned m=n-b<32?n-b:32;
+        for(unsigned i=0;i<m;i++){const int16_t* v=vtx+6*r[i];tmp[i]=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));}
+        for(unsigned i=0;i<m;i++){float iw=m1_rcp_pos(tmp[i].w);st[i].x=tmp[i].x*iw;st[i].y=tmp[i].y*iw;st[i].z=iw;}
+        for(unsigned i=0;i<m;i++){const int16_t* v=vtx+6*r[i];
+            st[i].flags=PVR_CMD_VERTEX;st[i].u=u0+du*v[3];st[i].v=v0+dv*v[4];st[i].argb=c[i];st[i].oargb=0;}
+    }
+}
 static float stage_w[256];
 static uint8_t stage_near[256];
 static shz_mat4x4_t world_pv __attribute__((aligned(32)));
@@ -38,7 +60,11 @@ static void stage_range(const uint16_t* vertices,const uint16_t* remap,const uin
     pvr_vertex_t* st=stage+first;const uint16_t* r=remap+first;const uint32_t* c=color+first;
     float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
     count_staged+=n;
-    if(!boundary){m1_stage_world(st,r,(const int16_t*)vertices,c,(n+1)/2,uv);return;}
+    if(!boundary){
+        if(m1_arm==2)stage_blocks(st,r,(const int16_t*)vertices,c,n,uv);
+        else m1_stage_world(st,r,(const int16_t*)vertices,c,(n+1)/2,uv);
+        return;
+    }
     for(unsigned i=0;i<n;i++,st++){
         const int16_t* v=(const int16_t*)vertices+6*r[i];
         shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));

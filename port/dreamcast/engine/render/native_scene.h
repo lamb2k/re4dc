@@ -12,5 +12,6 @@ void native_effects(NativeScene*);
 void native_hud(NativeScene*);
 void native_shadows(NativeScene*);
 void native_sky(NativeScene*);
+void native_select_arm(unsigned);
 int native_actor_open(NativeScene*);
 void native_actor_close(NativeScene*);
