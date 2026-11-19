@@ -8,6 +8,11 @@
      n       no baked visibility (draw the full set)
      d       control: 5 ms busy-wait inside the timed drawing of every picture (must show in the draw rows)
      h       control: picture 300 is held for 40 ms after its scene is finished (must show in the presented rows)
+     p       control: the engine's light pick made wrong on purpose (the light-pick test must report mismatches)
+   eng-look: content steps follow the room and flags as ".<item><step>" groups (render/content.h): L character
+   distance levels, W world distance cap and level shift, P far props as flat cards, E effect density cap, B baked
+   static lighting (steps 0-3; 0 = today's full detail), G the frame-alpha glow (0 off, 1 on: the default). Example:
+   "c0.L2 f0.W3.E1". An unknown token, flag, item or step refuses the whole schedule (stage 94, nothing runs).
    Default (the staged disc): c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh. /cd/SCHEDULE.TXT overrides it (one line of
    tokens); /cd/FARM1 alone means "f0 c0" (test images). After the schedule the summary stays on screen.
 
@@ -36,6 +41,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "memmap.h"
+#include "content.h"
 KOS_INIT_FLAGS(INIT_DEFAULT);
 int __real_cdrom_read_toc(cd_toc_t*,bool);
 int __wrap_cdrom_read_toc(cd_toc_t *toc,bool hd){
@@ -59,19 +65,34 @@ static const uint8_t calib_events[10]={0x25,0x28,0x0d,0x22,0x24,0x29,0x13,0x0f,0
 static const uint8_t ev1_list[6]={0x28,0x0d,0x22,0x24,0x29,0x13};
 static uint32_t sorted[600];
 static const char *names[]={"CROSS","FARM"};
-typedef struct { uint8_t scene,arm,novis,delay,hold; } Window;
+typedef struct { uint8_t scene,arm,novis,delay,hold,content[CS_COUNT]; } Window;
 static Window schedule[WINDOWS];
+volatile uint32_t m1_content[CS_COUNT]={[CS_GLOW]=1};
+volatile uint32_t m1_content_counts[8];
+volatile uint32_t m1_schedule_error;   /* 0, or the 1-based character offset of the refused token */
+static const char content_items[]="LWPEBG";
 
 static int exists(const char *p){FILE *f=fopen(p,"rb");if(!f)return 0;fclose(f);return 1;}
 static int cmp(const void *a,const void *b){uint32_t x=*(const uint32_t*)a,y=*(const uint32_t*)b;return (x>y)-(x<y);}
-static unsigned parse_schedule(const char* s){
-    unsigned n=0;
-    while(*s && n<WINDOWS){
+/* Returns the window count, or 0 with m1_schedule_error set when any token is not understood (eng-look: an unknown
+   arm, flag, content item or step is refused, never skipped). */
+static unsigned parse_schedule(const char* text){
+    unsigned n=0;const char* s=text;
+    while(*s){
         while(*s==' '||*s=='\n'||*s=='\r'||*s=='\t')s++;
-        if(*s!='c'&&*s!='f'){if(*s)s++;continue;}
-        Window w={*s=='f',0,0,0,0};s++;
-        for(;*s && *s!=' ' && *s!='\n' && *s!='\r';s++){
-            if(*s=='a')w.arm=1;else if(*s=='b')w.arm=2;else if(*s=='n')w.novis=1;else if(*s=='d')w.delay=1;else if(*s=='h')w.hold=1;
+        if(!*s)break;
+        const char* token=s;
+        if((*s!='c'&&*s!='f')||n==WINDOWS){m1_schedule_error=token-text+1;return 0;}
+        Window w={*s=='f',0,0,0,0,{[CS_GLOW]=1}};s++;
+        for(;*s && *s!=' ' && *s!='\n' && *s!='\r' && *s!='\t';s++){
+            if(*s=='0')continue;
+            else if(*s=='a')w.arm=1;else if(*s=='b')w.arm=2;else if(*s=='n')w.novis=1;else if(*s=='d')w.delay=1;else if(*s=='h')w.hold=1;
+            else if(*s=='p')w.content[CS_PICK_CONTROL]=1;
+            else if(*s=='.'){
+                const char* item=s[1]?strchr(content_items,s[1]):NULL;unsigned step=(unsigned)(s[2]-'0');
+                if(!item||step>(s[1]=='G'?1u:3u)){m1_schedule_error=token-text+1;return 0;}
+                w.content[item-content_items]=step;s+=2;
+            }else{m1_schedule_error=token-text+1;return 0;}
         }
         schedule[n++]=w;
     }
@@ -141,15 +162,21 @@ static void report(unsigned w,unsigned n_flips){
         mask+=r->vis==VIS_MASK;
     }
     qsort(sorted,600,4,cmp);
+    unsigned steps=0;char cs[24];unsigned cn=0;cs[0]=0;
+    for(unsigned k=0;k<CS_COUNT;k++){steps|=sw->content[k]<<(4*k);
+        if(k<CS_GLOW?sw->content[k]!=0:k==CS_GLOW?sw->content[k]==0:sw->content[k]!=0){
+            if(cn+3<sizeof(cs)){cs[cn++]=k==CS_PICK_CONTROL?'p':content_items[k];cs[cn++]=k==CS_PICK_CONTROL?' ':'0'+sw->content[k];cs[cn]=0;}}}
     unsigned vals[20]={sw->scene,sw->arm,sw->novis|sw->delay<<1|sw->hold<<2,600,(unsigned)(sum/600),sorted[593],worst,wi%300+1,wi/300+1,
-                       over14,over33,(unsigned)(wait/600),n_flips,over2,wf,wfi%300+1,(unsigned)(ev0/600),mask,wfi/300+1,0};
+                       over14,over33,(unsigned)(wait/600),n_flips,over2,wf,wfi%300+1,(unsigned)(ev0/600),mask,wfi/300+1,steps};
     for(unsigned k=0;k<20;k++)out[k]=vals[k];
     static const char arms[]="0ab";
     printf("WINDOW %u %s arm %c%s%s%s draw mean %.3f p99 %.3f worst %.3f (picture %u lap %u) over14 %u over33.3 %u wait %.3f flips %u "
-           "intervals>2 %u worst %u fields (picture %u lap %u) ev25 %lu vis-mask %u\n",
+           "intervals>2 %u worst %u fields (picture %u lap %u) ev25 %lu vis-mask %u content [%s] counts %lu %lu %lu %lu %lu %lu %lu %lu\n",
            w,names[sw->scene],arms[sw->arm],sw->novis?" novis":"",sw->delay?" delay5":"",sw->hold?" hold300":"",
            sum/600/1000.,sorted[593]/1000.,worst/1000.,wi%300+1,wi/300+1,over14,over33,wait/600/1000.,n_flips,over2,wf,wfi%300+1,wfi/300+1,
-           (unsigned long)(ev0/600),mask);
+           (unsigned long)(ev0/600),mask,cs,(unsigned long)m1_content_counts[0],(unsigned long)m1_content_counts[1],(unsigned long)m1_content_counts[2],
+           (unsigned long)m1_content_counts[3],(unsigned long)m1_content_counts[4],(unsigned long)m1_content_counts[5],(unsigned long)m1_content_counts[6],
+           (unsigned long)m1_content_counts[7]);
     for(unsigned i=0;i<600;i++){const volatile RawRow* r=&m1_rows[w][i];
         printf("ROW %u %u %lu %lu %lu %lu %lu %02lx %lu\n",w,i+1,(unsigned long)r->draw_us,(unsigned long)r->wait_us,(unsigned long)r->fields,
                (unsigned long)r->ev0,(unsigned long)r->ev1,(unsigned long)r->ev1_id,(unsigned long)r->vis);}
@@ -160,8 +187,11 @@ static void report(unsigned w,unsigned n_flips){
     snprintf(s,sizeof(s),"E0 bench  window %u/%lu  ms, 600 pictures",w+1,(unsigned long)m1_schedule_n);line(fb,0,s);
     for(unsigned k=(w>15?w-15:0);k<=w;k++){
         const volatile uint32_t* v=m1_windows[k];
-        snprintf(s,sizeof(s),"%c%c%s m%.2f p%.2f w%.2f@%lu/%lu %lu|%lu f%lu",names[v[0]][0],arms[v[1]],v[2]&1?"n":v[2]&2?"d":v[2]&4?"h":" ",
-                 v[4]/1000.,v[5]/1000.,v[6]/1000.,(unsigned long)v[7],(unsigned long)v[8],(unsigned long)v[9],(unsigned long)v[10],(unsigned long)v[13]);
+        char st[16];unsigned sn=0;st[0]=0;
+        for(unsigned c=0;c<CS_GLOW && sn+2<sizeof(st);c++){unsigned x=v[19]>>(4*c)&15;if(x){st[sn++]=content_items[c];st[sn++]='0'+x;st[sn]=0;}}
+        if(!(v[19]>>(4*CS_GLOW)&15) && sn+2<sizeof(st)){st[sn++]='G';st[sn++]='0';st[sn]=0;}
+        snprintf(s,sizeof(s),"%c%c%s m%.2f p%.2f w%.2f@%lu/%lu %lu|%lu f%lu %s",names[v[0]][0],arms[v[1]],v[2]&1?"n":v[2]&2?"d":v[2]&4?"h":" ",
+                 v[4]/1000.,v[5]/1000.,v[6]/1000.,(unsigned long)v[7],(unsigned long)v[8],(unsigned long)v[9],(unsigned long)v[10],(unsigned long)v[13],st);
         line(fb,1+k-(w>15?w-15:0),s);
     }
     line(fb,17,"m mean p p99 w worst@pic/lap >14|>33.3 f >2 fields");
@@ -182,7 +212,10 @@ int main(void){
         const char* def=exists("/cd/FARM1")?"f0 c0":"c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh";
         if(exists("/cd/DELAY5"))def=exists("/cd/FARM1")?"f0d c0d":"c0d f0d";
         m1_schedule_n=parse_schedule(n?text:def);
-        if(!m1_schedule_n)m1_schedule_n=parse_schedule(def);
+        if(!m1_schedule_n){   /* eng-look: refused, never replaced by the default */
+            printf("SCHEDULE REFUSED at character %lu: %s\n",(unsigned long)m1_schedule_error,n?text:def);
+            m1_state[5]=94;for(;;)thd_sleep(100);
+        }
     }
     calibrate();
     NativeScene native={0};int open=-1;
@@ -195,6 +228,8 @@ int main(void){
             open=scene;
         }else native_reset(&native);     /* same room: new window starts with every change flag cleared */
         native_select_arm(sw->arm);
+        for(unsigned k=0;k<CS_COUNT;k++)m1_content[k]=sw->content[k];
+        for(unsigned k=0;k<8;k++)m1_content_counts[k]=0;
         NativeVis* vis=native.world.vis;if(sw->novis)native.world.vis=NULL;
         memmap_sample(scene);
         m1_state[5]=3;
@@ -216,7 +251,8 @@ int main(void){
                 if(k==0||k==2||k==3)pvr_list_begin(k==0?PVR_LIST_OP_POLY:k==2?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY);
                 if(k==0)native_sky(&native);
                 if(k==0||k==2||k==3)native_world_pass(&native.assets,&native.world,camera,k==0?0:k-1);
-                if(k==1||k==2)native_actor_pass(&native,k==2);   /* hair: punch-through list */
+                if(k==1)native_actor_pass(&native,0);
+                if(k==3)native_actor_pass(&native,1);   /* eng-look: Leon's hair layer, blended in the translucent list */
                 if(k==4)native_effects(&native);
                 if(k==5)native_hud(&native);
                 if(k==1||k==2||k==5)pvr_list_finish();

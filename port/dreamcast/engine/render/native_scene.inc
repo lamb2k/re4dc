@@ -1,4 +1,5 @@
 #include "native_scene.h"
+#include "content.h"
 // A patch is an output length followed by (first word, mask, changed values) groups.
 static int validate_patch(const uint32_t* p,unsigned n,unsigned *maximum){
     if(!n||p[0]>96*1024)return 0;
@@ -148,6 +149,7 @@ static int valid_inputs(NativeScene* s){
         }
         for(unsigned i=0;i<s->words[3];i+=38){
             unsigned h=s->state[3][i+32];if(h!=~0u && h>=s->assets.header.n)return 0;
+            h=s->state[3][i+33];if(h!=~0u && h>=s->assets.header.n)return 0;   /* eng-look: the glow header */
         }
         for(unsigned i=4;i<s->words[5];i+=24){
             unsigned h=s->state[5][i+4];if(h!=~0u && h>=s->assets.header.n)return 0;
@@ -196,9 +198,10 @@ int native_open(NativeScene* s,const char* name){
     const uint32_t* h=pi.head;
     if(!ok||crc!=h[4]||!table(&root,data,68+pi.rest)||root.n!=15||bytes(&root,0))return 0;
     m1_load_status[0]=3;
-    if(bytes(&root,14)!=8)return 0;
+    if(bytes(&root,14)<8)return 0;
     memcpy(&s->sky_top,row(&root,14),8);
     if(!table(&s->models,row(&root,13),bytes(&root,13))||s->models.n<6)return 0;
+    if(!content_variants_open((const uint8_t*)row(&root,14)+8,bytes(&root,14)-8,s->models.n))return 0;   /* eng-look */
     s->assets.texture=(Table){tn,NULL,NULL};
     Table* assets[]={&s->assets.header,&s->frames};
     unsigned ids[]={1,3};
