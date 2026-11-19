@@ -263,6 +263,16 @@ static u16 re4dcBlockDebugChords(u16 b, int dbg, Re4dcPadMap* m)
 // /cd/dc/diag.txt switches on the heavy periodic diagnostics (thread dumps).
 struct PadScriptEntry { u32 frame; u16 buttons; u16 hold; int relative; char state[16]; int value_a, value_b; u32 timeout; int done; };
 static PadScriptEntry g_script[64];
+#ifdef RE4DC_DISC2_PLAY_SCRIPT
+// The numeric title/card entries are consumed first. The Disc 2 diagnostic twin
+// can then follow source-clock pad instructions from the same fixture.
+extern "C" u16 re4dc_disc2_pad_step(char** cursor, u32 clock);
+static char* g_disc2Route;
+static bool g_disc2Steering;
+// The ordinary fixture fits in one text page. A chapter route can occupy the
+// full padscript extent in the full-play diagnostic image.
+static char g_disc2Text[8192];
+#endif
 static int g_scriptCount = -1;  // -1: not loaded yet
 static u32 g_lastDelivered;
 static bool g_scriptSourceClock; // opt-in fixture clock; never modifies source time
@@ -318,7 +328,11 @@ static void loadScript(void)
     }
     file_t f = fs_open("/cd/dc/padscript.txt", O_RDONLY);
     if (f < 0) return;
+#ifdef RE4DC_DISC2_PLAY_SCRIPT
+    char (&text)[sizeof(g_disc2Text)] = g_disc2Text;
+#else
     static char text[4096];
+#endif
     ssize_t n = fs_read(f, text, sizeof(text) - 1);
     fs_close(f);
     if (n <= 0) return;
@@ -332,6 +346,12 @@ static void loadScript(void)
         if (hash) *hash = 0;
         char* end = line + strlen(line);
         while (end > line && (end[-1] == '\r' || end[-1] == ' ' || end[-1] == '\t')) *--end = 0;
+#ifdef RE4DC_DISC2_PLAY_SCRIPT
+        if (!strcmp(line, "disc2-route")) {
+            g_disc2Route = next;
+            break;
+        }
+#endif
         if (strcmp(line, "clock source") == 0 && g_scriptCount == 0) {
             g_scriptSourceClock = true;
             line = next;
@@ -396,6 +416,10 @@ static u16 scriptButtons(void)
         }
         return 0;  // waiting for the state, in order
     }
+#ifdef RE4DC_DISC2_PLAY_SCRIPT
+    g_disc2Steering = g_disc2Route != nullptr;
+    if (g_disc2Steering) return re4dc_disc2_pad_step(&g_disc2Route, now);
+#endif
     return 0;
 }
 
@@ -703,6 +727,13 @@ u32 PADRead(PADStatus* status)
 #endif
         p->stickX = mapped.stickX;       // SDK-clamped; maple Y already flipped
         p->stickY = mapped.stickY;
+#ifdef RE4DC_DISC2_PLAY_SCRIPT
+        if (i == 0 && g_disc2Steering && (scripted & 15)) {
+            p->stickX = ((scripted & PAD_BUTTON_RIGHT) ? 72 : 0) - ((scripted & PAD_BUTTON_LEFT) ? 72 : 0);
+            p->stickY = ((scripted & PAD_BUTTON_UP) ? 72 : 0) - ((scripted & PAD_BUTTON_DOWN) ? 72 : 0);
+            p->button &= ~(scripted & 15);
+        }
+#endif
         p->substickX = mapped.substickX;
         p->substickY = mapped.substickY;
         p->triggerLeft = mapped.triggerLeft;

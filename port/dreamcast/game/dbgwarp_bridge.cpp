@@ -2482,5 +2482,8 @@ unsigned re4dc_warp_late_room(void)
     return re4dc_warp_late_open() ? wp.late_room : 0u;
 }
 
+#ifdef RE4DC_DISC2_PLAY_SCRIPT
+#include "../tools/d367/castle31/pad_route.inc"
+#endif
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP

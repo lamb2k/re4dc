@@ -3943,3 +3943,13 @@ include cave66.mk
 ifeq ($(WEAPON_WEP04_OVL),1)
 export RE4DC_LINK_OVERLAY += .ovl_wep04
 endif
+
+# Guest-only chapter route replay, confined to explicitly requested castle test twins.
+DISC2_PLAY_SCRIPT ?= 0
+ifeq ($(DISC2_PLAY_SCRIPT),1)
+ifneq ($(DBG_WARP):$(ROUTE_CH31),1:1)
+$(error DISC2_PLAY_SCRIPT requires a castle diagnostic twin)
+endif
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_DISC2_PLAY_SCRIPT=1
+$(OBJDIR)/platform/pad.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2_PLAY_SCRIPT=1
+endif
