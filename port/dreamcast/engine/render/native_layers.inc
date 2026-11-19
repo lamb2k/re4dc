@@ -56,7 +56,7 @@ void native_sky(NativeScene* s){
         v.argb=0xffffffff;v.u=u;v.v=(s->sky_top-angle)/(s->sky_top-s->sky_bottom);pvr_prim(&v,32);
     }
 }
-typedef struct {uint32_t slot,id,texture,type,anim,flags,tool;float pos[3],angle[3],size[3],rgba[4],parent[12];uint32_t hdr,fnv,pattern,width,height;} NativeEffect;
+typedef struct {uint32_t slot,id,texture,type,anim,flags,tool;float pos[3],angle[3],size[3],rgba[4],parent[12];uint32_t hdr,fnv,pattern,width,height,blend;} NativeEffect;
 typedef struct {float x,y,iw,rx,ry,angle;unsigned hdr,color;} Billboard;
 static Billboard particles[1024];
 static int depth_sort(const void* a,const void* b){
@@ -90,14 +90,24 @@ void native_hud(NativeScene* s){
     unsigned count=(s->words[5]-4)*4/sizeof(*w);
     unsigned char visible[256]={0};
     float x[256]={0},y[256]={0},angle[256]={0};
-    for(unsigned level=0;level<12;level++)for(unsigned i=0;i<count;i++){
+    /* eng-e0b: layout first (parents before children), then masked backdrops (mask applied at bake: mask[0] = 1),
+       then every other widget, deepest level first so a parent's readouts sit over its children's frames; depth
+       rises with draw order so later widgets are in front. */
+    float z=.98f;
+    for(unsigned pass=0;pass<3;pass++)
+    for(unsigned lv=0;lv<12;lv++)for(unsigned i=0;i<count;i++){
+        /* pass 0 lays out (parents first); passes 1 and 2 draw deepest level first */
+        unsigned level=pass==0?lv:11-lv;
         const Widget* q=w+i;if(((q->tree>>8)&255)!=level)continue;
         unsigned parent=q->tree&255,id=q->identity&255;
+        if(pass==0){
         visible[id]=(!q->hidden && (q->shape&0x80000) && (parent==255 || visible[parent]));
         float a=parent==255?0:angle[parent],sn=sinf(a),cs=cosf(a);
         x[id]=(parent==255?0:x[parent])+cs*q->pos[0]-sn*q->pos[1];
         y[id]=(parent==255?0:y[parent])+sn*q->pos[0]+cs*q->pos[1];
         angle[id]=a+q->rot[2];
+        }
+        if(pass==0 || (q->mask[0]!=0)!=(pass==1))continue;
         if((q->tree>>16)==1 || !visible[id] || q->hdr==~0u || !(q->color[3]>0))continue;
         float cx=x[id],cy=y[id];unsigned anchor=q->shape&15;
         if(anchor>=1 && anchor<=4){
@@ -107,7 +117,7 @@ void native_hud(NativeScene* s){
             cx+=ca*ox-sa*oy;cy+=sa*ox+ca*oy;
         }
         submit_header(&s->assets,q->hdr);
-        rectangle(320+cx,240-cy,.99f,.5f*q->w,.5f*q->h,-angle[id],q->uv,argb4(q->color));
+        rectangle(320+cx,240-cy,z,.5f*q->w,.5f*q->h,-angle[id],q->uv,argb4(q->color));z+=1e-4f;
     }
     const uint32_t* text=s->state[6];unsigned prior=~0u;
     float pen=0,baseline=0;

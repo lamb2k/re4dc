@@ -214,7 +214,7 @@ int main(void){
                 if(k==0||k==2||k==3)pvr_list_begin(k==0?PVR_LIST_OP_POLY:k==2?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY);
                 if(k==0)native_sky(&native);
                 if(k==0||k==2||k==3)native_world_pass(&native.assets,&native.world,camera,k==0?0:k-1);
-                if(k==1||k==3)native_actor_pass(&native,k==3);
+                if(k==1||k==2)native_actor_pass(&native,k==2);   /* hair: punch-through list */
                 if(k==4)native_effects(&native);
                 if(k==5)native_hud(&native);
                 if(k==1||k==2||k==5)pvr_list_finish();

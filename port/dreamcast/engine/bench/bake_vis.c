@@ -365,7 +365,7 @@ int main(int argc,char** argv){
     }
     FILE* f=fopen(argv[1],"rb");if(!f)return 1;fseek(f,0,SEEK_END);long size=ftell(f);fseek(f,0,SEEK_SET);
     uint8_t* data=malloc(size);if(fread(data,1,size,f)!=(size_t)size)return 1;fclose(f);
-    Table root,frames,delta[8];if(!table(&root,data+20,size-20)||root.n!=14)return 2;
+    Table root,frames,delta[9];if(!table(&root,data+20,size-20)||(root.n!=14&&root.n!=15))return 2;
     NativeWorld w;if(!native_world_open(&w,row(&root,2),bytes(&root,2)))return 3;
     table(&frames,row(&root,3),bytes(&root,3));
     for(int k=0;k<8;k++)table(delta+k,row(&root,4+k),bytes(&root,4+k));
