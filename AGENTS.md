@@ -28,13 +28,14 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 
 ## Goal
 
-- The whole game playable on a real Dreamcast, from PS2 assets, with **30 fps as the floor** at the benchmark scenes.
+- All of the game in a new native Dreamcast engine, playable on a real console, from PS2 assets, with **30 fps as the floor** at the benchmark scenes.
 - **Correct means it plays right and looks right:** same kills, triggers, doors, waves, room clears and cutscenes; no desync or stuck events; still pairs for the look. Bit-exact results are not a goal.
-- **Never changed:** collision, event sequencing, game state and AI behaviour. Enemy cap 4. No GameCube assets drawn or played.
+- **Never changed:** behaviour. Collision results, event sequencing, game state and AI decisions stay the same. Enemy cap 4. No GameCube assets drawn or played.
 
 ## Direction
 
-- **Keep the original game logic. Replace the drawing path.** The new renderer is proven on a bench image on the console first, then put into the game image with the old drawing code removed.
+- **The engine is the program; the original game supplies behaviour** (owner 2026-11-19: "I want all of the game in a new native improved engine"). The engine owns the main loop, memory map, loading, renderer, effects, skeleton and collision services. The original AI, event and script code is hosted on it. Each hot system under that code becomes a native service, one at a time, in console-profile order, each proven to play the same before the old code is deleted. Behaviour code itself is not rewritten.
+- **No work on the old path** (owner 2026-11-19). Do not improve, re-measure or re-profile the old drawing path. The engine is judged on the absolute budget, never as a percentage of the old game.
 - **Console decides.** Every number is labelled console, MODELLED, Flycast or estimate. Before a console number exists, a modelled or emulator figure counts only if it fits in half the budget.
 - **Judge the whole picture** on the fixed benchmark: mean, p99, worst interval, count over 33.3 ms. A gain that does not show there does not merge.
 - **First remove repeated work, fix data layout, batch, and convert offline.** Add SH-4 assembly only where the console profile shows the cost and a simpler fix is not enough. Write down why.

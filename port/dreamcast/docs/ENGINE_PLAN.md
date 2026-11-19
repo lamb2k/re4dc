@@ -7,9 +7,9 @@ Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC 
 
 ## 1. Goal and bar
 
-- **Goal:** the whole game playable on a real Dreamcast, from PS2 assets, with 30 fps as the floor at the benchmark scenes.
+- **Goal:** all of the game in a new native Dreamcast engine, playable on a real console, from PS2 assets, with 30 fps as the floor at the benchmark scenes.
 - **Correct means "plays right and looks right":** same kills, triggers, doors, waves, room clears and cutscenes; no desync or stuck events; still pairs for the look. Not bit-exact.
-- **Never changed:** collision, event sequencing, game state and AI behaviour. Enemy cap 4. No GameCube assets.
+- **Never changed:** behaviour. Collision results, event sequencing, game state and AI decisions stay the same; the code that computes them may become a native engine service once it is proven to play the same. Enemy cap 4. No GameCube assets.
 - **Console decides.** A modelled or emulator number is a filter, never a result.
 
 ## 2. Why the path changes
@@ -34,14 +34,24 @@ What that means:
 
 ## 3. Architecture
 
-Keep the original game logic. Replace the drawing path. Prove it outside the game first.
+The engine is the program. The original game supplies behaviour, hosted on top of it. (Owner 2026-11-19: "I want all of the game in a new native improved engine", then chose "Engine owns everything, original behaviour hosted on it".)
 
 | Layer | Runs | What it is |
 |---|---|---|
-| **Bake** | PC, offline | PS2 sources to room packs: world pieces in strip order, sorted by material, with ready-made chip headers and bounds; characters as bone-sorted streams with their levels of detail and prepared material records; effect atlases. Mip-mapped VQ and palette textures |
-| **Logic** | SH-4, original code | Unchanged behaviour. Each tick it emits a **frame list**: camera, visible cells, actors (model, level, bone matrices, lights), effect sprites, HUD items |
-| **Renderer** | SH-4, new, small | Runs the frame list one phase at a time: world, characters, punch-through, translucent and effects, HUD. Each phase is one tight loop: cull, transform and light, clip class, straight to the chip through the store queues. One pass per vertex. Validation happens at load, room entry and owner change, not per tick |
-| **Pacer and governor** | SH-4 | One logic tick a picture. A frame-time governor steps detail down and back up to hold the floor |
+| **Bake** | PC, offline | PS2 sources to room packs: world pieces in strip order, sorted by material, with ready-made chip headers and bounds; characters as bone-sorted streams with levels of detail; effect atlases; collision and room tables in engine form. Mip-mapped VQ and palette textures |
+| **Engine core** | SH-4, new | The main loop, the pacer and the frame-time governor; the memory map (its own layout, not the GameCube's 13 MiB arena); room and disc loading; saves; audio; movies; the QA link and counters |
+| **Engine services** | SH-4, new | Renderer (world, characters, effects, HUD; one tight loop per phase, one pass per vertex, straight to the chip); effect simulation; skeleton and pose; collision queries; object and actor tables; lights. Data-oriented, sized for an 8 KB instruction cache and a 16 KB data cache, math on SH4ZAM |
+| **Behaviour** | SH-4, original code | Enemy AI, player, events, scripts, room code and puzzles, compiled against the engine's service interfaces. Behaviour is unchanged: same decisions, kills, triggers, waves and cutscenes |
+
+**How the original code moves over.** It starts hosted as it is, calling thin adapters. Then each hot system behind it is replaced by a native service, one at a time, in the order the console profile gives. Each replacement is proven to play the same before the old code for it is deleted:
+1. drawing (M1, M2);
+2. effect simulation and transform;
+3. skeleton, pose and inverse kinematics;
+4. collision queries;
+5. actor and object management, enemy body services (routes, foot placement);
+6. whatever the console profile shows next.
+
+Behaviour code itself (what an enemy decides, what an event does) is not rewritten. A system is replaced only when the console shows its cost, never on the model alone.
 
 **Math and kernels: SH4ZAM** (owner 2026-11-19: "the engine needs to leverage sh4zam or improve upon it if there are shortcomings").
 - Every engine kernel (transform, skin, light, clip class, matrix stack, vector and trig math) is built on SH4ZAM (`gyrovorbis/sh4zam`). The engine does not grow a second math library.
@@ -52,17 +62,17 @@ Keep the original game logic. Replace the drawing path. Prove it outside the gam
 
 Two images are built from the engine line:
 1. **Bench image.** The renderer plus a room pack plus recorded frame lists from the benchmark scenes. No game code. It boots in seconds, runs unattended over the QA link, and is the permanent console benchmark.
-2. **Game image.** The original logic with the new renderer. The old drawing code is removed, not switched off, so its bytes go back to the room heap.
+2. **Game image.** The engine with the original behaviour hosted on it. Old drawing and service code is removed as each native service lands, not switched off, so its bytes go back to the game.
 
 **Carries over:** the PS2 asset pipeline and room packages; the SH-4 transform, skin and light kernels; store-queue submission; the pacer; the QA menu, QA link, lab disc, PC sampler and counter rows; the release harness jobs (boot, disc race, full-play, texture, memory); every gameplay fix (cap 4, PS2 spawn logic, the carry-forward list); audio, movies, saves.
 
-**Replaced:** the world pass stack in `native_static.cpp`; the actor transaction, lease and owner-run layers; the 3D binders in `native_ui.cpp`; the switch surface in the Makefile for anything that draws; the determinism compiler settings on the engine line (fused multiply-add off, `#line` pins).
+**Replaced:** the world pass stack in `native_static.cpp`; the actor transaction, lease and owner-run layers; the 3D binders in `native_ui.cpp`; the GameCube heap layout and the SDK shims the behaviour code calls; then, service by service, the original effect, skeleton, collision and manager code; the switch surface in the Makefile; the determinism compiler settings (fused multiply-add off, `#line` pins).
 
-**Logic gets a diet, not a rewrite:** a fixed room-heap size so program size stops changing game decisions; normal compiler settings (fused multiply-add on, -O2, link-time optimisation as a trial); code placed by console heat; presentation-only pose and cloth skipped on ticks whose picture is dropped; idle Ganados staggered.
+**Behaviour code gets normal treatment:** an engine-owned memory map so program size stops changing game decisions; normal compiler settings (fused multiply-add on, -O2, link-time optimisation as a trial); code placed by console heat; presentation-only work skipped on ticks whose picture is dropped; idle Ganados staggered.
 
 Why not something simpler: code layout alone gave 3 to 6.5% fewer instruction stalls and 0 fps (console). One 45-switch stack added 13.6 ms a drawn frame (MODELLED). Per-lever lanes have been inside the measurement noise since 11-12.
 
-Why not a full rewrite of the game: a sister project tried that and played one room after 692 commits. The logic is 30% of the CPU and 100% of the behaviour. It stays.
+Why not a full rewrite of the behaviour: a sister project tried that and played one room after 692 commits. The behaviour code is where the game's rules live, and it is not where the time goes. The services under it are, and those are replaced.
 
 ## 4. Milestones
 
@@ -72,10 +82,10 @@ Each is a vertical slice that runs, is shown (stills, a short clip, frame number
 |---|---|---|---|---|
 | **M0** | **Console truth.** Run the lab disc session that is already built. Add "off" arms (no world, no characters, no effects) so each part's cost is a subtraction on one build. Record mean, p99, worst interval | Where console time really goes; the model's margin | One console table for 6 scenes | 1 to 2 days + one owner evening |
 | **M1** | **Bench: the cross and the worst farm view on the new renderer,** from recorded frame lists, on console | Drawing can fit about 20 ms on hardware | Clip, still pairs against the current build, console frame table | 5 to 8 days + one owner boot |
-| **M2** | **Drive: the village and farm in the game image.** New renderer in, old drawing out, logic diet, one tick a picture | The gain survives inside the game; gameplay stays equivalent; the heap grows | Play clip, console table, decisions check | 8 to 12 days |
-| **M3** | **Fights hold the floor.** Governor, staggered logic, effect pool. Bell fight, barn, lake fight | 30 fps under load with approved detail steps | Fight clips, still pairs per governor step | 5 to 8 days |
-| **M4** | **Disc 1 on the engine line.** Every chapter 1 and 2 room re-baked, a no-warp play-through, first release from the engine line | The whole pipeline, end to end | The release | 8 to 12 days |
-| **M5** | **Disc 2 and 3 rooms on the new formats,** with budgets at first pass and a play-through per chapter | The rest of the game | Chapter by chapter | Sized per chapter after M2 |
+| **M2** | **Engine shell: the village and farm run on the engine.** Engine main loop and memory map, new renderer in, old drawing out, behaviour hosted through adapters, one tick a picture | The engine can host the original behaviour; the drawing gain survives in the game; gameplay stays equivalent | Play clip, console table, decisions check | 10 to 15 days |
+| **M3** | **Native services, round 1: fights hold the floor.** Effect simulation, skeleton and pose, collision queries as engine services; governor; staggered Ganados. Bell fight, barn, lake fight | 30 fps under load; each service plays the same as the code it replaces | Fight clips, still pairs per governor step, equivalence report per service | 10 to 15 days |
+| **M4** | **Disc 1 on the engine.** Every chapter 1 and 2 room re-baked, bosses included, a no-warp play-through, first release from the engine line | The whole pipeline, end to end | The release | 8 to 12 days |
+| **M5** | **The rest of the game on the engine:** Disc 2 and Disc 3 rooms and bosses on the engine formats, budgets at first pass, a play-through per chapter; further native services as the console profile ranks them | All of the game in the new engine | Chapter by chapter | Sized per chapter after M2 |
 
 M1 numbers (one table, 2026-11-19):
 
@@ -149,6 +159,8 @@ Full rules: [engine/LANES.md](engine/LANES.md).
 | 11-17 | "lets put the re4 work on hold for now" | On hold until this plan is approved |
 | 11-19 | "get to work", then confirmed: "Yes, all 10 as recommended" | Plan approved; the recommended answers to all ten decisions in H-001 stand |
 | 11-19 | "the engine needs to leverage sh4zam or improve upon it if there are shortcomings" | SH4ZAM is the engine's math and kernel base |
+| 11-19 | "I don't want to pile on improvement for old work - ensure we are following the guidance and lessons learned to go native." | No work on the old path; the engine is judged on the absolute budget |
+| 11-19 | "I want all of the game in a new native improved engine"; chose "Engine owns everything, original behaviour hosted on it" | The engine is the program; original AI, event and script code is hosted on it; hot systems become native services one at a time |
 | 11-19 | Console session: "Later, prepare it and wait" | M0 lab disc is prepared; staging waits for the owner's SD card |
 
 ## 9. Sources

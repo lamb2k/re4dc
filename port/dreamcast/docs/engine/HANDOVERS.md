@@ -2,6 +2,14 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-005 (2026-11-19): scope widened to the whole game in a native engine
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** "I don't want to pile on improvement for old work - ensure we are following the guidance and lessons learned to go native." Then: "I want all of the game in a new native improved engine", choosing "Engine owns everything, original behaviour hosted on it".
+- **Meaning:** the engine is the program (main loop, memory map, loading, renderer, effects, skeleton, collision services). The original AI, event and script code is hosted on it. Hot systems become native services one at a time, in console-profile order, each proven to play the same. Behaviour code is not rewritten.
+- **Changed:** ENGINE_PLAN.md sections 1, 3, 4, 6 and 8; AGENTS.md goal and direction. M2 is now the engine shell; M3 is native services round 1; M5 is the rest of the game.
+- **Lanes:** eng-bench continues (renderer, absolute budget). disc2-play handed back its chapter 3-1 play-through work. New PC-only lane eng-shell-map: the service boundary between behaviour code and the engine.
+
 ## H-004 (2026-11-19): guideline check (owner asked "Are we still operating under the right guidelines")
 
 - **Holding:** lane limits, tiers on every number, no input sent to windows, Codex builds and Claude audits, SD card / GitHub / SH4ZAM boundaries.
