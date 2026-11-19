@@ -215,6 +215,7 @@ int native_actor_open(NativeScene* s){
 }
 
 /* ---- per picture ---- */
+
 static unsigned actor_serial;
 static void actor_frame_setup(const NativeScene* s){
     const float* camera=(const float*)s->state[0];
@@ -271,7 +272,8 @@ static Corner clip_corner(const IndexCorner* c){
     float w=m[3]*p->xyz[0]+m[7]*p->xyz[1]+m[11]*p->xyz[2]+m[15],mag=w<0?-w:w;
     return (Corner){v->x*mag,v->y*mag,w,c->u*(1.f/32768),c->v*(1.f/32768),cur_lit[c->normal]};
 }
-static void emit_part(pvr_vertex_t** sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
+extern pvr_vertex_t* m1_emit_actor_strip(pvr_vertex_t* sq,const IndexCorner* corners,unsigned n,const pvr_vertex_t* proj,const uint32_t* lit);
+static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
     int header=0;
     const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;const uint8_t* codes=cur_codes;
@@ -285,23 +287,17 @@ static void emit_part(pvr_vertex_t** sq,const NativeScene* s,const RtModel* m,co
         }
         if(!header){
             const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
-            for(unsigned j=0;j<8;j++)((volatile unsigned*)*sq)[j]=hdr[j];
-            advance(sq);header=1;
+            for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
+            advance(&sq);header=1;
         }
-        if(!(combined&32)){
-            for(unsigned j=0;j<n;j++){
-                const pvr_vertex_t* src=proj+v[j].position;pvr_vertex_t* d=*sq;
-                d->flags=j+1==n?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
-                d->x=src->x;d->y=src->y;d->z=src->z;
-                d->u=v[j].u*(1.f/32768);d->v=v[j].v*(1.f/32768);d->argb=lit[v[j].normal];d->oargb=0;
-                advance(sq);
-            }
-        }else{
+        if(!(combined&32))sq=m1_emit_actor_strip(sq,v,n,proj,lit);
+        else{
             Corner a=clip_corner(v),b=clip_corner(v+1);
-            for(unsigned j=2;j<n;j++){Corner c=clip_corner(v+j);clipped(sq,j&1?b:a,j&1?a:b,c,near);a=b;b=c;}
+            for(unsigned j=2;j<n;j++){Corner c=clip_corner(v+j);clipped(&sq,j&1?b:a,j&1?a:b,c,near);a=b;b=c;}
         }
     }
     *emitted_parts+=header;
+    return sq;
 }
 void native_actor_pass(NativeScene* s,unsigned translucent){
     const RtCatalog* cat=s->runtime;
@@ -323,7 +319,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         cur_projected=proj;cur_lit=lit;cur_codes=codes;cur_pos=m->pos;
         if(translucent){
             unsigned emitted=0;
-            for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==7 && state[p])emit_part(&sq,s,m,m->parts+p,state[p],near,&emitted);
+            for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==7 && state[p])sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             continue;
         }
         unsigned considered=h[4];census[0]+=considered;
@@ -379,7 +375,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         unsigned emitted=0;
         for(unsigned p=0;p<h[4];p++){
             if(!state[p] || m->parts[p].src->role==7)continue;
-            unsigned before=emitted;emit_part(&sq,s,m,m->parts+p,state[p],near,&emitted);
+            unsigned before=emitted;sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             if(emitted==before)census[1]++;
         }
     }

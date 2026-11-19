@@ -1,9 +1,15 @@
 #include <stdlib.h>
 #include <dc/pvr/pvr_fog.h>
 static const float identity_grid[]={1,0,0,0,0,1,0,0,0,0,1,0};
+/* Two-dimensional layers record their TA words here when recording is on (HUD), else submit directly. */
+static uint32_t* layer_record;static unsigned layer_words,layer_capacity;
+static void layer_prim(const void* p){
+    if(layer_record && layer_words+8<=layer_capacity){memcpy(layer_record+layer_words,p,32);layer_words+=8;}
+    else pvr_prim((void*)p,32);
+}
 static void submit_header(const Scene* s,unsigned index){
     pvr_poly_hdr_t header __attribute__((aligned(32)));
-    memcpy(&header,(const unsigned*)row(&s->header,index)+1,32);pvr_prim(&header,32);
+    memcpy(&header,(const unsigned*)row(&s->header,index)+1,32);layer_prim(&header);
 }
 static uint32_t argb4(const float* c){
     uint32_t v=0;
@@ -17,7 +23,7 @@ static void rectangle(float x,float y,float z,float dx,float dy,float angle,cons
         float a=(j&1)?dx:-dx,b=(j&2)?dy:-dy;
         p.flags=j==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
         p.x=x+cs*a-sn*b;p.y=y+sn*a+cs*b;p.z=z;
-        p.u=uv[j&1?2:0];p.v=uv[j&2?3:1];p.argb=color;pvr_prim(&p,32);
+        p.u=uv[j&1?2:0];p.v=uv[j&2?3:1];p.argb=color;layer_prim(&p);
     }
 }
 void native_sky(NativeScene* s){
@@ -77,6 +83,8 @@ void native_effects(NativeScene* s){
         rectangle(b->x,b->y,b->iw,b->rx,b->ry,b->angle,uv,b->color);}
 }
 typedef struct {unsigned identity,tree,shape,hidden,hdr,fnv,mask[2];float pos[3],rot[3],w,h,color[4],uv[4];} Widget;
+/* The HUD is laid out every picture: its widget state changes every picture in both scenes, so a layout change
+   flag (tried in e0s4a: record and compare) cost more than it saved. */
 void native_hud(NativeScene* s){
     const Widget* w=(const void*)(s->state[5]+4);
     unsigned count=(s->words[5]-4)*4/sizeof(*w);

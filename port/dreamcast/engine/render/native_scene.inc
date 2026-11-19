@@ -30,6 +30,7 @@ __attribute__((optimize("O2"))) void native_update(NativeScene* s,unsigned frame
     }
 }
 volatile uint32_t m1_ram[8];
+volatile uint32_t m1_room_serial;
 volatile uint32_t m1_load_status[8];
 static uint8_t* resident_pack;
 static unsigned resident_capacity;
@@ -95,7 +96,7 @@ void native_close(NativeScene* s){
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
 int native_open(NativeScene* s,const char* name){
-    m1_load_status[0]=1;
+    m1_load_status[0]=1;m1_room_serial++;
     if(!resident_pack){
         unsigned a=file_size("/cd/CROSS.PAK"),b=file_size("/cd/FARM.PAK");
         if(!a||!b)return 0;

@@ -1,6 +1,8 @@
 // World drawing (E0 step 3). Included after the shared emit and clip helpers.
 #include "native_world.h"
 extern volatile uint32_t m1_state[8];
+extern volatile uint32_t m1_room_serial;     /* native_open: a new room invalidates every change flag */
+volatile uint32_t m1_world_reused,m1_hud_reused;
 static shz_mat4x4_t projection_grid(const float* camera,const float* grid){
     const float* p=camera+12,*v=p+7;
     float cx=640*(v[0]+v[2]*.5f)/v[2],cy=480*(v[1]+v[3]*.5f)/v[3];
@@ -29,11 +31,14 @@ static unsigned place_stamp[PLACE_LIMIT],world_serial;
 volatile unsigned m1_world_counts[300][4];   /* pieces, staged vertices, corners, clipped strips */
 static unsigned count_staged,count_corners,count_clipped;
 
+/* stage_sh4.S: stages an even count (one vertex of overrun into the next range, which is staged later or unused). */
+extern void m1_stage_world(pvr_vertex_t* out,const uint16_t* remap,const int16_t* vertices,const uint32_t* color,unsigned pairs,const float* uvp);
 static void stage_range(const uint16_t* vertices,const uint16_t* remap,const uint32_t* color,unsigned first,unsigned n,
                         const float* uv,float near,int boundary){
     pvr_vertex_t* st=stage+first;const uint16_t* r=remap+first;const uint32_t* c=color+first;
     float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
     count_staged+=n;
+    if(!boundary){m1_stage_world(st,r,(const int16_t*)vertices,c,(n+1)/2,uv);return;}
     for(unsigned i=0;i<n;i++,st++){
         const int16_t* v=(const int16_t*)vertices+6*r[i];
         shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));
@@ -122,16 +127,23 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
 static NativePiece selected[8192], ordered[8192];
 static unsigned offsets[1025], list_offsets[4];
 static uint8_t header_list[1024];
-static const NativeWorld* lists_for;
+static unsigned lists_for=~0u;
 int native_prepare_world(const NativeWorld* w,const float* camera,unsigned materials){
     if(materials>1024 || w->place_count>PLACE_LIMIT)return 0;
-    if(lists_for!=w){
+    if(lists_for!=m1_room_serial){   /* per room (the scene struct and pack buffer are reused across rooms) */
         memset(header_list,0,sizeof(header_list));
         for(unsigned i=0;i<((const uint32_t*)w->mesh)[5];i++)header_list[w->materials[i].header]=w->materials[i].phase;
-        lists_for=w;
+        lists_for=m1_room_serial;
+    }
+    /* Change flag: an unmoved camera keeps last picture's selection, order and placement matrices. */
+    static uint32_t last_camera[26];static unsigned last_room=~0u;
+    if(last_room==m1_room_serial && !memcmp(last_camera,camera,sizeof(last_camera))){
+        count_staged=count_corners=count_clipped=0;m1_world_reused++;
+        return 1;
     }
     int n=native_world_select(w,camera,2.f,selected,8192);
     if(n<0)return 0;
+    memcpy(last_camera,camera,sizeof(last_camera));last_room=m1_room_serial;
     static const float identity[]={1,0,0,0,0,1,0,0,0,0,1,0};
     world_pv=projection_grid(camera,identity);++world_serial;
     count_staged=count_corners=count_clipped=0;
