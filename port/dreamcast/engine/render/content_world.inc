@@ -1,12 +1,13 @@
 /* eng-look: world content step W (render/content.h), included by native_draw.inc.
-   A coarser world level past a distance (native_world.c) and a stable ranked cap on world pieces: the selected
-   meshlets are ranked by projected size (box half-diagonal in pixels at the box centre's depth); a piece drawn last
-   picture ranks 25% higher (hysteresis); only the first N are drawn. Big near pieces (ground, walls) always rank
-   first, so the cap removes the smallest far detail. (A cap on placements was tried first: 45 of the 54 placements
-   a picture are larger than 4 m, terrain and buildings, and a cap of 32 removed the ground under the pyre.)
+   A coarser world level past a distance (native_world.c) and a stable ranked distance cap on world pieces: the
+   selected meshlets whose box centre lies past the step's distance are ranked by projected size (box half-diagonal
+   over depth); a piece drawn last picture ranks 25% higher (hysteresis); only the first N of them are drawn. Pieces
+   nearer than the distance are never capped. (Tried first: a cap on placements, where 45 of the 54 placements a
+   picture are terrain and buildings over 4 m and a cap of 32 removed the ground under the pyre; then a cap on all
+   pieces, where 192 of 219 removed the pyre's post and the hanging body.)
      step 1: one level coarser past 20 m
-     step 2: two levels coarser past 15 m, at most 192 pieces (cross selects 219 a picture, farm 231)
-     step 3: two levels coarser past 10 m, at most 128 pieces
+     step 2: two levels coarser past 15 m; at most 48 pieces past 15 m
+     step 3: two levels coarser past 10 m; at most 24 pieces past 10 m
    Step 0 is today's selection. */
 #include "content.h"
 #include <stdlib.h>
@@ -19,7 +20,7 @@ static int place_rank(const void* a,const void* b){float x=*(const float*)a,y=*(
 static uint8_t piece_last[8192];
 static inline unsigned piece_key(const NativePiece* p){return (p->placement*2654435761u^p->meshlet*40503u)&8191;}
 static int content_world_cap(const NativeWorld* w,const float* c,NativePiece* sel,int n){
-    static const unsigned caps[4]={0,0,192,128};
+    static const unsigned caps[4]={0,0,48,24};static const float from[4]={0,0,15000,10000};
     unsigned cap=caps[m1_content[CS_WORLD]&3];
     if(!cap||n<=0)return n;
     static float score[8192][2];
@@ -32,9 +33,12 @@ static int content_world_cap(const NativeWorld* w,const float* c,NativePiece* se
             float e=fabsf(g[4*r])*hx+fabsf(g[4*r+1])*hy+fabsf(g[4*r+2])*hz;r2+=e*e;}
         float depth=-(c[8]*ctr[0]+c[9]*ctr[1]+c[10]*ctr[2]+c[11]);
         float sc=sqrtf(r2)/m1_maxf(depth,100.f);if(piece_last[piece_key(sel+i)])sc*=1.25f;
+        if(depth<from[m1_content[CS_WORLD]&3])sc=1e30f;   /* near: never capped */
         score[i][0]=sc;score[i][1]=(float)i;
     }
     memset(piece_last,0,sizeof(piece_last));
+    unsigned near=0;for(int i=0;i<n;i++)near+=score[i][0]>=1e30f;
+    cap+=near;
     if((unsigned)n<=cap){for(int i=0;i<n;i++)piece_last[piece_key(sel+i)]=1;return n;}
     qsort(score,n,sizeof(score[0]),place_rank);
     static uint8_t keep[8192];memset(keep,0,n);
