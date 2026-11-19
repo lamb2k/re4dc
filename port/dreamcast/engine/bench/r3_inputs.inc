@@ -1,7 +1,7 @@
 // Snapshot after the scheduler has advanced the pose. No camera tests or draw lists.
 static void m1r3_snapshot_model(cModel* model, unsigned role, unsigned index) {
     struct Pose { unsigned role,index,id,bone; float world[12]; } pose =
-        {role,index,model->id,0,{}};
+        {role,index,(unsigned)model->id|((unsigned)model->type<<8),0,{}};
     memcpy(pose.world, model->mat, sizeof(pose.world));
     m1r3::append(m1r3::Actor,&pose,sizeof(pose));
     cParts* part=model->pList;
@@ -32,4 +32,30 @@ static void m1r3_snapshot_inputs() {
     struct { unsigned life,maximum,weapon,bullet; } hud=
         {pG->pl_life,pG->pl_life_max,pG->weapon_no,pG->bullet_type};
     m1r3::append(m1r3::Hud,&hud,sizeof(hud));
+}
+
+static void m1r3_snapshot_widgets(){
+    for(int i=0;i<IdSys.m_maxId;++i){
+        const IdUnit& u=IdSys.pUnit[i];
+        if(u.be_flag==0xff || !(u.be_flag&1))continue;
+        struct Widget { unsigned identity,tree,shape,hidden,key[2],mask[2]; Vec pos,rot;
+                        float width,height,rgba[4],uv[4]; } w={
+           (unsigned)i|((unsigned)u.classNo<<8)|((unsigned)u.markNo<<16),
+           (unsigned)(u.pParent?u.pParent-IdSys.pUnit:255)|((unsigned)u.levelNo<<8)|((unsigned)u.type<<16),
+           (unsigned)u.vtxType|((unsigned)u.blend_type<<8)|((unsigned)u.be_flag<<16),
+           IdSys.m_disp_off[u.classNo>>5]&(0x80000000u>>(u.classNo&31)),{}, {},
+           u.pos,u.rot,u.sizeX,u.size_H,{u.col[0],u.col[1],u.col[2],u.col[3]},
+           {u.u0,u.v0,u.u1,u.v1}};
+        if(u.type!=1){
+            TexWk* wk=IdGetTexWk(u.texId,1);
+            if(wk && wk->pTpl && u.texNo<wk->pTpl->numDescriptors)
+                m1r3::texture_key(TEXGet(wk->pTpl,u.texNo),w.key);
+            if(u.tex_flag&1){
+                wk=IdGetTexWk(u.maskId,1);
+                if(wk && wk->pTpl && u.maskNo<wk->pTpl->numDescriptors)
+                    m1r3::texture_key(TEXGet(wk->pTpl,u.maskNo),w.mask);
+            }
+        }
+        m1r3::append(m1r3::Hud,&w,sizeof(w));
+    }
 }

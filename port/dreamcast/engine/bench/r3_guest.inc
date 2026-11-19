@@ -5,6 +5,12 @@ Control m1r3_control{};
 void* re4dc_static_alloc(unsigned);
 }
 bool recording;
+void texture_image_key(const void* pixels, const void* palette,unsigned width,unsigned height,
+                       unsigned format,unsigned pf,unsigned pb,unsigned (&out)[2]){
+    Re4dcUiImage img={pixels,palette,width,height,format,pf,pb};
+    Key k{};
+    if(image_key(img,k)){out[0]=k.crc;out[1]=k.fnv;}
+}
 static unsigned room_id,warmup,number,presents;
 void append(Kind kind,const void* ptr,unsigned size){
     if(!recording)return;

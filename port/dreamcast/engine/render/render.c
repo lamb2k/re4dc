@@ -262,4 +262,6 @@ void draw_shadows(const Picture *pic){
 }
 #ifdef M1_NATIVE
 #include "native_draw.inc"
+#include "native_actor.inc"
+#include "native_layers.inc"
 #endif

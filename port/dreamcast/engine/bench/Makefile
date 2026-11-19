@@ -11,6 +11,9 @@ $(OUT)/m1.elf: main.c ../../game/platform/avk_sh4.S ../render/render.c ../render
 	kos-cc $(FLAGS) $(EXTRA) -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm
 
 .PHONY: native
-native: $(OUT)/native.elf
-$(OUT)/native.elf: main.c ../render/render.c ../render/replay_pack.c ../render/native_world.c ../../game/platform/avk_sh4.S ../render/native_scene.inc ../render/native_draw.inc ../render/native_world.h ../render/native_scene.h | $(OUT)
+native: native-packs $(OUT)/native.elf
+.PHONY: native-packs
+native-packs:
+	@test -s "$(PRIVATE_PACK_DIR)/cross.pak" -a -s "$(PRIVATE_PACK_DIR)/hayfork.pak" || { echo "M1 missing native packs in PRIVATE_PACK_DIR"; exit 1; }
+$(OUT)/native.elf: main.c ../render/render.c ../render/replay_pack.c ../render/native_world.c ../../game/platform/avk_sh4.S ../render/native_scene.inc ../render/native_draw.inc ../render/native_actor.inc ../render/native_layers.inc ../render/native_world.h ../render/native_scene.h | $(OUT)
 	kos-cc $(FLAGS) $(EXTRA) -DM1_NATIVE -DRE4DC_ACTOR_LIGHT_N16=1 $(filter %.c %.S,$^) -Wl,--wrap=cdrom_read_toc -o $@ -lm

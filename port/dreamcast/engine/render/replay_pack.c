@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 extern volatile uint32_t m1_state[8];
-pvr_ptr_t m1_textures[256];
+pvr_ptr_t m1_textures[M1_TEXTURE_LIMIT];
 static uint32_t crc32(const uint8_t* p,unsigned n) {
     uint32_t lut[256];
     for(unsigned i=0;i<256;i++){ unsigned c=i; for(int k=0;k<8;k++) c=(c>>1)^((0-(c&1))&0xedb88320); lut[i]=c; }
@@ -24,8 +24,8 @@ static int table(Table* t,void* data,unsigned size){
 static uint32_t palette[64][16];
 static unsigned banks;
 static int uploads(Scene* s) {
-    if(s->texture.n>256)return 0;
-    unsigned palette_bits[256]={0};
+    if(s->texture.n>M1_TEXTURE_LIMIT)return 0;
+    unsigned palette_bits[M1_TEXTURE_LIMIT]={0};
     pvr_set_pal_format(PVR_PAL_ARGB8888);
     for(unsigned i=0;i<s->texture.n;i++){
         const uint32_t *p=row(&s->texture,i);
@@ -216,7 +216,7 @@ int open_scene(Scene* s,const char* path){
     return ok;
 }
 void close_scene(Scene* s){
-    for(unsigned i=0;i<256;i++)if(m1_textures[i]){pvr_mem_free(m1_textures[i]);m1_textures[i]=NULL;}
+    for(unsigned i=0;i<M1_TEXTURE_LIMIT;i++)if(m1_textures[i]){pvr_mem_free(m1_textures[i]);m1_textures[i]=NULL;}
     banks=0;free(s->storage);memset(s,0,sizeof(*s));
 }
 

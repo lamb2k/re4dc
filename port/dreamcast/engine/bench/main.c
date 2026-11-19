@@ -87,13 +87,19 @@ int main(void){
                 uint64_t t=timer_us_gettime64();
                 if(k==0||k==2||k==3)pvr_list_begin(k==0?PVR_LIST_OP_POLY:k==2?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY);
 #ifdef M1_NATIVE
+                if(k==0)native_sky(&native);
                 if(k==0||k==2||k==3)native_world_pass(&native.assets,&native.world,camera,k==0?0:k-1);
+                if(k==1||k==3)native_actor_pass(&native,k==3);
+                if(k==4)native_effects(&native);
+                if(k==5)native_hud(&native);
 #else
                 render_phase(&s,&pic,k);
 #endif
                 if(k==1||k==2||k==5)pvr_list_finish();
 #ifndef M1_NATIVE
                 if(k==1)draw_shadows(&pic);
+#else
+                if(k==1)native_shadows(&native);
 #endif
                 timing[i][k]=timer_us_gettime64()-t;
             }
@@ -101,7 +107,13 @@ int main(void){
             pvr_scene_finish();timing[i][7]=timer_us_gettime64()-now;
             if(i%120==119)m1_pmc[scene][i/120]=perf_cntr_count(PRFC1)/120;
             if(i%120==119)printf("PMC: ev=%02x per_drawn=%llu drawn=120\n",events[i/120],(unsigned long long)perf_cntr_count(PRFC1)/120);
-            if(stills&&(i==0||i==149||i==299)){
+            if(stills && (
+#ifdef M1_NATIVE
+                i<300
+#else
+                i==0||i==149||i==299
+#endif
+            )){
                 pvr_wait_render_done();vid_waitvbl();vid_waitvbl();
                 m1_state[4]=0xa5000000+2*(*(volatile uint32_t*)0xa05f8050&0x7ffffc);
                 m1_state[2]=scene*600+i+1;while(m1_state[3]!=m1_state[2])thd_pass();

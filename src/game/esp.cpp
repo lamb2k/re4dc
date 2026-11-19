@@ -853,7 +853,16 @@ int EspTrans()
                 {1,0,0,0,0,1,0,0,0,0,1,0}};
             if(particle->parent && particle->parent!=pEffParentWorld)
                 __builtin_memcpy(fx.parent,particle->parent->mat,sizeof(fx.parent));
-            m1r3::append(m1r3::Effect,&fx,sizeof(fx));
+            struct { decltype(fx) state; unsigned key[2],pattern,width,height; } rec={fx,{},particle->m_Ptn_no,0,0};
+            EspTexWk* source=&sys->Esp_tex_tbl[particle->m_Tex_id];
+            if(source->pTpl && source->Owner!=0xd2 && rec.pattern<source->pTpl->numDescriptors){
+                const auto* td=TEXGet(source->pTpl,rec.pattern);
+                if(td && td->textureHeader){
+                    rec.width=td->textureHeader->width;rec.height=td->textureHeader->height;
+                    m1r3::texture_key(td,rec.key);
+                }
+            }
+            m1r3::append(m1r3::Effect,&rec,sizeof(rec));
         }
     }
 #endif

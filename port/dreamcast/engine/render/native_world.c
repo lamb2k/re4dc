@@ -18,6 +18,21 @@ int native_world_open(NativeWorld* w,const void* data,size_t size){
     for(unsigned k=0;k<6;k++)if(!range(u32(m+40+4*k),u32(m+16+4*k),strides[k],ml))return 0;
     if(!range(u32(m+88),u32(m+20),8,ml)||!range(u32(m+92),u32(m+80),20,ml)||!range(u32(m+96),u32(m+84),12,ml))return 0;
     *w=(NativeWorld){m,m+ml+mt+pl+cl,(const void*)(m+ml),(const void*)(m+ml+mt),(const void*)(m+ml+mt+pl),c,n,size-(28+ml+mt+pl+cl)};
+    if(w->group_bytes && (w->group_bytes<32 || memcmp(w->groups,"R4SG",4) ||
+        u32(w->groups+12)>32 || 32+(uint64_t)16*u32(w->groups+12)*u32(m+24)!=w->group_bytes))return 0;
+    for(unsigned i=0;i<u32(m+24);i++){
+        const uint8_t* info=m+u32(m+48)+28*i;
+        unsigned base=u32(info),start=u32(info+4),span=u32(info+8),verts=u16(info+12);
+        int indexed=u16(info+14)&32768;
+        if(verts>256 || !range(start,span+(indexed?2*verts:0),1,u32(m+32)))return 0;
+        const uint8_t* strip=m+u32(m+56)+start;
+        for(unsigned j=0;j<verts;j++)if((uint64_t)base+(indexed?u16(strip+2*j):j)>=u32(m+28))return 0;
+        if(indexed)strip+=2*verts;
+        for(unsigned j=0;j<span;){
+            unsigned length=strip[j++];if(length<3||length>span-j)return 0;
+            for(unsigned k=0;k<length;k++)if(strip[j++]>=verts)return 0;
+        }
+    }
     for(unsigned i=0;i<c;i++)if(!range(w->cells[i].first,w->cells[i].count,1,n))return 0;
     for(unsigned i=0;i<n;i++)if(w->places[i].mesh>=u32(m+16))return 0;
     for(unsigned i=0;i<u32(m+16);i++){
@@ -90,7 +105,19 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
                         int cls=grid_class(&local,meshlets+28*l+16,&z);
                         if(!cls)continue;
                         if(count>=capacity)return -1;
-                        out[count++]=(NativePiece){j,part,l,w->materials[part].header,cls};
+                        unsigned mask=~0u;
+                        if(w->group_bytes){
+                            unsigned groups=u32(w->groups+12);mask=0;
+                            const uint8_t* group=w->groups+32+16*(l*groups);
+                            unsigned before=0;
+                            for(unsigned g=0;g<groups;g++,group+=16){
+                                unsigned after=u16(group+12);
+                                if(after>before && grid_class(&local,group,&z))mask|=1u<<g;
+                                before=after;
+                            }
+                            if(!mask)continue;
+                        }
+                        out[count++]=(NativePiece){j,part,l,w->materials[part].header,cls,mask};
                     }
                 }
             }

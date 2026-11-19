@@ -11,7 +11,7 @@ typedef struct {
     const NativeCell *cells;
     unsigned cell_count,place_count,group_bytes;
 } NativeWorld;
-typedef struct { unsigned placement,part,meshlet,header,near_class; } NativePiece;
+typedef struct { unsigned placement,part,meshlet,header,near_class,groups; } NativePiece;
 typedef struct { float p[6][4]; } NativeFrustum;
 int native_world_open(NativeWorld*,const void*,size_t);
 int native_world_select(const NativeWorld*,const float*,float,NativePiece*,unsigned);

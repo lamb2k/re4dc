@@ -37,8 +37,14 @@ static void native_piece(pvr_vertex_t** sq,const NativeWorld* w,const NativePiec
         shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));
         unique_world[i]=(Corner){q.x,q.y,q.w,uv[0]+uv[2]*v[3],uv[1]+uv[3]*v[4],world_color(v[5],flags)};
     }
-    const uint8_t* end=strip+l[2];
-    while(strip<end){
+    const uint8_t* first=strip;unsigned groups=w->group_bytes?((const unsigned*)w->groups)[3]:1;
+    unsigned before=0;
+    for(unsigned g=0;g<groups;g++){
+        unsigned after=w->group_bytes?*(const uint16_t*)(w->groups+32+16*(piece->meshlet*groups+g)+12):l[2];
+        strip=first+before;before=after;
+        if(!(piece->groups&(1u<<g)))continue;
+        const uint8_t* end=first+after;
+        while(strip<end){
         unsigned n=*strip++;
         if(piece->near_class==1){
             for(unsigned k=0;k<n;k++)emit(sq,unique_world[strip[k]],k+1==n);
@@ -47,6 +53,7 @@ static void native_piece(pvr_vertex_t** sq,const NativeWorld* w,const NativePiec
               unique_world[strip[k-1-(k&1)]],unique_world[strip[k]],near);
         }
         strip+=n;
+        }
     }
 }
 static NativePiece selected[8192], ordered[8192];

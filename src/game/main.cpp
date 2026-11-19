@@ -279,6 +279,7 @@ static void systemScreenInit();
 // (GetSystemVcnt frames), buffer swap and systemResetCheck (soft reset -> RESTART).
 #if RE4DC_M1_LOGIC_CAPTURE
 #include "player.h"
+#include "texture.h"
 #include "../../port/dreamcast/engine/bench/r3_inputs.inc"
 #endif
 
@@ -395,6 +396,9 @@ RESTART: WC24_RESET() DSA24_RESET() DFA26_RESET()
 #endif
             if (!(pG->System_flg & 0x100000) || (pG->Status_flg[0] & 0x40000)) {
                 IdSys.move();
+#if RE4DC_M1_LOGIC_CAPTURE
+                if(m1r3::recording)m1r3_snapshot_widgets();
+#endif
             }
 #if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR
             if (!re4dc_loadind_active)

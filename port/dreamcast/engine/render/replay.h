@@ -15,7 +15,12 @@ int open_scene(Scene*,const char*);
 void close_scene(Scene*);
 void open_picture(const Scene*,unsigned,Picture*);
 void render_phase(const Scene*,const Picture*,unsigned);
-extern pvr_ptr_t m1_textures[256];
+#ifdef M1_NATIVE
+#define M1_TEXTURE_LIMIT 512
+#else
+#define M1_TEXTURE_LIMIT 256
+#endif
+extern pvr_ptr_t m1_textures[M1_TEXTURE_LIMIT];
 
 
 #define INDEX_MAGIC 0x32584449u
