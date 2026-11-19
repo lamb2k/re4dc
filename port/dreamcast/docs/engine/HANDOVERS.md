@@ -2,6 +2,18 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-008 (2026-11-19): Ashley and the bosses on the engine
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** "we should have leon ashleyh and boses plus neon or ashley on the engine". Read as: Leon, Ashley and the bosses on the engine, with Leon or Ashley as the player.
+- **Changed:**
+  - E1 is now Leon and Ashley: the partner hosted after Leon, and the player hosting generic for Ashley's playable section.
+  - E2 adds a first Disc 1 boss.
+  - E3 covers every Disc 1 boss.
+- **Lanes:**
+  - eng-e1 was given the Ashley scope by message.
+  - Lane eng-boss is briefed (E:\RE4DC-Lanes\eng-boss\BRIEF.md) and starts when an emulator slot frees.
+
 ## H-007 (2026-11-19): E0 bench audit (Codex)
 
 - **From:** the auditor (Codex). **To:** the integrator.

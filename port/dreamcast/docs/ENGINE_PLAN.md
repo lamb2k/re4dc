@@ -96,9 +96,9 @@ Each is a vertical slice that runs and is shown (stills, a short clip, frame num
 |---|---|---|
 | **M0** | **Console truth.** The lab disc's core session: today's game with each part switched off. The bench disc in the same evening | The real budget split; the model's margin |
 | **E0** | **Walkabout.** The engine image boots to the village. World, sky and lighting are drawn from the whole-room bake with runtime selection. The camera rides a recorded path through the village and the farm. No game code | The world fits its drawing row before any behaviour exists |
-| **E1** | **Leon.** The player on the engine in the village: native skeleton and skinning from the original animation data, native collision queries, the original player behaviour hosted through setters, HUD, aiming and shooting | Hosting works with no publication layer; one character at the floor; handling plays right |
-| **E2** | **Fight.** Four Ganados with the original AI hosted on native services, effects, the village fight and the farm, kills, waves and triggers | The floor under load; the services row holds |
-| **E3** | **Chapter.** Chapter 1 from the first room to the lake boss: room loading, doors, events, cutscene movies, items, the merchant, saves, sound | The whole loop, end to end; first engine release |
+| **E1** | **Leon and Ashley.** The player on the engine in the village: native skeleton and skinning from the original animation data, native collision queries, the original player behaviour hosted through setters, HUD, aiming and shooting. Then Ashley's original partner code hosted, following Leon; the player hosting made generic so Ashley can be the controlled character in her castle section | Hosting works with no publication layer; the player and the partner at the floor; handling plays right |
+| **E2** | **Fight and boss.** Four Ganados with the original AI hosted on native services, effects, the village fight and the farm, kills, waves and triggers. A first Disc 1 boss on the bench and then hosted, with boss body levels only if the fight is over budget | The floor under load; the services row holds; bosses fit the engine |
+| **E3** | **Chapter.** Chapter 1 from the first room to the lake boss: room loading, doors, events, cutscene movies, items, the merchant, saves, sound; every Disc 1 boss fight on the engine | The whole loop, end to end; first engine release |
 | **E4** | **Game.** The rest of Disc 1, then Disc 2 and Disc 3 by chapter, bosses included. Each chapter: bake, budget at first pass, no-warp play-through | All of the game in the engine |
 
 Bench round 3 (running) is the start of E0: whole-room bakes and runtime selection exist; its recorded characters and effects carry into E1 and E2.
@@ -154,6 +154,8 @@ Stop rules:
 | 11-19 | "I want all of the game in a new native improved engine"; chose "Engine owns everything, original behaviour hosted on it" | The engine is the program |
 | 11-19 | "we should take the same approach as the fzero session" | This version of the plan |
 | 11-19 | "Update instructions and switch to opus to get this work done" | Lanes on Claude Opus; agent files updated |
+| 11-19 | "What can we do ahead of me making changes on my end I'm not home and want progress", then "Lets do it" | Four lanes on work needing neither console nor owner calls: E1, look and content steps, PC reference, console loader |
+| 11-19 | "we should have leon ashleyh and boses plus neon or ashley on the engine" (read as: Leon, Ashley and the bosses on the engine, with Leon or Ashley as the player) | E1 adds Ashley as partner and the player hosting generic for Ashley; E2 adds a first boss; E3 every Disc 1 boss |
 
 ## 12. Decisions needed from the owner
 
