@@ -182,16 +182,68 @@ int native_world_runtime(NativeWorld* w){
     w->rt_vertices=total;w->rt_duplicates=dup;w->rt_full=full;
     return 1;
 }
+/* Stored mask: a mode byte, then raw bits (0) or runs (1): alternating runs starting with zeros, u8 lengths,
+   255 = 255 and continue. Returns the bits decoded (into out, if given) and the bytes read in *used; 0 on a
+   malformed stream. */
+static unsigned vis_rle(const uint8_t* p,const uint8_t* end,unsigned nbits,uint8_t* out,unsigned* used){
+    if(p>=end)return 0;
+    if(*p==0){unsigned n=(nbits+7)/8;if((unsigned)(end-p)<1+n)return 0;if(out)memcpy(out,p+1,n);*used=1+n;return nbits;}
+    if(*p!=1)return 0;
+    unsigned at=0,bit=0;const uint8_t* q=p+1;
+    if(out)memset(out,0,(nbits+7)/8);
+    while(at<nbits){
+        unsigned run=0;
+        for(;;){if(q>=end)return 0;unsigned r=*q++;run+=r;if(r!=255)break;}
+        if(at+run>nbits)return 0;
+        if(bit && out){
+            unsigned i=at,e=at+run;
+            for(;i<e && (i&7);i++)out[i>>3]|=1u<<(i&7);
+            for(;i+8<=e;i+=8)out[i>>3]=0xff;
+            for(;i<e;i++)out[i>>3]|=1u<<(i&7);
+        }
+        at+=run;bit^=1;
+    }
+    *used=q-p;return at;
+}
 int native_vis_open(NativeVis* v,const void* data,size_t size,const NativeWorld* w){
     const uint32_t* h=data;const float* f=(const float*)(h+16);
-    if(size<96||h[0]!=0x31534956||h[9]!=w->place_count)return 0;
-    v->ninst=h[1];v->ncube=h[2];v->ncell=h[3];v->cx=h[4];v->cz=h[5];v->ax=h[6];v->ay=h[7];v->az=h[8];v->nplace=h[9];
-    v->ibytes=h[10];v->cbytes=h[11];
-    v->org[0]=f[0];v->org[1]=f[1];v->cell=f[2];v->alo[0]=f[3];v->alo[1]=f[4];v->alo[2]=f[5];v->acube=f[6];
-    v->place_base=h+24;v->mesh_first=v->place_base+v->nplace+1;v->used=(const uint8_t*)(v->mesh_first+v->nplace);
-    v->bits=v->used+v->ncell;
-    if(v->ncell!=v->cx*v->cz||v->ncube!=v->ax*v->ay*v->az||v->ibytes!=(v->ninst+7)/8||v->cbytes!=(v->ncube+7)/8||
-       (size_t)(v->bits-(const uint8_t*)data)+(size_t)v->ncell*(v->ibytes+v->cbytes)!=size||v->place_base[v->nplace]!=v->ninst)return 0;
+    memset(v,0,sizeof(*v));
+    if(size<128||h[0]!=0x32534956||h[14]!=size||h[2]!=w->place_count)return 0;
+    v->ninst=h[1];v->nplace=h[2];v->nx=h[3];v->nz=h[4];v->ncells=h[5];v->ni=h[6];v->ibytes=h[7];
+    v->ax=h[8];v->ay=h[9];v->az=h[10];v->nbits=h[11];v->cbytes=h[12];v->nc=h[13];
+    v->org[0]=f[0];v->org[1]=f[1];v->cell=f[2];v->alo[0]=f[3];v->alo[1]=f[4];v->alo[2]=f[5];v->acube=f[6];v->yunit=f[7];
+    if(v->ibytes!=(v->ninst+7)/8||v->cbytes!=(v->nbits+7)/8||!(v->cell>0)||!(v->acube>0)||!(v->yunit>0)||v->ni>=0xffff||v->nc>=0xffff)return 0;
+    uint64_t at=128+4ull*(2*v->nplace+1),rows=at;at+=8ull*v->nz;
+    uint64_t cells=at;at+=8ull*v->ncells;uint64_t cols=at;at+=4ull*v->ax*v->az;
+    uint64_t ioff=at;at+=4ull*(v->ni+1);uint64_t coff=at;at+=4ull*(v->nc+1);
+    if(at>size)return 0;
+    v->place_base=h+32;v->mesh_first=v->place_base+v->nplace+1;
+    v->rows=(const uint32_t*)((const uint8_t*)data+rows);v->cells=(const void*)((const uint8_t*)data+cells);
+    v->cols=(const void*)((const uint8_t*)data+cols);v->ioff=(const void*)((const uint8_t*)data+ioff);
+    v->coff=(const void*)((const uint8_t*)data+coff);v->rle=(const uint8_t*)data+at;
+    size_t rle_bytes=size-at;
+    if(v->place_base[v->nplace]!=v->ninst)return 0;
+    /* rows: spans inside the grid and the cell array */
+    for(unsigned z=0;z<v->nz;z++){
+        unsigned x0=v->rows[2*z]&0xffff,n=v->rows[2*z]>>16,first=v->rows[2*z+1];
+        if(x0+n>v->nx||first+(uint64_t)n>v->ncells)return 0;
+    }
+    for(unsigned k=0;k<v->ncells;k++){
+        const NativeVisCell* c=v->cells+k;
+        if((c->imask==0xffff)!=(c->cmask==0xffff))return 0;
+        if(c->imask!=0xffff && (c->imask>=v->ni||c->cmask>=v->nc||c->ylo>c->yhi))return 0;
+    }
+    for(unsigned k=0;k<v->ax*v->az;k++){
+        const NativeVisColumn* c=v->cols+k;
+        if(c->ny && (c->bit>=v->nbits||c->y0+(unsigned)c->ny>v->ay))return 0;
+    }
+    /* every mask decodes to exactly its bit count and stays inside the stream */
+    for(unsigned k=0;k<v->ni;k++){unsigned used;
+        if(v->ioff[k]>v->ioff[k+1]||v->ioff[k+1]>rle_bytes)return 0;
+        if(vis_rle(v->rle+v->ioff[k],v->rle+v->ioff[k+1],v->ninst,NULL,&used)!=v->ninst||used!=v->ioff[k+1]-v->ioff[k])return 0;}
+    for(unsigned k=0;k<v->nc;k++){unsigned used;
+        if(v->coff[k]>v->coff[k+1]||v->coff[k+1]>rle_bytes)return 0;
+        if(vis_rle(v->rle+v->coff[k],v->rle+v->coff[k+1],v->nbits,NULL,&used)!=v->nbits||used!=v->coff[k+1]-v->coff[k])return 0;}
     /* every placement's cluster range must match the world */
     const uint8_t* m=w->mesh;const uint8_t *meshes=m+u32(m+40),*plod=m+u32(m+88);
     for(unsigned j=0;j<v->nplace;j++){
@@ -201,18 +253,31 @@ int native_vis_open(NativeVis* v,const void* data,size_t size,const NativeWorld*
         if(lo==~0u){lo=hi=0;}
         if(v->mesh_first[j]!=lo||v->place_base[j+1]-v->place_base[j]!=hi-lo)return 0;
     }
+    v->ibits=malloc(v->ibytes+4);v->cbits=malloc(v->cbytes+4);
+    if(!v->ibits||!v->cbits)return 0;
+    v->cur_i=v->cur_c=~0u;
     return 1;
 }
-void native_vis_select(NativeWorld* w,const float* c){
+void native_vis_close(NativeVis* v){free(v->ibits);free(v->cbits);v->ibits=v->cbits=NULL;}
+/* The camera's cell and band select this picture's hidden sets; anything the table does not cover draws all. */
+unsigned native_vis_select(NativeWorld* w,const float* c){
     w->vis_inst=w->vis_cubes=NULL;
-    const NativeVis* v=w->vis;if(!v)return;
-    float x=-(c[0]*c[3]+c[4]*c[7]+c[8]*c[11]),z=-(c[2]*c[3]+c[6]*c[7]+c[10]*c[11]);
+    NativeVis* v=w->vis;if(!v)return VIS_NONE;
+    float x=-(c[0]*c[3]+c[4]*c[7]+c[8]*c[11]),y=-(c[1]*c[3]+c[5]*c[7]+c[9]*c[11]),z=-(c[2]*c[3]+c[6]*c[7]+c[10]*c[11]);
     float fx=(x-v->org[0])/v->cell,fz=(z-v->org[1])/v->cell;
-    if(fx<0||fz<0)return;
+    if(!(fx>=0)||!(fz>=0))return VIS_OUTSIDE;
     unsigned cx=(unsigned)fx,cz=(unsigned)fz;
-    if(cx>=v->cx||cz>=v->cz)return;
-    unsigned cell=cz*v->cx+cx;if(!v->used[cell])return;
-    w->vis_inst=v->bits+(size_t)cell*(v->ibytes+v->cbytes);w->vis_cubes=w->vis_inst+v->ibytes;
+    if(cx>=v->nx||cz>=v->nz)return VIS_OUTSIDE;
+    unsigned x0=v->rows[2*cz]&0xffff,n=v->rows[2*cz]>>16;
+    if(cx<x0||cx>=x0+n)return VIS_UNBAKED;
+    const NativeVisCell* cell=v->cells+v->rows[2*cz+1]+(cx-x0);
+    if(cell->imask==0xffff)return VIS_UNBAKED;
+    if(!(y>=cell->ylo*v->yunit && y<=cell->yhi*v->yunit))return VIS_HEIGHT;
+    unsigned used;
+    if(v->cur_i!=cell->imask){vis_rle(v->rle+v->ioff[cell->imask],v->rle+v->ioff[cell->imask+1],v->ninst,v->ibits,&used);v->cur_i=cell->imask;}
+    if(v->cur_c!=cell->cmask){vis_rle(v->rle+v->coff[cell->cmask],v->rle+v->coff[cell->cmask+1],v->nbits,v->cbits,&used);v->cur_c=cell->cmask;}
+    w->vis_inst=v->ibits;w->vis_cubes=v->cbits;
+    return VIS_MASK;
 }
 void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
 int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){

@@ -217,15 +217,19 @@ int native_actor_open(NativeScene* s){
 /* ---- per picture ---- */
 volatile uint32_t m1_vis_actors;
 /* Baked visibility: an actor is skipped when every 2 m cube its bone-sphere box touches is hidden from the camera's cell. */
+/* Actor columns exist only where actors can stand, each with a cube range; an actor is skipped when every
+   column its bone-sphere box touches is hidden and the box stays inside those columns' ranges. Anything else
+   (outside the room box, a column with no range, above or below the range) keeps it visible. */
 static int actor_hidden(const NativeVis* v,const uint8_t* cubes,const float* lo,const float* hi){
     int a[3],b[3];const unsigned dim[3]={v->ax,v->ay,v->az};
     for(unsigned i=0;i<3;i++){
         float l=(lo[i]-v->alo[i])/v->acube,h=(hi[i]-v->alo[i])/v->acube;
-        if(l<0||h>=dim[i])return 0;              /* outside the baked room box: visible */
+        if(!(l>=0)||!(h<dim[i]))return 0;
         a[i]=(int)l;b[i]=(int)h;
     }
-    for(int z=a[2];z<=b[2];z++)for(int y=a[1];y<=b[1];y++)for(int x=a[0];x<=b[0];x++){
-        unsigned q=x+v->ax*(y+v->ay*z);if(!(cubes[q>>3]>>(q&7)&1))return 0;
+    for(int z=a[2];z<=b[2];z++)for(int x=a[0];x<=b[0];x++){
+        const NativeVisColumn* col=v->cols+x+v->ax*z;
+        if(a[1]<col->y0 || b[1]>=col->y0+col->ny || !(cubes[col->bit>>3]>>(col->bit&7)&1))return 0;
     }
     return 1;
 }
