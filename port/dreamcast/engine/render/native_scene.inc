@@ -30,6 +30,13 @@ void native_update(NativeScene* s,unsigned frame){
     }
 }
 volatile uint32_t m1_ram[8];
+volatile uint32_t m1_load_status[8];
+static uint8_t* resident_pack;
+static unsigned resident_capacity;
+static unsigned file_size(const char* path){
+    file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
+    unsigned bytes=fs_total(f);fs_close(f);return bytes;
+}
 static int valid_model(const Table* tab,unsigned id,unsigned headers){
     const uint32_t* h=row(tab,id);unsigned size=bytes(tab,id);
     if(size<24||h[0]>256||h[1]>256||h[2]>4000||h[3]>4000)return 0;
@@ -84,20 +91,31 @@ static int valid_inputs(NativeScene* s){
 }
 void native_close(NativeScene* s){
     for(unsigned k=0;k<8;k++)free(s->state[k]);
-    close_scene(&s->assets);memset(s,0,sizeof(*s));
+    s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
 int native_open(NativeScene* s,const char* name){
+    m1_load_status[0]=1;
+    if(!resident_pack){
+        unsigned a=file_size("/cd/CROSS.PAK"),b=file_size("/cd/FARM.PAK");
+        if(!a||!b)return 0;
+        resident_capacity=a>b?a:b;
+        if(resident_capacity>=13*1024*1024)return 0;
+        resident_pack=memalign(32,resident_capacity);
+        if(!resident_pack)return 0;
+    }
     file_t f=fs_open(name,O_RDONLY);
     if(f<0){printf("M1 missing pack %s\n",name);return 0;}
     unsigned size=fs_total(f),got=0;
-    uint8_t* data=size>=20 && size<13*1024*1024 ? memalign(32,size):NULL;
+    uint8_t* data=size>=20 && size<=resident_capacity ? resident_pack:NULL;
     while(data && got<size){
         int n=fs_read(f,data+got,size-got>65536?65536:size-got);if(n<=0)break;got+=n;
     }
     fs_close(f);s->assets.storage=data;
     const unsigned* h=(const void*)data;Table root;
+    m1_load_status[0]=2;m1_load_status[1]=size;m1_load_status[2]=got;
     if(!data||got!=size||memcmp(data,"NAT3",4)||h[1]!=3||h[3]!=size-20 ||
        crc32(data+20,size-20)!=h[4]||!table(&root,data+20,size-20)||root.n!=14)return 0;
+    m1_load_status[0]=3;
     if(bytes(&root,13)!=8)return 0;
     memcpy(&s->sky_top,row(&root,13),8);
     if(!table(&s->models,row(&root,12),bytes(&root,12))||s->models.n<6)return 0;
@@ -107,6 +125,7 @@ int native_open(NativeScene* s,const char* name){
     if(!native_world_open(&s->world,row(&root,2),bytes(&root,2))||s->frames.n!=300)return 0;
     for(unsigned i=0;i<((const unsigned*)s->world.mesh)[5];i++)
         if(s->world.materials[i].header>=s->assets.header.n||s->world.materials[i].phase>=3)return 0;
+    m1_load_status[0]=4;
     for(unsigned j=0;j<s->models.n;j++)if(!valid_model(&s->models,j,s->assets.header.n))return 0;
     unsigned logic_bytes=0;
     for(unsigned k=0;k<8;k++){
@@ -122,9 +141,11 @@ int native_open(NativeScene* s,const char* name){
         const unsigned* camera=row(s->delta,refs[1]);
         if(camera[0]!=26)return 0;
     }
-    if(!valid_inputs(s)||!uploads(&s->assets))return 0;
+    m1_load_status[0]=5;if(!valid_inputs(s))return 0;
+    m1_load_status[0]=6;if(!uploads(&s->assets))return 0;
+    m1_load_status[0]=7;
     struct mallinfo heap=mallinfo();
     m1_ram[0]=size;m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
-    m1_ram[3]=heap.uordblks;m1_ram[4]=heap.fordblks;m1_ram[5]=pvr_mem_available();
+    m1_ram[3]=heap.uordblks;m1_ram[4]=heap.fordblks;m1_ram[5]=pvr_mem_available();m1_ram[6]=resident_capacity;
     return 1;
 }
