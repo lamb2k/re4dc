@@ -107,6 +107,7 @@ def build(disc, capture, room, tables, prior_dir=None):
                 assets.lookup[ck]=(len(assets.texpack),len(pkg));assets.texpack+=pkg
             material_cache[tag]=assets.header(ck,4,blend=(4,1),fog=False)
         return material_cache[tag]
+    first_pose={}
     frames = []
     changes = [Changes() for _ in samples]
     previous = None
@@ -146,13 +147,37 @@ def build(disc, capture, room, tables, prior_dir=None):
                 struct.pack_into("<2I",record,24,int(masked),0)   # mask applied at bake; 1 = a masked backdrop
             groups[kind].extend(record)
             offset += size
+        g2=groups[2];recs=[struct.unpack_from("<4I12f",g2,i) for i in range(0,len(g2),64)]   # eng-look: first pose per prop
+        for i,r in enumerate(recs):
+            if r[3]==0 and r[0]==2 and r[2] not in first_pose:
+                j=i+1
+                while j<len(recs) and recs[j][3]:j+=1
+                first_pose[r[2]]=[x[4:] for x in recs[i:j]]
         if len(groups[1])!=104 or not groups[2] or not groups[6] or not groups[8]:
             raise ValueError(f"missing logic output in {path}: {[(k,len(v)) for k,v in groups.items()]}")
         frames.append(pack("10I",tick,*(table.add(changes[i].encode(groups[i+1])) for i,table in enumerate(samples))))
+    # eng-look: far props as flat cards (native_cards.py)
+    from native_cards import bake as bake_card
+    tex_cache={}
+    def header_texture(hdr):
+        if hdr not in tex_cache:
+            tid=struct.unpack_from("<I",assets.headers.rows[hdr])[0];tex_cache[hdr]=dctex.decode(assets.textures.rows[tid])
+        return tex_cache[hdr]
+    cards=[]
+    for model in range(6,6+len(prop_ids)):
+        if model not in first_pose:continue
+        got=bake_card(actor_models[model],first_pose[model],header_texture)
+        if not got:continue
+        atlas,centre,rw,hh=got
+        pkg=dctex.encode_4444(atlas,b"card");ck=(zlib.crc32(pkg),0x44524143)
+        if ck not in assets.lookup:assets.lookup[ck]=(len(assets.texpack),len(pkg));assets.texpack+=pkg
+        cards.append(pack("2H5f",model,assets.header(ck,2,fog=True),*centre,rw,hh))
+    print("prop cards",len(cards))
     sections = [block(t.rows) for t in [assets.textures,assets.headers]]
     sections += [world,block(frames),*(block(t.rows) for t in samples)]
     sections.append(block(actor_models))
-    sections.append(pack("2f",assets.top,assets.bottom)+pack("4sI",b"LODV",len(variants))+b"".join(pack("4H",b,k,v,0) for b,k,v in variants))
+    sections.append(pack("2f",assets.top,assets.bottom)+pack("4sI",b"LODV",len(variants))+b"".join(pack("4H",b,k,v,0) for b,k,v in variants)
+                    +pack("4sI",b"CARD",len(cards))+b"".join(cards))
     data = block(sections)
     print("missing source textures",len(missing),"texture count",len(assets.textures.rows))
     print("room",hex(room),"resident pack",len(data)+20,"sections",list(map(len,sections)))

@@ -279,6 +279,9 @@ unsigned native_vis_select(NativeWorld* w,const float* c){
     w->vis_inst=v->ibits;w->vis_cubes=v->cbits;
     return VIS_MASK;
 }
+/* eng-look content step W: clusters whose nearest point is past native_world_lod_dist (mm) take their level
+   native_world_lod_shift steps coarser (clamped to the last level). 0 = the projected-size level only (today). */
+unsigned native_world_lod_shift;float native_world_lod_dist;
 void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
 int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
     const float* p=camera+12;
@@ -308,6 +311,7 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
                     if(!grid_test(&local,pm,cl,&km,&z))continue;
                     unsigned lev=u32(cl+12),last=lev+u32(cl+16);
                     while(lev+1<last && f32(levels+12*(lev+1)+8)*lod<=z+near)++lev;
+                    if(native_world_lod_shift && z+near>native_world_lod_dist){lev+=native_world_lod_shift;if(lev>=last)lev=last-1;}   /* eng-look */
                     unsigned l=u32(levels+12*lev),stop=l+u32(levels+12*lev+4);
                     for(;l<stop;l++){
                         unsigned lm=0;

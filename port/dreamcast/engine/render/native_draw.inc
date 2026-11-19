@@ -150,6 +150,7 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
     }
     return sq;
 }
+#include "content_world.inc"
 static NativePiece selected[8192], ordered[8192];
 static unsigned offsets[1025], list_offsets[4];
 static uint8_t header_list[1024];
@@ -167,8 +168,10 @@ int native_prepare_world(const NativeWorld* w,const float* camera,unsigned mater
         count_staged=count_corners=count_clipped=0;m1_world_reused++;
         return 1;
     }
+    content_world_setup();   /* eng-look: step W */
     int n=native_world_select(w,camera,2.f,selected,8192);
     if(n<0)return 0;
+    n=content_world_cap(w,camera,selected,n);
     memcpy(last_camera,camera,sizeof(last_camera));last_room=m1_room_serial;
     static const float identity[]={1,0,0,0,0,1,0,0,0,0,1,0};
     world_pv=projection_grid(camera,identity);++world_serial;

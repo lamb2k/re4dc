@@ -13,7 +13,9 @@
    distance levels, W world distance cap and level shift, P far props as flat cards, E effect density cap, B baked
    static lighting (steps 0-3; 0 = today's full detail), G the frame-alpha glow (0 off, 1 on: the default). Example:
    "c0.L2 f0.W3.E1". An unknown token, flag, item or step refuses the whole schedule (stage 94, nothing runs).
-   Default (the staged disc): c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh. /cd/SCHEDULE.TXT overrides it (one line of
+   Default (the staged disc): c0 f0 ca c0 cb c0 fa f0 fb f0, then the content candidates' lightest steps against
+   step 0 in the same boot (eng-look): c0.L3 c0 c0.W3 c0.P3 c0.E3 c0.B3 c0 f0.L3 f0.W3 f0.P3 f0.E3 f0.B3 f0, and
+   the controls c0dh (24 windows, about 6 minutes). /cd/SCHEDULE.TXT overrides it (one line of
    tokens); /cd/FARM1 alone means "f0 c0" (test images). After the schedule the summary stays on screen.
 
    Raw rows, every picture of every window (m1_rows): drawing time (after PVR readiness to scene finish, us),
@@ -49,7 +51,7 @@ int __wrap_cdrom_read_toc(cd_toc_t *toc,bool hd){
     return rc && !hd ? __real_cdrom_read_toc(toc,false) : rc;
 }
 
-#define WINDOWS 16
+#define WINDOWS 24
 volatile uint32_t m1_frame __attribute__((aligned(32)));
 volatile uint32_t m1_state[8]; /* scene, picture, still request, ack, framebuffer, stage, completed windows, delay */
 volatile uint32_t m1_timing[600][8];   /* this window's phase times (us): world, actors, PT, TR, FX, HUD, wait, draw */
@@ -71,6 +73,7 @@ volatile uint32_t m1_content[CS_COUNT]={[CS_GLOW]=1};
 volatile uint32_t m1_content_counts[8];
 volatile uint32_t m1_schedule_error;   /* 0, or the 1-based character offset of the refused token */
 static const char content_items[]="LWPEBG";
+void native_cards(NativeScene*);
 
 static int exists(const char *p){FILE *f=fopen(p,"rb");if(!f)return 0;fclose(f);return 1;}
 static int cmp(const void *a,const void *b){uint32_t x=*(const uint32_t*)a,y=*(const uint32_t*)b;return (x>y)-(x<y);}
@@ -209,7 +212,7 @@ int main(void){
     {   /* schedule */
         static char text[256];FILE* f=fopen("/cd/SCHEDULE.TXT","rb");unsigned n=0;
         if(f){n=fread(text,1,sizeof(text)-1,f);fclose(f);text[n]=0;}
-        const char* def=exists("/cd/FARM1")?"f0 c0":"c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh";
+        const char* def=exists("/cd/FARM1")?"f0 c0":"c0 f0 ca c0 cb c0 fa f0 fb f0 c0.L3 c0 c0.W3 c0.P3 c0.E3 c0.B3 c0 f0.L3 f0.W3 f0.P3 f0.E3 f0.B3 f0 c0dh";
         if(exists("/cd/DELAY5"))def=exists("/cd/FARM1")?"f0d c0d":"c0d f0d";
         m1_schedule_n=parse_schedule(n?text:def);
         if(!m1_schedule_n){   /* eng-look: refused, never replaced by the default */
@@ -252,6 +255,7 @@ int main(void){
                 if(k==0)native_sky(&native);
                 if(k==0||k==2||k==3)native_world_pass(&native.assets,&native.world,camera,k==0?0:k-1);
                 if(k==1)native_actor_pass(&native,0);
+                if(k==2)native_cards(&native);          /* eng-look: far props as flat cards (step P) */
                 if(k==3)native_actor_pass(&native,1);   /* eng-look: Leon's hair layer, blended in the translucent list */
                 if(k==4)native_effects(&native);
                 if(k==5)native_hud(&native);

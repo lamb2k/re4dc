@@ -44,3 +44,5 @@ int native_vis_open(NativeVis*,const void*,size_t,const NativeWorld*);
 void native_vis_close(NativeVis*);
 unsigned native_vis_select(NativeWorld*,const float* camera);
 void native_world_free(NativeWorld*);
+/* eng-look content step W (native_world.c): coarser cluster levels past a distance */
+extern unsigned native_world_lod_shift;extern float native_world_lod_dist;
