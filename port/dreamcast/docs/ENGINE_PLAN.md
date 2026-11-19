@@ -77,6 +77,14 @@ Each is a vertical slice that runs, is shown (stills, a short clip, frame number
 | **M4** | **Disc 1 on the engine line.** Every chapter 1 and 2 room re-baked, a no-warp play-through, first release from the engine line | The whole pipeline, end to end | The release | 8 to 12 days |
 | **M5** | **Disc 2 and 3 rooms on the new formats,** with budgets at first pass and a play-through per chapter | The rest of the game | Chapter by chapter | Sized per chapter after M2 |
 
+M1 numbers (one table, 2026-11-19):
+
+| Step | Bar |
+|---|---|
+| Console entry | Modelled drawing at the cross at or under 10 ms (half of the 20 ms target), like for like with the game: same scope, one logic tick a picture, no one-off loads. After at most three model rounds the bench goes to the console anyway |
+| M1 pass | Console drawing at the cross at or under 20 ms per picture (p99), hay-fork reported |
+| M1 stop | Console drawing at the cross above 26 ms after two genuinely different designs; the owner then chooses between content cuts and a lower floor |
+
 Stop rules:
 - **M1:** if the bench cannot draw the cross inside 26 ms on console after two distinct attempts, renderer work alone will not reach 30 fps at this content. The owner then chooses between content cuts and a lower floor. Nothing proceeds to M2 on hope.
 - **Any milestone:** a failing gate gets two distinct hypotheses tested, then the blocker is written up. No tolerance is loosened to pass.

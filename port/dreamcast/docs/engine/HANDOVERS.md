@@ -2,6 +2,24 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-004 (2026-11-19): guideline check (owner asked "Are we still operating under the right guidelines")
+
+- **Holding:** lane limits, tiers on every number, no input sent to windows, Codex builds and Claude audits, SD card / GitHub / SH4ZAM boundaries.
+- **Drift and fix:**
+  1. Model-only rounds: M1 round 3 is the last before a console run.
+  2. Briefs caused 4 of 5 lane stops: an integrator brief checklist goes in LANES.md section 7.
+  3. M1 thresholds disagreed: one table in ENGINE_PLAN.md section 4.
+  4. Mid-milestone audit: an exception is written into LANES.md section 5.
+  5. Bookkeeping: OPT-TRACK.md and these hand-overs brought up to date.
+
+## H-003 (2026-11-19): M1 round 2 audit
+
+- **From:** independent auditor (Claude). **To:** the integrator.
+- **Commit audited:** lane/eng-bench 0b6f207ca.
+- **Finding:** the claimed MODELLED -51.7% (cross) and -45.6% (hay-fork) are not like for like. Like for like: -3 to -5.5 ms (18-30%) and -8 to -10.5 ms (22-28%).
+- **Evidence:** E:\RE4DC-Lanes\eng-bench\AUDIT-M1-R2.md.
+- **Action:** round 3 steered (STEER-004): the whole drawing path at runtime from logic outputs, a fair one-tick baseline, compact whole-room bakes, 20+ timed pictures.
+
 ## H-002 (2026-11-19): plan approved
 
 - **From:** the owner. **To:** the integrator.

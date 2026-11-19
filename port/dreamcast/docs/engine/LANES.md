@@ -46,6 +46,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 - **One independent audit per milestone,** by the agent that did not write the code. It reads the final image's evidence and tries to break the claims.
 - No review round per change. Tooling and wording findings do not block a merge.
+- Exception: a lane number that is about to drive a decision (a stop, a milestone call, a plan change) gets an independent check first.
 - **Hand-overs are numbered** (`H-001`, `H-002`, ...) in [HANDOVERS.md](HANDOVERS.md). One per milestone or per blocking question. Each has: commit, image hashes, numbers with tiers, evidence path, what was not done.
 - A message with no reply is not agreement.
 
@@ -57,6 +58,13 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - Old checkpoint notes are history. They are not instructions.
 
 ## 7. Brief template
+
+Integrator checklist before a brief goes out:
+- every reference hash named;
+- slots and folders provisioned;
+- the baseline's scope defined (which phases, ticks per picture, what is excluded);
+- the stop rule says which gates it covers;
+- the lane's thresholds match ENGINE_PLAN.md.
 
 ```
 Lane: eng-<topic>            Branch: lane/eng-<topic> from engine <sha>
