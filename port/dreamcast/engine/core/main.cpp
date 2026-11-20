@@ -46,7 +46,7 @@ static void room_init()
     e2_room_globals();
 #endif
     PlayerInit();
-    MemCreateHeap(4, MemGetHeapStartAddr(0) + 0x1000, MemGetHeapEndAddr(0));
+    e1_room_heap_create(4);             // the room heap above heap 0, not over it (host/e1_heap.cpp; lane eng-e1e)
     MemSetCurrentHeap(4);
     e1_load_room(r.room);               // room archive sections and the core camera data (engine room pack)
     pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points (the partner's follow)
@@ -157,6 +157,7 @@ int main()
            (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
     if (!pack_first) e1_draw_open();
     e1_memmap_sample();
+    e1_heap_room_checks();              // heap descriptors' map; HEAPCK: the heap-4 exercise (lane eng-e1e)
     e1_state[0] = 4;
     const unsigned ticks = e1_route().ticks;
     e1_state[2] = ticks;
@@ -169,6 +170,7 @@ int main()
         e1_stamp(6);
         e1_input_latch(e1_tick);
         e1_partner_tick_begin(e1_tick);
+        e1_svc_tick_begin(e1_tick);     // RUMBLEX only (lane eng-e1e): the rumble exercise's planted calls
         PadRead();
         pG->Frame_cnt++;
         e1_stamp(0);

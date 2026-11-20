@@ -37,9 +37,15 @@ void e1_log(const char* fmt, ...);
 void* e1_file_load(const char* path, uint32_t* size, uint32_t align);   /* whole file, KOS heap (room-pack region) */
 
 // ---- arena statistics (the behaviour arena high-water mark) ----
-typedef struct { uint32_t heap_lo[13], heap_hi[13], used[13], peak[13], fails[13], allocs, frees; } E1ArenaStats;
+typedef struct { uint32_t heap_lo[13], heap_hi[13], used[13], peak[13], fails[13], allocs, frees, refused; } E1ArenaStats;
 extern E1ArenaStats e1_arena;
 void e1_arena_init(void);
+// lane eng-e1e (E1 audit section 6): the heap descriptors' map check (every live heap inside the arena, no two
+// overlapping; returns the faults, 0 = valid) and the heap-4 exercise (allocate, free, reuse; boot option HEAPCK).
+unsigned e1_heap_map_check(int log);
+void e1_heap_exercise(int heap);
+int e1_room_heap_create(int no);
+void e1_heap_room_checks(void);
 
 // ---- tick state ----
 extern volatile uint32_t e1_tick;

@@ -13,6 +13,8 @@
 #include "e1_core.h"
 #include "skel.h"
 #include "col.h"
+#include "global.h"
+#include "main.h"
 
 static const uint32_t kPoolBytes = 256 * 1024;
 static uint8_t* carve_next;
@@ -44,6 +46,18 @@ extern "C" int re4dc_motion_acquire(const void*, unsigned**) { return 0; }
 extern "C" void re4dc_motion_release(int) {}
 
 void e1_prnd_seed(unsigned short s);
+// lane eng-e1e: the round-4 services' control switches (services/routes, services/input) and the rumble exercise
+extern "C" int route_control;
+extern "C" int input_control;
+static int rumble_exercise;
+extern "C" void VibSet(u32 time, u32 level, u16 wait, u16 type);
+void e1_svc_tick_begin(unsigned t)
+{
+    if (!rumble_exercise || t < 20 || (t - 20) % 40 != 0) return;
+    pSys->flags |= 0x08000000;
+    VibSet(30, 0xC0, 0, 0x8001);
+    VibSet(12, 0x40, 4, 0x0002);
+}
 // ---- the cloth's shape statistics (lane eng-e1d; boot option CLOTHSTAT, diagnostic, outside the timed rows) ----
 // The motion check of SERVICES.md section 12 on the console image: per chain, the mean over its links and the run of
 // the horizontal distance of each link bone from the model's bone 0 (radius), and per link its mean offset from bone 0
@@ -105,6 +119,18 @@ void e1_svc_boot()
     f = fs_open("/cd/CLOTHSTAT", O_RDONLY);
     cloth_stat = f >= 0;
     if (f >= 0) { fs_close(f); e1_log("E1 CLOTHSTAT: the cloth chains' shape statistics\n"); }
+    // lane eng-e1e: the round-4 services' controls in the image (each must move the play: the image runs the native
+    // service, not an original unit) and the rumble exercise:
+    //   ROUTENEAR  routes: the nearest-point search returns the second reachable point (re4ref control routenear)
+    //   RUMBLERND  input: the random rumble strength from the behaviour generator Rnd (the audit's fault; control)
+    //   RUMBLEX    every 40 ticks from tick 20 a 30-tick random-strength rumble and a 12-tick constant one (rumble
+    //              switched on), as eng-svc4's re4ref exercise: the strength draws come from the presentation generator
+    f = fs_open("/cd/ROUTENEAR", O_RDONLY);
+    if (f >= 0) { fs_close(f); route_control = 1; e1_log("E1 ROUTENEAR: routes control (second reachable point)\n"); }
+    f = fs_open("/cd/RUMBLERND", O_RDONLY);
+    if (f >= 0) { fs_close(f); input_control = 2; e1_log("E1 RUMBLERND: rumble strength from Rnd (control)\n"); }
+    f = fs_open("/cd/RUMBLEX", O_RDONLY);
+    if (f >= 0) { fs_close(f); rumble_exercise = 1; e1_log("E1 RUMBLEX: random-strength rumble exercise\n"); }
 #ifndef E2_BOSS
     // CLOTHCTL: the cloth statistics' control (must fail s/clothcmp.py): the native cloth with gravity off
     f = fs_open("/cd/CLOTHCTL", O_RDONLY);

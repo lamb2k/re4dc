@@ -94,6 +94,9 @@ extern "C" unsigned e1_pres_u32(void)
     unsigned a = prnd(), b = prnd(), c = prnd(), d = prnd();
     return a | (b << 8) | (c << 16) | (d << 24);
 }
+// lane eng-e1e: the native input service's rumble (services/input: a random-strength slot) draws its strength from this
+// generator, one byte a draw (E1 audit section 3: rumble is presentation, never Rnd).
+extern "C" unsigned char eng_pres_u8(void) { return prnd(); }
 extern "C" unsigned char __real_Rnd();
 extern "C" unsigned char __wrap_Rnd()
 {

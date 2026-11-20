@@ -16,7 +16,7 @@
 FIGHT_SRCS := em10/em10 em15/em15_set game/em_set game/em_sub game/dmg game/em_dm_val st1/r101 \
 	game/sce_com game/sce_at game/area game/game game/libgpu st/em_wrap
 HOSTED_SRCS += $(FIGHT_SRCS)
-SVC_ORIG_SRCS += game/route_ck
+# route_ck: the native routes service (services/routes, lane eng-e1e), not the original unit
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
 ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(wildcard $(ENG)/fight/*.cpp) $(wildcard $(ENG)/services/effects/*.cpp)
 ENG_HDRS += $(wildcard $(ENG)/fight/*.h) $(wildcard $(ENG)/services/effects/*.h)

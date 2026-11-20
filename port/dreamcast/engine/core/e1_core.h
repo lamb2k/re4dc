@@ -17,6 +17,7 @@ uint32_t e1_svc_group(unsigned g);
 void e1_svc_publish();
 // native services host side (lane eng-e1c, host/e1_svc_mem.cpp): boot options, room tables, report
 void e1_svc_boot();
+void e1_svc_tick_begin(unsigned t);
 void e1_svc_room_ready();
 void e1_svc_report();
 void e1_cloth_stat_tick();   // lane eng-e1d: CLOTHSTAT boot option, the cloth chains' shape statistics   // the palette, once a tick after the behaviour (native skeleton), in the services row

@@ -9,6 +9,7 @@
 #include "main_mem.h"
 #include "db_log.h"
 #include "e1_engine.h"
+#include "e1_kos.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -30,6 +31,13 @@ u32 _epy_base = 40;
 static u8 CurrentHeap;
 E1ArenaStats e1_arena;
 static u32 arena_base;
+// lane eng-e1e (E1 audit section 6): heap 0 and the room heap 4 no longer share memory. Heap 0 (the boot heap) holds
+// the first E1_HEAP0_BYTES of the arena (the 0x1000 the room heap always left below itself; it holds nothing in E1:
+// used 0, peak 0), heap 4 the rest. MemCreateHeap refuses a range that overlaps another live heap, so heap_of names one
+// heap for every block. HEAPBAD (boot option, the control): the map before the fix (heap 0 over the whole arena, the
+// overlap allowed), which the map check and the heap-4 exercise must report as a FAIL.
+#define E1_HEAP0_BYTES 0x1000u
+static int heap_bad;
 
 extern "C" void e1_arena_init(void)
 {
@@ -37,11 +45,19 @@ extern "C" void e1_arena_init(void)
         Heap[i].handle = -1;
         Heap[i].status = 0;
     }
+    file_t f = fs_open("/cd/HEAPBAD", O_RDONLY);
+    if (f >= 0) { fs_close(f); heap_bad = 1; e1_log("E1 HEAPBAD: heap 0 over the whole arena, overlap allowed (control)\n"); }
     arena_base = (u32) OSInitAlloc((void*) E1_ARENA_LO, (void*) E1_ARENA_HI, MEM_HEAP_NUM);
     arena_base = (arena_base + 0x1F) & ~0x1Fu;
-    // Heap 0 (system) over the whole arena, as the original's boot heap; the game replaces it with its room heaps.
-    MemCreateHeap(0, arena_base, E1_ARENA_HI);
+    MemCreateHeap(0, arena_base, heap_bad ? E1_ARENA_HI : arena_base + E1_HEAP0_BYTES);
     MemSetCurrentHeap(0);
+}
+// The room heap (core/main.cpp room_init): the arena above heap 0. HEAPBAD: the old range (heap 0's start + 0x1000 to
+// its end, inside heap 0).
+extern "C" int e1_room_heap_create(int no)
+{
+    if (heap_bad) return MemCreateHeap(no, MemGetHeapStartAddr(0) + E1_HEAP0_BYTES, MemGetHeapEndAddr(0));
+    return MemCreateHeap(no, MemGetHeapEndAddr(0), E1_ARENA_HI);
 }
 
 int memGetHeapSattus(int no) { return Heap[no].status; }
@@ -64,6 +80,13 @@ int MemCreateHeap(int no, u32 start, u32 end)
 {
     if (!memCheckHeapActive(no)) return 0;
     if (Heap[no].handle >= 0) MemDestroyHeap(no);
+    for (int i = 0; i < MEM_HEAP_NUM && !heap_bad; i++) {
+        if (i == no || Heap[i].handle < 0 || end <= Heap[i].start || start >= Heap[i].end) continue;
+        e1_arena.refused++;
+        e1_log("ARENA create heap %d %08lx-%08lx REFUSED: overlaps heap %d %08lx-%08lx\n", no, (unsigned long) start,
+               (unsigned long) end, i, (unsigned long) Heap[i].start, (unsigned long) Heap[i].end);
+        return 0;
+    }
     Heap[no].handle = OSCreateHeap((void*) start, (void*) end);
     if (Heap[no].handle < 0) return 0;
     Heap[no].start = start;
@@ -100,6 +123,57 @@ static int heap_of(void* p)
     for (int i = 0; i < MEM_HEAP_NUM; i++)
         if (Heap[i].handle >= 0 && (u32) p >= Heap[i].start && (u32) p < Heap[i].end) return i;
     return -1;
+}
+
+// The heap descriptors' map (lane eng-e1e): every live heap inside the arena and non-empty, no two overlapping, no
+// creation refused. Returns the faults (0: a valid map). Reported by core/memmap.cpp after the room load.
+extern "C" unsigned e1_heap_map_check(int log)
+{
+    unsigned faults = e1_arena.refused;
+    for (int i = 0; i < MEM_HEAP_NUM; i++) {
+        if (Heap[i].handle < 0) continue;
+        if (Heap[i].start < E1_ARENA_LO || Heap[i].end > E1_ARENA_HI || Heap[i].start >= Heap[i].end) {
+            faults++;
+            if (log) e1_log("E1 HEAPMAP heap %d %08lx-%08lx outside the arena\n", i, (unsigned long) Heap[i].start, (unsigned long) Heap[i].end);
+        }
+        for (int j = i + 1; j < MEM_HEAP_NUM; j++) {
+            if (Heap[j].handle < 0 || Heap[j].end <= Heap[i].start || Heap[j].start >= Heap[i].end) continue;
+            faults++;
+            if (log) e1_log("E1 HEAPMAP heap %d %08lx-%08lx overlaps heap %d %08lx-%08lx\n", i, (unsigned long) Heap[i].start,
+                            (unsigned long) Heap[i].end, j, (unsigned long) Heap[j].start, (unsigned long) Heap[j].end);
+        }
+    }
+    return faults;
+}
+
+// The heap exercise (lane eng-e1e, boot option HEAPCK): on heap `no`, three blocks allocated, the middle one freed and
+// allocated again (the first-fit allocator must reuse its cell), then all freed. Each block must be found in heap `no`
+// (heap_of), the reuse must land on the freed address, and the heap's used count must come back to its start value.
+// Run after the room load, outside the ticks; it leaves the free list as it found it (every cell freed coalesces).
+extern "C" void e1_heap_exercise(int no)
+{
+    const u32 used0 = e1_arena.used[no];
+    const int cur = CurrentHeap;
+    unsigned bad = 0;
+    void* a = mem_alloc(0x40, 0, 0, 1, no);
+    void* b = mem_alloc(0x100, 0, 0, 1, no);
+    void* c = mem_alloc(0x40, 0, 0, 1, no);
+    const int ha = heap_of(a), hb = heap_of(b), hc = heap_of(c);
+    if (!a || !b || !c || ha != no || hb != no || hc != no) bad |= 1;
+    Mem_free_h(b, no);
+    void* b2 = mem_alloc(0x100, 0, 0, 1, no);
+    if (b2 != b || heap_of(b2) != no) bad |= 2;
+    Mem_free_h(a, no);
+    Mem_free_h(b2, no);
+    Mem_free_h(c, no);
+    if (e1_arena.used[no] != used0) bad |= 4;
+    for (int i = 0; i < MEM_HEAP_NUM; i++)
+        if (e1_arena.used[i] > 0x80000000u) bad |= 8;   // a free charged to another heap underflows its count
+    if (Heap[no].handle >= 0 && OSCheckHeap(Heap[no].handle) < 0) bad |= 16;
+    MemSetCurrentHeap(cur);
+    e1_log("E1 HEAPCHECK heap %d: blocks %08lx %08lx %08lx in heaps %d %d %d; reuse %08lx; used %lu -> %lu; heap 0 used %lu; %s (bits %u)\n",
+           no, (unsigned long) a, (unsigned long) b, (unsigned long) c, ha, hb, hc, (unsigned long) b2, (unsigned long) used0,
+           (unsigned long) e1_arena.used[no], (unsigned long) e1_arena.used[0], bad ? "FAIL" : "PASS", bad);
 }
 
 // size rounded to 32 bytes; a 32-byte "MAD" tag follows tagged blocks (file != NULL), as the original.
@@ -160,3 +234,12 @@ void operator delete(void* p, unsigned int) { Mem_free(p); }
 void operator delete[](void* p, unsigned int) { Mem_free(p); }
 extern "C" void memclr_asm(void* dst, u32 n) { memset(dst, 0, n); }
 extern "C" void memset_asm(void* dst, int c, u32 n) { memset(dst, c, n); }
+
+// After the room load (core/main.cpp): the map check always (one line), the heap-4 exercise with boot option HEAPCK.
+extern "C" void e1_heap_room_checks(void)
+{
+    const unsigned faults = e1_heap_map_check(1);
+    e1_log("E1 HEAPMAP heaps checked, faults %u refused %lu: %s\n", faults, (unsigned long) e1_arena.refused, faults ? "FAIL" : "PASS");
+    file_t f = fs_open("/cd/HEAPCK", O_RDONLY);
+    if (f >= 0) { fs_close(f); e1_heap_exercise(4); }
+}
