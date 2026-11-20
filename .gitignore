@@ -40,3 +40,5 @@ tools/research/mwccdbg/retrowin32
 # port/dreamcast/build-public.sh output
 /port/dreamcast/out-public/
 /port/dreamcast/out-contrib/
+# engine lanes: private image build folders (game/Makefile OUT=, lane scripts)
+/.e1/
