@@ -28,7 +28,7 @@
 #   routenear RE4_SVC_CONTROL=routenear: the nearest reachable way point is the second one (hill-ashley: the partner)
 #   followslow RE4_SVC_CONTROL=followslow: every root-motion follower blend step one tick longer (e1-route, exercise follow)
 #   modelslot RE4_SVC_CONTROL=modelslot: a model's contiguous parts run starts at the second free run (hill-ashley)
-#   camfov   RE4_SVC_CONTROL=camfov: the view frustum built for a field of view 1 degree wider (door103-walk)
+#   camfov   RE4_SVC_CONTROL=camfov: the view frustum built for a field of view 1 degree wider (e1-route)
 #   camroll  RE4_SVC_CONTROL=camroll: the camera's roll orientation 0.01 rad further (door103-walk)
 #   padstick RE4_SVC_CONTROL=padstick: the stick's direction bits need 81 units (a full push no longer counts; e1-route)
 #   rumblernd RE4_SVC_CONTROL=rumblernd: the random rumble strength from the behaviour generator (bell-ganado, exercise
@@ -183,7 +183,7 @@ print()" "$b/compare.json")
     r4ctl hill-ashley "nearest way point is the second reachable" routenear
     r4ctl bell-ganado "way points between skipped" routehop
     r4ctl hill-ashley "parts run at the second free run" modelslot
-    r4ctl door103-walk "frustum 1 degree wider" camfov
+    r4ctl e1-route "frustum 1 degree wider" camfov   # e1-route: the field of view changes in play (door103 builds its frustum before the control is read)
     r4ctl door103-walk "roll orientation 0.01 rad further" camroll
     # service exercises (svc4_dump.cpp, RE4_SVC_EXERCISE): calls planted at fixed ticks for services the fixtures' play
     # does not reach; the reference and the native build get the same calls, so the comparison is still original
