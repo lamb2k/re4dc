@@ -51,6 +51,8 @@ extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
 extern "C" SkelCounters skel_cnt __attribute__((weak));
 extern "C" ColCounters col_cnt __attribute__((weak));
 extern "C" ClothCounters cloth_cnt __attribute__((weak));
+#include "../../services/cloth/cloth_kernel.h"
+extern "C" ClothKCounters cloth_k_cnt __attribute__((weak));
 extern "C" u32 cloth_chain_count(void) __attribute__((weak));
 extern "C" ClothChain* cloth_chain_at(u32 i) __attribute__((weak));
 extern "C" int skel_control_parent __attribute__((weak));
@@ -201,6 +203,10 @@ extern "C" void host_svc_finish()
         if (&cloth_cnt) {
             fprintf(f, "cloth: chains %u (original fallback %u), steps %u, links stepped %u, volumes built %u, resets %u\n",
                     cloth_cnt.chains, cloth_cnt.fallback, cloth_cnt.moves, cloth_cnt.links, cloth_cnt.at_volumes, cloth_cnt.resets);
+            if (&cloth_k_cnt)
+                fprintf(f, "cloth kernel: links %u, passes over a chain %u, normalize %u, sqrt %u, acos %u, rotations %u, volume tests %u\n",
+                        cloth_k_cnt.links, cloth_k_cnt.passes, cloth_k_cnt.normalize, cloth_k_cnt.sqrt, cloth_k_cnt.acos,
+                        cloth_k_cnt.rotations, cloth_k_cnt.vol_tests);
             // the chains' link bones by model code (pal.bin's), for svc/cloth_stats.py
             const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
             for (u32 i = 0; i < cloth_chain_count(); i++) {

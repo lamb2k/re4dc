@@ -94,7 +94,7 @@ SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(S
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
 	@mkdir -p $(dir $@)
 	objcopy $(foreach s,$(PEN_ORIG) $(PEN_RAND),--redefine-sym $(s)) $< $@
-$(NAT)/cloth.o: $(SVC_ENG)/cloth/cloth.cpp $(SVC_ENG)/cloth/cloth.h $(SVC_ENG)/skeleton/skel.h
+$(NAT)/cloth.o: $(SVC_ENG)/cloth/cloth.cpp $(SVC_ENG)/cloth/cloth.h $(SVC_ENG)/cloth/cloth_kernel.h $(SVC_ENG)/cloth/pres_rng.h $(SVC_ENG)/skeleton/skel.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
 
@@ -107,6 +107,9 @@ $(NAT)/skel.o: $(SVC_ENG)/skeleton/skel.cpp $(SVC_ENG)/skeleton/skel.h $(SVC_ENG
 $(NAT)/col.o: $(SVC_ENG)/collision/col.cpp $(SVC_ENG)/collision/col.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
+$(NAT)/cloth_kernel.o: $(SVC_ENG)/cloth/cloth_kernel.c $(SVC_ENG)/cloth/cloth_kernel.h $(SVC_ENG)/cloth/pres_rng.h
+	@mkdir -p $(dir $@)
+	$(CC) $(COMMON) $(FP_plain) -std=gnu11 -Wall -I$(SHZ)/include -c $< -o $@
 $(NAT)/skel_xm.o: $(SVC_ENG)/skeleton/skel_xm.c $(SVC_ENG)/skeleton/skel_xm.h
 	@mkdir -p $(dir $@)
 	$(CC) $(COMMON) $(FP_plain) -std=gnu11 -Wall -I$(SHZ)/include -c $< -o $@
@@ -127,8 +130,8 @@ $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
 	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS)
 $(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
-               $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/shz_xmtrx_sw.o aliases.ld
-	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/shz_xmtrx_sw.o \
+               $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
+	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
 
 odump: $(ODU)/re4ref
@@ -137,9 +140,9 @@ native: $(NAT)/re4ref
 
 # ---- ncensus: the native build with the census (calls, memory and fields, as make census for the reference) ----
 NCEN := $(BUILD)/ncensus
-NCENSUS_S := $(NAT)/weak/model.o $(NAT)/weak/motion.o $(NAT)/weak/atari.o $(NAT)/skel.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/pen.o \
+NCENSUS_S := $(NAT)/weak/model.o $(NAT)/weak/motion.o $(NAT)/weak/atari.o $(NAT)/skel.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/pen.o \
              $(foreach u,cMotBase shape pl_cloth at_mod at_sub at_sub2 atariInfo route_ck area,$(BUILD)/plain/game/$(u).o)
-$(NCEN)/wraps.flags: $(NATIVE_GAME_OBJS) $(NAT)/skel.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/skel_xm.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS) svc/gen_wraps.py
+$(NCEN)/wraps.flags: $(NATIVE_GAME_OBJS) $(NAT)/skel.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/skel_xm.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS) svc/gen_wraps.py
 	@mkdir -p $(NCEN)
 	$(PY) svc/gen_wraps.py $(NCEN)/wraps.S $(NCEN)/wrapnames.cpp $@ $(foreach o,$(NCENSUS_S),S:$(o)) \
 	    $(foreach u,$(CENSUS_M_UNITS),M:$(BUILD)/plain/game/$(u).o) M:$(NAT)/skel_xm.o \
@@ -153,8 +156,23 @@ $(NCEN)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_
                 $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/shz_xmtrx_sw.o $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/svc/svc_io.o \
                 $(NCEN)/wraps.o $(NCEN)/wrapnames.o $(BUILD)/plant/svc_plant.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/svc/svc_io.o $(NCEN)/wraps.o \
-	    $(NCEN)/wrapnames.o $(BUILD)/plant/svc_plant.o $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) \
+	    $(NCEN)/wrapnames.o $(BUILD)/plant/svc_plant.o $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) \
 	    $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $$(cat $(NCEN)/wraps.flags) -Wl,--wrap=host_fixed \
 	    -Wl,-Map=$(NCEN)/re4ref.map
 ncensus: $(NCEN)/re4ref
 .PHONY: ncensus
+
+# ---- cloth_ktest (lane eng-svc3): the cloth kernel's test and benchmark (services/cloth/cloth_kernel_test.c) ----
+KT := $(BUILD)/ktest
+KT_SDK := $(BUILD)/plain/sdk/sdk_vec.o $(BUILD)/plain/sdk/sdk_mtx.o $(BUILD)/plain/sdk/sdk_mtxvec.o
+$(KT)/cloth_kernel_t.o: $(SVC_ENG)/cloth/cloth_kernel.c $(SVC_ENG)/cloth/cloth_kernel.h $(SVC_ENG)/cloth/pres_rng.h
+	@mkdir -p $(dir $@)
+	$(CC) $(COMMON) $(FP_plain) -std=gnu11 -Wall -DCLOTH_K_TEST -I$(SHZ)/include -c $< -o $@
+$(KT)/cloth_kernel_test.o: $(SVC_ENG)/cloth/cloth_kernel_test.c $(SVC_ENG)/cloth/cloth_kernel.h
+	@mkdir -p $(dir $@)
+	$(CC) $(COMMON) $(FP_plain) -std=gnu11 -Wall -I$(SHZ)/include -c $< -o $@
+$(KT)/cloth_ktest: $(KT)/cloth_kernel_t.o $(KT)/cloth_kernel_test.o $(KT_SDK) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS) -lm
+cloth_ktest: $(KT)/cloth_ktest
+	$(KT)/cloth_ktest
+.PHONY: cloth_ktest
