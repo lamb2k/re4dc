@@ -395,7 +395,9 @@ void e2_room_init()
     // archives bound for decoding; the scenario areas (AEV, ITA); the enemy list's room state.
     e2_fx_room_init();
     fx_note_archive("etc/core.das", e1_core_arc, e1_resident_bytes[3]);
-    fx_note_archive("st1/r101.arc", e1_room_arc, e1_resident_bytes[2]);
+    // the room archive is loaded reduced to the sections the fight reads (core/loader.cpp): its effect data is named
+    // by section for the equivalence check, which reads the same section from the disc's archive
+    if (void* eff = GetDataExt(pG->pRoom, "EFF", 0)) fx_note_archive("st1/r101.arc:EFF", eff, 0x100000);
     fx_note_archive("em/wep02.drs", e1_wep_arc, e1_resident_bytes[1]);
     fx_note_archive("em/pl00.drs", e1_pl_arc, e1_resident_bytes[0]);
     fx_bind_archive(e1_core_arc, e1_resident_bytes[3]);

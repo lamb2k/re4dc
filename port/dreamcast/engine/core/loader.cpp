@@ -136,7 +136,22 @@ void e1_load_room(unsigned room)
     snprintf(path, sizeof(path), "/cd/st%u/r%03x.arc", room >> 8, room);
 #ifdef E2_BOSS
     uint32_t size = 0;
+#ifdef E2_FIGHT
+    // lane eng-e2: the fight's room script, Ganados and effects read these sections; the room's prop and item models
+    // (ETM, ITM, BIN, SMD), lights (LIT) and the rest (1.1 MB of r101's 1.85 MB) are drawn or served by the engine
+    // or not hosted, so they stay on the disc
+    uint8_t* raw = 0;
+    {
+        static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP", "AEV", "ITA", "EFF", "EAR", "MDT", "OSD",
+                                           "EMI", "EVS", "BLK", "ESE", "DSE", "ESQ"};   // ESQ: the packed effect records
+        file_t f = fs_open(path, O_RDONLY);
+        if (f < 0) { e1_log("E1 load: missing %s\n", path); return; }
+        raw = compact_arc_file(f, keep, sizeof(keep) / sizeof(keep[0]), &size);
+        fs_close(f);
+    }
+#else
     uint8_t* raw = (uint8_t*) e1_file_load(path, &size, 32);
+#endif
     if (!raw) return;
     // eng-boss: the arena script and the boss read the whole room archive (numbered sections, RTP route data)
     e1_room_arc = raw;

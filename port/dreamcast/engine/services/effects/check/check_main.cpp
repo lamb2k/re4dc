@@ -117,9 +117,20 @@ int main(int argc, char** argv)
         unsigned owner, off;
         char name[64];
         if (sscanf(line, "FX source: owner %x %63s +%x", &owner, name, &off) == 3) {
+            // "file:TAG": a section of an archive the engine loaded reduced to its sections (the room's EFF): the
+            // first section with that tag in the disc's archive
+            char file[64]; const char* tag = strchr(name, ':');
+            unsigned sect = 0;
+            snprintf(file, sizeof file, "%.*s", tag ? (int) (tag - name) : 63, name);
             for (unsigned k = 0; k < narcs; k++)
-                if (!strcmp(arcs[k].name, name)) {
+                if (!strcmp(arcs[k].name, file)) {
                     const Arc& a = arcs[k];
+                    if (tag) {
+                        const unsigned num = rd32(a.base);
+                        for (unsigned i = 0; i < num; i++)
+                            if (!memcmp(a.base + 16 + 4 * num + 4 * i, tag + 1, 3)) { sect = rd32(a.base + 16 + 4 * i); break; }
+                    }
+                    off += sect;
                     orig_data_load(a.base + off, owner);
                     native_EspDataLoad((u32) (uintptr_t) (a.base + off), owner, 0);
                     loads++;
