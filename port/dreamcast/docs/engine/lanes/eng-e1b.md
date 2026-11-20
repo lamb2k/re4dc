@@ -156,7 +156,7 @@ Not built. What the engine has to provide, from the code the player paths take w
 
 ## 8. Staged disc
 
-`E:\RE4DC-Lanes\eng-e1b\build\E1B-GDEMU-hill` (KEEP, SHA256SUMS, SHA256SUMS.boot, disc_lint standard PASS). Boot
+`E:\RE4DC-Lanes\eng-e1b\build\E1B-GDEMU-hill` (program of commit 848eac9bb; KEEP, SHA256SUMS, SHA256SUMS.boot, disc_lint standard PASS). Boot
 options on the disc: `HILL FEED RESUMEA` (the plays-right run: the old run's generator states and Ashley's resume
 state, so the console trace compares with the old fixture and re4ref). Booted in Flycast (`runs\staged-hill-1`): the
 trace is byte-identical to the headless engine's. One boot: 728 ticks, then the report on serial (T / A / R trace
