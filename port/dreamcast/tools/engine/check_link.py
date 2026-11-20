@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""check_link.py: the engine image may link only the original functions on the allowed list (lane eng-svc4).
+
+    check_link.py <image.map> [--allowed port/dreamcast/engine/game/allowed_original.txt] [--waive FILE]
+                  [--json out.json] [--list] [--quiet]
+
+Owner rule 2026-11-19 ("Split it"): no original service code in the engine image. Only behaviour (decisions,
+scripts, player, partner and enemy logic) may be original. This reads the GNU ld map of the image (-Wl,-Map=,
+written by engine/game/Makefile) and lists every code section the link KEPT from an original object: the hosted
+units compiled from src/ (<OUT>/h/...), the SDK library (<OUT>/sdk/...) and the game's fdlibm (<OUT>/fd/...).
+Each one must match a line of the allowed list; any other one is an original service function and fails the check.
+
+A code section is `.text.<name>` (-ffunction-sections: one function a section; static functions included) or the
+presentation section `e1_present` (several functions: the map's symbol lines name them). Data, read-only data and
+discarded sections are not checked.
+
+Allowed list format (one entry a line; '#' starts a comment):
+    ## <group>: <reason>                       starts a group; every entry below it belongs to it
+    <unit> <pattern> [<pattern> ...]           unit = the object's path under <OUT> without .o (game/player,
+                                               wep02/wep02, sdk/mtx, fd/ef_acos); pattern = an fnmatch glob on
+                                               the demangled name ("cPlayer::*", "*") or on the mangled name
+    !<unit> <pattern> ...                      an exception inside an allowed unit: a matching function is NOT
+                                               allowed even if another line allows it (service functions that
+                                               live in a behaviour unit: view frustum, camera evaluation, ...)
+
+--waive FILE: a second list in the same format whose entries pass but are reported as waived (today's known
+remaining service functions, for the control: with them waived the check passes, and one more linked service
+function must fail it).
+
+--write-waive FILE: write today's SERVICE functions as such a list (mangled names).
+
+--list: print every original function the image keeps, by unit, with its size, the group that allows it or
+"SERVICE" (not allowed). Exit status: 0 PASS, 1 FAIL (an original function outside the list), 2 usage error.
+"""
+import argparse
+import fnmatch
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from collections import OrderedDict, defaultdict
+
+ORIG_DIRS = ('h', 'sdk', 'fd')   # <OUT>/h (hosted src/), <OUT>/sdk (SDK library), <OUT>/fd (fdlibm)
+
+
+def unit_of(path):
+    """'.../<OUT>/h/game/atari.o' -> 'game/atari'; '.../<OUT>/sdk/mtx.o' -> 'sdk/mtx'; None if not original."""
+    p = path.replace('\\', '/')
+    m = re.search(r'/(h|sdk|fd)/(.+)\.o$', p)
+    if not m:
+        return None
+    if m.group(1) == 'h':
+        return m.group(2)
+    return m.group(1) + '/' + m.group(2)
+
+
+def parse_map(path):
+    """-> list of (unit, section, size, [symbol names]) for every kept code input section from an original object."""
+    with open(path, errors='replace') as f:
+        lines = f.read().splitlines()
+    start = None
+    for i, ln in enumerate(lines):
+        if ln.startswith('Linker script and memory map'):
+            start = i + 1
+            break
+    if start is None:
+        sys.exit(f'check_link: {path}: not a GNU ld map (no "Linker script and memory map")')
+    out = []
+    cur = None
+    pend = None   # a section name alone on its line; its address, size and object are on the next
+    sec_re = re.compile(r'^ (\S+)\s+0x([0-9a-fA-F]+)\s+0x([0-9a-fA-F]+)\s+(\S.*)$')
+    cont_re = re.compile(r'^\s+0x([0-9a-fA-F]+)\s+0x([0-9a-fA-F]+)\s+(\S.*)$')
+    sym_re = re.compile(r'^\s+0x([0-9a-fA-F]+)\s{8,}(\S.*)$')
+    for ln in lines[start:]:
+        m = sec_re.match(ln)
+        if m:
+            cur = (m.group(1), int(m.group(3), 16), m.group(4).strip())
+            pend = None
+            out.append([cur[0], cur[1], cur[2], []])
+            continue
+        if pend is not None:
+            m = cont_re.match(ln)
+            if m:
+                out.append([pend, int(m.group(2), 16), m.group(3).strip(), []])
+                pend = None
+                continue
+        m = re.match(r'^ (\S+)\s*$', ln)
+        if m and not ln.startswith('  '):
+            pend = m.group(1)
+            continue
+        m = sym_re.match(ln)
+        if m and out:
+            name = m.group(2).strip()
+            if not name.startswith(('.', '*', 'PROVIDE', 'ASSERT')) and '=' not in name:
+                out[-1][3].append(name)
+            continue
+        pend = None
+    res = []
+    for sec, size, obj, syms in out:
+        u = unit_of(obj)
+        if u is None or size == 0:
+            continue
+        if not (sec.startswith('.text') or sec == 'e1_present'):
+            continue
+        res.append((u, sec, size, syms))
+    return res
+
+
+def demangle_all(names):
+    """mangled -> demangled (c++filt when available; the names unchanged otherwise)."""
+    tool = shutil.which('c++filt') or shutil.which('sh-elf-c++filt')
+    names = list(names)
+    if not tool or not names:
+        return {n: n for n in names}
+    r = subprocess.run([tool], input='\n'.join(names) + '\n', capture_output=True, text=True)
+    dem = r.stdout.splitlines()
+    if len(dem) != len(names):
+        return {n: n for n in names}
+    return dict(zip(names, dem))
+
+
+def functions(sections):
+    """-> list of dicts {unit, name (mangled or the map's), dem, size, section} (one a function)."""
+    fns = []
+    mangled = []
+    for u, sec, size, syms in sections:
+        if sec.startswith('.text.'):
+            nm = sec[len('.text.'):]
+            fns.append({'unit': u, 'name': nm, 'size': size, 'section': sec})
+            mangled.append(nm)
+        elif sec == '.text':
+            fns.append({'unit': u, 'name': '(.text of %s)' % u, 'size': size, 'section': sec})
+        else:   # e1_present: one entry a symbol (the map lists them demangled); the size is shared
+            names = sorted(set(syms)) or ['(%s of %s)' % (sec, u)]
+            for nm in names:
+                fns.append({'unit': u, 'name': nm, 'size': size // len(names), 'section': sec, 'dem': nm})
+    dm = demangle_all(sorted(set(mangled)))
+    for f in fns:
+        f.setdefault('dem', dm.get(f['name'], f['name']))
+    return fns
+
+
+def load_list(path):
+    """-> (rules, groups): rules = [(neg, unit_glob, [patterns], group)], groups = {group: reason}."""
+    rules = []
+    groups = OrderedDict()
+    group = '(no group)'
+    with open(path) as f:
+        for n, ln in enumerate(f, 1):
+            s = ln.strip()
+            if s.startswith('##'):
+                g = s[2:].strip()
+                name, _, reason = g.partition(':')
+                group = name.strip()
+                groups[group] = reason.strip()
+                continue
+            s = s.split('#', 1)[0].strip()
+            if not s:
+                continue
+            neg = s.startswith('!')
+            if neg:
+                s = s[1:].strip()
+            parts = s.split()
+            if len(parts) < 2:
+                sys.exit(f'check_link: {path}:{n}: want "<unit> <pattern>..."')
+            rules.append((neg, parts[0], parts[1:], group))
+    return rules, groups
+
+
+def match(rules, f):
+    """-> the group of the first allowing rule, unless an exception (!) matches; None if not allowed."""
+    def hit(r):
+        _, ug, pats, _ = r
+        if not fnmatch.fnmatchcase(f['unit'], ug):
+            return False
+        return any(fnmatch.fnmatchcase(f['dem'], p) or fnmatch.fnmatchcase(f['name'], p) for p in pats)
+    for r in rules:
+        if r[0] and hit(r):
+            return None
+    for r in rules:
+        if not r[0] and hit(r):
+            return r[3]
+    return None
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('map')
+    here = os.path.dirname(os.path.abspath(__file__))
+    ap.add_argument('--allowed', default=os.path.join(here, '..', '..', 'engine', 'game', 'allowed_original.txt'))
+    ap.add_argument('--waive')
+    ap.add_argument('--json')
+    ap.add_argument('--list', action='store_true')
+    ap.add_argument('--quiet', action='store_true')
+    ap.add_argument('--write-waive', help='write the SERVICE functions found as a waive list (mangled names)')
+    a = ap.parse_args()
+    rules, groups = load_list(a.allowed)
+    wrules, _ = load_list(a.waive) if a.waive else ([], {})
+    fns = functions(parse_map(a.map))
+    if not fns:
+        print(f'check_link: {a.map}: no original code section kept (wrong map?)')
+        sys.exit(2)
+    allowed, waived, bad = [], [], []
+    for f in fns:
+        g = match(rules, f)
+        if g is not None:
+            f['group'] = g
+            allowed.append(f)
+            continue
+        if wrules and match(wrules, f) is not None:
+            f['group'] = 'WAIVED'
+            waived.append(f)
+            continue
+        f['group'] = 'SERVICE'
+        bad.append(f)
+    by_unit = defaultdict(list)
+    for f in bad:
+        by_unit[f['unit']].append(f)
+    verdict = 'FAIL' if bad else 'PASS'
+    if a.list:
+        for f in sorted(fns, key=lambda f: (f['unit'], f['dem'])):
+            print(f"{f['unit']:22s} {f['size']:6d}  {f['group']:22s} {f['dem']}")
+    if not a.quiet:
+        print(f'check_link: {a.map}: {len(fns)} original functions kept; allowed {len(allowed)} '
+              f'({sum(f["size"] for f in allowed)} B), waived {len(waived)} ({sum(f["size"] for f in waived)} B), '
+              f'SERVICE {len(bad)} ({sum(f["size"] for f in bad)} B): {verdict}')
+        for u in sorted(by_unit, key=lambda u: -sum(f['size'] for f in by_unit[u])):
+            fl = by_unit[u]
+            print(f'  {u}: {len(fl)} functions, {sum(f["size"] for f in fl)} B: '
+                  + ', '.join(f['dem'] for f in sorted(fl, key=lambda f: -f['size'])[:12])
+                  + (' ...' if len(fl) > 12 else ''))
+    if a.write_waive:
+        with open(a.write_waive, 'w') as f:
+            f.write('## waived: original service functions linked in %s (written by check_link.py)\n' % a.map)
+            for u in sorted(by_unit):
+                f.write(u + ' ' + ' '.join(sorted(set(x['name'] for x in by_unit[u]))) + '\n')
+    if a.json:
+        rep = {'map': a.map, 'allowed_list': a.allowed, 'waive': a.waive, 'verdict': verdict,
+               'functions': len(fns), 'allowed': len(allowed), 'waived': len(waived), 'service': len(bad),
+               'service_bytes': sum(f['size'] for f in bad),
+               'by_unit': {u: {'functions': len(fl), 'bytes': sum(f['size'] for f in fl),
+                               'names': sorted(f['dem'] for f in fl), 'mangled': sorted(f['name'] for f in fl)}
+                           for u, fl in sorted(by_unit.items())},
+               'groups': {g: {'reason': groups[g], 'functions': sum(1 for f in allowed if f['group'] == g)}
+                          for g in groups}}
+        with open(a.json, 'w') as f:
+            json.dump(rep, f, indent=1)
+    sys.exit(1 if bad else 0)
+
+
+if __name__ == '__main__':
+    main()
