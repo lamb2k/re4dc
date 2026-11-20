@@ -832,3 +832,124 @@ and the grid records of the leaves they visit).
 and the fallback still original (pendulum.cpp linked); HermiteInterpolation still in motion.o for the camera and
 shape units; the grid for unmasked small leaves still allocated (32 B a leaf); no farm (em12) fixture; no SH-4
 timing (emulator lane).
+
+## 23. Round 4 (lane eng-svc4): the remaining service units, native
+
+The E1 audit (H-011, section 1) found original units still doing service work in the image. Round 4 gives each one an
+engine body under `services/`, with the original's arithmetic in its order, so re4ref compares them bit for bit with
+the original on the same inputs. Status: finished, unaudited. The image does not link them yet: lane eng-e1e wires them
+(section 31). Every number here is from re4ref on the PC; none is a timing.
+
+| Section | Service | Engine files | Original unit(s) retired in re4ref |
+|---|---|---|---|
+| 24 | Actor volumes and pushes | `services/volumes/volumes.{h,cpp}` | atariInfo, at_mod, at_sub |
+| 25 | Collision response and the collision managers | `services/collision/col_model.{h,cpp}` | atari |
+| 26 | Routes | `services/routes/routes.{h,cpp}` | route_ck |
+| 27 | Root-motion follower | `services/motion/follow.{h,cpp}` | cMotBase |
+| 28 | Model records and the record pools | `services/model/model_svc.{h,cpp}`, `pool.h` | model (the part the skeleton does not own) |
+| 29 | Camera, frustum, camera tracks | `services/camera/camera_svc.{h,cpp}` | view, camera, cam_motion, motion's HermiteInterpolation; the evaluation functions of cam_ctrl, cam_sys, cam_extra |
+| 30 | Input and rumble | `services/input/input.{h,cpp}` | pad |
+
+**How each is checked** (`hostref/svc`):
+- `svc4_dump.cpp` logs every call the behaviour makes to a round-4 entry point (`-Wl,--wrap`, `svc.mk SVC4_WRAP`), with
+  its inputs and results as float bits, in call order; only top-level calls (not those inside another logged call).
+  CameraMove and PadRead are logged transparently (one line after the call; the calls inside stay their own lines).
+  `svc4_compare.py` compares the reference's log with the native build's line by line; the last lines are each
+  service's counters.
+- `svc4_units.sh` reads the native re4ref map with `check_link.py` and fails when the link keeps any original function
+  of a round-4 unit, or a named function of a split unit (`svc4_split.txt`). Today: **0 kept**.
+- `svc_controls.sh` runs the six fixtures (bones, queries, svc4 log, traces; wind on and off, determinism, no pack, 16-bit
+  rows), then every control; the round-4 controls are listed in its header. Each must FAIL.
+- **Service exercises** (`RE4_SVC_EXERCISE`): calls planted at fixed ticks from `svc4_dump.cpp`, the same in both
+  builds, for services no fixture reaches: `follow` (Leon's root-motion follower), `camtrack` (rail cuts exported as
+  camera motions, the tracks and the key evaluator), `rumble` (random-strength rumble). They change the play; the
+  comparison stays original against native on the same inputs.
+- `native` links `services/<area>/` objects first; every global symbol they define is made weak in the original
+  objects (`weak4/`), so every call reaches the engine body and `--gc-sections` drops the original. Units whose global
+  objects the engine file constructs (`SVC4_NOINIT`: model, atari, view, camera) have the original's static
+  initialiser taken out.
+
+## 24. Actor volumes (atariInfo, at_mod, at_sub)
+
+The collision body of a character or object (`cAtariInfo`: a cylinder, or a yaw-aligned box with flag 2, at an offset
+from the model or a part; radius blending; push priority), the pushes between bodies by priority (`EmAtCheck`), the
+line tests against bodies (`EmHitCheck`, `ObjHitCheck`, `ObaLineHitChk`: aiming and the camera), the hit-box chain
+set-up (`YarareInit`, `YarareAdd`) and the geometry predicates (plane, triangle, box, sphere, capsule). The bodies stay
+in the actors' records, where behaviour reads them. Debug drawing counted. Controls: `volpush` (every push 10% longer;
+hill-ashley's 41 pushes), `volline` (a line tests the cylinder bodies whatever its flag; square-follow).
+
+## 25. Collision response and the collision managers (atari)
+
+The layer above the query cores of `col.cpp`: a model's bodies against the scenery (`cSatMgr::check`, `checkAir`,
+`checkRect`), one body's swept sphere slid along the walls, the push applied to every bone, the floor snap
+(`scrAtCheckSphere`, `wallAdjust`, `adjust`, `getFloor`), the collision piece's set-up from its file, the surface-effect
+table (`cEatMgr`), the managers themselves (`SatMgr`, `EatMgr`: constructors, log, piece construction; the piece pool on
+`pool.h`) and `SEck`. Controls: `colfloor` (floor snap 0.5 unit high), `colwall` (wall slide radius 10% larger), both on
+e1-route.
+
+## 26. Routes (route_ck)
+
+The room's way-point graph is read in place from its RTP file (points, links, next-hop table). The nearest reachable
+point of a position (the ten nearest by squared distance, then the first with a clear line from 500 above) and its
+per-tick cache in the actor; the next position toward an actor or a position (`RouteCkToEm`, `RouteCkToPos`: the
+partner's follow, the Ganados' chase), the escape point, the step between two positions, path lengths. Fixtures:
+bell-ganado (186 `RouteCkToPos`, 462 `RouteCkPosToPosDis`), hill-ashley (303 `RouteCkToEm`, 903 `RouteCkToPos`).
+Controls: `routenear` (the second reachable point; hill-ashley, fails at tick 1), `routehop` (the way points between
+skipped; bell-ganado, fails at tick 1).
+
+## 27. Root-motion follower (cMotBase)
+
+The pose an actor's animation says it should be at, integrated from the motion's root speed, and the model blended onto
+it over a count of ticks (or pinned to it); `adjust` carries movement made outside the follower. No fixture starts one
+(ledge climbs, fence vaults and falls do): exercise `follow` plants set calls on Leon (e1-route: 65 active ticks, 35
+blending, 30 pinned, 2 ends), identical; control `followslow` (every blend step one tick longer) fails at tick 40.
+
+## 28. Model records and the record pools (model)
+
+cModel's constructor, `modelInit`, the joint set-up, the model-data chain (`cModelInfo`: add, delete, swap, flags), the
+relocation of model and TPL files, bounding boxes; the pose functions of model.cpp stay the skeleton service's
+(section 1). `pool.h` holds the engine's record pools (first free slot, given slot, alive list, destroy or mark for the
+sweep, peak count), given to `cParts`, `cModelInfo` and `cSat` by explicit specialization (`ENG_POOL`): PartsMgr takes a
+model's parts as one contiguous run when one is free. Control `modelslot` (the run starts at the second free run;
+hill-ashley) fails at tick 1.
+
+## 29. Camera, frustum and camera tracks
+
+The frame's camera (`CameraMove`: the hosted controller decides it, then the quake offset, the projection, the
+look-at matrix and the frustum), the view frustum (`VIEW`: planes, corners and bounding sphere in camera and world
+space), the orientation matrices (`CameraSetOrientationRoll`, `Up`), the keyed camera tracks of cutscenes
+(`CameraMotion`) and the key evaluator (`HermiteInterpolation`: ten key layouts, per-axis history search), the camera a
+motion carries (`CameraAttachedToMotion::move`) and the rail spline (`HermiteExport`, `Parametrize`, `BSpline`). The
+projection is no longer loaded into a graphics API (`CameraSetProjection` records the type): the renderer reads
+`pG->Cam.ProjMat`. The camera's decisions (which camera, modes, rails, areas, targets) stay the hosted controller's;
+cam_ctrl, cam_sys and cam_extra are split units (`svc4_split.txt`). Exercise `camtrack` (e1-route: two rail cuts
+exported as camera motions, 1260 track and 630 direct key evaluations), identical; controls `camfov` (frustum 1 degree
+wider) fails at tick 387, `camroll` (roll 0.01 rad further) at tick 1. **Not exercised on re4ref:** the attached
+camera (no fixture motion carries one) and `Parametrize` / `BSpline` (their de Boor-Cox basis allocates from the debug
+heap, which re4ref does not provide).
+
+## 30. Input and rumble (pad)
+
+The pads into `Joy[]`, the `Key` word through the key-type table, the key stop, the rumble slots and mixer.
+**Rumble is presentation** (E1 audit section 3): a random-strength slot draws from the engine's presentation generator
+(`eng_pres_u8`), never from `Rnd`. In re4ref the reference's `VibControl` is moved to the presentation section too
+(hostref Makefile), so the two builds draw the same presentation stream. Exercise `rumble` (bell-ganado: 16 rumbles,
+211 random-strength draws): identical, the gameplay unchanged. Control `rumblernd` (the strength from `Rnd`: the fault
+the audit found) fails at tick 20 (bones) and in the trace: a rumble on the behaviour generator moves the play.
+Control `padstick` (direction bits need 81 units) fails at tick 47 on e1-route.
+
+## 31. What the engine image must change for round 4 (lane eng-e1e)
+
+- `game/Makefile`: compile `services/{volumes/volumes,collision/col_model,routes/routes,motion/follow,model/model_svc,
+  camera/camera_svc,input/input}.cpp` with the hosted units' flags (`-I` for each service folder; `pool.h` is reached as
+  `../model/pool.h`) and link them **before** the hosted objects (a header inline both define is then taken from them).
+- `hosted.mk`: drop from `SVC_ORIG_SRCS` model, motion, cMotBase, atari, atariInfo, at_mod, at_sub, pad, route_ck; drop
+  view, camera, cam_motion from `HOSTED_SRCS`. cam_ctrl, cam_sys and cam_extra stay hosted, with the native functions
+  (svc4_split.txt) weakened in them, as `WEAK_*` does today.
+- `host/e1_wraps.cpp`: export `extern "C" unsigned char eng_pres_u8()` returning `prnd()` (the presentation byte).
+- `services/managers.cpp` keeps the record tables (workAt, arrayAlloc); the pools' create / destroy now come from
+  `pool.h` for cParts, cModelInfo and cSat.
+- The renderer reads `pG->Cam.ProjMat` (the camera service no longer calls `GXSetProjection`).
+- Projected from today's default-image map (a count, not a link result): these services cover 142 of its 241 service
+  functions (31,772 of 54,300 bytes); 99 functions (22,528 bytes) remain: math_sub, sub2, pl_cloth, the SDK math and
+  allocator, fdlibm, objWep's laser drawing, and manager templates in pl_sub and pl_npc.
