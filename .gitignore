@@ -40,3 +40,9 @@ tools/research/mwccdbg/retrowin32
 # port/dreamcast/build-public.sh output
 /port/dreamcast/out-public/
 /port/dreamcast/out-contrib/
+# lane eng-loop2: private disc staging, loader build outputs, scratch (never commit; packs are game data)
+/.disc-data/
+/.loader-build/
+/.x/
+/.disc-out-*/
+/.cdisc-*/

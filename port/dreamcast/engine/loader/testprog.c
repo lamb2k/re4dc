@@ -4,7 +4,8 @@
      report     (default) a few lines and DONE through cl_exit
      return     return from main (the atexit hand-in: DONE, exit 0)
      big:<n>    n more bytes of report (the report path under load)
-     crash      a misaligned write: CRASHED with the registers, back through the preloaded loader
+     crash      a misaligned write (then a TRAPA if that did not fault, as in Flycast): CRASHED with the registers,
+                back through the preloaded loader
      hang       loop with interrupts on: the --deadline watchdog hands in TIMEOUT
      reboot     BIOS reboot without a hand-in: shows what GDEMU boots after a soft reboot (loader -> LOST)
      hangoff    interrupts off for ever: only a power cycle returns (the documented limit)
@@ -70,6 +71,15 @@ int main(int argc, char **argv) {
         thd_sleep(1500);
         volatile uint32_t *p = (volatile uint32_t *)0x8c100002u;
         *p = 0xdeadbeefu;
+        /* lane eng-loop2: Flycast does not raise the address error a misaligned write raises on the SH-4 (the program
+           went on and handed in DONE). Still running: an illegal instruction (event 180). KOS answers an unhandled
+           TRAPA by returning, so that is no test. Still running after that: abort() (the wrapped arch_abort path). */
+        cl_report("misaligned write did not fault: illegal instruction\n");
+        say(5, "NO FAULT: ILLEGAL INSTRUCTION");
+        __asm__ __volatile__(".word 0xfffd");
+        cl_report("illegal instruction did not fault: abort\n");
+        say(6, "NO FAULT: ABORT");
+        abort();
     }
     if (has(args, "hang") && !has(args, "hangoff")) {
         say(4, "HANG: WAITING FOR THE DEADLINE WATCHDOG");

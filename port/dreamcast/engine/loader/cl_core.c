@@ -263,6 +263,7 @@ static void on_run(cl_core_t *c, uint32_t session) {
     h->crash_evt = h->crash_pc = h->crash_pr = h->crash_sp = 0;
     h->report_len = 0;
     h->report_crc = 0;
+    h->report_cap = 0;   /* the whole report area (a console disc's selector may have left a cap) */
     cl_handoff_seal(a);
     out(c, CL_EXEC, session, c->raw_len, 0, NULL, 0);
     c->exec_pending = 1;
