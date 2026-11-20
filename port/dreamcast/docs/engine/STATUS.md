@@ -35,7 +35,8 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 |---|---|---|---|---|
 | eng-boss | E2: first Disc 1 boss on the bench, then hosted on the E1 shell | lane/eng-boss from engine | Claude Opus | E:\RE4DC-Lanes\eng-boss |
 | eng-svc | PC-only: native skeleton and collision services (cache-friendly tables, SH4ZAM), proven equal to the original units in re4ref | lane/eng-svc from engine b9d8ab691 | Claude Opus | E:\RE4DC-Lanes\eng-svc |
-| eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
+
+Closed: eng-look (Opus), handed back 11-19, merged (26c3746c8). Hair fixed (+1 ms MODELLED from re-skinning), pyre glow approximated, unseen-route visibility down to 1 pixel on 1 picture, light-pick control added. Step 0 MODELLED: cross 17.3 mean / 23.2 worst, hay-fork 19.6 / 22.1. Content steps barely move these two scenes: character levels L3 -0.45 ms (invisible), effect cap E2 -0.04 ms (invisible); world cap W2 -0.4/-1.6 ms and W3 -2.2/-3.1 ms leave visible holes; props as cards and baked lighting gain nothing here. Sheets sent to the owner. Disc E:\RE4DC-Lanes\eng-lookuild\E0-GDEMU-lkg.
 
 Closed: eng-host2 (Opus, PC-only), handed back 11-19, merged (9dd87b9cb). re4ref now hosts Ashley (pl_npc, pl11: 37 KB code) and a Ganado (em10 and 8 files: 293 KB code); per-actor trace lines; 10 controls pass. Agreement with old-game traces (position only, every 4th tick): Ganado within 0.002 units over ticks 185-317 at the bell gate until the room event freezes it; Ashley within 0.018 units over ticks 185-289 at the r11d hill until the room's opening event. Needs two emulator fixtures recorded with full per-actor fields (listed in its hand-back).
 
