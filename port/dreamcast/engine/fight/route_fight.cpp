@@ -13,11 +13,11 @@
 #include "e1_kos.h"
 #include <string.h>
 
-// Pad frame at engine tick 0: calibrated against the old game's fight fixture (cross-fight16) with the diagnostic
-// generator feed: the first two hits (old t=208, 232) and the wave-1 camera cut (t=311..433) on the same ticks. E1's
-// route used 13 (its walk start); the fight's warp places Leon one pad frame earlier in the room's frame count.
+// Pad frame at engine tick 0: E1's calibration (13, the route's walk start), confirmed on the old game's fight fixture
+// (cross-fight16) with the diagnostic generator feed: enemy positions within 1 unit from the first tick and the first
+// two hits on the old run's ticks.
 #ifndef E1_PAD_AT_PLACE
-#define E1_PAD_AT_PLACE 14
+#define E1_PAD_AT_PLACE 13
 #endif
 // Controls (the plays-right check must fail): every action one pad frame later (E1_CONTROL_SHIFT=1).
 #ifndef E1_CONTROL_SHIFT

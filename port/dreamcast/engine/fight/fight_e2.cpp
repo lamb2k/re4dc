@@ -329,19 +329,31 @@ void SceSetEventCancel(int on, TaskFunc func, int arg, int flagNo, int sndFlag)
     SceSys.cancelFlagNo = flagNo;
     SceSys.sndFlag = sndFlag;
 }
+// One scheduler pass (sce_sys.cpp cSceSys::scheduler): every task runs at most once a pass (its `running` mark), and
+// after each run the walk starts again from the table's head, so a task another task created this pass also runs in
+// this pass, as on the original.
 static void scheduler_pass()
 {
-    for (int ot = 15; ot >= 0; ot--)
-        for (unsigned i = 0; i < E2_TASKS; i++) {
-            E2Task* t = &tasks[i];
-            if (!t->alive || t->killed || t->wake > sce_tick || t->otprio != ot) continue;
-            if (pG->Stop_flg & 0x800000) return;
-            current = t;
-            sem_signal(&t->go);
-            sem_wait(&t->back);
-            current = 0;
-            e2_task_runs++;
-        }
+    bool ran[E2_TASKS] = {};
+    for (;;) {
+        E2Task* next = 0;
+        unsigned idx = 0;
+        for (int ot = 15; ot >= 0 && !next; ot--)
+            for (unsigned i = 0; i < E2_TASKS; i++) {
+                E2Task* t = &tasks[i];
+                if (ran[i] || !t->alive || t->killed || t->wake > sce_tick || t->otprio != ot) continue;
+                next = t; idx = i;
+                break;
+            }
+        if (!next) return;
+        if (pG->Stop_flg & 0x800000) return;
+        ran[idx] = true;
+        current = next;
+        sem_signal(&next->go);
+        sem_wait(&next->back);
+        current = 0;
+        e2_task_runs++;
+    }
 }
 
 // ---- the chapter's PS2 enemy list (stage.cpp readEmList with the PS2 USA rows of list 0, PS2_ENEMY_ROOMS 0x33f) ----
