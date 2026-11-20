@@ -27,6 +27,7 @@ from native_world import whole_world
 from native_extra import build_extra
 from pack_scene import Baker, Table, block, pack
 from boss_model import boss_model
+from native_pack import effect_glow_header
 
 BOSS_IDS = {0x2b: 'em2b'}      # El Gigante; the package descriptor is chosen with --boss
 
@@ -198,7 +199,12 @@ def build(disc, capture, room, tables, boss, extra_ids=(0x43,), report=None, haz
                 blend = struct.unpack_from("<I", record, 148)[0]
                 bt, bs, bd = blend & 255, blend >> 8 & 255, blend >> 16 & 255
                 pair = (bs & 7, bd & 7) if bt == 1 else (4, 5)
-                struct.pack_into("<I", record, 128, effect_header(record, 128, pair))
+                # lane eng-e1f: the record's second key word carries the glow header since eng-look (the renderer
+                # and the pack loader's stage 5 read word 33 as a header or ~0), as native_pack.py writes it; this
+                # packer left the raw key word there, and the bench refused its packs at stage 5
+                tool = struct.unpack_from("<I", record, 24)[0]
+                glow = effect_glow_header(assets, material_cache, record, 128) if tool & 0x8000 and not tool & 0x200000 else 0xffffffff
+                struct.pack_into("<2I", record, 128, effect_header(record, 128, pair), glow)
             if kind == 7:
                 if size != 60: raise ValueError("glyph source format")
                 struct.pack_into("<I", record, 28, sprite_header(record, 28, 5))

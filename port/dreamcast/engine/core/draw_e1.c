@@ -125,6 +125,35 @@ static void list_keepalive(int list)
     }
 }
 
+/* Presented fields (lane eng-e1f; core/frame.cpp e1_fields_*): a vblank handler counts the 60 Hz fields and records
+   the field number of every change of the display address (FB_R_SOF1, the chip's page flip), as the bench's. */
+#include <dc/vblank.h>
+#include <dc/video.h>
+static volatile uint32_t vbl_fields, flip_n, last_sof;
+static volatile uint32_t flip_field[1040];
+static void on_vblank(uint32_t code, void* data)
+{
+    (void) code; (void) data;
+    vbl_fields++;
+    uint32_t sof = *(volatile uint32_t*) 0xa05f8050;
+    if (sof != last_sof) { last_sof = sof; if (flip_n < 1040) flip_field[flip_n] = vbl_fields; flip_n++; }
+}
+void e1_fields_start_c(void)
+{
+    vblank_handler_add(on_vblank, NULL);
+    if (open_ok) { pvr_wait_ready(); pvr_wait_render_done(); }
+    vid_waitvbl(); vid_waitvbl();
+    flip_n = 0;
+}
+uint32_t e1_fields_now_c(void) { return vbl_fields; }
+unsigned e1_fields_finish_c(const volatile uint32_t** field)
+{
+    if (open_ok) { pvr_wait_ready(); pvr_wait_render_done(); }
+    vid_waitvbl(); vid_waitvbl(); vid_waitvbl();
+    *field = flip_field;
+    return flip_n < 1040 ? flip_n : 1040;
+}
+
 /* The camera stream (26 words: view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane) and the
    HUD stream's first four words (life, life max, weapon, stance) are written in place by the engine's tick steps
    (services/draw.cpp e1_camera_draw_tick / e1_hud_draw_tick, lane eng-e1e): the picture reads them as they are.

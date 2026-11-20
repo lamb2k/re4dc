@@ -3,7 +3,7 @@
 # (lane eng-loop2, 2026-11-20; docs/engine/CONSOLE_LOOP.md section 10). Run it in WSL.
 #
 #   build_console_disc.sh [--ref <git ref>] [--out <dir>] [--scenes A,B,..] [--drop <disc path>]...
-#                         [--no-precheck] [--layout standard|legacy] [--title <text>]
+#                         [--put <disc path>]... [--no-precheck] [--layout standard|legacy] [--title <text>]
 #
 # From a clean checkout of <ref> (default origin/engine: git archive of the commit, plus the SH4ZAM submodule at the
 # commit <ref> records, from the local submodule clone; nothing from the working tree) it builds:
@@ -27,6 +27,9 @@
 # Controls: --drop <disc path> removes one staged file (for example FIGHT/CROSS.PAK): the selector reports that scene
 # FAILED ("missing ..."); with --no-precheck the selector does not check the files and the program itself must refuse
 # (for example --drop BOSSB/FARM.PAK: "M1 native pack REFUSED"). --scenes picks a subset (short control discs).
+# --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
+# images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
+# scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
 #
 # Private inputs (never in git; override with the environment): PRISTINE (the little-endian game tree: st1, etc,
 # em, dc/mot), LKG (E0 packs and visibility), HILL_PAK, HILL_VIS, FIGHT_PAK, FIGHT_FXMAP, BOSS_PAK, BOSS_VIS,
@@ -39,6 +42,7 @@ REF=origin/engine
 OUT=
 SCENES=BENCH,LEON,HILL,FIGHT,BOSS-BENCH,BOSS
 DROPS=()
+PUTS=()
 PRECHECK=1
 LAYOUT=standard
 TITLE='RE4DC ENGINE CONSOLE DISC'
@@ -48,6 +52,7 @@ while [ $# -gt 0 ]; do
     --out) OUT=$2; shift 2 ;;
     --scenes) SCENES=$2; shift 2 ;;
     --drop) DROPS+=("$2"); shift 2 ;;
+    --put) PUTS+=("$2"); shift 2 ;;
     --no-precheck) PRECHECK=0; shift ;;
     --layout) LAYOUT=$2; shift 2 ;;
     --title) TITLE=$2; shift 2 ;;
@@ -63,7 +68,9 @@ HILL_PAK=${HILL_PAK:-$LANES/eng-e1d/build/packs/hill2.pak}
 HILL_VIS=${HILL_VIS:-$LANES/eng-e1d/build/vis/hill1.vis}
 FIGHT_PAK=${FIGHT_PAK:-$LANES/eng-e2/build/pack/CROSS.PAK}
 FIGHT_FXMAP=${FIGHT_FXMAP:-$LANES/eng-e2/build/pack/FXMAP.BIN}
-BOSS_PAK=${BOSS_PAK:-$LANES/eng-boss/build/packs/boss2-full.pak}
+# El Gigante's bench pack: lane eng-e1f's re-bake with the engine's bake/boss_pack.py (the effect records' glow header;
+# eng-boss's boss2-full.pak is refused at pack-loader stage 5, the control)
+BOSS_PAK=${BOSS_PAK:-$LANES/eng-e1f/build/packs/boss3-full.pak}
 BOSS_VIS=${BOSS_VIS:-$LANES/eng-boss/build/vis/boss2-full.vis}
 BOSS_EMLIST=${BOSS_EMLIST:-$LANES/eng-boss/build/EMLIST.BIN}
 BOSS_EMARC=${BOSS_EMARC:-$LANES/eng-boss/build/EM2B.ARC}
@@ -161,6 +168,10 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 300 e1 $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
+for f in "${PUTS[@]}"; do
+  [ -d "$(dirname "$D/$f")" ] || { echo "build_console_disc: --put $f: no such scene folder" >&2; exit 1; }
+  : > "$D/$f"; log "boot option: put $f"
+done
 for f in "${DROPS[@]}"; do
   [ -e "$D/$f" ] || { echo "build_console_disc: --drop $f: not staged" >&2; exit 1; }
   rm -f "$D/$f"; log "control: dropped $f"
@@ -182,7 +193,7 @@ cp "$B/e1/e1.elf" "$OUT/elf/e1.elf"; cp "$B/fight/e1.elf" "$OUT/elf/fight.elf"; 
 cp "$D/SCENES.TXT" "$OUT/"
 {
   echo "RE4DC console disc: $REF = $COMMIT (build \"$BUILD\"), staged $(date -u +%FT%TZ)"
-  echo "scenes: $SCENES  precheck: $PRECHECK  layout: $LAYOUT  drops: ${DROPS[*]:-none}"
+  echo "scenes: $SCENES  precheck: $PRECHECK  layout: $LAYOUT  drops: ${DROPS[*]:-none}  puts: ${PUTS[*]:-none}"
   echo "## programs"; (cd "$D" && sha256sum LOADER.BIN PROG/*.BIN)
   echo "## private inputs"; sha256sum "$LKG/CROSS.PAK" "$LKG/FARM.PAK" "$LKG/CROSS.VIS" "$LKG/FARM.VIS" "$HILL_PAK" "$HILL_VIS" \
     "$FIGHT_PAK" "$FIGHT_FXMAP" "$BOSS_PAK" "$BOSS_VIS" "$BOSS_EMLIST" "$BOSS_EMARC"

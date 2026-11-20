@@ -59,3 +59,81 @@ game/rnd *
 !game/objWep cObjWep::drawLaserSight* Draw_line3d_local_222 drawPoint
 # Actor and object tables (the engine's): template instances of the original manager that land in behaviour units.
 !game/* cManager<*>::* cEmMgr::memClear* cObjMgr::memClear*
+
+# ==== Enemy decisions and room scripts (lane eng-e1f, integrator ruling from ENGINE_PLAN section 3: what an enemy
+# decides and what an event does stays original code). The units are allowed whole, and every function in them that
+# does service work (sound, effects, pose and parts, cloth, camera, view, drawing, collision maths, memory, tables,
+# loading) is taken out below by name: those stay offenders until a later lane makes them native. The list was made
+# by hand from the source of each function (its body and what it calls); the review and sizes are in the lane's
+# ev/enemy-service-functions.md. A name guard at the end refuses a service function allowed by mistake when its
+# name says what it is. Not allowed at all (whole units of service code): game/area (area volume queries),
+# game/obj20 (El Gigante's collision model object), game/libgpu (ordering-table list container), and the math,
+# SDK and fdlibm units as before.
+
+## enemy-decisions: the enemies' original AI (Ganado em10 and its em15 appearance table, El Gigante em2b), their shared decision helpers (em_sub damage and item drops, em_set spawn lists and the cap-4 policy, em_dm_val damage values, dmg damage areas, emtree and emtorch thrown objects) and the room scripts' enemy wrapper (em_wrap)
+em10/em10 *
+em15/em15_set *
+em2b/em2b *
+game/em_sub *
+game/em_set *
+game/em_dm_val *
+game/dmg *
+game/emtree *
+game/emtorch *
+st/em_wrap *
+
+## room-scripts: the room scripts (village r101, El Gigante's arena r119) and the scenario layer they drive (sce_at doors, items, ladders, messages; sce_com events, cut-ins, enemy counts), the difficulty points and the death demo (game)
+st1/r101 *
+st1/r119 *
+game/sce_at *
+game/sce_com *
+game/game *
+
+# ---- service code inside the enemy and room-script units (exceptions; ev/enemy-service-functions.md) ----
+# em10: sound, effects, pose / parts / cloth, camera, view, tables
+!em10/em10 Em10SetSeTbl em10BehindSeCk em10BreathSe em10CallVoiceSe em10CallVoiceSe2 em10CsawSignSe em10FootSe em10SetDamageVoice
+!em10/em10 em10BloodSet em1cBloodSet em10KickHitMark em10SetDmWaterEff em10SetWaterEff em10WepSeEffSet
+!em10/em10 em10NeckMove em10BombNeckMove em10WaistMove em10ScaleCompress em10BlendMotSet em10ClawMove em10GatlingRollMove em10BowgunMove
+!em10/em10 em10ChainSet em10BeltSet em10ClothPartsSet* em10GoodsPartsSet* em10SackSet* em10MouthPartsReset em10ModelInit em10SetAccesory em10HandSet em10HeadSet
+!em10/em10 em10CamMove em10CamMove2 em10CamMoveAshley em10CamMoveCri em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk
+!em10/em10 cEm10::~cEm10
+# em2b: camera, pose / cloth, drawing, sound, quake, view, collision, tables
+!em2b/em2b em2bBlowCamMove em2bEscapeCamMove em2bParasiteAtkCamMove em2bStampCamMove em2bQuakeSet em2bInScreenCk
+!em2b/em2b em2bBlendMotSet plBlendMotSet em2bChainSet em2bClothSet em2bShortRopeSet em2bNeckMove em2bScaleCompress
+!em2b/em2b em2bTexrenderInit em2bFootSe em2bObaHitCk cManager<*>::* cEm2b::~cEm2b
+# em_sub: collision maths (line, sphere, capsule, cube and polygon tests; the aim target query), effects, debug drawing, motion
+!game/em_sub emLineAtCk emLineAtCk2 emLineCapsuleCrossCk emLineCubeCrossCk emLinePolyCrossCk emSphereAtCk
+!game/em_sub EmAtkHitCk EmAtkHitCk2 EmAtkHitSubCk2 EmAtkLineHitCk PlBombHitCk EmRackCk EmGetDmPos CheckInWater
+!game/em_sub GetWepTargetPos GetWepTargetList2 GetWepTargetListBomb
+!game/em_sub EmDmBloodSet2 EmPlBloodSet2 EmSubBloodSet EmYarareDisp EmCatchMotionMove
+# dmg: the damage areas' collision tests, memory and manager
+!game/dmg *::hitCheck cDmgMgr::memAlloc cDmgMgr::memClear cDmgMgr::memFree cDmgMgr::construct *::~* startup._GLOBAL__sub_I_*
+# destructors of the thrown objects (actor tables)
+!game/emtree cEmTree::~cEmTree
+!game/emtorch cEmTorch::~cEmTorch
+# room scripts: the Ganado voice pick (sound), the arena's lightning (effects)
+!st1/r101 r101_callGanadoVoice
+!st1/r119 r119_ThunderMove r119_ThunderFlagOn r119_ThunderFlagOff
+# sce_at: hit and screen tests, area geometry, the at-list container, item effects, item models and their loading, shadow drawing
+!game/sce_at SceAtHitCheck sceAtHitCheck SceAtItemHitCheck* InScreenCheck sceAtGetArea sceAtGetLadderPos
+!game/sce_at SceAtInit sceAtGetOtAddr sceAtSetOtStart sceAtItemEffSet sceAtItemEffDelete* sceAtFunc_shd_disp
+!game/sce_at itemZoom SceAtSetItemModel SceAtItemModelPtr releaseModel sceAtSetItemModelParent sceAtCheckItemModelParent*
+# sce_com: debug drawing and the debug trigger; game: the save file's storage
+!game/sce_com SceDebugDisp DebugTrg
+!game/game cGameSave::* save__9cGameSavePv
+
+# ---- name guard (lane eng-e1f): in the enemy and room-script units, a function whose name says it is service work
+# is refused even when a line above allows it (a wildcard, or its own name added by mistake), unless a "+" line marks
+# it reviewed. By name only: service code with a neutral name is caught by the exceptions above, by hand.
+?em*/* *Se *SeCk *SetSe* *Voice* *Blood* *Eff *EffSet* *EffDelete* *HitMark* *Quake*
+?em*/* *CamMove* *Campos* *ScreenIn* *InScreen* *NeckMove *WaistMove *ScaleCompress *BlendMot* *ClothSet *ChainSet *RopeSet *PartsSet* *PartsReset *ModelInit *Accesory *Texrender* *Disp *Draw* *HitCk *hitCheck *HitCheck* *CrossCk *AtCk *AtCk2 *::~* *mem* cManager<*
+?game/em_* *Se *Voice* *Blood* *Eff *EffSet* *Quake* *CamMove* *InScreen* *Disp *Draw* *HitCk *HitCk2 *HitSubCk2 *HitCheck* *hitCheck *CrossCk *AtCk *AtCk2 *::~* *mem* cManager<*
+?game/dmg *hitCheck *mem* *::~* cManager<* startup._GLOBAL__*
+?game/emt* *::~* *Eff *EffSet* cManager<*
+?st*/* *Voice* *Thunder* *Disp *Draw* *Eff *EffSet* *::~* cManager<*
+?game/sce_* *HitCheck* *InScreen* *Ot* *ItemEff* *Model* *Disp *disp *Draw* DebugTrg *::~* cManager<*
+?game/game cGameSave::* save__*
+# reviewed: decisions whose names match a guard (the chainsaw and gatling hit decisions call the collision queries
+# above; picking up an item with no model is the item event)
++em10/em10 em10CsawHitCk em10GatlingHitCk
++game/sce_at sceAtGetItem_NoModel

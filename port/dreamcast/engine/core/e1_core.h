@@ -51,6 +51,12 @@ void e1_memmap_sample();
 void e1_draw_open();
 void e1_draw_picture(E1Timing& tm);
 void e1_pace_end(E1Timing& tm);
+// presented fields (lane eng-e1f, core/frame.cpp): start before the first tick, the LATEPIC control and the tick's end
+// after each picture, then each row's fields column from the vblank handler's flips (mode tick when headless)
+void e1_fields_start();
+void e1_fields_late(unsigned tick);
+void e1_fields_tick(unsigned tick);
+void e1_fields_finish(unsigned ticks);
 // trace and report
 void e1_trace_tick(unsigned tick);
 void e1_report();

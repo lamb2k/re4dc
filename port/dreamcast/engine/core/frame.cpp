@@ -143,6 +143,60 @@ void e1_pace_end(E1Timing& tm)
     }
 }
 
+// ---- presented fields (lane eng-e1f): the 30 fps floor is judged on the interval between presented pictures ----
+// A vblank handler (core/draw_e1.c, as the bench's bench/main.c) counts the 60 Hz fields and records the field number
+// of each change of the display address (the chip's page flip): picture k (tick k + 1) is flip k, and its interval is
+// flip k - flip k-1 in fields. This is the hardware's field count, not the software pacer. A headless image presents
+// no picture: its interval is then the tick's, the field number at the end of each tick's pace (mode "tick").
+// Control LATEPIC (boot option): picture 300 is held 100 ms after its scene is finished (inside no timed row but the
+// frame), so picture 301 (tick 300 when headless) must show as the worst interval, at least five fields. A 40 ms hold
+// gave 3 or 4 fields, which the pacer's own 3-field intervals can equal (lanes/eng-e1f.md).
+extern "C" {
+void e1_fields_start_c(void);
+uint32_t e1_fields_now_c(void);
+unsigned e1_fields_finish_c(const volatile uint32_t** field);
+}
+static uint32_t tick_field[E1_TICKS];
+static int late_control;
+void e1_fields_start()
+{
+    file_t f = fs_open("/cd/LATEPIC", O_RDONLY);
+    if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 100 ms after its scene (control)\n"); }
+    e1_fields_start_c();
+}
+void e1_fields_late(unsigned tick)
+{
+    if (!late_control || tick != 300) return;
+    uint64_t t = timer_us_gettime64();
+    while (timer_us_gettime64() - t < 100000) {}
+}
+void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fields_now_c(); }
+// Fills each row's fields column and prints the window's line (pictures 41 to 640, as the selector and budget.py):
+// "E1 FIELDS mode presented|tick flips F of P pictures; pictures 41-640: intervals>2 N worst W (picture K)".
+void e1_fields_finish(unsigned ticks)
+{
+    const volatile uint32_t* flip = 0;
+    const unsigned flips = e1_fields_finish_c(&flip);
+    const unsigned n = ticks < E1_TICKS ? ticks : E1_TICKS;
+    const bool presented = flips > 0;
+    for (unsigned i = 0; i < n; i++) {
+        uint32_t f = 0;
+        if (i && presented && i < flips) f = flip[i] - flip[i - 1];
+        else if (i && !presented) f = tick_field[i] - tick_field[i - 1];
+        e1_timing[i].fields = f;
+    }
+    unsigned over = 0, worst = 0, wi = 0, counted = 0;
+    for (unsigned i = 40; i < n && i < 640; i++) {
+        const uint32_t f = e1_timing[i].fields;
+        if (!f) continue;
+        counted++;
+        over += f > 2;
+        if (f > worst) { worst = f; wi = i + 1; }
+    }
+    e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)\n",
+           presented ? "presented" : "tick", flips, n, counted, over, worst, wi);
+}
+
 void e1_report()
 {
     e1_trace_flush();

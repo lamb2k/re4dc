@@ -9,6 +9,33 @@ from logic_delta import Changes
 from native_world import whole_world
 from pack_scene import Baker, Table, block, pack
 
+def effect_glow_header(assets,material_cache,data,offset):
+    """eng-look: the frame-alpha glow of an effect that writes the frame's alpha (filter03 mask): a white texture
+    whose alpha is the sprite texture's alpha shrunk to the middle 80% and blurred (sigma 4% of the size, the
+    filter's quarter-size copy and feedback passes), drawn additive (source alpha, one) without fog. Shared with
+    boss_pack.py (lane eng-e1f: the boss packer left the raw key word where the renderer reads this header)."""
+    import numpy as np, dctex
+    key=struct.unpack_from("<2I",data,offset)
+    if key==(0,0) or key not in assets.lookup:return 0xffffffff
+    tag=key,"glow"
+    if tag not in material_cache:
+        off,size=assets.lookup[key];img=dctex.decode(assets.texpack[off:off+size])
+        H,W=img.shape[:2];h,w=min(H,32),min(W,32)   # the glow is soft: 32 texels a side at most
+        a=img[...,3].astype(np.float32).reshape(h,H//h,w,W//w).mean(axis=(1,3))
+        ys=np.clip(((np.arange(h)+.5)/h-.5)/.8+.5,0,1-1e-6)*h;xs=np.clip(((np.arange(w)+.5)/w-.5)/.8+.5,0,1-1e-6)*w
+        inner=(np.abs(np.arange(h)+.5-h/2)<=.4*h)[:,None]&(np.abs(np.arange(w)+.5-w/2)<=.4*w)[None,:]
+        a=a[ys.astype(int)][:,xs.astype(int)]*inner
+        for axis,n in ((0,h),(1,w)):
+            sig=max(1.,.04*n);r=int(3*sig);k=np.exp(-.5*(np.arange(-r,r+1)/sig)**2);k/=k.sum()
+            a=np.apply_along_axis(lambda v:np.convolve(v,k,mode="same"),axis,a)
+        out=np.zeros((h,w,4),np.uint8);out[...,:3]=255;out[...,3]=np.clip(a,0,255).astype(np.uint8)
+        pkg=dctex.encode_4444(out,b"glow")
+        ck=(zlib.crc32(pkg),0x574f4c47)
+        if ck not in assets.lookup:
+            assets.lookup[ck]=(len(assets.texpack),len(pkg));assets.texpack+=pkg
+        material_cache[tag]=assets.header(ck,4,blend=(4,1),fog=False)
+    return material_cache[tag]
+
 def build(disc, capture, room, tables, prior_dir=None):
     assets = Baker(disc, capture, room)
     def world_material(key, phase, cull):
@@ -84,29 +111,7 @@ def build(disc, capture, room, tables, prior_dir=None):
             material_cache[tag]=assets.header(ck,phase,fog=False)
         return material_cache[tag]
     def glow_header(data,offset):
-        """eng-look: the frame-alpha glow of an effect that writes the frame's alpha (filter03 mask): a white texture
-        whose alpha is the sprite texture's alpha shrunk to the middle 80% and blurred (sigma 4% of the size, the
-        filter's quarter-size copy and feedback passes), drawn additive (source alpha, one) without fog."""
-        key=struct.unpack_from("<2I",data,offset)
-        if key==(0,0) or key not in assets.lookup:return 0xffffffff
-        tag=key,"glow"
-        if tag not in material_cache:
-            off,size=assets.lookup[key];img=dctex.decode(assets.texpack[off:off+size])
-            H,W=img.shape[:2];h,w=min(H,32),min(W,32)   # the glow is soft: 32 texels a side at most
-            a=img[...,3].astype(np.float32).reshape(h,H//h,w,W//w).mean(axis=(1,3))
-            ys=np.clip(((np.arange(h)+.5)/h-.5)/.8+.5,0,1-1e-6)*h;xs=np.clip(((np.arange(w)+.5)/w-.5)/.8+.5,0,1-1e-6)*w
-            inner=(np.abs(np.arange(h)+.5-h/2)<=.4*h)[:,None]&(np.abs(np.arange(w)+.5-w/2)<=.4*w)[None,:]
-            a=a[ys.astype(int)][:,xs.astype(int)]*inner
-            for axis,n in ((0,h),(1,w)):
-                sig=max(1.,.04*n);r=int(3*sig);k=np.exp(-.5*(np.arange(-r,r+1)/sig)**2);k/=k.sum()
-                a=np.apply_along_axis(lambda v:np.convolve(v,k,mode="same"),axis,a)
-            out=np.zeros((h,w,4),np.uint8);out[...,:3]=255;out[...,3]=np.clip(a,0,255).astype(np.uint8)
-            pkg=dctex.encode_4444(out,b"glow")
-            ck=(zlib.crc32(pkg),0x574f4c47)
-            if ck not in assets.lookup:
-                assets.lookup[ck]=(len(assets.texpack),len(pkg));assets.texpack+=pkg
-            material_cache[tag]=assets.header(ck,4,blend=(4,1),fog=False)
-        return material_cache[tag]
+        return effect_glow_header(assets,material_cache,data,offset)
     first_pose={}
     frames = []
     changes = [Changes() for _ in samples]
