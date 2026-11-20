@@ -12,7 +12,13 @@
 #include "global.h"
 #include "db_log.h"
 #include "e1_engine.h"
+#include "route_ck.h"
+#include "em_sub.h"
+#include "snd.h"
 #include <new>
+#ifdef E2_BOSS
+#include "boss_e2.h"
+#endif
 
 extern "C" void ShapeMove(void* info);
 void DrawOba(cModel* m);
@@ -30,14 +36,39 @@ cEmMgr::cEmMgr() : cManager<cEm>(sizeof(cEm), 2)
     Guid = 0;
 }
 void cEmMgr::log(const char* fmt, ...) { (void) fmt; }
+// The module characters (ids 1..0x3F: the partners and the enemy modules) take their archive from the engine's room
+// pack (core/partner.cpp e1_em_read_search: E1 serves the partner, id 3) and run the init function its module
+// registered, as the original's case 1..0xE and default branch do. The tail (serial, list entry 0xFF, be_flag 0x40 |
+// 0x02000000, the id, subArc2) is the original's, for the player too (lane eng-e1b; E1's first slice left it out).
+void* e1_em_read_search(u8 id);
 int cEmMgr::construct(cEm* p, u32 id)
 {
     if (id == 0 && pG->pl_type == 0) {
         p = new (p) cPlLeon;
+#ifdef E2_BOSS
+        return 1;   // eng-boss image: the player as the boss slice built it (no construct tail)
+    } else if (id != 0) {   // eng-boss: the arena's enemy-table kinds (boss/boss_e2.cpp)
+        int ok = e2_construct(p, id, Guid);
+        if (ok) Guid++;
+        return ok;
+#else
+    } else if (id >= 1 && id <= 0x3F) {
+        p->subArc = (PlArc*) e1_em_read_search((u8) id);
+        if (p->subArc == 0) return 0;
+        EmInitFunc(p);
+#endif
     } else {
         e1_stub_hit("cEmMgr::construct(other)", id);
         return 0;
     }
+    if (p->id >= 0x10 && p->id <= 0x20) p->id = 0x10;
+    p->serial = Guid;
+    Guid++;
+    p->emset_no = 0xFF;
+    p->be_flag |= 0x40;
+    p->id = id;
+    p->be_flag |= 0x02000000;
+    p->subArc2 = p->subArc;
     return 1;
 }
 int cEmMgr::arrayAlloc(u32 n)
@@ -64,6 +95,59 @@ int cEmMgr::isBattle()
     }
     return battle;
 }
+#ifndef E2_BOSS   // the boss image moves its enemy table itself (boss/boss_e2.cpp)
+// The characters' tick (lane eng-e1b): em.cpp's cEmMgr::move / emMove with every knob off, on the engine table.
+// The player's own move runs later in the tick (core/main.cpp); emMove skips him. e1_em_move_hook counts the
+// generator draws and the time of each character's move for the trace and the behaviour row.
+void e1_em_move_begin(cEm* em);
+void e1_em_move_end(cEm* em);
+static void emMove(cEm* em)
+{
+    if ((em->be_flag & 0x201) != 1) {
+        EmMgr.destroy(em);
+        return;
+    }
+    if ((pG->Status_flg[1] & 0x10000000) && !(em->be_flag & 0x800)) return;
+    if (em == pPL) return;
+    if (em == pSUB && (pG->Stop_flg & 0x1000)) return;
+    f32 dz = pPL->pos.z - em->pos.z;
+    f32 dx = pPL->pos.x - em->pos.x;
+    em->plDist2 = dx * dx + dz * dz;
+    em->l_sub = 1e16f;
+    e1_em_move_begin(em);
+    em->dmg.move();
+    em->move();
+    if ((em->be_flag & 0x201) != 1) {
+        e1_em_move_end(em);
+        return;
+    }
+    em->be_flag &= ~0x20000000;
+    ShapeMove(em->pModelInfo);
+    if (em->seNo) {
+        cModel* parts = em->getPartsPtr(0);
+        SndCall(8, em->seNo - 1, &parts->world, em->id, 0, em);
+        em->seNo = 0;
+    }
+    em->updateOldPos();
+    EmYarareDisp(em);
+    em->invisible_factor2 = 1.0f;
+    e1_em_move_end(em);
+}
+void cEmMgr::move()
+{
+    dieCheck();
+    RouteCk();
+    if (!(pG->Stop_flg & 0x20000000)) {
+        for (cEm* p = pAlive; p;) {
+            cEm* cur = p;
+            p = (cEm*) p->pNext;
+            emMove(cur);
+        }
+    } else if (pSUB && !(pG->Stop_flg & 0x1000)) {
+        emMove(pSUB);
+    }
+}
+#endif
 cEmMgr EmMgr;
 
 cEm::cEm() { initWork(); }

@@ -38,6 +38,10 @@ Against an old logic trace only the position is recorded: the LP lines (decision
 enemy's id and position every 4th tick, in alive-list order. The A actor is matched to the old record of the
 same id at the same rank among that id's records (its rank in the reference's own alive list), so the two
 lists must hold the same actors in the same order (the fixture creates them as the old run did).
+An old trace recorded with LOGIC_TRACE_EM_FROM/TO (LE and LF lines, lane eng-e1b) gives every alive enemy every
+tick: position, yaw (a: the yaw alone), motion frame and state, routine (r, from the stat word), life (hp),
+be_flag (be), the discrete hash (aps, rebuilt from those fields) and the generator (rng, the LT line's); it has
+no motion slot (mid), flags word (f) or per-actor generator calls (rc). The A actor is matched by id and rank.
 
 Exit status: 0 when every compared tick is within tolerance, 1 on a divergence, 2 on a usage error.
 The report names the first divergence (tick, field, both values, the difference) and a summary per field:
@@ -59,6 +63,10 @@ def fnv(words):
     for w in words:
         h = ((h ^ (w & 0xFFFFFFFF)) * 16777619) & 0xFFFFFFFF
     return h
+
+
+def s16(v):
+    return v - 0x10000 if v & 0x8000 else v
 
 
 def parse_kv(line):
@@ -144,6 +152,32 @@ def load(path):
                         i, xyz = tok.split(':', 1)
                         if i != 'ff':
                             lst.append({'id': i, 'p': floats(xyz, 3)})
+            elif line.startswith('LE t='):
+                # LOGIC_TRACE_EM_FROM/TO runs (lane eng-e1b): every alive enemy-list work every tick, alive-list
+                # order: id, type, be_flag, stat (r_no_0..3 as a little-endian word), Mot_state, life (hex),
+                # Mot_frame and position bits; the LF line after it carries the yaw
+                kv = parse_kv(line)
+                t, k = int(kv['t']), int(kv['k'])
+                rec = recs.setdefault(t, {})
+                if rec.get('le_done'):
+                    continue
+                lst = rec.setdefault('le', [])
+                if k == 0 and lst:
+                    rec['le_done'] = True   # a repeated tick: keep the first record
+                    continue
+                st = int(kv['stat'], 16)
+                e = {'k': k, 'id': '%02x' % int(kv['id'], 16), 'p': floats(kv['pos'], 3), 'mf': f32(kv['mf']),
+                     'ms': int(kv['ms'], 16), 'hp': str(s16(int(kv['hp'], 16))), 'be': '%08x' % int(kv['be'], 16),
+                     'r': ''.join('%02x' % ((st >> (8 * i)) & 0xFF) for i in range(4))}
+                e['aps'] = '%08x' % fnv([int(kv['be'], 16), st, int(kv['id'], 16), int(kv['type'], 16),
+                                         int(kv['ms'], 16), int(kv['hp'], 16) & 0xFFFF])
+                lst.append(e)
+            elif line.startswith('LF t='):
+                kv = parse_kv(line)
+                rec = recs.get(int(kv['t']), {})
+                lst = rec.get('le', [])
+                if lst and lst[-1]['k'] == int(kv['k']) and 'a' not in lst[-1] and not rec.get('le_done'):
+                    lst[-1]['a'] = [None, f32(kv['ay']), None]   # yaw only
             elif line.startswith('LT t='):
                 kind = 'logic'
                 kv = parse_kv(line)
@@ -203,7 +237,7 @@ def compare(A, B, tol, offset, window, fields):
                 d = max(abs(x - y) for x, y in zip(av, bv))
                 over = d > tol['pos']
             elif f == 'a':
-                d = max(angdiff_deg(x, y) for x, y in zip(av, bv))
+                d = max(angdiff_deg(x, y) for x, y in zip(av, bv) if x is not None and y is not None)
                 over = d > tol['ang_deg']
             elif f == 'mf':
                 d = abs(av - bv)
@@ -272,6 +306,11 @@ def actor_views(A, B, kb, sel, offset):
             x, _ = pick(b.get('actors', []), sel)
             if x is not None:
                 vb[t + offset] = dict(x, rng=b.get('rng'))
+        elif 'le' in b:
+            # LE runs: every field the logic trace records (no motion slot, flags or per-actor generator calls)
+            same = [x for x in b['le'] if x['id'] == a['id']]
+            if rank < len(same):
+                vb[t + offset] = dict(same[rank], rng=b.get('rng'))
         elif 'lp' in b:
             same = [x for x in b['lp'] if x['id'] == a['id']]
             if rank < len(same):
@@ -321,7 +360,8 @@ def main():
             # float exactness: ticks whose values are bit-identical, and the largest distance in float steps
             def as_list(v):
                 return v if isinstance(v, list) else [v]
-            us = [max(ulps(x, y) for x, y in zip(as_list(r[3]), as_list(r[4]))) for r in rows]
+            us = [max(ulps(x, y) for x, y in zip(as_list(r[3]), as_list(r[4])) if x is not None and y is not None)
+                  for r in rows]
             summary[f]['bit_identical'] = sum(1 for u in us if u == 0)
             summary[f]['max_ulps'] = max(us)
     verdict = 'PASS' if first is None and compared else ('NO-OVERLAP' if not compared else 'DIVERGED')

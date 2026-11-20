@@ -2,6 +2,19 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-010 (2026-11-19): native services, split random numbers
+
+- **From:** the owner. **To:** the integrator.
+- **Question:** "Is the approach drifting to porting existing code or true architecture for Dreamcast".
+- **Answer given:** drawing and core are native. The services were drifting:
+  - hosting lanes pulled in original service units "for now";
+  - keeping every random draw in order forced native effects and cloth to copy the original algorithms.
+- **Decision:** "Split it".
+  - Presentation randomness gets an engine generator; the original generator serves behaviour only.
+  - Plays right is gameplay equivalence plus position tolerance.
+  - No original service code enters the engine image.
+- **Applied:** ENGINE_PLAN.md sections 3, 8 and 11; AGENTS.md; LANES.md section 3b. Lanes eng-e2, eng-svc2 and eng-e1c were steered by message.
+
 ## H-009 (2026-11-19): look steps chosen
 
 - **From:** the owner. **To:** the integrator.

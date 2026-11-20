@@ -37,7 +37,7 @@ typedef struct {
 typedef struct {unsigned n; RtModel m[];} RtCatalog;
 
 #define ACTOR_POS_LIMIT 4096
-#define ACTOR_WS_LIMIT 256
+#define ACTOR_WS_LIMIT 384   /* eng-boss: El Gigante (PS2 cast) has 276 weight sets */
 #include "source_light.inc"
 #include "content_actor.inc"
 static uint16_t pos_records[ACTOR_POS_LIMIT+2][4] __attribute__((aligned(32)));

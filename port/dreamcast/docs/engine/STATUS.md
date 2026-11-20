@@ -33,9 +33,13 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-boss | E2: first Disc 1 boss on the bench, then hosted on the E1 shell | lane/eng-boss from engine | Claude Opus | E:\RE4DC-Lanes\eng-boss |
-| eng-e1b | E1 second slice: two full-field old-game fixtures recorded, then Ashley hosted on the engine | lane/eng-e1b from engine 22d3e1e98 | Claude Opus | E:\RE4DC-Lanes\eng-e1b |
+| eng-e1c | E1: switch the Leon image to the native skeleton and collision, time it (Flycast and MODELLED), plays right | lane/eng-e1c | Claude Opus | E:\RE4DC-Lanes\eng-e1c |
+| eng-e2 | E2: four Ganados at the cross with their original AI hosted, native effect simulation, drawn, plays right | lane/eng-e2 from engine 28189e752 | Claude Opus | E:\RE4DC-Lanes\eng-e2 |
 | eng-svc2 | PC-only: motion keys converted offline, native cloth, history copy cut, finer collision index; proven in re4ref | lane/eng-svc2 | Claude Opus | E:\RE4DC-Lanes\eng-svc2 |
+
+Closed: eng-e1b (Opus), handed back 11-19, merged (64b0211ba). Ashley's original partner code hosted on the engine (r11d hill, boot option HILL): with the old run's generator fed each tick, every field identical to re4ref for 729 ticks; against the old game (RESUMEA) Leon bit-identical 728 ticks, Ashley within 0.0117 units, routine exact; follow-distance control fails at tick 78. Flycast busy picture 19.46 / 26.74 ms (no world drawn); services over budget (11.86 ms: Ashley's cloth 3.55, motion 4.81, original code). Two full-field old-game fixtures recorded (hill, bell gate). Drawn as bone markers only: no Ashley mesh or r11d world bake yet. Fixed: E1 image link break after the look merge, empty punch-through list stall.
+
+Closed: eng-boss (Opus), handed back 11-19, merged (f6af771dc). El Gigante (village square r119). Bench, full body: MODELLED 19.98 mean / 25.41 worst (characters 9.9, world 5.2, translucent 3.3); Flycast 15.53 / 22.00, no interval over 2 fields. Lighter PS2 body (g50): 18.36 / 22.49 MODELLED, MAE 0.52, sheet sent to the owner. Original boss AI and room script hosted on the E1 shell: attack sequence exact for 8 of 10 changes, motion, state and hp exact to tick 867, hut break on the same tick; hosted rows Flycast behaviour 1.41, services 5.06, publication 0. Effects recorded, not simulated. Discs E:\RE4DC-Lanes\eng-bossuild\BOSS-BENCH-GDEMU and BOSS-HOSTED-GDEMU.
 
 Closed: eng-svc (Opus, PC-only), handed back 11-19, merged (bcc08c170). Native skeleton (SoA per actor, one parent-order pass in SH4ZAM XMTRX) and collision (flattened block tree, hot and cold polygon records) equal to the original units on six fixtures (bones equal as numbers, collision identical, plays-right pass); three controls fail as they must. Behaviour touches only 13 to 22 of Leon's 119 bone records. Skeleton memory accesses down 30 to 42%. Not yet in the E1 image; no SH-4 timing. Doc: SERVICES.md.
 
@@ -61,7 +65,7 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
-Queued for the next free emulator slot: switch the E1 image to the native skeleton and collision (SERVICES.md "What the engine image must change") and time it; then the loader's Flycast proof.
+Queued for the next free emulator slot: the loader's Flycast proof; Ashley's mesh and the r11d world bake.
 
 ## Waiting on the owner
 

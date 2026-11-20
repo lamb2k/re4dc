@@ -36,6 +36,8 @@ Same as F-Zero X, adapted to "original behaviour hosted on the engine" (the owne
    - The skeleton is evaluated once, straight into the matrices the skinning uses.
    - Effects are simulated in arrays that are submitted as they are.
 3. **Host only the decisions.** What an enemy decides and what an event does stays original code. Everything under it (drawing, effects, skeleton, collision queries, object and actor tables, memory, loading) is the engine's, native from the start of each milestone, not migrated later.
+   - **No original service code enters the engine image** (owner 2026-11-19, "Split it"). A hosted character uses the native engine service or a logged stub, never the original service unit "for now".
+   - **Random numbers are split.** The original generator serves behaviour only (AI, damage, spawns, game logic). Presentation randomness (effects, cloth, aim and camera sway) comes from an engine generator, so native effects and cloth are designed for the Dreamcast, not copied call for call.
 4. **Content built for this console,** with the owner approving the look (section 6). Not the PS2 content drawn one for one.
 5. **A separate engine image** on the `engine` branch. It is not a set of switches in the old port. The old port is frozen.
 6. **Vertical-slice milestones,** each ending in a console run (section 7).
@@ -112,7 +114,7 @@ Stop rules:
 | Gate | Rule |
 |---|---|
 | **Frame floor** | Console, 600 pictures per scene: at most two fields between presented pictures. Report mean, p99, worst interval and count over budget. A passing p99 does not establish the floor. Before a console number, a model figure counts only if it fits half the row |
-| **Plays right** | A reference build of the original code on the same inputs. Fixtures, inputs, units and tolerances agreed before the checkpoint: movement and aim response, damage and kills, enemy counts and waves, triggers, door and event order, item and save state. Discrete rules are exact |
+| **Plays right** | A reference build of the original code on the same inputs. Gameplay equivalence (owner 10-19 bar): same hits, damage, kills, spawn and wave order, triggers, door and event order, room clears, cutscenes, item and save state; no stuck events. Positions and angles within agreed tolerance where actors do the same thing. Generator state is not compared (it is split, section 3) |
 | **Determinism** | Two runs with the same inputs give identical frame tables and state hashes. The engine's PC build matches its SH-4 build at checkpoints |
 | **Looks right** | Owner-approved still pairs and clips against the PS2 original |
 | **Memory** | RAM and VRAM maps with no overlap, stack guards, floors at the fight low point, no failed allocations |
@@ -157,6 +159,7 @@ Stop rules:
 | 11-19 | "What can we do ahead of me making changes on my end I'm not home and want progress", then "Lets do it" | Four lanes on work needing neither console nor owner calls: E1, look and content steps, PC reference, console loader |
 | 11-19 | "we should have leon ashleyh and boses plus neon or ashley on the engine" (read as: Leon, Ashley and the bosses on the engine, with Leon or Ashley as the player) | E1 adds Ashley as partner and the player hosting generic for Ashley; E2 adds a first boss; E3 every Disc 1 boss |
 | 11-19 | "Lets go with best options" (on the still sheets) | Character levels step 3 and effect cap step 2 are engine defaults; world cap, prop cards and baked lighting stay at full detail |
+| 11-19 | "Is the approach drifting to porting existing code or true architecture for Dreamcast", then "Split it" | No original service code in the engine image; random numbers split between behaviour and presentation; plays right judged on gameplay equivalence |
 
 ## 12. Decisions needed from the owner
 

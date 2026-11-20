@@ -63,6 +63,10 @@ WRAPV(_ZN10cAtariInfo4moveEv, (void* a), (a))
 // skeleton: IK, cloth, shape, the model's motion step
 WRAPV(InverseKinematics, (void* m, int f), (m, f))
 WRAPV(_Z15PlClothMoveLeonP6cModelP7PlClothS2_S2_, (void* m, void* a, void* b, void* c), (m, a, b, c))
+// the partner's cloth (lane eng-e1b) and the pendulum cloth both characters hang from it
+WRAPV(_Z15PlClothMoveGirlP6cModelP7PlClothS2_S2_, (void* m, void* a, void* b, void* c), (m, a, b, c))
+WRAPV(PenClothMove, (void* m, void* c), (m, c))
+WRAPV(PenClothMove3, (void* m, void* c), (m, c))
 WRAPV(ShapeMove, (void* i), (i))
 WRAP(int, _ZN6cModel10motionMoveEv, (void* m), (m))
 // collision queries

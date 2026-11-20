@@ -23,11 +23,13 @@ void append(Kind kind,const void* ptr,unsigned size){
 void begin(unsigned room,unsigned tick){
     if(room!=room_id){warmup=number=0;room_id=room;}
     recording=false;presents=0;
-    if((room!=0x101 && room!=0x103) || number>=300)return;
+    if((room!=0x101 && room!=0x103 && room!=0x119) || number>=300)return;   /* eng-boss: + r119 (El Gigante) */
     if(warmup<300 || !m1r3_control.mode)return;
+    if(m1r3_control.start && tick<m1r3_control.start)return;   /* eng-boss: the host may fix the first tick */
     auto& c=m1r3_control;
     if(c.mode && !c.data){
-        c.capacity=384*1024;c.data=(unsigned char*)re4dc_static_alloc(c.capacity);
+        /* eng-boss: a host-written capacity (offset 36) wins; r119's heap 4 cannot spare 384 KiB at the fight */
+        c.capacity=c.capacity?c.capacity:384*1024;c.data=(unsigned char*)re4dc_static_alloc(c.capacity);
         if(!c.data)c.capacity=0;
     }
     c.picture=number+1;c.tick=tick;c.room=room;c.bytes=c.overflow=c.framebuffer=0;
@@ -35,7 +37,7 @@ void begin(unsigned room,unsigned tick){
 }
 void present(){++presents;}
 void finish(){
-    if((room_id!=0x101 && room_id!=0x103) || number>=300)return;
+    if((room_id!=0x101 && room_id!=0x103 && room_id!=0x119) || number>=300)return;
     if(warmup<300){warmup+=presents!=0;return;}
     if(!recording)return;
     auto& c=m1r3_control;
