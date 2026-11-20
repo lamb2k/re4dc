@@ -21,6 +21,9 @@ extern "C" {
 void skel_xm_load_3x4(const float m[12]);
 /*! XMTRX = XMTRX x \p m (3x4 row major, last row 0 0 0 1). */
 void skel_xm_apply_3x4(const float m[12]);
+/*! XMTRX = XMTRX x diag(\p x, \p y, \p z, 1): the first three columns scaled (one product each, as the C library's
+ *  concatenation with a scale matrix gives them, the sign of exact zeros aside). */
+void skel_xm_apply_scale(float x, float y, float z);
 /*! Stores the upper three rows of XMTRX as a 3x4 row-major matrix. */
 void skel_xm_store_3x4(float m[12]);
 /*! \p out = XMTRX x (\p in, 1): a point through XMTRX. */

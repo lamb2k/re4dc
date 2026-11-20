@@ -16,6 +16,10 @@ void skel_xm_apply_3x4(const float m[12]) {
     shz_xmtrx_apply_transpose_3x4((const shz_mat3x4_t*)m);
 }
 
+void skel_xm_apply_scale(float x, float y, float z) {
+    shz_xmtrx_apply_scale(x, y, z);
+}
+
 void skel_xm_store_3x4(float m[12]) {
     shz_xmtrx_store_transpose_3x4((shz_mat3x4_t*)m);
 }
