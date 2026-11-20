@@ -34,6 +34,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
 | eng-boss | E2: first Disc 1 boss on the bench, then hosted on the E1 shell | lane/eng-boss from engine | Claude Opus | E:\RE4DC-Lanes\eng-boss |
+| eng-svc | PC-only: native skeleton and collision services (cache-friendly tables, SH4ZAM), proven equal to the original units in re4ref | lane/eng-svc from engine b9d8ab691 | Claude Opus | E:\RE4DC-Lanes\eng-svc |
 | eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
 
 Closed: eng-host2 (Opus, PC-only), handed back 11-19, merged (9dd87b9cb). re4ref now hosts Ashley (pl_npc, pl11: 37 KB code) and a Ganado (em10 and 8 files: 293 KB code); per-actor trace lines; 10 controls pass. Agreement with old-game traces (position only, every 4th tick): Ganado within 0.002 units over ticks 185-317 at the bell gate until the room event freezes it; Ashley within 0.018 units over ticks 185-289 at the r11d hill until the room's opening event. Needs two emulator fixtures recorded with full per-actor fields (listed in its hand-back).
