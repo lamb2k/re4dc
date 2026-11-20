@@ -5,6 +5,7 @@
    live ones. Not drawn in E1: effects, foot shadows (recorded inputs), the handgun model (not in the pack). */
 #include "replay.h"
 #include "native_scene.h"
+#include "e1_skel_view.h"
 #include <kos.h>
 #include <dc/pvr.h>
 #include <string.h>
@@ -26,7 +27,8 @@ static NativeScene scene;
 static int open_ok, stills;
 /* STILLS boot option: every 40th tick (and tick 1) the finished picture is handed to the host runner
    (s/stills.py reads the frame buffer from Flycast's memory; m1_state 2 request, 3 acknowledge, 4 frame buffer). */
-void e1_actor_pass(NativeScene* s, const void* model_record, unsigned model, unsigned identity, unsigned translucent);
+void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
+                   unsigned translucent);
 #ifdef E2_FIGHT
 /* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
 void e2_draw_open(void);
@@ -56,22 +58,21 @@ int e1_draw_open_c(void)
 }
 
 /* The partner (lane eng-e1b), PLACEHOLDER form: her mesh is not in any engine pack yet (no bake holds Ashley), so
-   the renderer marks each of her bones with a flat square, read in place from the actor table: the model record's
-   parts chain (cParts at +0xF4, each one's world matrix cCoord::mat at +0x0C, written once a tick by the skeleton
-   service). Nothing is converted or copied per tick; the squares are projected with the camera the hosted camera set. */
+   the renderer marks each of her bones with a flat square, read in place from her native skeleton table's world
+   records (lane eng-e1c; written once a tick by the skeleton service). Nothing is converted or copied per tick; the
+   squares are projected with the camera the hosted camera set. */
 static unsigned partner_marks;
-static void e1_partner_pass(const float* c, const void* model)
+static void e1_partner_pass(const float* c, const E1SkelView* sk)
 {
-    if (!model) return;
+    if (!sk) return;
     pvr_poly_cxt_t cxt; pvr_poly_hdr_t hdr;
     pvr_poly_cxt_col(&cxt, PVR_LIST_OP_POLY);
     cxt.gen.culling = PVR_CULLING_NONE;
     pvr_poly_compile(&hdr, &cxt);
     pvr_prim(&hdr, sizeof(hdr));
     unsigned n = 0;
-    const uint8_t* p = *(const uint8_t* const*) ((const uint8_t*) model + 0xF4);
-    for (; p && n < 128; p = *(const uint8_t* const*) (p + 0xF4), n++) {
-        const float* m = (const float*) (p + 0x0C);
+    for (; n < sk->n && n < 128; n++) {
+        const float* m = sk->world + 16 * n;
         const float x = m[3], y = m[7], z = m[11];
         const float vx = c[0] * x + c[1] * y + c[2] * z + c[3];
         const float vy = c[4] * x + c[5] * y + c[6] * z + c[7];
@@ -116,8 +117,8 @@ static void list_keepalive(int list)
 /* camera: 26 words (view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane), as the pack's
    camera stream; hud: life, life max, weapon, stance; partner: the partner's model record or 0; world: draw the
    village bake (0 in the hill scene: r11d has no engine bake yet; its sky and fog are the village's) */
-void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, unsigned identity,
-                       uint32_t* wait_us, uint32_t* draw_us, const void* partner, int world)
+void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, const E1SkelView* leon_skel, unsigned identity,
+                       uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world)
 {
     if (!open_ok) { *wait_us = *draw_us = 0; return; }
     m1_frame++;
@@ -138,13 +139,13 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
 #ifdef E2_FIGHT
     e2_draw_actors(&scene);   /* before Leon: his translucent pass below reads the opaque pass's part state */
 #endif
-    e1_actor_pass(&scene, leon, 0, identity, 0);
+    e1_actor_pass(&scene, leon, leon_skel, 0, identity, 0);
     e1_partner_pass(cam, partner);
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_PT_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 1);
     else list_keepalive(PVR_LIST_PT_POLY);
-    e1_actor_pass(&scene, leon, 0, identity, 1);
+    e1_actor_pass(&scene, leon, leon_skel, 0, identity, 1);
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_TR_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 2);

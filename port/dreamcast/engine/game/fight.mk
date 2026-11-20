@@ -35,7 +35,12 @@ $(OUT)/h/game/game.o $(OUT)/h/game/sce_at.o: ORIG_FLAGS += "-DRE4DC_DOORPH(x)="
 # The Ganado module's REL entry under its own name (em15_set.cpp defines _prolog: EmInitFunc = the em10 init).
 $(OUT)/h/em15/em15_set.o: ORIG_FLAGS += -D_prolog=em15_prolog -D_epilog=em15_epilog -D_unresolved=em15_unresolved
 # Service accounting of the Ganado paths and the native effect service (fight/fight_wraps.cpp), with E1's wraps.
-FIGHT_WRAP_SYMS := MotionMove _ZN7cSatMgr8checkAirEP6cModeli At_box_sphere_ck AtBoxCapsuleCk3 RouteCkToEm RouteCkEscEm 	RouteCkToPos RouteCkConnectPosCk RouteCkPosToPosDis RouteCkGetNearPoint EstSet
+FIGHT_WRAP_SYMS := At_box_sphere_ck AtBoxCapsuleCk3 RouteCkToEm RouteCkEscEm 	RouteCkToPos RouteCkConnectPosCk RouteCkPosToPosDis RouteCkGetNearPoint EstSet
 $(OUT)/e1.elf: WRAPS += $(foreach s,$(FIGHT_WRAP_SYMS),-Wl,--wrap=$(s))
 # Controls / arms: make FIGHT=1 FIGHT_EXTRA=-DE1_CONTROL_SHIFT=1 (every pad action one frame late) ...
 ENG_FLAGS += $(FIGHT_EXTRA)
+# Presentation randomness (owner 2026-11-19 "Split it"; lane eng-e1c's e1_present section): the Ganado's voice, breath
+# and chainsaw sound timers, its blood-effect choice and its camera moves draw from the engine generator, not Rnd.
+PRESENT_em10/em10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10CamMove2P5cEm10 _Z12em1cBloodSetP5cEm10i \
+	_Z16em10CallVoiceSe2P5cEm10ii _Z18em10SetDamageVoiceP5cEm10ii em10CallVoiceSe em10CamMove em10CamMoveAshley \
+	em10CamMoveCri em10CamMoveTakeaway em10CsawSignSe plem10KickCamMove

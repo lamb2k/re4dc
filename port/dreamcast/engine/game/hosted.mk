@@ -17,16 +17,23 @@ HOSTED_SRCS := \
 	wep02/wep02 wep/objRuger game/objWep \
 	$(PARTNER_SRCS)
 
-# Service evaluation, FIRST FORM (lane eng-e1, stated in the hand-back): the skeleton (motion, parts, IK, shape,
-# cloth), collision (SAT/EAT queries, hit volumes), the actor/object managers' record code and the leaf math are the
-# original evaluation units compiled under the engine's service boundary with --gc-sections (only what the hosted
-# behaviour reaches is kept). The engine owns the calls, the records (the actor table, read in place by the
-# renderer), the memory and the data; these units are the arithmetic reference a re-laid-out native service must
-# match. Each unit's unresolved references are engine adapters (host/) or logged stubs.
+# Services (lane eng-e1c): the skeleton and the collision query cores are NATIVE (services/skeleton, services/collision,
+# docs/engine/SERVICES.md; game/Makefile NATIVE_OBJS). What is still compiled from src/ under the service boundary:
+#   - model.cpp, motion.cpp, atari.cpp with every function the native services replace made weak (game/Makefile
+#     WEAK_*): the calls reach the native bodies and --gc-sections drops the originals. What stays of them is the part
+#     SERVICES.md keeps original: model and parts allocation, the key decoder and the motion clock / root motion, and
+#     the per-model collision logic above the native cores (check, getFloor, wallAdjust, adjust);
+#   - cMotBase.cpp (root-motion follower), the actor volumes and capsules (atariInfo, at_mod, at_sub) and route_ck.cpp
+#     (the partner's route points, lane eng-e1b): no native service exists and a stub would change gameplay (pushes
+#     between characters, hits, the partner's follow);
+#   - pad.cpp (input) and the leaf math (math_sub, sub2).
+# Not linked: ik.cpp (native), shape.cpp (facial shape keys: the engine draws no shape keys), pl_cloth.cpp and
+# pendulum.cpp (cloth: no native cloth service yet; logged stubs in host/e1_svc_stubs.cpp, the cloth bones keep their
+# animated pose).
 # route_ck.cpp (lane eng-e1b): the room's route points, which the partner's follow reads (RouteCkToPos); the boss image
 # (BOSS=1) builds neither the partner nor this unit here (game/boss.mk adds route_ck itself).
 SVC_ORIG_SRCS := \
-	game/model game/motion game/cMotBase game/ik game/shape game/pl_cloth game/pendulum \
+	game/model game/motion game/cMotBase \
 	game/atari game/atariInfo game/at_mod game/at_sub \
 	game/pad \
 	game/math_sub game/sub2 \

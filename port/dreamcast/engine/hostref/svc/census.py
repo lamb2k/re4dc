@@ -21,7 +21,8 @@ import sys
 UNIT_KIND = {}
 for u in "model motion cMotBase ik shape skel".split():
     UNIT_KIND[u] = "skeleton"
-UNIT_KIND["pl_cloth"] = "cloth"
+for u in "pl_cloth pendulum pen cloth cloth_kernel".split():
+    UNIT_KIND[u] = "cloth"
 for u in "atari at_mod at_sub at_sub2 atariInfo col".split():
     UNIT_KIND[u] = "collision"
 for u in "route_ck area".split():

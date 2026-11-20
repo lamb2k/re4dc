@@ -16,6 +16,21 @@
 //                             index. Every test starts with a plane test on these (the line's ends on one side, the
 //                             sphere behind the face or not crossing it): most polygons a query visits end here
 //   cold      [nPoly] 64 B    the other two vertices and the three edge vectors, read only by a polygon that passed
+//   grid      [nLeaf] 32 B    lane eng-svc2: each leaf's cell grid, COL_GRID_X x COL_GRID_Z cells over the block's
+//                             x / z extent and COL_GRID_Y bands over its polygons' heights (origin, inverse cell sizes;
+//                             lane eng-svc3: the leaf's first mask, or none)
+//   cmask     [nMask]  4 B    the cells each list entry's polygon (its box grown by kColMargin) overlaps, for the
+//                             leaves with at least col_mask_min entries (lane eng-svc3: 32 cells, 4 B; a smaller leaf
+//                             is tested whole). A line query tests only the entries whose cells meet the cells of its
+//                             own grown box, in the list's order. A skipped polygon cannot be hit (the hit point lies
+//                             in both boxes), or its only hit is the segment's end (a segment lying exactly in its
+//                             plane: the original's test reports that wherever the polygon is), which never replaces
+//                             the nearest hit. The swept sphere (lane eng-svc3) takes the cells of the box of its
+//                             segment grown by its radius, again after every push (the sphere moves mid-query); a
+//                             polygon it skips is marked visited, as the original marks it after a test that cannot
+//                             hit (a hit needs the sphere within its radius of the polygon, or the segment through
+//                             it), so it is not tested later from another leaf either. The check build tests every
+//                             skipped polygon too and counts both kinds
 //
 // The walk order and the per-query polygon dedupe (a bit per polygon) are the original's, so the order in which
 // polygons push a sphere out, and the nearest-hit ties of the line test, are the original's.
@@ -43,6 +58,26 @@ struct ColLeaf {         // 8 B
     u16 nFloor;          // floors + slopes (the 0x40 group)
     u16 nWall;           // walls (the 0x80 group)
 };
+struct ColGrid {         // 32 B
+    f32 x0, z0, y0;      // the grid's origin (the block's min x / z, its polygons' lowest y)
+    f32 ix, iz, iy;      // cells per unit (COL_GRID_X / size x, COL_GRID_Z / size z, COL_GRID_Y / height span; 0 flat)
+    u32 mask;            // lane eng-svc3: the leaf's first entry in cmask, COL_NO_MASK: the leaf is tested whole
+    u32 pad;
+};
+#define COL_NO_MASK 0xFFFFFFFFu
+#ifndef COL_MASK64
+typedef u32 ColMask;      // lane eng-svc3: 32 cells (SERVICES.md section 18: masks halved, tests measured)
+#ifndef COL_GRID_X
+#define COL_GRID_X 2
+#define COL_GRID_Z 2
+#define COL_GRID_Y 8
+#endif
+#else
+typedef u64 ColMask;      // round 2: 2 x 4 x 8 = 64 cells
+#define COL_GRID_X 2
+#define COL_GRID_Z 4
+#define COL_GRID_Y 8
+#endif
 struct ColPiece {
     // header: 64 B
     cSat* sat;
@@ -62,6 +97,9 @@ struct ColPiece {
     ColHot* hot;
     ColCold* cold;
     u32 nPoly;
+    ColGrid* grid;       // [nLeaf]
+    ColMask* cmask;      // [nMask]
+    u32 nMask;
 };
 
 extern "C" {
@@ -72,8 +110,13 @@ ColPiece* col_piece_at(u32 i);
 u32 col_file_bytes(const ColPiece* pc);
 struct ColCounters {
     u32 bakes, late_bakes, line_queries, sphere_queries, nodes_tested, leaves, tris_line, tris_sphere, tri_bytes, cold_line,
-        cold_sphere;
+        cold_sphere, tris_skipped, filter_miss, filter_end, sphere_skipped, sphere_filter_miss, sphere_recells, leaves_whole;
 };
 extern ColCounters col_cnt;
 extern f32 col_control_floor;       // control: every floor-group triangle raised by this many units in the queries
+extern int col_control_grid;        // control (lane eng-svc2): the line query's cells taken one cell to the side
+extern int col_verify;              // check build: every skipped polygon is also tested; a hit counts filter_miss
+extern int col_grid_off;            // measurement: the grid not used (every list entry tested, as the original)
+extern int col_sphere_grid_off;     // measurement (lane eng-svc3): the swept sphere without the grid
+extern u32 col_mask_min;            // leaves with fewer list entries get no masks (tested whole; lane eng-svc3)
 }

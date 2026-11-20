@@ -10,6 +10,7 @@
 //   col.txt   every collision query the behaviour (and the IK) makes, in call order: kind, inputs, outputs as float
 //             bits (--wrap on the entry points; queries made inside another query are not logged, so both builds
 //             log the same boundary)
+//   hist.bin  world_old and world_old2: every bone (reference), the history bones (native; lane eng-svc2)
 //   svc.txt   the native services' counters (native build)
 // Controls (native build, RE4_SVC_CONTROL): parent=<bone> (that bone's parent one bone too low), floor=<units>
 // (floor triangles raised), noik (the IK pass skipped); poison off with RE4_SVC_POISON=0.
@@ -22,6 +23,7 @@
 #include "global.h"
 #include "../../services/skeleton/skel.h"
 #include "../../services/collision/col.h"
+#include "../../services/cloth/cloth.h"
 
 // svc_io.cpp (PC side)
 extern "C" {
@@ -48,6 +50,11 @@ extern "C" u32 col_file_bytes(const ColPiece* pc) __attribute__((weak));
 extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
 extern "C" SkelCounters skel_cnt __attribute__((weak));
 extern "C" ColCounters col_cnt __attribute__((weak));
+extern "C" ClothCounters cloth_cnt __attribute__((weak));
+#include "../../services/cloth/cloth_kernel.h"
+extern "C" ClothKCounters cloth_k_cnt __attribute__((weak));
+extern "C" u32 cloth_chain_count(void) __attribute__((weak));
+extern "C" ClothChain* cloth_chain_at(u32 i) __attribute__((weak));
 extern "C" int skel_control_parent __attribute__((weak));
 extern "C" int skel_control_no_ik __attribute__((weak));
 extern "C" int skel_poison __attribute__((weak));
@@ -56,6 +63,7 @@ extern "C" f32 col_control_floor __attribute__((weak));
 namespace {
 FILE_* g_pal;
 FILE_* g_col;
+FILE_* g_hist;
 unsigned g_tick;
 int g_depth;
 
@@ -103,6 +111,26 @@ void dump_model(cModel* m, u32 code)
     u32 hdr[2] = {code, n};
     svc_out_write(g_pal, hdr, 8);
     svc_out_write(g_pal, buf, sizeof(PalBone) * n);
+    // hist.bin (lane eng-svc2): world_old and world_old2, every bone (reference) / the history bones (native)
+    static f32 hb[256][7];
+    u32 nh = 0;
+    if (t) {
+        for (u32 k = 0; k < t->nHist && nh < 256; k++, nh++) {
+            u32 b = t->hlist[k];
+            __builtin_memcpy(&hb[nh][0], &b, 4);
+            __builtin_memcpy(&hb[nh][1], t->hold[k].old, 12);
+            __builtin_memcpy(&hb[nh][4], t->hold[k].old2, 12);
+        }
+    } else {
+        for (cParts* p = m->pList; p && nh < 256; p = p->pList, nh++) {
+            __builtin_memcpy(&hb[nh][0], &nh, 4);
+            __builtin_memcpy(&hb[nh][1], &p->world_old, 12);
+            __builtin_memcpy(&hb[nh][4], &p->world_old2, 12);
+        }
+    }
+    u32 hh[2] = {code, nh};
+    svc_out_write(g_hist, hh, 8);
+    svc_out_write(g_hist, hb, 28 * nh);
 }
 }   // namespace
 
@@ -113,6 +141,7 @@ extern "C" void host_svc_ready()
     if (col_bake_all) col_bake_all();   // the room's collision tables, baked at room load
     g_pal = open_out("pal.bin", "wb");
     g_col = open_out("col.txt", "w");
+    g_hist = open_out("hist.bin", "wb");
 }
 
 extern "C" void host_svc_tick(unsigned t, int begin)
@@ -123,17 +152,21 @@ extern "C" void host_svc_tick(unsigned t, int begin)
     if (!g_pal) return;
     u32 hdr[2] = {0x4B434954u, t};   // "TICK"
     svc_out_write(g_pal, hdr, 8);
+    svc_out_write(g_hist, hdr, 8);
     const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
     for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext) dump_model(e, ((u32) e - elo) / EmMgr.size);
     for (cObj* o = ObjMgr.pAlive; o; o = (cObj*) o->pNext) dump_model(o, 64 + ((u32) o - olo) / ObjMgr.size);
     u32 end[2] = {0x444E4524u, 0};   // "$END"
     svc_out_write(g_pal, end, 8);
+    svc_out_write(g_hist, end, 8);
 }
 
 extern "C" void host_svc_finish()
 {
     if (g_pal) fclose(g_pal);
     if (g_col) fclose(g_col);
+    if (g_hist) fclose(g_hist);
+    g_hist = 0;
     g_pal = 0;
     g_col = 0;
     if (&skel_cnt) {
@@ -147,14 +180,16 @@ extern "C" void host_svc_finish()
         if (&col_cnt) {
             const ColCounters& k = col_cnt;
             fprintf(f, "col bakes %u late_bakes %u line_queries %u sphere_queries %u nodes_tested %u leaves %u tris_line %u "
-                       "tris_sphere %u tri_bytes %u cold_line %u cold_sphere %u\n",
+                       "tris_sphere %u tri_bytes %u cold_line %u cold_sphere %u tris_skipped %u filter_miss %u filter_end %u "
+                       "sphere_skipped %u sphere_filter_miss %u sphere_recells %u leaves_whole %u\n",
                     k.bakes, k.late_bakes, k.line_queries, k.sphere_queries, k.nodes_tested, k.leaves, k.tris_line,
-                    k.tris_sphere, k.tri_bytes, k.cold_line, k.cold_sphere);
+                    k.tris_sphere, k.tri_bytes, k.cold_line, k.cold_sphere, k.tris_skipped, k.filter_miss, k.filter_end,
+                    k.sphere_skipped, k.sphere_filter_miss, k.sphere_recells, k.leaves_whole);
         }
         for (u32 i = 0; col_piece_count && i < col_piece_count(); i++) {
             ColPiece* pc = col_piece_at(i);
-            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u\n", i, (u32) pc->sat, pc->nNode,
-                    pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc));
+            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u masks %u\n", i, (u32) pc->sat,
+                    pc->nNode, pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc), pc->nMask);
         }
         for (u32 i = 0; skel_table_of && i < skel_table_count(); i++) {
             SkelTable* t = skel_table_at(i);
@@ -163,8 +198,44 @@ extern "C" void host_svc_finish()
                 if (t->mbox[b]) fprintf(f, " %u%s", b, t->mbox[b] == 2 ? "a" : "");
             fprintf(f, "\n");
         }
+        fprintf(f, "motion samples: integer frame %u fractional %u at or past the end %u\n", s.samp_int, s.samp_frac, s.samp_end);
+        fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u decoded from keys %u original decoder 0; "
+                   "root motion from rows %u decoded %u; axes decoded %u, outside the pack %u, rebinds %u\n", s.mk_bound,
+                s.mk_unbound, s.mk_rows, s.mk_dec, s.mk_root_rows, s.mk_root_dec, s.mk_axes, s.mk_miss, s.mk_rebinds);
+        if (&cloth_cnt) {
+            fprintf(f, "cloth: chains %u (original fallback %u), steps %u, links stepped %u, volumes built %u, resets %u\n",
+                    cloth_cnt.chains, cloth_cnt.fallback, cloth_cnt.moves, cloth_cnt.links, cloth_cnt.at_volumes, cloth_cnt.resets);
+            if (&cloth_k_cnt)
+                fprintf(f, "cloth kernel: links %u, passes over a chain %u, normalize %u, sqrt %u, acos %u, rotations %u, volume tests %u\n",
+                        cloth_k_cnt.links, cloth_k_cnt.passes, cloth_k_cnt.normalize, cloth_k_cnt.sqrt, cloth_k_cnt.acos,
+                        cloth_k_cnt.rotations, cloth_k_cnt.vol_tests);
+            // the chains' link bones by model code (pal.bin's), for svc/cloth_stats.py
+            const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
+            for (u32 i = 0; i < cloth_chain_count(); i++) {
+                ClothChain* ch = cloth_chain_at(i);
+                const u32 a = (u32) ch->m;
+                const u32 code = a >= elo && a < elo + EmMgr.size * EmMgr.nArray ? (a - elo) / EmMgr.size
+                                                                                 : 64 + (a - olo) / ObjMgr.size;
+                fprintf(f, "chain %u model %u links", i, code);
+                for (u32 k = 0; k < ch->n; k++) fprintf(f, " %u", ch->link[k].bone);
+                fprintf(f, "\n");
+            }
+        }
+        fprintf(f, "history: bones joined %u (after the first updateOldPos %u), bone moves %u, set full %u\n", s.hist_join,
+                s.hist_late, s.hist_moves, s.hist_full);
         fclose(f);
     }
+}
+
+// ---- the cloth's comparison mode (lane eng-svc2): RE4_SVC_CLOTH_WIND=0 sets every chain's no-wind flag (0x40) as
+// it is set up, in both builds, so the cloth draws no random number and native and original compare bit for bit ----
+#include "pendulum.h"
+extern "C" void __real_PenClothSet(cModel* m, PenCloth* c, f32 len);
+extern "C" void __wrap_PenClothSet(cModel* m, PenCloth* c, f32 len)
+{
+    const char* w = svc_env("RE4_SVC_CLOTH_WIND");
+    if (w && *w == '0') c->Flag |= 0x40;
+    __real_PenClothSet(m, c, len);
 }
 
 // ---- the collision boundary log (--wrap) ----

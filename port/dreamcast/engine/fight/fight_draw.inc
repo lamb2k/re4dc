@@ -5,7 +5,7 @@
    from the effect arrays (fx_sprites) with the material header of their texture picture (FXMAP.BIN, from the pack's
    recorded sprites), density cap as the owner's default (step 2: the 64 largest). */
 #include "fx.h"
-unsigned e2_actor_list(const void** models, unsigned* bases, unsigned* idents, unsigned max);   /* fight_trace.cpp */
+unsigned e2_actor_list(const void** models, E1SkelView* views, unsigned* bases, unsigned* idents, unsigned max);   /* fight_trace.cpp */
 
 /* ---- the effect map: (texture id, pattern) -> material header, glow header ---- */
 typedef struct { uint16_t tex, ptn; uint32_t hdr, glow; } FxMapRow;
@@ -38,22 +38,32 @@ static const FxMapRow* fx_lookup(unsigned tex, unsigned ptn)
 }
 
 /* ---- Ganados ---- */
+/* The actor pass checks once whether the skeleton's palette (world x the table's bind) equals the pack's bind for the
+   model it first draws (Leon's) and then trusts it; each Ganado model gets its own check here, cached. */
+static signed char pal_ok_model[64];
 void e2_draw_actors(NativeScene* s)
 {
-    const void* m[8]; unsigned base[8], ident[8];
-    const unsigned n = e2_actor_list(m, base, ident, 8);
+    const void* m[8]; E1SkelView v[8]; unsigned base[8], ident[8];
+    const unsigned n = e2_actor_list(m, v, base, ident, 8);
+    const int saved = e1_pal_ok;
     for (unsigned i = 0; i < n; i++) {
-        const unsigned bones = e1_gather((const uint8_t*) m[i]);
+        const unsigned bones = e1_gather((const uint8_t*) m[i], v + i);
         float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
         for (unsigned b = 0; b <= bones; b++)
             for (unsigned k = 0; k < 3; k++) {
-                const float v = e1_bone[b][3 + 4 * k];
-                if (v - 300.f < lo[k]) lo[k] = v - 300.f;
-                if (v + 300.f > hi[k]) hi[k] = v + 300.f;
+                const float x = e1_bone[b][3 + 4 * k];
+                if (x - 300.f < lo[k]) lo[k] = x - 300.f;
+                if (x + 300.f > hi[k]) hi[k] = x + 300.f;
             }
         const unsigned model = content_pick(s, base[i], lo, hi, 1 + i);
-        e1_actor_pass(s, m[i], model, ident[i], 0);
+        const RtCatalog* cat = s->runtime;
+        if (model < 64 && v[i].n >= cat->m[model].h[0]) {
+            if (!pal_ok_model[model]) pal_ok_model[model] = e1_pal_check(cat->m + model, v + i) ? 1 : -1;
+            e1_pal_ok = pal_ok_model[model] > 0;
+        }
+        e1_actor_pass(s, m[i], v + i, model, ident[i], 0);
     }
+    e1_pal_ok = saved;
 }
 
 /* ---- the native effect sprites ---- */

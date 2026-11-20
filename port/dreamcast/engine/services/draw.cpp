@@ -1,6 +1,6 @@
 // E1 drawing glue (lane eng-e1): the camera record from the hosted camera (pG->Cam: the look-at matrix and the
 // projection the camera code computed this tick) and the live HUD words, handed to the C renderer (core/draw_e1.c),
-// which reads Leon's matrices in place from the actor table.
+// which reads Leon's matrices in place from the actor table and the native skeleton's tables (lane eng-e1c).
 #include "global.h"
 #include "player.h"
 #include "pl_npc.h"
@@ -9,15 +9,31 @@
 #include "e1_core.h"
 #include "e1_engine.h"
 #include "e1_kos.h"
+#include "skel.h"
+#include "e1_skel_view.h"
 #include <string.h>
 
 extern "C" {
 int e1_draw_open_c(void);
-void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, unsigned identity, uint32_t* wait_us,
-                       uint32_t* draw_us, const void* partner, int world);
+void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, const E1SkelView* leon_skel, unsigned identity,
+                       uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world);
 }
 extern "C" int PlGetWeaponNo();
 static int headless;
+
+// The native skeleton table of a model as the renderer reads it (pointers only; lane eng-e1c)
+static int skel_view(const cModel* m, E1SkelView* v)
+{
+    const SkelTable* t = m ? skel_table_of(m) : 0;
+    if (!t) return 0;
+    v->world = &t->world[0].m[0][0];
+    v->pal = &t->pal[0].m[0][0];
+    v->bind[0] = t->soa + SK_BX * t->cap;
+    v->bind[1] = t->soa + SK_BY * t->cap;
+    v->bind[2] = t->soa + SK_BZ * t->cap;
+    v->n = t->n;
+    return 1;
+}
 
 void e1_draw_open()
 {
@@ -51,7 +67,10 @@ void e1_draw_picture(E1Timing& tm)
     // lane eng-e1b: the partner's record (placeholder marks, core/draw_e1.c); the village bake only in the village
     static int diag = -1;   // diagnostic boot options: DWORLD (village bake in the hill scene), DNOMARK (no partner marks)
     if (diag < 0) { diag = 0; file_t f = fs_open("/cd/DWORLD", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 1; } f = fs_open("/cd/DNOMARK", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 2; } }
-    e1_draw_picture_c(cam, hud, pPL, identity, &wait, &draw, (diag & 2) ? 0 : pSUB, e1_scene != E1_SCENE_HILL || (diag & 1));
+    E1SkelView leon, partner;
+    const int have_leon = skel_view(pPL, &leon), have_partner = !(diag & 2) && skel_view(pSUB, &partner);
+    e1_draw_picture_c(cam, hud, pPL, have_leon ? &leon : 0, identity, &wait, &draw, have_partner ? &partner : 0,
+                      e1_scene != E1_SCENE_HILL || (diag & 1));
     tm.draw_us = draw;
     tm.pvr_us = wait;   // PVR readiness wait (the graphics chip, not CPU work)
 }
