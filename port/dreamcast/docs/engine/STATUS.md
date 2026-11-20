@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-19 21:30):** owner away ("What can we do ahead of me making changes on my end I'm not home and want progress"). Four Opus lanes started on work that needs neither the console nor an owner decision; their results feed the console evening and the look approvals. Plan version 2 waits on the owner (H-006).
+**State (2026-11-20):** ALL LANES STOPPED by the owner. Handover: C:\Game Dev\Emulators\HANDOVER-RE4DC-20261120.md (why we drifted, real gains, resume order). Unfinished work on wip/eng-svc4-20261120, wip/eng-ref-20261120, wip/eng-loop2-20261120. E1 not passed (H-011).
 
 ## Milestones
 
@@ -33,9 +33,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-loop2 | Loader Flycast proof (CONSOLE_LOOP.md checks), then the bench through the loader | lane/eng-loop2 | Claude Opus | E:\RE4DC-Lanes\eng-loop2 |
-| eng-svc4 | PC-only: native versions of the remaining original service units, allowed-function link check, strict plays-right reader | lane/eng-svc4 from engine fecf63140 | Claude Opus | E:\RE4DC-Lanes\eng-svc4 |
-| eng-ref | Plays-right reference with the same random split: old-game reference build and re4ref route presentation draws to their own stream; re-record the fight fixture; re-check the E2 fight and the E1 scenes against it | lane/eng-ref | Claude Opus | E:\RE4DC-Lanes\eng-ref |
+| (none running) | | | | |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
 
@@ -77,7 +75,7 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
-Queued for the next free emulator slot: eng-e1e (E1 audit fixes in the image, final E1 image; brief written).
+Nothing queued. Resume order is in the handover: console first, then E1 only.
 
 ## Waiting on the owner
 
