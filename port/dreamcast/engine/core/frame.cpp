@@ -11,6 +11,9 @@
 #include "e1_kos.h"
 #include <stdio.h>
 #include <string.h>
+#ifdef E2_BOSS
+#include "boss_e2.h"
+#endif
 
 extern "C" unsigned short e1_rnd_state(void);
 extern "C" unsigned e1_rnd_draws;
@@ -103,6 +106,10 @@ void e1_trace_tick(unsigned tick)
            (unsigned long) bits(p->ang.x), (unsigned long) bits(p->ang.y), (unsigned long) bits(p->ang.z),
            (unsigned long) bits(p->Motion.Mot_frame), (unsigned) p->Motion.Mot_state, (unsigned long) p->stat,
            (unsigned long) motion_id(p), (unsigned long) Key.on, ps.h, pf.h, pm.h, cam.h);
+#ifdef E2_BOSS
+    if (trace_len + 4096 > sizeof(trace_buf)) e1_trace_flush();
+    e2_trace_tick(tick, trace_buf, sizeof(trace_buf), &trace_len);
+#endif
 }
 
 // ---- pacing: one logic tick a picture at 30 fps (two 60 Hz fields); a late picture runs the next tick at once ----

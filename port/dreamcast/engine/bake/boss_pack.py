@@ -56,7 +56,7 @@ def hidden_world(directory, hidden_smd, out):
 
 
 def build(disc, capture, room, tables, boss, extra_ids=(0x43,), report=None, haze_cut=True, hide_smd=(), tmp=Path("/tmp"),
-          leon="pl00"):
+          leon="pl00", rigid=None):
     assets = Baker(disc, capture, room)
 
     def world_material(key, phase, cull):
@@ -77,7 +77,8 @@ def build(disc, capture, room, tables, boss, extra_ids=(0x43,), report=None, haz
                                                  (disc / "native/pl08/leon_pl08_ps2.re4cp").read_bytes())
     stats = {}
     package = (disc / f"native/r{room:x}/registry.re4nmr").read_bytes()
-    actor_models.append(boss_model(package, boss, assets.lookup, lambda key, phase: assets.header(key, phase, fog=True), stats))
+    actor_models.append(boss_model(package, boss, assets.lookup, lambda key, phase: assets.header(key, phase, fog=True), stats,
+                                   rigid=rigid))
     boss_index = len(actor_models) - 1
     # role-3 models seen in the capture: identity -> model addresses
     seen = collections.defaultdict(set)
@@ -233,10 +234,11 @@ if __name__ == "__main__":
     p.add_argument("--boss", default="gigante-em2b-00", help="registry descriptor of the boss body (full or a level)")
     p.add_argument("--no-extra", action="store_true", help="bake no source props (the trees)")
     p.add_argument("--leon", default="pl00", choices=["pl00", "pl08"], help="Leon's costume (pl08: chapter 2, no jacket)")
+    p.add_argument("--rigid", type=float, help="content step: skin rows with a weight >= this become one bone (others to 1/4)")
     p.add_argument("--hide-smd", default="", help="comma list of scroll (SMD) ids hidden in the capture window")
     p.add_argument("--keep-haze", action="store_true", help="keep the haze and mist sprites (ids 0x15, 0x48) the source never draws")
     a = p.parse_args()
     rep = {}
     a.out.write_bytes(build(a.disc, a.capture, a.room, a.tables, a.boss, () if a.no_extra else (0x43,), rep, not a.keep_haze,
-                            [int(x, 0) for x in a.hide_smd.split(",") if x], leon=a.leon))
+                            [int(x, 0) for x in a.hide_smd.split(",") if x], leon=a.leon, rigid=a.rigid))
     print(json.dumps(rep))

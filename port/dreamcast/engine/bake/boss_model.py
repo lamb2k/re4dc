@@ -38,7 +38,22 @@ class Package:
         return out
 
 
-def boss_model(package_bytes, name, texpack_lookup, material, stats=None):
+def simplify_weights(row, rigid, step):
+    """Content step (eng-boss): a skin row whose largest weight is at least `rigid` becomes that bone alone; the others
+    are rounded to multiples of `step` (renormalised, zero weights dropped). Fewer distinct rows = fewer weight sets
+    to blend, project and light each picture."""
+    b = list(row[:3]); n = row[3]; w = list(struct.unpack_from('<3f', row, 4))
+    pairs = sorted(((w[i], b[i]) for i in range(n)), reverse=True)
+    if pairs[0][0] >= rigid:
+        return struct.pack('<3BB3f', pairs[0][1], 0, 0, 1, 1.0, 0.0, 0.0)
+    q = [(round(x / step) * step, bone) for x, bone in pairs]
+    q = [(x, bone) for x, bone in q if x > 0] or [(1.0, pairs[0][1])]
+    t = sum(x for x, _ in q); q = [(x / t, bone) for x, bone in q]
+    bones = [bone for _, bone in q] + [0] * (3 - len(q)); ws = [x for x, _ in q] + [0.0] * (3 - len(q))
+    return struct.pack('<3BB3f', *bones, len(q), *ws)
+
+
+def boss_model(package_bytes, name, texpack_lookup, material, stats=None, rigid=None, step=0.25):
     """One catalogue entry (native_models layout) for descriptor `name`. material(key, phase) -> header row."""
     pk = Package(package_bytes)
     desc = next((d for d in pk.descriptors() if d['name'] == name), None)
@@ -74,6 +89,8 @@ def boss_model(package_bytes, name, texpack_lookup, material, stats=None):
             b0, b1, b2, n = row[:4]
             if not 1 <= n <= 3 or max((b0, b1, b2)[:n]) >= bones:
                 raise ValueError('invalid skin row')
+        if rigid is not None:
+            rows = [simplify_weights(r, rigid, step) for r in rows]
         mats = [weights.setdefault(r, len(weights)) for r in rows]
         pos = pk.d[at_pos:at_pos + 8 * pc]
         nrm = pk.d[at_nrm:at_nrm + 8 * nc]
@@ -102,7 +119,7 @@ def boss_model(package_bytes, name, texpack_lookup, material, stats=None):
     raw += b''.join(struct.pack('<3hH', *r) for r in vertices) + b''.join(struct.pack('<3hH', *r) for r in normals)
     raw += b''.join(struct.pack('<4I', *r) for r in bindings) + strips
     if stats is not None:
-        stats.update(name=name, bones=bones, shift=desc['shift'], weights=len(weights), positions=len(vertices),
+        stats.update(name=name, rigid=rigid, bones=bones, shift=desc['shift'], weights=len(weights), positions=len(vertices),
                      normals=len(normals), parts=len(bindings), strip_bytes=len(strips), triangles=tris,
                      uv_min=uv_lo, uv_max=uv_hi, textures=[f'{t[0]:08x}-{t[1]:08x}' for t in texes])
     return raw
