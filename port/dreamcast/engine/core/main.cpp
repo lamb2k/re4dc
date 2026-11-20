@@ -15,6 +15,9 @@
 #include "e1_engine.h"
 #include "e1_core.h"
 #include "e1_kos.h"
+#ifdef E2_BOSS
+#include "boss_e2.h"   // eng-boss: the El Gigante slice
+#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -39,13 +42,20 @@ static void room_init()
 {
     const E1Route& r = e1_route();
     e1_room_globals(r);                 // pG room id, flags, PlayerInit (hosted)
+#ifdef E2_BOSS
+    e2_room_globals();
+#endif
     PlayerInit();
     MemCreateHeap(4, MemGetHeapStartAddr(0) + 0x1000, MemGetHeapEndAddr(0));
     MemSetCurrentHeap(4);
     e1_load_room(r.room);               // room archive sections and the core camera data (engine room pack)
     pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points (the partner's follow)
     ReadPlayerData(pG->pl_type, pG->pl_costume);
+#ifdef E2_BOSS
+    e2_managers_room_init();
+#else
     e1_managers_room_init();            // ModInfoMgr, PartsMgr, EmMgr, ObjMgr arrays on the room heap
+#endif
     e1_collision_room_init();           // SatMgr / EatMgr over the room's SAT / EAT
     pG->sub_pos.x = r.pos[0];
     pG->sub_pos.y = r.pos[1];
@@ -59,6 +69,9 @@ static void room_init()
     CamCtrl.CoreDataRead((CameraDataHeader*) (pG->pArc->ofs_30 + (u32) pG->pArc));
     CamCtrl.roomInit();
     e1_view_room_init();
+#ifdef E2_BOSS
+    e2_room_init();                     // enemy list, the boss module, the room script (R119Init)
+#endif
     pG->Rno0 = 3;
     pG->Rno1 = 0;
     e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
@@ -82,7 +95,16 @@ static void game_tick(E1Timing& tm)
     }
     e1_svc_begin();
     tm.chars_us = 0;
+#ifdef E2_BOSS
+    {   // gameMainLoop order: ScenarioMove (room main + scenario tasks), then EmMgr.move, then the player
+        uint64_t t = now_us();
+        e2_scenario_move(e1_tick);
+        e2_em_move();
+        tm.obj_us = now_us() - t;   // reported as the enemy share below
+    }
+#else
     if (e1_scene == E1_SCENE_HILL) e1_partner_chars_move(tm);   // EmMgr.move: the partner (gameMainLoop order)
+#endif
     e1_stamp(1);
     e1_rng_owner(1);
     if (!(pG->Stop_flg & 0x10000000) && (pPL->be_flag & 0x20) &&
@@ -100,7 +122,13 @@ static void game_tick(E1Timing& tm)
     e1_rng_owner(2);
     CameraMove();
     e1_rng_owner(0);
+#ifdef E2_BOSS
+    e2_fx_move();                       // effect service, then DmgMgr / collision die checks
+    e2_after_tick();
+    tm.obj_us += t2 - t1;
+#else
     tm.obj_us = t2 - t1;
+#endif
     tm.cam_us = now_us() - t2;
     tm.services_us = e1_svc_end();
 }
@@ -159,6 +187,9 @@ int main()
     }
     e1_state[0] = 5;
     e1_report();
+#ifdef E2_BOSS
+    e2_report();
+#endif
     e1_state[3] = 1;
     for (;;) thd_sleep(1000);
 }

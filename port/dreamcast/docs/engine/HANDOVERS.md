@@ -2,6 +2,13 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-009 (2026-11-19): look steps chosen
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** "Lets go with best options", after the still sheets for L3, E2, W2 and W3 were sent with the recommendations.
+- **Applied:** `CONTENT_DEFAULT_INIT` in `engine/render/content.h`: character distance levels step 3 and effect cap step 2 on by default. World cap, far-prop cards and baked lighting stay at step 0. A window can still ask for `.L0` / `.E0` for console A/B.
+- **Measured (MODELLED, eng-look):** L3 -0.45 ms cross / -0.48 hay-fork; E2 -0.04 ms; no visible change on the sheets.
+
 ## H-008 (2026-11-19): Ashley and the bosses on the engine
 
 - **From:** the owner. **To:** the integrator.

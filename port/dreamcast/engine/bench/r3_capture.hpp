@@ -10,6 +10,7 @@ struct Control {
     volatile unsigned sequence,ack;
     unsigned picture,tick,room,bytes,overflow,framebuffer,capacity;
     unsigned char *data;
+    volatile unsigned start; // eng-boss: 0, or the first game tick (Frame_cnt) to record (host-written, offset 44)
 };
 extern "C" Control m1r3_control;
 extern bool recording;

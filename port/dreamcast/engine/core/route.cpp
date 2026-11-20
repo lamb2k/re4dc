@@ -87,8 +87,6 @@ void e1_input_latch(unsigned tick)
     latched = p;
     e1_pad_now = p;
 }
-E1Pad e1_pad_now;
-int e1_scene;
 
 // The SDK pad read the hosted PadRead (src/game/pad.cpp) calls.
 struct PADStatus {

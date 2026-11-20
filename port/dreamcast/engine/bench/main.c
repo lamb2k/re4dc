@@ -69,7 +69,7 @@ static uint32_t sorted[600];
 static const char *names[]={"CROSS","FARM"};
 typedef struct { uint8_t scene,arm,novis,delay,hold,content[CS_COUNT]; } Window;
 static Window schedule[WINDOWS];
-volatile uint32_t m1_content[CS_COUNT]={[CS_GLOW]=1};
+volatile uint32_t m1_content[CS_COUNT]=CONTENT_DEFAULT_INIT;
 volatile uint32_t m1_content_counts[8];
 volatile uint32_t m1_schedule_error;   /* 0, or the 1-based character offset of the refused token */
 static const char content_items[]="LWPEBG";
@@ -86,7 +86,7 @@ static unsigned parse_schedule(const char* text){
         if(!*s)break;
         const char* token=s;
         if((*s!='c'&&*s!='f')||n==WINDOWS){m1_schedule_error=token-text+1;return 0;}
-        Window w={*s=='f',0,0,0,0,{[CS_GLOW]=1}};s++;
+        Window w={*s=='f',0,0,0,0,CONTENT_DEFAULT_INIT};s++;
         for(;*s && *s!=' ' && *s!='\n' && *s!='\r' && *s!='\t';s++){
             if(*s=='0')continue;
             else if(*s=='a')w.arm=1;else if(*s=='b')w.arm=2;else if(*s=='n')w.novis=1;else if(*s=='d')w.delay=1;else if(*s=='h')w.hold=1;

@@ -16,6 +16,9 @@
 #include "em_sub.h"
 #include "snd.h"
 #include <new>
+#ifdef E2_BOSS
+#include "boss_e2.h"
+#endif
 
 extern "C" void ShapeMove(void* info);
 void DrawOba(cModel* m);
@@ -42,10 +45,18 @@ int cEmMgr::construct(cEm* p, u32 id)
 {
     if (id == 0 && pG->pl_type == 0) {
         p = new (p) cPlLeon;
+#ifdef E2_BOSS
+        return 1;   // eng-boss image: the player as the boss slice built it (no construct tail)
+    } else if (id != 0) {   // eng-boss: the arena's enemy-table kinds (boss/boss_e2.cpp)
+        int ok = e2_construct(p, id, Guid);
+        if (ok) Guid++;
+        return ok;
+#else
     } else if (id >= 1 && id <= 0x3F) {
         p->subArc = (PlArc*) e1_em_read_search((u8) id);
         if (p->subArc == 0) return 0;
         EmInitFunc(p);
+#endif
     } else {
         e1_stub_hit("cEmMgr::construct(other)", id);
         return 0;
@@ -84,6 +95,7 @@ int cEmMgr::isBattle()
     }
     return battle;
 }
+#ifndef E2_BOSS   // the boss image moves its enemy table itself (boss/boss_e2.cpp)
 // The characters' tick (lane eng-e1b): em.cpp's cEmMgr::move / emMove with every knob off, on the engine table.
 // The player's own move runs later in the tick (core/main.cpp); emMove skips him. e1_em_move_hook counts the
 // generator draws and the time of each character's move for the trace and the behaviour row.
@@ -135,6 +147,7 @@ void cEmMgr::move()
         emMove(pSUB);
     }
 }
+#endif
 cEmMgr EmMgr;
 
 cEm::cEm() { initWork(); }

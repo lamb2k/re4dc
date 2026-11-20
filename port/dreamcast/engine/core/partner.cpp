@@ -26,6 +26,19 @@
 #include "e1_kos.h"
 #include <string.h>
 
+E1Pad e1_pad_now;
+int e1_scene;
+
+#ifdef E2_BOSS
+// The boss image (lane eng-boss, BOSS=1) hosts neither the partner nor the hill scene: the scene hooks do nothing.
+void e1_partner_boot() {}
+void e1_partner_room_init() {}
+void e1_partner_tick_begin(unsigned) {}
+void e1_partner_chars_move(E1Timing&) {}
+void e1_partner_tick_end(unsigned) {}
+void e1_trace_v2(unsigned) {}
+void e1_rng_owner(int) {}
+#else
 extern void (*EmInitFunc)(cEm* em);
 extern "C" void pl11_prolog();
 void RndInit(u16 seed);
@@ -384,3 +397,4 @@ void e1_trace_v2(unsigned t)
     n += snprintf(line + n, sizeof(line) - n, "\n");
     e1_trace_put(line, n);
 }
+#endif   // E2_BOSS

@@ -134,6 +134,30 @@ void e1_load_room(unsigned room)
 {
     char path[48];
     snprintf(path, sizeof(path), "/cd/st%u/r%03x.arc", room >> 8, room);
+#ifdef E2_BOSS
+    uint32_t size = 0;
+    uint8_t* raw = (uint8_t*) e1_file_load(path, &size, 32);
+    if (!raw) return;
+    // eng-boss: the arena script and the boss read the whole room archive (numbered sections, RTP route data)
+    e1_room_arc = raw;
+    e1_resident_bytes[2] = size;
+    pG->pRoom = e1_room_arc;
+    pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);
+    pG->RoomMes = GetDataExt(pG->pRoom, "MDT", 0);   // read.cpp ReadAreaData: the room data pointers
+    pG->pOsd = GetDataExt(pG->pRoom, "OSD", 0);
+    pG->pEmi = GetDataExt(pG->pRoom, "EMI", 0);
+    e1_log("E1 load: %s %lu B whole (E2 boss), RTP %p\n", path, (unsigned long) size, pG->Rtp);
+    {   // the whole core archive (the oba collision object's dummy model is in it)
+        uint32_t cb = 0;
+        uint8_t* core = drs_body("/cd/etc/core.das", &cb);
+        if (!core) return;
+        e1_core_arc = core;
+        e1_resident_bytes[3] = cb;
+        pG->pArc = (ArcFile*) core;
+        e1_log("E1 load: core archive %lu B whole (E2 boss)\n", (unsigned long) cb);
+        return;
+    }
+#else
     file_t f = fs_open(path, O_RDONLY);
     if (f < 0) { e1_log("E1 load: missing %s\n", path); return; }
     const uint32_t size = fs_total(f);
@@ -141,6 +165,7 @@ void e1_load_room(unsigned room)
     static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP"};
     e1_room_arc = compact_arc_file(f, keep, 5, &e1_resident_bytes[2]);
     fs_close(f);
+#endif
     pG->pRoom = e1_room_arc;
     e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
     // core archive: the camera core data and the vibration table
@@ -167,11 +192,15 @@ void ReadPlayerData(int type, int costume)
 {
     if (!(pG->pl_flag & 1)) return;
     pG->pl_flag &= ~1;
+#ifdef E2_BOSS
+    if (type != 0 || costume > 1) {   // eng-boss: costume 1 (chapter 2, file 0x5A) = em/pl08
+#else
     if (type != 0 || costume != 0) {
+#endif
         e1_stub_hit("ReadPlayerData(other character)", type << 8 | costume);
         return;
     }
-    if (!e1_pl_arc) e1_pl_arc = drs_body("/cd/em/pl00.drs", &e1_resident_bytes[0]);
+    if (!e1_pl_arc) e1_pl_arc = drs_body(costume ? "/cd/em/pl08.drs" : "/cd/em/pl00.drs", &e1_resident_bytes[0]);
     pG->pPlayer = (PlArc*) e1_pl_arc;
     e1_log("E1 load: player archive %lu B at %p\n", (unsigned long) e1_resident_bytes[0], e1_pl_arc);
 }
