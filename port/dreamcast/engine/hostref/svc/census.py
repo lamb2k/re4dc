@@ -129,9 +129,9 @@ def main():
         if line.startswith("#"):
             continue
         c, pool, slot, ident, typ, nparts, first = line.split()
-        name = {"00": "Leon", "03": "Ashley", "15": "Ganado"}.get(ident, "id" + ident) if pool == "em" else "obj" + ident
+        name = {"00": "Leon", "03": "Ashley", "15": "Ganado", "16": "Ganado"}.get(ident, "id" + ident) if pool == "em" else {"03": "Ashley", "02": "weapon"}.get(ident, "obj" + ident)
         actors[int(c)] = "%s(%s%s,%s parts)" % (name, pool, slot, nparts)
-    actors[128] = "-"
+    actors[250] = "-"
     ticks, calls = read_tsv(d + "/calls.tsv")
     names = demangle(sorted({r[1] for r in calls}))
     res = {"ticks": ticks, "boundary": [], "nested": [], "helpers": [], "mem": [], "fields": []}
@@ -160,15 +160,16 @@ def main():
     for (ctx, act, h), n in sorted(hel.items(), key=lambda x: (x[0][0], x[0][1], -x[1])):
         res["helpers"].append({"ctx": ctx, "actor": act, "helper": h, "calls": n, "per_tick": n / max(ticks, 1)})
     try:
-        _, mem = read_tsv(d + "/mem.tsv")
+        traced, mem = read_tsv(d + "/mem.tsv")   # memory rows are per traced tick (RE4_SVC_TRACE_FROM / _TO)
     except FileNotFoundError:
-        mem = []
+        traced, mem = 0, []
+    res["traced"] = traced
     if mem:
         mn = demangle(sorted({r[1] for r in mem}))
         for ctx, ctxn, cunit, actor, reg, acc, rd, wr, lines, lmax, seen in mem:
             res["mem"].append({"ctx": mn.get(ctxn, ctxn), "ctx_unit": cunit, "ctx_kind": UNIT_KIND.get(cunit, "none"),
-                               "actor": actors.get(int(actor), actor), "region": reg, "acc_per_tick": int(acc) / ticks,
-                               "reads": int(rd), "writes": int(wr), "lines_per_tick": int(lines) / ticks,
+                               "actor": actors.get(int(actor), actor), "region": reg, "acc_per_tick": int(acc) / max(traced, 1),
+                               "reads": int(rd), "writes": int(wr), "lines_per_tick": int(lines) / max(traced, 1),
                                "lines_max": int(lmax), "ticks_seen": int(seen)})
         _, fl = read_tsv(d + "/fields.tsv")
         fn = demangle(sorted({r[2] for r in fl}))

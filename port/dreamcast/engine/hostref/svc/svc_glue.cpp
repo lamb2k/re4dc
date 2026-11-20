@@ -14,11 +14,11 @@ namespace {
 uint8_t g_owner[4096], g_bone[4096];
 char g_actors[16384];
 unsigned g_actors_len;
-bool g_seen[128];
+bool g_seen[256];
 
 void note_actor(unsigned code, const cModel* m, unsigned t)
 {
-    if (code >= 128 || g_seen[code] || g_actors_len > sizeof g_actors - 256) return;
+    if (code >= 250 || g_seen[code] || g_actors_len > sizeof g_actors - 256) return;
     g_seen[code] = true;
     g_actors_len += sprintf(g_actors + g_actors_len, "%u\t%s\t%u\t%02x\t%02x\t%u\t%u\n", code, code < 64 ? "em" : "obj",
                             code & 63, m->id, m->type, m->nParts, t);
@@ -65,7 +65,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
 {
     if (!begin && skel_publish_all) skel_publish_all();   // the palette, once a tick (traced: native work)
     if (begin) {
-        __builtin_memset(g_owner, 128, sizeof g_owner);
+        __builtin_memset(g_owner, 250, sizeof g_owner);
         __builtin_memset(g_bone, 255, sizeof g_bone);
         const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
         for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext) own_chain(e, ((u32) e - elo) / EmMgr.size, t);

@@ -15,9 +15,11 @@
 //   ikAng   [cap]   4 B   MotionParts::ikAng
 //   hist    [n]    36 B   key history (MotionParts::hist, 6 channels x 3 axes, u16)
 //   parent  [cap]   1 B   parent bone (0xFF the model, 0xFE an outside coordinate: extParent)
-//   mbox    [cap]   1 B   mailbox: 1 the record is served after every evaluation and read back before (a bone code
-//                         outside asked for), 2 served only (its ancestors: reached through pParent, read)
+//   mbox    [cap]   1 B   mailbox: 1 a bone code outside asked for (served after every entry, taken back at the next
+//                         entry after it was handed out again), 2 its ancestors (reached through pParent: served
+//                         mat, world, r_scale, scale), bit 7 handed out since the last entry
 //   mlist   [cap]   1 B   the mailbox bones, in the order they joined
+//   handed  [cap]   1 B   the bones handed out since the last entry
 //   ik      [nIk]  96 B   IK chains (IkParts of the root: plane matrix, axis, direction)
 //
 // The cParts records stay (the behaviour holds pointers to them and walks pList); a record is the mailbox of its
@@ -83,11 +85,13 @@ struct SkelTable {
     SkelIk* ik;
     cCoord* extParent;    // the root's parent when it is not this model (cModel::setParent)
     u8* mlist;            // [nMbox] the mailbox bones
-    f32* shadow;          // check build: what each ancestor record was given (21 floats a bone)
-    u32 nMbox;
+    u8* handed;           // [nHanded] bones handed out since the last entry (taken back at the next)
+    f32* shadow;          // check build: what each mailbox record was given (49 floats a bone)
+    u32 nMbox, nHanded;
+    u8 nRoot, root[7];    // bones whose parent is the model or an outside coordinate
     u32 stamp;            // tick of the last publish
     u8 ikOf[SKEL_MAX_IK]; // unused slots 0xFF
-    u32 pad[10];
+    u32 pad[6];
 
     f32* row(int r) { return soa + r * cap; }
 };

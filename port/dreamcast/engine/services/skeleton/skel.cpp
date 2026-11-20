@@ -165,64 +165,73 @@ void poison_record(cParts* r)
     skel_cnt.poison_bones++;
 }
 
-// the check build's copy of what an ancestor record was given (21 floats a bone): a later difference is a write the
-// table would not take back (counted; must stay 0)
-void shadow_ancestor(SkelTable* t, u32 b)
+// Field groups a native entry may change (the mailbox serves only those): WORLD = mat, world, r_scale, flags;
+// LOCAL = l_mat, pos, ang, scale, addRot, flags; OLD = world_old, world_old2.
+enum { SG_WORLD = 1, SG_LOCAL = 2, SG_OLD = 4, SG_ALL = 7 };
+constexpr u32 kSnap = 49;   // floats of a record the check build remembers
+
+// the check build's copy of what a record was given: a later difference that was not taken back is a lost write
+// (counted; must stay 0)
+void snap_read(const cParts* r, f32* d)
 {
-    if (!t->shadow) return;
-    cParts* r = t->rec[b];
-    f32* d = t->shadow + 21 * b;
     memcpy(d, r->mat, 48);
-    d[12] = r->world.x; d[13] = r->world.y; d[14] = r->world.z;
-    d[15] = r->r_scale.x; d[16] = r->r_scale.y; d[17] = r->r_scale.z;
-    d[18] = r->scale.x; d[19] = r->scale.y; d[20] = r->scale.z;
+    memcpy(d + 12, r->l_mat, 48);
+    d[24] = r->world.x; d[25] = r->world.y; d[26] = r->world.z;
+    d[27] = r->world_old.x; d[28] = r->world_old.y; d[29] = r->world_old.z;
+    d[30] = r->world_old2.x; d[31] = r->world_old2.y; d[32] = r->world_old2.z;
+    d[33] = r->pos.x; d[34] = r->pos.y; d[35] = r->pos.z;
+    d[36] = r->ang.x; d[37] = r->ang.y; d[38] = r->ang.z;
+    d[39] = r->scale.x; d[40] = r->scale.y; d[41] = r->scale.z;
+    d[42] = r->r_scale.x; d[43] = r->r_scale.y; d[44] = r->r_scale.z;
+    d[45] = r->addRot.x; d[46] = r->addRot.y; d[47] = r->addRot.z;
+    memcpy(d + 48, &r->motParts.flags, 4);
 }
-void check_ancestor(SkelTable* t, u32 b)
+void snap_take(SkelTable* t, u32 b)
+{
+    if (t->shadow) snap_read(t->rec[b], t->shadow + kSnap * b);
+}
+void snap_check(SkelTable* t, u32 b)
 {
     if (!t->shadow) return;
-    cParts* r = t->rec[b];
-    const f32* d = t->shadow + 21 * b;
-    f32 now[21];
-    memcpy(now, r->mat, 48);
-    now[12] = r->world.x; now[13] = r->world.y; now[14] = r->world.z;
-    now[15] = r->r_scale.x; now[16] = r->r_scale.y; now[17] = r->r_scale.z;
-    now[18] = r->scale.x; now[19] = r->scale.y; now[20] = r->scale.z;
-    if (__builtin_memcmp(now, d, sizeof now) != 0) skel_cnt.lost_writes++;
+    f32 now[kSnap];
+    snap_read(t->rec[b], now);
+    if (__builtin_memcmp(now, t->shadow + kSnap * b, sizeof now) != 0) skel_cnt.lost_writes++;
 }
-void serve_ancestor(SkelTable* t, u32 b)
+
+// table -> record, the groups in `mask`. An ancestor (reached only through pParent) gets mat, world, r_scale, scale.
+void serve(SkelTable* t, u32 b, u32 mask)
 {
     cParts* r = t->rec[b];
-    memcpy(r->mat, t->world[b].m, 48);
-    r->r_scale.x = t->world[b].rs[0];
-    r->r_scale.y = t->world[b].rs[1];
-    r->r_scale.z = t->world[b].rs[2];
     const u32 c = t->cap;
     const f32* s = t->soa;
-    r->world.x = s[SK_WX * c + b]; r->world.y = s[SK_WY * c + b]; r->world.z = s[SK_WZ * c + b];
-    r->scale.x = s[SK_SX * c + b]; r->scale.y = s[SK_SY * c + b]; r->scale.z = s[SK_SZ * c + b];
-    shadow_ancestor(t, b);
-    skel_cnt.serve_ancestors++;
+    const bool anc = t->mbox[b] == 2;
+    if (mask & SG_WORLD) {
+        memcpy(r->mat, t->world[b].m, 48);
+        r->r_scale.x = t->world[b].rs[0];
+        r->r_scale.y = t->world[b].rs[1];
+        r->r_scale.z = t->world[b].rs[2];
+        r->world.x = s[SK_WX * c + b]; r->world.y = s[SK_WY * c + b]; r->world.z = s[SK_WZ * c + b];
+        if (!anc) r->motParts.flags = t->world[b].flags;
+    }
+    if (mask & SG_LOCAL) {
+        r->scale.x = s[SK_SX * c + b]; r->scale.y = s[SK_SY * c + b]; r->scale.z = s[SK_SZ * c + b];
+        if (!anc) {
+            memcpy(r->l_mat, t->lmat[b].m, 48);
+            r->pos.x = s[SK_PX * c + b]; r->pos.y = s[SK_PY * c + b]; r->pos.z = s[SK_PZ * c + b];
+            r->ang.x = s[SK_AX * c + b]; r->ang.y = s[SK_AY * c + b]; r->ang.z = s[SK_AZ * c + b];
+            r->addRot.x = s[SK_RX * c + b]; r->addRot.y = s[SK_RY * c + b]; r->addRot.z = s[SK_RZ * c + b];
+            r->motParts.flags = t->world[b].flags;
+        }
+    }
+    if ((mask & SG_OLD) && !anc) {
+        r->world_old.x = s[SK_OX * c + b]; r->world_old.y = s[SK_OY * c + b]; r->world_old.z = s[SK_OZ * c + b];
+        r->world_old2.x = s[SK_O2X * c + b]; r->world_old2.y = s[SK_O2Y * c + b]; r->world_old2.z = s[SK_O2Z * c + b];
+    }
+    if (anc) skel_cnt.serve_ancestors++;
+    else skel_cnt.serve_bones++;
+    snap_take(t, b);
 }
-void serve(SkelTable* t, u32 b)
-{
-    cParts* r = t->rec[b];
-    memcpy(r->mat, t->world[b].m, 48);
-    memcpy(r->l_mat, t->lmat[b].m, 48);
-    r->r_scale.x = t->world[b].rs[0];
-    r->r_scale.y = t->world[b].rs[1];
-    r->r_scale.z = t->world[b].rs[2];
-    r->motParts.flags = t->world[b].flags;
-    const u32 c = t->cap;
-    const f32* s = t->soa;
-    r->pos.x = s[SK_PX * c + b]; r->pos.y = s[SK_PY * c + b]; r->pos.z = s[SK_PZ * c + b];
-    r->ang.x = s[SK_AX * c + b]; r->ang.y = s[SK_AY * c + b]; r->ang.z = s[SK_AZ * c + b];
-    r->scale.x = s[SK_SX * c + b]; r->scale.y = s[SK_SY * c + b]; r->scale.z = s[SK_SZ * c + b];
-    r->world.x = s[SK_WX * c + b]; r->world.y = s[SK_WY * c + b]; r->world.z = s[SK_WZ * c + b];
-    r->world_old.x = s[SK_OX * c + b]; r->world_old.y = s[SK_OY * c + b]; r->world_old.z = s[SK_OZ * c + b];
-    r->world_old2.x = s[SK_O2X * c + b]; r->world_old2.y = s[SK_O2Y * c + b]; r->world_old2.z = s[SK_O2Z * c + b];
-    r->addRot.x = s[SK_RX * c + b]; r->addRot.y = s[SK_RY * c + b]; r->addRot.z = s[SK_RZ * c + b];
-    skel_cnt.serve_bones++;
-}
+// record -> table, every group (a bone handed out since the last entry)
 void pull(SkelTable* t, u32 b)
 {
     cParts* r = t->rec[b];
@@ -245,51 +254,62 @@ void pull(SkelTable* t, u32 b)
 }
 
 void refresh_roots(SkelTable* t);
-// Every engine entry: begin() takes the mailbox records back, end() serves them.
+// Every engine entry: begin() takes back the records handed out since the last entry (getPartsPtr, GetPartsAddr: the
+// census shows the behaviour writes a bone only right after asking for it), end() serves the groups the entry may
+// have changed to every mailbox record. The check build compares every other mailbox record with what it was given.
 struct Scope {
     SkelTable* t;
-    explicit Scope(SkelTable* tt) : t(tt)
+    u32 mask;
+    Scope(SkelTable* tt, u32 m) : t(tt), mask(m)
     {
         skel_cnt.entries++;
         if (!t) return;
         refresh_roots(t);
-        for (u32 i = 0; i < t->nMbox; i++) {
-            const u32 b = t->mlist[i];
-            if (t->mbox[b] == 1) pull(t, b);
-            else check_ancestor(t, b);
+        for (u32 i = 0; i < t->nHanded; i++) {
+            const u32 b = t->handed[i];
+            t->mbox[b] &= ~0x80;
+            pull(t, b);
         }
+        if (t->shadow)
+            for (u32 i = 0; i < t->nMbox; i++) {
+                const u32 b = t->mlist[i];
+                bool handed = false;
+                for (u32 k = 0; k < t->nHanded; k++) handed |= t->handed[k] == b;
+                if (!handed) snap_check(t, b);
+            }
+        t->nHanded = 0;
     }
     ~Scope()
     {
-        if (!t) return;
-        for (u32 i = 0; i < t->nMbox; i++) {
-            const u32 b = t->mlist[i];
-            if (t->mbox[b] == 1) serve(t, b);
-            else serve_ancestor(t, b);
-        }
+        if (!t || !mask) return;
+        for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], mask);
     }
 };
 
 void mailbox_add(SkelTable* t, u32 b)
 {
-    if (b >= t->n || t->mbox[b] == 1) return;
-    if (!t->mbox[b]) t->mlist[t->nMbox++] = (u8) b;
-    t->mbox[b] = 1;   // direct: full record both ways
-    serve(t, b);
+    if (b >= t->n) return;
+    if (!(t->mbox[b] & 0x80)) {   // handed out since the last entry: taken back at the next one
+        t->mbox[b] |= 0x80;
+        t->handed[t->nHanded++] = (u8) b;
+    }
+    if ((t->mbox[b] & 0x7F) == 1) return;
+    if (!(t->mbox[b] & 0x7F)) t->mlist[t->nMbox++] = (u8) b;
+    t->mbox[b] = 0x81;   // direct: the full record both ways
+    serve(t, b, SG_ALL);
     // its ancestors: code reaches a parent through cCoord::pParent (read)
-    for (u32 a = t->parent[b]; a < t->n && !t->mbox[a]; a = t->parent[a]) {
+    for (u32 a = t->parent[b]; a < t->n && !(t->mbox[a] & 0x7F); a = t->parent[a]) {
         t->mlist[t->nMbox++] = (u8) a;
         t->mbox[a] = 2;
-        serve_ancestor(t, a);
+        serve(t, a, SG_ALL);
     }
 }
 
 // a root bone's parent from its record (cModel::setParent, objWep and the event code write it there)
 void refresh_roots(SkelTable* t)
 {
-    for (u32 b = 0; b < t->n; b++) {
-        const u8 p = t->parent[b];
-        if (p != SKEL_PARENT_MODEL && p != SKEL_PARENT_EXT) continue;
+    for (u32 i = 0; i < t->nRoot; i++) {
+        const u32 b = t->root[i];
         cCoord* rp = t->rec[b]->pParent;
         if (rp == (cCoord*) t->model) {
             t->parent[b] = SKEL_PARENT_MODEL;
@@ -1141,7 +1161,8 @@ SkelTable* table_create(cModel* m)
     const u32 oParent = off; off = align32(off + cap);
     const u32 oMbox = off; off = align32(off + cap);
     const u32 oMlist = off; off = align32(off + cap);
-    const u32 oShadow = off; off = align32(off + (skel_poison ? 4 * 21 * n : 0));
+    const u32 oHanded = off; off = align32(off + cap);
+    const u32 oShadow = off; off = align32(off + (skel_poison ? 4 * kSnap * n : 0));
     const u32 oIk = off; off = align32(off + sizeof(SkelIk) * SKEL_MAX_IK);
     u8* blk = (u8*) pool_alloc(off);
     if (!blk) return 0;
@@ -1162,6 +1183,7 @@ SkelTable* table_create(cModel* m)
     t->parent = blk + oParent;
     t->mbox = blk + oMbox;
     t->mlist = blk + oMlist;
+    t->handed = blk + oHanded;
     t->shadow = skel_poison ? (f32*) (blk + oShadow) : 0;
     t->ik = (SkelIk*) (blk + oIk);
     for (u32 i = 0; i < SKEL_MAX_IK; i++) t->ikOf[i] = 0xFF;
@@ -1201,6 +1223,8 @@ SkelTable* table_create(cModel* m)
             }
         }
     }
+    for (b = 0; b < n && t->nRoot < sizeof t->root; b++)
+        if (t->parent[b] == SKEL_PARENT_MODEL || t->parent[b] == SKEL_PARENT_EXT) t->root[t->nRoot++] = (u8) b;
     if (g_ntab >= kMaxTables) {
         pLog->err(0, 0, "skel: too many tables");
         pool_free(blk);
@@ -1339,7 +1363,7 @@ void cModel::partsMatCalc()
 {
     SkelTable* t = table_for(this);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL | SG_WORLD);
     mat_calc(t);
 }
 
@@ -1356,7 +1380,7 @@ void cModel::partsWorldCalc()
     }
     SkelTable* t = table_for(this);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_WORLD);
     world_calc(t);
 }
 
@@ -1364,7 +1388,7 @@ void cModel::matBlend(f32 rate)
 {
     SkelTable* t = table_for(this);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL);
     mat_blend(t, rate);
 }
 
@@ -1374,7 +1398,7 @@ void cModel::matUpdate()
     if (pParts != NULL) {
         SkelTable* t = table_for(this);
         if (t) {
-            Scope sc(t);
+            Scope sc(t, SG_LOCAL | SG_WORLD);
             mat_calc(t);
             world_calc(t);
         }
@@ -1387,7 +1411,7 @@ void cModel::updateOldPos()
     pos_old = pos;
     SkelTable* t = table_for(this);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_OLD);
     const u32 c = t->cap;
     f32* s = t->soa;
     memcpy(s + SK_O2X * c, s + SK_OX * c, 4 * 3 * c);   // world_old2 = world_old (three rows)
@@ -1403,7 +1427,7 @@ void cModel::setPos(Vec* p)
         PSVECAdd(&this->pos, &d, &this->pos);
         PSVECAdd(&pos_old, &d, &pos_old);
         if (t) {
-            Scope sc(t);
+            Scope sc(t, SG_WORLD | SG_OLD);
             const u32 c = t->cap;
             f32* s = t->soa;
             for (u32 b = 0; b < t->n; b++) {
@@ -1433,7 +1457,7 @@ void cModel::partsFixMemory(int no)
     }
     SkelTable* t = table_for(this);
     if (!t || no < 0 || (u32) no >= t->n) return;
-    Scope sc(t);
+    Scope sc(t, 0);
     Fix_pos.x = t->soa[SK_WX * t->cap + no];
     Fix_pos.y = t->soa[SK_WY * t->cap + no];
     Fix_pos.z = t->soa[SK_WZ * t->cap + no];
@@ -1447,7 +1471,7 @@ void cModel::partsFixAdjust()
     SkelTable* t = table_for(this);
     if (!t) return;
     {
-        Scope sc(t);
+        Scope sc(t, 0);
         const u32 b = Fix_parts - 1;
         d.x = t->soa[SK_WX * t->cap + b] - Fix_pos.x;
         d.z = t->soa[SK_WZ * t->cap + b] - Fix_pos.z;
@@ -1466,7 +1490,7 @@ void cModel::setParent(cModel* parent, Vec* p, Vec* rot)
     r->ang = *rot;
     SkelTable* t = table_for(this);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL);
     t->parent[0] = SKEL_PARENT_EXT;
     t->extParent = parent;
     if ((cModel*) parent == this) t->parent[0] = SKEL_PARENT_MODEL;
@@ -1486,7 +1510,7 @@ void cModel::setPartsOffset(void* bin)
     calcModelAddr((ModelData*) bin);
     SkelTable* t = table_for(this);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_ALL);
     ModelDataHead* rec = ((ModelData*) bin)->pHead;
     const u32 c = t->cap;
     f32* s = t->soa;
@@ -1556,7 +1580,7 @@ extern "C" void PartsWorldPosCalc(cModel* m)
     if (PSVECMag(&d) != 0.0f) {
         SkelTable* t = table_for(m);
         if (t) {
-            Scope sc(t);
+            Scope sc(t, SG_WORLD);
             const u32 c = t->cap;
             f32* s = t->soa;
             for (u32 b = 0; b < t->n; b++) {
@@ -1578,7 +1602,7 @@ extern "C" void MotionClear(cModel* m, int flag)
     MotionWork* w = MOTION(m);
     SkelTable* t = table_for(m);
     if (t) {
-        Scope sc(t);
+        Scope sc(t, SG_LOCAL);
         const u32 c = t->cap;
         f32* s = t->soa;
         for (u32 b = 0; b < t->n; b++) {
@@ -1631,7 +1655,7 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
     int f;
     int i;
     SkelTable* t = table_for(m);
-    Scope sc(t);
+    Scope sc(t, SG_ALL);
 
     if (!(w->Mot_flag & 0x20000000)) MOTION(m)->blend = 0;
     w->Pos_old = vecZero;
@@ -1834,7 +1858,7 @@ extern "C" void MotionMoveCore(cModel* m, MotionWork* w, int flag)
     (void) flag;
     SkelTable* t = table_for(m);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL | SG_WORLD);
     move_core(t, w);
 }
 
@@ -1842,14 +1866,14 @@ extern "C" void MotionHokan(cModel* m, MotionWork* w)
 {
     SkelTable* t = table_for(m);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL);
     hokan(t, w);
 }
 
 extern "C" u16 MotionMoveSub(cModel* m, MotionWork* w)
 {
     SkelTable* t = table_for(m);
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL | SG_WORLD);
     if (t) move_core(t, w);
     MotionSequenceCtrl(w);
     if (w->Hokan_cnt != 0 && t) hokan(t, w);
@@ -1862,7 +1886,7 @@ extern "C" u16 MotionMove(cModel* m)
     Vec spd, rot, spd2, rot2;
     f32 rate, inv;
     SkelTable* t = table_for(m);
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL | SG_WORLD);
     MotionWork* W = MOTION(m);
 
     if (W->blend != 0) W->blend->Seq_speed = W->Seq_speed;
@@ -2014,7 +2038,7 @@ extern "C" void IKInit(cModel* m, MotionWork* w)
 {
     SkelTable* t = table_for(m);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL | SG_WORLD);
     ik_init(t, w);
 }
 
@@ -2023,7 +2047,7 @@ extern "C" void InverseKinematics(cModel* m, int flag)
     (void) flag;
     SkelTable* t = table_for(m);
     if (!t) return;
-    Scope sc(t);
+    Scope sc(t, SG_LOCAL | SG_WORLD);
     if (!skel_control_no_ik) inverse_kinematics(t);
 }
 
@@ -2035,7 +2059,7 @@ void at_pos_calc(cModel* m, Vec* vec)
         PSVECAdd(&m->pos, vec, &m->pos);
         SkelTable* t = table_for(m);
         if (t) {
-            Scope sc(t);
+            Scope sc(t, SG_WORLD);
             const u32 c = t->cap;
             f32* s = t->soa;
             for (u32 b = 0; b < t->n; b++) {

@@ -481,6 +481,16 @@ int sphere_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, f32 r, int flag,
 
 }   // namespace
 
+extern "C" u32 col_piece_count(void) { return g_npiece; }
+extern "C" ColPiece* col_piece_at(u32 i) { return i < g_npiece ? g_piece[i] : 0; }
+// the bytes the original walk reads from: the file's vertex, normal, edge, polygon and block tables
+extern "C" u32 col_file_bytes(const ColPiece* pc)
+{
+    const cSat* s = pc->sat;
+    return 0x14 + 12u * (s->vertex_num + s->normal_num + s->nEdge) + (u32) sizeof(AtPoly) * s->polygon_num + 0x24u * pc->nNode +
+           2u * pc->nIdx;
+}
+
 extern "C" ColPiece* col_piece_of(const cSat* s)
 {
     for (u32 i = 0; i < g_npiece; i++)

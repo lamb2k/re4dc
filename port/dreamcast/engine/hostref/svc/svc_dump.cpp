@@ -42,6 +42,9 @@ extern "C" void skel_publish_all(void) __attribute__((weak));
 extern "C" SkelTable* skel_table_of(const cModel* m) __attribute__((weak));
 extern "C" void col_bake_all(void) __attribute__((weak));
 extern "C" u32 skel_table_count(void) __attribute__((weak));
+extern "C" u32 col_piece_count(void) __attribute__((weak));
+extern "C" ColPiece* col_piece_at(u32 i) __attribute__((weak));
+extern "C" u32 col_file_bytes(const ColPiece* pc) __attribute__((weak));
 extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
 extern "C" SkelCounters skel_cnt __attribute__((weak));
 extern "C" ColCounters col_cnt __attribute__((weak));
@@ -147,6 +150,11 @@ extern "C" void host_svc_finish()
                        "tris_sphere %u tri_bytes %u\n",
                     k.bakes, k.late_bakes, k.line_queries, k.sphere_queries, k.nodes_tested, k.leaves, k.tris_line,
                     k.tris_sphere, k.tri_bytes);
+        }
+        for (u32 i = 0; col_piece_count && i < col_piece_count(); i++) {
+            ColPiece* pc = col_piece_at(i);
+            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u\n", i, (u32) pc->sat, pc->nNode,
+                    pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc));
         }
         for (u32 i = 0; skel_table_of && i < skel_table_count(); i++) {
             SkelTable* t = skel_table_at(i);

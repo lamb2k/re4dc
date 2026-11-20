@@ -63,6 +63,9 @@ struct ColPiece {
 extern "C" {
 void col_bake_all(void);            // every live piece of SatMgr and EatMgr (room load)
 ColPiece* col_piece_of(const cSat* s);
+u32 col_piece_count(void);
+ColPiece* col_piece_at(u32 i);
+u32 col_file_bytes(const ColPiece* pc);
 struct ColCounters {
     u32 bakes, late_bakes, line_queries, sphere_queries, nodes_tested, leaves, tris_line, tris_sphere, tri_bytes;
 };

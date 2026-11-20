@@ -33,9 +33,9 @@ extern const char census_kind[];
 }
 
 namespace {
-constexpr unsigned kMaxSym = 4096;
-constexpr unsigned kActors = 130;      // 0..63 em slots, 64..127 obj slots, 128 none, 129 other
-constexpr unsigned kNone = 128;
+constexpr unsigned kMaxSym = 1024;
+constexpr unsigned kActors = 256;      // 0..63 em slots, 64.. obj slots (64 + slot), 250 none
+constexpr unsigned kNone = 250;
 bool g_on;            // counting (between ready and the end)
 bool g_trace;         // memory tracer active (RE4_SVC_TRACE=1)
 bool g_armed;         // arena protected now
@@ -52,7 +52,10 @@ unsigned actor_of(unsigned a)
 {
     for (int r = SVC_R_EM; r <= SVC_R_OBJ; r++) {
         const SvcRegion& g = g_reg[r];
-        if (g.stride && a >= g.lo && a < g.hi) return (r == SVC_R_EM ? 0 : 64) + (a - g.lo) / g.stride;
+        if (g.stride && a >= g.lo && a < g.hi) {
+            const unsigned c = (r == SVC_R_EM ? 0 : 64) + (a - g.lo) / g.stride;
+            return c < kNone ? c : kNone;
+        }
     }
     if (g_part_owner && a >= g_part_lo && a < g_part_lo + g_part_n * g_part_stride) return g_part_owner[(a - g_part_lo) / g_part_stride];
     return kNone;
@@ -284,6 +287,10 @@ extern "C" void census_hit(unsigned idx, unsigned ret, unsigned arg0)
 extern "C" void svc_census_regions(const SvcRegion* r)
 {
     for (int i = 0; i < SVC_REGIONS; i++) g_reg[i] = r[i];
+    if (census_nsyms > kMaxSym) {
+        fprintf(stderr, "svc census: %u symbols, the tables hold %u\n", census_nsyms, kMaxSym);
+        exit(4);
+    }
     g_trace = getenv("RE4_SVC_TRACE") && atoi(getenv("RE4_SVC_TRACE")) != 0;
     if (getenv("RE4_SVC_TRACE_FROM")) g_from = (unsigned) atoi(getenv("RE4_SVC_TRACE_FROM"));
     if (getenv("RE4_SVC_TRACE_TO")) g_to = (unsigned) atoi(getenv("RE4_SVC_TRACE_TO"));
