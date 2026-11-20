@@ -303,3 +303,12 @@ everything stays off. Started by the loader or the console disc's selector, a co
   otherwise it starts again. After the summary is shown the journal is closed: the next reset starts a new run.
 - Controls: `--drop <disc path>` removes a staged file; `--no-precheck` leaves the refusal to the image itself;
   `--scenes` picks a subset.
+
+**Flycast proof (lane eng-loop2, 2026-11-20; console-like Flycast, GDEMU profile; Flycast ms, not a result).** One
+boot ran all six scenes and showed the summary. Bench OK (11 windows; the control window `c0dh` read +5.0 ms and one
+interval over two fields, as it must), Leon OK, hill OK, fight OK, El Gigante hosted OK (headless). **El Gigante on
+the bench FAILED**: the engine's bench refuses lane eng-boss's `boss2-full.pak` at pack-loader stage 5 (the recorded
+input checks); its pack needs a re-bake with the current packer. Controls: `--drop FIGHT/CROSS.PAK` gives FIGHT
+"FAILED missing FIGHT/CROSS.PAK"; with `--no-precheck`, `--drop BENCH/FARM.PAK` gives BENCH "FAILED M1 native pack
+REFUSED" and `--drop E1/st1/r101.arc` gives LEON "FAILED E1 load: missing /cd/st1/r101.arc". Evidence:
+`E:\RE4DC-Lanes\eng-loop2\evidence` (`final-*journal.txt`, `shots\final-*.png`).

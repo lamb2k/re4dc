@@ -31,7 +31,13 @@ deadline.
 - Scenes, one boot, in order: bench (village cross, hay-fork view, arms a and b A/B/A, control window), Leon in the
   village, Leon and Ashley on the hill, the four-Ganado fight, El Gigante on the bench, El Gigante hosted.
 - Selector `engine/loader/selector.c`; send-able build option `engine/loader/sendable.mk` + `cl_send.c`.
-- Flycast proof and controls: HANDBACK.md in the lane's evidence folder (the scene table and the summary photos).
+- Flycast proof (one boot, all six scenes, the summary screen): bench, Leon, hill, fight and El Gigante hosted OK;
+  **El Gigante on the bench FAILED**: the engine's bench refuses lane eng-boss's pack at pack-loader stage 5 (the
+  recorded-input checks), so it needs a re-bake with the current packer. Controls: a dropped pack with the
+  selector's check (FIGHT "missing FIGHT/CROSS.PAK") and without it (BENCH "M1 native pack REFUSED"; LEON
+  "E1 load: missing /cd/st1/r101.arc") are FAILED in the summary, never skipped.
+- The E1 images print a `fields` column but never fill it: the floor's presented-interval row is not measured for
+  Leon, the hill, the fight or the boss. The summary says so instead of showing 0.
 
 ## 3. Shared files touched
 
@@ -44,4 +50,11 @@ deadline.
 
 ## 4. Not done
 
-See HANDBACK.md.
+- El Gigante on the bench: no re-bake of its pack (outside the lane).
+- Presented fields in the E1 images: not added (engine `core/`).
+- No console run; no disc on the SD card.
+- The loader's GDEMU disc was not re-staged with this lane's changes (the evening does not use the loader).
+- The console-like Flycast build writes nothing to its captured stdout: the serial line was checked in the standard
+  Flycast slot.
+- The `SENDABLE` images copy their own text lines into the report inside `printf`; where an image prints during its
+  timed pictures this costs a little. Not measured.
