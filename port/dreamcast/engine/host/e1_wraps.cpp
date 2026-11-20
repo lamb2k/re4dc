@@ -51,9 +51,10 @@ uint32_t e1_svc_group(unsigned g) { return g < E1_SVC_GROUPS ? (uint32_t) svc_gr
     }
 enum { MOT = E1_SVC_MOTION, CLOTH = E1_SVC_CLOTH, PARTS = E1_SVC_PARTS, COL = E1_SVC_COLLISION };
 
-// Random numbers, split (lane eng-e1c, owner 2026-11-19): presentation randomness (eye wander, aim and camera sway,
-// cartridge and water-shot effects, the damage voice choice) comes from an engine-owned generator; the original Rnd
-// serves only the behaviour. The presentation functions are placed in their own code section, e1_present, at build
+// Random numbers, split (lane eng-e1c, owner 2026-11-19): presentation randomness (eye wander, camera sway,
+// cartridge and water-shot effects, the damage voice choice, the cloth) comes from an engine-owned generator; the
+// original Rnd serves only the behaviour. Lane eng-e1d (integrator ruling): the aim sway (PlWepLockRand) moves Leon and
+// his shots, so it is behaviour and draws from Rnd again. The presentation functions are placed in their own code section, e1_present, at build
 // time (game/Makefile PRESENT_*: objcopy --rename-section, the code unchanged); a draw whose caller lies in that
 // section is answered by the engine generator (the original algorithm on its own state), every other draw by the
 // original. Draws are counted per generator.
@@ -80,6 +81,13 @@ static float prnd_unit()   // [1, 2) from three draws, as fRand0_1 / fRand1_1 fo
     float f;
     __builtin_memcpy(&f, &u, 4);
     return f;
+}
+// lane eng-e1d: the native cloth's draws (services/cloth: wind phase, floor jitter) come from this generator too, 32 bits
+// from four draws (cloth.cpp takes the engine generator when this symbol is linked).
+extern "C" unsigned e1_pres_u32(void)
+{
+    unsigned a = prnd(), b = prnd(), c = prnd(), d = prnd();
+    return a | (b << 8) | (c << 16) | (d << 24);
 }
 extern "C" unsigned char __real_Rnd();
 extern "C" unsigned char __wrap_Rnd()

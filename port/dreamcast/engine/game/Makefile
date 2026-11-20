@@ -69,7 +69,8 @@ $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 # their code goes to the section e1_present, whose draws host/e1_wraps.cpp answers from the engine generator.
 PRESENT_game/pl_class := _ZN7cPlayer13moveEyeNormalEv
 PRESENT_game/pl_sub := PlSetDamageSe
-PRESENT_game/pl_wep := PlWepLockRand wepSetWaterShot
+# Lane eng-e1d: the aim sway PlWepLockRand is behaviour (it moves Leon and his shots): back on the original generator.
+PRESENT_game/pl_wep := wepSetWaterShot
 PRESENT_game/cam_extra := _ZN11CameraScope4moveEv _ZN12CameraLookAtC2EP6Camera
 PRESENT_wep/objRuger := _ZN9cObjRuger12setCartridgeEv
 PRESENT_game/pl_npc := _ZN8cSubChar8moveFaceEv
@@ -101,6 +102,22 @@ $(OUT)/e/%.o: $(ENG)/%.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 SVC_DIR := $(ENG)/services
 NATIVE_INC := -I$(SVC_DIR)/skeleton -I$(SVC_DIR)/collision -I$(ROOT)/port/dreamcast/game/platform/include
 NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
+# Lane eng-e1d: the native cloth (services/cloth, round 2; SERVICES.md sections 12 and 14), not in the boss image.
+ifneq ($(BOSS),1)
+NATIVE_INC += -I$(SVC_DIR)/cloth
+NATIVE_OBJS += $(OUT)/n/cloth.o
+endif
+$(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
+# pendulum.cpp: only the volume tests and the wind globals stay (hosted.mk); the five bodies the native cloth gives are
+# weakened so the calls reach cloth.o and --gc-sections drops the originals.
+WEAK_pendulum := PenClothSet PenClothMove PenClothMove3 PenClothFixSet PenClothFixClear
+$(OUT)/h/game/pendulum.o: $(ROOT)/src/game/pendulum.cpp $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@.orig.o
+	sh-elf-objcopy $(foreach s,$(WEAK_pendulum),--weaken-symbol=_$(s)) $@.orig.o $@
+	rm -f $@.orig.o
 $(OUT)/n/skel.o: $(SVC_DIR)/skeleton/skel.cpp $(SVC_DIR)/skeleton/skel.h $(SVC_DIR)/skeleton/skel_xm.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@

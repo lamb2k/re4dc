@@ -209,7 +209,8 @@ void e1_partner_boot()
 {
     file_t f = fs_open("/cd/HILL", O_RDONLY);
     if (f >= 0) { fs_close(f); e1_scene = E1_SCENE_HILL; e1_log("E1 scene: hill path (r11d), Leon and Ashley\n"); }
-    if (e1_scene != E1_SCENE_HILL) return;
+    // FEED, both scenes (lane eng-e1d: the village route too, to show which fields depend only on the generator state
+    // the old game's other draws leave at the start of a tick)
     uint32_t n = 0;
     f = fs_open("/cd/FEED.BIN", O_RDONLY);
     if (f >= 0) {
@@ -218,6 +219,7 @@ void e1_partner_boot()
         feed_n = feed ? n / 2 : 0;
         e1_log("E1 FEED: the old run's generator state at the start of %u ticks\n", feed_n);
     }
+    if (e1_scene != E1_SCENE_HILL) return;
     f = fs_open("/cd/CTRLFOL", O_RDONLY);
     if (f >= 0) { fs_close(f); follow_control = 1; e1_log("E1 CONTROL: Ashley follows 10%% further from Leon\n"); }
     f = fs_open("/cd/RESUMEA", O_RDONLY);
