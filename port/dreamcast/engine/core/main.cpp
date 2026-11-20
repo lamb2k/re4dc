@@ -30,6 +30,8 @@ void* GetDataExt(void* arc, const char* tag, int no);
 void ReadPlayerData(int type, int costume);
 
 volatile uint32_t e1_tick;
+extern "C" void e1_stamp_c(unsigned k);
+void e1_stamp(unsigned k) { e1_stamp_c(k); }
 volatile uint32_t e1_state[8];   // 0 stage, 1 tick, 2 ticks total, 3 done
 E1Timing e1_timing[E1_TICKS];
 
@@ -47,6 +49,7 @@ static void room_init()
     MemCreateHeap(4, MemGetHeapStartAddr(0) + 0x1000, MemGetHeapEndAddr(0));
     MemSetCurrentHeap(4);
     e1_load_room(r.room);               // room archive sections and the core camera data (engine room pack)
+    pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points (the partner's follow)
     ReadPlayerData(pG->pl_type, pG->pl_costume);
 #ifdef E2_BOSS
     e2_managers_room_init();
@@ -71,6 +74,7 @@ static void room_init()
 #endif
     pG->Rno0 = 3;
     pG->Rno1 = 0;
+    e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
 }
 
 // gameMainLoop, the hosted subset in its order (game.cpp:798).
@@ -90,6 +94,7 @@ static void game_tick(E1Timing& tm)
         preb_slow_flg = 0;
     }
     e1_svc_begin();
+    tm.chars_us = 0;
 #ifdef E2_BOSS
     {   // gameMainLoop order: ScenarioMove (room main + scenario tasks), then EmMgr.move, then the player
         uint64_t t = now_us();
@@ -97,7 +102,11 @@ static void game_tick(E1Timing& tm)
         e2_em_move();
         tm.obj_us = now_us() - t;   // reported as the enemy share below
     }
+#else
+    if (e1_scene == E1_SCENE_HILL) e1_partner_chars_move(tm);   // EmMgr.move: the partner (gameMainLoop order)
 #endif
+    e1_stamp(1);
+    e1_rng_owner(1);
     if (!(pG->Stop_flg & 0x10000000) && (pPL->be_flag & 0x20) &&
         (!(pG->Status_flg[1] & 0x10000000) || (pPL->be_flag & 0x800))) {
         uint64_t t = now_us();
@@ -105,10 +114,14 @@ static void game_tick(E1Timing& tm)
         tm.player_us = now_us() - t;
     }
     BitOff(pG->Status_flg[2], 0x8000000);
+    e1_stamp(2);
+    e1_rng_owner(3);
     uint64_t t1 = now_us();
     if (!(pG->Stop_flg & 0x4000000)) ObjMgr.move();
     uint64_t t2 = now_us();
+    e1_rng_owner(2);
     CameraMove();
+    e1_rng_owner(0);
 #ifdef E2_BOSS
     e2_fx_move();                       // effect service, then DmgMgr / collision die checks
     e2_after_tick();
@@ -127,12 +140,18 @@ int main()
     e1_state[0] = 1;
     e1_arena_init();
     e1_globals_init();
+    e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
+    // The hill scene holds 0.84 MB more room data (the partner's archive and motion keys): the renderer's pack goes
+    // first, while the KOS heap is empty, so its whole-file staging read (7.8 MB; the textures then go to video
+    // memory) fits before the room data is loaded.
+    const bool pack_first = e1_scene == E1_SCENE_HILL;
+    if (pack_first) e1_draw_open();
     e1_state[0] = 2;
     room_init();
     e1_state[0] = 3;
     e1_log("E1 engine: room %03x ready, player %p pos %d %d %d\n", (unsigned) pG->room_id, (void*) pPL,
            (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
-    e1_draw_open();
+    if (!pack_first) e1_draw_open();
     e1_memmap_sample();
     e1_state[0] = 4;
     const unsigned ticks = e1_route().ticks;
@@ -142,13 +161,20 @@ int main()
         e1_state[1] = e1_tick;
         E1Timing& tm = e1_timing[(e1_tick - 1) % E1_TICKS];
         uint64_t a = now_us();
+        e1_stamp_pic = e1_tick - 1;
+        e1_stamp(6);
         e1_input_latch(e1_tick);
+        e1_partner_tick_begin(e1_tick);
         PadRead();
         pG->Frame_cnt++;
+        e1_stamp(0);
         uint64_t b = now_us();
         game_tick(tm);
+        e1_partner_tick_end(e1_tick);
+        e1_stamp(3);
         uint64_t c = now_us();
         e1_trace_tick(e1_tick);
+        e1_stamp(4);
         uint64_t d = now_us();
         e1_draw_picture(tm);
         uint64_t e = now_us();

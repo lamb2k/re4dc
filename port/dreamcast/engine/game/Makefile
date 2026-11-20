@@ -40,13 +40,15 @@ REND_DEPS := $(wildcard $(ENG)/render/*.inc $(ENG)/render/*.h $(ENG)/services/*.
 .PHONY: all
 # Service-boundary accounting (host/e1_wraps.cpp): generator draws and service time at the behaviour's entry points.
 WRAP_SYMS := _Z3Rndv _Z13MotionSetCoreP6cModelPvS1_iiii PartsWorldPosCalc _ZN6cModel14partsWorldCalcEv 	_ZN6cModel14partsFixAdjustEv _ZN6cModel12updateOldPosEv _ZN6cModel9matUpdateEv _ZN8cMotBase4moveEv 	_ZN8cMotBase6adjustEv _ZN7cSatMgr5checkEP6cModeli EmAtCheck _ZN10cAtariInfo4moveEv \
-	InverseKinematics _Z15PlClothMoveLeonP6cModelP7PlClothS2_S2_ ShapeMove _ZN6cModel10motionMoveEv \
+	InverseKinematics _Z15PlClothMoveLeonP6cModelP7PlClothS2_S2_ _Z15PlClothMoveGirlP6cModelP7PlClothS2_S2_ PenClothMove PenClothMove3 ShapeMove _ZN6cModel10motionMoveEv \
 	_ZN7cSatMgr8getFloorEP3VecffPmi _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii \n	_ZN7cPlNeck4moveEv _ZN7cPlBody4moveEv _ZN7cPlayer7moveEyeEv _ZN7cPlayer10shadowCtrlEv _ZN7cPlayer9seqSeCtrlEv \n	_ZN7cPlayer11visibleCtrlEv _ZN6cPlWep4moveEv _ZN7cPlayer8dmgCheckEv _ZN7cPlayer9keyConfigEv \n	_ZN7cPlayer13moveBinocularEv _ZN7cPlayer16subCharLiveCheckEv _ZN7cPlayer9debugMoveEv pl_R0_Move
 WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc
 all: $(OUT)/e1.elf
 
 # rnd.cpp with its read-only trace accessor (re4dc_rnd_state: returns the generator state, changes nothing).
 $(OUT)/h/game/rnd.o: ORIG_FLAGS += -DRE4DC_LOGIC_TRACE=1
+# The partner module's REL entry under its own name (wep02's keeps _prolog).
+$(OUT)/h/pl11/pl11.o: ORIG_FLAGS += -D_prolog=pl11_prolog -D_epilog=pl11_epilog -D_unresolved=pl11_unresolved
 $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@

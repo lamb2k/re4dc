@@ -29,6 +29,8 @@
 #include "sce_sys.h"
 #include "scheduler.h"
 #include "game.h"
+#include "emdoor.h"
+#include "sce_at.h"
 #include "view.h"
 #include "main.h"
 #include "e1_engine.h"
@@ -106,14 +108,23 @@ void GameAddPoint(int type) { if (type) STUB("GameAddPoint"); }
 ScePrim* SceExec(int, TaskFunc, int, u8, int, void*) { STUB("SceExec"); return 0; }
 void TaskSleep(int) { STUB("TaskSleep"); }
 #endif
-// the partner (E1 hosts none)
+// the partner: hosted since lane eng-e1b (pl_npc.cpp, pl11.cpp; game/hosted.mk PARTNER_SRCS); the boss image hosts none
+#ifdef E2_BOSS
 u32 SubCharGetStatus() { return 0; }
 u32 SubCharGetCondition() { return 0; }
 void cSubChar::control(int) { STUB("cSubChar::control"); }
 void cSubChar::registPlAction(Vec*, f32) { STUB("cSubChar::registPlAction"); }
+#endif
 // other weapons' objects
 void cObjLauncher::grip(int) { STUB("cObjLauncher::grip"); }
 void cObjLauncher::gripBack() { STUB("cObjLauncher::gripBack"); }
+
+// doors and ladders the partner checks (lane eng-e1b): E1 hosts none, so the answer is "none"
+cEmDoor* DoorOpenCk(cModel*) { STUB("DoorOpenCk"); return 0; }
+void SubOpenDoorSet(cEmDoor*) { STUB("SubOpenDoorSet"); }
+int SceAtCheckLadder(cModel*, Vec*, f32*, u8*) { STUB("SceAtCheckLadder"); return 0; }
+extern "C" int SubLadderClimbCk(cModel*) { STUB("SubLadderClimbCk"); return 0; }
+extern "C" int SubLadderClimbCk2(cModel*) { STUB("SubLadderClimbCk2"); return 0; }
 
 // ---- effects (E1 draws none; the generator draws they would make are reported, see the hand-back) ----
 #ifndef E2_BOSS   // eng-boss: hosted or engine-served in the boss image
@@ -150,6 +161,22 @@ int cLightInfo::init2(int type, int partsNo, const Vec* pOffset, const Vec* pSiz
 }
 void cLightInfo::updateMatrix(cModel*) {}
 int cLightMgr::update(int, int) { return 0; }
+// The partner's own light (pl_npc.cpp cSubChar::init: LightMgr.createBack(0, 2, 0, 0), then setParent(this)), lane
+// eng-e1b: an engine light record (zeroed, one per partner) that keeps its parent; E1 draws with the room's baked
+// light set, so nothing reads it yet. Both calls are counted.
+static unsigned char e1_partner_light[sizeof(cLight)] __attribute__((aligned(32)));
+cLight* cLightMgr::createBack(int lit, int cut, int light, int flag)
+{
+    e1_stub_hit("cLightMgr::createBack", lit << 8 | cut);
+    return (cLight*) e1_partner_light;
+}
+int cLight::setParent(cModel* m)
+{
+    e1_stub_hit("cLight::setParent", 0);
+    ParentType = 1;
+    pParent = m;
+    return 1;
+}
 
 
 // ---- debug text and drawing (no consequence) ----

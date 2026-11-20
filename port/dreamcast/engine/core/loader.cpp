@@ -86,16 +86,22 @@ void* GetDataExt(void* arc, const char* tag, int no)
     return NULL;
 }
 
-// A tagged archive reduced to the listed tags (same header, offsets and tag tables; sections copied in order).
-static uint8_t* compact_arc(const uint8_t* src, uint32_t size, const char* const* keep, unsigned nkeep, uint32_t* out_size)
+// A tagged archive reduced to the listed tags (same header, offsets and tag tables; sections copied in order), read
+// section by section from the file (lane eng-e1b: no whole-archive staging copy in the room pack; r11d's archive is
+// 1.2 MB, of which the hosted code reads 0.2 MB).
+static uint8_t* compact_arc_file(file_t f, const char* const* keep, unsigned nkeep, uint32_t* out_size)
 {
-    uint32_t num = *(const uint32_t*) src;
-    const uint32_t* offs = (const uint32_t*) (src + 0x10);
-    const uint8_t* tags = src + 0x10 + 4 * num;
+    const uint32_t size = fs_total(f);
+    uint8_t hdr[0x10 + 8 * 64];
+    if (fs_read(f, hdr, sizeof(hdr)) < 0x10) return NULL;
+    uint32_t num = *(const uint32_t*) hdr;
+    if (num > 64) return NULL;
+    const uint32_t* offs = (const uint32_t*) (hdr + 0x10);
+    const uint8_t* tags = hdr + 0x10 + 4 * num;
     uint32_t head = (0x10 + 8 * num + 31) & ~31u, total = head;
     uint32_t len[64] = {0};
     int take[64] = {0};
-    for (uint32_t i = 0; i < num && i < 64; i++) {
+    for (uint32_t i = 0; i < num; i++) {
         uint32_t end = size;
         for (uint32_t j = 0; j < num; j++) if (offs[j] > offs[i] && offs[j] < end) end = offs[j];
         len[i] = end - offs[i];
@@ -105,17 +111,18 @@ static uint8_t* compact_arc(const uint8_t* src, uint32_t size, const char* const
     uint8_t* d = (uint8_t*) memalign(32, total);
     if (!d) return NULL;
     memset(d, 0, head);
-    memcpy(d, src, 0x10);
+    memcpy(d, hdr, 0x10);
     memcpy(d + 0x10 + 4 * num, tags, 4 * num);
     uint32_t at = head;
-    for (uint32_t i = 0; i < num && i < 64; i++) {
+    for (uint32_t i = 0; i < num; i++) {
         uint32_t* o = (uint32_t*) (d + 0x10) + i;
         if (!take[i]) {
             *o = 0;
             ((uint8_t*) (d + 0x10 + 4 * num))[4 * i] = 0;   // tag removed: GetDataExt does not find it
             continue;
         }
-        memcpy(d + at, src + offs[i], len[i]);
+        fs_seek(f, offs[i], SEEK_SET);
+        fs_read(f, d + at, len[i]);
         *o = at;
         at += (len[i] + 31) & ~31u;
     }
@@ -127,10 +134,10 @@ void e1_load_room(unsigned room)
 {
     char path[48];
     snprintf(path, sizeof(path), "/cd/st%u/r%03x.arc", room >> 8, room);
+#ifdef E2_BOSS
     uint32_t size = 0;
     uint8_t* raw = (uint8_t*) e1_file_load(path, &size, 32);
     if (!raw) return;
-#ifdef E2_BOSS
     // eng-boss: the arena script and the boss read the whole room archive (numbered sections, RTP route data)
     e1_room_arc = raw;
     e1_resident_bytes[2] = size;
@@ -150,12 +157,17 @@ void e1_load_room(unsigned room)
         e1_log("E1 load: core archive %lu B whole (E2 boss)\n", (unsigned long) cb);
         return;
     }
+#else
+    file_t f = fs_open(path, O_RDONLY);
+    if (f < 0) { e1_log("E1 load: missing %s\n", path); return; }
+    const uint32_t size = fs_total(f);
+    // RTP: the room's route points (route_ck.cpp, the partner's follow; lane eng-e1b)
+    static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP"};
+    e1_room_arc = compact_arc_file(f, keep, 5, &e1_resident_bytes[2]);
+    fs_close(f);
 #endif
-    static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS"};
-    e1_room_arc = compact_arc(raw, size, keep, 4, &e1_resident_bytes[2]);
-    free(raw);
     pG->pRoom = e1_room_arc;
-    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
+    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
     // core archive: the camera core data and the vibration table
     uint32_t cb = 0;
     uint8_t* core = drs_body("/cd/etc/core.das", &cb);

@@ -23,10 +23,12 @@ void e1_prof_report();
 
 void e1_managers_room_init()
 {
+    // the hill scene adds the partner: her model set (body, head, hair, two armour parts, hands) and her parts
+    const bool hill = e1_scene == E1_SCENE_HILL;
     ModInfoMgr.roomInit();
-    ModInfoMgr.arrayAlloc(64);
+    ModInfoMgr.arrayAlloc(hill ? 96 : 64);
     PartsMgr.roomInit();
-    PartsMgr.arrayAlloc(256);
+    PartsMgr.arrayAlloc(hill ? 512 : 256);
     EmMgr.roomInit();
     EmMgr.arrayAlloc(4);
     ObjMgr.roomInit();
@@ -88,11 +90,21 @@ void e1_trace_flush()
     fwrite(trace_buf, 1, trace_len, stdout);
     trace_len = 0;
 }
+void e1_trace_put(const char* line, unsigned n)
+{
+    if (trace_len + n + 1 > sizeof(trace_buf)) e1_trace_flush();
+    memcpy(trace_buf + trace_len, line, n);
+    trace_len += n;
+}
 void e1_trace_tick(unsigned tick)
 {
     static int notrace = -1;
     if (notrace < 0) { file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f); }
     if (notrace) return;
+    if (e1_scene == E1_SCENE_HILL) {   // lane eng-e1b: re4ref trace v2 lines (Leon and every character)
+        e1_trace_v2(tick);
+        return;
+    }
     cPlayer* p = pPL;
     unsigned draws = e1_rnd_draws - last_draws;
     last_draws = e1_rnd_draws;
@@ -143,10 +155,11 @@ void e1_report()
     unsigned n = e1_state[2] < E1_TICKS ? e1_state[2] : E1_TICKS;
     for (unsigned i = 0; i < n; i++) {
         const E1Timing& t = e1_timing[i];
-        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu\n", i + 1,
+        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu chars %lu\n", i + 1,
                (unsigned long) t.input_us, (unsigned long) t.tick_us, (unsigned long) t.services_us, (unsigned long) t.trace_us,
                (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields,
-               (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us, (unsigned long) t.pvr_us);
+               (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us, (unsigned long) t.pvr_us,
+               (unsigned long) t.chars_us);
     }
     e1_log("E1 END\n");
 }

@@ -1,4 +1,4 @@
-// E1 engine core interface (lane eng-e1).
+// E1 engine core interface (lane eng-e1; the partner and the hill scene: lane eng-e1b).
 #ifndef E1_CORE_H
 #define E1_CORE_H
 #include <stdint.h>
@@ -6,6 +6,7 @@
 #define E1_TICKS 1024
 struct E1Timing {
     uint32_t input_us, tick_us, services_us, trace_us, draw_us, wait_us, frame_us, fields, player_us, obj_us, cam_us, pvr_us;
+    uint32_t chars_us;   // the characters' moves (the partner), inside tick_us
 };
 extern E1Timing e1_timing[E1_TICKS];
 extern volatile uint32_t e1_state[8];
@@ -38,4 +39,25 @@ void e1_pace_end(E1Timing& tm);
 // trace and report
 void e1_trace_tick(unsigned tick);
 void e1_report();
+
+// Scenes (lane eng-e1b): the village route (Leon alone, the default) and the hill path (Leon and Ashley, the partner;
+// boot option HILL; core/partner.cpp).
+enum { E1_SCENE_VILLAGE = 0, E1_SCENE_HILL = 1 };
+extern int e1_scene;
+extern E1Pad e1_pad_now;                      // the pad this tick (trace)
+void e1_partner_boot();                       // the scene's boot options (HILL, FEED, CTRLFOL)
+void e1_partner_room_init();                  // after the player: the resume, the partner created (SubCharInit)
+void e1_partner_tick_begin(unsigned tick);    // before PadRead: the generator feed, partner commands, god
+void e1_partner_chars_move(E1Timing& tm);     // the characters' move (EmMgr.move), before the player
+void e1_partner_tick_end(unsigned tick);      // after the camera: the follow-distance control
+void e1_trace_v2(unsigned tick);              // re4ref trace v2 lines (T, A, R) for the hill scene
+void e1_rng_owner(int owner);                 // generator draws per caller: 0 other, 1 player, 2 camera, 3 objects, 4 spawn
+void e1_trace_put(const char* line, unsigned n);   // a line into the trace buffer (core/frame.cpp)
+// Phase stamps for the SH-4 hardware model (lane eng-e1b; the bench's m1_timing form, read by the observer that
+// tools/hwmodel builds through engine/bench/model_profile.py): one store per phase boundary, 8 words a picture,
+// 600 pictures. k: 6 picture start, 0 input done, 1 characters done, 2 player done, 3 objects and camera done,
+// 4 trace done, 5 graphics chip ready, 7 picture submitted. The value is the microsecond clock (Flycast tier).
+extern "C" volatile uint32_t m1_timing[600][8];
+extern unsigned e1_stamp_pic;
+void e1_stamp(unsigned k);
 #endif

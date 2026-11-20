@@ -1,0 +1,16 @@
+# eng-e1b fixture 1: Ashley at the r11d hill path, LE/LF lines (reference build EM window 185..1100).
+# From logicbudget bk-r11d (castgc17 k-r11d census warp): kill / killrep lines removed (no Ganado killed), census
+# removed, act_clock source; Leon walks: pad frame = Frame_cnt - 171 (eng-e1 calibration), so t=400 is pad 229:
+# forward 60 ticks, stand 60, forward 60.
+name e1b-hill
+room 0x11d
+pos 20214 0 13952
+ang -1.8170
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+act_clock source
+alivelog 60
+act 229 fwd 60
+act 349 fwd 60

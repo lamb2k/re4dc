@@ -1,0 +1,25 @@
+# hill-follow (lane eng-e1b): Ashley follows Leon on the r11d hill path, after the room's opening event, against the
+# full-field old-game fixture (eng-e1b fx-hill-1: the logicbudget bk-r11d warp without its kill lines, LOGIC_TRACE
+# with LOGIC_TRACE_EM_FROM=185 EM_TO=1100: LE / LF lines, every enemy-list work every tick; E:\RE4DC-Lanes\eng-e1b\
+# s\fixtures\hill-ashley-warp.txt). The opening event (Stop_flg 0x80400100) runs t=185..370; Leon walks forward
+# t=400..459 and t=520..579 (warp act lines, source clock).
+# Resume at the old t=372 (tick n here = old t 372+n: plays_right.py --offset 372): Leon as LT t=372 has him (idle
+# footwork, frame 8: the resume restarts it at 9 on tick 1), Ashley as LE / LF t=372 have her (created here by SubCharInit, then told to follow:
+# SubCharCtrl(1, 1), as the room script leaves her). Her idle motion restarts at frame 0 (the old run's is at 58):
+# a resume artefact, compared from her first motion change on. No Ganados: the hill's four Ganados stand 26 m away
+# in the old run (they never come nearer in this window); hill-follow-g creates them.
+room 0x11d
+pos 20214 0 13952
+ang -1.8170
+weapon 2 0
+seed 0x0d37
+god
+resume 0x469df1b2 0xc3841c09 0x465a0443 0xbfe89375 9
+sub 0x469ae1f8 0xc4064a5a 0x4658bef3 0x3fa98f4a
+subctrl 1 1 1
+ticks 728
+pad 0 0x0000 0 0
+pad 28 0x0000 0 80              # old t=400: stick forward for 60 ticks
+pad 88 0x0000 0 0
+pad 148 0x0000 0 80             # old t=520: forward again for 60
+pad 208 0x0000 0 0
