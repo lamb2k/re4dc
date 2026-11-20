@@ -27,6 +27,7 @@
 #   colwall  RE4_SVC_CONTROL=colwall: the per-model wall slide's radius 10% larger (e1-route)
 #   routenear RE4_SVC_CONTROL=routenear: the nearest reachable way point is the second one (hill-ashley: the partner)
 #   followslow RE4_SVC_CONTROL=followslow: every root-motion follower blend step one tick longer (e1-route, exercise follow)
+#   modelslot RE4_SVC_CONTROL=modelslot: a model's contiguous parts run starts at the second free run (hill-ashley)
 #   routehop RE4_SVC_CONTROL=routehop: the way points between skipped, every reachable destination its own next hop (bell-ganado: the Ganados' chase)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
@@ -176,6 +177,7 @@ print()" "$b/compare.json")
     r4ctl e1-route "wall slide radius 10% larger" colwall
     r4ctl hill-ashley "nearest way point is the second reachable" routenear
     r4ctl bell-ganado "way points between skipped" routehop
+    r4ctl hill-ashley "parts run at the second free run" modelslot
     # service exercises (svc4_dump.cpp, RE4_SVC_EXERCISE): calls planted at fixed ticks for services the fixtures' play
     # does not reach; the reference and the native build get the same calls, so the comparison is still original
     # against native on the same inputs. Each exercise's controls must FAIL.

@@ -11,8 +11,8 @@
 //   - the collision piece's set-up from its file (cSat::init, operator=, setCoord, blockInit; cSatMgr::create and
 //     destroy) and the room's surface-effect table (cEatMgr).
 // Arithmetic: the original's, in its order (contraction off), so the PC reference compares bit for bit. Debug lines
-// and spheres are counted, not drawn. The piece pool itself (cManager<cSat>: slot allocation) is still the original
-// manager template: the engine's table service replaces it with the other managers (SERVICES.md section 24).
+// and spheres are counted, not drawn. The managers (SatMgr: the room's pieces; EatMgr: the pieces bullets and effects
+// test) and their piece pool are the engine's too: the pool routines of services/model/pool.h.
 #include "atari.h"
 #include "at_sub.h"
 #include "em.h"
@@ -20,6 +20,9 @@
 #include "math_sub.h"
 #include "main.h"
 #include "col_model.h"
+#include "../model/pool.h"
+#include "va_ppc.h"
+#include "db_log.h"
 
 extern "C" {
 ColModelCounters colm_cnt;
@@ -30,6 +33,56 @@ void at_pos_calc(cModel* m, Vec* vec);
 namespace {
 inline bool in_arena(const void* p) { return (u32) p >= 0x8C000000 && (u32) p <= 0x8CFFFFFF; }
 }
+
+// ==== the managers and their piece pool ====
+
+// The piece pool's entry points: the engine's pool routines (pool.h); a cSat counts as alive while active.
+ENG_POOL(cSat)
+
+// at_sub's attribute filter bypass (the seCk of the manager running the query; col.cpp sets and reads it)
+int SEck;
+
+// The room's scenery pieces: flag 2 (a destroyed piece is marked, then swept).
+cSatMgr::cSatMgr() : cManager<cSat>(sizeof(cSat), 2) { setName("cSatMgr"); }
+
+void cSatMgr::log(const char* fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    pLog->vwarn(0, 0, fmt, ap);
+}
+
+// A fresh piece in its slot: alive before the constructor, inactive after it.
+int cSatMgr::construct(cSat* p, u32 id)
+{
+    (void) id;
+    p->be_flag = 1;
+    new (p) cSat();
+    p->m_Flag = 0;
+    return 1;
+}
+
+// The pieces bullets, thrown objects and effects test.
+cEatMgr::cEatMgr() { setName("cEatMgr"); }
+
+void cEatMgr::log(const char* fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    pLog->vwarn(0, 0, fmt, ap);
+}
+
+// The vertex table right after a piece file's header.
+Vec* cSatFile::getVertexPtr() { return (Vec*) (this + 1); }
+
+// At most 0x1FFF polygons (the query's polygon bit table).
+int cSatFile::dataCheck() { return m_nPolygon <= 0x1FFF; }
+
+// Piece file `no` of a multi-piece archive (the offset table after the header).
+cSatFile* cSatHeader::getSat(int no) { return (cSatFile*) ((u8*) this + ofs[no]); }
+
+cSatMgr SatMgr;
+cEatMgr EatMgr;
 
 // ==== per-model response ====
 

@@ -18,6 +18,7 @@
 #include "cMotBase.h"
 #include "../../services/motion/follow.h"
 #include "player.h"
+#include "../../services/model/model_svc.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -33,6 +34,9 @@ extern RouteCounters route_cnt __attribute__((weak));
 extern int route_control __attribute__((weak));
 extern FollowCounters follow_cnt __attribute__((weak));
 extern int follow_control __attribute__((weak));
+extern ModelCounters model_cnt __attribute__((weak));
+extern int model_control __attribute__((weak));
+extern u32 eng_pool_full __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -101,6 +105,10 @@ extern "C" void svc4_ready()
         const char* c = svc_env("RE4_SVC_CONTROL");
         if (c && !__builtin_strcmp(c, "followslow")) follow_control = 1;
     }
+    if (&model_control) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "modelslot")) model_control = 1;
+    }
 }
 // Service exercises (RE4_SVC_EXERCISE=<name>): inputs that drive a service the fixtures' play does not reach, made at
 // the start of a tick from this file, so the reference and the native build get the same calls. They change the play;
@@ -158,6 +166,11 @@ extern "C" void svc4_finish()
         const FollowCounters& f = follow_cnt;
         P(g_f, "# root-motion follower: sets %u moves %u blends %u pins %u ends %u adjusts %u\n", f.sets, f.moves, f.blends, f.pins, f.ends,
           f.adjusts);
+    }
+    if (&model_cnt) {
+        const ModelCounters& m = model_cnt;
+        P(g_f, "# models: inits %u infos %u parts_runs %u parts_single %u parts_made %u relocs %u debug_draws %u; pools full %u\n",
+          m.inits, m.infos, m.parts_runs, m.parts_single, m.parts_made, m.relocs, m.debug_draws, &eng_pool_full ? eng_pool_full : 0);
     }
     svc_out_close(g_f);
     g_f = 0;
@@ -267,3 +280,38 @@ WV(_ZN8cMotBase4moveEv, (cMotBase* b), (b), { P(g_f, " MB %u", actor(b->pModel))
 WV(_ZN8cMotBase6adjustEv, (cMotBase* b), (b), { P(g_f, " MJ %u", actor(b->pModel)); mb(b); }, { mb(b); })
 WV(_ZN8cMotBase3setEP9cMotModelP3VecS3_h, (cMotBase* b, cMotModel* m, Vec* p, Vec* r, u8 c), (b, m, p, r, c),
    { P(g_f, " MS %u", actor(m)); pv(p); pv(r); P(g_f, " %x", c); }, { mb(b); })
+// ---- models (model.cpp: the record, the model-data chain, the pools) ----
+namespace {
+// the model's record as the service leaves it: flags, parts (count, run flag, every part's pointer and parent folded),
+// the model-info chain (pointers, data, flags), the motion tables
+void md(const cModel* m)
+{
+    u32 h = 2166136261u;
+    auto mix = [&](u32 w) { h = (h ^ w) * 16777619u; };
+    int np = 0;
+    for (cParts* p = m->pList; p && np < 300; p = p->pList, np++) mix((u32) p), mix((u32) p->pParent), mix(p->be_flag);
+    int ni = 0;
+    for (cModelInfo* i = m->pModelInfo; i && ni < 50; i = i->pList, ni++)
+        mix((u32) i), mix((u32) i->pData), mix((u32) i->tpl_addr), mix(i->be_flag), mix(bits(i->bound.size.x)),
+            mix(bits(i->bound.center.y));
+    // a motion table in the arena by address; one in the program's own data (a default table) as "img": the two
+    // builds are different programs, so their data addresses differ
+    auto tbl = [](const void* t) { return (u32) t >= 0x8C000000u && (u32) t < 0x8D000000u ? (u32) t : (t ? 1u : 0u); };
+    P(g_f, " %x %d/%d %d %08x %08x %x %x", m->be_flag, m->nParts, np, ni, h, bits(m->invisible_factor), tbl(m->Motion.blendTbl),
+      tbl(m->Motion.flip));
+}
+}
+W(int, _ZN6cModel9modelInitEPvS0_, (cModel* m, void* bin, void* tpl), (m, bin, tpl), { P(g_f, " MI %u %x %x", actor(m), (u32) bin, (u32) tpl); },
+  { P(g_f, " %x", (u32) r); md(m); })
+W(int, _ZN6cModel9initJointEPv, (cModel* m, void* bin), (m, bin), { P(g_f, " MJ %u %x", actor(m), (u32) bin); }, { P(g_f, " %d", r); md(m); })
+W(int, _ZN6cModel13makePartsListEi, (cModel* m, int n), (m, n), { P(g_f, " ML %u %d", actor(m), n); }, { P(g_f, " %d", r); md(m); })
+WV(_ZN6cModel4pushEv, (cModel* m), (m), { P(g_f, " MP %u", actor(m)); }, { md(m); })
+WV(_ZN6cModel8addModelEP10cModelInfo, (cModel* m, cModelInfo* i), (m, i), { P(g_f, " MA %u %x", actor(m), (u32) i); }, { md(m); })
+W(int, _ZN6cModel15deleteModelInfoEP10cModelInfo, (cModel* m, cModelInfo* i), (m, i), { P(g_f, " MD %u %x", actor(m), (u32) i); },
+  { P(g_f, " %d", r); md(m); })
+W(int, _ZN6cModel13swapModelInfoEP9ModelDataP10cModelInfo, (cModel* m, ModelData* d, cModelInfo* i), (m, d, i),
+  { P(g_f, " MW %u %x %x", actor(m), (u32) d, (u32) i); }, { P(g_f, " %d", r); md(m); })
+W(cModelInfo*, _ZN11cModInfoMgr6createEPvS0_, (cModInfoMgr* mg, void* bin, void* tpl), (mg, bin, tpl),
+  { P(g_f, " MC %x %x", (u32) bin, (u32) tpl); },
+  { P(g_f, " %x", (u32) r); if (r) P(g_f, " %x %08x %08x %08x", r->be_flag, bits(r->bound.size.x), bits(r->bound.size.y), bits(r->bound.center.z)); })
+WV(ModelInfoSetTrans, (cModel* m, int no, int on), (m, no, on), { P(g_f, " MT %u %d %d", actor(m), no, on); }, { md(m); })
