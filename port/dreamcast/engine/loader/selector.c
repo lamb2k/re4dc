@@ -201,7 +201,7 @@ static void bench_window(sel_entry_t *e, const char *l) {
 #define E1_COUNT 600u
 static uint32_t g_v[5][E1_COUNT];
 static uint32_t g_fields[E1_COUNT];
-static unsigned g_rows, g_last_row, g_late;
+static unsigned g_rows, g_last_row, g_late, g_headless;
 static void e1_row(const char *l) {
     unsigned long v[14];
     int k = 0;
@@ -239,10 +239,8 @@ static void e1_summary(sel_entry_t *e) {
     const unsigned n = g_rows;
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
     if (!n) return;
-    uint32_t drawn = 0;
-    for (unsigned i = 0; i < n; ++i) drawn |= g_v[0][i];
     for (unsigned r = 0; r < 4; ++r) {
-        if (r == 0 && !drawn) {   /* a headless image: no drawing row, rather than "0 over 14" */
+        if (r == 0 && g_headless) {   /* "E1 draw: headless": no drawing row, rather than "0 over 14" */
             sum_add(e, "draw  not drawn (headless image)");
             continue;
         }
@@ -293,7 +291,7 @@ static void collect(unsigned i) {
         snprintf(e->why, sizeof(e->why), "report CRC bad");
     }
     /* the report: refusal lines and rows */
-    g_rows = g_last_row = g_late = 0;
+    g_rows = g_last_row = g_late = g_headless = 0;
     unsigned windows = 0, done = 0;
     if (e->report_ok) {
         static char line[400];
@@ -310,6 +308,7 @@ static void collect(unsigned i) {
             if (!strncmp(line, "WINDOW ", 7) && !strcmp(s->kind, "bench")) { bench_window(e, line); ++windows; }
             else if (!strncmp(line, "ROW ", 4) && !strcmp(s->kind, "e1")) e1_row(line);
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
+            else if (!strncmp(line, "E1 draw: headless", 17)) g_headless = 1;
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
         }
     }
