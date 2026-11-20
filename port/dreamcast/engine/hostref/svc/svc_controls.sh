@@ -18,6 +18,11 @@
 #   clothnograv RE4_SVC_CONTROL=clothnograv: cloth gravity off
 #   clothwind RE4_SVC_CONTROL=clothwind: the cloth's wind twice as strong (the wind-on statistics must fail)
 #   colgrid  RE4_SVC_CONTROL=colgrid: the line query's grid cells taken one cell to the side (polygons wrongly skipped)
+# Lane eng-svc4 (round 4: the native versions of the remaining service units) adds the boundary log svc4.txt
+# (svc4_dump.cpp: every call the behaviour makes to a round-4 entry point, compared line for line by svc4_compare.py,
+# in every row) and the controls:
+#   volpush  RE4_SVC_CONTROL=volpush: every push between two actor bodies 10% longer (hill-ashley: 41 pushes)
+#   volline  RE4_SVC_CONTROL=volline: a line tests the cylinder bodies whatever its flag (square-follow: the camera's lines past Ashley)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
 # the behaviour's Rnd. So each fixture runs twice: with the cloth's wind on ("native": every bone but the cloth links
@@ -84,6 +89,14 @@ row() {   # row <name> <must> <ref dir> <test dir> <fixture> [cloth]: cloth = th
         python3 "$HERE/svc_compare.py" "$a" "$b" --json "$b/compare.json" > "$b/compare.txt"
         local sc=$?
     fi
+    # lane eng-svc4: the round-4 services' boundary log (svc4.txt), line for line
+    local s4=""
+    if [ -f "$a/svc4.txt" ] && [ -f "$b/svc4.txt" ]; then
+        local t4=""
+        [ "$mode" = approx ] && t4="--tol 1.0"
+        s4=$(python3 "$HERE/svc4_compare.py" "$a" "$b" --json "$b/svc4.json" $t4) || sc=1
+        s4="; $(echo "$s4" | sed 's/^\(PASS\|FAIL\)  //')"
+    fi
     local pr=0 s
     python3 "$PR/plays_right.py" "$a/trace.txt" "$b/trace.txt" --tolerances "$PR/tolerances.json" --json "$b/pr.json" --quiet || pr=1
     for s in $(actors "$fx"); do
@@ -107,7 +120,7 @@ print()" "$b/compare.json")
         /^cloth:/ {printf "; cloth: %s chains native (fallback %s), %s steps", $3, $6+0, $8+0}
         /^col / {for (i = 2; i < NF; i += 2) v[$i] = $(i+1); printf "; line queries %s: polygons tested %s, skipped %s (check: hits among them %s, end-point only %s)", v["line_queries"], v["tris_line"], v["tris_skipped"], v["filter_miss"], v["filter_end"]}' "$b/svc.txt")
     [ "$got" = "$must" ] || echo 1 > "$OUT/.status"
-    echo "| $fx | $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | $first$cs$keys |"
+    echo "| $fx | $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | $first$cs$keys$s4 |"
 }
 {
     echo "| Fixture | Check | Must | Bones and collision | Traces | Detail |"
@@ -145,6 +158,15 @@ print()" "$b/compare.json")
         ctl "cloth gravity off" clothnograv
         ctl "line query cells one to the side" colgrid
     done
+    # lane eng-svc4: the round-4 services' controls, each on a fixture that exercises it (svc4.txt counters)
+    r4ctl() {   # r4ctl <fixture> <name> <control>
+        local fx=$1
+        [ -d "$OUT/$fx/ref0" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref0" RE4_SVC_CLOTH_WIND=0
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-$3" RE4_SVC_CLOTH_WIND=0 RE4_SVC_CONTROL=$3
+        row "control: $2" FAIL "$OUT/$fx/ref0" "$OUT/$fx/c-$3" "$fx"
+    }
+    r4ctl hill-ashley "pushes between bodies 10% longer" volpush
+    r4ctl square-follow "line tests cylinder bodies whatever the flag" volline
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

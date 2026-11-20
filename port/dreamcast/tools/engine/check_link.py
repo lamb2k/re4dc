@@ -43,15 +43,18 @@ import sys
 from collections import OrderedDict, defaultdict
 
 ORIG_DIRS = ('h', 'sdk', 'fd')   # <OUT>/h (hosted src/), <OUT>/sdk (SDK library), <OUT>/fd (fdlibm)
+ORIG_DEFAULT = r'/(h|sdk|fd)/(.+)\.o$'
+ORIG_RE = ORIG_DEFAULT
 
 
 def unit_of(path):
-    """'.../<OUT>/h/game/atari.o' -> 'game/atari'; '.../<OUT>/sdk/mtx.o' -> 'sdk/mtx'; None if not original."""
+    """'.../<OUT>/h/game/atari.o' -> 'game/atari'; '.../<OUT>/sdk/mtx.o' -> 'sdk/mtx'; None if not original.
+    With --orig-pattern (another build's layout, e.g. re4ref's), group 2 of the pattern names the unit."""
     p = path.replace('\\', '/')
-    m = re.search(r'/(h|sdk|fd)/(.+)\.o$', p)
+    m = re.search(ORIG_RE, p)
     if not m:
         return None
-    if m.group(1) == 'h':
+    if m.group(1) == 'h' or ORIG_RE != ORIG_DEFAULT:
         return m.group(2)
     return m.group(1) + '/' + m.group(2)
 
@@ -195,7 +198,11 @@ def main():
     ap.add_argument('--list', action='store_true')
     ap.add_argument('--quiet', action='store_true')
     ap.add_argument('--write-waive', help='write the SERVICE functions found as a waive list (mangled names)')
+    ap.add_argument('--orig-pattern', help='regex on object paths that marks an original object; group 2 = its unit')
     a = ap.parse_args()
+    if a.orig_pattern:
+        global ORIG_RE
+        ORIG_RE = a.orig_pattern
     rules, groups = load_list(a.allowed)
     wrules, _ = load_list(a.waive) if a.waive else ([], {})
     fns = functions(parse_map(a.map))
