@@ -302,6 +302,11 @@ instructions; no timing. Tables per fixture: `E:\RE4DC-Lanes\eng-svc\ev\cost\cos
 Controls by environment: `RE4_SVC_CONTROL=parent=<bone>`, `floor=<units>`, `noik` (native build), `plant` (census
 builds); `RE4_SVC_POISON=0` turns the check build's poison and shadow off.
 
+Round 2 adds: `bake/motion_keys.py` (the baked keys; `RE4_SVC_MK=<pack>` loads them, `svc_controls.sh` bakes them
+when unset), `svc/cloth_stats.py` (the cloth with the wind on), `svc_compare.py --skip-cloth`, `hist.bin`;
+`RE4_SVC_CLOTH_WIND=0` (both builds: no cloth wind), `RE4_SVC_COLGRID=0` (the line queries without the grid); the
+controls `mkrow`, `histnone`, `histfrozen`, `clothshort`, `clothnograv`, `clothwind`, `colgrid`.
+
 ## 9. Limits and what is not done
 
 - **Key sampling is the original decoder.** `HermiteInterpolation` and the port's key lease decode the keys; the
