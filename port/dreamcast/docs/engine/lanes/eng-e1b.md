@@ -92,7 +92,7 @@ the old fixture at tick 78; re4ref's own control fails at tick 79.
 
 ## 5. Budget rows, hill scene (Leon and Ashley), 600 pictures (41 to 640)
 
-Image b2 (commit below), boot options `HILL NOTRACE` (no generator feed, no diagnostic arm: the scene as the engine
+Image b2 (commit 848eac9bb), boot options `HILL NOTRACE` (no generator feed, no diagnostic arm: the scene as the engine
 runs it). Behaviour = the tick outside the service entry points; services = time inside the skeleton, cloth and
 collision entry points (link-time wraps; now also Ashley's `PlClothMoveGirl` and the pendulum cloth); publication = 0
 by construction; drawing = graphics chip ready to scene finish; system = input and the trace (pacer wait excluded).
@@ -199,3 +199,11 @@ image (`build\e1-b2-hilltime.iso`).
   (section 4); re4ref has no fixture key for it.
 - MODELLED over 60 sampled pictures of the 600, not all 600. No console run.
 - Controlled Ashley (section 7): listed, not built.
+
+## 11. Merge of `engine` into the lane (a333918ae)
+
+`engine` moved on during the lane (eng-svc, eng-boss's El Gigante slice, the look defaults). The lane merged it:
+the boss image (`BOSS=1`) keeps its own whole-room load, enemy-table move, construct and partner stubs and builds
+neither the partner nor `route_ck` from `hosted.mk`; both images build. After the merge the hill scene's trace is
+byte-identical to the one above, and the village route's plays-right result is unchanged. Lane eng-e1c (native
+services in the Leon image) works in the same files.
