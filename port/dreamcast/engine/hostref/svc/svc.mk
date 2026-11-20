@@ -68,7 +68,7 @@ SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision
 $(NAT)/weak/%.o: $(BUILD)/plain/game/%.o svc/svc.mk
 	@mkdir -p $(dir $@)
 	objcopy $(foreach s,$(WEAK_$*),--weaken-symbol=$(s)) $< $@
-$(NAT)/skel.o: $(SVC_ENG)/skeleton/skel.cpp $(SVC_ENG)/skeleton/skel.h
+$(NAT)/skel.o: $(SVC_ENG)/skeleton/skel.cpp $(SVC_ENG)/skeleton/skel.h $(SVC_ENG)/skeleton/skel_mk.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
 $(NAT)/col.o: $(SVC_ENG)/collision/col.cpp $(SVC_ENG)/collision/col.h

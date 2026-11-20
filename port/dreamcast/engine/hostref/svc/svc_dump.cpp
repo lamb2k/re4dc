@@ -163,6 +163,9 @@ extern "C" void host_svc_finish()
                 if (t->mbox[b]) fprintf(f, " %u%s", b, t->mbox[b] == 2 ? "a" : "");
             fprintf(f, "\n");
         }
+        fprintf(f, "motion samples: integer frame %u fractional %u at or past the end %u\n", s.samp_int, s.samp_frac, s.samp_end);
+        fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u from cold keys %u original decoder %u\n", s.mk_bound,
+                s.mk_unbound, s.mk_rows, s.mk_cold, s.mk_orig);
         fclose(f);
     }
 }

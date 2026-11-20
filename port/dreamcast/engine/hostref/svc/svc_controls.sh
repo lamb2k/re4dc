@@ -9,7 +9,11 @@
 #   parent   RE4_SVC_CONTROL=parent=5: bone 5's parent one bone too low (a wrong parent index in the table)
 #   floor    RE4_SVC_CONTROL=floor=1: every floor and slope triangle raised by 1 unit in the baked tables
 #   noik     RE4_SVC_CONTROL=noik: the IK pass skipped
+#   mkrow    RE4_SVC_CONTROL=mkrow: the baked motion keys read one frame late (the next frame's row; lane eng-svc2)
 # and the native build against itself (a second run) must PASS bit for bit (determinism).
+# The native runs sample the baked motion keys (RE4_SVC_MK=<pack>; without it the fixtures' archives are baked into
+# <out dir>/motion.mkp first, bake/motion_keys.py). Each native row's detail ends with where the motion samples came
+# from (rows, cold key blocks, the original decoder: must be 0).
 # Exit status 0 when every line ends as it must; the table goes to stdout and <out dir>/svc_controls.md.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -21,6 +25,13 @@ TREE=${RE4_TREE:?set RE4_TREE to the converted data tree (private game data)}
 B=$ROOT/build/hostref
 PR=$ROOT/port/dreamcast/tools/plays_right
 mkdir -p "$OUT"
+rm -f "$OUT/.status"
+if [ -z "${RE4_SVC_MK:-}" ]; then
+    python3 "$ROOT/port/dreamcast/engine/bake/motion_keys.py" --tree "$TREE" --out "$OUT/motion.mkp" --report "$OUT/motion.tsv" \
+        em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs > "$OUT/motion.txt" \
+        || { echo "motion key bake failed"; exit 2; }
+    export RE4_SVC_MK="$OUT/motion.mkp"
+fi
 run() {   # run <binary> <fixture> <dir> [env...]
     local bin=$1 fx=$2 d=$3
     shift 3
@@ -56,7 +67,10 @@ import json,sys
 j=json.load(open(sys.argv[1])); b=j['bones']; c=j['collision']
 f=b.get('first') or c.get('first')
 print('bones %d/%d bit-identical (%d equal), max %.3g u %.3g deg; queries %d/%d identical, max %.3g u; first: %s' % (b['bit_identical_bones'], b['bones'], b['equal_bones'], max(b['max_pos'], b['max_pal_pos']), max(b['max_deg'], b['max_pal_deg']), c['identical'], c['compared'], c['max_point'], json.dumps(f) if f else '-'))" "$b/compare.json")
-    echo "| $fx | $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | $first |"
+    local keys=""
+    [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, cold keys %s, original decoder %s", $11, $15, $18}' "$b/svc.txt")
+    [ "$got" = "$must" ] || echo 1 > "$OUT/.status"
+    echo "| $fx | $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | $first$keys |"
 }
 {
     echo "| Fixture | Check | Must | Bones and collision | Traces | Detail |"
@@ -76,6 +90,10 @@ print('bones %d/%d bit-identical (%d equal), max %.3g u %.3g deg; queries %d/%d 
         row "control: floors 1 unit higher" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-floor" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-noik" RE4_SVC_CONTROL=noik
         row "control: IK pass skipped" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-noik" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-mkrow" RE4_SVC_CONTROL=mkrow
+        row "control: motion keys one frame late" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-mkrow" "$fx"
     done
 } | tee "$OUT/svc_controls.md"
+[ -f "$OUT/.status" ] && status=1
+rm -f "$OUT/.status"
 exit $status

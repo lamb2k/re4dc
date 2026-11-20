@@ -106,11 +106,13 @@ SkelTable* skel_table_at(u32 i);
 // counters (svc census and the cost indicator)
 struct SkelCounters {
     u32 mat_local, mat_world, mat_world_slow, xmtrx_loads, add_rot, samples, hokan_bones, blend_bones, ik_chains,
-        palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch, serve_ancestors, lost_writes;
+        palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch, serve_ancestors, lost_writes,
+        samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_cold, mk_orig;
 };
 extern SkelCounters skel_cnt;
 // controls (lane eng-svc: each must make the equivalence check fail)
 extern int skel_control_parent;   // >0: bone skel_control_parent's parent taken one bone too low (wrong by one)
 extern int skel_control_no_ik;    // skip the IK pass
 extern int skel_poison;           // check build: records outside the mailbox hold NaN
+extern int skel_control_mk;       // baked motion keys: the row of the next frame (lane eng-svc2 control)
 }

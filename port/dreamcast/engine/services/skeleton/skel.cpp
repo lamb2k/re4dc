@@ -32,6 +32,7 @@
 #include "cam_ctrl.h"
 #include "atari.h"
 #include "skel_xm.h"
+#include "skel_mk.h"
 #include "native_motion.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
@@ -41,6 +42,9 @@ extern "C" float cosf(float);
 extern "C" float acosf(float);
 extern "C" void* svc_pool_base(u32* bytes);   // host: the engine's skeleton and collision pool
 extern "C" void calcModelAddr(ModelData* data);
+extern "C" const void* svc_mk_pack(u32* bytes) __attribute__((weak));   // host: the baked motion keys (skel_mk.h)
+extern "C" void svc_census_pause(int on) __attribute__((weak));        // census builds: load-time work not counted
+extern "C" void host_log(const char* fmt, ...) __attribute__((weak));  // host: the run log
 extern const Vec vecZero;
 
 extern "C" {
@@ -48,6 +52,7 @@ SkelCounters skel_cnt;
 int skel_control_parent;
 int skel_control_no_ik;
 int skel_poison;
+int skel_control_mk;
 }
 
 #define PTR_OK(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
@@ -462,6 +467,185 @@ void world_calc(SkelTable* t)
     MOTION(mdl)->Pos_world = mdl->pos;
 }
 
+// ---------------------------------------------------------------------------------------------------------------
+// offline motion keys (lane eng-svc2; skel_mk.h, bake/motion_keys.py). A clip is bound to its baked form once, when
+// MotionSetCore first sees it (the engine image binds an archive's clips when it loads the archive); the binding is
+// checked by identity: the FNV-1a of the clip header and of every pose joint's key block, as the baker computed it.
+struct MkBind {
+    const void* mot;
+    const MkClip* clip;
+    u32 head;
+};
+constexpr u32 kMkBind = 1024;
+MkBind g_mkb[kMkBind];
+const MkPack* g_mk;
+bool g_mk_init;
+const u8 kKeyBytes[16] = {12, 8, 6, 0, 10, 6, 4, 0, 9, 5, 3, 0, 0, 0, 0, 4};
+
+inline bool mk_pose(u16 info)
+{
+    const int ch = (info >> 8) & 0xF;
+    return ch != 6 && ch != 7 && (info & (2 | 4 | 8 | 0x30)) != 0;
+}
+inline u32 fnv_add(u32 h, const u8* p, u32 n)
+{
+    for (u32 i = 0; i < n; i++) h = (h ^ p[i]) * 16777619u;
+    return h;
+}
+inline u32 mk_head(const void* mot)
+{
+    const u8* p = (const u8*) mot;
+    return p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
+}
+const MkClip* mk_find(u32 ident)
+{
+    const MkIndex* ix = (const MkIndex*) ((const u8*) g_mk + g_mk->oIndex);
+    u32 lo = 0, hi = g_mk->nClip;
+    while (lo < hi) {
+        const u32 mid = (lo + hi) >> 1;
+        if (ix[mid].ident < ident) lo = mid + 1;
+        else hi = mid;
+    }
+    if (lo < g_mk->nClip && ix[lo].ident == ident) return (const MkClip*) ((const u8*) g_mk + ix[lo].off);
+    return 0;
+}
+// the bound clip of a clip header (0: none, the original decoder serves it)
+const MkClip* mk_of(const void* mot)
+{
+    if (!g_mk || !mot) return 0;
+    const u32 head = mk_head(mot);
+    for (u32 h = ((u32) mot >> 5) & (kMkBind - 1);; h = (h + 1) & (kMkBind - 1)) {
+        const MkBind& e = g_mkb[h];
+        if (!e.mot) return 0;
+        if (e.mot == mot && e.head == head) return e.clip;
+    }
+}
+void mk_bind(const void* mot, const u32* keys)
+{
+    if (!g_mk_init) {
+        g_mk_init = true;
+        u32 bytes = 0;
+        const MkPack* p = svc_mk_pack ? (const MkPack*) svc_mk_pack(&bytes) : 0;
+        if (p && bytes >= sizeof(MkPack) && p->magic[0] == MK_MAGIC0 && p->magic[1] == MK_MAGIC1) g_mk = p;
+    }
+    if (!g_mk || !mot) return;
+    const u32 head = mk_head(mot);
+    u32 h = ((u32) mot >> 5) & (kMkBind - 1);
+    for (;; h = (h + 1) & (kMkBind - 1)) {
+        MkBind& e = g_mkb[h];
+        if (!e.mot) break;
+        if (e.mot == mot && e.head == head) return;
+    }
+    if (svc_census_pause) svc_census_pause(1);
+    const u8* c = (const u8*) mot;
+    const u32 n = c[2];
+    const u16_un* info = (const u16_un*) (c + 3);
+    u32 ident = fnv_add(2166136261u, c, 3 + 3 * n);
+    bool ok = n != 0;
+    for (u32 i = 0; i < n && ok; i++) {
+        if (!mk_pose(info[i])) continue;
+        const u8* p = (const u8*) keys[i];
+        const u32 ks = kKeyBytes[info[i] >> 12];
+        if (!PTR_OK(p) || !ks) {
+            ok = false;
+            break;
+        }
+        u32 len = 0;
+        for (int a = 0; a < 3; a++) len += 2 + (p[len] | (p[len + 1] << 8)) * (2 + ks);
+        ident = fnv_add(ident, p, len);
+    }
+    const MkClip* k = ok ? mk_find(ident) : 0;
+    if (k && (k->maxFrame != (c[0] | (c[1] << 8)) || k->n != n)) k = 0;
+    if (svc_census_pause) svc_census_pause(0);
+    g_mkb[h].mot = mot;
+    g_mkb[h].clip = k;
+    g_mkb[h].head = head;
+    if (k) skel_cnt.mk_bound++;
+    else {
+        skel_cnt.mk_unbound++;
+        if (host_log) host_log("skel: clip %08x (%u joints, identity %08x) has no baked keys", (u32) mot, n, ident);
+    }
+}
+
+// MotionMoveCore's pose from the baked clip: an integer frame reads row k (each pose joint's three values, rotations
+// already in VecRadLimit's range); past the end of a clip that does not loop, the last row; a fractional frame the
+// cold key blocks through the original decoder with its history off (the same values: skel_mk.h).
+void move_core_mk(SkelTable* t, MotionWork* w, const MkClip* k, HermitePrm* pp, u16* flipTbl)
+{
+    cModel* m = t->model;
+    const u32 c = t->cap;
+    f32* s = t->soa;
+    f32 f = pp->frame;
+    const f32* row = 0;
+    if (pp->maxFrame <= f) {
+        if ((pp->flags & 6) == 4) f -= pp->maxFrame;   // looping: HermiteInterpolation wraps the frame once
+        else row = mk_rows(k) + (u32) k->maxFrame * k->stride;
+    }
+    if (!row) {
+        const int fi = (int) f;
+        if ((f32) fi == f && fi >= 0 && fi < (int) k->maxFrame) {
+            int r = fi;
+            if (skel_control_mk && r < (int) k->maxFrame) r++;   // control: the next frame's row
+            row = mk_rows(k) + (u32) r * k->stride;
+        }
+    }
+    const MkJoint* J = mk_joints(k);
+    const f32* C = mk_const(k);
+    const int n = k->n;
+    if (row) skel_cnt.mk_rows++;
+    else skel_cnt.mk_cold++;
+    for (int i = 0; i < n; i++) {
+        const MkJoint& j = J[i];
+        if (j.src == MK_OTHER) continue;   // camera channels go the original path (move_core keeps them)
+        int pno = j.pno;
+        if (w->Mot_attr & 0x40) {
+            u16 fp = flipTbl[pno];
+            if (fp != 0xFFFF) pno = (s16) fp;
+        }
+        if (pno >= m->nParts) pLog->err(0, 0, "MotionMoveCore(): Invalid parts %d.", pno);
+        if (pno < 0 || (u32) pno >= t->n) continue;
+        u32& fl = t->world[pno].flags;
+        if (fl & 0x20000000) continue;
+        fl |= 0x10010000;
+        if ((s32) w->Mot_flag < 0) fl |= 0x80000000;
+        const int kind = j.info & 0xFF;
+        const int rot = (kind & 2) || !(kind & (4 | 8));
+        Vec v;
+        if (row) {
+            const f32* src = (j.src == MK_ROWS ? row : C) + j.col;
+            v.x = src[0];
+            v.y = src[1];
+            v.z = src[2];
+        } else {
+            const u32 saved = pp->flags;
+            u16 hist[3] = {0, 0, 0};
+            pp->type = j.info >> 12;
+            pp->key = (u8*) (mk_cold(k) + mk_cold_tab(k)[i]);
+            pp->flags |= 8;
+            HermiteInterpolation(pp, &v, hist);
+            pp->flags = saved;
+            if (rot) VecRadLimit(&v);
+        }
+        int r0;
+        if (kind & 2) {
+            if (w->Mot_attr & 0x40) { v.y = -v.y; v.z = -v.z; }
+            r0 = SK_AX;
+        } else if (kind & 4) {
+            if (w->Mot_attr & 0x40) v.x = -v.x;
+            r0 = SK_PX;
+        } else if (kind & 8) {
+            r0 = SK_SX;
+        } else {
+            if (w->Mot_attr & 0x40) { v.y = -v.y; v.z = -v.z; }
+            r0 = SK_AX;
+        }
+        s[r0 * c + pno] = v.x;
+        s[(r0 + 1) * c + pno] = v.y;
+        s[(r0 + 2) * c + pno] = v.z;
+        skel_cnt.samples++;
+    }
+}
+
 // motion.cpp MotionMoveCore: the pose at the current sequence frame, into the table
 void move_core(SkelTable* t, MotionWork* w)
 {
@@ -486,6 +670,9 @@ void move_core(SkelTable* t, MotionWork* w)
     w->Mot_frame_sav = w->Mot_frame;
     pp->frame = w->Mot_frame;
     pp->maxFrame = w->Mot_frame_max;
+    if (pp->frame >= pp->maxFrame) skel_cnt.samp_end++;
+    else if (pp->frame == (f32) (int) pp->frame) skel_cnt.samp_int++;
+    else skel_cnt.samp_frac++;
     pp->flags = 0;
     if (w->Mot_attr & 4) {
         if (w->pSeq_top == 0) pp->flags = 4;
@@ -510,6 +697,11 @@ void move_core(SkelTable* t, MotionWork* w)
         w->Mot_attr &= ~0x40;
         pLog->err(0, 0, "MotionMoveCore():%d Flip Info Error!", 1067);
     }
+    if (const MkClip* mk = cam ? 0 : mk_of(w->pMot)) {
+        move_core_mk(t, w, mk, pp, flipTbl);
+        return;
+    }
+    if (g_mk) skel_cnt.mk_orig++;
     u32* keys = w->pHermite_data;
     Re4dcMotionLease lease(w->pMot, &keys, keys);
     do {
@@ -1717,6 +1909,7 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
             for (i = 0; i < w->Joint_num; i++) tbl[i] += (u32) w->pMot;
         }
     w->pHermite_data = tbl;
+    mk_bind(data, keys);
     w->Null_rot = 0xFFFF;
     w->Null_pos = 0xFFFF;
     if (w->pAttachCam != 0) {

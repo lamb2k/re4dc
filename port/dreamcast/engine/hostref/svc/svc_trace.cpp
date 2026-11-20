@@ -418,6 +418,14 @@ extern "C" void svc_census_finish(const char* actors_tsv)
     fclose(f);
 }
 
+// Load-time work the PC build does lazily (the motion-key binding): not counted. The engine image does it at load.
+extern "C" void svc_census_pause(int on)
+{
+    if (!g_tick_traced) return;
+    if (on) { g_armed = false; arena_prot(PROT_READ | PROT_WRITE); }
+    else { g_armed = true; arena_prot(PROT_NONE); }
+}
+
 extern "C" void svc_census_watch(uint32_t lo, uint32_t bytes)
 {
     g_svc_lo = lo;
