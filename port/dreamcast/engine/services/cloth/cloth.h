@@ -15,14 +15,15 @@
 //   link [n]    64 B   pos, oldPos, speed, nrm (Vec each), len, bone, upper link, hit, fix flag, side links
 //   cold [n]    48 B   rest direction (PenClothReset), half distances to the four side links, fixed position
 //   atBone [2 x volumes] the collision volumes' two bones
-// Arithmetic: the original's operations in its order (the same math library calls), so on the PC every value is the
-// original's bits when the wind is off. Random numbers (owner 2026-11-19, "Split it"): the cloth is presentation, so
-// its draws (the wind phase, the floor jitter) come from the engine's presentation generator, never from the
-// behaviour's Rnd. Here that is one xorshift32 state a chain (cloth_rng), seeded from the chain's set-up order: the
-// draws of one chain do not depend on any other chain or on behaviour, and cost a shift-xor and a multiply.
+// Arithmetic (lane eng-svc3): the chain's tick is one SH4ZAM kernel (cloth_kernel.h), one pass over the links; the
+// same stages in the original's pass order give the original's bits on the PC (cloth_passes). Random numbers (owner
+// 2026-11-19, "Split it"): the cloth is presentation, so its draws (the wind phase, the floor jitter) come from the
+// engine's presentation generator (pres_rng.h), one stream a chain seeded from the chain's set-up order, never from
+// the behaviour's Rnd.
 #pragma once
 #include "types.h"
 #include "vec.h"
+#include "pres_rng.h"
 
 class cModel;
 struct PenCloth;
@@ -60,7 +61,7 @@ struct ClothChain {      // 64 B header
     u16 n, nAt;
     u32 serial;
     u32 bytes;
-    u32 rng;             // the chain's presentation generator (xorshift32)
+    PresRng rng;         // the chain's presentation stream (pres_rng.h)
     u32 pad[5];
 };
 
@@ -74,6 +75,8 @@ extern ClothCounters cloth_cnt;
 extern int cloth_control_short;      // the last link of every chain left out (wrong chain length)
 extern int cloth_control_nogravity;  // gravity off
 extern int cloth_control_wind;       // the wind's push twice as strong (the statistics check must fail)
+extern int cloth_passes;             // 1: the kernel in the original's pass order (the exactness proof); 2: in one pass
+                                     // (measured, rejected); 0: fused (lane eng-svc3)
 u32 cloth_chain_count(void);
 ClothChain* cloth_chain_at(u32 i);
 }

@@ -1,4 +1,4 @@
-# Native skeleton, collision and cloth services (lanes eng-svc and eng-svc2, 2026-11-19)
+# Native skeleton, collision and cloth services (lanes eng-svc, eng-svc2 and eng-svc3, 2026-11-19)
 
 The services that dominate the budget's Services row, as engine code on engine tables, proven on the PC to give
 the original units' results. Tier of every number here: **PC** (re4ref, the host build of the original code). No
@@ -9,6 +9,12 @@ the bone history kept for the bones code reads (not every bone), a native cloth 
 Ashley's hair, skirt and sweater) on engine generator random numbers, and a cell grid that cuts the polygons a line
 query tests by 44 to 68%. Sections 1 to 9 are round 1 as it was handed back; where round 2 changed them, section 15
 says so.
+
+**Round 3 (lane eng-svc3), sections 16 to 22:** the motion keys' memory (16-bit rows for a per-room clip set from
+captured play, the keys resident: recommended), root motion and the key decoder native (the original decoder out of
+the skeleton service), the cloth's tick as one SH4ZAM kernel with its passes fused (a true single pass measured and
+rejected), the swept sphere on the collision grid and the masks smaller. Section 21 lists what the engine image must
+change, section 22 the interface changes.
 
 - **Skeleton:** `port/dreamcast/engine/services/skeleton/` (`skel.h`, `skel.cpp`, `skel_xm.h/.c`).
 - **Collision:** `port/dreamcast/engine/services/collision/` (`col.h`, `col.cpp`).
@@ -550,3 +556,279 @@ Memory: the village square's tables grow from 370 KB to 544 KB (scenery 141,536 
   the original decoder; SH4ZAM kernels and a single-pass cloth (no new math kernel was written, so no SH4ZAM-style
   commit); the swept-sphere queries without the grid (a push moves the sphere mid-query, so the cells would have to
   follow it); no farm (em12) Ganado fixture; no timing (emulator lane).
+
+# Round 3 (lane eng-svc3)
+
+Branch `lane/eng-svc3`. Same six fixtures, same tier (PC, re4ref), no timing. What round 2 left open: the motion
+keys' memory, the cloth's math on SH4ZAM, the root motion through the original decoder, the swept sphere without the
+grid and the masks' memory. `svc/svc_controls.sh` now also runs, per fixture, the native build with no pack (every
+sample decoded natively) and with 16-bit rows, and the controls `mkroot` and `mkcoarse`: 52 rows, all as they must
+(`E:\RE4DC-Lanes\eng-svc3\ev\controls\svc_controls.md`).
+
+## 16. Motion keys: the memory decision
+
+**The pack, version 2** (`bake/motion_keys.py` writes "RE4MK2", `services/skeleton/skel_mk.h` reads it):
+- **Pose rows** (MotionMoveCore's channels) as float32 (exact) or as **16-bit steps** (`--rows s16`): per column a
+  float32 scale and offset, value = offset + step x scale (the service's arithmetic; the baker picks each step by
+  that arithmetic). Rows start on a 32-byte line (16 steps a line).
+- **Aux rows**, float32 always: the root motion's two channels (`Null_pos`, kind 1; `Null_rot`, kind 0x40) and the
+  attach camera's (channel 6 / 7). Root motion moves the actor: it stays exact. Unpadded (a tick reads two joints).
+- **No copy of the keys.** Round 2 baked a cold copy of every clip's key blocks (3.48 MB) for fractional frames. The
+  clip's own key blocks stay resident with its archive anyway (behaviour reads the clip header); the service keeps
+  the clip's key table when it binds the clip and decodes fractional frames from it (section 17).
+- **A per-room clip set** (`--set <file>`): only the listed clips are baked. A clip the pack does not hold is decoded
+  from its keys on every sample: exact, slower, counted ("outside the pack"). So a set that misses a clip costs time,
+  never correctness. `bake/motion_sets.py` makes a room's set from captured play (the service logs every clip it
+  binds).
+- Identity: the FNV-1a of the clip header and every served joint's key block (pose, root and camera now), as the
+  service computes it at MotionSetCore. 415 distinct clips in the fixtures' archives (round 2: 414; one pair shared
+  its pose keys but not its root keys), 1 rejected (no joints).
+
+**Bytes** (`E:\RE4DC-Lanes\eng-svc3\ev\motion\mk-bytes.md`; the fixtures' rooms, every clip of the archives the room loads; the clip keys are
+resident today and stay):
+
+| Room | Actor | Clips | Clip keys (resident) | float32 rows | 16-bit rows | Named by the behaviour: clips | float32 | 16-bit |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Village square (r101) | Leon (pl00 + wep02) | 107 | 618,304 | 1,095,104 | 680,576 | 105 | 1,064,800 | 661,856 |
+| Village square | Ashley (pl11) | 71 | 495,264 | 951,584 | 592,256 | 53 | 660,416 | 411,424 |
+| Village square | Ganado (em15) | 166 | 1,945,120 | 3,571,840 | 2,045,248 | 135 | 2,929,728 | 1,664,352 |
+| Hill path (r11d) | Leon | 107 | 618,304 | 1,095,104 | 680,576 | 105 | 1,064,800 | 661,856 |
+| Hill path | Ashley | 71 | 495,264 | 951,584 | 592,256 | 53 | 660,416 | 411,424 |
+| Hill path | Ganado (em16) | 156 | 1,845,984 | 3,328,960 | 1,904,928 | 130 | 2,705,248 | 1,540,768 |
+| **All 415 clips** | | | **3,738,784** | **7,381,312 (1.97x)** | **4,387,904 (1.17x)** | | | |
+
+Round 2's form was 6.87 MB hot + 3.48 MB cold copy (2.77x the keys); float32 here is 1.97x (no cold copy, root rows
+added), 16-bit 1.17x. One scale for a whole clip (`--qscale clip`) was measured and rejected: up to 5.2 rad and 5.2 u
+off (a clip's positions span tens of thousands of units), the bones 24 u / 17 deg off, an e1-route collision result
+flips.
+
+**The per-room set.** Two sources measured:
+- *Named by the behaviour* (every FCV entry a behaviour source names by a literal archive index, `PL_ARC_PTR` /
+  `SUB_MOT`, for the archives the room's actor list loads; the handgun archive whole): 64 of Leon's 66 pl00 clips, 53
+  of Ashley's 71, 135 of em15's 166. Saves 3 to 31% an archive, and **misses clips the fixtures play** (tables and
+  computed indices): 1 to 3 clips outside the set on four of six fixtures (hill: 78,893 samples decoded from keys).
+  Not a usable set.
+- *Captured play* (`motion_sets.py` over the fixtures' logs): the village square's five fixtures bind 25 clips, the
+  hill path's 7. Packs: village square 416,736 B float32 / 244,896 B 16-bit; hill path 173,696 / 100,128. No clip
+  outside the set on its own fixtures. A real room's capture is larger than these short fixtures; the miss counter
+  shows what a capture lacked.
+
+**Equivalence** (`E:\RE4DC-Lanes\eng-svc3\ev\controls\svc_controls.md`, wind off):
+- float32 rows: every bone bit-identical on six fixtures (as round 2), traces identical.
+- No pack (every sample, root motion included, decoded natively from the keys): bit-identical on six fixtures.
+- 16-bit rows (an approximation, owner 2026-10-19): every bone but the cloth links within 0.14 u and 0.006 deg
+  (bell-ganado-hit; door103 0.023 u, e1-route 0.055 u, bell 0.046 u, hill 0.093 u, follow 0.031 u), the cloth links
+  by `cloth_stats.py` (chain radius within 7e-5 u, link means within 0.003 u), collision results identical with query
+  points within 0.38 u (the IK's foot queries move with the feet), traces PASS in every field (gameplay fields
+  identical). The cloth links alone, compared bone for bone, reach 0.7 deg on Ashley's skirt (the chain amplifies a
+  pose difference), which is why they are judged by their statistics as with the wind on.
+- 16-bit rows of the per-room captured sets: as the 16-bit rows above, 0 clips outside the pack.
+- Controls: `mkrow` (pose rows one frame late) and `mkroot` (root rows one frame late: Leon's position, traces FAIL)
+  fail; `mkcoarse` (16-bit steps cut to 8 bits) fails the tolerance (13.8 u / 0.8 deg on door103, 19.2 u / 2.5 deg on
+  the bell).
+- Fractional frames served from the rows instead of the keys (`--frac-check`, every clip at k + 1/4, 1/2, 3/4): linear
+  up to 45 deg / 298 u, Catmull-Rom 40 deg / 168 u, root channels 2,000 u (clips with cuts). Not safe: the keys stay.
+
+**Recommendation: 16-bit rows for a per-room set from captured play, the keys resident.**
+- Against the memory map (SHELL_MAP section 3: the room pack 4,096 KiB with actor meshes and motions; E1 measured
+  2.2 MB free to the arena): rows for every clip do not fit beside the keys in a fight room. The bell fight's Leon and
+  Ganado archives hold 2.56 MB of keys; their float32 rows add 4.67 MB, 16-bit rows 2.73 MB (the Ganado archive alone
+  2.05 MB). Captured sets add 0.10 to 0.25 MB a room (16-bit; 3 to 8% of the room's keys).
+- 16-bit rows halve every set's bytes (1.17x the keys against 1.97x) within 0.14 u / 0.006 deg.
+- A capture that misses a clip costs that clip's decode on every sample until the next bake, never correctness; the
+  miss counter goes in the room's capture gate.
+- Not chosen: rows replacing the keys (fractional frames need them: the error above); named-by-behaviour sets (miss
+  played clips).
+
+## 17. Native root motion and key decoder
+
+- **Root motion** (`skel.cpp`): `MotionGetSpeed`, `MotionGetPosition`, `MotionAddSpeed`, `MotionSequenceCtrl` and the
+  clock's small functions (`MotionBlendOff`, `MotionPause`, `FcvGetMaxFrame`, `MotionGetMaxFrame`,
+  `MotionGetCurrentFrame`, `MotionCheckCrossFrame`, `MotionGetState`) are native: the original's arithmetic in its
+  order on `MotionWork`; the root samples from the aux rows. `MotionSetCore`'s start values (the root at the start
+  frame, the clip's whole displacement `Pos_dist` / `Ang_dist`) likewise. `svc.mk` weakens the eleven in motion.o.
+- **The decoder** (`mk_decode`): one joint's three axes from its key block: a binary search for the last key at or
+  before the frame (key 0 is frame 0), the Fcc field conversions (f32, s16 and s8 times 0.0001f) and `hermite()` in
+  the original's order; a looping clip wraps once per axis, a frame at or past the end of one that does not takes the
+  last key, as HermiteInterpolation. Exact on the clips the baker accepts (strictly rising keys from 0 to maxFrame,
+  checked: the bracket a history search finds is the same). It serves fractional frames, clips outside the pack and
+  everything when no pack is loaded.
+- **The original decoder is out of the service:** `skel.o` references no motion.cpp symbol (`nm -u`); the key history
+  (`hist`, 36 B a bone; 4,284 B for Leon) is gone from the table. HermiteInterpolation stays in motion.o for two
+  other units only: `cam_motion` (camera curves) and `shape` (shape keys).
+- **Equivalence:** six fixtures bit-identical with the float32 pack and with no pack. Samples: root motion from rows
+  363 (door103) to 5,693 (hill) a fixture, decoded 15 (the fractional frames of bell-ganado-hit, where the pose has 315
+  decoded samples); the original decoder 0.
+
+## 18. The cloth on SH4ZAM
+
+**The kernel** (`services/cloth/cloth_kernel.h`, `.c`; its own commit): one chain's tick on the link records and the
+skeleton's bone rows, in C on SH4ZAM's primitives: `shz_dot6f` / `shz_mag_sqr3f` (dot products, magnitudes),
+`shz_inv_sqrtf_fsrra` (normalise), `shz_sqrtf_fsrra` (SQRTF), `shz_acosf` / `shz_asinf`, `shz_sincosf` (the axis
+rotations), `shz_vec3_cross`. On the SW back-end each forms its result as the C library the original calls does
+(VECNormalize, PSVECDotProduct, PSMTXRotAxisRad, PSMTXMultVec(SR), PSMTXConcat; the transcendental functions are the C
+library's); on the SH-4 they are FSRRA and FSCA (`sh-elf-gcc -m4-single-only -O2`: 11.3 KB, 38 FSRRA, 1 FSCA, no
+libm call; SH4ZAM leaves FIPR off by default). The **volume tests** (`penClothAtCk`, `penClothAtCkBorder`,
+`penClothAtCkParallel`) are native in the kernel. `cloth.cpp` sets up a step (the floor, the reset, the volumes, the
+wind phase, the root's motion) and calls it.
+
+**One pass, measured and rejected.** `cloth_k_step_onepass` moves, limits, constrains (Bundle_num times) and orients
+each link before the next: a link's later neighbours hold last tick's positions while it is constrained. Six fixtures,
+wind off: links' mean positions 11 to 54 u from the original's (bound 2), chain radius up to 6.25 u (bound 0.4); the
+other bones untouched. Not used (`RE4_SVC_CLOTH_PASSES=1` runs it).
+
+**The schedule used: fused, exact.** The original makes Bundle_num + 3 passes (motion and wind, angle limit,
+Bundle_num constraint passes, matrices). `cloth_k_step` makes Bundle_num + 1: the motion and the angle limit in one
+pass when every upper link comes before its link (the angle limit reads the upper link after its own motion and
+limit), and the last constraint pass with the matrices (a link's matrix stage runs as soon as no later constraint can
+move it or its upper link). Every stage reads what it reads in the original's order. Passes over a chain a step on the
+fixtures: 3.5 against 5.0 in the original order for Leon's two chains (door103), 3.8 against 5.4 for the hill's five.
+
+**Equivalence:** wind off, every bone, the links included, bit-identical on six fixtures; wind on: the round-2
+statistics exactly (chain radius within 0.251 u on the follow fixture, 0.044 u on the E1 route; link means within 1.7
+u). Controls `clothshort`, `clothnograv` and `clothwind` fail as before. `RE4_SVC_CLOTH_PASSES=4` (the original pass
+order through the kernel) is bit-identical too.
+
+**Test and benchmark** (`cloth_kernel_test.c`, `make cloth_ktest`; `E:\RE4DC-Lanes\eng-svc3\ev\cloth\cloth_ktest.txt`):
+- the nine primitives against the C library over 200,000 random inputs: bit-identical;
+- 264 random chains (both variants, upper links before and after their links, side links, spheres and cylinders,
+  eleven flag combinations, Bundle_num 1 to 3) x 120 ticks: the fused schedule bit-identical with the original pass
+  order (44 million volume tests, 345,570 hits);
+- PC host timing (x86, not SH-4; two runs, the second on a loaded machine): hair-like chain 2.3 / 2.4 us a step
+  (original order / fused; 3.8 / 4.4 loaded), jacket-like 4.1 / 4.8 (5.7 / 5.2), skirt-like 24.5 / 21.9 (37.6 / 33.9).
+  No consistent gain on the PC: the chains are 3 to 7 KB and stay in the cache between passes. The SH-4 lever is the
+  arithmetic (FSRRA and FSCA instead of library calls), which the emulator lane times.
+
+**The presentation generator** (`services/cloth/pres_rng.h`): the interface the cloth draws through (owner
+2026-11-19, "Split it"): a stream a chain, `pres_seed` / `pres_next` / `pres_f01` / `pres_f11` (xorshift32, the
+round-2 generator). The engine image can put its generator behind the same four functions.
+
+## 19. Collision: the swept sphere on the grid, smaller masks
+
+**The swept sphere** (`polySphereCk`, the walls and floors that push a moving sphere): per leaf the cells of the box of
+its segment (old position to current position) grown by its radius; an entry whose cells miss them is skipped and
+**marked visited**; after every push the cells are taken again (the sphere moved). Exact:
+- a polygon can change the sphere only if the sphere comes within its radius of it (`At_poly_sphere_ck2`'s plane
+  and edge cases) or its segment crosses it (the surface-line case); both put the polygon's box inside the grown
+  segment box, so a skipped polygon's test returns 0 and changes nothing;
+- the original marks a polygon visited when it tests it; the native marks a skipped one visited too, so a polygon in
+  two leaves is not tested later from the second leaf with the sphere moved (which would differ from the original).
+The check build tests every skipped polygon on a copy of the sphere: 0 hits on six fixtures.
+
+**Smaller masks.** Round 2: a 64-bit mask (2 x 4 x 8 cells) for every leaf list entry, and a 32-byte grid a leaf (the
+village square's tables 370 -> 544 KB). Measured (`E:\RE4DC-Lanes\eng-svc3\ev\collision\col-variants.md`; all exact, 0 check-build misses):
+
+| Shape, smallest masked leaf | Village square tables | Hill path | Line tests a query (door / route / bell / hit / hill / follow) | Sphere tests a query |
+|---|---:|---:|---|---|
+| no grid (the original's walk) | 470,240* | 272,800* | 7.5 / 8.0 / 18.0 / 18.2 / 29.7 / 18.9 | 6.0 / 7.3 / 13.3 / 15.1 / 17.2 / 20.8 |
+| round 2's shape: 2x4x8, 64-bit, every leaf (the sphere on it too) | 543,808 | 304,544 | 2.5 / 3.7 / 10.0 / 10.1 / 11.8 / 6.1 | 5.4 / 3.7 / 4.5 / 5.4 / 3.2 / 5.7 |
+| 2x4x8, 64-bit, leaves of 8 or more | 528,608 | 300,800 | 2.5 / 4.5 / 11.2 / 11.2 / 11.8 / 7.0 | 5.4 / 4.0 / 5.7 / 6.7 / 3.2 / 7.2 |
+| **2x2x8, 32-bit, leaves of 8 or more (chosen)** | **470,240** | **272,800** | 3.5 / 5.4 / 11.7 / 11.7 / 12.0 / 8.4 | 5.4 / 4.9 / 6.3 / 6.9 / 4.2 / 9.7 |
+| 2x2x8, 32-bit, every leaf | 477,824 | 274,688 | 3.5 / 4.7 / 10.6 / 10.7 / 12.0 / 7.6 | 5.4 / 4.7 / 5.4 / 5.6 / 4.2 / 8.7 |
+| 2x2x8, 32-bit, leaves of 16 or more | 447,520 | 267,232 | 7.5 / 6.3 / 12.3 / 12.5 / 17.3 / 8.5 | 6.0 / 5.7 / 6.9 / 8.6 / 6.7 / 10.0 |
+| 2x4x4, 32-bit, 8 or more | 470,240 | 272,800 | 2.5 / 4.7 / 12.0 / 11.9 / 14.0 / 7.0 | 5.4 / 4.0 / 7.2 / 8.2 / 3.2 / 7.2 |
+
+(* the no-grid run is the chosen build with the grid switched off: its tables are the chosen ones.)
+
+Chosen: 32 cells (2 x 2 x 8) in a 32-bit mask, masks only for leaves of 8 entries or more: the village square's tables
+**470 KB** (round 2: 544 KB; round 1: 370 KB), the hill path's 273 KB (305 KB). Over the six fixtures, line and
+sphere polygon tests together fall from round 2's 847,000 (lines on the grid, the sphere on the original walk) to
+778,000, and from the original's 1.69 million (-54%).
+
+## 20. Counts against round 2 (PC census)
+
+Round 2's windows and reference runs (the reference is unchanged); the native build with the float32 pack and with
+the 16-bit pack (`E:\RE4DC-Lanes\eng-svc3\ev\cost\cost-f32-*.md`, `cost-s16-*.md`; per actor per tick; original / round 2 / round 3). x86
+counts, no timing.
+
+| Actor, window | Skeleton lines | Archive (key) lines | Baked-key lines f32 / s16 | Skeleton accesses |
+|---|---:|---:|---:|---:|
+| Leon idle (door103) | 1,336 / 896 / 892 (s16 903) | 206 / 11 / 6 | 18 / 29 | 65,304 / 43,496 / 43,509 |
+| Leon running and aiming (e1-route) | 1,347 / 959 / 952 (965) | 212 / 12 / 6 | 19 / 32 | 89,611 / 50,617 / 50,617 |
+| Ganado (bell, em1) | 631 / 445 / 432 (444) | 260 / 19 / 5 | 20 / 32 | 25,582 / 15,625 / 15,615 |
+| Ganado, each of four (hill) | 654-692 / 390-408 / 388-407 | 262-300 / 8 / 4 | 24 / 36 | 25,100-26,100 / 14,700-15,100 / 14,748-15,173 |
+| Ashley (hill) | 1,772 / 1,076 / 1,079 (1,102) | 322 / 4 / 8 | 32 / 55 | 116,421 / 68,833 / 69,022 |
+
+- Key segments (hermite) a tick: 0 for every actor (round 2: 2.4 to 6.0 for root motion and MotionSetCore).
+- The archive key reads that remain in round 2 (root motion and MotionSetCore through the original decoder) are gone
+  but the clip header and key-table reads: 4 to 8 lines.
+- The 16-bit rows touch 11 to 23 more lines a tick than float32 (each clip's scale and offset table, 8 B a column, is
+  read with the row): the price of half the bytes.
+
+| Cloth, window | Lines (original / round 2 / round 3) | Accesses |
+|---|---:|---:|
+| Leon: hair + jacket (door103) | 377 / 261 / 261 | 21,927 / 23,410 / 19,437 |
+| Leon (e1-route) | 377 / 261 / 261 | 22,202 / 23,625 / 19,492 |
+| Ashley: hair, skirt, sweater (hill) | 637 / 452 / 452 | 57,967 / 61,017 / 53,797 |
+| Ashley (follow) | 637 / 454 / 454 | 58,645 / 61,675 / 54,009 |
+
+The kernel's accesses are 17% under round 2's and 11% under the original's (the vector copies in and out of the
+library calls are gone); the lines are the same (the link records and the bones).
+
+| Collision, every query of a tick | Lines (original / round 2 / round 3) | Accesses (original / round 3) |
+|---|---:|---:|
+| door103 | 123 / 144 / 140 | 3,533 / 4,264 |
+| e1-route | 164 / 184 / 179 | 4,244 / 4,918 |
+| bell | 622 / 591 / 538 | 12,576 / 12,615 |
+| hill | 839 / 760 / 667 | 23,461 / 18,893 |
+| follow | 200 / 223 / 212 | 7,614 / 8,724 |
+
+Lines a query (the tick's lines over the fixture's line and sphere queries a tick, an estimate): door103 7.9 / 9.3 /
+9.0, e1-route 10.7 / 12.0 / 11.7, bell 14.2 / 13.5 / 12.3, hill 13.0 / 11.8 / 10.4, follow 6.8 / 7.6 / 7.2. The
+fights (bell, hill) now touch 13 to 20% fewer lines than the original; the walks stay 3 to 14% above it (the masks
+and the grid records of the leaves they visit).
+
+## 21. What the engine image must change for round 3
+
+1. **Motion keys.**
+   - Bake with `bake/motion_keys.py --rows s16 --set <room>.lst` (RE4MK2); make each room's set with
+     `bake/motion_sets.py` from captured play of the room (benchmark and full-play runs log every clip the service
+     binds); put the room's miss count ("outside the pack") in its capture gate and add the missed clips at the next
+     bake.
+   - Keep the archives' clip keys resident (fractional frames and clips outside the set are decoded from them); no
+     cold copy is baked any more.
+   - Bind each archive's clips at archive load (identity, as `mk_bind`: the clip's key table pointer is kept, so the
+     keys must not move while the clip is bound); call `skel_mk_forget(base, bytes)` when an archive is freed.
+   - Link `skel.cpp` with the eleven motion.cpp functions it now defines weakened in motion.o (`svc.mk` WEAK_motion),
+     or drop motion.o once `cam_motion` and `shape` (the two other HermiteInterpolation users) have their own decoder.
+     **Required for the E1 image** (`engine/game/Makefile`, merged from eng-e1c): with round 3's skel.cpp its
+     `WEAK_motion` list must gain MotionGetSpeed, MotionGetPosition, MotionAddSpeed, MotionSequenceCtrl,
+     MotionBlendOff, MotionPause, FcvGetMaxFrame, MotionGetMaxFrame, MotionGetCurrentFrame, MotionCheckCrossFrame and
+     MotionGetState; without them the link stops on eleven multiple definitions, with them `e1.elf` links (checked:
+     `make WEAK_motion="..."`, sh-elf, no disc). Without a motion pack the image decodes every clip natively.
+   - The table is 36 B a bone smaller (no key history).
+2. **Cloth.** Compile `services/cloth/cloth_kernel.c` as C with SH4ZAM's include path and the engine's SH-4 flags
+   (`-m4-single-only`; without `-ffast-math` SH4ZAM's sincos is FSCA, with it the compiler's); `cloth.cpp` drives it.
+   The volume tests are native; `pendulum.cpp` is still linked for `PenClothMove2` (enemy flails), `PenWindSet` /
+   `GlobalWind` and the fallback bodies: porting those is what remains for "no original service code" in the cloth.
+   Put the engine's presentation generator behind `pres_rng.h` when it exists.
+3. **Collision.** `col.cpp` with the swept-sphere grid and 32-bit masks: the village square's tables 470 KB (the
+   round-2 544 KB figure in section 14 is replaced); `svc_pool_carve` sized to that.
+4. **SH-4 rounding.** FSRRA and FSCA round differently from the PC's library: the cloth's wind-off comparison becomes
+   a statistics check on Flycast (the round-2 bounds); the 16-bit rows' tolerance check (bones 1 u / 0.1 deg, links by
+   statistics) is unchanged.
+
+## 22. Interface changes and tools (round 3)
+
+- `skel_mk.h`: RE4MK2. `MkPack.flags` (1: 16-bit rows); `MkClip` gains `nAux`, `auxStride`, `oAux`, `oQuant` and loses
+  `oColdTab`, `oCold`, `coldBytes`; `MkJoint.src` is `MK_ROWS`, `MK_CONST`, `MK_AUX` (root and camera), `MK_NONE`.
+- `skel.h`: `SkelTable::hist` removed; `SkelCounters` `mk_cold` / `mk_orig` replaced by `mk_dec`, `mk_miss`,
+  `mk_root_rows`, `mk_root_dec`, `mk_axes`, `mk_rebinds`; `skel_control_mk` 2 (root rows late) and 3 (8-bit steps);
+  new `skel_mk_forget()`. `skel.cpp` defines MotionGetSpeed, MotionGetPosition, MotionAddSpeed, MotionSequenceCtrl,
+  MotionBlendOff, MotionPause, FcvGetMaxFrame, MotionGetMaxFrame, MotionGetCurrentFrame, MotionCheckCrossFrame,
+  MotionGetState (same signatures as motion.h).
+- `cloth.h`: `ClothChain::rng` is a `PresRng` (same 4 bytes); `cloth_passes`; new `cloth_kernel.h` (C API: `ClothKStep`,
+  `cloth_k_step`, `cloth_k_step_passes`, `cloth_k_step_onepass`, the three volume tests, `cloth_k_cnt`) and
+  `pres_rng.h`. `PenClothSet` / `Move` / `Move3` / `FixSet` / `FixClear` unchanged for callers.
+- `col.h`: `ColGrid.mask` (was padding), `ColMask` (u32; u64 with `COL_MASK64`), `ColPiece::cmask` is `ColMask*` with
+  `nMask`; new counters; `col_sphere_grid_off`, `col_mask_min`. `cSatMgr` entry points unchanged.
+- `motion_keys.py`: `--rows`, `--qscale`, `--set`, `--frac-check`; labels are `archive:entry` for proxy clips too.
+  New `motion_sets.py`.
+- re4ref (`svc_io.cpp`): `RE4_SVC_MK=none` (no pack), `RE4_SVC_MK16` (the 16-bit pack for svc_controls),
+  `RE4_SVC_CLOTH_PASSES=4` / `1` (original order / one pass), `RE4_SVC_COLSPHERE=0`, `RE4_SVC_COLMIN=<n>`,
+  `RE4_SVC_CONTROL=mkroot` / `mkcoarse`; `make cloth_ktest`; `svc.mk` `COL_DEFS`.
+
+**Not done:** per-room sets from real room captures (only the fixtures' short captures exist); PenClothMove2, the wind
+and the fallback still original (pendulum.cpp linked); HermiteInterpolation still in motion.o for the camera and
+shape units; the grid for unmasked small leaves still allocated (32 B a leaf); no farm (em12) fixture; no SH-4
+timing (emulator lane).

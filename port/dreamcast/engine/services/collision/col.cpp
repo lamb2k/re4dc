@@ -22,12 +22,17 @@ extern "C" void host_log(const char* fmt, ...) __attribute__((weak));   // host:
 f32 GetDistance(Vec* v0, Vec* v1);
 void InterVectorXYZ(Vec* out, Vec* a, Vec* b, f32 t);
 
+#ifndef COL_MASK_MIN
+#define COL_MASK_MIN 8   // lane eng-svc3: leaves with fewer list entries are tested whole (SERVICES.md section 18)
+#endif
 extern "C" {
 ColCounters col_cnt;
 f32 col_control_floor;
 int col_control_grid;
 int col_verify;
 int col_grid_off;
+int col_sphere_grid_off;
+u32 col_mask_min = COL_MASK_MIN;
 }
 // how much a polygon's box and a query's box grow before their cells are taken (units): far above the rounding of
 // the line test's arithmetic at room coordinates (a float step at 65,536 units is 0.008)
@@ -47,7 +52,7 @@ u32 align32(u32 x) { return (x + 31u) & ~31u; }
 
 // ---- bake: the piece's block tree and polygons into the tables (room load) ----
 struct BakeCount {
-    u32 nodes, leaves, idx;
+    u32 nodes, leaves, idx, masked;   // masked: the list entries of leaves with at least col_mask_min entries
 };
 void count_tree(cSatBlock* blk, BakeCount* c)
 {
@@ -57,7 +62,9 @@ void count_tree(cSatBlock* blk, BakeCount* c)
             count_tree((cSatBlock*) blk->idx, c);
         } else {
             c->leaves++;
-            c->idx += blk->m_nFloor + blk->m_nSlope + blk->m_nWall;
+            const u32 all = blk->m_nFloor + blk->m_nSlope + blk->m_nWall;
+            c->idx += all;
+            if (all >= col_mask_min) c->masked += all;
         }
     }
 }
@@ -117,7 +124,7 @@ void fill_tree(cSatBlock* blk, cSat* sat, BakeFill* f)
 }
 
 // the cells of box [lo, hi] (grown by the margin) in leaf grid g
-inline u64 cells_of(const ColGrid& g, f32 lx, f32 ly, f32 lz, f32 hx, f32 hy, f32 hz, int shift)
+inline ColMask cells_of(const ColGrid& g, f32 lx, f32 ly, f32 lz, f32 hx, f32 hy, f32 hz, int shift)
 {
     int x0 = (int) __builtin_floorf((lx - kColMargin - g.x0) * g.ix), x1 = (int) __builtin_floorf((hx + kColMargin - g.x0) * g.ix);
     int z0 = (int) __builtin_floorf((lz - kColMargin - g.z0) * g.iz), z1 = (int) __builtin_floorf((hz + kColMargin - g.z0) * g.iz);
@@ -130,8 +137,8 @@ inline u64 cells_of(const ColGrid& g, f32 lx, f32 ly, f32 lz, f32 hx, f32 hy, f3
     if (z1 > COL_GRID_Z - 1) z1 = COL_GRID_Z - 1;
     if (y1 > COL_GRID_Y - 1) y1 = COL_GRID_Y - 1;
     if (x0 > x1 || z0 > z1 || y0 > y1) return 0;
-    const u64 row = ((1ull << (x1 + 1)) - 1ull) & ~((1ull << x0) - 1ull);
-    u64 m = 0;
+    const ColMask row = (ColMask) (((1ull << (x1 + 1)) - 1ull) & ~((1ull << x0) - 1ull));
+    ColMask m = 0;
     for (int y = y0; y <= y1; y++)
         for (int z = z0; z <= z1; z++) m |= row << ((y * COL_GRID_Z + z) * COL_GRID_X);
     return m;
@@ -160,6 +167,10 @@ void bake_grid(ColPiece* pc, cSat* sat)
         g.ix = pc->nodeSizeX[k] > 0.0f ? (f32) COL_GRID_X / pc->nodeSizeX[k] : 0.0f;
         g.iz = pc->nodeSizeZ[k] > 0.0f ? (f32) COL_GRID_Z / pc->nodeSizeZ[k] : 0.0f;
         g.iy = all && yhi > ylo ? (f32) COL_GRID_Y / (yhi - ylo) : 0.0f;
+        g.mask = COL_NO_MASK;
+        if (all < col_mask_min || pc->nMask + all > pc->nIdx) continue;   // tested whole
+        g.mask = pc->nMask;
+        pc->nMask += all;
         for (u32 i = 0; i < all; i++) {
             const u16 no = pc->idx[L.first + i];
             const ColHot& h = pc->hot[no];
@@ -174,14 +185,14 @@ void bake_grid(ColPiece* pc, cSat* sat)
                 if (zs[v] < lz) lz = zs[v];
                 if (zs[v] > hz) hz = zs[v];
             }
-            pc->cmask[L.first + i] = cells_of(g, lx, ly, lz, hx, hy, hz, 0);
+            pc->cmask[g.mask + i] = cells_of(g, lx, ly, lz, hx, hy, hz, 0);
         }
     }
 }
 
 ColPiece* bake(cSat* sat)
 {
-    BakeCount c = {0, 0, 0};
+    BakeCount c = {0, 0, 0, 0};
     count_tree(sat->block_p, &c);
     const u32 nPoly = sat->polygon_num;
     u32 off = align32(sizeof(ColPiece));
@@ -196,7 +207,7 @@ ColPiece* bake(cSat* sat)
     const u32 oHot = off; off = align32(off + sizeof(ColHot) * nPoly);
     const u32 oCold = off; off = align32(off + sizeof(ColCold) * nPoly);
     const u32 oGrid = off; off = align32(off + sizeof(ColGrid) * c.leaves);
-    const u32 oMask = off; off = align32(off + 8 * c.idx);
+    const u32 oMask = off; off = align32(off + sizeof(ColMask) * c.masked);
     u8* blk = (u8*) svc_pool_carve(off);
     if (!blk) return 0;
     memset(blk, 0, off);
@@ -220,7 +231,8 @@ ColPiece* bake(cSat* sat)
     pc->hot = (ColHot*) (blk + oHot);
     pc->cold = (ColCold*) (blk + oCold);
     pc->grid = (ColGrid*) (blk + oGrid);
-    pc->cmask = (u64*) (blk + oMask);
+    pc->cmask = (ColMask*) (blk + oMask);
+    pc->nMask = 0;
     BakeFill f = {pc, 0, 0, 0};
     fill_tree(sat->block_p, sat, &f);
     // the floor group: polygons [0, floors + slopes) of the file (cSatFile counts); the control raises them
@@ -354,12 +366,16 @@ int line_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, int flag, int mask
         u32 a, b;
         group(pc->leaf[lf], flag, &a, &b);
         int r = 0;
-        const u64 q = col_grid_off ? ~0ull : cells_of(pc->grid[lf], qlx, qly, qlz, qhx, qhy, qhz, col_control_grid);
+        const ColGrid& g = pc->grid[lf];
+        const bool whole = col_grid_off || g.mask == COL_NO_MASK;
+        if (whole) col_cnt.leaves_whole++;
+        const ColMask q = whole ? (ColMask) ~0ull : cells_of(g, qlx, qly, qlz, qhx, qhy, qhz, col_control_grid);
+        const ColMask* cm = whole ? 0 : pc->cmask + g.mask - pc->leaf[lf].first;   // cm[i]: list entry i's cells
         for (u32 i = a; i < b; i++) {
             const u32 no = pc->idx[i];
             const ColHot* t = &pc->hot[no];
             const u32 bit = 1u << (no & 7);
-            if (!(pc->cmask[i] & q)) {   // its cells miss the query's: it cannot be hit
+            if (!whole && !(cm[i] & q)) {   // its cells miss the query's: it cannot be hit
                 col_cnt.tris_skipped++;
                 // the check build tests it anyway: a hit there must be the segment's end (a segment lying exactly in
                 // the polygon's plane), which never replaces the nearest hit (its distance is the whole segment's)
@@ -546,6 +562,15 @@ int node_sphere(const ColPiece* pc, u32 k, Vec* pos0, Vec* pos1, f32 r)
     return 0;
 }
 
+// the cells of the swept sphere's box: its segment's box grown by its radius (cells_of adds the margin)
+inline ColMask sphere_cells(const ColGrid& g, const Vec* p0, const Vec* p1, f32 r)
+{
+    const f32 lx = (p0->x < p1->x ? p0->x : p1->x) - r, hx = (p0->x < p1->x ? p1->x : p0->x) + r;
+    const f32 ly = (p0->y < p1->y ? p0->y : p1->y) - r, hy = (p0->y < p1->y ? p1->y : p0->y) + r;
+    const f32 lz = (p0->z < p1->z ? p0->z : p1->z) - r, hz = (p0->z < p1->z ? p1->z : p0->z) + r;
+    return cells_of(g, lx, ly, lz, hx, hy, hz, col_control_grid);
+}
+
 // blkPolySphereCk + blkPolySphereCkCore over the flattened tree
 int sphere_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, f32 r, int flag, Vec* nrm, int mask)
 {
@@ -563,15 +588,35 @@ int sphere_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, f32 r, int flag,
         col_cnt.leaves++;
         u32 a, b;
         group(pc->leaf[lf], flag, &a, &b);
+        // lane eng-svc3: the cells of the sphere's segment box grown by its radius, taken again after every push
+        const ColGrid& g = pc->grid[lf];
+        const bool whole = col_sphere_grid_off || g.mask == COL_NO_MASK;
+        if (whole) col_cnt.leaves_whole++;
+        const ColMask* cm = whole ? 0 : pc->cmask + g.mask - pc->leaf[lf].first;
+        ColMask q = whole ? (ColMask) ~0ull : sphere_cells(g, pos0, pos1, r);
         for (u32 i = a; i < b; i++) {
             const u32 no = pc->idx[i];
             const ColHot* t = &pc->hot[no];
             if (g_bits[no >> 3] & (1 << (no & 7))) continue;
-            g_bits[no >> 3] |= 1 << (no & 7);
+            g_bits[no >> 3] |= 1 << (no & 7);   // visited: the original tests it here, skipped or not
+            if (!whole && !(cm[i] & q)) {
+                // its cells miss the sphere's: no hit (the sphere never comes within its radius of the polygon and
+                // its segment does not cross it), so the original's test here leaves everything as it is
+                col_cnt.sphere_skipped++;
+                if (col_verify) {
+                    Vec p1 = *pos1;
+                    if (sphere_tri(t, &pc->cold[no], pos0, &p1, r, flag, mask)) col_cnt.sphere_filter_miss++;
+                }
+                continue;
+            }
             col_cnt.tris_sphere++;
             if (sphere_tri(t, &pc->cold[no], pos0, pos1, r, flag, mask)) {
                 ret = 1;
                 if (nrm) *nrm = sat->norm_p[t->nidx];
+                if (!whole) {   // the sphere moved: its cells again
+                    q = sphere_cells(g, pos0, pos1, r);
+                    col_cnt.sphere_recells++;
+                }
             }
         }
     }
