@@ -1,6 +1,6 @@
-# RE4 Dreamcast engine plan, version 2 (2026-11-19)
+# RE4 Dreamcast engine plan, version 3 (2026-11-20)
 
-Status: **draft for the owner.** It follows the owner's directions of 2026-11-19 (section 9) and takes the approach of the F-Zero X Saturn engine line. The section 7 milestones replace the earlier M1 to M5 once approved; M0 is unchanged.
+Status: **draft for the owner.** Version 3 keeps version 2's goal, budget, architecture and rules, and replaces its path with the one in section 7, written after the retrospective of 2026-11-20 ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). All lanes are stopped until the owner approves it.
 
 Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC hardware model), **Flycast**, **emulator** (another project's emulator), or **estimate**.
 
@@ -12,18 +12,27 @@ Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC 
 - **Never changed:** behaviour (collision results, event sequencing, game state, AI decisions), enemy cap 4, no GameCube assets.
 - **Console decides.** Emulator and model numbers are filters. They under-read the console by 1.3 to 2 times.
 
-## 2. What we learned on 2026-11-19
+## 2. Where we are (2026-11-20)
 
-| Finding | Source |
-|---|---|
-| Drawing the same content more efficiently gains 18 to 30%, not 50% (MODELLED, audited) | Bench audit, `E:\RE4DC-Lanes\eng-bench\AUDIT-M1-R2.md` |
-| The work the first bench skipped is where the time is: choosing what to draw (2.8 ms at the cross), light and model setup (1.2 to 3.9 ms), effect transforms (3.2 to 6 ms), skeleton (1.9 to 3.9 ms) | Same audit |
-| F-Zero X Saturn: about 37 ms of its gain came from no longer hosting the original simulation (22.1 ms) and the "publication" layer that turns original state into draw data (17.3 ms). Native physics plus sprites cost 1.6 ms. Changing what is drawn bought the last 5 to 8 ms (emulator) | F-Zero coordinator, 11-19 |
-| F-Zero has not run on hardware yet, and its second milestone misses the floor on 4.7% of intervals | Same |
-| RE4 on console: about 60% of CPU samples are in our own port code, about 30% in the original game code; 53% of each picture is memory stall | Console session 11-11 and 11-12 |
-| RE4 on console: ten props hidden behind a barn wall cost about 22 ms at the worst farm view | Console A/B 11-12 |
+| What | Before | Now | Tier |
+|---|---:|---:|---|
+| Drawing work, village cross | 34.1 ms (old game: drawing plus publication) | 17.3 ms | console vs MODELLED |
+| Services, hill, Leon and Ashley | 17.5 ms (original units) | 6.8 ms | MODELLED |
+| Whole picture, village, Leon alone | 56 ms (old game at the cross) | 18.6 ms | console vs MODELLED |
+| Whole picture, hill, Leon and Ashley | | 30.5 ms mean, 3 of 25 over 33.3 | MODELLED |
+| Whole picture, four-Ganado fight | 56 ms (old game) | 24.1 ms, drawing 16.2 in fight pictures | console vs MODELLED |
 
-What it means: most of our frame is publication, the port code that converts the original game's objects into things to draw, every tick, for every part. A faster renderer under that layer cannot halve the frame. Removing the layer can.
+- **Built:** the bench renderer; Leon, Ashley, four Ganados and El Gigante running their original behaviour on the engine; native skeleton, collision queries, cloth, animation keys and effects; the plays-right reference and tools; a remote console loader (PC-tested only).
+- **Passed (audited):** E0, on the model only.
+- **Not passed:** E1. The audit (H-011) found original service code still linked, small per-picture conversions, rumble on the game's random numbers, a heap overlap, and a stale disc.
+- **Never done:** a console run of the engine. Every engine number is MODELLED or Flycast, and the model has under-read the console by 1.3 to 2 times.
+- **The open risk:** drawing is over its 14 ms row in every scene on the model, and the cheap content steps saved only 0.5 ms.
+
+What the two days taught us (full list in the retrospective):
+- Hosting the original decisions is nearly free (under 1 ms a tick). The time is under them.
+- Drawing the same content better gains 18 to 30%. Removing publication and replacing services gains far more.
+- Audits catch what lane summaries miss. Three audits, three corrections.
+- Without the console we drift: more lanes, more model rounds, more checking against the old game.
 
 ## 3. The approach
 
@@ -90,24 +99,50 @@ The graphics chip is 20% busy at the cross. The CPU is the limit. So spend the c
 | Shadows and lights | Baked where the scene is static; chip shadows only near the camera | Per-part light setup is a publication cost |
 | Texture detail over vertex detail | Detail moves into textures and alpha, which the chip handles | The chip has headroom |
 
-## 7. Milestones
+Results so far (lane eng-look, MODELLED, owner's choice 11-19 "Lets go with best options"): character levels step 3 and effect cap step 2 are engine defaults (about 0.5 ms together, no visible change). The world distance cap left holes in the farmhouse and needs a rework; flat cards and baked lighting gained nothing in the two bench scenes. Baked visibility is in, whole room in 256 KiB.
 
-Each is a vertical slice that runs and is shown (stills, a short clip, frame numbers), proves one risk, and ends in a console run. Lanes run in parallel inside a milestone.
+## 7. The path from here
 
-| # | Slice | Proves |
+One milestone at a time. Each ends with an audit and a console run, and only then is it done.
+
+| Step | What | Done when | Rough size (estimate) |
+|---|---|---|---|
+| **1. Console evening** | The owner's SD card and one evening: today's game with each part switched off (lab disc, about 85 minutes), then one engine disc with the bench, Leon and Ashley, the fight and El Gigante | We have console numbers for every budget row and the model's real error | One evening; one lane round beforehand to build the single engine disc and finish the loader's proof |
+| **2. Pass E1: Leon and Ashley** | Fix the audit's list (H-011): no original service code, no per-picture conversion, rumble, the heap overlap, the village check, the look differences | Link check clean; Codex audit passes; console run holds the floor in the village and on the hill | 4 to 6 lane rounds |
+| **3. Pass E2: fight and boss** | The four-Ganado fight complete (a kill, doors, weapons, items, sound in the fight); El Gigante drawn with his events; drawing brought inside its row by whatever step 1 shows is needed | Outcome check passes (same kills, damage, waves, triggers); audit passes; console floor in the fight and the boss fight | 8 to 12 lane rounds |
+| **4. E3: chapter 1 playable** | Room loading, doors, events, cutscene movies, items, the merchant, saves and sound, from the first room to the lake boss | A no-warp play-through on console at the floor; the owner plays it; first engine release | 20 to 30 lane rounds |
+| **5. E4: the rest of the game** | Chapter by chapter: bake, host, budget, play-through, release. Disc 1, then Disc 2, then Disc 3, bosses included | Each chapter released | Sized per chapter after step 4 |
+
+A lane round is one briefed lane to its hand-back; they took one to three hours on 11-19. These sizes are low-confidence estimates.
+
+**What step 1 decides.** The console drawing number at the cross sets the next move:
+
+| Console drawing at the cross | What it means | Next |
 |---|---|---|
-| **M0** | **Console truth.** The lab disc's core session: today's game with each part switched off. The bench disc in the same evening | The real budget split; the model's margin |
-| **E0** | **Walkabout.** The engine image boots to the village. World, sky and lighting are drawn from the whole-room bake with runtime selection. The camera rides a recorded path through the village and the farm. No game code | The world fits its drawing row before any behaviour exists |
-| **E1** | **Leon and Ashley.** The player on the engine in the village: native skeleton and skinning from the original animation data, native collision queries, the original player behaviour hosted through setters, HUD, aiming and shooting. Then Ashley's original partner code hosted, following Leon; the player hosting made generic so Ashley can be the controlled character in her castle section | Hosting works with no publication layer; the player and the partner at the floor; handling plays right |
-| **E2** | **Fight and boss.** Four Ganados with the original AI hosted on native services, effects, the village fight and the farm, kills, waves and triggers. A first Disc 1 boss on the bench and then hosted, with boss body levels only if the fight is over budget | The floor under load; the services row holds; bosses fit the engine |
-| **E3** | **Chapter.** Chapter 1 from the first room to the lake boss: room loading, doors, events, cutscene movies, items, the merchant, saves, sound; every Disc 1 boss fight on the engine | The whole loop, end to end; first engine release |
-| **E4** | **Game.** The rest of Disc 1, then Disc 2 and Disc 3 by chapter, bosses included. Each chapter: bake, budget at first pass, no-warp play-through | All of the game in the engine |
+| At or under 14 ms | Drawing fits | Steps 2 and 3 as written |
+| 14 to 20 ms | Over, within reach | One lane on drawing (frame-time governor, reworked world levels) alongside step 2 |
+| Over 20 ms | The drawing design is short | A drawing redesign round before hosting more; the owner chooses between deeper content cuts and a lower floor if two designs miss |
 
-Bench round 3 (running) is the start of E0: whole-room bakes and runtime selection exist; its recorded characters and effects carry into E1 and E2.
+**When the console is not available,** work moves to things whose value does not depend on timing: hosting game systems (doors, items, events), tools, the play-through script. No speed tuning on the model.
 
-Stop rules:
-- A milestone whose console run misses the floor does not get more tuning rounds on the model. It gets the profile, one fix, and another console run.
-- If E0 cannot hold the world's drawing row on console after two genuinely different designs, the owner chooses between deeper content cuts and a lower floor.
+**Milestone contents** (unchanged from version 2):
+
+| # | Slice |
+|---|---|
+| **E0** | Walkabout: the world drawn from the whole-room bake. Done on the model; console pending |
+| **E1** | Leon and Ashley on the engine: native skeleton, collision and cloth; original player and partner behaviour hosted; HUD, aiming and shooting; the player hosting generic for Ashley's castle section |
+| **E2** | Fight and boss: four Ganados with original AI on native services and effects; a first Disc 1 boss |
+| **E3** | Chapter 1 end to end, every Disc 1 boss fight, first engine release |
+| **E4** | The rest of the game by chapter |
+
+**Backlog** (owner asks and open items not in the current step; the integrator proposes where each fits):
+- Ashley as the controlled character (her castle section, E4).
+- The lake fight as a boss scene (needs Leon's boat mode).
+- Per-room animation clip sets from real play captures.
+- Enemy flails and wind setup as native cloth.
+- Disc 2 play-through from the r207 sword puzzle on.
+- Test 28 on the release line (the lake-fight fixes), when a tester reading comes back.
+- The automatic console loop beyond the loader (smart plug, broadband adapter), if the owner has the hardware.
 
 ## 8. Gates (per milestone, once, on the final image)
 
@@ -125,22 +160,28 @@ Stop rules:
 ## 9. Workflow
 
 - **Branches:** `engine` is the integration line; lanes are `lane/eng-<topic>`; the release line (`t15/int`) takes hotfixes only.
-- **Who does what (owner 11-19: "switch to opus to get this work done"):**
-  - Lanes run as Claude Opus agents, briefed and steered by the integrator.
-  - Codex gives one independent audit per milestone.
-  - A lane number that is about to drive a decision gets an independent check first.
-- **Lanes in parallel:** at most two lanes that build or run emulators, plus up to two PC-only lanes (bakers, analysis, PC tests). The machine is shared with other projects.
-- **Messages and board:** numbered hand-overs (`H-NNN`) in `engine/HANDOVERS.md`; the board is `engine/STATUS.md`.
-- **Briefs:** from the template and checklist in `engine/LANES.md`.
-- **Console:** the owner boots; sessions run unattended over the QA link. Every milestone ends on the console.
+- **Who does what:** lanes run as Claude Opus agents, briefed and steered by the integrator. Codex audits each milestone, and any number about to drive a decision.
+- **Work in progress:** one milestone at a time, at most two lanes. New scope goes to the backlog in section 7, not into a new lane.
+- **Done means audited and run on the console.** Until then a lane's status is "finished, unaudited", and that is how it is reported to the owner.
+- **Merge gate, checked by the integrator, not taken from the lane's summary:**
+  - the link check passes (no original service symbol outside the allowed list);
+  - the lane's controls are re-run;
+  - every image still links;
+  - the rules in section 3 hold.
+- **Plays right by outcome.** A scripted player runs on the engine and on the reference; kills, damage, waves, triggers, events and time to clear are compared, with positions within tolerance where actors do the same thing. No tick-exact matching with the old game.
+- **One console disc.** A single engine disc is rebuilt from `engine` for each console session. Lanes do not stage discs for the console.
+- **Console cadence.** Each milestone's console run is booked with the owner before the milestone starts. The remote loader makes later runs card-free once it is proven.
+- **Records:** numbered hand-overs (`H-NNN`) in `engine/HANDOVERS.md`; the board is `engine/STATUS.md`; briefs from the template and checklist in `engine/LANES.md`.
 
 ## 10. What stops
 
 - Any work to improve, re-measure or re-profile the old port's drawing or its switches.
-- Reporting anything as a percentage of the old game.
-- Model-only rounds beyond one per milestone.
-- Building a native service "later": each milestone starts with its services native.
-- A review round per change; identity and STRICT gates anywhere on the engine line.
+- Reporting anything as a percentage of the old game, or as done before its audit and console run.
+- Model-only speed rounds: one per milestone at most, none while the console is unavailable.
+- Linking original service code to get something running. Each milestone starts with its services native.
+- More than two lanes, more than one milestone, or a new lane for a new idea.
+- Tick-exact matching with the old game; identity and STRICT gates anywhere on the engine line.
+- A disc per lane.
 
 ## 11. Owner directions on record
 
@@ -160,13 +201,15 @@ Stop rules:
 | 11-19 | "we should have leon ashleyh and boses plus neon or ashley on the engine" (read as: Leon, Ashley and the bosses on the engine, with Leon or Ashley as the player) | E1 adds Ashley as partner and the player hosting generic for Ashley; E2 adds a first boss; E3 every Disc 1 boss |
 | 11-19 | "Lets go with best options" (on the still sheets) | Character levels step 3 and effect cap step 2 are engine defaults; world cap, prop cards and baked lighting stay at full detail |
 | 11-19 | "Is the approach drifting to porting existing code or true architecture for Dreamcast", then "Split it" | No original service code in the engine image; random numbers split between behaviour and presentation; plays right judged on gameplay equivalence |
+| 11-20 | "Why did we drift instead of gains - create a clear concise handover and stop al lanes" | All lanes stopped; handover written |
+| 11-20 | "We made good progress. Do a retrospective as an Eng team ... then write an updated plan from here to meet our goal" | The retrospective and this version of the plan |
 
 ## 12. Decisions needed from the owner
 
-1. Approve the milestones E0 to E4 and the budget rows in section 4.
-2. The content items in section 6 as a class, with the lowest step of each approved from still pairs.
-3. The SD card and one console evening for M0 and the bench disc.
-4. Hardware for an automatic console loop: do you have a Dreamcast broadband adapter or a serial cable, and a smart plug? If not, the loader can use the existing DreamPi link (slower: about 5 to 10 minutes per program).
+1. **Approve this path** (section 7) and the working rules (section 9). Nothing starts until then.
+2. **The console evening:** when the SD card can go in. It is step 1 and everything after depends on it.
+3. **El Gigante's lighter PS2 body** (sheet sent 11-19): yes or no.
+4. **Hardware for an automatic console loop:** a Dreamcast broadband adapter or serial cable, and a smart plug, if you have them. Otherwise the loader uses the DreamPi link.
 
 ## 13. What open-source Dreamcast projects do that we do not (survey, 2026-11-19)
 

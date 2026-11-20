@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-20):** ALL LANES STOPPED by the owner. Handover: C:\Game Dev\Emulators\HANDOVER-RE4DC-20261120.md (why we drifted, real gains, resume order). Unfinished work on wip/eng-svc4-20261120, wip/eng-ref-20261120, wip/eng-loop2-20261120. E1 not passed (H-011).
+**State (2026-11-20):** all lanes stopped by the owner. Retrospective written (RETRO_20261120.md) and plan version 3 drafted (ENGINE_PLAN.md, section 7): console evening first, then pass E1, E2, chapter 1, the rest; one milestone and at most two lanes at a time. Waiting on the owner's approval. Handover: HANDOVER-20261120.md. Unfinished work on wip/eng-svc4-20261120, wip/eng-ref-20261120, wip/eng-loop2-20261120.
 
 ## Milestones
 
@@ -79,5 +79,6 @@ Nothing queued. Resume order is in the handover: console first, then E1 only.
 
 ## Waiting on the owner
 
-- Plan version 2: approve milestones E0 to E4, the budget rows, and the content look calls as a class.
-- SD card in, then one evening with the console and DreamPi on: lab disc core tier (85 min) plus the bench disc.
+- Approve plan version 3 (ENGINE_PLAN.md sections 7 and 9).
+- The console evening: the SD card.
+- El Gigante's lighter PS2 body: yes or no.

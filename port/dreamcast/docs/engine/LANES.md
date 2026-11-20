@@ -16,7 +16,9 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 ## 2. Lane limits
 
-- At most **two lanes that build or run emulators** at once, plus up to **two PC-only lanes** (bakers, analysis, PC tests), plus the lab or release lane when a console session or release is due. The machine is shared with other projects.
+- **One milestone at a time, at most two lanes** (plan version 3, after the 2026-11-20 retrospective). New scope goes to the backlog in `ENGINE_PLAN.md` section 7, not into a new lane. The machine is shared with other projects.
+- **A lane reports "finished, unaudited".** Done means audited and run on the console.
+- **Lanes do not stage console discs.** The integrator rebuilds one engine disc from `engine` for each console session.
 - PC-only lanes may not start an emulator.
 - Lanes run as Claude Opus agents; Codex audits each milestone.
 - A lane uses its own build folder and its own evidence folder. It deletes only inside them, by literal path.
@@ -56,6 +58,8 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - A failing gate gets two distinct hypotheses tested. Then the blocker is written as a hand-over. No tolerance is loosened to pass.
 - That rule is for milestone and merge gates. A lane's own tools (capture, bake, checkers) are its work: keep building them until they work. Hand back early only for the brief's stop rule, a console need, or a blocker outside the lane's own files.
 - Byte identity with a previous build is not a gate on the engine line.
+- **The integrator's merge gate:** the link check passes (no original service symbol outside the allowed list), the lane's controls re-run, every image links, and the plan's section 3 rules hold. A lane's summary is not evidence.
+- **Plays right is checked by outcome** (a scripted player on the engine and the reference: kills, damage, waves, triggers, time to clear), not tick for tick against the old game.
 
 ## 5. Audits and hand-overs
 

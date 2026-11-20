@@ -3,7 +3,7 @@
 Applies to every agent, Claude or Codex. Rewritten 2026-11-19. The earlier text is kept as history in
 `port/dreamcast/docs/history/AGENTS_TO_20261015.md` and is not instruction.
 
-**State:** the owner approved the engine line on 2026-11-19 and asked for the F-Zero X approach. Plan version 2 is in `port/dreamcast/docs/ENGINE_PLAN.md`. Lanes start only from a brief written by the integrator.
+**State (2026-11-20):** all lanes are stopped by the owner. Plan version 3 (`port/dreamcast/docs/ENGINE_PLAN.md`, section 7) and the retrospective (`port/dreamcast/docs/engine/RETRO_20261120.md`) wait for the owner's approval. Do not start a lane until `port/dreamcast/docs/engine/STATUS.md` says it is approved; then lanes start only from a brief written by the integrator.
 
 ## Outside contributors start here
 
@@ -37,6 +37,7 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 - **The engine is the program; the original game supplies behaviour** (owner 2026-11-19: "I want all of the game in a new native improved engine"). The engine owns the main loop, memory map, loading, renderer, effects, skeleton and collision services, native from the start of each milestone. Only decision code (AI, player, events, scripts) stays original, hosted through thin setters.
 - **No original service code in the engine image, and split random numbers** (owner 2026-11-19, "Split it"). Hosted characters use native services or logged stubs. The original generator serves behaviour only; presentation (effects, cloth, sway) uses an engine generator. Plays right is gameplay equivalence plus position tolerance, not generator state.
 - **No publication layer.** Engine state is draw state. Behaviour code never hands the engine an object to convert; it sets position, animation, flags, spawn and kill on engine tables. The skeleton is evaluated once, into the matrices the skinning uses.
+- **One milestone, two lanes, console at every milestone.** Done means audited and run on the console; until then work is "finished, unaudited". When the console is unavailable, do work that does not depend on timing; no model-only speed rounds.
 - **Budget first.** Every lane reports against its row of the whole-frame budget in `ENGINE_PLAN.md` section 4 (behaviour, services, publication, drawing, system, margin), in absolute ms, on the worst interval as well as the mean.
 - **Content built for this console.** The graphics chip has headroom and the CPU does not. Use baked visibility, distance levels, caps and baked lighting, each approved by the owner from a still pair. Do not draw the PS2 content one for one.
 - **No work on the old path** (owner 2026-11-19). Do not improve, re-measure or re-profile the old drawing path. The engine is judged on the absolute budget, never as a percentage of the old game.
