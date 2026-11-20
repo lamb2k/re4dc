@@ -18,6 +18,12 @@ console is unavailable). Item 8 (staging a disc) was dropped by the brief.
 | 7. Look | listed (below); no fault fixed in this lane. |
 | Also: `svc4_units.sh` | exits 2 ("no check made") on a missing, empty or non-re4ref map instead of "0 original functions kept"; controls recorded. |
 
+Link check on the final images (branch head after merging origin/engine 31cf010fd; `ev/img3-final.txt`,
+`ev/link-final-*.txt`): default 98, FIGHT=1 677, BOSS=1 321 SERVICE functions; the default image with SENDABLE=1
+(eng-loop2's console client) links, 98. Controls (`ev/link-final-controls.txt`): the default image with its 98
+waived passes (exit 0); the FIGHT=1 map with that list fails (exit 1); the list without its sdk/OSAlloc line fails
+(exit 1).
+
 ## Item 4: what the default image still links from original code (98 functions, 22,468 B)
 
 From `ev/link-w4-img.txt` (`check_link.py`), by unit. None of these units had a native version in eng-svc4's round:
@@ -51,9 +57,14 @@ no native builder; logged). Native added: `YarareInitCube` (volumes.cpp, the fig
 Checks (Flycast, stills from the frame buffer, `s/stillcmp.py`): before/after item 1, village **0 of 17** and hill
 **0 of 19** pictures differ (runs w2-vilst / w3-vilst / w4-vilst, w2-hillst / w3-hillst / w4-hillst). Controls:
 `PALCTL` (palette read with the old 12-float stride) 19 of 19 hill pictures differ; `CAMSTALE` (first camera only) 17 of
-17 village pictures differ; `LIGHTCTL` (records with a black material) see the hand-back; `LIGHTSTALE` (records never
+17 village pictures differ; `LIGHTCTL` (records with a black material) 19 of 19 hill pictures differ on the final
+image with gameplay unchanged; fight image light service 3,600 checks, 48 builds, 0 misses; `LIGHTSTALE` (records never
 rebuilt: 1 build instead of 25) changed none of the 19 sampled hill pictures, so the rebuilds are not visible at those
 pictures and LIGHTSTALE is not a picture control.
+
+Final image (branch head, `ev/final-checks.txt`): village and hill pictures identical to the w4 image's (0 of 17, 0
+of 19); village LT, hill trace and fight lines identical to eng-e1d's pre-wiring m2 runs (fight: spawn 4, hit 5,
+kill 0); fight SEED: hits 4.
 
 ## Items 2 and 3: checks and controls (Flycast)
 
@@ -63,9 +74,10 @@ pictures and LIGHTSTALE is not a picture control.
 | Heap-4 exercise (HEAPCK) | w2-vilhc, w4-vilhc | blocks in heap 4, the freed cell reused, used count restored: PASS; gameplay identical to w2-vil |
 | Control HEAPBAD | w2-vilhb, w4-vilhb | map FAIL (heap 0 overlaps heap 4); exercise FAIL (blocks found in heap 0, no reuse, heap 0 count underflows) |
 | Presentation seed only | village w2-vilrxp, hill w2-hillrxp, fight f4p | gameplay same (village 641 lines, hill 2187, fight 5411, hits 5 spawns 4); presentation fields differ |
-| Game seed only (SEED) | village w2-vilsd, hill w4-hillsd, fight f4s | gameplay differs (village p from 485, hill p from 369; fight: hand-back) |
-| Control RUMBLERND | village w2-vilrxr, hill w2-hillrxr, fight f4rxr | gameplay differs (village p from 485, hill p from 277) |
-| Rumble vs none | village w2-vilrx, hill w2-hillrx | gameplay same |
+| Game seed only (SEED) | village w2-vilsd, hill w4-hillsd, fight f4s | gameplay differs (village p from 485, hill p from 369; fight: Ganado positions from tick 2, **hits 4 instead of 5**) |
+| Control RUMBLERND | village w2-vilrxr, hill w2-hillrxr, fight f4rxr | gameplay differs (village p from 485, hill p from 277; fight **hits 4 instead of 5**) |
+| Rumble vs none | village w2-vilrx, hill w2-hillrx, fight f4rx | gameplay same (fight hits 5) |
+| Rumble, presentation seed only | fight f4rxp | gameplay same, hits 5 |
 | Wiring changes no gameplay | w1/w2 vs eng-e1d m2 (pre-wiring): village LT 641, hill trace 2187, fight 5411 lines | identical |
 
 Reader: `s/outcome.py` (gameplay fields: LT p, a, m, st, mi, k, r, d, ps, pf, c; hill trace v2 T/A/R; fight LT, LL,
@@ -78,7 +90,9 @@ LE, GE and the E2 EVENTS totals; LT's pm and FXCALL lines are presentation). It 
   read at open, no longer in the first picture.
 - Rows: Drawing = the renderer's stamps 5 -> 7 in Flycast as in the model (main.cpp no longer overwrites it with the
   whole call); palette, light records and route calls are in the services row in both; camera and HUD writes are in
-  the tick.
+  the tick. The ROW line's `draw` column therefore no longer holds the PVR wait or the call's set-up; eng-loop2's
+  selector (`loader/selector.c`) reads that column as its drawing row; its busy column (frame - wait - pvr) is
+  unchanged.
 - Still open: the effect service's `FX_LOG` writes to stderr (fight image, trace lines), and the presented-field
   counter from the hardware (console tooling, lane eng-loop2's area).
 
