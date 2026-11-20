@@ -11,6 +11,10 @@ console, no Flycast, no MODELLED number; no timing claim.
   r11d hill, Ashley following Leon), every bone of every actor on every tick and every collision query are the
   original's: bones equal as numbers (bit-identical but for the sign of exact zeros), queries bit-identical, traces
   bit-identical. Three controls (a parent off by one, floors 1 unit higher, the IK pass skipped) fail as they must.
+- **Cost (PC counts):** the skeleton makes 30 to 42% fewer memory accesses an actor and touches 12 to 21% fewer
+  32-byte lines for Leon and Ashley (about level for a Ganado); it now also writes the skin palette the renderer
+  multiplies out today. Collision touches about as many lines as the original (-7% to +10%): its lever is the number
+  of polygons a query tests, not their layout (section 6).
 
 ## 1. What replaces what
 
@@ -21,6 +25,15 @@ console, no Flycast, no MODELLED number; no timing claim.
 | `cModel::partsMatCalc`, `partsWorldCalc`, `matBlend`, `matUpdate`, `setPos`, `updateOldPos`, `partsFixMemory`, `partsFixAdjust`, `setParent` (both), `setPartsOffset`, `releasePartsList`, `getPartsPtr`, `GetPartsAddr` (model.cpp) | `skel.cpp` | model and parts allocation, model info, relocation |
 | `at_pos_calc` (atari.cpp: a collision push moves every bone) | `skel.cpp` | |
 | `cSatMgr::hitCheck2`, `hitCheck`, `polySphereCk` (atari.cpp) | `col.cpp` on the room's `ColPiece` tables | `check`, `checkAir`, `scrAtCheckSphere(Air)`, `wallAdjust`, `adjust`, `getFloor`, `atck` (per-model logic above the three cores); the actor volumes (`EmAtCheck`, `ObjHitCheck`, `EmHitCheck`, `cAtariInfo`, capsules) |
+
+**The collision entry points** (E1's 21 and the Ganado closure's, `hostref/closure-map*.tsv`):
+- *through the native cores:* `cSatMgr::check`, `checkAir`, `getFloor`, `hitCheck` (and `scrAtCheckSphere(Air)`,
+  `wallAdjust`, `adjust`, `atck` inside them): floors, walls, the swept sphere, line checks against the scenery;
+- *original:* the actor volumes and their tests (`cAtariInfo::init/set/move/setPriority`, `EmAtCheck`, `EmHitCheck`,
+  `ObjHitCheck`, `ObaLineHitChk`, `At_em_rect_rect_ck`, `YarareAdd/Init`, `AtSphereCapsuleCk`, `AtBoxCapsuleCk3`,
+  `At_box_sphere_ck`, `collision_sphere_hexahedron`), `EatGetEffectType`, and the route checks (`RouteCk*`,
+  `getNearPoint`, `AreaGetCenterPos`);
+- *stubs in re4ref:* the scenario item tests (`SceAt*`); debug drawing (`DrawOba`); `cubeMemoCk` is not linked.
 
 The re4ref build is the switch: `make native` links the native bodies; `game/ik.o` is left out and `motion.o`,
 `model.o`, `atari.o` are linked with the replaced functions made weak (`objcopy --weaken-symbol`, lists in
@@ -88,10 +101,10 @@ EAT files.
 A polygon test reads its 32-byte hot line, and the 64-byte cold record only if the plane test passes; the original
 reads the polygon (20 B), then a vertex and a normal, then two more vertices and three edges, from five tables. The
 walk is the original's (same box tests, same order, same per-query polygon dedupe), so the number of box and polygon
-tests is the same; what changes is where the bytes are. A first form with one 96-byte record per polygon touched more
-lines than the original (section 6): most polygons a query visits end at the plane test, and the original's shared
-vertex and edge tables are denser than three lines a polygon. The file
-stays resident: the hit report's normal pointer (`pFloor_norm`, `hitCheck2`'s `attr`) points into its normal table.
+tests is the same; what changes is where the bytes are. A first form with one 96-byte record per polygon touched up to
+19% more lines than the original (door103 146 against 123 a tick, hill 951 against 839): most polygons a query visits
+end at the plane test, and the original's shared vertex and edge tables are denser than three lines a polygon. The
+file stays resident: the hit report's normal pointer (`pFloor_norm`, `hitCheck2`'s `attr`) points into its normal table.
 
 ## 4. Fields behaviour reads, and how they are served
 
@@ -117,6 +130,10 @@ e1-route 40-600, bell 2-121, hill 2-121, follow 2-200):
 | world_old2 | R | 3.0 | 1 | `cSubChar::moveBust` | hill, follow |
 
 ("Bones" counts bone indices below 63 in the census mask; "every bone" rows are 64 because of that cap.)
+
+The census's own control: `RE4_SVC_CONTROL=plant` makes a behaviour-side unit (`svc/svc_plant.cpp`) read Leon's bone 3
+world position straight from its record once a tick; the fields table of that run lists `svc_plant_read` reading
+`world` (and `pList`, the walk to it), as it must.
 
 What it shows: outside `at_pos_calc`, the behaviour reaches a bone only through `getPartsPtr` (or `GetPartsAddr`),
 and then reads that record or, once (`moveBust`), its parent's through `pParent`. `at_pos_calc` is collision code that
@@ -182,7 +199,69 @@ why the bones are compared directly.
 
 ## 6. Cost indicator (PC counts, no timing)
 
-[COST]
+Both builds traced over the same ticks (`make census` / `make ncensus`, `RE4_SVC_TRACE=1`, check build off): door103
+1-40 (Leon idle), e1-route 200-279 (running, turning, aiming), bell 61-90 (Leon, four Ganados), hill 61-90 (Leon,
+Ashley, four Ganados), follow 31-70 (Ashley following). Operations are math library calls per tick (the native
+chain kernel's calls included); memory is every load and store the service made, and the distinct 32-byte lines (the
+SH-4 operand cache line) they touched in that tick, every entry point of the service together. x86 counts, not SH-4
+instructions; no timing. Tables per fixture: `E:\RE4DC-Lanes\eng-svc\ev\cost\cost-*.md` (`svc/svc_cost.py`).
+
+**Skeleton, memory per actor per tick** (reference / native)
+
+| Actor, fixture | Accesses | Lines | of which cParts and model records | archives (motion keys) | native tables |
+|---|---:|---:|---:|---:|---:|
+| Leon idle (door103) | 65,318 / 44,661 | 1,337 / 1,116 | 1,110 / 114 | 206 / 151 | 0 / 829 |
+| Leon running and aiming (e1-route) | 89,631 / 51,849 | 1,349 / 1,187 | 1,117 / 166 | 212 / 163 | 0 / 837 |
+| Leon (bell) | 65,084 / 44,606 | 1,325 / 1,101 | 1,107 / 118 | 198 / 155 | 0 / 807 |
+| Ganado, each of three (bell) | 25,500-26,100 / 16,200-16,500 | 631-671 / 633-665 | 352-357 / 62-116 | 260-295 / 194-219 | 0 / 312-357 |
+| Ganado, each of four (hill) | 25,100-26,100 / 15,900-16,500 | 654-692 / 628-664 | 358-360 / 63-64 | 262-300 / 193-221 | 0 / 309-344 |
+| Ashley (hill) | 120,117 / 75,210 | 1,926 / 1,528 | 1,569 / 108 | 322 / 278 | 0 / 1,106 |
+| Ashley following (follow) | 125,906 / 75,997 | 1,830 / 1,481 | 1,513 / 114 | 296 / 253 | 0 / 1,093 |
+| Handgun (door103) | 2,698 / 1,882 | 66 / 69 | 59 / 22 | 7 / 7 | 0 / 40 |
+| Palette, every table once a tick (door103 / bell / hill) | 0 / 4,817, 10,165, 17,558 | 0 / 557, 1,201, 1,893 | | | |
+
+- **Accesses fall 30 to 42% an actor; lines touched fall 12 to 21% for Leon and Ashley and stay about level for a
+  Ganado** (-6% to +5%; 34 bones: the table's rows are touched nearly whole every tick).
+- **The cParts records drop from 1,107-1,569 lines to 62-166** (the mailbox); the native tables are 807-1,106 lines.
+- **The palette is new work for the service** (557 lines a tick for Leon and the handgun): the E1 renderer does that
+  multiplication today in drawing (actor_e1.inc step 2), so it moves from the Drawing row to the Services row.
+- **Where the native lines go** (Leon, 829): world records 238, local matrices 179, key histories 134, pose and
+  history rows about 280. Two levers measured, not done: `updateOldPos` copies the world history of every bone each
+  tick (9 rows, 135 lines for Leon) while code reads it for 1 to 3 bones; converting the keys offline removes the key
+  history (134 lines) and the archive reads (151 lines).
+
+**Skeleton, operations per actor per tick** (reference / native)
+
+| Actor, fixture | Matrix x matrix (C library) | XMTRX apply | XMTRX column scale | XMTRX load | Matrix x vector | Inverse | Quaternion | Trig | Key segments |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Leon idle (door103) | 565.7 / 65.0 | 0 / 362.5 | 0 / 138.3 | 0 / 203.9 | 392.5 / 392.5 | 27.0 / 27.0 | 32.6 / 32.6 | 740 / 740 | 60.2 / 60.2 |
+| Leon running and aiming (e1-route) | 1,185.5 / 63.0 | 0 / 398.5 | 0 / 724.0 | 0 / 375.5 | 427.7 / 427.7 | 25.6 / 25.6 | 115.9 / 115.9 | 847 / 847 | 64.0 / 64.0 |
+| Ganado (bell, em1) | 308.7 / 28.1 | 0 / 104.8 | 0 / 175.8 | 0 / 91.9 | 124.9 / 124.9 | 10.0 / 10.0 | 14.3 / 14.3 | 216 / 216 | 51.7 / 51.7 |
+| Ashley (hill) | 1,352.2 / 54.0 | 0 / 440.4 | 0 / 857.8 | 0 / 429.5 | 469.0 / 469.0 | 22.0 / 22.0 | 430.1 / 430.1 | 1,491 / 1,491 | 103.3 / 103.3 |
+
+- The C matrix products of the world pass become XMTRX applies (one per bone); the non-uniform scale form (blended
+  poses) becomes one apply and two column scales instead of three products and two scale matrices.
+- Everything else is the same count: same arithmetic, same key decoder, same IK, hokan and blends.
+
+**Collision, all queries of a tick** (reference / native; the scenery and effect queries together)
+
+| Fixture | Accesses | Lines | of which the room's collision files | native tables | Most lines in one tick |
+|---|---:|---:|---:|---:|---:|
+| door103 | 3,533 / 4,327 | 123 / 135 | 89 / 0 | 0 / 100 | 89 / 100 |
+| e1-route | 4,244 / 5,080 | 164 / 180 | 92 / 0 | 0 / 136 | 506 / 459 |
+| bell | 12,576 / 13,375 | 622 / 581 | 538 / 0 | 0 / 496 | 1,370 / 1,310 |
+| hill | 23,461 / 22,388 | 839 / 787 | 713 / 1 | 0 / 658 | 1,075 / 1,016 |
+| follow | 7,614 / 8,939 | 200 / 216 | 124 / 1 | 0 / 161 | 602 / 509 |
+
+- **About level:** lines -7% to +10%, the worst tick 4 to 15% lower in four of five fixtures. The box tests and
+  polygon tests are the original's in number (same walk); the original's shared vertex and edge tables are already
+  dense.
+- **The collision lever is the number of polygons a query tests**, not their layout: 35,399 line-polygon tests for
+  4,714 line queries on door103 (7.5 each) and 934,473 for 31,473 on the hill (30 each). Testing fewer with the same
+  results needs a finer index that replays the original's visit order (the sphere's pushes are order dependent);
+  not done.
+- The actor-volume tests (`EmAtCheck`, original code) cost about 20% more accesses natively: each `getPartsPtr` they
+  make now does the mailbox's bookkeeping.
 
 ## 7. What the engine image must change to use them
 
@@ -214,8 +293,8 @@ why the bones are compared directly.
 | `svc/svc_compare.py <ref> <native>` | bones and collision queries, tick by tick |
 | `svc/census.py`, `svc/fields_table.py`, `svc/svc_cost.py` | census summaries; the fields table; the cost table |
 
-Controls by environment: `RE4_SVC_CONTROL=parent=<bone>`, `floor=<units>`, `noik`; `RE4_SVC_POISON=0` turns the check
-build's poison off.
+Controls by environment: `RE4_SVC_CONTROL=parent=<bone>`, `floor=<units>`, `noik` (native build), `plant` (census
+builds); `RE4_SVC_POISON=0` turns the check build's poison and shadow off.
 
 ## 9. Limits and what is not done
 
