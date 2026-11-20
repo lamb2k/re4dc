@@ -51,6 +51,8 @@ extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
 extern "C" SkelCounters skel_cnt __attribute__((weak));
 extern "C" ColCounters col_cnt __attribute__((weak));
 extern "C" ClothCounters cloth_cnt __attribute__((weak));
+extern "C" u32 cloth_chain_count(void) __attribute__((weak));
+extern "C" ClothChain* cloth_chain_at(u32 i) __attribute__((weak));
 extern "C" int skel_control_parent __attribute__((weak));
 extern "C" int skel_control_no_ik __attribute__((weak));
 extern "C" int skel_poison __attribute__((weak));
@@ -195,13 +197,36 @@ extern "C" void host_svc_finish()
         fprintf(f, "motion samples: integer frame %u fractional %u at or past the end %u\n", s.samp_int, s.samp_frac, s.samp_end);
         fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u from cold keys %u original decoder %u\n", s.mk_bound,
                 s.mk_unbound, s.mk_rows, s.mk_cold, s.mk_orig);
-        if (&cloth_cnt)
+        if (&cloth_cnt) {
             fprintf(f, "cloth: chains %u (original fallback %u), steps %u, links stepped %u, volumes built %u, resets %u\n",
                     cloth_cnt.chains, cloth_cnt.fallback, cloth_cnt.moves, cloth_cnt.links, cloth_cnt.at_volumes, cloth_cnt.resets);
+            // the chains' link bones by model code (pal.bin's), for svc/cloth_stats.py
+            const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
+            for (u32 i = 0; i < cloth_chain_count(); i++) {
+                ClothChain* ch = cloth_chain_at(i);
+                const u32 a = (u32) ch->m;
+                const u32 code = a >= elo && a < elo + EmMgr.size * EmMgr.nArray ? (a - elo) / EmMgr.size
+                                                                                 : 64 + (a - olo) / ObjMgr.size;
+                fprintf(f, "chain %u model %u links", i, code);
+                for (u32 k = 0; k < ch->n; k++) fprintf(f, " %u", ch->link[k].bone);
+                fprintf(f, "\n");
+            }
+        }
         fprintf(f, "history: bones joined %u (after the first updateOldPos %u), bone moves %u, set full %u\n", s.hist_join,
                 s.hist_late, s.hist_moves, s.hist_full);
         fclose(f);
     }
+}
+
+// ---- the cloth's comparison mode (lane eng-svc2): RE4_SVC_CLOTH_WIND=0 sets every chain's no-wind flag (0x40) as
+// it is set up, in both builds, so the cloth draws no random number and native and original compare bit for bit ----
+#include "pendulum.h"
+extern "C" void __real_PenClothSet(cModel* m, PenCloth* c, f32 len);
+extern "C" void __wrap_PenClothSet(cModel* m, PenCloth* c, f32 len)
+{
+    const char* w = svc_env("RE4_SVC_CLOTH_WIND");
+    if (w && *w == '0') c->Flag |= 0x40;
+    __real_PenClothSet(m, c, len);
 }
 
 // ---- the collision boundary log (--wrap) ----

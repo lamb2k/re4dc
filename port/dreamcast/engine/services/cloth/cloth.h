@@ -16,7 +16,10 @@
 //   cold [n]    48 B   rest direction (PenClothReset), half distances to the four side links, fixed position
 //   atBone [2 x volumes] the collision volumes' two bones
 // Arithmetic: the original's operations in its order (the same math library calls), so on the PC every value is the
-// original's bits; the random-number calls (wind phase, floor jitter) are the original's, in its order.
+// original's bits when the wind is off. Random numbers (owner 2026-11-19, "Split it"): the cloth is presentation, so
+// its draws (the wind phase, the floor jitter) come from the engine's presentation generator, never from the
+// behaviour's Rnd. Here that is one xorshift32 state a chain (cloth_rng), seeded from the chain's set-up order: the
+// draws of one chain do not depend on any other chain or on behaviour, and cost a shift-xor and a multiply.
 #pragma once
 #include "types.h"
 #include "vec.h"
@@ -57,7 +60,8 @@ struct ClothChain {      // 64 B header
     u16 n, nAt;
     u32 serial;
     u32 bytes;
-    u32 pad[6];
+    u32 rng;             // the chain's presentation generator (xorshift32)
+    u32 pad[5];
 };
 
 extern "C" {
@@ -69,7 +73,7 @@ extern ClothCounters cloth_cnt;
 // controls (lane eng-svc2: each must make the equivalence check fail)
 extern int cloth_control_short;      // the last link of every chain left out (wrong chain length)
 extern int cloth_control_nogravity;  // gravity off
-extern int cloth_control_droprng;    // the first wind-phase draw of the run skipped (one generator call dropped)
+extern int cloth_control_wind;       // the wind's push twice as strong (the statistics check must fail)
 u32 cloth_chain_count(void);
 ClothChain* cloth_chain_at(u32 i);
 }

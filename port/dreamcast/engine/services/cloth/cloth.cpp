@@ -3,7 +3,7 @@
 // Engine bodies for game/pendulum.cpp's PenClothSet, PenClothMove, PenClothMove3, PenClothFixSet, PenClothFixClear
 // and its static PenClothReset / penClothAtMake, on ClothChain link arrays and the skeleton service's tables. Every
 // float operation is the original's, in its order, through the same math library calls; the random-number calls
-// are the original's, in its order. What stays original and is called as it is: the link-against-volume tests
+// come from the chain's presentation generator (cloth.h). What stays original and is called as it is: the link-against-volume tests
 // (penClothAtCk, penClothAtCkBorder, penClothAtCkParallel: pure arithmetic on the volume list), PenClothMove2 (the
 // enemy weapons' flails) and the global wind (PenWindSet). A chain this service cannot resolve (a parts table outside
 // the owner's bones, a neighbour that is not a link of the chain, a link set up from an upper link set up after it)
@@ -34,7 +34,7 @@ extern "C" {
 ClothCounters cloth_cnt;
 int cloth_control_short;
 int cloth_control_nogravity;
-int cloth_control_droprng;
+int cloth_control_wind;
 }
 
 namespace {
@@ -51,7 +51,19 @@ PenAtWork* g_atwk;
 ClothChain* g_ch[kMaxChains];
 u32 g_nch;
 u32 g_serial;
-int g_dropped;
+
+// the chain's presentation generator: xorshift32, [0, 1) and [-1, 1) as fRand0_1 / fRand1_1 give them
+inline u32 rng_next(ClothChain* ch)
+{
+    u32 x = ch->rng;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    ch->rng = x;
+    return x;
+}
+inline f32 rng01(ClothChain* ch) { return (f32) (rng_next(ch) >> 8) * (1.0f / 16777216.0f); }
+inline f32 rng11(ClothChain* ch) { return rng01(ch) * 2.0f - 1.0f; }
 
 void* alloc(u32 bytes)
 {
@@ -184,6 +196,7 @@ ClothChain* build(cModel* m, PenCloth* c)
         ch->cold = (ClothCold*) (blk + 64 + 64 * n);
         ch->atBone = blk + 64 + 112 * n;
         ch->serial = ++g_serial;
+        ch->rng = 0x9E3779B9u * ch->serial ^ 0x2545F491u;
         g_ch[g_nch++] = ch;
     }
     ch->c = c;
@@ -320,21 +333,21 @@ inline void floor_ck(PenCloth* c, ClothChain* ch, u32 i, f32 floorY)
         if (L.up != CLOTH_NONE) {
             const ClothLink& U = ch->link[L.up];
             if (L.pos.x == U.pos.x && L.pos.z == U.pos.z) {
-                L.pos.x += fRand1_1();
-                L.pos.z += fRand1_1();
+                L.pos.x += rng11(ch);
+                L.pos.z += rng11(ch);
             }
         }
     }
 }
 // PEN_FLOOR_CK3: both ends of a constraint
-inline void floor_ck3(PenCloth* c, ClothLink& L, ClothLink& U, f32 floorY)
+inline void floor_ck3(PenCloth* c, ClothChain* ch, ClothLink& L, ClothLink& U, f32 floorY)
 {
     if (c->Flag & 0x100) return;
     if (L.pos.y < floorY) {
         L.pos.y = floorY;
         if (L.pos.x == U.pos.x && L.pos.z == U.pos.z) {
-            L.pos.x += fRand1_1();
-            L.pos.z += fRand1_1();
+            L.pos.x += rng11(ch);
+            L.pos.z += rng11(ch);
         }
     }
     if (U.pos.y < floorY) U.pos.y = floorY;
@@ -371,14 +384,7 @@ void step_begin(ClothChain* ch, Step& s)
     if (!(c->Flag & 1)) s.at = at_make(ch);
     f32 ang = 1.0f;
     if (!(c->Flag & 0x40)) {
-        f32 r;
-        if (cloth_control_droprng && !g_dropped) {   // control: one generator call dropped
-            g_dropped = 1;
-            r = 0.0f;
-        } else {
-            r = fRand0_1();
-        }
-        c->WindSin += r * GlobalWindAdd;
+        c->WindSin += rng01(ch) * GlobalWindAdd;
         c->WindSin = LIMIT_ANGLE(c->WindSin);
         PSVECScale(&GlobalWind, &s.wind, sinf(c->WindSin) + ang);
     }
@@ -473,8 +479,8 @@ void matrices(ClothChain* ch, const Step& s)
             if (L.pos.y < s.floorY) {
                 L.pos.y = s.floorY;
                 if (U && L.pos.x == U->pos.x && L.pos.z == U->pos.z) {
-                    L.pos.x += fRand1_1();
-                    L.pos.z += fRand1_1();
+                    L.pos.x += rng11(ch);
+                    L.pos.z += rng11(ch);
                 }
             }
         }
@@ -581,6 +587,7 @@ void move1(ClothChain* ch)
                         PSVECScale(&v, &v, ang);
                         PSVECScale(&v, &v, c->pWindRate[i]);
                     }
+                    if (cloth_control_wind) PSVECScale(&v, &v, 2.0f);   // control: the wind twice as strong
                     PSVECAdd(&L.pos, &v, &L.pos);
                 }
             }
@@ -687,14 +694,14 @@ void move3(ClothChain* ch)
                     if (c->pUpLeft && c->pUpLeft[i] < 0xFF) {
                         ClothLink& U = ch->link[L.side[2]];
                         penClothAtCkParallel(&L.pos, &U.pos, s.at);
-                        floor_ck3(c, L, U, s.floorY);
+                        floor_ck3(c, ch, L, U, s.floorY);
                         fix(ch, i);
                         fix(ch, L.side[2]);
                     }
                     if (c->pUpRight && c->pUpRight[i] < 0xFF) {
                         ClothLink& U = ch->link[L.side[3]];
                         penClothAtCkParallel(&L.pos, &U.pos, s.at);
-                        floor_ck3(c, L, U, s.floorY);
+                        floor_ck3(c, ch, L, U, s.floorY);
                         fix(ch, i);
                         fix(ch, L.side[3]);
                     }
@@ -708,7 +715,7 @@ void move3(ClothChain* ch)
                         PSVECScale(&v, &v, (d * 0.5f - (C.dist[q])) * c->Stretchy / d);
                         PSVECAdd(&L.pos, &v, &L.pos);
                         PSVECSubtract(&U.pos, &v, &U.pos);
-                        floor_ck3(c, L, U, s.floorY);
+                        floor_ck3(c, ch, L, U, s.floorY);
                         fix(ch, i);
                         fix(ch, L.side[q]);
                     }
@@ -721,7 +728,7 @@ void move3(ClothChain* ch)
                     PSVECScale(&v, &v, (d - L.len) * 0.5f * c->Stretchy / d);
                     PSVECAdd(&L.pos, &v, &L.pos);
                     PSVECSubtract(&U.pos, &v, &U.pos);
-                    floor_ck3(c, L, U, s.floorY);
+                    floor_ck3(c, ch, L, U, s.floorY);
                     fix(ch, i);
                     fix(ch, L.up);
                 } else {

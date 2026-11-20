@@ -107,7 +107,7 @@ extern "C" int col_control_grid __attribute__((weak));
 extern "C" int col_verify __attribute__((weak));
 extern "C" int col_grid_off __attribute__((weak));
 extern "C" int cloth_control_nogravity __attribute__((weak));
-extern "C" int cloth_control_droprng __attribute__((weak));
+extern "C" int cloth_control_wind __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
 {
     const char* c = getenv("RE4_SVC_CONTROL");
@@ -120,7 +120,7 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "clothshort", 10) && &cloth_control_short) cloth_control_short = 1;
         if (!strncmp(c, "colgrid", 7) && &col_control_grid) col_control_grid = 1;
         if (!strncmp(c, "clothnograv", 11) && &cloth_control_nogravity) cloth_control_nogravity = 1;
-        if (!strncmp(c, "clothdroprng", 12) && &cloth_control_droprng) cloth_control_droprng = 1;
+        if (!strncmp(c, "clothwind", 9) && &cloth_control_wind) cloth_control_wind = 1;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
     uint32_t all;

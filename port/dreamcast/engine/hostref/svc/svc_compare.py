@@ -2,7 +2,10 @@
 """svc_compare.py: the original skeleton and collision units against the native services, tick by tick
 (lane eng-svc; docs/engine/SERVICES.md "Equivalence").
 
-    svc_compare.py <reference dir> <native dir> [--json out.json] [--pos 1.0] [--deg 0.1] [--col 0.01]
+    svc_compare.py <reference dir> <native dir> [--json out.json] [--pos 1.0] [--deg 0.1] [--col 0.01] [--skip-cloth]
+
+--skip-cloth (lane eng-svc2): the cloth chains' link bones (the native svc.txt's "chain" lines) are left out of the
+bone check: with the wind on, the cloth's presentation generator swings them in another phase (cloth_stats.py).
 
 Both directories hold what svc_dump.cpp writes (pal.bin, col.txt). Checks:
   bones      every live model with parts, every tick, every bone: world position and world matrix translation
@@ -53,7 +56,7 @@ def axes_deg(a, b):
     return np.degrees(np.arccos(dot)).max(axis=1)
 
 
-def compare_bones(ra, rb, tol_pos, tol_deg):
+def compare_bones(ra, rb, tol_pos, tol_deg, skip=None):
     res = {"ticks": 0, "bones": 0, "bit_identical_bones": 0, "equal_bones": 0, "max_pos": 0.0, "max_deg": 0.0, "max_pal_pos": 0.0,
            "max_pal_deg": 0.0, "first": None, "over": 0, "missing": 0}
     for t in sorted(set(ra) | set(rb)):
@@ -70,11 +73,15 @@ def compare_bones(ra, rb, tol_pos, tol_deg):
                 if res["first"] is None:
                     res["first"] = {"tick": t, "actor": code, "what": "model missing or bone count differs"}
                 continue
-            a, b = ma[code].astype(np.float64), mb[code].astype(np.float64)
+            keep = np.ones(ma[code].shape[0], dtype=bool)
+            if skip and code in skip:
+                keep[[b for b in skip[code] if b < len(keep)]] = False
+            A, B = ma[code][keep], mb[code][keep]
+            a, b = A.astype(np.float64), B.astype(np.float64)
             res["bones"] += a.shape[0]
-            res["bit_identical_bones"] += int(np.all(ma[code].view("<u4") == mb[code].view("<u4"), axis=1).sum())
+            res["bit_identical_bones"] += int(np.all(A.view("<u4") == B.view("<u4"), axis=1).sum())
             # equal as numbers (+0 and -0 equal: the C matrix library and XMTRX differ only in the sign of exact zeros)
-            res["equal_bones"] += int(np.all((ma[code] == mb[code]) | (np.isnan(ma[code]) & np.isnan(mb[code])), axis=1).sum())
+            res["equal_bones"] += int(np.all((A == B) | (np.isnan(A) & np.isnan(B)), axis=1).sum())
             # world translation (matrix column 3), world position, palette translation
             ta = a[:, [3, 7, 11]]; tb = b[:, [3, 7, 11]]
             wa = a[:, 12:15]; wb = b[:, 12:15]
@@ -212,7 +219,14 @@ def main():
         if k in sys.argv:
             opt[k] = float(sys.argv[sys.argv.index(k) + 1])
     js = sys.argv[sys.argv.index("--json") + 1] if "--json" in sys.argv else None
-    bones = compare_bones(read_pal(a + "/pal.bin"), read_pal(b + "/pal.bin"), opt["--pos"], opt["--deg"])
+    skip = None
+    if "--skip-cloth" in sys.argv:
+        skip = {}
+        for line in open(b + "/svc.txt"):
+            if line.startswith("chain "):
+                w = line.split()
+                skip.setdefault(int(w[3]), []).extend(int(x) for x in w[5:])
+    bones = compare_bones(read_pal(a + "/pal.bin"), read_pal(b + "/pal.bin"), opt["--pos"], opt["--deg"], skip)
     col = compare_col(a + "/col.txt", b + "/col.txt", opt["--col"])
     hist = None
     try:

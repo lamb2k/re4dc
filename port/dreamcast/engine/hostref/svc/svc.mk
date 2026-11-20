@@ -9,24 +9,31 @@
 # lane eng-svc2: every svc build hosts the original cloth (game/pendulum.cpp; the plain build keeps host_stubs.cpp's
 # PenClothSet / PenClothMove / PenClothMove3 stubs, which the svc builds link weakened).
 PEN_STUBS := PenClothSet PenClothMove PenClothMove3
+# Random numbers are split (owner 2026-11-19): the cloth is presentation and draws from the engine's presentation
+# generator, never from the behaviour's Rnd. The hosted original's fRand0_1 / fRand1_1 are renamed to pen_fRand*
+# (svc_cloth_glue.cpp: a presentation stream of its own), so both builds leave the behaviour's Rnd untouched.
+PEN_RAND := fRand0_1=pen_fRand0_1 fRand1_1=pen_fRand1_1
+$(BUILD)/svc/ref/pendulum.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy $(foreach s,$(PEN_RAND),--redefine-sym $(s)) $< $@
 SVC_HG_OBJS := $(filter-out $(BUILD)/plain/host/host_stubs.o,$(plain_HG_OBJS)) $(BUILD)/svc/host_stubs.o $(BUILD)/svc/svc_cloth_glue.o
 $(BUILD)/svc/svc_cloth_glue.o: svc/svc_cloth_glue.cpp hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
-SVC_REF_GAME := $(plain_GAME_OBJS) $(BUILD)/plain/game/pendulum.o
+SVC_REF_GAME := $(plain_GAME_OBJS) $(BUILD)/svc/ref/pendulum.o
 $(BUILD)/svc/host_stubs.o: $(BUILD)/plain/host/host_stubs.o svc/svc.mk
 	@mkdir -p $(dir $@)
 	objcopy $(foreach s,$(PEN_STUBS),--weaken-symbol=$(s)) $< $@
 
 CEN := $(BUILD)/census
-CENSUS_S_UNITS := model motion cMotBase ik shape pl_cloth pendulum atari at_mod at_sub at_sub2 atariInfo route_ck area
+CENSUS_S_UNITS := model motion cMotBase ik shape pl_cloth atari at_mod at_sub at_sub2 atariInfo route_ck area
 CENSUS_M_UNITS := math_sub sub2
 CENSUS_OBJS := $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS)
 
 $(CEN)/wraps.flags: $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) svc/gen_wraps.py
 	@mkdir -p $(CEN)
 	$(PY) svc/gen_wraps.py $(CEN)/wraps.S $(CEN)/wrapnames.cpp $@ \
-	    $(foreach u,$(CENSUS_S_UNITS),S:$(BUILD)/plain/game/$(u).o) \
+	    $(foreach u,$(CENSUS_S_UNITS),S:$(BUILD)/plain/game/$(u).o) S:$(BUILD)/svc/ref/pendulum.o \
 	    $(foreach u,$(CENSUS_M_UNITS),M:$(BUILD)/plain/game/$(u).o) \
 	    $(foreach o,$(plain_SDK_OBJS) $(plain_LIBM_OBJS),M:$(o))
 $(CEN)/wraps.S $(CEN)/wrapnames.cpp: $(CEN)/wraps.flags
@@ -63,7 +70,7 @@ SVC_ENG := $(ROOT)/port/dreamcast/engine/services
 SHZ := $(GAME)/third_party/sh4zam
 SVC_WRAP_COL := _ZN7cSatMgr8getFloorEP3VecffPmi _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii \
                 _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i _ZN7cSatMgr5checkEP6cModeli _ZN7cSatMgr8checkAirEP6cModeli
-SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL),-Wl,--wrap=$(s))
+SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc
 WEAK_model := _ZN6cModel11getPartsPtrEi _ZN6cModel12partsMatCalcEv _ZN6cModel14partsWorldCalcEv _ZN6cModel8matBlendEf \
               _ZN6cModel9matUpdateEv _ZN6cModel12updateOldPosEv _ZN6cModel6setPosEP3Vec _ZN6cModel14partsFixMemoryEi \
@@ -84,7 +91,7 @@ NATIVE_GAME_OBJS := $(filter-out $(NATIVE_REPLACED),$(plain_GAME_OBJS)) $(NAT)/w
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
 	@mkdir -p $(dir $@)
-	objcopy $(foreach s,$(PEN_ORIG),--redefine-sym $(s)) $< $@
+	objcopy $(foreach s,$(PEN_ORIG) $(PEN_RAND),--redefine-sym $(s)) $< $@
 $(NAT)/cloth.o: $(SVC_ENG)/cloth/cloth.cpp $(SVC_ENG)/cloth/cloth.h $(SVC_ENG)/skeleton/skel.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
