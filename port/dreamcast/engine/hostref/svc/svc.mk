@@ -28,8 +28,11 @@ $(CEN)/svc_trace.o: svc/svc_trace.cpp svc/svc_census.h hostref.h
 $(CEN)/svc_glue.o: svc/svc_glue.cpp svc/svc_census.h hostref.h
 	@mkdir -p $(CEN)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
-$(CEN)/re4ref: $(CENSUS_OBJS) $(CEN)/wraps.o $(CEN)/wrapnames.o $(CEN)/svc_trace.o $(CEN)/svc_glue.o aliases.ld
-	$(CC) -o $@ $(plain_PC_OBJS) $(plain_HG_OBJS) $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(CEN)/wraps.o $(CEN)/wrapnames.o \
+$(BUILD)/plant/svc_plant.o: svc/svc_plant.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+$(CEN)/re4ref: $(CENSUS_OBJS) $(CEN)/wraps.o $(CEN)/wrapnames.o $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/plant/svc_plant.o aliases.ld
+	$(CC) -o $@ $(plain_PC_OBJS) $(plain_HG_OBJS) $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/plant/svc_plant.o $(CEN)/wraps.o $(CEN)/wrapnames.o \
 	    $(plain_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) \
 	    $$(cat $(CEN)/wraps.flags) -Wl,--wrap=host_fixed -Wl,-Map=$(CEN)/re4ref.map
 
@@ -115,9 +118,9 @@ $(NCEN)/wrapnames.o: $(NCEN)/wrapnames.cpp
 	$(CXX) -m32 -c $< -o $@
 $(NCEN)/re4ref: $(plain_PC_OBJS) $(plain_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) $(NAT)/skel.o \
                 $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/shz_xmtrx_sw.o $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/svc/svc_io.o \
-                $(NCEN)/wraps.o $(NCEN)/wrapnames.o aliases.ld
+                $(NCEN)/wraps.o $(NCEN)/wrapnames.o $(BUILD)/plant/svc_plant.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(plain_HG_OBJS) $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/svc/svc_io.o $(NCEN)/wraps.o \
-	    $(NCEN)/wrapnames.o $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) \
+	    $(NCEN)/wrapnames.o $(BUILD)/plant/svc_plant.o $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) \
 	    $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $$(cat $(NCEN)/wraps.flags) -Wl,--wrap=host_fixed \
 	    -Wl,-Map=$(NCEN)/re4ref.map
 ncensus: $(NCEN)/re4ref

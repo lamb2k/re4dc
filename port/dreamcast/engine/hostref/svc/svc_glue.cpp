@@ -61,8 +61,16 @@ extern "C" void host_svc_ready()
     g_actors_len = (unsigned) sprintf(g_actors, "# code\tpool\tslot\tid\ttype\tnparts\tfirst_tick\n");
 }
 
+extern "C" void svc_plant_read();   // svc_plant.cpp: the census's control
+extern "C" char* getenv(const char*);
+
 extern "C" void host_svc_tick(unsigned t, int begin)
 {
+    static int plant = -1;
+    if (plant < 0) {
+        const char* c = getenv("RE4_SVC_CONTROL");
+        plant = c && c[0] == 'p' && c[1] == 'l' && c[2] == 'a' && c[3] == 'n' && c[4] == 't';
+    }
     if (!begin && skel_publish_all) skel_publish_all();   // the palette, once a tick (traced: native work)
     if (begin) {
         __builtin_memset(g_owner, 250, sizeof g_owner);
@@ -73,6 +81,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
         svc_census_parts((u32) PartsMgr.pArray, PartsMgr.size, PartsMgr.nArray < 4096 ? PartsMgr.nArray : 4096, g_owner, g_bone);
     }
     svc_census_tick(t, begin);
+    if (begin && plant) svc_plant_read();   // traced: after the tick's arming
 }
 
 extern "C" void host_svc_finish() { svc_census_finish(g_actors); }

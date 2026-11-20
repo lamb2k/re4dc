@@ -54,7 +54,7 @@ void count_tree(cSatBlock* blk, BakeCount* c)
         }
     }
 }
-void fill_tri(ColTri* t, cSat* sat, u16 no, bool floorGroup)
+void fill_tri(ColHot* t, ColCold* u, cSat* sat, u16 no, bool floorGroup)
 {
     AtPoly* p = &sat->poly_p[no];
     const Vec* v0 = &sat->vtx[p->v[0]];
@@ -62,19 +62,19 @@ void fill_tri(ColTri* t, cSat* sat, u16 no, bool floorGroup)
     const Vec* v2 = &sat->vtx[p->v[2]];
     const f32 dy = floorGroup ? col_control_floor : 0.0f;
     t->v0[0] = v0->x; t->v0[1] = v0->y + dy; t->v0[2] = v0->z;
-    t->v1[0] = v1->x; t->v1[1] = v1->y + dy; t->v1[2] = v1->z;
-    t->v2[0] = v2->x; t->v2[1] = v2->y + dy; t->v2[2] = v2->z;
+    u->v1[0] = v1->x; u->v1[1] = v1->y + dy; u->v1[2] = v1->z;
+    u->v2[0] = v2->x; u->v2[1] = v2->y + dy; u->v2[2] = v2->z;
     if (dy == 0.0f) {   // exact copies when no control is set (v + 0.0f is v for every finite v but -0)
-        t->v0[1] = v0->y; t->v1[1] = v1->y; t->v2[1] = v2->y;
+        t->v0[1] = v0->y; u->v1[1] = v1->y; u->v2[1] = v2->y;
     }
     const Vec* n = &sat->norm_p[p->n];
     t->n[0] = n->x; t->n[1] = n->y; t->n[2] = n->z;
     const Vec* e0 = &sat->edge_p[p->e[0]];
     const Vec* e1 = &sat->edge_p[p->e[1]];
     const Vec* e2 = &sat->edge_p[p->e[2]];
-    t->e0[0] = e0->x; t->e0[1] = e0->y; t->e0[2] = e0->z;
-    t->e1[0] = e1->x; t->e1[1] = e1->y; t->e1[2] = e1->z;
-    t->e2[0] = e2->x; t->e2[1] = e2->y; t->e2[2] = e2->z;
+    u->e0[0] = e0->x; u->e0[1] = e0->y; u->e0[2] = e0->z;
+    u->e1[0] = e1->x; u->e1[1] = e1->y; u->e1[2] = e1->z;
+    u->e2[0] = e2->x; u->e2[1] = e2->y; u->e2[2] = e2->z;
     t->attr = (p->attrHi << 16) | p->attrLo;
     t->poly = no;
     t->nidx = p->n;
@@ -123,7 +123,8 @@ ColPiece* bake(cSat* sat)
     const u32 oLeafN = off; off = align32(off + 2 * c.nodes);
     const u32 oLeaf = off; off = align32(off + sizeof(ColLeaf) * c.leaves);
     const u32 oIdx = off; off = align32(off + 2 * c.idx);
-    const u32 oTri = off; off = align32(off + sizeof(ColTri) * nPoly);
+    const u32 oHot = off; off = align32(off + sizeof(ColHot) * nPoly);
+    const u32 oCold = off; off = align32(off + sizeof(ColCold) * nPoly);
     u8* blk = (u8*) svc_pool_carve(off);
     if (!blk) return 0;
     memset(blk, 0, off);
@@ -144,14 +145,15 @@ ColPiece* bake(cSat* sat)
     pc->nodeLeaf = (u16*) (blk + oLeafN);
     pc->leaf = (ColLeaf*) (blk + oLeaf);
     pc->idx = (u16*) (blk + oIdx);
-    pc->tri = (ColTri*) (blk + oTri);
+    pc->hot = (ColHot*) (blk + oHot);
+    pc->cold = (ColCold*) (blk + oCold);
     BakeFill f = {pc, 0, 0, 0};
     fill_tree(sat->block_p, sat, &f);
     // the floor group: polygons [0, floors + slopes) of the file (cSatFile counts); the control raises them
     const u32 nFloorPolys = (u32) sat->floor_num + sat->slope_num;
-    for (u32 i = 0; i < nPoly; i++) fill_tri(&pc->tri[i], sat, (u16) i, i < nFloorPolys);
+    for (u32 i = 0; i < nPoly; i++) fill_tri(&pc->hot[i], &pc->cold[i], sat, (u16) i, i < nFloorPolys);
     col_cnt.bakes++;
-    col_cnt.tri_bytes += sizeof(ColTri) * nPoly;
+    col_cnt.tri_bytes += (sizeof(ColHot) + sizeof(ColCold)) * nPoly;
     return pc;
 }
 
@@ -168,12 +170,10 @@ ColPiece* piece_for(cSat* sat)
 }
 
 // ---- the line test (at_sub.cpp At_poly_line_ck on a table triangle) ----
-inline u32 line_tri(const ColTri* t, Vec* out, Vec* vert0, Vec* vert1, u32 flag, u32 mask)
+inline u32 line_tri(const ColHot* t, const ColCold* u, Vec* out, Vec* vert0, Vec* vert1, u32 flag, u32 mask)
 {
     Vec d0, d1, c, a, b;
     const Vec* v0 = (const Vec*) t->v0;
-    const Vec* v1 = (const Vec*) t->v1;
-    const Vec* v2 = (const Vec*) t->v2;
     const Vec* nrm = (const Vec*) t->n;
     f32 dp0, dp1, tt, s0, s1;
     u32 attr;
@@ -189,15 +189,18 @@ inline u32 line_tri(const ColTri* t, Vec* out, Vec* vert0, Vec* vert1, u32 flag,
     dp1 = d1.x * nrm->x + d1.y * nrm->y;
     dp1 += d1.z * nrm->z;
     if (dp0 * dp1 > 0.0f) return 0;
+    col_cnt.cold_line++;
+    const Vec* v1 = (const Vec*) u->v1;
+    const Vec* v2 = (const Vec*) u->v2;
     PSVECSubtract(vert1, vert0, &a);
     PSVECSubtract(vert0, v0, &b);
-    PSVECCrossProduct((const Vec*) t->e0, &a, &c);
+    PSVECCrossProduct((const Vec*) u->e0, &a, &c);
     if (PSVECDotProduct(&c, &b) < 0.0f) return 0;
     PSVECSubtract(vert0, v1, &b);
-    PSVECCrossProduct((const Vec*) t->e1, &a, &c);
+    PSVECCrossProduct((const Vec*) u->e1, &a, &c);
     if (PSVECDotProduct(&c, &b) < 0.0f) return 0;
     PSVECSubtract(vert0, v2, &b);
-    PSVECCrossProduct((const Vec*) t->e2, &a, &c);
+    PSVECCrossProduct((const Vec*) u->e2, &a, &c);
     if (PSVECDotProduct(&c, &b) < 0.0f) return 0;
     tt = -dp0 / PSVECDotProduct(&a, nrm);
     if (tt >= 1.0f || tt < 0.0f) return 0;
@@ -274,12 +277,12 @@ int line_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, int flag, int mask
         int r = 0;
         for (u32 i = a; i < b; i++) {
             const u32 no = pc->idx[i];
-            const ColTri* t = &pc->tri[no];
+            const ColHot* t = &pc->hot[no];
             const u32 bit = 1u << (no & 7);
             if (g_bits[no >> 3] & bit) continue;
             g_bits[no >> 3] |= bit;
             col_cnt.tris_line++;
-            u32 at = line_tri(t, &h, pos0, pos1, flag, mask);
+            u32 at = line_tri(t, &pc->cold[no], &h, pos0, pos1, flag, mask);
             if (at) {
                 if (GetDistance(pos0, &h) < GetDistance(pos0, hit)) {
                     *hit = h;
@@ -294,7 +297,7 @@ int line_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, int flag, int mask
 }
 
 // ---- the swept sphere (at_sub.cpp At_poly_sphere_ck2 on a table triangle) ----
-u32 sphere_tri(const ColTri* t, Vec* oldPos, Vec* pos, f32 r, u32 flag, u32 mask)
+u32 sphere_tri(const ColHot* t, const ColCold* u, Vec* oldPos, Vec* pos, f32 r, u32 flag, u32 mask)
 {
     Vec tri[3];
     Vec n, hp, nn;
@@ -302,9 +305,13 @@ u32 sphere_tri(const ColTri* t, Vec* oldPos, Vec* pos, f32 r, u32 flag, u32 mask
     u32 hit, i;
     const u32 attr = t->attr;
     tri[0].x = t->v0[0]; tri[0].y = t->v0[1]; tri[0].z = t->v0[2];
-    tri[1].x = t->v1[0]; tri[1].y = t->v1[1]; tri[1].z = t->v1[2];
-    tri[2].x = t->v2[0]; tri[2].y = t->v2[1]; tri[2].z = t->v2[2];
     n.x = t->n[0]; n.y = t->n[1]; n.z = t->n[2];
+#define COL_COLD()                                                          \
+    do {                                                                    \
+        tri[1].x = u->v1[0]; tri[1].y = u->v1[1]; tri[1].z = u->v1[2];      \
+        tri[2].x = u->v2[0]; tri[2].y = u->v2[1]; tri[2].z = u->v2[2];      \
+        col_cnt.cold_sphere++;                                              \
+    } while (0)
 
     if (PSVECDotProduct(&n, oldPos) - PSVECDotProduct(&n, tri) < 0.0f) return 0;
     d = PSVECDotProduct(&n, pos) - PSVECDotProduct(&n, tri);
@@ -317,6 +324,7 @@ u32 sphere_tri(const ColTri* t, Vec* oldPos, Vec* pos, f32 r, u32 flag, u32 mask
                 hit = 0;
                 nn = n;
                 hp2 = hp;
+                COL_COLD();
                 if (At_poly_point_rel(tri, &nn, &hp2)) hit = 1;
             } else {
                 hit = 0;
@@ -327,6 +335,7 @@ u32 sphere_tri(const ColTri* t, Vec* oldPos, Vec* pos, f32 r, u32 flag, u32 mask
             PSVECSubtract(pos, &hp, &hp);
             nn = n;
             hp2 = hp;
+            COL_COLD();
             if (At_poly_point_rel(tri, &nn, &hp2) == 0) {
                 if (flag & 0x20) {
                     hit = 0;
@@ -466,11 +475,11 @@ int sphere_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, f32 r, int flag,
         group(pc->leaf[lf], flag, &a, &b);
         for (u32 i = a; i < b; i++) {
             const u32 no = pc->idx[i];
-            const ColTri* t = &pc->tri[no];
+            const ColHot* t = &pc->hot[no];
             if (g_bits[no >> 3] & (1 << (no & 7))) continue;
             g_bits[no >> 3] |= 1 << (no & 7);
             col_cnt.tris_sphere++;
-            if (sphere_tri(t, pos0, pos1, r, flag, mask)) {
+            if (sphere_tri(t, &pc->cold[no], pos0, pos1, r, flag, mask)) {
                 ret = 1;
                 if (nrm) *nrm = sat->norm_p[t->nidx];
             }

@@ -40,17 +40,17 @@ to 8). The world record is two cache lines; a bone's world pass reads its local 
 | `prev[n]` | 48 | previous motion's local matrix (hokan) |
 | `soa[33][cap]` | 132 | rows: pose pos / ang / scale; blend-saved pose; world position; world_old; world_old2; bind translation; addRot (IK length aliases it, as in the record) |
 | `ikAng[cap]`, `hist[n]` | 4 + 36 | IK twist angle; key history (6 channels x 3 axes) |
-| `parent[cap]`, `mbox[cap]`, `mlist[cap]`, `rec[n]` | 3 + 4 | parent bone (0xFF the model, 0xFE an outside coordinate); mailbox state and list; the cParts record |
+| `parent`, `mbox`, `mlist`, `handed` [cap], `rec[n]` | 4 + 4 | parent bone (0xFF the model, 0xFE an outside coordinate); mailbox state, list and the bones handed out since the last entry; the cParts record |
 | `ik[8]` | 96 a chain | IK plane matrix, axis, direction of each chain root |
 
 | Actor | Bones | Native table | cParts records (472 B a bone) | World pass reads + writes a tick per pass |
 |---|---:|---:|---:|---:|
-| Leon | 119 | 49,056 B | 56,168 B | 13,328 B (112 B a bone) |
-| Ashley | 141 | 58,240 B | 66,552 B | 15,792 B |
-| Ganado | 34 | 15,552 B | 16,048 B | 3,808 B |
-| Handgun (object) | 4 | 3,168 B | 1,888 B | 448 B |
+| Leon | 119 | 49,184 B | 56,168 B | 13,328 B (112 B a bone) |
+| Ashley | 141 | 58,400 B | 66,552 B | 15,792 B |
+| Ganado | 34 | 15,616 B | 16,048 B | 3,808 B |
+| Handgun (object) | 4 | 3,200 B | 1,888 B | 448 B |
 
-The check build adds 84 B a bone (the ancestor shadow, section 4); the sizes above are without it.
+The check build adds 196 B a bone (what each mailbox record was given, section 4); the sizes above are without it.
 
 **The world pass** (`world_calc`): one pass in chain order. The parent's world matrix is loaded into SH4ZAM's XMTRX,
 the bone's local matrix applied, the result stored; when the next bone is the child of the one just computed (a
@@ -75,7 +75,8 @@ EAT files.
 | node rows [nNode] | 20 a node | the block tree flattened in the walk's order: box min x / z, size x / z (f32 rows), skip (the node after this one's subtree: where a failed test continues), leaf number |
 | leaf [nLeaf] | 8 | first list entry, floors + slopes count, walls count |
 | idx [nIdx] | 2 | the leaves' polygon lists, leaf after leaf |
-| tri [nPoly] | 96 | one record per polygon: three vertices, face normal, three edge vectors, attribute word, polygon number, normal index |
+| hot [nPoly] | 32 | one line per polygon: first vertex, face normal, attribute word, normal index. Every polygon test starts with a plane test on these |
+| cold [nPoly] | 64 | the other two vertices and the three edge vectors: read only by a polygon that passed its plane test |
 
 | Room, piece | Nodes | Leaves | List entries | Polygons | Native tables | The file's tables the original walk reads |
 |---|---:|---:|---:|---:|---:|---:|
@@ -84,9 +85,12 @@ EAT files.
 | Hill path (r11d), scenery | 293 | 220 | 4,142 | 1,150 | 126,464 B | 99,764 B |
 | Hill path, effect | 265 | 199 | 3,324 | 949 | 104,864 B | 83,704 B |
 
-A polygon test reads one 96-byte record (three lines); the original reads the polygon (20 B), three vertices, a
-normal and three edges from five tables. The walk is the original's (same box tests, same order, same per-query
-polygon dedupe), so the number of box and polygon tests is the same; what changes is where the bytes are. The file
+A polygon test reads its 32-byte hot line, and the 64-byte cold record only if the plane test passes; the original
+reads the polygon (20 B), then a vertex and a normal, then two more vertices and three edges, from five tables. The
+walk is the original's (same box tests, same order, same per-query polygon dedupe), so the number of box and polygon
+tests is the same; what changes is where the bytes are. A first form with one 96-byte record per polygon touched more
+lines than the original (section 6): most polygons a query visits end at the plane test, and the original's shared
+vertex and edge tables are denser than three lines a polygon. The file
 stays resident: the hit report's normal pointer (`pFloor_norm`, `hitCheck2`'s `attr`) points into its normal table.
 
 ## 4. Fields behaviour reads, and how they are served
@@ -120,16 +124,19 @@ walks every record after a push; it is replaced (it moves the table).
 
 **How they are served: the mailbox.**
 - A record becomes its bone's mailbox when code outside asks for it (`getPartsPtr`, `GetPartsAddr`, a
-  `setParent` target). From then on every native entry takes the record's fields back first (the behaviour may have
-  written eyelid angles, waist addRot, bust positions, matrices) and writes the table's values to it after.
+  `setParent` target). After every native entry the record gets the table's values for the field groups that entry
+  may have changed (world: mat, world, r_scale, flags; local: l_mat, pos, ang, scale, addRot; history: world_old,
+  world_old2). Before the next entry the table takes back the records handed out since the last one: the census
+  shows the behaviour writes a bone (eyelid angles, waist addRot, bust positions and matrices) right after asking
+  for it.
 - Its ancestors (reached through `pParent`) are served the world matrix, world position, `r_scale` and scale only,
   and nothing is taken back.
 - A root bone's parent is re-read from its record before every evaluation (`objWep` writes its root's `pParent`
   directly to hang the handgun on Leon's hand).
 - Everything else in a record is never written: the check build fills it with NaN at table creation, so a read the
-  census missed would turn a trace into NaN; it also counts writes to ancestor records (lost writes) and records
-  whose `pParent` disagrees with the table. On all six fixtures: **lost writes 0, parent mismatches 0**, traces
-  identical.
+  census missed would turn a trace into NaN. It also remembers what every mailbox record was given and counts any
+  later difference the table did not take back (lost writes), and records whose `pParent` disagrees with the table.
+  On all six fixtures: **lost writes 0, parent mismatches 0**, traces identical.
 
 | Fixture | Leon (119) | Ganados (34 each) | Ashley (141) | Handgun (4) |
 |---|---|---|---|---|
