@@ -41,9 +41,10 @@ uint32_t cl_run_id(void) { return g_active ? H->h.run_id : 0; }
 
 void cl_report_bytes(const void *p, size_t n) {
     if (!g_active) return;
+    const uint32_t cap = CL_REPORT_CAP(&H->h);
     uint32_t len = H->h.report_len;
-    if (len > CL_REPORT_MAX) len = CL_REPORT_MAX;
-    if (n > CL_REPORT_MAX - len) n = CL_REPORT_MAX - len;
+    if (len > cap) len = cap;
+    if (n > cap - len) n = cap - len;
     memcpy(H->report + len, p, n);
     H->h.report_len = len + (uint32_t)n;
     cl_handoff_seal(H);   /* the header stays valid at every moment: a reboot or power-off mid-run reads as LOST */
@@ -61,7 +62,7 @@ void cl_report(const char *fmt, ...) {
 static void seal(uint32_t state, int code) {
     H->h.state = state;
     H->h.exit_code = code;
-    if (H->h.report_len > CL_REPORT_MAX) H->h.report_len = CL_REPORT_MAX;
+    if (H->h.report_len > CL_REPORT_CAP(&H->h)) H->h.report_len = CL_REPORT_CAP(&H->h);
     H->h.report_crc = cl_crc32(0, H->report, H->h.report_len);
     cl_handoff_seal(H);
 }
@@ -150,10 +151,13 @@ static void at_exit(void) {
     if (g_active && !g_leaving) finish(CL_RUN_DONE, 0);
 }
 
+/* lane eng-loop2: one sleep to the deadline (it used to wake every 250 ms, a thread switch inside the timed pictures
+   of an engine image) */
 static void *watchdog(void *arg) {
     (void)arg;
     for (;;) {
-        thd_sleep(250);
+        const uint64_t now = timer_ms_gettime64();
+        if (now < g_deadline_ms) thd_sleep((int)(g_deadline_ms - now));
         if (timer_ms_gettime64() >= g_deadline_ms) {
             cl_report("\nDEADLINE %u s\n", (unsigned)H->h.deadline_s);
             finish(CL_RUN_TIMEOUT, -2);

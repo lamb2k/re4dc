@@ -32,7 +32,9 @@ typedef struct {
     uint32_t crash_evt, crash_pc, crash_pr, crash_sp;
     uint32_t loader_len;          /* bytes of /cd/LOADER.BIN the client preloaded (diagnostic) */
     uint32_t report_len, report_crc;
-    uint32_t reserved[9];
+    uint32_t report_cap;          /* 0 = CL_REPORT_MAX; else the client writes at most this many report bytes (lane
+                                     eng-loop2: the console disc's selector keeps its journal above the cap) */
+    uint32_t reserved[8];
     uint32_t tramp[CL_TRAMP_WORDS];   /* scratch for the client's raw jump back (not covered by the CRC) */
     uint32_t tramp_stack[8];
 } cl_handoff_hdr_t;
@@ -40,6 +42,8 @@ typedef struct {
 #define CL_HANDOFF_HDR_CRC_FROM 12u
 #define CL_HANDOFF_HDR_CRC_TO ((uint32_t)__builtin_offsetof(cl_handoff_hdr_t, tramp))
 #define CL_REPORT_MAX (CL_HANDOFF_SIZE - (uint32_t)sizeof(cl_handoff_hdr_t))
+/* the report bytes a client may write: the launcher's cap when it set one */
+#define CL_REPORT_CAP(hdr) ((hdr)->report_cap && (hdr)->report_cap < CL_REPORT_MAX ? (hdr)->report_cap : CL_REPORT_MAX)
 
 typedef struct {
     cl_handoff_hdr_t h;

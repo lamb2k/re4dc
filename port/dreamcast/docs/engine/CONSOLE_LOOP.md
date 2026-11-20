@@ -1,7 +1,9 @@
 # Console loop: send a program to the Dreamcast over the QA link
 
 Lane eng-loop, 2026-11-19. Design first; the code is in `port/dreamcast/engine/loader/` (console) and
-`port/dreamcast/tools/consoleloop/` (PC). Built and host-tested on the PC. Not yet run in Flycast or on the console.
+`port/dreamcast/tools/consoleloop/` (PC). Built and host-tested on the PC. Lane eng-loop2 (2026-11-20): run in the
+console-like Flycast (section 8, results) and the one console disc with every engine scene (section 10). Not yet run
+on the console.
 
 ## The point
 
@@ -211,6 +213,31 @@ duplicates, reordering, a rate-limited line with a bounded queue, dead windows).
 5. Deadline control: `hang` with a 20 s deadline: the report says `TIMEOUT`.
 6. Resume: kill the PC sender halfway and start it again; only the missing chunks travel.
 
+**Flycast results (lane eng-loop2, 2026-11-20; console-like Flycast `fly1` with the GDEMU disc profile; loader
+`98aced1dc` plus the client changes of this lane; evidence `E:\RE4DC-Lanes\eng-loop2\evidence\k*`).** How Flycast
+stands in for the Pi: its modem emulation is the PPP peer and the console's UDP leaves through a PC socket, so the
+relay runs on the PC (`consoleloop.py relay-local`, started before the loader boots: a Windows socket that once took
+an ICMP port-unreachable stops passing datagrams down), and the sender talks to it (`--udp 127.0.0.1:52059 --bind 0`).
+
+| Check | Result | Control |
+|---|---|---|
+| 1. `UP`, `WAITING FOR THE PC`, `status` sees `HELLO` | pass (`k1-status.log`, `shots\k1-waiting.png`) | - |
+| 2. `run testprog --args report` | pass: `DONE`, exit 0, report CRC ok (`k2-report`) | - |
+| 3. Refusals | `--corrupt payload`: `VERDICT sha256`; `--corrupt stream`: `stream crc`; both "refused: not verified", nothing ran (boot count unchanged) | they are the controls of check 2 |
+| 4. Outcomes | `crash`: `CRASHED`, event 180, PC in the program; `hang` with 20 s: `TIMEOUT`; `return`: `DONE` exit 0; the loader waiting again after each (boot count +1) | each is the others' control. Flycast does not raise the address error of a misaligned write (the first crash run came back `DONE`): the test program falls through to an illegal instruction |
+| 5. Resume | sender killed at 66 of 128 chunks; the restarted sender's first ack starts at chunk 68 | a different stream (stored, not deflated) after the kill: the first ack starts at 0 |
+| Host tests after the hand-off header change | 16 / 16 (`evidence\host-tests`) | as section 7 |
+| Engine images through the loop (step 6) | the bench (`SENDABLE=1`, `root=E0S`, schedule `c0 f0`) and the E1 image (`root=E1`, village) sent, run and their reports back: 2 `WINDOW` rows, `SCHEDULE DONE`; 640 `ROW` lines, `E1 END` (`k6-bench`, `k6-e1`) | - |
+
+Link rates, **Flycast** (not a console figure): down 3.1 to 3.9 KB/s of deflated bytes, 5.0 to 6.2 KB/s of program
+bytes (130 to 373 KB images, 34 to 95 s); reports up 1.32 KB/s (100 KB in 75.8 s) and 1.46 KB/s (57 KB, 39 s).
+Flycast's modem reports 33600 bps; the console's rate is still unknown.
+
+The console-like Flycast also showed a console failure mode: a program that reads the disc sector by sector after
+the loader's jump stopped with "SH4 exception when blocked" under the GDEMU profile (stale GD DMA completions). The
+loader, the test program and every `SENDABLE` image now link the release game's KOS disc fixes (`kosfix.mk`); the
+unfixed test program is the control (it stops; the fixed one returns `DONE`).
+
 **First console run (owner powers on, picks the loader in openMenu once):**
 1. The loader dials the DreamPi and the beacons reach the Pi through the relay while `qalink_pi.py` runs.
 2. **Downlink rate**: the PC's transfer report of the E0 bench image (first real measure of Pi to console).
@@ -225,3 +252,63 @@ duplicates, reordering, a rate-limited line with a bounded queue, dead windows).
   would need RAM the program does not use).
 - A smart plug for the cases that need a power cycle (`Dream-TOS` testing notes).
 - A broadband adapter or serial cable path (dcload-ip / dc-tool), many times faster, if the owner has one.
+
+## 10. Engine images through the loop, and the one console disc (lane eng-loop2)
+
+**An engine image made send-able: `SENDABLE=1`** (`engine/loader/sendable.mk`, included by `engine/bench/Makefile`
+and `engine/game/Makefile`; no image source changes). It links the client library, the KOS disc fixes (`kosfix.mk`)
+and `cl_send.c`. Booted from its own disc the image runs as before: `cl_init()` finds no `RUNNING` hand-off and
+everything stays off. Started by the loader or the console disc's selector, a constructor turns on:
+- **the report:** a dbgio handler in front of the serial one copies the image's own text lines into the hand-off
+  report and passes everything on (serial unchanged). Arguments: `rows=skip|compact|keep` for `ROW` lines (compact
+  drops the field names), `skip=<prefix>,..` for other lines (the console disc skips the bench's `MEMBLK` lines);
+- **the end:** the image's last line (`SCHEDULE DONE`, `E1 END`) hands in `DONE`, exit 0, once the image has printed
+  nothing for 1.5 s (the fight and boss images print their event lists after `E1 END`); a refusal line
+  (`SCHEDULE REFUSED`, `M1 native pack REFUSED`, `STACK GUARD BROKEN`, `E1 draw: renderer refused`,
+  `E1 load: missing / read failed / bad DRS`) hands in exit 1, with the renderer's pack-loader stage when the image
+  has one. Crash and deadline as section 4;
+- **the data root:** `root=E1` makes `/cd/<path>` open `/cd/E1/<path>` first, then the disc root
+  (`-Wl,--wrap=fs_open`); `root=E1H:E1` tries both folders in order (the hill scene's `HILL` file sits alone in
+  `E1H`). `/cd/LOADER.BIN` is never redirected.
+- The watchdog sleeps once to the deadline and the end thread waits on a semaphore, so neither wakes inside the
+  timed pictures.
+
+**The console disc** (`tools/engine/build_console_disc.sh`, `engine/loader/selector.c`):
+- One GDEMU disc (standard layout) from a clean checkout of a commit (default `origin/engine`; `git archive` plus the
+  SH4ZAM submodule at the recorded commit) and the private packs, which never enter git. Output folder: the four
+  GDI files, `SHA256SUMS`, `MANIFEST.txt` (commit, program hashes, every input's hash, the disc tree), `SCENES.TXT`,
+  the ELFs, `KEEP`.
+- `1ST_READ.BIN` and `/LOADER.BIN` are the selector. It runs every line of `/SCENES.TXT` in order: checks the scene's
+  files, writes the hand-off area (`RUNNING`, arguments, deadline, a report cap), jumps to `/PROG/<image>.BIN`. The
+  image runs from its folder and hands back through the client library to `/LOADER.BIN`, the selector again, which
+  reads the report and keeps the scene's summary in a journal above the report cap (top 24 KiB of the hand-off area).
+- Scenes, in order: **BENCH** (village cross and hay-fork view, arms `c0 f0 ca c0 cb c0 fa f0 fb f0`, then the
+  control window `c0dh`), **LEON** (village route), **HILL** (Leon and Ashley), **FIGHT** (four Ganados),
+  **BOSS-BENCH** (El Gigante on the bench, `c0 cn c0 c0dh`), **BOSS** (El Gigante hosted, headless). The E1-family
+  scenes run with `NOTRACE`.
+- **Summary rows.** Bench scenes: the bench's own `WINDOW` rows (mean, p99, worst, over 14, over 33.3, presented
+  intervals over two fields, 600 pictures a window). E1-family scenes: computed by the selector from the image's
+  `ROW` lines, pictures 41 to 640 (the lane tools' `budget.py` rows): drawing, busy picture (frame less the pacer's
+  and the PVR waits), services, behaviour (mean, p99, worst with its picture, count over the row's budget), and
+  late pictures (no pacer wait). The E1 images print a `fields` column but do not count presented fields yet: the
+  summary says "fields not counted" rather than "0 over".
+- **A scene is FAILED, never skipped:** a missing file (the selector checks the scene's list first), an unreadable
+  program, a crash, the deadline, a return without a hand-in (`LOST`), a non-zero exit, a bad report CRC, a refusal
+  line in the report, no rows, or no end line. B held during the 3 s countdown before a scene skips it (recorded as
+  FAILED, "skipped by the owner").
+- **The end:** one summary screen, in pages of 16 lines that change every 10 s (the first line says `FINISHED: n OF
+  m SCENES OK`), and on the serial line `CDISC RESULT`, `CDISC SUM` and `CDISC SUMMARY` lines. The images print their
+  raw `ROW` lines on the serial line during their run, as on their own discs.
+- **A reset during the run:** if main RAM kept the journal the running scene is recorded `LOST` and the run goes on;
+  otherwise it starts again. After the summary is shown the journal is closed: the next reset starts a new run.
+- Controls: `--drop <disc path>` removes a staged file; `--no-precheck` leaves the refusal to the image itself;
+  `--scenes` picks a subset.
+
+**Flycast proof (lane eng-loop2, 2026-11-20; console-like Flycast, GDEMU profile; Flycast ms, not a result).** One
+boot ran all six scenes and showed the summary. Bench OK (11 windows; the control window `c0dh` read +5.0 ms and one
+interval over two fields, as it must), Leon OK, hill OK, fight OK, El Gigante hosted OK (headless). **El Gigante on
+the bench FAILED**: the engine's bench refuses lane eng-boss's `boss2-full.pak` at pack-loader stage 5 (the recorded
+input checks); its pack needs a re-bake with the current packer. Controls: `--drop FIGHT/CROSS.PAK` gives FIGHT
+"FAILED missing FIGHT/CROSS.PAK"; with `--no-precheck`, `--drop BENCH/FARM.PAK` gives BENCH "FAILED M1 native pack
+REFUSED" and `--drop E1/st1/r101.arc` gives LEON "FAILED E1 load: missing /cd/st1/r101.arc". Evidence:
+`E:\RE4DC-Lanes\eng-loop2\evidence` (`final-*journal.txt`, `shots\final-*.png`).

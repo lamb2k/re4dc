@@ -12,13 +12,20 @@ PPP_OBJS := $(addprefix $(OUT)/ppp/,$(PPP_SRC:.c=.o))
 PPP_DEFS := -Dthd_create=loader_link_thd_create -Dthd_pass=loader_link_thd_pass \
             -Dmodem_write_data=loader_link_modem_write -Dmodem_read_data=loader_link_modem_read \
             -Dsem_wait_timed=loader_link_sem_wait_timed
-LOADER_OBJS := $(addprefix $(OUT)/,main.o link.o cl_core.o cl_util.o) $(PPP_OBJS)
-TEST_OBJS := $(addprefix $(OUT)/,testprog.o client.o cl_util.o)
+# lane eng-loop2: the release game's KOS disc fixes in both programs (kosfix.mk)
+.DEFAULT_GOAL := all
+KOSFIX := $(OUT)/kosfix
+include kosfix.mk
+LOADER_OBJS := $(addprefix $(OUT)/,main.o link.o cl_core.o cl_util.o) $(PPP_OBJS) $(KOSFIX_OBJS)
+TEST_OBJS := $(addprefix $(OUT)/,testprog.o client.o cl_util.o) $(KOSFIX_OBJS)
+# lane eng-loop2: the console disc's scene runner (selector.c; tools/engine/build_console_disc.sh)
+SEL_OBJS := $(addprefix $(OUT)/,selector.o cl_util.o) $(KOSFIX_OBJS)
 WRAPS := -Wl,--wrap=createChainBuffer -Wl,--wrap=destroyChainBuffer -Wl,--wrap=thd_worker_create_ex \
          -Wl,--wrap=cdrom_read_toc
 
-.PHONY: all host
-all: $(OUT)/loader.elf $(OUT)/LOADER.BIN $(OUT)/testprog.elf $(OUT)/testprog.bin
+.PHONY: all host selector
+all: $(OUT)/loader.elf $(OUT)/LOADER.BIN $(OUT)/testprog.elf $(OUT)/testprog.bin $(OUT)/selector.elf $(OUT)/SELECTOR.BIN
+selector: $(OUT)/selector.elf $(OUT)/SELECTOR.BIN
 
 $(OUT)/ppp/%.o: $(PPP_DIR)/%.c
 	@mkdir -p $(dir $@)
@@ -36,6 +43,10 @@ $(OUT)/LOADER.BIN: $(OUT)/loader.elf
 $(OUT)/testprog.elf: $(TEST_OBJS)
 	kos-cc $(CFLAGS_L) $^ -Wl,--wrap=cdrom_read_toc -Wl,--wrap=arch_abort -o $@
 $(OUT)/testprog.bin: $(OUT)/testprog.elf
+	sh-elf-objcopy -R .stack -O binary $< $@
+$(OUT)/selector.elf: $(SEL_OBJS)
+	kos-cc $(CFLAGS_L) $^ -Wl,--wrap=cdrom_read_toc -o $@
+$(OUT)/SELECTOR.BIN: $(OUT)/selector.elf
 	sh-elf-objcopy -R .stack -O binary $< $@
 
 host: $(OUT)/cl_host
