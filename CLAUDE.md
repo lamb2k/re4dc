@@ -73,7 +73,7 @@ Only when Codex wrote the work. Follow the checklist in `CODEX.md`.
 
 ## Machine notes (maintainers)
 
-- Skills on the maintainers' machine: `re4dc-engine` (integrator routine), `re4dc-engine-lane` (lane agent), `re4dc-engine-audit` (auditor). The older `re4-dreamcast-*` skills are for the old port's release line only.
+- Skills on the maintainers' machine: `re4dc-engine` (integrator routine), `re4dc-engine-lane` (lane agent), `re4dc-engine-audit` (auditor), `re4dc-test-rig` (warp rig, QA teleporter, pad scripts, traces, unattended sessions). The older `re4-dreamcast-*` skills were removed on 2026-11-20.
 - Work in WSL Ubuntu-24.04. Worktrees live under `/root/work/lanes/<lane>`; evidence under `E:\RE4DC-Lanes\<lane>`.
 - Run multi-line WSL work from a script file. Inline `bash -c '...$VAR...'` loses variables to the outer shell.
 - Flycast runs only from a lane's provisioned slot folders. Never take window focus or send input to a window.
