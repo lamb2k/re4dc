@@ -194,8 +194,8 @@ int main()
         // (picture submitted), set by e1_draw_picture as the hardware model times it; the PVR wait is pvr_us; the
         // call's set-up before stamp 5 (skeleton views) stays in the frame's remainder
         (void) e;
-        e1_fields_late(e1_tick);        // LATEPIC (control): picture 300 held 40 ms after its scene
-        e1_pace_end(tm);
+        e1_fields_late(e1_tick);        // LATEPIC (control): picture 300 held 100 ms after its scene
+        e1_pace_end(tm);                // waits for the target field (core/frame.cpp; lab arm PACETMU: the timer)
         e1_fields_tick(e1_tick);        // the tick's end in fields (the headless images' interval)
         tm.frame_us = now_us() - a;
     }

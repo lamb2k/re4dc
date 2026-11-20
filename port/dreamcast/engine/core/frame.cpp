@@ -127,19 +127,42 @@ void e1_trace_tick(unsigned tick)
 #endif
 }
 
-// ---- pacing: one logic tick a picture at 30 fps (two 60 Hz fields); a late picture runs the next tick at once ----
+// ---- pacing on the display's field count (lane eng-e1g, H-014.1): one logic tick a picture, two 60 Hz fields ----
+// The pacer waits on the vblank handler's field count (core/draw_e1.c), not on a timer: each tick starts on a field
+// boundary, two fields after the last, so a picture that is ready in time is flipped every second field. A picture
+// that finishes late (its target field has already begun) is shown on the next field by the chip; the pacer then adds
+// no wait and the next target is two fields from now. The ROW wait column is this wait: from the end of the picture's
+// submission (after the LATEPIC hold) to the target field, in microseconds; 0 means late.
+// Lab arm PACETMU (boot option, for the console A/B; not a build switch): the earlier pacer, 33,367 us on the timer,
+// whose phase drifts against the display (3-field gaps with no late picture, lane eng-e1f).
+extern "C" uint32_t e1_fields_now_c(void);
+static int pace_tmu;
+static uint32_t pace_field;
 static uint64_t next_us;
 void e1_pace_end(E1Timing& tm)
 {
-    uint64_t now = timer_us_gettime64();
-    if (!next_us) next_us = now;
-    next_us += 33367;
-    if (now < next_us) {
-        tm.wait_us = next_us - now;
-        while (timer_us_gettime64() < next_us) thd_pass();
+    const uint64_t now = timer_us_gettime64();
+    if (pace_tmu) {
+        if (!next_us) next_us = now;
+        next_us += 33367;
+        if (now < next_us) {
+            tm.wait_us = next_us - now;
+            while (timer_us_gettime64() < next_us) thd_pass();
+        } else {
+            tm.wait_us = 0;
+            next_us = now;
+        }
+        return;
+    }
+    const uint32_t f = e1_fields_now_c();
+    pace_field += 2;
+    if ((int32_t) (pace_field - f) > 0) {
+        while ((int32_t) (pace_field - e1_fields_now_c()) > 0) thd_pass();
+        const uint64_t w = timer_us_gettime64() - now;
+        tm.wait_us = w ? (uint32_t) w : 1;
     } else {
         tm.wait_us = 0;
-        next_us = now;
+        pace_field = f;
     }
 }
 
@@ -153,7 +176,6 @@ void e1_pace_end(E1Timing& tm)
 // gave 3 or 4 fields, which the pacer's own 3-field intervals can equal (lanes/eng-e1f.md).
 extern "C" {
 void e1_fields_start_c(void);
-uint32_t e1_fields_now_c(void);
 unsigned e1_fields_finish_c(const volatile uint32_t** field);
 }
 static uint32_t tick_field[E1_TICKS];
@@ -162,7 +184,11 @@ void e1_fields_start()
 {
     file_t f = fs_open("/cd/LATEPIC", O_RDONLY);
     if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 100 ms after its scene (control)\n"); }
-    e1_fields_start_c();
+    f = fs_open("/cd/PACETMU", O_RDONLY);
+    if (f >= 0) { fs_close(f); pace_tmu = 1; }
+    e1_log("E1 PACE %s\n", pace_tmu ? "tmu 33367 us (lab arm PACETMU)" : "fields 2 (display field count)");
+    e1_fields_start_c();          // returns just after a field boundary
+    pace_field = e1_fields_now_c();   // tick 1's target is two fields from here
 }
 void e1_fields_late(unsigned tick)
 {
