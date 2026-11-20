@@ -136,7 +136,9 @@ void e1_trace_tick(unsigned tick)
 // Lab arm PACETMU (boot option, for the console A/B; not a build switch): the earlier pacer, 33,367 us on the timer,
 // whose phase drifts against the display (3-field gaps with no late picture, lane eng-e1f).
 extern "C" uint32_t e1_fields_now_c(void);
-static int pace_tmu;
+extern "C" void e1_present_next_c(uint32_t field);
+extern "C" unsigned e1_present_drops_c(void);
+static int pace_tmu, pace_manual;
 static uint32_t pace_field;
 static uint64_t next_us;
 void e1_pace_end(E1Timing& tm)
@@ -156,13 +158,15 @@ void e1_pace_end(E1Timing& tm)
     }
     const uint32_t f = e1_fields_now_c();
     pace_field += 2;
-    if ((int32_t) (pace_field - f) > 0) {
+    const bool late = (int32_t) (pace_field - f) <= 0;
+    if (late) pace_field = f;
+    e1_present_next_c(pace_field + 1);   // this picture is released when the next tick's second field begins
+    if (!late) {
         while ((int32_t) (pace_field - e1_fields_now_c()) > 0) thd_pass();
         const uint64_t w = timer_us_gettime64() - now;
         tm.wait_us = w ? (uint32_t) w : 1;
     } else {
         tm.wait_us = 0;
-        pace_field = f;
     }
 }
 
@@ -175,7 +179,7 @@ void e1_pace_end(E1Timing& tm)
 // frame), so picture 301 (tick 300 when headless) must show as the worst interval, at least five fields. A 40 ms hold
 // gave 3 or 4 fields, which the pacer's own 3-field intervals can equal (lanes/eng-e1f.md).
 extern "C" {
-void e1_fields_start_c(void);
+int e1_fields_start_c(int manual);
 unsigned e1_fields_finish_c(const volatile uint32_t** field);
 }
 static uint32_t tick_field[E1_TICKS];
@@ -186,9 +190,10 @@ void e1_fields_start()
     if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 100 ms after its scene (control)\n"); }
     f = fs_open("/cd/PACETMU", O_RDONLY);
     if (f >= 0) { fs_close(f); pace_tmu = 1; }
-    e1_log("E1 PACE %s\n", pace_tmu ? "tmu 33367 us (lab arm PACETMU)" : "fields 2 (display field count)");
-    e1_fields_start_c();          // returns just after a field boundary
-    pace_field = e1_fields_now_c();   // tick 1's target is two fields from here
+    pace_manual = e1_fields_start_c(!pace_tmu);   // returns just after a field boundary
+    pace_field = e1_fields_now_c();               // tick 1's target is two fields from here
+    e1_log("E1 PACE %s, presentation %s\n", pace_tmu ? "tmu 33367 us (lab arm PACETMU)" : "fields 2 (display field count)",
+           pace_manual ? "fixed field (release at the next tick's second field)" : "at render end (automatic flip)");
 }
 void e1_fields_late(unsigned tick)
 {

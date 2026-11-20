@@ -131,19 +131,51 @@ static void list_keepalive(int list)
 #include <dc/video.h>
 static volatile uint32_t vbl_fields, flip_n, last_sof;
 static volatile uint32_t flip_field[1040];
+/* Fixed-field presentation (lane eng-e1g, H-014.1): with the field pacer (core/frame.cpp e1_pace_end) every picture is
+   shown on a set field, not whenever the chip finishes it. KOS's manual flip holds a rendered picture back; the pacer
+   queues each picture's release field (the field after its tick's target), and this handler, which runs after KOS's
+   own vblank handler (registered at pvr_init, the list is in order), releases the oldest queued picture when that field
+   begins, so KOS flips it at the next field: two fields after the next tick starts, one picture of latency. The chip
+   renders picture k while the CPU runs tick k + 1; a picture whose render ends after its release field is flipped when
+   it ends (a late picture: a long interval, then two-field intervals again). Off (KOS's automatic flip, the picture shown
+   at the first field after its render) for the headless image and for the lab arm PACETMU. */
+static int manual_flip;
+static volatile uint32_t pres_q[8], pres_head, pres_tail, pres_drop;
 static void on_vblank(uint32_t code, void* data)
 {
     (void) code; (void) data;
     vbl_fields++;
     uint32_t sof = *(volatile uint32_t*) 0xa05f8050;
     if (sof != last_sof) { last_sof = sof; if (flip_n < 1040) flip_field[flip_n] = vbl_fields; flip_n++; }
+    if (manual_flip && pres_head != pres_tail && (int32_t) (vbl_fields - pres_q[pres_head & 7]) >= 0 &&
+        pvr_present_async(true) == 0)
+        pres_head++;
 }
-void e1_fields_start_c(void)
+/* The picture just submitted is released at field `field` (shown at field + 1). Queue full (eight pictures behind):
+   counted, released at once. */
+void e1_present_at_c(uint32_t field)
+{
+    if (!manual_flip) return;
+    if (pres_tail - pres_head >= 8) { pres_drop++; field = vbl_fields; }
+    pres_q[pres_tail & 7] = field;
+    pres_tail++;
+}
+static int stills_queued;   /* the STILLS option released this tick's picture itself */
+void e1_present_next_c(uint32_t field)
+{
+    if (stills_queued) { stills_queued = 0; return; }
+    e1_present_at_c(field);
+}
+unsigned e1_present_drops_c(void) { return pres_drop; }
+/* manual: 1 for the field pacer's fixed-field presentation (the drawing images), 0 for KOS's automatic flip */
+int e1_fields_start_c(int manual)
 {
     vblank_handler_add(on_vblank, NULL);
     if (open_ok) { pvr_wait_ready(); pvr_wait_render_done(); }
     vid_waitvbl(); vid_waitvbl();
+    if (open_ok && manual) manual_flip = pvr_set_manual_flip(true) == 0;
     flip_n = 0;
+    return manual_flip;
 }
 uint32_t e1_fields_now_c(void) { return vbl_fields; }
 unsigned e1_fields_finish_c(const volatile uint32_t** field)
@@ -203,6 +235,9 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
     *wait_us = (uint32_t) (t1 - t0);
     *draw_us = (uint32_t) (t2 - t1);
     if (stills && (m1_frame == 1 || m1_frame % 40 == 0)) {
+        /* fixed-field presentation: release this picture now (behind any queued one), then wait for it to show; the
+           pacer then does not queue it again (e1_present_take_c) */
+        if (manual_flip) { e1_present_at_c(vbl_fields); stills_queued = 1; vid_waitvbl(); vid_waitvbl(); }
         pvr_wait_render_done(); vid_waitvbl(); vid_waitvbl();
         m1_state[4] = 0xa5000000 + 2 * (*(volatile uint32_t*) 0xa05f8050 & 0x7ffffc);
         m1_state[2] = m1_frame;
