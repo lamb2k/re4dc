@@ -35,7 +35,8 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 |---|---|---|---|---|
 | eng-boss | E2: first Disc 1 boss on the bench, then hosted on the E1 shell | lane/eng-boss from engine | Claude Opus | E:\RE4DC-Lanes\eng-boss |
 | eng-look | E0 look items and content candidates (steps with phone-size still sheets for the owner) | lane/eng-look | Claude Opus | E:\RE4DC-Lanes\eng-look |
-| eng-host2 | PC-only: extend the plays-right reference to Ashley (partner) and one Ganado | lane/eng-host2 | Claude Opus | E:\RE4DC-Lanes\eng-host2 |
+
+Closed: eng-host2 (Opus, PC-only), handed back 11-19, merged (9dd87b9cb). re4ref now hosts Ashley (pl_npc, pl11: 37 KB code) and a Ganado (em10 and 8 files: 293 KB code); per-actor trace lines; 10 controls pass. Agreement with old-game traces (position only, every 4th tick): Ganado within 0.002 units over ticks 185-317 at the bell gate until the room event freezes it; Ashley within 0.018 units over ticks 185-289 at the r11d hill until the room's opening event. Needs two emulator fixtures recorded with full per-actor fields (listed in its hand-back).
 
 Closed: eng-host (Opus, PC-only), handed back 11-19, merged (41c045240). re4ref: PC build of the 20-file player and camera closure; plays_right.py with tolerances and three failing controls (walk speed +2%, one generator call dropped, input one tick late: all fail as they must). Agreement with the old game's door103 walk: 323 ticks within tolerance, discrete fields exact, position bit-identical on 272 ticks. Found a real bug: cAtariInfo::init declared with float arguments first. Doc: PLAYS_RIGHT.md.
 
