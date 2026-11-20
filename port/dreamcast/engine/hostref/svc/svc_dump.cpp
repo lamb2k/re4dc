@@ -1,0 +1,247 @@
+// svc_dump.cpp (game side; lane eng-svc): the per-tick record that compares the original skeleton and collision
+// units with the native services directly. Linked into two builds of re4ref (svc/svc.mk):
+//   odump   the reference (plain objects) with this dump
+//   native  the native services (services/skeleton, services/collision) with this dump
+// RE4_SVC_OUT=<dir> receives:
+//   pal.bin   every tick, every live model with parts (characters, then objects): per bone the world matrix (3x4),
+//             the world position and the skin palette (world x bind); the reference takes them from the cParts
+//             records (palette: cParts::mat x cParts::lt_inv_mat), the native build from its tables after
+//             skel_publish (once a tick, as the renderer would read it)
+//   col.txt   every collision query the behaviour (and the IK) makes, in call order: kind, inputs, outputs as float
+//             bits (--wrap on the entry points; queries made inside another query are not logged, so both builds
+//             log the same boundary)
+//   svc.txt   the native services' counters (native build)
+// Controls (native build, RE4_SVC_CONTROL): parent=<bone> (that bone's parent one bone too low), floor=<units>
+// (floor triangles raised), noik (the IK pass skipped); poison off with RE4_SVC_POISON=0.
+#include "hostref.h"
+#include "model.h"
+#include "motion.h"
+#include "em.h"
+#include "obj.h"
+#include "atari.h"
+#include "global.h"
+#include "../../services/skeleton/skel.h"
+#include "../../services/collision/col.h"
+
+// svc_io.cpp (PC side)
+extern "C" {
+void* svc_out_open(const char* name, const char* mode);
+void svc_out_write(void* f, const void* data, unsigned bytes);
+void svc_out_printf(void* f, const char* fmt, ...);
+void svc_out_close(void* f);
+const char* svc_env(const char* name);
+double svc_atof(const char* s);
+}
+typedef void FILE_;
+#define fprintf svc_out_printf
+#define fclose svc_out_close
+static int svc_atoi(const char* s) { int v = 0; while (*s >= '0' && *s <= '9') v = v * 10 + (*s++ - '0'); return v; }
+static int svc_prefix(const char* s, const char* p) { while (*p) if (*s++ != *p++) return 0; return 1; }
+// native build only (weak: absent from odump)
+extern "C" void skel_publish_all(void) __attribute__((weak));
+extern "C" SkelTable* skel_table_of(const cModel* m) __attribute__((weak));
+extern "C" void col_bake_all(void) __attribute__((weak));
+extern "C" u32 skel_table_count(void) __attribute__((weak));
+extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
+extern "C" SkelCounters skel_cnt __attribute__((weak));
+extern "C" ColCounters col_cnt __attribute__((weak));
+extern "C" int skel_control_parent __attribute__((weak));
+extern "C" int skel_control_no_ik __attribute__((weak));
+extern "C" int skel_poison __attribute__((weak));
+extern "C" f32 col_control_floor __attribute__((weak));
+
+namespace {
+FILE_* g_pal;
+FILE_* g_col;
+unsigned g_tick;
+int g_depth;
+
+FILE_* open_out(const char* name, const char* mode) { return svc_out_open(name, mode); }
+u32 bits(f32 f)
+{
+    u32 u;
+    __builtin_memcpy(&u, &f, 4);
+    return u;
+}
+void put_vec(const Vec* v) { fprintf(g_col, " %08x,%08x,%08x", bits(v->x), bits(v->y), bits(v->z)); }
+
+struct PalBone {
+    f32 m[12];
+    f32 w[3];
+    f32 p[12];
+};
+void dump_model(cModel* m, u32 code)
+{
+    if (!m->pParts || !m->nParts) return;
+    static PalBone buf[256];
+    u32 n = 0;
+    SkelTable* t = skel_table_of ? skel_table_of(m) : 0;
+    if (skel_table_of && !t) return;
+    if (t) {
+        n = t->n;
+        for (u32 b = 0; b < n && b < 256; b++) {
+            __builtin_memcpy(buf[b].m, t->world[b].m, 48);
+            buf[b].w[0] = t->soa[SK_WX * t->cap + b];
+            buf[b].w[1] = t->soa[SK_WY * t->cap + b];
+            buf[b].w[2] = t->soa[SK_WZ * t->cap + b];
+            __builtin_memcpy(buf[b].p, t->pal[b].m, 48);
+        }
+    } else {
+        for (cParts* p = m->pList; p && n < 256; p = p->pList, n++) {
+            __builtin_memcpy(buf[n].m, p->mat, 48);
+            buf[n].w[0] = p->world.x;
+            buf[n].w[1] = p->world.y;
+            buf[n].w[2] = p->world.z;
+            Mtx pal;
+            PSMTXConcat(p->mat, p->lt_inv_mat, pal);
+            __builtin_memcpy(buf[n].p, pal, 48);
+        }
+    }
+    u32 hdr[2] = {code, n};
+    svc_out_write(g_pal, hdr, 8);
+    svc_out_write(g_pal, buf, sizeof(PalBone) * n);
+}
+}   // namespace
+
+// the engine's service memory (svc_io.cpp: its own 4 MiB mapping at 0x8E000000, outside the game's arena): the
+// skeleton pool (1 MiB, tables come and go with the actors) and the room's collision tables above it
+extern "C" void* svc_region(u32* bytes);
+static u8* g_carve;
+static u32 g_carve_left;
+extern "C" void* svc_pool_base(u32* bytes)
+{
+    u32 all;
+    u8* r = (u8*) svc_region(&all);
+    *bytes = 0x00100000;
+    g_carve = r + *bytes;
+    g_carve_left = all - *bytes;
+    return r;
+}
+extern "C" void* svc_pool_carve(u32 bytes)
+{
+    if (!g_carve) {
+        u32 b;
+        svc_pool_base(&b);
+    }
+    bytes = (bytes + 31u) & ~31u;
+    if (bytes > g_carve_left) return 0;
+    void* p = g_carve;
+    g_carve += bytes;
+    g_carve_left -= bytes;
+    return p;
+}
+
+// before the room is set up (the tables are made while the player is constructed)
+__attribute__((constructor)) static void svc_options()
+{
+    const char* c = svc_env("RE4_SVC_CONTROL");
+    if (c && *c) {
+        if (svc_prefix(c, "parent=") && &skel_control_parent) skel_control_parent = svc_atoi(c + 7);
+        if (svc_prefix(c, "noik") && &skel_control_no_ik) skel_control_no_ik = 1;
+        if (svc_prefix(c, "floor=") && &col_control_floor) col_control_floor = (f32) svc_atof(c + 6);
+    }
+    const char* p = svc_env("RE4_SVC_POISON");
+    if (&skel_poison) skel_poison = !(p && *p == '0');
+}
+
+extern "C" void host_svc_ready()
+{
+    const char* c = svc_env("RE4_SVC_CONTROL");
+    if (c && *c) host_log("svc control: %s", c);
+    if (col_bake_all) col_bake_all();   // the room's collision tables, baked at room load
+    g_pal = open_out("pal.bin", "wb");
+    g_col = open_out("col.txt", "w");
+}
+
+extern "C" void host_svc_tick(unsigned t, int begin)
+{
+    g_tick = t;
+    if (begin) return;
+    if (skel_publish_all) skel_publish_all();
+    if (!g_pal) return;
+    u32 hdr[2] = {0x4B434954u, t};   // "TICK"
+    svc_out_write(g_pal, hdr, 8);
+    const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
+    for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext) dump_model(e, ((u32) e - elo) / EmMgr.size);
+    for (cObj* o = ObjMgr.pAlive; o; o = (cObj*) o->pNext) dump_model(o, 64 + ((u32) o - olo) / ObjMgr.size);
+    u32 end[2] = {0x444E4524u, 0};   // "$END"
+    svc_out_write(g_pal, end, 8);
+}
+
+extern "C" void host_svc_finish()
+{
+    if (g_pal) fclose(g_pal);
+    if (g_col) fclose(g_col);
+    g_pal = 0;
+    g_col = 0;
+    if (&skel_cnt) {
+        FILE_* f = open_out("svc.txt", "w");
+        if (!f) return;
+        const SkelCounters& s = skel_cnt;
+        fprintf(f, "skel entries %u mat_local %u mat_world %u mat_world_slow %u xmtrx_loads %u add_rot %u samples %u "
+                   "hokan_bones %u blend_bones %u ik_chains %u palette %u serve_bones %u pull_bones %u poison_bones %u parent_mismatch %u\n",
+                s.entries, s.mat_local, s.mat_world, s.mat_world_slow, s.xmtrx_loads, s.add_rot, s.samples, s.hokan_bones,
+                s.blend_bones, s.ik_chains, s.palette, s.serve_bones, s.pull_bones, s.poison_bones, s.parent_mismatch);
+        if (&col_cnt) {
+            const ColCounters& k = col_cnt;
+            fprintf(f, "col bakes %u late_bakes %u line_queries %u sphere_queries %u nodes_tested %u leaves %u tris_line %u "
+                       "tris_sphere %u tri_bytes %u\n",
+                    k.bakes, k.late_bakes, k.line_queries, k.sphere_queries, k.nodes_tested, k.leaves, k.tris_line,
+                    k.tris_sphere, k.tri_bytes);
+        }
+        for (u32 i = 0; skel_table_of && i < skel_table_count(); i++) {
+            SkelTable* t = skel_table_at(i);
+            fprintf(f, "table %u model %08x bones %u bytes %u mailbox %u:", i, (u32) t->model, t->n, t->bytes, t->nMbox);
+            for (u32 b = 0; b < t->n; b++)
+                if (t->mbox[b]) fprintf(f, " %u", b);
+            fprintf(f, "\n");
+        }
+        fclose(f);
+    }
+}
+
+// ---- the collision boundary log (--wrap) ----
+#define COLW(ret, mangled, params, args, log_in, log_out)                                                            \
+    extern "C" ret __real_##mangled params;                                                                          \
+    extern "C" ret __wrap_##mangled params                                                                           \
+    {                                                                                                                \
+        const bool top = g_depth == 0;                                                                               \
+        if (top && g_col) { fprintf(g_col, "%u", g_tick); log_in; }                                                 \
+        g_depth++;                                                                                                   \
+        ret r = __real_##mangled args;                                                                               \
+        g_depth--;                                                                                                   \
+        if (top && g_col) { fprintf(g_col, " ->"); log_out; fprintf(g_col, "\n"); }                                 \
+        return r;                                                                                                    \
+    }
+
+static const char* mgr(cSatMgr* s) { return s == &EatMgr ? "E" : "S"; }
+static u32 actor(cModel* m)
+{
+    const u32 a = (u32) m, elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
+    if (a >= elo && a < elo + EmMgr.size * EmMgr.nArray) return (a - elo) / EmMgr.size;
+    if (a >= olo && a < olo + ObjMgr.size * ObjMgr.nArray) return 64 + (a - olo) / ObjMgr.size;
+    return 999;
+}
+
+COLW(f32, _ZN7cSatMgr8getFloorEP3VecffPmi, (cSatMgr* s, Vec* pos, f32 up, f32 down, u32* attr, int flag),
+     (s, pos, up, down, attr, flag),
+     { fprintf(g_col, " F%s", mgr(s)); put_vec(pos); fprintf(g_col, " %08x %08x %x", bits(up), bits(down), flag); },
+     { fprintf(g_col, " %08x %08x", bits(r), attr ? *attr : 0); })
+COLW(int, _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii, (cSatMgr* s, Vec* p0, Vec* p1, Vec* hit, Vec* nrm, int flag, int mask),
+     (s, p0, p1, hit, nrm, flag, mask),
+     { fprintf(g_col, " H%s", mgr(s)); put_vec(p0); put_vec(p1); fprintf(g_col, " %x %x", flag, mask); },
+     { fprintf(g_col, " %08x", r); if (hit) put_vec(hit); if (nrm && r) put_vec(nrm); put_vec(p1); })
+COLW(int, _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii, (cSatMgr* s, Vec* p0, Vec* p1, Vec* hit, u32* attr, int flag, int mask),
+     (s, p0, p1, hit, attr, flag, mask),
+     { fprintf(g_col, " L%s", mgr(s)); put_vec(p0); put_vec(p1); fprintf(g_col, " %x %x", flag, mask); },
+     { fprintf(g_col, " %08x", r); if (hit) put_vec(hit); if (attr && r) fprintf(g_col, " %08x", *attr); put_vec(p1); })
+COLW(int, _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i, (cSatMgr* s, Vec* p0, Vec* p1, f32 rad, int flag, Vec* nrm, int mask),
+     (s, p0, p1, rad, flag, nrm, mask),
+     { fprintf(g_col, " P%s", mgr(s)); put_vec(p0); put_vec(p1); fprintf(g_col, " %08x %x %x", bits(rad), flag, mask); },
+     { fprintf(g_col, " %x", r); put_vec(p1); if (nrm) put_vec(nrm); })
+COLW(int, _ZN7cSatMgr5checkEP6cModeli, (cSatMgr* s, cModel* m, int flag), (s, m, flag),
+     { fprintf(g_col, " C%s %u", mgr(s), actor(m)); put_vec(&m->pos); fprintf(g_col, " %x", flag); },
+     { fprintf(g_col, " %x", r); put_vec(&m->pos); put_vec(&m->Wall_norm); fprintf(g_col, " %08x", (u32) m->pFloor_norm); })
+COLW(int, _ZN7cSatMgr8checkAirEP6cModeli, (cSatMgr* s, cModel* m, int flag), (s, m, flag),
+     { fprintf(g_col, " A%s %u", mgr(s), actor(m)); put_vec(&m->pos); fprintf(g_col, " %x", flag); },
+     { fprintf(g_col, " %x", r); put_vec(&m->pos); put_vec(&m->Wall_norm); })
