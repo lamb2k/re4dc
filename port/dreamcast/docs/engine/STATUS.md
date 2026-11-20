@@ -34,6 +34,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
 | eng-svc5 | Step 2 (E1), PC-only: native math helpers, garment pose, SDK math and allocator; strict plays-right reader | lane/eng-svc5 | Claude Opus | E:\RE4DC-Lanes\eng-svc5 |
+| eng-e1f | Steps 1 and 2: presented fields in every scene of the console disc, El Gigante bench pack, enemy decision groups in the link check, village plays-right gaps, HUD compositing | lane/eng-e1f | Claude Opus | E:\RE4DC-Lanes\eng-e1f |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
 
