@@ -1,0 +1,34 @@
+# e1-route: the E1 image's pad route (engine/core/route.cpp, from E:\RE4DC-Lanes\eng-e1\s\fixtures\r101-route.txt) on
+# the hosted player and camera (lane eng-svc): village square (r101) by the cross, Leon placed at (-7914, 0, 2000)
+# facing +x; walk, walk turning right, turn in place, run, run turning left, aim (R), aim turning left and right,
+# aim, walk, back step. Engine tick k reads pad frame 13 + k (route.cpp E1_PAD_AT_PLACE), so an act at pad frame f
+# starts at tick f - 13 and holds `hold` frames; a held R also gives the analog trigger 0xC0 (the warp rig's rule).
+# Reference-only: used by lane eng-svc to compare the original skeleton and collision units with the native ones on
+# walking, running, turning and aiming (no old-game agreement is claimed here; eng-e1 compared the engine image with
+# the old game on this route).
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+weapon 2 0
+seed 0x0d37
+ticks 640
+pad 0 0x0000 0 0
+pad 47 0x0000 0 80              # walk (frame 60, 90 frames)
+pad 137 0x0000 0 0
+pad 147 0x0000 80 80            # walk, turning right (160, 40)
+pad 187 0x0000 0 0
+pad 197 0x0000 80 0             # turn right in place (210, 30)
+pad 227 0x0000 0 0
+pad 237 0x0200 0 80             # run: B + forward (250, 60)
+pad 297 0x0000 0 0
+pad 307 0x0200 -80 80           # run, turning left (320, 36)
+pad 343 0x0000 0 0
+pad 387 0x0020 0 0 0 0 0 192    # aim: R (400, 30)
+pad 417 0x0020 -80 0 0 0 0 192  # aim, turning left (430, 24)
+pad 441 0x0020 80 0 0 0 0 192   # aim, turning right (454, 24)
+pad 465 0x0020 0 0 0 0 0 192    # aim (478, 20)
+pad 485 0x0000 0 0
+pad 517 0x0000 0 80             # walk (530, 30)
+pad 547 0x0000 0 0
+pad 557 0x0000 0 -80            # back step (570, 20)
+pad 577 0x0000 0 0

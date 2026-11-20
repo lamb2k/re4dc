@@ -43,6 +43,11 @@ extern "C" void host_trace_actors(unsigned t);
 extern "C" void host_control_follow(float k);
 extern "C" void host_sub_ctrl(int mode, int flag);
 void EmSetRoomInit();   // em_set.cpp
+// lane eng-svc: the service census and the native services (svc/, docs/engine/SERVICES.md) hook the run here.
+// Weak: the plain reference build has none of them.
+extern "C" void host_svc_ready() __attribute__((weak));
+extern "C" void host_svc_tick(unsigned t, int begin) __attribute__((weak));
+extern "C" void host_svc_finish() __attribute__((weak));
 
 static HostFixture g_fx;
 static HostOptions g_opt;
@@ -308,8 +313,10 @@ int main(int argc, char** argv)
     }
 
     bool rng_dropped = false;
+    if (host_svc_ready) host_svc_ready();
     for (unsigned t = 1; t <= g_fx.ticks; t++) {
         host_stub_tick_reset();
+        if (host_svc_tick) host_svc_tick(t, 1);
         host_rnd_owner = 0;
         if (g_opt.rng_feed) {
             const long ot = (long) t + g_opt.rng_offset;
@@ -371,9 +378,11 @@ int main(int argc, char** argv)
             host_rnd_calls = n - 1;
             rng_dropped = true;
         }
+        if (host_svc_tick) host_svc_tick(t, 0);
         trace_tick(t, g_pad);
         host_trace_actors(t);
     }
+    if (host_svc_finish) host_svc_finish();
     if (g_opt.control == HOST_CTL_DROP_RNG && !rng_dropped)
         host_log("control drop-rng: no generator call at or after tick %u (nothing dropped)", g_opt.tick);
     if (g_opt.control == HOST_CTL_DROP_RNG_ACTOR && !host_rnd_dropped)
