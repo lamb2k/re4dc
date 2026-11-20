@@ -26,6 +26,7 @@
 #   colfloor RE4_SVC_CONTROL=colfloor: the per-model floor snap 0.5 unit high (col_model.cpp; e1-route)
 #   colwall  RE4_SVC_CONTROL=colwall: the per-model wall slide's radius 10% larger (e1-route)
 #   routenear RE4_SVC_CONTROL=routenear: the nearest reachable way point is the second one (hill-ashley: the partner)
+#   followslow RE4_SVC_CONTROL=followslow: every root-motion follower blend step one tick longer (e1-route, exercise follow)
 #   routehop RE4_SVC_CONTROL=routehop: the way points between skipped, every reachable destination its own next hop (bell-ganado: the Ganados' chase)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
@@ -175,6 +176,21 @@ print()" "$b/compare.json")
     r4ctl e1-route "wall slide radius 10% larger" colwall
     r4ctl hill-ashley "nearest way point is the second reachable" routenear
     r4ctl bell-ganado "way points between skipped" routehop
+    # service exercises (svc4_dump.cpp, RE4_SVC_EXERCISE): calls planted at fixed ticks for services the fixtures' play
+    # does not reach; the reference and the native build get the same calls, so the comparison is still original
+    # against native on the same inputs. Each exercise's controls must FAIL.
+    exrow() {   # exrow <fixture> <exercise> <control>...
+        local fx=$1 ex=$2 c
+        shift 2
+        run "$B/odump/re4ref" "$fx" "$OUT/$fx/x-$ex-ref" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/x-$ex" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex
+        row "exercise $ex: native" PASS "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex" "$fx"
+        for c in "$@"; do
+            run "$B/native/re4ref" "$fx" "$OUT/$fx/x-$ex-c-$c" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex RE4_SVC_CONTROL=$c
+            row "exercise $ex, control: $c" FAIL "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex-c-$c" "$fx"
+        done
+    }
+    exrow e1-route follow followslow
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

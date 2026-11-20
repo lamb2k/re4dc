@@ -15,6 +15,9 @@
 #include "../../services/collision/col_model.h"
 #include "../../services/routes/routes.h"
 #include "route_ck.h"
+#include "cMotBase.h"
+#include "../../services/motion/follow.h"
+#include "player.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -28,6 +31,8 @@ extern ColModelCounters colm_cnt __attribute__((weak));
 extern int colm_control __attribute__((weak));
 extern RouteCounters route_cnt __attribute__((weak));
 extern int route_control __attribute__((weak));
+extern FollowCounters follow_cnt __attribute__((weak));
+extern int follow_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -92,8 +97,43 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "routenear")) route_control = 1;
         if (c && !__builtin_strcmp(c, "routehop")) route_control = 2;
     }
+    if (&follow_control) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "followslow")) follow_control = 1;
+    }
 }
-extern "C" void svc4_tick(unsigned t) { g_tick = t; }
+// Service exercises (RE4_SVC_EXERCISE=<name>): inputs that drive a service the fixtures' play does not reach, made at
+// the start of a tick from this file, so the reference and the native build get the same calls. They change the play;
+// the comparison stays reference against native on the same inputs.
+//   follow: Leon's root-motion follower (cMotBase, started by ledge climbs, fence vaults and falls, which no fixture
+//           has): tick 40 a 10-tick blend onto a pose 250 units off and 0.5 rad turned, tick 100 a pin (count 0)
+//           released at tick 130, tick 200 a 25-tick blend.
+namespace {
+int g_exercise = -1;
+unsigned g_ex_tick = ~0u;
+void exercise(unsigned t)
+{
+    if (g_exercise < 0) {
+        const char* e = svc_env("RE4_SVC_EXERCISE");
+        g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : 0;
+    }
+    if (!g_exercise || t == g_ex_tick || !pPL || !pPL->MotBase) return;
+    g_ex_tick = t;
+    cMotModel* m = (cMotModel*) (cModel*) pPL;
+    Vec p = pPL->pos, r = pPL->ang;
+    switch (t) {
+    case 40: p.x += 200.0f, p.z -= 150.0f, r.y += 0.5f; pPL->MotBase->set(m, &p, &r, 10); break;
+    case 100: pPL->MotBase->set(m, &p, &r, 0); break;
+    case 130: pPL->MotBase->cnt = 0xFF; m->Motion.Mot_attr |= 1; break;
+    case 200: p.x -= 300.0f, p.z += 100.0f, r.y -= 0.8f; pPL->MotBase->set(m, &p, &r, 25); break;
+    }
+}
+}   // namespace
+extern "C" void svc4_tick(unsigned t)
+{
+    g_tick = t;
+    exercise(t);
+}
 extern "C" void svc4_finish()
 {
     if (!g_f) return;
@@ -113,6 +153,11 @@ extern "C" void svc4_finish()
         const RouteCounters& r = route_cnt;
         P(g_f, "# routes: near_calls %u near_cached %u near_lines %u near_none %u steps %u steps_direct %u lines %u dists %u debug_draws %u\n",
           r.near_calls, r.near_cached, r.near_lines, r.near_none, r.steps, r.steps_direct, r.lines, r.dists, r.debug_draws);
+    }
+    if (&follow_cnt) {
+        const FollowCounters& f = follow_cnt;
+        P(g_f, "# root-motion follower: sets %u moves %u blends %u pins %u ends %u adjusts %u\n", f.sets, f.moves, f.blends, f.pins, f.ends,
+          f.adjusts);
     }
     svc_out_close(g_f);
     g_f = 0;
@@ -208,3 +253,17 @@ W(s8, getNearPoint, (Vec* pos, int mode, int mask), (pos, mode, mask), { P(g_f, 
 W(int, getNearInfo, (cEm* em, int mode, int mask), (em, mode, mask), { P(g_f, " NI %u", actor(em)); P(g_f, " %d %x", mode, mask); },
   { P(g_f, " %d", r); rck(em); })
 WV(RouteCk, (), (), { P(g_f, " RK"); }, {})
+// ---- root-motion follower (cMotBase) ----
+namespace {
+void mb(const cMotBase* b)
+{
+    P(g_f, " %x", b->cnt);
+    pv(&b->pos);
+    pv(&b->ang);
+    if (b->pModel) { pv(&b->pModel->pos); pv(&b->pModel->ang); P(g_f, " %x", b->pModel->Motion.Mot_attr); }
+}
+}
+WV(_ZN8cMotBase4moveEv, (cMotBase* b), (b), { P(g_f, " MB %u", actor(b->pModel)); mb(b); }, { mb(b); })
+WV(_ZN8cMotBase6adjustEv, (cMotBase* b), (b), { P(g_f, " MJ %u", actor(b->pModel)); mb(b); }, { mb(b); })
+WV(_ZN8cMotBase3setEP9cMotModelP3VecS3_h, (cMotBase* b, cMotModel* m, Vec* p, Vec* r, u8 c), (b, m, p, r, c),
+   { P(g_f, " MS %u", actor(m)); pv(p); pv(r); P(g_f, " %x", c); }, { mb(b); })
