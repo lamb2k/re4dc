@@ -44,6 +44,56 @@ extern "C" int re4dc_motion_acquire(const void*, unsigned**) { return 0; }
 extern "C" void re4dc_motion_release(int) {}
 
 void e1_prnd_seed(unsigned short s);
+// ---- the cloth's shape statistics (lane eng-e1d; boot option CLOTHSTAT, diagnostic, outside the timed rows) ----
+// The motion check of SERVICES.md section 12 on the console image: per chain, the mean over its links and the run of
+// the horizontal distance of each link bone from the model's bone 0 (radius), and per link its mean offset from bone 0
+// (x, y, z), from the skeleton tables after the tick. s/clothcmp.py compares them with re4ref's original cloth (odump
+// build, wind on) on the same fixture: radius within 0.4 unit, link means within 2 units (the round-2 bounds).
+static int cloth_stat = -1;
+#ifndef E2_BOSS
+#include "model.h"
+#include "../services/cloth/cloth.h"   // the native cloth service (an original cloth.h is on the include path)
+struct ClothStat { const cModel* m; u32 n, ticks; float r; float sum[64][3]; };
+static ClothStat cstat[8];
+void e1_cloth_stat_tick()
+{
+    if (cloth_stat <= 0) return;
+    for (u32 i = 0; i < cloth_chain_count() && i < 8; i++) {
+        const ClothChain* ch = cloth_chain_at(i);
+        if (!ch || !ch->t) continue;
+        ClothStat& s = cstat[i];
+        s.m = ch->m;
+        s.n = ch->n < 64 ? ch->n : 64;
+        const SkelTable* t = ch->t;
+        const float x0 = t->world[0].m[0][3], y0 = t->world[0].m[1][3], z0 = t->world[0].m[2][3];
+        float r = 0;
+        for (u32 k = 0; k < s.n; k++) {
+            const SkelBone& b = t->world[ch->link[k].bone];
+            const float dx = b.m[0][3] - x0, dy = b.m[1][3] - y0, dz = b.m[2][3] - z0;
+            r += __builtin_sqrtf(dx * dx + dz * dz);
+            s.sum[k][0] += dx; s.sum[k][1] += dy; s.sum[k][2] += dz;
+        }
+        s.r += s.n ? r / s.n : 0;
+        s.ticks++;
+    }
+}
+static void cloth_stat_report()
+{
+    if (cloth_stat <= 0) return;
+    for (u32 i = 0; i < 8; i++) {
+        const ClothStat& s = cstat[i];
+        if (!s.ticks) continue;
+        printf("E1 CLOTHSTAT chain %lu model %d links %lu ticks %lu radius %d/1000\n", (unsigned long) i,
+               s.m ? (int) s.m->id : -1, (unsigned long) s.n, (unsigned long) s.ticks, (int) (1000 * s.r / s.ticks));
+        for (u32 k = 0; k < s.n; k++)
+            printf("E1 CLOTHLINK %lu %lu %d %d %d\n", (unsigned long) i, (unsigned long) k, (int) (1000 * s.sum[k][0] / s.ticks),
+                   (int) (1000 * s.sum[k][1] / s.ticks), (int) (1000 * s.sum[k][2] / s.ticks));
+    }
+}
+#else
+void e1_cloth_stat_tick() {}
+static void cloth_stat_report() {}
+#endif
 void e1_svc_boot()
 {
     file_t f = fs_open("/cd/SKELCHECK", O_RDONLY);
@@ -52,6 +102,14 @@ void e1_svc_boot()
     // presentation randomness alone (the behaviour's generator is untouched)
     f = fs_open("/cd/PSEED", O_RDONLY);
     if (f >= 0) { fs_close(f); e1_prnd_seed(0x5A5A); e1_log("E1 PSEED: presentation generator 5a5a\n"); }
+    f = fs_open("/cd/CLOTHSTAT", O_RDONLY);
+    cloth_stat = f >= 0;
+    if (f >= 0) { fs_close(f); e1_log("E1 CLOTHSTAT: the cloth chains' shape statistics\n"); }
+#ifndef E2_BOSS
+    // CLOTHCTL: the cloth statistics' control (must fail s/clothcmp.py): the native cloth with gravity off
+    f = fs_open("/cd/CLOTHCTL", O_RDONLY);
+    if (f >= 0) { fs_close(f); cloth_control_nogravity = 1; e1_log("E1 CLOTHCTL: cloth gravity off (control)\n"); }
+#endif
 }
 
 void e1_svc_room_ready()
@@ -65,6 +123,7 @@ void e1_svc_room_ready()
 
 void e1_svc_report()
 {
+    cloth_stat_report();
     u32 bytes = 0;
     for (u32 i = 0; i < skel_table_count(); i++) {
         const SkelTable* t = skel_table_at(i);

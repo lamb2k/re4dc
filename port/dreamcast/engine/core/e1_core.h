@@ -18,7 +18,8 @@ void e1_svc_publish();
 // native services host side (lane eng-e1c, host/e1_svc_mem.cpp): boot options, room tables, report
 void e1_svc_boot();
 void e1_svc_room_ready();
-void e1_svc_report();   // the palette, once a tick after the behaviour (native skeleton), in the services row
+void e1_svc_report();
+void e1_cloth_stat_tick();   // lane eng-e1d: CLOTHSTAT boot option, the cloth chains' shape statistics   // the palette, once a tick after the behaviour (native skeleton), in the services row
 extern volatile uint32_t e1_state[8];
 
 // The route: start state (the reference fixture's warp: room, position, angle, flags) and the pad script, one

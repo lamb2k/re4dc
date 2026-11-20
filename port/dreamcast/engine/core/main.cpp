@@ -132,6 +132,7 @@ static void game_tick(E1Timing& tm)
     tm.cam_us = now_us() - t2;
     e1_svc_publish();                   // the palette (world x bind) for drawing, once a tick after the behaviour
     tm.services_us = e1_svc_end();
+    e1_cloth_stat_tick();               // CLOTHSTAT only (diagnostic, outside the timed rows)
     for (unsigned g = 0; g < E1_SVC_GROUPS; g++) tm.svc_group_us[g] = e1_svc_group(g);
 }
 

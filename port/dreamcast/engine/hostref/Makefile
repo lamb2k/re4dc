@@ -70,7 +70,7 @@ SDKLIB := mtx mtxvec vec quat mtx44 Padclamp
 # Host files: PC side (system C library) and game side (the game's headers, with their own libc).
 HOST_PC   := host_rt.cpp host_mem.cpp host_data.cpp host_trace.cpp host_io.cpp
 HOST_GAME := host_memapi.cpp host_globals.cpp host_mgr.cpp host_stubs.cpp host_glue.cpp host_em.cpp \
-             host_math.cpp host_actors.cpp host_actor_stubs.cpp replay.cpp
+             host_math.cpp host_actors.cpp host_actor_stubs.cpp replay.cpp host_present.cpp
 
 ARCH   := -m32 -msse2 -mfpmath=sse -malign-double -fno-pie -fno-stack-protector
 COMMON := $(ARCH) -O1 -g -fno-strict-aliasing -ffunction-sections -fdata-sections
@@ -83,7 +83,7 @@ HOSTFLAGS := -std=gnu++20 -fpermissive -Wall -Wno-unused-function -Wno-register 
 # c++config.h, taken from the 64-bit tree; nothing links against libstdc++ (host_rt.cpp).
 PCFLAGS := -isystem /usr/include/x86_64-linux-gnu/c++/13 -std=gnu++20 -Wall -fno-exceptions -fno-rtti \
            -fno-threadsafe-statics -I.
-LDFLAGS := -m32 -no-pie -Wl,--gc-sections -lm
+LDFLAGS := -m32 -no-pie -Wl,--gc-sections -Wl,-z,start-stop-gc -lm -Wl,--wrap=Rnd,--wrap=fRand0_1,--wrap=fRand1_1
 
 FP_plain := -ffp-contract=off '-DHOST_FP_NAME="plain"'
 FP_fma   := -mfma -ffp-contract=fast -fexpensive-optimizations '-DHOST_FP_NAME="fma"'
@@ -182,6 +182,15 @@ $(BUILD)/%/game/em16_em16_set.o: MODFLAGS = $(call modname,em16)
 # idiom): fine where int and float arguments travel in separate registers, wrong on the i386 stack. Its
 # object's reference is renamed to the adapter that passes them on in at_sub.cpp's order (host_actors.cpp).
 $(BUILD)/%/game/em_sub.o: POSTCC = objcopy --redefine-sym AtSphereCapsuleCk=host_AtSphereCapsuleCkF $@
+
+# lane eng-e1d: random numbers split as in the engine image (host_present.cpp): the presentation functions (the engine's
+# game/Makefile PRESENT_* list) are moved to the section re4ref_present, whose draws host_present.cpp answers.
+$(BUILD)/%/game/pl_class.o: POSTCC = objcopy --rename-section .text._ZN7cPlayer13moveEyeNormalEv=re4ref_present $@
+$(BUILD)/%/game/pl_sub.o: POSTCC = objcopy --rename-section .text.PlSetDamageSe=re4ref_present $@
+$(BUILD)/%/game/pl_wep.o: POSTCC = objcopy --rename-section .text.wepSetWaterShot=re4ref_present $@
+$(BUILD)/%/game/cam_extra.o: POSTCC = objcopy --rename-section .text._ZN11CameraScope4moveEv=re4ref_present --rename-section .text._ZN12CameraLookAtC2EP6Camera=re4ref_present $@
+$(BUILD)/%/game/wep_objRuger.o: POSTCC = objcopy --rename-section .text._ZN9cObjRuger12setCartridgeEv=re4ref_present $@
+$(BUILD)/%/game/pl_npc.o: POSTCC = objcopy --rename-section .text._ZN8cSubChar8moveFaceEv=re4ref_present $@
 
 # lane eng-svc: the service census build and the native skeleton and collision services (svc/svc.mk)
 include svc/svc.mk

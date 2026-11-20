@@ -75,7 +75,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     if (translucent) {
         unsigned emitted = 0;
         for (unsigned p = 0; p < h[4]; p++)
-            if (m->parts[p].src->role == 7 && state[p]) sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
+            if (m->parts[p].src->role == 8 && state[p]) sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
         sq_wait(); sq_unlock();
         return;
     }
@@ -126,10 +126,12 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
         light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lit + rp->nrm_first);
     }
-    /* 6. opaque parts (hair in the translucent call); Leon's knife part only in the knife stance */
+    /* 6. opaque parts (lane eng-e1d: as the bench's pass since eng-look, the hair part, role 7, is opaque with the body
+       atlas and the hair run, role 8, is drawn in the translucent call, in the translucent list); Leon's knife part only
+       in the knife stance */
     unsigned emitted = 0;
     for (unsigned p = 0; p < h[4]; p++) {
-        if (!state[p] || m->parts[p].src->role == 7) continue;
+        if (!state[p] || m->parts[p].src->role == 8) continue;
         if (!model && m->parts[p].src->role == 2 && knife_stance(s) == 0) continue;
         sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
     }

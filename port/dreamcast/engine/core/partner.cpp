@@ -231,6 +231,9 @@ void e1_partner_boot()
 void e1_partner_room_init()
 {
     if (e1_scene != E1_SCENE_HILL) return;
+    // lane eng-e1d: the behaviour generator starts where the old run's was at the resume (the fixture's seed 0x0d37,
+    // hill-follow.txt; re4ref applies it the same way), so the engine compares with re4ref without a per-tick feed
+    RndInit(0x0d37);
     static const uint32_t resume_pos[3] = {0x469df1b2u, 0xc3841c09u, 0x465a0443u}, resume_yaw = 0xbfe89375u;
     static const uint32_t sub_pos[3] = {0x469ae1f8u, 0xc4064a5au, 0x4658bef3u}, sub_yaw = 0x3fa98f4au;
     cPlayer* p = pPL;
@@ -350,7 +353,7 @@ void e1_trace_v2(unsigned t)
     unsigned total = 0;
     for (unsigned c : rng_calls) total += c;
     if (t == 0) {
-        int n = snprintf(line, sizeof(line), "# re4ref trace v2\nH fixture=engine-e1b-hill room=%04x seed=0000 ticks=%u fp=sh4 control=%s%s\n",
+        int n = snprintf(line, sizeof(line), "# re4ref trace v2\nH fixture=engine-e1b-hill room=%04x seed=0d37 ticks=%u fp=sh4 control=%s%s\n",
                          e1_route().room, e1_route().ticks, follow_control ? "follow-dist,1.1" : "none", feed ? " rng_feed=FEED.BIN" : "");
         e1_trace_put(line, n);
     }

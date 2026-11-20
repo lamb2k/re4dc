@@ -142,10 +142,10 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_list_begin(PVR_LIST_PT_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 1);
     else list_keepalive(PVR_LIST_PT_POLY);
-    e1_actor_pass(&scene, leon, leon_skel, 0, identity, 1);
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_TR_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 2);
+    e1_actor_pass(&scene, leon, leon_skel, 0, identity, 1);   /* Leon's hair run (role 8), as the bench since eng-look */
     native_hud(&scene);
     pvr_list_finish();
     pvr_scene_finish();
