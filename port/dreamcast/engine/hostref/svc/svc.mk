@@ -71,7 +71,9 @@ SHZ := $(GAME)/third_party/sh4zam
 SVC_WRAP_COL := _ZN7cSatMgr8getFloorEP3VecffPmi _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii \
                 _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i _ZN7cSatMgr5checkEP6cModeli _ZN7cSatMgr8checkAirEP6cModeli
 # lane eng-svc4: the round-4 boundary log (svc4_dump.cpp), the same entry points in both builds
-SVC4_WRAP := EmAtCheck EmHitCheck ObjHitCheck ObaLineHitChk AtSphereCapsuleCk AtBoxCapsuleCk3 At_box_sphere_ck EatGetEffectType              At_poly_line_ck YarareInit YarareAdd _ZN10cAtariInfo4moveEv _ZN10cAtariInfo3setEiff _ZN10cAtariInfo11setPriorityEi              _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_
+SVC4_WRAP := EmAtCheck EmHitCheck ObjHitCheck ObaLineHitChk AtSphereCapsuleCk AtBoxCapsuleCk3 At_box_sphere_ck EatGetEffectType
+SVC4_WRAP += At_poly_line_ck YarareInit YarareAdd _ZN10cAtariInfo4moveEv _ZN10cAtariInfo3setEiff _ZN10cAtariInfo11setPriorityEi
+SVC4_WRAP += _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_ _ZN7cEatMgr10getEffInfoEi
 SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
                MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
@@ -94,9 +96,9 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 # sections 23 on). SVC4_OBJS are compiled with the hosted units' flags; every global symbol they define is made weak in
 # the original units of SVC4_UNITS (weak4/), so each call reaches the native body; svc4/svc4_units.sh reports which
 # original functions of those units the native link still keeps.
-SVC4_SRCS := volumes/volumes.cpp
+SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
-SVC4_UNITS := at_mod at_sub atariInfo
+SVC4_UNITS := at_mod at_sub atariInfo atari
 SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_ENG)/$(d))
 define SVC4_RULE
 $(NAT)/svc4/$(notdir $(1:.cpp=.o)): $(SVC_ENG)/$(1) $(wildcard $(SVC_ENG)/$(dir $(1))*.h)
@@ -110,8 +112,9 @@ $(NAT)/weak4/%.o: $(BUILD)/plain/game/%.o $(NAT)/svc4/syms.txt
 	@mkdir -p $(dir $@)
 	objcopy $$(cat $(NAT)/svc4/syms.txt) $(foreach s,$(WEAK_$*),--weaken-symbol=$(s)) $< $@
 SVC4_REPLACED := $(addprefix $(BUILD)/plain/game/,$(addsuffix .o,$(SVC4_UNITS)))
-NATIVE_GAME_OBJS := $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED),$(plain_GAME_OBJS)) $(NAT)/weak/motion.o $(NAT)/weak/model.o \
-                    $(NAT)/weak/atari.o $(NAT)/pen.o $(addprefix $(NAT)/weak4/,$(addsuffix .o,$(SVC4_UNITS))) $(SVC4_OBJS)
+NATIVE_GAME_OBJS := $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED),$(plain_GAME_OBJS)) \
+                    $(filter-out $(addprefix $(NAT)/weak/,$(addsuffix .o,$(SVC4_UNITS))),$(NAT)/weak/motion.o $(NAT)/weak/model.o $(NAT)/weak/atari.o) \
+                    $(NAT)/pen.o $(addprefix $(NAT)/weak4/,$(addsuffix .o,$(SVC4_UNITS))) $(SVC4_OBJS)
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
 	@mkdir -p $(dir $@)
@@ -146,7 +149,7 @@ $(BUILD)/svc/svc_dump.o: svc/svc_dump.cpp $(SVC_ENG)/skeleton/skel.h $(SVC_ENG)/
 $(BUILD)/svc/svc_io.o: svc/svc_io.cpp hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(PCFLAGS) -c $< -o $@
-$(BUILD)/svc/svc4_dump.o: svc/svc4_dump.cpp $(SVC_ENG)/volumes/volumes.h hostref.h
+$(BUILD)/svc/svc4_dump.o: svc/svc4_dump.cpp $(wildcard $(SVC_ENG)/*/*.h) hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o

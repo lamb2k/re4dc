@@ -12,6 +12,7 @@
 #include "at_sub.h"
 #include "at_mod.h"
 #include "../../services/volumes/volumes.h"
+#include "../../services/collision/col_model.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -21,6 +22,8 @@ const char* svc_env(const char* name);
 int svc_col_depth(void);
 extern VolCounters vol_cnt __attribute__((weak));
 extern int vol_control __attribute__((weak));
+extern ColModelCounters colm_cnt __attribute__((weak));
+extern int colm_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -75,6 +78,11 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "volpush")) vol_control = 1;
         if (c && !__builtin_strcmp(c, "volline")) vol_control = 2;
     }
+    if (&colm_control) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "colfloor")) colm_control = 1;
+        if (c && !__builtin_strcmp(c, "colwall")) colm_control = 2;
+    }
 }
 extern "C" void svc4_tick(unsigned t) { g_tick = t; }
 extern "C" void svc4_finish()
@@ -86,6 +94,11 @@ extern "C" void svc4_finish()
                "capsule_tests %u box_sphere %u debug_draws %u\n",
           v.at_checks, v.at_skipped, v.pairs, v.pairs_prio, v.pushes, v.pairs_box, v.line_tests, v.line_bodies, v.line_hits,
           v.capsule_tests, v.box_sphere, v.debug_draws);
+    }
+    if (&colm_cnt) {
+        const ColModelCounters& c = colm_cnt;
+        P(g_f, "# collision response: checks %u rects %u spheres %u slides %u floors %u floor_lost %u pieces %u debug_draws %u\n",
+          c.checks, c.rects, c.spheres, c.slides, c.floors, c.floor_lost, c.pieces, c.debug_draws);
     }
     svc_out_close(g_f);
     g_f = 0;
@@ -132,6 +145,15 @@ W(u32, AtBoxCapsuleCk3, (Vec* box, Vec* p0, f32 rr, Vec* p1), (box, p0, rr, p1),
   { P(g_f, " BC"); for (int i = 0; i < 8; i++) pv(&box[i]); pv(p0); pv(p1); P(g_f, " %08x", bits(rr)); }, { P(g_f, " %u", r); })
 W(int, At_box_sphere_ck, (Vec* box, Vec* p, f32 rr), (box, p, rr),
   { P(g_f, " BS"); for (int i = 0; i < 8; i++) pv(&box[i]); pv(p); P(g_f, " %08x", bits(rr)); }, { P(g_f, " %d", r); })
+// ---- per-model collision response (atari): check / checkAir / getFloor are logged by svc_dump.cpp (col.txt) ----
+extern "C" AtEffInfo* __real__ZN7cEatMgr10getEffInfoEi(cEatMgr* e, int type);
+extern "C" AtEffInfo* __wrap__ZN7cEatMgr10getEffInfoEi(cEatMgr* e, int type)
+{
+    const bool top = TOP;
+    AtEffInfo* r = __real__ZN7cEatMgr10getEffInfoEi(e, type);
+    if (top) P(g_f, "%u EI %d -> %d %x\n", g_tick, type, r != 0, r ? r->flag : 0);
+    return r;
+}
 W(int, EatGetEffectType, (u32 attr), (attr), { P(g_f, " ET %x", attr); }, { P(g_f, " %d", r); })
 W(u32, At_poly_line_ck, (AtPolyData* pd, Vec* out, AtPoly* poly, Vec* v0, Vec* v1, u32 flag, u32 mask),
   (pd, out, poly, v0, v1, flag, mask), { P(g_f, " PL %x", (u32) poly); pv(v0); pv(v1); P(g_f, " %x %x", flag, mask); },
