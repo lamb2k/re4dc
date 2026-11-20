@@ -21,6 +21,11 @@ static inline void enter(unsigned slot) { if (depth++ == 0) { svc_t0 = timer_us_
 static inline void leave() { if (--depth == 0) { uint64_t d = timer_us_gettime64() - svc_t0; svc_acc += d; svc_rows[svc_cur].us += d; svc_rows[svc_cur].calls++; } }
 }
 void e1_svc_begin() { svc_acc = 0; depth = 0; }
+// lane eng-e2: the same accounting for service entry points wrapped outside this file (the fight image's Ganado paths
+// and the native effect service), so nested calls are counted once and the row stays one number
+extern "C" unsigned e1_svc_slot_named(const char* n) { return svc_slot(n); }
+extern "C" void e1_svc_enter(unsigned slot) { enter(slot); }
+extern "C" void e1_svc_leave() { leave(); }
 uint32_t e1_svc_end() { return (uint32_t) svc_acc; }
 
 #define WRAP(ret, mangled, params, args)                          \
