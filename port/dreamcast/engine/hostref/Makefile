@@ -40,12 +40,25 @@ SERVICES := src/game/model.cpp src/game/motion.cpp src/game/cMotBase.cpp src/gam
 WEAPON := src/wep/objRuger.cpp
 WEAPON02 := src/wep02/wep02.cpp src/wep02/objMauser.cpp
 
+# Actors (lane eng-host2; PLAYS_RIGHT.md "Actors"; closures in closure-map-actors.tsv):
+# Ashley as the partner: cSubChar (pl_npc.cpp) and the pl11 module's cSubAshley (enemy id 3, em/pl11).
+# One Ganado: the shared Ganado library em10.cpp with the per-type set files of the village square's
+# Ganado (em15, the bell fight), the farm's (em12, the hay-fork view) and the hill's with Ashley (em16, r11d), the spawn list (em_set.cpp), the
+# enemy helpers (em_sub.cpp) and the damage records (dmg.cpp). Each module's REL entry (_prolog) is linked
+# in under its own name (MODNAME_prolog: the -D renames below; no source change), as wep02's is.
+ACTOR_GAME := src/game/pl_npc.cpp src/game/em_set.cpp src/game/em_sub.cpp src/game/dmg.cpp src/game/em_dm_val.cpp
+ACTOR_MODS := src/pl11/pl11.cpp src/em10/em10.cpp src/em12/em12_set.cpp src/em15/em15_set.cpp src/em16/em16_set.cpp
+# The original services the actors reach that E1 did not (collision, routes, skeleton, math): the reference
+# keeps the original behaviour under the actors, as it does under the player.
+ACTOR_SERVICES := src/game/route_ck.cpp src/game/area.cpp
+
 # Parts of files whose other functions reach behaviour outside E1 (prep.py extract, verbatim):
 # em.cpp the character base and manager (construct: host_em.cpp), obj.cpp the object manager
 # (construct: host_em.cpp), read.cpp the tagged-archive lookup (the loaders: host_glue.cpp).
 EM_FUNCS := cEm::cEm cEm::setStatus cEm::clearStatus cEm::checkStatus cEm::checkThrow cEm::setItem \
             cEm::setNoItem cEm::move cEm::initWork cDmgInfo::cDmgInfo cDmgInfo::set cDmgInfo::clear \
-            cDmgInfo::move cEmMgr::cEmMgr cEmMgr::arrayAlloc cEmMgr::destroy cEmMgr::isBattle cEmMgr::log battleCheck
+            cDmgInfo::move cEmMgr::cEmMgr cEmMgr::arrayAlloc cEmMgr::destroy cEmMgr::isBattle cEmMgr::log battleCheck \
+            cEmMgr::move emMove@host_em_move cEmMgr::getEmPtr killEm cEmMgr::destroyAll
 OBJ_FUNCS := cObjMgr::cObjMgr cObjMgr::log cObjMgr::move objMove cObjMgr::destroy cObj::cObj
 READ_FUNCS := GetDataExt
 
@@ -57,7 +70,7 @@ SDKLIB := mtx mtxvec vec quat mtx44 Padclamp
 # Host files: PC side (system C library) and game side (the game's headers, with their own libc).
 HOST_PC   := host_rt.cpp host_mem.cpp host_data.cpp host_trace.cpp host_io.cpp
 HOST_GAME := host_memapi.cpp host_globals.cpp host_mgr.cpp host_stubs.cpp host_glue.cpp host_em.cpp \
-             host_math.cpp replay.cpp
+             host_math.cpp host_actors.cpp host_actor_stubs.cpp replay.cpp
 
 ARCH   := -m32 -msse2 -mfpmath=sse -malign-double -fno-pie -fno-stack-protector
 COMMON := $(ARCH) -O1 -g -fno-strict-aliasing -ffunction-sections -fdata-sections
@@ -88,6 +101,21 @@ $(BUILD)/gen/wep_%.cpp: $(ROOT)/src/wep/%.cpp prep.py
 $(BUILD)/gen/w02_%.cpp: $(ROOT)/src/wep02/%.cpp prep.py
 	@mkdir -p $(dir $@)
 	$(PY) prep.py copy $< $@
+$(BUILD)/gen/pl11_%.cpp: $(ROOT)/src/pl11/%.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/gen/em10_%.cpp: $(ROOT)/src/em10/%.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/gen/em12_%.cpp: $(ROOT)/src/em12/%.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/gen/em16_%.cpp: $(ROOT)/src/em16/%.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/gen/em15_%.cpp: $(ROOT)/src/em15/%.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
 $(BUILD)/gen/x_rnd.cpp: $(ROOT)/src/game/rnd.cpp prep.py
 	@mkdir -p $(dir $@)
 	$(PY) prep.py rnd $< $@
@@ -104,9 +132,10 @@ $(BUILD)/gen/sdk_%.c: $(ROOT)/src/lib/%.c $(GAME)/platform/sdk/strip_cw_asm.py
 	@mkdir -p $(dir $@)
 	$(PY) $(GAME)/platform/sdk/strip_cw_asm.py $< $@ > /dev/null
 
-GEN_GAME := $(patsubst src/game/%.cpp,$(BUILD)/gen/%.cpp,$(filter src/game/%,$(SEEDS) $(SERVICES))) \
+GEN_GAME := $(patsubst src/game/%.cpp,$(BUILD)/gen/%.cpp,$(filter src/game/%,$(SEEDS) $(SERVICES) $(ACTOR_GAME) $(ACTOR_SERVICES))) \
             $(patsubst src/wep/%.cpp,$(BUILD)/gen/wep_%.cpp,$(filter src/wep/%,$(SEEDS) $(WEAPON))) \
             $(patsubst src/wep02/%.cpp,$(BUILD)/gen/w02_%.cpp,$(WEAPON02)) \
+            $(foreach f,$(ACTOR_MODS),$(BUILD)/gen/$(word 2,$(subst /, ,$(f)))_$(notdir $(f))) \
             $(BUILD)/gen/x_rnd.cpp $(BUILD)/gen/x_em.cpp $(BUILD)/gen/x_obj.cpp $(BUILD)/gen/x_read.cpp
 GEN_SDK  := $(addprefix $(BUILD)/gen/sdk_,$(addsuffix .c,$(SDKLIB)))
 
@@ -120,7 +149,8 @@ $(1)_HG_OBJS   := $(addprefix $(BUILD)/$(1)/host/,$(HOST_GAME:.cpp=.o))
 
 $(BUILD)/$(1)/game/%.o: $(BUILD)/gen/%.cpp
 	@mkdir -p $$(dir $$@)
-	$(CXX) $(COMMON) $(FP_$(1)) $(GAMEFLAGS) -c $$< -o $$@
+	$(CXX) $(COMMON) $(FP_$(1)) $(GAMEFLAGS) $$(MODFLAGS) -c $$< -o $$@
+	$$(POSTCC)
 $(BUILD)/$(1)/sdk/%.o: $(BUILD)/gen/%.c
 	@mkdir -p $$(dir $$@)
 	$(CC) $(COMMON) $(FP_$(1)) -w -I$(GAME)/platform/sdk -I$(ROOT)/include -c $$< -o $$@
@@ -141,6 +171,17 @@ $(BUILD)/$(1)/re4ref: $$($(1)_GAME_OBJS) $$($(1)_SDK_OBJS) $$($(1)_LIBM_OBJS) $$
 endef
 $(eval $(call VARIANT,plain))
 $(eval $(call VARIANT,fma))
+
+# Module entry points under their own names (each module's file defines _prolog/_epilog/_unresolved).
+modname = -D_prolog=$(1)_prolog -D_epilog=$(1)_epilog -D_unresolved=$(1)_unresolved
+$(BUILD)/%/game/pl11_pl11.o: MODFLAGS = $(call modname,pl11)
+$(BUILD)/%/game/em12_em12_set.o: MODFLAGS = $(call modname,em12)
+$(BUILD)/%/game/em15_em15_set.o: MODFLAGS = $(call modname,em15)
+$(BUILD)/%/game/em16_em16_set.o: MODFLAGS = $(call modname,em16)
+# em_sub.cpp declares AtSphereCapsuleCk under its C name with the float arguments first (the atari_init.h
+# idiom): fine where int and float arguments travel in separate registers, wrong on the i386 stack. Its
+# object's reference is renamed to the adapter that passes them on in at_sub.cpp's order (host_actors.cpp).
+$(BUILD)/%/game/em_sub.o: POSTCC = objcopy --redefine-sym AtSphereCapsuleCk=host_AtSphereCapsuleCkF $@
 
 .SECONDARY:
 .PHONY: all fma clean

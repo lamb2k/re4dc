@@ -48,29 +48,13 @@ void QuakeMove() { HOST_STUB("QuakeMove"); }
 void PenClothMove(cModel*, PenCloth*) { HOST_STUB("PenClothMove"); }
 void PenClothMove3(cModel*, PenCloth*) { HOST_STUB("PenClothMove3"); }
 void PenClothSet(cModel*, PenCloth*, f32) { HOST_STUB("PenClothSet"); }
-// other behaviour (enemies, scenario, windows, racks, items, score)
+// other behaviour (enemies, scenario, windows, racks, items, score); the actors' own entry points
+// (spawn lists, damage, partner, Ganado) are original code since lane eng-host2
 int ChkWindow(cModel*, Vec*, Vec*, int, u16*, Vec*, Vec*, cEmWindow**) { HOST_STUB("ChkWindow"); return 0; }
-int EmRackCk(cEm*, Vec*, f32) { HOST_STUB("EmRackCk"); return 0; }
-void* EmReadSearch(u8, int, int) { HOST_STUB("EmReadSearch"); return 0; }
-void EmScenario(cEm*) { HOST_STUB("EmScenario"); }
-void EmYarareDisp(cEm*) { HOST_STUB("EmYarareDisp"); }
 void GameAddPoint(int) { HOST_STUB("GameAddPoint"); }
-u32 GetWepTargetList2(Vec*, Vec*, void*, u32, Vec*, Vec*, u32*, int, int, int) { HOST_STUB("GetWepTargetList2"); return 0; }
-int GetWepTargetListBomb(Vec*, f32, void*, int, int, int) { HOST_STUB("GetWepTargetListBomb"); return 0; }
-int GetWepTargetPos(Vec*, Vec*, int, int, cEm** outEm, int* outAttr)
-{
-    HOST_STUB("GetWepTargetPos");
-    if (outEm) *outEm = 0;
-    if (outAttr) *outAttr = 0;
-    return 0;
-}
-int LifeDownSet2(cEm*, int, int, int) { HOST_STUB("LifeDownSet2"); return 0; }
 void* SceExec(int, void*, int, u8, int, void*) { HOST_STUB("SceExec"); return 0; }
-int emLineCubeCrossCk(Vec*, Vec*, Mtx, f32, f32, f32, void*, Vec*) { HOST_STUB("emLineCubeCrossCk"); return 0; }
 int ExeWindowEventTask(void*) asm("ExeWindowEvent__9cEmWindow");
 int ExeWindowEventTask(void*) { HOST_STUB("cEmWindow::ExeWindowEvent"); return 0; }
-void SubCharRegistPlAction(void*, Vec*, int, f32) asm("registPlAction__8cSubCharP3Vecf");
-void SubCharRegistPlAction(void*, Vec*, int, f32) { HOST_STUB("cSubChar::registPlAction"); }
 // pad rumble, performance counters
 u32 PPCMfpmc1() { return 0; }
 void PPCMtmmcr0(u32) {}
@@ -98,8 +82,7 @@ int IdTexDataLoad(void*, int) { HOST_STUB("IdTexDataLoad"); return 1; }
 void IdTexRelease(int) { HOST_STUB("IdTexRelease"); }
 // old-port hooks reached with every knob off
 void re4dc_model_assets_changed() {}
-int re4dc_motion_acquire(const void*, unsigned**) { return 0; }   // 0: the archive's own keys are used
-void re4dc_motion_release(int) {}
+// re4dc_motion_acquire / re4dc_motion_release: host_data.cpp (the prepared archives' separate keys)
 void re4dc_halt(const char* file, int line) { host_fatal(4, "HALT %s(%d)", file, line); }
 void* _impure_ptr;
 }
@@ -107,7 +90,6 @@ void* _impure_ptr;
 // ---------------- C++ linkage ----------------
 void CameraDebugInformation() { HOST_STUB("CameraDebugInformation"); }
 int GetWaterHeight(Vec*, f32*) { HOST_STUB("GetWaterHeight"); return 0; }
-u32 SubCharGetStatus() { HOST_STUB("SubCharGetStatus"); return 0; }
 void TaskSleep(int) { HOST_STUB("TaskSleep"); }
 void QuakeInit() { HOST_STUB("QuakeInit"); }
 int BtoX(int bits) { return bits; }   // eprintf.cpp: pad debug page only
@@ -117,7 +99,6 @@ u32 SndCall(u16, u16, Vec*, int, int, cUnit*) { HOST_STUB("SndCall"); return 0; 
 int SndStop(u32, int) { HOST_STUB("SndStop"); return 0; }
 
 void cActionButton::set(int, int, int, int, int, int, int, int) { HOST_STUB("cActionButton::set"); }
-int cDmgMgr::hitCheck(Vec*, Vec*) { HOST_STUB("cDmgMgr::hitCheck"); return 0; }
 u16 cItemMgr::bulletNum() { HOST_STUB("cItemMgr::bulletNum"); return 0; }
 u32 cItemMgr::bulletNumCurrent() { HOST_STUB("cItemMgr::bulletNumCurrent"); return 0; }
 int cItemMgr::num(int, u8) { HOST_STUB("cItemMgr::num"); return 0; }
@@ -144,6 +125,5 @@ void Obj10SetEst(cObj*, int, int, u32, int, int, int, int, int, int) { HOST_STUB
 int cItemMgr::reloadable() { HOST_STUB("cItemMgr::reloadable"); return 0; }
 void cObjLauncher::grip(int) { HOST_STUB("cObjLauncher::grip"); }
 void cObjLauncher::gripBack() { HOST_STUB("cObjLauncher::gripBack"); }
-void cSubChar::control(int) { HOST_STUB("cSubChar::control"); }
 void cLog::warn(int, int, const char*, ...) { HOST_STUB("cLog::warn"); }
 void cLog::vwarn(int, int, const char*, char*) { HOST_STUB("cLog::vwarn"); }

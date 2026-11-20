@@ -8,6 +8,30 @@
 #include <string.h>
 
 unsigned host_rnd_calls;
+int host_rnd_owner;
+unsigned host_rnd_owner_calls[HOST_RNG_OWNERS];
+int host_rnd_drop_owner = -1;
+unsigned host_rnd_dropped;
+
+// Every Rnd() call (rnd.cpp host copy, prep.py rnd), before it draws: counted in total and for the caller
+// the replay names (host_rnd_owner). The drop-rng-actor control: the first call of host_rnd_drop_owner
+// is dropped, i.e. the generator is one step further on when it draws, as if the engine had left out
+// that call (the step is Rnd()'s own state update, repeated here).
+extern "C" void host_rnd_hook(unsigned short* state)
+{
+    ++host_rnd_calls;
+    const int o = host_rnd_owner >= 0 && host_rnd_owner < HOST_RNG_OWNERS ? host_rnd_owner : 0;
+    ++host_rnd_owner_calls[o];
+    if (host_rnd_drop_owner >= 0 && o == host_rnd_drop_owner && !host_rnd_dropped) {
+        const uint16_t r = *state;
+        uint32_t n = ((uint8_t) ((r >> 1) + (r >> 8)) << 8) | (uint8_t) (r >> 1);
+        uint32_t m = (n << 16) >> 16;
+        if (m == r) m = n + 0x101;
+        *state = (uint16_t) m;
+        host_rnd_dropped = 1;
+        host_rnd_drop_owner = -1;
+    }
+}
 static unsigned g_calls, g_hash = 2166136261u;
 static char g_names[160];
 FILE* host_log_file;
@@ -67,6 +91,7 @@ extern "C" void host_stub_tick_reset()
     g_hash = 2166136261u;
     g_names[0] = 0;
     host_rnd_calls = 0;
+    memset(host_rnd_owner_calls, 0, sizeof host_rnd_owner_calls);
 }
 
 extern "C" uint32_t host_stub_calls() { return g_calls; }

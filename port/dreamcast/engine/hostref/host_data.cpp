@@ -113,3 +113,100 @@ extern "C" void* host_load_data(const char* tree, const char* name, const char* 
     return dst;
 }
 
+// ---- motion keys of the Dreamcast tree's prepared enemy archives (lane eng-host2) ----
+// The converted enemy archives (em/emNN.drs, em/pl11.drs) end their tag table with "MTC" (R4MOTBL): each FCV
+// clip in the archive is a proxy that keeps the clip's header and axis table, and the full clip (keys
+// included) is a file of its own, dc/mot/<crc32>-<fnv1a>.fcv. The old port's motion service
+// (native_motion.cpp: re4dc_motion_bind / re4dc_motion_acquire, reached by motion.cpp's Re4dcMotionLease
+// with every knob off) loads that file and hands motion.cpp the clip's key table with the offsets made
+// absolute. The reference does the same, once per clip, with the same identity checks. Archives without an
+// MTC tag (core, pl00, wep02) keep their own keys (acquire answers 0, as before).
+namespace {
+uint32_t word_le(const uint8_t* p) { uint32_t v; memcpy(&v, p, 4); return v; }
+struct MotionBinding {
+    const uint8_t* archive;
+    uint32_t bytes;
+    const uint8_t* records;   // MTC + 32: 20-byte records (offset, size, crc32, fnv1a, flags)
+    uint32_t count;
+    uint8_t** loaded;         // per record: the loaded clip (0 until first use)
+};
+MotionBinding g_bind[8];
+const char* g_mot_tree;
+uint32_t prefix_bytes(const uint8_t* p) { const uint32_t n = p[2]; return ((3 + 3 * n + 3) & ~3u) + 4 + 4 * n; }
+uint32_t crc32le(const uint8_t* p, uint32_t n)
+{
+    uint32_t c = 0xFFFFFFFFu;
+    for (uint32_t i = 0; i < n; i++) {
+        c ^= p[i];
+        for (int k = 0; k < 8; k++) c = (c >> 1) ^ (0xEDB88320u & (0u - (c & 1u)));
+    }
+    return ~c;
+}
+}
+
+extern "C" void host_motion_bind(const char* tree, void* archive, uint32_t bytes)
+{
+    g_mot_tree = tree;
+    const uint8_t* a = (const uint8_t*) archive;
+    const uint32_t n = word_le(a);
+    if (bytes < 16 || n > (bytes - 16) / 8) return;
+    for (uint32_t i = 0; i < n; i++) {
+        if (memcmp(a + 16 + 4 * n + 4 * i, "MTC", 4)) continue;
+        const uint8_t* mtc = a + word_le(a + 16 + 4 * i);
+        if (memcmp(mtc, "R4MOTBL\0", 8)) { host_log("motion: MTC without R4MOTBL"); return; }
+        for (MotionBinding& b : g_bind) {
+            if (b.archive) continue;
+            b.archive = a;
+            b.bytes = bytes;
+            b.count = word_le(mtc + 12);
+            b.records = mtc + 32;
+            b.loaded = (uint8_t**) calloc(b.count, sizeof(uint8_t*));
+            host_log("motion: archive %08x bound, %u clips with separate keys", (unsigned) (uintptr_t) a, b.count);
+            return;
+        }
+        host_fatal(2, "motion: too many prepared archives");
+    }
+}
+
+extern "C" int re4dc_motion_acquire(const void* header, unsigned** table)
+{
+    const uintptr_t p = (uintptr_t) header;
+    for (MotionBinding& b : g_bind) {
+        const uintptr_t base = (uintptr_t) b.archive;
+        if (!base || p < base || p - base >= b.bytes) continue;
+        const uint32_t want = (uint32_t) (p - base);
+        for (uint32_t i = 0; i < b.count; i++) {
+            const uint8_t* e = b.records + 20 * i;
+            if (word_le(e) != want) continue;
+            if (!b.loaded[i]) {
+                const uint32_t size = word_le(e + 4);
+                char name[64];
+                snprintf(name, sizeof name, "dc/mot/%08x-%08x.fcv", word_le(e + 8), word_le(e + 12));
+                File f = read_file(g_mot_tree, name);
+                if (!f.data || f.size != size) host_fatal(2, "motion: %s missing or %u bytes (want %u)", name, f.size, size);
+                uint32_t fnv = 2166136261u;
+                for (uint32_t j = 0; j < size; j++) fnv = (fnv ^ f.data[j]) * 16777619u;
+                const uint32_t head = prefix_bytes(b.archive + want);
+                if (crc32le(f.data, size) != word_le(e + 8) || fnv != word_le(e + 12) || memcmp(b.archive + want, f.data, head))
+                    host_fatal(2, "motion: %s identity or header mismatch", name);
+                uint8_t* data = (uint8_t*) host_fixed((size + 31) & ~31u, "motion keys");
+                memcpy(data, f.data, size);
+                free(f.data);
+                uint32_t* t = (uint32_t*) (data + head - 4 * data[2]);
+                for (uint32_t j = 0; j < data[2]; j++) {
+                    if (t[j] < head || t[j] >= size) host_fatal(2, "motion: %s key offset", name);
+                    t[j] = (uint32_t) (uintptr_t) data + t[j];
+                }
+                b.loaded[i] = data;
+            }
+            const uint8_t* d = b.loaded[i];
+            *table = (unsigned*) (d + prefix_bytes(d) - 4 * d[2]);
+            return 1;
+        }
+        return 0;   // a clip the MTC table does not list keeps its keys in the archive (native_motion.cpp: no lease)
+    }
+    return 0;   // an archive with its own keys
+}
+
+extern "C" void re4dc_motion_release(int) {}
+

@@ -1,0 +1,17 @@
+# square-follow: Ashley told to follow Leon (SubCharCtrl(1, 1): control(2) clears her wait bit, as the room scripts do) while Leon walks across the
+# village square (r101), no enemies (lane eng-host2). Reference-only: no old-game trace records Ashley following
+# Leon with her routine (PLAYS_RIGHT.md "Actors"); the base of the follow-dist control.
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+weapon 2 0
+seed 0x0d37
+esl 0
+sub -7414 0 -254 2.9600
+subctrl 2 1 1
+ticks 240
+pad 0 0x0000 0 0
+pad 30 0x0000 0 80              # stick forward for 60 ticks
+pad 90 0x0000 0 0
+pad 150 0x0000 0 80             # and again for 30
+pad 180 0x0000 0 0

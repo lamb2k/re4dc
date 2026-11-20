@@ -8,7 +8,6 @@
 #include "main_sub.h"
 #include "joy.h"
 #include "act_btn.h"
-#include "dmg.h"
 #include "item.h"
 #include "obj.h"
 #include "light.h"
@@ -50,7 +49,6 @@ u8 filter0a_mask_alpha;
 #define HOST_STANDIN(Type, name) \
     alignas(32) unsigned char host_standin_##name[sizeof(Type)] asm(#name)
 HOST_STANDIN(cActionButton, ActBtn);
-HOST_STANDIN(cDmgMgr, DmgMgr);
 HOST_STANDIN(cItemMgr, ItemMgr);
 HOST_STANDIN(cLightMgr, LightMgr);
 HOST_STANDIN(debugCamera, CamDbg);

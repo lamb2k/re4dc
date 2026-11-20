@@ -1,19 +1,40 @@
-// hostref: cEmMgr::construct for the player only. The original (em.cpp) places the class for any id:
-// the player, partners, every enemy module and the 17 object classes; the E1 reference hosts Leon, so
-// id 0 with pl_type 0 builds cPlLeon exactly as the original does, and the tail (serial, emset_no,
-// be_flag 0x40 | 0x02000000, subArc2) is the original's. Any other id is a logged refusal.
+// hostref: cEmMgr::construct for the hosted characters. The original (em.cpp) places the class for any id:
+// the player, partners, every enemy module and the 17 object classes. The reference hosts Leon (id 0 with
+// pl_type 0: cPlLeon), and since lane eng-host2 the module characters: ids 1..0xE (the partners) and
+// 0xF..0x3F (the enemy modules) take the module's archive from EmReadSearch and run the init function it
+// registered, as the original's case 1..0xE and default branch do (host_actors.cpp serves the hosted
+// modules and refuses the others). The id switch and the tail (serial, emset_no, be_flag 0x40 |
+// 0x02000000, the id, subArc2) are the original's. The object classes (0x40..0x51, 0xFF) are refused, logged.
 #include "hostref.h"
 #include "em.h"
 #include "player.h"
 #include "global.h"
 
+extern void (*EmInitFunc)(cEm* em);   // em.cpp
+extern "C" void* EmReadSearch(u8 id, int a, int b);   // host_actors.cpp (read.cpp)
+
 int cEmMgr::construct(cEm* p, u32 id)
 {
-    if (id != 0 || pG->pl_type != 0) {
+    if (id == 0) {
+        if (pG->pl_type != 0) {
+            host_stub_hit("cEmMgr::construct(other player)");
+            return 0;
+        }
+        p = new (p) cPlLeon;
+    } else if (id <= 0x3F) {
+        p->subArc = (PlArc*) EmReadSearch((u8) id, 0, 0);
+        if (p->subArc == 0) return 0;
+        EmInitFunc(p);
+    } else {
         host_stub_hit("cEmMgr::construct(other)");
         return 0;
     }
-    p = new (p) cPlLeon;
+    switch (p->id) {
+    case 0x10: case 0x11: case 0x12: case 0x13: case 0x14: case 0x15: case 0x16: case 0x17: case 0x18:
+    case 0x19: case 0x1A: case 0x1B: case 0x1C: case 0x1D: case 0x1E: case 0x1F: case 0x20:
+        p->id = 0x10;
+        break;
+    }
     p->serial = Guid;
     Guid++;
     p->emset_no = 0xFF;
