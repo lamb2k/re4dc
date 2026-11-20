@@ -43,6 +43,18 @@ tick: position, yaw (a: the yaw alone), motion frame and state, routine (r, from
 be_flag (be), the discrete hash (aps, rebuilt from those fields) and the generator (rng, the LT line's); it has
 no motion slot (mid), flags word (f) or per-actor generator calls (rc). The A actor is matched by id and rank.
 
+Strict structure (lane eng-svc4, default; --lenient turns it off for sparse old-game logs): the comparison FAILS,
+whatever the values, when
+    a tick is missing          A's ticks must be one unbroken run (or the --expect-ticks LO:HI range) and B must have
+                               every one of them (the selected actor on every tick A has it), no tick more;
+    a field is missing         every compared field is on every compared tick of both traces; a field both traces mark
+                               as not recorded ('-') at the same tick counts as compared and equal;
+    a value is not finite      any NaN or infinity in a compared float field of either trace;
+    a tick is repeated         two T lines with one tick (two A lines of one actor and tick, two LT lines);
+    the counts are off         the compared ticks must equal --expect-count N when given, and every field's compared
+                               count must equal the compared ticks.
+The report lists every structure problem (kind, trace, tick, field) and the verdict is STRUCTURE (exit 1).
+
 Exit status: 0 when every compared tick is within tolerance, 1 on a divergence, 2 on a usage error.
 The report names the first divergence (tick, field, both values, the difference) and a summary per field:
 ticks compared, ticks over tolerance, the largest difference and where it is.
@@ -69,6 +81,24 @@ def s16(v):
     return v - 0x10000 if v & 0x8000 else v
 
 
+# which trace tokens carry which compared fields (strict structure)
+T_TOKENS = {'p': 'p', 'a': 'a', 'mid': 'm', 'mf': 'm', 'ms': 'm', 'r': 'r', 'ps': 'ps', 'rng': 'rng', 'cam': 'cam'}
+A_TOKENS = {'p': 'p', 'a': 'a', 'mid': 'm', 'mf': 'm', 'ms': 'm', 'r': 'r', 'hp': 'hp', 'be': 'be', 'f': 'f',
+            'aps': 'ps', 'rc': 'rc'}
+LT_TOKENS = {'p': 'p', 'a': 'a', 'mf': 'm', 'ms': 'm', 'ps': 'ps', 'rng': 'r'}
+
+
+def token_state(kv, tokens):
+    """-> (absent fields, not-recorded fields) of one trace line: a token missing from the line, or '-' / '~'."""
+    absent, nr = set(), set()
+    for f, tok in tokens.items():
+        if tok not in kv:
+            absent.add(f)
+        elif kv[tok] in ('-', '') or '~' in kv[tok]:
+            nr.add(f)
+    return absent, nr
+
+
 def parse_kv(line):
     out = {}
     for tok in line.split()[1:]:
@@ -87,10 +117,18 @@ def floats(v, n):
     return [f32(x) for x in parts[:n]]
 
 
+META = {}   # path -> {'dups': [...]}: what load() saw that the records cannot show (strict structure)
+
+
 def load(path):
-    """-> (kind, {tick: record}) with record keys p, a, mid, mf, ms, r, ps (list of acceptable), rng, cam."""
+    """-> (kind, {tick: record}) with record keys p, a, mid, mf, ms, r, ps (list of acceptable), rng, cam.
+    Strict structure: a record also carries '_absent' / '_nr' (fields missing / marked not recorded on its line);
+    repeated lines go to META[path]['dups']."""
     recs = {}
     kind = None
+    dups = []
+    seen_a = set()
+    META[path] = {'dups': dups}
     with open(path, errors='replace') as f:
         for line in f:
             if line.startswith('# re4ref trace'):
@@ -100,7 +138,11 @@ def load(path):
                 kind = 're4ref'
                 kv = parse_kv(line)
                 t = int(kv['t'])
-                r = {}
+                if recs.get(t, {}).get('_T'):
+                    dups.append(('T', t))
+                    continue   # the first record stands; strict mode fails on the repeat
+                r = {'_T': True}
+                r['_absent'], r['_nr'] = token_state(kv, T_TOKENS)
                 r['in'] = kv.get('in')
                 r['p'] = floats(kv.get('p'), 3)
                 r['a'] = floats(kv.get('a'), 3)
@@ -125,7 +167,12 @@ def load(path):
             elif line.startswith('A t=') and kind in (None, 're4ref'):
                 kv = parse_kv(line)
                 t = int(kv['t'])
-                a = {'k': int(kv['k']), 'id': kv['id'], 'e': kv['e'], 'p': floats(kv.get('p'), 3),
+                if (t, kv.get('e')) in seen_a:
+                    dups.append(('A', t, kv.get('e')))
+                    continue
+                seen_a.add((t, kv.get('e')))
+                ab, nr = token_state(kv, A_TOKENS)
+                a = {'_absent': ab, '_nr': nr, 'k': int(kv['k']), 'id': kv['id'], 'e': kv['e'], 'p': floats(kv.get('p'), 3),
                      'a': floats(kv.get('a'), 3), 'r': kv.get('r'), 'hp': kv.get('hp'), 'be': kv.get('be'),
                      'f': kv.get('f'), 'aps': kv.get('ps'), 'rc': kv.get('rc')}
                 m = kv.get('m', '-')
@@ -182,7 +229,10 @@ def load(path):
                 kind = 'logic'
                 kv = parse_kv(line)
                 t = int(kv['t'])
-                r = {}
+                if recs.get(t, {}).get('_LT'):
+                    dups.append(('LT', t))
+                r = {'_LT': True}
+                r['_absent'], r['_nr'] = token_state(kv, LT_TOKENS)
                 r['p'] = floats(kv.get('p'), 3)
                 r['a'] = floats(kv.get('a'), 3)
                 m = kv.get('m', '~')
@@ -197,8 +247,13 @@ def load(path):
                 r['rm'] = kv.get('rm')
                 if 'p' not in recs.get(t, {}):   # a repeated tick keeps its first record
                     recs[t] = {**r, **recs.get(t, {})}
+                else:
+                    recs[t]['_LT'] = True
     if kind is None:
         sys.exit(f'plays_right: {path}: no trace records')
+    if kind == 're4ref':
+        # strict structure (lane eng-svc5): a tick that has A or R lines but no T line lost its T line
+        dups.extend(('noT', t) for t in sorted(recs) if not recs[t].get('_T'))
     return kind, recs
 
 
@@ -258,6 +313,73 @@ def compare(A, B, tol, offset, window, fields):
     return res, first, compared
 
 
+def finite(v):
+    if isinstance(v, float):
+        return math.isfinite(v)
+    if isinstance(v, list):
+        return all(finite(x) for x in v)
+    return True
+
+
+def structure(A, B, fields, offset, window, expect_range, expect_count, dups_a, dups_b):
+    """Strict structure (see the module doc): -> list of problems, each {kind, trace, tick, field, detail}."""
+    probs = []
+
+    def add(kind, trace, tick=None, field=None, detail=''):
+        probs.append({'kind': kind, 'trace': trace, 'tick': tick, 'field': field, 'detail': detail})
+    for d in dups_a:
+        add('missing tick' if d[0] == 'noT' else 'duplicate tick', 'A', d[1], None,
+            'no T line' if d[0] == 'noT' else ' '.join(str(x) for x in d))
+    for d in dups_b:
+        add('missing tick' if d[0] == 'noT' else 'duplicate tick', 'B', d[1], None,
+            'no T line' if d[0] == 'noT' else ' '.join(str(x) for x in d))
+    ta = sorted(t for t in A if not window or window[0] <= t <= window[1])
+    tb = sorted(t - offset for t in B if not window or window[0] <= t - offset <= window[1])
+    if expect_range:
+        want = list(range(expect_range[0], expect_range[1] + 1))
+    else:
+        want = list(range(ta[0], ta[-1] + 1)) if ta else []
+    sa, sb, sw = set(ta), set(tb), set(want)
+    for t in sorted(sw - sa):
+        add('missing tick', 'A', t)
+    for t in sorted(sw - sb):
+        add('missing tick', 'B', t + offset)
+    for t in sorted(sa - sw):
+        add('extra tick', 'A', t)
+    for t in sorted(sb - sw):
+        add('extra tick', 'B', t + offset)
+    both = sorted(sa & sb & sw)
+    if not both:
+        add('tick count', 'A/B', None, None, 'no tick in both traces')
+    if expect_count is not None and len(both) != expect_count:
+        add('tick count', 'A/B', None, None, 'compared %d, expected %d' % (len(both), expect_count))
+    counts = {f: 0 for f in fields}
+    for t in both:
+        a, b = A[t], B[t + offset]
+        for f in fields:
+            na, nb = f in a.get('_nr', ()), f in b.get('_nr', ())
+            ma = f in a.get('_absent', ()) or ('_absent' not in a and a.get(f) is None)
+            mb = f in b.get('_absent', ()) or ('_absent' not in b and b.get(f) is None)
+            if ma:
+                add('missing field', 'A', t, f)
+            if mb:
+                add('missing field', 'B', t + offset, f)
+            if ma or mb:
+                continue
+            if na != nb:
+                add('missing field', 'A' if na else 'B', t if na else t + offset, f, 'not recorded on one side only')
+                continue
+            if not na and not (finite(a.get(f)) and finite(b.get(f))):
+                add('non-finite value', 'A' if not finite(a.get(f)) else 'B', t, f,
+                    '%s / %s' % (fmt(a.get(f)), fmt(b.get(f))))
+                continue
+            counts[f] += 1
+    for f in fields:
+        if counts[f] != len(both):
+            add('field count', 'A/B', None, f, 'compared on %d of %d ticks' % (counts[f], len(both)))
+    return probs
+
+
 def fmt(v):
     if isinstance(v, list):
         return '(' + ', '.join(f'{x:.4f}' if isinstance(x, float) else str(x) for x in v) + ')'
@@ -299,6 +421,8 @@ def actor_views(A, B, kb, sel, offset):
         if a is None:
             continue
         va[t] = dict(a, rng=r.get('rng'))
+        if r.get('rng') is None and '_absent' in a:
+            va[t]['_absent'] = a['_absent'] | {'rng'}
         b = B.get(t + offset)
         if not b:
             continue
@@ -306,6 +430,8 @@ def actor_views(A, B, kb, sel, offset):
             x, _ = pick(b.get('actors', []), sel)
             if x is not None:
                 vb[t + offset] = dict(x, rng=b.get('rng'))
+                if b.get('rng') is None and '_absent' in x:
+                    vb[t + offset]['_absent'] = x['_absent'] | {'rng'}
         elif 'le' in b:
             # LE runs: every field the logic trace records (no motion slot, flags or per-actor generator calls)
             same = [x for x in b['le'] if x['id'] == a['id']]
@@ -329,6 +455,10 @@ def main():
     ap.add_argument('--actor', help='compare one actor block (A lines): e=<entry>, k=<index> or id=<id>[#rank]')
     ap.add_argument('--json', help='write the report as JSON')
     ap.add_argument('--quiet', action='store_true')
+    ap.add_argument('--lenient', action='store_true',
+                    help='the old reader: skip missing ticks and fields (sparse old-game logs); no structure check')
+    ap.add_argument('--expect-ticks', help='LO:HI, the tick set A and B must both hold (default: A first to last)')
+    ap.add_argument('--expect-count', type=int, help='the number of compared ticks the comparison must reach')
     args = ap.parse_args()
     tol = dict(DEFAULT_TOL)
     if args.tolerances:
@@ -339,6 +469,7 @@ def main():
               .split(',') if f.strip()]
     ka, A = load(args.a)
     kb, B = load(args.b)
+    dups_a, dups_b = META[args.a]['dups'], META[args.b]['dups']   # any repeated line is a fault of the trace
     if args.actor:
         if ka != 're4ref':
             sys.exit('plays_right: --actor needs a re4ref trace as A')
@@ -346,6 +477,10 @@ def main():
         if not A:
             sys.exit(f'plays_right: no actor {args.actor} in {args.a}')
     res, first, compared = compare(A, B, tol, args.offset, window, fields)
+    probs = []
+    if not args.lenient:
+        er = tuple(int(x) for x in args.expect_ticks.split(':')) if args.expect_ticks else None
+        probs = structure(A, B, fields, args.offset, window, er, args.expect_count, dups_a, dups_b)
     summary = {}
     for f in fields:
         rows = res[f]
@@ -365,8 +500,11 @@ def main():
             summary[f]['bit_identical'] = sum(1 for u in us if u == 0)
             summary[f]['max_ulps'] = max(us)
     verdict = 'PASS' if first is None and compared else ('NO-OVERLAP' if not compared else 'DIVERGED')
+    if probs and verdict == 'PASS':
+        verdict = 'STRUCTURE'
     report = {'a': args.a, 'b': args.b, 'kinds': [ka, kb], 'offset': args.offset, 'window': window,
-              'tolerances': tol, 'ticks_compared': compared, 'verdict': verdict, 'summary': summary}
+              'tolerances': tol, 'ticks_compared': compared, 'verdict': verdict, 'summary': summary,
+              'strict': not args.lenient, 'structure_problems': len(probs), 'structure': probs[:200]}
     if first:
         t, f, av, bv, d = first
         report['first_divergence'] = {'tick': t, 'b_tick': t + args.offset, 'field': f, 'a': fmt(av),
@@ -386,6 +524,14 @@ def main():
             fd = report['first_divergence']
             print(f"  first divergence: tick {fd['tick']} (B {fd['b_tick']}) field {fd['field']}: "
                   f"A {fd['a']} B {fd['b']} diff {fd['diff']}")
+        if probs:
+            kinds = {}
+            for pr in probs:
+                kinds[pr['kind']] = kinds.get(pr['kind'], 0) + 1
+            p0 = probs[0]
+            print('  structure: %d problems (%s); first: %s' % (
+                len(probs), ', '.join('%s %d' % kv for kv in sorted(kinds.items())),
+                ' '.join(str(p0[k]) for k in ('kind', 'trace', 'tick', 'field', 'detail') if p0[k] not in (None, ''))))
         for f in fields:
             s = summary[f]
             if s['compared'] == 0:
@@ -399,7 +545,7 @@ def main():
     if args.json:
         with open(args.json, 'w') as f:
             json.dump(report, f, indent=1)
-    sys.exit(0 if verdict == 'PASS' else 1)
+    sys.exit(0 if verdict == 'PASS' and not probs else 1)
 
 
 if __name__ == '__main__':
