@@ -34,6 +34,11 @@
 #   rumblernd RE4_SVC_CONTROL=rumblernd: the random rumble strength from the behaviour generator (bell-ganado, exercise
 #            rumble: the Ganados' decisions move)
 #   routehop RE4_SVC_CONTROL=routehop: the way points between skipped, every reachable destination its own next hop (bell-ganado: the Ganados' chase)
+# Lane eng-svc5 (round 5: the math helpers, garment pose, SDK math and allocator) adds svc5.txt (the native counters)
+# and the controls:
+#   mathsin  RE4_SVC_CONTROL=mathsin: SINF / COSF without the series' x^9 term (e1-route)
+#   mathmuku RE4_SVC_CONTROL=mathmuku: every turning step (Muku, Muku2, Muku3) 5% larger (bell-ganado: the Ganados turn faster)
+# and the fixtures bell-ganado-kill and bell-ganado-clear (handgun hits to a kill and to the room clear) when named.
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
 # the behaviour's Rnd. So each fixture runs twice: with the cloth's wind on ("native": every bone but the cloth links
@@ -81,6 +86,7 @@ actors() {   # the actors of a fixture's A lines, as plays_right --actor selecto
     case $1 in
         bell-ganado) echo "e=14 e=1c e=1e e=1f" ;;
         bell-ganado-hit) echo "e=14" ;;
+        bell-ganado-kill|bell-ganado-clear) echo "e=14 e=1c e=1e e=1f" ;;
         hill-ashley) echo "id=03 e=df e=e0 e=e1 e=e3" ;;
         square-follow) echo "id=03" ;;
     esac
@@ -203,6 +209,9 @@ print()" "$b/compare.json")
     exrow e1-route camtrack camfov camroll
     exrow bell-ganado rumble rumblernd
     r4ctl e1-route "stick direction bits need 81 units" padstick
+    # lane eng-svc5: the round-5 controls
+    r4ctl e1-route "SINF / COSF without the x^9 term" mathsin   # e1-route: Leon walks (bell-ganado's rotations are of zero offsets)
+    r4ctl bell-ganado "turning steps 5% larger" mathmuku
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

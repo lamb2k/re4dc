@@ -139,10 +139,15 @@ extern "C" void svc4_ready(void) __attribute__((weak));
 extern "C" void svc4_tick(unsigned t) __attribute__((weak));
 extern "C" void svc4_finish(void) __attribute__((weak));
 extern "C" int svc_col_depth(void) { return g_depth; }
+// lane eng-svc5: the round-5 services (svc5_dump.cpp: controls, exercises, counters) ride them too.
+extern "C" void svc5_ready(void) __attribute__((weak));
+extern "C" void svc5_tick(unsigned t) __attribute__((weak));
+extern "C" void svc5_finish(void) __attribute__((weak));
 
 extern "C" void host_svc_ready()
 {
     if (svc4_ready) svc4_ready();
+    if (svc5_ready) svc5_ready();
     const char* c = svc_env("RE4_SVC_CONTROL");
     if (c && *c) host_log("svc control: %s", c);
     if (col_bake_all) col_bake_all();   // the room's collision tables, baked at room load
@@ -155,6 +160,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
 {
     g_tick = t;
     if (svc4_tick) svc4_tick(t);
+    if (svc5_tick) svc5_tick(t);
     if (begin) return;
     if (skel_publish_all) skel_publish_all();
     if (!g_pal) return;
@@ -172,6 +178,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
 extern "C" void host_svc_finish()
 {
     if (svc4_finish) svc4_finish();
+    if (svc5_finish) svc5_finish();
     if (g_pal) fclose(g_pal);
     if (g_col) fclose(g_col);
     if (g_hist) fclose(g_hist);
