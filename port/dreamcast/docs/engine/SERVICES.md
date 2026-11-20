@@ -1,8 +1,14 @@
-# Native skeleton and collision services (lane eng-svc, 2026-11-19)
+# Native skeleton, collision and cloth services (lanes eng-svc and eng-svc2, 2026-11-19)
 
-The two services that dominate the budget's Services row, as engine code on engine tables, proven on the PC to give
+The services that dominate the budget's Services row, as engine code on engine tables, proven on the PC to give
 the original units' results. Tier of every number here: **PC** (re4ref, the host build of the original code). No
 console, no Flycast, no MODELLED number; no timing claim.
+
+**Round 2 (lane eng-svc2), sections 10 to 15:** offline motion keys (no key search, history or decoding in a tick),
+the bone history kept for the bones code reads (not every bone), a native cloth service (Leon's hair and jacket,
+Ashley's hair, skirt and sweater) on engine generator random numbers, and a cell grid that cuts the polygons a line
+query tests by 44 to 68%. Sections 1 to 9 are round 1 as it was handed back; where round 2 changed them, section 15
+says so.
 
 - **Skeleton:** `port/dreamcast/engine/services/skeleton/` (`skel.h`, `skel.cpp`, `skel_xm.h/.c`).
 - **Collision:** `port/dreamcast/engine/services/collision/` (`col.h`, `col.cpp`).
@@ -310,3 +316,232 @@ builds); `RE4_SVC_POISON=0` turns the check build's poison and shadow off.
 - **No timing:** the cost table counts operations and memory; the emulator lane times them.
 - **Collision memory:** the native tables are a second copy (370 KB for the village square). After the bake only the
   file's normal table must stay; releasing the rest needs the room archive split.
+
+# Round 2 (lane eng-svc2)
+
+Branch `lane/eng-svc2`. Same fixtures, same tier (PC), no timing. `svc/svc_controls.sh` now bakes the motion keys,
+runs every fixture with the cloth's wind on and off, and runs every control; 37 rows, all as they must
+(`E:\RE4DC-Lanes\eng-svc2\ev\controls\svc_controls.md`).
+
+## 10. Offline motion keys
+
+**Why.** Round 1 sampled every pose channel with the original decoder: per axis a key search from the bone's key
+history, then the Fcc decode of the key pair (nine encodings) and the Hermite blend. A tick read the clip's frame
+tables and key data scattered over the archive (206 lines for Leon idle) and the key history (36 B a bone).
+
+**What the fixtures sample** (counted, `svc.txt` "motion samples"): 99.8% of MotionMoveCore calls are at an integer
+frame (the sequence clock steps whole frames); 15 of 9,000 calls are fractional (the flinch on the hit fixture).
+
+**The format** (`bake/motion_keys.py` writes it, `services/skeleton/skel_mk.h` reads it; the baked pack is private
+data, never committed):
+- per clip a **row table**, frame-major: row k holds every pose joint's three values at frame k, the joints in clip
+  order, as float32; a row is padded to 8 floats so it starts on a 32-byte line. Joints whose three axes never
+  change go to a **const** table once. The last row (frame maxFrame) holds each axis's last key: the original's
+  answer for a frame at or past the end of a clip that does not loop (a looping clip wraps first, as the original);
+- a **joint table** (8 B a joint: the kind word, parts, source, first column);
+- the clip's own key blocks as a **cold** section, for fractional frames.
+
+**Exact.** Each value is the original's arithmetic in float32 (the Fcc decode with its 0.0001f scale, `hermite()`
+in its order; a frame on a key takes the key), rotations already through `VecRadLimit` (idempotent on its output).
+Fractional frames go through the original decoder on the cold blocks with its history off: the baker checks that
+every axis's keys run from 0 to maxFrame strictly rising, and on such keys the search from key 0 finds the same
+bracket the history search finds, so the history changes no value. A clip that fails the check is not baked (the
+service keeps the original decoder for it): 1 of 415 (no joints). **Binding:** MotionSetCore binds a clip header to
+its baked clip once, by identity (FNV-1a of the header and every pose joint's key block, as the baker computed it);
+MotionMoveCore then reads one row.
+
+**Sizes** (the archives the fixtures load; em12 and em16 share em15's clips; 414 distinct clips):
+
+| Archive | Clips | Original clips | Rows + const + tables (hot) | Cold key blocks | Frames per clip | Row floats per clip |
+|---|---:|---:|---:|---:|---:|---:|
+| em/pl00 (Leon) | 65 | 439,520 B | 722,816 B | 403,996 B | 43.9 | 59.5 |
+| em/pl0e (Leon) | 41 | 359,040 B | 944,192 B | 318,776 B | 111.4 | 46.8 |
+| em/pl0f (Leon) | 26 | 286,752 B | 567,840 B | 278,440 B | 82.1 | 64.3 |
+| em/wep02 (handgun) | 42 | 178,784 B | 311,232 B | 166,020 B | 34.7 | 47.1 |
+| em/pl11 (Ashley) | 71 | 495,264 B | 883,104 B | 455,760 B | 45.7 | 61.1 |
+| em/em15 (+ em12, em16: Ganados) | 169 | 1,971,520 B | 3,442,720 B | 1,859,960 B | 76.9 | 62.5 |
+| **All** | **414** | **3,730,880 B** | **6,871,904 B** | **3,482,952 B** | | |
+
+The hot tables are 1.84 times the original clips, and the cold blocks are the original keys again: a memory decision
+for the engine image (section 14).
+
+**Equivalence.** Six fixtures: every bone of every actor bit-identical as in round 1 (the same counts), every motion
+sample from rows (15 fractional from the cold keys), the original decoder 0. Control `mkrow` (the next frame's row)
+fails.
+
+**Counts** (per actor per tick; original / native; the skeleton service, every entry point together):
+
+| Actor, fixture | Key segments (hermite) | Archive lines (keys) | Baked-key lines | Skeleton lines | Skeleton accesses |
+|---|---:|---:|---:|---:|---:|
+| Leon idle (door103) | 60.2 / 2.9 | 206 / 11 | 0 / 16 | 1,336 / 896 | 65,304 / 43,496 |
+| Leon running and aiming (e1-route) | 64.0 / 2.4 | 212 / 12 | 0 / 17 | 1,347 / 959 | 89,611 / 50,617 |
+| Leon (bell) | 61.1 / 2.9 | 198 / 12 | 0 / 16 | 1,325 / 882 | 65,084 / 43,450 |
+| Ganado, each of three (bell) | 51.7-80.7 / 3.8-6.0 | 260-295 / 8-19 | 0 / 17-21 | 631-671 / 394-445 | 25,500-26,100 / 14,900-15,600 |
+| Ganado, each of four (hill) | 80.4-80.5 / 6.0 | 262-300 / 8 | 0 / 21 | 654-692 / 390-408 | 25,100-26,100 / 14,700-15,100 |
+| Ashley (hill) | 103.3 / 0.8 | 322 / 4 | 0 / 32 | 1,772 / 1,076 | 116,421 / 68,833 |
+| Ashley following (follow) | 112.1 / 0.0 | 296 / 6 | 0 / 29 | 1,711 / 1,078 | 123,065 / 70,786 |
+
+Operations other than the key segments are unchanged against round 1 (section 6): the same matrix, quaternion and
+trigonometry counts (for example Leon idle 65 C matrix products, 392.5 matrix x vector, 740 trig a tick).
+
+The remaining key segments are root motion and MotionSetCore's start values (still the original decoder: they fill
+`MotionWork` state the behaviour reads). Round 1's native skeleton touched 1,116 lines for Leon idle; the baked keys
+and the history (section 11) take it to 896 (-20%; -33% against the original).
+
+## 11. The bone history kept for the bones code reads
+
+**Why.** `updateOldPos` copied every bone's `world_old` and `world_old2` (six SoA rows; 119 bones for Leon) each
+tick. The census (section 4) shows behaviour reads them only for bones it asked for (`getPartsPtr`): the body
+(`getSpeedVector`, `moveBust`, the cloth's root speed) and the em10 attack checks' parts.
+
+**The layout** (`skel.h`): the six rows are gone. A table keeps up to 32 **history bones**, 32 B each (`world_old`,
+`world_old2`), with a bone-to-slot byte map. The history bones are bone 0 (always: the body's history is the one read
+most, and the cloth reads it before it ever asks for bone 0) and every bone code outside asked for (the mailbox's
+direct bones). `updateOldPos`, `setPos` and `setPartsOffset` move those and nothing else.
+- A bone that joins during set-up starts with the original's values: until the first `updateOldPos` the table keeps
+  every bone's history in a temporary block (freed then).
+- A bone that joins later starts unknown: NaN in the check build, so a read before two `updateOldPos` have passed
+  would show in the comparison; in the release build, its current world position.
+
+**Equivalence.** `svc_dump` writes `hist.bin` (reference: every bone's `world_old` / `world_old2`; native: the kept
+bones) and `svc_compare.py` compares them: every known value of a kept bone bit-identical on all six fixtures; the
+values not known yet (2 to 27 bone-ticks a fixture, late joins) are never read (check build: bones and traces
+bit-identical). Controls `histnone` (no history kept: NaN served) and `histfrozen` (the history never moves) fail.
+
+**Counts** (`updateOldPos`, every actor, a tick; original / native): door103 377 / 71 lines (1,117 / 448 accesses), e1-route 377 / 83, bell 797 /
+293, hill 1,223 / 427, follow 803 / 201. Six SoA rows a table are gone (Leon: 2,880 B).
+
+## 12. Native cloth
+
+**Hosting the original first.** Every svc build of re4ref now hosts `game/pendulum.cpp` (the plain build keeps its
+stubs). Leon's chains run every tick on all six fixtures (hair: `PenClothMove`, 21 links; jacket: `PenClothMove3`,
+24 links), Ashley's on the hill and follow fixtures (hair 21, skirt 48, sweater 8). Under the check build the round-1
+skeleton served the original cloth through the mailbox (68 of Leon's 119 bones became mailbox bones) and matched
+once bone 0 kept its history from the start: round 1's section 7 item 8 is done.
+
+**The service** (`services/cloth/cloth.h`, `cloth.cpp`): engine bodies for `PenClothSet`, `PenClothMove`,
+`PenClothMove3`, `PenClothFixSet` and `PenClothFixClear`.
+- **Resolved once.** `PenClothSet` maps every link to its bone, its upper and side neighbours to link indices, the
+  collision volumes to their bones. The original reached every link through `getPartsPtr` in every pass and every
+  neighbour lookup, and kept each link's state inside its 472-byte parts record.
+- **Link records.** A link's state is one 64-byte record (position, old position, speed, rest direction, length,
+  bone, upper link, hit, pin, side links): two operand-cache lines, a chain contiguous. A cold 48-byte record holds
+  the rest direction, the side distances and the pin position. Records rather than SoA rows: every pass reads and
+  writes a link's position, old position and speed together, and the vector operations take xyz triples.
+- **On the skeleton's tables.** The bones' world matrices and positions are read and written in the skeleton tables
+  (new API: `skel_table_for`, `skel_parts_bone`, `skel_record_bone`, `skel_enter`, `skel_serve_bone`,
+  `skel_history`, `skel_parent_mat`); a link bone's record is written only when it is a mailbox bone. The cloth no
+  longer makes its links mailbox bones (Leon's mailbox: 68 back to 22).
+- **Random numbers** (owner 2026-11-19, "Split it"). The cloth is presentation: its draws (the wind phase, the floor
+  jitter) come from a presentation generator, one xorshift32 state a chain seeded from its set-up order, never from
+  the behaviour's Rnd. The hosted original's `fRand0_1` / `fRand1_1` are renamed to a presentation stream of its own
+  (`svc_cloth_glue.cpp`), so in both builds the behaviour's Rnd sees no cloth draw.
+- **Stays original:** the link-against-volume tests (`penClothAtCk`, `penClothAtCkBorder`, `penClothAtCkParallel`:
+  arithmetic on the volume list), `PenClothMove2` (the enemy weapons' flails) and the wind (`PenWindSet`). A chain
+  the service cannot resolve (a parts table outside the owner's bones, a neighbour that is not a link of the chain)
+  runs the original bodies, linked renamed `pen_orig_*`: none on the fixtures.
+
+**Equivalence.**
+- **Wind off** (`RE4_SVC_CLOTH_WIND=0` sets every chain's no-wind flag in both builds): every bone, the links
+  included, bit-identical on all six fixtures; traces identical.
+- **Wind on:** every bone that is not a link bit-identical; traces identical in every field (the generator field
+  included); the links by `svc/cloth_stats.py`: per chain, the mean horizontal distance of its links from bone 0
+  within 0.4 units of the original's, and every link's mean position within 2 units. Measured: radius within 0.251
+  units (Leon's hair on the follow fixture; 0.044 on the E1 route; under 0.01 elsewhere), mean positions within 1.7
+  units. Single-tick differences of the links reach 44 units (the phases differ: reported, not checked).
+- **Controls:** `clothshort` (every chain one link short) and `clothnograv` (gravity off) fail with the wind off;
+  `clothwind` (the wind's push twice as strong) fails the statistics on the E1 route (radius 0.552 units over 0.4).
+  The wind pushes in proportion to the root's speed, so the wind control runs where Leon moves. The margin is thin
+  (0.25 from the phase alone against 0.55 doubled); a longer moving fixture would widen it.
+
+**Counts** (per actor per tick; original / native; the cloth step and everything under it; operations are math
+library calls):
+
+| Actor, fixture | Lines | of which parts records | link records and volumes | Accesses | Matrix x matrix | Matrix x vector | Normalize | Rotation about an axis | Trig |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Leon: hair + jacket (door103) | 377 / 261 | 365 / 2 | 12 / 259 | 21,927 / 23,410 | 45 / 45 | 114.7 / 114.7 | 350.9 / 350.9 | 73.7 / 73.7 | 123.5 / 123.5 |
+| Leon (e1-route) | 377 / 261 | 365 / 2 | 12 / 259 | 22,202 / 23,625 | 45 / 45 | 121.6 / 121.6 | 354.0 / 354.0 | 80.6 / 80.6 | 123.5 / 123.5 |
+| Ashley: hair, skirt, sweater (hill) | 637 / 452 | 614 / 2 | 23 / 450 | 57,967 / 61,017 | 73.6 / 73.6 | 172.4 / 172.4 | 700.2 / 700.2 | 96.7 / 96.7 | 199.7 / 199.7 |
+| Ashley (follow) | 637 / 454 | 614 / 2 | 23 / 451 | 58,645 / 61,675 | 75.9 / 76.0 | 180.2 / 180.2 | 698.2 / 698.2 | 105.5 / 105.5 | 199.2 / 199.1 |
+
+(The original's volume list, `re4dc_locked_cache`, is traced in the service region as the native one is.)
+
+- **Lines fall about 30%**: the links' state leaves the 472-byte records for two lines a link.
+- **Accesses rise 5 to 7%; operations are the same.** The arithmetic is the original's, call for call (the PC
+  equivalence needs it), and the native side copies vectors in and out of the link records and the skeleton's SoA
+  rows. That is the lever for the SH-4 version (section 14): SH4ZAM vector kernels (FIPR dot, FSRRA normalize, FTRV
+  for the matrix-vector products and the axis rotations) and one pass over a chain's links where the original makes
+  four (wind, angle limit, Bundle_num constraint passes, matrices), judged by the wind-on statistics.
+
+## 13. Collision: a cell grid for the line queries
+
+**Why.** Line queries (floors, walls, the camera, line of sight) tested every polygon of every leaf the segment's box
+reached: 7.5 to 30 polygon tests a query on the fixtures. The walk itself (box tests) was cheap.
+
+**The index** (`col.h`): each leaf of a piece's block tree gets a cell grid, 2 x 4 cells over the block's x / z
+extent and 8 bands over its polygons' heights (32 B a leaf), and each leaf list entry the 64-bit mask of the cells
+its polygon's box, grown by 1 unit, overlaps (8 B an entry), built at room load. A line query takes the cells of its
+own grown box and tests, in the list's order, only the entries whose cells meet them.
+
+**Exact.** A polygon the grid skips cannot be hit: a hit point lies in both boxes (1 unit is far above the line
+test's rounding; a float step at 65,536 units is 0.008). The one exception is a segment lying exactly in the
+polygon's plane, which the original's test reports as a hit at the segment's end wherever the polygon is; such a hit
+never replaces the nearest hit (its distance is the whole segment's, and the nearest is kept with a strict compare).
+The check build tests every skipped polygon too and counts both kinds: 0 hits; 2 end-point-only hits on the hill
+(results unchanged). The grid shape was picked from nine measured (4x4x2, 4x4x4, 8x8x1, 8x4x2, 2x2x16, 4x2x8,
+2x4x8, 1x1x64, 2x1x32, on door103, the hill and the bell).
+
+**Equivalence.** Every collision query bit-identical on all six fixtures; the same build without the grid
+(`RE4_SVC_COLGRID=0`) gives the same traces. Control `colgrid` (the query's cells one cell to the side) fails.
+
+**Counts** (`col_cnt`; `RE4_SVC_COLGRID=0` is the original's walk):
+
+| Fixture | Line queries | Polygon tests (original / grid) | Per query | Change |
+|---|---:|---:|---:|---:|
+| door103-walk | 4,714 | 35,399 / 11,671 | 7.5 / 2.5 | -67% |
+| e1-route | 8,525 | 68,285 / 31,004 | 8.0 / 3.6 | -55% |
+| bell-ganado | 10,752 | 193,697 / 107,983 | 18.0 / 10.0 | -44% |
+| bell-ganado-hit | 7,227 | 131,909 / 73,016 | 18.3 / 10.1 | -45% |
+| hill-ashley | 31,520 | 935,155 / 370,884 | 29.7 / 11.8 | -60% |
+| square-follow | 6,142 | 115,797 / 37,522 | 18.9 / 6.1 | -68% |
+
+Lines touched by the collision service (all queries of a tick, original / native; round 1's native in brackets):
+door103 123 / 144 (135), e1-route 164 / 184 (180), bell 622 / 591 (581), hill 839 / 760 (787), follow 200 / 223
+(216). **Level:** every entry a leaf visits now reads its 8-byte cell mask (four to a line, in the list's order), which
+costs about the lines the skipped polygons' 32-byte records saved. The tests are what fall: 44 to 68% fewer
+plane-and-edge tests, the arithmetic the SH-4 pays; the lines are a wash on the PC count.
+
+Memory: the village square's tables grow from 370 KB to 544 KB (scenery 141,536 -> 198,720 B, effect 228,128 ->
+345,088 B); the hill path's from 231 KB to 305 KB.
+
+## 14. What the engine image must change for round 2
+
+1. **Motion keys.**
+   - Bake the archives with `bake/motion_keys.py` into the disc tree and load each archive's baked clips with it;
+     bind each FCV entry to its baked clip at archive load (an entry table from the baker), not by identity at
+     `MotionSetCore` (the PC build binds lazily, outside the counts). Provide `svc_mk_pack` or its per-archive form.
+   - **Memory decision:** the hot tables are 1.84 times the clips (Leon's four archives: 1.26 MB of keys, 2.55 MB of
+     rows). The cold section can point at the clip's own keys instead of a copy. Options to measure: 16-bit rows
+     with a per-column scale (half the size; a step of at most 0.0055 degrees, not exact, so plays-right decides),
+     rows only for the clips a room uses, or both.
+2. **History:** nothing beyond the new `skel.cpp`; 32 history bones a table cover the fixtures (at most 14 direct
+   mailbox bones a model).
+3. **Cloth:** link `services/cloth/cloth.cpp`; link `pendulum.cpp` with its five bodies renamed (`pen_orig_*`, the
+   fallback) and its `fRand` calls renamed to the presentation generator; 34 KB of `svc_pool_carve` (32 KB of
+   chains, 2 KB of volumes). The E1 image hosts Leon's cloth through the original today: this replaces it. The SH-4
+   version should take SH4ZAM's vector kernels and fold the passes (section 12); the wind-off comparison and the
+   wind-on statistics on Flycast decide.
+4. **Collision grid:** in `col.cpp` (room load); the village square's tables grow 47% (544 KB).
+5. **Random numbers:** the engine's presentation generator replaces the cloth's per-chain xorshift when it exists.
+
+## 15. Round 1 sections round 2 changed; limits
+
+- Section 2: the six `world_old` / `world_old2` rows are gone (`soa[27][cap]`), the history set is new (section 11);
+  `hist` (the key history) is touched only by clips without baked keys. Leon's table without the check build:
+  about 47.5 KB (49.2 KB in round 1).
+- Section 7, item 8 (the pendulum hosted under the check build): done (section 12).
+- Section 9: key sampling is baked (section 10); the cloth is covered (section 12).
+- **Not done:** the motion keys' size decision (section 14); root motion and `MotionSetCore`'s start values still on
+  the original decoder; SH4ZAM kernels and a single-pass cloth (no new math kernel was written, so no SH4ZAM-style
+  commit); the swept-sphere queries without the grid (a push moves the sphere mid-query, so the cells would have to
+  follow it); no farm (em12) Ganado fixture; no timing (emulator lane).
