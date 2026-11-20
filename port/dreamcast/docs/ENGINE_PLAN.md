@@ -143,6 +143,7 @@ A lane round is one briefed lane to its hand-back; they took one to three hours 
 - Disc 2 play-through from the r207 sword puzzle on.
 - Test 28 on the release line (the lake-fight fixes), when a tester reading comes back.
 - The automatic console loop beyond the loader (smart plug, broadband adapter), if the owner has the hardware.
+- **Beyond the PS2 version** (owner 11-20: "surpass the ps2 version with surreal Dreamcast strength enhancements"). Not in any step yet. Candidates that spend the graphics chip and video memory, not the CPU: sharper textures in the 8 MB of video memory, true shadow volumes, per-pixel sorted transparency, bump-mapped surfaces, anti-aliasing, 480p VGA, memory-card screen extras. Proposal: its own step after chapter 1 holds the floor on console, each item approved from still pairs. Needs an owner call on asset sources: the PS2-only rule caps texture and model detail at the PS2's.
 
 ## 8. Gates (per milestone, once, on the final image)
 
