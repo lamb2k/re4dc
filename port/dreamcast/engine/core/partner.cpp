@@ -205,11 +205,30 @@ static int follow_control;
 // run's trace does not record and a resume cannot know, taken from what the old run did next: her idle timer (m_Timer:
 // it expires at t=421, a look-around, r_no_2 0x1E), her idle frame (58 at t=372) and r_no_3 0.
 static int resume_hidden;
+#include <dc/maple.h>
+#include <dc/maple/controller.h>
+// Scene choice at boot (lane eng-e1d: one disc, both scenes): the root file HILL, or the A or Start button held on the
+// first controller while the program starts, selects the hill path; otherwise the village route.
+static int boot_button_hill()
+{
+    maple_device_t* dev = maple_enum_type(0, MAPLE_FUNC_CONTROLLER);
+    if (!dev) return 0;
+    cont_state_t* st = (cont_state_t*) maple_dev_status(dev);
+    return st && (st->buttons & (CONT_A | CONT_START));
+}
 void e1_partner_boot()
 {
     file_t f = fs_open("/cd/HILL", O_RDONLY);
-    if (f >= 0) { fs_close(f); e1_scene = E1_SCENE_HILL; e1_log("E1 scene: hill path (r11d), Leon and Ashley\n"); }
-    if (e1_scene != E1_SCENE_HILL) return;
+    const int file = f >= 0, button = boot_button_hill();
+    if (file) fs_close(f);
+    if (file || button) {
+        e1_scene = E1_SCENE_HILL;
+        e1_log("E1 scene: hill path (r11d), Leon and Ashley (%s)\n", file ? "root file HILL" : "button held at boot");
+    } else {
+        e1_log("E1 scene: village route (hold A or Start at boot for the hill path)\n");
+    }
+    // FEED, both scenes (lane eng-e1d: the village route too, to show which fields depend only on the generator state
+    // the old game's other draws leave at the start of a tick)
     uint32_t n = 0;
     f = fs_open("/cd/FEED.BIN", O_RDONLY);
     if (f >= 0) {
@@ -218,6 +237,7 @@ void e1_partner_boot()
         feed_n = feed ? n / 2 : 0;
         e1_log("E1 FEED: the old run's generator state at the start of %u ticks\n", feed_n);
     }
+    if (e1_scene != E1_SCENE_HILL) return;
     f = fs_open("/cd/CTRLFOL", O_RDONLY);
     if (f >= 0) { fs_close(f); follow_control = 1; e1_log("E1 CONTROL: Ashley follows 10%% further from Leon\n"); }
     f = fs_open("/cd/RESUMEA", O_RDONLY);
@@ -229,6 +249,9 @@ void e1_partner_boot()
 void e1_partner_room_init()
 {
     if (e1_scene != E1_SCENE_HILL) return;
+    // lane eng-e1d: the behaviour generator starts where the old run's was at the resume (the fixture's seed 0x0d37,
+    // hill-follow.txt; re4ref applies it the same way), so the engine compares with re4ref without a per-tick feed
+    RndInit(0x0d37);
     static const uint32_t resume_pos[3] = {0x469df1b2u, 0xc3841c09u, 0x465a0443u}, resume_yaw = 0xbfe89375u;
     static const uint32_t sub_pos[3] = {0x469ae1f8u, 0xc4064a5au, 0x4658bef3u}, sub_yaw = 0x3fa98f4au;
     cPlayer* p = pPL;
@@ -348,7 +371,7 @@ void e1_trace_v2(unsigned t)
     unsigned total = 0;
     for (unsigned c : rng_calls) total += c;
     if (t == 0) {
-        int n = snprintf(line, sizeof(line), "# re4ref trace v2\nH fixture=engine-e1b-hill room=%04x seed=0000 ticks=%u fp=sh4 control=%s%s\n",
+        int n = snprintf(line, sizeof(line), "# re4ref trace v2\nH fixture=engine-e1b-hill room=%04x seed=0d37 ticks=%u fp=sh4 control=%s%s\n",
                          e1_route().room, e1_route().ticks, follow_control ? "follow-dist,1.1" : "none", feed ? " rng_feed=FEED.BIN" : "");
         e1_trace_put(line, n);
     }

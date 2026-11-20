@@ -27,9 +27,18 @@ HOSTED_SRCS := \
 #     (the partner's route points, lane eng-e1b): no native service exists and a stub would change gameplay (pushes
 #     between characters, hits, the partner's follow);
 #   - pad.cpp (input) and the leaf math (math_sub, sub2).
-# Not linked: ik.cpp (native), shape.cpp (facial shape keys: the engine draws no shape keys), pl_cloth.cpp and
-# pendulum.cpp (cloth: no native cloth service yet; logged stubs in host/e1_svc_stubs.cpp, the cloth bones keep their
-# animated pose).
+# Not linked: ik.cpp (native), shape.cpp (facial shape keys: the engine draws no shape keys).
+# Cloth (lane eng-e1d): the NATIVE cloth service (services/cloth, round 3 of lane eng-svc3: cloth.cpp and the SH4ZAM
+# chain kernel cloth_kernel.c, game/Makefile NATIVE_OBJS) gives PenClothSet / Move / Move3 / FixSet / FixClear their
+# bodies, the link-against-volume tests included. pl_cloth.cpp is the behaviour's side of the cloth (each chain's
+# links, lengths, wind tables and volumes, then the PenCloth* calls; Leon's jacket, holster and hair, Ashley's hair,
+# skirt and sweater). pendulum.cpp is NOT linked: the wind globals (GlobalWind, GlobalWindAdd) are engine data at the
+# original's defaults (no room wind setter is hosted) and the service's fallback for a chain it cannot resolve is a
+# logged stub (host/e1_svc_stubs.cpp); PenClothMove2 (enemy flails) has no caller here. The boss image (BOSS=1) keeps
+# its cloth stubs, as does the fight image (FIGHT=1, lane eng-e2).
+ifeq ($(BOSS)$(FIGHT),)
+CLOTH_SRCS := game/pl_cloth
+endif
 # route_ck.cpp (lane eng-e1b): the room's route points, which the partner's follow reads (RouteCkToPos); the boss image
 # (BOSS=1) builds neither the partner nor this unit here (game/boss.mk adds route_ck itself).
 SVC_ORIG_SRCS := \
@@ -37,4 +46,4 @@ SVC_ORIG_SRCS := \
 	game/atari game/atariInfo game/at_mod game/at_sub \
 	game/pad \
 	game/math_sub game/sub2 \
-	$(SVC_PARTNER_SRCS)
+	$(SVC_PARTNER_SRCS) $(CLOTH_SRCS)

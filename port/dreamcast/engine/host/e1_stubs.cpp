@@ -161,6 +161,10 @@ int cLightInfo::init2(int type, int partsNo, const Vec* pOffset, const Vec* pSiz
     Offset = *pOffset;
     Size = *pSize;
     EnableMask = mask;
+    SelectMask = 0xFFFFFFFF;   // lane eng-e1d: as lightInfo.cpp (the light inputs the renderer now reads per character)
+    if ((Flag & 3) == 0) Radius = Size.x + Size.y;
+    else if ((Flag & 3) != 2) Radius = Size.x;
+    else Radius = __builtin_sqrtf(Size.x * Size.x + Size.y * Size.y + Size.z * Size.z);
     return 1;
 }
 void cLightInfo::updateMatrix(cModel*) {}

@@ -38,16 +38,15 @@ static const FxMapRow* fx_lookup(unsigned tex, unsigned ptn)
 }
 
 /* ---- Ganados ---- */
-/* The actor pass checks once whether the skeleton's palette (world x the table's bind) equals the pack's bind for the
-   model it first draws (Leon's) and then trusts it; each Ganado model gets its own check here, cached. */
-static signed char pal_ok_model[64];
+/* The actor pass checks per catalogue model whether the skeleton's palette (world x the table's bind) equals the pack's
+   bind (lane eng-e1d), and lights each Ganado with its own record from the actor table. */
 void e2_draw_actors(NativeScene* s)
 {
     const void* m[8]; E1SkelView v[8]; unsigned base[8], ident[8];
     const unsigned n = e2_actor_list(m, v, base, ident, 8);
-    const int saved = e1_pal_ok;
+    const float** e1_bone = e1_bone_slot[1];   /* the non-Leon characters' slot of the actor pass */
     for (unsigned i = 0; i < n; i++) {
-        const unsigned bones = e1_gather((const uint8_t*) m[i], v + i);
+        const unsigned bones = e1_gather(e1_bone, (const uint8_t*) m[i], v + i);
         float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
         for (unsigned b = 0; b <= bones; b++)
             for (unsigned k = 0; k < 3; k++) {
@@ -56,14 +55,8 @@ void e2_draw_actors(NativeScene* s)
                 if (x + 300.f > hi[k]) hi[k] = x + 300.f;
             }
         const unsigned model = content_pick(s, base[i], lo, hi, 1 + i);
-        const RtCatalog* cat = s->runtime;
-        if (model < 64 && v[i].n >= cat->m[model].h[0]) {
-            if (!pal_ok_model[model]) pal_ok_model[model] = e1_pal_check(cat->m + model, v + i) ? 1 : -1;
-            e1_pal_ok = pal_ok_model[model] > 0;
-        }
         e1_actor_pass(s, m[i], v + i, model, ident[i], 0);
     }
-    e1_pal_ok = saved;
 }
 
 /* ---- the native effect sprites ---- */

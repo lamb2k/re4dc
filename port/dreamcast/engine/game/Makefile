@@ -73,7 +73,13 @@ $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 # their code goes to the section e1_present, whose draws host/e1_wraps.cpp answers from the engine generator.
 PRESENT_game/pl_class := _ZN7cPlayer13moveEyeNormalEv
 PRESENT_game/pl_sub := PlSetDamageSe
-PRESENT_game/pl_wep := PlWepLockRand wepSetWaterShot
+# Lane eng-e1d: the aim sway PlWepLockRand is behaviour (it moves Leon and his shots): back on the original generator.
+PRESENT_game/pl_wep := wepSetWaterShot
+# Diagnostic arm (not a default): AIMSWAY_PRESENT=1 puts the aim sway back on the presentation generator, as images
+# before lane eng-e1d drew it (to compare with their traces).
+ifeq ($(AIMSWAY_PRESENT),1)
+PRESENT_game/pl_wep += PlWepLockRand
+endif
 PRESENT_game/cam_extra := _ZN11CameraScope4moveEv _ZN12CameraLookAtC2EP6Camera
 PRESENT_wep/objRuger := _ZN9cObjRuger12setCartridgeEv
 PRESENT_game/pl_npc := _ZN8cSubChar8moveFaceEv
@@ -105,6 +111,23 @@ $(OUT)/e/%.o: $(ENG)/%.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 SVC_DIR := $(ENG)/services
 NATIVE_INC := -I$(SVC_DIR)/skeleton -I$(SVC_DIR)/collision -I$(ROOT)/port/dreamcast/game/platform/include
 NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
+# Lane eng-e1d: the native cloth (services/cloth, round 3: cloth.cpp + the SH4ZAM chain kernel cloth_kernel.c; SERVICES.md
+# sections 12, 17 and 21), not in the boss image. Its presentation generator is the engine's: host/e1_pres_rng.h is
+# force-included and stands in for services/cloth/pres_rng.h (same four functions, same include guard), drawing from
+# the engine generator of host/e1_wraps.cpp. pendulum.cpp is not linked (host/e1_svc_stubs.cpp: the wind globals, the
+# fallback stubs).
+ifeq ($(BOSS)$(FIGHT),)
+NATIVE_INC += -I$(SVC_DIR)/cloth
+NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o
+endif
+CLOTH_DEPS := $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/cloth/cloth_kernel.h $(SVC_DIR)/cloth/pres_rng.h $(ENG)/host/e1_pres_rng.h
+$(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(CLOTH_DEPS) $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -include $(ENG)/host/e1_pres_rng.h -c $< -o $@
+$(OUT)/n/cloth_kernel.o: $(SVC_DIR)/cloth/cloth_kernel.c $(CLOTH_DEPS)
+	@mkdir -p $(dir $@)
+	kos-cc -O2 -std=gnu11 -Wall -ffp-contract=off -ffunction-sections -fdata-sections -I$(SHZ) -I$(SVC_DIR)/cloth \
+		-include $(ENG)/host/e1_pres_rng.h -c $< -o $@
 $(OUT)/n/skel.o: $(SVC_DIR)/skeleton/skel.cpp $(SVC_DIR)/skeleton/skel.h $(SVC_DIR)/skeleton/skel_xm.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@

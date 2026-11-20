@@ -36,7 +36,13 @@ void e2_draw_actors(NativeScene* s);
 void e2_draw_effects(NativeScene* s);
 #endif
 
-int e1_draw_open_c(void)
+/* Lane eng-e1d: the scene's pack. The village route reads CROSS.PAK (eng-look's lkg bake); the hill scene reads
+   HILL.PAK (bake/hill_pack.py: the r11d whole-room bake with its visibility HILL.VIS, the room's lights, fog and HUD
+   from an old-game capture of r11d, Leon in his chapter-2 costume, Ashley at catalogue 6). */
+#define E1_ASHLEY_MODEL 6
+extern volatile uint32_t m1_load_status[8];   /* render/native_scene.inc: the pack loader's stage */
+static unsigned partner_model;
+int e1_draw_open_c(const char* pack)
 {
     pvr_init_params_t params = {.opb_sizes = {PVR_BINSIZE_16, PVR_BINSIZE_8, PVR_BINSIZE_16, 0, PVR_BINSIZE_16},
                                 .vertex_buf_size = 1024 * 1024, .vbuf_doublebuf_disabled = 0};
@@ -45,8 +51,11 @@ int e1_draw_open_c(void)
     pvr_set_zclip(0.0f);
     pvr_set_shadow_scale(true, 0.5f);
     m1_state[5] = 2;
-    if (!native_open(&scene, "/cd/CROSS.PAK")) { printf("E1 draw: pack refused (stage %lu)\n", 0ul); return 0; }
+    if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
     native_update(&scene, 0);
+    /* Ashley's body is catalogue 6 of the hill pack only (other packs hold props there) */
+    partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
+    printf("E1 draw: pack %s, %u catalogue models, partner %s\n", pack, scene.models.n, partner_model ? "drawn from catalogue 6" : "bone marks");
 #ifdef E2_FIGHT
     e2_draw_open();
 #endif
@@ -57,8 +66,8 @@ int e1_draw_open_c(void)
     return 1;
 }
 
-/* The partner (lane eng-e1b), PLACEHOLDER form: her mesh is not in any engine pack yet (no bake holds Ashley), so
-   the renderer marks each of her bones with a flat square, read in place from her native skeleton table's world
+/* The partner (lane eng-e1b), PLACEHOLDER form, kept for a pack without her body (lane eng-e1d: the hill pack draws
+   her mesh, catalogue 6, through the E1 actor pass): the renderer marks each of her bones with a flat square, read in place from her native skeleton table's world
    records (lane eng-e1c; written once a tick by the skeleton service). Nothing is converted or copied per tick; the
    squares are projected with the camera the hosted camera set. */
 static unsigned partner_marks;
@@ -115,10 +124,10 @@ static void list_keepalive(int list)
 }
 
 /* camera: 26 words (view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane), as the pack's
-   camera stream; hud: life, life max, weapon, stance; partner: the partner's model record or 0; world: draw the
-   village bake (0 in the hill scene: r11d has no engine bake yet; its sky and fog are the village's) */
+   camera stream; hud: life, life max, weapon, stance; partner: the partner's skeleton view or 0, partner_record her
+   model record; world: draw the pack's whole-room bake (the scene's own room since lane eng-e1d) */
 void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, const E1SkelView* leon_skel, unsigned identity,
-                       uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world)
+                       uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world, const void* partner_record)
 {
     if (!open_ok) { *wait_us = *draw_us = 0; return; }
     m1_frame++;
@@ -137,18 +146,19 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     native_sky(&scene);   /* also the fog table every header reads (the hill scene: the village sky and fog) */
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 0);
 #ifdef E2_FIGHT
-    e2_draw_actors(&scene);   /* before Leon: his translucent pass below reads the opaque pass's part state */
+    e2_draw_actors(&scene);   /* the Ganados (lane eng-e2); each character keeps its own slot since lane eng-e1d */
 #endif
     e1_actor_pass(&scene, leon, leon_skel, 0, identity, 0);
-    e1_partner_pass(cam, partner);
+    if (partner && partner_model && partner_record) e1_actor_pass(&scene, partner_record, partner, partner_model, identity, 0);
+    else e1_partner_pass(cam, partner);
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_PT_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 1);
     else list_keepalive(PVR_LIST_PT_POLY);
-    e1_actor_pass(&scene, leon, leon_skel, 0, identity, 1);
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_TR_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 2);
+    e1_actor_pass(&scene, leon, leon_skel, 0, identity, 1);   /* Leon's hair run (role 8), as the bench since eng-look */
 #ifdef E2_FIGHT
     e2_draw_effects(&scene);
 #endif
