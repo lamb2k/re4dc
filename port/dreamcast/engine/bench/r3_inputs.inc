@@ -44,6 +44,10 @@ static void m1r3_snapshot_inputs() {
     for(cEm* e=EmMgr.pAlive;e;e=(cEm*)e->pNext,++index)
         if((e->be_flag&0x201)==1 && e->id>=0x10 && e->id<=0x20)
             m1r3_snapshot_model(e,1,index);
+        // eng-boss: in the El Gigante arena (r119) every other live enemy-table model too (the giant 0x2B, the
+        // trees 0x43, the dog 0x29), role 3, index = the model's address (the bake finds its source model by it)
+        else if((e->be_flag&0x201)==1 && pG->room_id==0x119)
+            m1r3_snapshot_model(e,3,(unsigned)(uintptr_t)e);
     for(cLight* l=LightMgr.pAlive;l;l=(cLight*)l->pNext) {
         // eng-e0b: + array index (setModel2 order and SelectMask bit), xF | Attribute | Priority | kind enabled,
         // spot cone A0 (parallel: flags) and fade A1, parent model

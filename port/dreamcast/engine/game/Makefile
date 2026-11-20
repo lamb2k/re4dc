@@ -28,6 +28,10 @@ SDK_UNITS := mtx mtxvec mtx44 vec quat OSAlloc
 SDK_OBJS := $(addprefix $(OUT)/sdk/,$(addsuffix .o,$(SDK_UNITS)))
 ENG_CPP := $(wildcard $(ENG)/core/*.cpp $(ENG)/host/*.cpp $(ENG)/services/*.cpp)
 ENG_C := $(wildcard $(ENG)/core/*.c)
+# E2 boss slice (lane eng-boss): BOSS=1 builds the El Gigante arena image (game/boss.mk).
+ifeq ($(BOSS),1)
+include boss.mk
+endif
 ENG_OBJS := $(patsubst $(ENG)/%.cpp,$(OUT)/e/%.o,$(ENG_CPP)) $(patsubst $(ENG)/%.c,$(OUT)/e/%.o,$(ENG_C))
 REND_OBJS := $(OUT)/r/render_e1.o $(OUT)/r/replay_pack.o $(OUT)/r/native_world.o $(OUT)/r/avk_sh4.o $(OUT)/r/stage_sh4.o
 ENG_HDRS := $(wildcard $(ENG)/host/*.h $(ENG)/core/*.h $(ENG)/services/*.h)

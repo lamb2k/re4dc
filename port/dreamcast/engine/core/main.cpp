@@ -15,6 +15,9 @@
 #include "e1_engine.h"
 #include "e1_core.h"
 #include "e1_kos.h"
+#ifdef E2_BOSS
+#include "boss_e2.h"   // eng-boss: the El Gigante slice
+#endif
 #include <stdio.h>
 #include <string.h>
 
@@ -37,12 +40,19 @@ static void room_init()
 {
     const E1Route& r = e1_route();
     e1_room_globals(r);                 // pG room id, flags, PlayerInit (hosted)
+#ifdef E2_BOSS
+    e2_room_globals();
+#endif
     PlayerInit();
     MemCreateHeap(4, MemGetHeapStartAddr(0) + 0x1000, MemGetHeapEndAddr(0));
     MemSetCurrentHeap(4);
     e1_load_room(r.room);               // room archive sections and the core camera data (engine room pack)
     ReadPlayerData(pG->pl_type, pG->pl_costume);
+#ifdef E2_BOSS
+    e2_managers_room_init();
+#else
     e1_managers_room_init();            // ModInfoMgr, PartsMgr, EmMgr, ObjMgr arrays on the room heap
+#endif
     e1_collision_room_init();           // SatMgr / EatMgr over the room's SAT / EAT
     pG->sub_pos.x = r.pos[0];
     pG->sub_pos.y = r.pos[1];
@@ -56,6 +66,9 @@ static void room_init()
     CamCtrl.CoreDataRead((CameraDataHeader*) (pG->pArc->ofs_30 + (u32) pG->pArc));
     CamCtrl.roomInit();
     e1_view_room_init();
+#ifdef E2_BOSS
+    e2_room_init();                     // enemy list, the boss module, the room script (R119Init)
+#endif
     pG->Rno0 = 3;
     pG->Rno1 = 0;
 }
@@ -77,6 +90,14 @@ static void game_tick(E1Timing& tm)
         preb_slow_flg = 0;
     }
     e1_svc_begin();
+#ifdef E2_BOSS
+    {   // gameMainLoop order: ScenarioMove (room main + scenario tasks), then EmMgr.move, then the player
+        uint64_t t = now_us();
+        e2_scenario_move(e1_tick);
+        e2_em_move();
+        tm.obj_us = now_us() - t;   // reported as the enemy share below
+    }
+#endif
     if (!(pG->Stop_flg & 0x10000000) && (pPL->be_flag & 0x20) &&
         (!(pG->Status_flg[1] & 0x10000000) || (pPL->be_flag & 0x800))) {
         uint64_t t = now_us();
@@ -88,7 +109,13 @@ static void game_tick(E1Timing& tm)
     if (!(pG->Stop_flg & 0x4000000)) ObjMgr.move();
     uint64_t t2 = now_us();
     CameraMove();
+#ifdef E2_BOSS
+    e2_fx_move();                       // effect service, then DmgMgr / collision die checks
+    e2_after_tick();
+    tm.obj_us += t2 - t1;
+#else
     tm.obj_us = t2 - t1;
+#endif
     tm.cam_us = now_us() - t2;
     tm.services_us = e1_svc_end();
 }
@@ -134,6 +161,9 @@ int main()
     }
     e1_state[0] = 5;
     e1_report();
+#ifdef E2_BOSS
+    e2_report();
+#endif
     e1_state[3] = 1;
     for (;;) thd_sleep(1000);
 }

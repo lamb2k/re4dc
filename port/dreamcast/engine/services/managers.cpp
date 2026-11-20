@@ -13,6 +13,9 @@
 #include "db_log.h"
 #include "e1_engine.h"
 #include <new>
+#ifdef E2_BOSS
+#include "boss_e2.h"
+#endif
 
 extern "C" void ShapeMove(void* info);
 void DrawOba(cModel* m);
@@ -34,6 +37,12 @@ int cEmMgr::construct(cEm* p, u32 id)
 {
     if (id == 0 && pG->pl_type == 0) {
         p = new (p) cPlLeon;
+#ifdef E2_BOSS
+    } else if (id != 0) {   // eng-boss: the arena's enemy-table kinds (boss/boss_e2.cpp)
+        int ok = e2_construct(p, id, Guid);
+        if (ok) Guid++;
+        return ok;
+#endif
     } else {
         e1_stub_hit("cEmMgr::construct(other)", id);
         return 0;
