@@ -13,6 +13,8 @@
 #include "at_mod.h"
 #include "../../services/volumes/volumes.h"
 #include "../../services/collision/col_model.h"
+#include "../../services/routes/routes.h"
+#include "route_ck.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -24,6 +26,8 @@ extern VolCounters vol_cnt __attribute__((weak));
 extern int vol_control __attribute__((weak));
 extern ColModelCounters colm_cnt __attribute__((weak));
 extern int colm_control __attribute__((weak));
+extern RouteCounters route_cnt __attribute__((weak));
+extern int route_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -83,6 +87,11 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "colfloor")) colm_control = 1;
         if (c && !__builtin_strcmp(c, "colwall")) colm_control = 2;
     }
+    if (&route_control) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "routenear")) route_control = 1;
+        if (c && !__builtin_strcmp(c, "routehop")) route_control = 2;
+    }
 }
 extern "C" void svc4_tick(unsigned t) { g_tick = t; }
 extern "C" void svc4_finish()
@@ -99,6 +108,11 @@ extern "C" void svc4_finish()
         const ColModelCounters& c = colm_cnt;
         P(g_f, "# collision response: checks %u rects %u spheres %u slides %u floors %u floor_lost %u pieces %u debug_draws %u\n",
           c.checks, c.rects, c.spheres, c.slides, c.floors, c.floor_lost, c.pieces, c.debug_draws);
+    }
+    if (&route_cnt) {
+        const RouteCounters& r = route_cnt;
+        P(g_f, "# routes: near_calls %u near_cached %u near_lines %u near_none %u steps %u steps_direct %u lines %u dists %u debug_draws %u\n",
+          r.near_calls, r.near_cached, r.near_lines, r.near_none, r.steps, r.steps_direct, r.lines, r.dists, r.debug_draws);
     }
     svc_out_close(g_f);
     g_f = 0;
@@ -173,3 +187,24 @@ WV(_ZN10cAtariInfo6getPosEP6cModelP3Vec, (cAtariInfo* a, cModel* m, Vec* out), (
    { pv(out); })
 WV(_ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_, (cAtariInfo* a, cModel* m, Vec* o, Vec* n), (a, m, o, n),
    { P(g_f, " AV %u", actor(m)); }, { pv(o); pv(n); })
+// ---- routes (route_ck) ----
+namespace {
+void rck(const cEm* e) { P(g_f, " rck %x %d %d %d", e->RckStat, e->RckMy, e->RckTo, e->RckNear); }
+}
+W(int, RouteCkToPos, (cEm* em, Vec* t, Vec* out, int flag, f32* dist), (em, t, out, flag, dist),
+  { P(g_f, " RP %u", actor(em)); pv(&em->pos); pv(t); P(g_f, " %x %d", flag, dist != 0); },
+  { P(g_f, " %d", r); pv(out); if (dist) P(g_f, " %08x", bits(*dist)); rck(em); })
+W(int, RouteCkToEm, (cEm* em, cEm* t, Vec* out, int flag), (em, t, out, flag),
+  { P(g_f, " RE %u %u", actor(em), actor(t)); pv(&em->pos); pv(&t->pos); P(g_f, " %x", flag); },
+  { P(g_f, " %d", r); pv(out); rck(em); rck(t); })
+WV(RouteCkEscEm, (cEm* em, cEm* from, Vec* out), (em, from, out), { P(g_f, " RX %u %u", actor(em), actor(from)); },
+   { pv(out); rck(em); })
+W(int, RouteCkPosToPos, (Vec* a, Vec* b, Vec* out), (a, b, out), { P(g_f, " RQ"); pv(a); pv(b); }, { P(g_f, " %d", r); pv(out); })
+W(f32, RouteCkPosToPosDis, (Vec* a, Vec* b), (a, b), { P(g_f, " RD"); pv(a); pv(b); }, { P(g_f, " %08x", bits(r)); })
+W(f32, RouteCkGetDist, (int a, int b), (a, b), { P(g_f, " RG %d %d", a, b); }, { P(g_f, " %08x", bits(r)); })
+W(int, RouteCkConnectPosCk, (Vec* a, Vec* b), (a, b), { P(g_f, " RC"); pv(a); pv(b); }, { P(g_f, " %d", r); })
+W(s8, getNearPoint, (Vec* pos, int mode, int mask), (pos, mode, mask), { P(g_f, " NP"); pv(pos); P(g_f, " %d %x", mode, mask); },
+  { P(g_f, " %d", r); })
+W(int, getNearInfo, (cEm* em, int mode, int mask), (em, mode, mask), { P(g_f, " NI %u", actor(em)); P(g_f, " %d %x", mode, mask); },
+  { P(g_f, " %d", r); rck(em); })
+WV(RouteCk, (), (), { P(g_f, " RK"); }, {})

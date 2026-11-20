@@ -25,6 +25,8 @@
 #   volline  RE4_SVC_CONTROL=volline: a line tests the cylinder bodies whatever its flag (square-follow: the camera's lines past Ashley)
 #   colfloor RE4_SVC_CONTROL=colfloor: the per-model floor snap 0.5 unit high (col_model.cpp; e1-route)
 #   colwall  RE4_SVC_CONTROL=colwall: the per-model wall slide's radius 10% larger (e1-route)
+#   routenear RE4_SVC_CONTROL=routenear: the nearest reachable way point is the second one (hill-ashley: the partner)
+#   routehop RE4_SVC_CONTROL=routehop: the way points between skipped, every reachable destination its own next hop (bell-ganado: the Ganados' chase)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
 # the behaviour's Rnd. So each fixture runs twice: with the cloth's wind on ("native": every bone but the cloth links
@@ -171,6 +173,8 @@ print()" "$b/compare.json")
     r4ctl square-follow "line tests cylinder bodies whatever the flag" volline
     r4ctl e1-route "floor snap 0.5 unit high" colfloor
     r4ctl e1-route "wall slide radius 10% larger" colwall
+    r4ctl hill-ashley "nearest way point is the second reachable" routenear
+    r4ctl bell-ganado "way points between skipped" routehop
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind
