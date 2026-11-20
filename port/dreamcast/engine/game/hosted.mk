@@ -6,7 +6,7 @@
 # The partner (lane eng-e1b, E1 second slice): Ashley's original partner code, cSubChar (pl_npc.cpp: follow, wait,
 # hide, carried, damage) and the pl11 module (cSubAshley, enemy id 3: em/pl11 + rel/pl11), whose REL entry is
 # linked under its own name (Makefile: -D_prolog=pl11_prolog, as the reference build re4ref does).
-ifneq ($(BOSS),1)
+ifeq ($(BOSS)$(FIGHT),)
 PARTNER_SRCS := game/pl_npc pl11/pl11
 SVC_PARTNER_SRCS := game/route_ck
 endif

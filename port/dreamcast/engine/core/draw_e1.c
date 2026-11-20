@@ -29,6 +29,12 @@ static int open_ok, stills;
    (s/stills.py reads the frame buffer from Flycast's memory; m1_state 2 request, 3 acknowledge, 4 frame buffer). */
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent);
+#ifdef E2_FIGHT
+/* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
+void e2_draw_open(void);
+void e2_draw_actors(NativeScene* s);
+void e2_draw_effects(NativeScene* s);
+#endif
 
 int e1_draw_open_c(void)
 {
@@ -41,6 +47,9 @@ int e1_draw_open_c(void)
     m1_state[5] = 2;
     if (!native_open(&scene, "/cd/CROSS.PAK")) { printf("E1 draw: pack refused (stage %lu)\n", 0ul); return 0; }
     native_update(&scene, 0);
+#ifdef E2_FIGHT
+    e2_draw_open();
+#endif
     open_ok = 1;
     file_t f = fs_open("/cd/STILLS", O_RDONLY);
     if (f >= 0) { fs_close(f); stills = 1; }
@@ -127,6 +136,9 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_list_begin(PVR_LIST_OP_POLY);
     native_sky(&scene);   /* also the fog table every header reads (the hill scene: the village sky and fog) */
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 0);
+#ifdef E2_FIGHT
+    e2_draw_actors(&scene);   /* before Leon: his translucent pass below reads the opaque pass's part state */
+#endif
     e1_actor_pass(&scene, leon, leon_skel, 0, identity, 0);
     e1_partner_pass(cam, partner);
     pvr_list_finish();
@@ -137,6 +149,9 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_TR_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 2);
+#ifdef E2_FIGHT
+    e2_draw_effects(&scene);
+#endif
     native_hud(&scene);
     pvr_list_finish();
     pvr_scene_finish();

@@ -159,13 +159,14 @@ void e1_report()
     unsigned n = e1_state[2] < E1_TICKS ? e1_state[2] : E1_TICKS;
     for (unsigned i = 0; i < n; i++) {
         const E1Timing& t = e1_timing[i];
-        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu chars %lu smot %lu scloth %lu sparts %lu scol %lu\n", i + 1,
+        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu chars %lu smot %lu scloth %lu sparts %lu scol %lu sfx %lu\n", i + 1,
                (unsigned long) t.input_us, (unsigned long) t.tick_us, (unsigned long) t.services_us, (unsigned long) t.trace_us,
                (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields,
                (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us, (unsigned long) t.pvr_us,
                (unsigned long) t.chars_us,
                (unsigned long) t.svc_group_us[E1_SVC_MOTION], (unsigned long) t.svc_group_us[E1_SVC_CLOTH],
-               (unsigned long) t.svc_group_us[E1_SVC_PARTS], (unsigned long) t.svc_group_us[E1_SVC_COLLISION]);
+               (unsigned long) t.svc_group_us[E1_SVC_PARTS], (unsigned long) t.svc_group_us[E1_SVC_COLLISION],
+               (unsigned long) t.svc_group_us[E1_SVC_EFFECTS]);
     }
     e1_log("E1 END\n");
 }
