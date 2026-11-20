@@ -213,6 +213,31 @@ duplicates, reordering, a rate-limited line with a bounded queue, dead windows).
 5. Deadline control: `hang` with a 20 s deadline: the report says `TIMEOUT`.
 6. Resume: kill the PC sender halfway and start it again; only the missing chunks travel.
 
+**Flycast results (lane eng-loop2, 2026-11-20; console-like Flycast `fly1` with the GDEMU disc profile; loader
+`98aced1dc` plus the client changes of this lane; evidence `E:\RE4DC-Lanes\eng-loop2\evidence\k*`).** How Flycast
+stands in for the Pi: its modem emulation is the PPP peer and the console's UDP leaves through a PC socket, so the
+relay runs on the PC (`consoleloop.py relay-local`, started before the loader boots: a Windows socket that once took
+an ICMP port-unreachable stops passing datagrams down), and the sender talks to it (`--udp 127.0.0.1:52059 --bind 0`).
+
+| Check | Result | Control |
+|---|---|---|
+| 1. `UP`, `WAITING FOR THE PC`, `status` sees `HELLO` | pass (`k1-status.log`, `shots\k1-waiting.png`) | - |
+| 2. `run testprog --args report` | pass: `DONE`, exit 0, report CRC ok (`k2-report`) | - |
+| 3. Refusals | `--corrupt payload`: `VERDICT sha256`; `--corrupt stream`: `stream crc`; both "refused: not verified", nothing ran (boot count unchanged) | they are the controls of check 2 |
+| 4. Outcomes | `crash`: `CRASHED`, event 180, PC in the program; `hang` with 20 s: `TIMEOUT`; `return`: `DONE` exit 0; the loader waiting again after each (boot count +1) | each is the others' control. Flycast does not raise the address error of a misaligned write (the first crash run came back `DONE`): the test program falls through to an illegal instruction |
+| 5. Resume | sender killed at 66 of 128 chunks; the restarted sender's first ack starts at chunk 68 | a different stream (stored, not deflated) after the kill: the first ack starts at 0 |
+| Host tests after the hand-off header change | 16 / 16 (`evidence\host-tests`) | as section 7 |
+| Engine images through the loop (step 6) | the bench (`SENDABLE=1`, `root=E0S`, schedule `c0 f0`) and the E1 image (`root=E1`, village) sent, run and their reports back: 2 `WINDOW` rows, `SCHEDULE DONE`; 640 `ROW` lines, `E1 END` (`k6-bench`, `k6-e1`) | - |
+
+Link rates, **Flycast** (not a console figure): down 3.1 to 3.9 KB/s of deflated bytes, 5.0 to 6.2 KB/s of program
+bytes (130 to 373 KB images, 34 to 95 s); reports up 1.32 KB/s (100 KB in 75.8 s) and 1.46 KB/s (57 KB, 39 s).
+Flycast's modem reports 33600 bps; the console's rate is still unknown.
+
+The console-like Flycast also showed a console failure mode: a program that reads the disc sector by sector after
+the loader's jump stopped with "SH4 exception when blocked" under the GDEMU profile (stale GD DMA completions). The
+loader, the test program and every `SENDABLE` image now link the release game's KOS disc fixes (`kosfix.mk`); the
+unfixed test program is the control (it stops; the fixed one returns `DONE`).
+
 **First console run (owner powers on, picks the loader in openMenu once):**
 1. The loader dials the DreamPi and the beacons reach the Pi through the relay while `qalink_pi.py` runs.
 2. **Downlink rate**: the PC's transfer report of the E0 bench image (first real measure of Pi to console).

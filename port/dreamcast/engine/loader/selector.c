@@ -285,8 +285,6 @@ static void collect(unsigned i) {
         snprintf(e->why, sizeof(e->why), "TIMEOUT after %u s", s->deadline);
     } else if (!e->report_ok) {
         snprintf(e->why, sizeof(e->why), "report CRC bad");
-    } else if (e->exit_code) {
-        snprintf(e->why, sizeof(e->why), "exit %d", (int)e->exit_code);
     }
     /* the report: refusal lines and rows */
     g_rows = g_last_row = g_late = 0;
@@ -306,8 +304,11 @@ static void collect(unsigned i) {
             if (!strncmp(line, "WINDOW ", 7) && !strcmp(s->kind, "bench")) { bench_window(e, line); ++windows; }
             else if (!strncmp(line, "ROW ", 4) && !strcmp(s->kind, "e1")) e1_row(line);
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
+            else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
         }
     }
+    if (!e->why[0] && e->exit_code) snprintf(e->why, sizeof(e->why), "exit %d", (int)e->exit_code);   /* after the
+                                                                    report: a refusal line says more than its exit code */
     if (!strcmp(s->kind, "e1")) e1_summary(e);
     e->rows = !strcmp(s->kind, "bench") ? windows : g_rows;
     if (!e->why[0] && !e->rows) snprintf(e->why, sizeof(e->why), "no rows in the report");
