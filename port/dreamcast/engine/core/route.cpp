@@ -108,45 +108,9 @@ u32 PADRead(PADStatus* status)
     for (int i = 1; i < 4; i++) status[i].err = -1;
     return 0x80000000u;
 }
-// The GameCube SDK's PADClamp (called by the hosted PadRead right after PADRead) is a no-op here, as in the old port:
-// the route's stick and trigger values reach the game as the warp rig gives them (80, 0xC0), which is what the old
-// game was run with. PADCLAMP (diagnostic boot option, lane eng-e1f) applies the SDK's clamp regions instead (main
-// stick: dead zone 15, octagon 72 / corner 40; triggers: 30..180), as the PC reference re4ref does with the SDK's
-// own Padclamp: the arm that shows whether the reference's aim-turn divergence comes from the input clamp.
-static int pad_clamp = -1;
-static void clamp_stick(s8* px, s8* py, int max, int xy, int min)
-{
-    int x = *px, y = *py;
-    const int sx = x < 0 ? -1 : 1, sy = y < 0 ? -1 : 1;
-    x = x < 0 ? -x : x;
-    y = y < 0 ? -y : y;
-    x = x <= min ? 0 : x - min;
-    y = y <= min ? 0 : y - min;
-    if (x || y) {
-        const int d = xy * y <= xy * x ? xy * x + (max - xy) * y : xy * y + (max - xy) * x;
-        if (xy * max < d) { x = (s8) (xy * max * x / d); y = (s8) (xy * max * y / d); }
-    }
-    *px = (s8) (sx * x);
-    *py = (s8) (sy * y);
-}
-static void clamp_trigger(u8* t, int min, int max)
-{
-    if (*t <= min) *t = 0;
-    else { if (*t > max) *t = (u8) max; *t = (u8) (*t - min); }
-}
-void PADClamp(PADStatus* s)
-{
-    if (pad_clamp < 0) {
-        file_t f = fs_open("/cd/PADCLAMP", O_RDONLY);
-        pad_clamp = f >= 0;
-        if (f >= 0) { fs_close(f); e1_log("E1 PADCLAMP: the SDK clamp regions on the route's pad (diagnostic)\n"); }
-    }
-    if (!pad_clamp || s[0].err) return;
-    clamp_stick(&s[0].stickX, &s[0].stickY, 72, 40, 15);
-    clamp_stick(&s[0].substickX, &s[0].substickY, 59, 31, 15);
-    clamp_trigger(&s[0].triggerLeft, 30, 180);
-    clamp_trigger(&s[0].triggerRight, 30, 180);
-}
+// The stick and trigger values above are raw controller units; the engine's input service clamps them on its pad path
+// as the original game does (services/input/input.cpp pad_clamp, lane eng-e1g: stick 80 reaches the game as 65,
+// trigger 0xC0 as 150), so this file has no PADClamp and no PADCLAMP boot option any more.
 int PADReset(u32) { return 1; }
 int GetSystemVcnt() { return 2; }
 }

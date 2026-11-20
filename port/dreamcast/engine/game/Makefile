@@ -160,6 +160,9 @@ $(OUT)/n/$(notdir $(1)).o: $(SVC_DIR)/$(1).cpp $(wildcard $(SVC_DIR)/$(dir $(1))
 	kos-c++ $$(ORIG_FLAGS) $$(ORIG_INC) $$(NATIVE_INC) -c $$< -o $$@
 endef
 $(foreach s,$(SVC4_SRCS),$(eval $(call SVC4_RULE,$(s))))
+# Control build only (lane eng-e1g): PAD_EXTRA=-DE1_PAD_NOCLAMP=1 takes the pad clamp out of the input service (the
+# village plays-right comparison must then split from the reference at tick 424). Never a default.
+$(OUT)/n/input.o: ORIG_FLAGS += $(PAD_EXTRA)
 $(OUT)/n/svc4_syms.txt: $(SVC4_OBJS)
 	sh-elf-nm -g --defined-only $(SVC4_OBJS) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
 SPLIT_UNITS := game/cam_ctrl game/cam_sys game/cam_extra
