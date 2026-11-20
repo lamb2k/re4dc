@@ -47,7 +47,8 @@ int e1_draw_open_c(const char* pack)
     m1_state[5] = 2;
     if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
     native_update(&scene, 0);
-    partner_model = scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
+    /* Ashley's body is catalogue 6 of the hill pack only (other packs hold props there) */
+    partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
     printf("E1 draw: pack %s, %u catalogue models, partner %s\n", pack, scene.models.n, partner_model ? "drawn from catalogue 6" : "bone marks");
     open_ok = 1;
     file_t f = fs_open("/cd/STILLS", O_RDONLY);
