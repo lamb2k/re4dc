@@ -51,6 +51,7 @@ void fx_move(void);                 // once a tick: sequence players, then the s
 unsigned fx_live_count(void);
 void fx_report(void);
 void fx_bind_archive(const void* base, unsigned bytes);   // an archive whose ESQ table packs records (DC tree)
+void fx_note_archive(const char* name, const void* base, unsigned bytes);   // names a loaded archive for the data log
 // Texture of a sprite pattern for the renderer: the (texture id, pattern) the sprite shows this tick.
 // Check build: the sequence seeds come from fx_check_seed instead of the engine generator.
 extern unsigned (*fx_check_seed)(void);

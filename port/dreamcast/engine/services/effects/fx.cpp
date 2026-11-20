@@ -37,6 +37,10 @@ extern "C" float atan2f(float, float);
 #endif
 
 struct FxSprites fx_sprites;
+#ifdef FX_HOST_CHECK
+unsigned fx_check_drop = ~0u;
+float fx_check_gravity = 1.0f;
+#endif
 struct FxStats fx_stats;
 unsigned (*fx_check_seed)(void);
 static FxSprites& S = fx_sprites;
@@ -70,6 +74,23 @@ static uint16_t owner_loads[0xD3];
 static const EspAnmData* tex_anm[256];
 static uint8_t tex_owner[256];
 
+// Archives the engine loaded (fx_note_archive): the data-load log names where each EffData block came from, so the
+// equivalence check reads the same bytes from the disc tree.
+struct FxNamed { const char* name; const u8* base; unsigned bytes; };
+static FxNamed named[8];
+void fx_note_archive(const char* name, const void* base, unsigned bytes)
+{
+    for (FxNamed& n : named) if (!n.base) { n = {name, (const u8*) base, bytes}; return; }
+}
+static void note_source(u32 owner, const void* p)
+{
+    for (const FxNamed& n : named)
+        if (n.base && (const u8*) p >= n.base && (const u8*) p < n.base + n.bytes) {
+            FX_LOG("FX source: owner %02lx %s +%lx\n", (unsigned long) owner, n.name, (unsigned long) ((const u8*) p - n.base));
+            return;
+        }
+    FX_LOG("FX source: owner %02lx unknown %p\n", (unsigned long) owner, p);
+}
 int EspDataLoad(u32 addr, u32 owner, int mode)
 {
     const EffData* d = (const EffData*) addr;
@@ -82,6 +103,7 @@ int EspDataLoad(u32 addr, u32 owner, int mode)
         const u16 id = ids->ent[i].id;
         if (id < 256) { tex_anm[id] = (const EspAnmData*) ((const u8*) anms + anms->ofs[i]); tex_owner[id] = (u8) owner; }
     }
+    note_source(owner, d);
     est_data[owner] = (const SstData*) ((const u8*) d + d->ofsEstData);
     est_list[owner] = (const SstList*) ((const u8*) d + d->ofsEstList);
     FX_LOG("FX data: owner %02lx est %lu tex %lu\n", (unsigned long) owner, (unsigned long) est_list[owner]->num, (unsigned long) ids->num);
@@ -168,6 +190,7 @@ struct FxSeq {
 static FxSeq seqs[FX_SEQ_MAX];
 static unsigned seq_n;
 static u32 next_uid;
+static unsigned id_count[256];   // sprites spawned per effect id (report)
 
 static void kill_sprite(unsigned i)
 {
@@ -221,7 +244,7 @@ static int spawn(const EspGenWork* rec, FxSeq& q, const Vec* pos)
     float ax = rec->Speed_plus.x + rec->R_speed_plus.x * seed11(seed);
     float ay = rec->Speed_plus.y + rec->R_speed_plus.y * seed11(seed);
     float az = rec->Speed_plus.z + rec->R_speed_plus.z * seed11(seed);
-    const float d2r = 3.1415927f / 180.0f;
+    const float d2r = 3.14f / 180.0f;   // esp_sub.cpp DEG2RAD (3.14, as the original)
     float rx = (rec->Ang.x + rec->R_ang.x * seed11(seed)) * d2r;
     float ry = (rec->Ang.y + rec->R_ang.y * seed11(seed)) * d2r;
     float rz = (rec->Ang.z + rec->R_ang.z * seed11(seed)) * d2r;
@@ -229,6 +252,11 @@ static int spawn(const EspGenWork* rec, FxSeq& q, const Vec* pos)
     float wy = (rec->Ang_plus.y + rec->R_ang_plus.y * seed11(seed)) * d2r;
     float wz = (rec->Ang_plus.z + rec->R_ang_plus.z * seed11(seed)) * d2r;
     const float rs = rec->R_size_base * seed11(seed);
+#ifdef FX_HOST_CHECK
+    // the check's controls (each must make the equivalence fail): one sprite never spawned; gravity changed
+    if (next_uid == fx_check_drop) { next_uid++; return 1; }
+    ay *= fx_check_gravity;
+#endif
     const float* parent = 0;
     cModel* model = q.model;
     const unsigned parts = rec->Parts_no;
@@ -300,6 +328,7 @@ static int spawn(const EspGenWork* rec, FxSeq& q, const Vec* pos)
     S.blend[i] = rec->Blend_type; S.id[i] = id; S.release[i] = rec->Release_time; S.owner[i] = q.owner; S.tool[i] = tool;
     S.parent[i] = parent; S.model[i] = parent ? model : 0; S.guid[i] = parent && model ? model->serial : 0; S.pem[i] = q.pem;
     S.uid[i] = next_uid++;
+    id_count[id]++;
     S.n++;
     fx_stats.spawned++;
     if (S.n > fx_stats.peak) fx_stats.peak = S.n;
@@ -345,6 +374,20 @@ static int seq_update(FxSeq& q)
 }
 
 // ---- entry points the hosted behaviour calls (original names, engine bodies) ----
+// The calls of a run, kept for the report (the equivalence check replays them): tick, owner, id (0xFFFF when the
+// caller passed the table itself), parts, model or not, explicit position, seed.
+struct FxCall { uint16_t tick, owner, id, parts; uint8_t model, pos; uint32_t seed; float x, y, z, rx, ry, rz; };
+#define FX_CALLS 256
+static FxCall calls[FX_CALLS];
+static unsigned n_calls;
+static unsigned cur_owner = 0xFFFF, cur_id = 0xFFFF;
+#ifndef FX_HOST_CHECK
+extern "C" volatile uint32_t e1_tick;
+#define FX_TICK e1_tick
+#else
+extern unsigned fx_host_tick;
+#define FX_TICK fx_host_tick
+#endif
 static void est_start(cModel* model, int no, Vec* pos, Vec* rot, const EspSeqData* head, int e, int f, u32 g, u32 owner, void* h)
 {
     fx_stats.est_calls++;
@@ -368,10 +411,17 @@ static void est_start(cModel* model, int no, Vec* pos, Vec* rot, const EspSeqDat
     if (h) { q->opt = *(const EspSeqOpt*) h; q->has_opt = 1; }
     fx_stats.seq_started++;
     if (seq_n < FX_SEQ_MAX) seq_n++;
+    if (n_calls < FX_CALLS) {
+        const Vec& o = q->offset;
+        calls[n_calls++] = {(uint16_t) FX_TICK, (uint16_t) cur_owner, (uint16_t) cur_id, q->parts, (uint8_t) (model != 0),
+                            (uint8_t) (pos != 0), q->seed, o.x, o.y, o.z, q->ang.x, q->ang.y, q->ang.z};
+    }
 }
 extern "C" void EstSet(int a, int b, Vec* pos, Vec* rot, int c, int d, int e, int f, u32 g, void* h)
 {
+    cur_owner = c; cur_id = d;
     est_start((cModel*) a, b, pos, rot, EspGetEstAddr(c, d, 0), e, f, g, c, h);
+    cur_owner = cur_id = 0xFFFF;
 }
 // The est table of a model's own effect data (em_sub.cpp / em10 EstSetEm form: owner from the work's kind).
 void EstSet(cModel* model, int no, Vec* pos, Vec* rot, EspSeqData* head, int e, int f, u32 g, u32 owner, void* h)
@@ -578,6 +628,12 @@ void fx_move()
 
 void fx_report()
 {
+    for (unsigned i = 0; i < n_calls; i++) {
+        const FxCall& c = calls[i];
+        FX_LOG("FXCALL t=%u owner=%x id=%x parts=%x model=%u pos=%u seed=%06lx at=%d,%d,%d rot=%d,%d,%d\n", c.tick, c.owner, c.id, c.parts,
+               c.model, c.pos, (unsigned long) c.seed, (int) c.x, (int) c.y, (int) c.z, (int) (c.rx * 1000), (int) (c.ry * 1000), (int) (c.rz * 1000));
+    }
+    for (unsigned k = 0; k < 256; k++) if (id_count[k]) FX_LOG("FXID %02x %u\n", k, id_count[k]);
     FX_LOG("FX est=%lu nodata=%lu seq=%lu seqfull=%lu spawned=%lu full=%lu kind1=%lu efm=%lu died=%lu deleted=%lu notex=%lu peak=%lu\n",
            (unsigned long) fx_stats.est_calls, (unsigned long) fx_stats.est_nodata, (unsigned long) fx_stats.seq_started,
            (unsigned long) fx_stats.seq_full, (unsigned long) fx_stats.spawned, (unsigned long) fx_stats.full,

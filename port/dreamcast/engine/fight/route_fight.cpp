@@ -6,9 +6,11 @@
 // event holds the game (Status_flg[1] 0x10000000) the running action is cut and no button is given; a held R also
 // gives the analog trigger 0xC0. Ports 1-3 have no controller.
 #include "global.h"
+#include "player.h"
 #include "e1_core.h"
 #include "e1_engine.h"
 #include "types.h"
+#include "e1_kos.h"
 #include <string.h>
 
 #ifndef E1_PAD_AT_PLACE
@@ -26,15 +28,46 @@ struct Act { unsigned frame; uint16_t buttons; int8_t sx, sy; unsigned hold; };
 static const E1Route route = {0x101, 0x00002000, E2_FIGHT_TICKS, E2_FIGHT_POS, E2_FIGHT_ANG};
 const E1Route& e1_route() { return route; }
 
+// Diagnostic arm FEED (boot option; plays right is reported without it): the old run's generator state at the start of
+// every tick (FEED.BIN, s/mkfeed.py), as re4ref --rng-feed. Since the owner's split the old game's effects draw from the
+// game generator and the engine's do not, so the feed shows what the AI does when it is given the old run's numbers.
+void RndInit(u16 seed);
+extern "C" void* e1_file_load(const char* path, uint32_t* size, uint32_t align);
+static unsigned short* feed;
+static unsigned feed_n;
+static int feed_open = -1;
+
 static E1Pad latched;
 static unsigned next_act, cur_until, pad_frames;
 static int cur_act = -1;
 
 void e1_input_latch(unsigned tick)
 {
-    (void) tick;
+    if (feed_open < 0) {
+        feed_open = 0;
+        file_t f = fs_open("/cd/FEED.BIN", O_RDONLY);
+        if (f >= 0) {
+            fs_close(f);
+            uint32_t n = 0;
+            feed = (unsigned short*) e1_file_load("/cd/FEED.BIN", &n, 32);
+            feed_n = feed ? n / 2 : 0;
+            e1_log("E2 FEED: the old run's generator state at the start of %u ticks\n", feed_n);
+        }
+    }
+    if (feed && tick < feed_n) RndInit(feed[tick]);
     // god (the fixture's warp): Leon's life refilled every frame
     pG->pl_life = pG->pl_life_max;
+    // goto (the fixture's warp, dbgwarp_bridge.cpp goto_poll): at or after its room frame and outside events, Leon is
+    // moved and turned once; room frame R is the old run's tick 184 + R + 1, engine tick R + 1
+    static unsigned next_goto;
+    if (pPL && gotos[next_goto].frame != 0xFFFFFFFFu && tick >= gotos[next_goto].frame + 1 &&
+        !(pG->Status_flg[1] & 0x10000000)) {
+        const Goto& g = gotos[next_goto++];
+        Vec gp = {g.x, g.y, g.z};
+        pPL->setPos(&gp);
+        if (g.ang < 90.0f) { Vec ga = {0.0f, g.ang, 0.0f}; pPL->setAng(&ga); }
+        e1_log("E2 goto at tick %u\n", tick);
+    }
     pad_frames = E1_PAD_AT_PLACE + tick - E1_CONTROL_SHIFT;
     E1Pad p = {0, 0, 0, 0};
     if (pG->Status_flg[1] & 0x10000000) {   // an event holds the game: the running action ends here

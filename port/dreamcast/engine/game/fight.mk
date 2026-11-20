@@ -14,7 +14,7 @@
 # stays off (render, platform and old-port hooks compile out).
 .DEFAULT_GOAL := all
 FIGHT_SRCS := em10/em10 em15/em15_set game/em_set game/em_sub game/dmg game/em_dm_val st1/r101 \
-	game/sce_com game/sce_at game/area game/game
+	game/sce_com game/sce_at game/area game/game game/libgpu st/em_wrap
 HOSTED_SRCS += $(FIGHT_SRCS)
 SVC_ORIG_SRCS += game/route_ck
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))

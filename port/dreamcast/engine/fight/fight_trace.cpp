@@ -16,7 +16,7 @@
 
 template <class T> static unsigned w4(const T& v) { unsigned w = 0; memcpy(&w, &v, sizeof(v) < 4 ? sizeof(v) : 4); return w; }
 
-struct GameEvent { uint16_t tick, kind; uint8_t entry, id; int16_t a, b; };
+struct GameEvent { uint16_t tick, kind; uint8_t entry, id; int16_t a, b; uint8_t wep, part; };
 #define E2_EVENTS 512
 static GameEvent events[E2_EVENTS];
 static unsigned n_events, n_kind[E2EV_KINDS];
@@ -26,7 +26,7 @@ void e2_event(int kind, cEm* em, int arg)
 {
     n_kind[kind]++;
     if (n_events < E2_EVENTS)
-        events[n_events++] = {(uint16_t) e1_tick, (uint16_t) kind, (uint8_t) em->emset_no, (uint8_t) em->id, (int16_t) arg, 0};
+        events[n_events++] = {(uint16_t) e1_tick, (uint16_t) kind, (uint8_t) em->emset_no, (uint8_t) em->id, (int16_t) arg, 0, 0, 0};
 }
 
 // Life per work slot, last tick: a drop is a hit, reaching 0 a kill (the original's die check follows on its own).
@@ -40,13 +40,14 @@ void e2_watch_hp()
         if (slot >= 64) continue;
         if (last_serial[slot] != e->serial + 1) { last_serial[slot] = e->serial + 1; last_hp[slot] = e->hp; continue; }
         if (e->hp < last_hp[slot]) {
+            const uint8_t wep = (uint8_t) e->dmg.m_Wep, part = e->dmg.m_pDamageYarare ? (uint8_t) e->dmg.m_pDamageYarare->partsNo : 0xFF;
             n_kind[E2EV_HIT]++;
             if (n_events < E2_EVENTS)
-                events[n_events++] = {(uint16_t) e1_tick, E2EV_HIT, (uint8_t) e->emset_no, (uint8_t) e->id, last_hp[slot], (int16_t) e->hp};
+                events[n_events++] = {(uint16_t) e1_tick, E2EV_HIT, (uint8_t) e->emset_no, (uint8_t) e->id, last_hp[slot], (int16_t) e->hp, wep, part};
             if (e->hp <= 0 && last_hp[slot] > 0) {
                 n_kind[E2EV_KILL]++;
                 if (n_events < E2_EVENTS)
-                    events[n_events++] = {(uint16_t) e1_tick, E2EV_KILL, (uint8_t) e->emset_no, (uint8_t) e->id, last_hp[slot], (int16_t) e->hp};
+                    events[n_events++] = {(uint16_t) e1_tick, E2EV_KILL, (uint8_t) e->emset_no, (uint8_t) e->id, last_hp[slot], (int16_t) e->hp, wep, part};
             }
         }
         last_hp[slot] = e->hp;
@@ -74,8 +75,8 @@ void e2_events_report()
 {
     for (unsigned k = 1; k < E2EV_KINDS; k++) e1_log("E2 EVENTS %s %u\n", kind_name[k], n_kind[k]);
     for (unsigned i = 0; i < n_events; i++)
-        e1_log("GE t=%u %s e=%02x id=%x a=%d b=%d\n", events[i].tick, kind_name[events[i].kind], events[i].entry, events[i].id,
-               events[i].a, events[i].b);
+        e1_log("GE t=%u %s e=%02x id=%x a=%d b=%d wep=%x part=%x\n", events[i].tick, kind_name[events[i].kind], events[i].entry,
+               events[i].id, events[i].a, events[i].b, events[i].wep, events[i].part);
 }
 void e2_report()
 {

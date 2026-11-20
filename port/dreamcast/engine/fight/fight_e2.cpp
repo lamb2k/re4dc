@@ -33,6 +33,7 @@
 #include "game.h"
 #include "fx.h"
 #include "read.h"
+#include "esp.h"
 #include <new>
 #include <string.h>
 #include <stdio.h>
@@ -48,6 +49,8 @@ extern cSubChar* pSUB;
 extern cPartsMgr PartsMgr;
 extern "C" void ShapeMove(void* info);
 extern "C" void* e1_file_load(const char* path, uint32_t* size, uint32_t align);
+extern uint32_t e1_resident_bytes[4];
+void* GetDataExt(void* arc, const char* tag, int no);
 
 cSceSys SceSys;
 
@@ -139,6 +142,8 @@ void* EmReadSearch(int id, void* addr, u32 size)
             fs_close(f);
             if (!m.arc) return 0;
             bind_motion_keys(m);
+            fx_bind_archive(m.arc, m.bytes);
+            fx_note_archive(m.file + 4, m.arc, m.bytes);
             e2_module_bytes[0] += m.bytes;
             e2_module_bytes[1] += m.keys;
             e1_log("E2 module: %s %lu B at %p, %lu motion clips' keys %lu B linked\n", m.file, (unsigned long) m.bytes,
@@ -171,7 +176,12 @@ int e2_construct(cEm* p, unsigned id, unsigned guid)
     if (id < 0x10 || id >= 0x40) { e1_stub_hit("cEmMgr::construct(unhosted kind)", id); return 0; }
     p->subArc = (PlArc*) EmReadSearch(id, 0, 0);
     if (p->subArc == 0) return 0;
+    // The module's init constructs the shared class in place; built without RE4DC_GAME, src/em15's Em15Init takes the
+    // value-initialising form (new (em) cEm10()), which zeroes the archive pointer the original keeps (the GameCube's
+    // construct leaves it in place for em10_R0_Init's set function). The engine puts it back.
+    PlArc* arc = p->subArc;
     EmInitFunc(p);
+    if (!p->subArc) p->subArc = arc;
     if (p->id >= 0x10 && p->id <= 0x20) p->id = 0x10;
     p->serial = guid;
     p->emset_no = 0xFF;
@@ -211,8 +221,10 @@ static void em_move(cEm* em)
     EmYarareDisp(em);
     em->invisible_factor2 = 1.0f;
 }
+static int skip_em_move_flag();
 void e2_em_move()
 {
+    if (skip_em_move_flag()) return;
     EmMgr.dieCheck();
     if (pG->Stop_flg & 0x20000000) return;
     for (cEm* p = EmMgr.pAlive; p;) {
@@ -356,6 +368,9 @@ void e2_room_init()
     e2_watchdog_start();
     pSaveData = &save_data;
     save_data.pGlobal = &save_global;
+    // a new game's difficulty points (game.cpp GamePointInit(0): 5500, rank 5; the fixture's warp starts a new game):
+    // enemy damage and the AI read the rank
+    GamePointInit(0);
     uint32_t n = 0;
     uint8_t* list = (uint8_t*) e1_file_load("/cd/etc/emleon00.esl", &n, 32);
     if (list && n <= sizeof(pG->Em_list)) { memset(pG->Em_list, 0, sizeof(pG->Em_list)); memcpy(pG->Em_list, list, n); }
@@ -363,23 +378,55 @@ void e2_room_init()
     free(list);
     pG->em_list_no = 0;
     ps2_list0();
+    // game.cpp gameRoomInit, the parts this slice needs, in its order: the effect service's room start with the common
+    // effect data (eff_sys.cpp EspInit: core owners 0 and 0xD1) and the room's (EFF, owner 1); packed records of the
+    // archives bound for decoding; the scenario areas (AEV, ITA); the enemy list's room state.
     e2_fx_room_init();
+    fx_note_archive("etc/core.das", e1_core_arc, e1_resident_bytes[3]);
+    fx_note_archive("st1/r101.arc", e1_room_arc, e1_resident_bytes[2]);
+    fx_note_archive("em/wep02.drs", e1_wep_arc, e1_resident_bytes[1]);
+    fx_note_archive("em/pl00.drs", e1_pl_arc, e1_resident_bytes[0]);
+    fx_bind_archive(e1_core_arc, e1_resident_bytes[3]);
+    fx_bind_archive(e1_room_arc, e1_resident_bytes[2]);
+    fx_bind_archive(e1_wep_arc, e1_resident_bytes[1]);
+    fx_bind_archive(e1_pl_arc, e1_resident_bytes[0]);
+    EspDataLoad(pG->pArc->ofs_14 + (u32) pG->pArc, 0, 0);
+    EspDataLoad(pG->pArc->ofs_50 + (u32) pG->pArc, 0xD1, 0);
+    if (void* eff = GetDataExt(pG->pRoom, "EFF", 0)) EspDataLoad((u32) eff, 1, 0);
+    SceAtInit(GetDataExt(pG->pRoom, "AEV", 0), GetDataExt(pG->pRoom, "ITA", 0));
+    EmSetRoomInit();
     SceSys.event_start_cnt = 0;
     SceSys.cancelFlagNo = -1;
     SceSys.sndFlag = 1;
+}
+
+// The scenario's room start (sce_sys.cpp ScenarioRoomInit: the room script's init, one scheduler pass, the room-entry
+// spawn at cap 4, the areas). The old game runs it on the frame after the player is placed (its enemies' first logged
+// state is the creation move's, one tick after the player's first), so the engine runs it as tick 1's scenario step,
+// and the enemy table does not move again that tick.
+static int scenario_started, skip_em_move;
+static int skip_em_move_flag() { const int s = skip_em_move; skip_em_move = 0; return s; }
+static void scenario_room_init()
+{
     SceExecInitCondition();
     R101Init();
-    sce_tick = 0;
     scheduler_pass();
     EmSetFromList();
     SceAtRoomSet();
-    e1_log("E2 room init: alive %d tasks %u\n", SceCountEmAlive(0x10, 0x20), e2_task_runs);
+    e1_log("E2 room init: alive %d tasks %u weapon %d/%d lv %d/%d/%d/%d\n", SceCountEmAlive(0x10, 0x20), e2_task_runs, (int) pG->weapon_no, (int) pG->weapon_type, (int) pG->weapon_lv_power, (int) pG->weapon_lv_speed, (int) pG->weapon_lv_reload, (int) pG->weapon_lv_blt);
 }
 
 // ---- per tick (sce_sys.cpp ScenarioMove, engine form): room main, tasks, moving areas, the cap's release ----
 void e2_scenario_move(unsigned tick)
 {
     sce_tick = tick;
+    if (!scenario_started) {
+        if (tick == 0) return;   // room_init's own pass (tick 0): the scenario starts on tick 1
+        scenario_started = 1;
+        scenario_room_init();
+        skip_em_move = 1;
+        return;
+    }
     GameAddPoint(0);
     SceExecCheckCondition();
     if (!(pG->Status_flg[0] & 0x100000)) R101Main();

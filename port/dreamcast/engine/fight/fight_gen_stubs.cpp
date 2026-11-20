@@ -80,147 +80,147 @@ template<class T> struct hr_z { static T get() { alignas(16) static unsigned cha
 template<class T> struct hr_z<T&> { static T& get() { alignas(16) static unsigned char z[sizeof(T)]; return *(T*) z; } };
 template<> struct hr_z<void> { static void get() {} };
 #define HS(n) e1_stub_hit(n, 0)
-// AddPrim   // not declared in the headers: int
-extern "C" int hs_0(...) asm("_AddPrim");
-int hs_0(...) { HS("AddPrim"); return hr_z<int>::get(); }
+// Ctrl11SetSe2__FP5cCtrlP6cModelsUsiUs   // not declared in the headers: int
+extern "C" int hs_0(...) asm("Ctrl11SetSe2__FP5cCtrlP6cModelsUsiUs");
+int hs_0(...) { HS("Ctrl11SetSe2__FP5cCtrlP6cModelsUsiUs"); return hr_z<int>::get(); }
+// Ctrl12CntAdd__FP5cCtrliUs   // not declared in the headers: int
+extern "C" int hs_1(...) asm("Ctrl12CntAdd__FP5cCtrliUs");
+int hs_1(...) { HS("Ctrl12CntAdd__FP5cCtrliUs"); return hr_z<int>::get(); }
+// Ctrl12Set__FP5cCtrliUs   // not declared in the headers: int
+extern "C" int hs_2(...) asm("Ctrl12Set__FP5cCtrliUs");
+int hs_2(...) { HS("Ctrl12Set__FP5cCtrliUs"); return hr_z<int>::get(); }
 // CardSave   // not declared in the headers: int
-extern "C" int hs_1(...) asm("_CardSave");
-int hs_1(...) { HS("CardSave"); return hr_z<int>::get(); }
+extern "C" int hs_3(...) asm("_CardSave");
+int hs_3(...) { HS("CardSave"); return hr_z<int>::get(); }
 // ContinueWepData   // not declared in the headers: int
-extern "C" int hs_2(...) asm("_ContinueWepData");
-int hs_2(...) { HS("ContinueWepData"); return hr_z<int>::get(); }
-// DelPrim   // not declared in the headers: int
-extern "C" int hs_3(...) asm("_DelPrim");
-int hs_3(...) { HS("DelPrim"); return hr_z<int>::get(); }
+extern "C" int hs_4(...) asm("_ContinueWepData");
+int hs_4(...) { HS("ContinueWepData"); return hr_z<int>::get(); }
 // DvdReadN   // not declared in the headers: int
-extern "C" int hs_4(...) asm("_DvdReadN");
-int hs_4(...) { HS("DvdReadN"); return hr_z<int>::get(); }
+extern "C" int hs_5(...) asm("_DvdReadN");
+int hs_5(...) { HS("DvdReadN"); return hr_z<int>::get(); }
 // EffectEventDelete
-extern "C" decltype(hr_ret(&EffectEventDelete)) hs_5(...) asm("_EffectEventDelete");
-decltype(hr_ret(&EffectEventDelete)) hs_5(...) { HS("EffectEventDelete"); return hr_z<decltype(hr_ret(&EffectEventDelete))>::get(); }
+extern "C" decltype(hr_ret(&EffectEventDelete)) hs_6(...) asm("_EffectEventDelete");
+decltype(hr_ret(&EffectEventDelete)) hs_6(...) { HS("EffectEventDelete"); return hr_z<decltype(hr_ret(&EffectEventDelete))>::get(); }
 // Em18ClothMove
-extern "C" decltype(hr_ret(&Em18ClothMove)) hs_6(...) asm("_Em18ClothMove");
-decltype(hr_ret(&Em18ClothMove)) hs_6(...) { HS("Em18ClothMove"); return hr_z<decltype(hr_ret(&Em18ClothMove))>::get(); }
+extern "C" decltype(hr_ret(&Em18ClothMove)) hs_7(...) asm("_Em18ClothMove");
+decltype(hr_ret(&Em18ClothMove)) hs_7(...) { HS("Em18ClothMove"); return hr_z<decltype(hr_ret(&Em18ClothMove))>::get(); }
 // Em18ClothSet
-extern "C" decltype(hr_ret(&Em18ClothSet)) hs_7(...) asm("_Em18ClothSet");
-decltype(hr_ret(&Em18ClothSet)) hs_7(...) { HS("Em18ClothSet"); return hr_z<decltype(hr_ret(&Em18ClothSet))>::get(); }
+extern "C" decltype(hr_ret(&Em18ClothSet)) hs_8(...) asm("_Em18ClothSet");
+decltype(hr_ret(&Em18ClothSet)) hs_8(...) { HS("Em18ClothSet"); return hr_z<decltype(hr_ret(&Em18ClothSet))>::get(); }
 // EspSetGatling
-extern "C" decltype(hr_ret(&EspSetGatling)) hs_8(...) asm("_EspSetGatling");
-decltype(hr_ret(&EspSetGatling)) hs_8(...) { HS("EspSetGatling"); return hr_z<decltype(hr_ret(&EspSetGatling))>::get(); }
+extern "C" decltype(hr_ret(&EspSetGatling)) hs_9(...) asm("_EspSetGatling");
+decltype(hr_ret(&EspSetGatling)) hs_9(...) { HS("EspSetGatling"); return hr_z<decltype(hr_ret(&EspSetGatling))>::get(); }
 // FadeSet   // not declared in the headers: int
-extern "C" int hs_9(...) asm("_FadeSet");
-int hs_9(...) { HS("FadeSet"); return hr_z<int>::get(); }
+extern "C" int hs_10(...) asm("_FadeSet");
+int hs_10(...) { HS("FadeSet"); return hr_z<int>::get(); }
 // Filter01SetParam   // not declared in the headers: int
-extern "C" int hs_10(...) asm("_Filter01SetParam");
-int hs_10(...) { HS("Filter01SetParam"); return hr_z<int>::get(); }
+extern "C" int hs_11(...) asm("_Filter01SetParam");
+int hs_11(...) { HS("Filter01SetParam"); return hr_z<int>::get(); }
 // GetEm10EyeEffectEnable
-extern "C" decltype(hr_ret(&GetEm10EyeEffectEnable)) hs_11(...) asm("_GetEm10EyeEffectEnable");
-decltype(hr_ret(&GetEm10EyeEffectEnable)) hs_11(...) { HS("GetEm10EyeEffectEnable"); return hr_z<decltype(hr_ret(&GetEm10EyeEffectEnable))>::get(); }
+extern "C" decltype(hr_ret(&GetEm10EyeEffectEnable)) hs_12(...) asm("_GetEm10EyeEffectEnable");
+decltype(hr_ret(&GetEm10EyeEffectEnable)) hs_12(...) { HS("GetEm10EyeEffectEnable"); return hr_z<decltype(hr_ret(&GetEm10EyeEffectEnable))>::get(); }
 // IdTexDataLoad
-extern "C" decltype(hr_ret(&IdTexDataLoad)) hs_12(...) asm("_IdTexDataLoad");
-decltype(hr_ret(&IdTexDataLoad)) hs_12(...) { HS("IdTexDataLoad"); return hr_z<decltype(hr_ret(&IdTexDataLoad))>::get(); }
+extern "C" decltype(hr_ret(&IdTexDataLoad)) hs_13(...) asm("_IdTexDataLoad");
+decltype(hr_ret(&IdTexDataLoad)) hs_13(...) { HS("IdTexDataLoad"); return hr_z<decltype(hr_ret(&IdTexDataLoad))>::get(); }
 // IdTexRelease
-extern "C" decltype(hr_ret(&IdTexRelease)) hs_13(...) asm("_IdTexRelease");
-decltype(hr_ret(&IdTexRelease)) hs_13(...) { HS("IdTexRelease"); return hr_z<decltype(hr_ret(&IdTexRelease))>::get(); }
+extern "C" decltype(hr_ret(&IdTexRelease)) hs_14(...) asm("_IdTexRelease");
+decltype(hr_ret(&IdTexRelease)) hs_14(...) { HS("IdTexRelease"); return hr_z<decltype(hr_ret(&IdTexRelease))>::get(); }
 // InitGameTime
-extern "C" decltype(hr_ret(&InitGameTime)) hs_14(...) asm("_InitGameTime");
-decltype(hr_ret(&InitGameTime)) hs_14(...) { HS("InitGameTime"); return hr_z<decltype(hr_ret(&InitGameTime))>::get(); }
+extern "C" decltype(hr_ret(&InitGameTime)) hs_15(...) asm("_InitGameTime");
+decltype(hr_ret(&InitGameTime)) hs_15(...) { HS("InitGameTime"); return hr_z<decltype(hr_ret(&InitGameTime))>::get(); }
 // InitModule   // not declared in the headers: int
-extern "C" int hs_15(...) asm("_InitModule");
-int hs_15(...) { HS("InitModule"); return hr_z<int>::get(); }
+extern "C" int hs_16(...) asm("_InitModule");
+int hs_16(...) { HS("InitModule"); return hr_z<int>::get(); }
 // ItemGetBinTplAddr   // not declared in the headers: int
-extern "C" int hs_16(...) asm("_ItemGetBinTplAddr");
-int hs_16(...) { HS("ItemGetBinTplAddr"); return hr_z<int>::get(); }
+extern "C" int hs_17(...) asm("_ItemGetBinTplAddr");
+int hs_17(...) { HS("ItemGetBinTplAddr"); return hr_z<int>::get(); }
 // LadderEventTrans   // not declared in the headers: int
-extern "C" int hs_17(...) asm("_LadderEventTrans");
-int hs_17(...) { HS("LadderEventTrans"); return hr_z<int>::get(); }
+extern "C" int hs_18(...) asm("_LadderEventTrans");
+int hs_18(...) { HS("LadderEventTrans"); return hr_z<int>::get(); }
 // MemorySwap   // not declared in the headers: int
-extern "C" int hs_18(...) asm("_MemorySwap");
-int hs_18(...) { HS("MemorySwap"); return hr_z<int>::get(); }
+extern "C" int hs_19(...) asm("_MemorySwap");
+int hs_19(...) { HS("MemorySwap"); return hr_z<int>::get(); }
 // MercSysSetPoint
-extern "C" decltype(hr_ret(&MercSysSetPoint)) hs_19(...) asm("_MercSysSetPoint");
-decltype(hr_ret(&MercSysSetPoint)) hs_19(...) { HS("MercSysSetPoint"); return hr_z<decltype(hr_ret(&MercSysSetPoint))>::get(); }
+extern "C" decltype(hr_ret(&MercSysSetPoint)) hs_20(...) asm("_MercSysSetPoint");
+decltype(hr_ret(&MercSysSetPoint)) hs_20(...) { HS("MercSysSetPoint"); return hr_z<decltype(hr_ret(&MercSysSetPoint))>::get(); }
 // Merchant2ndRoundInit   // not declared in the headers: int
-extern "C" int hs_20(...) asm("_Merchant2ndRoundInit");
-int hs_20(...) { HS("Merchant2ndRoundInit"); return hr_z<int>::get(); }
+extern "C" int hs_21(...) asm("_Merchant2ndRoundInit");
+int hs_21(...) { HS("Merchant2ndRoundInit"); return hr_z<int>::get(); }
 // MerchantDataLoad   // not declared in the headers: int
-extern "C" int hs_21(...) asm("_MerchantDataLoad");
-int hs_21(...) { HS("MerchantDataLoad"); return hr_z<int>::get(); }
+extern "C" int hs_22(...) asm("_MerchantDataLoad");
+int hs_22(...) { HS("MerchantDataLoad"); return hr_z<int>::get(); }
 // MerchantDataSave   // not declared in the headers: int
-extern "C" int hs_22(...) asm("_MerchantDataSave");
-int hs_22(...) { HS("MerchantDataSave"); return hr_z<int>::get(); }
+extern "C" int hs_23(...) asm("_MerchantDataSave");
+int hs_23(...) { HS("MerchantDataSave"); return hr_z<int>::get(); }
 // MotSetObj16
-extern "C" decltype(hr_ret(&MotSetObj16)) hs_23(...) asm("_MotSetObj16");
-decltype(hr_ret(&MotSetObj16)) hs_23(...) { HS("MotSetObj16"); return hr_z<decltype(hr_ret(&MotSetObj16))>::get(); }
+extern "C" decltype(hr_ret(&MotSetObj16)) hs_24(...) asm("_MotSetObj16");
+decltype(hr_ret(&MotSetObj16)) hs_24(...) { HS("MotSetObj16"); return hr_z<decltype(hr_ret(&MotSetObj16))>::get(); }
 // OpeOwTypeSet
-extern "C" decltype(hr_ret(&OpeOwTypeSet)) hs_24(...) asm("_OpeOwTypeSet");
-decltype(hr_ret(&OpeOwTypeSet)) hs_24(...) { HS("OpeOwTypeSet"); return hr_z<decltype(hr_ret(&OpeOwTypeSet))>::get(); }
+extern "C" decltype(hr_ret(&OpeOwTypeSet)) hs_25(...) asm("_OpeOwTypeSet");
+decltype(hr_ret(&OpeOwTypeSet)) hs_25(...) { HS("OpeOwTypeSet"); return hr_z<decltype(hr_ret(&OpeOwTypeSet))>::get(); }
 // OpeSetOpenTerm
-extern "C" decltype(hr_ret(&OpeSetOpenTerm)) hs_25(...) asm("_OpeSetOpenTerm");
-decltype(hr_ret(&OpeSetOpenTerm)) hs_25(...) { HS("OpeSetOpenTerm"); return hr_z<decltype(hr_ret(&OpeSetOpenTerm))>::get(); }
+extern "C" decltype(hr_ret(&OpeSetOpenTerm)) hs_26(...) asm("_OpeSetOpenTerm");
+decltype(hr_ret(&OpeSetOpenTerm)) hs_26(...) { HS("OpeSetOpenTerm"); return hr_z<decltype(hr_ret(&OpeSetOpenTerm))>::get(); }
 // PutInCase   // not declared in the headers: int
-extern "C" int hs_26(...) asm("_PutInCase");
-int hs_26(...) { HS("PutInCase"); return hr_z<int>::get(); }
+extern "C" int hs_27(...) asm("_PutInCase");
+int hs_27(...) { HS("PutInCase"); return hr_z<int>::get(); }
 // SceExecCheckCondition
-extern "C" decltype(hr_ret(&SceExecCheckCondition)) hs_27(...) asm("_SceExecCheckCondition");
-decltype(hr_ret(&SceExecCheckCondition)) hs_27(...) { HS("SceExecCheckCondition"); return hr_z<decltype(hr_ret(&SceExecCheckCondition))>::get(); }
+extern "C" decltype(hr_ret(&SceExecCheckCondition)) hs_28(...) asm("_SceExecCheckCondition");
+decltype(hr_ret(&SceExecCheckCondition)) hs_28(...) { HS("SceExecCheckCondition"); return hr_z<decltype(hr_ret(&SceExecCheckCondition))>::get(); }
 // SceExecInitCondition
-extern "C" decltype(hr_ret(&SceExecInitCondition)) hs_28(...) asm("_SceExecInitCondition");
-decltype(hr_ret(&SceExecInitCondition)) hs_28(...) { HS("SceExecInitCondition"); return hr_z<decltype(hr_ret(&SceExecInitCondition))>::get(); }
+extern "C" decltype(hr_ret(&SceExecInitCondition)) hs_29(...) asm("_SceExecInitCondition");
+decltype(hr_ret(&SceExecInitCondition)) hs_29(...) { HS("SceExecInitCondition"); return hr_z<decltype(hr_ret(&SceExecInitCondition))>::get(); }
 // SetEmItem   // not declared in the headers: int
-extern "C" int hs_29(...) asm("_SetEmItem");
-int hs_29(...) { HS("SetEmItem"); return hr_z<int>::get(); }
+extern "C" int hs_30(...) asm("_SetEmItem");
+int hs_30(...) { HS("SetEmItem"); return hr_z<int>::get(); }
 // SetObj16
-extern "C" decltype(hr_ret(&SetObj16)) hs_30(...) asm("_SetObj16");
-decltype(hr_ret(&SetObj16)) hs_30(...) { HS("SetObj16"); return hr_z<decltype(hr_ret(&SetObj16))>::get(); }
+extern "C" decltype(hr_ret(&SetObj16)) hs_31(...) asm("_SetObj16");
+decltype(hr_ret(&SetObj16)) hs_31(...) { HS("SetObj16"); return hr_z<decltype(hr_ret(&SetObj16))>::get(); }
 // SetShield
-extern "C" decltype(hr_ret(&SetShield)) hs_31(...) asm("_SetShield");
-decltype(hr_ret(&SetShield)) hs_31(...) { HS("SetShield"); return hr_z<decltype(hr_ret(&SetShield))>::get(); }
+extern "C" decltype(hr_ret(&SetShield)) hs_32(...) asm("_SetShield");
+decltype(hr_ret(&SetShield)) hs_32(...) { HS("SetShield"); return hr_z<decltype(hr_ret(&SetShield))>::get(); }
 // SetTaskModelPtr
-extern "C" decltype(hr_ret(&SetTaskModelPtr)) hs_32(...) asm("_SetTaskModelPtr");
-decltype(hr_ret(&SetTaskModelPtr)) hs_32(...) { HS("SetTaskModelPtr"); return hr_z<decltype(hr_ret(&SetTaskModelPtr))>::get(); }
+extern "C" decltype(hr_ret(&SetTaskModelPtr)) hs_33(...) asm("_SetTaskModelPtr");
+decltype(hr_ret(&SetTaskModelPtr)) hs_33(...) { HS("SetTaskModelPtr"); return hr_z<decltype(hr_ret(&SetTaskModelPtr))>::get(); }
 // SetWeapon
-extern "C" decltype(hr_ret(&SetWeapon)) hs_33(...) asm("_SetWeapon");
-decltype(hr_ret(&SetWeapon)) hs_33(...) { HS("SetWeapon"); return hr_z<decltype(hr_ret(&SetWeapon))>::get(); }
+extern "C" decltype(hr_ret(&SetWeapon)) hs_34(...) asm("_SetWeapon");
+decltype(hr_ret(&SetWeapon)) hs_34(...) { HS("SetWeapon"); return hr_z<decltype(hr_ret(&SetWeapon))>::get(); }
 // ShadowMemClear   // not declared in the headers: int
-extern "C" int hs_34(...) asm("_ShadowMemClear");
-int hs_34(...) { HS("ShadowMemClear"); return hr_z<int>::get(); }
+extern "C" int hs_35(...) asm("_ShadowMemClear");
+int hs_35(...) { HS("ShadowMemClear"); return hr_z<int>::get(); }
 // ShdGetObjPtr   // not declared in the headers: int
-extern "C" int hs_35(...) asm("_ShdGetObjPtr");
-int hs_35(...) { HS("ShdGetObjPtr"); return hr_z<int>::get(); }
+extern "C" int hs_36(...) asm("_ShdGetObjPtr");
+int hs_36(...) { HS("ShdGetObjPtr"); return hr_z<int>::get(); }
 // SscrnDataLoad
-extern "C" decltype(hr_ret(&SscrnDataLoad)) hs_36(...) asm("_SscrnDataLoad");
-decltype(hr_ret(&SscrnDataLoad)) hs_36(...) { HS("SscrnDataLoad"); return hr_z<decltype(hr_ret(&SscrnDataLoad))>::get(); }
+extern "C" decltype(hr_ret(&SscrnDataLoad)) hs_37(...) asm("_SscrnDataLoad");
+decltype(hr_ret(&SscrnDataLoad)) hs_37(...) { HS("SscrnDataLoad"); return hr_z<decltype(hr_ret(&SscrnDataLoad))>::get(); }
 // SscrnDataSave
-extern "C" decltype(hr_ret(&SscrnDataSave)) hs_37(...) asm("_SscrnDataSave");
-decltype(hr_ret(&SscrnDataSave)) hs_37(...) { HS("SscrnDataSave"); return hr_z<decltype(hr_ret(&SscrnDataSave))>::get(); }
+extern "C" decltype(hr_ret(&SscrnDataSave)) hs_38(...) asm("_SscrnDataSave");
+decltype(hr_ret(&SscrnDataSave)) hs_38(...) { HS("SscrnDataSave"); return hr_z<decltype(hr_ret(&SscrnDataSave))>::get(); }
 // SubScreenOpen
-extern "C" decltype(hr_ret(&SubScreenOpen)) hs_38(...) asm("_SubScreenOpen");
-decltype(hr_ret(&SubScreenOpen)) hs_38(...) { HS("SubScreenOpen"); return hr_z<decltype(hr_ret(&SubScreenOpen))>::get(); }
+extern "C" decltype(hr_ret(&SubScreenOpen)) hs_39(...) asm("_SubScreenOpen");
+decltype(hr_ret(&SubScreenOpen)) hs_39(...) { HS("SubScreenOpen"); return hr_z<decltype(hr_ret(&SubScreenOpen))>::get(); }
 // SubScreenWait
-extern "C" decltype(hr_ret(&SubScreenWait)) hs_39(...) asm("_SubScreenWait");
-decltype(hr_ret(&SubScreenWait)) hs_39(...) { HS("SubScreenWait"); return hr_z<decltype(hr_ret(&SubScreenWait))>::get(); }
+extern "C" decltype(hr_ret(&SubScreenWait)) hs_40(...) asm("_SubScreenWait");
+decltype(hr_ret(&SubScreenWait)) hs_40(...) { HS("SubScreenWait"); return hr_z<decltype(hr_ret(&SubScreenWait))>::get(); }
 // TaskExec
-extern "C" decltype(hr_ret(&TaskExec)) hs_40(...) asm("_TaskExec");
-decltype(hr_ret(&TaskExec)) hs_40(...) { HS("TaskExec"); return hr_z<decltype(hr_ret(&TaskExec))>::get(); }
+extern "C" decltype(hr_ret(&TaskExec)) hs_41(...) asm("_TaskExec");
+decltype(hr_ret(&TaskExec)) hs_41(...) { HS("TaskExec"); return hr_z<decltype(hr_ret(&TaskExec))>::get(); }
 // SndBlkStop(int)
-extern "C" decltype(SndBlkStop(hr_v<int>())) hs_41(...) asm("__Z10SndBlkStopi");
-decltype(SndBlkStop(hr_v<int>())) hs_41(...) { HS("SndBlkStop(int)"); return hr_z<decltype(SndBlkStop(hr_v<int>()))>::get(); }
+extern "C" decltype(SndBlkStop(hr_v<int>())) hs_42(...) asm("__Z10SndBlkStopi");
+decltype(SndBlkStop(hr_v<int>())) hs_42(...) { HS("SndBlkStop(int)"); return hr_z<decltype(SndBlkStop(hr_v<int>()))>::get(); }
 // setItemObj(void*, void*, Vec*, Vec*)   // not declared in the headers: int
-extern "C" int hs_42(...) asm("__Z10setItemObjPvS_P3VecS1_");
-int hs_42(...) { HS("setItemObj(void*, void*, Vec*, Vec*)"); return hr_z<int>::get(); }
+extern "C" int hs_43(...) asm("__Z10setItemObjPvS_P3VecS1_");
+int hs_43(...) { HS("setItemObj(void*, void*, Vec*, Vec*)"); return hr_z<int>::get(); }
 // Ctrl11SetSe(cCtrl*, cModel*, short, unsigned short, int)
-extern "C" decltype(Ctrl11SetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>())) hs_43(...) asm("__Z11Ctrl11SetSeP5cCtrlP6cModelsti");
-decltype(Ctrl11SetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>())) hs_43(...) { HS("Ctrl11SetSe(cCtrl*, cModel*, short, unsigned short, int)"); return hr_z<decltype(Ctrl11SetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>()))>::get(); }
+extern "C" decltype(Ctrl11SetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>())) hs_44(...) asm("__Z11Ctrl11SetSeP5cCtrlP6cModelsti");
+decltype(Ctrl11SetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>())) hs_44(...) { HS("Ctrl11SetSe(cCtrl*, cModel*, short, unsigned short, int)"); return hr_z<decltype(Ctrl11SetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>()))>::get(); }
 // Ctrl12CntCk(cCtrl*, int, unsigned short)
-extern "C" decltype(Ctrl12CntCk(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_44(...) asm("__Z11Ctrl12CntCkP5cCtrlit");
-decltype(Ctrl12CntCk(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_44(...) { HS("Ctrl12CntCk(cCtrl*, int, unsigned short)"); return hr_z<decltype(Ctrl12CntCk(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>()))>::get(); }
+extern "C" decltype(Ctrl12CntCk(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_45(...) asm("__Z11Ctrl12CntCkP5cCtrlit");
+decltype(Ctrl12CntCk(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_45(...) { HS("Ctrl12CntCk(cCtrl*, int, unsigned short)"); return hr_z<decltype(Ctrl12CntCk(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>()))>::get(); }
 // Obj01SetEst(cObj*, int, int, unsigned long, int, int, int, int, int, int)
-extern "C" decltype(Obj01SetEst(hr_v<cObj*>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_45(...) asm("__Z11Obj01SetEstP4cObjiimiiiiii");
-decltype(Obj01SetEst(hr_v<cObj*>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_45(...) { HS("Obj01SetEst(cObj*, int, int, unsigned long, int, int, int, int, int, int)"); return hr_z<decltype(Obj01SetEst(hr_v<cObj*>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
-// SceCkFindPL(float*)
-extern "C" decltype(SceCkFindPL(hr_v<float*>())) hs_46(...) asm("__Z11SceCkFindPLPf");
-decltype(SceCkFindPL(hr_v<float*>())) hs_46(...) { HS("SceCkFindPL(float*)"); return hr_z<decltype(SceCkFindPL(hr_v<float*>()))>::get(); }
+extern "C" decltype(Obj01SetEst(hr_v<cObj*>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_46(...) asm("__Z11Obj01SetEstP4cObjiimiiiiii");
+decltype(Obj01SetEst(hr_v<cObj*>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_46(...) { HS("Obj01SetEst(cObj*, int, int, unsigned long, int, int, int, int, int, int)"); return hr_z<decltype(Obj01SetEst(hr_v<cObj*>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // Ctrl11SetSe2(cCtrl*, cModel*, short, unsigned short, int, unsigned short)
 extern "C" decltype(Ctrl11SetSe2(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>(), hr_v<unsigned short>())) hs_47(...) asm("__Z12Ctrl11SetSe2P5cCtrlP6cModelstit");
 decltype(Ctrl11SetSe2(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>(), hr_v<unsigned short>())) hs_47(...) { HS("Ctrl11SetSe2(cCtrl*, cModel*, short, unsigned short, int, unsigned short)"); return hr_z<decltype(Ctrl11SetSe2(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v<unsigned short>(), hr_v<int>(), hr_v<unsigned short>()))>::get(); }
@@ -257,462 +257,447 @@ decltype(Ctrl11StopAndSetSe(hr_v<cCtrl*>(), hr_v<cModel*>(), hr_v<short>(), hr_v
 // bio4_GXSetCopyClear(GXColor, unsigned long)
 extern "C" decltype(bio4_GXSetCopyClear(hr_v<GXColor>(), hr_v<unsigned long>())) hs_58(...) asm("__Z19bio4_GXSetCopyClear7GXColorm");
 decltype(bio4_GXSetCopyClear(hr_v<GXColor>(), hr_v<unsigned long>())) hs_58(...) { HS("bio4_GXSetCopyClear(GXColor, unsigned long)"); return hr_z<decltype(bio4_GXSetCopyClear(hr_v<GXColor>(), hr_v<unsigned long>()))>::get(); }
-// setEm(short, signed char, int, int, int)
-extern "C" decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_59(...) asm("__Z5setEmsaiii");
-decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_59(...) { HS("setEm(short, signed char, int, int, int)"); return hr_z<decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // SceKill(ScePrim*)
-extern "C" decltype(SceKill(hr_v<ScePrim*>())) hs_60(...) asm("__Z7SceKillP7ScePrim");
-decltype(SceKill(hr_v<ScePrim*>())) hs_60(...) { HS("SceKill(ScePrim*)"); return hr_z<decltype(SceKill(hr_v<ScePrim*>()))>::get(); }
+extern "C" decltype(SceKill(hr_v<ScePrim*>())) hs_59(...) asm("__Z7SceKillP7ScePrim");
+decltype(SceKill(hr_v<ScePrim*>())) hs_59(...) { HS("SceKill(ScePrim*)"); return hr_z<decltype(SceKill(hr_v<ScePrim*>()))>::get(); }
 // Ctrl12Ck(cCtrl*, int)
-extern "C" decltype(Ctrl12Ck(hr_v<cCtrl*>(), hr_v<int>())) hs_61(...) asm("__Z8Ctrl12CkP5cCtrli");
-decltype(Ctrl12Ck(hr_v<cCtrl*>(), hr_v<int>())) hs_61(...) { HS("Ctrl12Ck(cCtrl*, int)"); return hr_z<decltype(Ctrl12Ck(hr_v<cCtrl*>(), hr_v<int>()))>::get(); }
+extern "C" decltype(Ctrl12Ck(hr_v<cCtrl*>(), hr_v<int>())) hs_60(...) asm("__Z8Ctrl12CkP5cCtrli");
+decltype(Ctrl12Ck(hr_v<cCtrl*>(), hr_v<int>())) hs_60(...) { HS("Ctrl12Ck(cCtrl*, int)"); return hr_z<decltype(Ctrl12Ck(hr_v<cCtrl*>(), hr_v<int>()))>::get(); }
 // SetChain(void*, void*, Vec*, Vec*)
-extern "C" decltype(SetChain(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_62(...) asm("__Z8SetChainPvS_P3VecS1_");
-decltype(SetChain(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_62(...) { HS("SetChain(void*, void*, Vec*, Vec*)"); return hr_z<decltype(SetChain(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>()))>::get(); }
+extern "C" decltype(SetChain(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_61(...) asm("__Z8SetChainPvS_P3VecS1_");
+decltype(SetChain(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_61(...) { HS("SetChain(void*, void*, Vec*, Vec*)"); return hr_z<decltype(SetChain(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>()))>::get(); }
 // SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)
-extern "C" decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_63(...) asm("__Z8SetObj01PvS_P3VecS1_S1_ffii");
-decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_63(...) { HS("SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)"); return hr_z<decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_62(...) asm("__Z8SetObj01PvS_P3VecS1_S1_ffii");
+decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_62(...) { HS("SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)"); return hr_z<decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // SetObj12(void*, void*, Vec*, Vec*)
-extern "C" decltype(SetObj12(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_64(...) asm("__Z8SetObj12PvS_P3VecS1_");
-decltype(SetObj12(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_64(...) { HS("SetObj12(void*, void*, Vec*, Vec*)"); return hr_z<decltype(SetObj12(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>()))>::get(); }
+extern "C" decltype(SetObj12(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_63(...) asm("__Z8SetObj12PvS_P3VecS1_");
+decltype(SetObj12(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>())) hs_63(...) { HS("SetObj12(void*, void*, Vec*, Vec*)"); return hr_z<decltype(SetObj12(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>()))>::get(); }
 // TaskExit()
-extern "C" decltype(TaskExit()) hs_65(...) asm("__Z8TaskExitv");
-decltype(TaskExit()) hs_65(...) { HS("TaskExit()"); return hr_z<decltype(TaskExit())>::get(); }
+extern "C" decltype(TaskExit()) hs_64(...) asm("__Z8TaskExitv");
+decltype(TaskExit()) hs_64(...) { HS("TaskExit()"); return hr_z<decltype(TaskExit())>::get(); }
 // Ctrl12Set(cCtrl*, int, unsigned short)
-extern "C" decltype(Ctrl12Set(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_66(...) asm("__Z9Ctrl12SetP5cCtrlit");
-decltype(Ctrl12Set(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_66(...) { HS("Ctrl12Set(cCtrl*, int, unsigned short)"); return hr_z<decltype(Ctrl12Set(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>()))>::get(); }
+extern "C" decltype(Ctrl12Set(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_65(...) asm("__Z9Ctrl12SetP5cCtrlit");
+decltype(Ctrl12Set(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>())) hs_65(...) { HS("Ctrl12Set(cCtrl*, int, unsigned short)"); return hr_z<decltype(Ctrl12Set(hr_v<cCtrl*>(), hr_v<int>(), hr_v<unsigned short>()))>::get(); }
 // SndStrReq(int, int, int, int, int, float)
-extern "C" decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>())) hs_67(...) asm("__Z9SndStrReqiiiiif");
-decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>())) hs_67(...) { HS("SndStrReq(int, int, int, int, int, float)"); return hr_z<decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>()))>::get(); }
+extern "C" decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>())) hs_66(...) asm("__Z9SndStrReqiiiiif");
+decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>())) hs_66(...) { HS("SndStrReq(int, int, int, int, int, float)"); return hr_z<decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>()))>::get(); }
 // cObjLadder::getLadderNum()
-extern "C" decltype(hr_v<cObjLadder&>().getLadderNum()) hs_68(...) asm("__ZN10cObjLadder12getLadderNumEv");
-decltype(hr_v<cObjLadder&>().getLadderNum()) hs_68(...) { HS("cObjLadder::getLadderNum()"); return hr_z<decltype(hr_v<cObjLadder&>().getLadderNum())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().getLadderNum()) hs_67(...) asm("__ZN10cObjLadder12getLadderNumEv");
+decltype(hr_v<cObjLadder&>().getLadderNum()) hs_67(...) { HS("cObjLadder::getLadderNum()"); return hr_z<decltype(hr_v<cObjLadder&>().getLadderNum())>::get(); }
 // cObjLadder::setResetReserve()
-extern "C" decltype(hr_v<cObjLadder&>().setResetReserve()) hs_69(...) asm("__ZN10cObjLadder15setResetReserveEv");
-decltype(hr_v<cObjLadder&>().setResetReserve()) hs_69(...) { HS("cObjLadder::setResetReserve()"); return hr_z<decltype(hr_v<cObjLadder&>().setResetReserve())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().setResetReserve()) hs_68(...) asm("__ZN10cObjLadder15setResetReserveEv");
+decltype(hr_v<cObjLadder&>().setResetReserve()) hs_68(...) { HS("cObjLadder::setResetReserve()"); return hr_z<decltype(hr_v<cObjLadder&>().setResetReserve())>::get(); }
 // cObjLadder::setOn()   // not declared in the headers: int
-extern "C" int hs_70(...) asm("__ZN10cObjLadder5setOnEv");
-int hs_70(...) { HS("cObjLadder::setOn()"); return hr_z<int>::get(); }
+extern "C" int hs_69(...) asm("__ZN10cObjLadder5setOnEv");
+int hs_69(...) { HS("cObjLadder::setOn()"); return hr_z<int>::get(); }
 // cObjLadder::setOff()   // not declared in the headers: int
-extern "C" int hs_71(...) asm("__ZN10cObjLadder6setOffEv");
-int hs_71(...) { HS("cObjLadder::setOff()"); return hr_z<int>::get(); }
+extern "C" int hs_70(...) asm("__ZN10cObjLadder6setOffEv");
+int hs_70(...) { HS("cObjLadder::setOff()"); return hr_z<int>::get(); }
 // cObjLadder::ckClimb()
-extern "C" decltype(hr_v<cObjLadder&>().ckClimb()) hs_72(...) asm("__ZN10cObjLadder7ckClimbEv");
-decltype(hr_v<cObjLadder&>().ckClimb()) hs_72(...) { HS("cObjLadder::ckClimb()"); return hr_z<decltype(hr_v<cObjLadder&>().ckClimb())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().ckClimb()) hs_71(...) asm("__ZN10cObjLadder7ckClimbEv");
+decltype(hr_v<cObjLadder&>().ckClimb()) hs_71(...) { HS("cObjLadder::ckClimb()"); return hr_z<decltype(hr_v<cObjLadder&>().ckClimb())>::get(); }
 // cObjLadder::ckReset()
-extern "C" decltype(hr_v<cObjLadder&>().ckReset()) hs_73(...) asm("__ZN10cObjLadder7ckResetEv");
-decltype(hr_v<cObjLadder&>().ckReset()) hs_73(...) { HS("cObjLadder::ckReset()"); return hr_z<decltype(hr_v<cObjLadder&>().ckReset())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().ckReset()) hs_72(...) asm("__ZN10cObjLadder7ckResetEv");
+decltype(hr_v<cObjLadder&>().ckReset()) hs_72(...) { HS("cObjLadder::ckReset()"); return hr_z<decltype(hr_v<cObjLadder&>().ckReset())>::get(); }
 // cObjLadder::getType()
-extern "C" decltype(hr_v<cObjLadder&>().getType()) hs_74(...) asm("__ZN10cObjLadder7getTypeEv");
-decltype(hr_v<cObjLadder&>().getType()) hs_74(...) { HS("cObjLadder::getType()"); return hr_z<decltype(hr_v<cObjLadder&>().getType())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().getType()) hs_73(...) asm("__ZN10cObjLadder7getTypeEv");
+decltype(hr_v<cObjLadder&>().getType()) hs_73(...) { HS("cObjLadder::getType()"); return hr_z<decltype(hr_v<cObjLadder&>().getType())>::get(); }
 // cObjLadder::setClimb()
-extern "C" decltype(hr_v<cObjLadder&>().setClimb()) hs_75(...) asm("__ZN10cObjLadder8setClimbEv");
-decltype(hr_v<cObjLadder&>().setClimb()) hs_75(...) { HS("cObjLadder::setClimb()"); return hr_z<decltype(hr_v<cObjLadder&>().setClimb())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().setClimb()) hs_74(...) asm("__ZN10cObjLadder8setClimbEv");
+decltype(hr_v<cObjLadder&>().setClimb()) hs_74(...) { HS("cObjLadder::setClimb()"); return hr_z<decltype(hr_v<cObjLadder&>().setClimb())>::get(); }
 // cObjLadder::setDown2()
-extern "C" decltype(hr_v<cObjLadder&>().setDown2()) hs_76(...) asm("__ZN10cObjLadder8setDown2Ev");
-decltype(hr_v<cObjLadder&>().setDown2()) hs_76(...) { HS("cObjLadder::setDown2()"); return hr_z<decltype(hr_v<cObjLadder&>().setDown2())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().setDown2()) hs_75(...) asm("__ZN10cObjLadder8setDown2Ev");
+decltype(hr_v<cObjLadder&>().setDown2()) hs_75(...) { HS("cObjLadder::setDown2()"); return hr_z<decltype(hr_v<cObjLadder&>().setDown2())>::get(); }
 // cObjLadder::setReset(int)
-extern "C" decltype(hr_v<cObjLadder&>().setReset(hr_v<int>())) hs_77(...) asm("__ZN10cObjLadder8setResetEi");
-decltype(hr_v<cObjLadder&>().setReset(hr_v<int>())) hs_77(...) { HS("cObjLadder::setReset(int)"); return hr_z<decltype(hr_v<cObjLadder&>().setReset(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().setReset(hr_v<int>())) hs_76(...) asm("__ZN10cObjLadder8setResetEi");
+decltype(hr_v<cObjLadder&>().setReset(hr_v<int>())) hs_76(...) { HS("cObjLadder::setReset(int)"); return hr_z<decltype(hr_v<cObjLadder&>().setReset(hr_v<int>()))>::get(); }
 // cObjLadder::setStand()   // not declared in the headers: int
-extern "C" int hs_78(...) asm("__ZN10cObjLadder8setStandEv");
-int hs_78(...) { HS("cObjLadder::setStand()"); return hr_z<int>::get(); }
+extern "C" int hs_77(...) asm("__ZN10cObjLadder8setStandEv");
+int hs_77(...) { HS("cObjLadder::setStand()"); return hr_z<int>::get(); }
 // cObjLadder::getStatus()
-extern "C" decltype(hr_v<cObjLadder&>().getStatus()) hs_79(...) asm("__ZN10cObjLadder9getStatusEv");
-decltype(hr_v<cObjLadder&>().getStatus()) hs_79(...) { HS("cObjLadder::getStatus()"); return hr_z<decltype(hr_v<cObjLadder&>().getStatus())>::get(); }
+extern "C" decltype(hr_v<cObjLadder&>().getStatus()) hs_78(...) asm("__ZN10cObjLadder9getStatusEv");
+decltype(hr_v<cObjLadder&>().getStatus()) hs_78(...) { HS("cObjLadder::getStatus()"); return hr_z<decltype(hr_v<cObjLadder&>().getStatus())>::get(); }
 // ItemExamine::init(unsigned short, cModel*, unsigned char)
-extern "C" decltype(hr_v<ItemExamine&>().init(hr_v<unsigned short>(), hr_v<cModel*>(), hr_v<unsigned char>())) hs_80(...) asm("__ZN11ItemExamine4initEtP6cModelh");
-decltype(hr_v<ItemExamine&>().init(hr_v<unsigned short>(), hr_v<cModel*>(), hr_v<unsigned char>())) hs_80(...) { HS("ItemExamine::init(unsigned short, cModel*, unsigned char)"); return hr_z<decltype(hr_v<ItemExamine&>().init(hr_v<unsigned short>(), hr_v<cModel*>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<ItemExamine&>().init(hr_v<unsigned short>(), hr_v<cModel*>(), hr_v<unsigned char>())) hs_79(...) asm("__ZN11ItemExamine4initEtP6cModelh");
+decltype(hr_v<ItemExamine&>().init(hr_v<unsigned short>(), hr_v<cModel*>(), hr_v<unsigned char>())) hs_79(...) { HS("ItemExamine::init(unsigned short, cModel*, unsigned char)"); return hr_z<decltype(hr_v<ItemExamine&>().init(hr_v<unsigned short>(), hr_v<cModel*>(), hr_v<unsigned char>()))>::get(); }
 // ItemExamine::move()
-extern "C" decltype(hr_v<ItemExamine&>().move()) hs_81(...) asm("__ZN11ItemExamine4moveEv");
-decltype(hr_v<ItemExamine&>().move()) hs_81(...) { HS("ItemExamine::move()"); return hr_z<decltype(hr_v<ItemExamine&>().move())>::get(); }
+extern "C" decltype(hr_v<ItemExamine&>().move()) hs_80(...) asm("__ZN11ItemExamine4moveEv");
+decltype(hr_v<ItemExamine&>().move()) hs_80(...) { HS("ItemExamine::move()"); return hr_z<decltype(hr_v<ItemExamine&>().move())>::get(); }
 // ItemExamine::quit()
-extern "C" decltype(hr_v<ItemExamine&>().quit()) hs_82(...) asm("__ZN11ItemExamine4quitEv");
-decltype(hr_v<ItemExamine&>().quit()) hs_82(...) { HS("ItemExamine::quit()"); return hr_z<decltype(hr_v<ItemExamine&>().quit())>::get(); }
+extern "C" decltype(hr_v<ItemExamine&>().quit()) hs_81(...) asm("__ZN11ItemExamine4quitEv");
+decltype(hr_v<ItemExamine&>().quit()) hs_81(...) { HS("ItemExamine::quit()"); return hr_z<decltype(hr_v<ItemExamine&>().quit())>::get(); }
 // ItemExamine::reset()
-extern "C" decltype(hr_v<ItemExamine&>().reset()) hs_83(...) asm("__ZN11ItemExamine5resetEv");
-decltype(hr_v<ItemExamine&>().reset()) hs_83(...) { HS("ItemExamine::reset()"); return hr_z<decltype(hr_v<ItemExamine&>().reset())>::get(); }
+extern "C" decltype(hr_v<ItemExamine&>().reset()) hs_82(...) asm("__ZN11ItemExamine5resetEv");
+decltype(hr_v<ItemExamine&>().reset()) hs_82(...) { HS("ItemExamine::reset()"); return hr_z<decltype(hr_v<ItemExamine&>().reset())>::get(); }
 // ItemExamine::setup()
-extern "C" decltype(hr_v<ItemExamine&>().setup()) hs_84(...) asm("__ZN11ItemExamine5setupEv");
-decltype(hr_v<ItemExamine&>().setup()) hs_84(...) { HS("ItemExamine::setup()"); return hr_z<decltype(hr_v<ItemExamine&>().setup())>::get(); }
+extern "C" decltype(hr_v<ItemExamine&>().setup()) hs_83(...) asm("__ZN11ItemExamine5setupEv");
+decltype(hr_v<ItemExamine&>().setup()) hs_83(...) { HS("ItemExamine::setup()"); return hr_z<decltype(hr_v<ItemExamine&>().setup())>::get(); }
 // ItemExamine::trans()
-extern "C" decltype(hr_v<ItemExamine&>().trans()) hs_85(...) asm("__ZN11ItemExamine5transEv");
-decltype(hr_v<ItemExamine&>().trans()) hs_85(...) { HS("ItemExamine::trans()"); return hr_z<decltype(hr_v<ItemExamine&>().trans())>::get(); }
+extern "C" decltype(hr_v<ItemExamine&>().trans()) hs_84(...) asm("__ZN11ItemExamine5transEv");
+decltype(hr_v<ItemExamine&>().trans()) hs_84(...) { HS("ItemExamine::trans()"); return hr_z<decltype(hr_v<ItemExamine&>().trans())>::get(); }
 // cObjGatling::ckBreak()
-extern "C" decltype(hr_v<cObjGatling&>().ckBreak()) hs_86(...) asm("__ZN11cObjGatling7ckBreakEv");
-decltype(hr_v<cObjGatling&>().ckBreak()) hs_86(...) { HS("cObjGatling::ckBreak()"); return hr_z<decltype(hr_v<cObjGatling&>().ckBreak())>::get(); }
+extern "C" decltype(hr_v<cObjGatling&>().ckBreak()) hs_85(...) asm("__ZN11cObjGatling7ckBreakEv");
+decltype(hr_v<cObjGatling&>().ckBreak()) hs_85(...) { HS("cObjGatling::ckBreak()"); return hr_z<decltype(hr_v<cObjGatling&>().ckBreak())>::get(); }
 // cObjGatling::setFire()
-extern "C" decltype(hr_v<cObjGatling&>().setFire()) hs_87(...) asm("__ZN11cObjGatling7setFireEv");
-decltype(hr_v<cObjGatling&>().setFire()) hs_87(...) { HS("cObjGatling::setFire()"); return hr_z<decltype(hr_v<cObjGatling&>().setFire())>::get(); }
+extern "C" decltype(hr_v<cObjGatling&>().setFire()) hs_86(...) asm("__ZN11cObjGatling7setFireEv");
+decltype(hr_v<cObjGatling&>().setFire()) hs_86(...) { HS("cObjGatling::setFire()"); return hr_z<decltype(hr_v<cObjGatling&>().setFire())>::get(); }
 // cObjGatling::setRide(cEm*)
-extern "C" decltype(hr_v<cObjGatling&>().setRide(hr_v<cEm*>())) hs_88(...) asm("__ZN11cObjGatling7setRideEP3cEm");
-decltype(hr_v<cObjGatling&>().setRide(hr_v<cEm*>())) hs_88(...) { HS("cObjGatling::setRide(cEm*)"); return hr_z<decltype(hr_v<cObjGatling&>().setRide(hr_v<cEm*>()))>::get(); }
+extern "C" decltype(hr_v<cObjGatling&>().setRide(hr_v<cEm*>())) hs_87(...) asm("__ZN11cObjGatling7setRideEP3cEm");
+decltype(hr_v<cObjGatling&>().setRide(hr_v<cEm*>())) hs_87(...) { HS("cObjGatling::setRide(cEm*)"); return hr_z<decltype(hr_v<cObjGatling&>().setRide(hr_v<cEm*>()))>::get(); }
 // cObjGatling::ckReload()
-extern "C" decltype(hr_v<cObjGatling&>().ckReload()) hs_89(...) asm("__ZN11cObjGatling8ckReloadEv");
-decltype(hr_v<cObjGatling&>().ckReload()) hs_89(...) { HS("cObjGatling::ckReload()"); return hr_z<decltype(hr_v<cObjGatling&>().ckReload())>::get(); }
+extern "C" decltype(hr_v<cObjGatling&>().ckReload()) hs_88(...) asm("__ZN11cObjGatling8ckReloadEv");
+decltype(hr_v<cObjGatling&>().ckReload()) hs_88(...) { HS("cObjGatling::ckReload()"); return hr_z<decltype(hr_v<cObjGatling&>().ckReload())>::get(); }
 // cObjGatling::stopFire()
-extern "C" decltype(hr_v<cObjGatling&>().stopFire()) hs_90(...) asm("__ZN11cObjGatling8stopFireEv");
-decltype(hr_v<cObjGatling&>().stopFire()) hs_90(...) { HS("cObjGatling::stopFire()"); return hr_z<decltype(hr_v<cObjGatling&>().stopFire())>::get(); }
+extern "C" decltype(hr_v<cObjGatling&>().stopFire()) hs_89(...) asm("__ZN11cObjGatling8stopFireEv");
+decltype(hr_v<cObjGatling&>().stopFire()) hs_89(...) { HS("cObjGatling::stopFire()"); return hr_z<decltype(hr_v<cObjGatling&>().stopFire())>::get(); }
 // cObjGatling::setReload()
-extern "C" decltype(hr_v<cObjGatling&>().setReload()) hs_91(...) asm("__ZN11cObjGatling9setReloadEv");
-decltype(hr_v<cObjGatling&>().setReload()) hs_91(...) { HS("cObjGatling::setReload()"); return hr_z<decltype(hr_v<cObjGatling&>().setReload())>::get(); }
+extern "C" decltype(hr_v<cObjGatling&>().setReload()) hs_90(...) asm("__ZN11cObjGatling9setReloadEv");
+decltype(hr_v<cObjGatling&>().setReload()) hs_90(...) { HS("cObjGatling::setReload()"); return hr_z<decltype(hr_v<cObjGatling&>().setReload())>::get(); }
 // cObjGondola::setGetOffEm(cEm*)
-extern "C" decltype(hr_v<cObjGondola&>().setGetOffEm(hr_v<cEm*>())) hs_92(...) asm("__ZN11cObjGondola11setGetOffEmEP3cEm");
-decltype(hr_v<cObjGondola&>().setGetOffEm(hr_v<cEm*>())) hs_92(...) { HS("cObjGondola::setGetOffEm(cEm*)"); return hr_z<decltype(hr_v<cObjGondola&>().setGetOffEm(hr_v<cEm*>()))>::get(); }
+extern "C" decltype(hr_v<cObjGondola&>().setGetOffEm(hr_v<cEm*>())) hs_91(...) asm("__ZN11cObjGondola11setGetOffEmEP3cEm");
+decltype(hr_v<cObjGondola&>().setGetOffEm(hr_v<cEm*>())) hs_91(...) { HS("cObjGondola::setGetOffEm(cEm*)"); return hr_z<decltype(hr_v<cObjGondola&>().setGetOffEm(hr_v<cEm*>()))>::get(); }
 // cObjGondola::ckRide()
-extern "C" decltype(hr_v<cObjGondola&>().ckRide()) hs_93(...) asm("__ZN11cObjGondola6ckRideEv");
-decltype(hr_v<cObjGondola&>().ckRide()) hs_93(...) { HS("cObjGondola::ckRide()"); return hr_z<decltype(hr_v<cObjGondola&>().ckRide())>::get(); }
+extern "C" decltype(hr_v<cObjGondola&>().ckRide()) hs_92(...) asm("__ZN11cObjGondola6ckRideEv");
+decltype(hr_v<cObjGondola&>().ckRide()) hs_92(...) { HS("cObjGondola::ckRide()"); return hr_z<decltype(hr_v<cObjGondola&>().ckRide())>::get(); }
 // cObjGondola::setVib()
-extern "C" decltype(hr_v<cObjGondola&>().setVib()) hs_94(...) asm("__ZN11cObjGondola6setVibEv");
-decltype(hr_v<cObjGondola&>().setVib()) hs_94(...) { HS("cObjGondola::setVib()"); return hr_z<decltype(hr_v<cObjGondola&>().setVib())>::get(); }
+extern "C" decltype(hr_v<cObjGondola&>().setVib()) hs_93(...) asm("__ZN11cObjGondola6setVibEv");
+decltype(hr_v<cObjGondola&>().setVib()) hs_93(...) { HS("cObjGondola::setVib()"); return hr_z<decltype(hr_v<cObjGondola&>().setVib())>::get(); }
 // cObjGondola::setBreak()
-extern "C" decltype(hr_v<cObjGondola&>().setBreak()) hs_95(...) asm("__ZN11cObjGondola8setBreakEv");
-decltype(hr_v<cObjGondola&>().setBreak()) hs_95(...) { HS("cObjGondola::setBreak()"); return hr_z<decltype(hr_v<cObjGondola&>().setBreak())>::get(); }
+extern "C" decltype(hr_v<cObjGondola&>().setBreak()) hs_94(...) asm("__ZN11cObjGondola8setBreakEv");
+decltype(hr_v<cObjGondola&>().setBreak()) hs_94(...) { HS("cObjGondola::setBreak()"); return hr_z<decltype(hr_v<cObjGondola&>().setBreak())>::get(); }
 // cObjGondola::setDamage()
-extern "C" decltype(hr_v<cObjGondola&>().setDamage()) hs_96(...) asm("__ZN11cObjGondola9setDamageEv");
-decltype(hr_v<cObjGondola&>().setDamage()) hs_96(...) { HS("cObjGondola::setDamage()"); return hr_z<decltype(hr_v<cObjGondola&>().setDamage())>::get(); }
+extern "C" decltype(hr_v<cObjGondola&>().setDamage()) hs_95(...) asm("__ZN11cObjGondola9setDamageEv");
+decltype(hr_v<cObjGondola&>().setDamage()) hs_95(...) { HS("cObjGondola::setDamage()"); return hr_z<decltype(hr_v<cObjGondola&>().setDamage())>::get(); }
 // cObjTrolley::ckTrolleyRide(Vec*, unsigned char*, Vec*)   // not declared in the headers: int
-extern "C" int hs_97(...) asm("__ZN11cObjTrolley13ckTrolleyRideEP3VecPhS1_");
-int hs_97(...) { HS("cObjTrolley::ckTrolleyRide(Vec*, unsigned char*, Vec*)"); return hr_z<int>::get(); }
+extern "C" int hs_96(...) asm("__ZN11cObjTrolley13ckTrolleyRideEP3VecPhS1_");
+int hs_96(...) { HS("cObjTrolley::ckTrolleyRide(Vec*, unsigned char*, Vec*)"); return hr_z<int>::get(); }
 // MessageControl::Delete(int)
-extern "C" decltype(hr_v<MessageControl&>().Delete(hr_v<int>())) hs_98(...) asm("__ZN14MessageControl6DeleteEi");
-decltype(hr_v<MessageControl&>().Delete(hr_v<int>())) hs_98(...) { HS("MessageControl::Delete(int)"); return hr_z<decltype(hr_v<MessageControl&>().Delete(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<MessageControl&>().Delete(hr_v<int>())) hs_97(...) asm("__ZN14MessageControl6DeleteEi");
+decltype(hr_v<MessageControl&>().Delete(hr_v<int>())) hs_97(...) { HS("MessageControl::Delete(int)"); return hr_z<decltype(hr_v<MessageControl&>().Delete(hr_v<int>()))>::get(); }
 // MessageControl::MesSet(int, int, int, unsigned long, int, int, int)
-extern "C" decltype(hr_v<MessageControl&>().MesSet(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_99(...) asm("__ZN14MessageControl6MesSetEiiimiii");
-decltype(hr_v<MessageControl&>().MesSet(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_99(...) { HS("MessageControl::MesSet(int, int, int, unsigned long, int, int, int)"); return hr_z<decltype(hr_v<MessageControl&>().MesSet(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<MessageControl&>().MesSet(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_98(...) asm("__ZN14MessageControl6MesSetEiiimiii");
+decltype(hr_v<MessageControl&>().MesSet(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_98(...) { HS("MessageControl::MesSet(int, int, int, unsigned long, int, int, int)"); return hr_z<decltype(hr_v<MessageControl&>().MesSet(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<unsigned long>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // MessageControl::setLayout(int, int)
-extern "C" decltype(hr_v<MessageControl&>().setLayout(hr_v<int>(), hr_v<int>())) hs_100(...) asm("__ZN14MessageControl9setLayoutEii");
-decltype(hr_v<MessageControl&>().setLayout(hr_v<int>(), hr_v<int>())) hs_100(...) { HS("MessageControl::setLayout(int, int)"); return hr_z<decltype(hr_v<MessageControl&>().setLayout(hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<MessageControl&>().setLayout(hr_v<int>(), hr_v<int>())) hs_99(...) asm("__ZN14MessageControl9setLayoutEii");
+decltype(hr_v<MessageControl&>().setLayout(hr_v<int>(), hr_v<int>())) hs_99(...) { HS("MessageControl::setLayout(int, int)"); return hr_z<decltype(hr_v<MessageControl&>().setLayout(hr_v<int>(), hr_v<int>()))>::get(); }
 // cDvd::ReadCheck(int, int*, int*, void**)   // not declared in the headers: int
-extern "C" int hs_101(...) asm("__ZN4cDvd9ReadCheckEiPiS0_PPv");
-int hs_101(...) { HS("cDvd::ReadCheck(int, int*, int*, void**)"); return hr_z<int>::get(); }
+extern "C" int hs_100(...) asm("__ZN4cDvd9ReadCheckEiPiS0_PPv");
+int hs_100(...) { HS("cDvd::ReadCheck(int, int*, int*, void**)"); return hr_z<int>::get(); }
 // cEmWep::setEffFall(unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setEffFall(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_102(...) asm("__ZN6cEmWep10setEffFallEhh");
-decltype(hr_v<cEmWep&>().setEffFall(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_102(...) { HS("cEmWep::setEffFall(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffFall(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setEffFall(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_101(...) asm("__ZN6cEmWep10setEffFallEhh");
+decltype(hr_v<cEmWep&>().setEffFall(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_101(...) { HS("cEmWep::setEffFall(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffFall(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setSeThrow(unsigned char, unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setSeThrow(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_103(...) asm("__ZN6cEmWep10setSeThrowEhhhh");
-decltype(hr_v<cEmWep&>().setSeThrow(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_103(...) { HS("cEmWep::setSeThrow(unsigned char, unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeThrow(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setSeThrow(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_102(...) asm("__ZN6cEmWep10setSeThrowEhhhh");
+decltype(hr_v<cEmWep&>().setSeThrow(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_102(...) { HS("cEmWep::setSeThrow(unsigned char, unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeThrow(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setEffWater(unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setEffWater(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_104(...) asm("__ZN6cEmWep11setEffWaterEhh");
-decltype(hr_v<cEmWep&>().setEffWater(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_104(...) { HS("cEmWep::setEffWater(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffWater(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setEffWater(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_103(...) asm("__ZN6cEmWep11setEffWaterEhh");
+decltype(hr_v<cEmWep&>().setEffWater(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_103(...) { HS("cEmWep::setEffWater(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffWater(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setSeAlways(unsigned char, unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setSeAlways(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_105(...) asm("__ZN6cEmWep11setSeAlwaysEhhhh");
-decltype(hr_v<cEmWep&>().setSeAlways(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_105(...) { HS("cEmWep::setSeAlways(unsigned char, unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeAlways(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setSeAlways(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_104(...) asm("__ZN6cEmWep11setSeAlwaysEhhhh");
+decltype(hr_v<cEmWep&>().setSeAlways(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_104(...) { HS("cEmWep::setSeAlways(unsigned char, unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeAlways(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setSeDamage(unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setSeDamage(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_106(...) asm("__ZN6cEmWep11setSeDamageEhhh");
-decltype(hr_v<cEmWep&>().setSeDamage(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_106(...) { HS("cEmWep::setSeDamage(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeDamage(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setSeDamage(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_105(...) asm("__ZN6cEmWep11setSeDamageEhhh");
+decltype(hr_v<cEmWep&>().setSeDamage(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_105(...) { HS("cEmWep::setSeDamage(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeDamage(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setBombThrow(Vec*, int)
-extern "C" decltype(hr_v<cEmWep&>().setBombThrow(hr_v<Vec*>(), hr_v<int>())) hs_107(...) asm("__ZN6cEmWep12setBombThrowEP3Veci");
-decltype(hr_v<cEmWep&>().setBombThrow(hr_v<Vec*>(), hr_v<int>())) hs_107(...) { HS("cEmWep::setBombThrow(Vec*, int)"); return hr_z<decltype(hr_v<cEmWep&>().setBombThrow(hr_v<Vec*>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setBombThrow(hr_v<Vec*>(), hr_v<int>())) hs_106(...) asm("__ZN6cEmWep12setBombThrowEP3Veci");
+decltype(hr_v<cEmWep&>().setBombThrow(hr_v<Vec*>(), hr_v<int>())) hs_106(...) { HS("cEmWep::setBombThrow(Vec*, int)"); return hr_z<decltype(hr_v<cEmWep&>().setBombThrow(hr_v<Vec*>(), hr_v<int>()))>::get(); }
 // cEmWep::setEffAlways(int, int)
-extern "C" decltype(hr_v<cEmWep&>().setEffAlways(hr_v<int>(), hr_v<int>())) hs_108(...) asm("__ZN6cEmWep12setEffAlwaysEii");
-decltype(hr_v<cEmWep&>().setEffAlways(hr_v<int>(), hr_v<int>())) hs_108(...) { HS("cEmWep::setEffAlways(int, int)"); return hr_z<decltype(hr_v<cEmWep&>().setEffAlways(hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setEffAlways(hr_v<int>(), hr_v<int>())) hs_107(...) asm("__ZN6cEmWep12setEffAlwaysEii");
+decltype(hr_v<cEmWep&>().setEffAlways(hr_v<int>(), hr_v<int>())) hs_107(...) { HS("cEmWep::setEffAlways(int, int)"); return hr_z<decltype(hr_v<cEmWep&>().setEffAlways(hr_v<int>(), hr_v<int>()))>::get(); }
 // cEmWep::setEffDamage(unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setEffDamage(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_109(...) asm("__ZN6cEmWep12setEffDamageEhh");
-decltype(hr_v<cEmWep&>().setEffDamage(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_109(...) { HS("cEmWep::setEffDamage(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffDamage(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setEffDamage(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_108(...) asm("__ZN6cEmWep12setEffDamageEhh");
+decltype(hr_v<cEmWep&>().setEffDamage(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_108(...) { HS("cEmWep::setEffDamage(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffDamage(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setSeHitWall(unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setSeHitWall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_110(...) asm("__ZN6cEmWep12setSeHitWallEhhh");
-decltype(hr_v<cEmWep&>().setSeHitWall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_110(...) { HS("cEmWep::setSeHitWall(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeHitWall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setSeHitWall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_109(...) asm("__ZN6cEmWep12setSeHitWallEhhh");
+decltype(hr_v<cEmWep&>().setSeHitWall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_109(...) { HS("cEmWep::setSeHitWall(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeHitWall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setTransMode(int)
-extern "C" decltype(hr_v<cEmWep&>().setTransMode(hr_v<int>())) hs_111(...) asm("__ZN6cEmWep12setTransModeEi");
-decltype(hr_v<cEmWep&>().setTransMode(hr_v<int>())) hs_111(...) { HS("cEmWep::setTransMode(int)"); return hr_z<decltype(hr_v<cEmWep&>().setTransMode(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setTransMode(hr_v<int>())) hs_110(...) asm("__ZN6cEmWep12setTransModeEi");
+decltype(hr_v<cEmWep&>().setTransMode(hr_v<int>())) hs_110(...) { HS("cEmWep::setTransMode(int)"); return hr_z<decltype(hr_v<cEmWep&>().setTransMode(hr_v<int>()))>::get(); }
 // cEmWep::setEffAlways2(unsigned char, unsigned char, unsigned char, Vec*, unsigned short)
-extern "C" decltype(hr_v<cEmWep&>().setEffAlways2(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<Vec*>(), hr_v<unsigned short>())) hs_112(...) asm("__ZN6cEmWep13setEffAlways2EhhhP3Vect");
-decltype(hr_v<cEmWep&>().setEffAlways2(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<Vec*>(), hr_v<unsigned short>())) hs_112(...) { HS("cEmWep::setEffAlways2(unsigned char, unsigned char, unsigned char, Vec*, unsigned short)"); return hr_z<decltype(hr_v<cEmWep&>().setEffAlways2(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<Vec*>(), hr_v<unsigned short>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setEffAlways2(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<Vec*>(), hr_v<unsigned short>())) hs_111(...) asm("__ZN6cEmWep13setEffAlways2EhhhP3Vect");
+decltype(hr_v<cEmWep&>().setEffAlways2(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<Vec*>(), hr_v<unsigned short>())) hs_111(...) { HS("cEmWep::setEffAlways2(unsigned char, unsigned char, unsigned char, Vec*, unsigned short)"); return hr_z<decltype(hr_v<cEmWep&>().setEffAlways2(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<Vec*>(), hr_v<unsigned short>()))>::get(); }
 // cEmWep::setThrowScythe(Vec*, EmAtkInfo*)
-extern "C" decltype(hr_v<cEmWep&>().setThrowScythe(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_113(...) asm("__ZN6cEmWep14setThrowScytheEP3VecP9EmAtkInfo");
-decltype(hr_v<cEmWep&>().setThrowScythe(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_113(...) { HS("cEmWep::setThrowScythe(Vec*, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setThrowScythe(hr_v<Vec*>(), hr_v<EmAtkInfo*>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setThrowScythe(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_112(...) asm("__ZN6cEmWep14setThrowScytheEP3VecP9EmAtkInfo");
+decltype(hr_v<cEmWep&>().setThrowScythe(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_112(...) { HS("cEmWep::setThrowScythe(Vec*, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setThrowScythe(hr_v<Vec*>(), hr_v<EmAtkInfo*>()))>::get(); }
 // cEmWep::setFall(int, Vec*, float)
-extern "C" decltype(hr_v<cEmWep&>().setFall(hr_v<int>(), hr_v<Vec*>(), hr_v<float>())) hs_114(...) asm("__ZN6cEmWep7setFallEiP3Vecf");
-decltype(hr_v<cEmWep&>().setFall(hr_v<int>(), hr_v<Vec*>(), hr_v<float>())) hs_114(...) { HS("cEmWep::setFall(int, Vec*, float)"); return hr_z<decltype(hr_v<cEmWep&>().setFall(hr_v<int>(), hr_v<Vec*>(), hr_v<float>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setFall(hr_v<int>(), hr_v<Vec*>(), hr_v<float>())) hs_113(...) asm("__ZN6cEmWep7setFallEiP3Vecf");
+decltype(hr_v<cEmWep&>().setFall(hr_v<int>(), hr_v<Vec*>(), hr_v<float>())) hs_113(...) { HS("cEmWep::setFall(int, Vec*, float)"); return hr_z<decltype(hr_v<cEmWep&>().setFall(hr_v<int>(), hr_v<Vec*>(), hr_v<float>()))>::get(); }
 // cEmWep::setLost()
-extern "C" decltype(hr_v<cEmWep&>().setLost()) hs_115(...) asm("__ZN6cEmWep7setLostEv");
-decltype(hr_v<cEmWep&>().setLost()) hs_115(...) { HS("cEmWep::setLost()"); return hr_z<decltype(hr_v<cEmWep&>().setLost())>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setLost()) hs_114(...) asm("__ZN6cEmWep7setLostEv");
+decltype(hr_v<cEmWep&>().setLost()) hs_114(...) { HS("cEmWep::setLost()"); return hr_z<decltype(hr_v<cEmWep&>().setLost())>::get(); }
 // cEmWep::setShot(Vec*, EmAtkInfo*)
-extern "C" decltype(hr_v<cEmWep&>().setShot(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_116(...) asm("__ZN6cEmWep7setShotEP3VecP9EmAtkInfo");
-decltype(hr_v<cEmWep&>().setShot(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_116(...) { HS("cEmWep::setShot(Vec*, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setShot(hr_v<Vec*>(), hr_v<EmAtkInfo*>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setShot(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_115(...) asm("__ZN6cEmWep7setShotEP3VecP9EmAtkInfo");
+decltype(hr_v<cEmWep&>().setShot(hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_115(...) { HS("cEmWep::setShot(Vec*, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setShot(hr_v<Vec*>(), hr_v<EmAtkInfo*>()))>::get(); }
 // cEmWep::setCloth(cModel*)
-extern "C" decltype(hr_v<cEmWep&>().setCloth(hr_v<cModel*>())) hs_117(...) asm("__ZN6cEmWep8setClothEP6cModel");
-decltype(hr_v<cEmWep&>().setCloth(hr_v<cModel*>())) hs_117(...) { HS("cEmWep::setCloth(cModel*)"); return hr_z<decltype(hr_v<cEmWep&>().setCloth(hr_v<cModel*>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setCloth(hr_v<cModel*>())) hs_116(...) asm("__ZN6cEmWep8setClothEP6cModel");
+decltype(hr_v<cEmWep&>().setCloth(hr_v<cModel*>())) hs_116(...) { HS("cEmWep::setCloth(cModel*)"); return hr_z<decltype(hr_v<cEmWep&>().setCloth(hr_v<cModel*>()))>::get(); }
 // cEmWep::setSeHit(unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setSeHit(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_118(...) asm("__ZN6cEmWep8setSeHitEhhh");
-decltype(hr_v<cEmWep&>().setSeHit(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_118(...) { HS("cEmWep::setSeHit(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeHit(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setSeHit(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_117(...) asm("__ZN6cEmWep8setSeHitEhhh");
+decltype(hr_v<cEmWep&>().setSeHit(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_117(...) { HS("cEmWep::setSeHit(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeHit(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setThrow(Vec*, float, EmAtkInfo*)
-extern "C" decltype(hr_v<cEmWep&>().setThrow(hr_v<Vec*>(), hr_v<float>(), hr_v<EmAtkInfo*>())) hs_119(...) asm("__ZN6cEmWep8setThrowEP3VecfP9EmAtkInfo");
-decltype(hr_v<cEmWep&>().setThrow(hr_v<Vec*>(), hr_v<float>(), hr_v<EmAtkInfo*>())) hs_119(...) { HS("cEmWep::setThrow(Vec*, float, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setThrow(hr_v<Vec*>(), hr_v<float>(), hr_v<EmAtkInfo*>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setThrow(hr_v<Vec*>(), hr_v<float>(), hr_v<EmAtkInfo*>())) hs_118(...) asm("__ZN6cEmWep8setThrowEP3VecfP9EmAtkInfo");
+decltype(hr_v<cEmWep&>().setThrow(hr_v<Vec*>(), hr_v<float>(), hr_v<EmAtkInfo*>())) hs_118(...) { HS("cEmWep::setThrow(Vec*, float, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setThrow(hr_v<Vec*>(), hr_v<float>(), hr_v<EmAtkInfo*>()))>::get(); }
 // cEmWep::setEffHit(unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setEffHit(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_120(...) asm("__ZN6cEmWep9setEffHitEhh");
-decltype(hr_v<cEmWep&>().setEffHit(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_120(...) { HS("cEmWep::setEffHit(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffHit(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setEffHit(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_119(...) asm("__ZN6cEmWep9setEffHitEhh");
+decltype(hr_v<cEmWep&>().setEffHit(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_119(...) { HS("cEmWep::setEffHit(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setEffHit(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cEmWep::setParent(cEm*, int, int)
-extern "C" decltype(hr_v<cEmWep&>().setParent(hr_v<cEm*>(), hr_v<int>(), hr_v<int>())) hs_121(...) asm("__ZN6cEmWep9setParentEP3cEmii");
-decltype(hr_v<cEmWep&>().setParent(hr_v<cEm*>(), hr_v<int>(), hr_v<int>())) hs_121(...) { HS("cEmWep::setParent(cEm*, int, int)"); return hr_z<decltype(hr_v<cEmWep&>().setParent(hr_v<cEm*>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setParent(hr_v<cEm*>(), hr_v<int>(), hr_v<int>())) hs_120(...) asm("__ZN6cEmWep9setParentEP3cEmii");
+decltype(hr_v<cEmWep&>().setParent(hr_v<cEm*>(), hr_v<int>(), hr_v<int>())) hs_120(...) { HS("cEmWep::setParent(cEm*, int, int)"); return hr_z<decltype(hr_v<cEmWep&>().setParent(hr_v<cEm*>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cEmWep::setRocket(cEm*, Vec*, EmAtkInfo*)
-extern "C" decltype(hr_v<cEmWep&>().setRocket(hr_v<cEm*>(), hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_122(...) asm("__ZN6cEmWep9setRocketEP3cEmP3VecP9EmAtkInfo");
-decltype(hr_v<cEmWep&>().setRocket(hr_v<cEm*>(), hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_122(...) { HS("cEmWep::setRocket(cEm*, Vec*, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setRocket(hr_v<cEm*>(), hr_v<Vec*>(), hr_v<EmAtkInfo*>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setRocket(hr_v<cEm*>(), hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_121(...) asm("__ZN6cEmWep9setRocketEP3cEmP3VecP9EmAtkInfo");
+decltype(hr_v<cEmWep&>().setRocket(hr_v<cEm*>(), hr_v<Vec*>(), hr_v<EmAtkInfo*>())) hs_121(...) { HS("cEmWep::setRocket(cEm*, Vec*, EmAtkInfo*)"); return hr_z<decltype(hr_v<cEmWep&>().setRocket(hr_v<cEm*>(), hr_v<Vec*>(), hr_v<EmAtkInfo*>()))>::get(); }
 // cEmWep::setSeFall(unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<cEmWep&>().setSeFall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_123(...) asm("__ZN6cEmWep9setSeFallEhhh");
-decltype(hr_v<cEmWep&>().setSeFall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_123(...) { HS("cEmWep::setSeFall(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeFall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cEmWep&>().setSeFall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_122(...) asm("__ZN6cEmWep9setSeFallEhhh");
+decltype(hr_v<cEmWep&>().setSeFall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_122(...) { HS("cEmWep::setSeFall(unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<cEmWep&>().setSeFall(hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cObj12::setBurn()
-extern "C" decltype(hr_v<cObj12&>().setBurn()) hs_124(...) asm("__ZN6cObj127setBurnEv");
-decltype(hr_v<cObj12&>().setBurn()) hs_124(...) { HS("cObj12::setBurn()"); return hr_z<decltype(hr_v<cObj12&>().setBurn())>::get(); }
+extern "C" decltype(hr_v<cObj12&>().setBurn()) hs_123(...) asm("__ZN6cObj127setBurnEv");
+decltype(hr_v<cObj12&>().setBurn()) hs_123(...) { HS("cObj12::setBurn()"); return hr_z<decltype(hr_v<cObj12&>().setBurn())>::get(); }
 // cObj12::setFall(Vec*, unsigned char)
-extern "C" decltype(hr_v<cObj12&>().setFall(hr_v<Vec*>(), hr_v<unsigned char>())) hs_125(...) asm("__ZN6cObj127setFallEP3Vech");
-decltype(hr_v<cObj12&>().setFall(hr_v<Vec*>(), hr_v<unsigned char>())) hs_125(...) { HS("cObj12::setFall(Vec*, unsigned char)"); return hr_z<decltype(hr_v<cObj12&>().setFall(hr_v<Vec*>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cObj12&>().setFall(hr_v<Vec*>(), hr_v<unsigned char>())) hs_124(...) asm("__ZN6cObj127setFallEP3Vech");
+decltype(hr_v<cObj12&>().setFall(hr_v<Vec*>(), hr_v<unsigned char>())) hs_124(...) { HS("cObj12::setFall(Vec*, unsigned char)"); return hr_z<decltype(hr_v<cObj12&>().setFall(hr_v<Vec*>(), hr_v<unsigned char>()))>::get(); }
 // cObj12::setParent(cModel*, int, int)
-extern "C" decltype(hr_v<cObj12&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_126(...) asm("__ZN6cObj129setParentEP6cModelii");
-decltype(hr_v<cObj12&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_126(...) { HS("cObj12::setParent(cModel*, int, int)"); return hr_z<decltype(hr_v<cObj12&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cObj12&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_125(...) asm("__ZN6cObj129setParentEP6cModelii");
+decltype(hr_v<cObj12&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_125(...) { HS("cObj12::setParent(cModel*, int, int)"); return hr_z<decltype(hr_v<cObj12&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cObj16::setMotData(void*, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*)
-extern "C" decltype(hr_v<cObj16&>().setMotData(hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>())) hs_127(...) asm("__ZN6cObj1610setMotDataEPvS0_S0_S0_S0_S0_S0_S0_S0_S0_S0_");
-decltype(hr_v<cObj16&>().setMotData(hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>())) hs_127(...) { HS("cObj16::setMotData(void*, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*)"); return hr_z<decltype(hr_v<cObj16&>().setMotData(hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>()))>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setMotData(hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>())) hs_126(...) asm("__ZN6cObj1610setMotDataEPvS0_S0_S0_S0_S0_S0_S0_S0_S0_S0_");
+decltype(hr_v<cObj16&>().setMotData(hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>())) hs_126(...) { HS("cObj16::setMotData(void*, void*, void*, void*, void*, void*, void*, void*, void*, void*, void*)"); return hr_z<decltype(hr_v<cObj16&>().setMotData(hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>(), hr_v<void*>()))>::get(); }
 // cObj16::ckAtkEnable()
-extern "C" decltype(hr_v<cObj16&>().ckAtkEnable()) hs_128(...) asm("__ZN6cObj1611ckAtkEnableEv");
-decltype(hr_v<cObj16&>().ckAtkEnable()) hs_128(...) { HS("cObj16::ckAtkEnable()"); return hr_z<decltype(hr_v<cObj16&>().ckAtkEnable())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().ckAtkEnable()) hs_127(...) asm("__ZN6cObj1611ckAtkEnableEv");
+decltype(hr_v<cObj16&>().ckAtkEnable()) hs_127(...) { HS("cObj16::ckAtkEnable()"); return hr_z<decltype(hr_v<cObj16&>().ckAtkEnable())>::get(); }
 // cObj16::setCritical()
-extern "C" decltype(hr_v<cObj16&>().setCritical()) hs_129(...) asm("__ZN6cObj1611setCriticalEv");
-decltype(hr_v<cObj16&>().setCritical()) hs_129(...) { HS("cObj16::setCritical()"); return hr_z<decltype(hr_v<cObj16&>().setCritical())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setCritical()) hs_128(...) asm("__ZN6cObj1611setCriticalEv");
+decltype(hr_v<cObj16&>().setCritical()) hs_128(...) { HS("cObj16::setCritical()"); return hr_z<decltype(hr_v<cObj16&>().setCritical())>::get(); }
 // cObj16::setLostWait(int)
-extern "C" decltype(hr_v<cObj16&>().setLostWait(hr_v<int>())) hs_130(...) asm("__ZN6cObj1611setLostWaitEi");
-decltype(hr_v<cObj16&>().setLostWait(hr_v<int>())) hs_130(...) { HS("cObj16::setLostWait(int)"); return hr_z<decltype(hr_v<cObj16&>().setLostWait(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setLostWait(hr_v<int>())) hs_129(...) asm("__ZN6cObj1611setLostWaitEi");
+decltype(hr_v<cObj16&>().setLostWait(hr_v<int>())) hs_129(...) { HS("cObj16::setLostWait(int)"); return hr_z<decltype(hr_v<cObj16&>().setLostWait(hr_v<int>()))>::get(); }
 // cObj16::setPlDmgMot(void*, int)
-extern "C" decltype(hr_v<cObj16&>().setPlDmgMot(hr_v<void*>(), hr_v<int>())) hs_131(...) asm("__ZN6cObj1611setPlDmgMotEPvi");
-decltype(hr_v<cObj16&>().setPlDmgMot(hr_v<void*>(), hr_v<int>())) hs_131(...) { HS("cObj16::setPlDmgMot(void*, int)"); return hr_z<decltype(hr_v<cObj16&>().setPlDmgMot(hr_v<void*>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setPlDmgMot(hr_v<void*>(), hr_v<int>())) hs_130(...) asm("__ZN6cObj1611setPlDmgMotEPvi");
+decltype(hr_v<cObj16&>().setPlDmgMot(hr_v<void*>(), hr_v<int>())) hs_130(...) { HS("cObj16::setPlDmgMot(void*, int)"); return hr_z<decltype(hr_v<cObj16&>().setPlDmgMot(hr_v<void*>(), hr_v<int>()))>::get(); }
 // cObj16::clearLostWait()
-extern "C" decltype(hr_v<cObj16&>().clearLostWait()) hs_132(...) asm("__ZN6cObj1613clearLostWaitEv");
-decltype(hr_v<cObj16&>().clearLostWait()) hs_132(...) { HS("cObj16::clearLostWait()"); return hr_z<decltype(hr_v<cObj16&>().clearLostWait())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().clearLostWait()) hs_131(...) asm("__ZN6cObj1613clearLostWaitEv");
+decltype(hr_v<cObj16&>().clearLostWait()) hs_131(...) { HS("cObj16::clearLostWait()"); return hr_z<decltype(hr_v<cObj16&>().clearLostWait())>::get(); }
 // cObj16::setAtk(unsigned char)
-extern "C" decltype(hr_v<cObj16&>().setAtk(hr_v<unsigned char>())) hs_133(...) asm("__ZN6cObj166setAtkEh");
-decltype(hr_v<cObj16&>().setAtk(hr_v<unsigned char>())) hs_133(...) { HS("cObj16::setAtk(unsigned char)"); return hr_z<decltype(hr_v<cObj16&>().setAtk(hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setAtk(hr_v<unsigned char>())) hs_132(...) asm("__ZN6cObj166setAtkEh");
+decltype(hr_v<cObj16&>().setAtk(hr_v<unsigned char>())) hs_132(...) { HS("cObj16::setAtk(unsigned char)"); return hr_z<decltype(hr_v<cObj16&>().setAtk(hr_v<unsigned char>()))>::get(); }
 // cObj16::setBurn()
-extern "C" decltype(hr_v<cObj16&>().setBurn()) hs_134(...) asm("__ZN6cObj167setBurnEv");
-decltype(hr_v<cObj16&>().setBurn()) hs_134(...) { HS("cObj16::setBurn()"); return hr_z<decltype(hr_v<cObj16&>().setBurn())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setBurn()) hs_133(...) asm("__ZN6cObj167setBurnEv");
+decltype(hr_v<cObj16&>().setBurn()) hs_133(...) { HS("cObj16::setBurn()"); return hr_z<decltype(hr_v<cObj16&>().setBurn())>::get(); }
 // cObj16::ckAtkHit()
-extern "C" decltype(hr_v<cObj16&>().ckAtkHit()) hs_135(...) asm("__ZN6cObj168ckAtkHitEv");
-decltype(hr_v<cObj16&>().ckAtkHit()) hs_135(...) { HS("cObj16::ckAtkHit()"); return hr_z<decltype(hr_v<cObj16&>().ckAtkHit())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().ckAtkHit()) hs_134(...) asm("__ZN6cObj168ckAtkHitEv");
+decltype(hr_v<cObj16&>().ckAtkHit()) hs_134(...) { HS("cObj16::ckAtkHit()"); return hr_z<decltype(hr_v<cObj16&>().ckAtkHit())>::get(); }
 // cObj16::setDamage()
-extern "C" decltype(hr_v<cObj16&>().setDamage()) hs_136(...) asm("__ZN6cObj169setDamageEv");
-decltype(hr_v<cObj16&>().setDamage()) hs_136(...) { HS("cObj16::setDamage()"); return hr_z<decltype(hr_v<cObj16&>().setDamage())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setDamage()) hs_135(...) asm("__ZN6cObj169setDamageEv");
+decltype(hr_v<cObj16&>().setDamage()) hs_135(...) { HS("cObj16::setDamage()"); return hr_z<decltype(hr_v<cObj16&>().setDamage())>::get(); }
 // cObj16::setDieEff()
-extern "C" decltype(hr_v<cObj16&>().setDieEff()) hs_137(...) asm("__ZN6cObj169setDieEffEv");
-decltype(hr_v<cObj16&>().setDieEff()) hs_137(...) { HS("cObj16::setDieEff()"); return hr_z<decltype(hr_v<cObj16&>().setDieEff())>::get(); }
+extern "C" decltype(hr_v<cObj16&>().setDieEff()) hs_136(...) asm("__ZN6cObj169setDieEffEv");
+decltype(hr_v<cObj16&>().setDieEff()) hs_136(...) { HS("cObj16::setDieEff()"); return hr_z<decltype(hr_v<cObj16&>().setDieEff())>::get(); }
 // Cockpit::lifeMeterDisp(int)
-extern "C" decltype(hr_v<Cockpit&>().lifeMeterDisp(hr_v<int>())) hs_138(...) asm("__ZN7Cockpit13lifeMeterDispEi");
-decltype(hr_v<Cockpit&>().lifeMeterDisp(hr_v<int>())) hs_138(...) { HS("Cockpit::lifeMeterDisp(int)"); return hr_z<decltype(hr_v<Cockpit&>().lifeMeterDisp(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<Cockpit&>().lifeMeterDisp(hr_v<int>())) hs_137(...) asm("__ZN7Cockpit13lifeMeterDispEi");
+decltype(hr_v<Cockpit&>().lifeMeterDisp(hr_v<int>())) hs_137(...) { HS("Cockpit::lifeMeterDisp(int)"); return hr_z<decltype(hr_v<Cockpit&>().lifeMeterDisp(hr_v<int>()))>::get(); }
 // Cockpit::roomInit()
-extern "C" decltype(hr_v<Cockpit&>().roomInit()) hs_139(...) asm("__ZN7Cockpit8roomInitEv");
-decltype(hr_v<Cockpit&>().roomInit()) hs_139(...) { HS("Cockpit::roomInit()"); return hr_z<decltype(hr_v<Cockpit&>().roomInit())>::get(); }
+extern "C" decltype(hr_v<Cockpit&>().roomInit()) hs_138(...) asm("__ZN7Cockpit8roomInitEv");
+decltype(hr_v<Cockpit&>().roomInit()) hs_138(...) { HS("Cockpit::roomInit()"); return hr_z<decltype(hr_v<Cockpit&>().roomInit())>::get(); }
 // Message::setNumber(unsigned long, unsigned short)
-extern "C" decltype(hr_v<Message&>().setNumber(hr_v<unsigned long>(), hr_v<unsigned short>())) hs_140(...) asm("__ZN7Message9setNumberEmt");
-decltype(hr_v<Message&>().setNumber(hr_v<unsigned long>(), hr_v<unsigned short>())) hs_140(...) { HS("Message::setNumber(unsigned long, unsigned short)"); return hr_z<decltype(hr_v<Message&>().setNumber(hr_v<unsigned long>(), hr_v<unsigned short>()))>::get(); }
+extern "C" decltype(hr_v<Message&>().setNumber(hr_v<unsigned long>(), hr_v<unsigned short>())) hs_139(...) asm("__ZN7Message9setNumberEmt");
+decltype(hr_v<Message&>().setNumber(hr_v<unsigned long>(), hr_v<unsigned short>())) hs_139(...) { HS("Message::setNumber(unsigned long, unsigned short)"); return hr_z<decltype(hr_v<Message&>().setNumber(hr_v<unsigned long>(), hr_v<unsigned short>()))>::get(); }
 // cEmDoor::setOpenLock(int)
-extern "C" decltype(hr_v<cEmDoor&>().setOpenLock(hr_v<int>())) hs_141(...) asm("__ZN7cEmDoor11setOpenLockEi");
-decltype(hr_v<cEmDoor&>().setOpenLock(hr_v<int>())) hs_141(...) { HS("cEmDoor::setOpenLock(int)"); return hr_z<decltype(hr_v<cEmDoor&>().setOpenLock(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().setOpenLock(hr_v<int>())) hs_140(...) asm("__ZN7cEmDoor11setOpenLockEi");
+decltype(hr_v<cEmDoor&>().setOpenLock(hr_v<int>())) hs_140(...) { HS("cEmDoor::setOpenLock(int)"); return hr_z<decltype(hr_v<cEmDoor&>().setOpenLock(hr_v<int>()))>::get(); }
 // cEmDoor::ckOpen()
-extern "C" decltype(hr_v<cEmDoor&>().ckOpen()) hs_142(...) asm("__ZN7cEmDoor6ckOpenEv");
-decltype(hr_v<cEmDoor&>().ckOpen()) hs_142(...) { HS("cEmDoor::ckOpen()"); return hr_z<decltype(hr_v<cEmDoor&>().ckOpen())>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().ckOpen()) hs_141(...) asm("__ZN7cEmDoor6ckOpenEv");
+decltype(hr_v<cEmDoor&>().ckOpen()) hs_141(...) { HS("cEmDoor::ckOpen()"); return hr_z<decltype(hr_v<cEmDoor&>().ckOpen())>::get(); }
 // cEmDoor::setLock(void*, void*, int, int)
-extern "C" decltype(hr_v<cEmDoor&>().setLock(hr_v<void*>(), hr_v<void*>(), hr_v<int>(), hr_v<int>())) hs_143(...) asm("__ZN7cEmDoor7setLockEPvS0_ii");
-decltype(hr_v<cEmDoor&>().setLock(hr_v<void*>(), hr_v<void*>(), hr_v<int>(), hr_v<int>())) hs_143(...) { HS("cEmDoor::setLock(void*, void*, int, int)"); return hr_z<decltype(hr_v<cEmDoor&>().setLock(hr_v<void*>(), hr_v<void*>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().setLock(hr_v<void*>(), hr_v<void*>(), hr_v<int>(), hr_v<int>())) hs_142(...) asm("__ZN7cEmDoor7setLockEPvS0_ii");
+decltype(hr_v<cEmDoor&>().setLock(hr_v<void*>(), hr_v<void*>(), hr_v<int>(), hr_v<int>())) hs_142(...) { HS("cEmDoor::setLock(void*, void*, int, int)"); return hr_z<decltype(hr_v<cEmDoor&>().setLock(hr_v<void*>(), hr_v<void*>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cEmDoor::setOpen(Vec*, int, int, int)
-extern "C" decltype(hr_v<cEmDoor&>().setOpen(hr_v<Vec*>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_144(...) asm("__ZN7cEmDoor7setOpenEP3Veciii");
-decltype(hr_v<cEmDoor&>().setOpen(hr_v<Vec*>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_144(...) { HS("cEmDoor::setOpen(Vec*, int, int, int)"); return hr_z<decltype(hr_v<cEmDoor&>().setOpen(hr_v<Vec*>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().setOpen(hr_v<Vec*>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_143(...) asm("__ZN7cEmDoor7setOpenEP3Veciii");
+decltype(hr_v<cEmDoor&>().setOpen(hr_v<Vec*>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_143(...) { HS("cEmDoor::setOpen(Vec*, int, int, int)"); return hr_z<decltype(hr_v<cEmDoor&>().setOpen(hr_v<Vec*>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cEmDoor::setBreak(Vec*)
-extern "C" decltype(hr_v<cEmDoor&>().setBreak(hr_v<Vec*>())) hs_145(...) asm("__ZN7cEmDoor8setBreakEP3Vec");
-decltype(hr_v<cEmDoor&>().setBreak(hr_v<Vec*>())) hs_145(...) { HS("cEmDoor::setBreak(Vec*)"); return hr_z<decltype(hr_v<cEmDoor&>().setBreak(hr_v<Vec*>()))>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().setBreak(hr_v<Vec*>())) hs_144(...) asm("__ZN7cEmDoor8setBreakEP3Vec");
+decltype(hr_v<cEmDoor&>().setBreak(hr_v<Vec*>())) hs_144(...) { HS("cEmDoor::setBreak(Vec*)"); return hr_z<decltype(hr_v<cEmDoor&>().setBreak(hr_v<Vec*>()))>::get(); }
 // cEmDoor::setShock(int, Vec*, int)
-extern "C" decltype(hr_v<cEmDoor&>().setShock(hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_146(...) asm("__ZN7cEmDoor8setShockEiP3Veci");
-decltype(hr_v<cEmDoor&>().setShock(hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_146(...) { HS("cEmDoor::setShock(int, Vec*, int)"); return hr_z<decltype(hr_v<cEmDoor&>().setShock(hr_v<int>(), hr_v<Vec*>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().setShock(hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_145(...) asm("__ZN7cEmDoor8setShockEiP3Veci");
+decltype(hr_v<cEmDoor&>().setShock(hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_145(...) { HS("cEmDoor::setShock(int, Vec*, int)"); return hr_z<decltype(hr_v<cEmDoor&>().setShock(hr_v<int>(), hr_v<Vec*>(), hr_v<int>()))>::get(); }
 // cEmDoor::setNormal()
-extern "C" decltype(hr_v<cEmDoor&>().setNormal()) hs_147(...) asm("__ZN7cEmDoor9setNormalEv");
-decltype(hr_v<cEmDoor&>().setNormal()) hs_147(...) { HS("cEmDoor::setNormal()"); return hr_z<decltype(hr_v<cEmDoor&>().setNormal())>::get(); }
+extern "C" decltype(hr_v<cEmDoor&>().setNormal()) hs_146(...) asm("__ZN7cEmDoor9setNormalEv");
+decltype(hr_v<cEmDoor&>().setNormal()) hs_146(...) { HS("cEmDoor::setNormal()"); return hr_z<decltype(hr_v<cEmDoor&>().setNormal())>::get(); }
 // cEmRack::setDown(Vec*)
-extern "C" decltype(hr_v<cEmRack&>().setDown(hr_v<Vec*>())) hs_148(...) asm("__ZN7cEmRack7setDownEP3Vec");
-decltype(hr_v<cEmRack&>().setDown(hr_v<Vec*>())) hs_148(...) { HS("cEmRack::setDown(Vec*)"); return hr_z<decltype(hr_v<cEmRack&>().setDown(hr_v<Vec*>()))>::get(); }
+extern "C" decltype(hr_v<cEmRack&>().setDown(hr_v<Vec*>())) hs_147(...) asm("__ZN7cEmRack7setDownEP3Vec");
+decltype(hr_v<cEmRack&>().setDown(hr_v<Vec*>())) hs_147(...) { HS("cEmRack::setDown(Vec*)"); return hr_z<decltype(hr_v<cEmRack&>().setDown(hr_v<Vec*>()))>::get(); }
 // cEmRack::setRange(float, float, float, float)
-extern "C" decltype(hr_v<cEmRack&>().setRange(hr_v<float>(), hr_v<float>(), hr_v<float>(), hr_v<float>())) hs_149(...) asm("__ZN7cEmRack8setRangeEffff");
-decltype(hr_v<cEmRack&>().setRange(hr_v<float>(), hr_v<float>(), hr_v<float>(), hr_v<float>())) hs_149(...) { HS("cEmRack::setRange(float, float, float, float)"); return hr_z<decltype(hr_v<cEmRack&>().setRange(hr_v<float>(), hr_v<float>(), hr_v<float>(), hr_v<float>()))>::get(); }
+extern "C" decltype(hr_v<cEmRack&>().setRange(hr_v<float>(), hr_v<float>(), hr_v<float>(), hr_v<float>())) hs_148(...) asm("__ZN7cEmRack8setRangeEffff");
+decltype(hr_v<cEmRack&>().setRange(hr_v<float>(), hr_v<float>(), hr_v<float>(), hr_v<float>())) hs_148(...) { HS("cEmRack::setRange(float, float, float, float)"); return hr_z<decltype(hr_v<cEmRack&>().setRange(hr_v<float>(), hr_v<float>(), hr_v<float>(), hr_v<float>()))>::get(); }
 // cEmRack::setShock()
-extern "C" decltype(hr_v<cEmRack&>().setShock()) hs_150(...) asm("__ZN7cEmRack8setShockEv");
-decltype(hr_v<cEmRack&>().setShock()) hs_150(...) { HS("cEmRack::setShock()"); return hr_z<decltype(hr_v<cEmRack&>().setShock())>::get(); }
-// cEmWrap::setNoSuspend(int)
-extern "C" decltype(hr_v<cEmWrap&>().setNoSuspend(hr_v<int>())) hs_151(...) asm("__ZN7cEmWrap12setNoSuspendEi");
-decltype(hr_v<cEmWrap&>().setNoSuspend(hr_v<int>())) hs_151(...) { HS("cEmWrap::setNoSuspend(int)"); return hr_z<decltype(hr_v<cEmWrap&>().setNoSuspend(hr_v<int>()))>::get(); }
-// cEmWrap::setEm(short, signed char, int, int, int)
-extern "C" decltype(hr_v<cEmWrap&>().setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_152(...) asm("__ZN7cEmWrap5setEmEsaiii");
-decltype(hr_v<cEmWrap&>().setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_152(...) { HS("cEmWrap::setEm(short, signed char, int, int, int)"); return hr_z<decltype(hr_v<cEmWrap&>().setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
-// cEmWrap::setPtr(cEm*, int)
-extern "C" decltype(hr_v<cEmWrap&>().setPtr(hr_v<cEm*>(), hr_v<int>())) hs_153(...) asm("__ZN7cEmWrap6setPtrEP3cEmi");
-decltype(hr_v<cEmWrap&>().setPtr(hr_v<cEm*>(), hr_v<int>())) hs_153(...) { HS("cEmWrap::setPtr(cEm*, int)"); return hr_z<decltype(hr_v<cEmWrap&>().setPtr(hr_v<cEm*>(), hr_v<int>()))>::get(); }
-// cEmWrap::destroy()
-extern "C" decltype(hr_v<cEmWrap&>().destroy()) hs_154(...) asm("__ZN7cEmWrap7destroyEv");
-decltype(hr_v<cEmWrap&>().destroy()) hs_154(...) { HS("cEmWrap::destroy()"); return hr_z<decltype(hr_v<cEmWrap&>().destroy())>::get(); }
-// cEmWrap::cEmWrap()
-extern "C" void hs_155(...) asm("__ZN7cEmWrapC1Ev");
-void hs_155(...) { HS("cEmWrap::cEmWrap()"); return hr_z<void>::get(); }
+extern "C" decltype(hr_v<cEmRack&>().setShock()) hs_149(...) asm("__ZN7cEmRack8setShockEv");
+decltype(hr_v<cEmRack&>().setShock()) hs_149(...) { HS("cEmRack::setShock()"); return hr_z<decltype(hr_v<cEmRack&>().setShock())>::get(); }
 // cSceSys::checkCTaskRange()
-extern "C" decltype(hr_v<cSceSys&>().checkCTaskRange()) hs_156(...) asm("__ZN7cSceSys15checkCTaskRangeEv");
-decltype(hr_v<cSceSys&>().checkCTaskRange()) hs_156(...) { HS("cSceSys::checkCTaskRange()"); return hr_z<decltype(hr_v<cSceSys&>().checkCTaskRange())>::get(); }
+extern "C" decltype(hr_v<cSceSys&>().checkCTaskRange()) hs_150(...) asm("__ZN7cSceSys15checkCTaskRangeEv");
+decltype(hr_v<cSceSys&>().checkCTaskRange()) hs_150(...) { HS("cSceSys::checkCTaskRange()"); return hr_z<decltype(hr_v<cSceSys&>().checkCTaskRange())>::get(); }
 // EventMgr::IsAliveEvt(unsigned long*, int, int)
-extern "C" decltype(hr_v<EventMgr&>().IsAliveEvt(hr_v<unsigned long*>(), hr_v<int>(), hr_v<int>())) hs_157(...) asm("__ZN8EventMgr10IsAliveEvtEPmii");
-decltype(hr_v<EventMgr&>().IsAliveEvt(hr_v<unsigned long*>(), hr_v<int>(), hr_v<int>())) hs_157(...) { HS("EventMgr::IsAliveEvt(unsigned long*, int, int)"); return hr_z<decltype(hr_v<EventMgr&>().IsAliveEvt(hr_v<unsigned long*>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<EventMgr&>().IsAliveEvt(hr_v<unsigned long*>(), hr_v<int>(), hr_v<int>())) hs_151(...) asm("__ZN8EventMgr10IsAliveEvtEPmii");
+decltype(hr_v<EventMgr&>().IsAliveEvt(hr_v<unsigned long*>(), hr_v<int>(), hr_v<int>())) hs_151(...) { HS("EventMgr::IsAliveEvt(unsigned long*, int, int)"); return hr_z<decltype(hr_v<EventMgr&>().IsAliveEvt(hr_v<unsigned long*>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // EventMgr::NameChange(char*)
-extern "C" decltype(hr_v<EventMgr&>().NameChange(hr_v<char*>())) hs_158(...) asm("__ZN8EventMgr10NameChangeEPc");
-decltype(hr_v<EventMgr&>().NameChange(hr_v<char*>())) hs_158(...) { HS("EventMgr::NameChange(char*)"); return hr_z<decltype(hr_v<EventMgr&>().NameChange(hr_v<char*>()))>::get(); }
+extern "C" decltype(hr_v<EventMgr&>().NameChange(hr_v<char*>())) hs_152(...) asm("__ZN8EventMgr10NameChangeEPc");
+decltype(hr_v<EventMgr&>().NameChange(hr_v<char*>())) hs_152(...) { HS("EventMgr::NameChange(char*)"); return hr_z<decltype(hr_v<EventMgr&>().NameChange(hr_v<char*>()))>::get(); }
 // EventMgr::GetEvt(unsigned long*, void**)
-extern "C" decltype(hr_v<EventMgr&>().GetEvt(hr_v<unsigned long*>(), hr_v<void**>())) hs_159(...) asm("__ZN8EventMgr6GetEvtEPmPPv");
-decltype(hr_v<EventMgr&>().GetEvt(hr_v<unsigned long*>(), hr_v<void**>())) hs_159(...) { HS("EventMgr::GetEvt(unsigned long*, void**)"); return hr_z<decltype(hr_v<EventMgr&>().GetEvt(hr_v<unsigned long*>(), hr_v<void**>()))>::get(); }
+extern "C" decltype(hr_v<EventMgr&>().GetEvt(hr_v<unsigned long*>(), hr_v<void**>())) hs_153(...) asm("__ZN8EventMgr6GetEvtEPmPPv");
+decltype(hr_v<EventMgr&>().GetEvt(hr_v<unsigned long*>(), hr_v<void**>())) hs_153(...) { HS("EventMgr::GetEvt(unsigned long*, void**)"); return hr_z<decltype(hr_v<EventMgr&>().GetEvt(hr_v<unsigned long*>(), hr_v<void**>()))>::get(); }
 // EventMgr::SetEvt(void*, unsigned long*)
-extern "C" decltype(hr_v<EventMgr&>().SetEvt(hr_v<void*>(), hr_v<unsigned long*>())) hs_160(...) asm("__ZN8EventMgr6SetEvtEPvPm");
-decltype(hr_v<EventMgr&>().SetEvt(hr_v<void*>(), hr_v<unsigned long*>())) hs_160(...) { HS("EventMgr::SetEvt(void*, unsigned long*)"); return hr_z<decltype(hr_v<EventMgr&>().SetEvt(hr_v<void*>(), hr_v<unsigned long*>()))>::get(); }
+extern "C" decltype(hr_v<EventMgr&>().SetEvt(hr_v<void*>(), hr_v<unsigned long*>())) hs_154(...) asm("__ZN8EventMgr6SetEvtEPvPm");
+decltype(hr_v<EventMgr&>().SetEvt(hr_v<void*>(), hr_v<unsigned long*>())) hs_154(...) { HS("EventMgr::SetEvt(void*, unsigned long*)"); return hr_z<decltype(hr_v<EventMgr&>().SetEvt(hr_v<void*>(), hr_v<unsigned long*>()))>::get(); }
 // IDSystem::set(void*, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)
-extern "C" decltype(hr_v<IDSystem&>().set(hr_v<void*>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_161(...) asm("__ZN8IDSystem3setEPvhhhhh");
-decltype(hr_v<IDSystem&>().set(hr_v<void*>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_161(...) { HS("IDSystem::set(void*, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<IDSystem&>().set(hr_v<void*>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<IDSystem&>().set(hr_v<void*>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_155(...) asm("__ZN8IDSystem3setEPvhhhhh");
+decltype(hr_v<IDSystem&>().set(hr_v<void*>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>())) hs_155(...) { HS("IDSystem::set(void*, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)"); return hr_z<decltype(hr_v<IDSystem&>().set(hr_v<void*>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // IDSystem::kill(unsigned char, unsigned char)
-extern "C" decltype(hr_v<IDSystem&>().kill(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_162(...) asm("__ZN8IDSystem4killEhh");
-decltype(hr_v<IDSystem&>().kill(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_162(...) { HS("IDSystem::kill(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<IDSystem&>().kill(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<IDSystem&>().kill(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_156(...) asm("__ZN8IDSystem4killEhh");
+decltype(hr_v<IDSystem&>().kill(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_156(...) { HS("IDSystem::kill(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<IDSystem&>().kill(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // IDSystem::beMove(IdUnit*, int)
-extern "C" decltype(hr_v<IDSystem&>().beMove(hr_v<IdUnit*>(), hr_v<int>())) hs_163(...) asm("__ZN8IDSystem6beMoveEP6IdUniti");
-decltype(hr_v<IDSystem&>().beMove(hr_v<IdUnit*>(), hr_v<int>())) hs_163(...) { HS("IDSystem::beMove(IdUnit*, int)"); return hr_z<decltype(hr_v<IDSystem&>().beMove(hr_v<IdUnit*>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<IDSystem&>().beMove(hr_v<IdUnit*>(), hr_v<int>())) hs_157(...) asm("__ZN8IDSystem6beMoveEP6IdUniti");
+decltype(hr_v<IDSystem&>().beMove(hr_v<IdUnit*>(), hr_v<int>())) hs_157(...) { HS("IDSystem::beMove(IdUnit*, int)"); return hr_z<decltype(hr_v<IDSystem&>().beMove(hr_v<IdUnit*>(), hr_v<int>()))>::get(); }
 // IDSystem::dispSw(unsigned char, int)
-extern "C" decltype(hr_v<IDSystem&>().dispSw(hr_v<unsigned char>(), hr_v<int>())) hs_164(...) asm("__ZN8IDSystem6dispSwEhi");
-decltype(hr_v<IDSystem&>().dispSw(hr_v<unsigned char>(), hr_v<int>())) hs_164(...) { HS("IDSystem::dispSw(unsigned char, int)"); return hr_z<decltype(hr_v<IDSystem&>().dispSw(hr_v<unsigned char>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<IDSystem&>().dispSw(hr_v<unsigned char>(), hr_v<int>())) hs_158(...) asm("__ZN8IDSystem6dispSwEhi");
+decltype(hr_v<IDSystem&>().dispSw(hr_v<unsigned char>(), hr_v<int>())) hs_158(...) { HS("IDSystem::dispSw(unsigned char, int)"); return hr_z<decltype(hr_v<IDSystem&>().dispSw(hr_v<unsigned char>(), hr_v<int>()))>::get(); }
 // IDSystem::unitPtr(unsigned char, unsigned char)
-extern "C" decltype(hr_v<IDSystem&>().unitPtr(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_165(...) asm("__ZN8IDSystem7unitPtrEhh");
-decltype(hr_v<IDSystem&>().unitPtr(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_165(...) { HS("IDSystem::unitPtr(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<IDSystem&>().unitPtr(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<IDSystem&>().unitPtr(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_159(...) asm("__ZN8IDSystem7unitPtrEhh");
+decltype(hr_v<IDSystem&>().unitPtr(hr_v<unsigned char>(), hr_v<unsigned char>())) hs_159(...) { HS("IDSystem::unitPtr(unsigned char, unsigned char)"); return hr_z<decltype(hr_v<IDSystem&>().unitPtr(hr_v<unsigned char>(), hr_v<unsigned char>()))>::get(); }
 // cItemMgr::get(int, int)
-extern "C" decltype(hr_v<cItemMgr&>().get(hr_v<int>(), hr_v<int>())) hs_166(...) asm("__ZN8cItemMgr3getEii");
-decltype(hr_v<cItemMgr&>().get(hr_v<int>(), hr_v<int>())) hs_166(...) { HS("cItemMgr::get(int, int)"); return hr_z<decltype(hr_v<cItemMgr&>().get(hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().get(hr_v<int>(), hr_v<int>())) hs_160(...) asm("__ZN8cItemMgr3getEii");
+decltype(hr_v<cItemMgr&>().get(hr_v<int>(), hr_v<int>())) hs_160(...) { HS("cItemMgr::get(int, int)"); return hr_z<decltype(hr_v<cItemMgr&>().get(hr_v<int>(), hr_v<int>()))>::get(); }
 // cItemMgr::num(int, unsigned char)
-extern "C" decltype(hr_v<cItemMgr&>().num(hr_v<int>(), hr_v<unsigned char>())) hs_167(...) asm("__ZN8cItemMgr3numEih");
-decltype(hr_v<cItemMgr&>().num(hr_v<int>(), hr_v<unsigned char>())) hs_167(...) { HS("cItemMgr::num(int, unsigned char)"); return hr_z<decltype(hr_v<cItemMgr&>().num(hr_v<int>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().num(hr_v<int>(), hr_v<unsigned char>())) hs_161(...) asm("__ZN8cItemMgr3numEih");
+decltype(hr_v<cItemMgr&>().num(hr_v<int>(), hr_v<unsigned char>())) hs_161(...) { HS("cItemMgr::num(int, unsigned char)"); return hr_z<decltype(hr_v<cItemMgr&>().num(hr_v<int>(), hr_v<unsigned char>()))>::get(); }
 // cItemMgr::use(ItemWork*)
-extern "C" decltype(hr_v<cItemMgr&>().use(hr_v<ItemWork*>())) hs_168(...) asm("__ZN8cItemMgr3useEP8ItemWork");
-decltype(hr_v<cItemMgr&>().use(hr_v<ItemWork*>())) hs_168(...) { HS("cItemMgr::use(ItemWork*)"); return hr_z<decltype(hr_v<cItemMgr&>().use(hr_v<ItemWork*>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().use(hr_v<ItemWork*>())) hs_162(...) asm("__ZN8cItemMgr3useEP8ItemWork");
+decltype(hr_v<cItemMgr&>().use(hr_v<ItemWork*>())) hs_162(...) { HS("cItemMgr::use(ItemWork*)"); return hr_z<decltype(hr_v<cItemMgr&>().use(hr_v<ItemWork*>()))>::get(); }
 // cItemMgr::load(void*)
-extern "C" decltype(hr_v<cItemMgr&>().load(hr_v<void*>())) hs_169(...) asm("__ZN8cItemMgr4loadEPv");
-decltype(hr_v<cItemMgr&>().load(hr_v<void*>())) hs_169(...) { HS("cItemMgr::load(void*)"); return hr_z<decltype(hr_v<cItemMgr&>().load(hr_v<void*>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().load(hr_v<void*>())) hs_163(...) asm("__ZN8cItemMgr4loadEPv");
+decltype(hr_v<cItemMgr&>().load(hr_v<void*>())) hs_163(...) { HS("cItemMgr::load(void*)"); return hr_z<decltype(hr_v<cItemMgr&>().load(hr_v<void*>()))>::get(); }
 // cItemMgr::save(void*)
-extern "C" decltype(hr_v<cItemMgr&>().save(hr_v<void*>())) hs_170(...) asm("__ZN8cItemMgr4saveEPv");
-decltype(hr_v<cItemMgr&>().save(hr_v<void*>())) hs_170(...) { HS("cItemMgr::save(void*)"); return hr_z<decltype(hr_v<cItemMgr&>().save(hr_v<void*>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().save(hr_v<void*>())) hs_164(...) asm("__ZN8cItemMgr4saveEPv");
+decltype(hr_v<cItemMgr&>().save(hr_v<void*>())) hs_164(...) { HS("cItemMgr::save(void*)"); return hr_z<decltype(hr_v<cItemMgr&>().save(hr_v<void*>()))>::get(); }
 // cItemMgr::check(unsigned short)
-extern "C" decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>())) hs_171(...) asm("__ZN8cItemMgr5checkEt");
-decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>())) hs_171(...) { HS("cItemMgr::check(unsigned short)"); return hr_z<decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>())) hs_165(...) asm("__ZN8cItemMgr5checkEt");
+decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>())) hs_165(...) { HS("cItemMgr::check(unsigned short)"); return hr_z<decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>()))>::get(); }
 // cItemMgr::dumpType(int)
-extern "C" decltype(hr_v<cItemMgr&>().dumpType(hr_v<int>())) hs_172(...) asm("__ZN8cItemMgr8dumpTypeEi");
-decltype(hr_v<cItemMgr&>().dumpType(hr_v<int>())) hs_172(...) { HS("cItemMgr::dumpType(int)"); return hr_z<decltype(hr_v<cItemMgr&>().dumpType(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().dumpType(hr_v<int>())) hs_166(...) asm("__ZN8cItemMgr8dumpTypeEi");
+decltype(hr_v<cItemMgr&>().dumpType(hr_v<int>())) hs_166(...) { HS("cItemMgr::dumpType(int)"); return hr_z<decltype(hr_v<cItemMgr&>().dumpType(hr_v<int>()))>::get(); }
 // cItemMgr::available(unsigned short)
-extern "C" decltype(hr_v<cItemMgr&>().available(hr_v<unsigned short>())) hs_173(...) asm("__ZN8cItemMgr9availableEt");
-decltype(hr_v<cItemMgr&>().available(hr_v<unsigned short>())) hs_173(...) { HS("cItemMgr::available(unsigned short)"); return hr_z<decltype(hr_v<cItemMgr&>().available(hr_v<unsigned short>()))>::get(); }
+extern "C" decltype(hr_v<cItemMgr&>().available(hr_v<unsigned short>())) hs_167(...) asm("__ZN8cItemMgr9availableEt");
+decltype(hr_v<cItemMgr&>().available(hr_v<unsigned short>())) hs_167(...) { HS("cItemMgr::available(unsigned short)"); return hr_z<decltype(hr_v<cItemMgr&>().available(hr_v<unsigned short>()))>::get(); }
 // cObjBell::ckBreakEnable()
-extern "C" decltype(hr_v<cObjBell&>().ckBreakEnable()) hs_174(...) asm("__ZN8cObjBell13ckBreakEnableEv");
-decltype(hr_v<cObjBell&>().ckBreakEnable()) hs_174(...) { HS("cObjBell::ckBreakEnable()"); return hr_z<decltype(hr_v<cObjBell&>().ckBreakEnable())>::get(); }
+extern "C" decltype(hr_v<cObjBell&>().ckBreakEnable()) hs_168(...) asm("__ZN8cObjBell13ckBreakEnableEv");
+decltype(hr_v<cObjBell&>().ckBreakEnable()) hs_168(...) { HS("cObjBell::ckBreakEnable()"); return hr_z<decltype(hr_v<cObjBell&>().ckBreakEnable())>::get(); }
 // cObjBell::setBreak()
-extern "C" decltype(hr_v<cObjBell&>().setBreak()) hs_175(...) asm("__ZN8cObjBell8setBreakEv");
-decltype(hr_v<cObjBell&>().setBreak()) hs_175(...) { HS("cObjBell::setBreak()"); return hr_z<decltype(hr_v<cObjBell&>().setBreak())>::get(); }
+extern "C" decltype(hr_v<cObjBell&>().setBreak()) hs_169(...) asm("__ZN8cObjBell8setBreakEv");
+decltype(hr_v<cObjBell&>().setBreak()) hs_169(...) { HS("cObjBell::setBreak()"); return hr_z<decltype(hr_v<cObjBell&>().setBreak())>::get(); }
 // cObjBull::ckBullRide(Vec*, unsigned char*, Vec*)
-extern "C" decltype(hr_v<cObjBull&>().ckBullRide(hr_v<Vec*>(), hr_v<unsigned char*>(), hr_v<Vec*>())) hs_176(...) asm("__ZN8cObjBull10ckBullRideEP3VecPhS1_");
-decltype(hr_v<cObjBull&>().ckBullRide(hr_v<Vec*>(), hr_v<unsigned char*>(), hr_v<Vec*>())) hs_176(...) { HS("cObjBull::ckBullRide(Vec*, unsigned char*, Vec*)"); return hr_z<decltype(hr_v<cObjBull&>().ckBullRide(hr_v<Vec*>(), hr_v<unsigned char*>(), hr_v<Vec*>()))>::get(); }
+extern "C" decltype(hr_v<cObjBull&>().ckBullRide(hr_v<Vec*>(), hr_v<unsigned char*>(), hr_v<Vec*>())) hs_170(...) asm("__ZN8cObjBull10ckBullRideEP3VecPhS1_");
+decltype(hr_v<cObjBull&>().ckBullRide(hr_v<Vec*>(), hr_v<unsigned char*>(), hr_v<Vec*>())) hs_170(...) { HS("cObjBull::ckBullRide(Vec*, unsigned char*, Vec*)"); return hr_z<decltype(hr_v<cObjBull&>().ckBullRide(hr_v<Vec*>(), hr_v<unsigned char*>(), hr_v<Vec*>()))>::get(); }
 // cSubChar::endDamage()
-extern "C" decltype(hr_v<cSubChar&>().endDamage()) hs_177(...) asm("__ZN8cSubChar9endDamageEv");
-decltype(hr_v<cSubChar&>().endDamage()) hs_177(...) { HS("cSubChar::endDamage()"); return hr_z<decltype(hr_v<cSubChar&>().endDamage())>::get(); }
+extern "C" decltype(hr_v<cSubChar&>().endDamage()) hs_171(...) asm("__ZN8cSubChar9endDamageEv");
+decltype(hr_v<cSubChar&>().endDamage()) hs_171(...) { HS("cSubChar::endDamage()"); return hr_z<decltype(hr_v<cSubChar&>().endDamage())>::get(); }
 // cSubChar::setDamage(unsigned char, int, float, int, int)
-extern "C" decltype(hr_v<cSubChar&>().setDamage(hr_v<unsigned char>(), hr_v<int>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_178(...) asm("__ZN8cSubChar9setDamageEhifii");
-decltype(hr_v<cSubChar&>().setDamage(hr_v<unsigned char>(), hr_v<int>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_178(...) { HS("cSubChar::setDamage(unsigned char, int, float, int, int)"); return hr_z<decltype(hr_v<cSubChar&>().setDamage(hr_v<unsigned char>(), hr_v<int>(), hr_v<float>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cSubChar&>().setDamage(hr_v<unsigned char>(), hr_v<int>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_172(...) asm("__ZN8cSubChar9setDamageEhifii");
+decltype(hr_v<cSubChar&>().setDamage(hr_v<unsigned char>(), hr_v<int>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_172(...) { HS("cSubChar::setDamage(unsigned char, int, float, int, int)"); return hr_z<decltype(hr_v<cSubChar&>().setDamage(hr_v<unsigned char>(), hr_v<int>(), hr_v<float>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // CountDown::frameOut()
-extern "C" decltype(hr_v<CountDown&>().frameOut()) hs_179(...) asm("__ZN9CountDown8frameOutEv");
-decltype(hr_v<CountDown&>().frameOut()) hs_179(...) { HS("CountDown::frameOut()"); return hr_z<decltype(hr_v<CountDown&>().frameOut())>::get(); }
+extern "C" decltype(hr_v<CountDown&>().frameOut()) hs_173(...) asm("__ZN9CountDown8frameOutEv");
+decltype(hr_v<CountDown&>().frameOut()) hs_173(...) { HS("CountDown::frameOut()"); return hr_z<decltype(hr_v<CountDown&>().frameOut())>::get(); }
 // cDataUnit::setCommand(int, unsigned long, unsigned char)
-extern "C" decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>())) hs_180(...) asm("__ZN9cDataUnit10setCommandEimh");
-decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>())) hs_180(...) { HS("cDataUnit::setCommand(int, unsigned long, unsigned char)"); return hr_z<decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>())) hs_174(...) asm("__ZN9cDataUnit10setCommandEimh");
+decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>())) hs_174(...) { HS("cDataUnit::setCommand(int, unsigned long, unsigned char)"); return hr_z<decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>()))>::get(); }
 // cDataUnit::waitLoadOk()
-extern "C" decltype(hr_v<cDataUnit&>().waitLoadOk()) hs_181(...) asm("__ZN9cDataUnit10waitLoadOkEv");
-decltype(hr_v<cDataUnit&>().waitLoadOk()) hs_181(...) { HS("cDataUnit::waitLoadOk()"); return hr_z<decltype(hr_v<cDataUnit&>().waitLoadOk())>::get(); }
+extern "C" decltype(hr_v<cDataUnit&>().waitLoadOk()) hs_175(...) asm("__ZN9cDataUnit10waitLoadOkEv");
+decltype(hr_v<cDataUnit&>().waitLoadOk()) hs_175(...) { HS("cDataUnit::waitLoadOk()"); return hr_z<decltype(hr_v<cDataUnit&>().waitLoadOk())>::get(); }
 // cDataUnit::isUseOk()
-extern "C" decltype(hr_v<cDataUnit&>().isUseOk()) hs_182(...) asm("__ZN9cDataUnit7isUseOkEv");
-decltype(hr_v<cDataUnit&>().isUseOk()) hs_182(...) { HS("cDataUnit::isUseOk()"); return hr_z<decltype(hr_v<cDataUnit&>().isUseOk())>::get(); }
+extern "C" decltype(hr_v<cDataUnit&>().isUseOk()) hs_176(...) asm("__ZN9cDataUnit7isUseOkEv");
+decltype(hr_v<cDataUnit&>().isUseOk()) hs_176(...) { HS("cDataUnit::isUseOk()"); return hr_z<decltype(hr_v<cDataUnit&>().isUseOk())>::get(); }
 // cDataUnit::isLoadOk()
-extern "C" decltype(hr_v<cDataUnit&>().isLoadOk()) hs_183(...) asm("__ZN9cDataUnit8isLoadOkEv");
-decltype(hr_v<cDataUnit&>().isLoadOk()) hs_183(...) { HS("cDataUnit::isLoadOk()"); return hr_z<decltype(hr_v<cDataUnit&>().isLoadOk())>::get(); }
+extern "C" decltype(hr_v<cDataUnit&>().isLoadOk()) hs_177(...) asm("__ZN9cDataUnit8isLoadOkEv");
+decltype(hr_v<cDataUnit&>().isLoadOk()) hs_177(...) { HS("cDataUnit::isLoadOk()"); return hr_z<decltype(hr_v<cDataUnit&>().isLoadOk())>::get(); }
 // cEmShield::setFall(float, Vec*)
-extern "C" decltype(hr_v<cEmShield&>().setFall(hr_v<float>(), hr_v<Vec*>())) hs_184(...) asm("__ZN9cEmShield7setFallEfP3Vec");
-decltype(hr_v<cEmShield&>().setFall(hr_v<float>(), hr_v<Vec*>())) hs_184(...) { HS("cEmShield::setFall(float, Vec*)"); return hr_z<decltype(hr_v<cEmShield&>().setFall(hr_v<float>(), hr_v<Vec*>()))>::get(); }
+extern "C" decltype(hr_v<cEmShield&>().setFall(hr_v<float>(), hr_v<Vec*>())) hs_178(...) asm("__ZN9cEmShield7setFallEfP3Vec");
+decltype(hr_v<cEmShield&>().setFall(hr_v<float>(), hr_v<Vec*>())) hs_178(...) { HS("cEmShield::setFall(float, Vec*)"); return hr_z<decltype(hr_v<cEmShield&>().setFall(hr_v<float>(), hr_v<Vec*>()))>::get(); }
 // cEmShield::setParent(cModel*, int, int)
-extern "C" decltype(hr_v<cEmShield&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_185(...) asm("__ZN9cEmShield9setParentEP6cModelii");
-decltype(hr_v<cEmShield&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_185(...) { HS("cEmShield::setParent(cModel*, int, int)"); return hr_z<decltype(hr_v<cEmShield&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmShield&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_179(...) asm("__ZN9cEmShield9setParentEP6cModelii");
+decltype(hr_v<cEmShield&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>())) hs_179(...) { HS("cEmShield::setParent(cModel*, int, int)"); return hr_z<decltype(hr_v<cEmShield&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cEmSwitch::setOpen()
-extern "C" decltype(hr_v<cEmSwitch&>().setOpen()) hs_186(...) asm("__ZN9cEmSwitch7setOpenEv");
-decltype(hr_v<cEmSwitch&>().setOpen()) hs_186(...) { HS("cEmSwitch::setOpen()"); return hr_z<decltype(hr_v<cEmSwitch&>().setOpen())>::get(); }
+extern "C" decltype(hr_v<cEmSwitch&>().setOpen()) hs_180(...) asm("__ZN9cEmSwitch7setOpenEv");
+decltype(hr_v<cEmSwitch&>().setOpen()) hs_180(...) { HS("cEmSwitch::setOpen()"); return hr_z<decltype(hr_v<cEmSwitch&>().setOpen())>::get(); }
 // cEmSwitch::setClose()
-extern "C" decltype(hr_v<cEmSwitch&>().setClose()) hs_187(...) asm("__ZN9cEmSwitch8setCloseEv");
-decltype(hr_v<cEmSwitch&>().setClose()) hs_187(...) { HS("cEmSwitch::setClose()"); return hr_z<decltype(hr_v<cEmSwitch&>().setClose())>::get(); }
+extern "C" decltype(hr_v<cEmSwitch&>().setClose()) hs_181(...) asm("__ZN9cEmSwitch8setCloseEv");
+decltype(hr_v<cEmSwitch&>().setClose()) hs_181(...) { HS("cEmSwitch::setClose()"); return hr_z<decltype(hr_v<cEmSwitch&>().setClose())>::get(); }
 // cEmWindow::SetBreakAll(Vec*, int, int)
-extern "C" decltype(hr_v<cEmWindow&>().SetBreakAll(hr_v<Vec*>(), hr_v<int>(), hr_v<int>())) hs_188(...) asm("__ZN9cEmWindow11SetBreakAllEP3Vecii");
-decltype(hr_v<cEmWindow&>().SetBreakAll(hr_v<Vec*>(), hr_v<int>(), hr_v<int>())) hs_188(...) { HS("cEmWindow::SetBreakAll(Vec*, int, int)"); return hr_z<decltype(hr_v<cEmWindow&>().SetBreakAll(hr_v<Vec*>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmWindow&>().SetBreakAll(hr_v<Vec*>(), hr_v<int>(), hr_v<int>())) hs_182(...) asm("__ZN9cEmWindow11SetBreakAllEP3Vecii");
+decltype(hr_v<cEmWindow&>().SetBreakAll(hr_v<Vec*>(), hr_v<int>(), hr_v<int>())) hs_182(...) { HS("cEmWindow::SetBreakAll(Vec*, int, int)"); return hr_z<decltype(hr_v<cEmWindow&>().SetBreakAll(hr_v<Vec*>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cEmWindow::SetBreakModel()
-extern "C" decltype(hr_v<cEmWindow&>().SetBreakModel()) hs_189(...) asm("__ZN9cEmWindow13SetBreakModelEv");
-decltype(hr_v<cEmWindow&>().SetBreakModel()) hs_189(...) { HS("cEmWindow::SetBreakModel()"); return hr_z<decltype(hr_v<cEmWindow&>().SetBreakModel())>::get(); }
+extern "C" decltype(hr_v<cEmWindow&>().SetBreakModel()) hs_183(...) asm("__ZN9cEmWindow13SetBreakModelEv");
+decltype(hr_v<cEmWindow&>().SetBreakModel()) hs_183(...) { HS("cEmWindow::SetBreakModel()"); return hr_z<decltype(hr_v<cEmWindow&>().SetBreakModel())>::get(); }
 // cEmWindow::ChkEnableDamage()
-extern "C" decltype(hr_v<cEmWindow&>().ChkEnableDamage()) hs_190(...) asm("__ZN9cEmWindow15ChkEnableDamageEv");
-decltype(hr_v<cEmWindow&>().ChkEnableDamage()) hs_190(...) { HS("cEmWindow::ChkEnableDamage()"); return hr_z<decltype(hr_v<cEmWindow&>().ChkEnableDamage())>::get(); }
+extern "C" decltype(hr_v<cEmWindow&>().ChkEnableDamage()) hs_184(...) asm("__ZN9cEmWindow15ChkEnableDamageEv");
+decltype(hr_v<cEmWindow&>().ChkEnableDamage()) hs_184(...) { HS("cEmWindow::ChkEnableDamage()"); return hr_z<decltype(hr_v<cEmWindow&>().ChkEnableDamage())>::get(); }
 // cEmWindow::SetEnableDamage(int)
-extern "C" decltype(hr_v<cEmWindow&>().SetEnableDamage(hr_v<int>())) hs_191(...) asm("__ZN9cEmWindow15SetEnableDamageEi");
-decltype(hr_v<cEmWindow&>().SetEnableDamage(hr_v<int>())) hs_191(...) { HS("cEmWindow::SetEnableDamage(int)"); return hr_z<decltype(hr_v<cEmWindow&>().SetEnableDamage(hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cEmWindow&>().SetEnableDamage(hr_v<int>())) hs_185(...) asm("__ZN9cEmWindow15SetEnableDamageEi");
+decltype(hr_v<cEmWindow&>().SetEnableDamage(hr_v<int>())) hs_185(...) { HS("cEmWindow::SetEnableDamage(int)"); return hr_z<decltype(hr_v<cEmWindow&>().SetEnableDamage(hr_v<int>()))>::get(); }
 // cEmWindow::SetShake()
-extern "C" decltype(hr_v<cEmWindow&>().SetShake()) hs_192(...) asm("__ZN9cEmWindow8SetShakeEv");
-decltype(hr_v<cEmWindow&>().SetShake()) hs_192(...) { HS("cEmWindow::SetShake()"); return hr_z<decltype(hr_v<cEmWindow&>().SetShake())>::get(); }
+extern "C" decltype(hr_v<cEmWindow&>().SetShake()) hs_186(...) asm("__ZN9cEmWindow8SetShakeEv");
+decltype(hr_v<cEmWindow&>().SetShake()) hs_186(...) { HS("cEmWindow::SetShake()"); return hr_z<decltype(hr_v<cEmWindow&>().SetShake())>::get(); }
 // cLightMgr::beginEvent()
-extern "C" decltype(hr_v<cLightMgr&>().beginEvent()) hs_193(...) asm("__ZN9cLightMgr10beginEventEv");
-decltype(hr_v<cLightMgr&>().beginEvent()) hs_193(...) { HS("cLightMgr::beginEvent()"); return hr_z<decltype(hr_v<cLightMgr&>().beginEvent())>::get(); }
+extern "C" decltype(hr_v<cLightMgr&>().beginEvent()) hs_187(...) asm("__ZN9cLightMgr10beginEventEv");
+decltype(hr_v<cLightMgr&>().beginEvent()) hs_187(...) { HS("cLightMgr::beginEvent()"); return hr_z<decltype(hr_v<cLightMgr&>().beginEvent())>::get(); }
 // cLightMgr::create(int, int, int, int)
-extern "C" decltype(hr_v<cLightMgr&>().create(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_194(...) asm("__ZN9cLightMgr6createEiiii");
-decltype(hr_v<cLightMgr&>().create(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_194(...) { HS("cLightMgr::create(int, int, int, int)"); return hr_z<decltype(hr_v<cLightMgr&>().create(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cLightMgr&>().create(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_188(...) asm("__ZN9cLightMgr6createEiiii");
+decltype(hr_v<cLightMgr&>().create(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_188(...) { HS("cLightMgr::create(int, int, int, int)"); return hr_z<decltype(hr_v<cLightMgr&>().create(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // cLightMgr::offScr(unsigned char)
-extern "C" decltype(hr_v<cLightMgr&>().offScr(hr_v<unsigned char>())) hs_195(...) asm("__ZN9cLightMgr6offScrEh");
-decltype(hr_v<cLightMgr&>().offScr(hr_v<unsigned char>())) hs_195(...) { HS("cLightMgr::offScr(unsigned char)"); return hr_z<decltype(hr_v<cLightMgr&>().offScr(hr_v<unsigned char>()))>::get(); }
+extern "C" decltype(hr_v<cLightMgr&>().offScr(hr_v<unsigned char>())) hs_189(...) asm("__ZN9cLightMgr6offScrEh");
+decltype(hr_v<cLightMgr&>().offScr(hr_v<unsigned char>())) hs_189(...) { HS("cLightMgr::offScr(unsigned char)"); return hr_z<decltype(hr_v<cLightMgr&>().offScr(hr_v<unsigned char>()))>::get(); }
 // cLightMgr::endEvent()
-extern "C" decltype(hr_v<cLightMgr&>().endEvent()) hs_196(...) asm("__ZN9cLightMgr8endEventEv");
-decltype(hr_v<cLightMgr&>().endEvent()) hs_196(...) { HS("cLightMgr::endEvent()"); return hr_z<decltype(hr_v<cLightMgr&>().endEvent())>::get(); }
+extern "C" decltype(hr_v<cLightMgr&>().endEvent()) hs_190(...) asm("__ZN9cLightMgr8endEventEv");
+decltype(hr_v<cLightMgr&>().endEvent()) hs_190(...) { HS("cLightMgr::endEvent()"); return hr_z<decltype(hr_v<cLightMgr&>().endEvent())>::get(); }
 // cObjChain::setChain(PenCloth*)
-extern "C" decltype(hr_v<cObjChain&>().setChain(hr_v<PenCloth*>())) hs_197(...) asm("__ZN9cObjChain8setChainEP8PenCloth");
-decltype(hr_v<cObjChain&>().setChain(hr_v<PenCloth*>())) hs_197(...) { HS("cObjChain::setChain(PenCloth*)"); return hr_z<decltype(hr_v<cObjChain&>().setChain(hr_v<PenCloth*>()))>::get(); }
+extern "C" decltype(hr_v<cObjChain&>().setChain(hr_v<PenCloth*>())) hs_191(...) asm("__ZN9cObjChain8setChainEP8PenCloth");
+decltype(hr_v<cObjChain&>().setChain(hr_v<PenCloth*>())) hs_191(...) { HS("cObjChain::setChain(PenCloth*)"); return hr_z<decltype(hr_v<cObjChain&>().setChain(hr_v<PenCloth*>()))>::get(); }
 // cObjChain::setParent(cModel*, int, Vec*, int)
-extern "C" decltype(hr_v<cObjChain&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_198(...) asm("__ZN9cObjChain9setParentEP6cModeliP3Veci");
-decltype(hr_v<cObjChain&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_198(...) { HS("cObjChain::setParent(cModel*, int, Vec*, int)"); return hr_z<decltype(hr_v<cObjChain&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<Vec*>(), hr_v<int>()))>::get(); }
+extern "C" decltype(hr_v<cObjChain&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_192(...) asm("__ZN9cObjChain9setParentEP6cModeliP3Veci");
+decltype(hr_v<cObjChain&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<Vec*>(), hr_v<int>())) hs_192(...) { HS("cObjChain::setParent(cModel*, int, Vec*, int)"); return hr_z<decltype(hr_v<cObjChain&>().setParent(hr_v<cModel*>(), hr_v<int>(), hr_v<Vec*>(), hr_v<int>()))>::get(); }
 // cRoomData::load(void*)
-extern "C" decltype(hr_v<cRoomData&>().load(hr_v<void*>())) hs_199(...) asm("__ZN9cRoomData4loadEPv");
-decltype(hr_v<cRoomData&>().load(hr_v<void*>())) hs_199(...) { HS("cRoomData::load(void*)"); return hr_z<decltype(hr_v<cRoomData&>().load(hr_v<void*>()))>::get(); }
+extern "C" decltype(hr_v<cRoomData&>().load(hr_v<void*>())) hs_193(...) asm("__ZN9cRoomData4loadEPv");
+decltype(hr_v<cRoomData&>().load(hr_v<void*>())) hs_193(...) { HS("cRoomData::load(void*)"); return hr_z<decltype(hr_v<cRoomData&>().load(hr_v<void*>()))>::get(); }
 // cRoomData::save(void*)
-extern "C" decltype(hr_v<cRoomData&>().save(hr_v<void*>())) hs_200(...) asm("__ZN9cRoomData4saveEPv");
-decltype(hr_v<cRoomData&>().save(hr_v<void*>())) hs_200(...) { HS("cRoomData::save(void*)"); return hr_z<decltype(hr_v<cRoomData&>().save(hr_v<void*>()))>::get(); }
+extern "C" decltype(hr_v<cRoomData&>().save(hr_v<void*>())) hs_194(...) asm("__ZN9cRoomData4saveEPv");
+decltype(hr_v<cRoomData&>().save(hr_v<void*>())) hs_194(...) { HS("cRoomData::save(void*)"); return hr_z<decltype(hr_v<cRoomData&>().save(hr_v<void*>()))>::get(); }
 // cRoomData::clear(void*)
-extern "C" decltype(hr_v<cRoomData&>().clear(hr_v<void*>())) hs_201(...) asm("__ZN9cRoomData5clearEPv");
-decltype(hr_v<cRoomData&>().clear(hr_v<void*>())) hs_201(...) { HS("cRoomData::clear(void*)"); return hr_z<decltype(hr_v<cRoomData&>().clear(hr_v<void*>()))>::get(); }
+extern "C" decltype(hr_v<cRoomData&>().clear(hr_v<void*>())) hs_195(...) asm("__ZN9cRoomData5clearEPv");
+decltype(hr_v<cRoomData&>().clear(hr_v<void*>())) hs_195(...) { HS("cRoomData::clear(void*)"); return hr_z<decltype(hr_v<cRoomData&>().clear(hr_v<void*>()))>::get(); }
 // collision_point_cone_rev_play_face   // not declared in the headers: int
-extern "C" int hs_202(...) asm("_collision_point_cone_rev_play_face");
-int hs_202(...) { HS("collision_point_cone_rev_play_face"); return hr_z<int>::get(); }
+extern "C" int hs_196(...) asm("_collision_point_cone_rev_play_face");
+int hs_196(...) { HS("collision_point_cone_rev_play_face"); return hr_z<int>::get(); }
 // collision_sphere_hexahedron   // not declared in the headers: int
-extern "C" int hs_203(...) asm("_collision_sphere_hexahedron");
-int hs_203(...) { HS("collision_sphere_hexahedron"); return hr_z<int>::get(); }
+extern "C" int hs_197(...) asm("_collision_sphere_hexahedron");
+int hs_197(...) { HS("collision_sphere_hexahedron"); return hr_z<int>::get(); }
 // getRoomEtcBreak
-extern "C" decltype(hr_ret(&getRoomEtcBreak)) hs_204(...) asm("_getRoomEtcBreak");
-decltype(hr_ret(&getRoomEtcBreak)) hs_204(...) { HS("getRoomEtcBreak"); return hr_z<decltype(hr_ret(&getRoomEtcBreak))>::get(); }
+extern "C" decltype(hr_ret(&getRoomEtcBreak)) hs_198(...) asm("_getRoomEtcBreak");
+decltype(hr_ret(&getRoomEtcBreak)) hs_198(...) { HS("getRoomEtcBreak"); return hr_z<decltype(hr_ret(&getRoomEtcBreak))>::get(); }
 // getRoomEtcDoor
-extern "C" decltype(hr_ret(&getRoomEtcDoor)) hs_205(...) asm("_getRoomEtcDoor");
-decltype(hr_ret(&getRoomEtcDoor)) hs_205(...) { HS("getRoomEtcDoor"); return hr_z<decltype(hr_ret(&getRoomEtcDoor))>::get(); }
+extern "C" decltype(hr_ret(&getRoomEtcDoor)) hs_199(...) asm("_getRoomEtcDoor");
+decltype(hr_ret(&getRoomEtcDoor)) hs_199(...) { HS("getRoomEtcDoor"); return hr_z<decltype(hr_ret(&getRoomEtcDoor))>::get(); }
 // getRoomEtcLadder
-extern "C" decltype(hr_ret(&getRoomEtcLadder)) hs_206(...) asm("_getRoomEtcLadder");
-decltype(hr_ret(&getRoomEtcLadder)) hs_206(...) { HS("getRoomEtcLadder"); return hr_z<decltype(hr_ret(&getRoomEtcLadder))>::get(); }
+extern "C" decltype(hr_ret(&getRoomEtcLadder)) hs_200(...) asm("_getRoomEtcLadder");
+decltype(hr_ret(&getRoomEtcLadder)) hs_200(...) { HS("getRoomEtcLadder"); return hr_z<decltype(hr_ret(&getRoomEtcLadder))>::get(); }
 // getRoomEtcRack
-extern "C" decltype(hr_ret(&getRoomEtcRack)) hs_207(...) asm("_getRoomEtcRack");
-decltype(hr_ret(&getRoomEtcRack)) hs_207(...) { HS("getRoomEtcRack"); return hr_z<decltype(hr_ret(&getRoomEtcRack))>::get(); }
+extern "C" decltype(hr_ret(&getRoomEtcRack)) hs_201(...) asm("_getRoomEtcRack");
+decltype(hr_ret(&getRoomEtcRack)) hs_201(...) { HS("getRoomEtcRack"); return hr_z<decltype(hr_ret(&getRoomEtcRack))>::get(); }
 // getRoomEtcWindow
-extern "C" decltype(hr_ret(&getRoomEtcWindow)) hs_208(...) asm("_getRoomEtcWindow");
-decltype(hr_ret(&getRoomEtcWindow)) hs_208(...) { HS("getRoomEtcWindow"); return hr_z<decltype(hr_ret(&getRoomEtcWindow))>::get(); }
+extern "C" decltype(hr_ret(&getRoomEtcWindow)) hs_202(...) asm("_getRoomEtcWindow");
+decltype(hr_ret(&getRoomEtcWindow)) hs_202(...) { HS("getRoomEtcWindow"); return hr_z<decltype(hr_ret(&getRoomEtcWindow))>::get(); }
 // itemInfo
-extern "C" decltype(hr_ret(&itemInfo)) hs_209(...) asm("_itemInfo");
-decltype(hr_ret(&itemInfo)) hs_209(...) { HS("itemInfo"); return hr_z<decltype(hr_ret(&itemInfo))>::get(); }
+extern "C" decltype(hr_ret(&itemInfo)) hs_203(...) asm("_itemInfo");
+decltype(hr_ret(&itemInfo)) hs_203(...) { HS("itemInfo"); return hr_z<decltype(hr_ret(&itemInfo))>::get(); }
 // memset
-extern "C" decltype(hr_ret(&memset)) hs_210(...) asm("memset");
-decltype(hr_ret(&memset)) hs_210(...) { HS("memset"); return hr_z<decltype(hr_ret(&memset))>::get(); }
+extern "C" decltype(hr_ret(&memset)) hs_204(...) asm("memset");
+decltype(hr_ret(&memset)) hs_204(...) { HS("memset"); return hr_z<decltype(hr_ret(&memset))>::get(); }
 // setCloseLock__7cEmDoori   // not declared in the headers: int
-extern "C" int hs_211(...) asm("setCloseLock__7cEmDoori");
-int hs_211(...) { HS("setCloseLock__7cEmDoori"); return hr_z<int>::get(); }
+extern "C" int hs_205(...) asm("setCloseLock__7cEmDoori");
+int hs_205(...) { HS("setCloseLock__7cEmDoori"); return hr_z<int>::get(); }
+// setThrow__6cEmWepP3VecfP9EmAtkInfo   // not declared in the headers: int
+extern "C" int hs_206(...) asm("setThrow__6cEmWepP3VecfP9EmAtkInfo");
+int hs_206(...) { HS("setThrow__6cEmWepP3VecfP9EmAtkInfo"); return hr_z<int>::get(); }
