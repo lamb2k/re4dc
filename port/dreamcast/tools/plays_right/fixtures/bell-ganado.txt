@@ -17,6 +17,7 @@ weapon 2 0
 seed 0x0d37
 esl 0
 god
+resume 0xc5f7504a 0xba800000 0xc37dfdae 0x403d70a4 2   # Leon as the old trace has him at t=184
 actor 0x14 1 post
 actor 0x1c 1 post
 actor 0x1e 1 post

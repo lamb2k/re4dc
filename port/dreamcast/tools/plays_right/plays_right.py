@@ -24,6 +24,21 @@ ps: the logic trace's FNV of be_flag, stat (r_no_0..3), id, type and Mot_state. 
 be_flag (ps=) and with the draw pass's marker 0x08000000 set (psm=); against a logic trace either matches,
 because the reference has no draw pass (tolerance "ps_draw_bits": the be_flag bits the draw pass owns).
 
+Actors (trace v2, lane eng-host2): --actor SEL compares one hosted actor's block (the A lines) instead of
+the T line. SEL is e=<list entry hex>, k=<alive-list index> or id=<enemy id hex>[#rank]. Against another re4ref
+trace every actor field compares:
+    p, a       as above (position, angles)
+    mid, mf, ms  motion slot (Exxx: the actor's archive), frame, state; exact as above
+    r          routine bytes, exact          hp   life, exact          be   be_flag, exact
+    f          the actor's flags word (Ganado work flags; partner subFlags), exact
+    aps        the actor's discrete hash (be_flag, stat, id, type, Mot_state, life), exact
+    rc         the generator calls the actor made this tick, exact
+    rng        the generator state at the end of the tick (the T line's), exact
+Against an old logic trace only the position is recorded: the LP lines (decision-trace runs) give every alive
+enemy's id and position every 4th tick, in alive-list order. The A actor is matched to the old record of the
+same id at the same rank among that id's records (its rank in the reference's own alive list), so the two
+lists must hold the same actors in the same order (the fixture creates them as the old run did).
+
 Exit status: 0 when every compared tick is within tolerance, 1 on a divergence, 2 on a usage error.
 The report names the first divergence (tick, field, both values, the difference) and a summary per field:
 ticks compared, ticks over tolerance, the largest difference and where it is.
@@ -97,7 +112,38 @@ def load(path):
                 if cam:
                     r['cam'] = cam
                 r['stub'] = kv.get('stub')
-                recs[t] = r
+                r.setdefault('actors', [])
+                recs[t] = {**recs.get(t, {}), **r}
+            elif line.startswith('A t=') and kind in (None, 're4ref'):
+                kv = parse_kv(line)
+                t = int(kv['t'])
+                a = {'k': int(kv['k']), 'id': kv['id'], 'e': kv['e'], 'p': floats(kv.get('p'), 3),
+                     'a': floats(kv.get('a'), 3), 'r': kv.get('r'), 'hp': kv.get('hp'), 'be': kv.get('be'),
+                     'f': kv.get('f'), 'aps': kv.get('ps'), 'rc': kv.get('rc')}
+                m = kv.get('m', '-')
+                if m != '-':
+                    mid, mf, ms = m.split(',')
+                    a['mid'], a['mf'], a['ms'] = mid, f32(mf), int(ms, 16)
+                recs.setdefault(t, {}).setdefault('actors', []).append(a)
+            elif line.startswith('R t=') and kind in (None, 're4ref'):
+                kv = parse_kv(line)
+                recs.setdefault(int(kv['t']), {})['rcalls'] = kv
+            elif line.startswith('LP t='):
+                # decision-trace runs: id:x,y,z of every alive enemy every 4th tick, alive-list order
+                t = int(line.split()[1][2:])
+                k = int(line.split()[2][2:]) if line.split()[2][2:].isdigit() else -1
+                rec = recs.setdefault(t, {})
+                if k < 0 or rec.get('lp_done'):
+                    continue   # unowned, or a repeated tick: keep the first record
+                if k == 0 and 'lp' in rec:
+                    rec['lp_done'] = True
+                    continue
+                lst = rec.setdefault('lp', [])
+                for tok in line.split()[3:]:
+                    if ':' in tok:
+                        i, xyz = tok.split(':', 1)
+                        if i != 'ff':
+                            lst.append({'id': i, 'p': floats(xyz, 3)})
             elif line.startswith('LT t='):
                 kind = 'logic'
                 kv = parse_kv(line)
@@ -115,7 +161,8 @@ def load(path):
                 if 'r' in kv and '~' not in kv['r']:
                     r['rng'] = kv['r']
                 r['rm'] = kv.get('rm')
-                recs.setdefault(t, r)   # a repeated tick keeps its first record
+                if 'p' not in recs.get(t, {}):   # a repeated tick keeps its first record
+                    recs[t] = {**r, **recs.get(t, {})}
     if kind is None:
         sys.exit(f'plays_right: {path}: no trace records')
     return kind, recs
@@ -186,6 +233,50 @@ def fmt(v):
 
 
 DEFAULT_TOL = {'pos': 1.0, 'ang_deg': 1.0, 'frame': 0.0, 'cam': 1.0, 'cam_fovy_deg': 0.1}
+ACTOR_FIELDS = 'p,a,mid,mf,ms,r,hp,be,f,aps,rc,rng'
+
+
+def pick(actors, sel):
+    """The actor of an A list that SEL names (e=, k=, id=[#rank]); -> (record, its rank among its id)."""
+    key, _, val = sel.partition('=')
+    rank_want = None
+    if key == 'id' and '#' in val:
+        val, r = val.split('#', 1)
+        rank_want = int(r)
+    seen = {}
+    for a in actors:
+        rank = seen.get(a['id'], 0)
+        seen[a['id']] = rank + 1
+        if key == 'e' and int(a['e'], 16) == int(val, 16):
+            return a, rank
+        if key == 'k' and a['k'] == int(val):
+            return a, rank
+        if key == 'id' and int(a['id'], 16) == int(val, 16) and (rank_want is None or rank == rank_want):
+            return a, rank
+    return None, None
+
+
+def actor_views(A, B, kb, sel, offset):
+    """{tick: fields} for the selected actor in A, and its counterpart in B (same SEL in a re4ref trace; the
+    same id at the same rank in an old trace's LP list)."""
+    va, vb = {}, {}
+    for t, r in A.items():
+        a, rank = pick(r.get('actors', []), sel)
+        if a is None:
+            continue
+        va[t] = dict(a, rng=r.get('rng'))
+        b = B.get(t + offset)
+        if not b:
+            continue
+        if kb == 're4ref':
+            x, _ = pick(b.get('actors', []), sel)
+            if x is not None:
+                vb[t + offset] = dict(x, rng=b.get('rng'))
+        elif 'lp' in b:
+            same = [x for x in b['lp'] if x['id'] == a['id']]
+            if rank < len(same):
+                vb[t + offset] = {'p': same[rank]['p']}
+    return va, vb
 
 
 def main():
@@ -195,7 +286,8 @@ def main():
     ap.add_argument('--tolerances', help='JSON file: pos, ang_deg, frame, cam, cam_fovy_deg')
     ap.add_argument('--offset', type=int, default=0, help="B's tick = A's tick + offset")
     ap.add_argument('--window', help='LO:HI, A ticks')
-    ap.add_argument('--fields', default='p,a,mid,mf,ms,r,ps,rng,cam')
+    ap.add_argument('--fields', help='default p,a,mid,mf,ms,r,ps,rng,cam (T line) or ' + ACTOR_FIELDS + ' (--actor)')
+    ap.add_argument('--actor', help='compare one actor block (A lines): e=<entry>, k=<index> or id=<id>[#rank]')
     ap.add_argument('--json', help='write the report as JSON')
     ap.add_argument('--quiet', action='store_true')
     args = ap.parse_args()
@@ -204,9 +296,16 @@ def main():
         with open(args.tolerances) as f:
             tol.update({k: v for k, v in json.load(f).items() if not k.startswith('_')})
     window = tuple(int(x) for x in args.window.split(':')) if args.window else None
-    fields = [f.strip() for f in args.fields.split(',') if f.strip()]
+    fields = [f.strip() for f in (args.fields or (ACTOR_FIELDS if args.actor else 'p,a,mid,mf,ms,r,ps,rng,cam'))
+              .split(',') if f.strip()]
     ka, A = load(args.a)
     kb, B = load(args.b)
+    if args.actor:
+        if ka != 're4ref':
+            sys.exit('plays_right: --actor needs a re4ref trace as A')
+        A, B = actor_views(A, B, kb, args.actor, args.offset)
+        if not A:
+            sys.exit(f'plays_right: no actor {args.actor} in {args.a}')
     res, first, compared = compare(A, B, tol, args.offset, window, fields)
     summary = {}
     for f in fields:

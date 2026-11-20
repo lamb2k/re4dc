@@ -203,7 +203,7 @@ extern "C" int re4dc_motion_acquire(const void* header, unsigned** table)
             *table = (unsigned*) (d + prefix_bytes(d) - 4 * d[2]);
             return 1;
         }
-        host_fatal(2, "motion: clip %08x of a prepared archive has no record", want);
+        return 0;   // a clip the MTC table does not list keeps its keys in the archive (native_motion.cpp: no lease)
     }
     return 0;   // an archive with its own keys
 }

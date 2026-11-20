@@ -29,7 +29,7 @@ extern FILE* host_log_file;
 static FILE* g_out;
 
 static const char* kUsage =
-    "usage: re4ref --tree DIR --fixture FILE [--out TRACE] [--log LOG] [--rng-feed LOGIC_TRACE[:offset]]\n"
+    "usage: re4ref --tree DIR --fixture FILE [--out TRACE] [--log LOG] [--rng-feed LOGIC_TRACE[:offset] [--stop-feed]]\n"
     "              [--control walk-speed[=k] | drop-rng[=tick] | shift-input[=n]\n"
     "                         | drop-rng-actor[=tick] | follow-dist[=k] | late-hit[=n]]\n";
 
@@ -49,7 +49,16 @@ extern "C" int host_parse_args(int argc, char** argv, HostOptions* o)
             if (!strncmp(c, "walk-speed", 10)) { o->control = HOST_CTL_WALK_SPEED; if (eq) o->k = strtof(eq + 1, 0); }
             else if (!strncmp(c, "drop-rng", 8) && (c[8] == 0 || c[8] == '=')) { o->control = HOST_CTL_DROP_RNG; if (eq) o->tick = strtoul(eq + 1, 0, 0); }
             else if (!strncmp(c, "shift-input", 11)) { o->control = HOST_CTL_SHIFT_INPUT; if (eq) o->shift = atoi(eq + 1); }
-            else if (!strncmp(c, "drop-rng-actor", 14)) { o->control = HOST_CTL_DROP_RNG_ACTOR; if (eq) o->tick = strtoul(eq + 1, 0, 0); }
+            else if (!strncmp(c, "drop-rng-actor", 14)) {
+                // drop-rng-actor[=tick[,k]]: actor k's (A k=) first generator call at or after tick is dropped
+                o->control = HOST_CTL_DROP_RNG_ACTOR;
+                o->shift = 0;
+                if (eq) {
+                    o->tick = strtoul(eq + 1, 0, 0);
+                    const char* comma = strchr(eq, ',');
+                    if (comma) o->shift = atoi(comma + 1);
+                }
+            }
             else if (!strncmp(c, "follow-dist", 11)) { o->control = HOST_CTL_FOLLOW_DIST; o->k = 1.1f; if (eq) o->k = strtof(eq + 1, 0); }
             else if (!strncmp(c, "late-hit", 8)) { o->control = HOST_CTL_LATE_HIT; if (eq) o->shift = atoi(eq + 1); }
             else { fprintf(stderr, "re4ref: unknown control %s\n%s", c, kUsage); return 0; }
@@ -63,6 +72,8 @@ extern "C" int host_parse_args(int argc, char** argv, HostOptions* o)
                 *colon = 0;
             }
             o->rng_feed = path;
+        } else if (!strcmp(argv[i], "--stop-feed")) {
+            o->stop_feed = 1;
         } else {
             fputs(kUsage, stderr);
             return 0;
@@ -139,6 +150,18 @@ extern "C" int host_parse_fixture(const char* path, HostFixture* fx)
             fx->hits[fx->nhits].entry = strtoul(b, 0, 0);
             fx->hits[fx->nhits].type = n >= 3 ? strtoul(c, 0, 0) : 1;
             fx->nhits++;
+        } else if (!strcmp(key, "subctrl")) {
+            // subctrl <tick> <mode> [flag]: a partner command as the room scripts give one (SubCharCtrl)
+            int t = 0, m = 0, fl = 0;
+            if (sscanf(rest, "%d %d %d", &t, &m, &fl) < 2 || fx->nctrl >= sizeof fx->ctrls / sizeof fx->ctrls[0]) {
+                fprintf(stderr, "re4ref: bad subctrl line: %s\n", line);
+                ok = 0;
+                break;
+            }
+            fx->ctrls[fx->nctrl].tick = (unsigned) t;
+            fx->ctrls[fx->nctrl].mode = m;
+            fx->ctrls[fx->nctrl].flag = fl;
+            fx->nctrl++;
         } else if (!strcmp(key, "sub")) {
             // sub x y z ay: the partner placed after her creation (an old trace's position), as resume does for Leon
             char a[4][32];
@@ -206,10 +229,11 @@ extern "C" void host_trace_header(const HostOptions* o, const HostFixture* f, co
             f->ticks, fp, kCtl[o->control]);
     if (o->control == HOST_CTL_WALK_SPEED || o->control == HOST_CTL_FOLLOW_DIST) fprintf(g_out, ",%g", (double) o->k);
     if (o->control == HOST_CTL_DROP_RNG || o->control == HOST_CTL_DROP_RNG_ACTOR) fprintf(g_out, ",%u", o->tick);
+    if (o->control == HOST_CTL_DROP_RNG_ACTOR) fprintf(g_out, ",%d", o->shift);
     if (o->control == HOST_CTL_SHIFT_INPUT || o->control == HOST_CTL_LATE_HIT) fprintf(g_out, ",%d", o->shift);
     if (f->esl >= 0) fprintf(g_out, " esl=%d", f->esl);
     for (unsigned i = 0; i < f->nactors; i++) fprintf(g_out, " actor=%02x@%u", f->actors[i].entry, f->actors[i].tick);
-    if (o->rng_feed) fprintf(g_out, " rng_feed=%s:%d", o->rng_feed, o->rng_offset);
+    if (o->rng_feed) fprintf(g_out, " rng_feed=%s:%d%s", o->rng_feed, o->rng_offset, o->stop_feed ? " stop_feed" : "");
     fputc('\n', g_out);
 }
 
@@ -235,18 +259,22 @@ extern "C" void host_rng_write(unsigned t, const unsigned* calls, int n)
     fputc('\n', g_out);
 }
 
-// The generator state at the start of each tick of an old logic trace (LT t=<tick> ... r=<state>).
-extern "C" int host_load_rng_feed(const char* path, unsigned short* states, unsigned char* have, unsigned max)
+// The generator state at the start of each tick of an old logic trace (LT t=<tick> n=.. r=<state> sy=.. sp=<Stop_flg>),
+// and the Stop_flg word the scenario left there.
+extern "C" int host_load_rng_feed(const char* path, unsigned short* states, unsigned* stops, unsigned char* have,
+                                  unsigned max)
 {
     FILE* f = fopen(path, "r");
     if (!f) { fprintf(stderr, "re4ref: cannot open the rng feed %s\n", path); return 0; }
     char line[1024];
     int n = 0;
     while (fgets(line, sizeof line, f)) {
-        unsigned t, nn, r;
-        if (sscanf(line, "LT t=%u n=%u r=%x", &t, &nn, &r) == 3 && t < max && !have[t]) {
+        unsigned t, nn, r, sy = 0, sp = 0;
+        const int got = sscanf(line, "LT t=%u n=%u r=%x sy=%x sp=%x", &t, &nn, &r, &sy, &sp);
+        if (got >= 3 && t < max && !have[t]) {
             states[t] = (unsigned short) r;
-            have[t] = 1;
+            stops[t] = got >= 5 ? sp : 0;
+            have[t] = got >= 5 ? 3 : 1;   // bit0: the generator, bit1: Stop_flg
             n++;
         }
     }

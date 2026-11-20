@@ -43,11 +43,11 @@ WEAPON02 := src/wep02/wep02.cpp src/wep02/objMauser.cpp
 # Actors (lane eng-host2; PLAYS_RIGHT.md "Actors"; closures in closure-map-actors.tsv):
 # Ashley as the partner: cSubChar (pl_npc.cpp) and the pl11 module's cSubAshley (enemy id 3, em/pl11).
 # One Ganado: the shared Ganado library em10.cpp with the per-type set files of the village square's
-# Ganado (em15, the bell fight) and the farm's (em12, the hay-fork view), the spawn list (em_set.cpp), the
+# Ganado (em15, the bell fight), the farm's (em12, the hay-fork view) and the hill's with Ashley (em16, r11d), the spawn list (em_set.cpp), the
 # enemy helpers (em_sub.cpp) and the damage records (dmg.cpp). Each module's REL entry (_prolog) is linked
 # in under its own name (MODNAME_prolog: the -D renames below; no source change), as wep02's is.
-ACTOR_GAME := src/game/pl_npc.cpp src/game/em_set.cpp src/game/em_sub.cpp src/game/dmg.cpp
-ACTOR_MODS := src/pl11/pl11.cpp src/em10/em10.cpp src/em12/em12_set.cpp src/em15/em15_set.cpp
+ACTOR_GAME := src/game/pl_npc.cpp src/game/em_set.cpp src/game/em_sub.cpp src/game/dmg.cpp src/game/em_dm_val.cpp
+ACTOR_MODS := src/pl11/pl11.cpp src/em10/em10.cpp src/em12/em12_set.cpp src/em15/em15_set.cpp src/em16/em16_set.cpp
 # The original services the actors reach that E1 did not (collision, routes, skeleton, math): the reference
 # keeps the original behaviour under the actors, as it does under the player.
 ACTOR_SERVICES := src/game/route_ck.cpp src/game/area.cpp
@@ -108,6 +108,9 @@ $(BUILD)/gen/em10_%.cpp: $(ROOT)/src/em10/%.cpp prep.py
 	@mkdir -p $(dir $@)
 	$(PY) prep.py copy $< $@
 $(BUILD)/gen/em12_%.cpp: $(ROOT)/src/em12/%.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/gen/em16_%.cpp: $(ROOT)/src/em16/%.cpp prep.py
 	@mkdir -p $(dir $@)
 	$(PY) prep.py copy $< $@
 $(BUILD)/gen/em15_%.cpp: $(ROOT)/src/em15/%.cpp prep.py
@@ -174,6 +177,7 @@ modname = -D_prolog=$(1)_prolog -D_epilog=$(1)_epilog -D_unresolved=$(1)_unresol
 $(BUILD)/%/game/pl11_pl11.o: MODFLAGS = $(call modname,pl11)
 $(BUILD)/%/game/em12_em12_set.o: MODFLAGS = $(call modname,em12)
 $(BUILD)/%/game/em15_em15_set.o: MODFLAGS = $(call modname,em15)
+$(BUILD)/%/game/em16_em16_set.o: MODFLAGS = $(call modname,em16)
 # em_sub.cpp declares AtSphereCapsuleCk under its C name with the float arguments first (the atari_init.h
 # idiom): fine where int and float arguments travel in separate registers, wrong on the i386 stack. Its
 # object's reference is renamed to the adapter that passes them on in at_sub.cpp's order (host_actors.cpp).

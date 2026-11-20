@@ -29,6 +29,7 @@ extern void (*EmInitFunc)(cEm* em);   // em.cpp
 extern "C" void pl11_prolog();        // the modules' REL entries, linked in under their own names (Makefile)
 extern "C" void em12_prolog();
 extern "C" void em15_prolog();
+extern "C" void em16_prolog();
 void SubCharInit(int type, Vec* pos, f32 ang);   // pl_sub.cpp
 
 namespace {
@@ -43,6 +44,7 @@ HostModule g_mods[] = {
     {3, "em/pl11.drs", pl11_prolog, 0, 0},     // Ashley (EmFileTbl[3]: em/pl11 + rel/pl11)
     {0x12, "em/em12.drs", em12_prolog, 0, 0},  // the farm's Ganados
     {0x15, "em/em15.drs", em15_prolog, 0, 0},  // the village square's Ganados
+    {0x16, "em/em16.drs", em16_prolog, 0, 0},  // the Ganados of the hill with Ashley (r11d)
 };
 const char* g_tree;
 }
@@ -110,6 +112,14 @@ extern "C" cEm* host_spawn_partner(const float* pos, float ang)
     if (!pSUB) host_log("actor: the partner was not created");
     else host_log("actor: partner id %02x at %08x", pSUB->id, (unsigned) (u32) pSUB);
     return pSUB;
+}
+
+// A partner command as the room scripts give one (pl_sub.cpp SubCharCtrl: 0 follow, 1 wait, ...).
+void SubCharCtrl(int mode, int flag);   // pl_sub.cpp
+extern "C" void host_sub_ctrl(int mode, int flag)
+{
+    SubCharCtrl(mode, flag);
+    host_log("partner: SubCharCtrl(%d, %d)", mode, flag);
 }
 
 // The actor created from list entry `entry` (em_set.cpp GetEmPtrFromList semantics: emset_no).
@@ -224,11 +234,11 @@ extern "C" void host_trace_actors(unsigned t)
 }
 
 // Control follow-dist: an engine whose partner keeps k times the original's distance to Leon while she
-// follows him (routine 1: cSubChar::moveMove): her ground offset from Leon is scaled after the tick.
+// follows him (routine 0/1: cSubChar::moveCore -> moveMove): her ground offset from Leon is scaled after the tick.
 extern "C" void host_control_follow(float k)
 {
     cEm* s = pSUB;
-    if (!s || !pPL || s->r_no_0 != 1) return;
+    if (!s || !pPL || s->r_no_0 != 0 || s->r_no_1 != 1) return;
     s->pos.x = pPL->pos.x + (s->pos.x - pPL->pos.x) * k;
     s->pos.z = pPL->pos.z + (s->pos.z - pPL->pos.z) * k;
 }

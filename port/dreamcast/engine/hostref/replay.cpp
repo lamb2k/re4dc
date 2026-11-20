@@ -41,6 +41,7 @@ extern "C" cEm* host_spawn_partner(const float* pos, float ang);
 extern "C" int host_hit(unsigned entry, unsigned type);
 extern "C" void host_trace_actors(unsigned t);
 extern "C" void host_control_follow(float k);
+extern "C" void host_sub_ctrl(int mode, int flag);
 void EmSetRoomInit();   // em_set.cpp
 
 static HostFixture g_fx;
@@ -294,11 +295,15 @@ int main(int argc, char** argv)
 
     // --rng-feed: the old run's generator state at the start of each tick (the reference's own actors
     // then draw the numbers the old game's actors drew, as long as they draw first in the tick)
+    // --stop-feed: also the Stop_flg word the old run's scenario left at each tick's start (its freezes: the
+    // scenario and event code are not hosted)
     static unsigned short feed[1u << 16];
+    static unsigned stops[1u << 16];
     static unsigned char have[1u << 16];
     if (g_opt.rng_feed) {
-        const int n = host_load_rng_feed(g_opt.rng_feed, feed, have, 1u << 16);
-        host_log("rng feed: %d ticks from %s (offset %d)", n, g_opt.rng_feed, g_opt.rng_offset);
+        const int n = host_load_rng_feed(g_opt.rng_feed, feed, stops, have, 1u << 16);
+        host_log("rng feed: %d ticks from %s (offset %d)%s", n, g_opt.rng_feed, g_opt.rng_offset,
+                 g_opt.stop_feed ? ", with Stop_flg" : "");
         if (n <= 0) return 2;
     }
 
@@ -308,7 +313,10 @@ int main(int argc, char** argv)
         host_rnd_owner = 0;
         if (g_opt.rng_feed) {
             const long ot = (long) t + g_opt.rng_offset;
-            if (ot >= 0 && ot < (1l << 16) && have[ot]) RndInit(feed[ot]);
+            if (ot >= 0 && ot < (1l << 16) && have[ot]) {
+                RndInit(feed[ot]);
+                if (g_opt.stop_feed && (have[ot] & 2)) pG->Stop_flg = stops[ot];
+            }
         }
         g_pad = pad_for(t);
         const Vec before = pPL->pos;
@@ -317,12 +325,14 @@ int main(int argc, char** argv)
         host_rnd_owner = 4;
         for (unsigned i = 0; i < g_fx.nactors; i++)
             if (g_fx.actors[i].tick == t && !g_fx.actors[i].post) host_spawn_entry(g_fx.actors[i].entry);
+        for (unsigned i = 0; i < g_fx.nctrl; i++)
+            if (g_fx.ctrls[i].tick == t) host_sub_ctrl(g_fx.ctrls[i].mode, g_fx.ctrls[i].flag);
         host_rnd_owner = 0;
         for (unsigned i = 0; i < g_fx.nhits; i++) {
             const unsigned at = g_fx.hits[i].tick + (g_opt.control == HOST_CTL_LATE_HIT ? g_opt.shift : 0);
             if (at == t) host_hit(g_fx.hits[i].entry, g_fx.hits[i].type);
         }
-        if (g_opt.control == HOST_CTL_DROP_RNG_ACTOR && t == g_opt.tick) host_rnd_drop_owner = 5;   // A k=0
+        if (g_opt.control == HOST_CTL_DROP_RNG_ACTOR && t == g_opt.tick) host_rnd_drop_owner = 5 + g_opt.shift;   // A k
         if (g_fx.god) pG->pl_life = pG->pl_life_max;   // the old fixtures' warp `god`
         PadRead();
         pG->Frame_cnt++;
@@ -367,7 +377,8 @@ int main(int argc, char** argv)
     if (g_opt.control == HOST_CTL_DROP_RNG && !rng_dropped)
         host_log("control drop-rng: no generator call at or after tick %u (nothing dropped)", g_opt.tick);
     if (g_opt.control == HOST_CTL_DROP_RNG_ACTOR && !host_rnd_dropped)
-        host_log("control drop-rng-actor: actor 0 made no generator call from tick %u (nothing dropped)", g_opt.tick);
+        host_log("control drop-rng-actor: actor %d made no generator call from tick %u (nothing dropped)", g_opt.shift,
+                 g_opt.tick);
     host_close_outputs();
     return 0;
 }

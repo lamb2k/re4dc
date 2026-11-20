@@ -43,6 +43,8 @@ struct HostFixture {
     int god;                  // the old fixtures' god mode: Leon's life refilled every tick (warp `god`)
     unsigned nhits;
     struct { unsigned tick; unsigned entry; unsigned type; } hits[16];   // a weapon hit on that actor
+    unsigned nctrl;
+    struct { unsigned tick; int mode, flag; } ctrls[16];   // partner commands (SubCharCtrl) before tick's pass
     unsigned nsub;            // partner placement after creation (resume-like): position and yaw
     float sub_pos[3];
     float sub_ang;
@@ -60,6 +62,7 @@ struct HostOptions {
     int shift;        // shift-input ticks, late-hit ticks
     const char* rng_feed;   // old logic trace: the generator state at each tick's start (LT r=)
     int rng_offset;         // its tick = reference tick + offset
+    int stop_feed;          // also take Stop_flg from it (the scenario's freezes, which the reference does not host)
 };
 // One hosted actor's line (A): every live enemy-list work other than the player, in alive-list order.
 struct HostActorRecord {
@@ -117,7 +120,7 @@ extern int host_rnd_drop_owner;              // control drop-rng-actor: the owne
 extern unsigned host_rnd_dropped;
 void host_actor_write(const HostActorRecord* r);
 void host_rng_write(unsigned t, const unsigned* calls, int n);
-int host_load_rng_feed(const char* path, unsigned short* states, unsigned char* have, unsigned max);
+int host_load_rng_feed(const char* path, unsigned short* states, unsigned* stops, unsigned char* have, unsigned max);
 // host_io.cpp
 int host_parse_args(int argc, char** argv, HostOptions* o);
 int host_parse_fixture(const char* path, HostFixture* f);

@@ -1,0 +1,22 @@
+# hill-ashley: Ashley as the partner in the old game's r11d benchmark warp (logicbudget bk-r11d: the hill path with
+# Ashley and the Ganados of chapter 2), on the hosted player, camera, partner and Ganado code (lane eng-host2).
+# Old run: logicbudget dec dt-lbt0-dec-bk11d (Flycast, LOGIC_TRACE with the decision trace). The old trace records
+# Ashley (enemy id 03) only as a position every 4th tick (LP lines): no angles, motion, routine or life.
+# The room code creates her in the pass that ends at t=185 (em/pl11 read, pl11 linked) together with the hill's
+# Ganados from enemy list 1: entries 0xdc (em3b, not hosted), 0xdf, 0xe0, 0xe1, 0xe3 (alive cap 4).
+# Tick n here = old t 184+n; Leon resumed as the old trace has him at t=184; Ashley placed where the old trace
+# first shows her (t=187), facing as Leon does (her yaw is not recorded).
+room 0x11d
+pos 20214 0 13952
+ang -1.8170
+weapon 2 0
+seed 0x0d37
+esl 1
+god
+resume 0x469dec04 0xc3851260 0x465a0026 0xbfe89375 2
+sub 0x469af7a1 0xc4045c61 0x4657f74f 0xbfe89375
+actor 0xdf 1 post
+actor 0xe0 1 post
+actor 0xe1 1 post
+actor 0xe3 1 post
+ticks 600
