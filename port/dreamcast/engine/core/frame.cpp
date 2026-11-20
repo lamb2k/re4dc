@@ -148,8 +148,9 @@ void e1_pace_end(E1Timing& tm)
 // of each change of the display address (the chip's page flip): picture k (tick k + 1) is flip k, and its interval is
 // flip k - flip k-1 in fields. This is the hardware's field count, not the software pacer. A headless image presents
 // no picture: its interval is then the tick's, the field number at the end of each tick's pace (mode "tick").
-// Control LATEPIC (boot option): picture 300 is held 40 ms after its scene is finished (inside no timed row but the
-// frame), so it must show as an interval over two fields.
+// Control LATEPIC (boot option): picture 300 is held 100 ms after its scene is finished (inside no timed row but the
+// frame), so picture 301 (tick 300 when headless) must show as the worst interval, at least five fields. A 40 ms hold
+// gave 3 or 4 fields, which the pacer's own 3-field intervals can equal (lanes/eng-e1f.md).
 extern "C" {
 void e1_fields_start_c(void);
 uint32_t e1_fields_now_c(void);
@@ -160,14 +161,14 @@ static int late_control;
 void e1_fields_start()
 {
     file_t f = fs_open("/cd/LATEPIC", O_RDONLY);
-    if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 40 ms after its scene (control)\n"); }
+    if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 100 ms after its scene (control)\n"); }
     e1_fields_start_c();
 }
 void e1_fields_late(unsigned tick)
 {
     if (!late_control || tick != 300) return;
     uint64_t t = timer_us_gettime64();
-    while (timer_us_gettime64() - t < 40000) {}
+    while (timer_us_gettime64() - t < 100000) {}
 }
 void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fields_now_c(); }
 // Fills each row's fields column and prints the window's line (pictures 41 to 640, as the selector and budget.py):

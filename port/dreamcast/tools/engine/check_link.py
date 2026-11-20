@@ -22,6 +22,15 @@ Allowed list format (one entry a line; '#' starts a comment):
     !<unit> <pattern> ...                      an exception inside an allowed unit: a matching function is NOT
                                                allowed even if another line allows it (service functions that
                                                live in a behaviour unit: view frustum, camera evaluation, ...)
+    ?<unit> <pattern> ...                      a service-name guard (lane eng-e1f): a function of a matching unit
+                                               whose name matches is NOT allowed, whatever allows it (a wildcard
+                                               or its own name), unless a "+" line marks it reviewed. It catches
+                                               a service function allowed by mistake when its name says what it is
+                                               (sound, effect, pose, camera, drawing, collision, memory, tables)
+    +<unit> <pattern> ...                      reviewed: a decision whose name matches a guard (the guard skips it)
+
+A pattern matches the demangled name, the mangled name, or the base name (the demangled name without its argument
+list and clone suffix: "em10NeckMove" matches "em10NeckMove(cEm10*) [clone .part.0]").
 
 --waive FILE: a second list in the same format whose entries pass but are reported as waived (today's known
 remaining service functions, for the control: with them waived the check passes, and one more linked service
@@ -146,7 +155,8 @@ def functions(sections):
 
 
 def load_list(path):
-    """-> (rules, groups): rules = [(neg, unit_glob, [patterns], group)], groups = {group: reason}."""
+    """-> (rules, groups): rules = [(kind, unit_glob, [patterns], group)], kind '' allow, '!' exception, '?' guard,
+    '+' reviewed; groups = {group: reason}."""
     rules = []
     groups = OrderedDict()
     group = '(no group)'
@@ -162,28 +172,40 @@ def load_list(path):
             s = s.split('#', 1)[0].strip()
             if not s:
                 continue
-            neg = s.startswith('!')
-            if neg:
+            kind = s[0] if s[0] in '!?+' else ''
+            if kind:
                 s = s[1:].strip()
             parts = s.split()
             if len(parts) < 2:
                 sys.exit(f'check_link: {path}:{n}: want "<unit> <pattern>..."')
-            rules.append((neg, parts[0], parts[1:], group))
+            rules.append((kind, parts[0], parts[1:], group))
     return rules, groups
 
 
+def base_name(dem):
+    """'em10NeckMove(cEm10*) [clone .part.0]' -> 'em10NeckMove'; 'cEm10::move()' -> 'cEm10::move'."""
+    b = re.sub(r' \[clone [^]]*\]$', '', dem)
+    i = b.find('(')
+    return b[:i] if i > 0 else b
+
+
 def match(rules, f):
-    """-> the group of the first allowing rule, unless an exception (!) matches; None if not allowed."""
+    """-> the group of the first allowing rule, unless an exception (!) matches, or a guard (?) matches a function no
+    reviewed line (+) names; None if not allowed (f['why'] says 'guard' when a guard refused it)."""
+    names = (f['dem'], f['name'], base_name(f['dem']))
     def hit(r):
         _, ug, pats, _ = r
         if not fnmatch.fnmatchcase(f['unit'], ug):
             return False
-        return any(fnmatch.fnmatchcase(f['dem'], p) or fnmatch.fnmatchcase(f['name'], p) for p in pats)
+        return any(fnmatch.fnmatchcase(n, p) for n in names for p in pats)
     for r in rules:
-        if r[0] and hit(r):
+        if r[0] == '!' and hit(r):
             return None
     for r in rules:
-        if not r[0] and hit(r):
+        if r[0] == '' and hit(r):
+            if any(g[0] == '?' and hit(g) for g in rules) and not any(v[0] == '+' and hit(v) for v in rules):
+                f['why'] = 'guard'
+                return None
             return r[3]
     return None
 
@@ -220,7 +242,7 @@ def main():
             f['group'] = 'WAIVED'
             waived.append(f)
             continue
-        f['group'] = 'SERVICE'
+        f['group'] = 'SERVICE(guard)' if f.get('why') == 'guard' else 'SERVICE'
         bad.append(f)
     by_unit = defaultdict(list)
     for f in bad:
@@ -232,7 +254,9 @@ def main():
     if not a.quiet:
         print(f'check_link: {a.map}: {len(fns)} original functions kept; allowed {len(allowed)} '
               f'({sum(f["size"] for f in allowed)} B), waived {len(waived)} ({sum(f["size"] for f in waived)} B), '
-              f'SERVICE {len(bad)} ({sum(f["size"] for f in bad)} B): {verdict}')
+              f'SERVICE {len(bad)} ({sum(f["size"] for f in bad)} B'
+              + (f', {sum(1 for f in bad if f.get("why") == "guard")} by the name guard' if any(f.get('why') == 'guard' for f in bad) else '')
+              + f'): {verdict}')
         for u in sorted(by_unit, key=lambda u: -sum(f['size'] for f in by_unit[u])):
             fl = by_unit[u]
             print(f'  {u}: {len(fl)} functions, {sum(f["size"] for f in fl)} B: '
@@ -247,6 +271,7 @@ def main():
         rep = {'map': a.map, 'allowed_list': a.allowed, 'waive': a.waive, 'verdict': verdict,
                'functions': len(fns), 'allowed': len(allowed), 'waived': len(waived), 'service': len(bad),
                'service_bytes': sum(f['size'] for f in bad),
+               'service_by_guard': sorted(f['dem'] for f in bad if f.get('why') == 'guard'),
                'by_unit': {u: {'functions': len(fl), 'bytes': sum(f['size'] for f in fl),
                                'names': sorted(f['dem'] for f in fl), 'mangled': sorted(f['name'] for f in fl)}
                            for u, fl in sorted(by_unit.items())},

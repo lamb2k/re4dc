@@ -28,8 +28,8 @@
 # FAILED ("missing ..."); with --no-precheck the selector does not check the files and the program itself must refuse
 # (for example --drop BOSSB/FARM.PAK: "M1 native pack REFUSED"). --scenes picks a subset (short control discs).
 # --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
-# images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 40 ms: every E1-family
-# scene must then show one interval over two fields in its summary).
+# images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
+# scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
 #
 # Private inputs (never in git; override with the environment): PRISTINE (the little-endian game tree: st1, etc,
 # em, dc/mot), LKG (E0 packs and visibility), HILL_PAK, HILL_VIS, FIGHT_PAK, FIGHT_FXMAP, BOSS_PAK, BOSS_VIS,
