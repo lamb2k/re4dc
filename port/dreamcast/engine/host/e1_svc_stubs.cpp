@@ -20,3 +20,9 @@ void PlClothMoveGirl(cModel* pl, PlCloth*, PlCloth*, PlCloth*) { e1_stub_hit("Pl
 void ShapeSet(void*, int a, void*, int) { e1_stub_hit("ShapeSet (shape keys: not drawn)", a); }
 void ShapeEnd(void*) { e1_stub_hit("ShapeEnd (shape keys: not drawn)", 0); }
 extern "C" int ShapeMove(cModelInfo*) { e1_stub_hit("ShapeMove (shape keys: not drawn)", 0); return 0; }
+// The pendulum cloth of other models (El Gigante's loincloth and ropes, em2b): no native service; the cloth bones
+// keep their animated pose (PenClothSet's skip-blend bits are not set, so the skeleton blends them as other bones).
+#include "pendulum.h"
+void PenClothSet(cModel*, PenCloth*, f32) { e1_stub_hit("PenClothSet (cloth: no native service)", 0); }
+void PenClothMove(cModel*, PenCloth*) { e1_stub_hit("PenClothMove (cloth: no native service)", 0); }
+void PenClothMove3(cModel*, PenCloth*) { e1_stub_hit("PenClothMove3 (cloth: no native service)", 0); }
