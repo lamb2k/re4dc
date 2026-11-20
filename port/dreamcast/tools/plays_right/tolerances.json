@@ -9,5 +9,7 @@
   "cam": 1.0,
   "_cam": "units; camera eye and target, per axis",
   "cam_fovy_deg": 0.1,
+  "event_ticks": 3,
+  "_event_ticks": "outcome.py (lane eng-svc5): a kill, a hit, a spawn or removal, an event-word change and the room clear may come this many ticks apart (0.1 s at 30 ticks a second); amounts and order are exact. A proposal for the integrator: on the PC every native pair is 0 apart",
   "_exact": "motion id, motion state, routine (r_no_0..3), discrete hash and generator state are compared exactly"
 }

@@ -106,15 +106,21 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 # sections 23 on). SVC4_OBJS are compiled with the hosted units' flags; every global symbol they define is made weak in
 # the original units of SVC4_UNITS (weak4/), so each call reaches the native body; svc4/svc4_units.sh reports which
 # original functions of those units the native link still keeps.
-SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp
+# lane eng-svc5 (round 5): the math helpers (services/math: math_sub, sub2) and the garments (services/cloth/garment:
+# pl_cloth), linked the same way (SERVICES.md sections 32, 33)
+SVC5_SRCS := math/math_svc.cpp cloth/garment.cpp
+SVC5_UNITS := math_sub sub2 pl_cloth
+SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp              $(SVC5_SRCS)
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
-SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad
+SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad $(SVC5_UNITS)
 # SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's rail spline,
 # cam_sys's orientation matrices, cam_extra's attached camera; svc4_split.txt names them): the same weak copy, and
 # svc4_units.sh checks only the named functions
 SVC4_SPLIT := cam_ctrl cam_sys cam_extra
 SVC4_ALL := $(SVC4_UNITS) $(SVC4_SPLIT)
-SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_ENG)/$(d))
+SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_ENG)/$(d)) -I$(SHZ)/include
+# SH4ZAM's headers include <math.h>: the C++ wrapper needs the target-neutral c++config.h of the 64-bit tree (as PCFLAGS)
+SVC4_INC += -isystem /usr/include/x86_64-linux-gnu/c++/13
 define SVC4_RULE
 $(NAT)/svc4/$(notdir $(1:.cpp=.o)): $(SVC_ENG)/$(1) $(wildcard $(SVC_ENG)/$(dir $(1))*.h)
 	@mkdir -p $$(dir $$@)
@@ -173,7 +179,10 @@ $(BUILD)/svc/svc_io.o: svc/svc_io.cpp hostref.h
 $(BUILD)/svc/svc4_dump.o: svc/svc4_dump.cpp $(wildcard $(SVC_ENG)/*/*.h) hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
-SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o
+$(BUILD)/svc/svc5_dump.o: svc/svc5_dump.cpp $(wildcard $(SVC_ENG)/*/*.h) hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	@mkdir -p $(dir $@)
@@ -226,3 +235,38 @@ $(KT)/cloth_ktest: $(KT)/cloth_kernel_t.o $(KT)/cloth_kernel_test.o $(KT_SDK) $(
 cloth_ktest: $(KT)/cloth_ktest
 	$(KT)/cloth_ktest
 .PHONY: cloth_ktest
+
+# ---- mathtest (lane eng-svc5): the native math helpers against math_sub.cpp / sub2.cpp on random inputs, bit for bit ----
+# The original objects are linked with every global symbol they define renamed orig_<symbol> (references included), so
+# the two run side by side in one program. RE4_SVC_CONTROL=mathsin|mathmuku sets the native control (must FAIL).
+MT := $(BUILD)/mathtest
+MT_UNITS := math_sub sub2
+$(MT)/orig.syms: $(foreach u,$(MT_UNITS),$(BUILD)/plain/game/$(u).o) svc/svc.mk
+	@mkdir -p $(MT)
+	nm -g --defined-only $(foreach u,$(MT_UNITS),$(BUILD)/plain/game/$(u).o) | awk 'NF == 3 {print $$3 " orig_" $$3}' | sort -u > $@
+$(MT)/orig_%.o: $(BUILD)/plain/game/%.o $(MT)/orig.syms
+	objcopy --redefine-syms=$(MT)/orig.syms $< $@
+$(MT)/mathtest.o: svc/mathtest.cpp $(SVC_ENG)/math/math_svc.h hostref.h
+	@mkdir -p $(MT)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -isystem /usr/include/x86_64-linux-gnu/c++/13 -c $< -o $@
+$(MT)/mathtest: $(MT)/mathtest.o $(NAT)/svc4/math_svc.o $(foreach u,$(MT_UNITS),$(MT)/orig_$(u).o) $(plain_SDK_OBJS) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+mathtest: $(MT)/mathtest
+.PHONY: mathtest
+
+# ---- garmenttest (lane eng-svc5): the native garments against pl_cloth.cpp, every character and costume, with the
+# cloth service's entry points logged (stubs) and Ashley's lapel pose on a synthetic model; the original object's global
+# symbols renamed orig_<symbol>. RE4_SVC_CONTROL=garmenthair|garmentskirt|lapelrate sets the native control (must FAIL).
+GT := $(BUILD)/garmenttest
+$(GT)/orig.syms: $(BUILD)/plain/game/pl_cloth.o svc/svc.mk
+	@mkdir -p $(GT)
+	nm -g --defined-only $< | awk 'NF == 3 {print $$3 " orig_" $$3}' | sort -u > $@
+$(GT)/orig_pl_cloth.o: $(BUILD)/plain/game/pl_cloth.o $(GT)/orig.syms
+	objcopy --redefine-syms=$(GT)/orig.syms $< $@
+$(GT)/garmenttest.o: svc/garmenttest.cpp $(SVC_ENG)/cloth/garment.h hostref.h
+	@mkdir -p $(GT)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -isystem /usr/include/x86_64-linux-gnu/c++/13 -c $< -o $@
+$(GT)/garmenttest: $(GT)/garmenttest.o $(NAT)/svc4/garment.o $(NAT)/svc4/math_svc.o $(GT)/orig_pl_cloth.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+garmenttest: $(GT)/garmenttest
+.PHONY: garmenttest
