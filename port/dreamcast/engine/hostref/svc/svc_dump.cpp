@@ -103,47 +103,6 @@ void dump_model(cModel* m, u32 code)
 }
 }   // namespace
 
-// the engine's service memory (svc_io.cpp: its own 4 MiB mapping at 0x8E000000, outside the game's arena): the
-// skeleton pool (1 MiB, tables come and go with the actors) and the room's collision tables above it
-extern "C" void* svc_region(u32* bytes);
-static u8* g_carve;
-static u32 g_carve_left;
-extern "C" void* svc_pool_base(u32* bytes)
-{
-    u32 all;
-    u8* r = (u8*) svc_region(&all);
-    *bytes = 0x00100000;
-    g_carve = r + *bytes;
-    g_carve_left = all - *bytes;
-    return r;
-}
-extern "C" void* svc_pool_carve(u32 bytes)
-{
-    if (!g_carve) {
-        u32 b;
-        svc_pool_base(&b);
-    }
-    bytes = (bytes + 31u) & ~31u;
-    if (bytes > g_carve_left) return 0;
-    void* p = g_carve;
-    g_carve += bytes;
-    g_carve_left -= bytes;
-    return p;
-}
-
-// before the room is set up (the tables are made while the player is constructed)
-__attribute__((constructor)) static void svc_options()
-{
-    const char* c = svc_env("RE4_SVC_CONTROL");
-    if (c && *c) {
-        if (svc_prefix(c, "parent=") && &skel_control_parent) skel_control_parent = svc_atoi(c + 7);
-        if (svc_prefix(c, "noik") && &skel_control_no_ik) skel_control_no_ik = 1;
-        if (svc_prefix(c, "floor=") && &col_control_floor) col_control_floor = (f32) svc_atof(c + 6);
-    }
-    const char* p = svc_env("RE4_SVC_POISON");
-    if (&skel_poison) skel_poison = !(p && *p == '0');
-}
-
 extern "C" void host_svc_ready()
 {
     const char* c = svc_env("RE4_SVC_CONTROL");
@@ -179,9 +138,9 @@ extern "C" void host_svc_finish()
         if (!f) return;
         const SkelCounters& s = skel_cnt;
         fprintf(f, "skel entries %u mat_local %u mat_world %u mat_world_slow %u xmtrx_loads %u add_rot %u samples %u "
-                   "hokan_bones %u blend_bones %u ik_chains %u palette %u serve_bones %u pull_bones %u poison_bones %u parent_mismatch %u\n",
+                   "hokan_bones %u blend_bones %u ik_chains %u palette %u serve_bones %u pull_bones %u poison_bones %u parent_mismatch %u serve_ancestors %u lost_writes %u\n",
                 s.entries, s.mat_local, s.mat_world, s.mat_world_slow, s.xmtrx_loads, s.add_rot, s.samples, s.hokan_bones,
-                s.blend_bones, s.ik_chains, s.palette, s.serve_bones, s.pull_bones, s.poison_bones, s.parent_mismatch);
+                s.blend_bones, s.ik_chains, s.palette, s.serve_bones, s.pull_bones, s.poison_bones, s.parent_mismatch, s.serve_ancestors, s.lost_writes);
         if (&col_cnt) {
             const ColCounters& k = col_cnt;
             fprintf(f, "col bakes %u late_bakes %u line_queries %u sphere_queries %u nodes_tested %u leaves %u tris_line %u "
@@ -193,7 +152,7 @@ extern "C" void host_svc_finish()
             SkelTable* t = skel_table_at(i);
             fprintf(f, "table %u model %08x bones %u bytes %u mailbox %u:", i, (u32) t->model, t->n, t->bytes, t->nMbox);
             for (u32 b = 0; b < t->n; b++)
-                if (t->mbox[b]) fprintf(f, " %u", b);
+                if (t->mbox[b]) fprintf(f, " %u%s", b, t->mbox[b] == 2 ? "a" : "");
             fprintf(f, "\n");
         }
         fclose(f);

@@ -98,3 +98,27 @@ $(NAT)/re4ref: $(plain_PC_OBJS) $(plain_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK
 odump: $(ODU)/re4ref
 native: $(NAT)/re4ref
 .PHONY: odump native
+
+# ---- ncensus: the native build with the census (calls, memory and fields, as make census for the reference) ----
+NCEN := $(BUILD)/ncensus
+NCENSUS_S := $(NAT)/weak/model.o $(NAT)/weak/motion.o $(NAT)/weak/atari.o $(NAT)/skel.o $(NAT)/col.o \
+             $(foreach u,cMotBase shape pl_cloth at_mod at_sub at_sub2 atariInfo route_ck area,$(BUILD)/plain/game/$(u).o)
+$(NCEN)/wraps.flags: $(NATIVE_GAME_OBJS) $(NAT)/skel.o $(NAT)/col.o $(NAT)/skel_xm.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS) svc/gen_wraps.py
+	@mkdir -p $(NCEN)
+	$(PY) svc/gen_wraps.py $(NCEN)/wraps.S $(NCEN)/wrapnames.cpp $@ $(foreach o,$(NCENSUS_S),S:$(o)) \
+	    $(foreach u,$(CENSUS_M_UNITS),M:$(BUILD)/plain/game/$(u).o) M:$(NAT)/skel_xm.o \
+	    $(foreach o,$(plain_SDK_OBJS) $(plain_LIBM_OBJS),M:$(o))
+$(NCEN)/wraps.S $(NCEN)/wrapnames.cpp: $(NCEN)/wraps.flags
+$(NCEN)/wraps.o: $(NCEN)/wraps.S
+	$(CC) -m32 -c $< -o $@
+$(NCEN)/wrapnames.o: $(NCEN)/wrapnames.cpp
+	$(CXX) -m32 -c $< -o $@
+$(NCEN)/re4ref: $(plain_PC_OBJS) $(plain_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) $(NAT)/skel.o \
+                $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/shz_xmtrx_sw.o $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/svc/svc_io.o \
+                $(NCEN)/wraps.o $(NCEN)/wrapnames.o aliases.ld
+	$(CC) -o $@ $(plain_PC_OBJS) $(plain_HG_OBJS) $(CEN)/svc_trace.o $(CEN)/svc_glue.o $(BUILD)/svc/svc_io.o $(NCEN)/wraps.o \
+	    $(NCEN)/wrapnames.o $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) \
+	    $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $$(cat $(NCEN)/wraps.flags) -Wl,--wrap=host_fixed \
+	    -Wl,-Map=$(NCEN)/re4ref.map
+ncensus: $(NCEN)/re4ref
+.PHONY: ncensus

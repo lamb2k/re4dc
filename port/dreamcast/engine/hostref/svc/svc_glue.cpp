@@ -38,8 +38,12 @@ void own_chain(const cModel* m, unsigned code, unsigned t)
 }
 }   // namespace
 
+extern "C" void col_bake_all(void) __attribute__((weak));        // native builds
+extern "C" void skel_publish_all(void) __attribute__((weak));
+
 extern "C" void host_svc_ready()
 {
+    if (col_bake_all) col_bake_all();
     SvcRegion r[SVC_REGIONS];
     __builtin_memset(r, 0, sizeof r);
     r[SVC_R_PARTS].lo = (u32) PartsMgr.pArray;
@@ -59,6 +63,7 @@ extern "C" void host_svc_ready()
 
 extern "C" void host_svc_tick(unsigned t, int begin)
 {
+    if (!begin && skel_publish_all) skel_publish_all();   // the palette, once a tick (traced: native work)
     if (begin) {
         __builtin_memset(g_owner, 128, sizeof g_owner);
         __builtin_memset(g_bone, 255, sizeof g_bone);

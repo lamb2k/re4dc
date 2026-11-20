@@ -165,12 +165,49 @@ void poison_record(cParts* r)
     skel_cnt.poison_bones++;
 }
 
+// the check build's copy of what an ancestor record was given (21 floats a bone): a later difference is a write the
+// table would not take back (counted; must stay 0)
+void shadow_ancestor(SkelTable* t, u32 b)
+{
+    if (!t->shadow) return;
+    cParts* r = t->rec[b];
+    f32* d = t->shadow + 21 * b;
+    memcpy(d, r->mat, 48);
+    d[12] = r->world.x; d[13] = r->world.y; d[14] = r->world.z;
+    d[15] = r->r_scale.x; d[16] = r->r_scale.y; d[17] = r->r_scale.z;
+    d[18] = r->scale.x; d[19] = r->scale.y; d[20] = r->scale.z;
+}
+void check_ancestor(SkelTable* t, u32 b)
+{
+    if (!t->shadow) return;
+    cParts* r = t->rec[b];
+    const f32* d = t->shadow + 21 * b;
+    f32 now[21];
+    memcpy(now, r->mat, 48);
+    now[12] = r->world.x; now[13] = r->world.y; now[14] = r->world.z;
+    now[15] = r->r_scale.x; now[16] = r->r_scale.y; now[17] = r->r_scale.z;
+    now[18] = r->scale.x; now[19] = r->scale.y; now[20] = r->scale.z;
+    if (__builtin_memcmp(now, d, sizeof now) != 0) skel_cnt.lost_writes++;
+}
+void serve_ancestor(SkelTable* t, u32 b)
+{
+    cParts* r = t->rec[b];
+    memcpy(r->mat, t->world[b].m, 48);
+    r->r_scale.x = t->world[b].rs[0];
+    r->r_scale.y = t->world[b].rs[1];
+    r->r_scale.z = t->world[b].rs[2];
+    const u32 c = t->cap;
+    const f32* s = t->soa;
+    r->world.x = s[SK_WX * c + b]; r->world.y = s[SK_WY * c + b]; r->world.z = s[SK_WZ * c + b];
+    r->scale.x = s[SK_SX * c + b]; r->scale.y = s[SK_SY * c + b]; r->scale.z = s[SK_SZ * c + b];
+    shadow_ancestor(t, b);
+    skel_cnt.serve_ancestors++;
+}
 void serve(SkelTable* t, u32 b)
 {
     cParts* r = t->rec[b];
     memcpy(r->mat, t->world[b].m, 48);
     memcpy(r->l_mat, t->lmat[b].m, 48);
-    memcpy(r->prevMat, t->prev[b].m, 48);
     r->r_scale.x = t->world[b].rs[0];
     r->r_scale.y = t->world[b].rs[1];
     r->r_scale.z = t->world[b].rs[2];
@@ -191,7 +228,6 @@ void pull(SkelTable* t, u32 b)
     cParts* r = t->rec[b];
     memcpy(t->world[b].m, r->mat, 48);
     memcpy(t->lmat[b].m, r->l_mat, 48);
-    memcpy(t->prev[b].m, r->prevMat, 48);
     t->world[b].rs[0] = r->r_scale.x;
     t->world[b].rs[1] = r->r_scale.y;
     t->world[b].rs[2] = r->r_scale.z;
@@ -215,27 +251,36 @@ struct Scope {
     explicit Scope(SkelTable* tt) : t(tt)
     {
         skel_cnt.entries++;
-        if (t) refresh_roots(t);
-        if (t && t->nMbox)
-            for (u32 b = 0; b < t->n; b++)
-                if (t->mbox[b]) pull(t, b);
+        if (!t) return;
+        refresh_roots(t);
+        for (u32 i = 0; i < t->nMbox; i++) {
+            const u32 b = t->mlist[i];
+            if (t->mbox[b] == 1) pull(t, b);
+            else check_ancestor(t, b);
+        }
     }
     ~Scope()
     {
-        if (t && t->nMbox)
-            for (u32 b = 0; b < t->n; b++)
-                if (t->mbox[b]) serve(t, b);
+        if (!t) return;
+        for (u32 i = 0; i < t->nMbox; i++) {
+            const u32 b = t->mlist[i];
+            if (t->mbox[b] == 1) serve(t, b);
+            else serve_ancestor(t, b);
+        }
     }
 };
 
 void mailbox_add(SkelTable* t, u32 b)
 {
-    // the bone and its ancestors: code reaches a parent through cCoord::pParent
-    while (b < t->n && !t->mbox[b]) {
-        t->mbox[b] = 1;
-        t->nMbox++;
-        serve(t, b);
-        b = t->parent[b];
+    if (b >= t->n || t->mbox[b] == 1) return;
+    if (!t->mbox[b]) t->mlist[t->nMbox++] = (u8) b;
+    t->mbox[b] = 1;   // direct: full record both ways
+    serve(t, b);
+    // its ancestors: code reaches a parent through cCoord::pParent (read)
+    for (u32 a = t->parent[b]; a < t->n && !t->mbox[a]; a = t->parent[a]) {
+        t->mlist[t->nMbox++] = (u8) a;
+        t->mbox[a] = 2;
+        serve_ancestor(t, a);
     }
 }
 
@@ -345,16 +390,21 @@ void world_calc(SkelTable* t)
         Vec wp;
         PSMTXMultVec(pr.m, &tmp, &wp);
         if (pr.rs[0] != pr.rs[1] || pr.rs[1] != pr.rs[2]) {
-            Mtx m1;
+            // a non-uniform parent scale: P S^-1 L S (the original's two scale concatenations, as column scales
+            // of XMTRX). Blended poses make r_scale's three components differ by rounding, so most bones of a
+            // blended pose come here. XMTRX's translation is then not the world position: the next bone reloads.
             Vec sc;
             sc.x = (pr.rs[0] != 0.0f) ? 1.0f / pr.rs[0] : 0.0f;
             sc.y = (pr.rs[1] != 0.0f) ? 1.0f / pr.rs[1] : 0.0f;
             sc.z = (pr.rs[2] != 0.0f) ? 1.0f / pr.rs[2] : 0.0f;
-            PSMTXScale(m1, sc.x, sc.y, sc.z);
-            PSMTXConcat(pr.m, m1, m1);
-            PSMTXConcat(m1, t->lmat[b].m, w.m);
-            PSMTXScale(m1, pr.rs[0], pr.rs[1], pr.rs[2]);
-            PSMTXConcat(w.m, m1, w.m);
+            if (pr.bone < 0 || pr.bone != inX) {
+                skel_xm_load_3x4(&pr.m[0][0]);
+                skel_cnt.xmtrx_loads++;
+            }
+            skel_xm_apply_scale(sc.x, sc.y, sc.z);
+            skel_xm_apply_3x4(&t->lmat[b].m[0][0]);
+            skel_xm_apply_scale(pr.rs[0], pr.rs[1], pr.rs[2]);
+            skel_xm_store_3x4(&w.m[0][0]);
             skel_cnt.mat_world_slow++;
             inX = -2;
         } else {
@@ -1090,6 +1140,8 @@ SkelTable* table_create(cModel* m)
     const u32 oHist = off; off = align32(off + 36 * n);
     const u32 oParent = off; off = align32(off + cap);
     const u32 oMbox = off; off = align32(off + cap);
+    const u32 oMlist = off; off = align32(off + cap);
+    const u32 oShadow = off; off = align32(off + (skel_poison ? 4 * 21 * n : 0));
     const u32 oIk = off; off = align32(off + sizeof(SkelIk) * SKEL_MAX_IK);
     u8* blk = (u8*) pool_alloc(off);
     if (!blk) return 0;
@@ -1109,6 +1161,8 @@ SkelTable* table_create(cModel* m)
     t->hist = (u16*) (blk + oHist);
     t->parent = blk + oParent;
     t->mbox = blk + oMbox;
+    t->mlist = blk + oMlist;
+    t->shadow = skel_poison ? (f32*) (blk + oShadow) : 0;
     t->ik = (SkelIk*) (blk + oIk);
     for (u32 i = 0; i < SKEL_MAX_IK; i++) t->ikOf[i] = 0xFF;
     u32 b = 0;

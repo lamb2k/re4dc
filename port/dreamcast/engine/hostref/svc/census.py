@@ -19,14 +19,14 @@ import subprocess
 import sys
 
 UNIT_KIND = {}
-for u in "model motion cMotBase ik shape".split():
+for u in "model motion cMotBase ik shape skel".split():
     UNIT_KIND[u] = "skeleton"
 UNIT_KIND["pl_cloth"] = "cloth"
-for u in "atari at_mod at_sub at_sub2 atariInfo".split():
+for u in "atari at_mod at_sub at_sub2 atariInfo col".split():
     UNIT_KIND[u] = "collision"
 for u in "route_ck area".split():
     UNIT_KIND[u] = "routes"
-for u in "math_sub sub2 pmtx".split():
+for u in "math_sub sub2 pmtx skel_xm".split():
     UNIT_KIND[u] = "math"
 
 # cParts / cModel fields (include/model.h): (offset, size, name)

@@ -15,7 +15,9 @@
 //   ikAng   [cap]   4 B   MotionParts::ikAng
 //   hist    [n]    36 B   key history (MotionParts::hist, 6 channels x 3 axes, u16)
 //   parent  [cap]   1 B   parent bone (0xFF the model, 0xFE an outside coordinate: extParent)
-//   mbox    [cap]   1 B   mailbox: the cParts record is served (written after every evaluation, read back before)
+//   mbox    [cap]   1 B   mailbox: 1 the record is served after every evaluation and read back before (a bone code
+//                         outside asked for), 2 served only (its ancestors: reached through pParent, read)
+//   mlist   [cap]   1 B   the mailbox bones, in the order they joined
 //   ik      [nIk]  96 B   IK chains (IkParts of the root: plane matrix, axis, direction)
 //
 // The cParts records stay (the behaviour holds pointers to them and walks pList); a record is the mailbox of its
@@ -80,10 +82,12 @@ struct SkelTable {
     u8* mbox;
     SkelIk* ik;
     cCoord* extParent;    // the root's parent when it is not this model (cModel::setParent)
+    u8* mlist;            // [nMbox] the mailbox bones
+    f32* shadow;          // check build: what each ancestor record was given (21 floats a bone)
     u32 nMbox;
     u32 stamp;            // tick of the last publish
     u8 ikOf[SKEL_MAX_IK]; // unused slots 0xFF
-    u32 pad[12];
+    u32 pad[10];
 
     f32* row(int r) { return soa + r * cap; }
 };
@@ -98,7 +102,7 @@ SkelTable* skel_table_at(u32 i);
 // counters (svc census and the cost indicator)
 struct SkelCounters {
     u32 mat_local, mat_world, mat_world_slow, xmtrx_loads, add_rot, samples, hokan_bones, blend_bones, ik_chains,
-        palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch;
+        palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch, serve_ancestors, lost_writes;
 };
 extern SkelCounters skel_cnt;
 // controls (lane eng-svc: each must make the equivalence check fail)

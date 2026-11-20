@@ -54,7 +54,7 @@ def axes_deg(a, b):
 
 
 def compare_bones(ra, rb, tol_pos, tol_deg):
-    res = {"ticks": 0, "bones": 0, "bit_identical_bones": 0, "max_pos": 0.0, "max_deg": 0.0, "max_pal_pos": 0.0,
+    res = {"ticks": 0, "bones": 0, "bit_identical_bones": 0, "equal_bones": 0, "max_pos": 0.0, "max_deg": 0.0, "max_pal_pos": 0.0,
            "max_pal_deg": 0.0, "first": None, "over": 0, "missing": 0}
     for t in sorted(set(ra) | set(rb)):
         if t not in ra or t not in rb:
@@ -73,6 +73,8 @@ def compare_bones(ra, rb, tol_pos, tol_deg):
             a, b = ma[code].astype(np.float64), mb[code].astype(np.float64)
             res["bones"] += a.shape[0]
             res["bit_identical_bones"] += int(np.all(ma[code].view("<u4") == mb[code].view("<u4"), axis=1).sum())
+            # equal as numbers (+0 and -0 equal: the C matrix library and XMTRX differ only in the sign of exact zeros)
+            res["equal_bones"] += int(np.all((ma[code] == mb[code]) | (np.isnan(ma[code]) & np.isnan(mb[code])), axis=1).sum())
             # world translation (matrix column 3), world position, palette translation
             ta = a[:, [3, 7, 11]]; tb = b[:, [3, 7, 11]]
             wa = a[:, 12:15]; wb = b[:, 12:15]
@@ -161,8 +163,8 @@ def main():
     out = {"verdict": "PASS" if ok else "FAIL", "tolerances": opt, "bones": bones, "collision": col}
     if js:
         json.dump(out, open(js, "w"), indent=1)
-    print("%s  bones: %d ticks, %d bone-ticks, %d bit-identical, max pos %.6g u, max axis %.6g deg, palette %.6g u / %.6g deg, over %d%s"
-          % (out["verdict"], bones["ticks"], bones["bones"], bones["bit_identical_bones"], bones["max_pos"], bones["max_deg"],
+    print("%s  bones: %d ticks, %d bone-ticks, %d bit-identical, %d equal, max pos %.6g u, max axis %.6g deg, palette %.6g u / %.6g deg, over %d%s"
+          % (out["verdict"], bones["ticks"], bones["bones"], bones["bit_identical_bones"], bones["equal_bones"], bones["max_pos"], bones["max_deg"],
              bones["max_pal_pos"], bones["max_pal_deg"], bones["over"],
              ", first %s" % json.dumps(bones["first"]) if bones["first"] else ""))
     print("      collision: %d/%d queries, %d identical, max point %.6g u, over %d, kinds %s%s"

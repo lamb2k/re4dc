@@ -57,6 +57,7 @@ unsigned actor_of(unsigned a)
     if (g_part_owner && a >= g_part_lo && a < g_part_lo + g_part_n * g_part_stride) return g_part_owner[(a - g_part_lo) / g_part_stride];
     return kNone;
 }
+extern uint32_t g_svc_lo, g_svc_hi;
 // the data loads (host_fixed, wrapped in this build): archives by kind
 struct Load { uint32_t lo, hi; int reg; };
 Load g_loads[64];
@@ -68,6 +69,7 @@ int region_of(unsigned a)
     for (unsigned i = 0; i < g_nloads; i++)
         if (a >= g_loads[i].lo && a < g_loads[i].hi) return g_loads[i].reg;
     if (a >= HOST_ARENA_BASE + 0x10000u && a < HOST_ARENA_BASE + HOST_ARENA_SIZE - 0x00600000u) return SVC_R_HEAP;
+    if (a >= g_svc_lo && a < g_svc_hi) return SVC_R_SVC;
     return SVC_R_OTHER;
 }
 
@@ -95,6 +97,25 @@ struct MemAgg { uint64_t acc, rd, wr, lines; uint32_t lines_max, ticks, lines_ti
 MemAgg* g_mem;
 MemAgg& mem(unsigned ctx, unsigned actor, unsigned reg) { return g_mem[((size_t) ctx * kActors + actor) * SVC_REGIONS + reg]; }
 
+// service kind of a census symbol (its unit): 1 skeleton, 2 collision, 3 another service unit, 0 none
+uint8_t g_kind[kMaxSym + 1];
+void init_kinds()
+{
+    static const char* skel[] = {"model", "motion", "cMotBase", "ik", "shape", "skel", 0};
+    static const char* col[] = {"atari", "at_mod", "at_sub", "at_sub2", "atariInfo", "col", 0};
+    for (unsigned i = 0; i < census_nsyms && i < kMaxSym; i++) {
+        g_kind[i] = census_kind[i] == 'S' ? 3 : 0;
+        for (int k = 0; skel[k]; k++)
+            if (!strcmp(census_unit[i], skel[k])) g_kind[i] = 1;
+        for (int k = 0; col[k]; k++)
+            if (!strcmp(census_unit[i], col[k])) g_kind[i] = 2;
+    }
+}
+struct KindKey { uint32_t stamp; uint8_t kind, actor; uint16_t pad; uint32_t line; };
+KindKey* g_klines;
+MemAgg* g_kmem;   // [kind 0..3][actor][region]
+MemAgg& kmem(unsigned kind, unsigned actor, unsigned reg) { return g_kmem[((size_t) kind * kActors + actor) * SVC_REGIONS + reg]; }
+
 struct FieldKey { uint32_t eip; uint16_t ctx; uint8_t reg, w; uint16_t off, pad; uint32_t n, nticks, last; uint64_t bones; uint32_t used; };
 constexpr unsigned kFieldTab = 1u << 18;
 FieldKey* g_fields;
@@ -108,7 +129,7 @@ void record(unsigned eip, unsigned addr, int w)
     MemAgg& m = mem(ctx, actor, reg);
     m.acc++;
     (w ? m.wr : m.rd)++;
-    const unsigned line = (addr - HOST_ARENA_BASE) >> 5;
+    const unsigned line = addr >> 5;
     unsigned h = hash3(line, ctx, actor) & (kLineTab - 1);
     for (;;) {
         LineKey& k = g_lines[h];
@@ -120,6 +141,24 @@ void record(unsigned eip, unsigned addr, int w)
         }
         if (k.line == line && k.ctx == ctx && k.actor == actor) break;
         h = (h + 1) & (kLineTab - 1);
+    }
+    {
+        const unsigned kind = g_kind[ctx];
+        MemAgg& km = kmem(kind, actor, reg);
+        km.acc++;
+        (w ? km.wr : km.rd)++;
+        unsigned kh = hash3(line, kind + 7, actor) & (kLineTab - 1);
+        for (;;) {
+            KindKey& k = g_klines[kh];
+            if (k.stamp != g_tick + 1) {
+                k.stamp = g_tick + 1; k.kind = (uint8_t) kind; k.actor = (uint8_t) actor; k.line = line;
+                km.lines_tick++;
+                if (km.last != g_tick + 1) { km.last = g_tick + 1; km.ticks++; }
+                break;
+            }
+            if (k.line == line && k.kind == kind && k.actor == actor) break;
+            kh = (kh + 1) & (kLineTab - 1);
+        }
     }
     if (reg == SVC_R_PARTS || reg == SVC_R_EM || reg == SVC_R_OBJ) {
         const SvcRegion& g = g_reg[reg];
@@ -145,7 +184,16 @@ void record(unsigned eip, unsigned addr, int w)
     }
 }
 
-void arena_prot(int prot) { mprotect((void*) (uintptr_t) HOST_ARENA_BASE, HOST_ARENA_SIZE, prot); }
+uint32_t g_svc_lo, g_svc_hi;   // the native services' region (svc_census_watch), traced like the arena
+void arena_prot(int prot)
+{
+    mprotect((void*) (uintptr_t) HOST_ARENA_BASE, HOST_ARENA_SIZE, prot);
+    if (g_svc_hi) mprotect((void*) (uintptr_t) g_svc_lo, g_svc_hi - g_svc_lo, prot);
+}
+bool watched(unsigned a)
+{
+    return (a >= HOST_ARENA_BASE && a < HOST_ARENA_BASE + HOST_ARENA_SIZE) || (a >= g_svc_lo && a < g_svc_hi);
+}
 // pages opened for the instruction being stepped (an instruction can touch two pages, or two operands)
 uint32_t g_open[8];
 unsigned g_nopen;
@@ -154,14 +202,15 @@ void on_segv(int, siginfo_t* si, void* ctx)
 {
     ucontext_t* uc = (ucontext_t*) ctx;
     const unsigned addr = (unsigned) (uintptr_t) si->si_addr;
-    if (!g_armed || addr < HOST_ARENA_BASE || addr >= HOST_ARENA_BASE + HOST_ARENA_SIZE || g_nopen >= 8) {
+    if (!g_armed || !watched(addr) || g_nopen >= 8) {
         signal(SIGSEGV, SIG_DFL);
         return;
     }
     record((unsigned) uc->uc_mcontext.gregs[REG_EIP], addr, (uc->uc_mcontext.gregs[REG_ERR] & 2) != 0);
     // open this page and the next (an unaligned access may straddle them), step the instruction
     uint32_t page = addr & ~4095u;
-    uint32_t len = page + 8192 <= HOST_ARENA_BASE + HOST_ARENA_SIZE ? 8192 : 4096;
+    const uint32_t top = addr >= g_svc_lo && addr < g_svc_hi ? g_svc_hi : HOST_ARENA_BASE + HOST_ARENA_SIZE;
+    uint32_t len = page + 8192 <= top ? 8192 : 4096;
     mprotect((void*) (uintptr_t) page, len, PROT_READ | PROT_WRITE);
     g_open[g_nopen++] = page | (len >> 12);
     uc->uc_mcontext.gregs[REG_EFL] |= 0x100;
@@ -242,6 +291,9 @@ extern "C" void svc_census_regions(const SvcRegion* r)
         g_lines = (LineKey*) calloc(kLineTab, sizeof(LineKey));
         g_mem = (MemAgg*) calloc((size_t) (kMaxSym + 1) * kActors * SVC_REGIONS, sizeof(MemAgg));
         g_fields = (FieldKey*) calloc(kFieldTab, sizeof(FieldKey));
+        g_klines = (KindKey*) calloc(kLineTab, sizeof(KindKey));
+        g_kmem = (MemAgg*) calloc((size_t) 4 * kActors * SVC_REGIONS, sizeof(MemAgg));
+        init_kinds();
         struct sigaction sa;
         memset(&sa, 0, sizeof sa);
         sa.sa_flags = SA_SIGINFO;
@@ -273,6 +325,14 @@ extern "C" void svc_census_tick(unsigned t, int begin)
         g_tot_calls[i] += g_tick_calls[i];
         if (g_tick_calls[i] > g_max_calls[i]) g_max_calls[i] = g_tick_calls[i];
     }
+    if (g_tick_traced)
+        for (size_t i = 0; i < (size_t) 4 * kActors * SVC_REGIONS; i++) {
+            MemAgg& m = g_kmem[i];
+            if (!m.lines_tick) continue;
+            m.lines += m.lines_tick;
+            if (m.lines_tick > m.lines_max) m.lines_max = m.lines_tick;
+            m.lines_tick = 0;
+        }
     if (g_trace)
         for (size_t i = 0; i < (size_t) (kMaxSym + 1) * kActors * SVC_REGIONS; i++) {
             MemAgg& m = g_mem[i];
@@ -311,7 +371,7 @@ extern "C" void svc_census_finish(const char* actors_tsv)
                     (unsigned long long) g_tot_calls[i], g_max_calls[i]);
     fclose(f);
     if (g_trace) {
-        static const char* rn[SVC_REGIONS] = {"parts", "em", "obj", "room", "chr", "core", "heap", "other"};
+        static const char* rn[SVC_REGIONS] = {"parts", "em", "obj", "room", "chr", "core", "heap", "svc", "other"};
         f = out_open("mem.tsv");
         fprintf(f, "# ticks\t%u\n# ctx\tctx_name\tctx_unit\tactor\tregion\taccesses\treads\twrites\tlines_sum\tlines_max\tticks_seen\n", g_traced);
         for (unsigned c = 0; c <= kMaxSym; c++)
@@ -322,6 +382,18 @@ extern "C" void svc_census_finish(const char* actors_tsv)
                     fprintf(f, "%u\t%s\t%s\t%u\t%s\t%llu\t%llu\t%llu\t%llu\t%u\t%u\n", c, c < kMaxSym ? census_name[c] : "-",
                             c < kMaxSym ? census_unit[c] : "-", a, rn[r], (unsigned long long) m.acc, (unsigned long long) m.rd,
                             (unsigned long long) m.wr, (unsigned long long) m.lines, m.lines_max, m.ticks);
+                }
+        fclose(f);
+        f = out_open("memk.tsv");
+        fprintf(f, "# ticks\t%u\n# kind\tactor\tregion\taccesses\treads\twrites\tlines_sum\tlines_max\tticks_seen\n", g_traced);
+        static const char* kn[4] = {"none", "skeleton", "collision", "other"};
+        for (unsigned kd = 0; kd < 4; kd++)
+            for (unsigned a = 0; a < kActors; a++)
+                for (unsigned r = 0; r < SVC_REGIONS; r++) {
+                    MemAgg& m = kmem(kd, a, r);
+                    if (!m.acc) continue;
+                    fprintf(f, "%s\t%u\t%s\t%llu\t%llu\t%llu\t%llu\t%u\t%u\n", kn[kd], a, rn[r], (unsigned long long) m.acc,
+                            (unsigned long long) m.rd, (unsigned long long) m.wr, (unsigned long long) m.lines, m.lines_max, m.ticks);
                 }
         fclose(f);
         f = out_open("fields.tsv");
@@ -337,4 +409,10 @@ extern "C" void svc_census_finish(const char* actors_tsv)
     f = out_open("actors.tsv");
     fputs(actors_tsv, f);
     fclose(f);
+}
+
+extern "C" void svc_census_watch(uint32_t lo, uint32_t bytes)
+{
+    g_svc_lo = lo;
+    g_svc_hi = lo + bytes;
 }
