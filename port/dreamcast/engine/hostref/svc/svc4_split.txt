@@ -1,0 +1,5 @@
+# svc4_split.txt (lane eng-svc4): the native functions inside behaviour units (svc.mk SVC4_SPLIT), one line a unit:
+# "<unit> <pattern>...", fnmatch on the demangled names; svc4_units.sh fails when the native link keeps any of them.
+cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize* CameraControl::debugDrawRail*
+cam_sys CameraSetOrientationRoll CameraSetOrientationUp
+cam_extra CameraAttachedToMotion::move*

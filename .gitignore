@@ -47,3 +47,6 @@ tools/research/mwccdbg/retrowin32
 /.disc-out-*/
 /.cdisc-*/
 /.tb/
+# engine lanes: private image build folders (game/Makefile OUT=, lane scripts)
+/.e1/
+/.gate/

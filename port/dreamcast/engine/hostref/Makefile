@@ -191,6 +191,9 @@ $(BUILD)/%/game/pl_wep.o: POSTCC = objcopy --rename-section .text.wepSetWaterSho
 $(BUILD)/%/game/cam_extra.o: POSTCC = objcopy --rename-section .text._ZN11CameraScope4moveEv=re4ref_present --rename-section .text._ZN12CameraLookAtC2EP6Camera=re4ref_present $@
 $(BUILD)/%/game/wep_objRuger.o: POSTCC = objcopy --rename-section .text._ZN9cObjRuger12setCartridgeEv=re4ref_present $@
 $(BUILD)/%/game/pl_npc.o: POSTCC = objcopy --rename-section .text._ZN8cSubChar8moveFaceEv=re4ref_present $@
+# lane eng-svc4: rumble is presentation (E1 audit section 3): the random-strength rumble (VibControl) draws from the
+# presentation generator in the reference too, as the native input service does (services/input, eng_pres_u8)
+$(BUILD)/%/game/pad.o: POSTCC = objcopy --rename-section .text.VibControl=re4ref_present $@
 
 # lane eng-svc: the service census build and the native skeleton and collision services (svc/svc.mk)
 include svc/svc.mk

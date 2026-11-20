@@ -47,6 +47,9 @@ static float prnd_unit()   // [1, 2) from three draws, as fRand0_1 / fRand1_1 fo
     __builtin_memcpy(&f, &u, 4);
     return f;
 }
+// lane eng-svc4: the engine's presentation byte for the native services (services/input: the rumble strength); the same
+// stream as the presentation callers above (the engine image: host/e1_wraps.cpp's prnd)
+extern "C" unsigned char eng_pres_u8() { return prnd(); }
 extern "C" unsigned char __real_Rnd();
 extern "C" unsigned char __wrap_Rnd()
 {

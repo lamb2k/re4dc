@@ -1,0 +1,61 @@
+# allowed_original.txt: the original functions the engine image may link (lane eng-svc4, 2026-11-20).
+#
+# Owner rule 2026-11-19 ("Split it"): no original service code in the engine image. Original code is allowed only
+# for behaviour: decisions, scripts, player, partner and enemy logic, and the behaviour generator. Everything under
+# it (skeleton and pose, collision and actor volumes, routes, models and parts, cameras and frustum, input, math,
+# allocation, drawing, actor and object tables) is the engine's.
+#
+# Checked by port/dreamcast/tools/engine/check_link.py against the image's link map (game/Makefile -Wl,-Map=):
+# every code section the link keeps from an original object (<OUT>/h/..., <OUT>/sdk/..., <OUT>/fd/...) must match an
+# entry here. Default deny: a unit not listed is service code, whole.
+#
+# Format: "## <group>: <reason>", then "<unit> <pattern>..." (fnmatch on the demangled or the mangled name);
+# "!<unit> <pattern>..." takes a function out of an allowed unit (service code inside a behaviour unit, split at
+# function boundaries as the E1 audit asks). Exceptions win over every allowing line.
+
+## player: Leon's original decisions (input to action, routines, damage, events, knife, pushes), hosted through setters
+game/player *
+game/pl_class *
+game/pl_body *
+game/pl_sub *
+game/pl_leon *
+game/pl_dmg *
+game/pl_push *
+game/pl_knife *
+game/pl_event *
+game/pl_debug *
+
+## weapon: the handgun's decisions (aim, lock, fire, reload, hit checks); the weapon module's REL entry
+game/pl_wep *
+wep/pl_handgun *
+wep/objRuger *
+wep02/wep02 *
+game/objWep *
+
+## partner: Ashley's original partner decisions (cSubChar: follow, wait, hide, carried, damage; pl11's cSubAshley)
+game/pl_npc *
+pl11/pl11 *
+
+## camera-decisions: the camera's control decisions (which camera, mode changes, rails, areas, scope, look-at targets)
+game/cam_ctrl *
+game/cam_sys *
+game/cam_qfps *
+game/cam_extra *
+
+## generator: the behaviour generator (owner 11-19: the original generator serves behaviour only)
+game/rnd *
+
+# Presentation helpers inside behaviour units (eye wander, damage voice, water splash, scope sway, look-at set-up,
+# cartridge, partner face: the section e1_present, drawing from the engine generator) are matched by the unit lines
+# above. They are not services; a native presentation layer would retire them (to review with the integrator).
+
+# ---- service code inside the allowed units (exceptions) ----
+# Camera evaluation (E1 audit section 1, "mixed units"): track and spline evaluation and the orientation matrices.
+!game/cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize*
+!game/cam_sys CameraSetOrientationRoll CameraSetOrientationUp
+!game/cam_extra CameraAttachedToMotion::move*
+# Debug and laser drawing (drawing is the engine's renderer).
+!game/cam_ctrl CameraControl::debugDrawRail*
+!game/objWep cObjWep::drawLaserSight* Draw_line3d_local_222 drawPoint
+# Actor and object tables (the engine's): template instances of the original manager that land in behaviour units.
+!game/* cManager<*>::* cEmMgr::memClear* cObjMgr::memClear*
