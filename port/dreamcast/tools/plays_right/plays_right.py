@@ -334,6 +334,12 @@ def main():
         # the agreement window: compared ticks before the first divergence
         report['agreement_ticks'] = sum(1 for tt in sorted(A) if tt < t and (tt + args.offset) in B
                                         and (not window or window[0] <= tt <= window[1]))
+        # inside that window: ticks whose position is bit-identical, and the largest position difference
+        rows = [r for r in res.get('p', []) if r[0] < t]
+        if rows:
+            report['agreement_p_bit_identical'] = sum(1 for r in rows if all(ulps(x, y) == 0 for x, y in zip(r[3], r[4])))
+            report['agreement_p_max'] = max(r[1] for r in rows)
+            report['agreement_last_tick'] = max(r[0] for r in rows)
     if not args.quiet:
         print(f'{args.a} ({ka}) vs {args.b} ({kb}), offset {args.offset}: {compared} ticks compared, {verdict}')
         if first:
