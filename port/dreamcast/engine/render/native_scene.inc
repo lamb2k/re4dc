@@ -109,7 +109,7 @@ static int upload_one(unsigned i,const uint32_t* p,unsigned size){
 }
 static int valid_model(const Table* tab,unsigned id,unsigned headers){
     const uint32_t* h=row(tab,id);unsigned size=bytes(tab,id);
-    if(size<24||h[0]>256||h[1]>256||h[2]>4000||h[3]>4000)return 0;
+    if(size<24||h[0]>256||h[1]>384||h[2]>4000||h[3]>4000)return 0;   /* eng-boss: 384 weight sets (ACTOR_WS_LIMIT) */
     uint64_t static_bytes=24+(uint64_t)48*h[0]+16*h[1]+8*(h[2]+h[3])+16*(uint64_t)h[4];
     if(static_bytes+h[5]!=size)return 0;
     const uint8_t* weights=(const uint8_t*)(h+6)+48*h[0];
