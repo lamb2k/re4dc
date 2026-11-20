@@ -143,6 +143,7 @@ int main()
     e1_arena_init();
     e1_globals_init();
     e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
+    e1_svc_boot();                      // the native services' check build (SKELCHECK)
     // The hill scene holds 0.84 MB more room data (the partner's archive and motion keys): the renderer's pack goes
     // first, while the KOS heap is empty, so its whole-file staging read (7.8 MB; the textures then go to video
     // memory) fits before the room data is loaded.

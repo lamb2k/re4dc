@@ -9,7 +9,11 @@ extern "C" {
 // ---- main RAM map (fixed addresses: independent of the image size) ----
 // Behaviour arena: every allocation of the hosted behaviour (the 13-heap API). Fixed address and size.
 #define E1_ARENA_LO 0x8cc00000u
-#define E1_ARENA_HI 0x8cfc0000u   /* 3,932,160 B; the KOS kernel stack (64 KB) sits at 0x8cff0000 */
+#define E1_ARENA_HI 0x8cec0000u   /* 2,883,584 B (lane eng-e1c: the services region follows) */
+// Native services region (lane eng-e1c, host/e1_svc_mem.cpp): the skeleton pool (256 KB) and the room's collision
+// tables. Fixed address and size; the KOS kernel stack (64 KB) sits at 0x8cff0000.
+#define E1_SVC_LO 0x8cec0000u
+#define E1_SVC_HI 0x8cfc0000u   /* 1,048,576 B */
 // Resident behaviour data the original keeps at fixed addresses: player archive body, weapon archive body, room
 // archive (CAM, SAT, EAT, ... sections the hosted code and the services read). Engine room-pack region, loaded at
 // room entry, read in place.

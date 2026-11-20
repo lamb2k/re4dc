@@ -41,7 +41,7 @@ REND_DEPS := $(wildcard $(ENG)/render/*.inc $(ENG)/render/*.h $(ENG)/services/*.
 # Service-boundary accounting (host/e1_wraps.cpp): generator draws and service time at the behaviour's entry points.
 # Lane eng-e1c: every entry point of the skeleton and collision services the behaviour can call (groups in
 # host/e1_wraps.cpp: motion, cloth, parts and palette, collision), the same list for the original units and the native.
-WRAP_SYMS := _Z3Rndv \
+WRAP_SYMS := Rnd fRand1_1 fRand0_1 \
     _Z13MotionSetCoreP6cModelPvS1_iiii _ZN6cModel10motionMoveEv MotionMove MotionClear MotionHokan \
     _ZN8cMotBase4moveEv _ZN8cMotBase6adjustEv InverseKinematics ShapeMove \
     _Z15PlClothMoveLeonP6cModelP7PlClothS2_S2_ _Z15PlClothMoveGirlP6cModelP7PlClothS2_S2_ PenClothMove PenClothMove3 \
@@ -64,6 +64,15 @@ $(OUT)/h/pl11/pl11.o: ORIG_FLAGS += -D_prolog=pl11_prolog -D_epilog=pl11_epilog 
 $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@
+	$(if $(PRESENT_$*),sh-elf-objcopy $(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present) $@)
+# Presentation functions (lane eng-e1c, owner 2026-11-19: presentation randomness from an engine-owned generator):
+# their code goes to the section e1_present, whose draws host/e1_wraps.cpp answers from the engine generator.
+PRESENT_game/pl_class := _ZN7cPlayer13moveEyeNormalEv
+PRESENT_game/pl_sub := PlSetDamageSe
+PRESENT_game/pl_wep := PlWepLockRand wepSetWaterShot
+PRESENT_game/cam_extra := _ZN11CameraScope4moveEv _ZN12CameraLookAtC2EP6Camera
+PRESENT_wep/objRuger := _ZN9cObjRuger12setCartridgeEv
+PRESENT_game/pl_npc := _ZN8cSubChar8moveFaceEv
 # SDK math (mtx, mtxvec, vec) and OSAlloc (the behaviour arena's allocator), generated from src/lib as the reference
 # build does (CodeWarrior asm stripped) and compiled with its flags; mtx.c with the reference's exact sincos and
 # normalise forms (RE4DC_SINCOS, RE4DC_VEC_NORM_INLINE: bit-identical by construction).
@@ -84,10 +93,41 @@ $(OUT)/fd/%.o: $(ROOT)/src/lib/fdlibm/%.c
 	kos-cc -O1 -ffp-contract=off -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks 		-fno-isolate-erroneous-paths-dereference -fschedule-insns -fsched-pressure -ffunction-sections -fdata-sections 		-I$(ROOT)/include -c $< -o $@
 $(OUT)/e/%.o: $(ENG)/%.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
-	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services -c $< -o $@
+	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services $(NATIVE_INC) -c $< -o $@
+
+# ---- Native skeleton and collision services (lane eng-e1c; docs/engine/SERVICES.md section 7) ----
+# skel.cpp and col.cpp port the original arithmetic in its order: the hosted units' flags (contraction off). skel_xm.c
+# is the bone-chain kernel on SH4ZAM's XMTRX (SH-4 back-end: FTRV).
+SVC_DIR := $(ENG)/services
+NATIVE_INC := -I$(SVC_DIR)/skeleton -I$(SVC_DIR)/collision -I$(ROOT)/port/dreamcast/game/platform/include
+NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
+$(OUT)/n/skel.o: $(SVC_DIR)/skeleton/skel.cpp $(SVC_DIR)/skeleton/skel.h $(SVC_DIR)/skeleton/skel_xm.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
+$(OUT)/n/col.o: $(SVC_DIR)/collision/col.cpp $(SVC_DIR)/collision/col.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
+$(OUT)/n/skel_xm.o: $(SVC_DIR)/skeleton/skel_xm.c $(SVC_DIR)/skeleton/skel_xm.h
+	@mkdir -p $(dir $@)
+	kos-cc -O2 -std=gnu11 -Wall -ffp-contract=off -ffunction-sections -fdata-sections -I$(SHZ) -c $< -o $@
+# The original units the native services replace in part: every replaced function made weak (the lists of
+# hostref/svc/svc.mk, with the SH symbol prefix), so each call reaches the native body and --gc-sections drops the
+# original's. ik.cpp is not linked (hosted.mk).
+WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc
+WEAK_model := _ZN6cModel11getPartsPtrEi _ZN6cModel12partsMatCalcEv _ZN6cModel14partsWorldCalcEv _ZN6cModel8matBlendEf \
+              _ZN6cModel9matUpdateEv _ZN6cModel12updateOldPosEv _ZN6cModel6setPosEP3Vec _ZN6cModel14partsFixMemoryEi \
+              _ZN6cModel14partsFixAdjustEv _ZN6cModel9setParentEPS_P3VecS2_ _ZN6cModel9setParentEPS_iP3VecS2_ \
+              _ZN6cModel14setPartsOffsetEPv _ZN6cModel16releasePartsListEi GetPartsAddr
+WEAK_atari := _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i \
+              _Z11at_pos_calcP6cModelP3Vec
+$(OUT)/h/game/motion.o $(OUT)/h/game/model.o $(OUT)/h/game/atari.o: $(OUT)/h/game/%.o: $(ROOT)/src/game/%.cpp $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.orig.o
+	sh-elf-objcopy $(foreach s,$(WEAK_$*),--weaken-symbol=_$(s)) $@.orig.o $@
+	rm -f $@.orig.o
 $(OUT)/e/%.o: $(ENG)/%.c $(ENG_HDRS)
 	@mkdir -p $(dir $@)
-	kos-cc $(REND_FLAGS) -I$(ENG)/core -I$(ENG)/host -c $< -o $@
+	kos-cc $(REND_FLAGS) -I$(ENG)/core -I$(ENG)/host -I$(ENG)/services -c $< -o $@
 $(OUT)/r/render_e1.o: $(ENG)/services/render_e1.c $(REND_DEPS)
 	@mkdir -p $(dir $@)
 	kos-cc $(REND_FLAGS) -I$(ENG)/services -c $< -o $@
@@ -104,6 +144,6 @@ $(OUT)/r/stage_sh4.o: $(ENG)/render/stage_sh4.S
 	@mkdir -p $(dir $@)
 	kos-cc -c $< -o $@
 
-$(OUT)/e1.elf: $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS)
-	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections \
+$(OUT)/e1.elf: $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS)
+	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) -lm -- $^

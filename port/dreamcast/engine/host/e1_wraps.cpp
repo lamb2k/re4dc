@@ -51,8 +51,57 @@ uint32_t e1_svc_group(unsigned g) { return g < E1_SVC_GROUPS ? (uint32_t) svc_gr
     }
 enum { MOT = E1_SVC_MOTION, CLOTH = E1_SVC_CLOTH, PARTS = E1_SVC_PARTS, COL = E1_SVC_COLLISION };
 
-extern "C" unsigned char __real__Z3Rndv();
-extern "C" unsigned char __wrap__Z3Rndv() { e1_rnd_draws++; return __real__Z3Rndv(); }
+// Random numbers, split (lane eng-e1c, owner 2026-11-19): presentation randomness (eye wander, aim and camera sway,
+// cartridge and water-shot effects, the damage voice choice) comes from an engine-owned generator; the original Rnd
+// serves only the behaviour. The presentation functions are placed in their own code section, e1_present, at build
+// time (game/Makefile PRESENT_*: objcopy --rename-section, the code unchanged); a draw whose caller lies in that
+// section is answered by the engine generator (the original algorithm on its own state), every other draw by the
+// original. Draws are counted per generator.
+extern "C" char __start_e1_present[] __attribute__((weak));
+extern "C" char __stop_e1_present[] __attribute__((weak));
+unsigned e1_prnd_draws;
+static unsigned short prnd_state;
+void e1_prnd_seed(unsigned short s) { prnd_state = s; }   // diagnostic arm PSEED (host/e1_svc_mem.cpp)
+static inline int present_caller(void* ra) { return (char*) ra >= __start_e1_present && (char*) ra < __stop_e1_present; }
+static unsigned char prnd()
+{
+    unsigned short r = prnd_state;
+    unsigned n = ((unsigned char) ((r >> 1) + (r >> 8)) << 8) | (unsigned char) (r >> 1);
+    unsigned m = n & 0xFFFF;
+    if (m == r) m = n + 0x101;
+    prnd_state = (unsigned short) m;
+    e1_prnd_draws++;
+    return (unsigned char) (m >> 8);
+}
+static float prnd_unit()   // [1, 2) from three draws, as fRand0_1 / fRand1_1 form it
+{
+    unsigned a = prnd(), b = prnd(), c = prnd();
+    unsigned u = a + (b << 8) + ((c & 0x7F) << 16) + 0x3F800000;
+    float f;
+    __builtin_memcpy(&f, &u, 4);
+    return f;
+}
+extern "C" unsigned char __real_Rnd();
+extern "C" unsigned char __wrap_Rnd()
+{
+    if (present_caller(__builtin_return_address(0))) return prnd();
+    e1_rnd_draws++;
+    return __real_Rnd();
+}
+extern "C" float __real_fRand1_1();
+extern "C" float __wrap_fRand1_1()
+{
+    if (present_caller(__builtin_return_address(0))) return prnd_unit() * 2.0f - 3.0f;
+    e1_rnd_draws += 3;
+    return __real_fRand1_1();
+}
+extern "C" float __real_fRand0_1();
+extern "C" float __wrap_fRand0_1()
+{
+    if (present_caller(__builtin_return_address(0))) return prnd_unit() - 1.0f;
+    e1_rnd_draws += 3;
+    return __real_fRand0_1();
+}
 
 // Groups (lane eng-e1c): every entry point of the skeleton and collision services the behaviour can call, the same
 // list for the original units (first form) and the native services.
@@ -140,6 +189,8 @@ void e1_prof_report()
 {
     for (unsigned i = 0; i < nsvc; i++)
         printf("E1 SVC %s us %lu calls %lu group %u\n", svc_rows[i].name, (unsigned long) svc_rows[i].us, (unsigned long) svc_rows[i].calls, svc_rows[i].group);
+    printf("E1 RNG behaviour draws %u presentation draws %u (presentation code %u B)\n", e1_rnd_draws, e1_prnd_draws,
+           (unsigned) (__stop_e1_present - __start_e1_present));
     for (unsigned i = 0; i < nprof; i++)
         printf("E1 PROF %s us %lu calls %lu\n", prof[i].name, (unsigned long) prof[i].us, (unsigned long) prof[i].calls);
 }

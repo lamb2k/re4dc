@@ -14,7 +14,11 @@ extern E1Timing e1_timing[E1_TICKS];
 // the MODELLED service stamps (e1_svc_stamp: 0 back in the behaviour).
 enum { E1_SVC_MOTION = 1, E1_SVC_CLOTH = 2, E1_SVC_PARTS = 3, E1_SVC_COLLISION = 4, E1_SVC_GROUPS = 5 };
 uint32_t e1_svc_group(unsigned g);
-void e1_svc_publish();   // the palette, once a tick after the behaviour (native skeleton), in the services row
+void e1_svc_publish();
+// native services host side (lane eng-e1c, host/e1_svc_mem.cpp): boot options, room tables, report
+void e1_svc_boot();
+void e1_svc_room_ready();
+void e1_svc_report();   // the palette, once a tick after the behaviour (native skeleton), in the services row
 extern volatile uint32_t e1_state[8];
 
 // The route: start state (the reference fixture's warp: room, position, angle, flags) and the pad script, one
