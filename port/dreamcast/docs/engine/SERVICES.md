@@ -791,6 +791,11 @@ and the grid records of the leaves they visit).
      keys must not move while the clip is bound); call `skel_mk_forget(base, bytes)` when an archive is freed.
    - Link `skel.cpp` with the eleven motion.cpp functions it now defines weakened in motion.o (`svc.mk` WEAK_motion),
      or drop motion.o once `cam_motion` and `shape` (the two other HermiteInterpolation users) have their own decoder.
+     **Required for the E1 image** (`engine/game/Makefile`, merged from eng-e1c): with round 3's skel.cpp its
+     `WEAK_motion` list must gain MotionGetSpeed, MotionGetPosition, MotionAddSpeed, MotionSequenceCtrl,
+     MotionBlendOff, MotionPause, FcvGetMaxFrame, MotionGetMaxFrame, MotionGetCurrentFrame, MotionCheckCrossFrame and
+     MotionGetState; without them the link stops on eleven multiple definitions, with them `e1.elf` links (checked:
+     `make WEAK_motion="..."`, sh-elf, no disc). Without a motion pack the image decodes every clip natively.
    - The table is 36 B a bone smaller (no key history).
 2. **Cloth.** Compile `services/cloth/cloth_kernel.c` as C with SH4ZAM's include path and the engine's SH-4 flags
    (`-m4-single-only`; without `-ffast-math` SH4ZAM's sincos is FSCA, with it the compiler's); `cloth.cpp` drives it.
