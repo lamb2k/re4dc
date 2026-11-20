@@ -183,6 +183,9 @@ $(BUILD)/%/game/em16_em16_set.o: MODFLAGS = $(call modname,em16)
 # object's reference is renamed to the adapter that passes them on in at_sub.cpp's order (host_actors.cpp).
 $(BUILD)/%/game/em_sub.o: POSTCC = objcopy --redefine-sym AtSphereCapsuleCk=host_AtSphereCapsuleCkF $@
 
+# lane eng-svc: the service census build and the native skeleton and collision services (svc/svc.mk)
+include svc/svc.mk
+
 .SECONDARY:
 .PHONY: all fma clean
 clean:
