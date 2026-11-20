@@ -78,6 +78,10 @@ SVC4_WRAP += _ZN8cMotBase4moveEv _ZN8cMotBase6adjustEv _ZN8cMotBase3setEP9cMotMo
 SVC4_WRAP += _ZN6cModel9modelInitEPvS0_ _ZN6cModel9initJointEPv _ZN6cModel13makePartsListEi _ZN6cModel4pushEv
 SVC4_WRAP += _ZN6cModel8addModelEP10cModelInfo _ZN6cModel15deleteModelInfoEP10cModelInfo ModelInfoSetTrans
 SVC4_WRAP += _ZN6cModel13swapModelInfoEP9ModelDataP10cModelInfo _ZN11cModInfoMgr6createEPvS0_
+SVC4_WRAP += _ZN4VIEW15initPerspectiveEffff CameraMove _ZN12CameraMotion4moveEv HermiteInterpolation
+SVC4_WRAP += CameraSetOrientationRoll CameraSetOrientationUp _ZN22CameraAttachedToMotion4moveEv
+SVC4_WRAP += _ZN13CameraControl13HermiteExportEP9CameraCutPh _Z7BSplineP13CameraBSplineP6Camerai
+SVC4_WRAP += _Z11ParametrizeP9CameraCutP13CameraBSpline
 SVC4_WRAP += _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_ _ZN7cEatMgr10getEffInfoEi
 SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
@@ -101,9 +105,14 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 # sections 23 on). SVC4_OBJS are compiled with the hosted units' flags; every global symbol they define is made weak in
 # the original units of SVC4_UNITS (weak4/), so each call reaches the native body; svc4/svc4_units.sh reports which
 # original functions of those units the native link still keeps.
-SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp
+SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
-SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model
+SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion
+# SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's rail spline,
+# cam_sys's orientation matrices, cam_extra's attached camera; svc4_split.txt names them): the same weak copy, and
+# svc4_units.sh checks only the named functions
+SVC4_SPLIT := cam_ctrl cam_sys cam_extra
+SVC4_ALL := $(SVC4_UNITS) $(SVC4_SPLIT)
 SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_ENG)/$(d))
 define SVC4_RULE
 $(NAT)/svc4/$(notdir $(1:.cpp=.o)): $(SVC_ENG)/$(1) $(wildcard $(SVC_ENG)/$(dir $(1))*.h)
@@ -115,17 +124,17 @@ $(NAT)/svc4/syms.txt: $(SVC4_OBJS)
 	nm -g --defined-only $(SVC4_OBJS) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
 # SVC4_NOINIT: units whose global objects the native file defines and constructs itself: the original's static
 # initialiser (.init_array) is taken out of the copy, so --gc-sections drops its constructor calls too.
-SVC4_NOINIT := model atari
+SVC4_NOINIT := model atari view camera
 NOINIT_FLAGS := --remove-section=.init_array --remove-section=.rel.init_array
 $(NAT)/weak4/%.o: $(BUILD)/plain/game/%.o $(NAT)/svc4/syms.txt
 	@mkdir -p $(dir $@)
 	objcopy $$(cat $(NAT)/svc4/syms.txt) $(foreach s,$(WEAK_$*),--weaken-symbol=$(s)) \
 	    $(if $(filter $*,$(SVC4_NOINIT)),$(NOINIT_FLAGS)) $< $@
-SVC4_REPLACED := $(addprefix $(BUILD)/plain/game/,$(addsuffix .o,$(SVC4_UNITS)))
+SVC4_REPLACED := $(addprefix $(BUILD)/plain/game/,$(addsuffix .o,$(SVC4_ALL)))
 # the native objects first: a header inline (manager methods, destructors) both define is taken from them
 NATIVE_GAME_OBJS := $(SVC4_OBJS) $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED),$(plain_GAME_OBJS)) \
-                    $(filter-out $(addprefix $(NAT)/weak/,$(addsuffix .o,$(SVC4_UNITS))),$(NAT)/weak/motion.o $(NAT)/weak/model.o $(NAT)/weak/atari.o) \
-                    $(NAT)/pen.o $(addprefix $(NAT)/weak4/,$(addsuffix .o,$(SVC4_UNITS)))
+                    $(filter-out $(addprefix $(NAT)/weak/,$(addsuffix .o,$(SVC4_ALL))),$(NAT)/weak/motion.o $(NAT)/weak/model.o $(NAT)/weak/atari.o) \
+                    $(NAT)/pen.o $(addprefix $(NAT)/weak4/,$(addsuffix .o,$(SVC4_ALL)))
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
 	@mkdir -p $(dir $@)

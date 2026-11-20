@@ -28,6 +28,8 @@
 #   routenear RE4_SVC_CONTROL=routenear: the nearest reachable way point is the second one (hill-ashley: the partner)
 #   followslow RE4_SVC_CONTROL=followslow: every root-motion follower blend step one tick longer (e1-route, exercise follow)
 #   modelslot RE4_SVC_CONTROL=modelslot: a model's contiguous parts run starts at the second free run (hill-ashley)
+#   camfov   RE4_SVC_CONTROL=camfov: the view frustum built for a field of view 1 degree wider (door103-walk)
+#   camroll  RE4_SVC_CONTROL=camroll: the camera's roll orientation 0.01 rad further (door103-walk)
 #   routehop RE4_SVC_CONTROL=routehop: the way points between skipped, every reachable destination its own next hop (bell-ganado: the Ganados' chase)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
@@ -178,6 +180,8 @@ print()" "$b/compare.json")
     r4ctl hill-ashley "nearest way point is the second reachable" routenear
     r4ctl bell-ganado "way points between skipped" routehop
     r4ctl hill-ashley "parts run at the second free run" modelslot
+    r4ctl door103-walk "frustum 1 degree wider" camfov
+    r4ctl door103-walk "roll orientation 0.01 rad further" camroll
     # service exercises (svc4_dump.cpp, RE4_SVC_EXERCISE): calls planted at fixed ticks for services the fixtures' play
     # does not reach; the reference and the native build get the same calls, so the comparison is still original
     # against native on the same inputs. Each exercise's controls must FAIL.
@@ -193,6 +197,7 @@ print()" "$b/compare.json")
         done
     }
     exrow e1-route follow followslow
+    exrow e1-route camtrack camfov camroll
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

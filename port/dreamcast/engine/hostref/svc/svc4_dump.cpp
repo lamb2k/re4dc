@@ -19,6 +19,13 @@
 #include "../../services/motion/follow.h"
 #include "player.h"
 #include "../../services/model/model_svc.h"
+#include "../../services/camera/camera_svc.h"
+#include "camera.h"
+#include "cam_ctrl.h"
+#include "cam_extra.h"
+#include "cam_motion.h"
+#include "view.h"
+#include "motion.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -37,6 +44,8 @@ extern int follow_control __attribute__((weak));
 extern ModelCounters model_cnt __attribute__((weak));
 extern int model_control __attribute__((weak));
 extern u32 eng_pool_full __attribute__((weak));
+extern CameraCounters cam_cnt __attribute__((weak));
+extern int cam_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -109,6 +118,11 @@ extern "C" void svc4_ready()
         const char* c = svc_env("RE4_SVC_CONTROL");
         if (c && !__builtin_strcmp(c, "modelslot")) model_control = 1;
     }
+    if (&cam_control) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "camfov")) cam_control = 1;
+        if (c && !__builtin_strcmp(c, "camroll")) cam_control = 2;
+    }
 }
 // Service exercises (RE4_SVC_EXERCISE=<name>): inputs that drive a service the fixtures' play does not reach, made at
 // the start of a tick from this file, so the reference and the native build get the same calls. They change the play;
@@ -116,14 +130,75 @@ extern "C" void svc4_ready()
 //   follow: Leon's root-motion follower (cMotBase, started by ledge climbs, fence vaults and falls, which no fixture
 //           has): tick 40 a 10-tick blend onto a pose 250 units off and 0.5 rad turned, tick 100 a pin (count 0)
 //           released at tick 130, tick 200 a 25-tick blend.
+//   camtrack: the keyed camera tracks and the rail spline, which no fixture reaches (cutscene cameras, rail areas):
+//           tick 10 two rail cuts around Leon (5 keys every 30 frames; 5 keys at uneven frames) are exported as camera
+//           motion files (HermiteExport) and a CameraMotion is bound to each (one looping); every tick after, both
+//           tracks move and one track's keys are evaluated directly at a sweeping frame, alternately searching
+//           forwards, backwards and looping. The rail fit and evaluation (Parametrize, BSpline) are not exercised:
+//           their de Boor-Cox basis allocates from the debug heap, which re4ref does not provide.
 namespace {
 int g_exercise = -1;
 unsigned g_ex_tick = ~0u;
+Vec g_cut_pos[5], g_cut_at[5];
+f32 g_cut_roll[5], g_cut_fovy[5];
+u16 g_cut_frames[5] = {0, 20, 70, 90, 150};
+CameraCut g_cut[2];
+alignas(8) u8 g_cmfile[2][0x440];
+alignas(8) u8 g_cmobj[2][sizeof(CameraMotion)];
+CameraMotion* g_cm[2];
+u16 g_hist[3];
+void exercise_camtrack(unsigned t)
+{
+    if (t == 10) {
+        for (int k = 0; k < 5; k++) {
+            g_cut_pos[k] = pPL->pos;
+            g_cut_pos[k].x += 800.0f * k - 1600.0f;
+            g_cut_pos[k].y += 1500.0f + 100.0f * (k & 1);
+            g_cut_pos[k].z -= 2500.0f - 300.0f * k;
+            g_cut_at[k] = pPL->pos;
+            g_cut_at[k].y += 1000.0f;
+            g_cut_at[k].x += 50.0f * k;
+            g_cut_roll[k] = 0.05f * (k - 2);
+            g_cut_fovy[k] = 40.0f + 5.0f * k;
+        }
+        for (int c = 0; c < 2; c++) {
+            __builtin_memset(&g_cut[c], 0, sizeof(CameraCut));
+            g_cut[c].num = 5;
+            g_cut[c].pos = g_cut_pos;
+            g_cut[c].at = g_cut_at;
+            g_cut[c].roll = g_cut_roll;
+            g_cut[c].fovy = g_cut_fovy;
+            g_cut[c].frames = c ? g_cut_frames : 0;
+            CamCtrl.HermiteExport(&g_cut[c], g_cmfile[c]);
+            g_cm[c] = new (g_cmobj[c]) CameraMotion(g_cmfile[c], 0, c ? 4 : 0, 0.0f);
+        }
+        return;
+    }
+    if (t < 10 || !g_cm[0]) return;
+    for (int c = 0; c < 2; c++) {
+        g_cm[c]->CameraMotion::move();
+    }
+    HermitePrm prm;
+    prm.frame = (f32) ((t * 7) % 140);
+    prm.maxFrame = 121.0f;
+    prm.flags = t % 3 == 0 ? 1 : t % 3 == 1 ? 0 : 4;
+    prm.type = 0;
+    prm.key = (u8*) g_cm[0]->m_info.keyTbl[0];   // track 0 (pos), relocated by the binding
+    Vec v;
+    HermiteInterpolation(&prm, &v, g_hist);
+}
 void exercise(unsigned t)
 {
     if (g_exercise < 0) {
         const char* e = svc_env("RE4_SVC_EXERCISE");
-        g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : 0;
+        g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2 : 0;
+    }
+    if (g_exercise == 2) {
+        if (t != g_ex_tick && pPL) {
+            g_ex_tick = t;
+            exercise_camtrack(t);
+        }
+        return;
     }
     if (!g_exercise || t == g_ex_tick || !pPL || !pPL->MotBase) return;
     g_ex_tick = t;
@@ -172,6 +247,12 @@ extern "C" void svc4_finish()
         P(g_f, "# models: inits %u infos %u parts_runs %u parts_single %u parts_made %u relocs %u debug_draws %u; pools full %u\n",
           m.inits, m.infos, m.parts_runs, m.parts_single, m.parts_made, m.relocs, m.debug_draws, &eng_pool_full ? eng_pool_full : 0);
     }
+    if (&cam_cnt) {
+        const CameraCounters& c = cam_cnt;
+        P(g_f, "# camera: frames %u frustums %u orients %u orient_cams %u tracks %u keys %u key_errors %u attached %u rails %u "
+               "projections %u debug_draws %u\n", c.frames, c.frustums, c.orients, c.orient_cams, c.tracks, c.keys, c.key_errors,
+          c.attached, c.rails, c.projections, c.debug_draws);
+    }
     svc_out_close(g_f);
     g_f = 0;
 }
@@ -200,6 +281,17 @@ extern "C" void svc4_finish()
         g_depth--;                                                                                                   \
         if (top) { P(g_f, " ->"); log_out; P(g_f, "\n"); }                                                          \
         return;                                                                                                      \
+    }
+
+// WT: a transparent wrapper: one line after the call, the calls inside it logged as top-level lines of their own (a
+// whole-frame entry point such as CameraMove, whose inner service calls are what is compared)
+#define WT(mangled, params, args, log_out)                                                                          \
+    extern "C" void __real_##mangled params;                                                                         \
+    extern "C" void __wrap_##mangled params                                                                          \
+    {                                                                                                                \
+        const bool top = TOP;                                                                                        \
+        __real_##mangled args;                                                                                       \
+        if (top) { P(g_f, "%u", g_tick); log_out; P(g_f, "\n"); }                                                  \
     }
 
 // ---- actor volumes (atariInfo, at_mod, at_sub) ----
@@ -315,3 +407,39 @@ W(cModelInfo*, _ZN11cModInfoMgr6createEPvS0_, (cModInfoMgr* mg, void* bin, void*
   { P(g_f, " MC %x %x", (u32) bin, (u32) tpl); },
   { P(g_f, " %x", (u32) r); if (r) P(g_f, " %x %08x %08x %08x", r->be_flag, bits(r->bound.size.x), bits(r->bound.size.y), bits(r->bound.center.z)); })
 WV(ModelInfoSetTrans, (cModel* m, int no, int on), (m, no, on), { P(g_f, " MT %u %d %d", actor(m), no, on); }, { md(m); })
+// ---- camera (view, camera, cam_motion, HermiteInterpolation; cam_ctrl / cam_sys / cam_extra evaluation) ----
+namespace {
+u32 words(const void* p, u32 bytes)
+{
+    u32 h = 2166136261u;
+    const u8* b = (const u8*) p;
+    for (u32 i = 0; i < bytes; i++) h = (h ^ b[i]) * 16777619u;
+    return h;
+}
+void campar(const Camera* c) { pv(&c->param.pos); pv(&c->param.at); P(g_f, " %08x %08x", bits(c->param.roll), bits(c->param.fovy)); }
+}
+WV(_ZN4VIEW15initPerspectiveEffff, (VIEW* v, f32 fy, f32 a, f32 zn, f32 zf), (v, fy, a, zn, zf),
+   { P(g_f, " VP %08x %08x %08x %08x", bits(fy), bits(a), bits(zn), bits(zf)); },
+   { P(g_f, " %08x %08x", words(&v->localFull, sizeof(ViewFrustum)), words(&v->sphere, sizeof(ViewSphere))); })
+// the frame's camera and the frustum it leaves (VIEW::move is not wrapped: in the native build CameraMove calls it
+// inside one object, where --wrap does not reach, so the two builds would log it differently)
+WT(CameraMove, (), (), {
+    P(g_f, " CM");
+    campar(&pG->Cam);
+    P(g_f, " %08x %08x %08x %08x %08x %08x", words(&pG->Cam, sizeof(Camera)), bits(View._fovy), bits(View._zfar),
+      words(&View.worldFull, sizeof(ViewFrustum)), words(&View.world, sizeof(ViewFrustum)), words(&View.sphereWorld, sizeof(ViewSphere)));
+})
+WV(_ZN12CameraMotion4moveEv, (CameraMotion* c), (c), { P(g_f, " CT %08x", bits(c->m_info.frame)); },
+   { campar(c); P(g_f, " %d %u %08x", c->end, c->m_info.state, words(c->m_info.hist, sizeof(c->m_info.hist))); })
+W(int, HermiteInterpolation, (HermitePrm* prm, Vec* out, u16* hist), (prm, out, hist),
+  { P(g_f, " HI %08x %08x %x %u %x,%x,%x", bits(prm->frame), bits(prm->maxFrame), prm->flags, prm->type, hist[0], hist[1], hist[2]); },
+  { P(g_f, " %d", r); pv(out); P(g_f, " %x,%x,%x", hist[0], hist[1], hist[2]); })
+WV(CameraSetOrientationRoll, (Camera* c), (c), { P(g_f, " OR"); campar(c); }, { P(g_f, " %08x", words(c->mat, sizeof(Mtx))); })
+WV(CameraSetOrientationUp, (Camera* c), (c), { P(g_f, " OU"); campar(c); pv(&c->up); }, { P(g_f, " %08x", words(c->mat, sizeof(Mtx))); })
+WV(_ZN22CameraAttachedToMotion4moveEv, (CameraAttachedToMotion* c), (c), { P(g_f, " CA"); }, { campar(c); })
+W(int, _ZN13CameraControl13HermiteExportEP9CameraCutPh, (CameraControl* cc, CameraCut* cut, u8* buf), (cc, cut, buf),
+  { P(g_f, " HX %d", cut->num); }, { P(g_f, " %d %08x", r, words(buf, r > 0 && r < 0x10000 ? r : 0)); })
+WV(_Z7BSplineP13CameraBSplineP6Camerai, (CameraBSpline* bs, Camera* c, int x), (bs, c, x), { P(g_f, " BS %08x", bits(bs->t)); },
+   { campar(c); })
+WV(_Z11ParametrizeP9CameraCutP13CameraBSpline, (CameraCut* cut, CameraBSpline* bs), (cut, bs), { P(g_f, " PZ %d", cut->num); },
+   { P(g_f, " %d %d %08x", bs->num, bs->k, words(bs, sizeof(CameraBSpline))); })
