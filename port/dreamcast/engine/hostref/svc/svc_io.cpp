@@ -54,7 +54,7 @@ extern "C" void* svc_pool_base(uint32_t* bytes)
     uint8_t* r = (uint8_t*) svc_region(&all);
     *bytes = 0x00100000;
     g_carve = r + *bytes;
-    g_carve_left = 0x00400000u - *bytes;
+    g_carve_left = 0x00400000u - 0x10000u - *bytes;   // the last 64 KiB: the original cloth's volume list (svc_cloth_glue)
     return r;
 }
 // The baked motion keys (bake/motion_keys.py; RE4_SVC_MK=<pack>), read once into the region at 4 MiB. Without
@@ -123,6 +123,8 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "clothdroprng", 12) && &cloth_control_droprng) cloth_control_droprng = 1;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
+    uint32_t all;
+    svc_region(&all);   // mapped before any game code runs (the hosted cloth's volume list lives in it)
     const char* p = getenv("RE4_SVC_POISON");
     if (&skel_poison) skel_poison = !(p && *p == '0');
     if (&col_verify) col_verify = !(p && *p == '0');   // the check build also tests every polygon the grid skips

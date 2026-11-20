@@ -4,9 +4,9 @@
 #include "dbmodule.h"
 
 // The old port's stand-in for the GameCube's locked cache: penClothAtMake builds a tick's collision volumes there.
-extern "C" {
-unsigned char re4dc_locked_cache[16384] __attribute__((aligned(32)));
-}
+// Placed in the service region's last 64 KiB below the motion keys (svc_io.cpp keeps the carve out of it), so the
+// census traces the original's volume list as it traces the native cloth's.
+asm(".globl re4dc_locked_cache\n.set re4dc_locked_cache, 0x8E3F0000");
 
 // Debug drawing (pG->Debug_flg[0] & 0x400): nothing to draw in the reference.
 void Draw_cylinderMtx(Mtx, Vec*, f32, f32, u32) {}

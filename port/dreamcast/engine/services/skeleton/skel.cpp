@@ -1542,6 +1542,10 @@ extern "C" void skel_leave(SkelTable* t, u32 groups)
 {
     for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], groups);
 }
+extern "C" void skel_serve_bone(SkelTable* t, u32 bone, u32 groups)
+{
+    if (bone < t->n && (t->mbox[bone] & 0x7F)) serve(t, bone, groups);
+}
 extern "C" SkelHist* skel_history(SkelTable* t, u32 bone)
 {
     return bone < t->n && t->hslot[bone] != 0xFF ? &t->hold[t->hslot[bone]] : 0;

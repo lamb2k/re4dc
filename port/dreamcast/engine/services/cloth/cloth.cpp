@@ -350,6 +350,7 @@ struct Step {
     PenAtWork* at;
     Vec wind;
     u32 n;
+    int reset;
 };
 void step_begin(ClothChain* ch, Step& s)
 {
@@ -364,7 +365,8 @@ void step_begin(ClothChain* ch, Step& s)
         Vec r = wget(t, 0);
         s.floorY = SatMgr.getFloor(&r, 600.0f, 100000.0f, 0, 0) + 30.0f;
     }
-    if (m->be_flag & 0x00200000) reset(ch);
+    s.reset = (m->be_flag & 0x00200000) != 0;
+    if (s.reset) reset(ch);
     s.at = 0;
     if (!(c->Flag & 1)) s.at = at_make(ch);
     f32 ang = 1.0f;
@@ -498,9 +500,15 @@ void matrices(ClothChain* ch, const Step& s)
     }
 }
 
-void step_end(ClothChain* ch)
+// the step changed its links' bones only (world matrix and position; a reset also their local matrices and the
+// root's history): the records of those that are mailbox bones get them
+void step_end(ClothChain* ch, int wasReset)
 {
-    skel_leave(ch->t, (ch->m->be_flag & 0x00200000) ? 7 : 1);
+    if (wasReset) {
+        skel_leave(ch->t, 7);
+        return;
+    }
+    for (u32 i = 0; i < ch->n; i++) skel_serve_bone(ch->t, ch->link[i].bone, 1);
 }
 
 // the debug wind (pG->Debug_flg[0] & 0x200), both variants
@@ -627,7 +635,7 @@ void move1(ClothChain* ch)
         }
     }
     matrices(ch, s);
-    step_end(ch);
+    step_end(ch, s.reset);
 }
 
 // PenClothMove3
@@ -734,7 +742,7 @@ void move3(ClothChain* ch)
         }
     }
     matrices(ch, s);
-    step_end(ch);
+    step_end(ch, s.reset);
 }
 
 }   // namespace
@@ -795,7 +803,7 @@ extern "C" void PenClothSet(cModel* m, PenCloth* c, f32 len)
         for (int q = 0; q < 4; q++)
             if (tabs[q] && tabs[q][i] < 0xFF) ch->cold[i].dist[q] = GetDistance3(&L.pos, &ch->link[L.side[q]].pos) * 0.5f;
     }
-    skel_leave(t, 1);
+    for (u32 i = 0; i < ch->n; i++) skel_serve_bone(t, ch->link[i].bone, 1);
 }
 
 extern "C" void PenClothMove(cModel* m, PenCloth* c)
