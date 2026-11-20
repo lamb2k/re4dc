@@ -7,12 +7,12 @@
 struct E1Timing {
     uint32_t input_us, tick_us, services_us, trace_us, draw_us, wait_us, frame_us, fields, player_us, obj_us, cam_us, pvr_us;
     uint32_t chars_us;   // the characters' moves (the partner), inside tick_us
-    uint32_t svc_group_us[5];   // the services row split (lane eng-e1c): index E1_SVC_* (0 unused)
+    uint32_t svc_group_us[6];   // the services row split (lane eng-e1c): index E1_SVC_* (0 unused; 5 effects, lane eng-e2)
 };
 extern E1Timing e1_timing[E1_TICKS];
 // Services row split (lane eng-e1c): the group of each service entry point (host/e1_wraps.cpp), also the words of
 // the MODELLED service stamps (e1_svc_stamp: 0 back in the behaviour).
-enum { E1_SVC_MOTION = 1, E1_SVC_CLOTH = 2, E1_SVC_PARTS = 3, E1_SVC_COLLISION = 4, E1_SVC_GROUPS = 5 };
+enum { E1_SVC_MOTION = 1, E1_SVC_CLOTH = 2, E1_SVC_PARTS = 3, E1_SVC_COLLISION = 4, E1_SVC_EFFECTS = 5, E1_SVC_GROUPS = 6 };   // effects: lane eng-e2
 uint32_t e1_svc_group(unsigned g);
 void e1_svc_publish();
 // native services host side (lane eng-e1c, host/e1_svc_mem.cpp): boot options, room tables, report

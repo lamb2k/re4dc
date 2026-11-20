@@ -121,3 +121,21 @@ file HILL does the same in test ISOs). Flycast boot of the staged disc: the vill
 - Village cloth still pair against the old game: no old-game stills of the village route exist (the hill pairs show
   both characters' cloth). Props, effects, foot shadows, HUD portrait not drawn. Hill over budget on the model.
 - Console run.
+
+## 8. Merge of `engine` 5a7c13b69 (eng-e2's fight), on the integrator's request
+
+- `core/draw_e1.c`: both sides kept. Opaque list: the Ganados (eng-e2), Leon, Ashley; translucent list: world, Leon's
+  hair run, the effect sprites (eng-e2), HUD. Each character keeps its own slot of the actor pass, so the Ganados no
+  longer have to precede Leon.
+- `services/actor_e1.inc`: the palette check is kept per catalogue model (eng-e2's per-Ganado cache in
+  `fight/fight_draw.inc` folded into it); every character but Leon is lit by its **own light record** built from its
+  model record in the actor table (`services/draw.cpp` `e1_light_record`: LightInfo, material colour, TEV group, added
+  ambient, as the capture records them; the group's TEV scale from the pack's records). Leon keeps the pack's record;
+  his live record is checked against it once per boot: 0 of 12 fields differ (village, hill, fight). The engine's
+  `cLightInfo::init2` now also sets SelectMask and Radius as the original does.
+- The fight image (FIGHT=1) keeps the cloth stubs, as the boss image.
+- Checks: default, HILL, FIGHT=1 and BOSS=1 build. Village trace and hill trace equal the hand-back's; hill vs re4ref
+  (split, no feed) 729/729 for Leon and Ashley. Fight: drawn, with trace; against eng-e2's `n2-t1` the first 900
+  ticks are identical with the diagnostic arm `AIMSWAY_PRESENT=1` (the aim sway on the presentation generator, as
+  eng-e2's image had it); the default image differs from tick 13, where Leon's aim sway now draws from Rnd (6 draws
+  that tick), as section 1 rules.

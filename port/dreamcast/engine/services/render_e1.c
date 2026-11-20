@@ -4,3 +4,6 @@
    not edited (lane eng-look works there). */
 #include "../render/render.c"
 #include "actor_e1.inc"
+#ifdef E2_FIGHT
+#include "fight_draw.inc"   /* lane eng-e2: the fight's Ganados and native effect sprites */
+#endif

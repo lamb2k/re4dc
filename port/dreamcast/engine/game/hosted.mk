@@ -6,7 +6,7 @@
 # The partner (lane eng-e1b, E1 second slice): Ashley's original partner code, cSubChar (pl_npc.cpp: follow, wait,
 # hide, carried, damage) and the pl11 module (cSubAshley, enemy id 3: em/pl11 + rel/pl11), whose REL entry is
 # linked under its own name (Makefile: -D_prolog=pl11_prolog, as the reference build re4ref does).
-ifneq ($(BOSS),1)
+ifeq ($(BOSS)$(FIGHT),)
 PARTNER_SRCS := game/pl_npc pl11/pl11
 SVC_PARTNER_SRCS := game/route_ck
 endif
@@ -35,8 +35,8 @@ HOSTED_SRCS := \
 # skirt and sweater). pendulum.cpp is NOT linked: the wind globals (GlobalWind, GlobalWindAdd) are engine data at the
 # original's defaults (no room wind setter is hosted) and the service's fallback for a chain it cannot resolve is a
 # logged stub (host/e1_svc_stubs.cpp); PenClothMove2 (enemy flails) has no caller here. The boss image (BOSS=1) keeps
-# its cloth stubs.
-ifneq ($(BOSS),1)
+# its cloth stubs, as does the fight image (FIGHT=1, lane eng-e2).
+ifeq ($(BOSS)$(FIGHT),)
 CLOTH_SRCS := game/pl_cloth
 endif
 # route_ck.cpp (lane eng-e1b): the room's route points, which the partner's follow reads (RouteCkToPos); the boss image

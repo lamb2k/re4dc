@@ -32,6 +32,10 @@ ENG_C := $(wildcard $(ENG)/core/*.c)
 ifeq ($(BOSS),1)
 include boss.mk
 endif
+# E2 fight slice (lane eng-e2): FIGHT=1 builds the village square fight image (game/fight.mk).
+ifeq ($(FIGHT),1)
+include fight.mk
+endif
 ENG_OBJS := $(patsubst $(ENG)/%.cpp,$(OUT)/e/%.o,$(ENG_CPP)) $(patsubst $(ENG)/%.c,$(OUT)/e/%.o,$(ENG_C))
 REND_OBJS := $(OUT)/r/render_e1.o $(OUT)/r/replay_pack.o $(OUT)/r/native_world.o $(OUT)/r/avk_sh4.o $(OUT)/r/stage_sh4.o
 ENG_HDRS := $(wildcard $(ENG)/host/*.h $(ENG)/core/*.h $(ENG)/services/*.h)
@@ -71,6 +75,11 @@ PRESENT_game/pl_class := _ZN7cPlayer13moveEyeNormalEv
 PRESENT_game/pl_sub := PlSetDamageSe
 # Lane eng-e1d: the aim sway PlWepLockRand is behaviour (it moves Leon and his shots): back on the original generator.
 PRESENT_game/pl_wep := wepSetWaterShot
+# Diagnostic arm (not a default): AIMSWAY_PRESENT=1 puts the aim sway back on the presentation generator, as images
+# before lane eng-e1d drew it (to compare with their traces).
+ifeq ($(AIMSWAY_PRESENT),1)
+PRESENT_game/pl_wep += PlWepLockRand
+endif
 PRESENT_game/cam_extra := _ZN11CameraScope4moveEv _ZN12CameraLookAtC2EP6Camera
 PRESENT_wep/objRuger := _ZN9cObjRuger12setCartridgeEv
 PRESENT_game/pl_npc := _ZN8cSubChar8moveFaceEv
@@ -107,7 +116,7 @@ NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
 # force-included and stands in for services/cloth/pres_rng.h (same four functions, same include guard), drawing from
 # the engine generator of host/e1_wraps.cpp. pendulum.cpp is not linked (host/e1_svc_stubs.cpp: the wind globals, the
 # fallback stubs).
-ifneq ($(BOSS),1)
+ifeq ($(BOSS)$(FIGHT),)
 NATIVE_INC += -I$(SVC_DIR)/cloth
 NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o
 endif

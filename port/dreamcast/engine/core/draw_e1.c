@@ -29,6 +29,12 @@ static int open_ok, stills;
    (s/stills.py reads the frame buffer from Flycast's memory; m1_state 2 request, 3 acknowledge, 4 frame buffer). */
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent);
+#ifdef E2_FIGHT
+/* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
+void e2_draw_open(void);
+void e2_draw_actors(NativeScene* s);
+void e2_draw_effects(NativeScene* s);
+#endif
 
 /* Lane eng-e1d: the scene's pack. The village route reads CROSS.PAK (eng-look's lkg bake); the hill scene reads
    HILL.PAK (bake/hill_pack.py: the r11d whole-room bake with its visibility HILL.VIS, the room's lights, fog and HUD
@@ -50,6 +56,9 @@ int e1_draw_open_c(const char* pack)
     /* Ashley's body is catalogue 6 of the hill pack only (other packs hold props there) */
     partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
     printf("E1 draw: pack %s, %u catalogue models, partner %s\n", pack, scene.models.n, partner_model ? "drawn from catalogue 6" : "bone marks");
+#ifdef E2_FIGHT
+    e2_draw_open();
+#endif
     open_ok = 1;
     file_t f = fs_open("/cd/STILLS", O_RDONLY);
     if (f >= 0) { fs_close(f); stills = 1; }
@@ -136,6 +145,9 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_list_begin(PVR_LIST_OP_POLY);
     native_sky(&scene);   /* also the fog table every header reads (the hill scene: the village sky and fog) */
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 0);
+#ifdef E2_FIGHT
+    e2_draw_actors(&scene);   /* the Ganados (lane eng-e2); each character keeps its own slot since lane eng-e1d */
+#endif
     e1_actor_pass(&scene, leon, leon_skel, 0, identity, 0);
     if (partner && partner_model && partner_record) e1_actor_pass(&scene, partner_record, partner, partner_model, identity, 0);
     else e1_partner_pass(cam, partner);
@@ -147,6 +159,9 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_list_begin(PVR_LIST_TR_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 2);
     e1_actor_pass(&scene, leon, leon_skel, 0, identity, 1);   /* Leon's hair run (role 8), as the bench since eng-look */
+#ifdef E2_FIGHT
+    e2_draw_effects(&scene);
+#endif
     native_hud(&scene);
     pvr_list_finish();
     pvr_scene_finish();

@@ -19,6 +19,29 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
                        uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world, const void* partner_record);
 }
 extern "C" int PlGetWeaponNo();
+
+// A character's light inputs (lane eng-e1d), read from its model record in the actor table: the fields of the
+// capture's ModelLight record (bench/r3_inputs.inc m1r3_snapshot_light, same bits), in its layout (17 words). The TEV
+// scale (gxCsScale of the group: room light data, not hosted) is left 0 for the renderer to fill.
+extern "C" int e1_light_record(const void* model, uint32_t* o)
+{
+    const cModel* m = (const cModel*) model;
+    const cLightInfo& li = m->LightInfo;
+    unsigned flags = ((m->be_flag & 0x8000) ? 1u : 0u) | ((m->be_flag & 8) ? 2u : 0u) | ((li.Flag & 4) ? 8u : 0u);
+    if (m->pModelInfo && m->pModelInfo->pData && (m->pModelInfo->pData->flags & 0x40000000)) flags |= 4;
+    o[0] = 0; o[1] = 0; o[2] = (uint32_t) (uintptr_t) m;
+    o[3] = (unsigned) li.Flag | ((unsigned) (u8) li.PartsNo << 8) | ((unsigned) li.EnableMask << 16) | (flags << 24);
+    o[4] = li.SelectMask;
+    memcpy(o + 5, &li.Offset, 12);
+    memcpy(o + 8, &li.Size, 12);
+    o[11] = 0;
+    if (m->pModelInfo) memcpy(o + 11, m->pModelInfo->color, 4);
+    o[12] = (unsigned) m->TevScaleGroup;
+    o[13] = (unsigned) m->AddAmb_r | ((unsigned) m->AddAmb_g << 8) | ((unsigned) m->AddAmb_b << 16);
+    o[14] = o[15] = 0xFFFFFFFFu;
+    o[16] = pG->Status_flg[1];
+    return 1;
+}
 static int headless;
 
 // The native skeleton table of a model as the renderer reads it (pointers only; lane eng-e1c)
