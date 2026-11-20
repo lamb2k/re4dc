@@ -1,12 +1,13 @@
 # RE4 Dreamcast engine plan, version 3 (2026-11-20)
 
-Status: **draft for the owner.** Version 3 keeps version 2's goal, budget, architecture and rules, and replaces its path with the one in section 7, written after the retrospective of 2026-11-20 ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). All lanes are stopped until the owner approves it.
+Status: **approved by the owner on 2026-11-20** ("Ok update plan and get to work"), with "beyond the PS2 version" added as a goal and as step 6. Version 3 keeps version 2's budget, architecture and rules; its path is section 7, written after the retrospective ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)).
 
 Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC hardware model), **Flycast**, **emulator** (another project's emulator), or **estimate**.
 
 ## 1. Goal and bar
 
 - **Goal:** all of the game in a new native Dreamcast engine, playable on a real console, from PS2 assets.
+- **Then surpass the PS2 version** (owner 2026-11-20: "surpass the ps2 version with surreal Dreamcast strength enhancements"), using what this console does better. It comes after the floor is held, never instead of it (step 6 in section 7).
 - **Floor:** 30 fps. At most two 60 Hz fields between presented pictures, judged on the worst interval, not the mean.
 - **Correct means "plays right and looks right":** same kills, triggers, doors, waves, room clears and cutscenes; no desync or stuck events; the look approved by the owner from still pairs. Not bit-exact.
 - **Never changed:** behaviour (collision results, event sequencing, game state, AI decisions), enemy cap 4, no GameCube assets.
@@ -112,6 +113,7 @@ One milestone at a time. Each ends with an audit and a console run, and only the
 | **3. Pass E2: fight and boss** | The four-Ganado fight complete (a kill, doors, weapons, items, sound in the fight); El Gigante drawn with his events; drawing brought inside its row by whatever step 1 shows is needed | Outcome check passes (same kills, damage, waves, triggers); audit passes; console floor in the fight and the boss fight | 8 to 12 lane rounds |
 | **4. E3: chapter 1 playable** | Room loading, doors, events, cutscene movies, items, the merchant, saves and sound, from the first room to the lake boss | A no-warp play-through on console at the floor; the owner plays it; first engine release | 20 to 30 lane rounds |
 | **5. E4: the rest of the game** | Chapter by chapter: bake, host, budget, play-through, release. Disc 1, then Disc 2, then Disc 3, bosses included | Each chapter released | Sized per chapter after step 4 |
+| **6. Beyond the PS2 version** | Enhancements that spend the graphics chip and video memory, not the CPU (table below). Starts once chapter 1 holds the floor on console; then runs beside step 5, one enhancement at a time | Each enhancement approved by the owner from still pairs or a clip, with the console floor still held | Sized per enhancement |
 
 A lane round is one briefed lane to its hand-back; they took one to three hours on 11-19. These sizes are low-confidence estimates.
 
@@ -124,6 +126,19 @@ A lane round is one briefed lane to its hand-back; they took one to three hours 
 | Over 20 ms | The drawing design is short | A drawing redesign round before hosting more; the owner chooses between deeper content cuts and a lower floor if two designs miss |
 
 **When the console is not available,** work moves to things whose value does not depend on timing: hosting game systems (doors, items, events), tools, the play-through script. No speed tuning on the model.
+
+**Step 6 candidates.** The chip is about 20% busy at the village cross and about 3 MB of video memory is free in a whole room on the bench, so these fit where the console has room. Order is by expected effect for the cost; the console decides each.
+
+| Enhancement | What the player sees | Costs |
+|---|---|---|
+| Sharper textures | More texture detail than the PS2's 4 MB of video memory allowed; mip-mapped, so less shimmer | Video memory. Needs the asset decision below |
+| True shadow volumes | Real character and prop shadows on the ground and walls, where the PS2 used blobs | Chip; a little CPU per caster |
+| Sorted transparency | Smoke, fire, water and hair layered correctly | Chip only |
+| Anti-aliasing and 480p VGA | Cleaner edges, progressive picture on a VGA box | Chip fill |
+| Bump-mapped surfaces | Stone, wood and metal that catch the light | Chip, video memory, some CPU per lit object |
+| Memory-card screen | Health or ammo on the controller's screen | Almost nothing |
+
+The asset decision: the owner's rule is PS2 assets only, and the PS2 set is the lower-detail one. Sharper textures and models need either reworked or upscaled PS2 art, or the GameCube originals that the rule forbids today. The other five rows need no asset change.
 
 **Milestone contents** (unchanged from version 2):
 
@@ -143,7 +158,6 @@ A lane round is one briefed lane to its hand-back; they took one to three hours 
 - Disc 2 play-through from the r207 sword puzzle on.
 - Test 28 on the release line (the lake-fight fixes), when a tester reading comes back.
 - The automatic console loop beyond the loader (smart plug, broadband adapter), if the owner has the hardware.
-- **Beyond the PS2 version** (owner 11-20: "surpass the ps2 version with surreal Dreamcast strength enhancements"). Not in any step yet. Candidates that spend the graphics chip and video memory, not the CPU: sharper textures in the 8 MB of video memory, true shadow volumes, per-pixel sorted transparency, bump-mapped surfaces, anti-aliasing, 480p VGA, memory-card screen extras. Proposal: its own step after chapter 1 holds the floor on console, each item approved from still pairs. Needs an owner call on asset sources: the PS2-only rule caps texture and model detail at the PS2's.
 
 ## 8. Gates (per milestone, once, on the final image)
 
@@ -204,13 +218,15 @@ A lane round is one briefed lane to its hand-back; they took one to three hours 
 | 11-19 | "Is the approach drifting to porting existing code or true architecture for Dreamcast", then "Split it" | No original service code in the engine image; random numbers split between behaviour and presentation; plays right judged on gameplay equivalence |
 | 11-20 | "Why did we drift instead of gains - create a clear concise handover and stop al lanes" | All lanes stopped; handover written |
 | 11-20 | "We made good progress. Do a retrospective as an Eng team ... then write an updated plan from here to meet our goal" | The retrospective and this version of the plan |
+| 11-20 | "Update agent .md and skills and codex.md to improve performance based on the retro"; "Can't we delete the old skills? We should still keep the teleporter / warp or autonomous testing rig" | Agent files rewritten; skills re4dc-engine, -lane, -audit and re4dc-test-rig; old skills removed |
+| 11-20 | "Do we have in our plan to surpass the ps2 version with surreal Dreamcast strength enhancements", then "Ok update plan and get to work" | Plan version 3 approved; beyond the PS2 version is a goal and step 6; work resumes at steps 1 and 2 with at most two lanes |
 
 ## 12. Decisions needed from the owner
 
-1. **Approve this path** (section 7) and the working rules (section 9). Nothing starts until then.
-2. **The console evening:** when the SD card can go in. It is step 1 and everything after depends on it.
+1. **The console evening:** when the SD card can go in. It is step 1, and nothing is done until it has run on the console.
+2. **Asset source for step 6:** keep PS2-only (five of the six enhancements still apply), allow reworked or upscaled PS2 art, or allow GameCube originals for textures and models.
 3. **El Gigante's lighter PS2 body** (sheet sent 11-19): yes or no.
-4. **Hardware for an automatic console loop:** a Dreamcast broadband adapter or serial cable, and a smart plug, if you have them. Otherwise the loader uses the DreamPi link.
+4. **Hardware for an automatic console loop:** a Dreamcast broadband adapter or serial cable, and a smart plug, if you have them.
 
 ## 13. What open-source Dreamcast projects do that we do not (survey, 2026-11-19)
 

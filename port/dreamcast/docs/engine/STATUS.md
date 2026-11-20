@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-20):** all lanes stopped by the owner. Retrospective written (RETRO_20261120.md) and plan version 3 drafted (ENGINE_PLAN.md, section 7): console evening first, then pass E1, E2, chapter 1, the rest; one milestone and at most two lanes at a time. Waiting on the owner's approval. Handover: HANDOVER-20261120.md. Unfinished work on wip/eng-svc4-20261120, wip/eng-ref-20261120, wip/eng-loop2-20261120.
+**State (2026-11-20):** plan version 3 APPROVED by the owner (H-012). Current steps: 1 (console evening, waits for the owner's SD card) and 2 (pass E1). Two lanes running, both independent of timing. Everything is "finished, unaudited" until its audit and console run.
 
 ## Milestones
 
@@ -33,7 +33,8 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| (none running) | | | | |
+| eng-svc4 | Step 2 (E1), PC-only: native versions of the remaining original service units, link check, strict plays-right reader | lane/eng-svc4 (resumed from wip/eng-svc4-20261120) | Claude Opus | E:\RE4DC-Lanes\eng-svc4 |
+| eng-loop2 | Step 1 preparation: loader Flycast proof; script to build one console disc from `engine`; the owner's evening steps | lane/eng-loop2 (resumed from wip/eng-loop2-20261120) | Claude Opus | E:\RE4DC-Lanes\eng-loop2 |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
 
@@ -75,10 +76,11 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
-Nothing queued. Resume order is in the handover: console first, then E1 only.
+Next, when eng-svc4 hands back: eng-e1e (E1 image fixes; brief at E:\RE4DC-Lanes\eng-e1e\BRIEF.md). Parked: wip/eng-ref-20261120.
 
 ## Waiting on the owner
 
-- Approve plan version 3 (ENGINE_PLAN.md sections 7 and 9).
-- The console evening: the SD card.
+- The console evening: the SD card (step 1).
+- Asset source for step 6 (beyond the PS2 version).
 - El Gigante's lighter PS2 body: yes or no.
+- C: is at 27 GB free (below the 40 GB line): Compact-WSL is the owner's admin step.

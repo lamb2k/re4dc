@@ -2,6 +2,17 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-012 (2026-11-20): plan version 3 approved; beyond the PS2 version added; work resumes
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** after the retrospective and the draft plan, "Update agent .md and skills and codex.md to improve performance based on the retro"; then "Do we have in our plan to surpass the ps2 version with surreal Dreamcast strength enhancements"; then "Ok update plan and get to work".
+- **Read as:** plan version 3 is approved, and "beyond the PS2 version" becomes a stated goal with its own step (step 6, after chapter 1 holds the floor on console).
+- **Open:** the asset source for step 6; the console evening date; El Gigante's lighter body.
+- **Started, under the retrospective's rules (two lanes, both independent of timing while the console is unavailable):**
+  - eng-svc4 (step 2, PC-only), resumed from wip/eng-svc4-20261120: native versions of the remaining original service units, the link check, the strict plays-right reader.
+  - eng-loop2 (step 1 preparation), resumed from wip/eng-loop2-20261120: the loader's Flycast proof and the script that builds one console disc from `engine`.
+- **Not started:** eng-e1e (E1 image fixes) follows eng-svc4. The split reference for the fight (wip/eng-ref-20261120) stays parked: plays right is judged by outcome from now on.
+
 ## H-011 (2026-11-20): E1 audit (Codex): not passed
 
 - **From:** the auditor (Codex). **To:** the integrator.
