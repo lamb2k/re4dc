@@ -113,7 +113,9 @@ $(OUT)/n/skel_xm.o: $(SVC_DIR)/skeleton/skel_xm.c $(SVC_DIR)/skeleton/skel_xm.h
 # The original units the native services replace in part: every replaced function made weak (the lists of
 # hostref/svc/svc.mk, with the SH symbol prefix), so each call reaches the native body and --gc-sections drops the
 # original's. ik.cpp is not linked (hosted.mk).
-WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \n               MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \n               MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
+WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
+               MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
+               MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
 WEAK_model := _ZN6cModel11getPartsPtrEi _ZN6cModel12partsMatCalcEv _ZN6cModel14partsWorldCalcEv _ZN6cModel8matBlendEf \
               _ZN6cModel9matUpdateEv _ZN6cModel12updateOldPosEv _ZN6cModel6setPosEP3Vec _ZN6cModel14partsFixMemoryEi \
               _ZN6cModel14partsFixAdjustEv _ZN6cModel9setParentEPS_P3VecS2_ _ZN6cModel9setParentEPS_iP3VecS2_ \
