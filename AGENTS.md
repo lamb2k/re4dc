@@ -35,6 +35,7 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 ## Direction
 
 - **The engine is the program; the original game supplies behaviour** (owner 2026-11-19: "I want all of the game in a new native improved engine"). The engine owns the main loop, memory map, loading, renderer, effects, skeleton and collision services, native from the start of each milestone. Only decision code (AI, player, events, scripts) stays original, hosted through thin setters.
+- **No original service code in the engine image, and split random numbers** (owner 2026-11-19, "Split it"). Hosted characters use native services or logged stubs. The original generator serves behaviour only; presentation (effects, cloth, sway) uses an engine generator. Plays right is gameplay equivalence plus position tolerance, not generator state.
 - **No publication layer.** Engine state is draw state. Behaviour code never hands the engine an object to convert; it sets position, animation, flags, spawn and kill on engine tables. The skeleton is evaluated once, into the matrices the skinning uses.
 - **Budget first.** Every lane reports against its row of the whole-frame budget in `ENGINE_PLAN.md` section 4 (behaviour, services, publication, drawing, system, margin), in absolute ms, on the worst interval as well as the mean.
 - **Content built for this console.** The graphics chip has headroom and the CPU does not. Use baked visibility, distance levels, caps and baked lighting, each approved by the owner from a still pair. Do not draw the PS2 content one for one.

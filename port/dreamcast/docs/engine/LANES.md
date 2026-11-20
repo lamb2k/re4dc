@@ -43,6 +43,11 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
   - the engine image links no original game code;
   - every check ships with an input that fails it.
 
+## 3b. Native, not ported (owner 2026-11-19)
+
+- A lane that hosts a character never links original service code (effects, skeleton, collision, cloth, routes, managers) to get it running. It uses the native service or a logged stub and lists the stub.
+- Presentation code never draws from the original generator.
+
 ## 4. Gates
 
 - Gates are per milestone and are listed in the plan, section 8. They run once, on the final image.
