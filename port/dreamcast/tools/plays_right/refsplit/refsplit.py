@@ -200,7 +200,36 @@ extern "C" float re4ref_f11(unsigned int cat)
 }
 '''
 
-DECL_PORT = ('extern "C" { extern volatile unsigned int re4ref_split_mask; extern unsigned int re4ref_pdraws, '
+BTRACE_CPP = '''
+// re4ref site trace (lane eng-ref, diagnostic build only): behaviour draws named by site when re4ref_btrace is set.
+extern "C" void re4dc_log(const char* fmt, ...);
+extern "C" {
+volatile unsigned int re4ref_btrace;
+unsigned char re4ref_brnd(unsigned int s)
+{
+    if (re4ref_btrace) re4dc_log("RB s=%u\\n", s);
+    return Rnd();
+}
+float re4ref_bf01(unsigned int s)
+{
+    if (re4ref_btrace) re4dc_log("RB s=%u\\n", s);
+    return fRand0_1();
+}
+float re4ref_bf11(unsigned int s)
+{
+    if (re4ref_btrace) re4dc_log("RB s=%u\\n", s);
+    return fRand1_1();
+}
+}
+'''
+BWARP_OLD = '''        } else if (!strcmp(k, "god")) {
+'''
+BWARP_NEW = '''        } else if (!strcmp(k, "rsplit_trace") && n >= 2) {
+            re4ref_btrace = num(tok[1]);
+        } else if (!strcmp(k, "god")) {
+'''
+
+DECL_PORT = ('extern "C" { extern volatile unsigned int re4ref_split_mask, re4ref_btrace; extern unsigned int re4ref_pdraws, '
              're4ref_pcats; void re4ref_pseed(unsigned short); }  // re4ref split (lane eng-ref)\n')
 
 WARP_OLD = '''        } else if (!strcmp(k, "god")) {
@@ -283,6 +312,43 @@ def main():
         decl = ('extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); '
                 'float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)')
         open(path, 'w', encoding='latin-1').write(decl + '\n' + '\n'.join(lines))
+    if '--trace-sites' in sys.argv:
+        # diagnostic build: every OTHER generator call (behaviour) gets a site number and, when the fixture says
+        # `rsplit_trace 1`, logs `RB s=<site>` as it draws (the cause of a draw-count difference, by name)
+        bmap = []
+        for d, _, fs in os.walk(src):
+            for fn in sorted(fs):
+                if not fn.endswith('.cpp'):
+                    continue
+                path = os.path.join(d, fn)
+                rel = os.path.relpath(path, src).replace(os.sep, '/')
+                if rel == 'game/rnd.cpp':
+                    continue
+                text = open(path, encoding='latin-1').read()
+                if not CALL.search(text):
+                    continue
+                lines = text.split('\n')
+                owner = functions(lines)
+                for i, l in enumerate(lines):
+                    if l.strip().startswith('//') or not CALL.search(l):
+                        continue
+                    def rep(m):
+                        bmap.append((len(bmap), rel, i + 1, owner[i], m.group(1)))
+                        return '%s(%d)' % (dict(Rnd='re4ref_brnd', fRand0_1='re4ref_bf01', fRand1_1='re4ref_bf11')[
+                            m.group(1)], len(bmap) - 1)
+                    lines[i] = CALL.sub(rep, l)
+                bdecl = ('extern "C" { unsigned char re4ref_brnd(unsigned int); float re4ref_bf01(unsigned int); '
+                         'float re4ref_bf11(unsigned int); }  // re4ref site trace (lane eng-ref)')
+                open(path, 'w', encoding='latin-1').write(bdecl + '\n' + '\n'.join(lines))
+        with open(os.path.join(src, 'game/rnd.cpp'), 'a', encoding='latin-1') as fp:
+            fp.write(BTRACE_CPP)
+        if out:
+            with open(out.replace('.tsv', '-bsites.tsv'), 'w') as fp:
+                fp.write('site\tfile\tline\tfunction\tcall\n')
+                for r in bmap:
+                    fp.write('\t'.join(str(x) for x in r) + '\n')
+        sub_once(os.path.join(tree, 'port/dreamcast/game/dbgwarp_bridge.cpp'), BWARP_OLD, BWARP_NEW)
+        print('refsplit: site trace on %d behaviour calls' % len(bmap))
     rnd_h = os.path.join(tree, 'include/rnd.h')
     s = open(rnd_h, encoding='latin-1').read()
     assert '#endif' in s

@@ -5,8 +5,8 @@
 // engine's own code changes). Each pad read it:
 //   - picks the nearest living Ganado (enemy id 0x15) by ground distance from Leon;
 //   - holds R (aim) and turns with the stick toward it, the stick proportional to the yaw error;
-//   - fires (A for 2 reads) when the aim has been within 2 degrees for 4 reads and 12 reads have passed since the
-//     last shot.
+//   - fires (A for 2 reads) when the aim has been within 3.4 degrees (0.06 rad) for 3 reads and 12 reads have
+//     passed since the last shot (a smaller stick than 40 does not turn the aim: the first try never fired).
 // The stick's turn direction is learnt, not assumed: if the error grows for 3 reads while turning, the sign flips.
 // It reads only game state both sides share (pPL, EmMgr's alive list); it keeps its own clock (pad reads since Leon
 // exists), so it needs no pad script. Deterministic: the same state gives the same pad.
@@ -56,14 +56,14 @@ static int re4ap_pad(unsigned short* buttons, signed char* sx, signed char* sy)
     const float err = re4ap_wrap(re4ap_atan2(bdx, bdz) - pPL->ang.y);
     *buttons = 0x0020;   // R: aim
     const float ae = re4ap_abs(err);
-    if (ae > 0.035f) {
+    if (ae > 0.06f) {
         if (ae > re4ap_abs(prev_err) + 0.002f && n > 21) {
             if (++grow >= 3) { sign = -sign; grow = 0; }
         } else {
             grow = 0;
         }
         int s = (int) (ae * 150.0f);
-        if (s < 24) s = 24;
+        if (s < 40) s = 40;
         if (s > 80) s = 80;
         *sx = (signed char) (sign * (err > 0 ? s : -s));
         aimed = 0;
@@ -72,7 +72,7 @@ static int re4ap_pad(unsigned short* buttons, signed char* sx, signed char* sy)
         ++aimed;
     }
     prev_err = err;
-    if (aimed >= 4 && n - last_shot >= 12) { last_shot = n; ++shots; }
+    if (aimed >= 3 && n - last_shot >= 12) { last_shot = n; ++shots; }
     if (n - last_shot < 2) *buttons |= 0x0100;   // A: fire
     return 1;
 }

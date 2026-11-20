@@ -123,8 +123,9 @@ def main():
     row('room events (held / released)', rv, ev, rv == ev)
     # a Ganado that waits without animating (the village has some) is in both runs; a stuck state is one only one side
     # has, or Leon frozen
+    rsk, esk = sorted((k, i) for k, i, _ in R['stuck']), sorted((k, i) for k, i, _ in E['stuck'])
     row('stuck states (one side only, or Leon)', R['stuck'], E['stuck'],
-        R['stuck'] == E['stuck'] and not any(k == 'leon' for k, _, _ in R['stuck'] + E['stuck']))
+        rsk == esk and not any(k == 'leon' for k, _ in rsk + esk))
     n = min(len(R['kills']), len(E['kills']))
     if n:
         rt, et = R['kills'][n - 1][0], E['kills'][n - 1][0]

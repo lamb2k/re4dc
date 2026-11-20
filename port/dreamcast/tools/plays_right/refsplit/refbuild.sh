@@ -16,7 +16,7 @@ git archive HEAD | tar -x -C "$R/tree"
 test "$(git -C port/dreamcast/game/third_party/sh4zam rev-parse HEAD)" = "$(git ls-tree HEAD port/dreamcast/game/third_party/sh4zam | cut -d' ' -f3 | cut -c1-40)"
 rm -rf "$R/tree/port/dreamcast/game/third_party/sh4zam"; cp -a port/dreamcast/game/third_party/sh4zam "$R/tree/port/dreamcast/game/third_party/sh4zam"
 git archive HEAD src include port/dreamcast/game | tar -x -C "$R/tree0"
-python3 "$L/port/dreamcast/tools/plays_right/refsplit/refsplit.py" "$R/tree" --list "$K/$LP-sites.tsv" ${RSMASK:+--mask $RSMASK}
+python3 "$L/port/dreamcast/tools/plays_right/refsplit/refsplit.py" "$R/tree" --list "$K/$LP-sites.tsv" ${RSMASK:+--mask $RSMASK} ${RSTRACE:+--trace-sites}
 ( cd "$R" && diff -ruN tree0/src tree/src; diff -ruN tree0/include tree/include; diff -ruN -x third_party tree0/port/dreamcast/game tree/port/dreamcast/game ) > "$K/$LP.patch" || true
 rm -rf "$R/tree0"
 grep -c '^+++ ' "$K/$LP.patch"
