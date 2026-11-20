@@ -46,6 +46,10 @@ static shz_mat4x4_t skin_project[ACTOR_WS_LIMIT] __attribute__((aligned(32)));
 static float skin_world[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
 static float bone_rows[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
 static float bone_scale[ACTOR_WS_LIMIT];
+/* The rows build_ws blends (lane eng-e1e): bone_rows (12 floats a bone) by default; the E1 actor pass points them at
+   the skeleton service's published palette (16 floats a bone, already in this layout) and reads it in place. */
+static const float* ws_rows=&bone_rows[0][0];
+static unsigned ws_stride=12;
 static uint8_t ws_ready[ACTOR_WS_LIMIT];
 static pvr_vertex_t projected_pool[2][ACTOR_POS_LIMIT] __attribute__((aligned(32)));
 static uint32_t colors_pool[2][ACTOR_POS_LIMIT] __attribute__((aligned(32)));
@@ -243,8 +247,8 @@ static void actor_frame_setup(const NativeScene* s){
 /* Blend one weight set, project it for the position kernel and evaluate the model's lights for it. */
 static void build_ws(const RtModel* m,unsigned i){
     const SkinWeight* w=m->w+i;float* out=skin_world[i];
-    if(w->count==1 && w->w[0]==1.f)memcpy(out,bone_rows[w->bone[0]],48);
-    else for(unsigned j=0;j<12;j++){float sum=0;for(unsigned k=0;k<w->count;k++)sum+=w->w[k]*bone_rows[w->bone[k]][j];out[j]=sum;}
+    if(w->count==1 && w->w[0]==1.f)memcpy(out,ws_rows+ws_stride*w->bone[0],48);
+    else for(unsigned j=0;j<12;j++){float sum=0;for(unsigned k=0;k<w->count;k++)sum+=w->w[k]*ws_rows[ws_stride*w->bone[k]+j];out[j]=sum;}
     shz_xmtrx_load_4x4(&view_project);
     shz_mat4x4_t* pm=skin_project+i;
     for(unsigned c=0;c<4;c++){

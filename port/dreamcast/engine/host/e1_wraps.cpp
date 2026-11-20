@@ -161,16 +161,30 @@ WRAP(int, _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii, COL, (void* s, void* a, void* b
 WRAP(int, _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i, COL, (void* s, void* a, void* b, float r, int f, void* n, int m), (s, a, b, r, f, n, m))
 WRAPV(EmAtCheck, COL, (void* m), (m))
 WRAPV(_ZN10cAtariInfo4moveEv, COL, (void* a), (a))
+#ifndef E2_FIGHT   // the fight image wraps these in fight/fight_wraps.cpp
+// lane eng-e1e (E1 audit section 5, rows partition the same work): the route service's entry points the behaviour
+// calls directly (the partner's follow), counted in the services row, not the behaviour's residual
+WRAP(int, RouteCkToEm, COL, (void* e, void* t, void* o, int f), (e, t, o, f))
+WRAP(int, RouteCkToPos, COL, (void* e, void* t, void* o, int f, float* d), (e, t, o, f, d))
+WRAPV(RouteCkEscEm, COL, (void* e, void* f, void* o), (e, f, o))
+WRAP(float, RouteCkPosToPosDis, COL, (void* a, void* b), (a, b))
+#endif
 
 // The palette (world x bind) once a tick after the behaviour: native skeleton only (the first form has none; its
 // drawing multiplied world x bind itself). Called by the main loop inside the tick's service accounting.
 extern "C" void skel_publish_all(void) __attribute__((weak));
+void e1_light_service_tick();   // services/draw.cpp (lane eng-e1e)
 void e1_svc_publish()
 {
     static unsigned slot = svc_slot("skel_publish_all", PARTS);
     if (!skel_publish_all) return;
     enter(slot);
     skel_publish_all();
+    leave();
+    // lane eng-e1e: the light service's records (services/draw.cpp), rebuilt only when a character's inputs change
+    static unsigned lslot = svc_slot("e1_light_service_tick", PARTS);
+    enter(lslot);
+    e1_light_service_tick();
     leave();
 }
 

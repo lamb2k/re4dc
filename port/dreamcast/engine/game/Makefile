@@ -58,6 +58,10 @@ WRAP_SYMS := Rnd fRand1_1 fRand0_1 \
     _ZN7cPlNeck4moveEv _ZN7cPlBody4moveEv _ZN7cPlayer7moveEyeEv _ZN7cPlayer10shadowCtrlEv _ZN7cPlayer9seqSeCtrlEv \
     _ZN7cPlayer11visibleCtrlEv _ZN6cPlWep4moveEv _ZN7cPlayer8dmgCheckEv _ZN7cPlayer9keyConfigEv \
     _ZN7cPlayer13moveBinocularEv _ZN7cPlayer16subCharLiveCheckEv _ZN7cPlayer9debugMoveEv pl_R0_Move
+# lane eng-e1e: the route service's entry points in the services row (host/e1_wraps.cpp; fight.mk wraps them itself)
+ifneq ($(FIGHT),1)
+WRAP_SYMS += RouteCkToEm RouteCkToPos RouteCkEscEm RouteCkPosToPosDis
+endif
 WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc
 all: $(OUT)/e1.elf
 
@@ -128,9 +132,10 @@ $(OUT)/n/cloth_kernel.o: $(SVC_DIR)/cloth/cloth_kernel.c $(CLOTH_DEPS)
 	@mkdir -p $(dir $@)
 	kos-cc -O2 -std=gnu11 -Wall -ffp-contract=off -ffunction-sections -fdata-sections -I$(SHZ) -I$(SVC_DIR)/cloth \
 		-include $(ENG)/host/e1_pres_rng.h -c $< -o $@
+# SKEL_PAL_DRAW (lane eng-e1e): the palette published in the renderer's skinning layout (quantum and sphere scale).
 $(OUT)/n/skel.o: $(SVC_DIR)/skeleton/skel.cpp $(SVC_DIR)/skeleton/skel.h $(SVC_DIR)/skeleton/skel_xm.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
-	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -DSKEL_PAL_DRAW=1 -c $< -o $@
 $(OUT)/n/col.o: $(SVC_DIR)/collision/col.cpp $(SVC_DIR)/collision/col.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@

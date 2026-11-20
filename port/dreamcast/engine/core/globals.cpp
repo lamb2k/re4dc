@@ -22,12 +22,30 @@ static cLog LogWork;
 cLogPtr pLog;
 
 // ---- engine log: serial (printf) ----
+// Lane eng-e1e (E1 audit section 5): nothing prints over serial inside the timed ticks. While the tick loop runs
+// (e1_state[0] == 4) a log line goes to a RAM buffer, printed by e1_log_flush after the loop (e1_report), with the tick
+// it was written at kept in the text; lines that do not fit are counted and reported.
+static char log_buf[48 * 1024];
+static unsigned log_len, log_dropped;
 extern "C" void e1_log(const char* fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
-    vprintf(fmt, ap);
+    if (e1_state[0] == 4) {
+        const unsigned room = sizeof(log_buf) - log_len;
+        const int n = vsnprintf(log_buf + log_len, room, fmt, ap);
+        if (n >= 0 && (unsigned) n < room) log_len += (unsigned) n;
+        else { log_buf[log_len] = 0; log_dropped++; }
+    } else {
+        vprintf(fmt, ap);
+    }
     va_end(ap);
+}
+extern "C" void e1_log_flush(void)
+{
+    if (log_len) fwrite(log_buf, 1, log_len, stdout);
+    printf("E1 LOGBUF %u bytes buffered during the ticks, %u lines dropped\n", log_len, log_dropped);
+    log_len = 0;
 }
 
 // ---- stubs into other behaviour: first 4 calls of each logged with the tick, every call counted ----
@@ -90,5 +108,6 @@ void e1_room_globals(const E1Route& r)
     file_t f = fs_open("/cd/CTRLSPD", O_RDONLY);
     if (f >= 0) { fs_close(f); pG->mot_speed = 0.97f; e1_log("E1 CONTROL: motion speed 0.97\n"); }
     f = fs_open("/cd/SEED", O_RDONLY);
-    if (f >= 0) { fs_close(f); RndInit(0x5A5A); e1_log("E1 SEED: generator 5a5a\n"); }
+    if (f >= 0) { fs_close(f); RndInit(0x5A5A); e1_game_seed_option = 1; e1_log("E1 SEED: generator 5a5a\n"); }
 }
+int e1_game_seed_option;

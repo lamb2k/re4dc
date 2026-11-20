@@ -121,6 +121,7 @@ static void game_tick(E1Timing& tm)
     uint64_t t2 = now_us();
     e1_rng_owner(2);
     CameraMove();
+    e1_camera_draw_tick();              // lane eng-e1e: the camera in the renderer's form, written once a tick
     e1_rng_owner(0);
 #ifdef E2_BOSS
     e2_fx_move();                       // effect service, then DmgMgr / collision die checks
@@ -132,6 +133,7 @@ static void game_tick(E1Timing& tm)
     tm.cam_us = now_us() - t2;
     e1_svc_publish();                   // the palette (world x bind) for drawing, once a tick after the behaviour
     tm.services_us = e1_svc_end();
+    e1_hud_draw_tick();                 // lane eng-e1e: the HUD's live words in the renderer's form
     e1_cloth_stat_tick();               // CLOTHSTAT only (diagnostic, outside the timed rows)
     for (unsigned g = 0; g < E1_SVC_GROUPS; g++) tm.svc_group_us[g] = e1_svc_group(g);
 }
@@ -187,7 +189,10 @@ int main()
         tm.input_us = b - a;
         tm.tick_us = c - b;
         tm.trace_us = d - c;
-        tm.draw_us = e - d;
+        // lane eng-e1e (E1 audit section 5): the Drawing row is the renderer's own span, stamp 5 (chip ready) to 7
+        // (picture submitted), set by e1_draw_picture as the hardware model times it; the PVR wait is pvr_us; the
+        // call's set-up before stamp 5 (skeleton views) stays in the frame's remainder
+        (void) e;
         e1_pace_end(tm);
         tm.frame_us = now_us() - a;
     }

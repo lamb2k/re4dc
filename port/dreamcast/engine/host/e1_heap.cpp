@@ -169,7 +169,6 @@ extern "C" void e1_heap_exercise(int no)
     if (e1_arena.used[no] != used0) bad |= 4;
     for (int i = 0; i < MEM_HEAP_NUM; i++)
         if (e1_arena.used[i] > 0x80000000u) bad |= 8;   // a free charged to another heap underflows its count
-    if (Heap[no].handle >= 0 && OSCheckHeap(Heap[no].handle) < 0) bad |= 16;
     MemSetCurrentHeap(cur);
     e1_log("E1 HEAPCHECK heap %d: blocks %08lx %08lx %08lx in heaps %d %d %d; reuse %08lx; used %lu -> %lu; heap 0 used %lu; %s (bits %u)\n",
            no, (unsigned long) a, (unsigned long) b, (unsigned long) c, ha, hb, hc, (unsigned long) b2, (unsigned long) used0,

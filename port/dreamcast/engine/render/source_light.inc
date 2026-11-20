@@ -34,21 +34,24 @@ static void lamps_frame(const NativeScene* s){
     for(unsigned i=0;i<n;i++){unsigned j=i;while(j && L[lamp_order[j-1]].index>L[i].index){lamp_order[j]=lamp_order[j-1];j--;}lamp_order[j]=i;}
     lamp_count=n;
 }
-static const ModelLight* model_light(const NativeScene* s,const ActorPose* a){
+static const ModelLight* model_light_ri(const NativeScene* s,unsigned role,unsigned index){
     const ModelLight* m=(const void*)s->state[8];unsigned n=s->words[8]*4/sizeof(ModelLight);
-    for(unsigned i=0;i<n;i++)if(m[i].role==a->role && m[i].index==a->index)return m+i;
+    for(unsigned i=0;i<n;i++)if(m[i].role==role && m[i].index==index)return m+i;
     return NULL;
 }
+static const ModelLight* model_light(const NativeScene* s,const ActorPose* a){return model_light_ri(s,a->role,a->index);}
+/* lane eng-e1e: the matrices the rule reads are passed by pointer (model, light-origin part, object position), so the
+   E1 actor pass lights from the skeleton's tables in place; the ActorPose form below picks them from its records. */
+static const ModelLight src_light_fallback={0,0,0,0x100000u,0xffffffffu,{0,0,0},{1000,1000,1000},{0x40,0x40,0x40,0xff},1|2<<8,0,{~0u,~0u},0};
 static float dist3(const float* a,const float* b){float x=a[0]-b[0],y=a[1]-b[1],z=a[2]-b[2];return sqrtf(x*x+y*y+z*z);}
 /* rotation part of a 3x4 row-major matrix times v */
 static void rot3(const float* m,const float* v,float* o){for(unsigned r=0;r<3;r++)o[r]=m[4*r]*v[0]+m[4*r+1]*v[1]+m[4*r+2]*v[2];}
-static int light_hit(const ModelLight* ml,const ActorPose* actor,unsigned bones,const NativeLamp* l){
+static int light_hit(const ModelLight* ml,const float* w0,const float* cw,const NativeLamp* l){
     if(l->radius==0.f)return 1;
-    unsigned parts=ml->info>>8&255;const ActorPose* c=parts && parts<=bones?actor+parts:actor;
-    float pos[3];rot3(c->world,ml->offset,pos);pos[0]+=c->world[3];pos[1]+=c->world[7];pos[2]+=c->world[11];
+    float pos[3];rot3(cw,ml->offset,pos);pos[0]+=cw[3];pos[1]+=cw[7];pos[2]+=cw[11];
     unsigned shape=ml->info&3;
     if(shape==2){   /* box: the light in the model's frame against size x scale + radius */
-        const float* m=actor->world;float d[3]={l->pos[0]-pos[0],l->pos[1]-pos[1],l->pos[2]-pos[2]};
+        const float* m=w0;float d[3]={l->pos[0]-pos[0],l->pos[1]-pos[1],l->pos[2]-pos[2]};
         for(unsigned a=0;a<3;a++){
             float ax[3]={m[a],m[4+a],m[8+a]},sc=sqrtf(ax[0]*ax[0]+ax[1]*ax[1]+ax[2]*ax[2]);
             float p=sc>0?(d[0]*ax[0]+d[1]*ax[1]+d[2]*ax[2])/sc:0,half=ml->size[a]*sc;
@@ -58,7 +61,7 @@ static int light_hit(const ModelLight* ml,const ActorPose* actor,unsigned bones,
     }
     if(shape==0){   /* cylinder: spheres of size.x at +-size.y along the parts' up axis */
         for(int sgn=-1;sgn<=1;sgn+=2){
-            float up[3]={0,sgn*ml->size[1],0},t[3];rot3(c->world,up,t);
+            float up[3]={0,sgn*ml->size[1],0},t[3];rot3(cw,up,t);
             float q[3]={pos[0]+t[0],pos[1]+t[1],pos[2]+t[2]};
             if(dist3(q,l->pos)<ml->size[0]+l->radius)return 1;
         }
@@ -67,12 +70,12 @@ static int light_hit(const ModelLight* ml,const ActorPose* actor,unsigned bones,
     return dist3(pos,l->pos)<ml->size[0]+l->radius;   /* sphere */
 }
 /* The picked lights of one model, as GX lights; ambient and output scale. */
-static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned bones,const ModelLight* ml,SrcLights* out){
-    static const ModelLight fallback={0,0,0,0x100000u,0xffffffffu,{0,0,0},{1000,1000,1000},{0x40,0x40,0x40,0xff},1|2<<8,0,{~0u,~0u},0};
-    if(!ml)ml=&fallback;   /* no record: a scenery-lit cylinder, material 0x40, TEV x4 */
+/* w0: the model's matrix; cw: the light volume's origin (the model or its part ml->info>>8); obj: the object position's
+   matrix (part 1 when the model has bones). ml is never NULL here. */
+static void source_lights_w(const NativeScene* s,const float* w0,const float* cw,const float* obj,const ModelLight* ml,SrcLights* out){
+    const ModelLight* const fallback=&src_light_fallback;
     const NativeLamp* L=(const void*)s->state[2];
     unsigned enable=ml->info>>16&255,flags=ml->info>>24,select=ml->select,status=ml->status;
-    const float* obj=bones?&actor[1].world[0]:&actor[0].world[0];
     float obj_pos[3]={obj[3],obj[7],obj[11]};
     float obj_size=m1_maxf(ml->size[0],ml->size[1]);int obj_flag=(ml->info&3)!=2;
     const NativeLamp* pick[8];unsigned n=0,game[8],gn=0;
@@ -85,13 +88,13 @@ static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned b
         if(l->type==4 || !(l->bits>>24&1))continue;
         if(l->index<=31 && !((1u<<l->index)&select) && !(status&0x01000000) && !(status&0x04000000))continue;
         if(!(l->rgb[0]|l->rgb[1]|l->rgb[2]))continue;
-        if(!light_hit(ml,actor,bones,l))continue;
+        if(!light_hit(ml,w0,cw,l))continue;
         if(n==8)break;
         pick[n++]=l;
     }
     /* test only: the game's own pick from its last draw (array indices), where recorded */
     for(unsigned i=0;i<8;i++){unsigned k=ml->picked[i>>2]>>(8*(i&3))&255;if(k!=255)game[gn++]=k;}
-    if(ml!=&fallback && ml->picked[0]!=~0u){
+    if(ml!=fallback && ml->picked[0]!=~0u){
         m1_light_pick_checked++;
         unsigned same=gn==n;for(unsigned i=0;same && i<n;i++)same=pick[i]->index==game[i];
         m1_light_pick_mismatch+=!same;
@@ -142,6 +145,12 @@ static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned b
     unsigned group=ml->tev&255,cs=ml->tev>>8&255;
     float S=group<=1?(cs==1?2.f:cs==2?4.f:1.f):group==5?2.f:group==6?4.f:1.f;
     for(unsigned c=0;c<3;c++){out->amb[c]=amb[c]*(1.f/255);out->k[c]=ml->color[c]*(1.f/255)*S*255.f;}
+}
+/* The ActorPose form (E0 bench, content and native passes): the same rule on the records' matrices. */
+static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned bones,const ModelLight* ml,SrcLights* out){
+    if(!ml)ml=&src_light_fallback;   /* no record: a scenery-lit cylinder, material 0x40, TEV x4 */
+    unsigned parts=ml->info>>8&255;const ActorPose* c=parts && parts<=bones?actor+parts:actor;
+    source_lights_w(s,actor->world,c->world,bones?actor[1].world:actor[0].world,ml,out);
 }
 /* Per weight set: each light's direction in the set's model space (scaled for raw s16 normals) and its colour
    times the attenuation at the set's origin. */

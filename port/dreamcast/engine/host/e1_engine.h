@@ -33,6 +33,7 @@ void e1_stub_hit(const char* name, int arg);
 void e1_stub_report(void);
 // ---- serial / RAM log ----
 void e1_log(const char* fmt, ...);
+void e1_log_flush(void);   // lane eng-e1e: the lines buffered while the ticks ran (core/globals.cpp)
 // ---- loader ----
 void* e1_file_load(const char* path, uint32_t* size, uint32_t align);   /* whole file, KOS heap (room-pack region) */
 

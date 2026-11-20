@@ -13,6 +13,13 @@
 #include "e1_core.h"
 #include "skel.h"
 #include "col.h"
+#include "routes.h"
+#include "input.h"
+#include "volumes.h"
+#include "follow.h"
+#include "model_svc.h"
+#include "camera_svc.h"
+#include "col_model.h"
 #include "global.h"
 #include "main.h"
 
@@ -50,6 +57,8 @@ void e1_prnd_seed(unsigned short s);
 extern "C" int route_control;
 extern "C" int input_control;
 static int rumble_exercise;
+extern "C" uint32_t e1_light_checks, e1_light_builds;   // services/draw.cpp
+extern "C" unsigned e1_light_miss;   // services/actor_e1.inc (renderer)
 extern "C" void VibSet(u32 time, u32 level, u16 wait, u16 type);
 void e1_svc_tick_begin(unsigned t)
 {
@@ -169,4 +178,19 @@ void e1_svc_report()
     e1_log("E1 COL bakes %lu late %lu line %lu sphere %lu nodes %lu tris_line %lu tris_sphere %lu\n", (unsigned long) col_cnt.bakes,
            (unsigned long) col_cnt.late_bakes, (unsigned long) col_cnt.line_queries, (unsigned long) col_cnt.sphere_queries,
            (unsigned long) col_cnt.nodes_tested, (unsigned long) col_cnt.tris_line, (unsigned long) col_cnt.tris_sphere);
+    // lane eng-e1e: the round-4 native services' counters (they run in this image) and the light service's
+    e1_log("E1 SVC4 routes near %lu cached %lu lines %lu steps %lu direct %lu | input reads %lu vib %lu random %lu queued %lu | "
+           "volumes at %lu pairs %lu pushes %lu lines %lu hits %lu | follow sets %lu moves %lu | model inits %lu infos %lu parts %lu | "
+           "camera frames %lu frustums %lu keys %lu | colm checks %lu slides %lu floors %lu pieces %lu\n",
+           (unsigned long) route_cnt.near_calls, (unsigned long) route_cnt.near_cached, (unsigned long) route_cnt.near_lines,
+           (unsigned long) route_cnt.steps, (unsigned long) route_cnt.steps_direct, (unsigned long) input_cnt.reads,
+           (unsigned long) input_cnt.vib_ticks, (unsigned long) input_cnt.vib_random, (unsigned long) input_cnt.vib_queued,
+           (unsigned long) vol_cnt.at_checks, (unsigned long) vol_cnt.pairs, (unsigned long) vol_cnt.pushes,
+           (unsigned long) vol_cnt.line_tests, (unsigned long) vol_cnt.line_hits, (unsigned long) follow_cnt.sets,
+           (unsigned long) follow_cnt.moves, (unsigned long) model_cnt.inits, (unsigned long) model_cnt.infos,
+           (unsigned long) model_cnt.parts_made, (unsigned long) cam_cnt.frames, (unsigned long) cam_cnt.frustums,
+           (unsigned long) cam_cnt.keys, (unsigned long) colm_cnt.checks, (unsigned long) colm_cnt.slides,
+           (unsigned long) colm_cnt.floors, (unsigned long) colm_cnt.pieces);
+    e1_log("E1 LIGHTSVC checks %lu builds %lu draw misses %lu\n", (unsigned long) e1_light_checks, (unsigned long) e1_light_builds,
+           (unsigned long) e1_light_miss);
 }

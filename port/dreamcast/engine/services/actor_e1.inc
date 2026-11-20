@@ -40,6 +40,38 @@ static void e1_live_light(const NativeScene* s, const void* model_record, ModelL
     }
     out->tev = group | (unsigned) (scale >= 0 ? scale : leon >= 0 ? leon : 255) << 8;
 }
+/* Lane eng-e1e (E1 audit section 2): the light service (services/draw.cpp) keeps every character's record but Leon's,
+   rebuilt only when its inputs change; the pass reads it in place (e1_light_rec_of). The TEV scale of each group is
+   resolved once from the pack at open (the rule of e1_live_light above: the first record of the group, else Leon's,
+   else 255), into the table the service builds its records with (value + 1; 0 = not resolved). */
+extern uint16_t e1_tev_scale_of_group[256];
+const uint32_t* e1_light_rec_of(const void* model);
+void e1_log(const char* fmt, ...);
+extern int e1_pal_control;   /* services/draw.cpp: the PALCTL control */   /* core/globals.cpp: buffered while the ticks run (lane eng-e1e) */
+unsigned e1_light_miss;   /* pictures a character had no record from the service (lit by the fallback record) */
+void e1_light_tables(const NativeScene* s)
+{
+    const ModelLight* rec = (const void*) s->state[8]; const unsigned n = s->words[8] * 4 / sizeof(ModelLight);
+    int leon = -1;
+    for (unsigned i = 0; i < n; i++) if (rec[i].role == 0 && leon < 0) leon = rec[i].tev >> 8 & 255;
+    for (unsigned g = 0; g < 256; g++) {
+        int scale = -1;
+        for (unsigned i = 0; i < n && scale < 0; i++) if ((rec[i].tev & 255) == g) scale = rec[i].tev >> 8 & 255;
+        e1_tev_scale_of_group[g] = (uint16_t) ((scale >= 0 ? scale : leon >= 0 ? leon : 255) + 1);
+    }
+}
+/* The bone's sphere test on the published palette (lane eng-e1e): part_class's rule (render/part_cull.h) reading the
+   palette in place, 16 floats a bone, its word 12 the bone's sphere scale. */
+static inline unsigned e1_part_class(const float (*fr)[4], const PartSphere* sp, unsigned n, const float* pal)
+{
+    unsigned out = 63; int inside = 1;
+    for (unsigned k = 0; k < n && (out || inside); k++, sp++) {
+        const float* r = pal + 16 * sp->bone; float c[3];
+        for (unsigned a = 0; a < 3; a++) c[a] = r[4 * a] * sp->c[0] + r[4 * a + 1] * sp->c[1] + r[4 * a + 2] * sp->c[2] + r[4 * a + 3];
+        out &= sphere_planes6(fr, c, sp->r * r[12], &inside);
+    }
+    return out ? 0 : inside ? 1 : 2;
+}
 static void e1_light_check(const NativeScene* s, const void* leon_record, const ModelLight* recorded)
 {
     static int done;
@@ -50,7 +82,7 @@ static void e1_light_check(const NativeScene* s, const void* leon_record, const 
     diff += live.info != recorded->info; diff += live.select != recorded->select;
     for (unsigned k = 0; k < 3; k++) diff += live.offset[k] != recorded->offset[k], diff += live.size[k] != recorded->size[k];
     diff += memcmp(live.color, recorded->color, 4) != 0; diff += live.tev != recorded->tev; diff += live.addamb != recorded->addamb;
-    printf("E1 LIGHT check: Leon's live light inputs vs the pack's record: %u of 12 fields differ (info %08x/%08x select %08x/%08x tev %x/%x)\n",
+    e1_log("E1 LIGHT check: Leon's live light inputs vs the pack's record: %u of 12 fields differ (info %08x/%08x select %08x/%08x tev %x/%x)\n",
            diff, live.info, recorded->info, live.select, recorded->select, live.tev, recorded->tev);
 }
 unsigned e1_pal_mismatch;    /* bones whose pack bind differs from the table's (report) */
@@ -77,8 +109,8 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
         if (d > worst) worst = d;
     }
     e1_pal_mismatch = bad; e1_pal_worst = worst;
-    printf("E1 PAL check: %u of %u bones differ (worst %d/1000 unit, rotation in 1/100000), %s\n", bad, m->nbones_used,
-           (int) (worst * 1000), bad ? "multiplying world x pack bind" : "palette used");
+    e1_log("E1 PAL check: %u of %u bones differ (worst %d/1000 unit, rotation in 1/100000), %s\n", bad, m->nbones_used,
+           (int) (worst * 1000), bad ? "FAULT: the pack's bind is not the skeleton's (drawn from the palette)" : "palette used");
     return bad == 0;
 }
 
@@ -118,35 +150,43 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         all &= sphere_planes(c, r, &dummy);
     }
     if (all) { memset(state, 0, h[4]); sq_wait(); sq_unlock(); return; }
-    /* 2. bones */
-    for (unsigned i = 0; i < m->nbones_used; i++) {
-        unsigned b = m->bones_used[i]; float* r = bone_rows[b];
-        if (e1_pal_ok) memcpy(r, skel->pal + 16 * b, 48);   /* the palette: world x bind, once a tick */
-        else multiply34(r, e1_bone[b + 1], m->bind + 12 * b);
-        for (unsigned k = 0; k < 3; k++) { r[k] *= .0625f; r[4 + k] *= .0625f; r[8 + k] *= .0625f; }
-        bone_scale[b] = column_scale(r);
-    }
+    /* 2. bones (lane eng-e1e, E1 audit section 2): none. The skeleton service publishes the palette once a tick in
+       this pass's final skinning layout (world x bind, the position quantum 1/16 in the basis, word 12 the sphere
+       scale; skel.cpp SKEL_PAL_DRAW); steps 3 and 4 read it in place. No per-actor copy, rescale or bind recompute:
+       a model whose pack bind is not the table's (e1_pal_check) is a bake fault, counted, and drawn from the palette. */
+    (void) e1_pal_ok;
+    const float* pal = skel->pal;
     /* 3. parts */
     unsigned visible = 0;
     for (unsigned p = 0; p < h[4]; p++) {
         const RtPart* rp = m->parts + p;
-        unsigned st = part_class((const float (*)[4]) frustum, m->spheres + rp->sphere_first, rp->sphere_count,
-                                 (const float (*)[12]) bone_rows, bone_scale);
+        unsigned st = e1_part_class((const float (*)[4]) frustum, m->spheres + rp->sphere_first, rp->sphere_count, pal);
         state[p] = st; visible += st != 0;
     }
     if (!visible) { sq_wait(); sq_unlock(); return; }
-    /* 4. lights (model and light-origin part records) and weight sets */
-    ActorPose lite[2];
-    lite[0].role = 0; lite[0].index = 0; lite[0].identity = identity; lite[0].bone = 0;
-    memcpy(lite[0].world, e1_bone[0], 48);
-    lite[1] = lite[0]; lite[1].bone = 1; memcpy(lite[1].world, e1_bone[1], 48);
-    if (model) { ModelLight own; e1_live_light(s, model_record, &own); source_lights(s, lite, 1, &own, &cur_lights); }
-    else { const ModelLight* rec = model_light(s, lite); e1_light_check(s, model_record, rec); source_lights(s, lite, 1, rec, &cur_lights); }
+    /* 4. lights and weight sets. The light rule reads the model's and its bone 0's matrices in place (no ActorPose
+       copies). Leon: the pack's record (looked up once a pack); every other character: the light service's record. */
+    const ModelLight* ml;
+    if (model) {
+        ml = (const ModelLight*) e1_light_rec_of(model_record);
+        if (!ml) { ml = &src_light_fallback; e1_light_miss++; }
+    } else {
+        static const void* leon_scene; static const ModelLight* leon_rec;
+        if (leon_scene != s->state[8]) { leon_scene = s->state[8]; leon_rec = model_light_ri(s, 0, 0); }
+        e1_light_check(s, model_record, leon_rec);
+        ml = leon_rec ? leon_rec : &src_light_fallback;
+    }
+    {
+        const unsigned parts = ml->info >> 8 & 255;   /* the light volume's origin: part 1 (bone 0) or the model */
+        source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, &cur_lights);
+    }
     memset(ws_ready, 0, h[1]);
+    ws_rows = pal; ws_stride = e1_pal_control ? 12 : 16;   /* build_ws blends the palette rows in place (PALCTL: wrong stride) */
     for (unsigned p = 0; p < h[4]; p++) {
         if (!state[p]) continue; const RtPart* rp = m->parts + p;
         for (unsigned k = 0; k < rp->ws_count; k++) { unsigned i = m->part_ws[rp->ws_first + k]; if (!ws_ready[i]) build_ws(m, i); }
     }
+    ws_rows = &bone_rows[0][0]; ws_stride = 12;
     /* 5. positions and normals */
     for (unsigned p = 0; p < h[4]; p++) {
         if (!state[p]) continue; const RtPart* rp = m->parts + p;

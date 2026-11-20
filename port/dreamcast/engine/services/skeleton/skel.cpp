@@ -1614,6 +1614,23 @@ extern "C" void skel_publish(SkelTable* t)
         p.m[0][3] = tr.x;
         p.m[1][3] = tr.y;
         p.m[2][3] = tr.z;
+#ifdef SKEL_PAL_DRAW
+        // lane eng-e1e (E1 audit section 2): the engine image publishes the palette in the renderer's final skinning
+        // layout, so drawing reads it in place (services/actor_e1.inc): the basis carries the vertex position quantum
+        // (1/16, exact), word 12 the basis' largest column length (the bone's sphere scale). The PC reference keeps
+        // world x bind unscaled (its service comparison).
+        for (int i = 0; i < 3; i++) {
+            p.m[i][0] *= 0.0625f;
+            p.m[i][1] *= 0.0625f;
+            p.m[i][2] *= 0.0625f;
+        }
+        const f32 ca = p.m[0][0] * p.m[0][0] + p.m[1][0] * p.m[1][0] + p.m[2][0] * p.m[2][0];
+        const f32 cb = p.m[0][1] * p.m[0][1] + p.m[1][1] * p.m[1][1] + p.m[2][1] * p.m[2][1];
+        const f32 cc = p.m[0][2] * p.m[0][2] + p.m[1][2] * p.m[1][2] + p.m[2][2] * p.m[2][2];
+        const f32 cm = ca > cb ? (ca > cc ? ca : cc) : (cb > cc ? cb : cc);
+        const f32 cs = __builtin_sqrtf(cm);
+        __builtin_memcpy(&p.pad[0], &cs, 4);
+#endif
     }
     skel_cnt.palette += t->n;
 }
