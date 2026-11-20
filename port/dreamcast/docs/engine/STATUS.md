@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-20):** plan version 3 APPROVED by the owner (H-012). Current steps: 1 (console evening, waits for the owner's SD card) and 2 (pass E1). Two lanes running, both independent of timing. Everything is "finished, unaudited" until its audit and console run.
+**State (2026-11-20, evening):** plan version 3 APPROVED by the owner (H-012); technical decisions are the integrator's (H-013, rulings in H-014). Current steps: 1 (console evening, waits for the owner's SD card) and 2 (pass E1). One lane running. The machine stalled for seven hours on 11-20 (WSL disk file at the NTFS fragment limit, H-014): builds go to RAM, C: is checked before every build. Everything is "finished, unaudited" until its audit and console run.
 
 ## Milestones
 
@@ -33,8 +33,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-svc5 | Step 2 (E1), PC-only: native math helpers, garment pose, SDK math and allocator; strict plays-right reader | lane/eng-svc5 | Claude Opus | E:\RE4DC-Lanes\eng-svc5 |
-| eng-e1f | Steps 1 and 2: presented fields in every scene of the console disc, El Gigante bench pack, enemy decision groups in the link check, village plays-right gaps, HUD compositing | lane/eng-e1f | Claude Opus | E:\RE4DC-Lanes\eng-e1f |
+| eng-e1g | Steps 1 and 2: pictures paced on the display's field count; engine pad clamp; native aim; SDK math, allocator and float library built and linked; allowed-list rulings; dying-Ganado skinning; HUD fault | lane/eng-e1g | Claude Opus | E:\RE4DC-Lanes\eng-e1g |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
 
@@ -82,9 +81,13 @@ Merged 11-20, finished, unaudited: eng-loop2 (loader checks pass in console-like
 
 Merged 11-20, finished, unaudited: eng-e1e (native services wired into the image; heap overlap fixed; rumble on the presentation generator; publication copies removed; integrator gate: default, FIGHT=1, BOSS=1, SENDABLE=1 link; link check offenders 241 -> 98, 843 -> 677, 471 -> 321, still FAIL). Open: enemy and room-script units have no group in the allowed list (owner or integrator decision); village plays-right not closed (yaw differs from tick 424 on the PC reference; native GetWepTargetPos); HUD compositing fault; presented-field counter; El Gigante bench pack re-bake.
 
+Merged 11-20, finished, unaudited: eng-svc5 (strict plays-right reader `outcome.py`, failing closed, 30/30 controls; native math helpers, 55 functions bit-identical on 20,000 inputs each; native garment pose; integrator gate: svc_controls 76/76, plays_right controls 18/18, mathtest and garmenttest pass and their controls fail, 0 original functions kept in those units). Not built: SDK math, allocator, float library (written, in `E:\RE4DC-Lanes\eng-svc5\stage`). Open: the dying Ganado's skinning palette differs between reference and native from tick 241 / 204.
+
+Merged 11-20, finished, unaudited: eng-e1f (fields between presented pictures in every E1 image and in the selector summary; El Gigante bench pack fixed in the baker; enemy decision units and room scripts in the allowed list with 141 service functions kept out and a name guard; integrator gate: default, FIGHT=1, BOSS=1, SENDABLE=1 link; link check service functions 98 / 204 / 154 / 98, still FAIL; guard control refuses em10FootSe). Flycast controls not re-run by the integrator. Found: the frame pacer is not tied to the display, 3-field gaps with no late picture (Flycast: village 5, hill 3, fight 29 per 600); the PC reference clamps the stick and the engine did not (cause of the village yaw split at tick 424). Not done: native aim (written, not built), shot-and-hit fixture, HUD fault, disc rebuild.
+
 ## Waiting on the owner
 
 - The console evening: the SD card (step 1).
 - Asset source for step 6 (beyond the PS2 version).
 - El Gigante's lighter PS2 body: yes or no.
-- C: is at 27 GB free (below the 40 GB line): Compact-WSL is the owner's admin step.
+- Disk space (H-014): C: and D: are 97% full. The cure for the WSL disk file is a fresh copy, which needs about 420 GB free on one volume or a new drive. No Compact-WSL until then.

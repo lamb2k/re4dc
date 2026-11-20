@@ -2,6 +2,24 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-014 (2026-11-20): integrator rulings; the machine stall and the rules that follow from it
+
+- **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013.
+- **Rulings:**
+  1. **Frame pacer:** pictures are paced on the display's field count (two fields a picture), not on a timer. Today every E1 scene shows 3-field gaps with no late picture (lane eng-e1f, Flycast). First job of lane eng-e1g; the console disc waits for it.
+  2. **Stick input:** the engine clamps stick and trigger on its pad path as the original game does. No boot switch. Fixtures stay in raw units.
+  3. **Laser sight:** `cObjWep::drawLaserSight` is decision code and is allowed; `drawPoint`, `Draw_line3d_local_222` and `Draw_line3d_222` stay offenders.
+  4. **Manager templates** (cEm, cLight in pl_sub and pl_npc): offenders; they go native through the engine pool.
+  5. **Outcome reader:** `event_ticks` = 3 is accepted.
+  6. **SH4ZAM:** commit 6d7d1e4 (zero fourth term dropped from `shz_dot6f` / `shz_mag_sqr3f` with FIPR off) stays on the local branch `re4dc/eng-svc5`. No upstream pull request is proposed now.
+- **Machine stall, 11:20 to 18:26:** C: fell to 2.6 GB free. The WSL disk file `C:\WSL\Ubuntu-24.04\ext4.vhdx` (414 GB) reached 1,696,950 NTFS fragments, where Windows refuses to extend a file (error 665). Every write from WSL failed at the host (`hv_storvsc ... cmd 0x2a ... hv 0xc0000001`); ext4 stalled; Ubuntu would not start after a reboot. Fixed in place: fragments merged to 1,291,165 with `FSCTL_MOVE_FILE` (`E:\RE4DC-Lanes\reassess19\relaunch\PartDefrag.cs`), then `e2fsck -fp` returned 0 and Ubuntu started. No repository or lane work was lost.
+- **Rules that follow, for every lane:**
+  - Check C: free from Windows before every build and disc stage. Under 30 GB: stop and tell the integrator.
+  - Build objects go to RAM (`/dev/shm`), not to the WSL disk. Discs, packs and evidence go to E:.
+  - No `fstrim`, Compact-WSL or sparse change until the disk file has been copied fresh.
+  - Fragment count, no admin needed: `fsutil file queryextents C:\WSL\Ubuntu-24.04\ext4.vhdx | find /c "VCN"`. The ceiling is near 1.7 million.
+- **Open with the owner:** about 420 GB free on one volume, or a new drive, for the fresh copy.
+
 ## H-013 (2026-11-20): outcome over method; the integrator makes the technical decisions
 
 - **From:** the owner. **To:** the integrator.
