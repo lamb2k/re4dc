@@ -1,7 +1,9 @@
 # Console loop: send a program to the Dreamcast over the QA link
 
 Lane eng-loop, 2026-11-19. Design first; the code is in `port/dreamcast/engine/loader/` (console) and
-`port/dreamcast/tools/consoleloop/` (PC). Built and host-tested on the PC. Not yet run in Flycast or on the console.
+`port/dreamcast/tools/consoleloop/` (PC). Built and host-tested on the PC. Lane eng-loop2 (2026-11-20): run in the
+console-like Flycast (section 8, results) and the one console disc with every engine scene (section 10). Not yet run
+on the console.
 
 ## The point
 
@@ -225,3 +227,54 @@ duplicates, reordering, a rate-limited line with a bounded queue, dead windows).
   would need RAM the program does not use).
 - A smart plug for the cases that need a power cycle (`Dream-TOS` testing notes).
 - A broadband adapter or serial cable path (dcload-ip / dc-tool), many times faster, if the owner has one.
+
+## 10. Engine images through the loop, and the one console disc (lane eng-loop2)
+
+**An engine image made send-able: `SENDABLE=1`** (`engine/loader/sendable.mk`, included by `engine/bench/Makefile`
+and `engine/game/Makefile`; no image source changes). It links the client library, the KOS disc fixes (`kosfix.mk`)
+and `cl_send.c`. Booted from its own disc the image runs as before: `cl_init()` finds no `RUNNING` hand-off and
+everything stays off. Started by the loader or the console disc's selector, a constructor turns on:
+- **the report:** a dbgio handler in front of the serial one copies the image's own text lines into the hand-off
+  report and passes everything on (serial unchanged). Arguments: `rows=skip|compact|keep` for `ROW` lines (compact
+  drops the field names), `skip=<prefix>,..` for other lines (the console disc skips the bench's `MEMBLK` lines);
+- **the end:** the image's last line (`SCHEDULE DONE`, `E1 END`) hands in `DONE`, exit 0, once the image has printed
+  nothing for 1.5 s (the fight and boss images print their event lists after `E1 END`); a refusal line
+  (`SCHEDULE REFUSED`, `M1 native pack REFUSED`, `STACK GUARD BROKEN`, `E1 draw: renderer refused`,
+  `E1 load: missing / read failed / bad DRS`) hands in exit 1, with the renderer's pack-loader stage when the image
+  has one. Crash and deadline as section 4;
+- **the data root:** `root=E1` makes `/cd/<path>` open `/cd/E1/<path>` first, then the disc root
+  (`-Wl,--wrap=fs_open`); `root=E1H:E1` tries both folders in order (the hill scene's `HILL` file sits alone in
+  `E1H`). `/cd/LOADER.BIN` is never redirected.
+- The watchdog sleeps once to the deadline and the end thread waits on a semaphore, so neither wakes inside the
+  timed pictures.
+
+**The console disc** (`tools/engine/build_console_disc.sh`, `engine/loader/selector.c`):
+- One GDEMU disc (standard layout) from a clean checkout of a commit (default `origin/engine`; `git archive` plus the
+  SH4ZAM submodule at the recorded commit) and the private packs, which never enter git. Output folder: the four
+  GDI files, `SHA256SUMS`, `MANIFEST.txt` (commit, program hashes, every input's hash, the disc tree), `SCENES.TXT`,
+  the ELFs, `KEEP`.
+- `1ST_READ.BIN` and `/LOADER.BIN` are the selector. It runs every line of `/SCENES.TXT` in order: checks the scene's
+  files, writes the hand-off area (`RUNNING`, arguments, deadline, a report cap), jumps to `/PROG/<image>.BIN`. The
+  image runs from its folder and hands back through the client library to `/LOADER.BIN`, the selector again, which
+  reads the report and keeps the scene's summary in a journal above the report cap (top 24 KiB of the hand-off area).
+- Scenes, in order: **BENCH** (village cross and hay-fork view, arms `c0 f0 ca c0 cb c0 fa f0 fb f0`, then the
+  control window `c0dh`), **LEON** (village route), **HILL** (Leon and Ashley), **FIGHT** (four Ganados),
+  **BOSS-BENCH** (El Gigante on the bench, `c0 cn c0 c0dh`), **BOSS** (El Gigante hosted, headless). The E1-family
+  scenes run with `NOTRACE`.
+- **Summary rows.** Bench scenes: the bench's own `WINDOW` rows (mean, p99, worst, over 14, over 33.3, presented
+  intervals over two fields, 600 pictures a window). E1-family scenes: computed by the selector from the image's
+  `ROW` lines, pictures 41 to 640 (the lane tools' `budget.py` rows): drawing, busy picture (frame less the pacer's
+  and the PVR waits), services, behaviour (mean, p99, worst with its picture, count over the row's budget), and
+  late pictures (no pacer wait). The E1 images print a `fields` column but do not count presented fields yet: the
+  summary says "fields not counted" rather than "0 over".
+- **A scene is FAILED, never skipped:** a missing file (the selector checks the scene's list first), an unreadable
+  program, a crash, the deadline, a return without a hand-in (`LOST`), a non-zero exit, a bad report CRC, a refusal
+  line in the report, no rows, or no end line. B held during the 3 s countdown before a scene skips it (recorded as
+  FAILED, "skipped by the owner").
+- **The end:** one summary screen, in pages of 16 lines that change every 10 s (the first line says `FINISHED: n OF
+  m SCENES OK`), and on the serial line `CDISC RESULT`, `CDISC SUM` and `CDISC SUMMARY` lines. The images print their
+  raw `ROW` lines on the serial line during their run, as on their own discs.
+- **A reset during the run:** if main RAM kept the journal the running scene is recorded `LOST` and the run goes on;
+  otherwise it starts again. After the summary is shown the journal is closed: the next reset starts a new run.
+- Controls: `--drop <disc path>` removes a staged file; `--no-precheck` leaves the refusal to the image itself;
+  `--scenes` picks a subset.

@@ -153,12 +153,12 @@ for f in st1/r119.arc etc/core.das em/pl08.drs em/wep02.drs em/em2b.drs; do put 
 need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
 {
   echo "# RE4DC console disc $SHORT ($REF), $(date -u +%FT%TZ). Selector: engine/loader/selector.c"
-  echo "BENCH Bench:_village_cross,_hay-fork PROG/BENCH.BIN 1500 bench $(need BENCH/CROSS.PAK,BENCH/FARM.PAK,BENCH/CROSS.VIS,BENCH/FARM.VIS,BENCH/SCHEDULE.TXT) root=BENCH rows=skip skip=T,MEMBLK"
-  echo "LEON Leon_in_the_village PROG/E1.BIN 420 e1 $(need E1/CROSS.PAK,E1/CROSS.VIS,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs) root=E1 rows=compact"
-  echo "HILL Leon_and_Ashley_on_the_hill PROG/E1.BIN 420 e1 $(need E1H/HILL,E1/HILL.PAK,E1/HILL.VIS,E1/FARM.PAK,E1/st1/r11d.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/pl11.drs) root=E1H:E1 rows=compact"
-  echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 420 e1 $(need FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHT rows=compact"
-  echo "BOSS-BENCH El_Gigante_on_the_bench PROG/BENCH.BIN 900 bench $(need BOSSB/CROSS.PAK,BOSSB/FARM.PAK,BOSSB/CROSS.VIS,BOSSB/SCHEDULE.TXT) root=BOSSB rows=skip skip=T,MEMBLK"
-  echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 420 e1 $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
+  echo "BENCH Bench:_village_cross,_hay-fork PROG/BENCH.BIN 900 bench $(need BENCH/CROSS.PAK,BENCH/FARM.PAK,BENCH/CROSS.VIS,BENCH/FARM.VIS,BENCH/SCHEDULE.TXT) root=BENCH rows=skip skip=T,MEMBLK"
+  echo "LEON Leon_in_the_village PROG/E1.BIN 300 e1 $(need E1/CROSS.PAK,E1/CROSS.VIS,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs) root=E1 rows=compact"
+  echo "HILL Leon_and_Ashley_on_the_hill PROG/E1.BIN 300 e1 $(need E1H/HILL,E1/HILL.PAK,E1/HILL.VIS,E1/FARM.PAK,E1/st1/r11d.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/pl11.drs) root=E1H:E1 rows=compact"
+  echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 300 e1 $(need FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHT rows=compact"
+  echo "BOSS-BENCH El_Gigante_on_the_bench PROG/BENCH.BIN 600 bench $(need BOSSB/CROSS.PAK,BOSSB/FARM.PAK,BOSSB/CROSS.VIS,BOSSB/SCHEDULE.TXT) root=BOSSB rows=skip skip=T,MEMBLK"
+  echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 300 e1 $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
 for f in "${DROPS[@]}"; do
