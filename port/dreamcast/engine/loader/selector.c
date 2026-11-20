@@ -239,7 +239,13 @@ static void e1_summary(sel_entry_t *e) {
     const unsigned n = g_rows;
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
     if (!n) return;
+    uint32_t drawn = 0;
+    for (unsigned i = 0; i < n; ++i) drawn |= g_v[0][i];
     for (unsigned r = 0; r < 4; ++r) {
+        if (r == 0 && !drawn) {   /* a headless image: no drawing row, rather than "0 over 14" */
+            sum_add(e, "draw  not drawn (headless image)");
+            continue;
+        }
         uint64_t sum = 0;
         unsigned worst = 0, wi = 0, over = 0;
         for (unsigned i = 0; i < n; ++i) {
