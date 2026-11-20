@@ -14,8 +14,11 @@
      <name> <title, '_' for spaces> <program> <deadline s> <kind> <files that must exist, ',' separated, or -> <args>
    kind bench: the summary is the bench's own WINDOW rows (mean, p99, worst, over 14, over 33.3, presented intervals
    over two fields; 600 pictures a window). kind e1: the summary is computed here from the image's ROW lines, pictures
-   41 to 640 (600; the lane tools' budget.py rows): drawing, busy picture (frame less the pacer's and PVR waits),
-   services, behaviour, and intervals over two fields.
+   41 to 640 (600; the lane tools' budget.py rows): drawing (the ROW draw column: the renderer's own span, phase
+   stamps 5 to 7, chip ready to picture submitted; the plan's drawing row since lane eng-e1e), busy picture (frame
+   less the pacer's and PVR waits), services, behaviour, the PVR wait on its own row (not in drawing), and the
+   presented-field intervals over two fields with the worst (lane eng-e1f: the image's vblank count of page flips,
+   its E1 FIELDS line names the mode; a headless image presents nothing and counts each tick's fields instead).
 
    A scene is FAILED, never skipped, when: a file is missing, the program cannot be read, it crashed, it ran into its
    deadline, it came back without handing in (LOST), it handed in a non-zero exit, its report fails its CRC, its report
@@ -202,6 +205,8 @@ static void bench_window(sel_entry_t *e, const char *l) {
 static uint32_t g_v[5][E1_COUNT];
 static uint32_t g_fields[E1_COUNT];
 static unsigned g_rows, g_last_row, g_late, g_headless;
+static char g_fmode[12];   /* the image's E1 FIELDS mode: presented, tick, or "" (an image that does not count) */
+static unsigned g_flips, g_pictures;
 static void e1_row(const char *l) {
     unsigned long v[14];
     int k = 0;
@@ -224,6 +229,7 @@ static void e1_row(const char *l) {
     g_v[1][i] = frame > wait + pvr ? frame - wait - pvr : 0;   /* busy picture */
     g_v[2][i] = svc;
     g_v[3][i] = tick > svc ? tick - svc : 0;                  /* behaviour */
+    g_v[4][i] = pvr;                                          /* PVR wait: the chip, not CPU work; not in draw */
     g_fields[i] = (uint32_t)v[8];
     g_late += wait == 0;   /* the 30 Hz pacer had no time left to wait: the picture was late */
     ++g_rows;
@@ -233,15 +239,18 @@ static int cmp_u32(const void *a, const void *b) {
     return (x > y) - (x < y);
 }
 static void e1_summary(sel_entry_t *e) {
-    static const char *const names[4] = {"draw", "busy", "svc", "behav"};
-    static const uint32_t budget_us[4] = {14000, 33333, 9000, 2000};
+    /* draw = the ROW draw column, the renderer's own span (stamps 5 to 7): the plan's drawing row; pvrw = the PVR
+       wait before it, shown apart so nothing is hidden (no budget: the chip, not CPU work) */
+    static const char *const names[5] = {"draw", "busy", "svc", "behav", "pvrw"};
+    static const uint32_t budget_us[5] = {14000, 33333, 9000, 2000, 0};
     static uint32_t s[E1_COUNT];
     const unsigned n = g_rows;
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
     if (!n) return;
-    for (unsigned r = 0; r < 4; ++r) {
-        if (r == 0 && g_headless) {   /* "E1 draw: headless": no drawing row, rather than "0 over 14" */
-            sum_add(e, "draw  not drawn (headless image)");
+    if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
+    for (unsigned r = 0; r < 5; ++r) {
+        if ((r == 0 || r == 4) && g_headless) {   /* "E1 draw: headless": no drawing row, rather than "0 over 14" */
+            if (r == 0) sum_add(e, "draw  not drawn (headless image)");
             continue;
         }
         uint64_t sum = 0;
@@ -251,22 +260,34 @@ static void e1_summary(sel_entry_t *e) {
             s[i] = x;
             sum += x;
             if (x > worst) { worst = x; wi = i; }
-            over += x > budget_us[r];
+            over += budget_us[r] && x > budget_us[r];
         }
         qsort(s, n, 4, cmp_u32);
         const unsigned p99 = s[(unsigned)(0.99 * n) < n ? (unsigned)(0.99 * n) : n - 1];
-        sum_add(e, "%-5s m%u.%02u p%u.%02u w%u.%02u@%u >%u.%u:%u", names[r], (unsigned)(sum / n / 1000),
-                (unsigned)(sum / n % 1000 / 10), p99 / 1000, p99 % 1000 / 10, worst / 1000, worst % 1000 / 10,
-                wi + E1_FIRST, budget_us[r] / 1000, budget_us[r] % 1000 / 100, over);
+        if (budget_us[r])
+            sum_add(e, "%-5s m%u.%02u p%u.%02u w%u.%02u@%u >%u.%u:%u", names[r], (unsigned)(sum / n / 1000),
+                    (unsigned)(sum / n % 1000 / 10), p99 / 1000, p99 % 1000 / 10, worst / 1000, worst % 1000 / 10,
+                    wi + E1_FIRST, budget_us[r] / 1000, budget_us[r] % 1000 / 100, over);
+        else
+            sum_add(e, "%-5s m%u.%02u p%u.%02u w%u.%02u@%u (PVR wait)", names[r], (unsigned)(sum / n / 1000),
+                    (unsigned)(sum / n % 1000 / 10), p99 / 1000, p99 % 1000 / 10, worst / 1000, worst % 1000 / 10,
+                    wi + E1_FIRST);
     }
-    unsigned iv = 0, wf = 0, wfi = 0;
+    unsigned iv = 0, wf = 0, wfi = 0, counted = 0;
     for (unsigned i = 0; i < n; ++i) {
+        counted += g_fields[i] != 0;
         if (g_fields[i] > 2) ++iv;
         if (g_fields[i] > wf) { wf = g_fields[i]; wfi = i; }
     }
-    /* the E1 images print a fields column but do not count presented fields yet (all 0): say so, never "0 over" */
-    if (wf) sum_add(e, "late %u; intervals>2 fields %u, worst %u@%u", g_late, iv, wf, wfi + E1_FIRST);
-    else sum_add(e, "late (no pacer wait) %u; fields not counted", g_late);
+    /* an image that does not count fields prints 0 in the column: say so, never "0 over" */
+    if (!g_fmode[0] || !counted) {
+        sum_add(e, "late (no pacer wait) %u; fields not counted", g_late);
+        return;
+    }
+    sum_add(e, "%s fields: >2 %u, worst %u@%u (%u)", strcmp(g_fmode, "tick") ? "presented" : "tick (headless)", iv, wf,
+            wfi + E1_FIRST, counted);
+    if (!strcmp(g_fmode, "presented") && g_flips < g_pictures) sum_add(e, "flips %u of %u pictures", g_flips, g_pictures);
+    sum_add(e, "late (no pacer wait) %u", g_late);
 }
 
 static void collect(unsigned i) {
@@ -292,6 +313,8 @@ static void collect(unsigned i) {
     }
     /* the report: refusal lines and rows */
     g_rows = g_last_row = g_late = g_headless = 0;
+    g_fmode[0] = 0;
+    g_flips = g_pictures = 0;
     unsigned windows = 0, done = 0;
     if (e->report_ok) {
         static char line[400];
@@ -309,6 +332,8 @@ static void collect(unsigned i) {
             else if (!strncmp(line, "ROW ", 4) && !strcmp(s->kind, "e1")) e1_row(line);
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
             else if (!strncmp(line, "E1 draw: headless", 17)) g_headless = 1;
+            else if (!strncmp(line, "E1 FIELDS mode ", 15))
+                sscanf(line + 15, "%11s flips %u of %u", g_fmode, &g_flips, &g_pictures);
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
         }
     }

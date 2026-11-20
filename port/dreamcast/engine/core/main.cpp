@@ -164,6 +164,7 @@ int main()
     const unsigned ticks = e1_route().ticks;
     e1_state[2] = ticks;
     e1_trace_tick(0);
+    e1_fields_start();                  // presented fields from the hardware's vblank count (lane eng-e1f)
     for (e1_tick = 1; e1_tick <= ticks; e1_tick++) {
         e1_state[1] = e1_tick;
         E1Timing& tm = e1_timing[(e1_tick - 1) % E1_TICKS];
@@ -193,9 +194,12 @@ int main()
         // (picture submitted), set by e1_draw_picture as the hardware model times it; the PVR wait is pvr_us; the
         // call's set-up before stamp 5 (skeleton views) stays in the frame's remainder
         (void) e;
+        e1_fields_late(e1_tick);        // LATEPIC (control): picture 300 held 40 ms after its scene
         e1_pace_end(tm);
+        e1_fields_tick(e1_tick);        // the tick's end in fields (the headless images' interval)
         tm.frame_us = now_us() - a;
     }
+    e1_fields_finish(ticks);            // each row's presented-field interval, and the E1 FIELDS line
     e1_state[0] = 5;
     e1_report();
 #ifdef E2_BOSS
