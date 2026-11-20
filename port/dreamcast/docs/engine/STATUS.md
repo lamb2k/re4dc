@@ -33,9 +33,11 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-e1c | E1: switch the Leon image to the native skeleton and collision, time it (Flycast and MODELLED), plays right | lane/eng-e1c | Claude Opus | E:\RE4DC-Lanes\eng-e1c |
+| eng-e1d | E1 finish: aim sway back on the behaviour generator; native cloth wired in; Ashley mesh and the r11d world bake; re4ref given the same generator split | lane/eng-e1d | Claude Opus | E:\RE4DC-Lanes\eng-e1d |
 | eng-e2 | E2: four Ganados at the cross with their original AI hosted, native effect simulation, drawn, plays right | lane/eng-e2 from engine 28189e752 | Claude Opus | E:\RE4DC-Lanes\eng-e2 |
 | eng-svc3 | PC-only: motion-key memory (16-bit rows, per-room clip sets), cloth on SH4ZAM in one pass, native root motion, swept-sphere queries on the grid | lane/eng-svc3 | Claude Opus | E:\RE4DC-Lanes\eng-svc3 |
+
+Closed: eng-e1c (Opus), handed back 11-19, merged (c4f938b5a). Leon image on the native skeleton and collision; original ik removed; presentation randomness on an engine generator; services in a fixed 1 MB region. Services before -> after: village Flycast 4.81 -> 2.33, MODELLED 6.85 -> 3.08; hill Flycast 12.29 -> 5.10, MODELLED 17.53 -> 6.80. Busy picture: village Flycast 15.93 -> 13.47 mean, MODELLED 21.21 -> 17.92; hill Flycast 19.87 -> 12.67, MODELLED 27.63 -> 17.42. El Gigante services 6.00 -> 4.48 Flycast. Cloth and facial keys are logged stubs for now (cloth does not swing). Integrator ruling: aim sway moves Leon and his shots, so it is behaviour and goes back on the original generator (eng-e1d). Disc E:\RE4DC-Lanes\eng-e1cuild\E1C-GDEMU-native.
 
 Closed: eng-svc2 (Opus, PC-only), handed back 11-19, merged (cc0d1ccf5). Offline motion keys (bit-identical, key segments for Leon 60 to 3 a tick, but rows 1.84x the clips: Leon archives 1.26 to 2.55 MB); bone history cut to what behaviour reads (updateOldPos lines 377 to 71); native cloth on its own presentation generator (wind off bit-identical; wind on within 0.25 u of the original's chain distance); collision grid (polygon tests per line query down 44 to 68%, results bit-identical). 37 controls end as they must. PC counts only.
 

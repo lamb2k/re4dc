@@ -1,7 +1,7 @@
 // E1 collision tables (lane eng-e1): the room's SAT (scenery) and EAT (effect) collision in the engine's tables,
 // set up as gameRoomInit does (game.cpp: roomInit, arrayAlloc, create over the room archive's SAT / EAT).
-// The queries are the collision service units (SHELL_MAP section 4, "collision queries": hitCheck, getFloor, check)
-// compiled under the service boundary (game/hosted.mk SVC_ORIG_SRCS, first form).
+// The query cores run natively on tables baked here (services/collision/col.cpp, lane eng-e1c): hitCheck2, hitCheck,
+// polySphereCk; check, getFloor, wallAdjust and adjust above them stay the original's (atari.cpp).
 #include "global.h"
 #include "atari.h"
 #include "e1_engine.h"
@@ -21,5 +21,6 @@ void e1_collision_room_init()
     SatMgr.seCk = 0;
     EatMgr.seCk = 1;
     EatMgr.initEffInfo();
+    e1_svc_room_ready();                // the native collision tables of the room's pieces (col_bake_all)
     e1_log("E1 collision: SAT %p EAT %p\n", sat, eat);
 }
