@@ -88,6 +88,22 @@ static void e1_partner_pass(const float* c, const void* model)
     partner_marks = n;
 }
 
+/* One off-screen triangle in a list that may otherwise stay empty (the hill scene has no world: its punch-through
+   list can be empty, and an empty list never reports done, so every picture waited for the chip's 100 ms timeout). */
+static void list_keepalive(int list)
+{
+    pvr_poly_cxt_t cxt; pvr_poly_hdr_t hdr;
+    pvr_poly_cxt_col(&cxt, list);
+    pvr_poly_compile(&hdr, &cxt);
+    pvr_prim(&hdr, sizeof(hdr));
+    pvr_vertex_t v = {0};
+    for (int i = 0; i < 3; i++) {
+        v.flags = i == 2 ? PVR_CMD_VERTEX_EOL : PVR_CMD_VERTEX;
+        v.x = -64.0f + (i & 1) * 8.0f; v.y = -64.0f + (i >> 1) * 8.0f; v.z = 0.0001f; v.argb = 0;
+        pvr_prim(&v, sizeof(v));
+    }
+}
+
 /* camera: 26 words (view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane), as the pack's
    camera stream; hud: life, life max, weapon, stance; partner: the partner's model record or 0; world: draw the
    village bake (0 in the hill scene: r11d has no engine bake yet; its sky and fog are the village's) */
@@ -115,6 +131,7 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_PT_POLY);
     if (world) native_world_pass(&scene.assets, &scene.world, cam, 1);
+    else list_keepalive(PVR_LIST_PT_POLY);
     e1_actor_pass(&scene, leon, 0, identity, 1);
     pvr_list_finish();
     pvr_list_begin(PVR_LIST_TR_POLY);
