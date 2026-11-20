@@ -109,6 +109,8 @@ extern "C" int col_grid_off __attribute__((weak));
 extern "C" int cloth_control_nogravity __attribute__((weak));
 extern "C" int cloth_control_wind __attribute__((weak));
 extern "C" int cloth_passes __attribute__((weak));
+extern "C" int col_sphere_grid_off __attribute__((weak));
+extern "C" unsigned col_mask_min __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
 {
     const char* c = getenv("RE4_SVC_CONTROL");
@@ -134,6 +136,10 @@ __attribute__((constructor)) static void svc_options()
     const char* cp = getenv("RE4_SVC_CLOTH_PASSES");   // 4: the cloth kernel in the original's pass order (proof)
     if (&cloth_passes && cp && *cp == '4') cloth_passes = 1;
     if (&cloth_passes && cp && *cp == '1') cloth_passes = 2;   // 1: one pass (measured, rejected)
+    const char* sg = getenv("RE4_SVC_COLSPHERE");   // 0: the swept sphere without the grid (measurement; lane eng-svc3)
+    if (&col_sphere_grid_off && sg && *sg == '0') col_sphere_grid_off = 1;
+    const char* mm = getenv("RE4_SVC_COLMIN");      // the smallest leaf with masks (measurement; lane eng-svc3)
+    if (&col_mask_min && mm && *mm) col_mask_min = (unsigned) atoi(mm);
     const char* g = getenv("RE4_SVC_COLGRID");
     if (&col_grid_off && g && *g == '0') col_grid_off = 1;   // measurement: the line queries without the grid
 }

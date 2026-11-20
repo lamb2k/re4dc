@@ -180,14 +180,16 @@ extern "C" void host_svc_finish()
         if (&col_cnt) {
             const ColCounters& k = col_cnt;
             fprintf(f, "col bakes %u late_bakes %u line_queries %u sphere_queries %u nodes_tested %u leaves %u tris_line %u "
-                       "tris_sphere %u tri_bytes %u cold_line %u cold_sphere %u tris_skipped %u filter_miss %u filter_end %u\n",
+                       "tris_sphere %u tri_bytes %u cold_line %u cold_sphere %u tris_skipped %u filter_miss %u filter_end %u "
+                       "sphere_skipped %u sphere_filter_miss %u sphere_recells %u leaves_whole %u\n",
                     k.bakes, k.late_bakes, k.line_queries, k.sphere_queries, k.nodes_tested, k.leaves, k.tris_line,
-                    k.tris_sphere, k.tri_bytes, k.cold_line, k.cold_sphere, k.tris_skipped, k.filter_miss, k.filter_end);
+                    k.tris_sphere, k.tri_bytes, k.cold_line, k.cold_sphere, k.tris_skipped, k.filter_miss, k.filter_end,
+                    k.sphere_skipped, k.sphere_filter_miss, k.sphere_recells, k.leaves_whole);
         }
         for (u32 i = 0; col_piece_count && i < col_piece_count(); i++) {
             ColPiece* pc = col_piece_at(i);
-            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u\n", i, (u32) pc->sat, pc->nNode,
-                    pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc));
+            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u masks %u\n", i, (u32) pc->sat,
+                    pc->nNode, pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc), pc->nMask);
         }
         for (u32 i = 0; skel_table_of && i < skel_table_count(); i++) {
             SkelTable* t = skel_table_at(i);

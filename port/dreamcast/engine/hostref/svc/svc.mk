@@ -104,9 +104,10 @@ $(NAT)/weak/%.o: $(BUILD)/plain/game/%.o svc/svc.mk
 $(NAT)/skel.o: $(SVC_ENG)/skeleton/skel.cpp $(SVC_ENG)/skeleton/skel.h $(SVC_ENG)/skeleton/skel_mk.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
+# COL_DEFS: measurement builds of the cell grid's shape (lane eng-svc3: -DCOL_MASK64, -DCOL_GRID_X=..)
 $(NAT)/col.o: $(SVC_ENG)/collision/col.cpp $(SVC_ENG)/collision/col.h
 	@mkdir -p $(dir $@)
-	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(COL_DEFS) -c $< -o $@
 $(NAT)/cloth_kernel.o: $(SVC_ENG)/cloth/cloth_kernel.c $(SVC_ENG)/cloth/cloth_kernel.h $(SVC_ENG)/cloth/pres_rng.h
 	@mkdir -p $(dir $@)
 	$(CC) $(COMMON) $(FP_plain) -std=gnu11 -Wall -I$(SHZ)/include -c $< -o $@
