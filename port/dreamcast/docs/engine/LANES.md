@@ -83,7 +83,9 @@ Integrator checklist before a brief goes out:
 - slots and folders provisioned;
 - the baseline's scope defined (which phases, ticks per picture, what is excluded);
 - the stop rule says which gates it covers;
-- the lane's thresholds match ENGINE_PLAN.md.
+- the lane's thresholds match ENGINE_PLAN.md;
+- the step is approved by the owner, belongs to the current milestone, and fewer than two lanes are running;
+- the milestone's console run is booked, or the work does not depend on timing.
 
 ```
 Lane: eng-<topic>            Branch: lane/eng-<topic> from engine <sha>
@@ -92,9 +94,11 @@ Goal: <one line, as a change to the benchmark picture or a named risk>
 Already ruled out: <closed results, with their console numbers>
 Read first: <files>
 Owns: <files and folders>    Never touches: <files and folders>
+Original code allowed: <decision files only>; everything else native or a logged stub (list the stubs)
 Merge gate: <checks, each with its failing control>
 Stop rule: <when to hand back without a result>
-Hand back: table (scene, mean, p99, worst, over-budget count, tier), commit, image hash,
+Hand back: status "finished, unaudited"; engine merged in and every image linking;
+           table (scene, mean, p99, worst, over-budget count, tier), commit, image hash,
            evidence path, what was not done
 ```
 
