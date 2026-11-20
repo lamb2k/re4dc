@@ -106,7 +106,7 @@ mk e1 $ENG/game OUT="$B/e1" SENDABLE=1
 mk fight $ENG/game OUT="$B/fight" FIGHT=1 SENDABLE=1
 mk boss $ENG/game OUT="$B/boss" BOSS=1 SENDABLE=1
 for e in "$B/bench/native.elf" "$B/e1/e1.elf" "$B/fight/e1.elf" "$B/boss/e1.elf"; do
-  sh-elf-nm "$e" | grep -q '_cl_send_start$' || { echo "build_console_disc: $e has no console loop client" >&2; exit 1; }
+  grep -q '_cl_send_start$' <(sh-elf-nm "$e") || { echo "build_console_disc: $e has no console loop client" >&2; exit 1; }
 done
 
 # ---- stage: one folder per scene (the programs open /cd/<file>; root=<dir> makes it /cd/<dir>/<file> first)
