@@ -21,17 +21,21 @@ HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SR
 ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(wildcard $(ENG)/fight/*.cpp) $(wildcard $(ENG)/services/effects/*.cpp)
 ENG_HDRS += $(wildcard $(ENG)/fight/*.h) $(wildcard $(ENG)/services/effects/*.h)
 ENG_FLAGS += -DE2_BOSS=1 -DE2_FIGHT=1 -I$(ENG)/fight -I$(ENG)/boss -I$(ENG)/services/effects
-REND_FLAGS += -DE2_BOSS=1 -DE2_FIGHT=1 -I$(ENG)/services/effects
+REND_FLAGS += -DE2_BOSS=1 -DE2_FIGHT=1 -I$(ENG)/services/effects -I$(ENG)/fight
+REND_DEPS += $(wildcard $(ENG)/fight/*.inc) $(ENG)/services/effects/fx.h
 
 E2_CAP := -DRE4DC_ALIVE_CAP=4 -DRE4DC_ALIVE_CAP_R101=1 -DRE4DC_ALIVE_CAP_LOG=0
 $(OUT)/h/game/em_set.o: ORIG_FLAGS += $(E2_CAP) -DRE4DC_ALIVE_CAP_N=4 -DRE4DC_ALIVE_CAP_PARK=1 -DRE4DC_ANIMALS_OFF=1
 $(OUT)/h/game/sce_com.o: ORIG_FLAGS += $(E2_CAP)
-$(OUT)/h/st1/r101.o: ORIG_FLAGS += -DRE4DC_R101_ALIVE_CAP=4 -DRE4DC_R101_CAP_N=4 -DRE4DC_R101_CAP_LOG=1 \
+$(OUT)/h/st1/r101.o: ORIG_FLAGS += -DRE4DC_R101_ALIVE_CAP=4 -DRE4DC_R101_CAP_N=4 -DRE4DC_R101_CAP_LOG=0 \
 	-DRE4DC_R101_CAP_WAVES=1 -DRE4DC_PS2_ENEMY_RULES=1 -DRE4DC_PS2_ENEMY_ROOMS=0x33f -DRE4DC_ALIVE_CAP_ON=1 \
 	-D_prolog=r101_prolog -D_epilog=r101_epilog -D_unresolved=r101_unresolved
 # src/game/game.cpp names the old port's door-phase probe unconditionally: an empty macro here (knob off).
 $(OUT)/h/game/game.o $(OUT)/h/game/sce_at.o: ORIG_FLAGS += "-DRE4DC_DOORPH(x)="
 # The Ganado module's REL entry under its own name (em15_set.cpp defines _prolog: EmInitFunc = the em10 init).
 $(OUT)/h/em15/em15_set.o: ORIG_FLAGS += -D_prolog=em15_prolog -D_epilog=em15_epilog -D_unresolved=em15_unresolved
+# Service accounting of the Ganado paths and the native effect service (fight/fight_wraps.cpp), with E1's wraps.
+FIGHT_WRAP_SYMS := MotionMove _ZN7cSatMgr8checkAirEP6cModeli At_box_sphere_ck AtBoxCapsuleCk3 RouteCkToEm RouteCkEscEm 	RouteCkToPos RouteCkConnectPosCk RouteCkPosToPosDis RouteCkGetNearPoint EstSet
+$(OUT)/e1.elf: WRAPS += $(foreach s,$(FIGHT_WRAP_SYMS),-Wl,--wrap=$(s))
 # Controls / arms: make FIGHT=1 FIGHT_EXTRA=-DE1_CONTROL_SHIFT=1 (every pad action one frame late) ...
 ENG_FLAGS += $(FIGHT_EXTRA)

@@ -83,6 +83,23 @@ void e2_report()
     e2_events_report();
     fx_report();
 }
-void e2_fx_move() { fx_move(); }
 void e2_after_tick() {}
 void e2_fx_room_init() { fx_room_init(); }
+
+// The Ganados for the picture (fight_draw.inc): each alive enemy-table work of the village square's Ganado kinds, its
+// record (bones read in place) and the pack's base model for its kind (native_actor.inc model_index: type 3 -> 3,
+// 4 -> 4, 11 -> 5, otherwise 2), identity = id | type << 8.
+extern "C" unsigned e2_actor_list(const void** models, unsigned* bases, unsigned* idents, unsigned max)
+{
+    unsigned n = 0;
+    for (cEm* e = EmMgr.pAlive; e && n < max; e = (cEm*) e->pNext) {
+        if (e == pPL || e->id < 0x10 || e->id > 0x20 || !(e->be_flag & 1)) continue;
+        if (e->hp <= 0 && !(e->be_flag & 2)) continue;
+        const unsigned type = e->type;
+        models[n] = e;
+        bases[n] = type == 3 ? 3 : type == 4 ? 4 : type == 11 ? 5 : 2;
+        idents[n] = (unsigned) e->id | type << 8;
+        n++;
+    }
+    return n;
+}

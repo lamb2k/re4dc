@@ -285,7 +285,7 @@ extern "C" ScePrim* SceExec(int prio, TaskFunc func, int arg, u8 flag, int otPri
         sem_init(&t->go, 0); sem_init(&t->back, 0);
         t->thd = thd_create(0, task_entry, t);
         t->prim.task = (TASK*) t;
-        e1_log("E2 task %u slot %d ot %d func %p arg %d tick %u\n", i, slot, otPrio, (void*) func, arg, sce_tick);
+        if (sce_tick < 2) e1_log("E2 task %u slot %d ot %d func %p arg %d tick %u\n", i, slot, otPrio, (void*) func, arg, sce_tick);
         return &t->prim;
     }
     e1_stub_hit("SceExec(no free task)", prio);
@@ -445,6 +445,7 @@ static void* watchdog(void*)
     unsigned same = 0;
     for (;;) {
         thd_sleep(2000);
+        if (e1_state[3]) return 0;   // the run is over (report printed): nothing to watch
         if (e1_tick != last) { last = e1_tick; same = 0; continue; }
         if (++same > 8) continue;
         if (main_thd) e1_log("E2 STALL tick %lu pc %08lx pr %08lx r14 %08lx\n", (unsigned long) e1_tick,
