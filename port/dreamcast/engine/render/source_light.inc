@@ -13,6 +13,7 @@
       direction and the distance terms are evaluated once per weight set at the weight set's origin.
    Inputs per picture: the room's lights (state 2, 18 words each) and each model's light record (state 8,
    17 words: the model's light volume and masks, material colour, TEV scale group and AddAmb). */
+#include "content.h"
 typedef struct {unsigned flags,type,kind,spot;float pos[3],dir[3],radius,intensity;uint8_t rgb[4];
                 unsigned index,bits,a0;float a1;unsigned parent;} NativeLamp;
 _Static_assert(sizeof(NativeLamp)==72,"lamp record");
@@ -75,8 +76,9 @@ static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned b
     float obj_pos[3]={obj[3],obj[7],obj[11]};
     float obj_size=m1_maxf(ml->size[0],ml->size[1]);int obj_flag=(ml->info&3)!=2;
     const NativeLamp* pick[8];unsigned n=0,game[8],gn=0;
+    const unsigned wrong=m1_content[CS_PICK_CONTROL];   /* eng-look: the test's control walks the lights backwards */
     for(unsigned o=0;o<lamp_count && !(flags&1);o++){
-        const NativeLamp* l=L+lamp_order[o];
+        const NativeLamp* l=L+lamp_order[wrong?lamp_count-1-o:o];
         if((l->flags&3)!=3)continue;
         unsigned xf=l->bits&255;
         if(!((xf&enable) || (!(enable&0x41) && l->parent==ml->model)))continue;

@@ -14,7 +14,7 @@
      masks only when the camera height is inside that band. Any other camera position (outside the grid, an
      unbaked cell, a height outside the band) draws everything (the safe fallback).
    For each baked cell, sample eyes on a 3 x 3 grid that includes the cell's edges, at the band's bottom,
-   middle and top (27 eyes), render six 90-degree depth faces of the opaque world from each, and mark a query
+   middle and top (27 eyes; --eyes N: N x N x 3), render six 90-degree depth faces of the opaque world from each, and mark a query
    hidden only when no eye sees any of it: world cluster instances (placement x cluster, by their world box) and
    2 m actor cubes. Actor cubes exist only where actors can stand: columns with a floor (reachable on foot or
    not: the barn interior holds props the camera never reaches), from CUBE_BELOW under
@@ -38,7 +38,8 @@
 #include <sys/wait.h>
 #include "native_world.h"
 #define ACUBE 2000.f
-#define MARGIN 60.f
+static float MARGIN=60.f;   /* query dilation, mm (--margin) */
+static int EYES=3,ERODE=0;  /* eye grid per axis (--eyes), conservative occluders (--erode) */
 #define RES 192
 #define NEARZ 20.f
 #define CLEAR 1700.f       /* headroom above a walkable floor */
@@ -147,6 +148,14 @@ static void render_face(void){
         if(a[0]>1.02f*a[2]&&b[0]>1.02f*b[2]&&c[0]>1.02f*c[2])continue;if(-a[0]>1.02f*a[2]&&-b[0]>1.02f*b[2]&&-c[0]>1.02f*c[2])continue;
         if(a[1]>1.02f*a[2]&&b[1]>1.02f*b[2]&&c[1]>1.02f*c[2])continue;if(-a[1]>1.02f*a[2]&&-b[1]>1.02f*b[2]&&-c[1]>1.02f*c[2])continue;
         clip_raster(a,b,c,0);}
+    if(ERODE){   /* eng-look: conservative occluders. Each pixel takes the farthest depth of its 3 x 3 neighbourhood, so an
+                    opening narrower than a pixel (missed by centre sampling) still shows what lies behind it. */
+        static float tmp[RES*RES];
+        for(int y=0;y<RES;y++)for(int x=0;x<RES;x++){float m=depth[y*RES+x];
+            for(int dy=-1;dy<=1;dy++)for(int dx=-1;dx<=1;dx++){int a=x+dx,b=y+dy;if(a<0||b<0||a>=RES||b>=RES)continue;if(depth[b*RES+a]>m)m=depth[b*RES+a];}
+            tmp[y*RES+x]=m;}
+        memcpy(depth,tmp,sizeof(tmp));
+    }
 }
 static int box_visible(const Box* b){
     float lo[3],hi[3];for(int i=0;i<3;i++){lo[i]=b->lo[i]-MARGIN;hi[i]=b->hi[i]+MARGIN;}
@@ -361,6 +370,9 @@ int main(int argc,char** argv){
         else if(!strcmp(argv[i],"--budget")&&i+1<argc)budget=atoi(argv[++i]);
         else if(!strcmp(argv[i],"--jobs")&&i+1<argc)jobs=atoi(argv[++i]);
         else if(!strcmp(argv[i],"--survey"))survey=1;
+        else if(!strcmp(argv[i],"--eyes")&&i+1<argc)EYES=atoi(argv[++i]);
+        else if(!strcmp(argv[i],"--margin")&&i+1<argc)MARGIN=atof(argv[++i]);
+        else if(!strcmp(argv[i],"--erode"))ERODE=1;
         else if(!strcmp(argv[i],"--from-raw")&&i+1<argc)from_raw=argv[++i];
         else if(!strcmp(argv[i],"--control")&&i+1<argc){control=argv[++i];wrong=1;if(i+1<argc&&argv[i+1][0]!='-')wrong=atoi(argv[++i]);}
     }
@@ -573,15 +585,17 @@ int main(int argc,char** argv){
         if(fread(hid_i,1,(size_t)nb*ibytes,r)!=(size_t)nb*ibytes||fread(hid_c,1,(size_t)nb*cbytes,r)!=(size_t)nb*cbytes)return 9;
         fclose(r);fprintf(stderr,"loaded the raw bake %s\n",from_raw);
     }else{
-    fprintf(stderr,"baking %u cells x 27 eyes in %u jobs\n",nb,jobs);
+    if(EYES<2)EYES=2;
+    fprintf(stderr,"baking %u cells x %d eyes (%d x %d x 3) in %u jobs, margin %.0f mm, erode %d\n",nb,3*EYES*EYES,EYES,EYES,jobs,MARGIN,ERODE);
     for(unsigned j=0;j<jobs;j++){
         if(fork()==0){
             for(unsigned k=j;k<nb;k+=jobs){
                 const CamCell* c=cc+pos[k];int x=pos[k]%nx,z=pos[k]/nx;
                 uint8_t* hi_=hid_i+(size_t)k*ibytes;uint8_t* hc=hid_c+(size_t)k*cbytes;
-                for(int s=0;s<27;s++){
-                    eye[0]=org[0]+(x+.5f*(s%3))*CELL;eye[2]=org[1]+(z+.5f*((s/3)%3))*CELL;
-                    eye[1]=c->ylo+(c->yhi-c->ylo)*.5f*(s/9);
+                for(int s=0;s<3*EYES*EYES;s++){
+                    float step=1.f/(EYES-1);
+                    eye[0]=org[0]+(x+step*(s%EYES))*CELL;eye[2]=org[1]+(z+step*((s/EYES)%EYES))*CELL;
+                    eye[1]=c->ylo+(c->yhi-c->ylo)*.5f*(s/(EYES*EYES));
                     for(int face=0;face<6;face++){
                         set_face(face);render_face();
                         for(unsigned q=0;q<ninst;q++)if((hi_[q>>3]>>(q&7)&1) && box_visible(inst+q))hi_[q>>3]&=~(1u<<(q&7));

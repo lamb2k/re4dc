@@ -59,28 +59,34 @@ void native_sky(NativeScene* s){
 typedef struct {uint32_t slot,id,texture,type,anim,flags,tool;float pos[3],angle[3],size[3],rgba[4],parent[12];uint32_t hdr,fnv,pattern,width,height,blend;} NativeEffect;
 typedef struct {float x,y,iw,rx,ry,angle;unsigned hdr,color;} Billboard;
 static Billboard particles[1024];
+#include "content_fx.inc"
 static int depth_sort(const void* a,const void* b){
     float x=((const Billboard*)a)->iw,y=((const Billboard*)b)->iw;return (x>y)-(x<y);
 }
 void native_effects(NativeScene* s){
     const NativeEffect* e=(const void*)s->state[3];const float* c=(const float*)s->state[0];
     shz_mat4x4_t screen=projection_grid(c,identity_grid);shz_xmtrx_load_4x4(&screen);
-    float near=c[18]/(c[17]-1);unsigned count=0;
+    float near=c[18]/(c[17]-1);unsigned count=0;fx_frame();
     for(unsigned i=0;i<s->words[3]*4/sizeof(*e);i++){
         const NativeEffect* v=e+i;const float* a=v->parent;const float* b=v->pos;
-        if(v->hdr==~0u || !(v->rgba[3]>0) || v->id==0x46)continue;
+        if(v->id==0x46){if(v->rgba[3]>0)fx_glow_driver(v);continue;}   /* eng-look: the glow filter's driver */
+        if(v->hdr==~0u || !(v->rgba[3]>0))continue;
         float w[3];for(unsigned k=0;k<3;k++,a+=4)w[k]=a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3];
         shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(w[0],w[1],w[2],1));
         if(q.w<near || q.w>c[25])continue;
         float iw=1.f/q.w,x=q.x*iw,y=q.y*iw;
         float rx=fabsf(160*c[13]*v->size[0]*v->size[2]*iw),ry=fabsf(120*c[15]*v->size[1]*v->size[2]*iw);
         if(x+rx<0||y+ry<0||x-rx>640||y-ry>480||count==1024)continue;
-        particles[count++]=(Billboard){x,y,iw,rx,ry,v->angle[2]*.017453293f,v->hdr,argb4(v->rgba)};
+        particle_slot[count]=v->slot;
+        particles[count]=(Billboard){x,y,iw,rx,ry,v->angle[2]*.017453293f,v->hdr,fx_color(v)};   /* eng-look: TEV scale */
+        fx_glow_note(v,particles+count);count++;
     }
+    count=fx_cap(particles,count);   /* eng-look: density cap (CS_EFFECTS) */
     qsort(particles,count,sizeof(Billboard),depth_sort);
     static const float uv[]={0,0,1,1};unsigned last=~0u;
     for(unsigned i=0;i<count;i++){Billboard* b=particles+i;if(last!=b->hdr){last=b->hdr;submit_header(&s->assets,last);}
         rectangle(b->x,b->y,b->iw,b->rx,b->ry,b->angle,uv,b->color);}
+    fx_glow_draw(s);   /* eng-look: the frame-alpha glow */
 }
 typedef struct {unsigned identity,tree,shape,hidden,hdr,fnv,mask[2];float pos[3],rot[3],w,h,color[4],uv[4];} Widget;
 /* The HUD is laid out every picture: its widget state changes every picture in both scenes, so a layout change

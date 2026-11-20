@@ -39,6 +39,7 @@ typedef struct {unsigned n; RtModel m[];} RtCatalog;
 #define ACTOR_POS_LIMIT 4096
 #define ACTOR_WS_LIMIT 256
 #include "source_light.inc"
+#include "content_actor.inc"
 static uint16_t pos_records[ACTOR_POS_LIMIT+2][4] __attribute__((aligned(32)));
 static const uint16_t dummy_uv[2];
 static shz_mat4x4_t skin_project[ACTOR_WS_LIMIT] __attribute__((aligned(32)));
@@ -250,7 +251,7 @@ static void build_ws(const RtModel* m,unsigned i){
         shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[c],out[4+c],out[8+c],c==3?1.f:0.f));
         pm->elem[4*c]=v.x;pm->elem[4*c+1]=v.y;pm->elem[4*c+2]=v.z;pm->elem[4*c+3]=v.w;
     }
-    ws_light(i,out);
+    if(!ws_light_off)ws_light(i,out);   /* eng-look: off on a baked-lighting cache hit */
     ws_ready[i]=1;
 }
 static const pvr_vertex_t* cur_projected;static const uint32_t* cur_lit;static const uint8_t* cur_codes;
@@ -293,7 +294,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
     const ActorPose* pose=(const void*)s->state[1];const ActorPose* end=pose+s->words[1]/16;
     const float* camera=(const float*)s->state[0];float near=camera[18]/(camera[17]-1),far=camera[25];
     volatile unsigned* census=m1_part_counts[(m1_state[1]-1)%300];
-    if(!translucent){census[0]=census[1]=0;actor_frame_setup(s);++actor_serial;}
+    if(!translucent){census[0]=census[1]=0;actor_frame_setup(s);++actor_serial;content_actor_frame();content_light_frame(s);}
     pvr_vertex_t* sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
     unsigned ordinal=0;
     for(;pose<end;ordinal++){
@@ -306,9 +307,9 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         uint8_t* state=part_state[ordinal];
         const pvr_vertex_t* proj=projected_pool[model!=0];uint32_t* lit=colors_pool[model!=0];uint8_t* codes=outcode_pool[model!=0];
         cur_projected=proj;cur_lit=lit;cur_codes=codes;cur_pos=m->pos;
-        if(translucent){
-            unsigned emitted=0;
-            for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==7 && state[p])sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
+        if(translucent){   /* eng-look: Leon's hair layer (role 8) of the model drawn this picture */
+            unsigned emitted=0;m=cat->m+lod_chosen[ordinal];h=m->h;cur_pos=m->pos;
+            for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==8 && state[p])sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             continue;
         }
         unsigned considered=h[4];census[0]+=considered;
@@ -321,7 +322,9 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
             for(unsigned a=0;a<3;a++){lo[a]=m1_minf(lo[a],c[a]-r);hi[a]=m1_maxf(hi[a],c[a]+r);}
         }
         if(!all && s->world.vis_cubes && actor_hidden(s->world.vis,s->world.vis_cubes,lo,hi)){all=1;m1_vis_actors++;}
-        if(all){memset(state,0,h[4]);census[1]+=considered;continue;}
+        if(all){memset(state,0,16);census[1]+=considered;lod_chosen[ordinal]=model;continue;}
+        if(content_card(s,actor,h[0],model,ordinal,m1_content[CS_CARDS]?actor_px(s,lo,hi):1e9f,s->assets.header.n)){memset(state,0,16);lod_chosen[ordinal]=model;continue;}
+        {unsigned v=content_pick(s,model,lo,hi,ordinal);if(v!=model){m=cat->m+v;h=m->h;cur_pos=m->pos;}}   /* eng-look */
         /* 2. bones: pose x inverse bind x quantum */
         for(unsigned i=0;i<m->nbones_used;i++){
             unsigned b=m->bones_used[i];float* r=bone_rows[b];
@@ -339,12 +342,16 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         }
         if(!visible)continue;
         /* 4. weight sets used by visible parts */
-        source_lights(s,actor,h[0],model_light(s,actor),&cur_lights);
+        int lit_fill=0;uint32_t* lit_cached=content_lit(s,actor,h[0],model,lod_chosen[ordinal],m,ordinal,
+            m1_content[CS_BAKED]==3?actor_px(s,lo,hi):1e9f,&lit_fill);   /* eng-look: step B (baked lighting cache) */
+        ws_light_off=lit_cached && !lit_fill;
+        if(!ws_light_off)source_lights(s,actor,h[0],model_light(s,actor),&cur_lights);
         memset(ws_ready,0,h[1]);
         for(unsigned p=0;p<h[4];p++){
             if(!state[p])continue;const RtPart* rp=m->parts+p;
             for(unsigned k=0;k<rp->ws_count;k++){unsigned i=m->part_ws[rp->ws_first+k];if(!ws_ready[i])build_ws(m,i);}
         }
+        if(lit_fill)for(unsigned i=0;i<h[1];i++)if(!ws_ready[i])build_ws(m,i);
         /* 5. positions and normals of visible parts */
         for(unsigned p=0;p<h[4];p++){
             if(!state[p])continue;const RtPart* rp=m->parts+p;
@@ -354,12 +361,14 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
                             skin_project[0].elem,ws_ready,h[1],640,480,near,far,0,0,0,0};
             re4dc_avk_pos_skin_u16(&a);
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
-            light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+            if(!lit_cached)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
         }
+        if(lit_fill){const RtPart* lp=m->parts+h[4]-1;light_normals_source(m->nrm,lp->nrm_first+lp->nrm_count,lit_cached);}
+        if(lit_cached)cur_lit=lit_cached;
         /* 6. opaque parts now; hair (role 7) in the translucent pass from the same pools */
         unsigned emitted=0;
         for(unsigned p=0;p<h[4];p++){
-            if(!state[p] || m->parts[p].src->role==7)continue;
+            if(!state[p] || m->parts[p].src->role==8)continue;
             /* Leon's role-2 part is the knife in hand: drawn in the knife stance only (eng-e0b: the recorded stance,
                PlGetWeaponNo() == 0x10). */
             if(!model && m->parts[p].src->role==2 && knife_stance(s)==0)continue;
