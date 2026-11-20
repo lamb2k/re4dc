@@ -210,7 +210,31 @@ WARP_NEW = '''        } else if (!strcmp(k, "rsplit") && n >= 2) {
             re4ref_split_mask = num(tok[1]);
             if (n >= 3) re4ref_pseed((unsigned short) num(tok[2]));
             re4dc_log("warp: rsplit mask=%x seed=%x\\n", (unsigned) re4ref_split_mask, n >= 3 ? (unsigned) num(tok[2]) : 0u);
+        } else if (!strcmp(k, "autoplay")) {
+            // the outcome check's closed-loop player (tools/plays_right/autoplay/autoplay.inc) drives pad 0
+            re4ap_on = 1;
+            re4dc_log("warp: autoplay\\n");
         } else if (!strcmp(k, "god")) {
+'''
+
+# the outcome check's player: included after the game headers; drives the pad after the event check
+INC_OLD = '''#include "em10.h"
+'''
+INC_NEW = '''#include "em10.h"
+static int re4ap_on;   // lane eng-ref: `autoplay` fixture line
+#include "re4ap_autoplay.inc"
+'''
+PAD_OLD = '''        re4dc_warp_cut("event");
+        return;
+    }
+'''
+PAD_NEW = '''        re4dc_warp_cut("event");
+        return;
+    }
+    if (re4ap_on) {   // lane eng-ref: the closed-loop player replaces the fixture's actions
+        re4ap_pad(buttons, stickX, stickY);
+        return;
+    }
 '''
 
 TRACE_OLD = '''    const unsigned rng = re4dc_rnd_state();
@@ -268,6 +292,13 @@ def main():
         fp.write(RND_CPP % mask)
     sub_once(os.path.join(tree, 'port/dreamcast/game/dbgwarp_bridge.cpp'), WARP_OLD, WARP_NEW)
     sub_once(os.path.join(tree, 'port/dreamcast/game/logic_trace.cpp'), TRACE_OLD, TRACE_NEW)
+    sub_once(os.path.join(tree, 'port/dreamcast/game/dbgwarp_bridge.cpp'), INC_OLD, INC_NEW)
+    sub_once(os.path.join(tree, 'port/dreamcast/game/dbgwarp_bridge.cpp'), PAD_OLD, PAD_NEW)
+    here = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(here, '..', 'autoplay', 'autoplay.inc'), encoding='latin-1') as fp:
+        ap = fp.read()
+    with open(os.path.join(tree, 'port/dreamcast/game/re4ap_autoplay.inc'), 'w', encoding='latin-1') as fp:
+        fp.write(ap)
     # file-scope C declarations (the parser and the trace live in anonymous namespaces: a block-scope extern there
     # would name a different, unresolved symbol)
     for f in ('port/dreamcast/game/dbgwarp_bridge.cpp', 'port/dreamcast/game/logic_trace.cpp'):
