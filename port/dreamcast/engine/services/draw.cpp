@@ -1,6 +1,7 @@
-// E1 drawing glue (lane eng-e1): the camera record from the hosted camera (pG->Cam: the look-at matrix and the
-// projection the camera code computed this tick) and the live HUD words, handed to the C renderer (core/draw_e1.c),
-// which reads Leon's matrices in place from the actor table and the native skeleton's tables (lane eng-e1c).
+// E1 drawing glue (lane eng-e1): the C renderer (core/draw_e1.c) reads Leon's matrices in place from the actor table and
+// the native skeleton's tables (lane eng-e1c). Lane eng-e1e: the camera (pG->Cam, the native camera service's look-at
+// matrix and projection) and the HUD's live words are written in the renderer's form once a tick by the steps that
+// produce them, and the characters' light records are kept by the light service below; the picture copies none of them.
 #include "global.h"
 #include "player.h"
 #include "pl_npc.h"
@@ -55,10 +56,11 @@ extern "C" int e1_light_record(const void* model, uint32_t* o)
 extern "C" {
 uint16_t e1_tev_scale_of_group[256];   // scale + 1, filled by the renderer at open (0: not resolved, 255 used)
 uint32_t e1_light_checks, e1_light_builds;
-// Controls (boot options, read at open; each must change the pictures): LIGHTSTALE a record is never rebuilt after its
-// first build; PALCTL the pass reads the palette with the old 12-float stride (services/actor_e1.inc); CAMSTALE the
-// camera stream keeps the room's first camera.
-int e1_light_stale, e1_pal_control, e1_cam_stale;
+// Controls (boot options, read at open): LIGHTCTL every record built with a black material, PALCTL the pass reads the
+// palette with the old 12-float stride (services/actor_e1.inc), CAMSTALE the camera stream keeps the room's first
+// camera: each must change the pictures. LIGHTSTALE (a record never rebuilt after its first build) shows what the
+// rebuilds change (lanes/eng-e1e.md).
+int e1_light_stale, e1_light_control, e1_pal_control, e1_cam_stale;   // LIGHTCTL: every record built with a black material
 }
 struct E1LightSlot { const cModel* m; uint32_t in[14]; uint32_t rec[17]; };
 static E1LightSlot light_slot[16];
@@ -80,6 +82,7 @@ static void light_build(E1LightSlot& s)
     const unsigned group = s.rec[12] & 255;
     const unsigned v = e1_tev_scale_of_group[group];
     s.rec[12] = group | (v ? v - 1 : 255u) << 8;
+    if (e1_light_control) s.rec[11] = 0;   // LIGHTCTL (control): the material colour black
     e1_light_builds++;
 }
 void e1_light_service_tick()
@@ -168,6 +171,7 @@ void e1_draw_open()
     draw_cam = e1_draw_cam_stream();
     draw_hud = e1_draw_hud_stream();
     f = fs_open("/cd/LIGHTSTALE", O_RDONLY); if (f >= 0) { fs_close(f); e1_light_stale = 1; e1_log("E1 LIGHTSTALE: light records never rebuilt (control)\n"); }
+    f = fs_open("/cd/LIGHTCTL", O_RDONLY); if (f >= 0) { fs_close(f); e1_light_control = 1; e1_log("E1 LIGHTCTL: light records with a black material (control)\n"); }
     f = fs_open("/cd/PALCTL", O_RDONLY); if (f >= 0) { fs_close(f); e1_pal_control = 1; e1_log("E1 PALCTL: palette read with a 12-float stride (control)\n"); }
     draw_cam[12] = 0.0f;   // GX_PERSPECTIVE
     draw_cam[19] = 0.0f; draw_cam[20] = 0.0f; draw_cam[21] = 640.0f; draw_cam[22] = 480.0f; draw_cam[23] = 0.0f; draw_cam[24] = 1.0f;

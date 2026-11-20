@@ -25,7 +25,7 @@ cLogPtr pLog;
 // Lane eng-e1e (E1 audit section 5): nothing prints over serial inside the timed ticks. While the tick loop runs
 // (e1_state[0] == 4) a log line goes to a RAM buffer, printed by e1_log_flush after the loop (e1_report), with the tick
 // it was written at kept in the text; lines that do not fit are counted and reported.
-static char log_buf[48 * 1024];
+static char log_buf[16 * 1024];
 static unsigned log_len, log_dropped;
 extern "C" void e1_log(const char* fmt, ...)
 {

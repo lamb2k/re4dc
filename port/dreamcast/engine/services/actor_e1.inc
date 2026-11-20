@@ -5,9 +5,10 @@
    is the k-th cParts on the model's pParts chain (cCoord::mat at +0x0C, next part at +0xF4), written once per tick
    by the skeleton service. Only pointers are gathered per picture; no matrix is converted. The lights use the
    source rule (source_light.inc) with the room's light set and the model's light record from the pack (the hosted
-   light manager is not in E1); those helpers take ActorPose records for the model and its light-origin part, so the
-   two matrices they read are copied (96 bytes a picture).
-   Steps 1 to 6 are native_actor_pass's, unchanged.
+   light manager is not in E1). Lane eng-e1e: the light rule reads the model's and its light-origin part's matrices
+   by pointer (source_lights_w), and step 2 is gone: the skeleton service publishes the palette in this pass's skinning
+   layout (see step 2 below).
+   Steps 1, 3 to 6 are native_actor_pass's.
 
    Lane eng-e1c: the bones come from the native skeleton's table (E1SkelView, services/e1_skel_view.h), not from the
    cParts records (only the mailbox records are written now): the world records for the whole-actor test and the
