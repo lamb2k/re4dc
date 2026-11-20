@@ -10,10 +10,16 @@
 //   lmat    [n]    48 B   local matrix (cCoord::l_mat)
 //   pal     [n]    64 B   skin palette: world x bind (3x4) + 16 B pad; written once a tick (skel_publish)
 //   prev    [n]    48 B   local matrix of the previous motion (cCoord::prevMat, MotionHokan)
-//   soa  [33][cap]  4 B   pose pos xyz, ang xyz, scale xyz | blend-saved pos xyz, rot xyz, scale xyz |
-//                         world position xyz (cCoord::world), world_old xyz | world_old2 xyz, bind xyz | addRot xyz
+//   soa  [27][cap]  4 B   pose pos xyz, ang xyz, scale xyz | blend-saved pos xyz, rot xyz, scale xyz |
+//                         world position xyz (cCoord::world), bind xyz | addRot xyz
 //   ikAng   [cap]   4 B   MotionParts::ikAng
-//   hist    [n]    36 B   key history (MotionParts::hist, 6 channels x 3 axes, u16)
+//   hist    [n]    36 B   key history (MotionParts::hist, 6 channels x 3 axes, u16): only clips without baked keys
+//                         (skel_mk.h) touch it
+//   hslot   [cap]   1 B   the bone's history slot (0xFF: none)
+//   hlist  [32]     1 B   the history bones, in the order they joined
+//   hold   [32]    32 B   world_old xyz, world_old2 xyz (+ 8 B pad) of the history bones: the bones code outside asked
+//                         for (lane eng-svc2: the census shows only those bones' history is read; updateOldPos moves
+//                         these and nothing else)
 //   parent  [cap]   1 B   parent bone (0xFF the model, 0xFE an outside coordinate: extParent)
 //   mbox    [cap]   1 B   mailbox: 1 a bone code outside asked for (served after every entry, taken back at the next
 //                         entry after it was handed out again), 2 its ancestors (reached through pParent: served
@@ -61,9 +67,14 @@ struct SkelIk {        // 96 B: IkParts of a chain root
 enum {
     SK_PX, SK_PY, SK_PZ, SK_AX, SK_AY, SK_AZ, SK_SX, SK_SY, SK_SZ,
     SK_MPX, SK_MPY, SK_MPZ, SK_MRX, SK_MRY, SK_MRZ, SK_MSX, SK_MSY, SK_MSZ,
-    SK_WX, SK_WY, SK_WZ, SK_OX, SK_OY, SK_OZ,
-    SK_O2X, SK_O2Y, SK_O2Z, SK_BX, SK_BY, SK_BZ, SK_RX, SK_RY, SK_RZ,
+    SK_WX, SK_WY, SK_WZ, SK_BX, SK_BY, SK_BZ, SK_RX, SK_RY, SK_RZ,
     SK_ROWS
+};
+#define SKEL_MAX_HIST 32
+struct SkelHist {      // 32 B: a history bone's world_old and world_old2
+    f32 old[3];
+    f32 old2[3];
+    u32 pad[2];
 };
 
 struct SkelTable {
@@ -91,7 +102,13 @@ struct SkelTable {
     u8 nRoot, root[7];    // bones whose parent is the model or an outside coordinate
     u32 stamp;            // tick of the last publish
     u8 ikOf[SKEL_MAX_IK]; // unused slots 0xFF
-    u32 pad[6];
+    SkelHist* hold;       // [SKEL_MAX_HIST] the history bones' world_old / world_old2
+    u8* hslot;            // [cap] bone -> history slot, 0xFF none
+    u8* hlist;            // [SKEL_MAX_HIST] slot -> bone
+    u32 nHist;
+    u32 nOld;             // updateOldPos calls so far (a history bone that joins later starts unknown)
+    f32* base;            // until the first updateOldPos: every bone's world_old and world_old2 (6 rows x cap), so a
+                          // bone that joins the history set during set-up starts with the original's values
 
     f32* row(int r) { return soa + r * cap; }
 };
@@ -107,7 +124,8 @@ SkelTable* skel_table_at(u32 i);
 struct SkelCounters {
     u32 mat_local, mat_world, mat_world_slow, xmtrx_loads, add_rot, samples, hokan_bones, blend_bones, ik_chains,
         palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch, serve_ancestors, lost_writes,
-        samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_cold, mk_orig;
+        samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_cold, mk_orig,
+        hist_join, hist_moves, hist_full, hist_late;
 };
 extern SkelCounters skel_cnt;
 // controls (lane eng-svc: each must make the equivalence check fail)
@@ -115,4 +133,5 @@ extern int skel_control_parent;   // >0: bone skel_control_parent's parent taken
 extern int skel_control_no_ik;    // skip the IK pass
 extern int skel_poison;           // check build: records outside the mailbox hold NaN
 extern int skel_control_mk;       // baked motion keys: the row of the next frame (lane eng-svc2 control)
+extern int skel_control_hist;     // 1: no bone keeps its history; 2: the history never moves (lane eng-svc2 controls)
 }

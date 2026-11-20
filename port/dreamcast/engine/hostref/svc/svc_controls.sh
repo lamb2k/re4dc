@@ -10,6 +10,8 @@
 #   floor    RE4_SVC_CONTROL=floor=1: every floor and slope triangle raised by 1 unit in the baked tables
 #   noik     RE4_SVC_CONTROL=noik: the IK pass skipped
 #   mkrow    RE4_SVC_CONTROL=mkrow: the baked motion keys read one frame late (the next frame's row; lane eng-svc2)
+#   histnone RE4_SVC_CONTROL=histnone: no bone keeps its world_old / world_old2 (the check build serves NaN)
+#   histfrozen RE4_SVC_CONTROL=histfrozen: updateOldPos never moves the kept history
 # and the native build against itself (a second run) must PASS bit for bit (determinism).
 # The native runs sample the baked motion keys (RE4_SVC_MK=<pack>; without it the fixtures' archives are baked into
 # <out dir>/motion.mkp first, bake/motion_keys.py). Each native row's detail ends with where the motion samples came
@@ -66,7 +68,10 @@ row() {   # row <name> <must> <ref dir> <test dir> <fixture>
 import json,sys
 j=json.load(open(sys.argv[1])); b=j['bones']; c=j['collision']
 f=b.get('first') or c.get('first')
-print('bones %d/%d bit-identical (%d equal), max %.3g u %.3g deg; queries %d/%d identical, max %.3g u; first: %s' % (b['bit_identical_bones'], b['bones'], b['equal_bones'], max(b['max_pos'], b['max_pal_pos']), max(b['max_deg'], b['max_pal_deg']), c['identical'], c['compared'], c['max_point'], json.dumps(f) if f else '-'))" "$b/compare.json")
+print('bones %d/%d bit-identical (%d equal), max %.3g u %.3g deg; queries %d/%d identical, max %.3g u; first: %s' % (b['bit_identical_bones'], b['bones'], b['equal_bones'], max(b['max_pos'], b['max_pal_pos']), max(b['max_deg'], b['max_pal_deg']), c['identical'], c['compared'], c['max_point'], json.dumps(f) if f else '-'), end='')
+h=j.get('history')
+if h: print('; history %d/%d bone-ticks equal (%d not known yet), max %.3g u' % (h['equal'], h['compared'], h['unknown'], h['max']), end='')
+print()" "$b/compare.json")
     local keys=""
     [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, cold keys %s, original decoder %s", $11, $15, $18}' "$b/svc.txt")
     [ "$got" = "$must" ] || echo 1 > "$OUT/.status"
@@ -92,6 +97,10 @@ print('bones %d/%d bit-identical (%d equal), max %.3g u %.3g deg; queries %d/%d 
         row "control: IK pass skipped" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-noik" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-mkrow" RE4_SVC_CONTROL=mkrow
         row "control: motion keys one frame late" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-mkrow" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-histnone" RE4_SVC_CONTROL=histnone
+        row "control: no bone history kept (check build: NaN)" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-histnone" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-histfrozen" RE4_SVC_CONTROL=histfrozen
+        row "control: bone history never moves" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-histfrozen" "$fx"
     done
 } | tee "$OUT/svc_controls.md"
 [ -f "$OUT/.status" ] && status=1

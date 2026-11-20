@@ -53,6 +53,7 @@ int skel_control_parent;
 int skel_control_no_ik;
 int skel_poison;
 int skel_control_mk;
+int skel_control_hist;
 }
 
 #define PTR_OK(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
@@ -228,9 +229,10 @@ void serve(SkelTable* t, u32 b, u32 mask)
             r->motParts.flags = t->world[b].flags;
         }
     }
-    if ((mask & SG_OLD) && !anc) {
-        r->world_old.x = s[SK_OX * c + b]; r->world_old.y = s[SK_OY * c + b]; r->world_old.z = s[SK_OZ * c + b];
-        r->world_old2.x = s[SK_O2X * c + b]; r->world_old2.y = s[SK_O2Y * c + b]; r->world_old2.z = s[SK_O2Z * c + b];
+    if ((mask & SG_OLD) && !anc && t->hslot[b] != 0xFF) {
+        const SkelHist& h = t->hold[t->hslot[b]];
+        r->world_old.x = h.old[0]; r->world_old.y = h.old[1]; r->world_old.z = h.old[2];
+        r->world_old2.x = h.old2[0]; r->world_old2.y = h.old2[1]; r->world_old2.z = h.old2[2];
     }
     if (anc) skel_cnt.serve_ancestors++;
     else skel_cnt.serve_bones++;
@@ -252,10 +254,42 @@ void pull(SkelTable* t, u32 b)
     s[SK_AX * c + b] = r->ang.x; s[SK_AY * c + b] = r->ang.y; s[SK_AZ * c + b] = r->ang.z;
     s[SK_SX * c + b] = r->scale.x; s[SK_SY * c + b] = r->scale.y; s[SK_SZ * c + b] = r->scale.z;
     s[SK_WX * c + b] = r->world.x; s[SK_WY * c + b] = r->world.y; s[SK_WZ * c + b] = r->world.z;
-    s[SK_OX * c + b] = r->world_old.x; s[SK_OY * c + b] = r->world_old.y; s[SK_OZ * c + b] = r->world_old.z;
-    s[SK_O2X * c + b] = r->world_old2.x; s[SK_O2Y * c + b] = r->world_old2.y; s[SK_O2Z * c + b] = r->world_old2.z;
+    if (t->hslot[b] != 0xFF) {
+        SkelHist& h = t->hold[t->hslot[b]];
+        h.old[0] = r->world_old.x; h.old[1] = r->world_old.y; h.old[2] = r->world_old.z;
+        h.old2[0] = r->world_old2.x; h.old2[1] = r->world_old2.y; h.old2[2] = r->world_old2.z;
+    }
     s[SK_RX * c + b] = r->addRot.x; s[SK_RY * c + b] = r->addRot.y; s[SK_RZ * c + b] = r->addRot.z;
     skel_cnt.pull_bones++;
+}
+
+// A bone joins the history set when code outside first asks for it (the census: behaviour reads world_old and
+// world_old2 only of bones it asked for). Its history starts as its world position, which is what the original holds
+// for a bone whose world has not moved since the last updateOldPos (setPartsOffset sets both to it); the check build
+// starts it as NaN instead, so a history read before two updateOldPos have passed shows in the comparison.
+void hist_add(SkelTable* t, u32 b)
+{
+    if (t->hslot[b] != 0xFF || skel_control_hist == 1) return;   // control: no history kept
+    if (t->nHist >= SKEL_MAX_HIST) {
+        skel_cnt.hist_full++;
+        pLog->err(0, 0, "skel: history set full");
+        return;
+    }
+    const u32 k = t->nHist++;
+    t->hslot[b] = (u8) k;
+    t->hlist[k] = (u8) b;
+    SkelHist& h = t->hold[k];
+    const u32 c = t->cap;
+    if (t->base) {   // set-up: the original's values, kept for every bone until the first updateOldPos
+        for (int i = 0; i < 3; i++) {
+            h.old[i] = t->base[i * c + b];
+            h.old2[i] = t->base[(3 + i) * c + b];
+        }
+    } else {         // later: unknown (NaN in the check build: a read before two updateOldPos would show)
+        for (int i = 0; i < 3; i++) h.old[i] = h.old2[i] = skel_poison ? kNaN : t->soa[(SK_WX + i) * c + b];
+        skel_cnt.hist_late++;
+    }
+    skel_cnt.hist_join++;
 }
 
 void refresh_roots(SkelTable* t);
@@ -301,6 +335,7 @@ void mailbox_add(SkelTable* t, u32 b)
     if ((t->mbox[b] & 0x7F) == 1) return;
     if (!(t->mbox[b] & 0x7F)) t->mlist[t->nMbox++] = (u8) b;
     t->mbox[b] = 0x81;   // direct: the full record both ways
+    hist_add(t, b);
     serve(t, b, SG_ALL);
     // its ancestors: code reaches a parent through cCoord::pParent (read)
     for (u32 a = t->parent[b]; a < t->n && !(t->mbox[a] & 0x7F); a = t->parent[a]) {
@@ -1356,9 +1391,25 @@ SkelTable* table_create(cModel* m)
     const u32 oHanded = off; off = align32(off + cap);
     const u32 oShadow = off; off = align32(off + (skel_poison ? 4 * kSnap * n : 0));
     const u32 oIk = off; off = align32(off + sizeof(SkelIk) * SKEL_MAX_IK);
+    const u32 oHold = off; off = align32(off + sizeof(SkelHist) * SKEL_MAX_HIST);
+    const u32 oHslot = off; off = align32(off + cap);
+    const u32 oHlist = off; off = align32(off + SKEL_MAX_HIST);
     u8* blk = (u8*) pool_alloc(off);
     if (!blk) return 0;
     SkelTable* t = (SkelTable*) blk;
+    t->hold = (SkelHist*) (blk + oHold);
+    t->hslot = blk + oHslot;
+    t->hlist = blk + oHlist;
+    memset(t->hslot, 0xFF, cap);
+    t->base = (f32*) pool_alloc(4 * 6 * cap);
+    if (t->base)
+        for (u32 b = 0; b < n; b++) {
+            u32 k = 0;
+            cParts* r = m->pList;
+            for (; k < b; k++) r = r->pList;
+            t->base[0 * cap + b] = r->world_old.x; t->base[1 * cap + b] = r->world_old.y; t->base[2 * cap + b] = r->world_old.z;
+            t->base[3 * cap + b] = r->world_old2.x; t->base[4 * cap + b] = r->world_old2.y; t->base[5 * cap + b] = r->world_old2.z;
+        }
     t->n = (u16) n;
     t->cap = (u16) cap;
     t->bytes = off;
@@ -1394,8 +1445,6 @@ SkelTable* table_create(cModel* m)
         s[SK_AX * cap + b] = r->ang.x; s[SK_AY * cap + b] = r->ang.y; s[SK_AZ * cap + b] = r->ang.z;
         s[SK_SX * cap + b] = r->scale.x; s[SK_SY * cap + b] = r->scale.y; s[SK_SZ * cap + b] = r->scale.z;
         s[SK_WX * cap + b] = r->world.x; s[SK_WY * cap + b] = r->world.y; s[SK_WZ * cap + b] = r->world.z;
-        s[SK_OX * cap + b] = r->world_old.x; s[SK_OY * cap + b] = r->world_old.y; s[SK_OZ * cap + b] = r->world_old.z;
-        s[SK_O2X * cap + b] = r->world_old2.x; s[SK_O2Y * cap + b] = r->world_old2.y; s[SK_O2Z * cap + b] = r->world_old2.z;
         s[SK_RX * cap + b] = r->addRot.x; s[SK_RY * cap + b] = r->addRot.y; s[SK_RZ * cap + b] = r->addRot.z;
         s[SK_MPX * cap + b] = r->motParts.pos.x; s[SK_MPY * cap + b] = r->motParts.pos.y; s[SK_MPZ * cap + b] = r->motParts.pos.z;
         s[SK_MRX * cap + b] = r->motParts.rot.x; s[SK_MRY * cap + b] = r->motParts.rot.y; s[SK_MRZ * cap + b] = r->motParts.rot.z;
@@ -1437,6 +1486,7 @@ void table_release(SkelTable* t)
         map_slots(i, t, false);
         g_tab[i] = g_tab[--g_ntab];
         if (i < g_ntab) map_slots(i, g_tab[i], true);
+        pool_free(t->base);
         pool_free(t);
         return;
     }
@@ -1604,10 +1654,21 @@ void cModel::updateOldPos()
     SkelTable* t = table_for(this);
     if (!t) return;
     Scope sc(t, SG_OLD);
+    // world_old2 = world_old, world_old = world: the history bones only (the original copies every bone's)
     const u32 c = t->cap;
-    f32* s = t->soa;
-    memcpy(s + SK_O2X * c, s + SK_OX * c, 4 * 3 * c);   // world_old2 = world_old (three rows)
-    memcpy(s + SK_OX * c, s + SK_WX * c, 4 * 3 * c);    // world_old = world
+    const f32* s = t->soa;
+    for (u32 k = 0; k < t->nHist && skel_control_hist != 2; k++) {   // control 2: the history never moves
+        SkelHist& h = t->hold[k];
+        const u32 b = t->hlist[k];
+        h.old2[0] = h.old[0]; h.old2[1] = h.old[1]; h.old2[2] = h.old[2];
+        h.old[0] = s[SK_WX * c + b]; h.old[1] = s[SK_WY * c + b]; h.old[2] = s[SK_WZ * c + b];
+    }
+    skel_cnt.hist_moves += t->nHist;
+    t->nOld++;
+    if (t->base) {
+        pool_free(t->base);
+        t->base = 0;
+    }
 }
 
 void cModel::setPos(Vec* p)
@@ -1627,11 +1688,15 @@ void cModel::setPos(Vec* p)
                 w.x = s[SK_WX * c + b]; w.y = s[SK_WY * c + b]; w.z = s[SK_WZ * c + b];
                 PSVECAdd(&w, &d, &w);
                 s[SK_WX * c + b] = w.x; s[SK_WY * c + b] = w.y; s[SK_WZ * c + b] = w.z;
-                s[SK_OX * c + b] = w.x; s[SK_OY * c + b] = w.y; s[SK_OZ * c + b] = w.z;
                 t->world[b].m[0][3] += d.x;
                 t->world[b].m[1][3] += d.y;
                 t->world[b].m[2][3] += d.z;
             }
+            for (u32 k = 0; k < t->nHist; k++) {   // world_old = the moved world (history bones)
+                const u32 b = t->hlist[k];
+                t->hold[k].old[0] = s[SK_WX * c + b]; t->hold[k].old[1] = s[SK_WY * c + b]; t->hold[k].old[2] = s[SK_WZ * c + b];
+            }
+            if (t->base) memcpy(t->base, s + SK_WX * c, 4 * 3 * c);
         }
         mat[0][3] = this->pos.x;
         mat[1][3] = this->pos.y;
@@ -1732,8 +1797,14 @@ void cModel::setPartsOffset(void* bin)
     PSMTXTrans(mat, this->pos.x, this->pos.y, this->pos.z);
     mat_calc(t);
     world_calc(t);
-    memcpy(s + SK_OX * c, s + SK_WX * c, 4 * 3 * c);
-    memcpy(s + SK_O2X * c, s + SK_WX * c, 4 * 3 * c);
+    for (u32 k = 0; k < t->nHist; k++) {   // world_old = world_old2 = world
+        const u32 b = t->hlist[k];
+        for (int i = 0; i < 3; i++) t->hold[k].old[i] = t->hold[k].old2[i] = s[(SK_WX + i) * c + b];
+    }
+    if (t->base) {
+        memcpy(t->base, s + SK_WX * c, 4 * 3 * c);
+        memcpy(t->base + 3 * c, s + SK_WX * c, 4 * 3 * c);
+    }
 }
 
 void cModel::releasePartsList(int no)

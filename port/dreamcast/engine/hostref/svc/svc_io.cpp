@@ -101,6 +101,7 @@ extern "C" int skel_control_no_ik __attribute__((weak));
 extern "C" int skel_poison __attribute__((weak));
 extern "C" float col_control_floor __attribute__((weak));
 extern "C" int skel_control_mk __attribute__((weak));
+extern "C" int skel_control_hist __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
 {
     const char* c = getenv("RE4_SVC_CONTROL");
@@ -108,6 +109,8 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "parent=", 7) && &skel_control_parent) skel_control_parent = atoi(c + 7);
         if (!strncmp(c, "noik", 4) && &skel_control_no_ik) skel_control_no_ik = 1;
         if (!strncmp(c, "mkrow", 5) && &skel_control_mk) skel_control_mk = 1;
+        if (!strncmp(c, "histnone", 8) && &skel_control_hist) skel_control_hist = 1;
+        if (!strncmp(c, "histfrozen", 10) && &skel_control_hist) skel_control_hist = 2;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
     const char* p = getenv("RE4_SVC_POISON");
