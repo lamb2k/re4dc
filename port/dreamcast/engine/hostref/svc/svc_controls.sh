@@ -30,6 +30,9 @@
 #   modelslot RE4_SVC_CONTROL=modelslot: a model's contiguous parts run starts at the second free run (hill-ashley)
 #   camfov   RE4_SVC_CONTROL=camfov: the view frustum built for a field of view 1 degree wider (door103-walk)
 #   camroll  RE4_SVC_CONTROL=camroll: the camera's roll orientation 0.01 rad further (door103-walk)
+#   padstick RE4_SVC_CONTROL=padstick: the stick's direction bits need 81 units (a full push no longer counts; e1-route)
+#   rumblernd RE4_SVC_CONTROL=rumblernd: the random rumble strength from the behaviour generator (bell-ganado, exercise
+#            rumble: the Ganados' decisions move)
 #   routehop RE4_SVC_CONTROL=routehop: the way points between skipped, every reachable destination its own next hop (bell-ganado: the Ganados' chase)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
@@ -198,6 +201,8 @@ print()" "$b/compare.json")
     }
     exrow e1-route follow followslow
     exrow e1-route camtrack camfov camroll
+    exrow bell-ganado rumble rumblernd
+    r4ctl e1-route "stick direction bits need 81 units" padstick
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

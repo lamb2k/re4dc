@@ -20,6 +20,10 @@
 #include "player.h"
 #include "../../services/model/model_svc.h"
 #include "../../services/camera/camera_svc.h"
+#include "../../services/input/input.h"
+#include "pad.h"
+#include "joy.h"
+#include "main.h"
 #include "camera.h"
 #include "cam_ctrl.h"
 #include "cam_extra.h"
@@ -46,6 +50,8 @@ extern int model_control __attribute__((weak));
 extern u32 eng_pool_full __attribute__((weak));
 extern CameraCounters cam_cnt __attribute__((weak));
 extern int cam_control __attribute__((weak));
+extern InputCounters input_cnt __attribute__((weak));
+extern int input_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -123,6 +129,11 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "camfov")) cam_control = 1;
         if (c && !__builtin_strcmp(c, "camroll")) cam_control = 2;
     }
+    if (&input_control) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "padstick")) input_control = 1;
+        if (c && !__builtin_strcmp(c, "rumblernd")) input_control = 2;
+    }
 }
 // Service exercises (RE4_SVC_EXERCISE=<name>): inputs that drive a service the fixtures' play does not reach, made at
 // the start of a tick from this file, so the reference and the native build get the same calls. They change the play;
@@ -187,11 +198,29 @@ void exercise_camtrack(unsigned t)
     Vec v;
     HermiteInterpolation(&prm, &v, g_hist);
 }
+//   rumble: random-strength rumble (type bit 15), which no fixture starts: rumble switched on (pSys->flags 0x08000000),
+//           then every 40 ticks from tick 20 a 30-tick random-strength rumble and a 12-tick constant one. Its strength
+//           is presentation: the behaviour must not change (control rumblernd draws it from Rnd and must fail).
+void exercise_rumble(unsigned t)
+{
+    if (t < 20 || (t - 20) % 40 != 0) return;
+    pSys->flags |= 0x08000000;
+    VibSet(30, 0xC0, 0, 0x8001);
+    VibSet(12, 0x40, 4, 0x0002);
+}
 void exercise(unsigned t)
 {
     if (g_exercise < 0) {
         const char* e = svc_env("RE4_SVC_EXERCISE");
-        g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2 : 0;
+        g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2
+                   : e && !__builtin_strcmp(e, "rumble") ? 3 : 0;
+    }
+    if (g_exercise == 3) {
+        if (t != g_ex_tick) {
+            g_ex_tick = t;
+            exercise_rumble(t);
+        }
+        return;
     }
     if (g_exercise == 2) {
         if (t != g_ex_tick && pPL) {
@@ -252,6 +281,11 @@ extern "C" void svc4_finish()
         P(g_f, "# camera: frames %u frustums %u orients %u orient_cams %u tracks %u keys %u key_errors %u attached %u rails %u "
                "projections %u debug_draws %u\n", c.frames, c.frustums, c.orients, c.orient_cams, c.tracks, c.keys, c.key_errors,
           c.attached, c.rails, c.projections, c.debug_draws);
+    }
+    if (&input_cnt) {
+        const InputCounters& n = input_cnt;
+        P(g_f, "# input: reads %u vib_ticks %u vib_random %u vib_queued %u motor_changes %u debug_prints %u\n", n.reads,
+          n.vib_ticks, n.vib_random, n.vib_queued, n.motor_changes, n.debug_prints);
     }
     svc_out_close(g_f);
     g_f = 0;
@@ -443,3 +477,19 @@ WV(_Z7BSplineP13CameraBSplineP6Camerai, (CameraBSpline* bs, Camera* c, int x), (
    { campar(c); })
 WV(_Z11ParametrizeP9CameraCutP13CameraBSpline, (CameraCut* cut, CameraBSpline* bs), (cut, bs), { P(g_f, " PZ %d", cut->num); },
    { P(g_f, " %d %d %08x", bs->num, bs->k, words(bs, sizeof(CameraBSpline))); })
+// ---- input (pad.cpp) ----
+namespace {
+u32 joyh()
+{
+    u32 h = words(&Joy[0].vib, sizeof(Joy[0].vib));
+    return h ^ Joy[0].motor_state;
+}
+}
+WT(PadRead, (), (), {
+    P(g_f, " PR %x %x %08x%08x %08x%08x %d,%d %08x", Joy[0].on, Joy[0].trg, (u32) (Key.on >> 32), (u32) Key.on, (u32) (Key.rep >> 32),
+      (u32) Key.rep, Key.stickX, Key.stickY, joyh());
+})
+WV(VibSet, (u32 time, u32 level, u16 wait, u16 type), (time, level, wait, type), { P(g_f, " VS %u %u %u %x", time, level, wait, type); },
+   { P(g_f, " %08x", joyh()); })
+WV(KeyStop, (u64 mask), (mask), { P(g_f, " KS %08x%08x", (u32) (mask >> 32), (u32) mask); },
+   { P(g_f, " %08x%08x", (u32) (Key.on >> 32), (u32) Key.on); })

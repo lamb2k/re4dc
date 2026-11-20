@@ -82,6 +82,7 @@ SVC4_WRAP += _ZN4VIEW15initPerspectiveEffff CameraMove _ZN12CameraMotion4moveEv 
 SVC4_WRAP += CameraSetOrientationRoll CameraSetOrientationUp _ZN22CameraAttachedToMotion4moveEv
 SVC4_WRAP += _ZN13CameraControl13HermiteExportEP9CameraCutPh _Z7BSplineP13CameraBSplineP6Camerai
 SVC4_WRAP += _Z11ParametrizeP9CameraCutP13CameraBSpline
+SVC4_WRAP += PadRead VibSet KeyStop
 SVC4_WRAP += _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_ _ZN7cEatMgr10getEffInfoEi
 SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
@@ -105,9 +106,9 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 # sections 23 on). SVC4_OBJS are compiled with the hosted units' flags; every global symbol they define is made weak in
 # the original units of SVC4_UNITS (weak4/), so each call reaches the native body; svc4/svc4_units.sh reports which
 # original functions of those units the native link still keeps.
-SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp
+SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
-SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion
+SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad
 # SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's rail spline,
 # cam_sys's orientation matrices, cam_extra's attached camera; svc4_split.txt names them): the same weak copy, and
 # svc4_units.sh checks only the named functions
