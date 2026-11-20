@@ -122,7 +122,9 @@ void cObjLauncher::gripBack() { STUB("cObjLauncher::gripBack"); }
 // doors and ladders the partner checks (lane eng-e1b): E1 hosts none, so the answer is "none"
 cEmDoor* DoorOpenCk(cModel*) { STUB("DoorOpenCk"); return 0; }
 void SubOpenDoorSet(cEmDoor*) { STUB("SubOpenDoorSet"); }
+#ifndef E2_FIGHT   // eng-e2: sce_at.cpp is hosted in the fight image
 int SceAtCheckLadder(cModel*, Vec*, f32*, u8*) { STUB("SceAtCheckLadder"); return 0; }
+#endif
 extern "C" int SubLadderClimbCk(cModel*) { STUB("SubLadderClimbCk"); return 0; }
 extern "C" int SubLadderClimbCk2(cModel*) { STUB("SubLadderClimbCk2"); return 0; }
 
@@ -134,8 +136,10 @@ void EffectEspDelete(int, int, u32, cModel*) {}
 void EffectEspgenDelete(int, int, int) {}
 void EffectEfmDelete(int, int, int) {}
 #endif
+#ifndef E2_FIGHT   // eng-e2: the native effect service (services/effects/fx.cpp) in the fight image
 void EspSetWaterHitmark(Vec*) { STUB("EspSetWaterHitmark"); }
 void EspSetEatEffect(Vec*, Vec*, int, int) { STUB("EspSetEatEffect"); }
+#endif
 int ChkWaterEffectEnable(Vec*) { return 0; }
 int GetWaterHeight(Vec*, f32*) { return 0; }        // no water in the village square
 extern "C" void AddWaterPower(Vec*, f32) { STUB("AddWaterPower"); }
@@ -203,7 +207,9 @@ extern "C" void PADControlMotor(int, u32) {}
 int emLineCubeCrossCk(Vec*, Vec*, Mtx, f32, f32, f32, Vec*, Vec*) { STUB("emLineCubeCrossCk"); return 0; }
 #endif
 // the weapon object's laser sight and its effect sets (drawing), the shell casing object (obj10), the other handgun
+#ifndef E2_FIGHT   // eng-e2: the native effect service in the fight image
 int EspEstSetSelect(int, int, int, cEsp** out, int) { STUB("EspEstSetSelect"); if (out) *out = 0; return 0; }
+#endif
 void EspDrawLaserLine(Vec, Vec, f32) {}
 cObj* SetObj10(void*, void*, Vec*, Vec*, Vec*, float, float, int, int) { STUB("SetObj10"); return 0; }
 void Obj10SetEst(cObj*, int, int, unsigned long, int, int, int, int, int, int) { STUB("Obj10SetEst"); }
