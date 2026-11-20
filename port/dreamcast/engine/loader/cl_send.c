@@ -188,6 +188,7 @@ static void *ender(void *arg) {
     cl_exit(g_end);
 }
 
+SLIST_HEAD(dbgio_handlers_list, dbgio_handler);   /* as kernel/debug/dbgio.c declares its handler list */
 extern struct dbgio_handlers_list dbgio_handlers;
 static void __attribute__((constructor)) cl_send_start(void) {
     if (!cl_init(0)) return;
