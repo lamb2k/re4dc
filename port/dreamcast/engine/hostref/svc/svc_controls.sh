@@ -10,6 +10,8 @@
 #   floor    RE4_SVC_CONTROL=floor=1: every floor and slope triangle raised by 1 unit in the baked tables
 #   noik     RE4_SVC_CONTROL=noik: the IK pass skipped
 #   mkrow    RE4_SVC_CONTROL=mkrow: the baked motion keys read one frame late (the next frame's row; lane eng-svc2)
+#   mkroot   RE4_SVC_CONTROL=mkroot: the root motion's (and attach camera's) rows read one frame late (lane eng-svc3)
+#   mkcoarse RE4_SVC_CONTROL=mkcoarse: with the 16-bit rows, every step cut to its top 8 bits (the tolerance must fail)
 #   histnone RE4_SVC_CONTROL=histnone: no bone keeps its world_old / world_old2 (the check build serves NaN)
 #   histfrozen RE4_SVC_CONTROL=histfrozen: updateOldPos never moves the kept history
 #   clothshort RE4_SVC_CONTROL=clothshort: every cloth chain one link short (the native cloth; lane eng-svc2)
@@ -23,8 +25,12 @@
 # bone, the links included, compared as before). The controls run with the wind off, the wind control with it on.
 # and the native build against itself (a second run) must PASS bit for bit (determinism).
 # The native runs sample the baked motion keys (RE4_SVC_MK=<pack>; without it the fixtures' archives are baked into
-# <out dir>/motion.mkp first, bake/motion_keys.py). Each native row's detail ends with where the motion samples came
-# from (rows, cold key blocks, the original decoder: must be 0).
+# <out dir>/motion.mkp, float32 rows, and <out dir>/motion-s16.mkp, 16-bit rows, first: bake/motion_keys.py). Each
+# native row's detail ends with where the motion samples came from (rows; decoded from the clip's keys by the native
+# decoder; the original decoder, always 0 since lane eng-svc3). Lane eng-svc3 adds, per fixture: the native build with
+# no pack (RE4_SVC_MK=none: every sample, root motion included, decoded from the keys: must be bit-identical), and the
+# 16-bit rows (an approximation, owner 2026-10-19: every bone but the cloth links within 1 unit / 0.1 degree, the links
+# by cloth_stats.py, collision results exact and points within 1 unit, traces in every field).
 # Exit status 0 when every line ends as it must; the table goes to stdout and <out dir>/svc_controls.md.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -37,11 +43,16 @@ B=$ROOT/build/hostref
 PR=$ROOT/port/dreamcast/tools/plays_right
 mkdir -p "$OUT"
 rm -f "$OUT/.status"
+ARCS="em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs"
 if [ -z "${RE4_SVC_MK:-}" ]; then
     python3 "$ROOT/port/dreamcast/engine/bake/motion_keys.py" --tree "$TREE" --out "$OUT/motion.mkp" --report "$OUT/motion.tsv" \
-        em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs > "$OUT/motion.txt" \
-        || { echo "motion key bake failed"; exit 2; }
+        $ARCS > "$OUT/motion.txt" || { echo "motion key bake failed"; exit 2; }
     export RE4_SVC_MK="$OUT/motion.mkp"
+fi
+MK16=${RE4_SVC_MK16:-$OUT/motion-s16.mkp}
+if [ ! -f "$MK16" ]; then
+    python3 "$ROOT/port/dreamcast/engine/bake/motion_keys.py" --tree "$TREE" --out "$MK16" --report "$OUT/motion-s16.tsv" \
+        --rows s16 $ARCS > "$OUT/motion-s16.txt" || { echo "motion key bake (s16) failed"; exit 2; }
 fi
 run() {   # run <binary> <fixture> <dir> [env...]
     local bin=$1 fx=$2 d=$3
@@ -62,8 +73,10 @@ status=0
 row() {   # row <name> <must> <ref dir> <test dir> <fixture> [cloth]: cloth = the wind is on (links by statistics)
     local name=$1 must=$2 a=$3 b=$4 fx=$5 mode=${6:-}
     local cs=""
-    if [ "$mode" = cloth ]; then
-        python3 "$HERE/svc_compare.py" "$a" "$b" --skip-cloth --json "$b/compare.json" > "$b/compare.txt"
+    if [ "$mode" = cloth ] || [ "$mode" = approx ]; then
+        local ct=""
+        [ "$mode" = approx ] && ct="--col 1.0"
+        python3 "$HERE/svc_compare.py" "$a" "$b" --skip-cloth $ct --json "$b/compare.json" > "$b/compare.txt"
         local sc=$?
         cs=$(python3 "$HERE/cloth_stats.py" "$a" "$b" --json "$b/cloth.json") || sc=1
         cs="; $(echo "$cs" | sed 's/^\(PASS\|FAIL\)  //')"
@@ -90,7 +103,7 @@ h=j.get('history')
 if h: print('; history %d/%d bone-ticks equal (%d not known yet), max %.3g u' % (h['equal'], h['compared'], h['unknown'], h['max']), end='')
 print()" "$b/compare.json")
     local keys=""
-    [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, cold keys %s, original decoder %s", $11, $15, $18}
+    [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, decoded from keys %s, original decoder 0; root motion: rows %s, decoded %s", $11, $15, $23, $25}
         /^cloth:/ {printf "; cloth: %s chains native (fallback %s), %s steps", $3, $6+0, $8+0}
         /^col / {for (i = 2; i < NF; i += 2) v[$i] = $(i+1); printf "; line queries %s: polygons tested %s, skipped %s (check: hits among them %s, end-point only %s)", v["line_queries"], v["tris_line"], v["tris_skipped"], v["filter_miss"], v["filter_end"]}' "$b/svc.txt")
     [ "$got" = "$must" ] || echo 1 > "$OUT/.status"
@@ -108,6 +121,10 @@ print()" "$b/compare.json")
         row "native (cloth wind off: every bone)" PASS "$OUT/$fx/ref0" "$OUT/$fx/native0" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/native2"
         row determinism PASS "$OUT/$fx/native" "$OUT/$fx/native2" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/nopack" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK=none
+        row "native, no pack (every sample decoded from the keys)" PASS "$OUT/$fx/ref0" "$OUT/$fx/nopack" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/s16" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK="$MK16"
+        row "native, 16-bit rows (tolerance; links by statistics)" PASS "$OUT/$fx/ref0" "$OUT/$fx/s16" "$fx" approx
     done
     for fx in door103-walk bell-ganado; do
         [ -d "$OUT/$fx/ref0" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref0" RE4_SVC_CLOTH_WIND=0
@@ -119,6 +136,9 @@ print()" "$b/compare.json")
         ctl "floors 1 unit higher" floor=1
         ctl "IK pass skipped" noik
         ctl "motion keys one frame late" mkrow
+        ctl "root motion rows one frame late" mkroot
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-mkcoarse" RE4_SVC_CLOTH_WIND=0 RE4_SVC_CONTROL=mkcoarse RE4_SVC_MK="$MK16"
+        row "control: 16-bit rows cut to 8 bits" FAIL "$OUT/$fx/ref0" "$OUT/$fx/c-mkcoarse" "$fx" approx
         ctl "no bone history kept (check build: NaN)" histnone
         ctl "bone history never moves" histfrozen
         ctl "cloth chains one link short" clothshort

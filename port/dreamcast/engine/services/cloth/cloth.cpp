@@ -9,6 +9,7 @@
 // the owner's bones, a neighbour that is not a link of the chain, a link set up from an upper link set up after it)
 // runs the original bodies (renamed pen_orig_* in the native build) through the skeleton's mailbox.
 #include "cloth.h"
+#include "cloth_kernel.h"
 #include "skel.h"
 #include "pendulum.h"
 #include "pl_cloth.h"
@@ -35,6 +36,7 @@ ClothCounters cloth_cnt;
 int cloth_control_short;
 int cloth_control_nogravity;
 int cloth_control_wind;
+int cloth_passes;
 }
 
 namespace {
@@ -52,18 +54,6 @@ ClothChain* g_ch[kMaxChains];
 u32 g_nch;
 u32 g_serial;
 
-// the chain's presentation generator: xorshift32, [0, 1) and [-1, 1) as fRand0_1 / fRand1_1 give them
-inline u32 rng_next(ClothChain* ch)
-{
-    u32 x = ch->rng;
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    ch->rng = x;
-    return x;
-}
-inline f32 rng01(ClothChain* ch) { return (f32) (rng_next(ch) >> 8) * (1.0f / 16777216.0f); }
-inline f32 rng11(ClothChain* ch) { return rng01(ch) * 2.0f - 1.0f; }
 
 void* alloc(u32 bytes)
 {
@@ -196,7 +186,7 @@ ClothChain* build(cModel* m, PenCloth* c)
         ch->cold = (ClothCold*) (blk + 64 + 64 * n);
         ch->atBone = blk + 64 + 112 * n;
         ch->serial = ++g_serial;
-        ch->rng = 0x9E3779B9u * ch->serial ^ 0x2545F491u;
+        pres_seed(&ch->rng, ch->serial);   // the chain's presentation stream (pres_rng.h)
         g_ch[g_nch++] = ch;
     }
     ch->c = c;
@@ -319,49 +309,10 @@ void reset(ClothChain* ch)
     cloth_cnt.resets++;
 }
 
-inline void fix(ClothChain* ch, u32 i)
-{
-    if (ch->link[i].fix & 1) ch->link[i].pos = ch->cold[i].fixPos;
-}
-// PEN_FLOOR_CK: above the floor; a link landed under its upper link is jittered (two generator draws)
-inline void floor_ck(PenCloth* c, ClothChain* ch, u32 i, f32 floorY)
-{
-    if (c->Flag & 0x100) return;
-    ClothLink& L = ch->link[i];
-    if (L.pos.y < floorY) {
-        L.pos.y = floorY;
-        if (L.up != CLOTH_NONE) {
-            const ClothLink& U = ch->link[L.up];
-            if (L.pos.x == U.pos.x && L.pos.z == U.pos.z) {
-                L.pos.x += rng11(ch);
-                L.pos.z += rng11(ch);
-            }
-        }
-    }
-}
-// PEN_FLOOR_CK3: both ends of a constraint
-inline void floor_ck3(PenCloth* c, ClothChain* ch, ClothLink& L, ClothLink& U, f32 floorY)
-{
-    if (c->Flag & 0x100) return;
-    if (L.pos.y < floorY) {
-        L.pos.y = floorY;
-        if (L.pos.x == U.pos.x && L.pos.z == U.pos.z) {
-            L.pos.x += rng11(ch);
-            L.pos.z += rng11(ch);
-        }
-    }
-    if (U.pos.y < floorY) U.pos.y = floorY;
-}
-inline int at_ck(PenCloth* c, Vec* p, Vec* up, PenAtWork* at)
-{
-    return (c->Flag & 0x80) ? penClothAtCkBorder(p, up, at) : penClothAtCk(p, up, at);
-}
-
 // The first part of a step, common to Move and Move3: the floor, the reset, the volumes, the wind phase
 struct Step {
     f32 floorY;
     PenAtWork* at;
-    Vec wind;
     u32 n;
     int reset;
 };
@@ -382,128 +333,13 @@ void step_begin(ClothChain* ch, Step& s)
     if (s.reset) reset(ch);
     s.at = 0;
     if (!(c->Flag & 1)) s.at = at_make(ch);
-    f32 ang = 1.0f;
     if (!(c->Flag & 0x40)) {
-        c->WindSin += rng01(ch) * GlobalWindAdd;
+        c->WindSin += pres_f01(&ch->rng) * GlobalWindAdd;
         c->WindSin = LIMIT_ANGLE(c->WindSin);
-        PSVECScale(&GlobalWind, &s.wind, sinf(c->WindSin) + ang);
     }
     for (u32 i = 0; i < s.n; i++) ch->link[i].hit = 0;
     cloth_cnt.moves++;
     cloth_cnt.links += s.n;
-}
-
-// the angle limit against the upper link (Move and Move3 alike)
-void angle_limit(ClothChain* ch, const Step& s)
-{
-    PenCloth* c = ch->c;
-    SkelTable* t = ch->t;
-    Mtx mtx;
-    Vec a, b, v;
-    f32 d, ang, spdRate;
-    for (u32 i = 0; i < s.n; i++) {
-        ClothLink& L = ch->link[i];
-        const u32 pb = L.bone;
-        if (L.fix & 1) continue;
-        if (L.up != CLOTH_NONE) {
-            ClothLink& U = ch->link[L.up];
-            wput(t, pb, U.pos);
-            const Vec nw = wget(t, U.bone);
-            PSVECSubtract(&U.pos, (Vec*) &nw, &a);
-            if (a.x == 0.0f && a.y == 0.0f && a.z == 0.0f) {
-                a = L.nrm;
-            } else {
-                VECNormalize(&a, &a);
-            }
-        } else {
-            PSMTXMultVecSR(MAT(t, pb), &L.nrm, &a);
-            VECNormalize(&a, &a);
-        }
-        Vec pw = wget(t, pb);
-        PSVECSubtract(&L.pos, &pw, &b);
-        d = SQRTF(b.x * b.x + b.y * b.y + b.z * b.z);
-        if (b.x == 0.0f && b.y == 0.0f && b.z == 0.0f) {
-            b = L.nrm;
-        } else {
-            VECNormalize(&b, &b);
-        }
-        ang = acosf(PSVECDotProduct(&a, &b));
-        spdRate = c->pMax[i];
-        if (ang > spdRate && ang < PI - 0.01f) {
-            spdRate = ang * 0.2f + spdRate * 0.8f;
-            PSVECCrossProduct(&a, &b, &v);
-            PSMTXRotAxisRad(mtx, &v, spdRate);
-            PSMTXMultVecSR(mtx, &a, &L.pos);
-            PSVECScale(&L.pos, &L.pos, d);
-            PSVECAdd(&L.pos, &pw, &L.pos);
-        }
-    }
-}
-
-// the matrices: every link's bone looks along its link (Move and Move3 alike)
-void matrices(ClothChain* ch, const Step& s)
-{
-    PenCloth* c = ch->c;
-    SkelTable* t = ch->t;
-    Mtx mtx;
-    Vec a, b, v;
-    f32 ang, spdRate;
-    int hit;
-    for (u32 i = 0; i < s.n; i++) {
-        ClothLink& L = ch->link[i];
-        const u32 pb = L.bone;
-        ClothLink* U = 0;
-        if (L.up != CLOTH_NONE) {
-            U = &ch->link[L.up];
-            wput(t, pb, U->pos);
-        }
-        Vec pw = wget(t, pb);
-        if (!(c->Flag & 8)) {
-            PSVECSubtract(&L.pos, &pw, &v);
-            if (v.x == 0.0f && v.y == 0.0f && v.z == 0.0f) {
-                v = L.nrm;
-            } else {
-                VECNormalize(&v, &v);
-            }
-            PSVECScale(&v, &v, L.len);
-            PSVECAdd(&pw, &v, &L.pos);
-        }
-        if (U) {
-            hit = at_ck(c, &L.pos, &U->pos, s.at);
-        } else {
-            hit = at_ck(c, &L.pos, &pw, s.at);
-            wput(t, pb, pw);
-        }
-        if (hit) L.hit |= 1;
-        if (!(c->Flag & 0x100)) {   // PEN_FLOOR_CK2
-            if (L.pos.y < s.floorY) {
-                L.pos.y = s.floorY;
-                if (U && L.pos.x == U->pos.x && L.pos.z == U->pos.z) {
-                    L.pos.x += rng11(ch);
-                    L.pos.z += rng11(ch);
-                }
-            }
-        }
-        fix(ch, i);
-        spdRate = c->pRate ? c->pRate[i] : c->Rate;
-        if (L.hit & 1) spdRate *= 0.3f;
-        PSVECSubtract(&L.pos, &L.oldPos, &L.speed);
-        PSVECScale(&L.speed, &L.speed, spdRate);
-        PSMTXMultVecSR(MAT(t, pb), &L.nrm, &a);
-        PSVECSubtract(&L.pos, &pw, &b);
-        if (b.x == 0.0f && b.y == 0.0f && b.z == 0.0f) {
-            b = L.nrm;
-        } else {
-            VECNormalize(&b, &b);
-        }
-        ang = acosf(PSVECDotProduct(&a, &b));
-        if (ang > 0.01f && ang < PI - 0.01f) {
-            PSVECCrossProduct(&a, &b, &a);
-            PSMTXRotAxisRad(mtx, &a, ang);
-            PSMTXConcat(mtx, MAT(t, pb), MAT(t, pb));
-        }
-        TransMatrix(MAT(t, pb), &pw);
-    }
 }
 
 // the step changed its links' bones only (world matrix and position; a reset also their local matrices and the
@@ -517,21 +353,58 @@ void step_end(ClothChain* ch, int wasReset)
     for (u32 i = 0; i < ch->n; i++) skel_serve_bone(ch->t, ch->link[i].bone, 1);
 }
 
-// the debug wind (pG->Debug_flg[0] & 0x200), both variants
-inline void debug_wind(PenCloth* c, ClothLink& L, u32 i, Vec* wind)
+// the chain's tick on the kernel (cloth_kernel.h): one pass over the links, or the original's pass order
+f32 g_windAng[256];
+void kernel_step(ClothChain* ch, const Step& s, int variant, const Vec& move, f32 spdLen, const Vec& mpos)
 {
-    if ((pG->Debug_flg[0] & 0x200) && !(c->Flag & 0x40) && c->pWindRate) {
-        f32 ang = 0.0f;
-        if (c->pWindSin) {
-            ang = sinf(LIMIT_ANGLE(c->WindSin + c->pWindSin[i])) + 1.0f;
-            PSVECScale(&GlobalWind, wind, ang);
-        }
-        if (c->pWindRate) {
-            PSVECScale(&GlobalWind, wind, ang);
-            PSVECScale(wind, wind, c->pWindRate[i]);
-        }
-        PSVECAdd(&L.pos, wind, &L.pos);
+    PenCloth* c = ch->c;
+    SkelTable* t = ch->t;
+    const u32 cap = t->cap;
+    ClothKStep k;
+    k.link = (ClothKLink*) ch->link;
+    k.cold = (const ClothKCold*) ch->cold;
+    k.n = s.n;
+    k.variant = variant;
+    k.flags = c->Flag;
+    k.bundle = c->Bundle_num;
+    k.stretchy = variant == 3 ? c->Stretchy : 0.0f;
+    k.gravity = c->Gravity;
+    k.pGravity = c->pGravity;
+    k.rate = c->Rate;
+    k.pRate = c->pRate;
+    k.pMax = c->pMax;
+    k.floorY = s.floorY;
+    k.move.x = move.x;
+    k.move.y = move.y;
+    k.move.z = move.z;
+    k.integrate = !(c->Flag & 0x20);
+    k.noGravity = cloth_control_nogravity;
+    k.wind = variant == 1 && (c->Flag & 0x200) && c->pWindRate;
+    k.debugWind = (pG->Debug_flg[0] & 0x200) && !(c->Flag & 0x40) && c->pWindRate;
+    k.spdLen = spdLen;
+    k.mpos.x = mpos.x;
+    k.mpos.y = mpos.y;
+    k.mpos.z = mpos.z;
+    k.windAng = 0;
+    if ((k.wind || k.debugWind) && c->pWindSin && k.integrate) {
+        for (u32 i = 0; i < s.n && i < 256; i++) g_windAng[i] = sinf(LIMIT_ANGLE(c->WindSin + c->pWindSin[i])) + 1.0f;
+        k.windAng = g_windAng;
     }
+    k.pWindRate = c->pWindRate;
+    k.windScale = cloth_control_wind ? 2.0f : 1.0f;
+    k.globalWind.x = GlobalWind.x;
+    k.globalWind.y = GlobalWind.y;
+    k.globalWind.z = GlobalWind.z;
+    k.wx = t->soa + SK_WX * cap;
+    k.wy = t->soa + SK_WY * cap;
+    k.wz = t->soa + SK_WZ * cap;
+    k.boneMat = &t->world[0].m[0][0];
+    k.vol = s.at ? (const ClothKVol*) s.at->pAt : 0;
+    k.nVol = s.at ? (u32) s.at->num : 0;
+    k.rng = &ch->rng;
+    if (cloth_passes == 1) cloth_k_step_passes(&k);
+    else if (cloth_passes == 2) cloth_k_step_onepass(&k);
+    else cloth_k_step(&k);
 }
 
 // PenClothMove
@@ -541,9 +414,8 @@ void move1(ClothChain* ch)
     cModel* m = ch->m;
     SkelTable* t = ch->t;
     Step s;
-    Vec v, a, mpos;
-    f32 spdLen, ang, d;
-    int hit;
+    Vec a = {0.0f, 0.0f, 0.0f}, mpos = {0.0f, 0.0f, 0.0f};
+    f32 spdLen = 0.0f;
     step_begin(ch, s);
     if (!(c->Flag & 0x20)) {
         const Vec rw = wget(t, 0);
@@ -560,88 +432,8 @@ void move1(ClothChain* ch)
         } else {
             PSVECScale(&a, &a, c->Move_rate);
         }
-        for (u32 i = 0; i < s.n; i++) {
-            ClothLink& L = ch->link[i];
-            PSVECAdd(&L.pos, &a, &L.pos);
-            L.oldPos = L.pos;
-            if (!cloth_control_nogravity) {
-                if (c->pGravity) {
-                    L.speed.y -= c->pGravity[i];
-                } else {
-                    L.speed.y -= c->Gravity;
-                }
-            }
-            PSVECAdd(&L.pos, &L.speed, &L.pos);
-            if ((c->Flag & 0x200) && c->pWindRate) {
-                PSVECSubtract(&L.pos, &mpos, &v);
-                v.y = 0.0f;
-                if (v.x != 0.0f && v.z != 0.0f) {
-                    PSVECNormalize(&v, &v);
-                    PSVECScale(&v, &v, spdLen);
-                    ang = 1.0f;
-                    if (c->pWindSin) {
-                        ang = sinf(LIMIT_ANGLE(c->WindSin + c->pWindSin[i])) + 1.0f;
-                        PSVECScale(&v, &v, ang);
-                    }
-                    if (c->pWindRate) {
-                        PSVECScale(&v, &v, ang);
-                        PSVECScale(&v, &v, c->pWindRate[i]);
-                    }
-                    if (cloth_control_wind) PSVECScale(&v, &v, 2.0f);   // control: the wind twice as strong
-                    PSVECAdd(&L.pos, &v, &L.pos);
-                }
-            }
-            debug_wind(c, L, i, &s.wind);
-            floor_ck(c, ch, i, s.floorY);
-            fix(ch, i);
-        }
     }
-    if (!(c->Flag & 0x10) && c->pMax) angle_limit(ch, s);
-    if (!(c->Flag & 2)) {
-        const u8* const tabs[4] = {c->pLeft, c->pRight, c->pUpLeft, c->pUpRight};
-        for (u32 k = 0; k < c->Bundle_num; k++) {
-            for (u32 i = 0; i < s.n; i++) {
-                ClothLink& L = ch->link[i];
-                const ClothCold& C = ch->cold[i];
-                if (!(c->Flag & 4)) {
-                    for (int q = 0; q < 4; q++) {
-                        if (!(tabs[q] && tabs[q][i] < 0xFF)) continue;
-                        ClothLink& U = ch->link[L.side[q]];
-                        PSVECSubtract(&U.pos, &L.pos, &v);
-                        d = SQRTF(v.x * v.x + v.y * v.y + v.z * v.z);
-                        PSVECScale(&v, &v, (C.dist[q]) / d - 0.5f);
-                        PSVECSubtract(&L.pos, &v, &L.pos);
-                        PSVECAdd(&U.pos, &v, &U.pos);
-                    }
-                }
-                if (L.up != CLOTH_NONE) {
-                    ClothLink& U = ch->link[L.up];
-                    PSVECSubtract(&U.pos, &L.pos, &v);
-                    d = SQRTF(v.x * v.x + v.y * v.y + v.z * v.z);
-                    PSVECScale(&v, &v, 0.5f / d * (L.len - d));
-                    PSVECAdd(&U.pos, &v, &U.pos);
-                    PSVECSubtract(&L.pos, &v, &L.pos);
-                    hit = at_ck(c, &L.pos, &U.pos, s.at);
-                    if (hit) L.hit |= 1;
-                    floor_ck(c, ch, i, s.floorY);
-                    fix(ch, i);
-                    fix(ch, L.up);
-                } else {
-                    Vec pw = wget(t, L.bone);
-                    PSVECSubtract(&pw, &L.pos, &v);
-                    d = SQRTF(v.x * v.x + v.y * v.y + v.z * v.z);
-                    PSVECScale(&v, &v, 0.5f / d * (L.len - d));
-                    PSVECSubtract(&L.pos, &v, &L.pos);
-                    hit = at_ck(c, &L.pos, &pw, s.at);
-                    wput(t, L.bone, pw);
-                    if (hit) L.hit |= 1;
-                    floor_ck(c, ch, i, s.floorY);
-                    fix(ch, i);
-                }
-            }
-        }
-    }
-    matrices(ch, s);
+    kernel_step(ch, s, 1, a, spdLen, mpos);
     step_end(ch, s.reset);
 }
 
@@ -652,103 +444,17 @@ void move3(ClothChain* ch)
     cModel* m = ch->m;
     SkelTable* t = ch->t;
     Step s;
-    Vec v, a;
-    f32 d;
-    int hit;
+    Vec a = {0.0f, 0.0f, 0.0f};
     step_begin(ch, s);
     if (!(c->Flag & 0x20)) {
         const Vec rw = wget(t, 0);
         const SkelHist* h = skel_history(t, 0);
         Vec ro;
         ro.x = h->old[0]; ro.y = h->old[1]; ro.z = h->old[2];
-        if (m->be_flag & 0x00100000) {
-            PSVECSubtract((Vec*) &rw, &ro, &a);
-        } else {
-            PSVECSubtract((Vec*) &rw, &ro, &a);
-            PSVECScale(&a, &a, c->Move_rate);
-        }
-        for (u32 i = 0; i < s.n; i++) {
-            ClothLink& L = ch->link[i];
-            PSVECAdd(&L.pos, &a, &L.pos);
-            L.oldPos = L.pos;
-            if (!cloth_control_nogravity) {
-                if (c->pGravity) {
-                    L.speed.y -= c->pGravity[i];
-                } else {
-                    L.speed.y -= c->Gravity;
-                }
-            }
-            PSVECAdd(&L.pos, &L.speed, &L.pos);
-            debug_wind(c, L, i, &s.wind);
-            floor_ck(c, ch, i, s.floorY);
-            fix(ch, i);
-        }
+        PSVECSubtract((Vec*) &rw, &ro, &a);
+        if (!(m->be_flag & 0x00100000)) PSVECScale(&a, &a, c->Move_rate);
     }
-    if (!(c->Flag & 0x10) && c->pMax) angle_limit(ch, s);
-    if (!(c->Flag & 2)) {
-        for (u32 k = 0; k < c->Bundle_num; k++) {
-            for (u32 i = 0; i < s.n; i++) {
-                ClothLink& L = ch->link[i];
-                const ClothCold& C = ch->cold[i];
-                if (!(c->Flag & 4)) {
-                    if (c->pUpLeft && c->pUpLeft[i] < 0xFF) {
-                        ClothLink& U = ch->link[L.side[2]];
-                        penClothAtCkParallel(&L.pos, &U.pos, s.at);
-                        floor_ck3(c, ch, L, U, s.floorY);
-                        fix(ch, i);
-                        fix(ch, L.side[2]);
-                    }
-                    if (c->pUpRight && c->pUpRight[i] < 0xFF) {
-                        ClothLink& U = ch->link[L.side[3]];
-                        penClothAtCkParallel(&L.pos, &U.pos, s.at);
-                        floor_ck3(c, ch, L, U, s.floorY);
-                        fix(ch, i);
-                        fix(ch, L.side[3]);
-                    }
-                    for (int q = 0; q < 2; q++) {
-                        const u8* tbl = q == 0 ? c->pLeft : c->pRight;
-                        if (!(tbl && tbl[i] < 0xFF)) continue;
-                        ClothLink& U = ch->link[L.side[q]];
-                        penClothAtCkParallel(&L.pos, &U.pos, s.at);
-                        PSVECSubtract(&U.pos, &L.pos, &v);
-                        d = SQRTF(v.x * v.x + v.y * v.y + v.z * v.z);
-                        PSVECScale(&v, &v, (d * 0.5f - (C.dist[q])) * c->Stretchy / d);
-                        PSVECAdd(&L.pos, &v, &L.pos);
-                        PSVECSubtract(&U.pos, &v, &U.pos);
-                        floor_ck3(c, ch, L, U, s.floorY);
-                        fix(ch, i);
-                        fix(ch, L.side[q]);
-                    }
-                }
-                if (L.up != CLOTH_NONE) {
-                    ClothLink& U = ch->link[L.up];
-                    penClothAtCkParallel(&L.pos, &U.pos, s.at);
-                    PSVECSubtract(&U.pos, &L.pos, &v);
-                    d = SQRTF(v.x * v.x + v.y * v.y + v.z * v.z);
-                    PSVECScale(&v, &v, (d - L.len) * 0.5f * c->Stretchy / d);
-                    PSVECAdd(&L.pos, &v, &L.pos);
-                    PSVECSubtract(&U.pos, &v, &U.pos);
-                    floor_ck3(c, ch, L, U, s.floorY);
-                    fix(ch, i);
-                    fix(ch, L.up);
-                } else {
-                    Vec pw = wget(t, L.bone);
-                    hit = at_ck(c, &L.pos, &pw, s.at);
-                    wput(t, L.bone, pw);
-                    if (hit) L.hit |= 1;
-                    PSVECSubtract(&pw, &L.pos, &v);
-                    d = SQRTF(v.x * v.x + v.y * v.y + v.z * v.z);
-                    PSVECScale(&v, &v, (d - L.len) * 0.5f * c->Stretchy / d);
-                    PSVECAdd(&L.pos, &v, &L.pos);
-                    if (!(c->Flag & 0x100)) {
-                        if (L.pos.y < s.floorY) L.pos.y = s.floorY;
-                    }
-                    fix(ch, i);
-                }
-            }
-        }
-    }
-    matrices(ch, s);
+    kernel_step(ch, s, 3, a, 0.0f, a);
     step_end(ch, s.reset);
 }
 

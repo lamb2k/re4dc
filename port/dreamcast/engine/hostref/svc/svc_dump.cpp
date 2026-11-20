@@ -51,6 +51,8 @@ extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
 extern "C" SkelCounters skel_cnt __attribute__((weak));
 extern "C" ColCounters col_cnt __attribute__((weak));
 extern "C" ClothCounters cloth_cnt __attribute__((weak));
+#include "../../services/cloth/cloth_kernel.h"
+extern "C" ClothKCounters cloth_k_cnt __attribute__((weak));
 extern "C" u32 cloth_chain_count(void) __attribute__((weak));
 extern "C" ClothChain* cloth_chain_at(u32 i) __attribute__((weak));
 extern "C" int skel_control_parent __attribute__((weak));
@@ -178,14 +180,16 @@ extern "C" void host_svc_finish()
         if (&col_cnt) {
             const ColCounters& k = col_cnt;
             fprintf(f, "col bakes %u late_bakes %u line_queries %u sphere_queries %u nodes_tested %u leaves %u tris_line %u "
-                       "tris_sphere %u tri_bytes %u cold_line %u cold_sphere %u tris_skipped %u filter_miss %u filter_end %u\n",
+                       "tris_sphere %u tri_bytes %u cold_line %u cold_sphere %u tris_skipped %u filter_miss %u filter_end %u "
+                       "sphere_skipped %u sphere_filter_miss %u sphere_recells %u leaves_whole %u\n",
                     k.bakes, k.late_bakes, k.line_queries, k.sphere_queries, k.nodes_tested, k.leaves, k.tris_line,
-                    k.tris_sphere, k.tri_bytes, k.cold_line, k.cold_sphere, k.tris_skipped, k.filter_miss, k.filter_end);
+                    k.tris_sphere, k.tri_bytes, k.cold_line, k.cold_sphere, k.tris_skipped, k.filter_miss, k.filter_end,
+                    k.sphere_skipped, k.sphere_filter_miss, k.sphere_recells, k.leaves_whole);
         }
         for (u32 i = 0; col_piece_count && i < col_piece_count(); i++) {
             ColPiece* pc = col_piece_at(i);
-            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u\n", i, (u32) pc->sat, pc->nNode,
-                    pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc));
+            fprintf(f, "piece %u sat %08x nodes %u leaves %u idx %u polys %u bytes %u file_bytes %u masks %u\n", i, (u32) pc->sat,
+                    pc->nNode, pc->nLeaf, pc->nIdx, pc->nTri, pc->bytes, col_file_bytes(pc), pc->nMask);
         }
         for (u32 i = 0; skel_table_of && i < skel_table_count(); i++) {
             SkelTable* t = skel_table_at(i);
@@ -195,11 +199,16 @@ extern "C" void host_svc_finish()
             fprintf(f, "\n");
         }
         fprintf(f, "motion samples: integer frame %u fractional %u at or past the end %u\n", s.samp_int, s.samp_frac, s.samp_end);
-        fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u from cold keys %u original decoder %u\n", s.mk_bound,
-                s.mk_unbound, s.mk_rows, s.mk_cold, s.mk_orig);
+        fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u decoded from keys %u original decoder 0; "
+                   "root motion from rows %u decoded %u; axes decoded %u, outside the pack %u, rebinds %u\n", s.mk_bound,
+                s.mk_unbound, s.mk_rows, s.mk_dec, s.mk_root_rows, s.mk_root_dec, s.mk_axes, s.mk_miss, s.mk_rebinds);
         if (&cloth_cnt) {
             fprintf(f, "cloth: chains %u (original fallback %u), steps %u, links stepped %u, volumes built %u, resets %u\n",
                     cloth_cnt.chains, cloth_cnt.fallback, cloth_cnt.moves, cloth_cnt.links, cloth_cnt.at_volumes, cloth_cnt.resets);
+            if (&cloth_k_cnt)
+                fprintf(f, "cloth kernel: links %u, passes over a chain %u, normalize %u, sqrt %u, acos %u, rotations %u, volume tests %u\n",
+                        cloth_k_cnt.links, cloth_k_cnt.passes, cloth_k_cnt.normalize, cloth_k_cnt.sqrt, cloth_k_cnt.acos,
+                        cloth_k_cnt.rotations, cloth_k_cnt.vol_tests);
             // the chains' link bones by model code (pal.bin's), for svc/cloth_stats.py
             const u32 elo = (u32) EmMgr.pArray, olo = (u32) ObjMgr.pArray;
             for (u32 i = 0; i < cloth_chain_count(); i++) {

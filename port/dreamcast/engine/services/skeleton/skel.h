@@ -13,8 +13,6 @@
 //   soa  [27][cap]  4 B   pose pos xyz, ang xyz, scale xyz | blend-saved pos xyz, rot xyz, scale xyz |
 //                         world position xyz (cCoord::world), bind xyz | addRot xyz
 //   ikAng   [cap]   4 B   MotionParts::ikAng
-//   hist    [n]    36 B   key history (MotionParts::hist, 6 channels x 3 axes, u16): only clips without baked keys
-//                         (skel_mk.h) touch it
 //   hslot   [cap]   1 B   the bone's history slot (0xFF: none)
 //   hlist  [32]     1 B   the history bones, in the order they joined
 //   hold   [32]    32 B   world_old xyz, world_old2 xyz (+ 8 B pad) of the history bones: the bones code outside asked
@@ -90,7 +88,6 @@ struct SkelTable {
     SkelMat* prev;
     f32* soa;
     f32* ikAng;
-    u16* hist;
     u8* parent;
     u8* mbox;
     SkelIk* ik;
@@ -128,12 +125,15 @@ void skel_enter(SkelTable* t);                       // an entry from another se
 void skel_leave(SkelTable* t, u32 groups);           // ... and serves the mailbox the groups it changed (1 world, 2 local)
 void skel_serve_bone(SkelTable* t, u32 bone, u32 groups);   // ... or only this bone, when it is a mailbox bone
 SkelHist* skel_history(SkelTable* t, u32 bone);      // the bone's kept world_old / world_old2 (NULL: not kept)
+// motion keys (lane eng-svc3): the engine image drops the bindings of an archive's clips when it frees the archive
+void skel_mk_forget(const void* lo, u32 bytes);
 const f32 (*skel_parent_mat(SkelTable* t, u32 bone))[4];   // the parent's world matrix (a bone, the model, outside)
 // counters (svc census and the cost indicator)
 struct SkelCounters {
     u32 mat_local, mat_world, mat_world_slow, xmtrx_loads, add_rot, samples, hokan_bones, blend_bones, ik_chains,
         palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch, serve_ancestors, lost_writes,
-        samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_cold, mk_orig,
+        samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_dec, mk_miss, mk_root_rows, mk_root_dec, mk_axes,
+        mk_rebinds,
         hist_join, hist_moves, hist_full, hist_late;
 };
 extern SkelCounters skel_cnt;
@@ -141,6 +141,7 @@ extern SkelCounters skel_cnt;
 extern int skel_control_parent;   // >0: bone skel_control_parent's parent taken one bone too low (wrong by one)
 extern int skel_control_no_ik;    // skip the IK pass
 extern int skel_poison;           // check build: records outside the mailbox hold NaN
-extern int skel_control_mk;       // baked motion keys: the row of the next frame (lane eng-svc2 control)
+extern int skel_control_mk;       // baked motion keys: 1 the pose row of the next frame (lane eng-svc2 control); 2 the
+                                  // root and camera rows of the next frame; 3 s16 steps cut to 8 bits (lane eng-svc3)
 extern int skel_control_hist;     // 1: no bone keeps its history; 2: the history never moves (lane eng-svc2 controls)
 }
