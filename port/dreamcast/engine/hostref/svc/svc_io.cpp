@@ -65,7 +65,7 @@ extern "C" const void* svc_mk_pack(uint32_t* bytes)
     static uint32_t n;
     if (!pk) {
         const char* path = getenv("RE4_SVC_MK");
-        if (!path || !*path) return 0;
+        if (!path || !*path || !strcmp(path, "none")) return 0;   // none: every clip decoded from its keys (lane eng-svc3)
         FILE* f = fopen(path, "rb");
         if (!f) { fprintf(stderr, "svc: cannot read %s\n", path); exit(2); }
         fseek(f, 0, SEEK_END);
@@ -115,6 +115,8 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "parent=", 7) && &skel_control_parent) skel_control_parent = atoi(c + 7);
         if (!strncmp(c, "noik", 4) && &skel_control_no_ik) skel_control_no_ik = 1;
         if (!strncmp(c, "mkrow", 5) && &skel_control_mk) skel_control_mk = 1;
+        if (!strncmp(c, "mkroot", 6) && &skel_control_mk) skel_control_mk = 2;
+        if (!strncmp(c, "mkcoarse", 8) && &skel_control_mk) skel_control_mk = 3;
         if (!strncmp(c, "histnone", 8) && &skel_control_hist) skel_control_hist = 1;
         if (!strncmp(c, "histfrozen", 10) && &skel_control_hist) skel_control_hist = 2;
         if (!strncmp(c, "clothshort", 10) && &cloth_control_short) cloth_control_short = 1;

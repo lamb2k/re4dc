@@ -195,8 +195,9 @@ extern "C" void host_svc_finish()
             fprintf(f, "\n");
         }
         fprintf(f, "motion samples: integer frame %u fractional %u at or past the end %u\n", s.samp_int, s.samp_frac, s.samp_end);
-        fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u from cold keys %u original decoder %u\n", s.mk_bound,
-                s.mk_unbound, s.mk_rows, s.mk_cold, s.mk_orig);
+        fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u decoded from keys %u original decoder 0; "
+                   "root motion from rows %u decoded %u; axes decoded %u, outside the pack %u, rebinds %u\n", s.mk_bound,
+                s.mk_unbound, s.mk_rows, s.mk_dec, s.mk_root_rows, s.mk_root_dec, s.mk_axes, s.mk_miss, s.mk_rebinds);
         if (&cloth_cnt) {
             fprintf(f, "cloth: chains %u (original fallback %u), steps %u, links stepped %u, volumes built %u, resets %u\n",
                     cloth_cnt.chains, cloth_cnt.fallback, cloth_cnt.moves, cloth_cnt.links, cloth_cnt.at_volumes, cloth_cnt.resets);

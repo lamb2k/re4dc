@@ -71,7 +71,9 @@ SHZ := $(GAME)/third_party/sh4zam
 SVC_WRAP_COL := _ZN7cSatMgr8getFloorEP3VecffPmi _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii \
                 _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i _ZN7cSatMgr5checkEP6cModeli _ZN7cSatMgr8checkAirEP6cModeli
 SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
-WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc
+WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
+               MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
+               MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
 WEAK_model := _ZN6cModel11getPartsPtrEi _ZN6cModel12partsMatCalcEv _ZN6cModel14partsWorldCalcEv _ZN6cModel8matBlendEf \
               _ZN6cModel9matUpdateEv _ZN6cModel12updateOldPosEv _ZN6cModel6setPosEP3Vec _ZN6cModel14partsFixMemoryEi \
               _ZN6cModel14partsFixAdjustEv _ZN6cModel9setParentEPS_P3VecS2_ _ZN6cModel9setParentEPS_iP3VecS2_ \
