@@ -72,6 +72,7 @@ int region_of(unsigned a)
     for (unsigned i = 0; i < g_nloads; i++)
         if (a >= g_loads[i].lo && a < g_loads[i].hi) return g_loads[i].reg;
     if (a >= HOST_ARENA_BASE + 0x10000u && a < HOST_ARENA_BASE + HOST_ARENA_SIZE - 0x00600000u) return SVC_R_HEAP;
+    if (a >= g_svc_lo + 0x00400000u && a < g_svc_hi) return SVC_R_MK;
     if (a >= g_svc_lo && a < g_svc_hi) return SVC_R_SVC;
     return SVC_R_OTHER;
 }
@@ -100,23 +101,27 @@ struct MemAgg { uint64_t acc, rd, wr, lines; uint32_t lines_max, ticks, lines_ti
 MemAgg* g_mem;
 MemAgg& mem(unsigned ctx, unsigned actor, unsigned reg) { return g_mem[((size_t) ctx * kActors + actor) * SVC_REGIONS + reg]; }
 
-// service kind of a census symbol (its unit): 1 skeleton, 2 collision, 3 another service unit, 0 none
+// service kind of a census symbol (its unit): 1 skeleton, 2 collision, 3 another service unit, 4 cloth, 0 none
+constexpr unsigned kKinds = 5;
 uint8_t g_kind[kMaxSym + 1];
 void init_kinds()
 {
     static const char* skel[] = {"model", "motion", "cMotBase", "ik", "shape", "skel", 0};
     static const char* col[] = {"atari", "at_mod", "at_sub", "at_sub2", "atariInfo", "col", 0};
+    static const char* cloth[] = {"pl_cloth", "pendulum", "pen", "cloth", 0};
     for (unsigned i = 0; i < census_nsyms && i < kMaxSym; i++) {
         g_kind[i] = census_kind[i] == 'S' ? 3 : 0;
         for (int k = 0; skel[k]; k++)
             if (!strcmp(census_unit[i], skel[k])) g_kind[i] = 1;
         for (int k = 0; col[k]; k++)
             if (!strcmp(census_unit[i], col[k])) g_kind[i] = 2;
+        for (int k = 0; cloth[k]; k++)
+            if (!strcmp(census_unit[i], cloth[k])) g_kind[i] = 4;
     }
 }
 struct KindKey { uint32_t stamp; uint8_t kind, actor; uint16_t pad; uint32_t line; };
 KindKey* g_klines;
-MemAgg* g_kmem;   // [kind 0..3][actor][region]
+MemAgg* g_kmem;   // [kind 0..4][actor][region]
 MemAgg& kmem(unsigned kind, unsigned actor, unsigned reg) { return g_kmem[((size_t) kind * kActors + actor) * SVC_REGIONS + reg]; }
 
 struct FieldKey { uint32_t eip; uint16_t ctx; uint8_t reg, w; uint16_t off, pad; uint32_t n, nticks, last; uint64_t bones; uint32_t used; };
@@ -299,7 +304,7 @@ extern "C" void svc_census_regions(const SvcRegion* r)
         g_mem = (MemAgg*) calloc((size_t) (kMaxSym + 1) * kActors * SVC_REGIONS, sizeof(MemAgg));
         g_fields = (FieldKey*) calloc(kFieldTab, sizeof(FieldKey));
         g_klines = (KindKey*) calloc(kLineTab, sizeof(KindKey));
-        g_kmem = (MemAgg*) calloc((size_t) 4 * kActors * SVC_REGIONS, sizeof(MemAgg));
+        g_kmem = (MemAgg*) calloc((size_t) kKinds * kActors * SVC_REGIONS, sizeof(MemAgg));
         init_kinds();
         struct sigaction sa;
         memset(&sa, 0, sizeof sa);
@@ -333,7 +338,7 @@ extern "C" void svc_census_tick(unsigned t, int begin)
         if (g_tick_calls[i] > g_max_calls[i]) g_max_calls[i] = g_tick_calls[i];
     }
     if (g_tick_traced)
-        for (size_t i = 0; i < (size_t) 4 * kActors * SVC_REGIONS; i++) {
+        for (size_t i = 0; i < (size_t) kKinds * kActors * SVC_REGIONS; i++) {
             MemAgg& m = g_kmem[i];
             if (!m.lines_tick) continue;
             m.lines += m.lines_tick;
@@ -378,7 +383,7 @@ extern "C" void svc_census_finish(const char* actors_tsv)
                     (unsigned long long) g_tot_calls[i], g_max_calls[i]);
     fclose(f);
     if (g_trace) {
-        static const char* rn[SVC_REGIONS] = {"parts", "em", "obj", "room", "chr", "core", "heap", "svc", "other"};
+        static const char* rn[SVC_REGIONS] = {"parts", "em", "obj", "room", "chr", "core", "heap", "svc", "other", "mk"};
         f = out_open("mem.tsv");
         fprintf(f, "# ticks\t%u\n# ctx\tctx_name\tctx_unit\tactor\tregion\taccesses\treads\twrites\tlines_sum\tlines_max\tticks_seen\n", g_traced);
         for (unsigned c = 0; c <= kMaxSym; c++)
@@ -393,8 +398,8 @@ extern "C" void svc_census_finish(const char* actors_tsv)
         fclose(f);
         f = out_open("memk.tsv");
         fprintf(f, "# ticks\t%u\n# kind\tactor\tregion\taccesses\treads\twrites\tlines_sum\tlines_max\tticks_seen\n", g_traced);
-        static const char* kn[4] = {"none", "skeleton", "collision", "other"};
-        for (unsigned kd = 0; kd < 4; kd++)
+        static const char* kn[kKinds] = {"none", "skeleton", "collision", "other", "cloth"};
+        for (unsigned kd = 0; kd < kKinds; kd++)
             for (unsigned a = 0; a < kActors; a++)
                 for (unsigned r = 0; r < SVC_REGIONS; r++) {
                     MemAgg& m = kmem(kd, a, r);
@@ -418,8 +423,28 @@ extern "C" void svc_census_finish(const char* actors_tsv)
     fclose(f);
 }
 
+// Load-time work the PC build does lazily (the motion-key binding): not counted. The engine image does it at load.
+extern "C" void svc_census_pause(int on)
+{
+    if (!g_tick_traced) return;
+    if (on) { g_armed = false; arena_prot(PROT_READ | PROT_WRITE); }
+    else { g_armed = true; arena_prot(PROT_NONE); }
+}
+
 extern "C" void svc_census_watch(uint32_t lo, uint32_t bytes)
 {
     g_svc_lo = lo;
     g_svc_hi = lo + bytes;
+}
+
+// The reference census build links no svc_io.cpp: it maps the service region itself (the hosted cloth's volume list
+// lives there, svc_cloth_glue.cpp) and traces it. Builds with svc_io.cpp map it there.
+extern "C" void* svc_region(uint32_t* bytes) __attribute__((weak));
+__attribute__((constructor)) static void census_region()
+{
+    if (svc_region) return;
+    void* want = (void*) (uintptr_t) 0x8E000000u;
+    void* r = mmap(want, 0x01000000u, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0);
+    if (r != want) { fprintf(stderr, "svc census: cannot map the service region\n"); exit(2); }
+    svc_census_watch(0x8E000000u, 0x01000000u);
 }

@@ -32,6 +32,7 @@
 #include "cam_ctrl.h"
 #include "atari.h"
 #include "skel_xm.h"
+#include "skel_mk.h"
 #include "native_motion.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
@@ -41,6 +42,9 @@ extern "C" float cosf(float);
 extern "C" float acosf(float);
 extern "C" void* svc_pool_base(u32* bytes);   // host: the engine's skeleton and collision pool
 extern "C" void calcModelAddr(ModelData* data);
+extern "C" const void* svc_mk_pack(u32* bytes) __attribute__((weak));   // host: the baked motion keys (skel_mk.h)
+extern "C" void svc_census_pause(int on) __attribute__((weak));        // census builds: load-time work not counted
+extern "C" void host_log(const char* fmt, ...) __attribute__((weak));  // host: the run log
 extern const Vec vecZero;
 
 extern "C" {
@@ -48,6 +52,8 @@ SkelCounters skel_cnt;
 int skel_control_parent;
 int skel_control_no_ik;
 int skel_poison;
+int skel_control_mk;
+int skel_control_hist;
 }
 
 #define PTR_OK(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
@@ -223,9 +229,10 @@ void serve(SkelTable* t, u32 b, u32 mask)
             r->motParts.flags = t->world[b].flags;
         }
     }
-    if ((mask & SG_OLD) && !anc) {
-        r->world_old.x = s[SK_OX * c + b]; r->world_old.y = s[SK_OY * c + b]; r->world_old.z = s[SK_OZ * c + b];
-        r->world_old2.x = s[SK_O2X * c + b]; r->world_old2.y = s[SK_O2Y * c + b]; r->world_old2.z = s[SK_O2Z * c + b];
+    if ((mask & SG_OLD) && !anc && t->hslot[b] != 0xFF) {
+        const SkelHist& h = t->hold[t->hslot[b]];
+        r->world_old.x = h.old[0]; r->world_old.y = h.old[1]; r->world_old.z = h.old[2];
+        r->world_old2.x = h.old2[0]; r->world_old2.y = h.old2[1]; r->world_old2.z = h.old2[2];
     }
     if (anc) skel_cnt.serve_ancestors++;
     else skel_cnt.serve_bones++;
@@ -247,10 +254,42 @@ void pull(SkelTable* t, u32 b)
     s[SK_AX * c + b] = r->ang.x; s[SK_AY * c + b] = r->ang.y; s[SK_AZ * c + b] = r->ang.z;
     s[SK_SX * c + b] = r->scale.x; s[SK_SY * c + b] = r->scale.y; s[SK_SZ * c + b] = r->scale.z;
     s[SK_WX * c + b] = r->world.x; s[SK_WY * c + b] = r->world.y; s[SK_WZ * c + b] = r->world.z;
-    s[SK_OX * c + b] = r->world_old.x; s[SK_OY * c + b] = r->world_old.y; s[SK_OZ * c + b] = r->world_old.z;
-    s[SK_O2X * c + b] = r->world_old2.x; s[SK_O2Y * c + b] = r->world_old2.y; s[SK_O2Z * c + b] = r->world_old2.z;
+    if (t->hslot[b] != 0xFF) {
+        SkelHist& h = t->hold[t->hslot[b]];
+        h.old[0] = r->world_old.x; h.old[1] = r->world_old.y; h.old[2] = r->world_old.z;
+        h.old2[0] = r->world_old2.x; h.old2[1] = r->world_old2.y; h.old2[2] = r->world_old2.z;
+    }
     s[SK_RX * c + b] = r->addRot.x; s[SK_RY * c + b] = r->addRot.y; s[SK_RZ * c + b] = r->addRot.z;
     skel_cnt.pull_bones++;
+}
+
+// A bone joins the history set when code outside first asks for it (the census: behaviour reads world_old and
+// world_old2 only of bones it asked for). Its history starts as its world position, which is what the original holds
+// for a bone whose world has not moved since the last updateOldPos (setPartsOffset sets both to it); the check build
+// starts it as NaN instead, so a history read before two updateOldPos have passed shows in the comparison.
+void hist_add(SkelTable* t, u32 b)
+{
+    if (t->hslot[b] != 0xFF || skel_control_hist == 1) return;   // control: no history kept
+    if (t->nHist >= SKEL_MAX_HIST) {
+        skel_cnt.hist_full++;
+        pLog->err(0, 0, "skel: history set full");
+        return;
+    }
+    const u32 k = t->nHist++;
+    t->hslot[b] = (u8) k;
+    t->hlist[k] = (u8) b;
+    SkelHist& h = t->hold[k];
+    const u32 c = t->cap;
+    if (t->base) {   // set-up: the original's values, kept for every bone until the first updateOldPos
+        for (int i = 0; i < 3; i++) {
+            h.old[i] = t->base[i * c + b];
+            h.old2[i] = t->base[(3 + i) * c + b];
+        }
+    } else {         // later: unknown (NaN in the check build: a read before two updateOldPos would show)
+        for (int i = 0; i < 3; i++) h.old[i] = h.old2[i] = skel_poison ? kNaN : t->soa[(SK_WX + i) * c + b];
+        skel_cnt.hist_late++;
+    }
+    skel_cnt.hist_join++;
 }
 
 void refresh_roots(SkelTable* t);
@@ -296,6 +335,7 @@ void mailbox_add(SkelTable* t, u32 b)
     if ((t->mbox[b] & 0x7F) == 1) return;
     if (!(t->mbox[b] & 0x7F)) t->mlist[t->nMbox++] = (u8) b;
     t->mbox[b] = 0x81;   // direct: the full record both ways
+    hist_add(t, b);
     serve(t, b, SG_ALL);
     // its ancestors: code reaches a parent through cCoord::pParent (read)
     for (u32 a = t->parent[b]; a < t->n && !(t->mbox[a] & 0x7F); a = t->parent[a]) {
@@ -462,6 +502,185 @@ void world_calc(SkelTable* t)
     MOTION(mdl)->Pos_world = mdl->pos;
 }
 
+// ---------------------------------------------------------------------------------------------------------------
+// offline motion keys (lane eng-svc2; skel_mk.h, bake/motion_keys.py). A clip is bound to its baked form once, when
+// MotionSetCore first sees it (the engine image binds an archive's clips when it loads the archive); the binding is
+// checked by identity: the FNV-1a of the clip header and of every pose joint's key block, as the baker computed it.
+struct MkBind {
+    const void* mot;
+    const MkClip* clip;
+    u32 head;
+};
+constexpr u32 kMkBind = 1024;
+MkBind g_mkb[kMkBind];
+const MkPack* g_mk;
+bool g_mk_init;
+const u8 kKeyBytes[16] = {12, 8, 6, 0, 10, 6, 4, 0, 9, 5, 3, 0, 0, 0, 0, 4};
+
+inline bool mk_pose(u16 info)
+{
+    const int ch = (info >> 8) & 0xF;
+    return ch != 6 && ch != 7 && (info & (2 | 4 | 8 | 0x30)) != 0;
+}
+inline u32 fnv_add(u32 h, const u8* p, u32 n)
+{
+    for (u32 i = 0; i < n; i++) h = (h ^ p[i]) * 16777619u;
+    return h;
+}
+inline u32 mk_head(const void* mot)
+{
+    const u8* p = (const u8*) mot;
+    return p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
+}
+const MkClip* mk_find(u32 ident)
+{
+    const MkIndex* ix = (const MkIndex*) ((const u8*) g_mk + g_mk->oIndex);
+    u32 lo = 0, hi = g_mk->nClip;
+    while (lo < hi) {
+        const u32 mid = (lo + hi) >> 1;
+        if (ix[mid].ident < ident) lo = mid + 1;
+        else hi = mid;
+    }
+    if (lo < g_mk->nClip && ix[lo].ident == ident) return (const MkClip*) ((const u8*) g_mk + ix[lo].off);
+    return 0;
+}
+// the bound clip of a clip header (0: none, the original decoder serves it)
+const MkClip* mk_of(const void* mot)
+{
+    if (!g_mk || !mot) return 0;
+    const u32 head = mk_head(mot);
+    for (u32 h = ((u32) mot >> 5) & (kMkBind - 1);; h = (h + 1) & (kMkBind - 1)) {
+        const MkBind& e = g_mkb[h];
+        if (!e.mot) return 0;
+        if (e.mot == mot && e.head == head) return e.clip;
+    }
+}
+void mk_bind(const void* mot, const u32* keys)
+{
+    if (!g_mk_init) {
+        g_mk_init = true;
+        u32 bytes = 0;
+        const MkPack* p = svc_mk_pack ? (const MkPack*) svc_mk_pack(&bytes) : 0;
+        if (p && bytes >= sizeof(MkPack) && p->magic[0] == MK_MAGIC0 && p->magic[1] == MK_MAGIC1) g_mk = p;
+    }
+    if (!g_mk || !mot) return;
+    const u32 head = mk_head(mot);
+    u32 h = ((u32) mot >> 5) & (kMkBind - 1);
+    for (;; h = (h + 1) & (kMkBind - 1)) {
+        MkBind& e = g_mkb[h];
+        if (!e.mot) break;
+        if (e.mot == mot && e.head == head) return;
+    }
+    if (svc_census_pause) svc_census_pause(1);
+    const u8* c = (const u8*) mot;
+    const u32 n = c[2];
+    const u16_un* info = (const u16_un*) (c + 3);
+    u32 ident = fnv_add(2166136261u, c, 3 + 3 * n);
+    bool ok = n != 0;
+    for (u32 i = 0; i < n && ok; i++) {
+        if (!mk_pose(info[i])) continue;
+        const u8* p = (const u8*) keys[i];
+        const u32 ks = kKeyBytes[info[i] >> 12];
+        if (!PTR_OK(p) || !ks) {
+            ok = false;
+            break;
+        }
+        u32 len = 0;
+        for (int a = 0; a < 3; a++) len += 2 + (p[len] | (p[len + 1] << 8)) * (2 + ks);
+        ident = fnv_add(ident, p, len);
+    }
+    const MkClip* k = ok ? mk_find(ident) : 0;
+    if (k && (k->maxFrame != (c[0] | (c[1] << 8)) || k->n != n)) k = 0;
+    if (svc_census_pause) svc_census_pause(0);
+    g_mkb[h].mot = mot;
+    g_mkb[h].clip = k;
+    g_mkb[h].head = head;
+    if (k) skel_cnt.mk_bound++;
+    else {
+        skel_cnt.mk_unbound++;
+        if (host_log) host_log("skel: clip %08x (%u joints, identity %08x) has no baked keys", (u32) mot, n, ident);
+    }
+}
+
+// MotionMoveCore's pose from the baked clip: an integer frame reads row k (each pose joint's three values, rotations
+// already in VecRadLimit's range); past the end of a clip that does not loop, the last row; a fractional frame the
+// cold key blocks through the original decoder with its history off (the same values: skel_mk.h).
+void move_core_mk(SkelTable* t, MotionWork* w, const MkClip* k, HermitePrm* pp, u16* flipTbl)
+{
+    cModel* m = t->model;
+    const u32 c = t->cap;
+    f32* s = t->soa;
+    f32 f = pp->frame;
+    const f32* row = 0;
+    if (pp->maxFrame <= f) {
+        if ((pp->flags & 6) == 4) f -= pp->maxFrame;   // looping: HermiteInterpolation wraps the frame once
+        else row = mk_rows(k) + (u32) k->maxFrame * k->stride;
+    }
+    if (!row) {
+        const int fi = (int) f;
+        if ((f32) fi == f && fi >= 0 && fi < (int) k->maxFrame) {
+            int r = fi;
+            if (skel_control_mk && r < (int) k->maxFrame) r++;   // control: the next frame's row
+            row = mk_rows(k) + (u32) r * k->stride;
+        }
+    }
+    const MkJoint* J = mk_joints(k);
+    const f32* C = mk_const(k);
+    const int n = k->n;
+    if (row) skel_cnt.mk_rows++;
+    else skel_cnt.mk_cold++;
+    for (int i = 0; i < n; i++) {
+        const MkJoint& j = J[i];
+        if (j.src == MK_OTHER) continue;   // camera channels go the original path (move_core keeps them)
+        int pno = j.pno;
+        if (w->Mot_attr & 0x40) {
+            u16 fp = flipTbl[pno];
+            if (fp != 0xFFFF) pno = (s16) fp;
+        }
+        if (pno >= m->nParts) pLog->err(0, 0, "MotionMoveCore(): Invalid parts %d.", pno);
+        if (pno < 0 || (u32) pno >= t->n) continue;
+        u32& fl = t->world[pno].flags;
+        if (fl & 0x20000000) continue;
+        fl |= 0x10010000;
+        if ((s32) w->Mot_flag < 0) fl |= 0x80000000;
+        const int kind = j.info & 0xFF;
+        const int rot = (kind & 2) || !(kind & (4 | 8));
+        Vec v;
+        if (row) {
+            const f32* src = (j.src == MK_ROWS ? row : C) + j.col;
+            v.x = src[0];
+            v.y = src[1];
+            v.z = src[2];
+        } else {
+            const u32 saved = pp->flags;
+            u16 hist[3] = {0, 0, 0};
+            pp->type = j.info >> 12;
+            pp->key = (u8*) (mk_cold(k) + mk_cold_tab(k)[i]);
+            pp->flags |= 8;
+            HermiteInterpolation(pp, &v, hist);
+            pp->flags = saved;
+            if (rot) VecRadLimit(&v);
+        }
+        int r0;
+        if (kind & 2) {
+            if (w->Mot_attr & 0x40) { v.y = -v.y; v.z = -v.z; }
+            r0 = SK_AX;
+        } else if (kind & 4) {
+            if (w->Mot_attr & 0x40) v.x = -v.x;
+            r0 = SK_PX;
+        } else if (kind & 8) {
+            r0 = SK_SX;
+        } else {
+            if (w->Mot_attr & 0x40) { v.y = -v.y; v.z = -v.z; }
+            r0 = SK_AX;
+        }
+        s[r0 * c + pno] = v.x;
+        s[(r0 + 1) * c + pno] = v.y;
+        s[(r0 + 2) * c + pno] = v.z;
+        skel_cnt.samples++;
+    }
+}
+
 // motion.cpp MotionMoveCore: the pose at the current sequence frame, into the table
 void move_core(SkelTable* t, MotionWork* w)
 {
@@ -486,6 +705,9 @@ void move_core(SkelTable* t, MotionWork* w)
     w->Mot_frame_sav = w->Mot_frame;
     pp->frame = w->Mot_frame;
     pp->maxFrame = w->Mot_frame_max;
+    if (pp->frame >= pp->maxFrame) skel_cnt.samp_end++;
+    else if (pp->frame == (f32) (int) pp->frame) skel_cnt.samp_int++;
+    else skel_cnt.samp_frac++;
     pp->flags = 0;
     if (w->Mot_attr & 4) {
         if (w->pSeq_top == 0) pp->flags = 4;
@@ -510,6 +732,11 @@ void move_core(SkelTable* t, MotionWork* w)
         w->Mot_attr &= ~0x40;
         pLog->err(0, 0, "MotionMoveCore():%d Flip Info Error!", 1067);
     }
+    if (const MkClip* mk = cam ? 0 : mk_of(w->pMot)) {
+        move_core_mk(t, w, mk, pp, flipTbl);
+        return;
+    }
+    if (g_mk) skel_cnt.mk_orig++;
     u32* keys = w->pHermite_data;
     Re4dcMotionLease lease(w->pMot, &keys, keys);
     do {
@@ -1164,9 +1391,25 @@ SkelTable* table_create(cModel* m)
     const u32 oHanded = off; off = align32(off + cap);
     const u32 oShadow = off; off = align32(off + (skel_poison ? 4 * kSnap * n : 0));
     const u32 oIk = off; off = align32(off + sizeof(SkelIk) * SKEL_MAX_IK);
+    const u32 oHold = off; off = align32(off + sizeof(SkelHist) * SKEL_MAX_HIST);
+    const u32 oHslot = off; off = align32(off + cap);
+    const u32 oHlist = off; off = align32(off + SKEL_MAX_HIST);
     u8* blk = (u8*) pool_alloc(off);
     if (!blk) return 0;
     SkelTable* t = (SkelTable*) blk;
+    t->hold = (SkelHist*) (blk + oHold);
+    t->hslot = blk + oHslot;
+    t->hlist = blk + oHlist;
+    memset(t->hslot, 0xFF, cap);
+    t->base = (f32*) pool_alloc(4 * 6 * cap);
+    if (t->base)
+        for (u32 b = 0; b < n; b++) {
+            u32 k = 0;
+            cParts* r = m->pList;
+            for (; k < b; k++) r = r->pList;
+            t->base[0 * cap + b] = r->world_old.x; t->base[1 * cap + b] = r->world_old.y; t->base[2 * cap + b] = r->world_old.z;
+            t->base[3 * cap + b] = r->world_old2.x; t->base[4 * cap + b] = r->world_old2.y; t->base[5 * cap + b] = r->world_old2.z;
+        }
     t->n = (u16) n;
     t->cap = (u16) cap;
     t->bytes = off;
@@ -1202,8 +1445,6 @@ SkelTable* table_create(cModel* m)
         s[SK_AX * cap + b] = r->ang.x; s[SK_AY * cap + b] = r->ang.y; s[SK_AZ * cap + b] = r->ang.z;
         s[SK_SX * cap + b] = r->scale.x; s[SK_SY * cap + b] = r->scale.y; s[SK_SZ * cap + b] = r->scale.z;
         s[SK_WX * cap + b] = r->world.x; s[SK_WY * cap + b] = r->world.y; s[SK_WZ * cap + b] = r->world.z;
-        s[SK_OX * cap + b] = r->world_old.x; s[SK_OY * cap + b] = r->world_old.y; s[SK_OZ * cap + b] = r->world_old.z;
-        s[SK_O2X * cap + b] = r->world_old2.x; s[SK_O2Y * cap + b] = r->world_old2.y; s[SK_O2Z * cap + b] = r->world_old2.z;
         s[SK_RX * cap + b] = r->addRot.x; s[SK_RY * cap + b] = r->addRot.y; s[SK_RZ * cap + b] = r->addRot.z;
         s[SK_MPX * cap + b] = r->motParts.pos.x; s[SK_MPY * cap + b] = r->motParts.pos.y; s[SK_MPZ * cap + b] = r->motParts.pos.z;
         s[SK_MRX * cap + b] = r->motParts.rot.x; s[SK_MRY * cap + b] = r->motParts.rot.y; s[SK_MRZ * cap + b] = r->motParts.rot.z;
@@ -1225,6 +1466,9 @@ SkelTable* table_create(cModel* m)
     }
     for (b = 0; b < n && t->nRoot < sizeof t->root; b++)
         if (t->parent[b] == SKEL_PARENT_MODEL || t->parent[b] == SKEL_PARENT_EXT) t->root[t->nRoot++] = (u8) b;
+    // bone 0 keeps its history from the start: the body's history is what the census shows read most (moveBust,
+    // the cloth's root speed, getSpeedVector), often first asked for after the first updateOldPos
+    hist_add(t, 0);
     if (g_ntab >= kMaxTables) {
         pLog->err(0, 0, "skel: too many tables");
         pool_free(blk);
@@ -1245,6 +1489,7 @@ void table_release(SkelTable* t)
         map_slots(i, t, false);
         g_tab[i] = g_tab[--g_ntab];
         if (i < g_ntab) map_slots(i, g_tab[i], true);
+        pool_free(t->base);
         pool_free(t);
         return;
     }
@@ -1267,6 +1512,48 @@ SkelTable* table_for(cModel* m)
 // =================================================================================================================
 // engine API
 extern "C" SkelTable* skel_table_of(const cModel* m) { return find_table(m); }
+extern "C" SkelTable* skel_table_for(cModel* m) { return table_for(m); }
+extern "C" int skel_record_bone(SkelTable* t, const void* rec)
+{
+    int b;
+    SkelTable* r = table_of_record(rec, &b);
+    return r && r == t ? b : -1;
+}
+extern "C" int skel_parts_bone(cModel* m, int no)
+{
+    cModel* p = m->pParts;
+    if (no < 0 || !PTR_OK(p)) return -1;
+    if (m->be_flag & 0x2000) {
+        p = (cModel*) ((cParts*) p + no);
+    } else {
+        for (; no > 0; no--) {
+            p = p->pParts;
+            if (!PTR_OK(p)) return -1;
+        }
+    }
+    SkelTable* t = find_table(m);
+    return t ? skel_record_bone(t, p) : -1;
+}
+extern "C" void skel_enter(SkelTable* t)
+{
+    Scope sc(t, 0);
+}
+extern "C" void skel_leave(SkelTable* t, u32 groups)
+{
+    for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], groups);
+}
+extern "C" void skel_serve_bone(SkelTable* t, u32 bone, u32 groups)
+{
+    if (bone < t->n && (t->mbox[bone] & 0x7F)) serve(t, bone, groups);
+}
+extern "C" SkelHist* skel_history(SkelTable* t, u32 bone)
+{
+    return bone < t->n && t->hslot[bone] != 0xFF ? &t->hold[t->hslot[bone]] : 0;
+}
+extern "C" const f32 (*skel_parent_mat(SkelTable* t, u32 bone))[4]
+{
+    return parent_of(t, bone).m;
+}
 extern "C" u32 skel_table_count(void) { return g_ntab; }
 extern "C" SkelTable* skel_table_at(u32 i) { return i < g_ntab ? g_tab[i] : 0; }
 
@@ -1412,10 +1699,21 @@ void cModel::updateOldPos()
     SkelTable* t = table_for(this);
     if (!t) return;
     Scope sc(t, SG_OLD);
+    // world_old2 = world_old, world_old = world: the history bones only (the original copies every bone's)
     const u32 c = t->cap;
-    f32* s = t->soa;
-    memcpy(s + SK_O2X * c, s + SK_OX * c, 4 * 3 * c);   // world_old2 = world_old (three rows)
-    memcpy(s + SK_OX * c, s + SK_WX * c, 4 * 3 * c);    // world_old = world
+    const f32* s = t->soa;
+    for (u32 k = 0; k < t->nHist && skel_control_hist != 2; k++) {   // control 2: the history never moves
+        SkelHist& h = t->hold[k];
+        const u32 b = t->hlist[k];
+        h.old2[0] = h.old[0]; h.old2[1] = h.old[1]; h.old2[2] = h.old[2];
+        h.old[0] = s[SK_WX * c + b]; h.old[1] = s[SK_WY * c + b]; h.old[2] = s[SK_WZ * c + b];
+    }
+    skel_cnt.hist_moves += t->nHist;
+    t->nOld++;
+    if (t->base) {
+        pool_free(t->base);
+        t->base = 0;
+    }
 }
 
 void cModel::setPos(Vec* p)
@@ -1435,11 +1733,15 @@ void cModel::setPos(Vec* p)
                 w.x = s[SK_WX * c + b]; w.y = s[SK_WY * c + b]; w.z = s[SK_WZ * c + b];
                 PSVECAdd(&w, &d, &w);
                 s[SK_WX * c + b] = w.x; s[SK_WY * c + b] = w.y; s[SK_WZ * c + b] = w.z;
-                s[SK_OX * c + b] = w.x; s[SK_OY * c + b] = w.y; s[SK_OZ * c + b] = w.z;
                 t->world[b].m[0][3] += d.x;
                 t->world[b].m[1][3] += d.y;
                 t->world[b].m[2][3] += d.z;
             }
+            for (u32 k = 0; k < t->nHist; k++) {   // world_old = the moved world (history bones)
+                const u32 b = t->hlist[k];
+                t->hold[k].old[0] = s[SK_WX * c + b]; t->hold[k].old[1] = s[SK_WY * c + b]; t->hold[k].old[2] = s[SK_WZ * c + b];
+            }
+            if (t->base) memcpy(t->base, s + SK_WX * c, 4 * 3 * c);
         }
         mat[0][3] = this->pos.x;
         mat[1][3] = this->pos.y;
@@ -1540,8 +1842,14 @@ void cModel::setPartsOffset(void* bin)
     PSMTXTrans(mat, this->pos.x, this->pos.y, this->pos.z);
     mat_calc(t);
     world_calc(t);
-    memcpy(s + SK_OX * c, s + SK_WX * c, 4 * 3 * c);
-    memcpy(s + SK_O2X * c, s + SK_WX * c, 4 * 3 * c);
+    for (u32 k = 0; k < t->nHist; k++) {   // world_old = world_old2 = world
+        const u32 b = t->hlist[k];
+        for (int i = 0; i < 3; i++) t->hold[k].old[i] = t->hold[k].old2[i] = s[(SK_WX + i) * c + b];
+    }
+    if (t->base) {
+        memcpy(t->base, s + SK_WX * c, 4 * 3 * c);
+        memcpy(t->base + 3 * c, s + SK_WX * c, 4 * 3 * c);
+    }
 }
 
 void cModel::releasePartsList(int no)
@@ -1717,6 +2025,7 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
             for (i = 0; i < w->Joint_num; i++) tbl[i] += (u32) w->pMot;
         }
     w->pHermite_data = tbl;
+    mk_bind(data, keys);
     w->Null_rot = 0xFFFF;
     w->Null_pos = 0xFFFF;
     if (w->pAttachCam != 0) {

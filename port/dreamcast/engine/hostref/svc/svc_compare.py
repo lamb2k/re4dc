@@ -2,7 +2,10 @@
 """svc_compare.py: the original skeleton and collision units against the native services, tick by tick
 (lane eng-svc; docs/engine/SERVICES.md "Equivalence").
 
-    svc_compare.py <reference dir> <native dir> [--json out.json] [--pos 1.0] [--deg 0.1] [--col 0.01]
+    svc_compare.py <reference dir> <native dir> [--json out.json] [--pos 1.0] [--deg 0.1] [--col 0.01] [--skip-cloth]
+
+--skip-cloth (lane eng-svc2): the cloth chains' link bones (the native svc.txt's "chain" lines) are left out of the
+bone check: with the wind on, the cloth's presentation generator swings them in another phase (cloth_stats.py).
 
 Both directories hold what svc_dump.cpp writes (pal.bin, col.txt). Checks:
   bones      every live model with parts, every tick, every bone: world position and world matrix translation
@@ -53,7 +56,7 @@ def axes_deg(a, b):
     return np.degrees(np.arccos(dot)).max(axis=1)
 
 
-def compare_bones(ra, rb, tol_pos, tol_deg):
+def compare_bones(ra, rb, tol_pos, tol_deg, skip=None):
     res = {"ticks": 0, "bones": 0, "bit_identical_bones": 0, "equal_bones": 0, "max_pos": 0.0, "max_deg": 0.0, "max_pal_pos": 0.0,
            "max_pal_deg": 0.0, "first": None, "over": 0, "missing": 0}
     for t in sorted(set(ra) | set(rb)):
@@ -70,11 +73,15 @@ def compare_bones(ra, rb, tol_pos, tol_deg):
                 if res["first"] is None:
                     res["first"] = {"tick": t, "actor": code, "what": "model missing or bone count differs"}
                 continue
-            a, b = ma[code].astype(np.float64), mb[code].astype(np.float64)
+            keep = np.ones(ma[code].shape[0], dtype=bool)
+            if skip and code in skip:
+                keep[[b for b in skip[code] if b < len(keep)]] = False
+            A, B = ma[code][keep], mb[code][keep]
+            a, b = A.astype(np.float64), B.astype(np.float64)
             res["bones"] += a.shape[0]
-            res["bit_identical_bones"] += int(np.all(ma[code].view("<u4") == mb[code].view("<u4"), axis=1).sum())
+            res["bit_identical_bones"] += int(np.all(A.view("<u4") == B.view("<u4"), axis=1).sum())
             # equal as numbers (+0 and -0 equal: the C matrix library and XMTRX differ only in the sign of exact zeros)
-            res["equal_bones"] += int(np.all((ma[code] == mb[code]) | (np.isnan(ma[code]) & np.isnan(mb[code])), axis=1).sum())
+            res["equal_bones"] += int(np.all((A == B) | (np.isnan(A) & np.isnan(B)), axis=1).sum())
             # world translation (matrix column 3), world position, palette translation
             ta = a[:, [3, 7, 11]]; tb = b[:, [3, 7, 11]]
             wa = a[:, 12:15]; wb = b[:, 12:15]
@@ -94,6 +101,61 @@ def compare_bones(ra, rb, tol_pos, tol_deg):
                 k = int(np.argmax(bad))
                 res["first"] = {"tick": t, "actor": code, "bone": k, "pos": float(dpos[k]), "deg": float(ddeg[k]),
                                 "pal_pos": float(dpal[k]), "pal_deg": float(dpdeg[k])}
+    return res
+
+
+def read_hist(path):
+    """hist.bin: per tick, per model: (bone, world_old xyz, world_old2 xyz) records"""
+    data = open(path, "rb").read()
+    ticks = {}
+    off = 0
+    while off < len(data):
+        magic, t = struct.unpack_from("<II", data, off)
+        off += 8
+        models = {}
+        while True:
+            code, n = struct.unpack_from("<II", data, off)
+            off += 8
+            if code == 0x444E4524:
+                break
+            rec = np.frombuffer(data, dtype="<u4", count=7 * n, offset=off).reshape(n, 7)
+            off += 28 * n
+            models[code] = rec
+        ticks[t] = models
+    return ticks
+
+
+def compare_hist(ha, hb):
+    """the native history bones' world_old / world_old2 against the reference's (lane eng-svc2). A native value that is
+    NaN is a bone whose history was not known yet (the check build; it must never be read: the traces show it)."""
+    res = {"compared": 0, "bit_identical": 0, "equal": 0, "unknown": 0, "max": 0.0, "first": None}
+    for t in sorted(hb):
+        if t not in ha:
+            continue
+        for code, rb in hb[t].items():
+            ra = ha[t].get(code)
+            if ra is None:
+                continue
+            by_bone = {int(r[0]): r for r in ra}
+            for row in rb:
+                b = int(row[0])
+                if b not in by_bone:
+                    continue
+                ref = by_bone[b]
+                va = ref[1:].view("<f4"); vb = row[1:].view("<f4")
+                res["compared"] += 1
+                if np.isnan(vb).any() or np.isnan(va).any():
+                    res["unknown"] += 1
+                    continue
+                if np.all(ref[1:] == row[1:]):
+                    res["bit_identical"] += 1
+                d = float(np.abs(va.astype(np.float64) - vb.astype(np.float64)).max())
+                if d == 0.0:
+                    res["equal"] += 1
+                else:
+                    res["max"] = max(res["max"], d)
+                    if res["first"] is None:
+                        res["first"] = {"tick": t, "actor": code, "bone": b, "diff": d}
     return res
 
 
@@ -157,10 +219,22 @@ def main():
         if k in sys.argv:
             opt[k] = float(sys.argv[sys.argv.index(k) + 1])
     js = sys.argv[sys.argv.index("--json") + 1] if "--json" in sys.argv else None
-    bones = compare_bones(read_pal(a + "/pal.bin"), read_pal(b + "/pal.bin"), opt["--pos"], opt["--deg"])
+    skip = None
+    if "--skip-cloth" in sys.argv:
+        skip = {}
+        for line in open(b + "/svc.txt"):
+            if line.startswith("chain "):
+                w = line.split()
+                skip.setdefault(int(w[3]), []).extend(int(x) for x in w[5:])
+    bones = compare_bones(read_pal(a + "/pal.bin"), read_pal(b + "/pal.bin"), opt["--pos"], opt["--deg"], skip)
     col = compare_col(a + "/col.txt", b + "/col.txt", opt["--col"])
-    ok = bones["over"] == 0 and bones["missing"] == 0 and col["over"] == 0
-    out = {"verdict": "PASS" if ok else "FAIL", "tolerances": opt, "bones": bones, "collision": col}
+    hist = None
+    try:
+        hist = compare_hist(read_hist(a + "/hist.bin"), read_hist(b + "/hist.bin"))
+    except (OSError, struct.error):
+        pass
+    ok = bones["over"] == 0 and bones["missing"] == 0 and col["over"] == 0 and (hist is None or hist["max"] <= opt["--pos"])
+    out = {"verdict": "PASS" if ok else "FAIL", "tolerances": opt, "bones": bones, "collision": col, "history": hist}
     if js:
         json.dump(out, open(js, "w"), indent=1)
     print("%s  bones: %d ticks, %d bone-ticks, %d bit-identical, %d equal, max pos %.6g u, max axis %.6g deg, palette %.6g u / %.6g deg, over %d%s"
@@ -170,6 +244,10 @@ def main():
     print("      collision: %d/%d queries, %d identical, max point %.6g u, over %d, kinds %s%s"
           % (col["compared"], col["queries_ref"], col["identical"], col["max_point"], col["over"], json.dumps(col["kinds"]),
              ", first %s" % json.dumps(col["first"]) if col["first"] else ""))
+    if hist:
+        print("      history: %d bone-ticks compared, %d bit-identical, %d equal, %d not known yet (NaN), max %.6g u%s"
+              % (hist["compared"], hist["bit_identical"], hist["equal"], hist["unknown"], hist["max"],
+                 ", first %s" % json.dumps(hist["first"]) if hist["first"] else ""))
     sys.exit(0 if ok else 1)
 
 

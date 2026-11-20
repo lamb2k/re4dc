@@ -17,14 +17,21 @@
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
-extern "C" void* svc_pool_carve(u32 bytes);   // host: room-lifetime engine memory (the skeleton pool's sibling)
+extern "C" void* svc_pool_carve(u32 bytes);
+extern "C" void host_log(const char* fmt, ...) __attribute__((weak));   // host: room-lifetime engine memory (the skeleton pool's sibling)
 f32 GetDistance(Vec* v0, Vec* v1);
 void InterVectorXYZ(Vec* out, Vec* a, Vec* b, f32 t);
 
 extern "C" {
 ColCounters col_cnt;
 f32 col_control_floor;
+int col_control_grid;
+int col_verify;
+int col_grid_off;
 }
+// how much a polygon's box and a query's box grow before their cells are taken (units): far above the rounding of
+// the line test's arithmetic at room coordinates (a float step at 65,536 units is 0.008)
+constexpr f32 kColMargin = 1.0f;
 
 #define VALID_PTR(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
 
@@ -109,6 +116,69 @@ void fill_tree(cSatBlock* blk, cSat* sat, BakeFill* f)
     }
 }
 
+// the cells of box [lo, hi] (grown by the margin) in leaf grid g
+inline u64 cells_of(const ColGrid& g, f32 lx, f32 ly, f32 lz, f32 hx, f32 hy, f32 hz, int shift)
+{
+    int x0 = (int) __builtin_floorf((lx - kColMargin - g.x0) * g.ix), x1 = (int) __builtin_floorf((hx + kColMargin - g.x0) * g.ix);
+    int z0 = (int) __builtin_floorf((lz - kColMargin - g.z0) * g.iz), z1 = (int) __builtin_floorf((hz + kColMargin - g.z0) * g.iz);
+    int y0 = (int) __builtin_floorf((ly - kColMargin - g.y0) * g.iy), y1 = (int) __builtin_floorf((hy + kColMargin - g.y0) * g.iy);
+    x0 += shift; x1 += shift;
+    if (x0 < 0) x0 = 0;
+    if (z0 < 0) z0 = 0;
+    if (y0 < 0) y0 = 0;
+    if (x1 > COL_GRID_X - 1) x1 = COL_GRID_X - 1;
+    if (z1 > COL_GRID_Z - 1) z1 = COL_GRID_Z - 1;
+    if (y1 > COL_GRID_Y - 1) y1 = COL_GRID_Y - 1;
+    if (x0 > x1 || z0 > z1 || y0 > y1) return 0;
+    const u64 row = ((1ull << (x1 + 1)) - 1ull) & ~((1ull << x0) - 1ull);
+    u64 m = 0;
+    for (int y = y0; y <= y1; y++)
+        for (int z = z0; z <= z1; z++) m |= row << ((y * COL_GRID_Z + z) * COL_GRID_X);
+    return m;
+}
+// lane eng-svc2: each leaf's grid and the cells of its list entries (room load)
+void bake_grid(ColPiece* pc, cSat* sat)
+{
+    for (u32 k = 0; k < pc->nNode; k++) {
+        const u16 lf = pc->nodeLeaf[k];
+        if (lf == 0xFFFF) continue;
+        const ColLeaf& L = pc->leaf[lf];
+        const u32 all = L.nFloor + L.nWall;
+        ColGrid& g = pc->grid[lf];
+        f32 ylo = 1e30f, yhi = -1e30f;
+        for (u32 i = 0; i < all; i++) {
+            const AtPoly* p = &sat->poly_p[pc->idx[L.first + i]];
+            for (int v = 0; v < 3; v++) {
+                const f32 y = sat->vtx[p->v[v]].y;
+                if (y < ylo) ylo = y;
+                if (y > yhi) yhi = y;
+            }
+        }
+        g.x0 = pc->nodeMinX[k];
+        g.z0 = pc->nodeMinZ[k];
+        g.y0 = all ? ylo : 0.0f;
+        g.ix = pc->nodeSizeX[k] > 0.0f ? (f32) COL_GRID_X / pc->nodeSizeX[k] : 0.0f;
+        g.iz = pc->nodeSizeZ[k] > 0.0f ? (f32) COL_GRID_Z / pc->nodeSizeZ[k] : 0.0f;
+        g.iy = all && yhi > ylo ? (f32) COL_GRID_Y / (yhi - ylo) : 0.0f;
+        for (u32 i = 0; i < all; i++) {
+            const u16 no = pc->idx[L.first + i];
+            const ColHot& h = pc->hot[no];
+            const ColCold& c = pc->cold[no];
+            const f32 xs[3] = {h.v0[0], c.v1[0], c.v2[0]}, ys[3] = {h.v0[1], c.v1[1], c.v2[1]}, zs[3] = {h.v0[2], c.v1[2], c.v2[2]};
+            f32 lx = xs[0], hx = xs[0], ly = ys[0], hy = ys[0], lz = zs[0], hz = zs[0];
+            for (int v = 1; v < 3; v++) {
+                if (xs[v] < lx) lx = xs[v];
+                if (xs[v] > hx) hx = xs[v];
+                if (ys[v] < ly) ly = ys[v];
+                if (ys[v] > hy) hy = ys[v];
+                if (zs[v] < lz) lz = zs[v];
+                if (zs[v] > hz) hz = zs[v];
+            }
+            pc->cmask[L.first + i] = cells_of(g, lx, ly, lz, hx, hy, hz, 0);
+        }
+    }
+}
+
 ColPiece* bake(cSat* sat)
 {
     BakeCount c = {0, 0, 0};
@@ -125,6 +195,8 @@ ColPiece* bake(cSat* sat)
     const u32 oIdx = off; off = align32(off + 2 * c.idx);
     const u32 oHot = off; off = align32(off + sizeof(ColHot) * nPoly);
     const u32 oCold = off; off = align32(off + sizeof(ColCold) * nPoly);
+    const u32 oGrid = off; off = align32(off + sizeof(ColGrid) * c.leaves);
+    const u32 oMask = off; off = align32(off + 8 * c.idx);
     u8* blk = (u8*) svc_pool_carve(off);
     if (!blk) return 0;
     memset(blk, 0, off);
@@ -147,11 +219,14 @@ ColPiece* bake(cSat* sat)
     pc->idx = (u16*) (blk + oIdx);
     pc->hot = (ColHot*) (blk + oHot);
     pc->cold = (ColCold*) (blk + oCold);
+    pc->grid = (ColGrid*) (blk + oGrid);
+    pc->cmask = (u64*) (blk + oMask);
     BakeFill f = {pc, 0, 0, 0};
     fill_tree(sat->block_p, sat, &f);
     // the floor group: polygons [0, floors + slopes) of the file (cSatFile counts); the control raises them
     const u32 nFloorPolys = (u32) sat->floor_num + sat->slope_num;
     for (u32 i = 0; i < nPoly; i++) fill_tri(&pc->hot[i], &pc->cold[i], sat, (u16) i, i < nFloorPolys);
+    bake_grid(pc, sat);
     col_cnt.bakes++;
     col_cnt.tri_bytes += (sizeof(ColHot) + sizeof(ColCold)) * nPoly;
     return pc;
@@ -257,6 +332,10 @@ int line_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, int flag, int mask
     adir.y = 0.0f;
     dir.y = 0.0f;
     mid.y = 0.0f;
+    // the query's own box (lane eng-svc2: the leaf grids' cells it meets)
+    const f32 qlx = pos0->x < pos1->x ? pos0->x : pos1->x, qhx = pos0->x < pos1->x ? pos1->x : pos0->x;
+    const f32 qly = pos0->y < pos1->y ? pos0->y : pos1->y, qhy = pos0->y < pos1->y ? pos1->y : pos0->y;
+    const f32 qlz = pos0->z < pos1->z ? pos0->z : pos1->z, qhz = pos0->z < pos1->z ? pos1->z : pos0->z;
     const u32 nn = pc->nNode;
     for (u32 k = 0; k < nn;) {
         col_cnt.nodes_tested++;
@@ -275,10 +354,21 @@ int line_piece(ColPiece* pc, cSat* sat, Vec* pos0, Vec* pos1, int flag, int mask
         u32 a, b;
         group(pc->leaf[lf], flag, &a, &b);
         int r = 0;
+        const u64 q = col_grid_off ? ~0ull : cells_of(pc->grid[lf], qlx, qly, qlz, qhx, qhy, qhz, col_control_grid);
         for (u32 i = a; i < b; i++) {
             const u32 no = pc->idx[i];
             const ColHot* t = &pc->hot[no];
             const u32 bit = 1u << (no & 7);
+            if (!(pc->cmask[i] & q)) {   // its cells miss the query's: it cannot be hit
+                col_cnt.tris_skipped++;
+                // the check build tests it anyway: a hit there must be the segment's end (a segment lying exactly in
+                // the polygon's plane), which never replaces the nearest hit (its distance is the whole segment's)
+                if (col_verify && !(g_bits[no >> 3] & bit) && line_tri(t, &pc->cold[no], &h, pos0, pos1, flag, mask)) {
+                    if (h.x == pos1->x && h.y == pos1->y && h.z == pos1->z) col_cnt.filter_end++;
+                    else col_cnt.filter_miss++;
+                }
+                continue;
+            }
             if (g_bits[no >> 3] & bit) continue;
             g_bits[no >> 3] |= bit;
             col_cnt.tris_line++;

@@ -3,7 +3,8 @@
 #pragma once
 #include <stdint.h>
 
-enum { SVC_R_PARTS = 0, SVC_R_EM, SVC_R_OBJ, SVC_R_ROOM, SVC_R_CHR, SVC_R_CORE, SVC_R_HEAP, SVC_R_SVC, SVC_R_OTHER, SVC_REGIONS };
+// SVC_R_MK (lane eng-svc2): the baked motion keys, the service region from 4 MiB on (svc_io.cpp)
+enum { SVC_R_PARTS = 0, SVC_R_EM, SVC_R_OBJ, SVC_R_ROOM, SVC_R_CHR, SVC_R_CORE, SVC_R_HEAP, SVC_R_SVC, SVC_R_OTHER, SVC_R_MK, SVC_REGIONS };
 struct SvcRegion { uint32_t lo, hi, stride; };
 
 extern "C" {
