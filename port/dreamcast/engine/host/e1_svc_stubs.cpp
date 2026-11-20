@@ -38,3 +38,18 @@ void PenClothSet(cModel*, PenCloth*, f32) { e1_stub_hit("PenClothSet (cloth: no 
 void PenClothMove(cModel*, PenCloth*) { e1_stub_hit("PenClothMove (cloth: no native service)", 0); }
 void PenClothMove3(cModel*, PenCloth*) { e1_stub_hit("PenClothMove3 (cloth: no native service)", 0); }
 #endif
+
+#ifdef E2_FIGHT
+// Fight image (lane eng-e1e): the scenario's quad collision piece (sce_at.cpp sceAtSetScrAt: a wall, box or floor
+// built at run time from a 4-corner area, original atari.cpp cSatMgr::create(Vec*, Vec*, Vec*, int, int, f32) and its
+// builders createSat / createBoxSat / createFloorSat). The round-4 collision service (services/collision/col_model.cpp)
+// has no native version of it yet (no re4ref fixture reaches it) and atari.cpp is not linked: a logged stub, no piece
+// (the area's scripted wall is absent). Listed for the next services lane in lanes/eng-e1e.md.
+#include "atari.h"
+cSat* cSatMgr::create(Vec*, Vec*, Vec*, int attr, int flag, f32)
+{
+    e1_stub_hit("cSatMgr::create(quad) (scenario collision piece: no native builder yet)", flag);
+    (void) attr;
+    return 0;
+}
+#endif

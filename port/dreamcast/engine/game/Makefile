@@ -58,6 +58,10 @@ WRAP_SYMS := Rnd fRand1_1 fRand0_1 \
     _ZN7cPlNeck4moveEv _ZN7cPlBody4moveEv _ZN7cPlayer7moveEyeEv _ZN7cPlayer10shadowCtrlEv _ZN7cPlayer9seqSeCtrlEv \
     _ZN7cPlayer11visibleCtrlEv _ZN6cPlWep4moveEv _ZN7cPlayer8dmgCheckEv _ZN7cPlayer9keyConfigEv \
     _ZN7cPlayer13moveBinocularEv _ZN7cPlayer16subCharLiveCheckEv _ZN7cPlayer9debugMoveEv pl_R0_Move
+# lane eng-e1e: the route service's entry points in the services row (host/e1_wraps.cpp; fight.mk wraps them itself)
+ifneq ($(FIGHT),1)
+WRAP_SYMS += RouteCkToEm RouteCkToPos RouteCkEscEm RouteCkPosToPosDis
+endif
 WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc
 all: $(OUT)/e1.elf
 
@@ -128,31 +132,41 @@ $(OUT)/n/cloth_kernel.o: $(SVC_DIR)/cloth/cloth_kernel.c $(CLOTH_DEPS)
 	@mkdir -p $(dir $@)
 	kos-cc -O2 -std=gnu11 -Wall -ffp-contract=off -ffunction-sections -fdata-sections -I$(SHZ) -I$(SVC_DIR)/cloth \
 		-include $(ENG)/host/e1_pres_rng.h -c $< -o $@
+# SKEL_PAL_DRAW (lane eng-e1e): the palette published in the renderer's skinning layout (quantum and sphere scale).
 $(OUT)/n/skel.o: $(SVC_DIR)/skeleton/skel.cpp $(SVC_DIR)/skeleton/skel.h $(SVC_DIR)/skeleton/skel_xm.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
-	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -DSKEL_PAL_DRAW=1 -c $< -o $@
 $(OUT)/n/col.o: $(SVC_DIR)/collision/col.cpp $(SVC_DIR)/collision/col.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
 $(OUT)/n/skel_xm.o: $(SVC_DIR)/skeleton/skel_xm.c $(SVC_DIR)/skeleton/skel_xm.h
 	@mkdir -p $(dir $@)
 	kos-cc -O2 -std=gnu11 -Wall -ffp-contract=off -ffunction-sections -fdata-sections -I$(SHZ) -c $< -o $@
-# The original units the native services replace in part: every replaced function made weak (the lists of
-# hostref/svc/svc.mk, with the SH symbol prefix), so each call reaches the native body and --gc-sections drops the
-# original's. ik.cpp is not linked (hosted.mk).
-WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
-               MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
-               MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
-WEAK_model := _ZN6cModel11getPartsPtrEi _ZN6cModel12partsMatCalcEv _ZN6cModel14partsWorldCalcEv _ZN6cModel8matBlendEf \
-              _ZN6cModel9matUpdateEv _ZN6cModel12updateOldPosEv _ZN6cModel6setPosEP3Vec _ZN6cModel14partsFixMemoryEi \
-              _ZN6cModel14partsFixAdjustEv _ZN6cModel9setParentEPS_P3VecS2_ _ZN6cModel9setParentEPS_iP3VecS2_ \
-              _ZN6cModel14setPartsOffsetEPv _ZN6cModel16releasePartsListEi GetPartsAddr
-WEAK_atari := _ZN7cSatMgr9hitCheck2EP3VecS1_S1_Pmii _ZN7cSatMgr8hitCheckEP3VecS1_S1_S1_ii _ZN7cSatMgr12polySphereCkEP3VecS1_fiS1_i \
-              _Z11at_pos_calcP6cModelP3Vec
-$(OUT)/h/game/motion.o $(OUT)/h/game/model.o $(OUT)/h/game/atari.o: $(OUT)/h/game/%.o: $(ROOT)/src/game/%.cpp $(ENG)/host/e1_prelude.h
+# ---- Round-4 native services (lane eng-svc4, wired by lane eng-e1e; docs/engine/SERVICES.md sections 23-31) ----
+# Actor volumes, collision response and managers, routes, the root-motion follower, model records and pools, the
+# camera (frustum, tracks, orientation) and input/rumble. Compiled with the hosted units' flags (they port the original
+# arithmetic in its order) and linked BEFORE the hosted objects, so a header inline both define is taken from them.
+# The original units they retire are not linked at all (hosted.mk): model, motion, cMotBase, atari, atariInfo, at_mod,
+# at_sub, pad, route_ck, view, camera, cam_motion. The split behaviour units cam_ctrl, cam_sys and cam_extra stay
+# hosted with every global symbol the native objects define made weak in them (SPLIT_UNITS below), so each call
+# reaches the native body and --gc-sections drops the original's.
+SVC4_SRCS := volumes/volumes collision/col_model routes/routes motion/follow model/model_svc camera/camera_svc input/input
+SVC4_OBJS := $(addprefix $(OUT)/n/,$(addsuffix .o,$(notdir $(SVC4_SRCS))))
+SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_DIR)/$(d))
+NATIVE_INC += $(SVC4_INC)
+define SVC4_RULE
+$(OUT)/n/$(notdir $(1)).o: $(SVC_DIR)/$(1).cpp $(wildcard $(SVC_DIR)/$(dir $(1))*.h) $(SVC_DIR)/model/pool.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $$(dir $$@)
+	kos-c++ $$(ORIG_FLAGS) $$(ORIG_INC) $$(NATIVE_INC) -c $$< -o $$@
+endef
+$(foreach s,$(SVC4_SRCS),$(eval $(call SVC4_RULE,$(s))))
+$(OUT)/n/svc4_syms.txt: $(SVC4_OBJS)
+	sh-elf-nm -g --defined-only $(SVC4_OBJS) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
+SPLIT_UNITS := game/cam_ctrl game/cam_sys game/cam_extra
+$(addprefix $(OUT)/h/,$(addsuffix .o,$(SPLIT_UNITS))): $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h $(OUT)/n/svc4_syms.txt
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.orig.o
-	sh-elf-objcopy $(foreach s,$(WEAK_$*),--weaken-symbol=_$(s)) $@.orig.o $@
+	sh-elf-objcopy $$(cat $(OUT)/n/svc4_syms.txt) $(if $(PRESENT_$*),$(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present)) $@.orig.o $@
 	rm -f $@.orig.o
 $(OUT)/e/%.o: $(ENG)/%.c $(ENG_HDRS)
 	@mkdir -p $(dir $@)
@@ -178,6 +192,6 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
-$(OUT)/e1.elf: $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
+$(OUT)/e1.elf: $(SVC4_OBJS) $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

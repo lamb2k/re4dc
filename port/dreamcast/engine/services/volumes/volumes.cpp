@@ -32,6 +32,7 @@ int vol_control;
 void yarareInit0(YARARE_INFO* y, f32 x, f32 yy, f32 z, f32 w, f32 h, s16 no, u16 flags);
 void YarareInit(cEm* em, f32 x, f32 y, f32 z, f32 w, f32 h, s16 no, u16 flags);
 void YarareAdd(cEm* em, YARARE_INFO* box, f32 x, f32 y, f32 z, f32 w, f32 h, s16 no, u16 flags);
+void YarareInitCube(cEm* em, f32 x, f32 y, f32 z, f32 w, f32 h, f32 extent, s16 no, u16 flags);
 // em_sub.cpp (the enemy unit): the line against an oriented box (the box bodies' line test)
 int emLineCubeCrossCk(Vec* a, Vec* b, Mtx m, f32 sx, f32 sy, f32 sz, Vec* ofs, Vec* hit);
 }
@@ -183,6 +184,15 @@ void yarareInit0(YARARE_INFO* y, f32 x, f32 yy, f32 z, f32 w, f32 h, s16 no, u16
 void YarareInit(cEm* em, f32 x, f32 y, f32 z, f32 w, f32 h, s16 no, u16 flags)
 {
     yarareInit0(&em->hitInfo, x, y, z, w, h, no, flags);
+}
+
+// lane eng-e1e: the box form of the primary hit box (flags bit 3, depth = extent), which the fight image's scenario code
+// sets on a shoot-down item (sce_at.cpp SceAtSetShootDownItem); the original's three stores after yarareInit0.
+void YarareInitCube(cEm* em, f32 x, f32 y, f32 z, f32 w, f32 h, f32 extent, s16 no, u16 flags)
+{
+    yarareInit0(&em->hitInfo, x, y, z, w, h, no, flags);
+    em->hitInfo.depth = extent;
+    em->hitInfo.flags |= 8;
 }
 
 void YarareAdd(cEm* em, YARARE_INFO* box, f32 x, f32 y, f32 z, f32 w, f32 h, s16 no, u16 flags)

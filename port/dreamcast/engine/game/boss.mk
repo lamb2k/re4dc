@@ -3,7 +3,7 @@
 # and the engine pieces under engine/boss/ (route, room set-up, enemy table move, scenario tasks, effect service).
 #   make -C port/dreamcast/engine/game BOSS=1 OUT=<dir>   -> <dir>/e1.elf
 .DEFAULT_GOAL := all
-BOSS_SRCS := em2b/em2b st1/r119 game/em_sub game/em_set game/dmg game/em_dm_val game/emtree game/emtorch game/obj20 game/route_ck game/game
+BOSS_SRCS := em2b/em2b st1/r119 game/em_sub game/em_set game/dmg game/em_dm_val game/emtree game/emtorch game/obj20 game/game
 HOSTED_SRCS += $(BOSS_SRCS)
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
 ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(wildcard $(ENG)/boss/*.cpp)

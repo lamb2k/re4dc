@@ -29,6 +29,7 @@ static int open_ok, stills;
    (s/stills.py reads the frame buffer from Flycast's memory; m1_state 2 request, 3 acknowledge, 4 frame buffer). */
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent);
+void e1_light_tables(const NativeScene* s);
 #ifdef E2_FIGHT
 /* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
 void e2_draw_open(void);
@@ -53,6 +54,7 @@ int e1_draw_open_c(const char* pack)
     m1_state[5] = 2;
     if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
     native_update(&scene, 0);
+    e1_light_tables(&scene);   /* lane eng-e1e: each TEV group's scale, once a pack (services/actor_e1.inc) */
     /* Ashley's body is catalogue 6 of the hill pack only (other packs hold props there) */
     partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
     printf("E1 draw: pack %s, %u catalogue models, partner %s\n", pack, scene.models.n, partner_model ? "drawn from catalogue 6" : "bone marks");
@@ -123,10 +125,14 @@ static void list_keepalive(int list)
     }
 }
 
-/* camera: 26 words (view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane), as the pack's
-   camera stream; hud: life, life max, weapon, stance; partner: the partner's skeleton view or 0, partner_record her
-   model record; world: draw the pack's whole-room bake (the scene's own room since lane eng-e1d) */
-void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, const E1SkelView* leon_skel, unsigned identity,
+/* The camera stream (26 words: view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane) and the
+   HUD stream's first four words (life, life max, weapon, stance) are written in place by the engine's tick steps
+   (services/draw.cpp e1_camera_draw_tick / e1_hud_draw_tick, lane eng-e1e): the picture reads them as they are.
+   partner: the partner's skeleton view or 0, partner_record her model record; world: draw the pack's whole-room bake
+   (the scene's own room since lane eng-e1d) */
+float* e1_draw_cam_stream(void) { return (float*) scene.state[0]; }
+uint32_t* e1_draw_hud_stream(void) { return scene.words[5] >= 4 ? (uint32_t*) scene.state[5] : 0; }
+void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned identity,
                        uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world, const void* partner_record)
 {
     if (!open_ok) { *wait_us = *draw_us = 0; return; }
@@ -136,8 +142,6 @@ void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leo
     pvr_wait_ready();
     e1_stamp_c(5);
     uint64_t t1 = timer_us_gettime64();
-    memcpy(scene.state[0], camera, 26 * 4);
-    if (scene.words[5] >= 4) memcpy(scene.state[5], hud, 16);
     const float* cam = (const float*) scene.state[0];
     native_vis_select(&scene.world, cam);   /* also the frame's view state the actor pass and the HUD read */
     native_prepare_world(&scene.world, cam, scene.assets.header.n);

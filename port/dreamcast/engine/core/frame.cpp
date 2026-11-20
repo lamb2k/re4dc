@@ -146,6 +146,7 @@ void e1_pace_end(E1Timing& tm)
 void e1_report()
 {
     e1_trace_flush();
+    e1_log_flush();   // lane eng-e1e: the log lines written during the ticks (core/globals.cpp)
     e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
     e1_stub_report();
     e1_prof_report();

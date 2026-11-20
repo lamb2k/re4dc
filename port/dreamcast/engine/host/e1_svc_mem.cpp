@@ -13,6 +13,15 @@
 #include "e1_core.h"
 #include "skel.h"
 #include "col.h"
+#include "routes.h"
+#include "input.h"
+#include "volumes.h"
+#include "follow.h"
+#include "model_svc.h"
+#include "camera_svc.h"
+#include "col_model.h"
+#include "global.h"
+#include "main.h"
 
 static const uint32_t kPoolBytes = 256 * 1024;
 static uint8_t* carve_next;
@@ -44,6 +53,20 @@ extern "C" int re4dc_motion_acquire(const void*, unsigned**) { return 0; }
 extern "C" void re4dc_motion_release(int) {}
 
 void e1_prnd_seed(unsigned short s);
+// lane eng-e1e: the round-4 services' control switches (services/routes, services/input) and the rumble exercise
+extern "C" int route_control;
+extern "C" int input_control;
+static int rumble_exercise;
+extern "C" uint32_t e1_light_checks, e1_light_builds;   // services/draw.cpp
+extern "C" unsigned e1_light_miss;   // services/actor_e1.inc (renderer)
+extern "C" void VibSet(u32 time, u32 level, u16 wait, u16 type);
+void e1_svc_tick_begin(unsigned t)
+{
+    if (!rumble_exercise || t < 20 || (t - 20) % 40 != 0) return;
+    pSys->flags |= 0x08000000;
+    VibSet(30, 0xC0, 0, 0x8001);
+    VibSet(12, 0x40, 4, 0x0002);
+}
 // ---- the cloth's shape statistics (lane eng-e1d; boot option CLOTHSTAT, diagnostic, outside the timed rows) ----
 // The motion check of SERVICES.md section 12 on the console image: per chain, the mean over its links and the run of
 // the horizontal distance of each link bone from the model's bone 0 (radius), and per link its mean offset from bone 0
@@ -105,6 +128,18 @@ void e1_svc_boot()
     f = fs_open("/cd/CLOTHSTAT", O_RDONLY);
     cloth_stat = f >= 0;
     if (f >= 0) { fs_close(f); e1_log("E1 CLOTHSTAT: the cloth chains' shape statistics\n"); }
+    // lane eng-e1e: the round-4 services' controls in the image (each must move the play: the image runs the native
+    // service, not an original unit) and the rumble exercise:
+    //   ROUTENEAR  routes: the nearest-point search returns the second reachable point (re4ref control routenear)
+    //   RUMBLERND  input: the random rumble strength from the behaviour generator Rnd (the audit's fault; control)
+    //   RUMBLEX    every 40 ticks from tick 20 a 30-tick random-strength rumble and a 12-tick constant one (rumble
+    //              switched on), as eng-svc4's re4ref exercise: the strength draws come from the presentation generator
+    f = fs_open("/cd/ROUTENEAR", O_RDONLY);
+    if (f >= 0) { fs_close(f); route_control = 1; e1_log("E1 ROUTENEAR: routes control (second reachable point)\n"); }
+    f = fs_open("/cd/RUMBLERND", O_RDONLY);
+    if (f >= 0) { fs_close(f); input_control = 2; e1_log("E1 RUMBLERND: rumble strength from Rnd (control)\n"); }
+    f = fs_open("/cd/RUMBLEX", O_RDONLY);
+    if (f >= 0) { fs_close(f); rumble_exercise = 1; e1_log("E1 RUMBLEX: random-strength rumble exercise\n"); }
 #ifndef E2_BOSS
     // CLOTHCTL: the cloth statistics' control (must fail s/clothcmp.py): the native cloth with gravity off
     f = fs_open("/cd/CLOTHCTL", O_RDONLY);
@@ -143,4 +178,19 @@ void e1_svc_report()
     e1_log("E1 COL bakes %lu late %lu line %lu sphere %lu nodes %lu tris_line %lu tris_sphere %lu\n", (unsigned long) col_cnt.bakes,
            (unsigned long) col_cnt.late_bakes, (unsigned long) col_cnt.line_queries, (unsigned long) col_cnt.sphere_queries,
            (unsigned long) col_cnt.nodes_tested, (unsigned long) col_cnt.tris_line, (unsigned long) col_cnt.tris_sphere);
+    // lane eng-e1e: the round-4 native services' counters (they run in this image) and the light service's
+    e1_log("E1 SVC4 routes near %lu cached %lu lines %lu steps %lu direct %lu | input reads %lu vib %lu random %lu queued %lu | "
+           "volumes at %lu pairs %lu pushes %lu lines %lu hits %lu | follow sets %lu moves %lu | model inits %lu infos %lu parts %lu | "
+           "camera frames %lu frustums %lu keys %lu | colm checks %lu slides %lu floors %lu pieces %lu\n",
+           (unsigned long) route_cnt.near_calls, (unsigned long) route_cnt.near_cached, (unsigned long) route_cnt.near_lines,
+           (unsigned long) route_cnt.steps, (unsigned long) route_cnt.steps_direct, (unsigned long) input_cnt.reads,
+           (unsigned long) input_cnt.vib_ticks, (unsigned long) input_cnt.vib_random, (unsigned long) input_cnt.vib_queued,
+           (unsigned long) vol_cnt.at_checks, (unsigned long) vol_cnt.pairs, (unsigned long) vol_cnt.pushes,
+           (unsigned long) vol_cnt.line_tests, (unsigned long) vol_cnt.line_hits, (unsigned long) follow_cnt.sets,
+           (unsigned long) follow_cnt.moves, (unsigned long) model_cnt.inits, (unsigned long) model_cnt.infos,
+           (unsigned long) model_cnt.parts_made, (unsigned long) cam_cnt.frames, (unsigned long) cam_cnt.frustums,
+           (unsigned long) cam_cnt.keys, (unsigned long) colm_cnt.checks, (unsigned long) colm_cnt.slides,
+           (unsigned long) colm_cnt.floors, (unsigned long) colm_cnt.pieces);
+    e1_log("E1 LIGHTSVC checks %lu builds %lu draw misses %lu\n", (unsigned long) e1_light_checks, (unsigned long) e1_light_builds,
+           (unsigned long) e1_light_miss);
 }
