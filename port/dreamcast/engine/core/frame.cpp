@@ -8,6 +8,7 @@
 #include "view.h"
 #include "e1_engine.h"
 #include "e1_core.h"
+#include "skel.h"
 #include "e1_kos.h"
 #include <stdio.h>
 #include <string.h>
@@ -66,8 +67,10 @@ static void model_state(Fnv& discrete, Fnv& coords, Fnv& parts, cModel* m)
     coord_block(coords, m);
     coords.words(&m->speed, sizeof(Vec) * 2);
     coords.add(m->Motion.Mot_frame);
-    unsigned n = 0;
-    for (cModel* p = m->pParts; p && n < 256; p = (cModel*) ((cParts*) p)->pList, ++n) coord_block(parts, p);
+    // the skeleton's output: the native table's world records and local matrices (lane eng-e1c)
+    const SkelTable* t = skel_table_of(m);
+    unsigned n = t ? t->n : 0;
+    for (unsigned k = 0; k < n; k++) { parts.words(&t->world[k], 64); parts.words(&t->lmat[k], 48); }
     parts.word(n);
 }
 static uint32_t bits(float f) { uint32_t u; memcpy(&u, &f, 4); return u; }
@@ -146,6 +149,7 @@ void e1_report()
     e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
     e1_stub_report();
     e1_prof_report();
+    e1_svc_report();
     for (int i = 0; i < 13; i++)
         if (e1_arena.heap_hi[i])
             e1_log("E1 ARENA heap %d %08lx-%08lx used %lu peak %lu fails %lu\n", i, (unsigned long) e1_arena.heap_lo[i],
@@ -155,11 +159,13 @@ void e1_report()
     unsigned n = e1_state[2] < E1_TICKS ? e1_state[2] : E1_TICKS;
     for (unsigned i = 0; i < n; i++) {
         const E1Timing& t = e1_timing[i];
-        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu chars %lu\n", i + 1,
+        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu chars %lu smot %lu scloth %lu sparts %lu scol %lu\n", i + 1,
                (unsigned long) t.input_us, (unsigned long) t.tick_us, (unsigned long) t.services_us, (unsigned long) t.trace_us,
                (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields,
                (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us, (unsigned long) t.pvr_us,
-               (unsigned long) t.chars_us);
+               (unsigned long) t.chars_us,
+               (unsigned long) t.svc_group_us[E1_SVC_MOTION], (unsigned long) t.svc_group_us[E1_SVC_CLOTH],
+               (unsigned long) t.svc_group_us[E1_SVC_PARTS], (unsigned long) t.svc_group_us[E1_SVC_COLLISION]);
     }
     e1_log("E1 END\n");
 }
