@@ -1,0 +1,1637 @@
+diff -ruN tree0/src/em10/em10.cpp tree/src/em10/em10.cpp
+--- tree0/src/em10/em10.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/em10/em10.cpp	2026-11-20 00:24:20.095329245 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // em10/em10.cpp: the Ganado enemy library (D:/Bio4/Prog/em10.cpp), the same object in the 16 modules
+ // em10..em17, em19..em1f, em20 (config/G4BE08/modules.py). cEm10 and its routines, the per-weapon
+ // damage reactions, the route / attack / find checks and the player-side event routines (plem10*).
+@@ -2191,7 +2192,7 @@
+             } else {
+                 EmDmBloodSet2(em, 0x10, 0xC, 0, 0, 0);
+             }
+-            if ((Rnd() & 3) == 0) {
++            if ((re4ref_rnd(0x20) & 3) == 0) {
+                 if (EmGetDmPos(em, &pos, &dir)) {
+                     EstSet(0, -1, &pos, 0, 0x10, 0xD, 0, 0, 0, 0);
+                 }
+@@ -2433,7 +2434,7 @@
+             } else {
+                 EmDmBloodSet2(em, 0x10, 0xC, 0, 0, 0);
+             }
+-            if ((Rnd() & 3) == 0) {
++            if ((re4ref_rnd(0x20) & 3) == 0) {
+                 if (EmGetDmPos(em, &pos, &dir)) {
+                     EstSet(0, -1, &pos, 0, 0x10, 0xD, 0, 0, 0, 0);
+                 }
+@@ -18090,8 +18091,8 @@
+         idx = 2;
+         break;
+     }
+-    w->Seid_voice = Ctrl11StopAndSetSe(w->pCtrlSe, em, Rnd() % 20 + 20, no, idx);
+-    w->Breath_se_wait = Rnd() % 120 + 120;
++    w->Seid_voice = Ctrl11StopAndSetSe(w->pCtrlSe, em, re4ref_rnd(0x10) % 20 + 20, no, idx);
++    w->Breath_se_wait = re4ref_rnd(0x10) % 120 + 120;
+ }
+ 
+ // Voice `no` on ctrl11 bank `a` without stopping the current voice (only while none plays).
+@@ -18102,8 +18103,8 @@
+     SndStop(w->Seid_voice, 0);
+     SndStop(w->Seid_breath, 0);
+     if (!(w->flags & 0x80)) {
+-        w->Seid_voice = Ctrl11SetSe2I(w->pCtrlSe, em, Rnd() % 20 + 20, no, 6, a);
+-        w->Breath_se_wait = Rnd() % 120 + 120;
++        w->Seid_voice = Ctrl11SetSe2I(w->pCtrlSe, em, re4ref_rnd(0x10) % 20 + 20, no, 6, a);
++        w->Breath_se_wait = re4ref_rnd(0x10) % 120 + 120;
+     }
+ }
+ 
+@@ -18115,9 +18116,9 @@
+     if (w->Breath_se_wait) {
+         w->Breath_se_wait--;
+     } else {
+-        w->Breath_se_wait = Rnd() % 120 + 120;
++        w->Breath_se_wait = re4ref_rnd(0x10) % 120 + 120;
+         if (!(w->flags & 0x80)) {
+-            w->Seid_breath = Ctrl11SetSe(w->pCtrlSe, em, Rnd() % 20 + 20, w->Se_tbl[7], 6);
++            w->Seid_breath = Ctrl11SetSe(w->pCtrlSe, em, re4ref_rnd(0x10) % 20 + 20, w->Se_tbl[7], 6);
+         }
+     }
+ }
+@@ -18142,7 +18143,7 @@
+             w->Csaw_fake_timer--;
+             return;
+         }
+-        w->Csaw_fake_timer = (u8) (Rnd() % 150) + 150;
++        w->Csaw_fake_timer = (u8) (re4ref_rnd(0x10) % 150) + 150;
+         w->Csaw_sign_wait = 150;
+         w->Seid_csaw = SndCall(6, 0x4B, &em->pos, 0, 0, em);
+     } else {
+@@ -18152,7 +18153,7 @@
+         SndStop(w->Seid_csaw, 0);
+         w->Seid_csaw = SndCall(6, 0x3E, &em->pos, 0, 0, em);
+         w->Csaw_sign_wait = 150;
+-        w->Csaw_fake_timer = (u8) (Rnd() % 150) + 150;
++        w->Csaw_fake_timer = (u8) (re4ref_rnd(0x10) % 150) + 150;
+     }
+ }
+ 
+@@ -22300,9 +22301,9 @@
+     if (shake) {
+         PosToPos(&c->param.at, &v, &w->Cam.param.at, rate);
+         PosToPos(&c->param.pos, &w->Campos, &w->Cam.param.pos, rate);
+-        v.x = fRand1_1() * 10.0f;
+-        v.y = fRand1_1() * 10.0f;
+-        v.z = fRand1_1() * 10.0f;
++        v.x = re4ref_f11(0x8) * 10.0f;
++        v.y = re4ref_f11(0x8) * 10.0f;
++        v.z = re4ref_f11(0x8) * 10.0f;
+         PSVECAdd(&w->Cam.param.pos, &v, &w->Cam.param.pos);
+         PSVECAdd(&w->Cam.param.at, &v, &w->Cam.param.at);
+     } else {
+@@ -22355,7 +22356,7 @@
+     f32 h;
+     f32 len;
+ 
+-    if (Rnd() & 1) {
++    if (re4ref_rnd(0x4000) & 1) {
+         pos = em10_campos2_r;
+     } else {
+         pos = em10_campos2_l;
+@@ -22523,9 +22524,9 @@
+     if (shake) {
+         PosToPos(&c->param.at, &b, &w->Cam.param.at, 1.0f);
+         PosToPos(&c->param.pos, &a, &w->Cam.param.pos, 1.0f);
+-        a.x = fRand1_1() * 10.0f;
+-        a.y = fRand1_1() * 10.0f;
+-        a.z = fRand1_1() * 10.0f;
++        a.x = re4ref_f11(0x8) * 10.0f;
++        a.y = re4ref_f11(0x8) * 10.0f;
++        a.z = re4ref_f11(0x8) * 10.0f;
+         PSVECAdd(&w->Cam.param.pos, &a, &w->Cam.param.pos);
+         PSVECAdd(&w->Cam.param.at, &a, &w->Cam.param.at);
+     } else {
+@@ -26473,8 +26474,8 @@
+         if (em->type != 10 && em->type != 13 && (w->pParasite || w->pCore)) {
+             SndStop(w->Seid_voice, 0);
+             SndStop(w->Seid_breath, 0);
+-            w->Seid_voice = Ctrl11SetSe2(w->pCtrlSe, em, Rnd() % 20 + 20, 0x89, 6, 8);
+-            w->Breath_se_wait = Rnd() % 120 + 120;
++            w->Seid_voice = Ctrl11SetSe2(w->pCtrlSe, em, re4ref_rnd(0x10) % 20 + 20, 0x89, 6, 8);
++            w->Breath_se_wait = re4ref_rnd(0x10) % 120 + 120;
+         }
+     } else if (!(w->flags & 0x80)) {
+         em10CallVoiceSeI(em, a);
+@@ -27601,8 +27602,8 @@
+         }
+         return;
+     }
+-    w->Seid_voice = Ctrl11SetSe2(w->pCtrlSe, em, Rnd() % 20 + 20, 0x89, 6, 8);
+-    w->Breath_se_wait = Rnd() % 120 + 120;
++    w->Seid_voice = Ctrl11SetSe2(w->pCtrlSe, em, re4ref_rnd(0x2000) % 20 + 20, 0x89, 6, 8);
++    w->Breath_se_wait = re4ref_rnd(0x2000) % 120 + 120;
+     if (w->Ganado == 1) {
+         EstSet(0, -1, &w->pCore->getPartsPtr(9)->world, 0, 0x10, 0x80, 0, 0, a, (void*) a);
+     } else {
+diff -ruN tree0/src/game/Espgen42.cpp tree/src/game/Espgen42.cpp
+--- tree0/src/game/Espgen42.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/Espgen42.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/Espgen42.cpp: effect controller 42, the room water surface (see the class note below):
+ // a height field simulated every frame, lit and drawn with a bump-mapped display list, with
+ // the AddWaterPower / GetWaterHeight / GetWaterCrossPos entry points the rest of the game uses
+@@ -1006,7 +1007,7 @@
+     (void) fy;
+     for (int gy = 0; gy < p->ny + 1; gy++) {
+         for (int gx = 0; gx < p->nx + 1; gx++) {
+-            (void) fRand1_1();   // the grid init's shared-RNG draws, same count and order
++            (void) re4ref_f11(0x1);   // the grid init's shared-RNG draws, same count and order
+         }
+     }
+     return w;
+@@ -1130,7 +1131,7 @@
+         fx = 0.0f;
+         for (jj = 0; jj < p->nx + 1; jj++) {
+             p->pos[idx].x = fx - (f32) (int) (p->nx / 2);
+-            p->pos[idx].y = fRand1_1() * 0.2f;
++            p->pos[idx].y = re4ref_f11(0x1) * 0.2f;
+             p->pos[idx].z = fy - (f32) (int) (p->ny / 2);
+             p->nrm[idx].x = 0.0f;
+             p->nrm[idx].y = 1.0f;
+diff -ruN tree0/src/game/Espgen43.cpp tree/src/game/Espgen43.cpp
+--- tree0/src/game/Espgen43.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/Espgen43.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/Espgen43.cpp: effect controller 43, a deformable sand / mud surface. An nx x ny height
+ // grid (Vec per point) rendered as lit triangle strips through a display list; AddSandPower
+ // dents the surface at a point (footprints, impacts) with three widening rings, GetSandHeight
+@@ -520,7 +521,7 @@
+             idx = y * (p->Width + 1);
+             for (x = 0; x < p->Width + 1; x++) {
+                 p->pHeightBuf[idx].x = fx - (f32) (p->Width / 2);
+-                p->pHeightBuf[idx].y = fRand1_1() * 0.15f;
++                p->pHeightBuf[idx].y = re4ref_f11(0x1) * 0.15f;
+                 p->pHeightBuf[idx].z = fy - (f32) (p->ny / 2);
+                 p->pNorBuf[idx].x = 0.0f;
+                 p->pNorBuf[idx].y = 1.0f;
+diff -ruN tree0/src/game/cam_extra.cpp tree/src/game/cam_extra.cpp
+--- tree0/src/game/cam_extra.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/cam_extra.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/cam_extra.cpp: the special cCamera implementations the camera controller switches to:
+ // CameraAttachedToMotion (a camera track inside a model's motion), CameraScope (rifle scope
+ // with zoom, pitch and reticle ids), CameraBinocular (with its HUD ids), CameraPushObject,
+@@ -455,9 +456,9 @@
+     {
+         u8 c = sct--; // the old value in a byte local: `clrlwi r0,r9,24` + `addi r9,r9,255`
+         if (c == 0) {
+-        x_yure_spd = yure_spd * (fRand1_1() * 0.5f + 1.0f);
+-        y_yure_spd = yure_spd * (fRand1_1() * 0.5f + 1.0f);
+-        rdir0 = fRand0_1() * rnd_gain2;
++        x_yure_spd = yure_spd * (re4ref_f11(0x8) * 0.5f + 1.0f);
++        y_yure_spd = yure_spd * (re4ref_f11(0x8) * 0.5f + 1.0f);
++        rdir0 = re4ref_f01(0x8) * rnd_gain2;
+         sct = 0x96;
+     }
+     }
+@@ -1098,7 +1099,7 @@
+     Vec from;
+     Vec to;
+ 
+-    if (Rnd() & 1) {
++    if (re4ref_rnd(0x8) & 1) {
+         parts = pPL->getPartsPtr(1);
+     } else {
+         parts = pPL->getPartsPtr(2);
+diff -ruN tree0/src/game/em_sub.cpp tree/src/game/em_sub.cpp
+--- tree0/src/game/em_sub.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/em_sub.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/em_sub.cpp: the shared enemy helper library used by the enemy modules: damage position and
+ // blood effects, hit box (yarare) checks against boxes, lines and spheres, the weapon target
+ // lists, life and damage entry points for the player and the partner, the catch (grab) motion
+@@ -305,17 +306,17 @@
+     switch (em->dmg.m_Wep) {
+     default:
+         EstSet(0, -1, &pos, &dir, 0, 1, 0, 0, 0, 0);
+-        p.x = fRand1_1() * 200.0f + pos.x;
+-        p.y = fRand0_1() * 200.0f + (pos.y + 200.0f);
+-        p.z = fRand1_1() * 200.0f + pos.z;
++        p.x = re4ref_f11(0x1000) * 200.0f + pos.x;
++        p.y = re4ref_f01(0x1000) * 200.0f + (pos.y + 200.0f);
++        p.z = re4ref_f11(0x1000) * 200.0f + pos.z;
+         EstSet(0, -1, &p, &dir, 0, 2, 0, 0, 0, 0);
+-        p.x = fRand1_1() * 250.0f + pos.x;
+-        p.y = fRand0_1() * 150.0f + (pos.y - 150.0f);
+-        p.z = fRand1_1() * 150.0f + pos.z;
++        p.x = re4ref_f11(0x1000) * 250.0f + pos.x;
++        p.y = re4ref_f01(0x1000) * 150.0f + (pos.y - 150.0f);
++        p.z = re4ref_f11(0x1000) * 150.0f + pos.z;
+         EstSet(0, -1, &p, &dir, 0, 2, 0, 0, 0, 0);
+-        p.x = fRand1_1() * 150.0f + pos.x;
+-        p.y = fRand0_1() * 150.0f + (pos.y - 150.0f);
+-        p.z = fRand1_1() * 250.0f + pos.z;
++        p.x = re4ref_f11(0x1000) * 150.0f + pos.x;
++        p.y = re4ref_f01(0x1000) * 150.0f + (pos.y - 150.0f);
++        p.z = re4ref_f11(0x1000) * 250.0f + pos.z;
+         EstSet(0, -1, &p, &dir, 0, 2, 0, 0, 0, 0);
+         break;
+     case 1:
+@@ -332,16 +333,16 @@
+     case 0x27:
+     case 0x2B:
+         EstSet(0, -1, &pos, &dir, 0, 0, 0, 0, 0, 0);
+-        if (Rnd() & 1) {
+-            p.x = fRand1_1() * 150.0f + pos.x;
+-            p.y = fRand1_1() * 150.0f + pos.y;
+-            p.z = fRand1_1() * 150.0f + pos.z;
++        if (re4ref_rnd(0x1000) & 1) {
++            p.x = re4ref_f11(0x1000) * 150.0f + pos.x;
++            p.y = re4ref_f11(0x1000) * 150.0f + pos.y;
++            p.z = re4ref_f11(0x1000) * 150.0f + pos.z;
+             EstSet(0, -1, &p, &dir, 0, 2, 0, 0, 0, 0);
+         }
+-        if (Rnd() & 1) {
+-            p.x = fRand1_1() * 150.0f + pos.x;
+-            p.y = fRand1_1() * 150.0f + pos.y;
+-            p.z = fRand1_1() * 150.0f + pos.z;
++        if (re4ref_rnd(0x1000) & 1) {
++            p.x = re4ref_f11(0x1000) * 150.0f + pos.x;
++            p.y = re4ref_f11(0x1000) * 150.0f + pos.y;
++            p.z = re4ref_f11(0x1000) * 150.0f + pos.z;
+             EstSet(0, -1, &p, &dir, 0, 2, 0, 0, 0, 0);
+         }
+         break;
+@@ -358,9 +359,9 @@
+         return;
+     }
+     if (rnd) {
+-        pos.x = fRand1_1() * 50.0f + pos.x;
+-        pos.y = fRand1_1() * 50.0f + pos.y;
+-        pos.z = fRand1_1() * 50.0f + pos.z;
++        pos.x = re4ref_f11(0x1000) * 50.0f + pos.x;
++        pos.y = re4ref_f11(0x1000) * 50.0f + pos.y;
++        pos.z = re4ref_f11(0x1000) * 50.0f + pos.z;
+     }
+     EstSetB(0, -1, &pos, &dir, no, prm, esp_core_flg, f, (u32) em, 0);
+ }
+@@ -375,9 +376,9 @@
+         return;
+     }
+     if (rnd) {
+-        pos.x = fRand1_1() * 50.0f + pos.x;
+-        pos.y = fRand1_1() * 50.0f + pos.y;
+-        pos.z = fRand1_1() * 50.0f + pos.z;
++        pos.x = re4ref_f11(0x1000) * 50.0f + pos.x;
++        pos.y = re4ref_f11(0x1000) * 50.0f + pos.y;
++        pos.z = re4ref_f11(0x1000) * 50.0f + pos.z;
+     }
+     EstSetB(0, -1, &pos, &em->ang, no, prm, esp_core_flg, f, (u32) em, 0);
+ }
+@@ -418,8 +419,8 @@
+     q.x = 0.0f;
+     q.z = mag * 0.5f;
+     q.y = h;
+-    q.y = fRand1_1() * 50.0f + q.y;
+-    q.x = fRand1_1() * 50.0f + q.x;
++    q.y = re4ref_f11(0x1000) * 50.0f + q.y;
++    q.x = re4ref_f11(0x1000) * 50.0f + q.x;
+     PSMTXMultVec(m, &q, &q);
+     if (eff_id == 0xFF || est_id == 0xFF) {
+         if (type != 1) {
+diff -ruN tree0/src/game/emrock.cpp tree/src/game/emrock.cpp
+--- tree0/src/game/emrock.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/emrock.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/emrock.cpp: rolling rock enemy (cEmRock): boulders that hang on a parent, fall, get
+ // thrown, roll after the player (with the escape event) or drop on him.
+ //
+@@ -1860,9 +1861,9 @@
+     RE4DC_XM_POINT(pl->mat, &emRock_target, &p1);
+     PosToPos(&g->Cam.param.at, &p1, &emRockCam.param.at, rate);
+     PosToPos(&g->Cam.param.pos, &p0, &emRockCam.param.pos, rate);
+-    r.x = fRand1_1() * 10.0f;
+-    r.y = fRand1_1() * 10.0f;
+-    r.z = fRand1_1() * 10.0f;
++    r.x = re4ref_f11(0x4000) * 10.0f;
++    r.y = re4ref_f11(0x4000) * 10.0f;
++    r.z = re4ref_f11(0x4000) * 10.0f;
+     PSVECAdd(&emRockCam.param.pos, &r, &emRockCam.param.pos);
+     PSVECAdd(&emRockCam.param.at, &r, &emRockCam.param.at);
+     if (EatMgr.hitCheck(&emRockCam.param.at, &emRockCam.param.pos, &hit, 0, 0x8000, 0)) {
+@@ -1917,9 +1918,9 @@
+     RE4DC_XM_POINT(pl->mat, &emRock_target, &p1);
+     PosToPos(&gcam->param.at, &p1, &emRockCam.param.at, 1.0f);
+     PosToPos(&gcam->param.pos, &p0, &emRockCam.param.pos, 1.0f);
+-    r.x = fRand1_1() * 10.0f;
+-    r.y = fRand1_1() * 10.0f;
+-    r.z = fRand1_1() * 10.0f;
++    r.x = re4ref_f11(0x4000) * 10.0f;
++    r.y = re4ref_f11(0x4000) * 10.0f;
++    r.z = re4ref_f11(0x4000) * 10.0f;
+     PSVECAdd(&emRockCam.param.pos, &r, &emRockCam.param.pos);
+     PSVECAdd(&emRockCam.param.at, &r, &emRockCam.param.at);
+     {
+diff -ruN tree0/src/game/esp04.cpp tree/src/game/esp04.cpp
+--- tree0/src/game/esp04.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp04.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp04.cpp: effect id 0x04, a screen-space tiled texture overlay (rain sheets, dust,
+ // static). The sprite must be a screen sprite; its trans draws a grid of Size_base_x x
+ // Size_base_y quads in a 512 x 448 orthographic projection, repeated across the screen on the
+@@ -120,7 +121,7 @@
+     y = esp->m_Pos.y;
+ 
+     if (w->rand_x != 0) {
+-        esp->m_Pos.x = w->base_pos.x + (Rnd() % (w->rand_x * 2)) - (f32)w->rand_x;
++        esp->m_Pos.x = w->base_pos.x + (re4ref_rnd(0x1) % (w->rand_x * 2)) - (f32)w->rand_x;
+         if (esp->m_Pos.x < -esp->m_Size_base_x) {
+             esp->m_Pos.x += esp->m_Size_base_x + 512.0f;
+         }
+@@ -129,7 +130,7 @@
+         }
+     }
+     if (w->rand_y != 0) {
+-        esp->m_Pos.y = w->base_pos.y + (Rnd() % (w->rand_y * 2)) - (f32)w->rand_y;
++        esp->m_Pos.y = w->base_pos.y + (re4ref_rnd(0x1) % (w->rand_y * 2)) - (f32)w->rand_y;
+         if (esp->m_Pos.y < -esp->m_Size_base_y) {
+             esp->m_Pos.y += esp->m_Size_base_y + 448.0f;
+         }
+diff -ruN tree0/src/game/esp05.cpp tree/src/game/esp05.cpp
+--- tree0/src/game/esp05.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp05.cpp	2026-11-20 00:24:20.099329309 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp05.cpp: effect id 0x05, a fluttering sprite (falling leaf, feather, ash): the position
+ // wobbles by Pow (Vec0.x) along sin / cos of a random phase advanced by Spd (Vec0.y x 0.05) with
+ // random speed jitter; Vec0.z randomises both by up to 10% per unit.
+@@ -39,7 +40,7 @@
+         m_Pos.x += w->Pow * sinf(w->Theta);
+         m_Pos.z += w->Pow * cosf(w->Theta * 1.7f);
+         m_Pos.y += w->Pow * 0.3f * cosf(w->Theta * 1.9f);
+-        w->Theta += w->Spd * (fRand0_1() + 0.2f);
++        w->Theta += w->Spd * (re4ref_f01(0x1) + 0.2f);
+         if (!AnmMove()) {
+             PushEsp(this);
+         }
+@@ -53,8 +54,8 @@
+ 
+     w->Pow = gen->Vec0.x;
+     w->Spd = gen->Vec0.y * 0.05f;
+-    w->Pow += w->Pow * fRand0_1() * (gen->Vec0.z * 0.1f);
+-    w->Spd += w->Spd * fRand0_1() * (gen->Vec0.z * 0.1f);
+-    w->Theta = fRand0_1() * PI * 2.0f;
++    w->Pow += w->Pow * re4ref_f01(0x1) * (gen->Vec0.z * 0.1f);
++    w->Spd += w->Spd * re4ref_f01(0x1) * (gen->Vec0.z * 0.1f);
++    w->Theta = re4ref_f01(0x1) * PI * 2.0f;
+     return 1;
+ }
+diff -ruN tree0/src/game/esp06.cpp tree/src/game/esp06.cpp
+--- tree0/src/game/esp06.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp06.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp06.cpp: effect id 0x06, a sprite riding an effect path (EspGetPathAddr owner Work8[0],
+ // id Work8[1]). Dist advances by PathSpeed (prm 0xCC, +- xD4 random, accelerated by 0xD0 / 10)
+ // each frame; at the path end Flg (Work8[2]) bit0 loops (pausing StopFrame + random frames),
+@@ -135,7 +136,7 @@
+                     Esp06GetPathPos(esp);
+                     w->wait = w->StopFrame;
+                     if (w->StopFrameRnd != 0) {
+-                        w->StopFrame += (u32)Rnd() % w->StopFrameRnd;
++                        w->StopFrame += (u32)re4ref_rnd(0x1) % w->StopFrameRnd;
+                     }
+                 } else if (w->Flg & 2) {
+                     if (w->PathSpeed > 0.0f) {
+diff -ruN tree0/src/game/esp0b.cpp tree/src/game/esp0b.cpp
+--- tree0/src/game/esp0b.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp0b.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp0b.cpp: effect id 0x0B, a sprite jittering in the camera plane. Each frame a new random
+ // offset of up to prm.x sideways and prm.y up (camera axes) plus prm.z toward the camera replaces
+ // the previous one. Core_flg 0x8000 effects (moving during pauses) apply the jitter only inside
+@@ -68,9 +69,9 @@
+             CameraGetUpVec(cam, &up);
+             PSVECCrossProduct(&look, &up, &side);
+             PSVECScale(&look, &w->ofs, -w->prm.z);
+-            PSVECScale(&side, &tmp, w->prm.x * fRand1_1());
++            PSVECScale(&side, &tmp, w->prm.x * re4ref_f11(0x1));
+             PSVECAdd(&w->ofs, &tmp, &w->ofs);
+-            PSVECScale(&up, &tmp, w->prm.y * fRand1_1());
++            PSVECScale(&up, &tmp, w->prm.y * re4ref_f11(0x1));
+             PSVECAdd(&w->ofs, &tmp, &w->ofs);
+             if (parent != pEffParentWorld) {
+                 PSMTXInverse(parent->mat, inv);
+@@ -112,9 +113,9 @@
+         CameraGetUpVec(cam, &up);
+         PSVECCrossProduct(&look, &up, &side);
+         PSVECScale(&look, &w->ofs, -w->prm.z);
+-        PSVECScale(&side, &tmp, w->prm.x * fRand1_1());
++        PSVECScale(&side, &tmp, w->prm.x * re4ref_f11(0x1));
+         PSVECAdd(&w->ofs, &tmp, &w->ofs);
+-        PSVECScale(&up, &tmp, w->prm.y * fRand1_1());
++        PSVECScale(&up, &tmp, w->prm.y * re4ref_f11(0x1));
+         PSVECAdd(&w->ofs, &tmp, &w->ofs);
+         if (esp->parent != pEffParentWorld) {
+             PSMTXInverse(esp->parent->mat, inv);
+diff -ruN tree0/src/game/esp16.cpp tree/src/game/esp16.cpp
+--- tree0/src/game/esp16.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp16.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp16.cpp: effect id 0x16, a rope / chain of Num (Work8[0] + 2) points simulated with
+ // distance constraints (segment length Vec0.x, damping Vec0.y %, constraint feedback Vec0.z %,
+ // gravity Vec1, jitter Vec2). Point 0 follows the effect; with Work8[1] the last point is
+@@ -88,9 +89,9 @@
+         {
+             Vec jit;
+ 
+-            jit.x = w->rand_plus.x * fRand1_1();
+-            jit.y = w->rand_plus.y * fRand1_1();
+-            jit.z = w->rand_plus.z * fRand1_1();
++            jit.x = w->rand_plus.x * re4ref_f11(0x1);
++            jit.y = w->rand_plus.y * re4ref_f11(0x1);
++            jit.z = w->rand_plus.z * re4ref_f11(0x1);
+             PSVECAdd(Esp3f_GetVecPtr(w->pos, i), &jit, Esp3f_GetVecPtr(w->pos, i));
+         }
+         PSVECScale(&d, &d, w->nen);
+@@ -123,9 +124,9 @@
+             {
+                 Vec jit;
+ 
+-                jit.x = w->rand_plus.x * fRand1_1();
+-                jit.y = w->rand_plus.y * fRand1_1();
+-                jit.z = w->rand_plus.z * fRand1_1();
++                jit.x = w->rand_plus.x * re4ref_f11(0x1);
++                jit.y = w->rand_plus.y * re4ref_f11(0x1);
++                jit.z = w->rand_plus.z * re4ref_f11(0x1);
+                 PSVECAdd(Esp3f_GetVecPtr(w->pos, i), &jit, Esp3f_GetVecPtr(w->pos, i));
+             }
+             PSVECScale(&d, &d, w->nen);
+diff -ruN tree0/src/game/esp1a.cpp tree/src/game/esp1a.cpp
+--- tree0/src/game/esp1a.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp1a.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp1a.cpp: effect id 0x1A, a camera-plane jitter sprite (like esp0b) that is spawned along
+ // the axis of a model part: the +y axis of parts Work8[0] gives the direction, R_pos.x / .y the
+ // min / max distance along it and R_pos.z the radius of a random disc around it. The sprite is
+@@ -56,8 +57,8 @@
+             if (!AnmMove()) {
+                 PushEsp(this);
+             } else {
+-                fRand1_1();
+-                fRand1_1();
++                re4ref_f11(0x1);
++                re4ref_f11(0x1);
+             }
+         }
+         return;
+@@ -80,9 +81,9 @@
+             CameraGetUpVec(cam, &up);
+             PSVECCrossProduct(&look, &up, &side);
+             PSVECScale(&look, &w->Move_vec, -w->Dist.z);
+-            PSVECScale(&side, &tmp, w->Dist.x * fRand1_1());
++            PSVECScale(&side, &tmp, w->Dist.x * re4ref_f11(0x1));
+             PSVECAdd(&w->Move_vec, &tmp, &w->Move_vec);
+-            PSVECScale(&up, &tmp, w->Dist.y * fRand1_1());
++            PSVECScale(&up, &tmp, w->Dist.y * re4ref_f11(0x1));
+             PSVECAdd(&w->Move_vec, &tmp, &w->Move_vec);
+             if (parent != pEffParentWorld) {
+                 PSMTXInverse(parent->mat, inv);
+diff -ruN tree0/src/game/esp4b.cpp tree/src/game/esp4b.cpp
+--- tree0/src/game/esp4b.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp4b.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/esp4b.cpp: effect id 0x4B, a sprite frozen on one animation pattern: Work8[0] selects the
+ // pattern (0xFF = random) and the animation is never advanced.
+ 
+@@ -40,7 +41,7 @@
+     }
+     ptn = gen->Work8[0];
+     if (ptn == 0xff) {
+-        m_Ptn_no = (Rnd() + Rnd()) % anm->Frames;
++        m_Ptn_no = (re4ref_rnd(0x1) + re4ref_rnd(0x1)) % anm->Frames;
+     } else {
+         if (ptn >= anm->Frames) {
+             pLog->err(0, 0, "ESP4B : PtnNo[%d >= %d] over", ptn, anm->Frames);
+diff -ruN tree0/src/game/esp4e.cpp tree/src/game/esp4e.cpp
+--- tree0/src/game/esp4e.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/esp4e.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #if defined(RE4DC_CLOTH_MATERIAL11) && RE4DC_CLOTH_MATERIAL11
+ // Owns the cEspSystem layout and its C++-linkage g_pEspSys declaration.
+ #include "espgen.h"
+@@ -131,11 +132,11 @@
+ 
+     for (i = 0; i < c->divV; i++) {
+         base = SINF(ay) * wx;
+-        ay += stepY * rand * fRand0_1() + stepY;
++        ay += stepY * rand * re4ref_f01(0x1) + stepY;
+         ax = wk->time2;
+         for (j = 0; j < c->divH; j++) {
+             f32 v = SINF(ax) * wy;
+-            ax += stepX * rand * fRand0_1() + stepX;
++            ax += stepX * rand * re4ref_f01(0x1) + stepX;
+             c->disturbance((base + v) * s + wk->offset * s, j, i);
+             PSVECAdd(&c->pSpd[j + c->divH * i], &sp, &c->pSpd[j + c->divH * i]);
+         }
+diff -ruN tree0/src/game/espgen00.cpp tree/src/game/espgen00.cpp
+--- tree0/src/game/espgen00.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/espgen00.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/espgen00: effect controller 00, the repeating emitter (D:/Bio4/Prog/espgen00.cpp). A
+ // controller record of Kind 1 / Espgen_type 0 spawns its esp record `num+1` times every `wait`
+ // frames for `life` frames, following a parts of its model, with per-emission scale/speed/alpha
+@@ -169,7 +170,7 @@
+             p->waitCnt = n;
+         }
+         if (p->waitRnd) {
+-            int r = Rnd() % (p->waitRnd * 2) - p->waitRnd;
++            int r = re4ref_rnd(0x1) % (p->waitRnd * 2) - p->waitRnd;
+ 
+             if (p->waitCnt + r < 0) {
+                 p->waitCnt = 0;
+@@ -293,7 +294,7 @@
+     p->Flg = rec->Espgen_flg;
+     p->waitRnd = rec->Espgen_work8_3[0];
+     if (p->waitRnd) {
+-        p->wait += (u32) Rnd() % p->waitRnd;
++        p->wait += (u32) re4ref_rnd(0x1) % p->waitRnd;
+     }
+     if (head->flags & 1) {
+         p->flags2 |= 2;
+@@ -307,7 +308,7 @@
+     if (p->Flg & 2) {
+         p->seed = 0x12345678 + rec->x10E;
+     } else {
+-        p->seed = Rnd() | (Rnd() << 8) | (Rnd() << 16);
++        p->seed = re4ref_rnd(0x1) | (re4ref_rnd(0x1) << 8) | (re4ref_rnd(0x1) << 16);
+     }
+     PSMTXCopy(*mtx, p->Mat);
+     if (pSct != NULL) {
+diff -ruN tree0/src/game/espgen02.cpp tree/src/game/espgen02.cpp
+--- tree0/src/game/espgen02.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/espgen02.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/espgen02: effect controller 02, the path emitter (D:/Bio4/Prog/espgen02.cpp). Like
+ // controller 00 but each emitted esp is placed at a (random) fraction of an effect path
+ // (EspGetPathAddr / PathGetPos), optionally scaled/rotated and oriented along the path tangent
+@@ -188,7 +189,7 @@
+             p->Next_cnt = n;
+         }
+         if (p->R_inter) {
+-            int r = Rnd() % (p->R_inter * 2) - p->R_inter;
++            int r = re4ref_rnd(0x1) % (p->R_inter * 2) - p->R_inter;
+ 
+             if (p->Next_cnt + r < 0) {
+                 p->Next_cnt = 0;
+@@ -439,7 +440,7 @@
+     p->Espgen_flg = rec->Espgen_flg;
+     p->R_inter = rec->Espgen_work8_3[0];
+     if (p->R_inter) {
+-        p->wait += (u32) Rnd() % p->R_inter;
++        p->wait += (u32) re4ref_rnd(0x1) % p->R_inter;
+     }
+     if (head->flags & 1) {
+         p->Flg |= 2;
+@@ -453,7 +454,7 @@
+     if (p->Espgen_flg & 2) {
+         p->Rand_seed = 0x12345678 + rec->x10E;
+     } else {
+-        p->Rand_seed = Rnd() | (Rnd() << 8) | (Rnd() << 16);
++        p->Rand_seed = re4ref_rnd(0x1) | (re4ref_rnd(0x1) << 8) | (re4ref_rnd(0x1) << 16);
+     }
+     PSMTXCopy(*mtx, p->Mat);
+     if (pSct != NULL) {
+diff -ruN tree0/src/game/espgen45.cpp tree/src/game/espgen45.cpp
+--- tree0/src/game/espgen45.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/espgen45.cpp	2026-11-20 00:24:20.103329372 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/espgen45: effect controller 45, the weather (open-air) water surface (D:/Bio4/Prog/espgen45.cpp).
+ // A height-field grid (Espgen42Work: hA/hB height buffers, pos/nrm vertex arrays, a bump texture
+ // and a display list) that follows the camera target, is stirred by the noise texture 0xFE and drawn
+@@ -1821,7 +1822,7 @@
+ #if RE4DC_WATER45_GRID_SKIP
+     for (i2 = 0; i2 < p->ny + 1; i2++) {
+         for (jj = 0; jj < p->nx + 1; jj++) {
+-            (void) fRand1_1();   // the grid init's shared-RNG draws, same count and order
++            (void) re4ref_f11(0x1);   // the grid init's shared-RNG draws, same count and order
+         }
+     }
+     return w;
+@@ -1832,7 +1833,7 @@
+         fx = 0.0f;
+         for (jj = 0; jj < p->nx + 1; jj++) {
+             p->pos[idx].x = fx - (f32) (int) (p->nx / 2);
+-            p->pos[idx].y = fRand1_1() * 0.2f;
++            p->pos[idx].y = re4ref_f11(0x1) * 0.2f;
+             fx += 1.0f;
+             p->pos[idx].z = fy - (f32) (int) (p->ny / 2);
+ #if !RE4DC_WATER45_LEAN
+diff -ruN tree0/src/game/est.cpp tree/src/game/est.cpp
+--- tree0/src/game/est.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/est.cpp	2026-11-20 00:24:20.107329434 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+ #include "fallback_audit35.h"
+ #endif
+@@ -94,7 +95,7 @@
+     } else {
+         p->Ang = *rot;
+     }
+-    p->Rand_seed = Rnd() | (Rnd() << 8) | (Rnd() << 16);
++    p->Rand_seed = re4ref_rnd(0x1) | (re4ref_rnd(0x1) << 8) | (re4ref_rnd(0x1) << 16);
+     if (h != NULL) {
+         p->p8 = &p->opt;
+         p->opt = *(EspSeqOpt*) h;
+diff -ruN tree0/src/game/filter06.cpp tree/src/game/filter06.cpp
+--- tree0/src/game/filter06.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/filter06.cpp	2026-11-20 00:24:20.107329434 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/filter06: dust / snow / rain particle filter (D:/Bio4/Prog/filter06.cpp). Up to 0x800 line
+ // particles drift with a speed around the camera and are wrapped back into a box around it; drawn
+ // as lines whose alpha fades with camera distance and eases to the requested colour. Rooms start it
+@@ -610,9 +611,9 @@
+     FSet(m_Pos.x, pG->Cam.param.pos.x);
+     FSet(m_Pos.y, pG->Cam.param.pos.y);
+     FSet(m_Pos.z, pG->Cam.param.pos.z);
+-    m_Pos.x += flt06.spread * 10.0f * fRand1_1() + (f32) no * 500.0f;
+-    m_Pos.y += flt06.spread * 10.0f * fRand1_1() + (f32) no * 500.0f;
+-    m_Pos.z += flt06.spread * 10.0f * fRand1_1() + (f32) no * 500.0f;
++    m_Pos.x += flt06.spread * 10.0f * re4ref_f11(0x1) + (f32) no * 500.0f;
++    m_Pos.y += flt06.spread * 10.0f * re4ref_f11(0x1) + (f32) no * 500.0f;
++    m_Pos.z += flt06.spread * 10.0f * re4ref_f11(0x1) + (f32) no * 500.0f;
+     m_Base_alpha = 0x80;
+     m_Alpha = 0;
+ }
+@@ -834,9 +835,9 @@
+     for (i = 0; i < flt06.num; i++) {
+         flt06.p[i].init(i);
+         flt06.p[i].m_Spd = *spd;
+-        flt06.p[i].m_Spd.x += spdRand->x * fRand1_1();
+-        flt06.p[i].m_Spd.y += spdRand->y * fRand1_1();
+-        flt06.p[i].m_Spd.z += spdRand->z * fRand1_1();
++        flt06.p[i].m_Spd.x += spdRand->x * re4ref_f11(0x1);
++        flt06.p[i].m_Spd.y += spdRand->y * re4ref_f11(0x1);
++        flt06.p[i].m_Spd.z += spdRand->z * re4ref_f11(0x1);
+     }
+     flt06.col[0] = r;
+     flt06.col[1] = g;
+diff -ruN tree0/src/game/filter08.cpp tree/src/game/filter08.cpp
+--- tree0/src/game/filter08.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/filter08.cpp	2026-11-20 00:24:20.107329434 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/filter08: aiming zoom blur (D:/Bio4/Prog/filter08.cpp). While Status_flg[3] 0x08000000 (the
+ // weapon's scope/zoom view) is set, filter08_ratio eases to 1 and the frame is blurred outwards from
+ // the weapon marker position (g_cx/g_cy, jittered) by feedback copies; the last pass blends a tinted
+@@ -87,8 +88,8 @@
+         g_cx2 = 0.5f;
+         g_cy2 = 0.5f;
+     }
+-    g_cx2 += fRand1_1() * filter08_rnd_dist;
+-    g_cy2 += fRand1_1() * filter08_rnd_dist;
++    g_cx2 += re4ref_f11(0x1) * filter08_rnd_dist;
++    g_cy2 += re4ref_f11(0x1) * filter08_rnd_dist;
+     g_cx += (g_cx2 - g_cx) * 0.3f;
+     g_cy += (g_cy2 - g_cy) * 0.3f;
+     if (Render_checkBlurPermission()) {
+diff -ruN tree0/src/game/light01.cpp tree/src/game/light01.cpp
+--- tree0/src/game/light01.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/light01.cpp	2026-11-20 00:24:20.107329434 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/light01: light type 1, flicker (D:/Bio4/Prog/light01.cpp). Light types are the per-frame
+ // move entries of LightFuncTbl (game.cpp) run by cLightMgr::move on every alive cLight; each reads
+ // its parameters from the light's `work` bytes set by the room light data.
+@@ -24,7 +25,7 @@
+     int c;
+ 
+     if (w->range != 0) {
+-        r = Rnd() % (w->range + w->range) - w->range;
++        r = re4ref_rnd(0x1) % (w->range + w->range) - w->range;
+     } else {
+         r = 0;
+     }
+diff -ruN tree0/src/game/obj10.cpp tree/src/game/obj10.cpp
+--- tree0/src/game/obj10.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/obj10.cpp	2026-11-20 00:24:20.107329434 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/obj10: object id 10, the player's thrown weapon item cWepItem (D:/Bio4/Prog/obj10.cpp):
+ // grenades and the like thrown by the player, with the obj01 flight model (gravity, spin, bounce,
+ // water) but its own landing sounds, a self-damage check on the explosion (hitCkPl) and no
+@@ -373,19 +374,19 @@
+     }
+     if (flags & 2) {
+         w->be_flag |= 8;
+-        w->rot_spd.x = fRand0_1() * 0.19634955f + 0.39269908f;
++        w->rot_spd.x = re4ref_f01(0x80) * 0.19634955f + 0.39269908f;
+         w->rot_spd.y = 0.0f;
+-        w->rot_spd.z = fRand0_1() * 0.09817477f + 0.09817477f;
+-        if (Rnd() & 1) {
++        w->rot_spd.z = re4ref_f01(0x80) * 0.09817477f + 0.09817477f;
++        if (re4ref_rnd(0x80) & 1) {
+             w->rot_spd.x = -w->rot_spd.x;
+         }
+-        if (Rnd() & 1) {
++        if (re4ref_rnd(0x80) & 1) {
+             w->rot_spd.z = -w->rot_spd.z;
+         }
+     }
+     if (flags & 4) {
+         w->be_flag |= 8;
+-        w->rot_spd.x = -(fRand0_1() * 0.049087387f + 0.19634955f);
++        w->rot_spd.x = -(re4ref_f01(0x80) * 0.049087387f + 0.19634955f);
+         w->rot_spd.y = 0.0f;
+         w->rot_spd.z = 0.0f;
+     }
+diff -ruN tree0/src/game/pad.cpp tree/src/game/pad.cpp
+--- tree0/src/game/pad.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/pad.cpp	2026-11-20 00:24:20.107329434 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/pad: 12/12 functions byte-identical. PadRead: `dead` (5 refs / 526 doubled insns, priority 190)
+ // beats the loop-2 `&Pad_data` hoist (4 / 448, 178) in global-alloc (target r16/r17); pinned to r16, the
+ // constant kept first in block 0 by a codeless `asm volatile("")` barrier (see PadRead). The Key loop preheader order (`Key.on = 0` stores before
+@@ -341,7 +342,7 @@
+         v->level += v->add;
+         lvl = v->level;
+         if (v->type & 0x8000) {
+-            lvl = (u32) ((Rnd() << 8) + Rnd()) % (lvl + 1);
++            lvl = (u32) ((re4ref_rnd(0x10000) << 8) + re4ref_rnd(0x10000)) % (lvl + 1);
+         }
+         if (max < lvl) {
+             max = lvl;
+diff -ruN tree0/src/game/pendulum.cpp tree/src/game/pendulum.cpp
+--- tree0/src/game/pendulum.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/pendulum.cpp	2026-11-20 00:24:20.111329498 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #if defined(RE4DC_FALLBACK_AUDIT35) && RE4DC_FALLBACK_AUDIT35
+ #include "fallback_audit35.h"
+ #endif
+@@ -101,8 +102,8 @@
+             if ((c)->pParent[i] < 0xFF) {                                                     \
+                 PenParts* uw = PEN_WORK(penPartsNo(m, c, (c)->pParent[i]));                    \
+                 if ((w)->pos.x == uw->pos.x && (w)->pos.z == uw->pos.z) {                 \
+-                    (w)->pos.x += fRand1_1();                                             \
+-                    (w)->pos.z += fRand1_1();                                             \
++                    (w)->pos.x += re4ref_f11(0x2);                                             \
++                    (w)->pos.z += re4ref_f11(0x2);                                             \
+                 }                                                                         \
+             }                                                                             \
+         }                                                                                 \
+@@ -115,8 +116,8 @@
+             (w)->pos.y = floorY;                                                          \
+             if (uw) {                                                                     \
+                 if ((w)->pos.x == (uw)->pos.x && (w)->pos.z == (uw)->pos.z) {             \
+-                    (w)->pos.x += fRand1_1();                                             \
+-                    (w)->pos.z += fRand1_1();                                             \
++                    (w)->pos.x += re4ref_f11(0x2);                                             \
++                    (w)->pos.z += re4ref_f11(0x2);                                             \
+                 }                                                                         \
+             }                                                                             \
+         }                                                                                 \
+@@ -129,8 +130,8 @@
+             (w)->pos.y = floorY;                                                          \
+             if (uw) {                                                                     \
+                 if ((w)->pos.x == (uw)->pos.x && (w)->pos.z == (uw)->pos.z) {             \
+-                    (w)->pos.x += fRand1_1();                                             \
+-                    (w)->pos.z += fRand1_1();                                             \
++                    (w)->pos.x += re4ref_f11(0x2);                                             \
++                    (w)->pos.z += re4ref_f11(0x2);                                             \
+                 }                                                                         \
+             }                                                                             \
+         }                                                                                 \
+@@ -276,7 +277,7 @@
+         skip = !(f > 0.0f && f * f >= 0.25f * d2);
+     }
+     if (skip && !(c->Flag & 0x40)) {
+-        c->WindSin += fRand0_1() * GlobalWindAdd;
++        c->WindSin += re4ref_f01(0x2) * GlobalWindAdd;
+         c->WindSin = LIMIT_ANGLE(c->WindSin);
+     }
+     return skip;
+@@ -363,7 +364,7 @@
+     }
+     ang = 1.0f;
+     if (!(c->Flag & 0x40)) {
+-        c->WindSin += fRand0_1() * GlobalWindAdd;
++        c->WindSin += re4ref_f01(0x2) * GlobalWindAdd;
+         c->WindSin = LIMIT_ANGLE(c->WindSin);
+         penWindScale(&wind, sinf(c->WindSin) + ang);
+     }
+@@ -681,7 +682,7 @@
+     }
+     ang = 1.0f;
+     if (!(c->Flag & 0x40)) {
+-        c->WindSin += fRand0_1() * GlobalWindAdd;
++        c->WindSin += re4ref_f01(0x2) * GlobalWindAdd;
+         c->WindSin = LIMIT_ANGLE(c->WindSin);
+         penWindScale(&wind, sinf(c->WindSin) + ang);
+     }
+@@ -984,7 +985,7 @@
+     }
+     ang = 1.0f;
+     if (!(c->Flag & 0x40)) {
+-        c->WindSin += fRand0_1() * GlobalWindAdd;
++        c->WindSin += re4ref_f01(0x2) * GlobalWindAdd;
+         c->WindSin = LIMIT_ANGLE(c->WindSin);
+         penWindScale(&wind, sinf(c->WindSin) + ang);
+     }
+@@ -1735,7 +1736,7 @@
+ #endif
+ #line 3320
+     if (!(c->Flag & 0x40)) {
+-        c->WindSin += fRand0_1() * GlobalWindAdd;
++        c->WindSin += re4ref_f01(0x2) * GlobalWindAdd;
+         c->WindSin = LIMIT_ANGLE(c->WindSin);
+     }
+ }
+diff -ruN tree0/src/game/pl_class.cpp tree/src/game/pl_class.cpp
+--- tree0/src/game/pl_class.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/pl_class.cpp	2026-11-20 00:24:20.111329498 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/pl_class.cpp: cPlayer base class: action selection (wall / fence / window / ledge / jump
+ // checks and their action buttons), damage entry, event begin/end, eye / neck / waist control and
+ // the three-way motion blend (cMot3). Owns the cPlayer vtable.
+@@ -1351,7 +1352,7 @@
+         p->ang.x = 0.0f;
+         break;
+     case 0: {
+-        f32 y = ((f32) (Rnd() % 200) * 0.01f - 1.0f) * 3.1415927f * 0.1f;
++        f32 y = ((f32) (re4ref_rnd(0x4) % 200) * 0.01f - 1.0f) * 3.1415927f * 0.1f;
+         eyeDir.y = y;
+         if (eyeDir.z == 0.0f) {
+             eyeDir.x = y;
+@@ -1384,7 +1385,7 @@
+         }
+         break;
+     case 0x58:
+-        if (Rnd() & 3) {
++        if (re4ref_rnd(0x4) & 3) {
+             timer = 0;
+         } else {
+             timer = 0x5A;
+@@ -1424,12 +1425,12 @@
+         static int eyetime = 0;
+ 
+         if (--eyetime < 0) {
+-            f32 d = ((f32) (Rnd() % 200) * 0.01f - 1.0f) * 0.03141592815518379f;
++            f32 d = ((f32) (re4ref_rnd(0x4) % 200) * 0.01f - 1.0f) * 0.03141592815518379f;
+             eyeDir.y += d;
+             if (eyeDir.z == 0.0f) {
+                 eyeDir.x = eyeDir.y;
+             }
+-            eyetime = Rnd() % 3 + 2;
++            eyetime = re4ref_rnd(0x4) % 3 + 2;
+         }
+     }
+     {
+diff -ruN tree0/src/game/pl_npc.cpp tree/src/game/pl_npc.cpp
+--- tree0/src/game/pl_npc.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/pl_npc.cpp	2026-11-20 00:24:20.111329498 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/pl_npc.cpp: cSubChar, the partner character (Ashley): routine tables, follow / escape /
+ // hide / action logic, damage, neck and face control. Owns the cSubChar vtable.
+ 
+@@ -3693,7 +3694,7 @@
+         break;
+     case 0: {
+         // computed into a local first: the constant loads precede the eyeDir.z test
+-        f32 y = ((f32) (int) (u8) (Rnd() % 200) * 0.01f - 1.0f) * 3.1415927f * 0.1f;
++        f32 y = ((f32) (int) (u8) (re4ref_rnd(0x40) % 200) * 0.01f - 1.0f) * 3.1415927f * 0.1f;
+ 
+         eyeDir.y = y;
+         if (eyeDir.z == 0.0f) {
+@@ -3727,7 +3728,7 @@
+         }
+         break;
+     case 0x58:
+-        timer = (Rnd() & 3) ? 0 : 0x5A;
++        timer = (re4ref_rnd(0x40) & 3) ? 0 : 0x5A;
+         break;
+     case 0x5A:
+         p->ang.x = 0.0872664600610733f;
+@@ -3763,13 +3764,13 @@
+         static int eyetime = 0;
+ 
+         if (--eyetime < 0) {
+-            f32 d = ((f32) (int) (u8) (Rnd() % 200) * 0.01f - 1.0f) * 0.03141592815518379f;
++            f32 d = ((f32) (int) (u8) (re4ref_rnd(0x40) % 200) * 0.01f - 1.0f) * 0.03141592815518379f;
+ 
+             eyeDir.y += d;
+             if (eyeDir.z == 0.0f) {
+                 eyeDir.x = eyeDir.y;
+             }
+-            eyetime = (u8) (Rnd() % 3) + 2;
++            eyetime = (u8) (re4ref_rnd(0x40) % 3) + 2;
+         }
+     }
+     eyeDir.limit();
+diff -ruN tree0/src/game/pl_sub.cpp tree/src/game/pl_sub.cpp
+--- tree0/src/game/pl_sub.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/pl_sub.cpp	2026-11-20 00:24:20.111329498 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/pl_sub.cpp: player / partner helpers: costume, data reload, damage entry points, partner
+ // (Ashley) control, ladder, motion registration, key helpers, water effects.
+ 
+@@ -167,7 +168,7 @@
+     cPlayer* pl = pPL;
+ 
+     if (no == 0) {
+-        u8 r = (u32) Rnd() % 3;
++        u8 r = (u32) re4ref_rnd(0x10) % 3;
+ 
+         no = r + 9;
+     }
+diff -ruN tree0/src/game/pl_wep.cpp tree/src/game/pl_wep.cpp
+--- tree0/src/game/pl_wep.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/pl_wep.cpp	2026-11-20 00:24:20.111329498 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/pl_wep.cpp: player weapon control: weapon object release/load, hit checks, lock-on
+ // target search, aim control (PlWepLockCtrl), auto tracking, water shots.
+ 
+@@ -1141,11 +1142,11 @@
+         wep->pitch = *pitch;
+         wep->m_CenterY = *yaw;
+     } else if (flag & 2) {
+-        *pitch = fRand1_1() * rP * lockRandCtr + wep->pitch;
+-        *yaw = fRand1_1() * rY * lockRandCtr + wep->m_CenterY;
++        *pitch = re4ref_f11(0x80000) * rP * lockRandCtr + wep->pitch;
++        *yaw = re4ref_f11(0x80000) * rY * lockRandCtr + wep->m_CenterY;
+     } else {
+-        *pitch = sP * fRand1_1() + *pitch;
+-        *yaw = sY * fRand1_1() + *yaw;
++        *pitch = sP * re4ref_f11(0x80000) + *pitch;
++        *yaw = sY * re4ref_f11(0x80000) + *yaw;
+         if (*pitch > wep->pitch + rP) {
+             *pitch = wep->pitch + rP;
+         } else if (*pitch < wep->pitch - rP) {
+@@ -1241,9 +1242,9 @@
+     case 0xF:
+     case 0x2C:
+         for (i = 0; i < 3; i++) {   // reversed by loop.c: `li r31,3` after the hoisted `addi`/`lfs`
+-            r.x = fRand1_1() * 2000.0f + p1->x;
+-            r.y = fRand1_1() * 2000.0f + p1->y;
+-            r.z = fRand1_1() * 2000.0f + p1->z;
++            r.x = re4ref_f11(0x1) * 2000.0f + p1->x;
++            r.y = re4ref_f11(0x1) * 2000.0f + p1->y;
++            r.z = re4ref_f11(0x1) * 2000.0f + p1->z;
+             wepSetWaterShot(p0, &r, 2);
+         }
+         break;
+diff -ruN tree0/src/game/rnd.cpp tree/src/game/rnd.cpp
+--- tree0/src/game/rnd.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/rnd.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -77,3 +77,60 @@
+     f = f * 2.0f - 2.0f - 1.0f;
+     return f;
+ }
++
++// re4ref split (lane eng-ref; REFERENCE build only). The presentation generator: the original algorithm on its own
++// state, starting at 0 (as the engine's, host/e1_wraps.cpp). A call whose category bit is in re4ref_split_mask draws
++// from it; any other call reaches the original Rnd / fRand0_1 / fRand1_1 above, unchanged.
++extern "C" {
++volatile unsigned int re4ref_split_mask = 0x7f1ff;
++unsigned int re4ref_pdraws;    // presentation generator steps so far
++unsigned int re4ref_pcats;     // categories that drew from it so far
++}
++static u16 PRandom;
++extern "C" void re4ref_pseed(unsigned short s) { PRandom = s; }
++static u8 PRnd()
++{
++    u16 r = PRandom;
++    u32 n = ((u8) ((r >> 1) + (r >> 8)) << 8) | (u8) (r >> 1);
++    u32 m = (n << 16) >> 16;
++
++    if (m == r) {
++        m = n + 0x101;
++    }
++    PRandom = m;
++    re4ref_pdraws++;
++    return m >> 8;
++}
++static f32 PUnit()
++{
++    u32 a = PRnd();
++    u32 b = PRnd();
++    u32 c = PRnd();
++    u32 u = a + (b << 8) + ((c & 0x7F) << 16) + 0x3F800000;
++
++    return *(f32*) &u;
++}
++extern "C" unsigned char re4ref_rnd(unsigned int cat)
++{
++    if (re4ref_split_mask & cat) {
++        re4ref_pcats |= cat;
++        return PRnd();
++    }
++    return Rnd();
++}
++extern "C" float re4ref_f01(unsigned int cat)
++{
++    if (re4ref_split_mask & cat) {
++        re4ref_pcats |= cat;
++        return PUnit() - 1.0f;
++    }
++    return fRand0_1();
++}
++extern "C" float re4ref_f11(unsigned int cat)
++{
++    if (re4ref_split_mask & cat) {
++        re4ref_pcats |= cat;
++        return PUnit() * 2.0f - 3.0f;
++    }
++    return fRand1_1();
++}
+diff -ruN tree0/src/game/se_at.cpp tree/src/game/se_at.cpp
+--- tree0/src/game/se_at.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/se_at.cpp	2026-11-20 00:24:20.111329498 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/se_at: the room's ambient sound emitters — the "ESE" sub-file of the room archive lists
+ // SeAt records (a SE block / number, a position, first-play wait, repeat count, fixed interval or
+ // a random one); SeAtCheck plays them on their timers every frame during play, the room scripts
+@@ -78,7 +79,7 @@
+                     at->repeat--;
+                 }
+                 if (at->interval == 0) {
+-                    at->cnt = at->rnd_base + Rnd() % at->rnd_range;
++                    at->cnt = at->rnd_base + re4ref_rnd(0x100) % at->rnd_range;
+                 } else {
+                     at->cnt = at->interval;
+                 }
+diff -ruN tree0/src/game/snd.cpp tree/src/game/snd.cpp
+--- tree0/src/game/snd.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/game/snd.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // game/snd: game-side sound interface (D:/Bio4/Prog/snd.cpp, -O2). Owns the game sound work
+ // (`Snd`, pSnd), the sound data memory map (`SndMem`) and the room BGM / stream tables, and calls
+ // into the C sound driver (src/game/snd_*.cpp, include/snd_drv.h).
+@@ -861,7 +862,7 @@
+     }
+     t = (SndRndTbl*) ((u8*) tbl + tbl[g]);
+     do {
+-        *no = *(t->e + Rnd() % t->num);
++        *no = *(t->e + re4ref_rnd(0x100) % t->num);
+         retry--;
+     } while (*no == t->last && retry != 0);
+     t->last = *no;
+diff -ruN tree0/src/st/cSceObj.cpp tree/src/st/cSceObj.cpp
+--- tree0/src/st/cSceObj.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/st/cSceObj.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #include "types.h"
+ #include "vec.h"
+ #include "model.h"
+@@ -523,14 +524,14 @@
+         PSVECScale(vp, vp, 10.0f);
+         PSVECScale(vr, vr, PI / 180.0f);
+         if (cnt <= vibStart) {
+-            PSVECScale(vp, vp, fRand1_1() * vibAmp0);
+-            PSVECScale(vr, vr, fRand1_1() * vibAmp0);
++            PSVECScale(vp, vp, re4ref_f11(0x20000) * vibAmp0);
++            PSVECScale(vr, vr, re4ref_f11(0x20000) * vibAmp0);
+         } else if (cnt > frame - vibEnd) {
+-            PSVECScale(vp, vp, fRand1_1() * vibAmp2);
+-            PSVECScale(vr, vr, fRand1_1() * vibAmp2);
++            PSVECScale(vp, vp, re4ref_f11(0x20000) * vibAmp2);
++            PSVECScale(vr, vr, re4ref_f11(0x20000) * vibAmp2);
+         } else {
+-            PSVECScale(vp, vp, fRand1_1() * vibAmp1);
+-            PSVECScale(vr, vr, fRand1_1() * vibAmp1);
++            PSVECScale(vp, vp, re4ref_f11(0x20000) * vibAmp1);
++            PSVECScale(vr, vr, re4ref_f11(0x20000) * vibAmp1);
+         }
+     } else {
+         vp->x = 0.0f;
+diff -ruN tree0/src/st1/r101.cpp tree/src/st1/r101.cpp
+--- tree0/src/st1/r101.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/st1/r101.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #include "types.h"
+ #include "main_mem.h"
+ #include "st_room.h"
+@@ -1500,14 +1501,14 @@
+             break;
+         }
+         do {
+-            u32 r = Rnd();
++            u32 r = re4ref_rnd(0x2000);
+             u8 i = r % 10;
+ 
+             v = tbl[i];
+         } while (last == v);
+         last = v;
+         SndCall(6, last, &pos, 0, 0, 0);
+-        SceSleep(Rnd() * 45 / 255 + 75);
++        SceSleep(re4ref_rnd(0x2000) * 45 / 255 + 75);
+     }
+ }
+ 
+diff -ruN tree0/src/st1/r119.cpp tree/src/st1/r119.cpp
+--- tree0/src/st1/r119.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/st1/r119.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #include "types.h"
+ #include "main_mem.h"
+ #include "st_room.h"
+@@ -256,7 +257,7 @@
+ 
+     SceSleep(1);
+     {
+-        u8 r = Rnd() % 30;
++        u8 r = re4ref_rnd(0x40000) % 30;
+         cnt = r * 5 + 240;
+     }
+     EffSetToolStateCallBack(0, r119_ThunderFlagOn, r119_ThunderFlagOff);
+@@ -264,7 +265,7 @@
+         if (cnt == 0) {
+             EstSet(0, -1, 0, 0, 1, 0, 1, 0, 0, 0);
+             {
+-                u8 r = Rnd() % 30;
++                u8 r = re4ref_rnd(0x40000) % 30;
+                 cnt = r * 5 + 240;
+             }
+             SceSndCallThunder();
+diff -ruN tree0/src/st1/r11d.cpp tree/src/st1/r11d.cpp
+--- tree0/src/st1/r11d.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/st1/r11d.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ #include "types.h"
+ #include "main_mem.h"
+ #include "st_room.h"
+@@ -757,7 +758,7 @@
+ 
+     SceSleep(1);
+     {
+-        u8 r = Rnd() % 30;
++        u8 r = re4ref_rnd(0x8000) % 30;
+         cnt = r * 5 + 90;
+     }
+     for (;;) {
+@@ -769,7 +770,7 @@
+                 EstSet(0, -1, 0, 0, 1, 1, 1, 0, 0, 0);
+             }
+             {
+-                u8 r = Rnd() % 30;
++                u8 r = re4ref_rnd(0x8000) % 30;
+                 cnt = r * 5 + 90;
+             }
+             SceSndCallThunder();
+diff -ruN tree0/src/wep/objMachinegun.cpp tree/src/wep/objMachinegun.cpp
+--- tree0/src/wep/objMachinegun.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep/objMachinegun.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // Machine gun weapon object (wep11 / wep29 modules, first object; real file name unknown): model
+ // by weapon type, fire burst with cartridge ejection and reload motions.
+ //
+@@ -154,9 +155,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0xA), WEP_ARC_PTR(0xB), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep/objRuger.cpp tree/src/wep/objRuger.cpp
+--- tree0/src/wep/objRuger.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep/objRuger.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // Punisher (Ruger) weapon object (wep02 second object / wep43 first object, the same object in both;
+ // real file name unknown): model by weapon type, fire with cartridge ejection, reload by tune level.
+ // wep38 carries its own build of the class (no weapon types).
+@@ -188,9 +189,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep01/objFn57.cpp tree/src/wep01/objFn57.cpp
+--- tree0/src/wep01/objFn57.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep01/objFn57.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // FN57 (Blacktail) weapon object (wep01 module, first object; real file name unknown): model by
+ // weapon type, fire with cartridge ejection, reload by tune level.
+ //
+@@ -188,9 +189,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep02/objMauser.cpp tree/src/wep02/objMauser.cpp
+--- tree0/src/wep02/objMauser.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep02/objMauser.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // Red9 (Mauser) weapon object (wep02 module, first object; real file name unknown): model by weapon
+ // type, ready / fire / down motions, cartridge ejection, the two-step reload (magazine then pin).
+ //
+@@ -154,9 +155,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+@@ -265,9 +266,9 @@
+     spd.x = 1.0f;
+     spd.y = 40.0f;
+     spd.z = 40.0f;
+-    spd.x += fRand1_1() * 5.0f;
+-    spd.y += fRand1_1() * 5.0f;
+-    spd.z += fRand1_1() * 5.0f;
++    spd.x += re4ref_f11(0x80) * 5.0f;
++    spd.y += re4ref_f11(0x80) * 5.0f;
++    spd.z += re4ref_f11(0x80) * 5.0f;
+     PSMTXMultVecSR(pParts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x43), WEP_ARC_PTR(0x44), &pos, &rot, &spd, grav, rad, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep04/wep04.cpp tree/src/wep04/wep04.cpp
+--- tree0/src/wep04/wep04.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep04/wep04.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep04 module: the XD9 handgun (cObjXd9, object id 0x33). The module object carries the class,
+ // the entry points and the handgun routine registration (wep/pl_handgun.cpp).
+ //
+@@ -238,9 +239,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep06/wep06.cpp tree/src/wep06/wep06.cpp
+--- tree0/src/wep06/wep06.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep06/wep06.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep06 module: the Government (Matilda) handgun (cObjGovernment, object id 0x31). The module object
+ // carries the class, the entry points and the handgun routine registration (wep/pl_handgun.cpp).
+ //
+@@ -195,9 +196,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x3F), WEP_ARC_PTR(0x40), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep07/wep07.cpp tree/src/wep07/wep07.cpp
+--- tree0/src/wep07/wep07.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep07/wep07.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep07 module: the shotgun (cObjShotgun, object id 0x2B; routines wep/pl_shotgun.cpp).
+ //
+ // cObjShotgun is the cObjWep (game/objWep.cpp) of the pump shotgun (weapon_no 7), hanging on the
+@@ -188,9 +189,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x28, 3);
+     if (obj) {
+diff -ruN tree0/src/wep08/wep08.cpp tree/src/wep08/wep08.cpp
+--- tree0/src/wep08/wep08.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep08/wep08.cpp	2026-11-20 00:24:20.115329560 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep08 module: the Striker shotgun (cObjStriker, object id 0x2F; routines wep/pl_shotgun.cpp).
+ //
+ // cObjStriker is the cObjWep (game/objWep.cpp) of the Striker (weapon_no 8, a semi-auto drum
+@@ -160,9 +161,9 @@
+     spd.x = 3.0f;
+     spd.y = 30.0f;
+     spd.z = 20.0f;
+-    spd.x += fRand1_1() * 3.0f;
+-    spd.y += fRand1_1() * 5.0f;
+-    spd.z += fRand1_1() * 5.0f;
++    spd.x += re4ref_f11(0x80) * 3.0f;
++    spd.y += re4ref_f11(0x80) * 5.0f;
++    spd.z += re4ref_f11(0x80) * 5.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x28, 3);
+     if (obj) {
+diff -ruN tree0/src/wep09/objSniper.cpp tree/src/wep09/objSniper.cpp
+--- tree0/src/wep09/objSniper.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep09/objSniper.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // Bolt-action rifle weapon object (wep09 module, first object; real file name unknown): scoped rifle
+ // with cartridge ejection after the shot and the level-dependent reload motion.
+ //
+@@ -105,9 +106,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0xB), WEP_ARC_PTR(0xC), &pos, &rot, &spd, 10.0f, 50.0f, 0x28, 3);
+     if (obj) {
+diff -ruN tree0/src/wep12/objTompson.cpp tree/src/wep12/objTompson.cpp
+--- tree0/src/wep12/objTompson.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep12/objTompson.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // Thompson weapon object (wep12 module, first object; real file name unknown): a machine gun
+ // without weapon types (fixed model / ability), cartridge ejection and level-dependent reload.
+ //
+@@ -130,9 +131,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0xA), WEP_ARC_PTR(0xB), &pos, &rot, &spd, 10.0f, 50.0f, 0x28, 3);
+     if (obj) {
+diff -ruN tree0/src/wep14/objMine.cpp tree/src/wep14/objMine.cpp
+--- tree0/src/wep14/objMine.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep14/objMine.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // Mine thrower weapon object (wep14 module, first object; real file name unknown): fires a cEmMine
+ // (SetMine) along the aim line, ejects a cartridge (SetObj10), reloads by tune level.
+ //
+@@ -270,9 +271,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 40.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(PLA_ARC_PTR(0x7A), PLA_ARC_PTR(0x7B), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep17/objVp70.cpp tree/src/wep17/objVp70.cpp
+--- tree0/src/wep17/objVp70.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep17/objVp70.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // VP70 weapon object (wep17 module, first object; real file name unknown): a Mauser-style handgun
+ // with ready / fire motions, cartridge ejection and the reload by tune level.
+ //
+@@ -180,9 +181,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x7), WEP_ARC_PTR(0x8), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep27/wep27.cpp tree/src/wep27/wep27.cpp
+--- tree0/src/wep27/wep27.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep27/wep27.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep27 module: the Klauser machine gun (own copy of the cObjMachinegun class, routines wep/pl_machine.cpp).
+ //
+ // Krauser's (mercenaries) build of the TMP: the same cObjMachinegun as wep/objMachinegun.cpp with
+@@ -171,9 +172,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0xA), WEP_ARC_PTR(0xB), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep33/wep33.cpp tree/src/wep33/wep33.cpp
+--- tree0/src/wep33/wep33.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep33/wep33.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep33 module: the pump shotgun (cObjShotgun, object id 0x2B; routines wep/pl_shotgun.cpp).
+ //
+ // The mercenaries' build of wep07 (weapon_no 0x21): the same cObjShotgun hanging on the player's
+@@ -176,9 +177,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x28, 3);
+     if (obj) {
+diff -ruN tree0/src/wep38/wep38.cpp tree/src/wep38/wep38.cpp
+--- tree0/src/wep38/wep38.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep38/wep38.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep38 module: Ada's handgun (the Punisher class rebuilt without weapon types, object id 0x21).
+ // The module object carries the class, the entry points and the handgun routine registration
+ // (wep/pl_handgun.cpp).
+@@ -197,9 +198,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x8), WEP_ARC_PTR(0x9), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep39/wep39.cpp tree/src/wep39/wep39.cpp
+--- tree0/src/wep39/wep39.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep39/wep39.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep39 module: Ada's machine gun (own copy of the cObjMachinegun class, routines wep/pl_machine.cpp).
+ //
+ // Ada's TMP: the wep27 build (fire motions / SEs per weapon_type: 0/2 loud, 1/3 suppressed) with
+@@ -177,9 +178,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0xA), WEP_ARC_PTR(0xB), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/src/wep44/wep44.cpp tree/src/wep44/wep44.cpp
+--- tree0/src/wep44/wep44.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/src/wep44/wep44.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { unsigned char re4ref_rnd(unsigned int); float re4ref_f01(unsigned int); float re4ref_f11(unsigned int); }  // re4ref split (lane eng-ref)
+ // wep44 module: Wesker's handgun (cObjGovernment, object id 0x31; routines wep/pl_handgun.cpp).
+ //
+ // Wesker's Killer7: the wep06 cObjGovernment without weapon types (one model 0x6, weapon list id
+@@ -183,9 +184,9 @@
+     spd.x = 3.0f;
+     spd.y = 60.0f;
+     spd.z = 60.0f;
+-    spd.x += fRand1_1() * 15.0f;
+-    spd.y += fRand1_1() * 15.0f;
+-    spd.z += fRand1_1() * 15.0f;
++    spd.x += re4ref_f11(0x80) * 15.0f;
++    spd.y += re4ref_f11(0x80) * 15.0f;
++    spd.z += re4ref_f11(0x80) * 15.0f;
+     PSMTXMultVecSR(parts->mat, &spd, &spd);
+     obj = SetObj10(WEP_ARC_PTR(0x3F), WEP_ARC_PTR(0x40), &pos, &rot, &spd, 10.0f, 50.0f, 0x1E, 3);
+     if (obj) {
+diff -ruN tree0/include/rnd.h tree/include/rnd.h
+--- tree0/include/rnd.h	2026-11-20 00:07:42.000000000 -0500
++++ tree/include/rnd.h	2026-11-20 00:24:20.119329624 -0500
+@@ -13,4 +13,14 @@
+ f32 fRandSeed1_1(u32* seed);
+ }
+ 
++
++// re4ref split (lane eng-ref; REFERENCE build only, applied at build time by tools/plays_right/refsplit/refsplit.py):
++// presentation calls draw from a second generator when their category bit is in re4ref_split_mask.
++extern "C" {
++unsigned char re4ref_rnd(unsigned int cat);
++float re4ref_f01(unsigned int cat);
++float re4ref_f11(unsigned int cat);
++void re4ref_pseed(unsigned short seed);
++}
++
+ #endif
+diff -ruN -x third_party tree0/port/dreamcast/game/dbgwarp_bridge.cpp tree/port/dreamcast/game/dbgwarp_bridge.cpp
+--- tree0/port/dreamcast/game/dbgwarp_bridge.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/port/dreamcast/game/dbgwarp_bridge.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { extern volatile unsigned int re4ref_split_mask; extern unsigned int re4ref_pdraws, re4ref_pcats; void re4ref_pseed(unsigned short); }  // re4ref split (lane eng-ref)
+ // D367 test warp rig (DBG_WARP=1, test builds only; compiled out otherwise, and a disc without
+ // /cd/dc/warp.txt boots normally). Starts the game in a chosen room with Leon placed and the
+ // scenario state an event needs, within seconds of boot:
+@@ -680,6 +681,11 @@
+             wp.money = num(tok[1]);
+         } else if (!strcmp(k, "ammo")) {
+             wp.ammo = true;
++        } else if (!strcmp(k, "rsplit") && n >= 2) {
++            // re4ref split (lane eng-ref, reference build only): `rsplit <mask> [presentation seed]`
++            re4ref_split_mask = num(tok[1]);
++            if (n >= 3) re4ref_pseed((unsigned short) num(tok[2]));
++            re4dc_log("warp: rsplit mask=%x seed=%x\n", (unsigned) re4ref_split_mask, n >= 3 ? (unsigned) num(tok[2]) : 0u);
+         } else if (!strcmp(k, "god")) {
+             wp.god = true;
+             re4dc_warp_god = 1;
+diff -ruN -x third_party tree0/port/dreamcast/game/logic_trace.cpp tree/port/dreamcast/game/logic_trace.cpp
+--- tree0/port/dreamcast/game/logic_trace.cpp	2026-11-20 00:07:42.000000000 -0500
++++ tree/port/dreamcast/game/logic_trace.cpp	2026-11-20 00:24:20.119329624 -0500
+@@ -1,3 +1,4 @@
++extern "C" { extern volatile unsigned int re4ref_split_mask; extern unsigned int re4ref_pdraws, re4ref_pcats; void re4ref_pseed(unsigned short); }  // re4ref split (lane eng-ref)
+ // Determinism trace (LOGIC_TRACE=1 in game30.mk; never in a product image).
+ //
+ // Proves that a build or code change leaves the game logic bit-identical: once per frame-loop
+@@ -513,6 +514,13 @@
+ #endif
+         model_state(os, of, om, (cModel*) u);
+     const unsigned rng = re4dc_rnd_state();
++    {   // re4ref split (lane eng-ref, reference build only): presentation draws so far, when they moved
++        static unsigned int rs_last = ~0u;
++        if (re4ref_pdraws != rs_last) {
++            re4dc_log("RS t=%u pd=%u pc=%x\n", (unsigned) pG->Frame_cnt, (unsigned) re4ref_pdraws, (unsigned) re4ref_pcats);
++            rs_last = re4ref_pdraws;
++        }
++    }
+     const unsigned room = (unsigned(pG->stage_no) << 8) | pG->room_no;
+     // Fixture sync state for the scripted pad input (platform/pad.cpp "room=<id>/<player>"): lets a
+     // gameplay route start at the room's first tick with the player placed, the same anchor
