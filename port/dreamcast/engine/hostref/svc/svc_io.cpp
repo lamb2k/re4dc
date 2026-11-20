@@ -103,6 +103,9 @@ extern "C" float col_control_floor __attribute__((weak));
 extern "C" int skel_control_mk __attribute__((weak));
 extern "C" int skel_control_hist __attribute__((weak));
 extern "C" int cloth_control_short __attribute__((weak));
+extern "C" int col_control_grid __attribute__((weak));
+extern "C" int col_verify __attribute__((weak));
+extern "C" int col_grid_off __attribute__((weak));
 extern "C" int cloth_control_nogravity __attribute__((weak));
 extern "C" int cloth_control_droprng __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
@@ -115,10 +118,14 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "histnone", 8) && &skel_control_hist) skel_control_hist = 1;
         if (!strncmp(c, "histfrozen", 10) && &skel_control_hist) skel_control_hist = 2;
         if (!strncmp(c, "clothshort", 10) && &cloth_control_short) cloth_control_short = 1;
+        if (!strncmp(c, "colgrid", 7) && &col_control_grid) col_control_grid = 1;
         if (!strncmp(c, "clothnograv", 11) && &cloth_control_nogravity) cloth_control_nogravity = 1;
         if (!strncmp(c, "clothdroprng", 12) && &cloth_control_droprng) cloth_control_droprng = 1;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
     const char* p = getenv("RE4_SVC_POISON");
     if (&skel_poison) skel_poison = !(p && *p == '0');
+    if (&col_verify) col_verify = !(p && *p == '0');   // the check build also tests every polygon the grid skips
+    const char* g = getenv("RE4_SVC_COLGRID");
+    if (&col_grid_off && g && *g == '0') col_grid_off = 1;   // measurement: the line queries without the grid
 }

@@ -16,6 +16,14 @@
 //                             index. Every test starts with a plane test on these (the line's ends on one side, the
 //                             sphere behind the face or not crossing it): most polygons a query visits end here
 //   cold      [nPoly] 64 B    the other two vertices and the three edge vectors, read only by a polygon that passed
+//   grid      [nLeaf] 32 B    lane eng-svc2: each leaf's cell grid, 2 x 4 cells over the block's x / z extent and 8
+//                             bands over its polygons' heights (origin and inverse cell sizes)
+//   cmask     [nIdx]   8 B    the cells each leaf list entry's polygon (its box grown by kColMargin) overlaps: a line
+//                             query tests only the entries whose cells meet the cells of its own grown box, in the
+//                             list's order. A skipped polygon cannot be hit (the hit point lies in both boxes), or its
+//                             only hit is the segment's end (a segment lying exactly in its plane: the original's test
+//                             reports that wherever the polygon is), which never replaces the nearest hit. The check
+//                             build tests every skipped polygon too and counts both kinds
 //
 // The walk order and the per-query polygon dedupe (a bit per polygon) are the original's, so the order in which
 // polygons push a sphere out, and the nearest-hit ties of the line test, are the original's.
@@ -43,6 +51,14 @@ struct ColLeaf {         // 8 B
     u16 nFloor;          // floors + slopes (the 0x40 group)
     u16 nWall;           // walls (the 0x80 group)
 };
+struct ColGrid {         // 32 B
+    f32 x0, z0, y0;      // the grid's origin (the block's min x / z, its polygons' lowest y)
+    f32 ix, iz, iy;      // cells per unit (2 / size x, 4 / size z, 8 / height span; 0 for a flat span)
+    u32 pad[2];
+};
+#define COL_GRID_X 2      // 2 x 4 x 8 = 64 cells (the best of 4x4x2, 4x4x4, 8x8x1, 8x4x2, 2x2x16, 4x2x8, 2x4x8, 1x1x64, 2x1x32
+#define COL_GRID_Z 4      // on door103, the hill and the bell: SERVICES.md section 13)
+#define COL_GRID_Y 8
 struct ColPiece {
     // header: 64 B
     cSat* sat;
@@ -62,6 +78,8 @@ struct ColPiece {
     ColHot* hot;
     ColCold* cold;
     u32 nPoly;
+    ColGrid* grid;       // [nLeaf]
+    u64* cmask;          // [nIdx]
 };
 
 extern "C" {
@@ -72,8 +90,11 @@ ColPiece* col_piece_at(u32 i);
 u32 col_file_bytes(const ColPiece* pc);
 struct ColCounters {
     u32 bakes, late_bakes, line_queries, sphere_queries, nodes_tested, leaves, tris_line, tris_sphere, tri_bytes, cold_line,
-        cold_sphere;
+        cold_sphere, tris_skipped, filter_miss, filter_end;
 };
 extern ColCounters col_cnt;
 extern f32 col_control_floor;       // control: every floor-group triangle raised by this many units in the queries
+extern int col_control_grid;        // control (lane eng-svc2): the line query's cells taken one cell to the side
+extern int col_verify;              // check build: every skipped polygon is also tested; a hit counts filter_miss
+extern int col_grid_off;            // measurement: the grid not used (every list entry tested, as the original)
 }

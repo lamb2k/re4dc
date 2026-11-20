@@ -15,6 +15,7 @@
 #   clothshort RE4_SVC_CONTROL=clothshort: every cloth chain one link short (the native cloth; lane eng-svc2)
 #   clothnograv RE4_SVC_CONTROL=clothnograv: cloth gravity off
 #   clothdroprng RE4_SVC_CONTROL=clothdroprng: the cloth's first generator call (the wind phase) dropped
+#   colgrid  RE4_SVC_CONTROL=colgrid: the line query's grid cells taken one cell to the side (polygons wrongly skipped)
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # and the native build against itself (a second run) must PASS bit for bit (determinism).
 # The native runs sample the baked motion keys (RE4_SVC_MK=<pack>; without it the fixtures' archives are baked into
@@ -78,7 +79,8 @@ if h: print('; history %d/%d bone-ticks equal (%d not known yet), max %.3g u' % 
 print()" "$b/compare.json")
     local keys=""
     [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, cold keys %s, original decoder %s", $11, $15, $18}
-        /^cloth:/ {printf "; cloth: %s chains native (fallback %s), %s steps", $3, $6+0, $8+0}' "$b/svc.txt")
+        /^cloth:/ {printf "; cloth: %s chains native (fallback %s), %s steps", $3, $6+0, $8+0}
+        /^col / {for (i = 2; i < NF; i += 2) v[$i] = $(i+1); printf "; line queries %s: polygons tested %s, skipped %s (check: hits among them %s, end-point only %s)", v["line_queries"], v["tris_line"], v["tris_skipped"], v["filter_miss"], v["filter_end"]}' "$b/svc.txt")
     [ "$got" = "$must" ] || echo 1 > "$OUT/.status"
     echo "| $fx | $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | $first$keys |"
 }
@@ -112,6 +114,8 @@ print()" "$b/compare.json")
         row "control: cloth gravity off" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-clothnograv" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothdroprng" RE4_SVC_CONTROL=clothdroprng
         row "control: cloth generator call dropped" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-clothdroprng" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-colgrid" RE4_SVC_CONTROL=colgrid
+        row "control: line query cells one to the side" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-colgrid" "$fx"
     done
 } | tee "$OUT/svc_controls.md"
 [ -f "$OUT/.status" ] && status=1
