@@ -12,6 +12,10 @@
 #   mkrow    RE4_SVC_CONTROL=mkrow: the baked motion keys read one frame late (the next frame's row; lane eng-svc2)
 #   histnone RE4_SVC_CONTROL=histnone: no bone keeps its world_old / world_old2 (the check build serves NaN)
 #   histfrozen RE4_SVC_CONTROL=histfrozen: updateOldPos never moves the kept history
+#   clothshort RE4_SVC_CONTROL=clothshort: every cloth chain one link short (the native cloth; lane eng-svc2)
+#   clothnograv RE4_SVC_CONTROL=clothnograv: cloth gravity off
+#   clothdroprng RE4_SVC_CONTROL=clothdroprng: the cloth's first generator call (the wind phase) dropped
+# The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # and the native build against itself (a second run) must PASS bit for bit (determinism).
 # The native runs sample the baked motion keys (RE4_SVC_MK=<pack>; without it the fixtures' archives are baked into
 # <out dir>/motion.mkp first, bake/motion_keys.py). Each native row's detail ends with where the motion samples came
@@ -73,7 +77,8 @@ h=j.get('history')
 if h: print('; history %d/%d bone-ticks equal (%d not known yet), max %.3g u' % (h['equal'], h['compared'], h['unknown'], h['max']), end='')
 print()" "$b/compare.json")
     local keys=""
-    [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, cold keys %s, original decoder %s", $11, $15, $18}' "$b/svc.txt")
+    [ -f "$b/svc.txt" ] && keys=$(awk '/^motion keys:/ {printf "; motion samples: rows %s, cold keys %s, original decoder %s", $11, $15, $18}
+        /^cloth:/ {printf "; cloth: %s chains native (fallback %s), %s steps", $3, $6+0, $8+0}' "$b/svc.txt")
     [ "$got" = "$must" ] || echo 1 > "$OUT/.status"
     echo "| $fx | $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | $first$keys |"
 }
@@ -101,6 +106,12 @@ print()" "$b/compare.json")
         row "control: no bone history kept (check build: NaN)" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-histnone" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-histfrozen" RE4_SVC_CONTROL=histfrozen
         row "control: bone history never moves" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-histfrozen" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothshort" RE4_SVC_CONTROL=clothshort
+        row "control: cloth chains one link short" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-clothshort" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothnograv" RE4_SVC_CONTROL=clothnograv
+        row "control: cloth gravity off" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-clothnograv" "$fx"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothdroprng" RE4_SVC_CONTROL=clothdroprng
+        row "control: cloth generator call dropped" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-clothdroprng" "$fx"
     done
 } | tee "$OUT/svc_controls.md"
 [ -f "$OUT/.status" ] && status=1

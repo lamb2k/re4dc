@@ -23,6 +23,7 @@
 #include "global.h"
 #include "../../services/skeleton/skel.h"
 #include "../../services/collision/col.h"
+#include "../../services/cloth/cloth.h"
 
 // svc_io.cpp (PC side)
 extern "C" {
@@ -49,6 +50,7 @@ extern "C" u32 col_file_bytes(const ColPiece* pc) __attribute__((weak));
 extern "C" SkelTable* skel_table_at(u32 i) __attribute__((weak));
 extern "C" SkelCounters skel_cnt __attribute__((weak));
 extern "C" ColCounters col_cnt __attribute__((weak));
+extern "C" ClothCounters cloth_cnt __attribute__((weak));
 extern "C" int skel_control_parent __attribute__((weak));
 extern "C" int skel_control_no_ik __attribute__((weak));
 extern "C" int skel_poison __attribute__((weak));
@@ -193,6 +195,9 @@ extern "C" void host_svc_finish()
         fprintf(f, "motion samples: integer frame %u fractional %u at or past the end %u\n", s.samp_int, s.samp_frac, s.samp_end);
         fprintf(f, "motion keys: clips bound %u unbound %u; calls from rows %u from cold keys %u original decoder %u\n", s.mk_bound,
                 s.mk_unbound, s.mk_rows, s.mk_cold, s.mk_orig);
+        if (&cloth_cnt)
+            fprintf(f, "cloth: chains %u (original fallback %u), steps %u, links stepped %u, volumes built %u, resets %u\n",
+                    cloth_cnt.chains, cloth_cnt.fallback, cloth_cnt.moves, cloth_cnt.links, cloth_cnt.at_volumes, cloth_cnt.resets);
         fprintf(f, "history: bones joined %u (after the first updateOldPos %u), bone moves %u, set full %u\n", s.hist_join,
                 s.hist_late, s.hist_moves, s.hist_full);
         fclose(f);

@@ -102,6 +102,9 @@ extern "C" int skel_poison __attribute__((weak));
 extern "C" float col_control_floor __attribute__((weak));
 extern "C" int skel_control_mk __attribute__((weak));
 extern "C" int skel_control_hist __attribute__((weak));
+extern "C" int cloth_control_short __attribute__((weak));
+extern "C" int cloth_control_nogravity __attribute__((weak));
+extern "C" int cloth_control_droprng __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
 {
     const char* c = getenv("RE4_SVC_CONTROL");
@@ -111,6 +114,9 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "mkrow", 5) && &skel_control_mk) skel_control_mk = 1;
         if (!strncmp(c, "histnone", 8) && &skel_control_hist) skel_control_hist = 1;
         if (!strncmp(c, "histfrozen", 10) && &skel_control_hist) skel_control_hist = 2;
+        if (!strncmp(c, "clothshort", 10) && &cloth_control_short) cloth_control_short = 1;
+        if (!strncmp(c, "clothnograv", 11) && &cloth_control_nogravity) cloth_control_nogravity = 1;
+        if (!strncmp(c, "clothdroprng", 12) && &cloth_control_droprng) cloth_control_droprng = 1;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
     const char* p = getenv("RE4_SVC_POISON");

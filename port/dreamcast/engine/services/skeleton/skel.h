@@ -120,6 +120,14 @@ void skel_publish(SkelTable* t);                     // palette = world x bind f
 void skel_publish_all(void);                         // every live table
 u32 skel_table_count(void);
 SkelTable* skel_table_at(u32 i);
+// for the other native services that work on the bones (lane eng-svc2: the cloth, services/cloth)
+SkelTable* skel_table_for(cModel* m);                // the model's table, made on first use (NULL: no parts)
+int skel_parts_bone(cModel* m, int no);              // getPartsPtr(no)'s bone, without making it a mailbox bone; -1
+int skel_record_bone(SkelTable* t, const void* rec); // a cParts record's bone; -1
+void skel_enter(SkelTable* t);                       // an entry from another service: takes back the records handed out
+void skel_leave(SkelTable* t, u32 groups);           // ... and serves the mailbox the groups it changed (1 world, 2 local)
+SkelHist* skel_history(SkelTable* t, u32 bone);      // the bone's kept world_old / world_old2 (NULL: not kept)
+const f32 (*skel_parent_mat(SkelTable* t, u32 bone))[4];   // the parent's world matrix (a bone, the model, outside)
 // counters (svc census and the cost indicator)
 struct SkelCounters {
     u32 mat_local, mat_world, mat_world_slow, xmtrx_loads, add_rot, samples, hokan_bones, blend_bones, ik_chains,

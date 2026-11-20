@@ -1466,6 +1466,9 @@ SkelTable* table_create(cModel* m)
     }
     for (b = 0; b < n && t->nRoot < sizeof t->root; b++)
         if (t->parent[b] == SKEL_PARENT_MODEL || t->parent[b] == SKEL_PARENT_EXT) t->root[t->nRoot++] = (u8) b;
+    // bone 0 keeps its history from the start: the body's history is what the census shows read most (moveBust,
+    // the cloth's root speed, getSpeedVector), often first asked for after the first updateOldPos
+    hist_add(t, 0);
     if (g_ntab >= kMaxTables) {
         pLog->err(0, 0, "skel: too many tables");
         pool_free(blk);
@@ -1509,6 +1512,44 @@ SkelTable* table_for(cModel* m)
 // =================================================================================================================
 // engine API
 extern "C" SkelTable* skel_table_of(const cModel* m) { return find_table(m); }
+extern "C" SkelTable* skel_table_for(cModel* m) { return table_for(m); }
+extern "C" int skel_record_bone(SkelTable* t, const void* rec)
+{
+    int b;
+    SkelTable* r = table_of_record(rec, &b);
+    return r && r == t ? b : -1;
+}
+extern "C" int skel_parts_bone(cModel* m, int no)
+{
+    cModel* p = m->pParts;
+    if (no < 0 || !PTR_OK(p)) return -1;
+    if (m->be_flag & 0x2000) {
+        p = (cModel*) ((cParts*) p + no);
+    } else {
+        for (; no > 0; no--) {
+            p = p->pParts;
+            if (!PTR_OK(p)) return -1;
+        }
+    }
+    SkelTable* t = find_table(m);
+    return t ? skel_record_bone(t, p) : -1;
+}
+extern "C" void skel_enter(SkelTable* t)
+{
+    Scope sc(t, 0);
+}
+extern "C" void skel_leave(SkelTable* t, u32 groups)
+{
+    for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], groups);
+}
+extern "C" SkelHist* skel_history(SkelTable* t, u32 bone)
+{
+    return bone < t->n && t->hslot[bone] != 0xFF ? &t->hold[t->hslot[bone]] : 0;
+}
+extern "C" const f32 (*skel_parent_mat(SkelTable* t, u32 bone))[4]
+{
+    return parent_of(t, bone).m;
+}
 extern "C" u32 skel_table_count(void) { return g_ntab; }
 extern "C" SkelTable* skel_table_at(u32 i) { return i < g_ntab ? g_tab[i] : 0; }
 
