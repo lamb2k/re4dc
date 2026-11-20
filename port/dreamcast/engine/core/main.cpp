@@ -41,6 +41,7 @@ static void room_init()
     MemCreateHeap(4, MemGetHeapStartAddr(0) + 0x1000, MemGetHeapEndAddr(0));
     MemSetCurrentHeap(4);
     e1_load_room(r.room);               // room archive sections and the core camera data (engine room pack)
+    pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points (the partner's follow)
     ReadPlayerData(pG->pl_type, pG->pl_costume);
     e1_managers_room_init();            // ModInfoMgr, PartsMgr, EmMgr, ObjMgr arrays on the room heap
     e1_collision_room_init();           // SatMgr / EatMgr over the room's SAT / EAT
@@ -58,6 +59,7 @@ static void room_init()
     e1_view_room_init();
     pG->Rno0 = 3;
     pG->Rno1 = 0;
+    e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
 }
 
 // gameMainLoop, the hosted subset in its order (game.cpp:798).
@@ -77,6 +79,9 @@ static void game_tick(E1Timing& tm)
         preb_slow_flg = 0;
     }
     e1_svc_begin();
+    tm.chars_us = 0;
+    if (e1_scene == E1_SCENE_HILL) e1_partner_chars_move(tm);   // EmMgr.move: the partner (gameMainLoop order)
+    e1_rng_owner(1);
     if (!(pG->Stop_flg & 0x10000000) && (pPL->be_flag & 0x20) &&
         (!(pG->Status_flg[1] & 0x10000000) || (pPL->be_flag & 0x800))) {
         uint64_t t = now_us();
@@ -84,10 +89,13 @@ static void game_tick(E1Timing& tm)
         tm.player_us = now_us() - t;
     }
     BitOff(pG->Status_flg[2], 0x8000000);
+    e1_rng_owner(3);
     uint64_t t1 = now_us();
     if (!(pG->Stop_flg & 0x4000000)) ObjMgr.move();
     uint64_t t2 = now_us();
+    e1_rng_owner(2);
     CameraMove();
+    e1_rng_owner(0);
     tm.obj_us = t2 - t1;
     tm.cam_us = now_us() - t2;
     tm.services_us = e1_svc_end();
@@ -100,6 +108,7 @@ int main()
     e1_state[0] = 1;
     e1_arena_init();
     e1_globals_init();
+    e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
     e1_state[0] = 2;
     room_init();
     e1_state[0] = 3;
@@ -116,10 +125,12 @@ int main()
         E1Timing& tm = e1_timing[(e1_tick - 1) % E1_TICKS];
         uint64_t a = now_us();
         e1_input_latch(e1_tick);
+        e1_partner_tick_begin(e1_tick);
         PadRead();
         pG->Frame_cnt++;
         uint64_t b = now_us();
         game_tick(tm);
+        e1_partner_tick_end(e1_tick);
         uint64_t c = now_us();
         e1_trace_tick(e1_tick);
         uint64_t d = now_us();

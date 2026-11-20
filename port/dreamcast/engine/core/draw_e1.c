@@ -11,6 +11,12 @@
 #include <stdio.h>
 
 volatile uint32_t m1_frame;
+/* eng-look's run-time content steps (render/content.h), read by the shared actor pass since that lane's merge: the
+   E1 image draws at step 0 of every item with the glow on, the bench's defaults (lane eng-e1b: the E1 image did not
+   link without them). */
+#include "content.h"
+volatile uint32_t m1_content[CS_COUNT] = {[CS_GLOW] = 1};
+volatile uint32_t m1_content_counts[8];
 volatile uint32_t m1_state[8];
 static NativeScene scene;
 static int open_ok, stills;

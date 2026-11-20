@@ -43,6 +43,8 @@ all: $(OUT)/e1.elf
 
 # rnd.cpp with its read-only trace accessor (re4dc_rnd_state: returns the generator state, changes nothing).
 $(OUT)/h/game/rnd.o: ORIG_FLAGS += -DRE4DC_LOGIC_TRACE=1
+# The partner module's REL entry under its own name (wep02's keeps _prolog).
+$(OUT)/h/pl11/pl11.o: ORIG_FLAGS += -D_prolog=pl11_prolog -D_epilog=pl11_epilog -D_unresolved=pl11_unresolved
 $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@

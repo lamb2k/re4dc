@@ -130,11 +130,12 @@ void e1_load_room(unsigned room)
     uint32_t size = 0;
     uint8_t* raw = (uint8_t*) e1_file_load(path, &size, 32);
     if (!raw) return;
-    static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS"};
-    e1_room_arc = compact_arc(raw, size, keep, 4, &e1_resident_bytes[2]);
+    // RTP: the room's route points (route_ck.cpp, the partner's follow; lane eng-e1b)
+    static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP"};
+    e1_room_arc = compact_arc(raw, size, keep, 5, &e1_resident_bytes[2]);
     free(raw);
     pG->pRoom = e1_room_arc;
-    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
+    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
     // core archive: the camera core data and the vibration table
     uint32_t cb = 0;
     uint8_t* core = drs_body("/cd/etc/core.das", &cb);
