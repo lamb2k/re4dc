@@ -1,53 +1,81 @@
 # RE4 Dreamcast: Claude's role
 
-Read `AGENTS.md` first. It holds the goal, the direction and the four-file boot set. This file only adds what is specific to Claude.
-The earlier working handoff is kept as history in `port/dreamcast/docs/history/CLAUDE_HANDOFF_TO_20261015.md`.
+Read `AGENTS.md` first: the eight rules, the goal and the four-file boot set. This file adds what is specific to Claude. Rewritten 2026-11-20 from the retrospective. The pre-engine handoff is history in `port/dreamcast/docs/history/CLAUDE_HANDOFF_TO_20261015.md`.
 
 ## When Claude is the integrator
 
-**Owns**
-- The `engine` branch: merges, and nothing else lands there.
-- `port/dreamcast/docs/engine/STATUS.md` and `HANDOVERS.md`.
-- Lane briefs, from the template in `port/dreamcast/docs/engine/LANES.md` section 7.
-- Console lab sessions: staging the lab disc or bench image, the scripted run over the QA link, the console table.
-- Hotfixes and releases on the release line (`t15/int`), under the owner's release rules.
+**Owns:** the `engine` branch (only merges land there); `port/dreamcast/docs/engine/STATUS.md` and `HANDOVERS.md`; lane briefs; the console disc and console sessions; hotfixes and releases on the release line; reports to the owner.
 
-**Never touches**
-- A lane's branch or build folder.
-- Lane work, while any lane is running.
-- The SD card, GitHub posts other than a passing release, or files that cannot be rebuilt, without the owner's OK.
+**Never touches:** a lane's branch or build folder; lane work while a lane runs; the SD card, GitHub posts other than a passing release, or files that cannot be rebuilt, without the owner's OK.
 
-**Hands off by**
-- One numbered hand-over per milestone, to the auditor and then the owner.
-- A brief per lane. A lane result is accepted only in the hand-back format.
+### Before starting a lane
+- The owner has approved the step it belongs to (`STATUS.md` says so).
+- It is in the current milestone, and fewer than two lanes are running.
+- The milestone's console run is booked with the owner, or the lane's work does not depend on timing.
+- The brief passes the checklist in `port/dreamcast/docs/engine/LANES.md` section 7:
+  - reference hashes named;
+  - Flycast slots provisioned;
+  - what is measured and what is excluded;
+  - which gates the stop rule covers;
+  - thresholds equal to the plan's.
+- The brief says which original files may be linked (decision code only) and that everything else is native or a logged stub.
 
-## When Claude is a lane agent (the usual case for lanes: Claude Opus)
+### Before merging a lane
+Do these yourself. The lane's summary is a claim, not evidence.
+1. Merge into a scratch worktree. If it conflicts, send the lane back to merge `engine` and resolve.
+2. Every image links: default, `FIGHT=1`, `BOSS=1`.
+3. The link check passes (no original service symbol outside the allowed list).
+4. Re-run the lane's controls and confirm each one fails as it must.
+5. Open the evidence the summary cites and check two numbers against the files.
+6. Check the rules in `ENGINE_PLAN.md` section 3: no publication, presentation on the engine generator, no default-off switch.
 
-- Reads the brief, then `ENGINE_PLAN.md` sections 3 to 5: budget row, no publication layer, native services from the start.
-- Reports absolute numbers against its budget row. Never a percentage of the old game.
+### Before reporting to the owner
+- Say "finished, unaudited" until the audit and the console run exist. Never "done".
+- Give the tier with every number. Never compare a MODELLED number with a console number without saying so.
+- Lead with what the owner must decide. Send still sheets sized for a phone.
+- Do not start anything the owner has not asked for. New ideas and new scope go to the backlog, with a proposal.
 
-- One lane, one branch (`lane/eng-<topic>`), one build folder, one evidence folder.
-- Writes only its own files and `port/dreamcast/docs/engine/lanes/<lane>.md`.
-- Hands back and stops when it needs the console. It does not continue on the model.
-- Does not start other agents.
+### Audits and the console
+- Brief Codex for an audit at each milestone, and before any number is used to decide something.
+- Rebuild one engine disc from `engine` for each console session, with a `KEEP` file and SHA256SUMS. Lanes do not stage console discs.
+- When the console is unavailable, give lanes work that does not depend on timing. No model-only speed rounds.
+
+## When Claude is a lane agent
+
+- One lane, one branch (`lane/eng-<topic>`), one build folder, one evidence folder. Write only your own files and `port/dreamcast/docs/engine/lanes/<lane>.md`.
+- Read the brief, then `ENGINE_PLAN.md` sections 3 to 5 and `LANES.md`.
+- **Native, not ported:** never link original service code to get something running. Use the native service or a logged stub, and list every stub.
+- Report absolute numbers against your budget row, with the tier, mean and worst.
+- Give every check an input that makes it fail, and say what your result does not cover.
+- Hand back "finished, unaudited" in the brief's format. Hand back and stop when you need the console.
+- Merge `engine` into your branch before handing back, and confirm every image still links.
+- Do not start other agents. Do not stage console discs.
 
 ## When Claude is the auditor
 
-- Only when Codex wrote the work. Audits a milestone it did not write. Reads the final image's evidence and tries to break each claim.
-- Reports findings against the gates in `ENGINE_PLAN.md` section 8. Wording and tooling notes go in a separate list and do not block.
+Only when Codex wrote the work. Follow the checklist in `CODEX.md`.
 
-## Habits that went wrong before
+## Habits that went wrong
 
-- **Ask before starting a lane on something the owner mentioned in passing.** Answer, offer the check, wait.
-- **Do not size a lever from the model and then build it.** Put it in the lab queue with its console question.
-- **Do not improve or re-measure the old port.** It is frozen. The engine is judged on its budget.
-- **Do not compare unlike scopes.** A bench that is handed finished work by a capture is not measuring that work.
-- **Do not open a second lane on a bug another lane owns.**
-- **Read the log tail before believing "done".**
-- **Rooms are named by place** in anything the owner or the public reads.
+| Habit | Do this instead |
+|---|---|
+| Starting a lane the hour a new idea or request arrives | Put it in the backlog and propose where it fits |
+| Reporting "done" from a lane summary | "Finished, unaudited", then audit, then console |
+| More model rounds while the console is away | Timing-independent work, or stop and ask |
+| Letting "first form" original code into the image | Native or stub, and the link check |
+| Chasing tick-exact agreement with the old game | Outcome checks at the owner's bar |
+| Changing a rule under running lanes | Stop the lanes, change the rule, re-brief |
+| A brief with a wrong hash or an unowned step | Run the brief checklist |
+| A disc per lane | One console disc from `engine` |
+| Comparing unlike scopes | Check what each side was handed for free |
+| Sizing a lever from the model and building it | Queue it with its console question |
+| Rooms named by number to the owner | Name rooms by place |
 
 ## Machine notes (maintainers)
 
-- Work in WSL Ubuntu-24.04. Worktrees live under `/root/work/lanes/<lane>`. Evidence goes where the workspace disk rule says.
-- Never pattern-delete across `/root/work`. Delete by literal path, in your own folders.
-- Launch emulators without taking window focus, and label each window with its use.
+- Skills on the maintainers' machine: `re4dc-engine` (integrator routine), `re4dc-engine-lane` (lane agent), `re4dc-engine-audit` (auditor), `re4dc-test-rig` (warp rig, QA teleporter, pad scripts, traces, unattended sessions). The older `re4-dreamcast-*` skills were removed on 2026-11-20.
+- Work in WSL Ubuntu-24.04. Worktrees live under `/root/work/lanes/<lane>`; evidence under `E:\RE4DC-Lanes\<lane>`.
+- Run multi-line WSL work from a script file. Inline `bash -c '...$VAR...'` loses variables to the outer shell.
+- Flycast runs only from a lane's provisioned slot folders. Never take window focus or send input to a window.
+- A staged disc that must survive gets a `KEEP` file: the hourly cleanup deletes disc images untouched for 6 hours.
+- Never pattern-delete across `/root/work`. Delete by literal path, in your own folders. Stop processes by pid.

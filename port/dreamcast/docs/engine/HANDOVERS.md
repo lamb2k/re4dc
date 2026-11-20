@@ -2,6 +2,37 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-012 (2026-11-20): plan version 3 approved; beyond the PS2 version added; work resumes
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** after the retrospective and the draft plan, "Update agent .md and skills and codex.md to improve performance based on the retro"; then "Do we have in our plan to surpass the ps2 version with surreal Dreamcast strength enhancements"; then "Ok update plan and get to work".
+- **Read as:** plan version 3 is approved, and "beyond the PS2 version" becomes a stated goal with its own step (step 6, after chapter 1 holds the floor on console).
+- **Open:** the asset source for step 6; the console evening date; El Gigante's lighter body.
+- **Started, under the retrospective's rules (two lanes, both independent of timing while the console is unavailable):**
+  - eng-svc4 (step 2, PC-only), resumed from wip/eng-svc4-20261120: native versions of the remaining original service units, the link check, the strict plays-right reader.
+  - eng-loop2 (step 1 preparation), resumed from wip/eng-loop2-20261120: the loader's Flycast proof and the script that builds one console disc from `engine`.
+- **Not started:** eng-e1e (E1 image fixes) follows eng-svc4. The split reference for the fight (wip/eng-ref-20261120) stays parked: plays right is judged by outcome from now on.
+
+## H-011 (2026-11-20): E1 audit (Codex): not passed
+
+- **From:** the auditor (Codex). **To:** the integrator.
+- **Audited:** origin/engine fecf63140. Report: E:\RE4DC-Lanes\eng-e1d\AUDIT-E1.md.
+- **Holds:**
+  - Leon and Ashley run their original behaviour code on the engine.
+  - On the hill, every selected gameplay field matches re4ref for 729 ticks, with no feed.
+  - Native skeleton, IK, collision queries, root and clock, and cloth are linked; ik.cpp, shape.cpp and pendulum.cpp are out.
+  - The budget figures match the logs.
+- **Does not hold:**
+  - Original service units are still linked (section 1).
+  - Per-picture conversions remain: palette repack, the light record, camera and HUD (section 2).
+  - Rumble draws from the game generator (section 3).
+  - The unfed village position check fails on 118 ticks, and the plays-right reader passes truncated traces (section 4).
+  - Serial printing sits inside the timed rows, and the rows do not partition the same work across tiers (section 5).
+  - Heap 0 and heap 4 alias (section 6).
+  - The look differs beyond the listed items: Ashley's pose and the HUD gauges (section 7).
+  - The staged disc predates the merge.
+- **Action:** eng-svc4 (PC, running) retires the original service units, adds an allowed-function link check and makes the reader strict. eng-e1e (emulator, queued) fixes the image side and stages one final E1 image.
+
 ## H-010 (2026-11-19): native services, split random numbers
 
 - **From:** the owner. **To:** the integrator.

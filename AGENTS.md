@@ -1,9 +1,19 @@
 # RE4 Dreamcast: agent rules
 
-Applies to every agent, Claude or Codex. Rewritten 2026-11-19. The earlier text is kept as history in
-`port/dreamcast/docs/history/AGENTS_TO_20261015.md` and is not instruction.
+Applies to every agent, Claude or Codex. Rewritten 2026-11-20 from the retrospective (`port/dreamcast/docs/engine/RETRO_20261120.md`). Earlier text is history in `port/dreamcast/docs/history/` and is not instruction.
 
-**State:** the owner approved the engine line on 2026-11-19 and asked for the F-Zero X approach. Plan version 2 is in `port/dreamcast/docs/ENGINE_PLAN.md`. Lanes start only from a brief written by the integrator.
+**State:** read `port/dreamcast/docs/engine/STATUS.md`. If it says lanes are stopped or the plan is waiting on the owner, do not start a lane.
+
+## The eight rules (each one cost us time when it was broken)
+
+1. **Done means audited and run on the console.** Until then work is "finished, unaudited", and that is the only status you report.
+2. **One milestone at a time, at most two lanes.** New scope goes to the backlog in `ENGINE_PLAN.md` section 7, not into a new lane.
+3. **The console decides.** Label every number console, MODELLED, Flycast or estimate. One model-only speed round per milestone, then the console. If the console is unavailable, do work that does not depend on timing.
+4. **Native, not ported.** No original service code in the engine image (drawing, skeleton, collision, cloth, effects, routes, camera, input, math, managers). Use the native service or a logged stub. The link check enforces it.
+5. **No publication layer.** Engine state is draw state. Nothing converts a behaviour object into draw data each tick or picture.
+6. **Plays right by outcome.** Same kills, damage, waves, triggers, doors, room clears and cutscenes, no stuck events, positions within tolerance. Never tick-exact matching with the old game.
+7. **Every check ships with an input that makes it fail.** A check that cannot fail is not evidence.
+8. **Evidence, not summaries.** Before merging or reporting, re-run the controls and read the files. An agent's summary is a claim.
 
 ## Outside contributors start here
 
@@ -18,55 +28,51 @@ The rest of this file is the maintainers' working rules. It names folders on the
 ## Read these four files, in this order
 
 1. `AGENTS.md` (this file).
-2. `port/dreamcast/docs/ENGINE_PLAN.md`: goal, architecture, milestones, gates, what stopped.
-3. `port/dreamcast/docs/engine/STATUS.md`: milestone state, benchmark numbers, running lanes.
+2. `port/dreamcast/docs/ENGINE_PLAN.md`: goal, budget, architecture, the path (section 7), gates (section 8), workflow (section 9).
+3. `port/dreamcast/docs/engine/STATUS.md`: milestone state, numbers, running lanes, what waits on the owner.
 4. `port/dreamcast/docs/engine/HANDOVERS.md`: the newest numbered hand-over.
 
-Then your role file: `CLAUDE.md` or `CODEX.md`. Lane rules: `port/dreamcast/docs/engine/LANES.md`.
+Then your role file (`CLAUDE.md` or `CODEX.md`) and `port/dreamcast/docs/engine/LANES.md`.
 
 Everything else under `port/dreamcast/docs` is history or reference. Read a history file for a specific past result. Do not take work orders from it.
 
 ## Goal
 
-- All of the game in a new native Dreamcast engine, playable on a real console, from PS2 assets, with **30 fps as the floor** at the benchmark scenes.
-- **Correct means it plays right and looks right:** same kills, triggers, doors, waves, room clears and cutscenes; no desync or stuck events; still pairs for the look. Bit-exact results are not a goal.
-- **Never changed:** behaviour. Collision results, event sequencing, game state and AI decisions stay the same. Enemy cap 4. No GameCube assets drawn or played.
+- All of the game in a new native Dreamcast engine, playable on a real console, from PS2 assets.
+- **30 fps is the floor:** at most two 60 Hz fields between presented pictures, judged on the worst interval.
+- **Correct means it plays right and looks right.** Bit-exact results are not a goal.
+- **Never changed:** behaviour (collision results, event order, game state, AI decisions), enemy cap 4, no GameCube assets.
 
-## Direction
+## How the engine is built
 
-- **The engine is the program; the original game supplies behaviour** (owner 2026-11-19: "I want all of the game in a new native improved engine"). The engine owns the main loop, memory map, loading, renderer, effects, skeleton and collision services, native from the start of each milestone. Only decision code (AI, player, events, scripts) stays original, hosted through thin setters.
-- **No original service code in the engine image, and split random numbers** (owner 2026-11-19, "Split it"). Hosted characters use native services or logged stubs. The original generator serves behaviour only; presentation (effects, cloth, sway) uses an engine generator. Plays right is gameplay equivalence plus position tolerance, not generator state.
-- **No publication layer.** Engine state is draw state. Behaviour code never hands the engine an object to convert; it sets position, animation, flags, spawn and kill on engine tables. The skeleton is evaluated once, into the matrices the skinning uses.
-- **Budget first.** Every lane reports against its row of the whole-frame budget in `ENGINE_PLAN.md` section 4 (behaviour, services, publication, drawing, system, margin), in absolute ms, on the worst interval as well as the mean.
-- **Content built for this console.** The graphics chip has headroom and the CPU does not. Use baked visibility, distance levels, caps and baked lighting, each approved by the owner from a still pair. Do not draw the PS2 content one for one.
-- **No work on the old path** (owner 2026-11-19). Do not improve, re-measure or re-profile the old drawing path. The engine is judged on the absolute budget, never as a percentage of the old game.
-- **Console decides.** Every number is labelled console, MODELLED, Flycast or estimate. Before a console number exists, a modelled or emulator figure counts only if it fits in half the budget.
-- **Judge the whole picture** on the fixed benchmark: mean, p99, worst interval, count over budget. The floor is at most two 60 Hz fields between presented pictures. One model-only round per milestone at most; then the console.
-- **First remove repeated work, fix data layout, batch, and convert offline.** Add SH-4 assembly only where the console profile shows the cost and a simpler fix is not enough. Write down why.
-- **SH4ZAM is the math and kernel base** (owner 2026-11-19: "the engine needs to leverage sh4zam or improve upon it if there are shortcomings"). Build kernels on it. Where it falls short, improve it in SH4ZAM's own style and offer the change upstream; posting to `gyrovorbis/sh4zam` needs the owner's OK.
-- **A change merges switched on, or it does not merge.** No default-off speed switches on the engine line.
-- **The release line is frozen to hotfixes.** Do not tune the old drawing path. Do not add engine features to it as switches.
+- **The engine is the program; the original game supplies decisions.** The engine owns the main loop, memory map, loading, renderer and every service. Original AI, player, event and script code is hosted on it and calls thin setters.
+- **Random numbers are split.** The original generator serves behaviour only. Effects, cloth, eye and camera sway, voices and rumble use an engine generator. Aim sway moves shots, so it is behaviour.
+- **Budget first.** Every lane reports against its row in `ENGINE_PLAN.md` section 4 (behaviour 2, services 9, publication 0, drawing 14, system 3.5 ms), in absolute ms, mean and worst. Never as a percentage of the old game.
+- **Content built for this console.** The graphics chip has headroom and the CPU does not. Baked visibility, distance levels and caps, each approved by the owner from still pairs.
+- **Simple fixes first.** Remove repeated work, fix data layout, batch, convert offline. Add SH-4 assembly only where the console profile shows the cost.
+- **SH4ZAM is the math and kernel base.** Improve it in its own style where it falls short. Posting to `gyrovorbis/sh4zam` needs the owner's OK.
+- **A change merges switched on, or it does not merge.** No default-off speed switches.
+- **The old port is frozen.** Hotfixes only on the release line. Do not improve, re-measure or re-profile it.
 
 ## Roles
 
 | Role | Who | Does | Never does |
 |---|---|---|---|
 | **Owner** | the user | Sets goal and bar; approves the plan, look steps and releases; boots the console | |
-| **Integrator** | the Claude session that resumes | Merges lanes into `engine` on passing gates; keeps `STATUS.md`; writes briefs and steers; runs console sessions; ships hotfixes on the release line | Lane work while lanes are running; edits to a lane's branch |
-| **Lane agent** | Claude Opus agents (owner 2026-11-19: "switch to opus to get this work done") | One lane, one branch, one build folder; hands back in the template | Merging; other lanes' files; `STATUS.md`; deleting outside its own folders |
-| **Auditor** | Codex | One independent audit per milestone, of work it did not write; an extra check on any number about to drive a decision | Reviewing each change; blocking on wording |
+| **Integrator** | the Claude session that resumes | Writes briefs and steers; checks and merges lanes into `engine`; keeps `STATUS.md` and `HANDOVERS.md`; builds the console disc and runs console sessions; reports to the owner | Lane work while lanes run; merging on a summary; starting a lane for a new idea |
+| **Lane agent** | Claude Opus agents | One lane, one branch, one build folder; hands back "finished, unaudited" in the template | Merging; other lanes' files; `STATUS.md`; console discs; deleting outside its own folders |
+| **Auditor** | Codex | One independent audit per milestone, and of any number about to drive a decision | Reviewing each change; blocking on wording |
 
 ## Gates
 
 Per milestone, once, on the final image. Full table: `ENGINE_PLAN.md` section 8.
 
-- Frame floor on the console. Plays right. Determinism of one build against itself. Looks right. Memory floors. Disc reads. Asset source.
-- Every check ships with an input that makes it fail.
-- Knob-off identity and STRICT are debugging tools. They gate only hotfixes on the release line.
+- Frame floor on the console. Plays right by outcome. Determinism of one build against itself. Looks right. Memory with no overlap. No disc reads in play. The link check.
+- Knob-off identity and STRICT gate only hotfixes on the release line.
 
 ## Hand-overs
 
-Numbered, in `port/dreamcast/docs/engine/HANDOVERS.md`. One per milestone or blocking question. Commit, image hashes, numbers with tiers, evidence path, what was not done. A message with no reply is not agreement.
+Numbered, in `port/dreamcast/docs/engine/HANDOVERS.md`. One per milestone, audit or owner decision. Commit, image hashes, numbers with tiers, evidence path, what was not done. Owner decisions are recorded in the owner's words. A message with no reply is not agreement.
 
 ## Repository rules
 
