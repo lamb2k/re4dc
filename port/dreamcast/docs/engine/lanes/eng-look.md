@@ -118,7 +118,7 @@ re-lit every 4th picture)
 
 ## 5. The staged disc
 
-`E:\RE4DC-Lanes\eng-lookuild\E0-GDEMU-lkg\` (KEEP and SHA256SUMS inside): disc.gdi
+`E:\RE4DC-Lanes\eng-lookbuild\E0-GDEMU-lkg\` (KEEP and SHA256SUMS inside): disc.gdi
 `025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f`, track01.bin
 `8ffad7e33ae944b2e63a4bed060cfe64732afb8361a4ed79b411b179dd43b1af`, track02.raw
 `15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48`, track03.bin
