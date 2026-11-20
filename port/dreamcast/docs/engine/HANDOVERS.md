@@ -2,6 +2,26 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-011 (2026-11-20): E1 audit (Codex): not passed
+
+- **From:** the auditor (Codex). **To:** the integrator.
+- **Audited:** origin/engine fecf63140. Report: E:\RE4DC-Lanes\eng-e1d\AUDIT-E1.md.
+- **Holds:**
+  - Leon and Ashley run their original behaviour code on the engine.
+  - On the hill, every selected gameplay field matches re4ref for 729 ticks, with no feed.
+  - Native skeleton, IK, collision queries, root and clock, and cloth are linked; ik.cpp, shape.cpp and pendulum.cpp are out.
+  - The budget figures match the logs.
+- **Does not hold:**
+  - Original service units are still linked (section 1).
+  - Per-picture conversions remain: palette repack, the light record, camera and HUD (section 2).
+  - Rumble draws from the game generator (section 3).
+  - The unfed village position check fails on 118 ticks, and the plays-right reader passes truncated traces (section 4).
+  - Serial printing sits inside the timed rows, and the rows do not partition the same work across tiers (section 5).
+  - Heap 0 and heap 4 alias (section 6).
+  - The look differs beyond the listed items: Ashley's pose and the HUD gauges (section 7).
+  - The staged disc predates the merge.
+- **Action:** eng-svc4 (PC, running) retires the original service units, adds an allowed-function link check and makes the reader strict. eng-e1e (emulator, queued) fixes the image side and stages one final E1 image.
+
 ## H-010 (2026-11-19): native services, split random numbers
 
 - **From:** the owner. **To:** the integrator.

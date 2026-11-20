@@ -10,7 +10,7 @@ Only the integrator edits this file. Keep it under 80 lines.
 |---|---|---|---|
 | M0 | Console truth (lab session) | Lab disc v2 READY (lane/lab33 dc1ca2809, disc from 03b6e57f2, E:\RE4DC-Lanes\lab33\final). Core tier 85 min, std 279 min | Waits for SD card |
 | E0 | Walkabout and the drawing row (budget 14 ms console) | Console-ready disc E:\RE4DC-Lanes\eng-e0build\E0-GDEMU-e0b (renderer 1edab55a8, merged). MODELLED 25 pictures: cross 16.3 mean / 22.0 worst, hay-fork 18.8 / 21.1 (the source lighting rule added 1.7 to 2.3 ms). Fixed: near-plane clipping (with a test the old loop fails); visibility safe in unknown cells and heights, whole room in 256 KiB; texture copies released; raw rows per picture with A/B/A arms in one boot. Partly: look (MAE 8.6 cross / 6.2 farm; pyre glow and hair open); unseen cross route differs on 8 of 300 pictures by 1 to 2 pixels. Over budget on the model; content changes wait for the owner | Waits for SD card |
-| E1 | Leon and Ashley on the engine | Done (eng-e1d fded11182, merged with the fight); Codex audit next. Leon (village) and Ashley (r11d hill, whole world baked, her PS2 mesh) on native skeleton, collision and cloth; presentation on engine generators, aim sway on the game's. Every character has its own light record. Plays right: hill vs re4ref every field 729/729 for both, no feed; village Leon frame, state, angle 641/641, position to tick 522. Busy picture: village Flycast 14.40 / 21.91, MODELLED 18.60 / 21.19; hill Flycast 23.44 / 30.77, MODELLED 30.53 / 34.76 (3 of 25 over 33.3). Disc (pre-merge image): E:\RE4DC-Lanes\eng-e1duild\E1D-GDEMU-both | Waits for SD card |
+| E1 | Leon and Ashley on the engine | NOT PASSED (Codex audit H-011, E:\RE4DC-Lanes\eng-e1d\AUDIT-E1.md): original service units still linked (actor volumes, collision response, route checks, root-motion follower, model parts, camera and frustum, pad and rumble, math helpers, garment pose); per-picture conversions remain (palette repack, Ashley light record, camera and HUD repack); rumble draws from the game generator; heap 0 and heap 4 alias; village position fails the last 118 ticks unfed; serial prints inside timed rows; staged disc predates the lighting merge. Fixes: eng-svc4 (running, PC) and eng-e1e (queued, emulator) | Waits for SD card |
 | E2 | Fight and boss | Fight at the cross runs on the engine (eng-e2, merged, FIGHT=1): Leon and four Ganados with original AI, native skeleton, collision and effects (effects bit-identical to the original on PC). Flycast: busy 16.71 ms mean, drawing 10.58, services 5.28. MODELLED: busy 24.11, drawing 13.94 (16.24 on fight pictures, over 14). Plays right holds for 7 of 16 events, then the AI takes different random choices because of the split; a reference with the same split is being built (eng-ref). El Gigante hosted. Discs E:\RE4DC-Lanes\eng-e2uild\E2-GDEMU-fight, eng-boss | Not run |
 | E3 | Chapter 1 end to end, lake boss, first engine release | Not started | Not run |
 | E4 | The rest of the game, by chapter | Not started | Not run |
@@ -34,6 +34,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
 | eng-loop2 | Loader Flycast proof (CONSOLE_LOOP.md checks), then the bench through the loader | lane/eng-loop2 | Claude Opus | E:\RE4DC-Lanes\eng-loop2 |
+| eng-svc4 | PC-only: native versions of the remaining original service units, allowed-function link check, strict plays-right reader | lane/eng-svc4 from engine fecf63140 | Claude Opus | E:\RE4DC-Lanes\eng-svc4 |
 | eng-ref | Plays-right reference with the same random split: old-game reference build and re4ref route presentation draws to their own stream; re-record the fight fixture; re-check the E2 fight and the E1 scenes against it | lane/eng-ref | Claude Opus | E:\RE4DC-Lanes\eng-ref |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
@@ -76,7 +77,7 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
-Queued for the next free emulator slot: the loader's Flycast proof; Ashley's mesh and the r11d world bake.
+Queued for the next free emulator slot: eng-e1e (E1 audit fixes in the image, final E1 image; brief written).
 
 ## Waiting on the owner
 
