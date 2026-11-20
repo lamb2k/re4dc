@@ -3,7 +3,8 @@
 //   - facial shape keys (game/shape.cpp ShapeSet / ShapeMove / ShapeEnd): the engine renderer draws no shape keys.
 //   - cloth: lane eng-e1d links the native cloth service (services/cloth, game/hosted.mk). What stays a stub is its
 //     fallback for a chain it cannot resolve (pen_orig_*: the original bodies, not linked; never reached by Leon's or
-//     Ashley's chains) and, in the boss image (BOSS=1), the whole cloth as before (El Gigante's loincloth and ropes).
+//     Ashley's chains); the wind globals are engine data (pendulum.cpp is not linked). In the boss image (BOSS=1) the
+//     whole cloth stays stubbed as before (El Gigante's loincloth and ropes).
 #include "e1_engine.h"
 #include "model.h"
 #include "pl_cloth.h"
@@ -14,6 +15,10 @@ void ShapeEnd(void*) { e1_stub_hit("ShapeEnd (shape keys: not drawn)", 0); }
 extern "C" int ShapeMove(cModelInfo*) { e1_stub_hit("ShapeMove (shape keys: not drawn)", 0); return 0; }
 
 #ifndef E2_BOSS
+// The cloth's wind (pendulum.cpp's globals, set per room by light.cpp's PenWindSet, which is not hosted): engine data at
+// the original's start values (20 units along +z, phase step pi / 3).
+Vec GlobalWind = {0.0f, 0.0f, 20.0f};
+f32 GlobalWindAdd = 1.0471976f;
 // The native cloth's fallback (services/cloth/cloth.cpp): a chain the service cannot resolve keeps its animated pose.
 extern "C" void pen_orig_Set(cModel*, PenCloth*, f32) { e1_stub_hit("pen_orig_Set (cloth chain not resolved: no swing)", 0); }
 extern "C" void pen_orig_Move(cModel*, PenCloth*) { e1_stub_hit("pen_orig_Move (cloth chain not resolved)", 0); }

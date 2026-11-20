@@ -14,14 +14,18 @@
    lights, the palette (world x bind, written once a tick by the skeleton service) for the skin. The palette replaces
    step 2's world x bind multiplication when the pack's bind is the table's (identity rotation, the same translation:
    checked once, for every bone the model uses); otherwise step 2 multiplies the table's world records as before. */
+/* Lane eng-e1d: two characters a picture (Leon, catalogue 0; Ashley in the hill scene, catalogue 6 of the hill pack,
+   141 bones). Each has its own slot: bone pointers, part states and projected / lit pools (the translucent call of a
+   character reads what its own opaque call left), and its own palette check. */
 #include "e1_skel_view.h"
-#define E1_BONES 128
-static const float* e1_bone[E1_BONES + 1];
-static int e1_pal_ok = -1;   /* -1 not checked, 1 the palette is the pack's world x bind, 0 multiply */
+#define E1_BONES 160
+#define E1_SLOTS 2
+static const float* e1_bone_slot[E1_SLOTS][E1_BONES + 1];
+static int e1_pal_ok_slot[E1_SLOTS] = {-1, -1};   /* -1 not checked, 1 the palette is the pack's world x bind, 0 multiply */
 unsigned e1_pal_mismatch;    /* bones whose pack bind differs from the table's (report) */
 float e1_pal_worst;          /* the largest difference found by the check */
 
-static unsigned e1_gather(const uint8_t* model, const E1SkelView* sk)
+static unsigned e1_gather(const float** e1_bone, const uint8_t* model, const E1SkelView* sk)
 {
     unsigned n = 0;
     e1_bone[0] = (const float*) (model + 0x0C);
@@ -53,15 +57,20 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     const RtCatalog* cat = s->runtime;
     const float* camera = (const float*) s->state[0];
     float near = camera[18] / (camera[17] - 1);
-    static unsigned bones;
-    if (!translucent) { actor_frame_setup(s); ++actor_serial; bones = e1_gather((const uint8_t*) model_record, skel); }
+    const unsigned slot = model ? 1 : 0;
+    static unsigned bones_slot[E1_SLOTS];
+    const float** e1_bone = e1_bone_slot[slot];
+    if (model >= cat->n) return;
+    if (!translucent) { actor_frame_setup(s); ++actor_serial; bones_slot[slot] = e1_gather(e1_bone, (const uint8_t*) model_record, skel); }
+    const unsigned bones = bones_slot[slot];
     const RtModel* m = cat->m + model;
     const unsigned* h = m->h;
     if (bones < h[0]) return;
-    if (e1_pal_ok < 0) e1_pal_ok = e1_pal_check(m, skel);
+    if (e1_pal_ok_slot[slot] < 0) e1_pal_ok_slot[slot] = e1_pal_check(m, skel);
+    const int e1_pal_ok = e1_pal_ok_slot[slot];
     pvr_vertex_t* sq = (pvr_vertex_t*) sq_lock((void*) PVR_TA_INPUT);
-    uint8_t* state = part_state[0];
-    const pvr_vertex_t* proj = projected_pool[0]; uint32_t* lit = colors_pool[0]; uint8_t* codes = outcode_pool[0];
+    uint8_t* state = part_state[slot];
+    const pvr_vertex_t* proj = projected_pool[slot]; uint32_t* lit = colors_pool[slot]; uint8_t* codes = outcode_pool[slot];
     cur_projected = proj; cur_lit = lit; cur_codes = codes; cur_pos = m->pos;
     if (translucent) {
         unsigned emitted = 0;

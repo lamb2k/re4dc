@@ -102,22 +102,23 @@ $(OUT)/e/%.o: $(ENG)/%.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 SVC_DIR := $(ENG)/services
 NATIVE_INC := -I$(SVC_DIR)/skeleton -I$(SVC_DIR)/collision -I$(ROOT)/port/dreamcast/game/platform/include
 NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
-# Lane eng-e1d: the native cloth (services/cloth, round 2; SERVICES.md sections 12 and 14), not in the boss image.
+# Lane eng-e1d: the native cloth (services/cloth, round 3: cloth.cpp + the SH4ZAM chain kernel cloth_kernel.c; SERVICES.md
+# sections 12, 17 and 21), not in the boss image. Its presentation generator is the engine's: host/e1_pres_rng.h is
+# force-included and stands in for services/cloth/pres_rng.h (same four functions, same include guard), drawing from
+# the engine generator of host/e1_wraps.cpp. pendulum.cpp is not linked (host/e1_svc_stubs.cpp: the wind globals, the
+# fallback stubs).
 ifneq ($(BOSS),1)
 NATIVE_INC += -I$(SVC_DIR)/cloth
-NATIVE_OBJS += $(OUT)/n/cloth.o
+NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o
 endif
-$(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
+CLOTH_DEPS := $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/cloth/cloth_kernel.h $(SVC_DIR)/cloth/pres_rng.h $(ENG)/host/e1_pres_rng.h
+$(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(CLOTH_DEPS) $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
-	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
-# pendulum.cpp: only the volume tests and the wind globals stay (hosted.mk); the five bodies the native cloth gives are
-# weakened so the calls reach cloth.o and --gc-sections drops the originals.
-WEAK_pendulum := PenClothSet PenClothMove PenClothMove3 PenClothFixSet PenClothFixClear
-$(OUT)/h/game/pendulum.o: $(ROOT)/src/game/pendulum.cpp $(ENG)/host/e1_prelude.h
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -include $(ENG)/host/e1_pres_rng.h -c $< -o $@
+$(OUT)/n/cloth_kernel.o: $(SVC_DIR)/cloth/cloth_kernel.c $(CLOTH_DEPS)
 	@mkdir -p $(dir $@)
-	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@.orig.o
-	sh-elf-objcopy $(foreach s,$(WEAK_pendulum),--weaken-symbol=_$(s)) $@.orig.o $@
-	rm -f $@.orig.o
+	kos-cc -O2 -std=gnu11 -Wall -ffp-contract=off -ffunction-sections -fdata-sections -I$(SHZ) -I$(SVC_DIR)/cloth \
+		-include $(ENG)/host/e1_pres_rng.h -c $< -o $@
 $(OUT)/n/skel.o: $(SVC_DIR)/skeleton/skel.cpp $(SVC_DIR)/skeleton/skel.h $(SVC_DIR)/skeleton/skel_xm.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@

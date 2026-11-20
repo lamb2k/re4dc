@@ -14,9 +14,9 @@
 #include <string.h>
 
 extern "C" {
-int e1_draw_open_c(void);
+int e1_draw_open_c(const char* pack);
 void e1_draw_picture_c(const float* camera, const uint32_t* hud, const void* leon, const E1SkelView* leon_skel, unsigned identity,
-                       uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world);
+                       uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world, const void* partner_record);
 }
 extern "C" int PlGetWeaponNo();
 static int headless;
@@ -39,7 +39,7 @@ void e1_draw_open()
 {
     file_t f = fs_open("/cd/HEADLESS", O_RDONLY);
     if (f >= 0) { fs_close(f); headless = 1; e1_log("E1 draw: headless\n"); return; }
-    if (!e1_draw_open_c()) { headless = 1; e1_log("E1 draw: renderer refused the pack, headless\n"); }
+    if (!e1_draw_open_c(e1_scene == E1_SCENE_HILL ? "/cd/HILL.PAK" : "/cd/CROSS.PAK")) { headless = 1; e1_log("E1 draw: renderer refused the pack, headless\n"); }
 }
 
 void e1_draw_picture(E1Timing& tm)
@@ -64,13 +64,13 @@ void e1_draw_picture(E1Timing& tm)
     uint32_t hud[4] = {pG->pl_life, pG->pl_life_max, pG->weapon_no, (uint32_t) PlGetWeaponNo()};
     unsigned identity = (unsigned) pPL->id | ((unsigned) pPL->type << 8);
     uint32_t wait = 0, draw = 0;
-    // lane eng-e1b: the partner's record (placeholder marks, core/draw_e1.c); the village bake only in the village
-    static int diag = -1;   // diagnostic boot options: DWORLD (village bake in the hill scene), DNOMARK (no partner marks)
-    if (diag < 0) { diag = 0; file_t f = fs_open("/cd/DWORLD", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 1; } f = fs_open("/cd/DNOMARK", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 2; } }
+    // lane eng-e1b: the partner's record; lane eng-e1d: each scene draws its own room's bake (DNOWORLD: none)
+    static int diag = -1;   // diagnostic boot options: DNOWORLD (no world drawn), DNOMARK (no partner drawn)
+    if (diag < 0) { diag = 0; file_t f = fs_open("/cd/DNOWORLD", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 1; } f = fs_open("/cd/DNOMARK", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 2; } }
     E1SkelView leon, partner;
     const int have_leon = skel_view(pPL, &leon), have_partner = !(diag & 2) && skel_view(pSUB, &partner);
     e1_draw_picture_c(cam, hud, pPL, have_leon ? &leon : 0, identity, &wait, &draw, have_partner ? &partner : 0,
-                      e1_scene != E1_SCENE_HILL || (diag & 1));
+                      !(diag & 1), pSUB);
     tm.draw_us = draw;
     tm.pvr_us = wait;   // PVR readiness wait (the graphics chip, not CPU work)
 }
