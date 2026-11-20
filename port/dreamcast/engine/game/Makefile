@@ -187,6 +187,11 @@ $(OUT)/r/stage_sh4.o: $(ENG)/render/stage_sh4.S
 	@mkdir -p $(dir $@)
 	kos-cc -c $< -o $@
 
-$(OUT)/e1.elf: $(SVC4_OBJS) $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS)
+# lane eng-loop2: SENDABLE=1 links the console loop's client (loader/sendable.mk) for the console disc and the loader
+ifeq ($(SENDABLE),1)
+include $(ENG)/loader/sendable.mk
+.DEFAULT_GOAL := all
+endif
+$(OUT)/e1.elf: $(SVC4_OBJS) $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections -Wl,-z,start-stop-gc \
-		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) -lm -- $^
+		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

@@ -10,7 +10,9 @@ This tool reaches it through a relay piped to `ssh <pi> python3` (nothing is ins
   python consoleloop.py --pi re4pi send bench.elf             send and verify only (no run)
   python consoleloop.py --pi re4pi run bench.elf --args "cross farm" --deadline 900 --out results/
   python consoleloop.py --pi re4pi report --out results/      collect a pending report
-  python consoleloop.py --udp 127.0.0.1:52062 --bind 52060 run test.elf   (Flycast: LINK.TXT host <PC>, lport 52062)
+  Flycast (LINK.TXT host <PC address>, lport 52062; its modem emulation is the PPP peer, the PC plays the Pi):
+  python consoleloop.py relay-local                            start BEFORE Flycast boots the loader; leave it running
+  python consoleloop.py --udp 127.0.0.1:52059 --bind 0 run test.elf
 
 Program: an ELF (its PT_LOAD segments, loaded at 0x8C010000) or a raw 1ST_READ-style .bin. Deflate level 9 unless
 --no-compress. Every run writes <out>/run-<session>.json (timings, rates, retransmits, verdict) and the report.
@@ -204,6 +206,48 @@ class UdpTransport:
 
     def close(self):
         self.s.close()
+
+
+def relay_local(port, ctl, log):
+    """The ssh relay's job as a standing process on this PC (Flycast: its modem emulation is the PPP peer and the PC is
+    the 'Pi'). Binds UDP <port> (the loader's) before the loader beacons and keeps it bound: a Windows socket that once
+    took an ICMP port-unreachable (a beacon to a closed port) stops passing datagrams down in Flycast (lane eng-loop2).
+    Console datagrams go to the newest client on 127.0.0.1:<ctl>; a client's go to the console. Beacons with no client
+    are dropped. Clients: consoleloop.py --udp 127.0.0.1:<ctl> --bind 0 ..."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(('0.0.0.0', port))
+    c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    c.bind(('127.0.0.1', ctl))
+    import selectors
+    sel = selectors.DefaultSelector()
+    sel.register(s, selectors.EVENT_READ)
+    sel.register(c, selectors.EVENT_READ)
+    console = client = None
+    up = down = 0
+    log('relay-local: udp %d (console side), 127.0.0.1:%d (clients)' % (port, ctl))
+    while True:
+        for key, _ in sel.select(5.0):
+            try:
+                d, a = key.fileobj.recvfrom(4096)
+            except (ConnectionResetError, OSError):
+                continue
+            if key.fileobj is s:
+                if a != console:
+                    console = a
+                    log('relay-local: console at %s:%d' % a)
+                up += 1
+                if client:
+                    try:
+                        c.sendto(d, client)
+                    except OSError:
+                        pass
+            else:
+                if a != client:
+                    client = a
+                    log('relay-local: client %s:%d' % a)
+                if console:
+                    down += 1
+                    s.sendto(d, console)
 
 
 class SshRelayTransport:
@@ -462,6 +506,7 @@ class Loop:
         blocks = {}
         need = [o for o in range(0, max(length, 1), CHUNK)] if length else []
         tries = 0
+        t0 = time.time()
         while need and tries < 30:
             tries += 1
             first = need[0]
@@ -484,6 +529,7 @@ class Loop:
         if need:
             raise RuntimeError('report incomplete after %d requests' % tries)
         data = b''.join(blocks[o] for o in sorted(blocks))[:length]
+        secs = time.time() - t0
         ok = (zlib.crc32(data) & 0xFFFFFFFF) == crc and len(data) == length
         path = None
         if out_dir:
@@ -495,6 +541,7 @@ class Loop:
                       every=2.0, poke=lambda: self.send(REPDONE, run))
         return {'run': '%08x' % run, 'state': RUN_STATES.get(h['report_state'], h['report_state']),
                 'exit': h['report_exit'], 'bytes': len(data), 'crc_ok': ok, 'path': path,
+                'seconds': round(secs, 3), 'Bps': round(len(data) / max(secs, 1e-6), 1), 'requests': tries,
                 'text_head': data[:400].decode('latin-1')}
 
 
@@ -529,11 +576,16 @@ def main(argv=None):
     r = sub.add_parser('report')
     r.add_argument('--out', default='.')
     sub.add_parser('relay', help='print the relay program the ssh mode runs on the Pi')
+    rl = sub.add_parser('relay-local', help='the relay as a standing process on this PC (Flycast)')
+    rl.add_argument('--ctl', type=int, default=PORT - 1, help='client port on 127.0.0.1 (default %d)' % (PORT - 1))
     a = ap.parse_args(argv)
     if a.cmd == 'relay':
         print(RELAY)
         return 0
     stamp = lambda s: print('%s %s' % (time.strftime('%H:%M:%S'), s), flush=True)
+    if a.cmd == 'relay-local':
+        relay_local(a.port, a.ctl, stamp)
+        return 0
     if a.udp:
         t = UdpTransport(a.udp, a.bind)
     elif a.pi:

@@ -31,5 +31,10 @@ $(OUT)/avk_sh4.o: ../../game/platform/avk_sh4.S | $(OUT)
 $(OUT)/stage_sh4.o: ../render/stage_sh4.S | $(OUT)
 	kos-cc -c $< -o $@
 NATIVE_OBJS := $(addprefix $(OUT)/,main.o replay_pack.o render.o native_world.o avk_sh4.o stage_sh4.o)
-$(OUT)/native.elf: $(NATIVE_OBJS)
-	kos-cc $(COMMON) $(SIZE) $(EXTRA) $^ -Wl,--wrap=cdrom_read_toc -Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free -o $@ -lm
+# lane eng-loop2: SENDABLE=1 links the console loop's client (loader/sendable.mk) for the console disc and the loader
+ifeq ($(SENDABLE),1)
+include ../loader/sendable.mk
+.DEFAULT_GOAL := all
+endif
+$(OUT)/native.elf: $(NATIVE_OBJS) $(CL_SEND_OBJS)
+	kos-cc $(COMMON) $(SIZE) $(EXTRA) $^ $(CL_SEND_LDFLAGS) -Wl,--wrap=cdrom_read_toc -Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free -o $@ -lm

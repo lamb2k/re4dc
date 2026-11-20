@@ -34,7 +34,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
 | eng-e1e | Step 2 (E1): wire the native services into the image, drop the retired original units, fix the rest of the E1 audit list | lane/eng-e1e | Claude Opus | E:\RE4DC-Lanes\eng-e1e |
-| eng-loop2 | Step 1 preparation: loader Flycast proof; script to build one console disc from `engine`; the owner's evening steps | lane/eng-loop2 (resumed from wip/eng-loop2-20261120) | Claude Opus | E:\RE4DC-Lanes\eng-loop2 |
+| eng-svc5 | Step 2 (E1), PC-only: native math helpers, garment pose, SDK math and allocator; strict plays-right reader | lane/eng-svc5 | Claude Opus | E:\RE4DC-Lanes\eng-svc5 |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
 
@@ -77,6 +77,8 @@ Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no
 noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
 
 Merged 11-20, finished, unaudited: eng-svc4 (7 of 10 service items native on the PC reference; integrator gate: three images link, 70/70 controls as they must, link check still FAIL 241 / 843 / 471 service functions until eng-e1e wires the services). Next: eng-svc5 (math helpers, garment pose, SDK math and allocator, strict plays-right reader) when a lane slot frees. Parked: wip eng-ref (local only).
+
+Merged 11-20, finished, unaudited: eng-loop2 (loader checks pass in console-like Flycast; `tools/engine/build_console_disc.sh` builds one disc with six scenes and a selector; Flycast boot: 5 of 6 scenes run, El Gigante on the bench FAILED on a stale pack; integrator gate: default, FIGHT=1, BOSS=1 and SENDABLE=1 link, loader host tests 16/16, disc hashes verified). Console disc: `E:\RE4DC-Lanes\eng-loop2\cdisc\full` (KEEP); rebuild from `engine` before the evening. Open for the next image lane: re-bake the El Gigante bench pack; count presented fields in the E1-family images.
 
 ## Waiting on the owner
 
