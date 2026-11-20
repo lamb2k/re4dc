@@ -162,7 +162,7 @@ static void sum_add(sel_entry_t *e, const char *fmt, ...) {
     e->sum[len + 1] = 0;
 }
 
-static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "E1 draw: renderer refused",
+static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "M1 missing pack", "STACK GUARD BROKEN", "E1 draw: renderer refused",
                                          "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "CRASH event",
                                          "ABORT", "DEADLINE", NULL};
 
@@ -190,8 +190,8 @@ static void bench_window(sel_entry_t *e, const char *l) {
     if (strstr(l, " delay5")) strcat(flags, "d");
     if (strstr(l, " hold300")) strcat(flags, "h");
     if (ct && *ct == '[') { sscanf(ct + 1, "%15[^]]", cs); }
-    sum_add(e, "%c%c%-2s m%.6s p%.6s w%.6s >14:%u >33:%u iv>2:%u %s", room[0], a ? *a : '?', flags, m ? m : "?",
-            p ? p : "?", wo ? wo : "?", o14 ? (unsigned)atoi(o14) : 999u, o33 ? (unsigned)atoi(o33) : 999u,
+    sum_add(e, "%c%c%-2s m%.2f p%.2f w%.2f >14:%u >33:%u f>2:%u %s", room[0], a ? *a : '?', flags, m ? atof(m) : -1.0,
+            p ? atof(p) : -1.0, wo ? atof(wo) : -1.0, o14 ? (unsigned)atoi(o14) : 999u, o33 ? (unsigned)atoi(o33) : 999u,
             iv ? (unsigned)atoi(iv) : 999u, cs);
     (void)w;
 }
@@ -201,7 +201,7 @@ static void bench_window(sel_entry_t *e, const char *l) {
 #define E1_COUNT 600u
 static uint32_t g_v[5][E1_COUNT];
 static uint32_t g_fields[E1_COUNT];
-static unsigned g_rows, g_last_row;
+static unsigned g_rows, g_last_row, g_late;
 static void e1_row(const char *l) {
     unsigned long v[14];
     int k = 0;
@@ -225,6 +225,7 @@ static void e1_row(const char *l) {
     g_v[2][i] = svc;
     g_v[3][i] = tick > svc ? tick - svc : 0;                  /* behaviour */
     g_fields[i] = (uint32_t)v[8];
+    g_late += wait == 0;   /* the 30 Hz pacer had no time left to wait: the picture was late */
     ++g_rows;
 }
 static int cmp_u32(const void *a, const void *b) {
@@ -259,7 +260,9 @@ static void e1_summary(sel_entry_t *e) {
         if (g_fields[i] > 2) ++iv;
         if (g_fields[i] > wf) { wf = g_fields[i]; wfi = i; }
     }
-    sum_add(e, "intervals>2 fields: %u, worst %u fields @%u", iv, wf, wfi + E1_FIRST);
+    /* the E1 images print a fields column but do not count presented fields yet (all 0): say so, never "0 over" */
+    if (wf) sum_add(e, "late %u; intervals>2 fields %u, worst %u@%u", g_late, iv, wf, wfi + E1_FIRST);
+    else sum_add(e, "late (no pacer wait) %u; fields not counted", g_late);
 }
 
 static void collect(unsigned i) {
@@ -286,7 +289,7 @@ static void collect(unsigned i) {
         snprintf(e->why, sizeof(e->why), "exit %d", (int)e->exit_code);
     }
     /* the report: refusal lines and rows */
-    g_rows = g_last_row = 0;
+    g_rows = g_last_row = g_late = 0;
     unsigned windows = 0, done = 0;
     if (e->report_ok) {
         static char line[400];
@@ -480,7 +483,7 @@ int main(int argc, char **argv) {
     for (unsigned page = 0;; page = (page + 1) % (pages ? pages : 1)) {
         vid_clear(0, 0, 0);
         line_at(0, ok == g_n ? GREEN : RED, "FINISHED: %u OF %u SCENES OK   PAGE %u/%u", ok, g_n, page + 1, pages);
-        line_at(1, GREY, "RE4DC CONSOLE DISC %s  ms, CONSOLE", LOADER_BUILD);
+        line_at(1, GREY, "RE4DC CONSOLE DISC %s  TIMES IN MS", LOADER_BUILD);
         for (unsigned k = 0; k < per && page * per + k < g_nl; ++k)
             line_at(2 + (int)k, g_col[page * per + k], "%s", g_lines[page * per + k]);
         line_at(18, GREY, "m mean p p99 w worst@picture >budget:count");

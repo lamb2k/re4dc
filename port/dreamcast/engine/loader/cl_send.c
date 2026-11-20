@@ -30,7 +30,7 @@
 #ifndef CL_SEND_FAIL
 /* the bench's refusals; the E1 images' file and pack failures (the E1 image goes on headless when its pack is refused,
    and would hand in a run without drawing; a headless scene asks for it with the HEADLESS root file instead) */
-#define CL_SEND_FAIL "SCHEDULE REFUSED|M1 native pack REFUSED|E1 draw: renderer refused|E1 load: missing|E1 load: read failed|E1 load: bad DRS"
+#define CL_SEND_FAIL "SCHEDULE REFUSED|M1 native pack REFUSED|STACK GUARD BROKEN|E1 draw: renderer refused|E1 load: missing|E1 load: read failed|E1 load: bad DRS"
 #endif
 #define H ((cl_handoff_t *)CL_HANDOFF_ADDR)
 #define CL_CAP CL_REPORT_CAP(&H->h)
@@ -177,12 +177,18 @@ static void parse_args(const char *a) {
     }
 }
 
+/* the renderer's pack-loader stage (render/native_scene.inc), when the image has one: says where a pack was refused */
+extern volatile uint32_t m1_load_status[8] __attribute__((weak));
+
 static void *ender(void *arg) {
     (void)arg;
     while (g_end < 0) sem_wait(&g_end_sem);
     /* the lines after the end line (the boss and fight images print their event and effect lists after "E1 END"):
        hand in once the program has printed nothing for 1.5 s */
     do thd_sleep(500); while (timer_ms_gettime64() - g_last_ms < 1500);
+    if (m1_load_status)
+        cl_report("cl-send: pack loader stage %u size %u textures %u\n", (unsigned)m1_load_status[0],
+                  (unsigned)m1_load_status[1], (unsigned)m1_load_status[2]);
     cl_report("cl-send: lines %u kept %u rows dropped %u skipped %u dropped when full %u cut long %u, end code %d\n",
               g_lines, g_kept, g_dropped_rows, g_dropped_skip, g_dropped_full, g_truncated, g_end);
     cl_exit(g_end);
