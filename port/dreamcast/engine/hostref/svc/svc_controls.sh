@@ -38,6 +38,9 @@
 # and the controls:
 #   mathsin  RE4_SVC_CONTROL=mathsin: SINF / COSF without the series' x^9 term (e1-route)
 #   mathmuku RE4_SVC_CONTROL=mathmuku: every turning step (Muku, Muku2, Muku3) 5% larger (bell-ganado: the Ganados turn faster)
+#   garmenthair RE4_SVC_CONTROL=garmenthair: Leon's hair chain not stepped on odd ticks (door103-walk)
+#   garmentskirt RE4_SVC_CONTROL=garmentskirt: Ashley's skirt always as stiff as when carried (hill-ashley)
+# and the exercise costume (svc5_dump.cpp: Leon changes to costume 1 at tick 1, the holster strap instead of the jacket).
 # and the fixtures bell-ganado-kill and bell-ganado-clear (handgun hits to a kill and to the room clear) when named.
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
 # Random numbers are split (owner 2026-11-19): the cloth draws from a presentation generator in both builds, never from
@@ -212,6 +215,9 @@ print()" "$b/compare.json")
     # lane eng-svc5: the round-5 controls
     r4ctl e1-route "SINF / COSF without the x^9 term" mathsin   # e1-route: Leon walks (bell-ganado's rotations are of zero offsets)
     r4ctl bell-ganado "turning steps 5% larger" mathmuku
+    r4ctl door103-walk "Leon's hair not stepped on odd ticks" garmenthair
+    r4ctl hill-ashley "Ashley's skirt always stiff" garmentskirt
+    exrow door103-walk costume garmenthair
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

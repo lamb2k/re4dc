@@ -141,7 +141,7 @@ extern "C" void svc4_finish(void) __attribute__((weak));
 extern "C" int svc_col_depth(void) { return g_depth; }
 // lane eng-svc5: the round-5 services (svc5_dump.cpp: controls, exercises, counters) ride them too.
 extern "C" void svc5_ready(void) __attribute__((weak));
-extern "C" void svc5_tick(unsigned t) __attribute__((weak));
+extern "C" void svc5_tick(unsigned t, int begin) __attribute__((weak));
 extern "C" void svc5_finish(void) __attribute__((weak));
 
 extern "C" void host_svc_ready()
@@ -160,7 +160,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
 {
     g_tick = t;
     if (svc4_tick) svc4_tick(t);
-    if (svc5_tick) svc5_tick(t);
+    if (svc5_tick) svc5_tick(t, begin);
     if (begin) return;
     if (skel_publish_all) skel_publish_all();
     if (!g_pal) return;

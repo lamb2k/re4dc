@@ -106,9 +106,10 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 # sections 23 on). SVC4_OBJS are compiled with the hosted units' flags; every global symbol they define is made weak in
 # the original units of SVC4_UNITS (weak4/), so each call reaches the native body; svc4/svc4_units.sh reports which
 # original functions of those units the native link still keeps.
-# lane eng-svc5 (round 5): the math helpers (services/math: math_sub, sub2), linked the same way (SERVICES.md section 32)
-SVC5_SRCS := math/math_svc.cpp
-SVC5_UNITS := math_sub sub2
+# lane eng-svc5 (round 5): the math helpers (services/math: math_sub, sub2) and the garments (services/cloth/garment:
+# pl_cloth), linked the same way (SERVICES.md sections 32, 33)
+SVC5_SRCS := math/math_svc.cpp cloth/garment.cpp
+SVC5_UNITS := math_sub sub2 pl_cloth
 SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp              $(SVC5_SRCS)
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad $(SVC5_UNITS)
@@ -252,3 +253,20 @@ $(MT)/mathtest: $(MT)/mathtest.o $(NAT)/svc4/math_svc.o $(foreach u,$(MT_UNITS),
 	$(CC) -o $@ $^ $(LDFLAGS)
 mathtest: $(MT)/mathtest
 .PHONY: mathtest
+
+# ---- garmenttest (lane eng-svc5): the native garments against pl_cloth.cpp, every character and costume, with the
+# cloth service's entry points logged (stubs) and Ashley's lapel pose on a synthetic model; the original object's global
+# symbols renamed orig_<symbol>. RE4_SVC_CONTROL=garmenthair|garmentskirt|lapelrate sets the native control (must FAIL).
+GT := $(BUILD)/garmenttest
+$(GT)/orig.syms: $(BUILD)/plain/game/pl_cloth.o svc/svc.mk
+	@mkdir -p $(GT)
+	nm -g --defined-only $< | awk 'NF == 3 {print $$3 " orig_" $$3}' | sort -u > $@
+$(GT)/orig_pl_cloth.o: $(BUILD)/plain/game/pl_cloth.o $(GT)/orig.syms
+	objcopy --redefine-syms=$(GT)/orig.syms $< $@
+$(GT)/garmenttest.o: svc/garmenttest.cpp $(SVC_ENG)/cloth/garment.h hostref.h
+	@mkdir -p $(GT)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -isystem /usr/include/x86_64-linux-gnu/c++/13 -c $< -o $@
+$(GT)/garmenttest: $(GT)/garmenttest.o $(NAT)/svc4/garment.o $(NAT)/svc4/math_svc.o $(GT)/orig_pl_cloth.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+garmenttest: $(GT)/garmenttest
+.PHONY: garmenttest
