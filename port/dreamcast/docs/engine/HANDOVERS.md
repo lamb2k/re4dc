@@ -2,6 +2,16 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-013 (2026-11-20): outcome over method; the integrator makes the technical decisions
+
+- **From:** the owner. **To:** the integrator.
+- **Words:** "I just want it to work as fast as possible on a Dreamcast regardless of how it works - while feeling and looking like a Dreamcast optimized version of the game. Make those technical decisions for me."
+- **Read as:** the measure is speed on the real console plus a Dreamcast-optimised look and feel. Technical choices are the integrator's, recorded here as rulings. The owner is asked about console time and hardware, look and feel, asset sources, releases and admin steps.
+- **Rulings so far:**
+  - Enemy decision units and room scripts go on the allowed list; service work inside them stays flagged (lane eng-e1f).
+  - The ROW `draw` column is the renderer's own span, the plan's drawing row; the PVR wait is shown beside it.
+  - Work is ranked by console milliseconds once the console evening has run; until then by the plan's budget rows.
+
 ## H-012 (2026-11-20): plan version 3 approved; beyond the PS2 version added; work resumes
 
 - **From:** the owner. **To:** the integrator.
