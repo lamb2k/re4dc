@@ -607,7 +607,10 @@ extern "C" void svc4_finish()
     g_f = 0;
 }
 
-#define TOP (g_depth == 0 && svc_col_depth() == 0 && g_f)
+// lane eng-e2a: nor inside an enemy hit-geometry call (e2_dump.cpp: those are compared at their own boundary, e2.txt)
+extern "C" int svc_e2_depth(void) __attribute__((weak));
+extern "C" int svc4_depth(void) { return g_depth; }
+#define TOP (g_depth == 0 && svc_col_depth() == 0 && (!svc_e2_depth || svc_e2_depth() == 0) && g_f)
 #define W(ret, mangled, params, args, log_in, log_out)                                                               \
     extern "C" ret __real_##mangled params;                                                                          \
     extern "C" ret __wrap_##mangled params                                                                           \
