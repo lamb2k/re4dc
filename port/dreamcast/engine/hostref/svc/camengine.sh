@@ -113,6 +113,9 @@ engine() {   # engine <arm> <serial> <scene> <must>
     fi
     if [ -n "$CTRL" ]; then
         for sc in LEON HILL SHOT; do
+            # only the control serial's scenes that ran the arm (their log says "E1 CAMEVERY")
+            awk -v s="$sc" '$0 ~ "^CDISC RUN [0-9]+ " s " " {on = 1; next} $0 ~ "^CDISC RESULT [0-9]+ " s " " {on = 0}
+                on && /E1 CAMEVERY/ {f = 1} END {exit !f}' "$CTRL" || continue
             python3 "$CE" "$CTRL" "$sc" "$OUT/ref/$sc" "$OUT/ctrl/$sc" > "$OUT/ctrl-$sc.camengine.txt" 2>&1 || continue
             row "control CAMEVERY $sc: engine (Flycast) against the reference" FAIL "$OUT/ref/$sc" "$OUT/ctrl/$sc"
             [ -d "$OUT/oldref/$sc" ] && info "control CAMEVERY $sc: engine against the old reference" "$OUT/oldref/$sc" "$OUT/ctrl/$sc"
