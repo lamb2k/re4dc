@@ -77,11 +77,13 @@ done
 PRISTINE=${PRISTINE:-/root/work/lanes/eng-bench/.m1/pristine}
 # lane eng-e1i: the packs after bake/hud_fix.py (the HUD widgets made right; docs/engine/SERVICES.md 45). FARM.PAK and
 # the .VIS files are eng-look's unchanged.
-LKG=${LKG:-${LANES:-/mnt/e/RE4DC-Lanes}/eng-e1i/packs/lkg-hud}
+# lane eng-look1: the same packs with Leon's PS2 handgun models added to the catalogue (bake/weapon_model.py on
+# eng-e1i's lkg-hud/CROSS.PAK, hill2-hud.pak and fight-hud.pak; FARM.PAK and the .VIS files copied unchanged)
+LKG=${LKG:-${LANES:-/mnt/e/RE4DC-Lanes}/eng-look1/packs/lkg-wep}
 LANES=${LANES:-/mnt/e/RE4DC-Lanes}
-HILL_PAK=${HILL_PAK:-$LANES/eng-e1i/packs/hill2-hud.pak}
+HILL_PAK=${HILL_PAK:-$LANES/eng-look1/packs/hill2-wep.pak}
 HILL_VIS=${HILL_VIS:-$LANES/eng-e1d/build/vis/hill1.vis}
-FIGHT_PAK=${FIGHT_PAK:-$LANES/eng-e1i/packs/fight-hud.pak}
+FIGHT_PAK=${FIGHT_PAK:-$LANES/eng-look1/packs/fight-wep.pak}
 FIGHT_FXMAP=${FIGHT_FXMAP:-$LANES/eng-e2/build/pack/FXMAP.BIN}
 # El Gigante's bench pack: lane eng-e1f's re-bake with the engine's bake/boss_pack.py (the effect records' glow header;
 # eng-boss's boss2-full.pak is refused at pack-loader stage 5, the control)
@@ -238,7 +240,20 @@ E1P_CONTROLS=(
   "CROWTOK|CRT|ROWTOKEN|e1:timing:drawn|Control:_row_value_with_a_trailing_token|PROG/E1.BIN|E1L:E1"
   "CREADX|CRX|READX|e1:timing:drawn|Control:_disc_file_read_at_picture_100|PROG/E1.BIN|E1L:E1"
 )
-for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}"; do
+# Lane eng-look1, same format: Leon's weapon. NOWEP (boot file) leaves every weapon undrawn. CNOWEP, CNOWEPH, CNOWEPF
+# (village, hill, fight timing runs) must FAIL in the selector ("weapon: visible N drawn 0"); they are also the "without"
+# arm of the weapon's drawing cost. CNWLS, CNWHS, CNWFS are the same scenes' stills runs with the weapon undrawn:
+# the reference tools/engine/wepcheck.py compares LEONS, HILLS and FIGHTS against, and its control (wepcheck must FAIL
+# when one is checked against itself or put in place of the scene with the weapon). They FAIL in the selector too.
+ELOOK_CONTROLS=(
+  "CNOWEP|CNW|NOWEP|e1:timing:drawn|Control:_weapon_undrawn|PROG/E1.BIN|E1L:E1"
+  "CNOWEPH|CNH|NOWEP|e1:timing:drawn|Control:_weapon_undrawn_(hill)|PROG/E1.BIN|E1H:E1"
+  "CNOWEPF|CNF2|NOWEP|e1:timing:drawn|Control:_weapon_undrawn_(fight)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+  "CNWLS|CNWL|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(wepcheck)|PROG/E1.BIN|E1L:E1"
+  "CNWHS|CNWH|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(hill)|PROG/E1.BIN|E1H:E1"
+  "CNWFS|CNWF|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(fight)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+)
+for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
 done
@@ -279,7 +294,7 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
     echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1L:E1 rows=compact"
   done
   # lane eng-e1n: the publication and HUD controls (above); lane eng-e1p: the camera track, record and disc read controls
-  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}"; do
+  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
     case $croot in
       E1H:E1) cneed=E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/st1/r11d.arc ;;
