@@ -4,6 +4,7 @@
 #
 #   build_console_disc.sh [--ref <git ref>] [--out <dir>] [--scenes A,B,..] [--drop <disc path>]...
 #                         [--put <disc path>]... [--no-precheck] [--layout standard|legacy] [--title <text>]
+#                         [--plan-control longcomment|fivefield]
 #
 # From a clean checkout of <ref> (default origin/engine: git archive of the commit, plus the SH4ZAM submodule at the
 # commit <ref> records, from the local submodule clone; nothing from the working tree) it builds:
@@ -24,12 +25,19 @@
 #   SHOT        (only when --scenes names it; lane eng-e1k) the FIGHT image playing the re4ref fixture file SHOT.TXT
 #               (default tools/plays_right/fixtures/shot-ganado.txt; SHOT_FIXTURE=<file> for a control), traced: a
 #               function run judged against the PC reference by tools/plays_right/shot_engine.sh, never a timing run
+# FIGHTT      (only when --scenes names it; lane eng-e1p) the FIGHT image traced: a function run whose CAMLOG lines
+#             (serial) check the fight's camera cut against earlier runs
 # The E1-family scenes run with NOTRACE (no trace lines formatted inside the pictures). The bench scenes keep their
 # ROW and MEMBLK lines out of the report (serial still has them): the report holds the WINDOW rows.
 #
 # Controls: --drop <disc path> removes one staged file (for example FIGHT/CROSS.PAK): the selector reports that scene
 # FAILED ("missing ..."); with --no-precheck the selector does not check the files and the program itself must refuse
 # (for example --drop BOSSB/FARM.PAK: "M1 native pack REFUSED"). --scenes picks a subset (short control discs).
+# --plan-control (lane eng-e1p, H-018.3): a control schedule the selector must refuse whole (nothing runs).
+# longcomment: the scheduled entries (name eight), then a comment line of 5,000 bytes, then a ninth entry (a copy of the
+# first, named NINTH): the selector must read past 4,096 bytes and refuse nine scenes. fivefield: the scheduled entries,
+# then the last one again with only its first five fields (named <name>5): a line that does not parse refuses the
+# schedule (before, both were run as if the extra entry were not there).
 # --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
 # images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
 # scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
@@ -49,6 +57,7 @@ PUTS=()
 PRECHECK=1
 LAYOUT=standard
 TITLE='RE4DC ENGINE CONSOLE DISC'
+PLANCTL=
 while [ $# -gt 0 ]; do
   case $1 in
     --ref) REF=$2; shift 2 ;;
@@ -59,6 +68,7 @@ while [ $# -gt 0 ]; do
     --no-precheck) PRECHECK=0; shift ;;
     --layout) LAYOUT=$2; shift 2 ;;
     --title) TITLE=$2; shift 2 ;;
+    --plan-control) PLANCTL=$2; shift 2 ;;
     *) echo "build_console_disc: unknown argument $1" >&2; exit 2 ;;
   esac
 done
@@ -164,7 +174,8 @@ put "$FIGHT_PAK" FIGHT/CROSS.PAK; put "$FIGHT_PAK" FIGHT/FARM.PAK; put "$FIGHT_F
 put "$LKG/CROSS.VIS" FIGHT/CROSS.VIS
 for f in st1/r101.arc etc/core.das etc/emleon00.esl em/pl00.drs em/wep02.drs em/em15.drs; do put "$P/$f" "FIGHT/$f"; done
 mots "$P/em/em15.drs" FIGHT
-: > "$D/FIGHT/NOTRACE"
+# lane eng-e1p: NOTRACE in FIGHT's own folder FIGHTL (as E1L, E1H), so FIGHTT can run the same files traced
+mkdir -p "$D/FIGHTL"; : > "$D/FIGHTL/NOTRACE"
 # BOSSB: the bench image with El Gigante's pack in both slots (the buffer is sized once)
 put "$BOSS_PAK" BOSSB/CROSS.PAK; put "$BOSS_PAK" BOSSB/FARM.PAK; put "$BOSS_VIS" BOSSB/CROSS.VIS; put "$BOSS_VIS" BOSSB/FARM.VIS
 printf 'c0 cn c0 c0dh\n' > "$D/BOSSB/SCHEDULE.TXT"
@@ -212,9 +223,22 @@ done
 E1N_CONTROLS=(
   "CPUBCP|CPB|PUBCOPY|e1:timing:drawn|Control:_camera_record_copied_each_tick|PROG/E1.BIN|E1L:E1"
   "CLMISS|CLM|LIGHTMISS|e1:timing:drawn|Control:_light_view_refused|PROG/E1.BIN|E1H:E1"
-  "CHUDFZ|CHF|HUDFREEZE,STILLS|e1:function:drawn|Control:_HUD_count_frozen_(hudcheck)|PROG/FIGHT.BIN|FIGHT"
+  "CHUDFZ|CHF|HUDFREEZE,STILLS|e1:function:drawn|Control:_HUD_count_frozen_(hudcheck)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
 )
-for c in "${E1N_CONTROLS[@]}"; do
+# Lane eng-e1p (H-018), same format: each must FAIL in the selector with the reason CONSOLE_LOOP.md section 13 gives.
+# CCUTCONV the fight with its camera cut converted at the switch, in play ("camera tracks converted in play 1"); CTRKSZ
+# the track store limited to 1024 bytes (the room refused at load: "E1 load: camera tracks refused"); CMALFREE the
+# after-play line without mallinfo free; CTICK1 E1 DONE and E1 CAMREC both 1 (against 640 rows); CROWTOK row 300's
+# fields value "2,missing"; CREADX a disc file opened before play and read at picture 100 (reads and sector requests).
+E1P_CONTROLS=(
+  "CCUTCONV|CCC|CUTCONV|e1:timing:drawn|Control:_camera_track_converted_at_the_cut|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+  "CTRKSZ|CTS|CAMSTORE|e1:timing:drawn|Control:_camera_track_store_too_small|PROG/E1.BIN|E1L:E1"
+  "CMALFREE|CMF|MEMNOFREE|e1:timing:drawn|Control:_mallinfo_free_dropped|PROG/E1.BIN|E1L:E1"
+  "CTICK1|CT1|TICKS1|e1:timing:drawn|Control:_tick_and_camera_counts_1|PROG/E1.BIN|E1L:E1"
+  "CROWTOK|CRT|ROWTOKEN|e1:timing:drawn|Control:_row_value_with_a_trailing_token|PROG/E1.BIN|E1L:E1"
+  "CREADX|CRX|READX|e1:timing:drawn|Control:_disc_file_read_at_picture_100|PROG/E1.BIN|E1L:E1"
+)
+for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
 done
@@ -230,7 +254,7 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "BENCH Bench:_village_cross,_hay-fork PROG/BENCH.BIN 900 bench $(need BENCH/CROSS.PAK,BENCH/FARM.PAK,BENCH/CROSS.VIS,BENCH/FARM.VIS,BENCH/SCHEDULE.TXT) root=BENCH rows=skip skip=T,MEMBLK"
   echo "LEON Leon_in_the_village PROG/E1.BIN 300 e1:timing:drawn $(need E1L/NOTRACE,E1/CROSS.PAK,E1/CROSS.VIS,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs) root=E1L:E1 rows=compact"
   echo "HILL Leon_and_Ashley_on_the_hill PROG/E1.BIN 300 e1:timing:drawn $(need E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/HILL.VIS,E1/FARM.PAK,E1/st1/r11d.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/pl11.drs) root=E1H:E1 rows=compact"
-  echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 300 e1:timing:drawn $(need FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHT rows=compact"
+  echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 300 e1:timing:drawn $(need FIGHTL/NOTRACE,FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHTL:FIGHT rows=compact"
   echo "BOSS-BENCH El_Gigante_on_the_bench PROG/BENCH.BIN 600 bench $(need BOSSB/CROSS.PAK,BOSSB/FARM.PAK,BOSSB/CROSS.VIS,BOSSB/SCHEDULE.TXT) root=BOSSB rows=skip skip=T,MEMBLK"
   echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 300 e1:timing:headless $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
   SHOTNEED=FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs
@@ -246,26 +270,40 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "HILLT Hill_traced_(function_run) PROG/E1.BIN 300 e1:function:drawn $(need E1HT/HILL,E1/HILL.PAK,E1/st1/r11d.arc) root=E1HT:E1 rows=compact $TSKIP"
   echo "LEONS Leon_stills_(function_run) PROG/E1.BIN 300 e1:function:drawn $(need E1LS/STILLS,E1L/NOTRACE,E1/CROSS.PAK) root=E1LS:E1L:E1 rows=compact"
   echo "HILLS Hill_stills_(function_run) PROG/E1.BIN 300 e1:function:drawn $(need E1HS/STILLS,E1H/HILL,E1/HILL.PAK) root=E1HS:E1H:E1 rows=compact"
-  echo "FIGHTS Fight_stills_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHTS/STILLS,FIGHT/CROSS.PAK) root=FIGHTS:FIGHT rows=compact"
+  echo "FIGHTS Fight_stills_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHTS/STILLS,FIGHTL/NOTRACE,FIGHT/CROSS.PAK) root=FIGHTS:FIGHTL:FIGHT rows=compact"
+  echo "FIGHTT Fight_traced_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHT/CROSS.PAK,FIGHT/st1/r101.arc,FIGHT/em/em15.drs) root=FIGHT rows=compact $TSKIP"
   # the record's controls (lanes eng-e1k, eng-e1o; only when --scenes names them): the Leon scene with one boot file
   # each, every one must FAIL with its reason (CONSOLE_LOOP.md section 12); LEON beside them must stay OK
   for c in "${CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfile ckind ctitle <<< "$c"
     echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1L:E1 rows=compact"
   done
-  # lane eng-e1n: the publication and HUD controls (above)
-  for c in "${E1N_CONTROLS[@]}"; do
+  # lane eng-e1n: the publication and HUD controls (above); lane eng-e1p: the camera track, record and disc read controls
+  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
     case $croot in
       E1H:E1) cneed=E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/st1/r11d.arc ;;
       E1L:E1) cneed=E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc ;;
-      *) cneed=FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;
+      *) cneed=FIGHTL/NOTRACE,FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;
     esac
     cneed=$cdir/${cfiles%%,*},$cneed
     echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact"
   done
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
+# lane eng-e1p (H-018.3): the control schedules (above); the selector must refuse each whole
+case $PLANCTL in
+  '') ;;
+  longcomment)
+    [ "$NSCENES" = 8 ] || { echo "build_console_disc: --plan-control longcomment needs eight scenes" >&2; exit 1; }
+    { printf '#'; head -c 4999 /dev/zero | tr '\0' 'x'; printf '\n'
+      grep -v '^#' "$D/SCENES.TXT" | head -1 | sed 's/^[^ ]* /NINTH /'; } >> "$D/SCENES.TXT"
+    log "control schedule: eight entries, a 5,000-byte comment, a ninth entry" ;;
+  fivefield)
+    grep -v '^#' "$D/SCENES.TXT" | tail -1 | awk '{ print $1 "5", $2, $3, $4, $5 }' >> "$D/SCENES.TXT"
+    log "control schedule: a five-field line after the entries" ;;
+  *) echo "build_console_disc: --plan-control $PLANCTL: longcomment or fivefield" >&2; exit 2 ;;
+esac
 for f in "${PUTS[@]}"; do
   [ -d "$(dirname "$D/$f")" ] || { echo "build_console_disc: --put $f: no such scene folder" >&2; exit 1; }
   : > "$D/$f"; log "boot option: put $f"
@@ -291,7 +329,7 @@ cp "$B/e1/e1.elf" "$OUT/elf/e1.elf"; cp "$B/fight/e1.elf" "$OUT/elf/fight.elf"; 
 cp "$D/SCENES.TXT" "$OUT/"
 {
   echo "RE4DC console disc: $REF = $COMMIT (build \"$BUILD\"), staged $(date -u +%FT%TZ)"
-  echo "scenes: $SCENES  precheck: $PRECHECK  layout: $LAYOUT  drops: ${DROPS[*]:-none}  puts: ${PUTS[*]:-none}"
+  echo "scenes: $SCENES  precheck: $PRECHECK  layout: $LAYOUT  drops: ${DROPS[*]:-none}  puts: ${PUTS[*]:-none}  plan control: ${PLANCTL:-none}"
   echo "## programs"; (cd "$D" && sha256sum LOADER.BIN PROG/*.BIN)
   echo "## private inputs"; sha256sum "$LKG/CROSS.PAK" "$LKG/FARM.PAK" "$LKG/CROSS.VIS" "$LKG/FARM.VIS" "$HILL_PAK" "$HILL_VIS" \
     "$FIGHT_PAK" "$FIGHT_FXMAP" "$BOSS_PAK" "$BOSS_VIS" "$BOSS_EMLIST" "$BOSS_EMARC"

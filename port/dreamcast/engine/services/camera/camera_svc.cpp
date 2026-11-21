@@ -42,6 +42,7 @@
 #include "player.h"   // lane eng-e1m: the diagnosis lines read Leon's position and matrix
 #undef fabsf
 #include <stdio.h>   // lane eng-e1l: the record's trace line (snprintf)
+#include <malloc.h>  // lane eng-e1p: the room store (memalign at room load)
 #include "camera_svc.h"
 #include "eng_camera.h"
 #include "cam_math.h"
@@ -545,31 +546,63 @@ void CamPos2ScrnVec(Vec* out, f32 sx, f32 sy)
 // caller starts it at one and the clock steps whole frames); a frame without a row is not decoded: the camera holds
 // and the sample is counted.
 //
-// The rows live in the camera service's track store (kTrackStore bytes, below), one block per live CameraMotion (its
-// MkClip header, four joints, the rows), released when the CameraMotion is destroyed. A track the store cannot hold,
-// a key block the decoder does not accept (keys not starting at frame 0 and rising, a layout without tangents) or a
-// cut export the writer refused is not played: the motion ends at its first move with the camera held, counted
-// (cam_cnt.key_errors) and logged.
+// The rows live in the camera service's track store (kTrackStore bytes, below): an MkClip header, four joints and the
+// rows per track. A track the store cannot hold, a key block the decoder does not accept (keys not starting at frame 0
+// and rising, a layout without tangents) or a cut export the writer refused is not played: the motion ends at its first
+// move with the camera held, counted (cam_cnt.key_errors) and logged.
+//
+// Lane eng-e1p (ruling H-018.1): the conversion is loading work. When the room is loaded (core/main.cpp room_init, after
+// the room's and the core's camera data are relocated) cam_track_room_load exports every motion cut (cut type 6 or 7:
+// the routines that play a cut as a camera motion) and converts it into the room store, one track a cut, owned by the
+// cut. The room store is allocated at the load to the bytes the room's tracks need (the KOS heap, freed at the next
+// room load), under a ceiling of 64 KiB and 56 cuts: a room past either, or whose store cannot be allocated, is refused
+// (nothing converted; the caller logs "E1 load: camera tracks refused" and stops). At a cut switch in play,
+// HermiteExport finds the cut's track (cam_track_cut_ready) and writes nothing; the CameraMotion made next on that buffer
+// binds to the track without reading the buffer. A CameraMotion made on any other file (an event's camera, the PC
+// exercises, or a cut whose track is not ready) converts it as before, into the play store (12,288 B, static), released
+// when it is destroyed: during play that is a conversion in play, counted (cam_cnt.play_conversions).
+//
+// Lane eng-e1p (ruling H-018.2): a refused export is honoured first: the CameraMotion made on a buffer the writer refused
+// sets its work from its arguments and returns; it reads no header or part count, takes no lease and relocates nothing.
 
 void skel_mk_decode(const u8* keys, u32 type, f32 frame, f32 maxFrame, u32 flags, Vec* out);   // services/skeleton/skel.cpp
+extern "C" int cam_cut_export(CameraCut* cut, u8* buf);   // cam_eval.cpp: the cut's file, or its refusal (0 or > buf)
 
-
-
+extern "C" {
+int cam_track_cut_convert;   // lab arm CUTCONV (control): the cut switch converts in play, as before lane eng-e1p
+}
 
 namespace {
 
 constexpr u32 kTrackStore = 12288;   // bytes: the largest cut export (6 keys, 152 rows: 4,960 B) twice over
 constexpr u32 kTrackStride = 8;      // floats a row: eye x y z, target x y z, roll, fov
-constexpr u32 kTrackSlots = 4;
+constexpr u32 kTrackSlots = 64;      // a room's motion cuts (at most kRoomCuts) and the motions converted on a file
+constexpr u32 kRoomCuts = 56;
 constexpr u32 kTrackHead = sizeof(MkClip) + 4 * sizeof(MkJoint);
-alignas(32) u8 g_track_store[kTrackStore];
+constexpr u32 kExportBuffer = 0x440;  // cam_ctrl.cpp's CAMERA_MOTION_BUFFER_SIZE (cam_eval.cpp kMotionBuffer)
+constexpr u32 kRoomStoreMax = 65536;  // the room store's ceiling (the lab arm CAMSTORE lowers it)
+alignas(32) u8 g_track_store[kTrackStore];   // the play store: tracks converted from a file by a CameraMotion
+u8* g_room_store;                // the room store: the room's tracks, allocated at room load to the bytes they need
+u32 g_room_store_bytes;
 struct TrackSlot {
-    const CameraMotion* owner;
-    u32 off, bytes;   // in g_track_store; bytes 0: free
+    const void* owner;   // the CameraMotion that converted it, or the room's cut
+    u32 off, bytes;      // in the room store (room) or the play store; bytes 0: free
+    u32 export_size;     // a room track: the size of the cut's file (HermiteExport's return)
+    int room;            // a room track (kept until the next room load)
 };
 TrackSlot g_track_slot[kTrackSlots];
+struct TrackBind {       // a CameraMotion bound to a room track (made on a buffer HermiteExport served by lookup)
+    const CameraMotion* cm;
+    const TrackSlot* s;
+};
+TrackBind g_track_bind[4];
 u32 g_track_peak;               // the store's most bytes in use at once
 const u8* g_export_refused;     // the destination of the last cut export the writer refused (HermiteExport)
+const u8* g_ready_buf;          // the buffer of the last cut switch served by lookup, and its track
+const TrackSlot* g_ready_slot;
+const CameraCut* g_room_refused[kRoomCuts];   // motion cuts the room load could not convert (writer or keys)
+u32 g_room_nrefused, g_room_cuts, g_room_tracks, g_room_bytes, g_room_refused_cuts;
+int g_track_in_play;
 
 inline u32 rd16(const u8* p) { return p[0] | (p[1] << 8); }
 constexpr u8 kKeyBytes[16] = {12, 8, 6, 0, 10, 6, 4, 0, 9, 5, 3, 0, 0, 0, 0, 0};   // with tangents; 0: not accepted
@@ -589,20 +622,38 @@ bool track_keys_ok(const u8* p, u32 type)
     return true;
 }
 
-TrackSlot* track_slot_of(const CameraMotion* cm)
+TrackSlot* track_slot_of(const void* owner)
 {
     for (TrackSlot& s : g_track_slot)
-        if (s.bytes && s.owner == cm) return &s;
+        if (s.bytes && s.owner == owner) return &s;
     return 0;
 }
 
-void track_release(const CameraMotion* cm)
+// the track a CameraMotion reads: the one it converted, or the room track it is bound to
+const TrackSlot* track_of(const CameraMotion* cm)
 {
-    if (TrackSlot* s = track_slot_of(cm)) s->bytes = 0, s->owner = 0;
+    for (const TrackSlot& s : g_track_slot)
+        if (s.bytes && s.owner == cm && !s.room) return &s;
+    for (const TrackBind& b : g_track_bind)
+        if (b.cm == cm) return b.s;
+    return 0;
 }
 
-// the lowest gap of the store that holds `bytes` (32-byte blocks), or 0
-TrackSlot* track_claim(const CameraMotion* cm, u32 bytes)
+// a CameraMotion destroyed or made again in the same storage: its own track released, its binding dropped
+void track_release(const CameraMotion* cm)
+{
+    for (TrackSlot& s : g_track_slot)
+        if (s.bytes && s.owner == cm && !s.room) s.bytes = 0, s.owner = 0;
+    for (TrackBind& b : g_track_bind)
+        if (b.cm == cm) b.cm = 0, b.s = 0;
+}
+
+inline u32 track_bytes(u32 rows) { return (kTrackHead + rows * kTrackStride * sizeof(f32) + 31) & ~31u; }
+
+inline u8* track_base(int room) { return room ? g_room_store : g_track_store; }
+
+// the lowest gap of the room store or the play store that holds `bytes` (32-byte blocks), or 0
+TrackSlot* track_claim(const void* owner, u32 bytes, int room)
 {
     bytes = (bytes + 31) & ~31u;
     TrackSlot* free_slot = 0;
@@ -613,33 +664,60 @@ TrackSlot* track_claim(const CameraMotion* cm, u32 bytes)
     for (bool moved = true; moved;) {
         moved = false;
         for (const TrackSlot& s : g_track_slot)
-            if (s.bytes && at < s.off + s.bytes && s.off < at + bytes) at = s.off + s.bytes, moved = true;
+            if (s.bytes && !s.room == !room && at < s.off + s.bytes && s.off < at + bytes) at = s.off + s.bytes, moved = true;
     }
-    if (at + bytes > kTrackStore) return 0;
-    free_slot->owner = cm, free_slot->off = at, free_slot->bytes = bytes;
-    u32 used = 0;
-    for (const TrackSlot& s : g_track_slot)
-        if (s.bytes && s.off + s.bytes > used) used = s.off + s.bytes;
-    if (used > g_track_peak) g_track_peak = used;
+    if (at + bytes > (room ? g_room_store_bytes : kTrackStore) || !track_base(room)) return 0;
+    free_slot->owner = owner, free_slot->off = at, free_slot->bytes = bytes;
+    free_slot->export_size = 0, free_slot->room = room;
+    if (!room) {
+        u32 used = 0;
+        for (const TrackSlot& s : g_track_slot)
+            if (s.bytes && !s.room && s.off + s.bytes > used) used = s.off + s.bytes;
+        if (used > g_track_peak) g_track_peak = used;
+    }
     return free_slot;
 }
 
-inline const MkClip* track_clip(const TrackSlot* s) { return (const MkClip*) (g_track_store + s->off); }
+inline const MkClip* track_clip(const TrackSlot* s) { return (const MkClip*) (track_base(s->room) + s->off); }
 
-// The conversion: the motion file's parts into rows, frames 0 .. maxFrame (the last: each axis's last key).
-bool track_convert(CameraMotion* cm, const MotionData* data, const u32* keys)
+// A motion file's key table: the word-aligned offsets after the part numbers (the first word skipped, as the original
+// reads it), as addresses into the file. Reads the file only; relocates nothing (the room load's own export buffer).
+void file_keys(const u8* d, u32* keys)
+{
+    const u32 n = d[2];
+    const u32* tbl = (const u32*) ((((u32) (d + 3 + 2 * n) + n) + 3) & ~3u) + 1;
+    for (u32 i = 0; i < n; i++) keys[i] = (u32) d + tbl[i];
+}
+
+// The rows a motion file's track needs (frames 0 .. maxFrame), and whether its key blocks are accepted.
+u32 track_rows(const MotionData* data) { return (data->maxFrame & 0x3FFF) + 1 + 1; }
+bool track_keys_all_ok(const MotionData* data, const u32* keys)
+{
+    const u8* d = (const u8*) data;
+    const u32 n = d[2];
+    const u16_un* info = (const u16_un*) (d + 3);
+    const u8* part = d + 3 + 2 * n;
+    for (u32 i = 0; i < n; i++)
+        if (part[i] <= 3 && !(keys[i] && track_keys_ok((const u8*) keys[i], info[i] >> 12))) return false;
+    return true;
+}
+
+// The conversion: the motion file's parts into rows, frames 0 .. maxFrame (the last: each axis's last key). Returns the
+// track, or 0 (keys not accepted, or the store full).
+TrackSlot* track_convert(const void* owner, int room, const MotionData* data, const u32* keys)
 {
     const u8* d = (const u8*) data;
     const u32 n = d[2];
     const u16_un* info = (const u16_un*) (d + 3);
     const u8* part = d + 3 + 2 * n;
     const u32 maxFrame = (data->maxFrame & 0x3FFF) + 1;   // the clock's maxFrame (the original's + 1)
-    for (u32 i = 0; i < n; i++)
-        if (part[i] <= 3 && !(keys[i] && track_keys_ok((const u8*) keys[i], info[i] >> 12))) return false;
+    if (!track_keys_all_ok(data, keys)) return 0;
     const u32 rows = maxFrame + 1;
-    TrackSlot* s = track_claim(cm, kTrackHead + rows * kTrackStride * sizeof(f32));
-    if (!s) return false;
-    MkClip* k = (MkClip*) (g_track_store + s->off);
+    TrackSlot* s = track_claim(owner, kTrackHead + rows * kTrackStride * sizeof(f32), room);
+    if (!s) return 0;
+    cam_cnt.conversions++;
+    if (g_track_in_play) cam_cnt.play_conversions++;
+    MkClip* k = (MkClip*) (track_base(room) + s->off);
     memset(k, 0, kTrackHead);
     k->maxFrame = (u16) maxFrame;
     k->n = 4;
@@ -681,18 +759,153 @@ bool track_convert(CameraMotion* cm, const MotionData* data, const u32* keys)
         if (slope) __builtin_memcpy(slope, &saved, 4);
         cam_cnt.keys += rows;
     }
-    return true;
+    return s;
 }
 
 }   // namespace
 
-// The motion work as the original sets it up (the key table relocated in place, as the data's other readers expect),
-// then the conversion.
+extern "C" {
+u32 cam_track_limit = kRoomStoreMax;   // the room store's ceiling; lab arm CAMSTORE (control): lower
+
+
+// The room's motion cuts (type 6 or 7) of one camera data block (relocated), in file order. Only a "B402".."B404" block
+// has cuts in this layout, relocated by calcAddr: anything else (the core's "EMPT" placeholder in the E1 images, an older
+// version calcAddr leaves as offsets) has none to convert (lane eng-e1p: the first runs read the E1 images' core
+// placeholder as cuts and refused its garbage).
+static u32 room_motion_cuts(const void* cam, CameraCut** out, u32 max)
+{
+    if (!cam || cameraDataVersion((char*) cam) < 2) return 0;
+    const CameraDataHeader* h = (const CameraDataHeader*) cam;
+    CameraAreaRec* rec = (CameraAreaRec*) (h + 1);
+    CameraAreaInfo* area = (CameraAreaInfo*) (rec + h->numArea);
+    CameraCut* cut = (CameraCut*) (area + h->numArea);
+    u32 n = 0;
+    for (int i = 0; i < h->numCut; i++, cut++)
+        if (cut->type == 6 || cut->type == 7) {
+            if (n < max) out[n] = cut;
+            n++;   // counted past max too: the caller refuses the room
+        }
+    return n;
+}
+
+int cam_track_room_load(const void* room_cam, const void* core_cam)
+{
+    // a new room: every track and binding of the last one goes
+    for (TrackSlot& s : g_track_slot) s.bytes = 0, s.owner = 0, s.room = 0;
+    for (TrackBind& b : g_track_bind) b.cm = 0, b.s = 0;
+    g_ready_buf = 0, g_ready_slot = 0, g_export_refused = 0;
+    g_room_nrefused = g_room_cuts = g_room_tracks = g_room_bytes = g_room_refused_cuts = 0;
+    if (g_room_store) free(g_room_store);
+    g_room_store = 0, g_room_store_bytes = 0;
+    CameraCut* cuts[kRoomCuts];
+    u32 n = room_motion_cuts(room_cam, cuts, kRoomCuts);
+    if (core_cam && core_cam != room_cam) n += room_motion_cuts(core_cam, cuts + (n < kRoomCuts ? n : kRoomCuts),
+                                                                n < kRoomCuts ? kRoomCuts - n : 0);
+    g_room_cuts = n;
+    if (n > kRoomCuts) return -1;   // more motion cuts than the store's slots: refused
+    alignas(8) static u8 file[kExportBuffer];
+    u32 keys[8];
+    // the room's bytes first: a room whose tracks do not fit is refused whole (nothing converted)
+    u32 need = 0;
+    for (u32 i = 0; i < n; i++) {
+        const int size = cam_cut_export(cuts[i], file);
+        if (size <= 0 || (u32) size > kExportBuffer || file[2] > 8) continue;   // refused below
+        need += track_bytes(track_rows((const MotionData*) file));
+    }
+    // the room store: allocated now to the bytes the room's tracks need (KOS heap; freed at the next room load)
+    g_room_bytes = need;
+    if (need > cam_track_limit) return -1;
+    if (need) {
+        g_room_store = (u8*) memalign(32, need);
+        if (!g_room_store) return -1;
+        g_room_store_bytes = need;
+    }
+    for (u32 i = 0; i < n; i++) {
+        const int size = cam_cut_export(cuts[i], file);
+        TrackSlot* s = 0;
+        if (size > 0 && (u32) size <= kExportBuffer && file[2] <= 8) {
+            file_keys(file, keys);
+            s = track_convert(cuts[i], 1, (const MotionData*) file, keys);
+        }
+        if (!s) {   // the writer refused the cut, or its keys are not accepted: not played (as at a cut switch)
+            g_room_refused_cuts++;
+            cam_cnt.key_errors++;
+            if (g_room_nrefused < 16) g_room_refused[g_room_nrefused++] = cuts[i];
+            pLog->err(0, 0, "camera track: room cut %d of %d keys not converted (%d bytes)", (int) cuts[i]->camera_no,
+                      (int) cuts[i]->num, size);
+            continue;
+        }
+        s->export_size = (u32) size;
+        g_room_tracks++;
+    }
+    return 0;
+}
+
+void cam_track_room(u32* cuts, u32* tracks, u32* refused, u32* bytes, u32* limit)
+{
+    *cuts = g_room_cuts, *tracks = g_room_tracks, *refused = g_room_refused_cuts, *bytes = g_room_bytes;
+    *limit = cam_track_limit;
+}
+
+void cam_track_in_play(int on) { g_track_in_play = on; }
+
+// HermiteExport at a cut switch (cam_eval.cpp): the cut's room track, handed to the CameraMotion made next on `buf`.
+// Returns the file's size (nothing is written), -1 for a cut the room load refused, 0 when the cut has no room track
+// (the writer then writes and the CameraMotion converts: a conversion in play).
+int cam_track_cut_ready(const CameraCut* cut, const u8* buf)
+{
+    if (g_ready_buf == buf) g_ready_buf = 0, g_ready_slot = 0;
+    if (cam_track_cut_convert) return 0;
+    for (u32 i = 0; i < g_room_nrefused; i++)
+        if (g_room_refused[i] == cut) return -1;
+    const TrackSlot* s = track_slot_of(cut);
+    if (!s || !s->room) return 0;
+    g_ready_buf = buf, g_ready_slot = s;
+    cam_cnt.lookups++;
+    return (int) s->export_size;
+}
+}
+
+// The motion work. A refused export first (lane eng-e1p, H-018.2): the work from the arguments only, nothing of the
+// buffer read, not played. A buffer HermiteExport served from the room's track: bound to it, the buffer not read (its
+// clock length is the track's). Any other file: the work as the original sets it up (the key table relocated in place,
+// as the data's other readers expect), then the conversion.
 CameraMotion::CameraMotion(void* data, int hokan, int flags, f32 frame)
 {
     CameraMotionWork* w = &m_info;
     memclr_asm(w, sizeof(CameraMotionWork));
     w->data = (MotionData*) data;
+    w->hokan = hokan;
+    w->flags = flags;
+    w->frame = frame;
+    base_mat = NULL;
+    end = 0;
+    track_release(this);   // a CameraMotion made again in the same storage
+    const bool refused = (const u8*) data == g_export_refused;
+    if (refused && cam_control != 9) {
+        cam_cnt.key_errors++;
+        pLog->err(0, 0, "CameraMotion: track not converted (the export was refused)");
+        return;
+    }
+    if (!refused && g_ready_slot && (const u8*) data == g_ready_buf) {
+        for (TrackBind& b : g_track_bind)
+            if (!b.cm) {
+                b.cm = this, b.s = g_ready_slot;
+                break;
+            }
+        const MkClip* k = track_clip(g_ready_slot);
+        g_ready_buf = 0, g_ready_slot = 0;
+        w->maxFrame = (f32) k->maxFrame;   // the clock's maxFrame (the file's + 1), as converted at load
+        w->nParts = 4;                     // the writer's four tracks; the pointers below are not followed
+        w->partsInfo = (u16_un*) ((u8*) data + 3);
+        w->partsNo = (u8*) data + (4 * 2 + 3);
+        w->keyTbl = (u32*) ((((u32) w->partsNo + 4) + 3) & ~3u) + 1;
+        if (!track_of(this)) {   // no binding left (more than four live): not played, counted
+            cam_cnt.key_errors++;
+            pLog->err(0, 0, "CameraMotion: track not bound (bindings full)");
+        }
+        return;
+    }
     w->maxFrame = (f32) ((((MotionData*) data)->maxFrame & 0x3FFF) + 1);
     w->nParts = w->data->nParts;
     w->partsInfo = (u16_un*) ((u8*) data + 3);
@@ -703,14 +916,7 @@ CameraMotion::CameraMotion(void* data, int hokan, int flags, f32 frame)
     if (!lease.external() && (s32) tbl[0] >= 0)
         for (int i = 0; i < w->nParts; i++) tbl[i] += (u32) data;
     w->keyTbl = tbl;
-    w->hokan = hokan;
-    w->flags = flags;
-    w->frame = frame;
-    base_mat = NULL;
-    end = 0;
-    track_release(this);   // a CameraMotion made again in the same storage
-    const bool refused = (const u8*) data == g_export_refused;
-    if (refused || !track_convert(this, w->data, keys)) {
+    if (refused || !track_convert(this, 0, w->data, keys)) {   // refused here only under control camlate (9)
         cam_cnt.key_errors++;
         pLog->err(0, 0, "CameraMotion: track not converted (%s)", refused ? "the export was refused" : "keys or store");
     }
@@ -730,7 +936,7 @@ void CameraMotion::move()
     CAM_SVC("CameraMotion::move");
     cam_cnt.tracks++;
     CameraMotionWork* w = &m_info;
-    const TrackSlot* s = track_slot_of(this);
+    const TrackSlot* s = track_of(this);
     const MkClip* k = s ? track_clip(s) : 0;
     const int r = k ? mk_row_of(k, w->frame, w->maxFrame, 2) : -1;
     if (r < 0) {
@@ -766,8 +972,12 @@ extern "C" void cam_track_store_use(u32* now, u32* peak, u32* size)
 // The cut writer's refusal (cam_eval.cpp HermiteExport): the CameraMotion made on that buffer next is not played.
 extern "C" void cam_track_export_refused(const u8* buf, int refused)
 {
-    if (refused) g_export_refused = buf;
-    else if (g_export_refused == buf) g_export_refused = 0;
+    if (refused) {
+        g_export_refused = buf;
+        if (g_ready_buf == buf) g_ready_buf = 0, g_ready_slot = 0;
+    } else if (g_export_refused == buf) {
+        g_export_refused = 0;
+    }
 }
 
 u32 CameraSequenceCtrl(CameraMotionWork* w)

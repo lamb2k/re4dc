@@ -16,6 +16,7 @@
 #include "e1_core.h"
 #include "e1_kos.h"
 #include "camera/eng_camera.h"   // lane eng-e1l: the camera record's finite check
+#include "camera/camera_svc.h"   // lane eng-e1p: the room's camera tracks converted at load
 #ifdef E2_BOSS
 #include "boss_e2.h"   // eng-boss: the El Gigante slice
 #endif
@@ -68,6 +69,22 @@ static void room_init()
     if (cam) CamCtrl.RoomDataRead((CameraDataHeader*) cam);
     else pG->pCamRoom = cam;
     CamCtrl.CoreDataRead((CameraDataHeader*) (pG->pArc->ofs_30 + (u32) pG->pArc));
+    {   // lane eng-e1p (H-018.1): every motion cut of the room's and the core's camera data exported and converted now,
+        // loading work; a cut switch in play is a lookup. A room whose tracks do not fit the store is refused.
+        const int rc = cam_track_room_load(pG->pCamRoom, pG->pCamCore);
+        u32 cuts, tracks, refused, bytes, limit;
+        cam_track_room(&cuts, &tracks, &refused, &bytes, &limit);
+        if (rc) {
+            e1_log("E1 load: camera tracks refused: room %03x needs %lu bytes for %lu motion cuts, the room store's ceiling "
+                   "%lu (56 cuts)\n",
+                   (unsigned) pG->room_id, (unsigned long) bytes, (unsigned long) cuts, (unsigned long) limit);
+            for (;;) thd_sleep(1000);
+        }
+        e1_log("E1 CAMTRACK room %03x: motion cuts %lu converted %lu refused %lu, room store %lu bytes (allocated at load; "
+               "ceiling %lu)\n",
+               (unsigned) pG->room_id, (unsigned long) cuts, (unsigned long) tracks, (unsigned long) refused,
+               (unsigned long) bytes, (unsigned long) limit);
+    }
     CamCtrl.roomInit();
     e1_view_room_init();
 #ifdef E2_BOSS

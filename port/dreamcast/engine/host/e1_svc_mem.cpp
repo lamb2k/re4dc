@@ -204,11 +204,17 @@ void e1_svc_report()
     // lane eng-e1n (H-017.5): only what has a producer: the camera copy control (PUBCOPY) and the light-view misses;
     // the selector fails a scene where either is not 0 or the line is missing
     e1_log("E1 PUB camera %lu light-view-misses %lu\n", (unsigned long) eng_pub.camera, (unsigned long) e1_light_miss);
-    {   // lane eng-e1n (H-017.2): the camera tracks converted at load (rows), refused, the track store's use
-        u32 now, peak, size;
+    {   // lane eng-e1n (H-017.2): the camera tracks' part-frame decodes (one a frame and part converted), moves, tracks
+        // not played, the track store's use; lane eng-e1p (H-018.1): tracks converted at room load and in play, cut
+        // switches served by lookup, the room's tracks and bytes. The selector fails a timing scene with a conversion in play.
+        u32 now, peak, size, cuts, tracks, refused, bytes, limit;
         cam_track_store_use(&now, &peak, &size);
-        e1_log("E1 CAMTRACK rows %lu moves %lu not-played %lu store peak %lu of %lu bytes\n", (unsigned long) cam_cnt.keys,
-               (unsigned long) cam_cnt.tracks, (unsigned long) cam_cnt.key_errors, (unsigned long) peak, (unsigned long) size);
+        cam_track_room(&cuts, &tracks, &refused, &bytes, &limit);
+        e1_log("E1 CAMTRACK part-frame-decodes %lu moves %lu not-played %lu conversions %lu in-play %lu lookups %lu "
+               "room-tracks %lu room-bytes %lu store-peak %lu of %lu\n", (unsigned long) cam_cnt.keys,
+               (unsigned long) cam_cnt.tracks, (unsigned long) cam_cnt.key_errors, (unsigned long) cam_cnt.conversions,
+               (unsigned long) cam_cnt.play_conversions, (unsigned long) cam_cnt.lookups, (unsigned long) tracks,
+               (unsigned long) bytes, (unsigned long) peak, (unsigned long) size);
     }
     // lane eng-e1l: the camera record's finite check (every tick; the selector fails a scene with a non-finite tick or
     // without this line) and the renderer's planes the record holds

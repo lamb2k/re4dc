@@ -88,6 +88,14 @@ void e1_memmap_after()
                (unsigned long) mm_peak, (unsigned long) top, (long) (E1_ARENA_LO - top));
         return;
     }
+    if (e1_lab.memnofree) {   // MEMNOFREE (lane eng-e1p, control): mallinfo used, then the vram clause: no free value
+        e1_log("E1 MEM after play:stack high water %u of %u guard %s | heap blocks %u in use %lu peak %lu | sbrk %08lx free to arena %ld "
+               "| mallinfo used %lu | vram free %ld | lost %u\n", stack_high_water(), (unsigned) (stack_hi - stack_lo),
+               bad ? "BROKEN" : "intact", mm_n, (unsigned long) mm_bytes, (unsigned long) mm_peak, (unsigned long) top,
+               (long) (E1_ARENA_LO - top), (unsigned long) mi.uordblks,
+               e1_draw_opened_c() ? (long) pvr_mem_available() : -1l, mm_lost);
+        return;
+    }
     e1_log("E1 MEM after play:stack high water %u of %u guard %s | heap blocks %u in use %lu peak %lu | sbrk %08lx free to arena %ld "
            "| mallinfo used %lu free %lu | vram free %ld | lost %u\n", stack_high_water(), (unsigned) (stack_hi - stack_lo),
            bad ? "BROKEN" : "intact", mm_n, (unsigned long) mm_bytes, (unsigned long) mm_peak, (unsigned long) top,

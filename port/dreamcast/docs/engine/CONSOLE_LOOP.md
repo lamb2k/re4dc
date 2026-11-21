@@ -419,3 +419,61 @@ disc.
 
 Every clean scene on these discs prints `files opened in play 0` (ctlA, ctlB, runC2: LEON, HILL, BOSS, the function
 scenes and, after the fix, FIGHT); the selector's summary shows the count.
+
+## 13. Whole lines, whole schedules, disc reads in play, camera tracks at room load (lane eng-e1p, 2026-11-21)
+
+Status: finished, unaudited. Answers HANDOVERS.md H-018 (fourth E1 audit, findings 3, 4, 6 and 7). Flycast runs are
+function checks; no timing claim.
+
+**Every judged line is matched whole** (`loader/selector.c tmatch`): the line against its template, literal text and
+fields in order to the line's end. A number is digits only (a '-' first where signed), at most 32 bits, and must end
+exactly where the template's next character says: `17,missing` where a row value is expected, `12x`, `none`, an empty or
+missing field, a value past 4,294,967,295 or text left over at the end do not match. Matched this way: `E1 FIELDS`,
+`E1 MEM after play` (every clause, `mallinfo free` included), `E1 DONE`, `E1 FILES`, `E1 CAMTRACK`, `E1 CAMREC`, `E1 POOL`,
+`E1 PUB` and the client's closing `cl-send: lines ...` count. A ROW is numbers separated by one blank each, read to its
+end. A memory line that does not match names the template field where matching stopped.
+
+**Self-reports cross-checked against what was received** (every E1-family scene): `E1 DONE ticks` (and with it `E1 CAMREC
+ticks`, already required equal) must equal the last ROW received plus the rows the client dropped past its row budget
+(its closing count; the budget only fills, so dropped rows are always the last: the fight's 900-tick report keeps rows to
+about 832). A timing scene's `E1 FIELDS` counts (pictures, counted, intervals over two, worst and its picture) must equal
+the values recomputed from the ROW lines of pictures 41 to 640.
+
+**The schedule is read whole** (`read_plan`): to the end of the file, whatever its length (1 MiB at most); every line
+that is not blank or a comment must have six fields, each within its size, a deadline of 1 to 100,000 s, arguments of
+255 characters at most. A line that does not parse refuses the whole schedule (`CDISC SCHEDULE REFUSED: schedule line
+N: ...`), nothing runs. Control schedules (`build_console_disc.sh --plan-control`): `longcomment` (eight entries, a
+5,000-byte comment, a ninth entry) and `fivefield` (a line with five fields).
+
+**Disc reads in play** (`core/play_files.c`, `core/boot.c`, `game/Makefile` wraps): beside opens, the reads on
+disc-backed handles (`fs_read` on a handle opened under `/cd`, whenever it was opened; `fs_close` drops the mark) and the
+CD drive's read requests as this KOS's ISO filesystem issues them (the image's map: `fs_iso9660.o` calls
+`cdrom_read_sectors_ex`, `cdrom_stream_start`, `cdrom_stream_request` and `cdrom_read_toc`; `cdrom_read_sectors` is
+wrapped too) are counted from the first to the last picture. `E1 FILES in play: opens N reads R sector-requests S
+first-open-tick T first-read-tick T first-sector-tick T name X`; a timing scene needs all three 0.
+
+**Camera tracks at room load** (SERVICES.md 48d, lane eng-e1p bullet): `E1 CAMTRACK room <id>: motion cuts N converted
+C refused R, room store B bytes` at load; `E1 CAMTRACK part-frame-decodes ... in-play I ...` after play; a timing scene
+needs `in-play` 0. A room whose tracks cannot be held is refused at load (`E1 load: camera tracks refused`, a refusal
+line for the client and the selector).
+
+**Controls** (Flycast test discs, final commit d5c28a62e unless said; evidence `E:\RE4DC-Lanes\eng-e1p\ev\flycast\`).
+Each of the audit's counterexamples passed the selector before (disc D: the selector of 611eeadae on the same images;
+PL0, PF0) and fails it now (C2, PL1, PF1):
+
+| Scene (disc) | Input | Before (old selector) | Now |
+|---|---|---|---|
+| CMALFREE (D / C2) | `MEMNOFREE`: `mallinfo used M` then the vram clause | OK | FAILED "after-play memory line: no match at 'free %u \| vram free %d ...'" |
+| CTICK1 (D / C2) | `TICKS1`: E1 DONE and E1 CAMREC both 1 | OK | FAILED "E1 DONE says 1 ticks, rows end at 640 (+0 dropped)" |
+| CROWTOK (D / C2) | `ROWTOKEN`: row 300's fields value `2,missing` | OK | FAILED "rows: 1 with a field that is not a number" |
+| CREADX (D / C2) | `READX`: `em/pl11.drs` opened before play, 2,048 bytes read at picture 100 | OK (opens 0) | FAILED "disc read in play: reads 1, sector requests 1" (first read and request at tick 100) |
+| CCUTCONV (D / C2) | `CUTCONV`: the fight's cut converted at the switch, as before | OK | FAILED "camera tracks converted in play 1" (part-frame decodes 3,096 = 2,608 at load + 488) |
+| PL0 / PL1 | `--plan-control longcomment`: 8 entries, a 5,000-byte comment, a ninth (SCENES.TXT 6,733 B) | "8 scenes", run started | "CDISC SCHEDULE REFUSED: schedule has 9 scenes, the selector runs 8" |
+| PF0 / PF1 | `--plan-control fivefield`: LEON, HILL, then HILL's first five fields | "2 of 2 scenes OK" | "CDISC SCHEDULE REFUSED: schedule line 4: files missing (6 fields needed)" |
+| CTRKSZ (C2) | `CAMSTORE`: the room store's ceiling 1,024 B | - | FAILED "E1 load: camera tracks refused: room 101 needs 21920 bytes ..." (exit 1, no rows) |
+| COPENX (C2) | `OPENX` (lane eng-e1o) | - | FAILED "files opened in play 1 (first /cd/OPENX)" |
+| LEON (C2) beside them | none | - | OK |
+
+The schedule controls PL1 and PF1 ran on 6b1e567bc; `read_plan` is the same at d5c28a62e. Clean scenes (A2, d5c28a62e):
+LEON, HILL, FIGHT, BOSS (timing) and LEONS, HILLS, FIGHTS, FIGHTT (function) all OK, each with opens 0, reads 0, sector
+requests 0 and camera tracks converted in play 0; FIGHT's cut served by lookup (lookups 1, 122 moves).

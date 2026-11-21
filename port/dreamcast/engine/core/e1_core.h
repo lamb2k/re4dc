@@ -72,7 +72,15 @@ void e1_report();
 //   STACKX   one stack guard word overwritten at tick 300 (lane eng-e1k)
 //   LIGHTMISS every character's light view refused (lane eng-e1n: E1 PUB light-view-misses, the scene fails)
 //   HUDFREEZE the HUD's ammo count frozen at the renderer's open (lane eng-e1n: hudcheck must fail)
-struct E1Lab { int camrec0, memcut, runfunc, numtext, openx, stackx, lightmiss, hudfreeze; };
+// Lane eng-e1p (H-018):
+//   CUTCONV  a cut switch converts its camera track in play, as before (E1 CAMTRACK in-play 1: the scene fails)
+//   CAMSTORE the camera track store limited to 1024 bytes (the room is refused at load: "E1 load: camera tracks refused")
+//   MEMNOFREE the after-play memory line without its mallinfo free value
+//   TICKS1   E1 DONE ticks and E1 CAMREC ticks both 1 (they agree with each other, not with the rows)
+//   ROWTOKEN row 300's fields value printed with a trailing token ("2,missing")
+//   READX    a disc file opened before play, 2048 bytes read from it at picture 100 (no open in play: E1 FILES reads)
+struct E1Lab { int camrec0, memcut, runfunc, numtext, openx, stackx, lightmiss, hudfreeze;
+               int cutconv, camstore, memnofree, ticks1, rowtoken, readx, readx_fd; };
 extern E1Lab e1_lab;
 void e1_lab_boot();
 extern "C" void e1_play_files_begin(void);

@@ -1355,6 +1355,29 @@ Details, numbers and how each body differs from the original: `lanes/eng-e1n.md`
 - **PC checks** (`hostref/svc`): exercise `campush` (the push camera on the door walk, a window planted for its door
   branch), `camexport` (a 7-key cut against a guarded buffer), controls `caminv`, `camfollow`, `camslope`
   (svc_controls.sh's camtrack row).
+- **Lane eng-e1p (H-018.1, H-018.2): tracks converted at room load; a refused export honoured first.** The bullets
+  above on the conversion's time and the store are superseded:
+  - When the room is loaded (`core/main.cpp room_init`, after `RoomDataRead` and `CoreDataRead`),
+    `cam_track_room_load` exports every motion cut (cut type 6 or 7) of the room's and the core's camera data with the
+    service's writer and converts it into the **room store**, allocated then to the bytes the room's tracks need (KOS
+    heap, freed at the next room load; ceiling 64 KiB and 56 cuts). A room past either, or whose store cannot be
+    allocated, is refused: `E1 load: camera tracks refused ...`, a refusal line (the client hands in, the selector
+    fails the scene). r101 (village, fight): 11 motion cuts, 21,920 B; r11d (hill): 10 cuts, 32,480 B.
+  - At a cut switch in play the hosted controller still calls `HermiteExport` and makes a `CameraMotion` on its buffer;
+    `HermiteExport` finds the cut's room track (`cam_track_cut_ready`), writes nothing and returns the file's size, and
+    the `CameraMotion` binds to the track without reading the buffer: a lookup. A `CameraMotion` made on any other file
+    (an event's camera, the PC exercises) converts it as before into the 12,288 B static **play store**; during play
+    (`cam_track_in_play`, the first to the last picture) that counts as a conversion in play.
+  - `E1 CAMTRACK part-frame-decodes D moves M not-played P conversions C in-play I lookups L room-tracks T room-bytes B
+    store-peak K of S` (the old "rows" are part-frame decodes, one a frame and part); the selector fails a timing scene
+    whose `in-play` is not 0. Controls (boot files): `CUTCONV` (the cut switch converts as before), `CAMSTORE` (the
+    room store's ceiling 1,024 B: the room refused).
+  - A refused export (count outside 1 .. 26, or the file past 0x440 bytes) is honoured first: the `CameraMotion` made
+    on that buffer sets its work from its arguments and returns, before it reads a header or part count, takes a lease
+    or relocates anything. PC exercise `camrefuse` (oversize 7 keys, counts 0 and 27, a stale valid 5-key table):
+    the guarded buffer unchanged after the export, the construction and a move, the motion ended; control `camlate`
+    (the marker checked after the reads, the order before) fails it. Exercise `camroom` converts the room's tracks on
+    the PC as the images do.
 
 #### 48d.1 Decision statements re-expressed in engine code (ruling H-017.10)
 
