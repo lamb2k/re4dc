@@ -120,10 +120,10 @@ static void cloth_count_report()
     const ClothCounters& c = cloth_cnt;
     const ClothKCounters& k = cloth_k_cnt;
     e1_log("E1 CLOTH chains %lu fallback %lu moves %lu links %lu volumes %lu resets %lu | kernel links %lu passes %lu normalize %lu "
-           "sqrt %lu acos %lu rotations %lu volume-tests %lu volume-hits %lu\n", (unsigned long) c.chains, (unsigned long) c.fallback,
+           "sqrt %lu acos %lu rotations %lu volume-tests %lu volume-hits %lu volume-skips %lu\n", (unsigned long) c.chains, (unsigned long) c.fallback,
            (unsigned long) c.moves, (unsigned long) c.links, (unsigned long) c.at_volumes, (unsigned long) c.resets,
            (unsigned long) k.links, (unsigned long) k.passes, (unsigned long) k.normalize, (unsigned long) k.sqrt,
-           (unsigned long) k.acos, (unsigned long) k.rotations, (unsigned long) k.vol_tests, (unsigned long) k.vol_hits);
+           (unsigned long) k.acos, (unsigned long) k.rotations, (unsigned long) k.vol_tests, (unsigned long) k.vol_hits, (unsigned long) k.vol_skips);
 }
 #else
 static void cloth_stat_tick() {}
