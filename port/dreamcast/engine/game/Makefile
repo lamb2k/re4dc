@@ -133,10 +133,12 @@ $(OUT)/n/skel_xm.o: $(SVC_DIR)/skeleton/skel_xm.c $(SVC_DIR)/skeleton/skel_xm.h
 # camera (frustum, tracks, orientation) and input/rumble. Compiled with the hosted units' flags (they port the original
 # arithmetic in its order) and linked BEFORE the hosted objects, so a header inline both define is taken from them.
 # The original units they retire are not linked at all (hosted.mk): model, motion, cMotBase, atari, atariInfo, at_mod,
-# at_sub, pad, route_ck, view, camera, cam_motion. The split behaviour units cam_ctrl, cam_sys and cam_extra stay
+# at_sub, pad, route_ck, view, camera, cam_motion, cam_sys. The split behaviour units cam_ctrl, cam_qfps and cam_extra stay
 # hosted with every global symbol the native objects define made weak in them (SPLIT_UNITS below), so each call
 # reaches the native body and --gc-sections drops the original's.
 SVC4_SRCS := volumes/volumes collision/col_model routes/routes motion/follow model/model_svc camera/camera_svc input/input
+# lane eng-e1j (H-016.1): the camera service's evaluation under the controller (services/camera/cam_eval.cpp)
+SVC4_SRCS += camera/cam_eval
 # lane eng-e1h (H-014.4): the character and light tables on the engine's record pool (services/model/mgr_pool.cpp)
 SVC4_SRCS += model/mgr_pool
 # lane eng-e1h: the Ganado's dissolving-corpse squash on the native skeleton (services/skeleton/em_compress.cpp; the
@@ -144,7 +146,8 @@ SVC4_SRCS += model/mgr_pool
 SVC4_SRCS += skeleton/em_compress
 SVC4_OBJS := $(addprefix $(OUT)/n/,$(addsuffix .o,$(notdir $(SVC4_SRCS))))
 SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_DIR)/$(d))
-NATIVE_INC += $(SVC4_INC)
+# lane eng-e1j: the camera service is on SH4ZAM's types (services/camera/cam_math.h)
+NATIVE_INC += $(SVC4_INC) -I$(SHZ)
 define SVC4_RULE
 $(OUT)/n/$(notdir $(1)).o: $(SVC_DIR)/$(1).cpp $(wildcard $(SVC_DIR)/$(dir $(1))*.h) $(SVC_DIR)/model/pool.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $$(dir $$@)
@@ -173,6 +176,10 @@ WEAKEN_game/em_sub := _GetWepTargetPos _GetWepTargetList2   # SH-ELF symbol name
 WEAKEN_game/objWep := _drawPoint _Draw_line3d_local_222 _Draw_line3d_222
 # Lane eng-e1h: em10ScaleCompress's squash is the skeleton service's (services/skeleton/em_compress.cpp)
 WEAKEN_em10/em10 := __Z17em10ScaleCompressP5cEm10
+# Lane eng-e1j: pl_debug's scrHitCheck (a debug ray drawn as lines) is a logged stub (host/e1_stubs.cpp); without partial
+# inlining cPlayer::debugMove calls the symbol (not a local clone), so the stub is reached and the body dropped.
+WEAKEN_game/pl_debug := __Z11scrHitCheckP7cPlayer
+$(OUT)/h/game/pl_debug.o: ORIG_FLAGS += -fno-partial-inlining
 # ---- Round-5 native services (lane eng-svc5, linked by lane eng-e1g; SERVICES.md sections 32-38) in every image: the
 # math helpers (math_sub, sub2), the garments (pl_cloth's chain set-up and pose), the SDK matrix / vector math and the
 # allocator. Compiled with the hosted units' flags (the original's arithmetic in its order) and linked before the
@@ -189,7 +196,9 @@ endef
 $(foreach s,$(SVC5_SRCS),$(eval $(call SVC5_RULE,$(s))))
 $(OUT)/n/svc4_syms.txt: $(SVC4_OBJS)
 	sh-elf-nm -g --defined-only $(SVC4_OBJS) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
-SPLIT_UNITS := game/cam_ctrl game/cam_sys game/cam_extra
+# lane eng-e1j: cam_qfps is split too (its frame, offset blend, wall probe and offset correction are the camera
+# service's); cam_sys is not hosted at all (every function is the service's: hosted.mk)
+SPLIT_UNITS := game/cam_ctrl game/cam_qfps game/cam_extra
 $(addprefix $(OUT)/h/,$(addsuffix .o,$(SPLIT_UNITS))): $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h $(OUT)/n/svc4_syms.txt
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.orig.o

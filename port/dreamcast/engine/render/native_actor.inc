@@ -211,7 +211,13 @@ int native_actor_open(NativeScene* s){
 
 /* ---- per picture ---- */
 /* The player's stance from the HUD head record (life, maximum, weapon, stance): 1 while the knife is in hand. */
-static int knife_stance(const NativeScene* s){return s->words[5]>=4 && s->state[5][3]==0x10;}
+/* Lane eng-e1j (H-016.2): the E1 images read the stance from the game state when drawing (hud_stance_live, set by
+   services/draw.cpp); the bench reads the pack's recorded word. */
+unsigned (*hud_stance_live)(void);
+static int knife_stance(const NativeScene* s){
+    if(hud_stance_live)return hud_stance_live()==0x10;
+    return s->words[5]>=4 && s->state[5][3]==0x10;
+}
 volatile uint32_t m1_vis_actors;
 /* Baked visibility: an actor is skipped when every 2 m cube its bone-sphere box touches is hidden from the camera's cell. */
 /* Actor columns exist only where actors can stand, each with a cube range; an actor is skipped when every

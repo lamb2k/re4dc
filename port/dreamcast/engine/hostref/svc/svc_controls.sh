@@ -58,7 +58,7 @@
 # Exit status 0 when every line ends as it must; the table goes to stdout and <out dir>/svc_controls.md.
 # Fails closed (lane eng-e1h; on 11-20 a missing odump build gave exit 0 and an empty table): exit 2 when a build
 # (odump, native) or a fixture is missing, when a run fails, when a row has no comparison report, or when the table
-# does not hold every row this script plans (5 a fixture + 47). RE4_HOSTREF_BUILD=<dir> reads the builds from another
+# does not hold every row this script plans (5 a fixture + 48). RE4_HOSTREF_BUILD=<dir> reads the builds from another
 # folder (the control: an empty folder must exit 2).
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -77,7 +77,7 @@ for fx in $FIX door103-walk e1-route bell-ganado bell-ganado-kill hill-ashley sq
 done
 [ -d "$TREE" ] || { echo "svc_controls: no data tree at $TREE"; exit 2; }
 NFIX=$(echo $FIX | wc -w)
-ROWS_PLANNED=$((5 * NFIX + 47))
+ROWS_PLANNED=$((5 * NFIX + 48))
 mkdir -p "$OUT"
 rm -f "$OUT/.status" "$OUT/.abort"
 ARCS="em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs"
@@ -127,6 +127,13 @@ row() {   # row <name> <must> <ref dir> <test dir> <fixture> [cloth]: cloth = th
     if [ -f "$a/svc4.txt" ] && [ -f "$b/svc4.txt" ]; then
         local t4=""
         [ "$mode" = approx ] && t4="--tol 1.0"
+        # lane eng-e1j: the camera service is the engine's own code (same mathematics, not the original's operation
+        # order): its lines and the probes it makes differ from the reference's by a few float steps. The reference
+        # against native rows compare only the camera's lines within 0.01 (svc4_compare.py --camera-tol: the camera
+        # kinds and the lines logged while CameraMove runs; hashes of float state skipped there); every other line stays
+        # bit for bit, and bones, queries, palette and traces are compared as before. The camera itself is judged by
+        # svc/camcheck.sh. Determinism and the controls stay bit for bit; the control pos005 (below) runs in this mode.
+        [ "$mode" = cloth ] || [ "$mode" = native ] && t4="--camera-tol 0.01"
         s4=$(python3 "$HERE/svc4_compare.py" "$a" "$b" --json "$b/svc4.json" $t4) || sc=1
         s4="; $(echo "$s4" | sed 's/^\(PASS\|FAIL\)  //')"
     fi
@@ -166,11 +173,11 @@ print()" "$b/compare.json")
         row "native (cloth wind on: links by statistics)" PASS "$OUT/$fx/ref" "$OUT/$fx/native" "$fx" cloth
         run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref0" RE4_SVC_CLOTH_WIND=0
         run "$B/native/re4ref" "$fx" "$OUT/$fx/native0" RE4_SVC_CLOTH_WIND=0
-        row "native (cloth wind off: every bone)" PASS "$OUT/$fx/ref0" "$OUT/$fx/native0" "$fx"
+        row "native (cloth wind off: every bone)" PASS "$OUT/$fx/ref0" "$OUT/$fx/native0" "$fx" native
         run "$B/native/re4ref" "$fx" "$OUT/$fx/native2"
         row determinism PASS "$OUT/$fx/native" "$OUT/$fx/native2" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/nopack" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK=none
-        row "native, no pack (every sample decoded from the keys)" PASS "$OUT/$fx/ref0" "$OUT/$fx/nopack" "$fx"
+        row "native, no pack (every sample decoded from the keys)" PASS "$OUT/$fx/ref0" "$OUT/$fx/nopack" "$fx" native
         run "$B/native/re4ref" "$fx" "$OUT/$fx/s16" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK="$MK16"
         row "native, 16-bit rows (tolerance; links by statistics)" PASS "$OUT/$fx/ref0" "$OUT/$fx/s16" "$fx" approx
     done
@@ -217,7 +224,7 @@ print()" "$b/compare.json")
         shift 2
         run "$B/odump/re4ref" "$fx" "$OUT/$fx/x-$ex-ref" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex
         run "$B/native/re4ref" "$fx" "$OUT/$fx/x-$ex" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex
-        row "exercise $ex: native" PASS "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex" "$fx"
+        row "exercise $ex: native" PASS "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex" "$fx" native
         for c in "$@"; do
             run "$B/native/re4ref" "$fx" "$OUT/$fx/x-$ex-c-$c" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex RE4_SVC_CONTROL=$c
             row "exercise $ex, control: $c" FAIL "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex-c-$c" "$fx"
@@ -235,6 +242,11 @@ print()" "$b/compare.json")
     exrow door103-walk costume garmenthair
     # lane eng-e1h: the dying Ganado's squash (em10ScaleCompress on the native skeleton): left out, the palette differs
     r4ctl bell-ganado-kill "the dying Ganado's squash left out of the table" nocompress
+    # lane eng-e1j: the reference-against-native rows loosen only the camera's lines; Leon's model 0.005 unit to the side
+    # at tick 100 (every bone with it; bones within 1 unit pass) must still FAIL those rows' comparison (mode native)
+    [ -d "$OUT/e1-route/ref0" ] || run "$B/odump/re4ref" e1-route "$OUT/e1-route/ref0" RE4_SVC_CLOTH_WIND=0
+    run "$B/native/re4ref" e1-route "$OUT/e1-route/c-pos005" RE4_SVC_CLOTH_WIND=0 RE4_SVC_CONTROL=pos005
+    row "control: Leon 0.005 unit to the side at tick 100 (in the native rows' mode)" FAIL "$OUT/e1-route/ref0" "$OUT/e1-route/c-pos005" e1-route native
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

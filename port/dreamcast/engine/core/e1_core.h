@@ -7,20 +7,20 @@
 struct E1Timing {
     uint32_t input_us, tick_us, services_us, trace_us, draw_us, wait_us, frame_us, fields, player_us, obj_us, cam_us, pvr_us;
     uint32_t chars_us;   // the characters' moves (the partner), inside tick_us
-    uint32_t svc_group_us[6];   // the services row split (lane eng-e1c): index E1_SVC_* (0 unused; 5 effects, lane eng-e2)
+    uint32_t svc_group_us[7];   // the services row split (lane eng-e1c): index E1_SVC_* (0 unused; 5 effects, lane eng-e2; 6 camera, lane eng-e1j)
 };
 extern E1Timing e1_timing[E1_TICKS];
 // Services row split (lane eng-e1c): the group of each service entry point (host/e1_wraps.cpp), also the words of
-// the MODELLED service stamps (e1_svc_stamp: 0 back in the behaviour).
-enum { E1_SVC_MOTION = 1, E1_SVC_CLOTH = 2, E1_SVC_PARTS = 3, E1_SVC_COLLISION = 4, E1_SVC_EFFECTS = 5, E1_SVC_GROUPS = 6 };   // effects: lane eng-e2
+// the MODELLED service stamps (e1_svc_stamp: 0 back in the behaviour). Lane eng-e1j: 6, the camera service's
+// evaluation (services/camera: the record, the frustum and every entry point the hosted controller calls).
+enum { E1_SVC_MOTION = 1, E1_SVC_CLOTH = 2, E1_SVC_PARTS = 3, E1_SVC_COLLISION = 4, E1_SVC_EFFECTS = 5, E1_SVC_CAMERA = 6, E1_SVC_GROUPS = 7 };   // effects: lane eng-e2
 uint32_t e1_svc_group(unsigned g);
 void e1_svc_publish();
 // native services host side (lane eng-e1c, host/e1_svc_mem.cpp): boot options, room tables, report
 void e1_svc_boot();
 void e1_svc_tick_begin(unsigned t);
 extern int e1_game_seed_option;   // core/globals.cpp, boot option SEED (lane eng-e1e: the hill scene applies it too)
-void e1_camera_draw_tick();   // services/draw.cpp (lane eng-e1e)
-void e1_hud_draw_tick();
+void e1_hud_draw_tick();      // services/draw.cpp: the ammo digits (lane eng-e1i); the camera has no draw step (eng-e1j)
 extern "C" void e1_pool_control(void);   // services/model/mgr_pool.cpp: POOLCTL (lane eng-e1i)
 void e1_svc_room_ready();
 void e1_svc_report();

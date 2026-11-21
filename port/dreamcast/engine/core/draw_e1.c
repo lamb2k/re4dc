@@ -6,6 +6,7 @@
 #include "replay.h"
 #include "native_scene.h"
 #include "e1_skel_view.h"
+#include "camera/eng_camera.h"
 #include <kos.h>
 #include <dc/pvr.h>
 #include <string.h>
@@ -57,6 +58,9 @@ int e1_draw_open_c(const char* pack)
     m1_state[5] = 2;
     if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
     native_update(&scene, 0);
+    /* lane eng-e1j (H-016.2): the scene's camera stream is the camera service's record, read in place by every pass
+       (services/camera/eng_camera.h: its first 26 words are the stream's layout); the pack's recorded camera is not used */
+    scene.state[0] = (uint32_t*) &eng_cam;
     e1_light_tables(&scene);   /* lane eng-e1e: each TEV group's scale, once a pack (services/actor_e1.inc) */
     /* Ashley's body is catalogue 6 of the hill pack only (other packs hold props there) */
     partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
@@ -313,13 +317,11 @@ unsigned e1_fields_finish_c(const volatile uint32_t** field)
     return flip_n < 1040 ? flip_n : 1040;
 }
 
-/* The camera stream (26 words: view 3x4, GX projection type + 6 terms, viewport x y w h near far, far plane) and the
-   HUD stream's first four words (life, life max, weapon, stance) are written in place by the engine's tick steps
-   (services/draw.cpp e1_camera_draw_tick / e1_hud_draw_tick, lane eng-e1e): the picture reads them as they are.
+/* The camera (26 words: view 3x4, projection type + 6 terms, viewport x y w h near far, far plane) is the camera
+   service's record (lane eng-e1j; scene.state[0] points at it since open); the HUD's stance is read from the game state
+   and its digits from hud_ammo. The picture reads them as they are; no tick step converts them.
    partner: the partner's skeleton view or 0, partner_record her model record; world: draw the pack's whole-room bake
    (the scene's own room since lane eng-e1d) */
-float* e1_draw_cam_stream(void) { return (float*) scene.state[0]; }
-uint32_t* e1_draw_hud_stream(void) { return scene.words[5] >= 4 ? (uint32_t*) scene.state[5] : 0; }
 void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned identity,
                        uint32_t* wait_us, uint32_t* draw_us, const E1SkelView* partner, int world, const void* partner_record)
 {

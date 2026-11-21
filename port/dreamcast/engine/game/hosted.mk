@@ -9,13 +9,13 @@
 ifeq ($(BOSS)$(FIGHT),)
 PARTNER_SRCS := game/pl_npc pl11/pl11
 endif
-# Camera: cam_ctrl, cam_sys, cam_qfps and cam_extra are the camera's decisions (which camera, modes, rails, areas,
-# targets). Their evaluation functions (rail spline, orientation matrices, attached camera) are the native camera
-# service's: game/Makefile SPLIT_UNITS weakens them here. view.cpp, camera.cpp and cam_motion.cpp are not linked
-# (lane eng-e1e: services/camera/camera_svc.cpp).
+# Camera: cam_ctrl, cam_qfps and cam_extra are the camera's decisions (which camera, modes, cuts, routines, targets,
+# offset tables). Their evaluation functions are the native camera service's (lane eng-e1j: services/camera/
+# camera_svc.cpp, cam_eval.cpp; the list is docs/engine/lanes/eng-e1j.md): game/Makefile SPLIT_UNITS weakens them here.
+# cam_sys (camera maths throughout), view.cpp, camera.cpp and cam_motion.cpp are not linked.
 HOSTED_SRCS := \
 	game/player game/pl_class game/pl_body game/pl_sub game/pl_leon game/pl_wep game/pl_dmg game/pl_push \
-	game/pl_knife game/pl_debug game/pl_event game/cam_ctrl game/cam_sys game/cam_qfps game/cam_extra \
+	game/pl_knife game/pl_debug game/pl_event game/cam_ctrl game/cam_qfps game/cam_extra \
 	wep/pl_handgun game/rnd \
 	wep02/wep02 wep/objRuger game/objWep \
 	$(PARTNER_SRCS)

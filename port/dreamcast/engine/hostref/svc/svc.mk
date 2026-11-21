@@ -114,12 +114,15 @@ SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motio
 # lane eng-e1h: the Ganado's dissolving-corpse squash on the native skeleton (em10ScaleCompress; em10's own made weak in
 # weak6/ below)
 SVC4_SRCS += skeleton/em_compress.cpp
+# lane eng-e1j (H-016.1): the camera service's evaluation under the controller (services/camera/cam_eval.cpp)
+SVC4_SRCS += camera/cam_eval.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
-SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad $(SVC5_UNITS)
-# SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's rail spline,
-# cam_sys's orientation matrices, cam_extra's attached camera; svc4_split.txt names them): the same weak copy, and
-# svc4_units.sh checks only the named functions
-SVC4_SPLIT := cam_ctrl cam_sys cam_extra
+# lane eng-e1j: cam_sys is camera maths throughout (the camera service has every function): a replaced unit
+SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion cam_sys motion pad $(SVC5_UNITS)
+# SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's blend, smoothing, area
+# tests, probe, rail and data relocation, cam_qfps's frame, offsets and wall probe, cam_extra's attached camera;
+# svc4_split.txt names them): the same weak copy, and svc4_units.sh checks only the named functions
+SVC4_SPLIT := cam_ctrl cam_qfps cam_extra
 SVC4_ALL := $(SVC4_UNITS) $(SVC4_SPLIT)
 SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_ENG)/$(d)) -I$(SHZ)/include
 # SH4ZAM's headers include <math.h>: the C++ wrapper needs the target-neutral c++config.h of the 64-bit tree (as PCFLAGS)

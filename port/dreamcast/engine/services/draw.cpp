@@ -1,7 +1,9 @@
 // E1 drawing glue (lane eng-e1): the C renderer (core/draw_e1.c) reads Leon's matrices in place from the actor table and
-// the native skeleton's tables (lane eng-e1c). Lane eng-e1e: the camera (pG->Cam, the native camera service's look-at
-// matrix and projection) and the HUD's live words are written in the renderer's form once a tick by the steps that
-// produce them, and the characters' light records are kept by the light service below; the picture copies none of them.
+// the native skeleton's tables (lane eng-e1c). Lane eng-e1j (ruling H-016.2): nothing is converted into a draw record
+// each tick. The camera is the camera service's record (services/camera/eng_camera.h), which the renderer reads in
+// place; the HUD's life, weapon and stance are read in place from the game state; a character's light inputs are read
+// in place from its model record by the light rule (render/source_light.inc, services/actor_e1.inc). The ammo digits
+// are the HUD's own state, set once a tick (lane eng-e1i).
 #include "global.h"
 #include "player.h"
 #include "pl_npc.h"
@@ -12,6 +14,7 @@
 #include "e1_kos.h"
 #include "skel.h"
 #include "e1_skel_view.h"
+#include "camera/eng_camera.h"
 #include <string.h>
 
 extern "C" {
@@ -21,9 +24,9 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
 }
 extern "C" int PlGetWeaponNo();
 
-// A character's light inputs (lane eng-e1d), read from its model record in the actor table: the fields of the
-// capture's ModelLight record (bench/r3_inputs.inc m1r3_snapshot_light, same bits), in its layout (17 words). The TEV
-// scale (gxCsScale of the group: room light data, not hosted) is left 0 for the renderer to fill.
+// A character's light inputs (lane eng-e1d) in the capture's ModelLight layout (17 words; bench/r3_inputs.inc
+// m1r3_snapshot_light, same bits). Used once a run, for the check of Leon's live inputs against the pack's record
+// (services/actor_e1.inc e1_light_check); the characters are lit from their model records in place (below).
 extern "C" int e1_light_record(const void* model, uint32_t* o)
 {
     const cModel* m = (const cModel*) model;
@@ -44,75 +47,47 @@ extern "C" int e1_light_record(const void* model, uint32_t* o)
     return 1;
 }
 
-// ---- the light service's records (lane eng-e1e, E1 audit section 2) ----
-// Each character but Leon (who keeps the pack's record) has its light record here, in the renderer's ModelLight layout
-// with its TEV scale resolved: kept between pictures and rebuilt only when one of its inputs changes. Once a tick after
-// the behaviour (e1_light_service_tick, inside the services row), each alive character's inputs (the light volume and
-// masks of cModel::LightInfo, the be_flag bits, the material word and flag, the TEV group, the added ambient, the room
-// status word) are compared with the ones its record was built from. The renderer reads the record in place
-// (e1_light_rec_of). The TEV scale of a group is room light data the renderer resolves once from its pack
-// (services/actor_e1.inc e1_light_tables -> e1_tev_scale_of_group).
-#include "em.h"
+// ---- a character's light inputs, read in place (lane eng-e1j, ruling H-016.2) ----
+// The light rule reads each input where the behaviour keeps it: the light volume and masks in cModel::LightInfo, the
+// be_flag bits, the model data's flag word, the material colour, the TEV group, the added ambient, the room status
+// word. Only addresses are gathered for a picture (as the skeleton's views); nothing is copied or compared. The
+// behaviour writes these fields directly (em10's damage flash writes the material colour, parts show and hide by
+// be_flag), so there is no setter to hang a record on: the record is the model itself.
+#include "light_view.h"
+#include <stddef.h>
 extern "C" {
-uint16_t e1_tev_scale_of_group[256];   // scale + 1, filled by the renderer at open (0: not resolved, 255 used)
-uint32_t e1_light_checks, e1_light_builds;
-// Controls (boot options, read at open): LIGHTCTL every record built with a black material, PALCTL the pass reads the
-// palette with the old 12-float stride (services/actor_e1.inc), CAMSTALE the camera stream keeps the room's first
-// camera: each must change the pictures. LIGHTSTALE (a record never rebuilt after its first build) shows what the
-// rebuilds change (lanes/eng-e1e.md).
-int e1_light_stale, e1_light_control, e1_pal_control, e1_cam_stale;   // LIGHTCTL: every record built with a black material
+uint16_t e1_tev_scale_of_group[256];   // the TEV scale of each group + 1 (0 not resolved), resolved by the renderer at open
+int e1_light_control, e1_pal_control;   // LIGHTCTL, PALCTL (controls, below)
 }
-struct E1LightSlot { const cModel* m; uint32_t in[14]; uint32_t rec[17]; };
-static E1LightSlot light_slot[16];
-static unsigned light_slots;
-static void light_inputs(const cModel* m, uint32_t* in)
+extern "C" int e1_light_view(const void* model, E1LightView* v)
 {
-    memcpy(in, &m->LightInfo.EnableMask, 32);   // EnableMask, Flag, PartsNo, x53, SelectMask, Offset, Size
-    in[8] = m->be_flag & 0x8008u;
-    in[9] = (m->pModelInfo && m->pModelInfo->pData) ? (m->pModelInfo->pData->flags & 0x40000000u) : 0;
-    in[10] = 0;
-    if (m->pModelInfo) memcpy(&in[10], m->pModelInfo->color, 4);
-    in[11] = m->TevScaleGroup;
-    in[12] = (unsigned) m->AddAmb_r | ((unsigned) m->AddAmb_g << 8) | ((unsigned) m->AddAmb_b << 16);
-    in[13] = pG->Status_flg[1];
+    static const uint8_t black[4] = {0, 0, 0, 0};
+    const cModel* m = (const cModel*) model;
+    if (!m) return 0;
+    const cLightInfo& li = m->LightInfo;
+    v->model = m;
+    v->info = (const E1LightInfoIn*) &li.EnableMask;
+    v->be_flag = (const uint32_t*) &m->be_flag;
+    v->data_flags = m->pModelInfo && m->pModelInfo->pData ? (const uint32_t*) &m->pModelInfo->pData->flags : 0;
+    v->color = m->pModelInfo && !e1_light_control ? (const uint8_t*) m->pModelInfo->color : black;   // LIGHTCTL: black
+    v->tev_group = (const uint8_t*) &m->TevScaleGroup;
+    v->addamb = (const uint8_t*) &m->AddAmb_r;
+    v->status = (const uint32_t*) &pG->Status_flg[1];
+    v->tev_table = e1_tev_scale_of_group;
+    return 1;
 }
-static void light_build(E1LightSlot& s)
-{
-    e1_light_record(s.m, s.rec);
-    const unsigned group = s.rec[12] & 255;
-    const unsigned v = e1_tev_scale_of_group[group];
-    s.rec[12] = group | (v ? v - 1 : 255u) << 8;
-    if (e1_light_control) s.rec[11] = 0;   // LIGHTCTL (control): the material colour black
-    e1_light_builds++;
-}
-void e1_light_service_tick()
-{
-    for (cEm* p = EmMgr.pAlive; p; p = (cEm*) p->pNext) {
-        if (p == (cEm*) pPL) continue;
-        const cModel* m = p;
-        unsigned i = 0;
-        while (i < light_slots && light_slot[i].m != m) i++;
-        uint32_t in[14];
-        light_inputs(m, in);
-        e1_light_checks++;
-        if (i == light_slots) {
-            if (light_slots == 16) { e1_stub_hit("light service: more than 16 characters", 0); continue; }
-            light_slots++;
-            light_slot[i].m = m;
-        } else if (e1_light_stale || !memcmp(in, light_slot[i].in, sizeof in)) {   // LIGHTSTALE: never rebuilt
-            continue;
-        }
-        memcpy(light_slot[i].in, in, sizeof in);
-        light_build(light_slot[i]);
-    }
-}
-// The record of a model (ModelLight layout, 17 words) or 0 when the service has none.
-extern "C" const uint32_t* e1_light_rec_of(const void* model)
-{
-    for (unsigned i = 0; i < light_slots; i++)
-        if (light_slot[i].m == (const cModel*) model) return light_slot[i].rec;
-    return 0;
-}
+static_assert(sizeof(((cLightInfo*) 0)->EnableMask) == 1 && sizeof(((cLightInfo*) 0)->Flag) == 1, "light view: EnableMask, Flag bytes");
+static_assert(sizeof(((cModel*) 0)->be_flag) == 4, "light view: be_flag word");
+static_assert(offsetof(cLightInfo, Flag) == offsetof(cLightInfo, EnableMask) + 1, "light view: Flag after EnableMask");
+static_assert(offsetof(cLightInfo, PartsNo) == offsetof(cLightInfo, EnableMask) + 2, "light view: PartsNo");
+static_assert(offsetof(cLightInfo, SelectMask) == offsetof(cLightInfo, EnableMask) + 4, "light view: SelectMask");
+static_assert(offsetof(cLightInfo, Offset) == offsetof(cLightInfo, EnableMask) + 8, "light view: Offset");
+static_assert(offsetof(cLightInfo, Size) == offsetof(cLightInfo, EnableMask) + 20, "light view: Size");
+// (AddAmb_r, _g, _b are the bytes 0x139, 0x13A, 0x13B of cModel: model.h)
+// Controls (boot options, read at open): LIGHTCTL every character lit with a black material, PALCTL the pass reads the
+// palette with the old 12-float stride (services/actor_e1.inc), CAMSTALE the camera record keeps the first camera,
+// PUBCOPY the camera service copies its record into a draw stream once a tick (counted: the selector must fail the
+// scene). Each must change the pictures or the scene's verdict.
 static int headless;
 
 // The native skeleton table of a model as the renderer reads it (pointers only; lane eng-e1c)
@@ -129,35 +104,16 @@ static int skel_view(const cModel* m, E1SkelView* v)
     return 1;
 }
 
-// ---- camera and HUD state in the renderer's form (lane eng-e1e, E1 audit section 2) ----
-// The renderer's camera stream (26 words: view 3x4, projection type and six terms, viewport, far plane) and the HUD's
-// four live words (life, life max, weapon, stance) are written in place by the tick steps that produce them: the camera
-// right after the camera service's CameraMove (e1_camera_draw_tick, core/main.cpp), the HUD at the end of the tick
-// (e1_hud_draw_tick). The constant words (projection type, viewport, far plane) are written once at open. The picture
-// no longer repacks or copies either (draw_e1.c reads its streams as they are).
-static float* draw_cam;        // the renderer's camera stream (0: headless)
-static uint32_t* draw_hud;     // the HUD stream's four live words (0: none in the pack)
-extern "C" float* e1_draw_cam_stream(void);
-extern "C" uint32_t* e1_draw_hud_stream(void);
-void e1_camera_draw_tick()
-{
-    if (!draw_cam || e1_cam_stale) return;
-    const Camera& c = pG->Cam;
-    memcpy(draw_cam, c.v_mat, 48);
-    draw_cam[13] = c.ProjMat[0][0];
-    draw_cam[14] = c.ProjMat[0][2];
-    draw_cam[15] = c.ProjMat[1][1];
-    draw_cam[16] = c.ProjMat[1][2];
-    draw_cam[17] = c.ProjMat[2][2];
-    draw_cam[18] = c.ProjMat[2][3];
-}
-// Lane eng-e1i: the ammo digits (render/native_scene.h HudAmmo), written here once a tick and read in place by the
-// renderer: the equipped weapon's loaded count split into ones, tens and hundreds, shown as cockpit.cpp
-// BulletInfo::move / dispBulletDigit show them (guns only, not for pl_type 1; the hundreds only when not 0). Not
-// covered: the "EMPTY" sign for an empty gun with no spare rounds, and the no-weapon player states.
+// ---- the HUD's live state (lane eng-e1j: the four words are read in place) ----
+// The renderer reads the stance (the knife part) from the game state when it draws (e1_hud_stance), and the ammo digits
+// from hud_ammo (render/native_scene.h). Lane eng-e1i: the digits are the HUD's own state, set once a tick: the
+// equipped weapon's loaded count split into ones, tens and hundreds, shown as cockpit.cpp BulletInfo::move /
+// dispBulletDigit show them (guns only, not for pl_type 1; the hundreds only when not 0). Not covered: the "EMPTY"
+// sign for an empty gun with no spare rounds, and the no-weapon player states.
 extern "C" {
 typedef struct { uint32_t tick; uint8_t digit[3]; uint8_t shown; } HudAmmo;
 extern HudAmmo* hud_ammo;
+extern unsigned (*hud_stance_live)(void);   // render/native_actor.inc: the stance read when drawing (0: the pack's word)
 }
 static HudAmmo e1_ammo;
 #include "item.h"
@@ -173,13 +129,9 @@ static int e1_gun_shows_count(unsigned no)
     return 0;
 }
 extern "C" unsigned e1_hud_magazine(void) { return ItemMgr.bulletNum(); }
+static unsigned e1_hud_stance(void) { return (unsigned) PlGetWeaponNo(); }
 void e1_hud_draw_tick()
 {
-    if (!draw_hud) return;
-    draw_hud[0] = pG->pl_life;
-    draw_hud[1] = pG->pl_life_max;
-    draw_hud[2] = pG->weapon_no;
-    draw_hud[3] = (uint32_t) PlGetWeaponNo();
     unsigned n = ItemMgr.bulletNum();
     e1_ammo.tick++;
     e1_ammo.digit[0] = (uint8_t) (n % 10);
@@ -190,25 +142,27 @@ void e1_hud_draw_tick()
 }
 static int diag;   // diagnostic boot options: DNOWORLD (no world drawn), DNOMARK (no partner drawn); read at open
 
+static int boot_file(const char* name)
+{
+    file_t f = fs_open(name, O_RDONLY);
+    if (f < 0) return 0;
+    fs_close(f);
+    return 1;
+}
+
 void e1_draw_open()
 {
-    file_t f = fs_open("/cd/HEADLESS", O_RDONLY);
-    if (f >= 0) { fs_close(f); headless = 1; e1_log("E1 draw: headless\n"); return; }
+    if (boot_file("/cd/HEADLESS")) { headless = 1; e1_log("E1 draw: headless\n"); return; }
     if (!e1_draw_open_c(e1_scene == E1_SCENE_HILL ? "/cd/HILL.PAK" : "/cd/CROSS.PAK")) { headless = 1; e1_log("E1 draw: renderer refused the pack, headless\n"); return; }
-    f = fs_open("/cd/DNOWORLD", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 1; }
-    f = fs_open("/cd/DNOMARK", O_RDONLY); if (f >= 0) { fs_close(f); diag |= 2; }
-    draw_cam = e1_draw_cam_stream();
-    draw_hud = e1_draw_hud_stream();
-    f = fs_open("/cd/LIGHTSTALE", O_RDONLY); if (f >= 0) { fs_close(f); e1_light_stale = 1; e1_log("E1 LIGHTSTALE: light records never rebuilt (control)\n"); }
-    f = fs_open("/cd/LIGHTCTL", O_RDONLY); if (f >= 0) { fs_close(f); e1_light_control = 1; e1_log("E1 LIGHTCTL: light records with a black material (control)\n"); }
-    f = fs_open("/cd/PALCTL", O_RDONLY); if (f >= 0) { fs_close(f); e1_pal_control = 1; e1_log("E1 PALCTL: palette read with a 12-float stride (control)\n"); }
-    draw_cam[12] = 0.0f;   // GX_PERSPECTIVE
-    draw_cam[19] = 0.0f; draw_cam[20] = 0.0f; draw_cam[21] = 640.0f; draw_cam[22] = 480.0f; draw_cam[23] = 0.0f; draw_cam[24] = 1.0f;
-    draw_cam[25] = ZFAR > 0.0f ? ZFAR : 18750.0f;
-    e1_camera_draw_tick();   // the room's first camera (CameraRoomInit ran in room_init)
-    f = fs_open("/cd/CAMSTALE", O_RDONLY); if (f >= 0) { fs_close(f); e1_cam_stale = 1; e1_log("E1 CAMSTALE: the first camera only (control)\n"); }
+    if (boot_file("/cd/DNOWORLD")) diag |= 1;
+    if (boot_file("/cd/DNOMARK")) diag |= 2;
+    if (boot_file("/cd/LIGHTCTL")) { e1_light_control = 1; e1_log("E1 LIGHTCTL: characters lit with a black material (control)\n"); }
+    if (boot_file("/cd/PALCTL")) { e1_pal_control = 1; e1_log("E1 PALCTL: palette read with a 12-float stride (control)\n"); }
+    if (boot_file("/cd/CAMSTALE")) { eng_cam.frozen = 1; e1_log("E1 CAMSTALE: the camera record keeps its next camera (control)\n"); }
+    if (boot_file("/cd/PUBCOPY")) { eng_pub_copy = 1; e1_log("E1 PUBCOPY: the camera record copied once a tick (control)\n"); }
+    hud_stance_live = e1_hud_stance;
     e1_hud_draw_tick();
-    e1_log("E1 draw: camera stream far %d, HUD words %s\n", (int) draw_cam[25], draw_hud ? "live" : "none");
+    e1_log("E1 draw: camera from the camera service's record (far %d), HUD read in place\n", (int) eng_cam.zfar);
 }
 
 void e1_draw_picture(E1Timing& tm)

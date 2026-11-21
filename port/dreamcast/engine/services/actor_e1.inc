@@ -41,15 +41,16 @@ static void e1_live_light(const NativeScene* s, const void* model_record, ModelL
     }
     out->tev = group | (unsigned) (scale >= 0 ? scale : leon >= 0 ? leon : 255) << 8;
 }
-/* Lane eng-e1e (E1 audit section 2): the light service (services/draw.cpp) keeps every character's record but Leon's,
-   rebuilt only when its inputs change; the pass reads it in place (e1_light_rec_of). The TEV scale of each group is
-   resolved once from the pack at open (the rule of e1_live_light above: the first record of the group, else Leon's,
-   else 255), into the table the service builds its records with (value + 1; 0 = not resolved). */
+/* Lane eng-e1j (second E1 audit section 3, ruling H-016.2): every character but Leon (who keeps the pack's record) is lit
+   from its model record in place: the light rule reads its light volume, masks, flags, material colour, TEV group,
+   added ambient and the room status word where the behaviour keeps them (services/light_view.h; e1_light_view gathers
+   their addresses for the picture). No record is assembled or compared per tick (the light service of lane eng-e1e is
+   gone: hill 728 compares, fight 3,600, now 0). The TEV scale of each group is resolved once from the pack at open (the
+   rule of e1_live_light above: the first record of the group, else Leon's, else 255; value + 1, 0 = not resolved). */
 extern uint16_t e1_tev_scale_of_group[256];
-const uint32_t* e1_light_rec_of(const void* model);
 void e1_log(const char* fmt, ...);
 extern int e1_pal_control;   /* services/draw.cpp: the PALCTL control */   /* core/globals.cpp: buffered while the ticks run (lane eng-e1e) */
-unsigned e1_light_miss;   /* pictures a character had no record from the service (lit by the fallback record) */
+unsigned e1_light_miss;   /* pictures a character had no light view (lit by the fallback record) */
 void e1_light_tables(const NativeScene* s)
 {
     const ModelLight* rec = (const void*) s->state[8]; const unsigned n = s->words[8] * 4 / sizeof(ModelLight);
@@ -166,20 +167,23 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     }
     if (!visible) { sq_wait(); sq_unlock(); return; }
     /* 4. lights and weight sets. The light rule reads the model's and its bone 0's matrices in place (no ActorPose
-       copies). Leon: the pack's record (looked up once a pack); every other character: the light service's record. */
-    const ModelLight* ml;
+       copies). Leon: the pack's record (looked up once a pack); every other character: its model record in place. */
+    const ModelLight* ml = &src_light_fallback;
+    E1LightView lv;
+    const E1LightView* live = 0;
     if (model) {
-        ml = (const ModelLight*) e1_light_rec_of(model_record);
-        if (!ml) { ml = &src_light_fallback; e1_light_miss++; }
+        if (e1_light_view(model_record, &lv)) live = &lv;
+        else e1_light_miss++;
     } else {
         static const void* leon_scene; static const ModelLight* leon_rec;
         if (leon_scene != s->state[8]) { leon_scene = s->state[8]; leon_rec = model_light_ri(s, 0, 0); }
         e1_light_check(s, model_record, leon_rec);
-        ml = leon_rec ? leon_rec : &src_light_fallback;
+        if (leon_rec) ml = leon_rec;
     }
     {
-        const unsigned parts = ml->info >> 8 & 255;   /* the light volume's origin: part 1 (bone 0) or the model */
-        source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, &cur_lights);
+        /* the light volume's origin: part 1 (bone 0) or the model */
+        const unsigned parts = live ? (unsigned) (uint8_t) live->info->parts : ml->info >> 8 & 255;
+        source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, live, &cur_lights);
     }
     memset(ws_ready, 0, h[1]);
     ws_rows = pal; ws_stride = e1_pal_control ? 12 : 16;   /* build_ws blends the palette rows in place (PALCTL: wrong stride) */

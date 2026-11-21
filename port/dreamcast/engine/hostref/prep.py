@@ -24,7 +24,14 @@ import sys
 
 
 def host_text(text):
-    return re.sub(r'"([+=]?)f"\(', r'"\1x"(', text)
+    text = re.sub(r'"([+=]?)f"\(', r'"\1x"(', text)
+    # Lane eng-e1j: cam_ctrl.cpp's BSpline calls de_Boor_Cox through math_sub.h's floats-first alias de_Boor_CoxF
+    # (n, knot, t, k, out) -> asm("de_Boor_Cox") (n, knot, k, t, out). The PowerPC and the SH-4 pass floats and
+    # integers in separate registers, so the swapped order reaches the same arguments there; i386 passes them on the
+    # stack in order, so on the PC t and k arrived swapped (the reference's rail always evaluated at its first key).
+    # The host copy names the function with its own argument order: the call the PowerPC makes.
+    text = re.sub(r'\bde_Boor_CoxF\(([^,()]+),([^,()]+),([^,()]+),([^,()]+),', r'de_Boor_Cox(\1,\2,\4,\3,', text)
+    return text
 
 
 def copy(src, dst):

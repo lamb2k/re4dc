@@ -337,7 +337,7 @@ static void collect(unsigned i) {
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0;
-    int pool_seen = 0;
+    int pool_seen = 0, pub_seen = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -376,10 +376,20 @@ static void collect(unsigned i) {
                 if ((!pool_seen || full || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
+            else if (!strncmp(line, "E1 PUB camera ", 14)) {
+                /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records */
+                unsigned cam = 0, hud = 0, light = 0;
+                pub_seen = sscanf(line + 14, "%u hud %u light-compares %u", &cam, &hud, &light) == 3;
+                if ((!pub_seen || cam || hud || light) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "conversions per tick: camera %u, hud %u, light compares %u", cam, hud, light);
+            }
         }
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pool_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 POOL line in the report");
+    /* lane eng-e1j (H-016.2): timing and function runs alike must report their conversions (a missing line fails) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");
     /* lane eng-e1k (H-016.6): a timing scene is OK only with a complete record: the run's kind line, 600 picture rows
        once each (41-640), drawn images in presented mode with 600 measured flip intervals (a headless image: 600 tick
        intervals), zero release-queue drops, the after-play memory line (its guard is a refusal line of its own) */

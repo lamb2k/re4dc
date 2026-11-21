@@ -21,6 +21,9 @@
 #undef fabsf
 #include "math_svc.h"
 #include "sh4zam/shz_vector.h"
+#include "../camera/eng_camera.h"   // lane eng-e1j: the view matrix is the camera service's record's
+// (weak: the unit tests mathtest and garmenttest link this file without the camera service and never project)
+extern "C" EngCamera eng_cam __attribute__((weak));
 
 extern "C" {
 double atan2(double y, double x);
@@ -612,8 +615,8 @@ int GetScreenPos(Vec* pos, Vec* scr)
     CameraCurrentProjection();
     GXGetProjectionv(proj);
     GXGetViewportv(vp);
-    GXProject(pos->x, pos->y, pos->z, pG->Cam.v_mat, proj, vp, &scr->x, &scr->y, &scr->z);
-    PSMTXMultVec(pG->Cam.v_mat, pos, &cam);
+    GXProject(pos->x, pos->y, pos->z, eng_cam.view, proj, vp, &scr->x, &scr->y, &scr->z);
+    PSMTXMultVec(eng_cam.view, pos, &cam);
     return cam.z < -0.0f;
 }
 

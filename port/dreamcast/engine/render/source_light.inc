@@ -43,58 +43,97 @@ static const ModelLight* model_light(const NativeScene* s,const ActorPose* a){re
 /* lane eng-e1e: the matrices the rule reads are passed by pointer (model, light-origin part, object position), so the
    E1 actor pass lights from the skeleton's tables in place; the ActorPose form below picks them from its records. */
 static const ModelLight src_light_fallback={0,0,0,0x100000u,0xffffffffu,{0,0,0},{1000,1000,1000},{0x40,0x40,0x40,0xff},1|2<<8,0,{~0u,~0u},0};
+/* Lane eng-e1j (ruling H-016.2): a character of the E1 images is lit from its model record in place (lv, a view of
+   addresses: services/light_view.h, filled by services/draw.cpp e1_light_view); the rule reads each input where the
+   behaviour keeps it. A record (ml: the pack's, the bench's) is read as before when lv is 0. The bench has no views. */
+#ifdef E1_LIGHT_VIEW_H
+static inline unsigned lv_flags(const E1LightView* v){
+    const unsigned b=*v->be_flag;unsigned f=(b&0x8000?1u:0u)|(b&8?2u:0u)|(v->info->flag&4?8u:0u);
+    if(v->data_flags && (*v->data_flags&0x40000000u))f|=4;
+    return f;
+}
+static inline unsigned lv_tev(const E1LightView* v){const unsigned g=*v->tev_group,t=v->tev_table[g];return g|(t?t-1:255u)<<8;}
+#define LI_ENABLE(ml,lv) ((lv)?(unsigned)(lv)->info->enable:((ml)->info>>16&255))
+#define LI_FLAGS(ml,lv)  ((lv)?lv_flags(lv):((ml)->info>>24))
+#define LI_SHAPE(ml,lv)  ((lv)?(unsigned)((lv)->info->flag&3):((ml)->info&3))
+#define LI_SELECT(ml,lv) ((lv)?(lv)->info->select:(ml)->select)
+#define LI_STATUS(ml,lv) ((lv)?*(lv)->status:(ml)->status)
+#define LI_MODEL(ml,lv)  ((lv)?(unsigned)(uintptr_t)(lv)->model:(ml)->model)
+#define LI_OFFSET(ml,lv) ((lv)?(lv)->info->offset:(ml)->offset)
+#define LI_SIZE(ml,lv)   ((lv)?(lv)->info->size:(ml)->size)
+#define LI_COLOR(ml,lv)  ((lv)?(lv)->color:(ml)->color)
+#define LI_TEV(ml,lv)    ((lv)?lv_tev(lv):(ml)->tev)
+#define LI_ADDAMB(ml,lv) ((lv)?((unsigned)(lv)->addamb[0]|(unsigned)(lv)->addamb[1]<<8|(unsigned)(lv)->addamb[2]<<16):(ml)->addamb)
+#else
+typedef struct E1LightView E1LightView;
+#define LI_ENABLE(ml,lv) ((ml)->info>>16&255)
+#define LI_FLAGS(ml,lv)  ((ml)->info>>24)
+#define LI_SHAPE(ml,lv)  ((ml)->info&3)
+#define LI_SELECT(ml,lv) ((ml)->select)
+#define LI_STATUS(ml,lv) ((ml)->status)
+#define LI_MODEL(ml,lv)  ((ml)->model)
+#define LI_OFFSET(ml,lv) ((ml)->offset)
+#define LI_SIZE(ml,lv)   ((ml)->size)
+#define LI_COLOR(ml,lv)  ((ml)->color)
+#define LI_TEV(ml,lv)    ((ml)->tev)
+#define LI_ADDAMB(ml,lv) ((ml)->addamb)
+#endif
 static float dist3(const float* a,const float* b){float x=a[0]-b[0],y=a[1]-b[1],z=a[2]-b[2];return sqrtf(x*x+y*y+z*z);}
 /* rotation part of a 3x4 row-major matrix times v */
 static void rot3(const float* m,const float* v,float* o){for(unsigned r=0;r<3;r++)o[r]=m[4*r]*v[0]+m[4*r+1]*v[1]+m[4*r+2]*v[2];}
-static int light_hit(const ModelLight* ml,const float* w0,const float* cw,const NativeLamp* l){
+static int light_hit(const ModelLight* ml,const E1LightView* lv,const float* w0,const float* cw,const NativeLamp* l){
     if(l->radius==0.f)return 1;
-    float pos[3];rot3(cw,ml->offset,pos);pos[0]+=cw[3];pos[1]+=cw[7];pos[2]+=cw[11];
-    unsigned shape=ml->info&3;
+    const float* offset=LI_OFFSET(ml,lv);const float* size=LI_SIZE(ml,lv);
+    float pos[3];rot3(cw,offset,pos);pos[0]+=cw[3];pos[1]+=cw[7];pos[2]+=cw[11];
+    unsigned shape=LI_SHAPE(ml,lv);
     if(shape==2){   /* box: the light in the model's frame against size x scale + radius */
         const float* m=w0;float d[3]={l->pos[0]-pos[0],l->pos[1]-pos[1],l->pos[2]-pos[2]};
         for(unsigned a=0;a<3;a++){
             float ax[3]={m[a],m[4+a],m[8+a]},sc=sqrtf(ax[0]*ax[0]+ax[1]*ax[1]+ax[2]*ax[2]);
-            float p=sc>0?(d[0]*ax[0]+d[1]*ax[1]+d[2]*ax[2])/sc:0,half=ml->size[a]*sc;
+            float p=sc>0?(d[0]*ax[0]+d[1]*ax[1]+d[2]*ax[2])/sc:0,half=size[a]*sc;
             if(p-l->radius>half || p+l->radius<-half)return 0;
         }
         return 1;
     }
     if(shape==0){   /* cylinder: spheres of size.x at +-size.y along the parts' up axis */
         for(int sgn=-1;sgn<=1;sgn+=2){
-            float up[3]={0,sgn*ml->size[1],0},t[3];rot3(cw,up,t);
+            float up[3]={0,sgn*size[1],0},t[3];rot3(cw,up,t);
             float q[3]={pos[0]+t[0],pos[1]+t[1],pos[2]+t[2]};
-            if(dist3(q,l->pos)<ml->size[0]+l->radius)return 1;
+            if(dist3(q,l->pos)<size[0]+l->radius)return 1;
         }
         return 0;
     }
-    return dist3(pos,l->pos)<ml->size[0]+l->radius;   /* sphere */
+    return dist3(pos,l->pos)<size[0]+l->radius;   /* sphere */
 }
 /* The picked lights of one model, as GX lights; ambient and output scale. */
 /* w0: the model's matrix; cw: the light volume's origin (the model or its part ml->info>>8); obj: the object position's
-   matrix (part 1 when the model has bones). ml is never NULL here. */
-static void source_lights_w(const NativeScene* s,const float* w0,const float* cw,const float* obj,const ModelLight* ml,SrcLights* out){
+   matrix (part 1 when the model has bones). ml is never NULL here; lv (lane eng-e1j): the model's inputs in place, read
+   instead of ml when set. */
+static void source_lights_w(const NativeScene* s,const float* w0,const float* cw,const float* obj,const ModelLight* ml,
+                            const E1LightView* lv,SrcLights* out){
     const ModelLight* const fallback=&src_light_fallback;
     const NativeLamp* L=(const void*)s->state[2];
-    unsigned enable=ml->info>>16&255,flags=ml->info>>24,select=ml->select,status=ml->status;
+    unsigned enable=LI_ENABLE(ml,lv),flags=LI_FLAGS(ml,lv),select=LI_SELECT(ml,lv),status=LI_STATUS(ml,lv);
+    const unsigned owner=LI_MODEL(ml,lv);const float* size=LI_SIZE(ml,lv);
     float obj_pos[3]={obj[3],obj[7],obj[11]};
-    float obj_size=m1_maxf(ml->size[0],ml->size[1]);int obj_flag=(ml->info&3)!=2;
+    float obj_size=m1_maxf(size[0],size[1]);int obj_flag=LI_SHAPE(ml,lv)!=2;
     const NativeLamp* pick[8];unsigned n=0,game[8],gn=0;
     const unsigned wrong=m1_content[CS_PICK_CONTROL];   /* eng-look: the test's control walks the lights backwards */
     for(unsigned o=0;o<lamp_count && !(flags&1);o++){
         const NativeLamp* l=L+lamp_order[wrong?lamp_count-1-o:o];
         if((l->flags&3)!=3)continue;
         unsigned xf=l->bits&255;
-        if(!((xf&enable) || (!(enable&0x41) && l->parent==ml->model)))continue;
+        if(!((xf&enable) || (!(enable&0x41) && l->parent==owner)))continue;
         if(l->type==4 || !(l->bits>>24&1))continue;
         if(l->index<=31 && !((1u<<l->index)&select) && !(status&0x01000000) && !(status&0x04000000))continue;
         if(!(l->rgb[0]|l->rgb[1]|l->rgb[2]))continue;
-        if(!light_hit(ml,w0,cw,l))continue;
+        if(!light_hit(ml,lv,w0,cw,l))continue;
         if(n==8)break;
         pick[n++]=l;
     }
-    /* test only: the game's own pick from its last draw (array indices), where recorded */
-    for(unsigned i=0;i<8;i++){unsigned k=ml->picked[i>>2]>>(8*(i&3))&255;if(k!=255)game[gn++]=k;}
-    if(ml!=fallback && ml->picked[0]!=~0u){
+    /* test only: the game's own pick from its last draw (array indices), where recorded (a record, not a live model) */
+    if(!lv)for(unsigned i=0;i<8;i++){unsigned k=ml->picked[i>>2]>>(8*(i&3))&255;if(k!=255)game[gn++]=k;}
+    if(!lv && ml!=fallback && ml->picked[0]!=~0u){
         m1_light_pick_checked++;
         unsigned same=gn==n;for(unsigned i=0;same && i<n;i++)same=pick[i]->index==game[i];
         m1_light_pick_mismatch+=!same;
@@ -141,16 +180,17 @@ static void source_lights_w(const NativeScene* s,const float* w0,const float* cw
         }else g->br=m1_maxf(0,br);
     }
     for(unsigned c=0;c<3;c++)amb[c]=m1_maxf(amb[c],ea[c]);
-    if(flags&2){amb[0]+=ml->addamb&255;amb[1]+=ml->addamb>>8&255;amb[2]+=ml->addamb>>16&255;}
-    unsigned group=ml->tev&255,cs=ml->tev>>8&255;
+    if(flags&2){const unsigned aa=LI_ADDAMB(ml,lv);amb[0]+=aa&255;amb[1]+=aa>>8&255;amb[2]+=aa>>16&255;}
+    const unsigned tev=LI_TEV(ml,lv);const uint8_t* color=LI_COLOR(ml,lv);
+    unsigned group=tev&255,cs=tev>>8&255;
     float S=group<=1?(cs==1?2.f:cs==2?4.f:1.f):group==5?2.f:group==6?4.f:1.f;
-    for(unsigned c=0;c<3;c++){out->amb[c]=amb[c]*(1.f/255);out->k[c]=ml->color[c]*(1.f/255)*S*255.f;}
+    for(unsigned c=0;c<3;c++){out->amb[c]=amb[c]*(1.f/255);out->k[c]=color[c]*(1.f/255)*S*255.f;}
 }
 /* The ActorPose form (E0 bench, content and native passes): the same rule on the records' matrices. */
 static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned bones,const ModelLight* ml,SrcLights* out){
     if(!ml)ml=&src_light_fallback;   /* no record: a scenery-lit cylinder, material 0x40, TEV x4 */
     unsigned parts=ml->info>>8&255;const ActorPose* c=parts && parts<=bones?actor+parts:actor;
-    source_lights_w(s,actor->world,c->world,bones?actor[1].world:actor[0].world,ml,out);
+    source_lights_w(s,actor->world,c->world,bones?actor[1].world:actor[0].world,ml,0,out);
 }
 /* Per weight set: each light's direction in the set's model space (scaled for raw s16 normals) and its colour
    times the attenuation at the set's origin. */
