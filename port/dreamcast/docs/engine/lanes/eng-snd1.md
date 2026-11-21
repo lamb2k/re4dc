@@ -40,12 +40,15 @@ Memory after play with sound (k6cal): margin to the behaviour arena / arena peak
 272 KB / 294 KB, fight 152 KB / 825 KB of 1 MB, boss 2,196 KB / 454 KB. Nothing hangs.
 
 ## Checks and their controls
-- Requests (`sndreq_check.py`, run k6fun against `re4ref` rebuilt after the eng-fix1 merge): hill 27 of 27 PASS, shot
-  30 of 30 PASS; village 56 of 56 same ticks, ids and flags, FAIL on position (requests 51-56, ticks 547-569, 1.05 to
-  1.38 units). Cause found (request R9, not sound): the engine's village starts the behaviour generator at 0 while
-  re4ref seeds the fixture's 0x0d37 (`core/partner.cpp` seeds the hill only), so the aim sway from tick 393 differs and
-  Leon's yaw is 0.052 degrees off from tick 485; with re4ref run at seed 0 the route is bit-identical over 641 ticks
-  and all 56 requests pass (runs/footstep). Controls drop, move, extra and the control scene CSNDDROP fail, as they must.
+- Requests (`sndreq_check.py`, run k7fun against `re4ref` rebuilt after the eng-fix1 merge, lane 28475242a): village 56
+  of 56, hill 27 of 27, shot 30 of 30 PASS, positions included. The village failed on six footstep positions (ticks
+  547-569, 1.05 to 1.38 units) until request R9: the engine's village started the behaviour generator at 0 while re4ref
+  seeds the fixture's 0x0d37 (`core/partner.cpp` seeded the hill only), so the aim sway drew other numbers from tick 393
+  and Leon's yaw was 0.052 degrees off from tick 485. The seed is now part of each scene's start state (`core/route.cpp`,
+  set in `core/main.cpp` room_init where re4ref sets it); the village is bit-identical to re4ref over 641 ticks. What
+  moved in the village with the fix: the camera and the parts' matrices from tick 393 (the aim), Leon's yaw from 485,
+  his position from 487, sound request positions from 493; the hill and the shot did not move. Controls drop, move,
+  extra, the control scene CSNDDROP, and CSEED0 (the seed left at 0: the footsteps fail again) fail, as they must.
 - Output (`audiocheck.py` on Flycast's audio): PASS on the final run k6cal (62.0% of 100 ms windows above RMS 64);
   CSNDMUTE (run k6mute): RMS 0, FAIL as it must; the image's probe reads audible 0 under it.
 - Cost ceiling (selector): CSNDSLOW fails the scene (mean 6.24, worst 10.60 ms, run k6cal on the final build).
