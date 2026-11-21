@@ -244,8 +244,11 @@ extern "C" int collision_point_cone_rev_play_face(Vec* p, GeoCone* cone, Vec* fa
 
 // Effect starts: logged when made inside an e2 call (the blood placed at a hit), as their own line.
 extern "C" void __real_EstSet(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g, void* h);
+// lane eng-e2b: em10's service functions' log (e2b_dump.cpp) sees every start too (it logs those outside a service call)
+extern "C" void e2b_est(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g) __attribute__((weak));
 extern "C" void __wrap_EstSet(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g, void* h)
 {
+    if (e2b_est) e2b_est(a, b, p, r, c, d, e, f, g);
     if (g_f && g_open && g_depth == 1) {   // inside a top-level e2 call: printed after its line (es_flush)
         if (g_nes < 8) g_es[g_nes] = Es{a, b, c, d, e, f, g, *p, r ? *r : Vec{0.0f, 0.0f, 0.0f}, r != 0};
         g_nes++;
