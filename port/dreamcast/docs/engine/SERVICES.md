@@ -927,6 +927,10 @@ exported as camera motions, 1260 track and 630 direct key evaluations), identica
 wider) fails at tick 387, `camroll` (roll 0.01 rad further) at tick 1. **Not exercised on re4ref:** the attached
 camera (no fixture motion carries one) and `Parametrize` / `BSpline` (their de Boor-Cox basis allocates from the debug
 heap, which re4ref does not provide).
+**Superseded by section 48 (lane eng-e1j):** the camera service was rewritten as the engine's own code (not the
+original's operations in order), its record is the renderer's camera (the renderer no longer reads `pG->Cam.ProjMat`
+or a copy of `v_mat`), the evaluation inside cam_ctrl, cam_qfps and cam_extra is the service's, cam_sys is replaced
+whole, and the rail is checked (the reference's `BSpline` reached its basis with swapped arguments on the PC).
 
 ## 30. Input and rumble (pad)
 
@@ -1236,3 +1240,42 @@ every allowed unit's cManager<...> member and c*Mgr::memClear (`!*/* ...`). Cont
 The scene selector (`loader/selector.c`) marks an E1-family scene FAILED when its report's `E1 POOL full N bad_frees N`
 line has a non-zero count ("pool refused: ...") or is missing. Control: the boot file POOLCTL makes the image destroy
 a free character record after the room's set-up (`e1_pool_control`), which the pool refuses and counts.
+
+## 48. The camera as one native service; no per-tick conversion (lane eng-e1j, rulings H-016.1 and H-016.2)
+
+The second E1 audit found camera evaluation linked from the camera's decision units and the camera service's rail
+bodies following the original line for line (H-016.1), and the camera, the HUD's words and the characters' light
+inputs converted into draw records every tick (H-016.2). The table of every camera function and the per-function
+differences are in `lanes/eng-e1j.md`.
+
+- **One service, its record is the renderer's camera.** `services/camera/eng_camera.h` `EngCamera eng_cam`: the view
+  matrix, the projection terms, the viewport and far plane (the renderer's 26-word stream layout), the evaluated eye,
+  target, roll and fov. `CameraMove` (camera_svc.cpp) writes it once a tick after the hosted controller decides; the
+  renderer reads it in place (`core/draw_e1.c` points the scene's camera stream at it once, at open). The draw step that
+  copied 48 bytes and six terms (`e1_camera_draw_tick`) is gone. `pG->Cam.v_mat` / `ProjMat` are no longer written (the
+  laser line and `GetScreenPos` read the record's view).
+- **The evaluation is the service's** (`cam_eval.cpp`, `camera_svc.cpp`): the cut blend and the smoothing, the area
+  containment tests, the line-of-sight probe, the rail (fit by a tridiagonal solve on the original's knots, evaluated
+  on its span, the nearest point, the export as a keyed track), the attached-motion camera, the shoulder camera's frame,
+  offset blend, wall probe and offset correction, the data relocation, and every function of cam_sys (not hosted any
+  more). On SH4ZAM's types (`cam_math.h`), exact roots and divisions. The hosted units keep the decisions; the link
+  check refuses the evaluation by name (`allowed_original.txt`). Debug drawing: a counter and a logged stub
+  (pl_debug's scrHitCheck).
+- **Check** (`hostref/svc/camcheck.sh`): the frame's camera of every tick, original against native, within 0.01 unit and
+  0.01 degree, and the controller's decisions equal: five fixtures, determinism, two exercises (`camblend`: cut blends;
+  `camrail`: the rail), each PASS; controls `camsmooth`, `caminterp`, `camrail` FAIL. `svc_controls.sh` compares the
+  reference-against-native boundary log within 0.01 now (the camera is the engine's arithmetic, not bit-identical); 77
+  rows as they must.
+- **The PC reference's rail** reached its basis through a floats-first alias with t and k swapped on i386
+  (`hostref/prep.py` writes the call in its own order in the host copy).
+- **No per-tick conversion.** The HUD's stance is read from the game state when drawing (`hud_stance_live`; the life
+  and weapon words were not read by the renderer); a character's light inputs are read by the light rule from its model
+  record in place (`services/light_view.h`, `render/source_light.inc` `LI_*`): the per-tick snapshot and compare of
+  lane eng-e1e (hill 728 compares, fight 3,600) is gone. The ammo digits stay the HUD's state set once a tick (section
+  45). The image reports `E1 PUB camera N hud N light-compares N`; the selector fails a scene where one is not 0 or the
+  line is missing. Control: the boot file PUBCOPY makes the camera service copy its record once a tick (counted).
+- **Rows:** the camera service's entry points are timed in the services row (`E1_SVC_CAMERA`, group 6; nested calls
+  once; `E1 SVC <entry> ... group 6` lines), so camera evaluation is no longer in the behaviour's remainder.
+- **Found, not changed:** ZNEAR and ZFAR are zero in the E1 images (the original's main.cpp sets 100 and 1,000,000):
+  the shoulder camera's side probes have no width there and the projection's depth terms are not numbers. The record
+  keeps them as they were, so the picture does not move.
