@@ -16,6 +16,9 @@
 #ifdef E2_BOSS
 #include "boss_e2.h"
 #endif
+#ifdef E2_FIGHT
+#include "shot_e2.h"
+#endif
 
 extern "C" unsigned short e1_rnd_state(void);
 extern "C" unsigned e1_rnd_draws;
@@ -103,7 +106,12 @@ void e1_trace_put(const char* line, unsigned n)
 void e1_trace_tick(unsigned tick)
 {
     static int notrace = -1;
-    if (notrace < 0) { file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f); }
+    if (notrace < 0) {
+        file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f);
+#ifdef E2_FIGHT
+        if (e2_shot.active) notrace = 0;   // lane eng-e1k: the shot fixture is a traced function run, always
+#endif
+    }
     if (notrace) return;
     if (e1_scene == E1_SCENE_HILL) {   // lane eng-e1b: re4ref trace v2 lines (Leon and every character)
         e1_trace_v2(tick);
@@ -231,6 +239,7 @@ void e1_fields_finish(unsigned ticks)
 }
 
 extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, boxes, capsules, cubes; } aim_cnt;
+extern "C" struct AimListCounters { uint32_t calls, scenery, listed, hit_only, empty; } aim_list_cnt;
 #include "e1_laser.h"
 extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
 void e1_report()
@@ -250,6 +259,10 @@ void e1_report()
            (unsigned long) aim_cnt.calls, (unsigned long) aim_cnt.scenery, (unsigned long) aim_cnt.enemy,
            (unsigned long) aim_cnt.enemy_flag40, (unsigned long) aim_cnt.boxes, (unsigned long) aim_cnt.capsules,
            (unsigned long) aim_cnt.cubes);
+    // lane eng-e1k: the shot's native target list (services/aim/aim.cpp GetWepTargetList2)
+    e1_log("E1 AIM LIST shots %lu scenery %lu enemies listed %lu hit-only %lu empty %lu\n", (unsigned long) aim_list_cnt.calls,
+           (unsigned long) aim_list_cnt.scenery, (unsigned long) aim_list_cnt.listed, (unsigned long) aim_list_cnt.hit_only,
+           (unsigned long) aim_list_cnt.empty);
     // lane eng-e1h: the laser sight's setters and the renderer's laser pass (services/laser.cpp, core/draw_e1.c); the
     // record pools' refusals (services/model/pool.h: full tables, destroys of records not alive)
     e1_log("E1 LASER sets %lu lines drawn %lu dots drawn %lu\n", (unsigned long) e1_laser.sets,

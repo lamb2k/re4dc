@@ -11,6 +11,7 @@
 #include "e1_engine.h"
 #include "types.h"
 #include "e1_kos.h"
+#include "shot_e2.h"
 #include <string.h>
 
 // Pad frame at engine tick 0: E1's calibration (13, the route's walk start), confirmed on the old game's fight fixture
@@ -28,8 +29,22 @@ unsigned e1_control_shift = E1_CONTROL_SHIFT;
 struct Act { unsigned frame; uint16_t buttons; int8_t sx, sy; unsigned hold; };
 #include "acts_cross.inc"   // static const Act acts[]; E2_FIGHT_TICKS; E2_FIGHT_POS / ANG
 
-static const E1Route route = {0x101, 0x00002000, E2_FIGHT_TICKS, E2_FIGHT_POS, E2_FIGHT_ANG};
-const E1Route& e1_route() { return route; }
+static E1Route route = {0x101, 0x00002000, E2_FIGHT_TICKS, E2_FIGHT_POS, E2_FIGHT_ANG};
+// lane eng-e1k: with the boot file SHOT.TXT (a re4ref fixture; fight/shot_e2.cpp) the route is the fixture's: its
+// placement and length, no warp flags, and its pad lines in place of the fight's actions
+const E1Route& e1_route()
+{
+    static int booted;
+    if (!booted) {
+        booted = 1;
+        e2_shot_boot();
+        if (e2_shot.active && !e2_shot.refused)
+            route = {e2_shot.room, 0, e2_shot.ticks, {e2_shot.pos[0], e2_shot.pos[1], e2_shot.pos[2]}, e2_shot.ang};
+        else if (e2_shot.active)
+            route.ticks = 1;   // a refused fixture plays nothing (the refusal line fails the scene)
+    }
+    return route;
+}
 
 // Diagnostic arm FEED (boot option; plays right is reported without it): the old run's generator state at the start of
 // every tick (FEED.BIN, s/mkfeed.py), as re4ref --rng-feed. Since the owner's split the old game's effects draw from the
@@ -58,6 +73,13 @@ void e1_input_latch(unsigned tick)
         }
     }
     if (feed && tick < feed_n) RndInit(feed[tick]);
+    if (e2_shot.active) {   // lane eng-e1k: the shot fixture's tick start (re4ref's order), its pad lines as they are
+        E1Pad p;
+        e2_shot_tick_begin(tick, &p);
+        latched = p;
+        e1_pad_now = p;
+        return;
+    }
     // god (the fixture's warp): Leon's life refilled every frame
     pG->pl_life = pG->pl_life_max;
     // goto (the fixture's warp, dbgwarp_bridge.cpp goto_poll): at or after its room frame and outside events, Leon is

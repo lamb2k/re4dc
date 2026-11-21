@@ -30,7 +30,7 @@
 #ifndef CL_SEND_FAIL
 /* the bench's refusals; the E1 images' file and pack failures (the E1 image goes on headless when its pack is refused,
    and would hand in a run without drawing; a headless scene asks for it with the HEADLESS root file instead) */
-#define CL_SEND_FAIL "SCHEDULE REFUSED|M1 native pack REFUSED|STACK GUARD BROKEN|E1 draw: renderer refused|E1 load: missing|E1 load: read failed|E1 load: bad DRS"
+#define CL_SEND_FAIL "SCHEDULE REFUSED|M1 native pack REFUSED|STACK GUARD BROKEN|E1 draw: renderer refused|E1 load: missing|E1 load: read failed|E1 load: bad DRS|E2 SHOT REFUSED"
 #endif
 #define H ((cl_handoff_t *)CL_HANDOFF_ADDR)
 #define CL_CAP CL_REPORT_CAP(&H->h)

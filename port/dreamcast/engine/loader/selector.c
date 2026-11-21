@@ -167,7 +167,7 @@ static void sum_add(sel_entry_t *e, const char *fmt, ...) {
 
 static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "M1 missing pack", "STACK GUARD BROKEN", "E1 draw: renderer refused",
                                          "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "CRASH event",
-                                         "ABORT", "DEADLINE", NULL};
+                                         "ABORT", "DEADLINE", "E2 SHOT REFUSED", NULL};
 
 /* the value after the keyword (first match at or after *from) */
 static const char *after(const char *line, const char *key) {

@@ -21,6 +21,9 @@
 #   FIGHT       the four-Ganado fight at the village cross (FIGHT=1)
 #   BOSS-BENCH  El Gigante on the bench (the bench image with the boss pack; c0 cn c0 c0dh)
 #   BOSS        El Gigante hosted (BOSS=1, headless: its drawing row is the bench's)
+#   SHOT        (only when --scenes names it; lane eng-e1k) the FIGHT image playing the re4ref fixture file SHOT.TXT
+#               (default tools/plays_right/fixtures/shot-ganado.txt; SHOT_FIXTURE=<file> for a control), traced: a
+#               function run judged against the PC reference by tools/plays_right/shot_engine.sh, never a timing run
 # The E1-family scenes run with NOTRACE (no trace lines formatted inside the pictures). The bench scenes keep their
 # ROW and MEMBLK lines out of the report (serial still has them): the report holds the WINDOW rows.
 #
@@ -157,6 +160,16 @@ printf 'c0 cn c0 c0dh\n' > "$D/BOSSB/SCHEDULE.TXT"
 put "$BOSS_EMARC" BOSS/EM2B.ARC; put "$BOSS_EMLIST" BOSS/EMLIST.BIN
 for f in st1/r119.arc etc/core.das em/pl08.drs em/wep02.drs em/em2b.drs; do put "$P/$f" "BOSS/$f"; done
 : > "$D/BOSS/HEADLESS"; : > "$D/BOSS/NOTRACE"
+# SHOT (lane eng-e1k; not in the default scene list): the FIGHT image playing a re4ref fixture file, the shot judged
+# against the PC reference's trace (tools/plays_right/shot_engine.sh). SHOT_FIXTURE overrides the fixture (a control).
+# Its controls, each a scene of its own (every one must FAIL the judgement): SHOTNP the fixture without the press at
+# tick 160 (no hit), SHOTDMG a wrong damage amount planted in the engine, SHOTLATE every hit taken 30 ticks late.
+case ",$SCENES," in *,SHOT*)
+  put "${SHOT_FIXTURE:-$SRC/port/dreamcast/tools/plays_right/fixtures/shot-ganado.txt}" SHOT/SHOT.TXT
+  mkdir -p "$D/SHOTNP" "$D/SHOTD" "$D/SHOTL"
+  grep -v -E '^pad 16[02] ' "$D/SHOT/SHOT.TXT" > "$D/SHOTNP/SHOT.TXT"
+  : > "$D/SHOTD/SHOTDMG"; : > "$D/SHOTL/SHOTLATE" ;;
+esac
 
 # ---- the plan: <name> <title> <program> <deadline s> <kind> <files that must exist> <args>
 need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
@@ -168,6 +181,11 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 300 e1 $(need FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHT rows=compact"
   echo "BOSS-BENCH El_Gigante_on_the_bench PROG/BENCH.BIN 600 bench $(need BOSSB/CROSS.PAK,BOSSB/FARM.PAK,BOSSB/CROSS.VIS,BOSSB/SCHEDULE.TXT) root=BOSSB rows=skip skip=T,MEMBLK"
   echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 300 e1 $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
+  SHOTNEED=FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs
+  echo "SHOT Shot_fixture_(traced,_not_timing) PROG/FIGHT.BIN 300 e1 $(need SHOT/SHOT.TXT,$SHOTNEED) root=SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOTNP Shot_control:_no_press PROG/FIGHT.BIN 300 e1 $(need SHOTNP/SHOT.TXT,$SHOTNEED) root=SHOTNP:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOTDMG Shot_control:_wrong_damage PROG/FIGHT.BIN 300 e1 $(need SHOTD/SHOTDMG,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTD:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOTLATE Shot_control:_hit_1_s_late PROG/FIGHT.BIN 300 e1 $(need SHOTL/SHOTLATE,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTL:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
 for f in "${PUTS[@]}"; do
