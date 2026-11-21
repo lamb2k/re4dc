@@ -312,3 +312,76 @@ plays_right.py hill.trace <dt-lbt0-dec-bk11d.txt> --offset 184 --tolerances tole
   no fixture exercises it: no old trace records it.
 - One heap; `GetSystemVcnt` fixed at 2. The old port's alive cap (4) is replaced by the fixture creating
   the entries the old run created.
+
+
+## Outcome reader (lane eng-svc5, 2026-11-20)
+
+The gate's reader: `tools/plays_right/outcome.py` judges two runs of the same inputs by **outcome**, and **fails closed**.
+`plays_right.py` stays the per-tick diagnostic (now strict by default as well, below). Status: finished, unaudited.
+
+```
+outcome.py A.trace B.trace --tolerances tolerances.json [--offset N] [--expect-ticks LO:HI] [--actors e=14,id=03#0]
+           [--pos all|final] [--log a|b|ab] [--json out.json]
+```
+
+| Outcome | How it is judged |
+|---|---|
+| Route | Leon's position at the last tick, within `pos` (1 unit) per axis |
+| Position | Leon's and every actor's position within `pos` on every compared tick (`--pos all`, the default), or at the last tick each has in both runs (`--pos final`) |
+| Kills | which actors' life reaches 0 from above 0, and when (within `event_ticks`) |
+| Damage | every drop of an actor's life (and Leon's, when both runs record it): the amounts exact and in order, the ticks within `event_ticks` |
+| Triggers | actor spawns (first tick in the alive list) and removals; the event word (Stop_flg) changes in order, where both runs record it |
+| Clears | the room clear: the first tick every list enemy that appeared is dead or gone |
+
+`event_ticks` (tolerances.json, new): 3 ticks (0.1 s at 30 ticks a second), accepted by the integrator (HANDOVERS.md H-014.5). Every native
+pair on the PC is 0 ticks apart.
+
+**Fails closed.** Each of these is a failure whatever the values: a missing or unreadable file (`missing-file`); no
+trace record (`no-records`); a record tag the reader does not know, or a line that is not a record in a trace file
+(`unknown-line`; serial logs are read with `--log`, which skips and counts non-record lines); a record without a field
+the outcome needs (`malformed`); a NaN or infinity in a position or angle (`non-finite`); two records of one tick or of
+one actor in one tick (`duplicate`); ticks missing from the expected set, which is `--expect-ticks` or the H line's
+`ticks=` (a logic trace without `--expect-ticks` fails: its length is not known) (`short-run`); ticks outside it
+(`extra-tick`); an actor named by `--actors` absent, or an actor of one run never in the other (`missing-actor`).
+
+**Formats.** re4ref traces (`# re4ref trace v1/v2`: H, T, A, R lines; the engine's hill trace writes the same) and
+logic-trace records (LT, LE, LF, LL, GE and the other L* records of `logic_trace.cpp` and the engine's fight trace).
+Actors are matched by enemy-list entry (`e=`), or by id and order of first appearance when they have none (Ashley).
+Old-game logs with enemies only every 4th tick (LP lines) cannot pass: they are `plays_right.py --lenient` material.
+
+**Controls** (`outcome_controls.py <out dir> [--engine-log serial.txt:LO:HI]`; 30 rows, all as they must,
+`E:\RE4DC-Lanes\eng-svc5\ev\outcome_controls.md`):
+
+| Row | Must | Input |
+|---|---|---|
+| determinism (door103-walk, bell-ganado-kill, bell-ganado-clear, hill-ashley) | PASS | the reference twice |
+| missing-file, no-records | FAIL | B absent; B empty |
+| unknown-line (record, text) | FAIL | a `Q t=20` record; a serial line in a trace file |
+| malformed | FAIL | one A line without `hp=` |
+| non-finite | FAIL | one actor position a NaN |
+| duplicate | FAIL | one T line twice |
+| short-run (cut, gap) | FAIL | B cut after tick 300 of 520; B without tick 100's T line |
+| extra-tick | FAIL | one tick after the last |
+| missing-actor (gone, required) | FAIL | B without 0x1e; `--actors e=55` |
+| route, position | FAIL | door103-walk with the walk 2% longer (re4ref `--control walk-speed=1.02`): 8.5 units at the end |
+| kill | FAIL | bell-ganado-kill without its third hit |
+| damage | FAIL | the second hit by weapon 0x14 (another amount) |
+| damage-time | FAIL | every hit 30 ticks later (`--control late-hit=30`) |
+| trigger-spawn, trigger-gone | FAIL | 0x1f created at tick 20; 0x1f's records removed from tick 400 |
+| clear | FAIL | bell-ganado-clear without the hits on 0x1c |
+| logic form | PASS | bell-ganado-clear as LT/LL/LE records with serial lines between, against itself (`--log ab`) |
+| logic form without --log / without --expect-ticks | FAIL | the same files |
+| trigger-event | FAIL | the event word changed from tick 200 |
+| engine log against itself | PASS | eng-e2's Flycast fight log (f16t-1, 901 ticks, 4 Ganados) |
+| engine log, Leon hit once more | FAIL | one more life drop on Leon |
+
+**New fixtures:** `bell-ganado-kill` (three handgun hits kill Ganado 0x14 at tick 140) and `bell-ganado-clear` (all four
+Ganados die; the room clears at tick 160). Reference-only (the old run has no shots).
+
+**Strict `plays_right.py`.** Default strict structure (eng-svc4's draft, checked): a missing tick (a tick with A or R
+lines but no T line counts), a missing field, a non-finite value, a duplicate tick, or a tick or field count different
+from the expected set (`--expect-ticks`, `--expect-count`) fails with verdict STRUCTURE. `--lenient` is the old reader,
+for sparse old-game logs. `controls.sh` adds one control per structure fault (18 rows, all as they must,
+`E:\RE4DC-Lanes\eng-svc5\ev\pr_controls.md`). Its `drop-rng` control moved to bell-ganado: on door103-walk Leon's walk no
+longer draws from the behaviour generator (his eye wander is presentation since eng-e1d), so it dropped nothing and
+**passed**, a stale control found by re-running it.
