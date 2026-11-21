@@ -295,7 +295,8 @@ $(addprefix $(OUT)/h/,$(addsuffix .o,$(SPLIT_UNITS))): $(OUT)/h/%.o: $(ROOT)/src
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.orig.o
 	sh-elf-objcopy $$(cat $(OUT)/n/svc4_syms.txt) $(if $(PRESENT_$*),$(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present)) \
-		$(foreach r,$(CAM_UNIT_MATH_$*),--redefine-sym _$(subst =,=_,$(r))) $@.orig.o $@
+		$(foreach r,$(CAM_UNIT_MATH_$*),--redefine-sym _$(subst =,=_,$(r))) $(foreach f,$(WEAKEN_$*),--weaken-symbol=$(f)) \
+		$@.orig.o $@
 	rm -f $@.orig.o
 $(OUT)/e/%.o: $(ENG)/%.c $(ENG_HDRS)
 	@mkdir -p $(dir $@)

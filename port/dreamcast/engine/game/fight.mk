@@ -14,7 +14,29 @@
 # stays off (render, platform and old-port hooks compile out).
 .DEFAULT_GOAL := all
 FIGHT_SRCS := em10/em10 em15/em15_set game/em_set game/em_sub game/dmg game/em_dm_val st1/r101 \
-	game/sce_com game/sce_at game/game game/libgpu st/em_wrap
+	game/sce_com game/sce_at game/game st/em_wrap
+# lane eng-e2d item 3: game/libgpu is not hosted: the three calls the image used (ClearOTagR, AddPrim, DelPrim) are the
+# scene attachments' list, the engine's (services/scene/at_list.cpp), with sce_at's two walkers. Control build only:
+# ATLIST_ORIG=1 hosts libgpu and keeps sce_at's walkers (the engine's copies left out; the link check must FAIL).
+# Lane eng-e2d item 3: the logged stubs of engine/fight/fight_svc_stubs.cpp (the binocular's widget and the focus blur,
+# the save file's storage, the scenario debug print; DebugTrg the engine's 0): the hosted bodies made weak. (The header
+# inlines IDApplication::init and IdBinocular's destructors are taken from the engine's by name.) Control build only:
+# FIGHT_STUBS_ORIG=1 keeps them all original (the link check must FAIL).
+ifneq ($(FIGHT_STUBS_ORIG),1)
+WEAKEN_game/cam_extra += __ZN11IdBinocular4initEP6CameraPvS2_ __ZN11IdBinocular4moveEPv __ZN11IdBinocular4quitEPv \
+	__ZN14FocusAnimation4initEi __ZN14FocusAnimation4moveEi __ZN14FocusAnimation4quitEv
+WEAKEN_game/game += __ZN9cGameSave4loadEPv __ZN9cGameSave9checkAddrEP12GameSaveData \
+	__ZN9cGameSave10calcOffsetEP12GameSaveDataPv __ZN9cGameSave8calcAddrEP12GameSaveData save__9cGameSavePv
+WEAKEN_game/sce_com += _SceDebugDisp __Z8DebugTrgi
+else
+ENG_CPP_OUT += $(ENG)/fight/fight_svc_stubs.cpp
+endif
+ifeq ($(ATLIST_ORIG),1)
+FIGHT_SRCS += game/libgpu
+ENG_CPP_OUT += $(ENG)/services/scene/at_list.cpp
+else
+WEAKEN_game/sce_at += _sceAtSetOtStart _sceAtGetOtAddr
+endif
 # lane eng-e2a item 3: the scenario areas are the engine's (services/volumes/area_vol.cpp, game/Makefile AREAVOL_OBJ);
 # game/area is not hosted (AREA_ORIG=1, a control build only, hosts it again)
 ifeq ($(AREA_ORIG),1)
@@ -23,11 +45,12 @@ endif
 HOSTED_SRCS += $(FIGHT_SRCS)
 # route_ck: the native routes service (services/routes, lane eng-e1e), not the original unit
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
-ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(wildcard $(ENG)/fight/*.cpp) $(wildcard $(ENG)/services/effects/*.cpp)
+ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(filter-out $(ENG_CPP_OUT),$(wildcard $(ENG)/fight/*.cpp)) \
+	$(wildcard $(ENG)/services/effects/*.cpp)
 ENG_HDRS += $(wildcard $(ENG)/fight/*.h) $(wildcard $(ENG)/services/effects/*.h)
 # Lane eng-e2d: the scenario layer's services (services/scene/: the event walk over the record tables, sce_at's
 # service functions); sce_com and sce_at are SPLIT_NOIPA_UNITS (their calls reach the engine's bodies)
-ENG_CPP += $(wildcard $(ENG)/services/scene/*.cpp)
+ENG_CPP += $(filter-out $(ENG_CPP_OUT),$(wildcard $(ENG)/services/scene/*.cpp))
 ENG_HDRS += $(wildcard $(ENG)/services/scene/*.h)
 SPLIT_NOIPA_UNITS += game/sce_com game/sce_at
 ENG_FLAGS += -DE2_BOSS=1 -DE2_FIGHT=1 -I$(ENG)/fight -I$(ENG)/boss -I$(ENG)/services/effects
