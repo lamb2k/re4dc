@@ -82,20 +82,15 @@ void* alloc(u32 bytes)
     return p;
 }
 
-ClothChain* find(const PenCloth* c)
+// A chain is keyed by its PenCloth and its model (lane eng-cloth1): El Gigante's chained form sets one PenCloth up on
+// two chain objects (em2bChainSet, rope[1]); keyed on the PenCloth alone the second set-up took the first chain over.
+ClothChain* find(const PenCloth* c, const cModel* m)
 {
-    for (u32 i = 0; i < g_nch; i++)
-        if (g_ch[i]->c == c) return g_ch[i];
-    return 0;
+    const int i = cloth_key_find(g_ch, g_nch, c, m);
+    return i < 0 ? 0 : g_ch[i];
 }
-void forget(const PenCloth* c)
-{
-    for (u32 i = 0; i < g_nch; i++)
-        if (g_ch[i]->c == c) {
-            g_ch[i] = g_ch[--g_nch];
-            return;
-        }
-}
+void forget(const PenCloth* c, const cModel* m) { cloth_key_forget(g_ch, g_nch, c, m); }
+u32 g_step;   // chain steps so far: a chain's stamp is its last step's (the table's eviction order)
 
 // ---------------------------------------------------------------------------------------------------------------
 // bones
@@ -208,12 +203,21 @@ ClothChain* build(cModel* m, PenCloth* c)
     }
     const int root = skel_parts_bone(m, 0);
     if (root != 0 || !skel_history(t, 0)) return 0;   // the root's world_old: the skeleton keeps bone 0's
-    ClothChain* ch = find(c);
+    ClothChain* ch = find(c, m);
     const u32 bytes = 64 + 64 * n + 48 * n + ((2 * nAt + 31u) & ~31u);
-    if (!ch || ch->bytes != bytes || ch->m != m) {
-        forget(c);
-        if (g_nch >= kMaxChains) return 0;
-        u8* blk = (u8*) alloc(bytes);
+    if (!ch || ch->bytes != bytes) {
+        forget(c, m);
+        u8* blk = 0;
+        if (g_nch >= kMaxChains) {
+            // the table full (a chain's owner may have died: nothing tells the service): the chain stepped least
+            // recently gives up its entry, and its block when the size matches
+            const int v = cloth_key_oldest(g_ch, g_nch);
+            if (g_ch[v]->bytes == bytes) blk = (u8*) g_ch[v];
+            g_ch[v] = g_ch[--g_nch];
+            cloth_cnt.evicted++;
+            if (blk) memset(blk, 0, bytes);
+        }
+        if (!blk) blk = (u8*) alloc(bytes);
         if (!blk) return 0;
         ch = (ClothChain*) blk;
         ch->bytes = bytes;
@@ -377,6 +381,7 @@ void step_begin(ClothChain* ch, Step& s)
     }
     for (u32 i = 0; i < s.n; i++) ch->link[i].hit = 0;
     cloth_cnt.moves++;
+    ch->stamp = ++g_step;
     cloth_cnt.links += s.n;
 }
 
@@ -592,7 +597,7 @@ extern "C" void PenClothSet(cModel* m, PenCloth* c, f32 len)
     if (c->Num == 0) return;
     ClothChain* ch = build(m, c);
     if (!ch) {
-        forget(c);
+        forget(c, m);
         cloth_cnt.fallback++;
         pen_orig_Set(m, c, len);
         return;
@@ -647,8 +652,8 @@ extern "C" void PenClothSet(cModel* m, PenCloth* c, f32 len)
 extern "C" void PenClothMove(cModel* m, PenCloth* c)
 {
     if (c->Num == 0) return;
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_Move(m, c);
         return;
     }
@@ -658,8 +663,8 @@ extern "C" void PenClothMove(cModel* m, PenCloth* c)
 extern "C" void PenClothMove3(cModel* m, PenCloth* c)
 {
     if (c->Num == 0) return;
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_Move3(m, c);
         return;
     }
@@ -668,8 +673,8 @@ extern "C" void PenClothMove3(cModel* m, PenCloth* c)
 
 extern "C" void PenClothFixSet(cModel* m, PenCloth* c, int no, Vec* pos)
 {
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_FixSet(m, c, no, pos);
         return;
     }
@@ -681,8 +686,8 @@ extern "C" void PenClothFixSet(cModel* m, PenCloth* c, int no, Vec* pos)
 
 extern "C" void PenClothFixClear(cModel* m, PenCloth* c, int no)
 {
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_FixClear(m, c, no);
         return;
     }
