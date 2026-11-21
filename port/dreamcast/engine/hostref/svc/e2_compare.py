@@ -27,9 +27,12 @@ REL = 2.0 ** -20
 DEG = 0.01
 
 
+LOG = 'e2.txt'   # --log NAME: another boundary log of the same token form (lane eng-e2b: e2b.txt, svc/e2b_dump.cpp)
+
+
 def load(d):
     try:
-        with open(d + '/e2.txt', errors='replace') as f:
+        with open(d + '/' + LOG, errors='replace') as f:
             return [ln.rstrip('\n') for ln in f]
     except OSError:
         return None
@@ -73,13 +76,15 @@ def text_equal(tx, ty):
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     opt = {}
-    for o in ('--json', '--rescue'):
+    for o in ('--json', '--rescue', '--log'):
         if o in sys.argv:
             opt[o] = sys.argv[sys.argv.index(o) + 1]
             args.remove(opt[o])
+    global LOG
+    LOG = opt.get('--log', LOG)
     ra, rb = load(args[0]), load(args[1])
     if not ra or not rb:
-        print('e2_compare: missing or empty e2.txt')
+        print('e2_compare: missing or empty %s' % LOG)
         sys.exit(2)
     rescue = set()
     if '--rescue' in opt:
