@@ -37,6 +37,7 @@
 #include "camera_svc.h"
 #include "eng_camera.h"   // lane eng-e1m: the diagnosis lines
 #include "cam_math.h"
+#include "area_edge.h"   // lane eng-e2a: the ground-edge side test, shared with the scenario areas
 
 using namespace camsvc;
 
@@ -118,8 +119,8 @@ inline bool in_band(const Vec* pos, const CameraAreaInfo* a)
     const f32 y = pos->y + 100.0f;
     return y >= a->base_y && y < a->base_y + a->height;
 }
-// the side of p from the ground edge a -> b: the y component of (b - a) x (p - a); >= 0 on the area's inner side
-inline f32 edge_side(const Vec& a, const Vec& b, const Vec* p) { return (b.z - a.z) * (p->x - a.x) - (b.x - a.x) * (p->z - a.z); }
+// the side of p from the ground edge a -> b (area_edge.h, shared with the scenario areas since lane eng-e2a)
+using areasvc::edge_side;
 }   // namespace
 
 // A position in an area: not when the area is off (attr 4); with attr 0x40 the facing must be within 135 degrees of

@@ -2,6 +2,60 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-027 (2026-11-21): the plan written down (version 3.2); what the PC reference is and is not; rulings from the first gates
+
+- **Owner:** "okmemoralize that plan and ensure the skill sare up to date". Done: `ENGINE_PLAN.md` version 3.2 ("The plan as of
+  2026-11-21"), `LANES.md`, `COMMON_BRIEF.md`, `INTEGRATION_GATE.md`, the rule files and the four skills (merge 9dfe2ca00).
+- **Owner asked:** "In the PC the ideal reference ?" and "How does el Gigante run in reference?". Answers given, and rulings:
+  1. **The PC reference is the workbench, not the truth.** It is the original code built for a third platform. Four faults
+     in it were found in two days (em10's presentation callers, the BSpline alias, routine bytes, the Ganado's hit voice
+     label), each one a case where engine and reference agreed and both were wrong. From now on a PC fixture counts as a
+     reference only where it is anchored: the same scene run on the released old port in Flycast, agreeing on outcome and
+     on chosen state at chosen ticks. A lane for that anchoring starts when the machine has room (backlog, first in line
+     after the renderer redesign's build lanes).
+  2. **El Gigante has no whole-fight reference.** The PC reference does not host him; lane eng-e2c checked each function on
+     a planted giant. The released old port is his reference: a scripted fight there, the engine judged on outcome. Part of
+     the anchoring lane. His AI and his drawing meet in one scene only after the renderer redesign (his drawing alone is
+     over twice the row on the bench).
+  3. **Gate rule:** a move of `engine` since a lane's merge base passes without a re-merge when the trial merge is clean and
+     every moved file is a document or a tool that no image and no suite uses. `GATE.md` carries it.
+  4. **A hand-back figure that does not match the head** is a lane error the integration lane records with the figure it
+     measured; it fails the gate only if the control itself does not work (eng-e2b: "em10 21" and "8 clones" came from an
+     intermediate build; at the head the controls give em10 11 and 181 problems).
+  5. **Service code hidden by inlining** (eng-e2b's finding: the optimiser had inlined 8 of em10's service functions into
+     decision functions, out of the symbol-based link check's sight). Until lane eng-e2d's general check has run on every
+     image, the link check's counts, the default image's 0 included, are counts of symbols, not proof.
+  6. **The boss room's thunder** is presentation: its interval moves to the presentation generator (the split rule); the
+     three `static` functions may be made replaceable by build means without editing `src/`. The shift of the boss's
+     behaviour stream against old-game traces from tick 1 is the split's accepted consequence.
+  7. **No session links** (owner, by way of the F-Zero session: "We shouldn't put a link to Claude sessions in PRs"): commit
+     and merge messages end with the `Co-Authored-By` line only. History already pushed is not rewritten without the
+     owner's word.
+- **State:** merged through the integration lane today: eng-salv1, eng-e2a, eng-cmp1 (the comparison, MODELLED, with its
+  band). At the gate: eng-e2b (held on one question: do the reference's trace differences after the hit-voice fix touch
+  behaviour state), then eng-look1 (Leon's handgun drawn live; +0.57 ms a picture MODELLED). Handed back, finishing: eng-e2c
+  (boss 26 to 3; the thunder). Running: eng-draw1, eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-fix1, eng-e2d.
+- **Open with the owner:** whether the GameCube original in an emulator is wanted as a third reference for disputes
+  (behaviour only, no assets), or anchoring on the released old port is enough.
+
+## H-026 (2026-11-21): corrections, not switches; quick weapon select; reworked PS2 art; the F-Zero line's advice
+
+- **From:** the owner (quoted) and the integrator (rulings under H-013).
+- **1. What lane eng-fix1 found:** the released game carries its fixes as the old port's `RE4DC_` conditionals inside the original code; read per unit, 33 are behaviour fixes, of which the engine built 11 and the PC reference 2. With the Ganado byte-order one missing, all 32 of a Ganado's routine tests read the wrong bytes in both the engine and the reference: they agreed with each other and both differed from the released game (on the reference: Ganado reactions change from the first hit in the bell fight; kills, damage and room clear the same). The same class of fault as H-016.8.
+- **2. The owner on how to carry them:** "wouldn't implementing the switches just be a workaround?", "would it make sense to rethink the switches as proper replatforming?", "we should stop calling them switches". Ruling and vocabulary, for every document and report:
+  - **corrections:** what makes the original code right on this CPU and compiler (byte order; compiler and ABI). Unconditional in how the engine and the reference build the original code; the reference keeps `CORRECTIONS=0` only as a control build.
+  - **game settings:** the owner's product choices (the enemy cap and its rules, the PS2 spawn rules, quick weapon select), in one file, each with who decided and when.
+  - **guards:** tripwires against failures the old port had (a refused spawn, a refused effect). Counted in the scene record, expected at 0, a non-zero count fails a timing scene; a guard that never fires is removed.
+  - The mechanism is "the old port's conditionals". Next, as its own lane after eng-fix1 lands: the corrections are written into the engine line's copy of the original source and the conditionals deleted by a mechanical pass proven by byte-identical objects (old-drawing-path branches removed). The engine line's source then differs from the release line's; a release hotfix is applied to both by hand.
+- **3. Quick weapon select stays** (the owner: "i want to keep quiock weapon switch"). It is a game setting and an owner-chosen departure from the GameCube version. The known departures are now: the enemy cap of 4, quick weapon select, one picture of input delay from the fixed-field pacer. Where the old port added a convenience, ask the owner before dropping it.
+- **4. Release line:** lane eng-fix1 found that Disc 2 builds module em1f's copy of em10 without the Ganado byte-order correction. A hotfix candidate; the owner decides; nothing on the release line was touched.
+- **5. A Dreamcast look, from reworked PS2 art.** The owner asked whether rooms can be baked and made "dreamcastt optimzied", and characters given an aesthetic, "where we can stand out from the gamecube version", and then answered the open asset question: "sure the ps2 aart can be rewporedm, tetouched, reatpined etc." (read: the PS2 art may be reworked, retouched, repainted and the like). So: the PS2 version stays the only source (the no-GameCube-assets rule stands), and its art may be upscaled, retouched, repainted, re-lit and rebuilt for this console. The owner added: "ps2 was primarily to establish hthe baseline geometric shapes etc.": the PS2 version is the baseline for shapes (rooms, models, layout); textures, lighting, materials and the overall look are ours to rework. Geometry may be rebuilt for the console (distance levels, meshlets) as long as the shapes stay the PS2's (the integrator's reading). How it is run:
+  - what makes the picture both cheaper and better goes into the renderer redesign itself (rooms lit offline, meshes and distance levels built for the console, clean transparency);
+  - what costs frame time (shadow volumes, bump mapping, anti-aliasing) waits until the floor holds on the calibrated model;
+  - the owner chooses the look from still sheets: two or three treatments of one room and of Leon, one variable per sheet, each with its count of differing pixels and its modelled cost; the chosen treatment becomes the bake recipe.
+- **6. The F-Zero line's advice, adopted** (their integrator, asked at the owner's request): look for invisible work before cutting content (their drawing win was an exact, pixel-identical cull); never mix a look change into a speed arm; every still pair carries its differing-pixel count; every baked pack carries a receipt of its inputs; lanes hand back before they lose the thread (about 250 tool calls); a speed claim needs its base re-run in the same session. These are in the common brief. Their cautions, noted: twelve lanes on a saturated machine mostly queue (they run two to four); the calibration was fitted on the old port's work and may not transfer to the new renderer (a small console bench of the renderer alone would anchor it: the owner's call, not asked for).
+- **7. The machine:** CPU at 98% with three projects on it. One emulator slot was added and reserved for the integration lane (`eng-e1d\int1`; the owner: "more slots is ok adjust based on computer utilization"). Lanes are not added while the CPU is saturated: as lanes hand back the count drains to what the machine carries, and a successor starts only when there is room. A lease covers only a running emulator; the integration lane has priority.
+
 ## H-025 (2026-11-21): rulings from the salvage inventory and the comparison; three more lanes
 
 - **From:** the integrator. Authority: H-013. Sources (handed back, not yet gated): `E:\RE4DC-Lanes\eng-salv1\SALVAGE.md` (lane/eng-salv1 3e11ed9dd), `E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` (lane/eng-cmp1 68007ec63).
