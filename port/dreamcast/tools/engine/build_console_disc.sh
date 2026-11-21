@@ -171,21 +171,49 @@ case ",$SCENES," in *,SHOT*)
   : > "$D/SHOTD/SHOTDMG"; : > "$D/SHOTL/SHOTLATE" ;;
 esac
 
+# The record's controls (lane eng-e1k: CROWDUP to CSTACK; lane eng-e1o, H-017.6 and H-017.7: CCAM0 to CKIND), each the
+# Leon scene (E1 image, village route) run from its own folder with one boot file (core/e1_core.h lists them), staged
+# only when --scenes names it. <name>|<folder>|<boot file>|<schedule kind>|<title>. Each must FAIL with the reason
+# CONSOLE_LOOP.md section 12 gives; CKIND is refused by the selector before it runs (a kind without run and mode).
+CONTROLS=(
+  "CROWDUP|CRD|ROWDUP|e1:timing:drawn|Control:_repeated_row"
+  "CNOFLIP|CNF|NOFLIP|e1:timing:drawn|Control:_no_flips"
+  "CQDROP|CQD|QDROP|e1:timing:drawn|Control:_queue_drop"
+  "CSTACK|CSX|STACKX|e1:timing:drawn|Control:_stack_overrun"
+  "CCAM0|CC0|CAMREC0|e1:timing:drawn|Control:_no_camera_tick_checked"
+  "CMEMCUT|CMC|MEMCUT|e1:timing:drawn|Control:_memory_line_cut"
+  "CRUNFN|CRF|RUNFUNC|e1:timing:drawn|Control:_function_label_on_a_timing_scene"
+  "CNUMTXT|CNT|NUMTEXT|e1:timing:drawn|Control:_text_where_a_number_belongs"
+  "COPENX|COX|OPENX|e1:timing:drawn|Control:_boot_file_opened_at_picture_100"
+  "CHEADM|CHM|HEADLESS|e1:timing:drawn|Control:_headless_image_on_a_drawn_scene"
+  "CKIND|CKD|NOTRACE|e1|Control:_schedule_kind_without_run_and_mode"
+)
+for c in "${CONTROLS[@]}"; do
+  IFS='|' read -r cn cdir cfile ckind ctitle <<< "$c"
+  case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile" ;; esac
+done
+
 # ---- the plan: <name> <title> <program> <deadline s> <kind> <files that must exist> <args>
 need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
 {
   echo "# RE4DC console disc $SHORT ($REF), $(date -u +%FT%TZ). Selector: engine/loader/selector.c"
   echo "BENCH Bench:_village_cross,_hay-fork PROG/BENCH.BIN 900 bench $(need BENCH/CROSS.PAK,BENCH/FARM.PAK,BENCH/CROSS.VIS,BENCH/FARM.VIS,BENCH/SCHEDULE.TXT) root=BENCH rows=skip skip=T,MEMBLK"
-  echo "LEON Leon_in_the_village PROG/E1.BIN 300 e1 $(need E1/CROSS.PAK,E1/CROSS.VIS,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs) root=E1 rows=compact"
-  echo "HILL Leon_and_Ashley_on_the_hill PROG/E1.BIN 300 e1 $(need E1H/HILL,E1/HILL.PAK,E1/HILL.VIS,E1/FARM.PAK,E1/st1/r11d.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/pl11.drs) root=E1H:E1 rows=compact"
-  echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 300 e1 $(need FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHT rows=compact"
+  echo "LEON Leon_in_the_village PROG/E1.BIN 300 e1:timing:drawn $(need E1/CROSS.PAK,E1/CROSS.VIS,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs) root=E1 rows=compact"
+  echo "HILL Leon_and_Ashley_on_the_hill PROG/E1.BIN 300 e1:timing:drawn $(need E1H/HILL,E1/HILL.PAK,E1/HILL.VIS,E1/FARM.PAK,E1/st1/r11d.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/pl11.drs) root=E1H:E1 rows=compact"
+  echo "FIGHT Four_Ganados_at_the_cross PROG/FIGHT.BIN 300 e1:timing:drawn $(need FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs) root=FIGHT rows=compact"
   echo "BOSS-BENCH El_Gigante_on_the_bench PROG/BENCH.BIN 600 bench $(need BOSSB/CROSS.PAK,BOSSB/FARM.PAK,BOSSB/CROSS.VIS,BOSSB/SCHEDULE.TXT) root=BOSSB rows=skip skip=T,MEMBLK"
-  echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 300 e1 $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
+  echo "BOSS El_Gigante_hosted_(headless) PROG/BOSS.BIN 300 e1:timing:headless $(need BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/etc/core.das,BOSS/em/em2b.drs,BOSS/em/pl08.drs) root=BOSS rows=compact"
   SHOTNEED=FIGHT/CROSS.PAK,FIGHT/FARM.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc,FIGHT/etc/core.das,FIGHT/etc/emleon00.esl,FIGHT/em/em15.drs
-  echo "SHOT Shot_fixture_(traced,_not_timing) PROG/FIGHT.BIN 300 e1 $(need SHOT/SHOT.TXT,$SHOTNEED) root=SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
-  echo "SHOTNP Shot_control:_no_press PROG/FIGHT.BIN 300 e1 $(need SHOTNP/SHOT.TXT,$SHOTNEED) root=SHOTNP:FIGHT rows=compact skip=T,LT,LE,LL"
-  echo "SHOTDMG Shot_control:_wrong_damage PROG/FIGHT.BIN 300 e1 $(need SHOTD/SHOTDMG,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTD:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
-  echo "SHOTLATE Shot_control:_hit_1_s_late PROG/FIGHT.BIN 300 e1 $(need SHOTL/SHOTLATE,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTL:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOT Shot_fixture_(traced,_not_timing) PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOT/SHOT.TXT,$SHOTNEED) root=SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOTNP Shot_control:_no_press PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOTNP/SHOT.TXT,$SHOTNEED) root=SHOTNP:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOTDMG Shot_control:_wrong_damage PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOTD/SHOTDMG,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTD:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "SHOTLATE Shot_control:_hit_1_s_late PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOTL/SHOTLATE,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTL:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  # the record's controls (lanes eng-e1k, eng-e1o; only when --scenes names them): the Leon scene with one boot file
+  # each, every one must FAIL with its reason (CONSOLE_LOOP.md section 12); LEON beside them must stay OK
+  for c in "${CONTROLS[@]}"; do
+    IFS='|' read -r cn cdir cfile ckind ctitle <<< "$c"
+    echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1 rows=compact"
+  done
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
 for f in "${PUTS[@]}"; do

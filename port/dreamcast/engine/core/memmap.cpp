@@ -82,7 +82,13 @@ void e1_memmap_after()
     const uintptr_t top = (uintptr_t) sbrk(0);
     struct mallinfo mi = mallinfo();
     const unsigned bad = stack_guard_broken();
-    e1_log("E1 MEM after play: stack high water %u of %u guard %s | heap blocks %u in use %lu peak %lu | sbrk %08lx free to arena %ld "
+    if (e1_lab.memcut) {   // MEMCUT (lane eng-e1o, control): the line cut after the arena margin
+        e1_log("E1 MEM after play: stack high water %u of %u guard %s | heap blocks %u in use %lu peak %lu | sbrk %08lx free to arena %ld\n",
+               stack_high_water(), (unsigned) (stack_hi - stack_lo), bad ? "BROKEN" : "intact", mm_n, (unsigned long) mm_bytes,
+               (unsigned long) mm_peak, (unsigned long) top, (long) (E1_ARENA_LO - top));
+        return;
+    }
+    e1_log("E1 MEM after play:stack high water %u of %u guard %s | heap blocks %u in use %lu peak %lu | sbrk %08lx free to arena %ld "
            "| mallinfo used %lu free %lu | vram free %ld | lost %u\n", stack_high_water(), (unsigned) (stack_hi - stack_lo),
            bad ? "BROKEN" : "intact", mm_n, (unsigned long) mm_bytes, (unsigned long) mm_peak, (unsigned long) top,
            (long) (E1_ARENA_LO - top), (unsigned long) mi.uordblks, (unsigned long) mi.fordblks,
@@ -91,10 +97,9 @@ void e1_memmap_after()
                     (unsigned long) (stack_lo + STACK_GUARD));
 }
 // Control STACKX (boot file): at tick 300 one guard word is overwritten, as a stack overrun would; the after-play check
-// must break the guard and the selector FAIL the scene.
+// must break the guard and the selector FAIL the scene. Lane eng-e1o (H-017.7): the boot file is read before play
+// (core/frame.cpp e1_lab_boot), not on the first picture as before (an fs_open inside play).
 void e1_memmap_control(unsigned tick)
 {
-    static int on = -1;
-    if (on < 0) { file_t f = fs_open("/cd/STACKX", O_RDONLY); on = f >= 0; if (f >= 0) { fs_close(f); e1_log("E1 STACKX: a guard word overwritten at tick 300 (control)\n"); } }
-    if (on && tick == 300) *(volatile uint32_t*) (stack_lo + 64) = 0;
+    if (e1_lab.stackx && tick == 300) *(volatile uint32_t*) (stack_lo + 64) = 0;
 }

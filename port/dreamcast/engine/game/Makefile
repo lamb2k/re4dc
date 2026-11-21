@@ -63,7 +63,8 @@ WRAP_SYMS := Rnd fRand1_1 fRand0_1 \
 ifneq ($(FIGHT),1)
 WRAP_SYMS += RouteCkToEm RouteCkToPos RouteCkEscEm RouteCkPosToPosDis
 endif
-WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc
+# lane eng-e1o (H-017.7): every file open goes through core/play_files.c, which counts the opens during play
+WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc -Wl,--wrap=fs_open
 all: $(OUT)/e1.elf
 
 # rnd.cpp with its read-only trace accessor (re4dc_rnd_state: returns the generator state, changes nothing).
