@@ -74,6 +74,7 @@ static void camera(float* cam,const float* eye,float yaw,float pitch,float cot){
     cam[12]=0;cam[13]=cot/1.33333333f;cam[14]=0;cam[15]=cot;cam[16]=0;cam[17]=-n*k;cam[18]=-(fa*n)*k;
     cam[19]=0;cam[20]=0;cam[21]=640;cam[22]=480;cam[23]=0;cam[24]=1;cam[25]=fa;
 }
+int cmpf(const void* a,const void* b){float x=*(const float*)a,y=*(const float*)b;return (x>y)-(x<y);}
 int main(int argc,char** argv){
     if(argc<4){fprintf(stderr,"usage: census_world pack vis cot [--yaws N] [--pitch DEG] [--eye MM]\n");return 1;}
     float cot=atof(argv[3]),pitch_deg=-10.f,eye_up=2000.f;int yaws=16;
@@ -114,7 +115,7 @@ int main(int argc,char** argv){
     NativeVis vis;if(!native_vis_open(&vis,vdata,vsize,&w))return 4;w.vis=&vis;
     printf("vis bytes=%ld cells_in_rows=%u instance_masks=%u column_masks=%u decode_bytes=%u\n",vsize,vis.ncells,vis.ni,vis.nc,vis.ibytes+vis.cbytes);
     float cam[26];Count best={0},bestn={0},sum={0},sumn={0};double pvs_max_t=0,pvs_max_v=0,pvs_t=0,pvs_v=0;unsigned cells=0,views=0,outside=0;
-    int bx=-1,bz=-1;double best_yaw=0;
+    int bx=-1,bz=-1;double best_yaw=0;float* vv=malloc(sizeof(float)*(size_t)(vis.ncells+1)*yaws);unsigned nvv=0;
     for(unsigned z=0;z<vis.nz;z++){unsigned x0=vis.rows[2*z]&0xffff,n=vis.rows[2*z]>>16,first=vis.rows[2*z+1];
         for(unsigned x=x0;x<x0+n;x++){const NativeVisCell* c=vis.cells+first+(x-x0);if(c->imask==0xffff)continue;
             float ylo=c->ylo*vis.yunit,yhi=c->yhi*vis.yunit;
@@ -128,16 +129,34 @@ int main(int argc,char** argv){
                 native_vis_select(&w,cam);count_view(&w,cam,&a);
                 w.vis_inst=NULL;w.vis_cubes=NULL;count_view(&w,cam,&b);
                 if(a.meshlets<0||b.meshlets<0){fprintf(stderr,"selection over capacity\n");return 5;}
-                views++;sum.meshlets+=a.meshlets;sum.verts+=a.verts;sum.corners+=a.corners;sum.tris+=a.tris;sum.strips+=a.strips;
+                views++;vv[nvv++]=a.verts;sum.meshlets+=a.meshlets;sum.verts+=a.verts;sum.corners+=a.corners;sum.tris+=a.tris;sum.strips+=a.strips;
                 sumn.verts+=b.verts;sumn.tris+=b.tris;sumn.corners+=b.corners;sumn.meshlets+=b.meshlets;
                 if(a.verts>best.verts){best=a;bx=x;bz=z;best_yaw=360.*y/yaws;}
                 if(b.verts>bestn.verts)bestn=b;
             }
         }}
+    {   /* the pack's own pictures (a game pack: the recorded route; a world pack: its entry points), with the table;
+           the recorded view and field of view, the engine renderer's near and far planes */
+        Table frames,d0;table(&frames,row(&root,3),bytes(&root,3));table(&d0,row(&root,4),bytes(&root,4));
+        static uint32_t st[32768];Count rb={0},rs={0};unsigned rn=0,rm=0;
+        for(unsigned fr=0;fr<frames.n;fr++){
+            const uint32_t* refs=row(&frames,fr);const uint32_t* p=row(&d0,refs[1]);const uint32_t* end=p+bytes(&d0,refs[1])/4;p++;
+            while(p<end){uint32_t* dest=st+*p++;unsigned bits=*p++;for(;bits;bits>>=1,dest++)if(bits&1)*dest=*p++;}
+            float rc[26];const float* sf=(const float*)st;float eye[3]={0,0,0};
+            camera(rc,eye,0,0,sf[15]>0?sf[15]:cot);memcpy(rc,sf,48);
+            Count a;rm+=native_vis_select(&w,rc)==VIS_MASK;count_view(&w,rc,&a);
+            if(a.meshlets<0)return 5;rn++;rs.verts+=a.verts;rs.tris+=a.tris;rs.corners+=a.corners;
+            if(a.verts>rb.verts)rb=a;
+        }
+        if(rn)printf("route pictures=%u with_mask=%u max_staged_vertices=%.0f max_triangles=%.0f mean_staged_vertices=%.0f mean_triangles=%.0f mean_corners=%.0f\n",
+                     rn,rm,rb.verts,rb.tris,rs.verts/rn,rs.tris/rn,rs.corners/rn);
+    }
     if(!cells){printf("cells baked=0\n");printf("census ok\n");return 0;}
     printf("pvs cells=%u unbaked_at_centre=%u max_triangles=%.0f max_vertices=%.0f mean_triangles=%.0f mean_vertices=%.0f\n",cells,outside,pvs_max_t,pvs_max_v,pvs_t/cells,pvs_v/cells);
     printf("view yaws=%d pitch=%.0f eye=%.0f views=%u max_staged_vertices=%.0f max_corners=%.0f max_triangles=%.0f max_meshlets=%.0f max_strips=%.0f max_cell=%d,%d max_yaw=%.1f mean_staged_vertices=%.0f mean_corners=%.0f mean_triangles=%.0f mean_meshlets=%.1f mean_strips=%.0f\n",
            yaws,pitch_deg,eye_up,views,best.verts,best.corners,best.tris,best.meshlets,best.strips,bx,bz,best_yaw,sum.verts/views,sum.corners/views,sum.tris/views,sum.meshlets/views,sum.strips/views);
+    qsort(vv,nvv,sizeof(float),cmpf);
+    printf("viewpct p50_staged_vertices=%.0f p90_staged_vertices=%.0f p99_staged_vertices=%.0f\n",vv[nvv/2],vv[nvv*9/10],vv[nvv*99/100]);
     printf("novis max_staged_vertices=%.0f max_triangles=%.0f mean_staged_vertices=%.0f mean_triangles=%.0f\n",bestn.verts,bestn.tris,sumn.verts/views,sumn.tris/views);
     printf("census ok\n");
     return 0;

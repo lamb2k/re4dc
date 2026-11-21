@@ -4,6 +4,7 @@
     room_bake.py --chapter1 [--out DIR]            every chapter 1 room, then the census table (census.json, census.md)
     room_bake.py --inputs                          the chapter 1 room list with each bake input present or missing
     room_bake.py --control-seeds <room hex>        the seed check's failing input (seeds moved off the floor)
+    room_bake.py --controls                        every check's failing input, after --chapter1 (controls.json)
 
 Two kinds of pack, both in the NAT3 format of native_pack.py (no format change):
 - game pack (<room>.pak): a recording of the old game in the room exists (RECORDINGS below). native_pack.build (the
@@ -99,6 +100,8 @@ def stage_tables(iso=ISO):
         out[room]["lights"] = struct.unpack_from(">I", L, o + 4)[0]
         out[room]["fog"] = (struct.unpack_from(">i", L, o + 8)[0], *struct.unpack_from(">2f", L, o + 12))
         out[room]["lit_cuts"] = cuts
+        # every cut's light count: the cut in force follows the player's light area at run time (light_area.cpp)
+        out[room]["lights_per_cut"] = [struct.unpack_from(">I", L, struct.unpack_from(">I", L, 4 + 4 * c)[0] + 4)[0] for c in range(cuts)]
     return out
 
 
@@ -361,7 +364,11 @@ def bake_room(room, out, tables, cot, jobs=4, control_seeds=False):
     res["ram_at_load"] = len(data) - len(secs[0]) + rt + vb + dec
     res["vis_bytes"] = vb
     res["lights_recorded"] = light_count(rid)
+    from native_world import live_objects
+    res["live_objects_left_out"] = sorted(live_objects(DISC / "native" / room).items())   # (placement, (kind, id))
     res["lights_lit"] = (tables.get(room) or {}).get("lights")
+    res["lights_lit_max"] = max((tables.get(room) or {}).get("lights_per_cut") or [0]) or None
+    res["lit_cuts"] = (tables.get(room) or {}).get("lit_cuts")
     res["seconds"] = round(time.time() - t0, 1)
     return res
 
@@ -373,41 +380,96 @@ PLACES = {"r100": "the first house", "r101": "village", "r103": "farm", "r107": 
 def table(results):
     """the census as Markdown rows (numbers only: no game data)"""
     kib = lambda b: "%.0f" % (b / 1024)
-    head = ("| Room | Place | Ch | Pack | Triangles | Vertices | Strips | Meshlets | Materials | Textures | VRAM world KiB | VRAM other KiB "
-            "| Pack KiB | RAM at load KiB | Largest view: staged vertices / triangles | Mean view: staged vertices / triangles "
-            "| Largest PVS triangles | Mean PVS triangles | Lights (LIT / recorded) | GameCube-sourced texture rows |")
-    rows = [head, "|" + "---|" * 20]
+    A = ["| Room | Place | Ch | Pack | Triangles | Vertices | Strips | Meshlets | Materials | Textures | VRAM world KiB "
+         "| VRAM catalogue, HUD, effects KiB | Pack KiB | RAM at load KiB | RAM at load, room content only KiB "
+         "| Lights: LIT cut 0 / most in a cut / recorded | GameCube-sourced texture rows |", "|" + "---|" * 17]
+    B = ["| Room | Place | Baked cells | Largest view: staged vertices / triangles | View p99 / p90 / p50 staged vertices "
+         "| Mean view staged vertices | Largest view without the table | Largest PVS vertices / triangles | Mean PVS vertices / triangles "
+         "| Recorded route: mean / largest staged vertices |", "|" + "---|" * 10]
     for r in results:
+        place = PLACES.get(r["room"], "")
         if not r.get("world"):
             why = "; ".join(r.get("failures") or [r.get("note", "")])
-            rows.append(f"| {r['room']} | {PLACES.get(r['room'], '')} | {r.get('chapter', '')} | none | " + " | ".join(["-"] * 15)
-                        + f" | {r.get('lights_lit') if r.get('lights_lit') is not None else (r.get('inputs') or {}).get('lights_lit', '-')} | - |"
-                        + (f" <!-- {why} -->" if why else ""))
+            A.append(f"| {r['room']} | {place} | {r.get('chapter', '')} | none | " + " | ".join(["-"] * 11)
+                     + f" | {(r.get('inputs') or {}).get('lights_lit', '-')} / - / - | - |" + (f" <!-- {why} -->" if why else ""))
             continue
-        w = r["world"]; L0 = w["level0"]; v = w["view"]; p = w["pvs"]; t = r["textures"]
+        w = r["world"]; L0 = w["level0"]; v = w["view"]; p = w["pvs"]; t = r["textures"]; pc = w.get("viewpct", {}); rt = w.get("route", {})
         gc = sum(n for name, n in t["names"].items() if name in ("source", "source-pair"))
-        rows.append("| %s | %s | %s | %s | %s | %s | %s | %s | %d | %d | %s | %s | %s | %s | %s / %s | %s / %s | %s | %s | %s / %s | %d |" % (
-            r["room"], PLACES.get(r["room"], ""), r.get("chapter", ""), r["kind"], L0["triangles"], L0["vertices"], L0["strips"],
-            L0["meshlets"], r["materials"], t["count"], kib(t["world_bytes"]), kib(t["other_bytes"]), kib(r["pack_bytes"]),
-            kib(r["ram_at_load"]), v["max_staged_vertices"], v["max_triangles"], v["mean_staged_vertices"], v["mean_triangles"],
-            p["max_triangles"], p["mean_triangles"], r.get("lights_lit"), r.get("lights_recorded") if r.get("lights_recorded") is not None else "-", gc))
-    return "\n".join(rows)
+        s = r["sections"]; content = r["ram_at_load"] - sum(s[3:13])
+        A.append("| %s | %s | %s | %s | %s | %s | %s | %s | %d | %d | %s | %s | %s | %s | %s | %s / %s / %s | %d |" % (
+            r["room"], place, r.get("chapter", ""), r["kind"], L0["triangles"], L0["vertices"], L0["strips"], L0["meshlets"],
+            r["materials"], t["count"], kib(t["world_bytes"]), kib(t["other_bytes"]), kib(r["pack_bytes"]), kib(r["ram_at_load"]),
+            kib(content), r.get("lights_lit"), r.get("lights_lit_max"),
+            r.get("lights_recorded") if r.get("lights_recorded") is not None else "-", gc))
+        route = "%s / %s" % (rt["mean_staged_vertices"], rt["max_staged_vertices"]) if r["kind"] == "game" and rt else "-"
+        B.append("| %s | %s | %s | %s / %s | %s / %s / %s | %s | %s | %s / %s | %s / %s | %s |" % (
+            r["room"], place, p["cells"], v["max_staged_vertices"], v["max_triangles"], pc.get("p99_staged_vertices", "-"),
+            pc.get("p90_staged_vertices", "-"), pc.get("p50_staged_vertices", "-"), v["mean_staged_vertices"],
+            w["novis"]["max_staged_vertices"], p["max_vertices"], p["max_triangles"], p["mean_vertices"], p["mean_triangles"], route))
+    return "\n".join(A) + "\n\n" + "\n".join(B)
 
 
 def chapter1(out, jobs):
-    tables = stage_tables(); cot = template_cot()
-    (out / "stage1-tables.json").write_text(json.dumps(tables, indent=1))
+    st = out / "stage1-tables.json"
+    if st.exists() and "lights_per_cut" in st.read_text(): tables = json.loads(st.read_text())
+    else: tables = stage_tables(); st.write_text(json.dumps(tables, indent=1))
+    cot = template_cot()
     results = []
     for room, ch, note in CHAPTER1 + COMPARE:
         if room == "r120":
             results.append(dict(room=room, chapter=ch, note=note, kind="none", failures=[], checks={},
                                 inputs=inputs(room, tables=tables))); continue
+        done = out / f"{room}.census.json"   # one file per room as it finishes; a rerun resumes
+        if done.exists():
+            results.append(json.loads(done.read_text())); continue
         log(f"== {room}")
         r = bake_room(room, out, tables, cot, jobs); r.update(chapter=ch, note=note); results.append(r)
+        done.write_text(json.dumps(r, indent=1))
         log(json.dumps({k: r.get(k) for k in ("room", "kind", "pack_bytes", "failures", "checks", "seconds")}))
     (out / "census.json").write_text(json.dumps(results, indent=1))
     (out / "census.md").write_text(table(results) + "\n")
     return results
+
+
+def recensus(out):
+    """re-run census_world over every baked room of census.json (after a change to the census tool)"""
+    _, census_world = tools(); cot = template_cot()
+    results = json.loads((out / "census.json").read_text())
+    for r in results:
+        if not r.get("pack") or not r.get("world"): continue
+        pack = Path(r["pack"]); vis = pack.with_suffix(".vis")
+        c = subprocess.run([str(census_world), str(pack), str(vis), "%.6f" % cot], capture_output=True, text=True)
+        (out / f"{pack.stem}.census.log").write_text(c.stdout + c.stderr)
+        if c.returncode == 0: r["world"] = keyvals(c.stdout)
+        else: r["failures"].append(f"census_world exit {c.returncode}")
+        (out / f"{r['room']}.census.json").write_text(json.dumps(r, indent=1)); log(r["room"], c.returncode)
+    (out / "census.json").write_text(json.dumps(results, indent=1))
+    (out / "census.md").write_text(table(results) + "\n")
+
+
+def controls(out, jobs):
+    """each check's failing input, run after --chapter1 (uses its packs); every row must say 'failed as it must'"""
+    rows = []
+    def row(name, failed, detail):
+        rows.append(dict(check=name, result="failed as it must" if failed else "DID NOT FAIL", detail=detail)); log(rows[-1])
+    tables = json.loads((out / "stage1-tables.json").read_text()); cot = template_cot()
+    # 1. seeded floor: every entry point moved off the floor (r10a)
+    r = bake_room("r10a", out, tables, cot, jobs, control_seeds=True)
+    row("seeded_floor", any("reachable" in f or "bake_vis" in f for f in r["failures"]), r["failures"] or r.get("vis_domain"))
+    # 2. census_world: the village pack against the farm's table
+    _, census_world = tools()
+    c = subprocess.run([str(census_world), str(out / "r101.pak"), str(out / "r103.vis"), "%.6f" % cot], capture_output=True, text=True)
+    row("census_world table/pack match", c.returncode == 4, f"exit {c.returncode}")
+    # 3. offline seed coverage: the village recording's cameras against the farm's world-pack table
+    cov = route_coverage(out / "r103.world.vis", Path(RECORDINGS[0x101]["capture"]))
+    row("offline_seeds_cover_recording", cov["in_band"] < 0.95 * cov["pictures"], cov)
+    # 4. HUD verify on a world pack (must refuse it)
+    import hud_fix
+    try: hud_fix.verify((out / "r10b.world.pak").read_bytes()); failed = False; d = "accepted"
+    except ValueError as e: failed = True; d = str(e)[:120]
+    row("hud_verify on a world pack", failed, d)
+    (out / "controls.json").write_text(json.dumps(rows, indent=1))
+    return all(r["result"] == "failed as it must" for r in rows)
 
 
 def main():
@@ -416,7 +478,13 @@ def main():
     ap.add_argument("--chapter1", action="store_true"); ap.add_argument("--inputs", action="store_true")
     ap.add_argument("--control-seeds", action="store_true"); ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--table", type=Path, help="census.json -> Markdown rows")
+    ap.add_argument("--controls", action="store_true", help="run every check's failing input (after --chapter1)")
+    ap.add_argument("--recensus", action="store_true", help="re-run the census tool over census.json's packs")
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
+    if a.controls:
+        sys.exit(0 if controls(a.out, a.jobs) else 1)
+    if a.recensus:
+        recensus(a.out); return
     if a.table:
         print(table(json.loads(a.table.read_text()))); return
     if a.inputs:
