@@ -28,6 +28,12 @@
 #include "motion.h"
 #include "math_sub.h"
 #include "atari.h"
+#include "obj.h"
+#include "wep_mod.h"
+#include "ctrl.h"
+#include "TexRender.h"
+#include "pendulum.h"
+#include "pl_cloth.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -396,6 +402,263 @@ void ex_squash(unsigned t)
         P(g_f, "\n");
     }
 }
+
+}   // namespace
+// The giant's virtual table, empty and strong (svc/svc.mk: the copies in em2b.cpp and the engine's are weak and would
+// pull the whole of em2b into the link through their entries); the destructor under test only stores its address.
+extern "C" const u32 e2c_em2b_vtable[17] asm("_ZTV5cEm2b") = {};
+namespace {
+// ---- lifetime: a giant's destructor releases the objects it holds ----
+// Test objects of a free object kind (a plain cObj), the pool's: planted in the giant's object slots (some left empty),
+// the destructor called, each one's state read back, the survivors released after.
+constexpr int kTestKind = 0x3D;
+void test_obj_init(cObj* p) { new (p) cObj(); }
+bool g_kind_ok;
+void ex_life(unsigned t)
+{
+    if (!g_kind_ok) return;
+    plant(pPL);
+    Em2bWork* w = EM2B_WK(g_gi);
+    cObj* made[6] = {};
+    for (int k = 0; k < 6; k++) made[k] = ((t / 50 + k) % 4 == 3) ? 0 : ObjMgr.create(kTestKind);
+    w->pParasite = (cObj16*) made[0];
+    w->pTen[(t / 50) % 10] = (cObj16*) made[1];
+    w->pTen[9] = (cObj16*) made[2];
+    w->pChain = made[3], w->pChain2 = made[4], w->pChain3 = made[5];
+    P(g_f, "%u LF", t);
+    for (int k = 0; k < 6; k++) P(g_f, " %u", made[k] ? actor(made[k]) : 999);
+    P(g_f, "\n");
+    g_in = 1;
+    g_gi->cEm2b::~cEm2b();
+    g_in = 0;
+    P(g_f, "%u LF->", t);
+    for (int k = 0; k < 6; k++) P(g_f, " %x", made[k] ? (made[k]->be_flag & 0x601) : 0xFFF);
+    P(g_f, "\n");
+    for (int k = 0; k < 6; k++)
+        if (made[k] && (made[k]->be_flag & 0x201) == 1) ObjMgr.destroy(made[k]);
+}
+
+// ---- object: the oba bodies, made at tick 40 on two live actors (a part and the origin), one standing alone and one on a
+// test object released at tick 70 (its oba must go with it); their place, matrix and cylinder logged every tick ----
+}   // namespace
+// The kind's constructor: the class is obj20.cpp's / oba_obj.cpp's cObjObaModel (declared here under its own name)
+class cObjObaModel : public cObj {
+public:
+    virtual void move();
+};
+extern "C" cObj* SetObaModel(cObj* parent, int partsNo, Vec* ofs, f32 rad, u8 type, f32 h);
+namespace {
+void oba_init(cObj* p) { new (p) cObjObaModel(); }
+cObj* g_oba[4];
+cObj* g_oba_parent;
+void ex_oba_make(unsigned t)
+{
+    if (!ObjInitFunc[0x20]) ObjInitFunc[0x20] = oba_init;
+    cEm* a = 0;
+    cEm* b = 0;
+    for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext) {
+        if (e == (cEm*) pPL || (e->be_flag & 0x201) != 1 || parts_count(e) < 4) continue;
+        if (!a) a = e; else if (!b) { b = e; break; }
+    }
+    if (!a) a = (cEm*) pPL;
+    if (!b) b = a;
+    g_oba_parent = g_kind_ok ? ObjMgr.create(kTestKind) : 0;
+    if (g_oba_parent) g_oba_parent->pos = Vec{pPL->pos.x + 900.0f, pPL->pos.y, pPL->pos.z - 400.0f};
+    Vec o0 = {0.0f, 100.0f, 50.0f}, o1 = {200.0f, 0.0f, -150.0f}, o2 = {pPL->pos.x - 1500.0f, pPL->pos.y, pPL->pos.z + 700.0f},
+        o3 = {0.0f, 300.0f, 0.0f};
+    g_in = 1;
+    g_oba[0] = SetObaModel((cObj*) a, 3, &o0, 300.0f, 0, 1000.0f);
+    g_oba[1] = SetObaModel((cObj*) b, 0, &o1, 500.0f, 1, 800.0f);
+    g_oba[2] = SetObaModel(0, 0, &o2, 400.0f, 0, 600.0f);
+    g_oba[3] = g_oba_parent ? SetObaModel(g_oba_parent, 0, &o3, 250.0f, 1, 500.0f) : 0;
+    g_in = 0;
+    P(g_f, "%u OB made %u %u", t, actor(a), actor(b));
+    for (int k = 0; k < 4; k++) P(g_f, " %u", g_oba[k] ? actor(g_oba[k]) : 999);
+    P(g_f, "\n");
+}
+void ex_oba_log(unsigned t)
+{
+    if (t == 70 && g_oba_parent) {
+        ObjMgr.destroy(g_oba_parent);
+        P(g_f, "%u OB parent released\n", t);
+        g_oba_parent = 0;
+    }
+    for (int k = 0; k < 4; k++) {
+        cObj* o = g_oba[k];
+        if (!o) continue;
+        P(g_f, "%u OB %d %x", t, k, o->be_flag & 0x601);
+        if ((o->be_flag & 0x201) != 1) {
+            P(g_f, " gone\n");
+            g_oba[k] = 0;
+            continue;
+        }
+        pv(&o->pos);
+        mcols(o->mat);
+        const cAtariInfo& v = o->sub2B4.atari;
+        P(g_f, " %x %x", (u32) (u16) v.m_flag, (u32) v.m_stat);
+        P(g_f, "\n");
+    }
+}
+
+// ---- hit check: the giants' push-apart. A live Ganado is made a giant in battle for the call (its id, status put
+// back); a planted giant with no parts stands at offsets from it (inside 3000, outside, on it); its place is logged ----
+void ex_push(unsigned t)
+{
+    cEm* b = 0;
+    for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext)
+        if (live_ganado(e)) { b = e; break; }
+    if (!b) return;
+    const u32 id = b->id, status = b->status;
+    b->id = 0x2B;
+    b->setStatus(EM_STATUS_ACTIVE);
+    static const f32 ofs[6][2] = {{1000.0f, 400.0f}, {-2000.0f, 1500.0f}, {2999.0f, 0.0f}, {3001.0f, 10.0f}, {0.0f, 0.0f},
+                                  {-450.0f, -2800.0f}};
+    for (int k = 0; k < 6; k++) {
+        plant(b);
+        g_gi->pParts = 0;
+        g_gi->pos = Vec{b->pos.x + ofs[k][0], b->pos.y + 120.0f * (f32) (k % 3), b->pos.z + ofs[k][1]};
+        P(g_f, "%u PU %u", t, actor(b));
+        pv(&g_gi->pos);
+        g_in = 1;
+        em2bObaHitCk(g_gi);
+        g_in = 0;
+        P(g_f, " ->");
+        pv(&g_gi->pos);
+        P(g_f, "\n");
+    }
+    b->id = id;
+    b->status = status;
+}
+
+// ---- set-ups: the cloth, rope and chain descriptions and requests, the texture-render manager ----
+// a chain record by its contents (the two builds' tables are at different addresses): every field, arrays through
+// their pointers, floats by their bits (compared exactly)
+void hex_bytes(const void* p, int n)
+{
+    if (!p) { P(g_f, " -"); return; }
+    P(g_f, " ");
+    for (int i = 0; i < n; i++) P(g_f, "%02x", ((const u8*) p)[i]);
+}
+void log_pen(const PenCloth* c)
+{
+    if (!c) { P(g_f, " pen-"); return; }
+    const int n = c->Num > 0 && c->Num < 64 ? c->Num : 0;
+    P(g_f, " n%d", c->Num);
+    const u8* const links[7] = {c->pCloth, c->pLeft, c->pRight, c->pUpLeft, c->pUpRight, c->pParent, c->pChild};
+    for (const u8* a : links) hex_bytes(a, n);
+    const f32* const rows[5] = {c->pGravity, c->pRate, c->pMax, c->pWindSin, c->pWindRate};
+    for (const f32* a : rows) hex_bytes(a, 4 * n);
+    hex_bytes(c->pAtset, c->At_num > 0 && c->At_num < 16 ? c->At_num * (int) sizeof(CLOTH_AT_SET) : 0);
+    P(g_f, " at%d %08x %08x %u %08x %08x %08x %d %u %x", c->At_num, bits(c->Gravity), bits(c->Rate), c->Bundle_num,
+      bits(c->WindSin), bits(c->Stretchy), bits(c->Move_rate), c->pPtbl != 0, actor(c->pEm_at), c->Flag);
+}
+// offsets in the giant's archive of the models a chain object is made from
+cEm* g_setup_em;
+int arc_ofs(const void* p) { return g_setup_em ? (int) ((const u8*) p - (const u8*) g_setup_em->subArc) : -1; }
+alignas(32) u8 g_trm_mem[sizeof(TexRenderMng)];   // a manager record (its constructor is the renderer's: not linked)
+TexRenderMng& g_trm = *(TexRenderMng*) g_trm_mem;
+int g_trm_on;
+}   // namespace
+extern "C" cObjChain* __real__Z8SetChainPvS_P3VecS1_(void* bin, void* tpl, Vec* pos, Vec* rot);
+extern "C" cObjChain* __wrap__Z8SetChainPvS_P3VecS1_(void* bin, void* tpl, Vec* pos, Vec* rot)
+{
+    if (!(g_f && g_in)) return __real__Z8SetChainPvS_P3VecS1_(bin, tpl, pos, rot);
+    P(g_f, "%u CH %d %d", g_tick, arc_ofs(bin), arc_ofs(tpl));
+    pv(pos);
+    pv(rot);
+    P(g_f, "\n");
+    return 0;   // no chain object kind in the boss image either (a stub that answers none)
+}
+extern "C" void __real__ZN9cObjChain8setChainEP8PenCloth(cObjChain* o, PenCloth* c);
+extern "C" void __wrap__ZN9cObjChain8setChainEP8PenCloth(cObjChain* o, PenCloth* c)
+{
+    if (!(g_f && g_in)) { __real__ZN9cObjChain8setChainEP8PenCloth(o, c); return; }
+    P(g_f, "%u CC %d", g_tick, o != 0);
+    log_pen(c);
+    P(g_f, "\n");
+}
+extern "C" void __real__ZN9cObjChain9setParentEP6cModeliP3Veci(cObjChain* o, cModel* m, int parts, Vec* ofs, int flag);
+extern "C" void __wrap__ZN9cObjChain9setParentEP6cModeliP3Veci(cObjChain* o, cModel* m, int parts, Vec* ofs, int flag)
+{
+    if (!(g_f && g_in)) { __real__ZN9cObjChain9setParentEP6cModeliP3Veci(o, m, parts, ofs, flag); return; }
+    P(g_f, "%u CA %d %u %x", g_tick, o != 0, actor(m), parts);
+    pv(ofs);
+    P(g_f, " %d\n", flag);
+}
+// not in the reference at all (the boss's rope only): a logging body in both builds
+void cObjChain::setParent2(cModel* m, int p1, Vec* o1, int p2, Vec* o2, int flag)
+{
+    if (!(g_f && g_in)) return;
+    P(g_f, "%u CA2 %d %u %x", g_tick, this != 0, actor(m), p1);
+    pv(o1);
+    P(g_f, " %x", p2);
+    pv(o2);
+    P(g_f, " %d\n", flag);
+}
+TexRenderMng* Ctrl12GetTexRenderEm2b(cCtrl* c)
+{
+    if (g_f && g_in) P(g_f, "%u TR %d %d\n", g_tick, c != 0, g_trm_on);
+    return g_trm_on ? &g_trm : 0;
+}
+extern "C" int e2c_cloth_hook(cModel* m, PenCloth* c, f32 len)
+{
+    if (!(g_f && g_in)) return 0;
+    P(g_f, "%u PC %u", g_tick, actor(m));
+    log_pen(c);
+    P(g_f, " R%.9g\n", (double) len);
+    return 1;
+}
+namespace {
+void log_setup(unsigned t, const char* tag)
+{
+    Em2bWork* w = EM2B_WK(g_gi);
+    P(g_f, "%u %s cloth", t, tag);
+    log_pen(&w->Cloth);
+    P(g_f, "\n%u %s rope0", t, tag);
+    log_pen(&w->rope[0]);
+    P(g_f, "\n%u %s rope1", t, tag);
+    log_pen(&w->rope[1]);
+    P(g_f, "\n%u %s objs %d %d %d mgr %d", t, tag, w->pChain != 0, w->pChain2 != 0, w->pChain3 != 0, w->pMgr != 0);
+    hex_bytes(w->Tex_buf, 8);
+    P(g_f, " %x %u %u %d\n", g_trm.texId, g_trm.m_W_size, g_trm.m_H_size, g_trm.m_Rep_type);
+}
+// every form (0 to 3) through the three set-ups; the texture-render set-up in room 224 with and without a manager and in
+// this room. The planted giant's archive is Leon's (only offsets into it are logged)
+void ex_setup(unsigned t)
+{
+    for (int type = 0; type < 4; type++) {
+        plant(pPL);
+        g_gi->type = (u8) type;
+        // the giant's archive: a table of model offsets of this file's own (Leon's archive pointer may be none here)
+        static PlArc arc;
+        for (u32 i = 0; i < 0x20; i++) arc.ofs[i] = 0x1000 + 0x40 * i;
+        g_gi->subArc = &arc;
+        g_setup_em = g_gi;
+        g_in = 1;
+        em2bClothSet(g_gi);
+        if (type == 0) em2bShortRopeSet(g_gi);
+        if (type == 3) em2bChainSet(g_gi);
+        g_in = 0;
+        char tag[8] = {'S', 'U', (char) ('0' + type), 0};
+        log_setup(t, tag);
+    }
+    const u16 room = pG->room_id;
+    for (int k = 0; k < 3; k++) {
+        plant(pPL);
+        __builtin_memset(g_trm_mem, 0, sizeof(g_trm_mem));
+        g_trm.texId = (u8) (0xF8 + k);
+        g_trm_on = k == 1;
+        pG->room_id = k == 2 ? room : 0x224;
+        g_in = 1;
+        em2bTexrenderInit(g_gi);
+        g_in = 0;
+        pG->room_id = room;
+        char tag[8] = {'T', 'X', (char) ('0' + k), 0};
+        log_setup(t, tag);
+    }
+    g_trm_on = 0;
+    g_setup_em = 0;
+}
 }   // namespace
 
 extern "C" void e2c_ready()
@@ -410,7 +673,13 @@ extern "C" void e2c_ready()
         if (c && !__builtin_strcmp(c, "bossquake")) boss_control = 2;
         if (c && !__builtin_strcmp(c, "bossneck")) boss_control = 3;
         if (c && !__builtin_strcmp(c, "bossblend")) boss_control = 4;
+        if (c && !__builtin_strcmp(c, "bossheld")) boss_control = 5;
+        if (c && !__builtin_strcmp(c, "bossoba")) boss_control = 6;
+        if (c && !__builtin_strcmp(c, "bosspush")) boss_control = 7;
+        if (c && !__builtin_strcmp(c, "bossrope")) boss_control = 8;
     }
+    g_kind_ok = !ObjInitFunc[kTestKind];
+    if (g_kind_ok) ObjInitFunc[kTestKind] = test_obj_init;
 }
 extern "C" void e2c_tick(unsigned t, int begin)
 {
@@ -434,6 +703,23 @@ extern "C" void e2c_tick(unsigned t, int begin)
         P(g_f, "# e2cboss skeleton %u\n", t);
         ex_neck(t);
         ex_blend(t);
+    }
+    if (t >= 100 && t % 50 == 0) {
+        P(g_f, "# e2cboss lifetime %u\n", t);
+        ex_life(t);
+    }
+    if (t == 40) {
+        P(g_f, "# e2cboss object %u\n", t);
+        ex_oba_make(t);
+    }
+    if (t > 40) ex_oba_log(t);
+    if (t >= 35 && t % 10 == 5) {
+        P(g_f, "# e2cboss push %u\n", t);
+        ex_push(t);
+    }
+    if (t % 100 == 36) {
+        P(g_f, "# e2cboss set-up %u\n", t);
+        ex_setup(t);
     }
 }
 extern "C" void e2c_finish()

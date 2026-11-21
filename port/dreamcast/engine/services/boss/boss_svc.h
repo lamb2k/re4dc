@@ -17,10 +17,25 @@ struct BossSvcCounters {
     u32 necks;          // em2bNeckMove calls
     u32 blends;         // em2bBlendMotSet and plBlendMotSet calls
     u32 squashes;       // em2bScaleCompress calls that squashed
+    u32 giant_releases; // cEm2b destructor calls (the pool released a giant)
+    u32 held_released;  // objects a giant held, released with it
+    u32 empty_releases; // the tree's and the torch's destructors (nothing to release)
+    u32 oba_made;       // SetObaModel: oba collision objects made
+    u32 oba_refused;    // SetObaModel: refused (object pool full, or the model not set up)
+    u32 oba_moves;      // cObjObaModel::move calls
+    u32 oba_orphans;    // oba objects released because their parent died
+    u32 push_tests;     // em2bObaHitCk calls
+    u32 pushes;         // giants pushed apart
+    u32 cloths;         // em2bClothSet: arm cloths handed to the cloth service
+    u32 chains;         // chain objects asked for (rope, arm chains)
+    u32 texrender_refused;   // room 224's texture-render manager: none (the renderer has none yet)
 };
 extern BossSvcCounters boss_cnt;
 // Controls (set only by the PC check, hostref svc/e2c_dump.cpp RE4_SVC_CONTROL; each must make the comparison fail):
 // 1 "bosscam": the event cameras' eye 1% further from the target; 2 "bossquake": the quake's nearest band 4500 instead
-// of 5000; 3 "bossneck": the neck's damping 0.85 instead of 0.9; 4 "bossblend": the blend weight |Blend| / 255.
+// of 5000; 3 "bossneck": the neck's damping 0.85 instead of 0.9; 4 "bossblend": the blend weight |Blend| / 255;
+// 5 "bossheld": a giant's destructor keeps its third chain object; 6 "bossoba": an oba object's ground clamp 1500
+// instead of 2000 above the parent; 7 "bosspush": giants pushed apart to 2900 instead of 3000; 8 "bossrope": the rope's
+// constraint iterations 99 instead of 100.
 extern int boss_control;
 }

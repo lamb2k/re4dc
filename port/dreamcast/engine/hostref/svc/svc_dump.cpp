@@ -261,8 +261,11 @@ extern "C" void host_svc_finish()
 // it is set up, in both builds, so the cloth draws no random number and native and original compare bit for bit ----
 #include "pendulum.h"
 extern "C" void __real_PenClothSet(cModel* m, PenCloth* c, f32 len);
+// lane eng-e2c: the boss exercise logs a set-up made on a planted giant and keeps it from the cloth service (1: taken)
+extern "C" int e2c_cloth_hook(cModel* m, PenCloth* c, f32 len) __attribute__((weak));
 extern "C" void __wrap_PenClothSet(cModel* m, PenCloth* c, f32 len)
 {
+    if (e2c_cloth_hook && e2c_cloth_hook(m, c, len)) return;
     const char* w = svc_env("RE4_SVC_CLOTH_WIND");
     if (w && *w == '0') c->Flag |= 0x40;
     __real_PenClothSet(m, c, len);

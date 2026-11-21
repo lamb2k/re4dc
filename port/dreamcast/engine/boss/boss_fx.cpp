@@ -50,6 +50,12 @@ void e2_report()
            "blends %u squashes %u\n", (unsigned) b.cam_moves[0], (unsigned) b.cam_moves[1], (unsigned) b.cam_moves[2],
            (unsigned) b.cam_moves[3], (unsigned) b.cam_pulls, (unsigned) b.quakes, (unsigned) b.quake_sets,
            (unsigned) b.feet, (unsigned) b.screen_tests, (unsigned) b.necks, (unsigned) b.blends, (unsigned) b.squashes);
+    e1_log("E2C BOSS releases giant %u held %u empty %u oba made %u refused %u moves %u orphans %u push tests %u pushes %u\n",
+           (unsigned) b.giant_releases, (unsigned) b.held_released, (unsigned) b.empty_releases, (unsigned) b.oba_made,
+           (unsigned) b.oba_refused, (unsigned) b.oba_moves, (unsigned) b.oba_orphans, (unsigned) b.push_tests,
+           (unsigned) b.pushes);
+    e1_log("E2C BOSS set-ups cloths %u chains %u texrender refused %u\n", (unsigned) b.cloths, (unsigned) b.chains,
+           (unsigned) b.texrender_refused);
     for (unsigned k = 1; k < FX_KINDS; k++) if (fx_count[k]) e1_log("E2 FX %s count=%u\n", fx_names[k], fx_count[k]);
     for (unsigned i = 0; i < fx_n; i++)
         e1_log("E2 FXEV t=%u %s %08lx %08lx %08lx\n", fx_events[i].tick, fx_names[fx_events[i].kind],

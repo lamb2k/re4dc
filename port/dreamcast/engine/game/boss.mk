@@ -3,16 +3,26 @@
 # and the engine pieces under engine/boss/ (route, room set-up, enemy table move, scenario tasks, effect service).
 #   make -C port/dreamcast/engine/game BOSS=1 OUT=<dir>   -> <dir>/e1.elf
 .DEFAULT_GOAL := all
-BOSS_SRCS := em2b/em2b st1/r119 game/em_sub game/em_set game/dmg game/em_dm_val game/emtree game/emtorch game/obj20 game/game
+# Lane eng-e2c: game/obj20 (the oba collision objects) is not hosted: services/boss/oba_obj.cpp has the whole unit.
+# Control build only: OBA_ORIG=1 hosts game/obj20 again in place of the engine's (the link check must FAIL). Never a default.
+BOSS_SRCS := em2b/em2b st1/r119 game/em_sub game/em_set game/dmg game/em_dm_val game/emtree game/emtorch game/game
+ifeq ($(OBA_ORIG),1)
+BOSS_SRCS += game/obj20
+endif
 HOSTED_SRCS += $(BOSS_SRCS)
 # Lane eng-e2c: El Gigante's service entry points are the engine's (services/boss/; docs/engine/lanes/eng-e2c.md):
-# presentation and view (em2b_pres: the event cameras, the quake, the foot landing, the on-screen test) and pose
-# (em2b_skel: the neck, the blends, the squash). Compiled with the hosted units' flags and linked before the hosted
-# objects; every global symbol they define is made weak in em2b.o (below), so the hosted calls reach the engine bodies
-# and --gc-sections drops the original's.
+# presentation and view (em2b_pres: the event cameras, the quake, the foot landing, the on-screen test), pose
+# (em2b_skel: the neck, the blends, the squash), lifetime (em2b_life: the giant's, the tree's and the torch's
+# destructors) and the collision bodies (oba_obj: the oba objects, the giants' push-apart). Compiled with the hosted
+# units' flags and linked before the hosted objects; every global symbol they define is made weak in em2b.o (below),
+# so the hosted calls reach the engine bodies and --gc-sections drops the original's. The tree's and the torch's
+# destructors are the compiler's inline (weak) copies in emtree.o and emtorch.o: the engine's strong ones take their place.
 # Control build only (E2C_ORIG=<symbol>, the SH-ELF name, e.g. __Z12em2bNeckMoveP5cEm2b): that original stays linked and
 # the engine's copy is made weak (the link check must FAIL on it). Never a default.
-BOSSVC_SRCS := em2b_pres em2b_skel
+BOSSVC_SRCS := em2b_pres em2b_skel em2b_life em2b_setup
+ifneq ($(OBA_ORIG),1)
+BOSSVC_SRCS += oba_obj
+endif
 BOSSVC_OBJS := $(addprefix $(OUT)/n/boss_,$(addsuffix .o,$(BOSSVC_SRCS)))
 HOSTED_OBJS := $(BOSSVC_OBJS) $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
 $(OUT)/n/boss_%.o: $(ENG)/services/boss/%.cpp $(wildcard $(ENG)/services/boss/*.h) $(ENG)/services/camera/cam_math.h $(ENG)/host/e1_prelude.h
