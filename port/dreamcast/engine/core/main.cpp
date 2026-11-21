@@ -75,11 +75,13 @@ static void room_init()
         u32 cuts, tracks, refused, bytes, limit;
         cam_track_room(&cuts, &tracks, &refused, &bytes, &limit);
         if (rc) {
-            e1_log("E1 load: camera tracks refused: room %03x needs %lu bytes for %lu motion cuts, the store holds %lu\n",
+            e1_log("E1 load: camera tracks refused: room %03x needs %lu bytes for %lu motion cuts, the room store's ceiling "
+                   "%lu (56 cuts)\n",
                    (unsigned) pG->room_id, (unsigned long) bytes, (unsigned long) cuts, (unsigned long) limit);
             for (;;) thd_sleep(1000);
         }
-        e1_log("E1 CAMTRACK room %03x: motion cuts %lu converted %lu refused %lu, %lu bytes of %lu (at load)\n",
+        e1_log("E1 CAMTRACK room %03x: motion cuts %lu converted %lu refused %lu, room store %lu bytes (allocated at load; "
+               "ceiling %lu)\n",
                (unsigned) pG->room_id, (unsigned long) cuts, (unsigned long) tracks, (unsigned long) refused,
                (unsigned long) bytes, (unsigned long) limit);
     }

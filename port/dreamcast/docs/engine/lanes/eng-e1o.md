@@ -33,6 +33,23 @@ std2, function checks). No timing claim; the pacer and what the field counter co
   builds (never defaults): hostref `EM10_SPLIT=0`, `BSPLINE_ALIAS=i386` (beside `STAT_BYTES=0`). Script self-controls:
   `CAMCHECK_RAIL_TRACE_MUST=FAIL`, `CAMENGINE_CONTROL=refcut`.
 
+## Still sheet: what still differs from the old Dreamcast port (hill, ticks 200 to 320; Flycast both)
+
+Copied from the hand-back (`E:\RE4DC-Lanes\eng-e1o\HANDBACK.md`, "Still sheet") by lane eng-e1p, at the fourth audit's
+request; the sheet is `E:\RE4DC-Lanes\eng-e1o\ev\look\sheet-e1.jpg`.
+- **Barrels:** the barrels right of Leon are not drawn (props are not in E1).
+- **Ground light:** the bright light pool on the ground at Leon's feet is missing (an effect).
+- **Leon's material:** the engine's Leon reads lighter and browner, with light arms, where the old port's is a dark
+  navy outfit (the chapter-2 body chunks over the pl00 atlas; an owner look call).
+- **Handgun on the hill:** the old port shows the raised handgun; on the engine's hill it is hard to see (in the village and
+  fight stills it is drawn).
+- **Camera framing:** the engine's picture is slightly wider (Ashley a little smaller); the camera state is not carried by
+  the resume (known since eng-e1d).
+- **Ashley's hair and foot shadows:** no clear difference visible at this size; not judged (no close still).
+- **Engine-only (no old still in the named folders):** village tick 160, the hanging body next to the camera is drawn in a
+  teal-green tint (material or light on a near character, visible now that the near plane draws it); fight tick 200, Leon
+  is out of frame (the camera's view at that moment, not compared). The EMPTY sign is not in any still taken.
+
 ## Not done
 
 - The PUB line's parse stays as it is (lane eng-e1n's); the bench's WINDOW values are shown, not judged, and keep `atof`.

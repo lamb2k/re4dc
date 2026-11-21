@@ -16,9 +16,11 @@ route's engine trace and re4ref agree bit for bit at offset 0, lane eng-e1g). Th
 (the fixture's length): out/cam.txt gets the engine's line for every tick the reference has, in the reference's order,
 written as svc4_dump.cpp writes its own (decimal floats, %.9g). Exit 0 written; 2 when the scene is not in the log, an
 engine tick of the window is missing, a tick is repeated, or a value is not finite (camcheck.py then compares).
---ticks N (lane eng-e1o, H-017.8): the fixture's length. The window must then be every tick 1..N, once each and in order,
-in the reference as in the engine: a reference or an engine run that lost ticks at either side of the same window can no
-longer pass with a shorter one (exit 2).
+--ticks N (lane eng-e1o, H-017.8): the fixture's length. The window must then be every tick 1..N: in the reference once
+each and in order; in the engine once each (the engine's lines are keyed by their tick, so the order they arrive in is
+not checked or needed; a repeated tick fails; lane eng-e1p corrected this sentence at the fourth audit's note): a
+reference or an engine run that lost ticks at either side of the same window can no longer pass with a shorter one
+(exit 2).
 """
 import os
 import re

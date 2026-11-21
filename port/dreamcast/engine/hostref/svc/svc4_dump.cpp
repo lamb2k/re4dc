@@ -456,6 +456,21 @@ void exercise_camrefuse(unsigned t)
                    "motion_ended %d\n", c.name, c.keys, r, after_export, after_construct, after_move, guards, ended);
     }
 }
+// Lane eng-e1p (H-018.1): camroom (native build only), the room's camera tracks converted as the engine images convert
+// them at room load (cam_track_room_load over the room's and the core's camera data), at the first tick; the line
+// "# camroom" gives the result, the motion cuts, the tracks converted and refused and the room store's bytes.
+extern "C" int cam_track_room_load(const void* room_cam, const void* core_cam) __attribute__((weak));
+extern "C" void cam_track_room(u32* cuts, u32* tracks, u32* refused, u32* bytes, u32* limit) __attribute__((weak));
+void exercise_camroom(unsigned t)
+{
+    if (t != 1 || !cam_track_room_load) return;
+    const int rc = cam_track_room_load(pG->pCamRoom, pG->pCamCore);
+    u32 cuts, tracks, refused, bytes, limit;
+    cam_track_room(&cuts, &tracks, &refused, &bytes, &limit);
+    if (g_f)
+        P(g_f, "# camroom: room %03x rc %d motion cuts %u converted %u refused %u room store %u bytes ceiling %u\n",
+          (unsigned) pG->room_id, rc, cuts, tracks, refused, bytes, limit);
+}
 void exercise(unsigned t)
 {
     if (g_exercise < 0) {
@@ -463,7 +478,15 @@ void exercise(unsigned t)
         g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2
                    : e && !__builtin_strcmp(e, "rumble") ? 3 : e && !__builtin_strcmp(e, "camblend") ? 4
                    : e && !__builtin_strcmp(e, "camrail") ? 5 : e && !__builtin_strcmp(e, "campush") ? 6
-                   : e && !__builtin_strcmp(e, "camexport") ? 7 : e && !__builtin_strcmp(e, "camrefuse") ? 8 : 0;
+                   : e && !__builtin_strcmp(e, "camexport") ? 7 : e && !__builtin_strcmp(e, "camrefuse") ? 8
+                   : e && !__builtin_strcmp(e, "camroom") ? 9 : 0;
+    }
+    if (g_exercise == 9) {
+        if (t != g_ex_tick && pPL) {
+            g_ex_tick = t;
+            exercise_camroom(t);
+        }
+        return;
     }
     if (g_exercise == 6 || g_exercise == 7 || g_exercise == 8) {
         if (t != g_ex_tick && pPL) {

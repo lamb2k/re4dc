@@ -43,7 +43,8 @@ extern int cam_control;
 void cam_track_store_use(u32* now, u32* peak, u32* size);
 // Lane eng-e1p (H-018.1): the room's camera tracks, converted when the room is loaded. cam_track_room_load exports and
 // converts every motion cut (type 6 or 7) of the room's and the core's camera data (relocated: after RoomDataRead and
-// CoreDataRead) into the track store; it returns 0, or -1 when the room's tracks do not fit the store (nothing is
+// CoreDataRead) into the room store, allocated now to the bytes they need; it returns 0, or -1 when the room's tracks
+// pass the room store's ceiling (cam_track_limit, 64 KiB), its 56 cuts, or the store cannot be allocated (nothing is
 // converted then; the caller refuses the room). cam_track_room reports the last room: motion cuts, tracks converted,
 // cuts refused (writer or keys), the bytes the room needs and the store's limit.
 int cam_track_room_load(const void* room_cam, const void* core_cam);
