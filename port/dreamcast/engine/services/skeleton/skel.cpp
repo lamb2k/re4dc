@@ -24,6 +24,9 @@
 // carry the original's bits; XMTRX on the SW back-end forms each element as the C matrix library does (addition
 // commutes exactly). On the SH-4, FTRV rounds differently: the PC proof covers the layout and the data flow, the
 // SH-4 build's tolerance is the plays-right tolerance.
+#if defined(__sh__)
+#define fabsf skel_game_fabsf   // include/math_sub.h's static fabsf clashes with the C library's SH4ZAM declares
+#endif
 #include "skel.h"
 #include "model.h"
 #include "motion.h"
@@ -37,6 +40,22 @@
 #include "skel_mk.h"
 #include "native_motion.h"
 #include "svc_prof.h"
+// Lane eng-svcspd1: the world pass's XMTRX steps. On the SH-4 SH4ZAM's inline forms, the very instructions skel_xm.c
+// wraps (FTRV and the column scales), without a call a step; elsewhere (the PC reference: SH4ZAM's SW back-end linked
+// as its own object) through skel_xm.c as before.
+#if defined(__sh__)
+#undef fabsf
+#include "sh4zam/shz_xmtrx.h"
+#define XM_LOAD(m) shz_xmtrx_load_transpose_3x4((const shz_mat3x4_t*) (m))
+#define XM_APPLY(m) shz_xmtrx_apply_transpose_3x4((const shz_mat3x4_t*) (m))
+#define XM_SCALE(x, y, z) shz_xmtrx_apply_scale((x), (y), (z))
+#define XM_STORE(m) shz_xmtrx_store_transpose_3x4((shz_mat3x4_t*) (m))
+#else
+#define XM_LOAD(m) skel_xm_load_3x4(m)
+#define XM_APPLY(m) skel_xm_apply_3x4(m)
+#define XM_SCALE(x, y, z) skel_xm_apply_scale((x), (y), (z))
+#define XM_STORE(m) skel_xm_store_3x4(m)
+#endif
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
@@ -60,6 +79,7 @@ int skel_control_hist;
 int skel_control_compress;
 int skel_control_trig;
 int skel_control_ikclosure;
+int skel_control_worldfast;
 }
 // lane eng-svcspd1: this service's own controls on the PC reference (RE4_SVC_CONTROL, read once; hostref svc_io.cpp)
 extern "C" const char* svc_env(const char* name) __attribute__((weak));
@@ -72,6 +92,7 @@ inline void read_controls()
     const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
     if (c && !__builtin_strcmp(c, "trigstale")) skel_control_trig = 1;
     if (c && !__builtin_strcmp(c, "ikclosure")) skel_control_ikclosure = 1;
+    if (c && !__builtin_strcmp(c, "worldfast")) skel_control_worldfast = 1;
 }
 }
 
@@ -388,7 +409,7 @@ struct ParentRef {
     const f32* rs;
     int bone;   // -1: not a bone of this table
 };
-ParentRef parent_of(SkelTable* t, u32 b)
+inline __attribute__((always_inline)) ParentRef parent_of(SkelTable* t, u32 b)
 {
     ParentRef r;
     u32 p = t->parent[b];
@@ -496,41 +517,47 @@ void world_calc(SkelTable* t, int phase = SP_WORLD_ENTRY, const u8* only = 0)
             w.flags &= ~0x40000000;
             continue;
         }
-        ParentRef pr = parent_of(t, b);
-        Vec tmp;
-        tmp.x = t->lmat[b].m[0][3];
-        tmp.y = t->lmat[b].m[1][3];
-        tmp.z = t->lmat[b].m[2][3];
+        // lane eng-svcspd1: the parent, the world position and the XMTRX steps inline (XM_* below: on the SH-4 the
+        // same SH4ZAM instructions skel_xm.c wraps, without the calls); the position is the C library's product
+        // (PSMTXMultVec's operations in its order). Control worldfast: a slip in that product.
+        const ParentRef pr = parent_of(t, b);
+        const f32* L = &t->lmat[b].m[0][0];
+        const f32 lx = L[3], ly = L[7], lz = L[11];
+        const f32 (*P)[4] = pr.m;
         Vec wp;
-        PSMTXMultVec(pr.m, &tmp, &wp);
-        if (pr.rs[0] != pr.rs[1] || pr.rs[1] != pr.rs[2]) {
+        wp.x = P[0][3] + ((P[0][2] * lz) + ((P[0][0] * lx) + (P[0][1] * ly)));
+        wp.y = P[1][3] + ((P[1][2] * lz) + ((P[1][0] * lx) + (P[1][1] * ly)));
+        wp.z = P[2][3] + ((P[2][2] * lz) + ((P[2][0] * lx) + (P[2][1] * ly)));
+        const f32 r0 = pr.rs[0], r1 = pr.rs[1], r2 = pr.rs[2];
+        if (r0 != r1 || r1 != r2) {
             // a non-uniform parent scale: P S^-1 L S (the original's two scale concatenations, as column scales
             // of XMTRX). Blended poses make r_scale's three components differ by rounding, so most bones of a
             // blended pose come here. XMTRX's translation is then not the world position: the next bone reloads.
-            Vec sc;
-            sc.x = (pr.rs[0] != 0.0f) ? 1.0f / pr.rs[0] : 0.0f;
-            sc.y = (pr.rs[1] != 0.0f) ? 1.0f / pr.rs[1] : 0.0f;
-            sc.z = (pr.rs[2] != 0.0f) ? 1.0f / pr.rs[2] : 0.0f;
+            const f32 sx = (r0 != 0.0f) ? 1.0f / r0 : 0.0f;
+            const f32 sy = (r1 != 0.0f) ? 1.0f / r1 : 0.0f;
+            const f32 sz = (r2 != 0.0f) ? 1.0f / r2 : 0.0f;
             if (pr.bone < 0 || pr.bone != inX) {
-                skel_xm_load_3x4(&pr.m[0][0]);
+                XM_LOAD(&P[0][0]);
                 skel_cnt.xmtrx_loads++;
             }
-            skel_xm_apply_scale(sc.x, sc.y, sc.z);
-            skel_xm_apply_3x4(&t->lmat[b].m[0][0]);
-            skel_xm_apply_scale(pr.rs[0], pr.rs[1], pr.rs[2]);
-            skel_xm_store_3x4(&w.m[0][0]);
+            XM_SCALE(sx, sy, sz);
+            XM_APPLY(L);
+            XM_SCALE(r0, r1, r2);
+            XM_STORE(&w.m[0][0]);
             skel_cnt.mat_world_slow++;
             inX = -2;
         } else {
             if (pr.bone < 0 || pr.bone != inX) {
-                skel_xm_load_3x4(&pr.m[0][0]);
+                XM_LOAD(&P[0][0]);
                 skel_cnt.xmtrx_loads++;
             }
-            skel_xm_apply_3x4(&t->lmat[b].m[0][0]);
-            skel_xm_store_3x4(&w.m[0][0]);
+            XM_APPLY(L);
+            XM_STORE(&w.m[0][0]);
             skel_cnt.mat_world++;
             inX = (int) b;
         }
+        if (skel_control_worldfast)   // control: a transcription slip (the second row from the parent's first)
+            wp.y = P[0][3] + ((P[0][2] * lz) + ((P[0][0] * lx) + (P[0][1] * ly)));
         if (w.flags & 0x40000000) {
             Mtx m2;
             w.flags &= ~0x40000000;

@@ -25,7 +25,7 @@ TREE=${RE4_TREE:?set RE4_TREE to the converted data tree (private game data)}
 B=${RE4_HOSTREF_BUILD:-$ROOT/build/hostref}
 SV=$ROOT/port/dreamcast/engine/hostref/svc
 PR=$ROOT/port/dreamcast/tools/plays_right
-CONTROLS=${SPEED_CONTROLS:-"trigstale:door103-walk,hill-ashley,bell-ganado clothbound:hill-ashley ikclosure:door103-walk,hill-ashley,bell-ganado"}
+CONTROLS=${SPEED_CONTROLS:-"trigstale:door103-walk,hill-ashley,bell-ganado clothbound:hill-ashley ikclosure:door103-walk,hill-ashley,bell-ganado worldfast:door103-walk,hill-ashley,bell-ganado"}
 for bin in odump native; do
     [ -x "$B/$bin/re4ref" ] || { echo "speed_controls: no $bin build at $B/$bin/re4ref"; exit 2; }
 done

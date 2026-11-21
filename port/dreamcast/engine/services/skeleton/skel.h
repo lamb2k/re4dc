@@ -161,4 +161,6 @@ extern int skel_control_compress; // 1: skel_compress_y squashes nothing (the fa
 extern int skel_control_trig;     // 1: a bone's kept sin and cos reused whatever its angles (stale; lane eng-svcspd1's
                                   // control; on the PC reference RE4_SVC_CONTROL=trigstale)
 extern int skel_control_ikclosure; // 1: the first world pass leaves out the IK chains' ancestors (RE4_SVC_CONTROL=ikclosure)
+extern int skel_control_worldfast; // 1: the world pass's inline position product takes its second row from the
+                                   // parent's first (a transcription slip; RE4_SVC_CONTROL=worldfast)
 }
