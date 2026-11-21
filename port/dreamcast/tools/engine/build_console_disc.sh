@@ -267,12 +267,14 @@ ELOOK_CONTROLS=(
 # must FAIL it ("sound over H-025.1"). CSNDMUTE (every channel at total attenuation, the fight, a run with the audio
 # capture): the scene runs, engine/services/sound/tools/audiocheck.py must FAIL its capture. CSNDDROP (the first request
 # from tick 100 not passed on, the traced village): engine/services/sound/tools/sndreq_check.py must FAIL it against the
-# PC reference. ASNDOFF is not a control but the "off" arm of the cost comparison (no sound started): it must stay OK.
+# PC reference. CSEED0 (the traced village with its behaviour generator left at 0, as before request R9): the same
+# check must FAIL on the footsteps' positions (ticks 547-569). ASNDOFF is not a control but the "off" arm of the cost comparison (no sound started): it must stay OK.
 SND_CONTROLS=(
   "CSNDSLOW|CSS|SNDSLOW|e1:timing:drawn|Control:_sound_over_its_ceiling|PROG/E1.BIN|E1L:E1"
   "CSNDMUTE|CSM|SNDMUTE|e1:timing:drawn|Control:_sound_muted_(audiocheck)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
   "CSNDDROP|CSD|SNDDROP|e1:function:drawn|Control:_a_sound_request_dropped_(sndreq_check)|PROG/E1.BIN|E1"
   "ASNDOFF|ASO|SNDOFF|e1:timing:drawn|Arm:_sound_off_(cost_comparison)|PROG/E1.BIN|E1L:E1"
+  "CSEED0|CS0|SEED0|e1:function:drawn|Control:_village_seed_left_at_0_(sndreq_check)|PROG/E1.BIN|E1"
 )
 for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"

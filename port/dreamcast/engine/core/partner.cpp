@@ -249,10 +249,9 @@ void e1_partner_boot()
 void e1_partner_room_init()
 {
     if (e1_scene != E1_SCENE_HILL) return;
-    // lane eng-e1d: the behaviour generator starts where the old run's was at the resume (the fixture's seed 0x0d37,
-    // hill-follow.txt; re4ref applies it the same way), so the engine compares with re4ref without a per-tick feed
-    // lane eng-e1e: the SEED boot option (the game-seed control) applies here too, 0x5A5A in place of the fixture's
-    RndInit(e1_game_seed_option ? 0x5A5A : 0x0d37);
+    // The behaviour generator's seed (the fixture's 0x0d37, or 0x5A5A under the SEED boot option) is part of every
+    // scene's start state since lane eng-snd1 (R9): core/main.cpp room_init sets it from the route (core/route.cpp), as
+    // re4ref does, for the village route too (it ran from 0 before: the aim sway drew other numbers than re4ref's).
     static const uint32_t resume_pos[3] = {0x469df1b2u, 0xc3841c09u, 0x465a0443u}, resume_yaw = 0xbfe89375u;
     static const uint32_t sub_pos[3] = {0x469ae1f8u, 0xc4064a5au, 0x4658bef3u}, sub_yaw = 0x3fa98f4au;
     cPlayer* p = pPL;

@@ -38,12 +38,12 @@ static const Act acts[] = {
     {530, 0x0000, 0, 80, 30},    // walk
     {570, 0x0000, 0, -80, 20},   // back step
 };
-static const E1Route route = {0x101, 0x00002000, E1_ROUTE_TICKS, {-7914.0f, 0.0f, 2000.0f}, 1.5708f};
+static const E1Route route = {0x101, 0x00002000, E1_ROUTE_TICKS, {-7914.0f, 0.0f, 2000.0f}, 1.5708f, 0x0d37};   // e1-route.txt
 
 // The hill scene (lane eng-e1b; boot option HILL): Ashley follows Leon on the r11d hill path, the re4ref fixture
 // tools/plays_right/fixtures/hill-follow.txt (tick n = the old game's t 372 + n in the full-field fixture fx-hill-1).
 // Pads are re4ref's: from that tick on (stick forward 80 for 60 ticks from tick 28, again from tick 148).
-static const E1Route hill = {0x11d, 0x00100000, 728, {20214.0f, 0.0f, 13952.0f}, -1.8170f};
+static const E1Route hill = {0x11d, 0x00100000, 728, {20214.0f, 0.0f, 13952.0f}, -1.8170f, 0x0d37};   // hill-follow.txt
 struct TickPad { unsigned tick; E1Pad pad; };
 static const TickPad hill_pads[] = {
     {0, {0x0000, 0, 0, 0}},
