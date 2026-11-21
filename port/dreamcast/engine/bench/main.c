@@ -82,8 +82,9 @@ static const uint16_t lab_bits[]={DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN,D
 /* the options' schedule (boot file DRAWLAB2): eng-look's content steps at their lightest useful steps against today's
    defaults (L3 E2), character levels off (.L0: as the E1 images draw), and the option arms X, V, G (draw_cost.h) */
 /* the census and the look pairs (boot file DRAWLAB3, with STILLS40 for stills): census windows (counts only), then
-   today's defaults against each option that changes the picture, every window handing over the same 12 pictures */
-#define DRAWLAB3_SCHEDULE "c0/Z f0/Z c0 c0/G c0/X c0.W2 c0.W3 c0.L0 f0 f0/G f0/X f0.W2 f0.W3 f0.L0"
+   todays defaults (three times: the floor) against each option, every window handing over the same 12 pictures */
+#define DRAWLAB3_SCHEDULE "c0 c0 c0/Z c0/G c0/X c0.W2 c0.W3 c0.L0 c0 f0 f0 f0/Z f0/G f0/X f0.W2 f0.W3 f0.L0 f0"
+#define DRAWLAB4_SCHEDULE "c0/Z f0/Z"   /* the census alone (boot file DRAWLAB4) */
 #define DRAWLAB2_SCHEDULE "c0 c0.L0 c0.W2 c0.W3 c0.P3 c0.B3 c0/X c0/V c0/G c0 f0 f0.L0 f0.W2 f0.W3 f0.P3 f0.B3 f0/X f0/V f0/G f0"
 static Window schedule[WINDOWS];
 volatile uint32_t m1_content[CS_COUNT]=CONTENT_DEFAULT_INIT;
@@ -241,6 +242,7 @@ int main(void){
         if(exists("/cd/DELAY5"))def=exists("/cd/FARM1")?"f0d c0d":"c0d f0d";
         if(exists("/cd/DRAWLAB")){def=DRAWLAB_SCHEDULE;n=0;printf("DRAWLAB: lane eng-draw1 lab schedule %s\n",def);}
         else if(exists("/cd/DRAWLAB2")){def=DRAWLAB2_SCHEDULE;n=0;printf("DRAWLAB2: lane eng-draw1 options schedule %s\n",def);}
+        else if(exists("/cd/DRAWLAB4")){def=DRAWLAB4_SCHEDULE;n=0;printf("DRAWLAB4: lane eng-draw1 census %s\n",def);}
         else if(exists("/cd/DRAWLAB3")){def=DRAWLAB3_SCHEDULE;n=0;printf("DRAWLAB3: lane eng-draw1 census and look schedule %s\n",def);}
         m1_schedule_n=parse_schedule(n?text:def);
         if(!m1_schedule_n){   /* eng-look: refused, never replaced by the default */

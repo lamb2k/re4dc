@@ -23,7 +23,7 @@ PH = ['select', 'begin', 'sky', 'preworld', 'worldOP', 'actors', 'worldPT', 'lis
 SET_ARMS = {1: (6, {1: 'S stage twice', 2: 'C copy twice', 3: 'Q select twice', 4: 'H HUD twice', 5: 'N near not a number'}),
             2: (5, {1: 'B weight sets twice', 2: 'L normals lit twice', 3: 'E actor emission twice', 4: 'D 2 ms delay (control)'}),
             3: (4, {1: 'X world without a stage', 2: 'V world copy v2', 3: 'G world near clamp (no clipping)'})}
-BITS = {1: 'S', 2: 'C', 4: 'Q', 8: 'H', 16: 'N', 32: 'B', 64: 'L', 128: 'E', 256: 'D', 512: 'K', 1024: 'X', 2048: 'V', 4096: 'G'}
+BITS = {1: 'S', 2: 'C', 4: 'Q', 8: 'H', 16: 'N', 32: 'B', 64: 'L', 128: 'E', 256: 'D', 512: 'K', 1024: 'X', 2048: 'V', 4096: 'G', 8192: 'Z'}
 LO, HI = 41, 640
 
 
@@ -31,6 +31,42 @@ def stats(v):
     v = sorted(v)
     if not v: return None
     return dict(n=len(v), mean=sum(v) / len(v), p99=v[len(v) - 1 - len(v) // 100], worst=v[-1])
+
+
+def census(count):
+    """The invisible share from the census counters (means a picture). The culled sign is the one the depth check says
+    is the far side of the characters: on closed meshes the culled (back) faces are farther, so their mean 1/w is
+    smaller. The world and the characters use the same rule (one screen convention)."""
+    g = lambda k: count.get(k, {}).get('mean', 0)
+    out = {}
+    ineg, ipos = g('v_a_iw_neg'), g('v_a_iw_pos')
+    nneg, npos = g('v_a_neg') + g('v_a_nc_neg'), g('v_a_pos') + g('v_a_nc_pos')   # culling-off triangles by sign too
+    mneg = ineg / nneg if nneg else 0; mpos = ipos / npos if npos else 0
+    aculled = 'n' if mneg < mpos else 'p'   # characters: the farther sign is their back side
+    # the world: the sign its headers' culling removes. PVR mode 3 culls clockwise triangles; on the screen (y down)
+    # (x1-x0)(y2-y0)-(x2-x0)(y1-y0) > 0 is clockwise, so mode 3 removes the positive sign, mode 2 the negative one
+    wculled = 'p' if g('v_w_cullmode_cw') >= g('v_w_cullmode_ccw') else 'n'
+    out['depth_check'] = dict(mean_iw_neg=mneg / 16777216, mean_iw_pos=mpos / 16777216, character_back_sign='negative' if aculled == 'n' else 'positive',
+                              world_culled_sign='positive (CW headers)' if wculled == 'p' else 'negative (CCW headers)')
+    for side, p, culled in (('world', 'v_w_', wculled), ('characters', 'v_a_', aculled)):
+        tris = g(p + 'tris'); off = g(p + 'off'); nocull = g(p + 'nocull')
+        back = g(p + ('neg' if culled == 'n' else 'pos')); front = g(p + ('pos' if culled == 'n' else 'neg'))
+        area = g(p + 'area_nocull') + g(p + ('area_pos' if culled == 'n' else 'area_neg'))
+        out[side] = dict(triangles=tris, offscreen=off, back_facing=back, culling_off=nocull, kept=front + nocull,
+                         kept_area_px=area, overdraw=area / 307200.0,
+                         dead_strips=g(p + 'deadstrips_' + culled), dead_corners=g(p + 'deadcorners_' + culled),
+                         dead_vertices=g(p + ('deadvtx_' if side == 'world' else 'deadpos_') + culled),
+                         dead_normals=g(p + 'deadnrm_' + culled) if side == 'characters' else None,
+                         cullmode_cw=g(p + 'cullmode_cw'), cullmode_ccw=g(p + 'cullmode_ccw'))
+    c = out['characters']; cs = aculled
+    c['back_facing_drawn'] = g('v_a_nc_' + ('neg' if cs == 'n' else 'pos'))   # culling off in their headers: drawn
+    c['back_facing_area_px'] = g('v_a_nc_area_' + ('neg' if cs == 'n' else 'pos'))
+    c['if_culled_dead_strips'] = g('v_a_cdeadstrips_' + cs); c['if_culled_dead_corners'] = g('v_a_cdeadcorners_' + cs)
+    c['if_culled_dead_positions'] = g('v_a_cdeadpos_' + cs)
+    out['world']['clipper_front'] = g('v_w_clip_front'); out['world']['clipper_behind'] = g('v_w_clip_behind')
+    out['world']['clipper_crossing'] = g('v_w_clip_cross'); out['translucent_area_px'] = g('v_tr_area')
+    out['translucent_overdraw'] = g('v_tr_area') / 307200.0
+    return out
 
 
 def scenes(lines):
@@ -74,6 +110,9 @@ def e1_scene(sc):
         res['counts'] = count
         res['per_picture'] = {i: dict(draw=draw[i], spans=dcp[i][:11], w_corners=dcp[i][11], w_cliptris=dcp[i][12],
                                       a_corners=dcp[i][13], a_pos=dcp[i][14]) for i in pics}
+        return res
+    if lab == 4:   # the census (DLV): counts only, never timing
+        res['census'] = census(count)
         return res
     M, names = SET_ARMS[lab]
     base = [i for i in pics if i % M == 0]
@@ -132,6 +171,7 @@ def bench_scene(sc):
             nm = ''.join(BITS.get(b, '?') for b in sorted(BITS) if (w['arms'] or 0) & b) or ('content ' + w.get('content', ''))
             res['arms'][room][nm] = dict(window=k, draw=w['mean'] - bm,
                                          spans={p: w['phase'].get(p, {}).get('mean', 0) / 1000 - bph[p] for p in PH})
+            if nm == 'Z': res['arms'][room][nm]['census'] = census(w['count'])
     return res
 
 
@@ -155,13 +195,16 @@ def main():
                       ' '.join('%s %.2f' % (p, v) for p, v in b['phases'].items() if v >= .005)))
                 for nm, a in arms.items():
                     if nm == 'base': continue
+                    if nm == 'Z': print('    census:', json.dumps(a['census'])); continue
                     big = sorted(a['spans'].items(), key=lambda x: -abs(x[1]))[:2]
                     print('    arm %-3s +%.3f ms draw (%s)' % (nm, a['draw'], ', '.join('%s %+.3f' % x for x in big)))
                     if nm == 'D':
                         ok = abs(a['draw'] - 2) <= .1 and abs(a['spans']['worldOP'] - 2) <= .1
                         print('    control D (2 ms in worldOP): %s' % ('PASS' if ok else 'FAIL')); fail |= not ok
+        elif r['set'] == 4:
+            print('  census:', json.dumps(r['census']))
         elif r['set']:
-            print('  set %c, base pictures draw mean %.2f' % ('A' if r['set'] == 1 else 'B', r['base_draw']['mean']))
+            print('  set %c, base pictures draw mean %.2f' % ('ABCV'[r['set'] - 1], r['base_draw']['mean']))
             for nm, a in r['arms'].items():
                 big = sorted(a['spans'].items(), key=lambda x: -abs(x[1]))[:2]
                 print('    %-26s %3d pictures: draw %+.3f ms (p99 %+.3f) (%s) counters %s' % (nm, a['pictures'], a['draw']['mean'], a['draw']['p99'],

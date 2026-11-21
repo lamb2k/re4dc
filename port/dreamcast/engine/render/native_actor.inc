@@ -291,8 +291,9 @@ static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtMod
     if(DC_ARM(DL_CENSUS)){memset(dc_apos+rp->pos_first,0,rp->pos_count);memset(dc_anrm+rp->nrm_first,0,rp->nrm_count);}
     sq=emit_part_once(sq,s,m,rp,state,DC_NEAR(near),emitted_parts);
     if(DC_ARM(DL_CENSUS) && rp->src->role!=8){   /* census: positions skinned and normals lit that no kept triangle used */
-        unsigned pn=0,pp=0,nn=0,np=0;
-        for(unsigned i=rp->pos_first;i<(unsigned)rp->pos_first+rp->pos_count;i++){pn+=!(dc_apos[i]&1);pp+=!(dc_apos[i]&2);}
+        unsigned pn=0,pp=0,nn=0,np=0,cn=0,cp=0;
+        for(unsigned i=rp->pos_first;i<(unsigned)rp->pos_first+rp->pos_count;i++){pn+=!(dc_apos[i]&1);pp+=!(dc_apos[i]&2);cn+=!(dc_apos[i]&4);cp+=!(dc_apos[i]&8);}
+        dc_n[DC_V_A_CDEADPOS_N]+=cn;dc_n[DC_V_A_CDEADPOS_P]+=cp;
         for(unsigned i=rp->nrm_first;i<(unsigned)rp->nrm_first+rp->nrm_count;i++){nn+=!(dc_anrm[i]&1);np+=!(dc_anrm[i]&2);}
         dc_n[DC_V_A_DEADPOS_N]+=pn;dc_n[DC_V_A_DEADPOS_P]+=pp;dc_n[DC_V_A_DEADNRM_N]+=nn;dc_n[DC_V_A_DEADNRM_P]+=np;
     }
@@ -324,8 +325,8 @@ static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const 
             const unsigned cull=((const unsigned*)row(&s->assets.header,rp->src->hdr)+1)[1]>>27&3;unsigned any=0;
             for(unsigned k=2;k<n;k++){
                 const IndexCorner *ca=v+(k&1?k-1:k-2),*cb=v+(k&1?k-2:k-1),*cc=v+k;
-                if(combined&32){any|=3;dc_apos[ca->position]|=3;dc_apos[cb->position]|=3;dc_apos[cc->position]|=3;
-                    dc_anrm[ca->normal]|=3;dc_anrm[cb->normal]|=3;dc_anrm[cc->normal]|=3;continue;}
+                if(combined&32){any|=15;dc_apos[ca->position]|=15;dc_apos[cb->position]|=15;dc_apos[cc->position]|=15;
+                    dc_anrm[ca->normal]|=15;dc_anrm[cb->normal]|=15;dc_anrm[cc->normal]|=15;continue;}
                 const pvr_vertex_t *a=proj+ca->position,*b=proj+cb->position,*c=proj+cc->position;
                 if(rp->src->role==8){dc_census_tr(a->x,a->y,b->x,b->y,c->x,c->y);continue;}
                 unsigned kept;dc_census_tri(DC_V_A_TRIS,a->x,a->y,a->z,b->x,b->y,b->z,c->x,c->y,c->z,cull,&kept);
@@ -335,6 +336,8 @@ static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const 
             if(rp->src->role!=8){
                 if(!(any&1)){dc_n[DC_V_A_DEADSTRIPS_N]++;dc_n[DC_V_A_DEADCORNERS_N]+=n;}
                 if(!(any&2)){dc_n[DC_V_A_DEADSTRIPS_P]++;dc_n[DC_V_A_DEADCORNERS_P]+=n;}
+                if(!(any&4)){dc_n[DC_V_A_CDEADSTRIPS_N]++;dc_n[DC_V_A_CDEADCORNERS_N]+=n;}
+                if(!(any&8)){dc_n[DC_V_A_CDEADSTRIPS_P]++;dc_n[DC_V_A_CDEADCORNERS_P]+=n;}
             }
         }
         if(!(combined&32)){sq=m1_emit_actor_strip(sq,v,n,proj,lit);corners+=n;}

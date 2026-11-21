@@ -30,7 +30,9 @@ static const char* const dc_count_name[DC_COUNT]={"w_pieces","w_places","w_heade
     "v_a_tris","v_a_off","v_a_nocull","v_a_neg","v_a_pos","v_a_area_nocull","v_a_area_neg","v_a_area_pos",
     "v_a_deadstrips_n","v_a_deadstrips_p","v_a_deadcorners_n","v_a_deadcorners_p","v_a_deadpos_n","v_a_deadpos_p",
     "v_a_deadnrm_n","v_a_deadnrm_p","v_a_iw_neg","v_a_iw_pos","v_a_cullmode_cw","v_a_cullmode_ccw",
-    "v_w_cullmode_cw","v_w_cullmode_ccw"};
+    "v_w_cullmode_cw","v_w_cullmode_ccw",
+    "v_a_nc_neg","v_a_nc_pos","v_a_nc_area_neg","v_a_nc_area_pos","v_a_cdeadstrips_n","v_a_cdeadstrips_p",
+    "v_a_cdeadcorners_n","v_a_cdeadcorners_p","v_a_cdeadpos_n","v_a_cdeadpos_p"};
 _Static_assert(sizeof(dc_count_name)/sizeof(dc_count_name[0])==DC_COUNT,"one name a counter");
 /* ---- census (arm Z / DLV): measurement only ---- */
 static float dc_clip_area(float x0,float y0,float x1,float y1,float x2,float y2){
@@ -65,9 +67,12 @@ void dc_census_tri(unsigned b,float x0,float y0,float z0,float x1,float y1,float
         dc_n[cull==3?DC_V_A_CULLMODE_CW:cull==2?DC_V_A_CULLMODE_CCW:DC_V_A_NOCULL+0]+=cull>=2;
         uint32_t iw=(uint32_t)((z0+z1+z2)*(16777216.f/3.f));dc_n[s<0?DC_V_A_IW_NEG:DC_V_A_IW_POS]+=iw;
     }else dc_n[cull==3?DC_V_W_CULLMODE_CW:DC_V_W_CULLMODE_CCW]+=cull>=2;
-    if(cull<2){dc_n[b+2]++;dc_n[b+5]+=(uint32_t)area;*kept=3;return;}
-    if(s<0){dc_n[b+3]++;dc_n[b+6]+=(uint32_t)area;*kept=2;}   /* kept only if the positive sign is the culled one */
-    else{dc_n[b+4]++;dc_n[b+7]+=(uint32_t)area;*kept=1;}
+    if(cull<2){dc_n[b+2]++;dc_n[b+5]+=(uint32_t)area;
+        if(b==DC_V_A_TRIS){if(s<0){dc_n[DC_V_A_NC_NEG]++;dc_n[DC_V_A_NC_AREA_NEG]+=(uint32_t)area;*kept=3|8;}
+                           else{dc_n[DC_V_A_NC_POS]++;dc_n[DC_V_A_NC_AREA_POS]+=(uint32_t)area;*kept=3|4;}return;}
+        *kept=3;return;}
+    if(s<0){dc_n[b+3]++;dc_n[b+6]+=(uint32_t)area;*kept=2|8;}   /* kept only if the positive sign is the culled one */
+    else{dc_n[b+4]++;dc_n[b+7]+=(uint32_t)area;*kept=1|4;}
 }
 void dc_census_tr(float x0,float y0,float x1,float y1,float x2,float y2){
     if(!dc_offscreen(x0,y0,x1,y1,x2,y2))dc_n[DC_V_TR_AREA]+=(uint32_t)dc_clip_area(x0,y0,x1,y1,x2,y2);

@@ -32,6 +32,10 @@ enum {
     DC_V_A_DEADSTRIPS_N, DC_V_A_DEADSTRIPS_P, DC_V_A_DEADCORNERS_N, DC_V_A_DEADCORNERS_P, DC_V_A_DEADPOS_N, DC_V_A_DEADPOS_P,
     DC_V_A_DEADNRM_N, DC_V_A_DEADNRM_P, DC_V_A_IW_NEG, DC_V_A_IW_POS, DC_V_A_CULLMODE_CW, DC_V_A_CULLMODE_CCW,
     DC_V_W_CULLMODE_CW, DC_V_W_CULLMODE_CCW,
+    /* characters, headers with culling off (all of them today): the sign of each on-screen triangle, and what would be
+       dead if culling were on (C: kept-if-culled marks, bits 4 (N) and 8 (P)) */
+    DC_V_A_NC_NEG, DC_V_A_NC_POS, DC_V_A_NC_AREA_NEG, DC_V_A_NC_AREA_POS,
+    DC_V_A_CDEADSTRIPS_N, DC_V_A_CDEADSTRIPS_P, DC_V_A_CDEADCORNERS_N, DC_V_A_CDEADCORNERS_P, DC_V_A_CDEADPOS_N, DC_V_A_CDEADPOS_P,
     DC_COUNT
 };
 extern uint32_t dc_n[DC_COUNT];
