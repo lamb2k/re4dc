@@ -467,6 +467,12 @@ static void diag_inputs()
     f(CamSmth.param.at.x), f(CamSmth.param.at.y), f(CamSmth.param.at.z);
     i((uint32_t) CamCtrl.r0), i((uint32_t) CamCtrl.r1);
     eng_cam_diag("qs", w, n);
+    n = 0;   // the game's state words the player's move reads (Status_flg, Debug_flg, Stop_flg) and Leon's stat
+    for (int k = 0; k < 4; k++) i(pG->Status_flg[k]);
+    for (int k = 0; k < 4; k++) i(pG->Debug_flg[k]);
+    i(pG->Stop_flg);
+    i(pPL ? pPL->stat : 0);
+    eng_cam_diag("gf", w, n);
 }
 
 // The record as a trace line (trace runs only): eye, target, roll (radians), fov (degrees) as bit patterns and the

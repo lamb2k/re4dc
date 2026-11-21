@@ -78,6 +78,11 @@ static void room_init()
     e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
 }
 
+// Lab arm CAMEVERY (boot file; the camera check's control, lane eng-e1m): after Leon's move the shoulder camera is handed
+// his matrix every tick, as the PC reference did before its routine bytes were swapped (it read Leon idle and not moved
+// as moving). The game hands it over only when he moved (player.cpp move); the camera check must fail with this arm.
+static int cam_every;
+
 // gameMainLoop, the hosted subset in its order (game.cpp:798).
 static void game_tick(E1Timing& tm)
 {
@@ -113,6 +118,7 @@ static void game_tick(E1Timing& tm)
         uint64_t t = now_us();
         pPL->move();
         tm.player_us = now_us() - t;
+        if (cam_every) CamCtrl.m_QuasiFPS.setPlayerLocation(pPL->mat, pPL->pFloor_norm);   // CAMEVERY (control)
     }
     BitOff(pG->Status_flg[2], 0x8000000);
     e1_stamp(2);
@@ -147,6 +153,14 @@ int main()
     e1_globals_init();
     e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
+    {
+        file_t f = fs_open("/cd/CAMEVERY", O_RDONLY);
+        if (f >= 0) {
+            fs_close(f);
+            cam_every = 1;
+            e1_log("E1 CAMEVERY: the shoulder camera handed Leon's matrix every tick (lab arm, control)\n");
+        }
+    }
     // The hill scene holds 0.84 MB more room data (the partner's archive and motion keys): the renderer's pack goes
     // first, while the KOS heap is empty, so its whole-file staging read (7.8 MB; the textures then go to video
     // memory) fits before the room data is loaded.
