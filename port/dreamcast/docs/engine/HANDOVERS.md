@@ -2,6 +2,23 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-017 (2026-11-21): E1 third audit (Codex): not passed, list shorter; integrator rulings
+
+- **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1c\AUDIT-E1C.md` (audited `5f490e427`; the staged disc is built from it).
+- **Closed by the auditor:** the outcome reader's four gaps; the shot on the engine against the PC reference (no reference data reaches the engine); the camera bodies named in the second audit; the camera against the reference on village, hill and shot scene; the loosened comparison reversed; the staged disc and its boot; the five record controls; the three reference changes judged real in the source.
+- **Open, and the ruling on each:**
+  1. **Evaluation inside hosted decision bodies.** `CameraQuasiFPS::move` keeps its follow filter and transforms; `CameraPushObject::move` inverts and transforms. Ruling: the decision stays hosted (which site, which ratio, which door); the filter, the inverse and the transforms move into the camera service behind thin calls. The allowed list names both functions with a size ceiling so growth is seen.
+  2. **Camera motion tracks.** `HermiteInterpolation` and `CameraMotion` in the engine follow the original's key walk. Ruling: camera tracks are converted once, when the camera data is loaded, to the engine's key segments and evaluated by the engine's existing motion-key evaluator (the one actors use since eng-svc2). No history walk at run time. Conversion at load is loading work, not per-tick work.
+  3. **The motion writer** (`HermiteExport`): count and capacity are validated before anything is written; a control overruns it and is refused.
+  4. **HUD digits.** The renderer derives the three glyphs from the live magazine count when it draws them (drawing work, in the drawing row). Nothing is built per tick.
+  5. **The PUB line** counts only what has a producer: the camera copy control and light-view misses. A light-view miss fails the scene. Zero publication is otherwise established by reading producers and consumers at audit, not by a counter.
+  6. **Selector.** A timing scene needs: camera ticks checked equal to the scene's ticks; a complete numeric after-play memory line (a drawn scene may not print the headless sentinel); run kind and headless mode taken from the schedule, not from the image's own label; strict number parsing. Each with a failing input.
+  7. **Boot switches** are read once before play. No file lookup inside a picture; the in-play disc read count in the summary must be 0.
+  8. **Reference controls.** Each reference change keeps its old behaviour as a switchable build and a row that is run: unsplit em10 callers, the i386 floats-first alias, the old routine bytes. `camcheck.sh` counts the plays-right exit; `camengine.sh` fails when a requested row is skipped or the window is short.
+  9. **Re-derive on the fixed reference** before citing: the hill's 729 records (Leon and Ashley), the eight float-library fixtures. Stills, visibility counts and Flycast draw figures taken before the near plane fix are retired; a corrected-view still sheet replaces the look evidence.
+- **After these two lanes:** rebuild and boot the disc, repeat the selector controls, and ask the auditor for a verdict on these nine items only. Step 3 (the fight and boss images' 114 and 57 service functions) does not start before the owner has seen E1 on the console.
+- **Open with the owner:** the HUD look and the near plane look (two still sheets); the yes for the WSL disk compaction; a date for the console evening.
+
 ## H-016 (2026-11-21): E1 second audit (Codex): not passed; integrator rulings on its list
 
 - **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1b\AUDIT-E1B.md` (audited `d13510243`; staged disc built from `00effae99`).
