@@ -146,7 +146,7 @@ The shot itself does not move: on both references Ganado 0x14 goes from 800 to 5
 it, and the reference built with and without it has identical code in all 98 objects (compared without debug info,
 which holds the build folder's path).
 
-`refctl.sh` has five new rows (17 rows in all, every one as it must):
+`refctl.sh` has five new rows (20 rows in all after lane eng-e2b's merge: its 15 and these 5, every one as it must):
 
 | Row | Must | Got |
 |---|---|---|
@@ -167,32 +167,48 @@ which holds the build folder's path).
 
 ## 7. Engine images: build and link check
 
-All four images link with the corrections, guards and settings (objects compiled from the commit's tree; `check_link.py`
-on each map; `evidence/part2/link/`):
+All four images link with the corrections, guards and settings. `check_link.py` on each map, against origin/engine
+ba541cdcf (lanes eng-e2a and eng-e2b merged), the same image from that commit beside this branch's merge (1eab51f7a):
 
-| Image | Original functions kept (allowed) before, after | SERVICE before (origin/engine 505c4da2d) | SERVICE after |
+| Image | Original functions kept (allowed) before, after | SERVICE before | SERVICE after |
 |---|---|---|---|
 | default | 384 (107,044 B), 384 (107,008 B) | 0 | 0 |
-| FIGHT=1 | 796 (354,712 B), 801 (355,544 B) | 73 (28,500 B) | 73 (28,500 B) |
+| FIGHT=1 | 802 (343,076 B), 807 (343,904 B) | 43 (13,128 B) | 43 (13,128 B) |
 | BOSS=1 | 473 (150,368 B), 479 (151,368 B) | 26 (5,936 B) | 26 (5,936 B) |
 | SENDABLE=1 | 384 (107,044 B), 384 (107,008 B) | 0 | 0 |
 
-Lane eng-e2a is merged: the baselines are 73 and 26, and they are not raised (before the merge, against 18e3a6f35: 114 and
-57, also unchanged). The added allowed functions are original code the corrections make reachable in already-allowed
-units. Maps and lists: `evidence/part2/link-merged/` (and `link/` for the pre-merge check).
+The counts are not raised (earlier merges: 73 and 26 against 505c4da2d; 114 and 57 against 18e3a6f35; also unchanged).
+The added allowed functions are original code the corrections make reachable in already-allowed units. The em10 split
+check (lane eng-e2b, run in the FIGHT build) passes with em10 built with the corrections (`-DRE4DC_GAME=1`, the
+prelude's `corrections.h`): "em10_split_check: PASS ...: no clone or inlined copy of em10's 40 service functions; 33
+symbols weak", as on the base. Lists and build logs: `evidence/part3/link/`.
 
 ## 8. Suites, and the engine on Flycast against the new reference
 
-Suites on the new reference (`build/hostref`, CORRECTIONS=1), after merging origin/engine 505c4da2d: `svc_controls.sh`
-79 rows, `camcheck.sh` 21, `refctl.sh` 17 (12 + the five above), `tools/plays_right/controls.sh` 18,
-`outcome_controls.py` 35, `aim_check.sh` (5 fixtures x 3 arms), `e2check.sh` 14 (lane eng-e2a's): every row as it must,
-exit 0 (`evidence/part2/suites-new2/`; the same suites before the merge: `suites-new/`). The fixture comparison old
-against new reference is the same after the merge (`cmp-corr2.md`). `camengine.sh` not run (section 11).
+Suites, after merging origin/engine ba541cdcf (lane eng-e2b: em10's service functions native, the em10 split check, the
+hit-voice reference fix): every suite run on the base (ba541cdcf alone) and on this branch's merge (1eab51f7a), each
+with its own reference build. Every row ends as it must on both, exit 0:
+
+| Suite | Rows base / merged | Rows that move (verdict unchanged unless said) |
+|---|---|---|
+| `svc_controls.sh` | 79 / 79 | 6: the five bell-ganado-hit rows (line queries 5,591 to 5,648 identical-compared; bone history 7,815 to 8,764 bone-ticks: the neighbours react after the hit) and the bell-ganado-kill squash control (queries 8,396 to 8,477), every one still as it must |
+| `camcheck.sh` | 21 / 21 | 0 |
+| `refctl.sh` | 15 / 20 | the five rows above are new; eng-e2b's hit-voice control moves (em10 boundary log 1,402 to 1,896 lines; still FAIL as it must, its outcome row still PASS) |
+| `tools/plays_right/controls.sh` | 18 / 18 | 0 |
+| `outcome_controls.py` | 35 / 35 | 1 (beyond output paths): "damage (second hit by weapon 0x14)" still FAIL as it must, its first position difference at tick 101 e=14 now 97.3 units (was 218.5) |
+| `aim_check.sh` | 15 / 15 | 1: shot-ganado's control arm (return and enemy differ 14 of 119 calls, was 7), still FAIL as it must |
+| `e2check.sh` (eng-e2a) | 15 / 15 | 4 fixture rows (bell-ganado-hit, -kill, -clear, shot-ganado): more boundary calls after the hit (e.g. bell-ganado-hit 3,410 to 3,415 lines), every one within bounds, PASS |
+| `e2bcheck.sh` (eng-e2b) | 17 / 17 | 5 (the same four fixtures and the shot exercise): more em10 boundary lines (bell-ganado-hit 1,402 to 1,896), every one identical, PASS |
+
+The fixtures' traces, base reference against the merged one (`evidence/part3/cmp-base-new.md`): the same six change as
+before, first at bell-ganado-hit / -kill / -clear tick 61 (Ganado 0x1e's routine bytes, one more behaviour draw) and
+shot-ganado tick 163 (Ganado 0x1f's routine, Leon's camera eye); the other twelve runs identical. Row diffs:
+`evidence/part3/rowdiff.md`, `rowdiff-e2.md`. `camengine.sh` not run (section 11).
 
 One Flycast test disc, run twice: from the commit e591c471a (before merging origin/engine, `runs/d1/`) and from the
 merged head 9e7e3d61d (`runs/d2/`), plain slot std1 by lease (`Dynarec.Enabled` and `Sh4Clock` not set in the slot's
 emu.cfg, the defaults; a function check, never a timing): LEON, HILL, FIGHT, SHOT, SHOTNP, SHOTDMG, SHOTLATE, HILLT.
-**8 of 8 scenes OK** under the selector on both. The judgements below are the same on both runs (figures from d2). Every scene's summary has
+**8 of 8 scenes OK** under the selector on both. Both runs predate lane eng-e2b's merge; the disc was not re-run after it. The judgements below are the same on both runs (figures from d2). Every scene's summary has
 `E1 GUARDS em_must_retry 0; uncounted em_ok_skip r10c_spawn_live r117_beam_null` and the quick weapon select stub
 (`calls=1`).
 
@@ -243,6 +259,7 @@ image before and after, the suites' result tables on the new reference, the fixt
 - Nothing ran on a console; the Flycast runs are function runs in a plain slot (no timing claim).
 - `camengine.sh` was not run (it needs LEONT and HILLT on one disc; the disc held eight scenes).
 - The uncounted guards (EM_OK skip, r10c, r117) print "uncounted"; r10c and r117 are not hosted yet.
+- The Flycast disc was not re-run after lane eng-e2b's merge (the PC suites were).
 - No other E1 scene than BOSS exercises a counted guard path; FIGHT, LEON, HILL report 0 because nothing refuses.
 - The table's "belongs to an engine service" and "not needed" rows outside the hosted units were ruled by unit and
   makefile comment, not site by site.
