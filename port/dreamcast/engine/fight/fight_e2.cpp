@@ -74,6 +74,11 @@ void e2_managers_room_init()
     EmMgr.arrayAlloc(64);
     ObjMgr.roomInit();
     ObjMgr.arrayAlloc(64);
+    // lane eng-e2a item 2: the damage volumes' table (services/volumes/dmg_vol.cpp), 20 records as game.cpp and the PC
+    // reference make it; ticked after the camera (fight_trace.cpp e2_after_tick). Before, the image had no table: every
+    // registration was refused and no Ganado ever stood in another's attack zone (kind 3), as the reference's do.
+    DmgMgr.roomInit();
+    DmgMgr.arrayAlloc(20);
 }
 
 // ---- the Ganado module (read.cpp EmReadSearch, engine form): em/em15 with its motion keys in place ----
