@@ -30,6 +30,8 @@
 #include "emrack.h"
 #include "math_sub.h"
 #include "dmg.h"
+#include "area.h"
+#include "geometry.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -40,6 +42,7 @@ int svc_col_depth(void);
 int svc4_depth(void) __attribute__((weak));
 extern int emhit_control __attribute__((weak));
 extern int dmg_control __attribute__((weak));
+extern int area_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -207,6 +210,37 @@ W(int, _ZN7cDmgMgr3setEiiP3Vecff, (cDmgMgr* m, int kind, int time, Vec* pos, f32
 W(int, _ZN7cDmgMgr3setEiiP3Vecf, (cDmgMgr* m, int kind, int time, Vec* pt, f32 h), (m, kind, time, pt, h),
   { P(g_f, " DQ %d %d", kind, time); for (int k = 0; k < 4; k++) pv(&pt[k]); len(h); }, { P(g_f, " %d", r); dmg_table(m); })
 WV(_ZN7cDmgMgr4moveEv, (cDmgMgr* m), (m), { P(g_f, " DM"); }, { dmg_table(m); })
+
+// ---- the scenario areas (area.cpp; native in services/volumes/area_vol.cpp) ----
+namespace {
+void area_rec(const AreaData* a)
+{
+    P(g_f, " t%d b%d", a->type, a->Be_flag);
+    const f32* w = (const f32*) &a->u;
+    for (int i = 0; i < 11; i++) P(g_f, " R%.9g", (double) w[i]);
+}
+}   // namespace
+W(int, _Z12AreaHitCheckPvP3Vec, (void* a, Vec* p), (a, p), { P(g_f, " AH t%d", ((AreaData*) a)->type); pv(p); }, { P(g_f, " %d", r); })
+W(int, areaHitCheck_xz4, (AreaXZ4* q, Vec* p), (q, p), { P(g_f, " AQ"); pv(p); }, { P(g_f, " %d", r); })
+W(int, areaHitCheck_Cylinder, (AreaCylinder* c, Vec* p), (c, p), { P(g_f, " AC"); pv(p); }, { P(g_f, " %d", r); })
+namespace {
+struct { bool on; Vec p, face; f32 margin, angle; } g_cn;   // the view-cone question asked inside the logged call
+}
+W(int, AreaViewCheck, (AreaData* a, GeoCone* c), (a, c), { P(g_f, " AV t%d", a->type); g_cn.on = false; },
+  { P(g_f, " %d", r); if (g_cn.on) { P(g_f, " cone"); pv(&g_cn.p); pv(&g_cn.face); len(g_cn.margin); ang(g_cn.angle); } })
+WV(AreaGetCenterPos, (Vec* out, AreaData* a), (out, a), { P(g_f, " AG t%d", a->type); }, { pv(out); })
+WV(AreaGetInsidePos, (Vec* out, AreaData* a), (out, a), { P(g_f, " AI t%d", a->type); }, { pv(out); })
+WV(AreaDataInit, (AreaData* a, Vec* pos, u8 type, f32 size, f32 h), (a, pos, type, size, h),
+   { P(g_f, " AD %d", type); pv(pos); len(size); len(h); }, { area_rec(a); })
+// The view-cone test (geometry.cpp) is not hosted in the fight image (its generated stub answers 0) nor in the PC
+// reference: this stand-in answers the same 0 in both builds and logs what it was asked (the trigger's point, look
+// direction, margin and facing limit), so the native AreaViewCheck's question is compared.
+extern "C" int collision_point_cone_rev_play_face(Vec* p, GeoCone* cone, Vec* face, f32 margin, f32 angle)
+{
+    (void) cone;
+    g_cn.on = true, g_cn.p = *p, g_cn.face = *face, g_cn.margin = margin, g_cn.angle = angle;
+    return 0;
+}
 
 // Effect starts: logged when made inside an e2 call (the blood placed at a hit), as their own line.
 extern "C" void __real_EstSet(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g, void* h);
@@ -404,6 +438,10 @@ extern "C" void e2_ready()
         const char* c = svc_env("RE4_SVC_CONTROL");
         if (c && !__builtin_strcmp(c, "dmgwide")) dmg_control = 1;
     }
+    if (&area_control) {   // lane eng-e2a item 3: every cylinder area 10% wider, every area's band 100 higher
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "areawide")) area_control = 1;
+    }
     const char* e = svc_env("RE4_SVC_EXERCISE");
     g_ex = e && !__builtin_strcmp(e, "e2geom") ? 1 : 0;
 }
@@ -460,6 +498,35 @@ extern "C" void e2_tick(unsigned t)
                     DmgMgr.hitCheck(&p, (i + j) & 1 ? &out : 0);
                 }
         }
+    }
+    // scenario areas: every 9th tick from 34 to 160, a square, a cylinder and an eye trigger made around Leon
+    // (AreaDataInit), the square's corners then moved into an irregular quad, an area of an unknown kind; each asked for
+    // its centre, three inside points and the view check, and a grid of 49 points tested against each
+    if (pPL && t >= 34 && t <= 160 && t % 9 == 7) {
+        P(g_f, "# e2geom areas %u\n", t);
+        AreaData a[4] = {};   // the unknown kind is left as it was: zero in both builds
+        Vec c = pPL->pos;
+        for (int k = 0; k < 4; k++) {
+            Vec at = {c.x + 400.0f * k - 600.0f, c.y + 20.0f * (f32) (t % 5), c.z + 250.0f};
+            AreaDataInit(&a[k], &at, k == 3 ? 7 : (u8) (k + 1), 1200.0f + 37.0f * (f32) (t % 7), 1500.0f);
+        }
+        for (int i = 0; i < 4; i++) a[0].u.xz4.p[i].x += srand1() * 250.0f, a[0].u.xz4.p[i].z += srand1() * 250.0f;
+        a[2].u.eye.ang_x = srand1() * 0.6f, a[2].u.eye.ang_y = srand1() * 3.1f, a[2].u.eye.open = (t % 2) ? 0.0f : 1.2f;
+        GeoCone cone = {{c.x, c.y + 1600.0f, c.z}, {0.0f, -0.6f, 0.8f}, 0.5f, 3000.0f, 0.0f};
+        for (int k = 0; k < 4; k++) {
+            Vec o;
+            AreaGetCenterPos(&o, &a[k]);
+            for (int n = 0; n < 3; n++) AreaGetInsidePos(&o, &a[k]);
+            AreaViewCheck(&a[k], &cone);
+            for (int i = -3; i <= 3; i++)
+                for (int j = -3; j <= 3; j++) {
+                    Vec p = {c.x + 230.0f * i - 300.0f, c.y + 330.0f * (i + j) - 150.0f, c.z + 210.0f * j + 250.0f};
+                    AreaHitCheck(&a[k], &p);
+                }
+        }
+        Vec p = {c.x - 650.0f, c.y + 10.0f, c.z + 300.0f};
+        areaHitCheck_xz4(&a[0].u.xz4, &p);
+        areaHitCheck_Cylinder(&a[1].u.cyl, &p);
     }
     if (pPL && t == 270) {
         P(g_f, "# e2geom blast %u\n", t);

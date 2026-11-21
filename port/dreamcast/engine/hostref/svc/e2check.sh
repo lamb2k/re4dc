@@ -3,7 +3,8 @@
 #
 #   RE4_TREE=<converted data tree> e2check.sh <out dir>
 #
-# re4ref odump (the original em_sub and dmg) and native (services/aim/em_hit.cpp, services/volumes/dmg_vol.cpp) run the
+# re4ref odump (the original em_sub, dmg and area) and native (services/aim/em_hit.cpp, services/volumes/dmg_vol.cpp,
+# services/volumes/area_vol.cpp) run the
 # same inputs, wind off, motion keys
 # decoded. Per row: e2_compare.py on the
 # boundary log e2.txt (svc/e2_dump.cpp: every call the behaviour makes to those entry points, integers and flags exact,
@@ -13,7 +14,7 @@
 # their definitions in double precision: a second opinion where the two differ, never a verdict).
 #   fixtures   bell-ganado, bell-ganado-hit, bell-ganado-kill, bell-ganado-clear, shot-ganado, aimfire-ganado: must PASS
 #   exercise   e2geom on bell-ganado and hill-ashley (the partner): every entry point on generated and planted inputs: must PASS
-#   controls   (native only, on the bell-ganado exercise) hitwide, dmposmid, sphereshort; dmgwide (item 2): must FAIL
+#   controls   (native only, on the bell-ganado exercise) hitwide, dmposmid, sphereshort; dmgwide (item 2); areawide (item 3): must FAIL
 # Exit 0 when every row ends as it must, 1 when one does not, 2 when a build or a run is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -72,7 +73,7 @@ for fx in bell-ganado hill-ashley; do
     python3 "$HERE/e2_exact.py" "$d/odump" "$d/native" --json "$d/exact.json" | sed 's/^/    exact: /'
 done
 d=$OUT/ex-bell-ganado
-for c in hitwide dmposmid sphereshort dmgwide; do
+for c in hitwide dmposmid sphereshort dmgwide areawide; do
     run "$d/ctl-$c" native bell-ganado $EX RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done

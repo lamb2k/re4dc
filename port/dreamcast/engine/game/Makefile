@@ -203,6 +203,16 @@ $(OUT)/h/game/dmg.o: $(ROOT)/src/game/dmg.cpp $(ENG)/host/e1_prelude.h $(DMGVOL_
 	rm -f $@.orig.o
 endif
 endif
+# Lane eng-e2a item 3: the scenario areas (services/volumes/area_vol.cpp) in the fight image, which no longer hosts
+# game/area at all (fight.mk). Control build only: AREA_ORIG=1 hosts game/area again (the link check must FAIL).
+ifeq ($(FIGHT),1)
+ifneq ($(AREA_ORIG),1)
+AREAVOL_OBJ := $(OUT)/n/area_vol.o
+endif
+endif
+$(OUT)/n/area_vol.o: $(SVC_DIR)/volumes/area_vol.cpp $(SVC_DIR)/camera/area_edge.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
 $(OUT)/n/dmg_vol.o: $(SVC_DIR)/volumes/dmg_vol.cpp $(SVC_DIR)/model/pool.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
@@ -283,6 +293,6 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
-$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
+$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(AREAVOL_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

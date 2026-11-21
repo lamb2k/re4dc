@@ -90,6 +90,9 @@ extern "C" struct EmHitCounters {
 // lane eng-e2a item 2: the damage volumes' counters (services/volumes/dmg_vol.cpp)
 extern "C" struct DmgCounters { unsigned sets_seen, tests, hits, ticks, expired, freed, logs, debug_draws; } dmg_cnt
     __attribute__((weak));   // weak: the control build DMG_ORIG=1 links dmg.cpp whole
+// lane eng-e2a item 3: the scenario areas' counters (services/volumes/area_vol.cpp; weak: the control build AREA_ORIG=1)
+extern "C" struct AreaCounters { unsigned hit_tests, hits, eye_tests, centres, inside_points, inits, bad_types; } area_cnt
+    __attribute__((weak));
 void e2_report()
 {
     e2_events_report();
@@ -103,6 +106,9 @@ void e2_report()
     if (&dmg_cnt) e1_log("E2 DMG table %u records, tests %u hits %u ticks %u expired %u freed %u pool-logs %u debug-draws %u\n",
            (unsigned) DmgMgr.nArray, dmg_cnt.tests, dmg_cnt.hits, dmg_cnt.ticks, dmg_cnt.expired, dmg_cnt.freed, dmg_cnt.logs,
            dmg_cnt.debug_draws);
+    if (&area_cnt) e1_log("E2 AREA hit-tests %u hits %u eye-tests %u centres %u inside-points %u inits %u bad-types %u\n",
+           area_cnt.hit_tests, area_cnt.hits, area_cnt.eye_tests, area_cnt.centres, area_cnt.inside_points, area_cnt.inits,
+           area_cnt.bad_types);
 }
 // lane eng-e2a item 2: the damage volumes' tick (services/volumes/dmg_vol.cpp cDmgMgr::move), after the camera as the
 // game's main loop and the PC reference (hostref replay.cpp) run it

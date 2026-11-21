@@ -89,6 +89,8 @@ SVC4_WRAP += _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVecto
 E2_WRAP := emLinePolyCrossCk emLineCubeCrossCk emLineCapsuleCrossCk emLineAtCk emSphereAtCk EmGetDmPos EmAtkHitCk2 	EmAtkHitSubCk2 EmAtkHitCk EmAtkLineHitCk EmRackCk CheckInWater EmCatchMotionMove EmYarareDisp EmDmBloodSet2 	EmPlBloodSet2 EmSubBloodSet PlBombHitCk GetWepTargetListBomb EstSet
 # and the damage volumes (dmg_vol.cpp): the point test, the two registrations (hosted in both builds) and the tick
 E2_WRAP += _ZN7cDmgMgr8hitCheckEP3VecS1_ _ZN7cDmgMgr3setEiiP3Vecff _ZN7cDmgMgr3setEiiP3Vecf _ZN7cDmgMgr4moveEv
+# and the scenario areas (area_vol.cpp)
+E2_WRAP += _Z12AreaHitCheckPvP3Vec areaHitCheck_xz4 areaHitCheck_Cylinder AreaViewCheck AreaGetCenterPos AreaGetInsidePos AreaDataInit
 SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP) $(E2_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := HermiteInterpolation _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
                MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
@@ -126,9 +128,11 @@ SVC4_SRCS += aim/em_hit.cpp
 # lane eng-e2a: the damage volumes (services/volumes/dmg_vol.cpp: the table on the engine pool, its tick and the point
 # tests; dmg is split below, its set / beginEvent stay the behaviour's, and the native file constructs DmgMgr itself)
 SVC4_SRCS += volumes/dmg_vol.cpp
+# lane eng-e2a item 3: the scenario areas (services/volumes/area_vol.cpp: every area query; area is a replaced unit)
+SVC4_SRCS += volumes/area_vol.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 # lane eng-e1j: cam_sys is camera maths throughout (the camera service has every function): a replaced unit
-SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion cam_sys motion pad $(SVC5_UNITS)
+SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion cam_sys motion pad $(SVC5_UNITS) area
 # SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's blend, smoothing, area
 # tests, probe, rail and data relocation, cam_qfps's frame, offsets and wall probe, cam_extra's attached camera;
 # svc4_split.txt names them): the same weak copy, and svc4_units.sh checks only the named functions
