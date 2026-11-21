@@ -2,6 +2,17 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-022 (2026-11-21): the rule documents follow H-019 to H-021; E1's milestone audit
+
+- **From:** the integrator. Authority: H-013; the owner asked "do we need to update agent.md etc?" and said "Fix it".
+- **Done:** `AGENTS.md`, the repository `CLAUDE.md`, `CODEX.md`, `ENGINE_PLAN.md` (version 3.1: a dated Amendments section, superseded sentences marked, none deleted) and `LANES.md` now carry the owner's directions of 2026-11-21 and the gate and audit rules of H-014 to H-021. Outside the repository: the workspace `CLAUDE.md`, `OPT-TRACK.md` and the four skills (re4dc-engine, re4dc-engine-lane, re4dc-engine-audit, re4dc-test-rig).
+- **Rulings made while doing it:**
+  1. The half-budget rule stays for uncalibrated figures (plain Flycast, the PC model before it is re-fitted). A calibrated strict-Flycast figure is judged on its worst case against the full row at the defensive clock.
+  2. Step 6 starts when chapter 1 holds the floor on the calibrated model; each enhancement is still the owner's to approve from stills or a clip.
+  3. "Behaviour code itself is not rewritten" is the default; a decision function goes native only where the model shows it hot, with the outcome check, and each case is ruled here.
+  4. A lane that changes a Flycast slot's settings keeps the original, restores it before hand-back, never touches a slot another lane uses, and logs `Dynarec.Enabled` and `Sh4Clock` with every number.
+- **E1's milestone audit** (replaces H-018's "on the console logs"): once the calibration exists (lane eng-cmp1) and the E1 scenes have calibrated figures, one Codex audit judges E1 on the code, the gates and the model. If it passes, E1 is "finished, modelled, not on console".
+
 ## H-021 (2026-11-21): the owner: no disc until the replatform is complete; model the console ourselves
 
 - **From:** the owner, in conversation. **To:** the integrator and lanes.
