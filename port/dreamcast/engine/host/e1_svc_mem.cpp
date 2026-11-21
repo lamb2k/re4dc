@@ -22,6 +22,7 @@
 #include "col_model.h"
 #include "global.h"
 #include "main.h"
+#include "svc_prof.h"
 
 static const uint32_t kPoolBytes = 256 * 1024;
 static uint8_t* carve_next;
@@ -76,9 +77,10 @@ static int cloth_stat = -1;
 #ifndef E2_BOSS
 #include "model.h"
 #include "../services/cloth/cloth.h"   // the native cloth service (an original cloth.h is on the include path)
+#include "../services/cloth/cloth_kernel.h"
 struct ClothStat { const cModel* m; u32 n, ticks; float r; float sum[64][3]; };
 static ClothStat cstat[8];
-void e1_cloth_stat_tick()
+static void cloth_stat_tick()
 {
     if (cloth_stat <= 0) return;
     for (u32 i = 0; i < cloth_chain_count() && i < 8; i++) {
@@ -113,13 +115,78 @@ static void cloth_stat_report()
                    (int) (1000 * s.sum[k][1] / s.ticks), (int) (1000 * s.sum[k][2] / s.ticks));
     }
 }
+static void cloth_count_report()
+{
+    const ClothCounters& c = cloth_cnt;
+    const ClothKCounters& k = cloth_k_cnt;
+    e1_log("E1 CLOTH chains %lu fallback %lu moves %lu links %lu volumes %lu resets %lu | kernel links %lu passes %lu normalize %lu "
+           "sqrt %lu acos %lu rotations %lu volume-tests %lu volume-hits %lu\n", (unsigned long) c.chains, (unsigned long) c.fallback,
+           (unsigned long) c.moves, (unsigned long) c.links, (unsigned long) c.at_volumes, (unsigned long) c.resets,
+           (unsigned long) k.links, (unsigned long) k.passes, (unsigned long) k.normalize, (unsigned long) k.sqrt,
+           (unsigned long) k.acos, (unsigned long) k.rotations, (unsigned long) k.vol_tests, (unsigned long) k.vol_hits);
+}
 #else
-void e1_cloth_stat_tick() {}
+static void cloth_stat_tick() {}
 static void cloth_stat_report() {}
+static void cloth_count_report() {}
 #endif
+
+// ---- the services row's phase account (lane eng-svcspd1; services/skeleton/svc_prof.h). Boot file SVCPROF: each
+// tick's exclusive time per phase (us, 16 bits) kept in the service region and printed after play (serial only),
+// outside the timed rows. SVCPROFCTL: the control, a 200 us busy wait a tick inside SP_PUBLISH. ----
+extern "C" unsigned long long svc_prof_clock(void) { return timer_ns_gettime64(); }
+static const char* const kSpName[SP_N] = {"rest", "sample", "matcalc", "world_pre", "world_post", "world_hokan", "world_entry", "ik",
+                                          "hokan", "blend", "blendtbl", "mailbox", "translate", "publish", "motion_rest",
+                                          "cloth_pre", "cloth_kernel", "cloth_post", "col_line", "col_floor", "col_sphere"};
+static const u32 kSpTicks = 1024;
+static uint16_t* sp_buf;   // [kSpTicks][SP_N]
+static u32 sp_ticks;
+static uint64_t sp_total[SP_N];
+static void svc_prof_tick()
+{
+    if (!svc_prof_on) return;
+    if (sp_ticks < kSpTicks && sp_buf)
+        for (u32 k = 0; k < SP_N; k++) {
+            const u32 us = (svc_prof_ns[k] + 500) / 1000;
+            sp_buf[sp_ticks * SP_N + k] = (uint16_t) (us > 65535 ? 65535 : us);
+        }
+    for (u32 k = 0; k < SP_N; k++) {
+        sp_total[k] += svc_prof_ns[k];
+        svc_prof_ns[k] = 0;
+    }
+    sp_ticks++;
+}
+static void svc_prof_report()
+{
+    if (!svc_prof_on) return;
+    printf("E1 SVCPROF ticks %lu control %lu us phases", (unsigned long) sp_ticks, (unsigned long) svc_prof_ctl_us);
+    for (u32 k = 0; k < SP_N; k++) printf(" %s", kSpName[k]);
+    printf("\n");
+    for (u32 k = 0; k < SP_N; k++)
+        printf("E1 SVCPROF total %s us %lu calls %lu\n", kSpName[k], (unsigned long) (sp_total[k] / 1000), (unsigned long) svc_prof_calls[k]);
+    for (u32 t = 0; t < sp_ticks && t < kSpTicks && sp_buf; t++) {
+        printf("SP %lu", (unsigned long) (t + 1));
+        for (u32 k = 0; k < SP_N; k++) printf(" %u", (unsigned) sp_buf[t * SP_N + k]);
+        printf("\n");
+    }
+}
+void e1_cloth_stat_tick()
+{
+    cloth_stat_tick();
+    svc_prof_tick();
+}
 void e1_svc_boot()
 {
-    file_t f = fs_open("/cd/SKELCHECK", O_RDONLY);
+    file_t f = fs_open("/cd/SVCPROF", O_RDONLY);
+    if (f >= 0) {
+        fs_close(f);
+        sp_buf = (uint16_t*) svc_pool_carve(kSpTicks * SP_N * 2);
+        svc_prof_on = sp_buf != 0;
+        e1_log("E1 SVCPROF: the services row's phase account (lab arm, %s)\n", svc_prof_on ? "on" : "no memory: off");
+    }
+    f = fs_open("/cd/SVCPROFCTL", O_RDONLY);
+    if (f >= 0) { fs_close(f); svc_prof_ctl_us = 200; e1_log("E1 SVCPROFCTL: 200 us a tick waited inside the palette phase (control)\n"); }
+    f = fs_open("/cd/SKELCHECK", O_RDONLY);
     if (f >= 0) { fs_close(f); skel_poison = 1; e1_log("E1 SVC check build: skel_poison 1\n"); }
     // PSEED (diagnostic arm): the presentation generator starts from 0x5A5A instead of 0: shows which fields depend on
     // presentation randomness alone (the behaviour's generator is untouched)
@@ -159,6 +226,8 @@ void e1_svc_room_ready()
 void e1_svc_report()
 {
     cloth_stat_report();
+    cloth_count_report();
+    svc_prof_report();
     u32 bytes = 0;
     for (u32 i = 0; i < skel_table_count(); i++) {
         const SkelTable* t = skel_table_at(i);
@@ -175,6 +244,13 @@ void e1_svc_report()
            (unsigned long) c.pull_bones, (unsigned long) c.serve_ancestors, (unsigned long) c.poison_bones, (unsigned long) c.lost_writes,
            (unsigned long) c.parent_mismatch, (unsigned long) c.palette, (unsigned long) c.samples, (unsigned long) c.mat_world,
            (unsigned long) c.mat_world_slow, (unsigned long) c.ik_chains);
+    // lane eng-svcspd1: the rest of the skeleton's work counters (the account's units)
+    e1_log("E1 SKEL2 local %lu xmtrx_loads %lu add_rot %lu hokan_bones %lu blend_bones %lu samp_int %lu samp_frac %lu samp_end %lu "
+           "mk_rows %lu mk_dec %lu mk_miss %lu mk_root_rows %lu mk_root_dec %lu mk_axes %lu hist_moves %lu\n",
+           (unsigned long) c.mat_local, (unsigned long) c.xmtrx_loads, (unsigned long) c.add_rot, (unsigned long) c.hokan_bones,
+           (unsigned long) c.blend_bones, (unsigned long) c.samp_int, (unsigned long) c.samp_frac, (unsigned long) c.samp_end,
+           (unsigned long) c.mk_rows, (unsigned long) c.mk_dec, (unsigned long) c.mk_miss, (unsigned long) c.mk_root_rows,
+           (unsigned long) c.mk_root_dec, (unsigned long) c.mk_axes, (unsigned long) c.hist_moves);
     e1_log("E1 COL bakes %lu late %lu line %lu sphere %lu nodes %lu tris_line %lu tris_sphere %lu\n", (unsigned long) col_cnt.bakes,
            (unsigned long) col_cnt.late_bakes, (unsigned long) col_cnt.line_queries, (unsigned long) col_cnt.sphere_queries,
            (unsigned long) col_cnt.nodes_tested, (unsigned long) col_cnt.tris_line, (unsigned long) col_cnt.tris_sphere);

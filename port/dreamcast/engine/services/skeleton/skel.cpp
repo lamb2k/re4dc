@@ -36,6 +36,7 @@
 #include "skel_xm.h"
 #include "skel_mk.h"
 #include "native_motion.h"
+#include "svc_prof.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
@@ -306,6 +307,7 @@ struct Scope {
     {
         skel_cnt.entries++;
         if (!t) return;
+        SvcProf pr(SP_MAILBOX);
         refresh_roots(t);
         for (u32 i = 0; i < t->nHanded; i++) {
             const u32 b = t->handed[i];
@@ -324,6 +326,7 @@ struct Scope {
     ~Scope()
     {
         if (!t || !mask) return;
+        SvcProf pr(SP_MAILBOX);
         for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], mask);
     }
 };
@@ -416,6 +419,7 @@ inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp Ro
 // partsMatCalc: l_mat = R(ang) T(pos) S(scale), copied to mat
 void mat_calc(SkelTable* t)
 {
+    SvcProf pr(SP_MATCALC);
     const u32 c = t->cap;
     f32* s = t->soa;
     for (u32 b = 0; b < t->n; b++) {
@@ -435,8 +439,9 @@ void mat_calc(SkelTable* t)
 
 // The world pass (cModel::partsWorldCalc): one pass in chain order; parent x local through XMTRX. XMTRX keeps the
 // last bone's world while the next bone is its child, so a parent -> child run loads nothing.
-void world_calc(SkelTable* t)
+void world_calc(SkelTable* t, int phase = SP_WORLD_ENTRY)
 {
+    SvcProf pr(phase);
     cModel* mdl = t->model;
     mdl->r_scale = mdl->scale;
     const u32 c = t->cap;
@@ -742,6 +747,7 @@ bool mk_sample(const MkBind* b, u32 i, f32 frame, f32 maxFrame, u32 flags, Vec* 
 // motion.cpp MotionMoveCore: the pose at the current sequence frame, into the table
 void move_core(SkelTable* t, MotionWork* w)
 {
+    SvcProf pr(SP_SAMPLE);
     cModel* m = t->model;
     AttachCamera* cam;
     u16* flipTbl = MOTION(m)->flip;
@@ -852,6 +858,7 @@ void hokan(SkelTable* t, MotionWork* w)
     Quaternion q0, q1, q2;
     Mtx m0, m1;
     f32 tt, u, s0, s1, s2, n0, n1, n2, sx, sz, sy;
+    SvcProf pr(SP_HOKAN);
 
     w->Hokan_cnt--;
     tt = (f32) (w->Hokan_frame - w->Hokan_cnt);
@@ -948,6 +955,7 @@ void hokan(SkelTable* t, MotionWork* w)
 // model.cpp cModel::matBlend on the table
 void mat_blend(SkelTable* t, f32 rate)
 {
+    SvcProf pr(SP_BLEND);
     const u32 c = t->cap;
     f32* s = t->soa;
     Mtx m;
@@ -1219,6 +1227,7 @@ void twist_apply(SkelTable* t, u32 q, int col, f32 ang, f32 rate)
 
 void inverse_kinematics(SkelTable* t)
 {
+    SvcProf pr(SP_IK);
     cModel* m = t->model;
     cEm* em = (cEm*) m;
     MotionWork* blend = MOTION(m)->blend;
@@ -1616,6 +1625,7 @@ extern "C" SkelTable* skel_table_at(u32 i) { return i < g_ntab ? g_tab[i] : 0; }
 // bone's world, the bind translation goes through it as a point. Once a tick, after the behaviour.
 extern "C" void skel_publish(SkelTable* t)
 {
+    SvcProf pr(SP_PUBLISH);
     if (skel_poison) {
         for (u32 b = 0; b < t->n; b++) {
             const u8 p = t->parent[b];
@@ -1664,6 +1674,12 @@ extern "C" void skel_publish(SkelTable* t)
 extern "C" void skel_publish_all(void)
 {
     for (u32 i = 0; i < g_ntab; i++) skel_publish(g_tab[i]);
+    if (svc_prof_ctl_us && svc_prof_clock) {   // the account's control: a known wait read as SP_PUBLISH
+        SvcProf pr(SP_PUBLISH);
+        const unsigned long long t0 = svc_prof_clock();
+        while (svc_prof_clock() - t0 < 1000ull * svc_prof_ctl_us) {
+        }
+    }
 }
 
 // =================================================================================================================
@@ -1740,7 +1756,7 @@ void cModel::partsWorldCalc()
     SkelTable* t = table_for(this);
     if (!t) return;
     Scope sc(t, SG_WORLD);
-    world_calc(t);
+    world_calc(t, SP_WORLD_ENTRY);
 }
 
 void cModel::matBlend(f32 rate)
@@ -1790,6 +1806,7 @@ void cModel::updateOldPos()
 
 void cModel::setPos(Vec* p)
 {
+    SvcProf pr(SP_TRANSLATE);
     Vec d;
     PSVECSubtract(p, &this->pos, &d);
     SkelTable* t = table_for(this);
@@ -1952,6 +1969,7 @@ void cModel::releasePartsList(int no)
 // motion.cpp -----------------------------------------------------------------------------------------------------
 extern "C" void PartsWorldPosCalc(cModel* m)
 {
+    SvcProf pr(SP_TRANSLATE);
     Vec d;
     PSVECSubtract(&m->pos, &MOTION(m)->Pos_world, &d);
     m->mat[0][3] += d.x;
@@ -2032,6 +2050,7 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
     AttachCamera* cam;
     int f;
     int i;
+    SvcProf pr(SP_MOTION_REST);
     SkelTable* t = table_for(m);
     Scope sc(t, SG_ALL);
 
@@ -2438,6 +2457,7 @@ extern "C" u16 MotionMove(cModel* m)
     static int new_add = 1;
     Vec spd, rot, spd2, rot2;
     f32 rate, inv;
+    SvcProf pr(SP_MOTION_REST);
     SkelTable* t = table_for(m);
     Scope sc(t, SG_LOCAL | SG_WORLD);
     MotionWork* W = MOTION(m);
@@ -2526,18 +2546,19 @@ extern "C" u16 MotionMove(cModel* m)
         PSMTXConcat(m->mat, tmp, tmp);
         memcpy(m->mat, tmp, sizeof(Mtx));
         m->r_scale = m->scale;
-        world_calc(t);
+        world_calc(t, SP_WORLD_PRE);
         if (!skel_control_no_ik) inverse_kinematics(t);
         memcpy(m->mat, save, sizeof(Mtx));
         m->r_scale = m->scale;
-        world_calc(t);
+        world_calc(t, SP_WORLD_POST);
     }
     if (W->Hokan_cnt != 0) {
         hokan(t, W);
         m->r_scale = m->scale;
-        world_calc(t);
+        world_calc(t, SP_WORLD_HOKAN);
     }
     if (W->blendTbl != 0) {
+        SvcProf pb(SP_BLENDTBL);
         int nb = *(s32*) W->blendTbl;
         u16* tb = W->blendTbl + 2;
         Mtx m0, m1, mq, inv2;
@@ -2608,6 +2629,7 @@ extern "C" void InverseKinematics(cModel* m, int flag)
 // (the collision unit's only write to the bones; it walked the parts records)
 void at_pos_calc(cModel* m, Vec* vec)
 {
+    SvcProf pr(SP_TRANSLATE);
     if (PSVECMag(vec) != 0.0f) {
         PSVECAdd(&m->pos, vec, &m->pos);
         SkelTable* t = table_for(m);

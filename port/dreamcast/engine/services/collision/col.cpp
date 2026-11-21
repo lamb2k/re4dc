@@ -14,6 +14,7 @@
 #include "global.h"
 #include "db_log.h"
 #include "math_sub.h"
+#include "svc_prof.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
@@ -661,6 +662,7 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
     Vec cur, la, lb, lcur, tmp;
     u32 pn = 0;
     int ret = 0;
+    SvcProfUnless pr(SP_COL_LINE, SP_COL_FLOOR);   // the account (svc_prof.h): a floor query's line is the floor's
     SEck = seCk;
     cur = *pos1;
     col_cnt.line_queries++;
@@ -700,6 +702,7 @@ int cSatMgr::hitCheck(Vec* pos0, Vec* pos1, Vec* hit, Vec* nrm, int flag, int ma
 int cSatMgr::polySphereCk(Vec* oldPos, Vec* pos, f32 r, int flag, Vec* nrm, int mask)
 {
     int ret = 0;
+    SvcProf pr(SP_COL_SPHERE);
     col_cnt.sphere_queries++;
     for (u32 i = 0; i < nArray; i++) {
         cSat* sat = (cSat*) ((u8*) pArray + size * i);

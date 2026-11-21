@@ -19,6 +19,7 @@
 #include "math_sub.h"
 #include "rnd.h"
 #include "db_log.h"
+#include "svc_prof.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" float sinf(float);
@@ -318,6 +319,7 @@ struct Step {
 };
 void step_begin(ClothChain* ch, Step& s)
 {
+    SvcProf pr(SP_CLOTH_PRE);
     PenCloth* c = ch->c;
     cModel* m = ch->m;
     SkelTable* t = ch->t;
@@ -346,6 +348,7 @@ void step_begin(ClothChain* ch, Step& s)
 // root's history): the records of those that are mailbox bones get them
 void step_end(ClothChain* ch, int wasReset)
 {
+    SvcProf pr(SP_CLOTH_POST);
     if (wasReset) {
         skel_leave(ch->t, 7);
         return;
@@ -357,6 +360,7 @@ void step_end(ClothChain* ch, int wasReset)
 f32 g_windAng[256];
 void kernel_step(ClothChain* ch, const Step& s, int variant, const Vec& move, f32 spdLen, const Vec& mpos)
 {
+    SvcProf pr(SP_CLOTH_KERNEL);
     PenCloth* c = ch->c;
     SkelTable* t = ch->t;
     const u32 cap = t->cap;
