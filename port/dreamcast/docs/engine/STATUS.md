@@ -41,7 +41,9 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 | eng-bake1 | PC only: every chapter 1 room through the engine's bake, failures fixed or listed, and a per-room census for the drawing redesign; owns `bake/` | lane/eng-bake1 | Claude Opus | E:\RE4DC-Lanes\eng-bake1 |
 | eng-snd1 | Sound in the engine (H-025.1): the AICA layer lifted, the original sound driver hosted under a waiver with a cost ceiling, the same sound requests as the reference, cost on the calibrated tier; owns a new `services/sound/` and `game/sound.mk` | lane/eng-snd1 | Claude Opus | E:\RE4DC-Lanes\eng-snd1 |
 | eng-load1 | Room-to-room loading through a door: a loading state, memory returned and reused, disc access only while loading, a DOOR scene judged against the reference; owns `core/loader.cpp`, a new `core/room_change*`, `core/disc_safe*` | lane/eng-load1 | Claude Opus | E:\RE4DC-Lanes\eng-load1 |
-| eng-fix1 | Reading and PC runs: the `RE4DC_` fixes inside `src/` that the release builds on and the engine builds off (148 by the salvage count), classified, with the set to switch on and what it changes on the fixtures. No build change | lane/eng-fix1 | Claude Opus | E:\RE4DC-Lanes\eng-fix1 |
+| eng-fix1 | Corrections, game settings and guards (H-026): the released game's corrections of the original code built into the engine and the PC reference together, the owner's game settings in one file (quick weapon select on), three guards counted and expected at 0; no "switches" | lane/eng-fix1 | Claude Opus | E:\RE4DC-Lanes\eng-fix1 |
+| eng-e2b | The Ganado's own 40 service functions and the rest of the fight image, to 0; the knock-down seen on the engine against the reference; continues eng-e2a (branched from its head); owns the FIGHT sections of `game/` and em10's units | lane/eng-e2b | Claude Opus | E:\RE4DC-Lanes\eng-e2b |
+| eng-e2c | The boss image's remaining 26 service functions, to 0 (em2b, obj20, r119, two destructors); owns the BOSS sections of `game/` and the boss's units | lane/eng-e2c | Claude Opus | E:\RE4DC-Lanes\eng-e2c |
 | eng-int | The integration lane (H-024): gates each handed-back lane to `GATE.md` and is the only one that merges into `engine` | - | Claude Opus | E:\RE4DC-Lanes\eng-int |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (fded11182, resolved with eng-e2: draw order Ganados, Leon, Ashley; per-model palette check; per-character light records; FIGHT=1 keeps cloth stubs). The fight image now follows the aim-sway ruling, so its trace differs from eng-e2's run from tick 13 (identical for 900 ticks with AIMSWAY_PRESENT=1). Look calls open: Leon's chapter-2 body browner, Ashley's hair opaque, hill props and handgun not drawn.
@@ -106,7 +108,7 @@ Merged 11-21, finished, unaudited: eng-salv1 (the old port inventoried for the r
 
 ## Waiting on the owner
 
-- Look, when the owner chooses to look (still sheets, no disc): the HUD (`E:\RE4DC-Lanes\eng-e1i\ev\hud\hud-sheet.jpg`), the near plane fix (`E:\RE4DC-Lanes\eng-e1l\ev\cam\sheet-renderer.jpg`), the overall picture (`E:\RE4DC-Lanes\eng-e1o\ev\look\sheet-e1.jpg`), old port beside engine (`E:\RE4DC-Lanes\eng-cmp1\ev\stills\sheet-cmp1.jpg`).
-- How many code lanes at once (the rule is two; the integrator recommended three).
-- Asset source for step 6 (beyond the PS2 version); El Gigante's lighter PS2 body: yes or no.
-- Not asked for: a console evening or the SD card (H-021). Done 11-21: the WSL disk file compaction (H-023).
+- Look, when the owner chooses to look (still sheets, no disc): the HUD, the near plane fix, the overall picture, old port beside engine (`E:\RE4DC-Lanes\eng-cmp1\ev\stills\sheet-cmp1.jpg`); next: Dreamcast look treatments for one room and for Leon, one variable per sheet, with exact pixel differences and modelled cost (H-026.5).
+- The release line: a hotfix candidate found by lane eng-fix1 (Disc 2 builds module em1f's copy of em10 without the Ganado byte-order correction).
+- El Gigante's lighter PS2 body: yes or no.
+- Not asked for: a console evening or the SD card (H-021). Answered 11-21: the PS2 art may be reworked (H-026.5); quick weapon select stays (H-026.3); as many lanes as the machine carries (H-024); more emulator slots (H-026.7).

@@ -49,7 +49,7 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 - **Correct means it plays right and looks right.** Bit-exact results are not a goal.
 - **The player's test:** it plays like the GameCube version and runs as fast, at 30 fps (owner 2026-11-21: "People that have played the GameCube version shouldn't have to think about game play choices it should just run as fast.").
 - **Never changed:** behaviour (collision results, event order, game state, AI decisions), enemy cap 4, no GameCube assets.
-- **Known departures from the GameCube version** (a short list, kept short): the enemy cap of 4 (owner 2026-10-17; revisited when the model shows headroom, the owner's call); one picture of input delay from the fixed-field pacer.
+- **Known departures from the GameCube version** (a short list, kept short): the enemy cap of 4 (owner 2026-10-17; revisited when the model shows headroom, the owner's call); quick weapon select (owner 2026-11-21); one picture of input delay from the fixed-field pacer. The PS2 art may be reworked, retouched and repainted for this console (owner 2026-11-21); no GameCube assets.
 
 ## How the engine is built
 
