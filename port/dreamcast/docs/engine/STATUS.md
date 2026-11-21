@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-21):** plan version 3; technical decisions are the integrator's (H-013). **No console run until the replatform is complete (the owner, H-021):** nobody asks the owner for a console evening; milestones proceed, and speed is judged by a defensive model (the interpreter Flycast with `Sh4Clock` calibrated on the old port's console numbers, plus cost read from the code). A milestone on the model is "finished, modelled, not on console"; its console run is deferred, not waived. E1's code side has been through four audits (H-011, H-016, H-017, H-018). At most two lanes.
+**State (2026-11-21):** plan version 3.2 (`ENGINE_PLAN.md`, "The plan as of 2026-11-21": start there). The replatform: RE4 as a Dreamcast native port of the whole game. No console run until it is complete (H-021); speed is judged on the calibrated tier (the console-like Flycast build, dynarec on, `Sh4Clock` 70; a band, H-025.3). As many lanes as are not redundant and the machine carries, one integration lane (`eng-int`) that gates and merges (H-024). Technical decisions are the integrator's (H-013). A milestone on the model is "finished, modelled, not on console".
 
 ## Milestones
 
