@@ -14,7 +14,12 @@
 # stays off (render, platform and old-port hooks compile out).
 .DEFAULT_GOAL := all
 FIGHT_SRCS := em10/em10 em15/em15_set game/em_set game/em_sub game/dmg game/em_dm_val st1/r101 \
-	game/sce_com game/sce_at game/area game/game game/libgpu st/em_wrap
+	game/sce_com game/sce_at game/game game/libgpu st/em_wrap
+# lane eng-e2a item 3: the scenario areas are the engine's (services/volumes/area_vol.cpp, game/Makefile AREAVOL_OBJ);
+# game/area is not hosted (AREA_ORIG=1, a control build only, hosts it again)
+ifeq ($(AREA_ORIG),1)
+FIGHT_SRCS += game/area
+endif
 HOSTED_SRCS += $(FIGHT_SRCS)
 # route_ck: the native routes service (services/routes, lane eng-e1e), not the original unit
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
