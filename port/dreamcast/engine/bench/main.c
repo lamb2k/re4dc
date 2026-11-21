@@ -75,12 +75,15 @@ typedef struct { uint8_t scene,arm,novis,delay,hold,content[CS_COUNT]; uint16_t 
    control: must read +2 ms), K positions skinned twice. The boot file DRAWLAB runs DRAWLAB_SCHEDULE below (in place of
    SCHEDULE.TXT and the default). */
 #include "draw_cost.h"
-static const char lab_letters[]="SCQHNBLEDKXVG";
+static const char lab_letters[]="SCQHNBLEDKXVGZ";
 static const uint16_t lab_bits[]={DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN,DL_WS2,DL_LIGHT2,DL_EMIT2,DL_DELAY,DL_SKIN2,
-                                  DL_DIRECT,DL_COPYV2,DL_CLAMP};
+                                  DL_DIRECT,DL_COPYV2,DL_CLAMP,DL_CENSUS};
 #define DRAWLAB_SCHEDULE "c0 c0/S c0/C c0/Q c0/K c0/B c0/L c0/E c0/H c0/D c0 c0/N f0 f0/S f0/C f0/Q f0/K f0/B f0/L f0/E f0/H f0/N f0"
 /* the options' schedule (boot file DRAWLAB2): eng-look's content steps at their lightest useful steps against today's
    defaults (L3 E2), character levels off (.L0: as the E1 images draw), and the option arms X, V, G (draw_cost.h) */
+/* the census and the look pairs (boot file DRAWLAB3, with STILLS40 for stills): census windows (counts only), then
+   today's defaults against each option that changes the picture, every window handing over the same 12 pictures */
+#define DRAWLAB3_SCHEDULE "c0/Z f0/Z c0 c0/G c0/X c0.W2 c0.W3 c0.L0 f0 f0/G f0/X f0.W2 f0.W3 f0.L0"
 #define DRAWLAB2_SCHEDULE "c0 c0.L0 c0.W2 c0.W3 c0.P3 c0.B3 c0/X c0/V c0/G c0 f0 f0.L0 f0.W2 f0.W3 f0.P3 f0.B3 f0/X f0/V f0/G f0"
 static Window schedule[WINDOWS];
 volatile uint32_t m1_content[CS_COUNT]=CONTENT_DEFAULT_INIT;
@@ -228,6 +231,9 @@ int main(void){
     perf_cntr_timer_disable();   /* PRFC0 is ours; the bench's clock is the TMU (timer_us_gettime64) */
     vblank_handler_add(on_vblank,NULL);
     int stills=exists("/cd/STILLS");
+    /* lane eng-draw1: STILLS40, pictures 1, 51, 101 ... 551 of every window (the same pictures in each window, for exact
+       pixel counts between a window and its base) */
+    const int stills50=exists("/cd/STILLS40");
     {   /* schedule */
         static char text[256];FILE* f=fopen("/cd/SCHEDULE.TXT","rb");unsigned n=0;
         if(f){n=fread(text,1,sizeof(text)-1,f);fclose(f);text[n]=0;}
@@ -235,6 +241,7 @@ int main(void){
         if(exists("/cd/DELAY5"))def=exists("/cd/FARM1")?"f0d c0d":"c0d f0d";
         if(exists("/cd/DRAWLAB")){def=DRAWLAB_SCHEDULE;n=0;printf("DRAWLAB: lane eng-draw1 lab schedule %s\n",def);}
         else if(exists("/cd/DRAWLAB2")){def=DRAWLAB2_SCHEDULE;n=0;printf("DRAWLAB2: lane eng-draw1 options schedule %s\n",def);}
+        else if(exists("/cd/DRAWLAB3")){def=DRAWLAB3_SCHEDULE;n=0;printf("DRAWLAB3: lane eng-draw1 census and look schedule %s\n",def);}
         m1_schedule_n=parse_schedule(n?text:def);
         if(!m1_schedule_n){   /* eng-look: refused, never replaced by the default */
             printf("SCHEDULE REFUSED at character %lu: %s\n",(unsigned long)m1_schedule_error,n?text:def);
@@ -292,7 +299,7 @@ int main(void){
             r->draw_us=end-now;r->wait_us=now-begin;r->ev0=(uint32_t)perf_cntr_count(PRFC0);r->ev1=(uint32_t)perf_cntr_count(PRFC1);
             r->ev1_id=ev1;r->vis=vs;r->fields=0;
             if(sw->hold && i==299){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<40000){}}
-            if(stills && i<300){
+            if((stills && i<300) || (stills50 && i%50==0)){
                 pvr_wait_render_done();vid_waitvbl();vid_waitvbl();
                 m1_state[4]=0xa5000000+2*(*(volatile uint32_t*)0xa05f8050&0x7ffffc);
                 m1_state[2]=scene*600+i+1;while(m1_state[3]!=m1_state[2])thd_pass();

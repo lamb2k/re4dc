@@ -23,22 +23,73 @@ static const char* const dc_phase_name[DC_PH]={"select","begin","sky","preworld"
 static const char* const dc_count_name[DC_COUNT]={"w_pieces","w_places","w_headers","w_staged","w_strips","w_corners",
     "w_clipstrips","w_cliptris","w_clipout","w_meshlets","w_selected","a_calls","a_parts","a_parts_bound","a_ws","a_pos",
     "a_nrm","a_nrmlights","a_lights","a_headers","a_strips","a_strips_out","a_corners","a_clipstrips","a_cliptris",
-    "a_clipout","h_rects"};
+    "a_clipout","h_rects",
+    "v_w_tris","v_w_off","v_w_nocull","v_w_neg","v_w_pos","v_w_area_nocull","v_w_area_neg","v_w_area_pos",
+    "v_w_deadstrips_n","v_w_deadstrips_p","v_w_deadcorners_n","v_w_deadcorners_p","v_w_deadvtx_n","v_w_deadvtx_p",
+    "v_w_clip_front","v_w_clip_behind","v_w_clip_cross","v_tr_area",
+    "v_a_tris","v_a_off","v_a_nocull","v_a_neg","v_a_pos","v_a_area_nocull","v_a_area_neg","v_a_area_pos",
+    "v_a_deadstrips_n","v_a_deadstrips_p","v_a_deadcorners_n","v_a_deadcorners_p","v_a_deadpos_n","v_a_deadpos_p",
+    "v_a_deadnrm_n","v_a_deadnrm_p","v_a_iw_neg","v_a_iw_pos","v_a_cullmode_cw","v_a_cullmode_ccw",
+    "v_w_cullmode_cw","v_w_cullmode_ccw"};
+_Static_assert(sizeof(dc_count_name)/sizeof(dc_count_name[0])==DC_COUNT,"one name a counter");
+/* ---- census (arm Z / DLV): measurement only ---- */
+static float dc_clip_area(float x0,float y0,float x1,float y1,float x2,float y2){
+    float px[12],py[12],qx[12],qy[12];unsigned n=3;
+    px[0]=x0;py[0]=y0;px[1]=x1;py[1]=y1;px[2]=x2;py[2]=y2;
+    for(unsigned e=0;e<4;e++){   /* Sutherland-Hodgman against x>=0, x<=640, y>=0, y<=480 */
+        unsigned m=0;
+        for(unsigned i=0;i<n;i++){
+            float ax=px[i],ay=py[i],bx=px[(i+1)%n],by=py[(i+1)%n];
+            float da=e==0?ax:e==1?640.f-ax:e==2?ay:480.f-ay,db=e==0?bx:e==1?640.f-bx:e==2?by:480.f-by;
+            if(da>=0){qx[m]=ax;qy[m]=ay;m++;}
+            if((da>=0)!=(db>=0)){float t=da/(da-db);qx[m]=ax+(bx-ax)*t;qy[m]=ay+(by-ay)*t;m++;}
+        }
+        n=m;for(unsigned i=0;i<n;i++){px[i]=qx[i];py[i]=qy[i];}
+        if(n<3)return 0;
+    }
+    float a=0;for(unsigned i=0;i<n;i++){unsigned j=(i+1)%n;a+=px[i]*py[j]-px[j]*py[i];}
+    return a<0?-.5f*a:.5f*a;
+}
+static int dc_offscreen(float x0,float y0,float x1,float y1,float x2,float y2){
+    return (x0<0&&x1<0&&x2<0)||(x0>640&&x1>640&&x2>640)||(y0<0&&y1<0&&y2<0)||(y0>480&&y1>480&&y2>480);
+}
+/* cull: the header's culling bits (0 none, 1 small, 2 CCW, 3 CW). The triangle is given in the strip's drawing order
+   (odd triangles already swapped). kept: bit 1 if kept when the negative-area sign is the culled one, bit 2 when the
+   positive one is. */
+void dc_census_tri(unsigned b,float x0,float y0,float z0,float x1,float y1,float z1,float x2,float y2,float z2,
+                   unsigned cull,unsigned* kept){
+    *kept=0;dc_n[b]++;
+    if(dc_offscreen(x0,y0,x1,y1,x2,y2)){dc_n[b+1]++;return;}
+    float s=(x1-x0)*(y2-y0)-(x2-x0)*(y1-y0),area=dc_clip_area(x0,y0,x1,y1,x2,y2);
+    if(b==DC_V_A_TRIS){
+        dc_n[cull==3?DC_V_A_CULLMODE_CW:cull==2?DC_V_A_CULLMODE_CCW:DC_V_A_NOCULL+0]+=cull>=2;
+        uint32_t iw=(uint32_t)((z0+z1+z2)*(16777216.f/3.f));dc_n[s<0?DC_V_A_IW_NEG:DC_V_A_IW_POS]+=iw;
+    }else dc_n[cull==3?DC_V_W_CULLMODE_CW:DC_V_W_CULLMODE_CCW]+=cull>=2;
+    if(cull<2){dc_n[b+2]++;dc_n[b+5]+=(uint32_t)area;*kept=3;return;}
+    if(s<0){dc_n[b+3]++;dc_n[b+6]+=(uint32_t)area;*kept=2;}   /* kept only if the positive sign is the culled one */
+    else{dc_n[b+4]++;dc_n[b+7]+=(uint32_t)area;*kept=1;}
+}
+void dc_census_tr(float x0,float y0,float x1,float y1,float x2,float y2){
+    if(!dc_offscreen(x0,y0,x1,y1,x2,y2))dc_n[DC_V_TR_AREA]+=(uint32_t)dc_clip_area(x0,y0,x1,y1,x2,y2);
+}
 static int dc_boot(const char* path){file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;fs_close(f);return 1;}
 /* E1 images: the boot sets, read once when the pack opens (before play) */
 void dc_lab_open(void){
     static int done;if(done)return;done=1;
     if(dc_boot("/cd/DLA"))dc_interleave=1;else if(dc_boot("/cd/DLB"))dc_interleave=2;else if(dc_boot("/cd/DLC"))dc_interleave=3;
-    static const char* const sets[3]={
+    else if(dc_boot("/cd/DLV"))dc_interleave=4;
+    static const char* const sets[4]={
         "picture % 6: 1 stage twice, 2 copy twice, 3 select twice, 4 HUD twice, 5 near plane not a number",
         "picture % 5: 1 weight sets twice, 2 normals lit twice, 3 actor emission twice, 4 2 ms delay in the world OP pass",
-        "picture % 4: 1 world without a stage (X), 2 world copy v2 (V), 3 world near clamp instead of clipping (G)"};
+        "picture % 4: 1 world without a stage (X), 2 world copy v2 (V), 3 world near clamp instead of clipping (G)",
+        "every picture: the census (counts of invisible work; never a timing run)"};
     if(dc_interleave)printf("DC LAB set %c: %s\n",'A'+dc_interleave-1,sets[dc_interleave-1]);
 }
 static uint32_t dc_arms_for(unsigned idx){
     if(dc_interleave==1){static const uint32_t a[6]={0,DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN};return a[idx%6];}
     if(dc_interleave==2){static const uint32_t b[5]={0,DL_WS2,DL_LIGHT2,DL_EMIT2,DL_DELAY};return b[idx%5];}
     if(dc_interleave==3){static const uint32_t c[4]={0,DL_DIRECT,DL_COPYV2,DL_CLAMP};return c[idx%4];}
+    if(dc_interleave==4)return DL_CENSUS;
     return dc_lab_bench;
 }
 void dc_window_begin(void){

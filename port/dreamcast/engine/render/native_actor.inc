@@ -282,12 +282,20 @@ static Corner clip_corner(const IndexCorner* c){
 }
 extern pvr_vertex_t* m1_emit_actor_strip(pvr_vertex_t* sq,const IndexCorner* corners,unsigned n,const pvr_vertex_t* proj,const uint32_t* lit);
 static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts);
+static uint8_t dc_apos[ACTOR_POS_LIMIT],dc_anrm[ACTOR_POS_LIMIT];   /* census marks (lane eng-draw1) */
 /* lane eng-draw1: counted per part; lab arm DL_EMIT2 emits the part twice; arm N (near not a number) as before lane
    eng-e1l: no near outcode, no near clipping */
 static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
     dc_clip=DC_A_CLIPTRIS;
     if(!dc_mute){DC_ADD(DC_A_PARTS,1);DC_ADD(DC_A_PARTS_BOUND,state==2);DC_ADD(DC_A_POS,rp->pos_count);}
+    if(DC_ARM(DL_CENSUS)){memset(dc_apos+rp->pos_first,0,rp->pos_count);memset(dc_anrm+rp->nrm_first,0,rp->nrm_count);}
     sq=emit_part_once(sq,s,m,rp,state,DC_NEAR(near),emitted_parts);
+    if(DC_ARM(DL_CENSUS) && rp->src->role!=8){   /* census: positions skinned and normals lit that no kept triangle used */
+        unsigned pn=0,pp=0,nn=0,np=0;
+        for(unsigned i=rp->pos_first;i<(unsigned)rp->pos_first+rp->pos_count;i++){pn+=!(dc_apos[i]&1);pp+=!(dc_apos[i]&2);}
+        for(unsigned i=rp->nrm_first;i<(unsigned)rp->nrm_first+rp->nrm_count;i++){nn+=!(dc_anrm[i]&1);np+=!(dc_anrm[i]&2);}
+        dc_n[DC_V_A_DEADPOS_N]+=pn;dc_n[DC_V_A_DEADPOS_P]+=pp;dc_n[DC_V_A_DEADNRM_N]+=nn;dc_n[DC_V_A_DEADNRM_P]+=np;
+    }
     if(DC_ARM(DL_EMIT2)){unsigned again=0;dc_mute=1;sq=emit_part_once(sq,s,m,rp,state,near,&again);dc_mute=0;}
     return sq;
 }
@@ -311,6 +319,23 @@ static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const 
             const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
             advance(&sq);header=1;
+        }
+        if(DC_ARM(DL_CENSUS) && !dc_mute){   /* census (counts only) */
+            const unsigned cull=((const unsigned*)row(&s->assets.header,rp->src->hdr)+1)[1]>>27&3;unsigned any=0;
+            for(unsigned k=2;k<n;k++){
+                const IndexCorner *ca=v+(k&1?k-1:k-2),*cb=v+(k&1?k-2:k-1),*cc=v+k;
+                if(combined&32){any|=3;dc_apos[ca->position]|=3;dc_apos[cb->position]|=3;dc_apos[cc->position]|=3;
+                    dc_anrm[ca->normal]|=3;dc_anrm[cb->normal]|=3;dc_anrm[cc->normal]|=3;continue;}
+                const pvr_vertex_t *a=proj+ca->position,*b=proj+cb->position,*c=proj+cc->position;
+                if(rp->src->role==8){dc_census_tr(a->x,a->y,b->x,b->y,c->x,c->y);continue;}
+                unsigned kept;dc_census_tri(DC_V_A_TRIS,a->x,a->y,a->z,b->x,b->y,b->z,c->x,c->y,c->z,cull,&kept);
+                any|=kept;dc_apos[ca->position]|=kept;dc_apos[cb->position]|=kept;dc_apos[cc->position]|=kept;
+                dc_anrm[ca->normal]|=kept;dc_anrm[cb->normal]|=kept;dc_anrm[cc->normal]|=kept;
+            }
+            if(rp->src->role!=8){
+                if(!(any&1)){dc_n[DC_V_A_DEADSTRIPS_N]++;dc_n[DC_V_A_DEADCORNERS_N]+=n;}
+                if(!(any&2)){dc_n[DC_V_A_DEADSTRIPS_P]++;dc_n[DC_V_A_DEADCORNERS_P]+=n;}
+            }
         }
         if(!(combined&32)){sq=m1_emit_actor_strip(sq,v,n,proj,lit);corners+=n;}
         else{

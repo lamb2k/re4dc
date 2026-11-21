@@ -132,7 +132,28 @@ static __attribute__((noinline)) pvr_vertex_t* direct_strips(pvr_vertex_t* sq,co
     if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);DC_ADD(DC_W_STAGED,corners);}
     return sq;
 }
+/* lane eng-draw1 census (DL_CENSUS, counts only): each triangle of strips wholly in front, on the stage's screen
+   positions; dc_wmark: per stage slot, bit 1 used by a kept triangle under N, bit 2 under P */
+static unsigned dc_wcull,dc_wlist;static uint8_t dc_wmark[256];
+static void census_world(const uint8_t* s,const uint8_t* end){
+    while(s<end){
+        unsigned n=*s++,any=0;
+        for(unsigned k=2;k<n;k++){
+            unsigned i0=s[k&1?k-1:k-2],i1=s[k&1?k-2:k-1],i2=s[k];
+            const pvr_vertex_t *a=stage+i0,*b=stage+i1,*c=stage+i2;
+            if(dc_wlist==2){dc_census_tr(a->x,a->y,b->x,b->y,c->x,c->y);continue;}
+            unsigned kept;dc_census_tri(DC_V_W_TRIS,a->x,a->y,a->z,b->x,b->y,b->z,c->x,c->y,c->z,dc_wcull,&kept);
+            dc_wmark[i0]|=kept;dc_wmark[i1]|=kept;dc_wmark[i2]|=kept;any|=kept;
+        }
+        if(dc_wlist!=2){
+            if(!(any&1)){dc_n[DC_V_W_DEADSTRIPS_N]++;dc_n[DC_V_W_DEADCORNERS_N]+=n;}
+            if(!(any&2)){dc_n[DC_V_W_DEADSTRIPS_P]++;dc_n[DC_V_W_DEADCORNERS_P]+=n;}
+        }
+        s+=n;
+    }
+}
 static __attribute__((noinline)) pvr_vertex_t* copy_strips(pvr_vertex_t* sq,const uint8_t* s,const uint8_t* end){
+    if(DC_ARM(DL_CENSUS) && !dc_mute)census_world(s,end);
     if(DC_ARM(DL_COPYV2))return copy_strips_v2(sq,s,end);
     unsigned corners=0,strips=0;
     while(s<end){
@@ -157,6 +178,11 @@ static __attribute__((noinline)) pvr_vertex_t* clip_strips(pvr_vertex_t* sq,cons
         if(!any){sq=copy_strips(sq,s,s+1+n);s+=1+n;continue;}
         s++;
         if(!dc_mute){count_clipped++;count_corners+=n;DC_ADD(DC_W_CLIPSTRIPS,1);}   /* w_corners: copied strips only */
+        if(DC_ARM(DL_CENSUS) && !dc_mute)for(unsigned k=2;k<n;k++){   /* census: what the clipper is given */
+            unsigned b=stage_near[s[k-2]]+stage_near[s[k-1]]+stage_near[s[k]];
+            dc_n[b==0?DC_V_W_CLIP_FRONT:b==3?DC_V_W_CLIP_BEHIND:DC_V_W_CLIP_CROSS]++;
+            dc_wmark[s[k-2]]|=3;dc_wmark[s[k-1]]|=3;dc_wmark[s[k]]|=3;   /* their vertices count as used */
+        }
         if(DC_ARM(DL_CLAMP)){   /* lane eng-draw1, option arm G: no clipping; a strip wholly behind is dropped, the others
                                    drawn with each corner's w raised to the near plane (an approximation: its look is
                                    the question) */
@@ -201,6 +227,10 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
         else for(unsigned g=0;g<G;g++)if(sel>>g&1)stage_range(vertices,remap,color,range[2*g],range[2*g+1],uv,near,boundary);
     }
     dc_mute=0;
+    if(DC_ARM(DL_CENSUS)){   /* census: clear the staged slots' marks */
+        if(rt->full)memset(dc_wmark,0,rt->count);
+        else for(unsigned g=0;g<G;g++)if(sel>>g&1)memset(dc_wmark+range[2*g],0,range[2*g+1]);
+    }
     for(unsigned rep=0;rep<1u+!!DC_ARM(DL_COPY2);rep++){
         dc_mute=rep;
         if(!w->group_bytes){
@@ -216,6 +246,12 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
         }
     }
     dc_mute=0;
+    if(DC_ARM(DL_CENSUS) && dc_wlist!=2){   /* census: staged vertices no kept triangle used */
+        unsigned dn=0,dp=0;
+        if(rt->full){for(unsigned i=0;i<rt->count;i++){dn+=!(dc_wmark[i]&1);dp+=!(dc_wmark[i]&2);}}
+        else for(unsigned g=0;g<G;g++)if(sel>>g&1)for(unsigned i=range[2*g];i<(unsigned)range[2*g]+range[2*g+1];i++){dn+=!(dc_wmark[i]&1);dp+=!(dc_wmark[i]&2);}
+        dc_n[DC_V_W_DEADVTX_N]+=dn;dc_n[DC_V_W_DEADVTX_P]+=dp;
+    }
     return sq;
 }
 #include "content_world.inc"
@@ -283,6 +319,7 @@ static void load_place(const NativeWorld* w,unsigned place){
 }
 void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigned phase){
     dc_stamp(DS_W0A+2*(phase<3?phase:2));   /* lane eng-draw1 */
+    dc_wlist=phase;
     unsigned last_place=~0u,last_header=~0u,headers=0,places=0;
     float near=DC_NEAR(camera[18]/(camera[17]-1));
     pvr_vertex_t *sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
@@ -292,6 +329,7 @@ void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigne
             last_header=p->header;const unsigned* hdr=(const unsigned*)row(&s->header,last_header)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
             advance(&sq);headers++;
+            dc_wcull=hdr[1]>>27&3;   /* census: the header's culling bits (ISP/TSP word) */
         }
         if(last_place!=p->placement){last_place=p->placement;load_place(w,last_place);places++;}
         sq=native_piece(sq,w,p,near);

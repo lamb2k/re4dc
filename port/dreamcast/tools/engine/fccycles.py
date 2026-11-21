@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""fccycles.py <elf> <opcode list> <range> [<range>...] [--clock 70]: what the calibrated tier charges for a code path.
+"""fccycles.py <elf> <opcode list> <range> [<range>...] [--clock 70] [--section <name>]: what the calibrated tier charges for a code path.
 
 Lane eng-draw1. The calibrated tier (console-build Flycast, dynarec, [config] Sh4Clock 70) charges time by block, not by
 memory or cache: when the dynarec compiles a block it adds, per instruction, the opcode table's issue cycles unless the
@@ -78,11 +78,15 @@ def charge(table, ops, clock):
     return blocks
 
 
+SECTION = None
+
+
 def ops_from_elf(elf, ranges):
     ops = []
     for r in ranges:
         a, b = [int(x, 16) for x in r.split('-')]
-        txt = subprocess.run(['sh-elf-objdump', '-d', '--start-address=0x%x' % a, '--stop-address=0x%x' % b, elf],
+        sec = ['-j', SECTION] if SECTION else []   # --section: an object file whose sections all start at 0
+        txt = subprocess.run(['sh-elf-objdump', '-d'] + sec + ['--start-address=0x%x' % a, '--stop-address=0x%x' % b, elf],
                              capture_output=True, text=True).stdout
         for l in txt.splitlines():
             m = re.match(r'\s*([0-9a-f]+):\s+([0-9a-f]{2}) ([0-9a-f]{2})\s', l)
@@ -94,6 +98,8 @@ def main():
     clock = 70
     args = sys.argv[1:]
     if '--clock' in args: i = args.index('--clock'); clock = int(args[i + 1]); del args[i:i + 2]
+    global SECTION
+    if '--section' in args: i = args.index('--section'); SECTION = args[i + 1]; del args[i:i + 2]
     if args and args[0] == '--selftest':
         t = load_table(args[1])
         # add r1,r2 (EX) + mov.l @r3,r4 (LS): pair -> 1 issue + 2 mem; fschg alone: 1; four loads (LS never pairs with
