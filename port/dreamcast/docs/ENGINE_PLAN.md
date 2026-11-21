@@ -1,6 +1,79 @@
-# RE4 Dreamcast engine plan, version 3.1 (2026-11-20, amended 2026-11-21)
+# RE4 Dreamcast engine plan, version 3.2 (2026-11-20, amended 2026-11-21)
 
-Status: **approved by the owner on 2026-11-20** ("Ok update plan and get to work"), with "beyond the PS2 version" added as a goal and as step 6. Version 3 keeps version 2's budget, architecture and rules; its path is section 7, written after the retrospective ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). Version 3.1 adds the amendments below.
+Status: **approved by the owner on 2026-11-20** ("Ok update plan and get to work"), with "beyond the PS2 version" added as a goal and as step 6. Version 3 keeps version 2's budget, architecture and rules; its path is section 7, written after the retrospective ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). Version 3.1 adds the amendments below. Version 3.2 adds "The plan as of 2026-11-21", which the owner asked to have written down ("ok memoralize that plan and ensure the skill sare up to date").
+
+## The plan as of 2026-11-21 (version 3.2)
+
+Start here. This is the current plan in short; the hand-overs (`engine/HANDOVERS.md`, H-019 to H-026) hold the detail and the owner's exact words. Where this section and an older section below disagree, this section wins.
+
+### 1. What we are building
+
+- **The replatform:** RE4 as a Dreamcast native port of the whole game (the owner: "Remember re-platform for Dreamcast native port.").
+- **The player's test:** it plays like the GameCube version and runs as fast, at 30 pictures a second (the owner: "People that have played the GameCube version shouldn't have to think about game play choices it should just run as fast.").
+- **The look:** the owner: "i want the raw stenghts of the syustem to stand out on a ps3 3d asseet foundation with native dreamcast code" (read: a PS2 3D asset foundation). The PS2 version is the baseline for shapes ("ps2 was primarily to establish hthe baseline geometric shapes etc."); its art is free to be reworked ("sure the ps2 aart can be rewporedm, tetouched, reatpined etc.", read: reworked, retouched, repainted). No GameCube assets (H-026.5).
+- **Known departures from the GameCube version:** the enemy cap of 4; quick weapon select (the owner: "i want to keep quiock weapon switch"); one picture of input delay from the fixed-field pacer (H-026.3).
+
+### 2. How it is judged until the end
+
+- **No console disc until the replatform is complete** (H-021). A milestone's console run is deferred, not waived.
+- **The calibrated tier:** the console-like Flycast build with its dynarec on at `Sh4Clock` 70, fitted on the old port's console benchmark means (H-023). Label: MODELLED (console-build dynarec at 70 MHz, calibrated on the old port).
+- **It is a band** (H-025.3): the standard build fitted the same way reads the engine 3 to 10% kinder in pictures a second. Quote the 70 MHz figure as the pessimistic end and say the band.
+- **Worst picture against the budget row,** not the mean. With every modelled number, list what the model cannot see: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing. Plain Flycast is for function checks only.
+- **Status words:** "finished, unaudited"; after its audit and its model, "finished, modelled, not on console"; "done" only after the deferred console run.
+
+### 3. Where we are on that model
+
+Lane eng-cmp1's figures (`E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` section 10), handed back and not yet gated or merged. MODELLED (console-build dynarec at 70 MHz, calibrated on the old port); the band is 3 to 10% kinder for the engine.
+
+| Scene | Old port: pictures a second, work a picture (mean) | Engine: pictures a second, work a picture (mean / worst) | Engine drawing / services (row 14 / 9 ms) | Game speed, old port / engine |
+|---|---|---|---|---|
+| Village route | 15.6, 62.4 ms | 28.9, 34.2 / 44.8 ms | 27.0 / 6.9 | 93% / 96% |
+| Hill, Leon and Ashley | 11.3, 86.6 ms | 18.3, 55.0 / 63.1 ms | 36.8 / 17.8 | 76% / 61% |
+| Fight at the cross | 16.4, 54.9 ms | 24.2, 37.1 / 53.6 ms | 25.6 / 10.6 | 97% / 81% |
+
+- Neither side holds 30 a second in any of the three scenes. Drawing is about twice its row; services are over theirs on the hill and in the fight.
+- When a picture is late the engine slows the game; the old port drops pictures and keeps game time (hill: 61% against 76%).
+- The engine does not yet play sound, draw the burning pyre, barrels and other room objects, or handle items and enemy weapons; Leon's handgun is drawn in the first picture only. It runs three test scenes, not the game.
+
+### 4. The tracks
+
+States are from `engine/STATUS.md`. "Done when" is on the calibrated model.
+
+| Track | What | Done when | State |
+|---|---|---|---|
+| Drawing | The account first, phase by phase. Invisible work first, pixel-identical options before picture-changing ones. Then rooms prepared for the console: lit offline, meshes and distance levels built for it, clean transparency, every pack with a receipt (H-023.1, H-026.5, H-026.6) | Drawing inside its 14 ms row on the worst picture | Lane eng-draw1 running |
+| Services | The account by group, then fixes with play unchanged | Services inside the 9 ms row on the worst picture | Lane eng-svcspd1 running |
+| Game time | When work for a picture overruns, the next tick runs without drawing, within a bound (H-025.2) | Game speed held in the benchmark scenes | Queued, after the drawing design |
+| Native services | The fight image and the boss image to 0 original service functions | Link check 0 for FIGHT and BOSS | Lanes eng-e2a, eng-e2b (fight), eng-e2c (boss) |
+| Corrections, game settings, guards (H-026.2) | Built in now; then written into the engine line's copy of the original source, the old port's conditionals deleted by a pass proven by byte-identical objects | Corrections unconditional, settings in one file, guards counted at 0 | Lane eng-fix1 running; the source pass is its own lane after it |
+| Chapter 1's systems | From the salvage inventory (`engine/SALVAGE_20261121.md`): sound (the original driver hosted under the H-025.1 waiver with its cost ceiling), room-to-room loading and doors, the script scheduler, saves and the memory-card screen, the crash screen, route movies, items and the inventory (the 3 MB problem), old-game room recordings as a bake input | Each system working in the engine, judged by outcome against the reference | Lanes eng-snd1 and eng-load1 running; the scheduler, saves and crash screen, route movies, room recordings queued (H-025); items not started |
+| Rooms | Every chapter 1 room through the bake, with a census; then the rest of the game by chapter | Every chapter 1 room baked, failures fixed or listed | Lane eng-bake1 running |
+| The look | Leon's handgun; effects one at a time on a budget (gameplay feedback, then scene-defining, then ambient; the owner: "We should probably be selective with the effect layer if we are getting these gains without them."); Dreamcast look treatments for one room and for Leon chosen by the owner from still sheets (one variable per sheet, differing-pixel counts, modelled cost); enhancements that cost frame time (shadow volumes, bump mapping, anti-aliasing) only once the floor holds on the model | The owner's choices from stills | Lane eng-look1 running (the handgun, then the muzzle flash); the treatment sheets are next |
+| Milestones and audits | One independent audit per milestone. E1's waits for a drawing design that fits its row on the model (H-023.2, H-022). The console run of every milestone is deferred to the end | Audit passed and model held: "finished, modelled, not on console" | E1 audit waiting on the drawing design |
+
+### 5. How the work is run
+
+- **As many lanes as are not redundant and the machine carries** (the owner: "Run as many as possible with an integration lane as long as they aren't redundant"; H-024). Each lane owns named files and one question; the lanes table in `engine/STATUS.md` is the register.
+- **One integration lane** (`eng-int`) gates each handed-back lane to [engine/INTEGRATION_GATE.md](engine/INTEGRATION_GATE.md) with its gate script, and is the only one that merges into `engine`. A failed gate goes back to the integrator.
+- **One common brief** for every lane ([engine/COMMON_BRIEF.md](engine/COMMON_BRIEF.md)); each lane's own brief adds its files and its question.
+- **Emulator slots by lease** (a `LEASE.txt` held only while Flycast runs); `int1` is the integration lane's (H-026.7). Lanes are added only while the machine has room.
+- **Working habits from the F-Zero line** (H-026.6): invisible work before content cuts; one variable per arm; a differing-pixel count on every still pair; a receipt on every baked pack; hand back at about 250 tool calls; a speed claim needs its base re-run in the same session.
+- **The integrator** briefs, rules, reads each gate report and writes the hand-overs (`LANES.md`, the `re4dc-engine` skill).
+
+### 6. Sizes
+
+From the salvage inventory, in lane rounds (one briefed lane to its hand-back), low confidence: step 3 (fight and boss) 9 to 15 with the drawing redesign; step 4 (chapter 1 playable) 22 to 36; step 5 (the rest of the game) 30 to 55. Its three biggest unknowns:
+1. Whether the redesigned renderer's packs still need per-room recordings of the old game, and how far the old port can reach (moves step 4 by about 5 and step 5 by about 10).
+2. How many chapter 1 events have no PS2 movie and must run in real time.
+3. RAM: chapter 1's 29 room modules plus the sub screen's 3 MiB, inside a map sized from E1. A shortfall forces module overlays or a sub-screen redesign.
+
+### 7. Open with the owner
+
+From `engine/STATUS.md`:
+- Look, from still sheets when the owner chooses: the HUD, the near plane fix, the overall picture, old port beside engine; next, the Dreamcast look treatments for one room and for Leon.
+- The release line: a hotfix candidate (Disc 2 builds module em1f's copy of em10 without the Ganado byte-order correction).
+- El Gigante's lighter PS2 body: yes or no.
+- Not asked: a console evening or the SD card.
 
 Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC hardware model), **Flycast**, **emulator** (another project's emulator), or **estimate**. (amended 2026-11-21, see Amendments: the tiers are now those in D below.)
 
@@ -41,7 +114,7 @@ What they mean for this plan:
 
 **E. The old port is a measuring stick.** It may be measured as a baseline beside the engine: same scenes, same tier, same measure, with what each side draws and runs stated. It is never tuned, profiled or fixed, and nothing chases exact agreement between the two. Customer-facing speed claims need a console number or an explicitly labelled model figure, and the owner's OK before anything is posted.
 
-**F. Work that proceeds without the console** (H-020): native services for the fight and boss images; hosting of the systems chapter 1 needs (room loading, doors, items, sound, events); look items the owner approves from stills. At most two lanes; every merge through the integrator's gate.
+**F. Work that proceeds without the console** (H-020): native services for the fight and boss images; hosting of the systems chapter 1 needs (room loading, doors, items, sound, events); look items the owner approves from stills. At most two lanes; every merge through the integrator's gate. (The lane count is superseded by H-024: see the plan as of 2026-11-21 above.)
 
 **What this supersedes:**
 - Step 1 in section 7 (the console evening first): deferred to the end of the replatform, or whenever the owner asks.
@@ -151,6 +224,8 @@ The graphics chip is 20% busy at the cross. The CPU is the limit. So spend the c
 Results so far (lane eng-look, MODELLED, owner's choice 11-19 "Lets go with best options"): character levels step 3 and effect cap step 2 are engine defaults (about 0.5 ms together, no visible change). The world distance cap left holes in the farmhouse and needs a rework; flat cards and baked lighting gained nothing in the two bench scenes. Baked visibility is in, whole room in 256 KiB.
 
 ## 7. The path from here
+
+(see the plan as of 2026-11-21 above for the current order)
 
 One milestone at a time. Each ends with an audit and a console run, and only then is it done. (amended 2026-11-21, see Amendments)
 
@@ -272,6 +347,13 @@ The asset decision: the owner's rule is PS2 assets only, and the PS2 set is the 
 | 11-21 | "I don't want to look at a disc until we've coloelrter the replatforming - you can tell by the code where complexity is. You can also use a stricter emulator build for Flycast look that up so you can do Your own defense modeling." | Read as "completed" and "defensive": no console until the replatform is complete; the defensive model (Amendments C and D; H-021) |
 | 11-21 | "Remember re-platform for Dreamcast native port." | The work is the replatform; progress reported as how much of the game is re-platformed (Amendments A) |
 | 11-21 | "What makes the most sense? People that have played the GameCube version shouldn't have to think about game play choices it should just run as fast." | The player's test: plays like the GameCube version, runs as fast (Amendments B) |
+| 11-21 | "We should probably be selective with the effect layer if we are getting these gains without them." | Effects one at a time on a budget (H-023) |
+| 11-21 | "Run as many as possible with an integration lane as long as they aren't redundant" | Lanes by ownership, one integration lane (H-024) |
+| 11-21 | "i want to keep quiock weapon switch" | Quick weapon select stays, a game setting and a known departure (H-026.3) |
+| 11-21 | "sure the ps2 aart can be rewporedm, tetouched, reatpined etc."; "ps2 was primarily to establish hthe baseline geometric shapes etc." | The PS2 version sets the shapes; its art may be reworked; no GameCube assets (H-026.5) |
+| 11-21 | "i want the raw stenghts of the syustem to stand out on a ps3 3d asseet foundation with native dreamcast code" | Read as a PS2 3D asset foundation; the look built to show the Dreamcast's strengths (AGENTS.md) |
+| 11-21 | "more slots is ok adjust based on computer utilization" | Slot `int1` for the integration lane; lanes by machine load (H-026.7) |
+| 11-21 | "ok memoralize that plan and ensure the skill sare up to date" | The plan as of 2026-11-21 (version 3.2) |
 
 ## 12. Decisions needed from the owner
 
