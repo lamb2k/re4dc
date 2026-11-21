@@ -127,6 +127,11 @@ row() {   # row <name> <must> <ref dir> <test dir> <fixture> [cloth]: cloth = th
     if [ -f "$a/svc4.txt" ] && [ -f "$b/svc4.txt" ]; then
         local t4=""
         [ "$mode" = approx ] && t4="--tol 1.0"
+        # lane eng-e1j: the camera service is the engine's own code (same mathematics, not the original's operation
+        # order): its lines and the probes it makes differ from the reference's by a few float steps. The reference
+        # against native rows compare the boundary log within 0.01 (hashes of float state skipped); the camera itself is
+        # judged by svc/camcheck.py (camcheck rows below). Determinism and the controls stay bit for bit.
+        [ "$mode" = cloth ] || [ "$mode" = native ] && t4="--tol 0.01"
         s4=$(python3 "$HERE/svc4_compare.py" "$a" "$b" --json "$b/svc4.json" $t4) || sc=1
         s4="; $(echo "$s4" | sed 's/^\(PASS\|FAIL\)  //')"
     fi
@@ -166,11 +171,11 @@ print()" "$b/compare.json")
         row "native (cloth wind on: links by statistics)" PASS "$OUT/$fx/ref" "$OUT/$fx/native" "$fx" cloth
         run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref0" RE4_SVC_CLOTH_WIND=0
         run "$B/native/re4ref" "$fx" "$OUT/$fx/native0" RE4_SVC_CLOTH_WIND=0
-        row "native (cloth wind off: every bone)" PASS "$OUT/$fx/ref0" "$OUT/$fx/native0" "$fx"
+        row "native (cloth wind off: every bone)" PASS "$OUT/$fx/ref0" "$OUT/$fx/native0" "$fx" native
         run "$B/native/re4ref" "$fx" "$OUT/$fx/native2"
         row determinism PASS "$OUT/$fx/native" "$OUT/$fx/native2" "$fx"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/nopack" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK=none
-        row "native, no pack (every sample decoded from the keys)" PASS "$OUT/$fx/ref0" "$OUT/$fx/nopack" "$fx"
+        row "native, no pack (every sample decoded from the keys)" PASS "$OUT/$fx/ref0" "$OUT/$fx/nopack" "$fx" native
         run "$B/native/re4ref" "$fx" "$OUT/$fx/s16" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK="$MK16"
         row "native, 16-bit rows (tolerance; links by statistics)" PASS "$OUT/$fx/ref0" "$OUT/$fx/s16" "$fx" approx
     done
@@ -217,7 +222,7 @@ print()" "$b/compare.json")
         shift 2
         run "$B/odump/re4ref" "$fx" "$OUT/$fx/x-$ex-ref" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex
         run "$B/native/re4ref" "$fx" "$OUT/$fx/x-$ex" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex
-        row "exercise $ex: native" PASS "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex" "$fx"
+        row "exercise $ex: native" PASS "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex" "$fx" native
         for c in "$@"; do
             run "$B/native/re4ref" "$fx" "$OUT/$fx/x-$ex-c-$c" RE4_SVC_CLOTH_WIND=0 RE4_SVC_EXERCISE=$ex RE4_SVC_CONTROL=$c
             row "exercise $ex, control: $c" FAIL "$OUT/$fx/x-$ex-ref" "$OUT/$fx/x-$ex-c-$c" "$fx"

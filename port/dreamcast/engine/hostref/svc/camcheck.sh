@@ -1,0 +1,72 @@
+#!/bin/bash
+# camcheck.sh: the camera service against the original camera code (lane eng-e1j, ruling H-016.1; SERVICES.md 48).
+#
+#   RE4_TREE=<converted data tree> camcheck.sh <out dir>
+#
+# re4ref odump (the original camera units: camera, view, cam_sys, cam_ctrl, cam_qfps, cam_extra) and native (the
+# engine's camera service: services/camera) run the same inputs, wind off; svc/camcheck.py compares the frame's camera
+# of every tick (cam.txt: eye, target, roll, fov, and the controller's area, cut, routine and blend frames), within
+# 0.01 unit and 0.01 degree (stated before the first run; CAM_POS / CAM_DEG override). plays_right.py compares the
+# traces. Rows that must PASS: five fixtures (the village route, the hill, the bell fight, the square follow, the
+# door walk), determinism (bit for bit), the exercises camblend (cut blends) and camrail (rail fit, search and
+# evaluation: no fixture has either). Controls that must FAIL: smoothing off, cut blend off, rail parameter 0.25 on.
+# Exit 0 when every row is as it must, 1 when one is not, 2 when a run or a build is missing.
+set -u
+HERE=$(cd "$(dirname "$0")" && pwd)
+ROOT=$(cd "$HERE/../../../../.." && pwd)
+OUT=${1:?out dir}
+TREE=${RE4_TREE:?set RE4_TREE to the converted data tree (private game data)}
+B=${RE4_HOSTREF_BUILD:-$ROOT/build/hostref}
+PR=$ROOT/port/dreamcast/tools/plays_right
+CC=$HERE/camcheck.py
+for bin in odump native; do
+    [ -x "$B/$bin/re4ref" ] || { echo "camcheck: no $bin build at $B/$bin/re4ref (make $bin)"; exit 2; }
+done
+mkdir -p "$OUT"
+rm -f "$OUT/.wrong" "$OUT/.abort"
+TOL="--pos ${CAM_POS:-0.01} --deg ${CAM_DEG:-0.01}"
+run() {   # run <bin> <fixture> <dir> [env...]
+    local bin=$1 fx=$2 d=$3
+    shift 3
+    mkdir -p "$d"
+    env RE4_SVC_OUT="$d" RE4_SVC_CLOTH_WIND=0 "$@" "$B/$bin/re4ref" --tree "$TREE" --fixture "$PR/fixtures/$fx.txt" \
+        --out "$d/trace.txt" --log "$d/run.log" 2> "$d/err.txt" || { echo "camcheck: run failed $d" >&2; touch "$OUT/.abort"; }
+}
+row() {   # row <name> <must> <ref dir> <test dir> [exact]
+    local name=$1 must=$2 a=$3 b=$4 res got
+    if [ "${5:-}" = exact ]; then res=$(python3 "$CC" "$a" "$b" --pos 0 --deg 0); else res=$(python3 "$CC" "$a" "$b" $TOL --json "$b/cam.json"); fi
+    case $? in 0) got=PASS ;; 1) got=FAIL ;; *) got=ERROR; touch "$OUT/.abort" ;; esac
+    python3 "$PR/plays_right.py" "$a/trace.txt" "$b/trace.txt" --tolerances "$PR/tolerances.json" --quiet > /dev/null
+    local pr=$?
+    local ok="$got (as it must)"
+    [ "$got" = "$must" ] || { ok="$got (WRONG: must $must)"; touch "$OUT/.wrong"; }
+    echo "| $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | ${res#* } |"
+}
+{
+    echo "| Check | Must | Camera | Trace (plays_right) | Detail |"
+    echo "|---|---|---|---|---|"
+    for fx in e1-route hill-ashley bell-ganado square-follow door103-walk; do
+        run odump $fx "$OUT/$fx/ref"
+        run native $fx "$OUT/$fx/nat"
+        row "$fx: native camera against the original" PASS "$OUT/$fx/ref" "$OUT/$fx/nat"
+    done
+    run native e1-route "$OUT/e1-route/nat2"
+    row "e1-route: native against itself (determinism, exact)" PASS "$OUT/e1-route/nat" "$OUT/e1-route/nat2" exact
+    for ex in camblend camrail; do
+        run odump e1-route "$OUT/x-$ex/ref" RE4_SVC_EXERCISE=$ex
+        run native e1-route "$OUT/x-$ex/nat" RE4_SVC_EXERCISE=$ex
+        row "e1-route, exercise $ex: native against the original" PASS "$OUT/x-$ex/ref" "$OUT/x-$ex/nat"
+    done
+    run native e1-route "$OUT/c-camsmooth" RE4_SVC_CONTROL=camsmooth
+    row "control: smoothing off (e1-route)" FAIL "$OUT/e1-route/ref" "$OUT/c-camsmooth"
+    run native e1-route "$OUT/c-caminterp" RE4_SVC_CONTROL=caminterp RE4_SVC_EXERCISE=camblend
+    row "control: cut blend off (e1-route, exercise camblend)" FAIL "$OUT/x-camblend/ref" "$OUT/c-caminterp"
+    run native e1-route "$OUT/c-camrail" RE4_SVC_CONTROL=camrail RE4_SVC_EXERCISE=camrail
+    row "control: rail parameter 0.25 further (e1-route, exercise camrail)" FAIL "$OUT/x-camrail/ref" "$OUT/c-camrail"
+} | tee "$OUT/camcheck.md"
+status=0
+[ -f "$OUT/.wrong" ] && status=1
+[ -f "$OUT/.abort" ] && status=2
+rm -f "$OUT/.wrong" "$OUT/.abort"
+echo "camcheck: $([ $status -eq 0 ] && echo 'every row as it must' || echo "exit $status")"
+exit $status

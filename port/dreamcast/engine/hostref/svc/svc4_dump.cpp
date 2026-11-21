@@ -214,12 +214,75 @@ void exercise_rumble(unsigned t)
     VibSet(30, 0xC0, 0, 0x8001);
     VibSet(12, 0x40, 4, 0x0002);
 }
+// Lane eng-e1j: the camera check's exercises (the fixtures' play has no cut blend and no rail):
+//   camblend: ticks 100 and 300, a 30-tick cut blend from a camera 600 units above and 400 to the side of the current
+//             one (CamCtrl.interp.set, as a cut switch with a blend record sets it): the frame's camera blends back.
+//   camrail:  tick 10 a 6-key rail cut around Leon (uneven key spacing, roll and fov changing); every tick after, the
+//             rail fitted (Parametrize, tick 10 and every 50th), searched for the point nearest Leon's aim (searchRail)
+//             and evaluated (BSpline), the result written to cam.txt as an "R" line.
+CameraBSpline g_bs;
+Vec g_rail_pos[6], g_rail_at[6];
+f32 g_rail_roll[6], g_rail_fovy[6];
+CameraCut g_rail;
+void exercise_camblend(unsigned t)
+{
+    if (t != 100 && t != 300) return;
+    CameraParam p = CamCtrl.camera.param;
+    p.pos.y += 600.0f;
+    p.pos.x += 400.0f;
+    p.fovy += 10.0f;
+    CamCtrl.interp.set(30, &p);
+}
+void exercise_camrail(unsigned t)
+{
+    if (t < 10) return;
+    if (t == 10) {
+        static const f32 dx[6] = {-2400.0f, -1500.0f, -700.0f, 200.0f, 1300.0f, 2500.0f};
+        for (int k = 0; k < 6; k++) {
+            g_rail_pos[k] = pPL->pos;
+            g_rail_pos[k].x += dx[k];
+            g_rail_pos[k].y += 1800.0f + 150.0f * (k % 3);
+            g_rail_pos[k].z -= 2200.0f - 250.0f * k;
+            g_rail_at[k] = pPL->pos;
+            g_rail_at[k].x += 0.6f * dx[k];
+            g_rail_at[k].y += 900.0f + 40.0f * k;
+            g_rail_at[k].z += 100.0f * (k & 1);
+            g_rail_roll[k] = 0.03f * (k - 3);
+            g_rail_fovy[k] = 45.0f + 3.0f * k;
+        }
+        __builtin_memset(&g_rail, 0, sizeof g_rail);
+        g_rail.num = 6;
+        g_rail.pos = g_rail_pos;
+        g_rail.at = g_rail_at;
+        g_rail.roll = g_rail_roll;
+        g_rail.fovy = g_rail_fovy;
+    }
+    if (t == 10 || t % 50 == 0) Parametrize(&g_rail, &g_bs);
+    Vec aim = pPL->pos;
+    aim.y += 1000.0f;
+    aim.x += 30.0f * (f32) ((int) (t % 160) - 80);   // sweeps the aim along the rail
+    searchRail(&g_bs, &g_rail, &aim, 0);
+    Camera c;
+    BSpline(&g_bs, &c, 0);
+    if (g_cam)
+        P(g_cam, "R %u %.9g %.9g %.9g %.9g %.9g %.9g %.9g %.9g %d %d %d %d\n", t, c.param.pos.x, c.param.pos.y, c.param.pos.z,
+          c.param.at.x, c.param.at.y, c.param.at.z, c.param.roll, c.param.fovy, g_bs.seg, g_bs.k, g_bs.num, 0);
+}
 void exercise(unsigned t)
 {
     if (g_exercise < 0) {
         const char* e = svc_env("RE4_SVC_EXERCISE");
         g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2
-                   : e && !__builtin_strcmp(e, "rumble") ? 3 : 0;
+                   : e && !__builtin_strcmp(e, "rumble") ? 3 : e && !__builtin_strcmp(e, "camblend") ? 4
+                   : e && !__builtin_strcmp(e, "camrail") ? 5 : 0;
+    }
+    if (g_exercise == 4 || g_exercise == 5) {
+        if (t != g_ex_tick && pPL) {
+            g_ex_tick = t;
+            if (g_exercise == 4) exercise_camblend(t);
+            else exercise_camrail(t);
+        }
+        return;
     }
     if (g_exercise == 3) {
         if (t != g_ex_tick) {
@@ -465,13 +528,13 @@ void campar(const Camera* c) { pv(&c->param.pos); pv(&c->param.at); P(g_f, " %08
 }
 WV(_ZN4VIEW15initPerspectiveEffff, (VIEW* v, f32 fy, f32 a, f32 zn, f32 zf), (v, fy, a, zn, zf),
    { P(g_f, " VP %08x %08x %08x %08x", bits(fy), bits(a), bits(zn), bits(zf)); },
-   { P(g_f, " %08x %08x", words(&v->localFull, sizeof(ViewFrustum)), words(&v->sphere, sizeof(ViewSphere))); })
+   { P(g_f, " h%08x h%08x", words(&v->localFull, sizeof(ViewFrustum)), words(&v->sphere, sizeof(ViewSphere))); })
 // the frame's camera and the frustum it leaves (VIEW::move is not wrapped: in the native build CameraMove calls it
 // inside one object, where --wrap does not reach, so the two builds would log it differently)
 WT(CameraMove, (), (), {
     P(g_f, " CM");
     campar(&pG->Cam);
-    P(g_f, " %08x %08x %08x %08x %08x %08x", words(&pG->Cam, sizeof(Camera)), bits(View._fovy), bits(View._zfar),
+    P(g_f, " h%08x %08x %08x h%08x h%08x h%08x", words(&pG->Cam, sizeof(Camera)), bits(View._fovy), bits(View._zfar),
       words(&View.worldFull, sizeof(ViewFrustum)), words(&View.world, sizeof(ViewFrustum)), words(&View.sphereWorld, sizeof(ViewSphere)));
     // lane eng-e1j: the camera check's line: tick, eye, target, roll (radians), fov (degrees) as decimal floats, and the
     // controller's decisions (area, camera cut, routine, cut blend frames left)
@@ -483,19 +546,19 @@ WT(CameraMove, (), (), {
     }
 })
 WV(_ZN12CameraMotion4moveEv, (CameraMotion* c), (c), { P(g_f, " CT %08x", bits(c->m_info.frame)); },
-   { campar(c); P(g_f, " %d %u %08x", c->end, c->m_info.state, words(c->m_info.hist, sizeof(c->m_info.hist))); })
+   { campar(c); P(g_f, " %d %u h%08x", c->end, c->m_info.state, words(c->m_info.hist, sizeof(c->m_info.hist))); })
 W(int, HermiteInterpolation, (HermitePrm* prm, Vec* out, u16* hist), (prm, out, hist),
   { P(g_f, " HI %08x %08x %x %u %x,%x,%x", bits(prm->frame), bits(prm->maxFrame), prm->flags, prm->type, hist[0], hist[1], hist[2]); },
   { P(g_f, " %d", r); pv(out); P(g_f, " %x,%x,%x", hist[0], hist[1], hist[2]); })
-WV(CameraSetOrientationRoll, (Camera* c), (c), { P(g_f, " OR"); campar(c); }, { P(g_f, " %08x", words(c->mat, sizeof(Mtx))); })
-WV(CameraSetOrientationUp, (Camera* c), (c), { P(g_f, " OU"); campar(c); pv(&c->up); }, { P(g_f, " %08x", words(c->mat, sizeof(Mtx))); })
+WV(CameraSetOrientationRoll, (Camera* c), (c), { P(g_f, " OR"); campar(c); }, { P(g_f, " h%08x", words(c->mat, sizeof(Mtx))); })
+WV(CameraSetOrientationUp, (Camera* c), (c), { P(g_f, " OU"); campar(c); pv(&c->up); }, { P(g_f, " h%08x", words(c->mat, sizeof(Mtx))); })
 WV(_ZN22CameraAttachedToMotion4moveEv, (CameraAttachedToMotion* c), (c), { P(g_f, " CA"); }, { campar(c); })
 W(int, _ZN13CameraControl13HermiteExportEP9CameraCutPh, (CameraControl* cc, CameraCut* cut, u8* buf), (cc, cut, buf),
-  { P(g_f, " HX %d", cut->num); }, { P(g_f, " %d %08x", r, words(buf, r > 0 && r < 0x10000 ? r : 0)); })
+  { P(g_f, " HX %d", cut->num); }, { P(g_f, " %d h%08x", r, words(buf, r > 0 && r < 0x10000 ? r : 0)); })
 WV(_Z7BSplineP13CameraBSplineP6Camerai, (CameraBSpline* bs, Camera* c, int x), (bs, c, x), { P(g_f, " BS %08x", bits(bs->t)); },
    { campar(c); })
 WV(_Z11ParametrizeP9CameraCutP13CameraBSpline, (CameraCut* cut, CameraBSpline* bs), (cut, bs), { P(g_f, " PZ %d", cut->num); },
-   { P(g_f, " %d %d %08x", bs->num, bs->k, words(bs, sizeof(CameraBSpline))); })
+   { P(g_f, " %d %d h%08x", bs->num, bs->k, words(bs, sizeof(CameraBSpline))); })
 // ---- input (pad.cpp) ----
 namespace {
 u32 joyh()
