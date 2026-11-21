@@ -91,6 +91,9 @@ typedef struct {
 } scene_t;
 static scene_t g_sc[SEL_MAX];
 static unsigned g_n;
+/* lane eng-e1n: every entry of the schedule, also those past SEL_MAX; a longer schedule is refused (main), so the run
+   never reports "N of N scenes OK" for a plan it cut */
+static unsigned g_listed;
 static uint32_t g_plan_crc;
 
 static uint32_t journal_crc(void) {
@@ -132,12 +135,13 @@ static int read_plan(void) {
     fclose(f);
     text[n] = 0;
     g_plan_crc = cl_crc32(0, text, n);
-    for (char *l = text; l && *l && g_n < SEL_MAX;) {
+    static scene_t over;   /* lane eng-e1n: an entry past SEL_MAX, read only to be counted */
+    for (char *l = text; l && *l;) {
         char *e = strchr(l, '\n');
         if (e) *e = 0;
         char *r = strchr(l, '\r');
         if (r) *r = 0;
-        scene_t *s = &g_sc[g_n];
+        scene_t *s = g_n < SEL_MAX ? &g_sc[g_n] : &over;
         int used = 0;
         if (*l && *l != '#' &&
             sscanf(l, "%15s %47s %39s %u %23s %255s %n", s->name, s->title, s->prog, &s->deadline, s->kind, s->need, &used) >= 6) {
@@ -157,7 +161,8 @@ static int read_plan(void) {
             } else if (strcmp(s->kind, "bench")) {
                 snprintf(s->plan_err, sizeof(s->plan_err), "schedule: unknown kind %.20s", s->kind);
             }
-            ++g_n;
+            ++g_listed;
+            if (s != &over) ++g_n;
         }
         l = e ? e + 1 : NULL;
     }
@@ -477,11 +482,15 @@ static void collect(unsigned i) {
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
             else if (!strncmp(line, "E1 PUB camera ", 14)) {
-                /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records */
-                unsigned cam = 0, hud = 0, light = 0;
-                pub_seen = sscanf(line + 14, "%u hud %u light-compares %u", &cam, &hud, &light) == 3;
-                if ((!pub_seen || cam || hud || light) && !e->why[0])
-                    snprintf(e->why, sizeof(e->why), "conversions per tick: camera %u, hud %u, light compares %u", cam, hud, light);
+                /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records; lane eng-e1n
+                   (H-017.5): the line counts only what has a producer, the camera copy control and the light-view
+                   misses (a character drawn without its light view); either not 0, or the line incomplete, fails */
+                unsigned cam = 0, miss = 0;
+                /* strict numbers (eng-e1o's key_u): both fields present and all digits, or the line is incomplete */
+                pub_seen = key_u(line, "E1 PUB camera ", &cam) && key_u(line, " light-view-misses ", &miss);
+                if ((!pub_seen || cam || miss) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "%sPUB: camera copies %u, light-view misses %u",
+                             pub_seen ? "" : "incomplete ", cam, miss);
             }
             else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
                 /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */
@@ -660,6 +669,15 @@ int main(int argc, char **argv) {
     if (!planned) {
         line_at(0, RED, "RE4DC CONSOLE DISC: NO /cd/SCENES.TXT");
         printf("CDISC no plan\n");
+        for (;;) thd_sleep(1000);
+    }
+    if (g_listed > SEL_MAX) {   /* lane eng-e1n: more entries than the selector can run: refused, nothing run */
+        printf("CDISC START %s: %u scenes, plan crc %08x\n", LOADER_BUILD, g_listed, (unsigned)g_plan_crc);
+        printf("CDISC SCHEDULE REFUSED: schedule has %u scenes, the selector runs %u\n", g_listed, (unsigned)SEL_MAX);
+        printf("CDISC SUMMARY BEGIN %s run 00000000 boots 1\n", LOADER_BUILD);
+        printf("CDISC SUMMARY END FAILED: schedule has %u scenes, the selector runs %u\n", g_listed, (unsigned)SEL_MAX);
+        vid_clear(0, 0, 0);
+        line_at(0, RED, "FAILED: SCHEDULE HAS %u SCENES, SELECTOR RUNS %u", g_listed, (unsigned)SEL_MAX);
         for (;;) thd_sleep(1000);
     }
     const int jv = J->magic == SEL_MAGIC && J->crc == journal_crc() && J->plan_crc == g_plan_crc && J->n == g_n;

@@ -93,6 +93,15 @@ log() { echo "[cdisc $(date +%H:%M:%S)] $*"; }
 COMMIT=$(git -C "$REPO" rev-parse --verify "$REF^{commit}")
 SHORT=$(git -C "$REPO" rev-parse --short=9 "$COMMIT")
 log "checkout $REF = $COMMIT"
+# lane eng-e1n: the selector runs at most SEL_MAX scenes (engine/loader/selector.c, as REF has it); a longer list is
+# refused here, before anything is built (no disc). The selector refuses such a SCENES.TXT itself too.
+SELMAX=$(git -C "$REPO" show "$COMMIT:port/dreamcast/engine/loader/selector.c" | sed -n 's/^#define SEL_MAX \([0-9][0-9]*\).*/\1/p')
+NSCENES=$(echo "$SCENES" | tr ',' '\n' | grep -c .)
+[ -n "$SELMAX" ] || { echo "build_console_disc: SEL_MAX not found in $REF's engine/loader/selector.c" >&2; exit 1; }
+if [ "$NSCENES" -gt "$SELMAX" ]; then
+  echo "build_console_disc: --scenes names $NSCENES scenes, the selector runs at most $SELMAX (SEL_MAX): refused, no disc" >&2
+  exit 1
+fi
 git -C "$REPO" archive --format=tar "$COMMIT" | tar -x -C "$SRC"
 SZP=port/dreamcast/game/third_party/sh4zam
 SZC=$(git -C "$REPO" ls-tree "$COMMIT" "$SZP" | awk '{print $3}')
@@ -195,6 +204,20 @@ for c in "${CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfile ckind ctitle <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile" ;; esac
 done
+# Lane eng-e1n (H-017.4, H-017.5): the publication and HUD controls, each a scene of its own staged only when --scenes
+# names it. <name>|<folder>|<boot files>|<schedule kind>|<title>|<program>|<the folders behind it>. CPUBCP (the camera
+# record copied once a tick, Leon's scene) and CLMISS (every light view refused, the hill: Ashley is lit through hers)
+# must FAIL in the selector ("PUB: camera copies N" / "light-view misses N"); CHUDFZ (the HUD's ammo count frozen at
+# open, the fight with stills) is a function run the selector passes: tools/engine/hudcheck.py must FAIL on its stills.
+E1N_CONTROLS=(
+  "CPUBCP|CPB|PUBCOPY|e1:timing:drawn|Control:_camera_record_copied_each_tick|PROG/E1.BIN|E1L:E1"
+  "CLMISS|CLM|LIGHTMISS|e1:timing:drawn|Control:_light_view_refused|PROG/E1.BIN|E1H:E1"
+  "CHUDFZ|CHF|HUDFREEZE,STILLS|e1:function:drawn|Control:_HUD_count_frozen_(hudcheck)|PROG/FIGHT.BIN|FIGHT"
+)
+for c in "${E1N_CONTROLS[@]}"; do
+  IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
+  case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
+done
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
 case ",$SCENES," in *,LEONS,*) mkdir -p "$D/E1LS"; : > "$D/E1LS/STILLS" ;; esac
 case ",$SCENES," in *,HILLS,*) mkdir -p "$D/E1HS"; : > "$D/E1HS/STILLS" ;; esac
@@ -229,6 +252,17 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   for c in "${CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfile ckind ctitle <<< "$c"
     echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1L:E1 rows=compact"
+  done
+  # lane eng-e1n: the publication and HUD controls (above)
+  for c in "${E1N_CONTROLS[@]}"; do
+    IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
+    case $croot in
+      E1H:E1) cneed=E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/st1/r11d.arc ;;
+      E1L:E1) cneed=E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc ;;
+      *) cneed=FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;
+    esac
+    cneed=$cdir/${cfiles%%,*},$cneed
+    echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact"
   done
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"

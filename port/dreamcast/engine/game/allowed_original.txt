@@ -68,6 +68,19 @@ game/rnd *
 #   cam_qfps (the shoulder camera): its base frame, the offset blend, the wall probe and the offsets' correction
 !game/cam_qfps CameraQuasiFPS::calcBaseMatrix CameraQuasiFPS::calcOffset CameraQuasiFPS::hitCheck offsetCorrection
 !game/cam_qfps CameraQuasiFPS::offsetCorrection
+#   Lane eng-e1n (ruling H-017.1, third E1 audit section 1): the two bodies that still evaluated inside a decision.
+#   CameraQuasiFPS::move kept the shoulder camera's follow (the 0.6 lateral filter of the eye and target) and their
+#   transforms by the base frame: its body is now the camera service's (services/camera/cam_eval.cpp), which calls the
+#   unit's decisions (checkCameraType, checkFBLR, calcDepressionRatio) and the service's follow; nothing of the
+#   original's body stays linked (ceiling 0). CameraPushObject::move keeps its decisions (which door the camera swings
+#   round, to which side) and reaches its inverse, transforms and swing through the camera service (game/Makefile
+#   binds cam_extra's matrix calls to the service): its size today is the ceiling, and the unit may not reference the
+#   SDK's matrix functions those calls replaced.
+#   The decision statements CameraQuasiFPS::move's engine body re-expresses (ruling H-017.10): docs/engine/SERVICES.md
+#   48d.1, "decision statements re-expressed in engine code", line by line.
+=game/cam_qfps CameraQuasiFPS::move* 0
+=game/cam_extra CameraPushObject::move* 924
+-game/cam_extra PSMTXInverse PSMTXMultVec PSMTXMultVecSR PSMTXIdentity MtxRotAxisPosRad
 #   cam_extra: the binocular's ID widget and the focus blur are drawing (the ID system and a screen filter), not camera
 #   decisions (FIGHT=1 links them)
 !game/cam_extra IdBinocular::* FocusAnimation::* IDApplication::*

@@ -20,7 +20,7 @@ void e1_svc_publish();
 void e1_svc_boot();
 void e1_svc_tick_begin(unsigned t);
 extern int e1_game_seed_option;   // core/globals.cpp, boot option SEED (lane eng-e1e: the hill scene applies it too)
-void e1_hud_draw_tick();      // services/draw.cpp: the ammo digits (lane eng-e1i); the camera has no draw step (eng-e1j)
+// (lane eng-e1n: no HUD draw step either: the renderer makes the ammo digits from the live count when it draws them)
 extern "C" void e1_pool_control(void);   // services/model/mgr_pool.cpp: POOLCTL (lane eng-e1i)
 void e1_svc_room_ready();
 void e1_svc_report();
@@ -70,7 +70,9 @@ void e1_report();
 //   NUMTEXT  the FIELDS line's release-queue count printed as text
 //   OPENX    a boot file looked up at picture 100 (a file open inside play)
 //   STACKX   one stack guard word overwritten at tick 300 (lane eng-e1k)
-struct E1Lab { int camrec0, memcut, runfunc, numtext, openx, stackx; };
+//   LIGHTMISS every character's light view refused (lane eng-e1n: E1 PUB light-view-misses, the scene fails)
+//   HUDFREEZE the HUD's ammo count frozen at the renderer's open (lane eng-e1n: hudcheck must fail)
+struct E1Lab { int camrec0, memcut, runfunc, numtext, openx, stackx, lightmiss, hudfreeze; };
 extern E1Lab e1_lab;
 void e1_lab_boot();
 extern "C" void e1_play_files_begin(void);

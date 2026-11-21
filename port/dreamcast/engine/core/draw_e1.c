@@ -319,7 +319,7 @@ unsigned e1_fields_finish_c(const volatile uint32_t** field)
 
 /* The camera (26 words: view 3x4, projection type + 6 terms, viewport x y w h near far, far plane) is the camera
    service's record (lane eng-e1j; scene.state[0] points at it since open); the HUD's stance is read from the game state
-   and its digits from hud_ammo. The picture reads them as they are; no tick step converts them.
+   and its ammo digits are made from the live count when the HUD is drawn (lane eng-e1n). No tick step converts them.
    partner: the partner's skeleton view or 0, partner_record her model record; world: draw the pack's whole-room bake
    (the scene's own room since lane eng-e1d) */
 void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned identity,

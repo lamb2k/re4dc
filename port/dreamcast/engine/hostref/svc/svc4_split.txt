@@ -3,5 +3,5 @@
 # Lane eng-e1j (H-016.1): the camera service's whole evaluation (docs/engine/lanes/eng-e1j.md section 1); cam_sys is a
 # replaced unit (svc.mk SVC4_UNITS).
 cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize* CameraControl::debugDrawRail* CameraInterpolation::move* CameraSmooth::move* areaHit(* area_hit_p3* area_hit_pN* cameraHitCheck* searchRail* CameraControl::calcAddr* cameraDataVersion*
-cam_qfps CameraQuasiFPS::calcBaseMatrix* CameraQuasiFPS::calcOffset* CameraQuasiFPS::hitCheck* offsetCorrection* CameraQuasiFPS::offsetCorrection*
+cam_qfps CameraQuasiFPS::move* CameraQuasiFPS::calcBaseMatrix* CameraQuasiFPS::calcOffset* CameraQuasiFPS::hitCheck* offsetCorrection* CameraQuasiFPS::offsetCorrection*
 cam_extra CameraAttachedToMotion::move*

@@ -225,6 +225,9 @@ void e1_lab_boot()
     if ((e1_lab.numtext = boot_file("/cd/NUMTEXT"))) e1_log("E1 NUMTEXT: the release-queue count printed as text (control)\n");
     if ((e1_lab.openx = boot_file("/cd/OPENX"))) e1_log("E1 OPENX: a boot file looked up at picture 100 (control)\n");
     if ((e1_lab.stackx = boot_file("/cd/STACKX"))) e1_log("E1 STACKX: a guard word overwritten at tick 300 (control)\n");
+    // lane eng-e1n: the publication and HUD controls (services/draw.cpp acts on them at the renderer's open)
+    if ((e1_lab.lightmiss = boot_file("/cd/LIGHTMISS"))) e1_log("E1 LIGHTMISS: every character's light view refused (control)\n");
+    if ((e1_lab.hudfreeze = boot_file("/cd/HUDFREEZE"))) e1_log("E1 HUDFREEZE: the HUD's ammo count frozen at the renderer's open (control)\n");
 }
 void e1_fields_start()
 {

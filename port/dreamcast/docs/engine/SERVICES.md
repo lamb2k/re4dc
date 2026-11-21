@@ -1321,3 +1321,57 @@ Details and numbers: `lanes/eng-e1m.md`.
 - **Controls.** The old reference (`STAT_BYTES=0`, its own BUILD folder): `camengine.sh` rows must FAIL. Lab arm
   CAMEVERY (boot file): the image hands the shoulder camera Leon's matrix every tick, as the old reference did; it must
   FAIL against the reference. ZCLIP0 still fails HILL from tick 1.
+### 48d. No evaluation in a hosted body; camera tracks as motion-key rows; HUD digits at draw time (lane eng-e1n)
+
+Details, numbers and how each body differs from the original: `lanes/eng-e1n.md`. Rulings H-017.1 to H-017.5.
+- **The shoulder camera's tick** (`CameraQuasiFPS::move`) is the camera service's (`cam_eval.cpp`): it calls the
+  hosted unit's decisions (`checkCameraType`, `checkFBLR`, `calcDepressionRatio`) and the service's base frame, offset
+  blend, wall probe and follow (`cam_shoulder_follow`: the eye and target follow the probed camera sideways at rate
+  0.6, directly in height and depth, then through the base frame; the service's own state). The hosted copy is weak and
+  dropped. `src/` is not edited, and the original holds the follow inline in the same function as its decisions, so the
+  body cannot stay hosted without its arithmetic.
+- **The push-object camera** (`CameraPushObject::move`) stays hosted: which door the camera swings round and to which
+  side. Every evaluation in it was already a call; game/Makefile binds cam_extra's five matrix calls (inverse, point,
+  direction, identity, turn about an axis) to camera-service entry points (`cam_mtx_*`, objcopy `--redefine-sym`), so
+  the inverse, the candidate and offset transforms and the swing are the service's (group 6).
+- **The link check** reads size ceilings (`=<unit> <pattern> <bytes>`) and reference bans (`-<unit> <symbols>`, from the
+  map's cross reference: the image links `--cref`): `CameraQuasiFPS::move` ceiling 0, `CameraPushObject::move` 924,
+  cam_extra may not reference the SDK's five functions. Controls: `CAM_EXTRA=-DE1_CAM_ORIG_QFPS_MOVE=1` and
+  `CAM_PUSH_ORIG=1` FAIL.
+- **Camera tracks.** A camera motion file is converted when its `CameraMotion` is made (the camera data is loaded: a
+  cut's export, an event's file) into an `MkClip` (skel_mk.h) of aux rows, eight floats a frame (eye, target, roll,
+  fov in degrees) for frames 0 .. maxFrame, made by the skeleton's native key decoder (`skel_mk_decode`: binary search,
+  no history). `CameraMotion::move` reads one row by the evaluator's row rule (`mk_row_of`, now in skel_mk.h). The
+  engine has no `HermiteInterpolation`. The rows live in the camera service's track store (12,288 B, static), one block
+  a live motion (96 B + 32 B a frame), released with it. A track whose keys the decoder does not accept, or that the
+  store cannot hold, is not played (the motion ends at once, counted). Report line `E1 CAMTRACK`.
+- **The cut writer** (`HermiteExport`) checks the key count (1 .. 26) and the file's size against the 0x440 motion
+  buffer before it writes; a refused export writes nothing and the CameraMotion made on that buffer is not played.
+- **HUD digits:** the renderer splits the live magazine count into the three glyphs when it draws the HUD
+  (`hud_magazine_live`, render/native_scene.h); nothing is made per tick (supersedes 45's "set once a tick").
+- **PUB:** `E1 PUB camera N light-view-misses N`: the camera copy control (PUBCOPY: a real copy into a global stream)
+  and the pictures a character was drawn without its light view. Either not 0 fails the scene. Lab arms (controls, boot
+  files): HUDFREEZE (the count frozen at open), LIGHTMISS (every light view refused).
+- **PC checks** (`hostref/svc`): exercise `campush` (the push camera on the door walk, a window planted for its door
+  branch), `camexport` (a 7-key cut against a guarded buffer), controls `caminv`, `camfollow`, `camslope`
+  (svc_controls.sh's camtrack row).
+
+#### 48d.1 Decision statements re-expressed in engine code (ruling H-017.10)
+
+`CameraQuasiFPS::move` is a hosted function whose body mixes decision statements with inline evaluation (the follow
+filter) and cannot be split at link without editing `src/`, so it is an engine composition
+(`engine/services/camera/cam_eval.cpp`, `CameraQuasiFPS::move`); its own decision calls stay the hosted functions
+(`checkCameraType`, `checkFBLR`, `calcDepressionRatio`). The decision statements it re-expresses, line by line
+(`allowed_original.txt` points here beside its size ceiling of 0):
+
+| `src/game/cam_qfps.cpp` | Statement | `cam_eval.cpp` |
+|---|---|---|
+| 1241 | the debug camera's flag test before `m_site = checkFBLR()` (the call is hosted) | 741-742 |
+| 1262 | the same test before `calcDepressionRatio()` (the call is hosted) | 748 |
+| 1244-1261 | `switch (m_site)`: the site's `cur` / `old` offset tables | 743-747 |
+| 1285-1291 | `switch (PlGetStatus()) case 2, 4, 8: CamSmth.m_ratio = m_walk_ratio` (the smoothing ratio while the player moves) | 754-755 |
+| 1292-1294 | `if (reset) CamSmth.m_flag \|= 1` (the smoothing snapped on a reset) | 756 |
+| 1345 | `reset = 0` | 758 |
+
+None is a function of its own in any hosted unit, so none can be a hosted call; keeping them in original object code
+would mean keeping the whole body, with the follow arithmetic (1268-1282) H-017.1 moves out.

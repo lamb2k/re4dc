@@ -7,8 +7,9 @@
 //
 // This file: the frame's camera (CameraMove and the record), the projection, the view frustum (VIEW), the camera
 // frames (every function of cam_sys.cpp: orientation from eye / target / roll or up, the roll read back, turns about an
-// axis, dolly and distance), the stick in camera space, the screen ray, and the keyed tracks of cutscenes (CameraMotion
-// and its key evaluator, from lane eng-svc4). cam_eval.cpp: the evaluation under the controller (the cut blend, the
+// axis, dolly and distance), the stick in camera space, the screen ray, and the camera tracks of cuts and cutscenes
+// (CameraMotion: converted once to motion-key rows, read by row; lane eng-e1n). cam_eval.cpp: the evaluation under the
+// controller (the cut blend, the
 // smoothing, the rail, the area tests, the line-of-sight probe, the shoulder camera's frame, offsets and wall probe,
 // the attached-motion camera, the data relocation).
 //
@@ -44,6 +45,7 @@
 #include "camera_svc.h"
 #include "eng_camera.h"
 #include "cam_math.h"
+#include "skel_mk.h"   // lane eng-e1n: camera tracks in the motion-key form
 
 using namespace camsvc;
 
@@ -53,6 +55,7 @@ int cam_control;
 EngCamera eng_cam;
 EngPubCounters eng_pub;
 int eng_pub_copy;
+f32 eng_pub_stream[26];   // lane eng-e1n: PUBCOPY's destination
 f32 sinf(f32);
 f32 cosf(f32);
 f32 tanf(f32);
@@ -363,8 +366,7 @@ static void record_write(const Camera* cam)
     r.tick++;
     if (r.frozen == 1) r.frozen = 2;
     if (eng_pub_copy) {   // PUBCOPY (control): a forced copy into a draw stream, counted (the selector must fail it)
-        static f32 stream[26];
-        __builtin_memcpy(stream, &r, sizeof stream);
+        __builtin_memcpy(eng_pub_stream, &r, sizeof eng_pub_stream);
         eng_pub.camera++;
     }
 }
@@ -531,181 +533,217 @@ void CamPos2ScrnVec(Vec* out, f32 sx, f32 sy)
     put(out, frame_dir(frame_of(pG->Cam.mat), v));
 }
 
-// ==== keyed tracks: the Hermite key evaluator (motion.cpp's HermiteInterpolation; lane eng-svc4, not rewritten) ====
+// ==== camera tracks (cam_motion.cpp's CameraMotion; lane eng-e1n, ruling H-017.2) ====
+// A camera motion file (a header, then per part: an eye, target, roll or fov track of three axes, each {key count, key
+// frames, keys of value and tangents}) is converted once, when a CameraMotion is made on it (the camera data is loaded:
+// a cut's export or an event's file), into the engine's motion-key form (services/skeleton/skel_mk.h): an MkClip whose
+// aux rows hold, for every integer frame 0 .. maxFrame, the camera's eight numbers (eye, target, roll in radians, fov in
+// degrees), the last row the answer at and past the end. The rows are made by the skeleton's native key decoder
+// (skel_mk_decode: the bracket by a binary search on the key frames, then the Hermite segment), the same decoder that
+// fills an actor's rows. At run time the track is read by the motion-key evaluator's row rule (mk_row_of): the row of
+// the frame. No key search, no key decoding, no history at run time. A camera motion's frame is an integer (every
+// caller starts it at one and the clock steps whole frames); a frame without a row is not decoded: the camera holds
+// and the sample is counted.
+//
+// The rows live in the camera service's track store (kTrackStore bytes, below), one block per live CameraMotion (its
+// MkClip header, four joints, the rows), released when the CameraMotion is destroyed. A track the store cannot hold,
+// a key block the decoder does not accept (keys not starting at frame 0 and rising, a layout without tangents) or a
+// cut export the writer refused is not played: the motion ends at its first move with the camera held, counted
+// (cam_cnt.key_errors) and logged.
+
+void skel_mk_decode(const u8* keys, u32 type, f32 frame, f32 maxFrame, u32 flags, Vec* out);   // services/skeleton/skel.cpp
+
+
+
 
 namespace {
 
+constexpr u32 kTrackStore = 12288;   // bytes: the largest cut export (6 keys, 152 rows: 4,960 B) twice over
+constexpr u32 kTrackStride = 8;      // floats a row: eye x y z, target x y z, roll, fov
+constexpr u32 kTrackSlots = 4;
+constexpr u32 kTrackHead = sizeof(MkClip) + 4 * sizeof(MkJoint);
+alignas(32) u8 g_track_store[kTrackStore];
+struct TrackSlot {
+    const CameraMotion* owner;
+    u32 off, bytes;   // in g_track_store; bytes 0: free
+};
+TrackSlot g_track_slot[kTrackSlots];
+u32 g_track_peak;               // the store's most bytes in use at once
+const u8* g_export_refused;     // the destination of the last cut export the writer refused (HermiteExport)
+
 inline u32 rd16(const u8* p) { return p[0] | (p[1] << 8); }
-inline f32 key_f32(const u8* d)
-{
-    f32 v;
-    __builtin_memcpy(&v, d, 4);
-    return v;
-}
-inline f32 key_s16(const u8* d) { return (f32) (s16) rd16(d) * 0.0001f; }
-inline f32 key_s8(const u8* d) { return (f32) (s8) d[0] * 0.0001f; }
+constexpr u8 kKeyBytes[16] = {12, 8, 6, 0, 10, 6, 4, 0, 9, 5, 3, 0, 0, 0, 0, 0};   // with tangents; 0: not accepted
 
-// key layouts: value field, tangent field (0 f32, 1 s16, 2 s8, 3 none), bytes a key; -1 bytes: not a layout
-struct KeyLayout {
-    u8 val, tan;
-    s8 bytes;
-};
-constexpr KeyLayout kLayouts[16] = {
-    {0, 0, 12}, {0, 1, 8}, {0, 2, 6}, {0, 0, -1}, {1, 0, 10}, {1, 1, 6}, {1, 2, 4}, {0, 0, -1},
-    {2, 0, 9},  {2, 1, 5}, {2, 2, 3}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 3, 4},
-};
-inline f32 key_field(const u8* d, int fmt) { return fmt == 0 ? key_f32(d) : fmt == 1 ? key_s16(d) : key_s8(d); }
-
-void key_pair(u32 type, const u8* d, int i0, int i1, f32* v, f32* t)
+// a key block the decoder answers as the original does: three axes of keys at frame 0 first, strictly rising
+bool track_keys_ok(const u8* p, u32 type)
 {
-    const KeyLayout& L = kLayouts[type & 15];
-    if (L.bytes < 0) return;
-    const int vb = L.val == 0 ? 4 : L.val == 1 ? 2 : 1;
-    const int tb = L.tan == 0 ? 4 : L.tan == 1 ? 2 : 1;
-    v[0] = key_field(d + i0 * L.bytes, L.val);
-    v[1] = key_field(d + i1 * L.bytes, L.val);
-    if (L.tan == 3) return;
-    t[0] = key_field(d + i0 * L.bytes + vb + tb, L.tan);   // the key's out-tangent
-    t[1] = key_field(d + i1 * L.bytes + vb, L.tan);        // the key's in-tangent
+    const u32 kb = kKeyBytes[type & 15];
+    if (!kb) return false;
+    for (int a = 0; a < 3; a++) {
+        const u32 n = rd16(p);
+        if (n == 0 || rd16(p + 2) != 0) return false;
+        for (u32 i = 1; i < n; i++)
+            if (rd16(p + 2 + 2 * i) <= rd16(p + 2 * i)) return false;
+        p += 2 + 2 * n + n * kb;
+    }
+    return true;
 }
 
-inline f32 hermite_eval(const f32* p, const f32* v, f32 t)
+TrackSlot* track_slot_of(const CameraMotion* cm)
 {
-    const f32 t2 = t * t;
-    const f32 t3 = t * t2;
-    const f32 h01 = -(t3 + t3) + 3.0f * t2;
-    const f32 h11 = t3 - t2;
-    const f32 h10 = h11 - t2 + t;
-    const f32 h00 = -h01 + 1.0f;
-    return p[0] * h00 + p[1] * h01 + v[0] * h10 + v[1] * h11;
+    for (TrackSlot& s : g_track_slot)
+        if (s.bytes && s.owner == cm) return &s;
+    return 0;
+}
+
+void track_release(const CameraMotion* cm)
+{
+    if (TrackSlot* s = track_slot_of(cm)) s->bytes = 0, s->owner = 0;
+}
+
+// the lowest gap of the store that holds `bytes` (32-byte blocks), or 0
+TrackSlot* track_claim(const CameraMotion* cm, u32 bytes)
+{
+    bytes = (bytes + 31) & ~31u;
+    TrackSlot* free_slot = 0;
+    for (TrackSlot& s : g_track_slot)
+        if (!s.bytes && !free_slot) free_slot = &s;
+    if (!free_slot) return 0;
+    u32 at = 0;
+    for (bool moved = true; moved;) {
+        moved = false;
+        for (const TrackSlot& s : g_track_slot)
+            if (s.bytes && at < s.off + s.bytes && s.off < at + bytes) at = s.off + s.bytes, moved = true;
+    }
+    if (at + bytes > kTrackStore) return 0;
+    free_slot->owner = cm, free_slot->off = at, free_slot->bytes = bytes;
+    u32 used = 0;
+    for (const TrackSlot& s : g_track_slot)
+        if (s.bytes && s.off + s.bytes > used) used = s.off + s.bytes;
+    if (used > g_track_peak) g_track_peak = used;
+    return free_slot;
+}
+
+inline const MkClip* track_clip(const TrackSlot* s) { return (const MkClip*) (g_track_store + s->off); }
+
+// The conversion: the motion file's parts into rows, frames 0 .. maxFrame (the last: each axis's last key).
+bool track_convert(CameraMotion* cm, const MotionData* data, const u32* keys)
+{
+    const u8* d = (const u8*) data;
+    const u32 n = d[2];
+    const u16_un* info = (const u16_un*) (d + 3);
+    const u8* part = d + 3 + 2 * n;
+    const u32 maxFrame = (data->maxFrame & 0x3FFF) + 1;   // the clock's maxFrame (the original's + 1)
+    for (u32 i = 0; i < n; i++)
+        if (part[i] <= 3 && !(keys[i] && track_keys_ok((const u8*) keys[i], info[i] >> 12))) return false;
+    const u32 rows = maxFrame + 1;
+    TrackSlot* s = track_claim(cm, kTrackHead + rows * kTrackStride * sizeof(f32));
+    if (!s) return false;
+    MkClip* k = (MkClip*) (g_track_store + s->off);
+    memset(k, 0, kTrackHead);
+    k->maxFrame = (u16) maxFrame;
+    k->n = 4;
+    k->nAux = 4;
+    k->auxStride = kTrackStride;
+    k->oJoint = sizeof(MkClip);
+    k->oAux = kTrackHead;
+    MkJoint* j = (MkJoint*) ((u8*) k + k->oJoint);
+    static const u16 kCol[4] = {0, 3, 6, 7};
+    for (int c = 0; c < 4; c++) j[c].pno = (u8) c, j[c].src = MK_AUX, j[c].col = kCol[c];
+    f32* row = (f32*) ((u8*) k + k->oAux);
+    memset(row, 0, rows * kTrackStride * sizeof(f32));
+    for (u32 i = 0; i < n; i++) {
+        if (part[i] > 3) continue;
+        j[part[i]].info = info[i];
+        const u8* kb = (const u8*) keys[i];
+        const u32 type = info[i] >> 12;
+        // control camslope: the out-tangent of the second key of the first axis 1.25 times steeper (the key block is
+        // the caller's: restored after the conversion)
+        f32 saved = 0.0f;
+        u8* slope = 0;
+        if (cam_control == 6 && i == 0 && rd16(kb) > 1 && (type & 15) == 0) {
+            slope = (u8*) kb + 2 + 2 * rd16(kb) + 12 + 8;
+            __builtin_memcpy(&saved, slope, 4);
+            const f32 v = saved * 1.25f;
+            __builtin_memcpy(slope, &v, 4);
+        }
+        for (u32 f = 0; f < rows; f++) {
+            Vec v;
+            skel_mk_decode(kb, type, (f32) f, (f32) maxFrame, 2, &v);
+            f32* r = row + f * kTrackStride;
+            switch (part[i]) {
+            case 0: r[0] = v.x, r[1] = v.y, r[2] = v.z; break;
+            case 1: r[3] = v.x, r[4] = v.y, r[5] = v.z; break;
+            case 2: r[6] = v.y; break;
+            default: r[7] = v.y * 180.0f / kPi; break;
+            }
+        }
+        if (slope) __builtin_memcpy(slope, &saved, 4);
+        cam_cnt.keys += rows;
+    }
+    return true;
 }
 
 }   // namespace
 
-int HermiteInterpolation(HermitePrm* prm, Vec* out, u16* hist)
-{
-    cam_cnt.keys++;
-    f32 frame = prm->frame;
-    const u8* p = prm->key;
-    f32* o = (f32*) out;
-    f32 r = 0.0f, f0 = 0.0f, f1 = 0.0f;
-    f32 val[2], tan[2];
-    int ret = 0;
-    const KeyLayout& L = kLayouts[prm->type & 15];
-    for (int axis = 0; axis < 3; axis++) {
-        const int n = (int) rd16(p);
-        const u8* frames = p + 2;
-        const u8* data = p + n * 2 + 2;
-        u16* hp = &hist[axis];
-        p = data + (L.bytes < 0 ? -1 : n * L.bytes);
-        int cnt = n;
-        bool found = false;
-        if (prm->maxFrame <= frame) {
-            if ((prm->flags & 6) == 4) {
-                frame -= prm->maxFrame;
-                if (!(prm->flags & 8)) *hp = 0;
-            } else {
-                key_pair(prm->type, data, n - 1, 0, val, tan);
-                cnt = 0;
-                found = true;
-                r = val[0];
-            }
-        }
-        int idx = (prm->flags & 8) ? 0 : *hp;
-        const int last = n - 1;
-        if (idx > last) {
-            pLog->err(0, 0, "H.I.(): axis=%d, hist=%d nFrm=%d, Invalid key history.", axis, idx, n);
-            cam_cnt.key_errors++;
-            idx = 0;
-            ret = 1;
-        }
-        for (; cnt != 0; cnt--) {
-            f0 = (f32) rd16(frames + 2 * idx);
-            if (f0 == frame) {
-                key_pair(prm->type, data, idx, 0, val, tan);
-                r = val[0];
-                if (!(prm->flags & 8)) *hp = idx;
-                found = true;
-                break;
-            }
-            if (f0 < frame) {
-                const int nx = idx + 1 > last ? 0 : idx + 1;
-                f1 = (f32) rd16(frames + 2 * nx);
-                if (frame < f1) {
-                    key_pair(prm->type, data, idx, nx, val, tan);
-                    if (!(prm->flags & 8)) *hp = idx;
-                    break;
-                }
-            }
-            if ((prm->flags & 1) || f0 > frame) {
-                if (--idx < 0) idx = last;
-            } else {
-                if (++idx > last) idx = 0;
-            }
-        }
-        if (!found) r = hermite_eval(val, tan, (frame - f0) / (f1 - f0));
-        o[axis] = r;
-    }
-    return ret;
-}
-
-// ==== cutscene camera tracks (cam_motion.cpp; lane eng-svc4) ====
-
+// The motion work as the original sets it up (the key table relocated in place, as the data's other readers expect),
+// then the conversion.
 CameraMotion::CameraMotion(void* data, int hokan, int flags, f32 frame)
 {
     CameraMotionWork* w = &m_info;
     memclr_asm(w, sizeof(CameraMotionWork));
     w->data = (MotionData*) data;
-    w->maxFrame = (f32) (((MotionData*) data)->maxFrame & 0x3FFF);
-    w->maxFrame += 1.0f;
+    w->maxFrame = (f32) ((((MotionData*) data)->maxFrame & 0x3FFF) + 1);
     w->nParts = w->data->nParts;
-    w->partsInfo = (u16_un*) ((u8*) w->data + 3);
-    w->partsNo = (u8*) w->data + (w->nParts * 2 + 3);
-    u32* tbl = (u32*) ((u32) w->partsNo + w->nParts);
-    tbl = (u32*) (((u32) tbl + 3) & ~3);
-    tbl++;
+    w->partsInfo = (u16_un*) ((u8*) data + 3);
+    w->partsNo = (u8*) data + (w->nParts * 2 + 3);
+    u32* tbl = (u32*) ((((u32) w->partsNo + w->nParts) + 3) & ~3u) + 1;
     u32* keys = tbl;
     Re4dcMotionLease lease(data, &keys, tbl);
-    if (!lease.external() && (s32) tbl[0] >= 0) {
-        for (int i = 0; i < w->nParts; i++) tbl[i] += (u32) w->data;
-    }
+    if (!lease.external() && (s32) tbl[0] >= 0)
+        for (int i = 0; i < w->nParts; i++) tbl[i] += (u32) data;
     w->keyTbl = tbl;
-    for (int i = 0; i < w->nParts; i++) w->hist[i][0] = w->hist[i][1] = w->hist[i][2] = 0;
     w->hokan = hokan;
     w->flags = flags;
     w->frame = frame;
-    w->state = 0;
     base_mat = NULL;
     end = 0;
+    track_release(this);   // a CameraMotion made again in the same storage
+    const bool refused = (const u8*) data == g_export_refused;
+    if (refused || !track_convert(this, w->data, keys)) {
+        cam_cnt.key_errors++;
+        pLog->err(0, 0, "CameraMotion: track not converted (%s)", refused ? "the export was refused" : "keys or store");
+    }
 }
 
-CameraMotion::~CameraMotion() { memset(this, 9, 0x200); }
+CameraMotion::~CameraMotion()
+{
+    track_release(this);
+    memset(this, 9, 0x200);
+}
 
-// The tracks at the current frame (pos, at, roll, fov in radians), the frame, the optional base matrix (an event placed
-// in the room), then the clock; `end` when the sequence finished.
+// The tracks at the current frame: the row (eye, target, roll, fov), the frame, the optional base matrix (an event
+// placed in the room), then the clock; `end` when the sequence finished. A motion whose track was not converted ends
+// at once with the camera held.
 void CameraMotion::move()
 {
     CAM_SVC("CameraMotion::move");
     cam_cnt.tracks++;
-    HermitePrm prm;
-    Vec pos, at, fov;
-    Vec roll = {0.0f, 0.0f, 0.0f};
     CameraMotionWork* w = &m_info;
-    u32* keys = w->keyTbl;
-    Re4dcMotionLease lease(w->data, &keys, keys);
-    prm.frame = w->frame;
-    prm.maxFrame = w->maxFrame;
-    prm.flags = 2;
-    for (int i = 0; i < w->nParts; i++) {
-        prm.type = w->partsInfo[i] >> 12;
-        prm.key = (u8*) keys[i];
-        Vec* dst = w->partsNo[i] == 0 ? &pos : w->partsNo[i] == 1 ? &at : w->partsNo[i] == 2 ? &roll : w->partsNo[i] == 3 ? &fov : 0;
-        if (dst) HermiteInterpolation(&prm, dst, w->hist[i]);
+    const TrackSlot* s = track_slot_of(this);
+    const MkClip* k = s ? track_clip(s) : 0;
+    const int r = k ? mk_row_of(k, w->frame, w->maxFrame, 2) : -1;
+    if (r < 0) {
+        param = pG->Cam.param;
+        end = 1;
+        if (k) cam_cnt.key_errors++;   // a frame without a row
+        return;
     }
-    param.pos = pos;
-    param.at = at;
-    param.roll = roll.y;
-    param.fovy = fov.y * 180.0f / kPi;
+    const f32* v = mk_aux(k) + (u32) r * k->auxStride;
+    param.pos.x = v[0], param.pos.y = v[1], param.pos.z = v[2];
+    param.at.x = v[3], param.at.y = v[4], param.at.z = v[5];
+    param.roll = v[6];
+    param.fovy = v[7];
     CameraSetOrientationRoll(this);
     if (base_mat) {
         const Frame b = frame_of(*base_mat);
@@ -715,6 +753,21 @@ void CameraMotion::move()
         CameraSetOrientationUp(this);
     }
     end = CameraSequenceCtrl(&m_info) == 4 ? 1 : 0;
+}
+
+// The track store's use (the report and the PC check): bytes in use now, the most at once, the store's size.
+extern "C" void cam_track_store_use(u32* now, u32* peak, u32* size)
+{
+    u32 used = 0;
+    for (const TrackSlot& s : g_track_slot)
+        if (s.bytes) used += s.bytes;
+    *now = used, *peak = g_track_peak, *size = kTrackStore;
+}
+// The cut writer's refusal (cam_eval.cpp HermiteExport): the CameraMotion made on that buffer next is not played.
+extern "C" void cam_track_export_refused(const u8* buf, int refused)
+{
+    if (refused) g_export_refused = buf;
+    else if (g_export_refused == buf) g_export_refused = 0;
 }
 
 u32 CameraSequenceCtrl(CameraMotionWork* w)

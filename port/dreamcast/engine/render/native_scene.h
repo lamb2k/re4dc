@@ -11,12 +11,13 @@ void native_world_pass(Scene*,const NativeWorld*,const float*,unsigned);
 void native_actor_pass(NativeScene*,unsigned);
 void native_effects(NativeScene*);
 void native_hud(NativeScene*);
-/* lane eng-e1i: the ammo digits' live state. The E1 images point hud_ammo at theirs and write it once a tick
-   (services/draw.cpp e1_hud_draw_tick: the magazine split as cockpit.cpp BulletInfo::move splits it); the renderer
-   reads it in place. digit[0] ones, [1] tens, [2] hundreds; shown bit k: cell k drawn. hud_ammo 0 (the bench): the
-   pack's own digit pictures. hud_ammo_drawn: the digit each cell drew in the last picture (0xff none). */
-typedef struct { uint32_t tick; uint8_t digit[3]; uint8_t shown; } HudAmmo;
-extern HudAmmo* hud_ammo;
+/* lane eng-e1i, eng-e1n (H-017.4): the ammo digits are made by the renderer when it draws the HUD, from the live
+   magazine count. hud_magazine_live (the E1 images set it: services/draw.cpp) returns 1 when the equipped weapon shows
+   its count (cockpit.cpp dispBulletDigit's list) and puts the count in *n; native_hud splits it into ones, tens and
+   hundreds (the hundreds only when not 0, as BulletInfo::move) for that picture. Nothing is made per tick.
+   hud_magazine_live 0 (the bench): the pack's own digit pictures. hud_ammo_drawn: the digit each cell drew in the last
+   picture (0xff none). */
+extern int (*hud_magazine_live)(unsigned* n);
 extern uint8_t hud_ammo_drawn[3];
 extern int hud_blend_control;
 void native_shadows(NativeScene*);

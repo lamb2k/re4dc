@@ -85,7 +85,7 @@ SVC4_WRAP += _Z11ParametrizeP9CameraCutP13CameraBSpline
 SVC4_WRAP += PadRead VibSet KeyStop
 SVC4_WRAP += _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_ _ZN7cEatMgr10getEffInfoEi
 SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
-WEAK_motion := _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
+WEAK_motion := HermiteInterpolation _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
                MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
                MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
 WEAK_model := _ZN6cModel11getPartsPtrEi _ZN6cModel12partsMatCalcEv _ZN6cModel14partsWorldCalcEv _ZN6cModel8matBlendEf \
@@ -139,9 +139,14 @@ $(NAT)/svc4/syms.txt: $(SVC4_OBJS)
 # initialiser (.init_array) is taken out of the copy, so --gc-sections drops its constructor calls too.
 SVC4_NOINIT := model atari view camera
 NOINIT_FLAGS := --remove-section=.init_array --remove-section=.rel.init_array
+# lane eng-e1n (H-017.1): cam_extra's camera bodies reach their matrix maths through the camera service, as in the image
+# (game/Makefile CAM_UNIT_MATH_game/cam_extra): the unit's references bound to the service's entry points
+CAM_UNIT_MATH_cam_extra := PSMTXInverse=cam_mtx_inverse PSMTXMultVec=cam_mtx_point PSMTXMultVecSR=cam_mtx_dir \
+	PSMTXIdentity=cam_mtx_identity MtxRotAxisPosRad=cam_mtx_turn_about
 $(NAT)/weak4/%.o: $(BUILD)/plain/game/%.o $(NAT)/svc4/syms.txt
 	@mkdir -p $(dir $@)
 	objcopy $$(cat $(NAT)/svc4/syms.txt) $(foreach s,$(WEAK_$*),--weaken-symbol=$(s)) \
+	    $(foreach r,$(CAM_UNIT_MATH_$*),--redefine-sym $(r)) \
 	    $(if $(filter $*,$(SVC4_NOINIT)),$(NOINIT_FLAGS)) $< $@
 # ---- lane eng-svc5: the native SDK math in re4ref native (services/math/sdk_math.cpp): the SDK's C objects and the old
 # port's PS* forwarders (plain/sdk) are linked with every symbol the native objects define made weak (weak5/), as weak4/

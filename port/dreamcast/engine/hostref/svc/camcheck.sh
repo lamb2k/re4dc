@@ -12,6 +12,10 @@
 # evaluation: no fixture has either). Controls that must FAIL: smoothing off, cut blend off, rail parameter 0.25 on.
 # Each row states two musts, the camera's and the trace's (plays_right.py, lane eng-e1o): smoothing off and cut blend off
 # change the play (trace FAIL); the rail control moves only the exercise's rail lines (trace PASS: the rail is not played).
+# Lane eng-e1n: the exercise campush (the push-object camera, its door branch) must PASS / PASS; controls caminv (its
+# inverse skipped) and camfollow (the shoulder follow's rate) must FAIL / FAIL (they move the camera, so the stick's
+# world direction and the play); the exercise camexport: the engine's cut writer refuses an oversized cut with the
+# buffer and its guards untouched (PASS), the original writer overruns it (FAIL; no trace compared).
 # Exit 0 when every row is as it must, 1 when one is not, 2 when a run or a build is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -74,6 +78,28 @@ row() {   # row <name> <camera must> <trace must> <ref dir> <test dir> [exact]
     # CAMCHECK_RAIL_TRACE_MUST=FAIL is the script's own control (lane eng-e1o): the trace column is counted, so the run
     # must then end exit 1 with this row WRONG (before, the trace's exit was shown and not counted)
     row "control: rail parameter 0.25 further (e1-route, exercise camrail)" FAIL "${CAMCHECK_RAIL_TRACE_MUST:-PASS}" "$OUT/x-camrail/ref" "$OUT/c-camrail"
+    # lane eng-e1n (H-017.1, .3): the push-object camera (exercise campush on the door walk: svc4_dump.cpp), the shoulder
+    # camera's follow and the push camera's inverse as controls, the cut writer's refusal (exercise camexport)
+    run odump door103-walk "$OUT/x-campush/ref" RE4_SVC_EXERCISE=campush
+    run native door103-walk "$OUT/x-campush/nat" RE4_SVC_EXERCISE=campush
+    row "door103-walk, exercise campush: native against the original" PASS PASS "$OUT/x-campush/ref" "$OUT/x-campush/nat"
+    run native door103-walk "$OUT/c-caminv" RE4_SVC_CONTROL=caminv RE4_SVC_EXERCISE=campush
+    row "control: the push camera's player-frame inverse skipped (door103-walk, exercise campush)" FAIL FAIL "$OUT/x-campush/ref" "$OUT/c-caminv"
+    run native e1-route "$OUT/c-camfollow" RE4_SVC_CONTROL=camfollow
+    row "control: the shoulder camera's follow rate 0.5 instead of 0.6 (e1-route)" FAIL FAIL "$OUT/e1-route/ref" "$OUT/c-camfollow"
+    run odump e1-route "$OUT/x-camexport/ref" RE4_SVC_EXERCISE=camexport
+    run native e1-route "$OUT/x-camexport/nat" RE4_SVC_EXERCISE=camexport
+    xrow() {   # xrow <name> <must> <dir>: the camexport line: refused (nothing written, guards intact, the motion ended)
+        local got=FAIL line
+        line=$(grep -h "^# camexport" "$3/svc4.txt" 2>/dev/null)
+        [ -n "$line" ] || { touch "$OUT/.abort"; line="(no camexport line)"; }
+        echo "$line" | grep -q "buffer_untouched 1 guards_intact 1 motion_ended 1" && got=PASS
+        local ok="$got (as it must)"
+        [ "$got" = "$2" ] || { ok="$got (WRONG: must $2)"; touch "$OUT/.wrong"; }
+        echo "| $1 | $2 / - | $ok | - | ${line#\# } |"
+    }
+    xrow "exercise camexport: the engine's writer refuses a 7-key cut before writing" PASS "$OUT/x-camexport/nat"
+    xrow "control: the original writer on the same cut (odump)" FAIL "$OUT/x-camexport/ref"
 } | tee "$OUT/camcheck.md"
 status=0
 [ -f "$OUT/.wrong" ] && status=1

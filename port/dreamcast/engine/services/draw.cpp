@@ -58,6 +58,7 @@ extern "C" int e1_light_record(const void* model, uint32_t* o)
 extern "C" {
 uint16_t e1_tev_scale_of_group[256];   // the TEV scale of each group + 1 (0 not resolved), resolved by the renderer at open
 int e1_light_control, e1_pal_control;   // LIGHTCTL, PALCTL (controls, below)
+extern int e1_light_miss_control;       // LIGHTMISS (control, lane eng-e1n): services/actor_e1.inc
 }
 extern "C" int e1_light_view(const void* model, E1LightView* v)
 {
@@ -105,17 +106,17 @@ static int skel_view(const cModel* m, E1SkelView* v)
 }
 
 // ---- the HUD's live state (lane eng-e1j: the four words are read in place) ----
-// The renderer reads the stance (the knife part) from the game state when it draws (e1_hud_stance), and the ammo digits
-// from hud_ammo (render/native_scene.h). Lane eng-e1i: the digits are the HUD's own state, set once a tick: the
-// equipped weapon's loaded count split into ones, tens and hundreds, shown as cockpit.cpp BulletInfo::move /
-// dispBulletDigit show them (guns only, not for pl_type 1; the hundreds only when not 0). Not covered: the "EMPTY"
-// sign for an empty gun with no spare rounds, and the no-weapon player states.
+// The renderer reads the stance (the knife part) from the game state when it draws (e1_hud_stance), and the ammo count
+// when it draws the digits (render/native_scene.h hud_magazine_live; lane eng-e1n, H-017.4: the renderer splits it into
+// the three glyphs then, in the drawing row; nothing is made per tick). The count is the equipped weapon's loaded
+// count, shown as cockpit.cpp BulletInfo::move / dispBulletDigit show it (guns only, not for pl_type 1). Not covered:
+// the "EMPTY" sign for an empty gun with no spare rounds, and the no-weapon player states.
 extern "C" {
-typedef struct { uint32_t tick; uint8_t digit[3]; uint8_t shown; } HudAmmo;
-extern HudAmmo* hud_ammo;
+extern int (*hud_magazine_live)(unsigned* n);
 extern unsigned (*hud_stance_live)(void);   // render/native_actor.inc: the stance read when drawing (0: the pack's word)
 }
-static HudAmmo e1_ammo;
+static int hud_freeze;           // HUDFREEZE lab arm (control): the count the HUD shows is the one at open
+static unsigned hud_frozen_count;
 #include "item.h"
 static int e1_gun_shows_count(unsigned no)
 {
@@ -130,15 +131,11 @@ static int e1_gun_shows_count(unsigned no)
 }
 extern "C" unsigned e1_hud_magazine(void) { return ItemMgr.bulletNum(); }
 static unsigned e1_hud_stance(void) { return (unsigned) PlGetWeaponNo(); }
-void e1_hud_draw_tick()
+// the count the HUD shows, read when the renderer draws the digits: 1 when the equipped weapon shows it
+static int e1_hud_magazine_live(unsigned* n)
 {
-    unsigned n = ItemMgr.bulletNum();
-    e1_ammo.tick++;
-    e1_ammo.digit[0] = (uint8_t) (n % 10);
-    e1_ammo.digit[1] = (uint8_t) (n / 10 % 10);
-    e1_ammo.digit[2] = (uint8_t) (n / 100 % 10);
-    e1_ammo.shown = e1_gun_shows_count(pG->weapon_no) ? (uint8_t) (e1_ammo.digit[2] ? 7 : 3) : 0;
-    hud_ammo = &e1_ammo;
+    *n = hud_freeze ? hud_frozen_count : ItemMgr.bulletNum();
+    return e1_gun_shows_count(pG->weapon_no);
 }
 static int diag;   // diagnostic boot options: DNOWORLD (no world drawn), DNOMARK (no partner drawn); read at open
 
@@ -160,8 +157,14 @@ void e1_draw_open()
     if (boot_file("/cd/PALCTL")) { e1_pal_control = 1; e1_log("E1 PALCTL: palette read with a 12-float stride (control)\n"); }
     if (boot_file("/cd/CAMSTALE")) { eng_cam.frozen = 1; e1_log("E1 CAMSTALE: the camera record keeps its next camera (control)\n"); }
     if (boot_file("/cd/PUBCOPY")) { eng_pub_copy = 1; e1_log("E1 PUBCOPY: the camera record copied once a tick (control)\n"); }
+    e1_light_miss_control = e1_lab.lightmiss;   // LIGHTMISS (control; its boot file read by e1_lab_boot, core/frame.cpp)
     hud_stance_live = e1_hud_stance;
-    e1_hud_draw_tick();
+    hud_magazine_live = e1_hud_magazine_live;
+    if (e1_lab.hudfreeze) {   // HUDFREEZE (control; its boot file read by e1_lab_boot, core/frame.cpp)
+        hud_freeze = 1;
+        hud_frozen_count = ItemMgr.bulletNum();
+        e1_log("E1 HUDFREEZE: the HUD's ammo count frozen at %u (control)\n", hud_frozen_count);
+    }
     e1_log("E1 draw: camera from the camera service's record (far %d), HUD read in place\n", (int) eng_cam.zfar);
 }
 

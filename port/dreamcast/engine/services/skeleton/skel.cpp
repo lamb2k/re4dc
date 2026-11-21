@@ -697,18 +697,7 @@ void mk_decode(const u8* p, u32 type, f32 frame, f32 maxFrame, u32 flags, Vec* o
         o[a] = p0 * h00 + p1 * h01 + v0 * h10 + v1 * h11;
     }
 }
-// the baked row of a frame, or -1 (decode from the keys): an integer frame before the end; the last row at or past
-// the end of a clip that does not loop; a looping clip wraps once first
-inline int mk_row_of(const MkClip* k, f32 f, f32 maxFrame, u32 flags)
-{
-    if (maxFrame <= f) {
-        if ((flags & 6) != 4) return k->maxFrame;
-        f -= maxFrame;
-        if (maxFrame <= f) return -1;
-    }
-    const int fi = (int) f;
-    return (f32) fi == f && fi >= 0 ? fi : -1;
-}
+// (mk_row_of, the baked row of a frame: skel_mk.h)
 // joint i of a bound clip at a frame: the row (pose rows f32 or s16, const, aux rows) or the keys; true: from the bake
 bool mk_sample(const MkBind* b, u32 i, f32 frame, f32 maxFrame, u32 flags, Vec* v, bool root)
 {
@@ -1540,6 +1529,15 @@ SkelTable* table_for(cModel* m)
 
 // =================================================================================================================
 // engine API
+// Lane eng-e1n: the native key decoder for the camera service's load-time conversion of camera tracks into motion-key
+// rows (services/camera/camera_svc.cpp): one key block's three axes at a frame. Not a skeleton sample: the skeleton's
+// axis counter is left as it was.
+void skel_mk_decode(const u8* keys, u32 type, f32 frame, f32 maxFrame, u32 flags, Vec* out)
+{
+    const u32 axes = skel_cnt.mk_axes;
+    mk_decode(keys, type, frame, maxFrame, flags, out);
+    skel_cnt.mk_axes = axes;
+}
 extern "C" SkelTable* skel_table_of(const cModel* m) { return find_table(m); }
 extern "C" SkelTable* skel_table_for(cModel* m) { return table_for(m); }
 extern "C" int skel_record_bone(SkelTable* t, const void* rec)
