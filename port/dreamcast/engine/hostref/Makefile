@@ -81,6 +81,22 @@ COMMON := $(ARCH) -O1 -g -fno-strict-aliasing -ffunction-sections -fdata-section
 # moving, so the shoulder camera took his matrix every tick where the game holds it; lanes/eng-e1m.md). STAT_BYTES=0 is
 # the old reference, kept only as the camera check's control (build it in its own BUILD folder).
 STAT_BYTES ?= 1
+# Lane eng-e1o (H-017.8): the two other reference changes of 2026-11-21 keep their old behaviour as a build of its own,
+# each only as a control (svc/refctl.sh builds it in its own BUILD folder, runs its row and deletes it):
+#   EM10_SPLIT=0       em10's 13 presentation callers left on the behaviour generator (before lane eng-e1k, PRESENT_EM10)
+#   BSPLINE_ALIAS=i386 cam_ctrl's BSpline calls the floats-first alias as it is (before lane eng-e1j, prep.py)
+EM10_SPLIT ?= 1
+BSPLINE_ALIAS ?= host
+export PREP_BSPLINE := $(BSPLINE_ALIAS)
+# A BUILD folder holds one reference only (the host copies and objects do not depend on these switches): a different
+# switch set on an existing folder is refused, so a control build can never land in the reference's folder.
+REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)
+ifneq ($(filter clean,$(MAKECMDGOALS)),clean)
+REF_VARIANT_HAD := $(shell mkdir -p $(BUILD) && { [ -f $(BUILD)/variant.txt ] || echo $(REF_VARIANT) > $(BUILD)/variant.txt; } && cat $(BUILD)/variant.txt)
+ifneq ($(REF_VARIANT_HAD),$(REF_VARIANT))
+$(error hostref: $(BUILD) holds the reference $(REF_VARIANT_HAD), not $(REF_VARIANT): use another BUILD folder)
+endif
+endif
 GAMEINC := -include $(GAME)/platform/include/re4dc_prelude.h -I$(ROOT)/include -I$(ROOT)/src \
            -I$(ROOT)/src/game -I$(ROOT)/src/wep -I$(GAME)/platform/include -DRE4DC_GAME \
            -DRE4DC_STAT_ROUTINE_BYTES=$(STAT_BYTES)
@@ -208,7 +224,9 @@ $(BUILD)/%/game/pad.o: POSTCC = objcopy --rename-section .text.VibControl=re4ref
 PRESENT_EM10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10CamMove2P5cEm10 _Z12em1cBloodSetP5cEm10i \
 	_Z16em10CallVoiceSe2P5cEm10ii _Z18em10SetDamageVoiceP5cEm10ii em10CallVoiceSe em10CamMove em10CamMoveAshley \
 	em10CamMoveCri em10CamMoveTakeaway em10CsawSignSe plem10KickCamMove
+ifeq ($(EM10_SPLIT),1)
 $(BUILD)/%/game/em10_em10.o: POSTCC = objcopy $(foreach f,$(PRESENT_EM10),--rename-section .text.$(f)=re4ref_present) $@
+endif
 
 # lane eng-svc: the service census build and the native skeleton and collision services (svc/svc.mk)
 include svc/svc.mk

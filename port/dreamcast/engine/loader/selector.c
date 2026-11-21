@@ -12,6 +12,7 @@
 
    /cd/SCENES.TXT, one scene a line ('#' comments):
      <name> <title, '_' for spaces> <program> <deadline s> <kind> <files that must exist, ',' separated, or -> <args>
+   kinds: bench, or e1:<timing|function>:<drawn|headless> (lane eng-e1o: the run kind and mode are the schedule's).
    kind bench: the summary is the bench's own WINDOW rows (mean, p99, worst, over 14, over 33.3, presented intervals
    over two fields; 600 pictures a window). kind e1: the summary is computed here from the image's ROW lines, pictures
    41 to 640 (600; the lane tools' budget.py rows): drawing (the ROW draw column: the renderer's own span, phase
@@ -78,9 +79,15 @@ typedef struct {
 _Static_assert(sizeof(sel_journal_t) <= SEL_JOURNAL_SIZE, "journal too large");
 #define J ((sel_journal_t *)SEL_JOURNAL_ADDR)
 
+/* lane eng-e1o (H-017.6): an E1-family scene's run kind and drawing mode come from the schedule, never from the image:
+   kind "e1:timing:drawn", "e1:timing:headless", "e1:function:drawn" or "e1:function:headless". The image's own run
+   line and headless line must agree with it (a scheduled timing scene whose image says "function" fails). A bare "e1"
+   or any other spelling is a schedule error: the scene FAILS without being run. */
 typedef struct {
-    char name[16], title[48], prog[40], kind[8], need[256], args[256];
+    char name[16], title[48], prog[40], kind[24], need[256], args[256];
     unsigned deadline;
+    int e1, timing, headless;   /* e1: an E1-family scene; timing: scheduled timing run; headless: scheduled headless */
+    char plan_err[48];          /* the schedule line's kind could not be read */
 } scene_t;
 static scene_t g_sc[SEL_MAX];
 static unsigned g_n;
@@ -133,9 +140,23 @@ static int read_plan(void) {
         scene_t *s = &g_sc[g_n];
         int used = 0;
         if (*l && *l != '#' &&
-            sscanf(l, "%15s %47s %39s %u %7s %255s %n", s->name, s->title, s->prog, &s->deadline, s->kind, s->need, &used) >= 6) {
+            sscanf(l, "%15s %47s %39s %u %23s %255s %n", s->name, s->title, s->prog, &s->deadline, s->kind, s->need, &used) >= 6) {
             snprintf(s->args, sizeof(s->args), "%s", used ? l + used : "");
             for (char *t = s->title; *t; ++t) if (*t == '_') *t = ' ';
+            s->e1 = !strncmp(s->kind, "e1", 2);
+            s->plan_err[0] = 0;
+            if (s->e1) {
+                static const char *const forms[4] = {"e1:timing:drawn", "e1:timing:headless", "e1:function:drawn",
+                                                     "e1:function:headless"};
+                int f = -1;
+                for (int k = 0; k < 4; ++k) if (!strcmp(s->kind, forms[k])) f = k;
+                if (f < 0) snprintf(s->plan_err, sizeof(s->plan_err), "schedule: kind %.20s (run and mode not said)", s->kind);
+                s->timing = f == 0 || f == 1;
+                s->headless = f == 1 || f == 3;
+                strcpy(s->kind, "e1");
+            } else if (strcmp(s->kind, "bench")) {
+                snprintf(s->plan_err, sizeof(s->plan_err), "schedule: unknown kind %.20s", s->kind);
+            }
             ++g_n;
         }
         l = e ? e + 1 : NULL;
@@ -178,6 +199,31 @@ static const char *after(const char *line, const char *key) {
     return p;
 }
 
+/* lane eng-e1o (H-017.6): strict numbers. A field is a number only if it is all digits (an optional '-' first when
+   signed, "0x"-less hex when hex) and ends at a space, the line's end or one of the record's own separators
+   (")", ";", ","): "12x", "none", "" and a missing field are not numbers (atoi read "none" as 0). */
+static int num_end_ok(const char *e) { return !*e || *e == ' ' || *e == ')' || *e == ';' || *e == ',' || *e == '\n'; }
+static int num_l(const char *p, long *v, int is_signed, int base) {
+    if (!p) return 0;
+    const char *d = p + (is_signed && *p == '-');
+    const int digit = base == 16 ? ((*d >= '0' && *d <= '9') || (*d >= 'a' && *d <= 'f') || (*d >= 'A' && *d <= 'F'))
+                                 : (*d >= '0' && *d <= '9');
+    if (!digit) return 0;
+    char *e;
+    const long x = is_signed ? strtol(p, &e, base) : (long)strtoul(p, &e, base);
+    if (e == p || !num_end_ok(e)) return 0;
+    *v = x;
+    return 1;
+}
+/* the strict unsigned number after a keyword; 0 when the keyword is missing or its field is not a number */
+static int key_u(const char *line, const char *key, unsigned *v) {
+    long x;
+    if (!num_l(after(line, key), &x, 0, 10)) return 0;
+    *v = (unsigned)x;
+    return 1;
+}
+static int key_l(const char *line, const char *key, long *v) { return num_l(after(line, key), v, 1, 10); }
+
 /* bench WINDOW line: "WINDOW 0 CROSS arm 0 [novis] [delay5] [hold300] draw mean 12.910 p99 17.800 worst 17.800 (picture ..)
    over14 172 over33.3 0 wait .. flips 600 intervals>2 0 worst 2 fields (picture ..) .. content [L3] counts .." */
 static void bench_window(sel_entry_t *e, const char *l) {
@@ -214,18 +260,26 @@ static uint8_t g_seen[E1_COUNT];
 static unsigned g_dups, g_drops, g_drops_seen, g_function, g_mem_after;
 static char g_runkind[48];
 static long g_mem_stack, g_mem_arena, g_mem_vram;
+/* lane eng-e1o (H-017.6): rows with a field that is not a number; the after-play memory line's completeness; the
+   image's own tick count (E1 DONE); the in-play file opens (E1 FILES, H-017.7) */
+static unsigned g_bad_rows, g_mem_ok, g_mem_guard_broken, g_mem_lost, g_done_ticks, g_done_seen;
+static unsigned g_files_seen, g_files_opens;
+static char g_mem_why[48], g_files_first[48];
 static void e1_row(const char *l) {
-    unsigned long v[14];
+    /* compact rows: "ROW n in tick svc trace draw wait frame fields pl obj cam pvr chars ..." as numbers only; every
+       field must be a number (lane eng-e1o: a text field is a malformed row and fails the record, never skipped) */
+    unsigned long v[24];
     int k = 0;
     const char *p = l + 4;
-    while (k < 14 && *p) {
-        char *end;
-        unsigned long x = strtoul(p, &end, 10);
-        if (end == p) break;
-        v[k++] = x;
-        p = end;
+    while (*p) {
+        while (*p == ' ') ++p;
+        if (!*p) break;
+        long x;
+        if (k >= 24 || !num_l(p, &x, 0, 10)) { ++g_bad_rows; return; }
+        v[k++] = (unsigned long)x;
+        while (*p && *p != ' ') ++p;
     }
-    if (k < 13) return;
+    if (k < 13) { ++g_bad_rows; return; }
     const unsigned n = (unsigned)v[0];
     if (n > g_last_row) g_last_row = n;
     if (n < E1_FIRST || n >= E1_FIRST + E1_COUNT) return;
@@ -257,11 +311,13 @@ static void e1_summary(sel_entry_t *e) {
     if (g_function) {   /* lane eng-e1k: a traced or stills run: its rows are not timing */
         sum_add(e, "run: %.44s", g_runkind);   /* "function (traced): not a timing run" */
         sum_add(e, "rows %u of %u ticks: not reported as timing", n, g_last_row);
+        if (g_files_seen) sum_add(e, "files opened in play %u", g_files_opens);
         return;
     }
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
     if (g_mem_after)
         sum_add(e, "after play: stack %ld B, arena margin %ld B, vram free %ld B", g_mem_stack, g_mem_arena, g_mem_vram);
+    if (g_files_seen) sum_add(e, "files opened in play %u", g_files_opens);   /* lane eng-e1o (H-017.7) */
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {
@@ -334,9 +390,12 @@ static void collect(unsigned i) {
     memset(g_seen, 0, sizeof(g_seen));
     memset(g_fields, 0, sizeof(g_fields));
     g_dups = g_drops = g_drops_seen = g_function = g_mem_after = 0;
+    g_bad_rows = g_mem_ok = g_mem_guard_broken = g_mem_lost = g_done_ticks = g_done_seen = 0;
+    g_files_seen = g_files_opens = 0;
+    g_mem_why[0] = g_files_first[0] = 0;
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
-    unsigned windows = 0, done = 0;
+    unsigned windows = 0, done = 0, run_lines = 0, fields_bad = 0, camrec_ticks = 0;
     int pool_seen = 0, pub_seen = 0, camrec_seen = 0;
     if (e->report_ok) {
         static char line[400];
@@ -355,24 +414,65 @@ static void collect(unsigned i) {
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
             else if (!strncmp(line, "E1 draw: headless", 17)) g_headless = 1;
             else if (!strncmp(line, "E1 FIELDS mode ", 15)) {
-                sscanf(line + 15, "%11s flips %u of %u", g_fmode, &g_flips, &g_pictures);
-                const char *q = after(line, "release queue full ");
-                if (q) { g_drops = (unsigned)atoi(q); g_drops_seen = 1; }
+                /* lane eng-e1o: every field strict ("E1 FIELDS mode presented|tick flips F of P pictures; pictures
+                   41-640: counted C intervals>2 N worst W (picture K); release queue full D") */
+                unsigned c = 0, iv = 0, w = 0, wp = 0;
+                g_fmode[0] = 0;
+                sscanf(line + 15, "%11s", g_fmode);
+                if (strcmp(g_fmode, "presented") && strcmp(g_fmode, "tick")) { g_fmode[0] = 0; ++fields_bad; }
+                if (!key_u(line, " flips ", &g_flips) || !key_u(line, " of ", &g_pictures) || !key_u(line, " counted ", &c) ||
+                    !key_u(line, " intervals>2 ", &iv) || !key_u(line, " worst ", &w) || !key_u(line, "(picture ", &wp))
+                    ++fields_bad;
+                g_drops_seen = key_u(line, "release queue full ", &g_drops);
+                if (!g_drops_seen) ++fields_bad;
             } else if (!strncmp(line, "E1 RUN ", 7)) {
                 snprintf(g_runkind, sizeof(g_runkind), "%.40s", line + 7);
-                g_function = strstr(line, "not a timing run") != NULL;
+                ++run_lines;
+                if (!strncmp(line, "E1 RUN timing ", 14)) g_function = 0;
+                else if (!strncmp(line, "E1 RUN function ", 16) && strstr(line, "not a timing run")) g_function = 1;
+                else g_function = 2;   /* a run line that says neither: fails below */
             } else if (!strncmp(line, "E1 MEM after play:", 18)) {
-                const char *a = after(line, " high water "), *b = after(line, " free to arena "), *c = after(line, " vram free ");
-                g_mem_after = 1;
-                g_mem_stack = a ? atol(a) : -1;
-                g_mem_arena = b ? atol(b) : -1;
-                g_mem_vram = c ? atol(c) : -1;
+                /* lane eng-e1o (H-017.6): the line is complete and numeric, or the record fails. "E1 MEM after play: stack
+                   high water H of S guard intact|BROKEN | heap blocks B in use U peak P | sbrk X free to arena A |
+                   mallinfo used M free F | vram free V | lost L". The guard is read from this line. */
+                unsigned hw = 0, of = 0, blocks = 0, use = 0, peak = 0, mu = 0;
+                long sbrk_top = 0;
+                const char *miss = NULL, *g = after(line, " guard ");
+                ++g_mem_after;
+                if (!key_l(line, " high water ", &g_mem_stack)) miss = "stack high water";
+                else if (!key_u(line, " high water ", &hw) || !key_u(line, " of ", &of)) miss = "stack size";
+                else if (!g || (strncmp(g, "intact ", 7) && strncmp(g, "BROKEN ", 7))) miss = "guard";
+                else if (!key_u(line, " heap blocks ", &blocks) || !key_u(line, " in use ", &use) || !key_u(line, " peak ", &peak))
+                    miss = "heap";
+                else if (!num_l(after(line, " sbrk "), &sbrk_top, 0, 16)) miss = "sbrk";
+                else if (!key_l(line, " free to arena ", &g_mem_arena)) miss = "arena margin";
+                else if (!key_u(line, " mallinfo used ", &mu)) miss = "mallinfo";
+                else if (!key_l(line, " vram free ", &g_mem_vram)) miss = "vram free";
+                else if (!key_u(line, "| lost ", &g_mem_lost)) miss = "lost";
+                if (miss) snprintf(g_mem_why, sizeof(g_mem_why), "after-play memory line: no %s", miss);
+                else {
+                    g_mem_ok = 1;
+                    g_mem_guard_broken = !strncmp(g, "BROKEN ", 7);
+                }
+                (void)hw; (void)of; (void)blocks; (void)use; (void)peak; (void)mu; (void)sbrk_top;
+            }
+            else if (!strncmp(line, "E1 DONE ticks=", 14)) {
+                long t;
+                g_done_seen = num_l(line + 14, &t, 0, 10) && t > 0;
+                g_done_ticks = g_done_seen ? (unsigned)t : 0;
+            }
+            else if (!strncmp(line, "E1 FILES in play: opens ", 24)) {
+                /* lane eng-e1o (H-017.7): files opened between the first and the last picture ("E1 FILES in play: opens
+                   N first tick T name X"); a timing scene needs 0 */
+                g_files_seen = key_u(line, " opens ", &g_files_opens);
+                const char *nm = after(line, " name ");
+                snprintf(g_files_first, sizeof(g_files_first), "%.40s", nm ? nm : "?");
             }
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
             else if (!strncmp(line, "E1 POOL full ", 13)) {
                 /* lane eng-e1i (ruling H-015.3): a record pool's refusal is an engine fault, the scene fails */
                 unsigned full = 0, bad = 0;
-                pool_seen = sscanf(line + 13, "%u bad_frees %u", &full, &bad) == 2;
+                pool_seen = key_u(line, "E1 POOL full ", &full) && key_u(line, " bad_frees ", &bad);
                 if ((!pool_seen || full || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
@@ -386,7 +486,9 @@ static void collect(unsigned i) {
             else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
                 /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */
                 unsigned ticks = 0, bad = 0, first = 0;
-                camrec_seen = sscanf(line + 16, "%u non-finite %u (first tick %u", &ticks, &bad, &first) == 3;
+                camrec_seen = key_u(line, "E1 CAMREC ticks ", &ticks) && key_u(line, " non-finite ", &bad) &&
+                              key_u(line, "(first tick ", &first);
+                camrec_ticks = ticks;   /* lane eng-e1o: ticks checked, compared with the scene's ticks below */
                 if ((!camrec_seen || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "camera record not finite: %u of %u ticks (first tick %u)", bad, ticks, first);
             }
@@ -403,12 +505,43 @@ static void collect(unsigned i) {
     /* lane eng-e1k (H-016.6): a timing scene is OK only with a complete record: the run's kind line, 600 picture rows
        once each (41-640), drawn images in presented mode with 600 measured flip intervals (a headless image: 600 tick
        intervals), zero release-queue drops, the after-play memory line (its guard is a refusal line of its own) */
+    /* lane eng-e1o (H-017.6, H-017.7): every E1-family scene, timing or function, has its run line in the schedule's
+       kind and its drawing mode, its tick count, the camera record checked on every one of those ticks, and the
+       in-play file count line */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !e->why[0]) {
+        if (!g_runkind[0]) snprintf(e->why, sizeof(e->why), "no E1 RUN line: timing or function run not said");
+        else if (run_lines != 1) snprintf(e->why, sizeof(e->why), "%u E1 RUN lines", run_lines);
+        else if (g_function == 2) snprintf(e->why, sizeof(e->why), "run line not read: %.40s", g_runkind);
+        else if (s->timing && g_function)
+            snprintf(e->why, sizeof(e->why), "run kind: image says function, schedule says timing");
+        else if (!s->timing && !g_function)
+            snprintf(e->why, sizeof(e->why), "run kind: image says timing, schedule says function");
+        else if (s->headless != (g_headless != 0))
+            snprintf(e->why, sizeof(e->why), "mode: image %s, schedule %s", g_headless ? "headless" : "drawn",
+                     s->headless ? "headless" : "drawn");
+        else if (!g_done_seen) snprintf(e->why, sizeof(e->why), "no E1 DONE tick count (or not a number)");
+        else if (camrec_ticks != g_done_ticks)
+            snprintf(e->why, sizeof(e->why), "camera record checked %u of %u ticks", camrec_ticks, g_done_ticks);
+        else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "no E1 FILES line (or its count not a number)");
+        else if (s->timing && g_files_opens)
+            snprintf(e->why, sizeof(e->why), "files opened in play %u (first %.30s)", g_files_opens, g_files_first);
+    }
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !e->why[0] && s->timing) {
         unsigned distinct = 0, counted = 0;
         for (unsigned i = 0; i < E1_COUNT; ++i) { distinct += g_seen[i]; counted += g_seen[i] && g_fields[i] != 0; }
-        if (!g_runkind[0]) snprintf(e->why, sizeof(e->why), "no E1 RUN line: timing or function run not said");
-        else if (g_function) { /* a function run: judged on its end, refusals and pools only */ }
-        else if (!g_mem_after) snprintf(e->why, sizeof(e->why), "no after-play memory line");
+        if (!g_mem_after) snprintf(e->why, sizeof(e->why), "no after-play memory line");
+        else if (g_mem_after != 1) snprintf(e->why, sizeof(e->why), "%u after-play memory lines", g_mem_after);
+        else if (!g_mem_ok) snprintf(e->why, sizeof(e->why), "%.60s", g_mem_why);
+        else if (g_mem_guard_broken) snprintf(e->why, sizeof(e->why), "after-play memory line: stack guard BROKEN");
+        else if (g_mem_lost) snprintf(e->why, sizeof(e->why), "after-play memory line: %u heap blocks not tracked", g_mem_lost);
+        else if (g_mem_stack <= 0) snprintf(e->why, sizeof(e->why), "after-play memory line: stack high water %ld", g_mem_stack);
+        else if (g_mem_arena < 0) snprintf(e->why, sizeof(e->why), "after-play memory line: arena margin %ld", g_mem_arena);
+        else if (!s->headless && g_mem_vram < 0)   /* -1 is the headless image's sentinel: never a drawn scene's */
+            snprintf(e->why, sizeof(e->why), "after-play memory line: drawn scene, vram free %ld", g_mem_vram);
+        else if (s->headless && g_mem_vram != -1)
+            snprintf(e->why, sizeof(e->why), "after-play memory line: headless scene, vram free %ld", g_mem_vram);
+        else if (g_bad_rows) snprintf(e->why, sizeof(e->why), "rows: %u with a field that is not a number", g_bad_rows);
+        else if (fields_bad) snprintf(e->why, sizeof(e->why), "E1 FIELDS line: a field missing or not a number");
         else if (g_dups || distinct != E1_COUNT)
             snprintf(e->why, sizeof(e->why), "rows: %u of 600 pictures, %u repeated", distinct, g_dups);
         else if (!g_fmode[0]) snprintf(e->why, sizeof(e->why), "no E1 FIELDS line");
@@ -570,6 +703,7 @@ int main(int argc, char **argv) {
             }
         }
         if (skip) fail(i, "skipped by the owner (B held)");
+        else if (s->plan_err[0]) fail(i, "%s", s->plan_err);   /* lane eng-e1o: a kind without run and mode */
         else if (missing[0]) fail(i, "missing %s", missing);
         else launch(i);   /* returns only when the program could not be read */
         J->next = i + 1;

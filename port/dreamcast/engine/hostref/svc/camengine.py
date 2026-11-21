@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """camengine.py: the engine image's camera record, tick by tick, as a cam.txt for camcheck.py (lane eng-e1l).
 
-    camengine.py <serial.txt> <scene> <ref dir> <out dir>
+    camengine.py <serial.txt> <scene> <ref dir> <out dir> [--ticks N]
 
 <serial.txt> is the serial log of a test disc (tools/engine/build_console_disc.sh) whose E1-family scenes ran traced
 (no NOTRACE file): each tick the image prints "CAMLOG t=<tick> e=<eye> g=<target> r=<roll> f=<fov> d=<area>,<cut>,
@@ -16,6 +16,9 @@ route's engine trace and re4ref agree bit for bit at offset 0, lane eng-e1g). Th
 (the fixture's length): out/cam.txt gets the engine's line for every tick the reference has, in the reference's order,
 written as svc4_dump.cpp writes its own (decimal floats, %.9g). Exit 0 written; 2 when the scene is not in the log, an
 engine tick of the window is missing, a tick is repeated, or a value is not finite (camcheck.py then compares).
+--ticks N (lane eng-e1o, H-017.8): the fixture's length. The window must then be every tick 1..N, once each and in order,
+in the reference as in the engine: a reference or an engine run that lost ticks at either side of the same window can no
+longer pass with a shorter one (exit 2).
 """
 import os
 import re
@@ -41,10 +44,15 @@ def scene_lines(lines, name):
 
 
 def main():
-    if len(sys.argv) != 5:
+    args = sys.argv[1:]
+    want = None
+    if len(args) == 6 and args[4] == '--ticks':
+        want = int(args[5])
+        args = args[:4]
+    if len(args) != 4:
         print(__doc__)
         return 2
-    serial, scene, ref, out = sys.argv[1:]
+    serial, scene, ref, out = args
     lines = open(serial, errors='replace').read().replace('\r', '').splitlines()
     seg = scene_lines(lines, scene)
     if seg is None:
@@ -75,6 +83,10 @@ def main():
             t = ln.split()
             if t and t[0] != 'R':
                 ref_ticks.append(int(t[0]))
+    if want is not None and ref_ticks != list(range(1, want + 1)):
+        print('camengine: ERROR the reference window is %d lines (%s..%s), not the fixture ticks 1..%d' % (
+            len(ref_ticks), ref_ticks[0] if ref_ticks else '-', ref_ticks[-1] if ref_ticks else '-', want))
+        return 2
     missing = [t for t in ref_ticks if t not in eng]
     if missing:
         print('camengine: ERROR %d reference ticks without an engine line (first %s); engine ticks %d..%d' % (

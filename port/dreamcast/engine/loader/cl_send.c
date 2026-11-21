@@ -134,8 +134,12 @@ static dbgio_handler_t g_tee = {.name = "cl-tee", .detected = tee_detected, .ini
                                 .read_buffer = tee_read_buffer};
 
 /* ---------------------------------------------------------------- /cd/<root>/ first (-Wl,--wrap=fs_open) */
+/* lane eng-e1o: the E1-family images count the files opened in play in their own wrapper (engine/core/play_files.c),
+   which calls this one; an image without it (the bench) gets the weak wrapper below */
 file_t __real_fs_open(const char *fn, int mode);
-file_t __wrap_fs_open(const char *fn, int mode) {
+file_t cl_send_fs_open(const char *fn, int mode);
+__attribute__((weak)) file_t __wrap_fs_open(const char *fn, int mode) { return cl_send_fs_open(fn, mode); }
+file_t cl_send_fs_open(const char *fn, int mode) {
     if (g_nroot && fn && starts(fn, "/cd/") && !starts(fn, "/cd/LOADER.BIN")) {
         char p[256];
         for (unsigned i = 0; i < g_nroot; ++i) {
