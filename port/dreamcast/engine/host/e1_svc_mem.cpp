@@ -220,9 +220,57 @@ void e1_cloth_stat_tick()
     cloth_stat_tick();
     svc_prof_tick();
 }
+// ---- lane eng-skel1, Part B item 8: the gap probe (boot file GAPPROBE, a diagnostic lab arm before play). The ~2.5 ms
+// span seen once per emulated second in every phase and in drawing: a tight loop reads the engine clock for a while
+// and lists every gap over 0.2 ms with the second it fell in and how far into that second (KOS's TMU2 count), first
+// with interrupts on (with a known 3 ms spin at 0.5 s: the probe's control), then with interrupts off. A gap that stays
+// with interrupts off is not a handler or a thread. ----
+static void gap_run(const char* tag, uint64_t len_ns, bool irq_off, bool control)
+{
+    irq_mask_t old = 0;
+    if (irq_off) old = irq_disable();
+    uint64_t t0 = timer_ns_gettime64(), prev = t0;
+    uint32_t n = 0, iters = 0;
+    uint64_t at[16], gap[16];
+    bool spun = false;
+    for (;;) {
+        const uint64_t t = timer_ns_gettime64();
+        iters++;
+        if (t - prev > 200000 && n < 16) {
+            at[n] = prev - t0;
+            gap[n] = t - prev;
+            n++;
+        }
+        prev = t;
+        if (control && !spun && t - t0 > 500000000ull) {
+            spun = true;
+            const uint64_t m0 = timer_ms_gettime64();   // a 3 ms spin on the millisecond clock between two reads
+            while (timer_ms_gettime64() - m0 < 4) {
+            }
+        }
+        if (t - t0 >= len_ns) break;
+    }
+    if (irq_off) irq_restore(old);
+    e1_log("E1 GAPPROBE %s: %lu ms, %lu reads, %lu gaps over 0.2 ms\n", tag, (unsigned long) (len_ns / 1000000),
+           (unsigned long) iters, (unsigned long) n);
+    for (uint32_t i = 0; i < n; i++)
+        e1_log("E1 GAPPROBE %s gap %lu us at %lu.%06lu s from the start\n", tag, (unsigned long) (gap[i] / 1000),
+               (unsigned long) (at[i] / 1000000000ull), (unsigned long) (at[i] / 1000 % 1000000));
+}
+static void gap_probe()
+{
+    uint32_t s0 = 0, ms0 = 0;
+    timer_ms_gettime(&s0, &ms0);
+    e1_log("E1 GAPPROBE start at %lu.%03lu s of KOS time\n", (unsigned long) s0, (unsigned long) ms0);
+    gap_run("irq-on", 3200000000ull, false, true);
+    gap_run("irq-off", 1500000000ull, true, false);
+    gap_run("irq-off2", 1500000000ull, true, false);
+}
 void e1_svc_boot()
 {
-    file_t f = fs_open("/cd/SVCPROF", O_RDONLY);
+    file_t f = fs_open("/cd/GAPPROBE", O_RDONLY);
+    if (f >= 0) { fs_close(f); gap_probe(); }
+    f = fs_open("/cd/SVCPROF", O_RDONLY);
     if (f >= 0) {
         fs_close(f);
         sp_buf = (uint16_t*) svc_pool_carve(kSpTicks * SP_N * 2);
