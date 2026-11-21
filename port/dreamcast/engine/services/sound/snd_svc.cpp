@@ -546,6 +546,9 @@ extern "C" void snd_svc_report(void)
         e1_log("E1 SOUND worst picture %lu: audio steps %u (%lu us, longest %u us), game calls and SndWatcher %u us\n",
                (unsigned long) wpic, g_steps[wpic], (unsigned long) (g_cost[wpic] - g_cost_main[wpic]), g_step_max[wpic],
                g_cost_main[wpic]);
+    e1_log("E1 SOUND longest step %lu us: %lu driver frames %lu us, voices %lu us, register flush %lu us\n",
+           (unsigned long) aica_stats.long_us, (unsigned long) aica_stats.long_frames, (unsigned long) aica_stats.long_drv,
+           (unsigned long) aica_stats.long_vox, (unsigned long) aica_stats.long_flush);
     for (unsigned i = 0; i < g_tlog_n; i++) e1_log("%s", g_tlog[i]);
     if (g_tlog_lost) e1_log("E1 SOUND thread log: %u lines not kept\n", g_tlog_lost);
     const AicaStats& s = aica_stats;

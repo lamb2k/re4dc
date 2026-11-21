@@ -729,6 +729,7 @@ void audio_step()
     }
     u32 notes = 0;
     for (int i = 0; i < kNotes; i++) notes += g_notes[i].used;
+    const u64 tv = timer_us_gettime64();
     flush();
     mutex_unlock(&g_lock);
     if (aica_slow_us) {   // SNDSLOW (control): a known delay inside the step, so the cost must read it
@@ -742,6 +743,13 @@ void audio_step()
     S.drv_us += d; S.flush_us += f;
     if (d > S.max_drv_us) S.max_drv_us = d;
     if (f > S.max_flush_us) S.max_flush_us = f;
+    if ((u32) (t2 - now) > S.long_us) {   // the longest step and its parts (diagnosis)
+        S.long_us = (u32) (t2 - now);
+        S.long_drv = d;
+        S.long_vox = (u32) (tv - t1);
+        S.long_flush = (u32) (t2 - tv);
+        S.long_frames = ticks;
+    }
     S.active_voices = active; S.active_notes = notes;
     if (active > S.peak_voices) S.peak_voices = active;
     if (notes > S.peak_notes) S.peak_notes = notes;
