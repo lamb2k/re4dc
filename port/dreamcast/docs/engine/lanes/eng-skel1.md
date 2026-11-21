@@ -71,3 +71,27 @@ records (and links `game/obj1d.cpp`), native the entries (and `services/cloth/ch
   model's parts records, so one description can drive two models. El Gigante's chained form does that (em2bChainSet:
   the second and third arm chains share `rope[1]`): in the engine the second set-up takes the first chain over. Request
   to the cloth's owner (eng-cloth1): key a chain by (PenCloth, model), and give a chain back when its model goes.
+
+## Design: binding an archive's clips to its key pack at load (eng-load1's request; not built in Part A)
+
+Today the console images link no motion key pack (`svc_mk_pack` is the PC reference's), so every pose sample is decoded
+from the clip's keys (0.6 to 1.0 ms a picture, MODELLED, eng-svcspd1). The pack the PC uses is one file for a fixture's
+whole set, found by a per-clip identity hash (FNV-1a over the clip header and every key block: 1 to 5 ms a clip on the
+calibrated tier), which is why the console never computes it. Proposed entry, in `skel.h`, called by the loader:
+
+```
+// The clips of one loaded archive bound to that archive's key pack (bake/motion_keys.py --per-archive): pack[i] names
+// clip i by its offset in the archive; each is checked by its header (max frame, joint count) and the pack's receipt
+// (the archive's size and FNV-1a of its motion headers, computed by the baker). Returns the clips bound, or
+// SKEL_MK_REFUSED_FORMAT (-1), SKEL_MK_REFUSED_RECEIPT (-2: the pack was baked from another archive), SKEL_MK_FULL (-3).
+int skel_mk_attach(const void* arc, u32 arcBytes, const void* pack, u32 packBytes);
+// already there: skel_mk_forget(arc, arcBytes) drops the bindings when the archive is freed (and the pack with it)
+```
+
+How to call: in the loader, right after an archive with motion clips is loaded (the room archive, a character's
+archive, the core archive), read its `.mkp` beside it in the same load (no read in play), place it in the same heap as
+the archive (same lifetime), and call `skel_mk_attach`. A refusal is logged and counted (`skel_cnt.mk_refused`), and the
+clips keep being decoded from their keys (correct, slower): the scene's gate row reads the count. When the archive is
+freed, `skel_mk_forget` then free both. The bindings are made here, so `MotionSetCore` finds a clip by its address
+(`mk_of`, a hash probe) and computes no identity in play. Memory: the s16 rows (eng-svc3's approximation, every bone
+within 1 unit / 0.1 degree) are about half the float rows; the room's set is the integrator's ruling (main RAM).

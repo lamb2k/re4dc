@@ -3,7 +3,8 @@
 // Memory: one fixed region of the main RAM map, [E1_SVC_LO, E1_SVC_HI) (host/e1_engine.h, the top 1 MB of the old
 // behaviour arena), independent of the image and of the KOS heap (the hill scene leaves 252 KB of KOS heap free):
 //   - the skeleton pool, 256 KB at E1_SVC_LO (svc_pool_base: tables come and go with the actors);
-//   - the room's collision tables above it (svc_pool_carve: room lifetime, carved upward, never freed in E1).
+//   - the boot carve above it (svc_pool_carve: the cloth pool, the account buffers; never freed) and, from the top
+//     down, the room carve (svc_pool_carve_room: the collision tables, given back when the room is left; lane eng-skel1).
 // The motion key lease of the old port (native_motion.h) is not used: the engine loads every clip in place at room
 // entry, so the key decoder reads pHermite_data as the original does (re4dc_motion_acquire answers "not leased").
 // Check build: the boot option SKELCHECK sets skel_poison (records outside the mailbox hold NaN, lost writes and

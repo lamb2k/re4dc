@@ -3,8 +3,9 @@
 //   - facial shape keys (game/shape.cpp ShapeSet / ShapeMove / ShapeEnd): the engine renderer draws no shape keys.
 //   - cloth: lane eng-e1d links the native cloth service (services/cloth, game/hosted.mk). What stays a stub is its
 //     fallback for a chain it cannot resolve (pen_orig_*: the original bodies, not linked; never reached by Leon's or
-//     Ashley's chains); the wind globals are engine data (pendulum.cpp is not linked). In the boss image (BOSS=1) the
-//     whole cloth stays stubbed as before (El Gigante's loincloth and ropes).
+//     Ashley's chains); the wind globals are engine data (pendulum.cpp is not linked). Lane eng-skel1: the boss image
+//     links the cloth and the chain object too (El Gigante's rope and arm chains); the fight image keeps the stubs below
+//     until its lane sets CLOTH_SVC (game/Makefile).
 #include "e1_engine.h"
 #include "model.h"
 #include "pl_cloth.h"
@@ -26,7 +27,7 @@ extern "C" void pen_orig_Move3(cModel*, PenCloth*) { e1_stub_hit("pen_orig_Move3
 extern "C" void pen_orig_FixSet(cModel*, PenCloth*, int no, Vec*) { e1_stub_hit("pen_orig_FixSet (cloth chain not resolved)", no); }
 extern "C" void pen_orig_FixClear(cModel*, PenCloth*, int no) { e1_stub_hit("pen_orig_FixClear (cloth chain not resolved)", no); }
 #else
-// Fight and boss images: no cloth service linked (lane eng-e1c's stubs). The garments (PlCloth*) are the native garment
+// An image without the cloth service (the fight image until its lane links it; lane eng-e1c's stubs). The garments (PlCloth*) are the native garment
 // service in every image since lane eng-e1g (services/cloth/garment.cpp: it clears the chains' reset / warp request bits,
 // be_flag 0x00E00000, itself); the chains it sets up and moves reach these logged stubs, so the cloth bones keep their
 // animated pose. El Gigante's loincloth and ropes (em2b) likewise.

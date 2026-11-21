@@ -6,7 +6,7 @@
 //
 // One ColPiece per collision piece (cSat), one 32-byte aligned block:
 //
-//   header             64 B   counts, the piece, its file
+//   header             80 B   counts, the piece, its file (96 B with the alignment)
 //   node SoA  [nNode]  20 B   the block tree flattened in the walk's order: box min x / z, size x / z (f32 rows),
 //                             skip (u16: the node after this one's subtree, where a failed test continues) and
 //                             leaf (u16: leaf number, 0xFFFF for an inner node)
