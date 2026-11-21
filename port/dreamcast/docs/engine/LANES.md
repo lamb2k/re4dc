@@ -38,13 +38,13 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 - **Tiers:** every number is labelled with one of:
 
-  | Tier | What it is | What it may decide |
-  |---|---|---|
-  | **console** | Real Dreamcast, GDEMU | Everything; deferred until the replatform is complete |
-  | **MODELLED (strict Flycast, calibrated)** | The interpreter build (`Dynarec.Enabled = no`; slots `fly1`, `fly2`) at the calibrated `[config] Sh4Clock` (MHz, default 200; upstream since v2.2, ours v2.7-14-g12bb43652) | Speed, until the deferred console run |
-  | **MODELLED (PC hardware model)** | Cost read from the code: per-picture counts and the PC hardware model (it has under-read the console by 1.3 to 2 times) | Where the cost is; beside the strict Flycast |
-  | **Flycast** | The plain build (slots `std1`, `std2`) | Function checks only; no speed claim |
-  | **estimate** | Reasoning without a run | Nothing on its own |
+  | Tier | What it is |
+  |---|---|
+  | **console** | Real Dreamcast, GDEMU. Deferred until the replatform is complete |
+  | **MODELLED (strict Flycast, calibrated)** | The interpreter build (`Dynarec.Enabled = no`; slots `fly1`, `fly2`) at the calibrated `[config] Sh4Clock` (MHz, default 200; upstream since v2.2, ours v2.7-14-g12bb43652). Judges speed until the deferred console run |
+  | **MODELLED (PC hardware model)** | The PC hardware model, with the images' own per-picture counters (it has under-read the console by 1.3 to 2 times) |
+  | **Flycast** | The plain build (slots `std1`, `std2`). Function checks only; no speed claim |
+  | **estimate** | No run behind it |
 
 - **The defensive model** (owner 2026-11-21, H-021) replaces "the console decides" until the deferred console run:
   - The clock is calibrated on the old port: its five benchmark scenes have real console means from Test 27.1 (village cross 56 ms, bell fight 53 to 60 ms, farm entry 44 to 58 ms, farm hay-fork view 96 ms, farm quiet view 34 ms). The lowest clock any scene needs is the defensive clock; the spread across scenes says how far one factor can be trusted. The first calibration: see `COMPARISON_20261121.md` in this folder when it lands.
