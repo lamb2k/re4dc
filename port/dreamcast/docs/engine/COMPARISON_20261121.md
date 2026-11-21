@@ -190,9 +190,9 @@ and the hosted game outside these three scripted scenes.
 ## 6. Still pairs
 
 Kept out of git (game pictures). Sheet: `E:\RE4DC-Lanes\eng-cmp1\ev\stills\sheet-cmp1.jpg`; full-size pairs `ev\stills\pair-*.png`.
-Old port: this lane's run A1 of each scene (the frame buffer KOS was showing, read from Flycast's video memory). Engine:
-lane eng-e1p's function run A2 (images E1.BIN b104b052... / FIGHT.BIN f64c1f59..., commit d5c28a62e), not the timed
-console-disc images.
+Old port: this lane's run A1 of each scene (std2, settings not recorded: look evidence only, no figure is taken from
+these stills; the frame buffer KOS was showing, read from Flycast's video memory). Engine: lane eng-e1p's function run
+A2 (images E1.BIN b104b052... / FIGHT.BIN f64c1f59..., commit d5c28a62e), not the timed console-disc images.
 
 ## 7. What can be said
 
@@ -254,8 +254,11 @@ On the SD card (both already staged with KEEP files; nothing staged by this lane
   costs the old port 0.1 to 0.5 pictures a second, so the interval columns use B. Its effect on `remain` itself (cache
   disturbance) is not measured.
 - Not checked: fog and colour grading differences beyond what the stills show; the hill camera record's "far 0" line.
-- Runs: engine eng-1, eng-2, eng-3 (`runs\eng-*`), old port `runs\vil-A1..3`, `hill-A1..3`, `fight-A1..3`, `*-B1..3`;
-  `ev\table.json` holds every run's figures.
+- Runs cited for section 1 (settings recorded: std1, Flycast defaults 200 MHz and dynarec on, in each `launch.json` and
+  log): engine `runs\eng-r1`; old port `runs\vil-RA1`, `hill-RA1`, `fight-RA1` (image A) and `vil-RB1`, `hill-RB1`,
+  `fight-RB1` (image B); comparison with the earlier runs in `ev\rerun_cmp.json` (all window figures equal).
+- Earlier runs, settings not recorded, figures identical (not cited): engine eng-1, eng-2, eng-3; old port
+  `vil|hill|fight-A1..3`, `*-B1..3`, `vil-A4std1`, `try-vil`; `ev\table.json` holds their figures.
 
 ## 10. Flycast calibrated on the old port's console numbers (item 6, owner input 2026-11-21)
 
