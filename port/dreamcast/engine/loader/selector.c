@@ -389,6 +389,9 @@ static char g_mem_why[64], g_files_first[48];
 /* lane eng-e1p (H-018.4, H-018.1, H-018.3): the in-play disc reads and drive requests (E1 FILES), the camera tracks
    converted in play (E1 CAMTRACK); the FIELDS line's own counts, cross-checked against the rows */
 static unsigned g_files_reads, g_files_sectors, g_ctrack_seen, g_ctrack_inplay;
+/* the console loop client's closing count (loader/cl_send.c): rows it dropped once the report's row budget was spent
+   (always the last rows: the budget only fills), so the image's tick count is the last row received plus these */
+static unsigned g_cl_seen, g_cl_rows_dropped;
 static unsigned g_fl_counted, g_fl_over, g_fl_worst, g_fl_worst_pic;
 static void e1_row(const char *l) {
     /* compact rows: "ROW n in tick svc trace draw wait frame fields pl obj cam pvr chars ..." as numbers only; every
@@ -527,6 +530,7 @@ static void collect(unsigned i) {
     g_bad_rows = g_mem_ok = g_mem_guard_broken = g_mem_lost = g_done_ticks = g_done_seen = 0;
     g_files_seen = g_files_opens = 0;
     g_files_reads = g_files_sectors = g_ctrack_seen = g_ctrack_inplay = 0;
+    g_cl_seen = g_cl_rows_dropped = 0;
     g_fl_counted = g_fl_over = g_fl_worst = g_fl_worst_pic = 0;
     g_mem_why[0] = g_files_first[0] = 0;
     g_runkind[0] = 0;
@@ -614,6 +618,13 @@ static void collect(unsigned i) {
                 (void)t1; (void)t2; (void)t3;
             }
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
+            else if (!strncmp(line, "cl-send: lines ", 15)) {
+                unsigned nl = 0, kept = 0, skipped = 0, full = 0, cut = 0;
+                long code = 0;
+                g_cl_seen = tmatch(line, "cl-send: lines %u kept %u rows dropped %u skipped %u dropped when full %u cut long %u, "
+                                         "end code %d", NULL, &nl, &kept, &g_cl_rows_dropped, &skipped, &full, &cut, &code);
+                (void)nl; (void)kept; (void)skipped; (void)full; (void)cut; (void)code;
+            }
             else if (!strncmp(line, "E1 POOL full ", 13)) {
                 /* lane eng-e1i (ruling H-015.3): a record pool's refusal is an engine fault, the scene fails */
                 unsigned full = 0, bad = 0;
@@ -681,9 +692,12 @@ static void collect(unsigned i) {
         else if (!g_done_seen) snprintf(e->why, sizeof(e->why), "no E1 DONE tick count (or not a number)");
         else if (camrec_ticks != g_done_ticks)
             snprintf(e->why, sizeof(e->why), "camera record checked %u of %u ticks", camrec_ticks, g_done_ticks);
-        /* lane eng-e1p (H-018.3): the image's tick count (and with it the camera ticks) against the rows received */
-        else if (g_done_ticks != g_last_row)
-            snprintf(e->why, sizeof(e->why), "E1 DONE says %u ticks, the rows end at tick %u", g_done_ticks, g_last_row);
+        /* lane eng-e1p (H-018.3): the image's tick count (and with it the camera ticks) against the rows received: the
+           last row, plus the rows the client dropped past its row budget (its closing line, required) */
+        else if (!g_cl_seen) snprintf(e->why, sizeof(e->why), "no cl-send closing count (or a field not a number)");
+        else if (g_done_ticks != g_last_row + g_cl_rows_dropped)
+            snprintf(e->why, sizeof(e->why), "E1 DONE says %u ticks, rows end at %u (+%u dropped)", g_done_ticks, g_last_row,
+                     g_cl_rows_dropped);
         else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "no E1 FILES line (or a field not a number)");
         else if (s->timing && g_files_opens)
             snprintf(e->why, sizeof(e->why), "files opened in play %u (first %.30s)", g_files_opens, g_files_first);
@@ -730,8 +744,9 @@ static void collect(unsigned i) {
                 rover += g_fields[i] > 2;
                 if (g_fields[i] > rworst) { rworst = g_fields[i]; rpic = i + E1_FIRST; }
             }
-            if (g_pictures != g_last_row)
-                snprintf(e->why, sizeof(e->why), "E1 FIELDS says %u pictures, the rows end at %u", g_pictures, g_last_row);
+            if (g_pictures != g_last_row + g_cl_rows_dropped)
+                snprintf(e->why, sizeof(e->why), "E1 FIELDS says %u pictures, rows end at %u (+%u dropped)", g_pictures,
+                         g_last_row, g_cl_rows_dropped);
             else if (rc != g_fl_counted || rover != g_fl_over || rworst != g_fl_worst || rpic != g_fl_worst_pic)
                 snprintf(e->why, sizeof(e->why), "E1 FIELDS %u/%u/%u@%u, rows %u/%u/%u@%u", g_fl_counted, g_fl_over,
                          g_fl_worst, g_fl_worst_pic, rc, rover, rworst, rpic);
