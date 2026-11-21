@@ -9,8 +9,11 @@
 Exit 0 PASS, 1 FAIL, 2 nothing to check.
 
 The image says, for every still it hands over, what the hosted code decided and where the weapon is
-("E1 WEPSTILL n tick t present p visible v drawn d box x0 y0 x1 y1", services/weapon_draw.inc: the box is the weapon's
-part spheres projected with the camera, from its skeleton palette; -1 when not on screen). The rule, stated before the
+("E1 WEPSTILL n tick t present p visible v drawn d box x0 y0 x1 y1", services/weapon_draw.inc: the box of the weapon's
+own positions skinned on its skeleton palette and projected with the camera; -1 when not on screen). History: the first
+run (commit 2a2233484, lane eng-look1 F2) gave the box of the part spheres, several times the weapon's silhouette; the
+rule below failed LEONS 4 and FIGHTS 18 stills on the 8% share although every differing pixel lay in the box. The box
+was made the positions' box; the rule's numbers were not changed. The rule, stated before the
 first run (2026-11-21), per still of SCENE with the reference still of the same picture number:
   1. the image's own facts: drawn == visible (the weapon drawn exactly when the hosted code says);
   2. visible and on screen (box area at least 100 pixels after clipping to 640 x 480): the weapon's pixels are found in

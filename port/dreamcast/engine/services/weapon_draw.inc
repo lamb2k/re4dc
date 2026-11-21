@@ -86,6 +86,44 @@ static int e1_weapon_box(const NativeScene* s, const RtModel* m, const float* pa
     return x1 >= 0.f && y1 >= 0.f && x0 < 640.f && y0 < 480.f;
 }
 
+/* Stills runs only (lane eng-look1, after the first check run: the sphere box is several times the weapon's silhouette,
+   so the check's in-box share read 3-6% where the weapon was drawn): the weapon's projected box from its own positions,
+   each skinned on the palette as the pass skins it (weight set blend, position quantum folded in the rows) and projected
+   with the camera. Not used in a timed picture. */
+static int e1_weapon_box_tight(const NativeScene* s, const RtModel* m, const float* pal, int* box)
+{
+    const float* c = (const float*) s->state[0];
+    const RtPart* last = m->parts + m->h[4] - 1;
+    const unsigned npos = last->pos_first + last->pos_count;
+    float x0 = 1e9f, y0 = 1e9f, x1 = -1e9f, y1 = -1e9f;
+    int any = 0;
+    for (unsigned i = 0; i < npos; i++) {
+        const SourceVector* v = m->pos + i;
+        const SkinWeight* sw = m->w + v->bone;
+        float w[3] = {0, 0, 0};
+        for (unsigned k = 0; k < sw->count; k++) {
+            const float* r = pal + 16 * sw->bone[k];
+            for (unsigned a = 0; a < 3; a++)
+                w[a] += sw->w[k] * (r[4 * a] * v->xyz[0] + r[4 * a + 1] * v->xyz[1] + r[4 * a + 2] * v->xyz[2] + r[4 * a + 3]);
+        }
+        const float vx = c[0] * w[0] + c[1] * w[1] + c[2] * w[2] + c[3];
+        const float vy = c[4] * w[0] + c[5] * w[1] + c[6] * w[2] + c[7];
+        const float vz = c[8] * w[0] + c[9] * w[1] + c[10] * w[2] + c[11];
+        if (-vz < 20.f) continue;
+        const float iw = 1.0f / -vz;
+        const float sx = 320.0f + 320.0f * (c[13] * vx + c[14] * vz) * iw;
+        const float sy = 240.0f - 240.0f * (c[15] * vy + c[16] * vz) * iw;
+        if (sx < x0) x0 = sx;
+        if (sy < y0) y0 = sy;
+        if (sx > x1) x1 = sx;
+        if (sy > y1) y1 = sy;
+        any = 1;
+    }
+    if (!any) return 0;
+    box[0] = (int) x0; box[1] = (int) y0; box[2] = (int) x1; box[3] = (int) y1;
+    return x1 >= 0.f && y1 >= 0.f && x0 < 640.f && y0 < 480.f;
+}
+
 static void e1_weapon_pass(NativeScene* s)
 {
     E1WeaponView v[E1_WEAPON_MAX];
@@ -101,8 +139,9 @@ static void e1_weapon_pass(NativeScene* s)
             drawn = (unsigned) e1_actor_pass_one(s, v[i].model, &v[i].skel, (unsigned) cm, 0, 0, 0);   /* Leon's set-up */
         if (drawn) {
             int b[4];
-            on = (unsigned) e1_weapon_box(s, ((const RtCatalog*) s->runtime)->m + cm, v[i].skel.pal, b);
-            if (on && box[0] == -1) memcpy(box, b, sizeof(b));
+            const RtModel* wm = ((const RtCatalog*) s->runtime)->m + cm;
+            on = (unsigned) e1_weapon_box(s, wm, v[i].skel.pal, b);
+            if (on && still && box[0] == -1 && e1_weapon_box_tight(s, wm, v[i].skel.pal, b)) memcpy(box, b, sizeof(b));
         }
         drawn_n += drawn;
         e1_weapon_note(i, drawn, on);
