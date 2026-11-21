@@ -2,6 +2,17 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-024 (2026-11-21): the owner: as many lanes as possible, with an integration lane, none redundant
+
+- **From:** the owner, in conversation. **The owner's words:** "Run as many as possible with an integration lane as long as they aren't redundant". It replaces the limit of two lanes set after the 11-20 stop.
+- **How it is run (the integrator's rulings):**
+  1. **Ownership instead of a count.** Every lane's brief names the files it owns and the one question it answers. No two lanes own the same files or the same fault. The lanes table in STATUS.md is the register; a lane that finds it overlaps another stops that part and says so.
+  2. **One integration lane** (`eng-int`, standing instructions `E:\RE4DC-Lanes\eng-int\GATE.md`) gates each handed-back lane, one at a time, and is the only one that merges into `engine` and adds the "Merged" note to STATUS.md. It does no lane work, fixes nothing in a lane and rules on nothing: a failed gate comes back to the integrator. The integrator still reads each gate report, rules, briefs and writes the hand-overs.
+  3. **One common brief** for what is the same in every lane (`E:\RE4DC-Lanes\COMMON-BRIEF-20261121.md`): rules, machine, suites, Flycast slots by lease (a `LEASE.txt` in the slot), hand-back.
+  4. **The machine is the limit:** 8 cores shared with two other projects (about 90% busy when this was written), 40 GB for WSL including RAM builds, four Flycast slots. Lanes build with `-j4`, one image at a time; C: under 40 GB or E: under 20 GB stops a lane.
+  5. **The drift guard that replaces the count:** nothing merges without the gate; a lane's summary is still a claim; H-023's "drawing first" stands for what hosting waits on.
+- **Lanes now:** eng-e2a (fight services), eng-cmp1 (comparison and calibration, finishing), eng-salv1 (salvage inventory), and new: eng-draw1 (drawing cost and options), eng-svcspd1 (services cost and fixes), eng-look1 (the handgun, then the muzzle flash), eng-bake1 (chapter 1 rooms through the bake, census), eng-int (integration). Queued until the salvage inventory and the drawing options are in: room-to-room loading and doors, sound, items.
+
 ## H-023 (2026-11-21): the disk shrink done; the first calibrated model; the owner on effects and the handgun
 
 - **From:** the integrator and the owner. Authority for the rulings: H-013.
