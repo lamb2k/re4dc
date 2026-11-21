@@ -35,6 +35,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 |---|---|---|---|---|
 | eng-e2a | Step 3 (pass E2), work that does not depend on the console (H-020): the fight image's 114 original service functions native (enemy hit geometry, damage volumes, areas, the Ganado's service functions, scene attachments), judged by outcome on the PC reference | lane/eng-e2a | Claude Opus | E:\RE4DC-Lanes\eng-e2a |
 | eng-cmp1 | Measurement only (owner 11-21, H-019): the old port and the new engine on the same three scenes in the same Flycast, measured the same way, with what each side draws and runs; no change to either | lane/eng-cmp1 | Claude Opus | E:\RE4DC-Lanes\eng-cmp1 |
+| eng-salv1 | Reading only, at the owner's request (11-21: "We should have a lane inspect what we can salvage so the plan is accurate"): the old port's code, data, tools and knowledge classified as reuse, adapt, rewrite native or drop, with the effect on the plan's sizes. A third lane by the owner's word; it builds and runs nothing | lane/eng-salv1 | Claude Opus | E:\RE4DC-Lanes\eng-salv1 |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (fded11182, resolved with eng-e2: draw order Ganados, Leon, Ashley; per-model palette check; per-character light records; FIGHT=1 keeps cloth stubs). The fight image now follows the aim-sway ruling, so its trace differs from eng-e2's run from tick 13 (identical for 900 ticks with AIMSWAY_PRESENT=1). Look calls open: Leon's chapter-2 body browner, Ashley's hair opaque, hill props and handgun not drawn.
 
