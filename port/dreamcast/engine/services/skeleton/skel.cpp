@@ -58,6 +58,19 @@ int skel_poison;
 int skel_control_mk;
 int skel_control_hist;
 int skel_control_compress;
+int skel_control_trig;
+}
+// lane eng-svcspd1: this service's own controls on the PC reference (RE4_SVC_CONTROL, read once; hostref svc_io.cpp)
+extern "C" const char* svc_env(const char* name) __attribute__((weak));
+namespace {
+int g_ctl_read;
+inline void read_controls()
+{
+    if (g_ctl_read) return;
+    g_ctl_read = 1;
+    const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
+    if (c && !__builtin_strcmp(c, "trigstale")) skel_control_trig = 1;
+}
 }
 
 #define PTR_OK(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
@@ -397,10 +410,9 @@ ParentRef parent_of(SkelTable* t, u32 b)
 
 // ---------------------------------------------------------------------------------------------------------------
 // kernels (original arithmetic, original order)
-inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp RotMatrix
+// RotMatrix's body on the sines and cosines of the three angles
+inline void rot_matrix_sc(f32 (*m)[4], f32 sx, f32 sy, f32 sz, f32 cx, f32 cy, f32 cz)
 {
-    f32 sx = sinf(ax), sy = sinf(ay), sz = sinf(az);
-    f32 cx = cosf(ax), cy = cosf(ay), cz = cosf(az);
     f32 szcx = sz * cx, szsx = sz * sx, czsx = cz * sx, czcx = cz * cx;
     m[0][0] = cz * cy;
     m[0][1] = czsx * sy - szcx;
@@ -415,6 +427,32 @@ inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp Ro
     m[2][2] = cy * cx;
     m[2][3] = 0.0f;
 }
+inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp RotMatrix
+{
+    rot_matrix_sc(m, sinf(ax), sinf(ay), sinf(az), cosf(ax), cosf(ay), cosf(az));
+}
+// RotMatrix of bone b's pose angles (lane eng-svcspd1): the six sines and cosines are kept with the angles' bits and
+// reused while the angles do not change. sinf and cosf are functions of their argument's bits, so a reuse gives the same
+// values a call would: the matrix is the same, bit for bit. Most bones a clip does not key (cloth links, face, fingers)
+// keep their angles from tick to tick; newlib's sinf / cosf are 60 to 250 instructions each.
+inline void bone_rot_matrix(SkelTable* t, u32 b, f32 (*m)[4], f32 ax, f32 ay, f32 az)
+{
+    SkelTrig& e = t->trig[b];
+    u32 kx, ky, kz;
+    memcpy(&kx, &ax, 4);
+    memcpy(&ky, &ay, 4);
+    memcpy(&kz, &az, 4);
+    if (!e.valid || (!skel_control_trig && (e.key[0] != kx || e.key[1] != ky || e.key[2] != kz))) {
+        e.s[0] = sinf(ax); e.s[1] = sinf(ay); e.s[2] = sinf(az);
+        e.c[0] = cosf(ax); e.c[1] = cosf(ay); e.c[2] = cosf(az);
+        e.key[0] = kx; e.key[1] = ky; e.key[2] = kz;
+        e.valid = 1;
+        skel_cnt.trig_miss++;
+    } else {
+        skel_cnt.trig_hits++;
+    }
+    rot_matrix_sc(m, e.s[0], e.s[1], e.s[2], e.c[0], e.c[1], e.c[2]);
+}
 
 // partsMatCalc: l_mat = R(ang) T(pos) S(scale), copied to mat
 void mat_calc(SkelTable* t)
@@ -424,7 +462,7 @@ void mat_calc(SkelTable* t)
     f32* s = t->soa;
     for (u32 b = 0; b < t->n; b++) {
         f32 (*m)[4] = t->lmat[b].m;
-        rot_matrix(m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
+        bone_rot_matrix(t, b, m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
         m[0][3] = s[SK_PX * c + b];
         m[1][3] = s[SK_PY * c + b];
         m[2][3] = s[SK_PZ * c + b];
@@ -991,7 +1029,7 @@ void mat_blend(SkelTable* t, f32 rate)
         pos.z = s[SK_PZ * c + b] * rate + wm[2][3] * inv;
         s[SK_PX * c + b] = pos.x; s[SK_PY * c + b] = pos.y; s[SK_PZ * c + b] = pos.z;
         PSMTXIdentity(m);
-        rot_matrix(m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
+        bone_rot_matrix(t, b, m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
         C_QUATMtx(&q0, m);
         C_QUATMtx(&q1, wm);
         C_QUATSlerp(&q0, &q1, &q2, inv);
@@ -1318,8 +1356,8 @@ void inverse_kinematics(SkelTable* t)
                 if (toe < t->n) {
                     Vec tp;
                     get_p(t, toe, &tp);
-                    rot_matrix(LM(t, toe), t->soa[SK_AX * t->cap + toe], t->soa[SK_AY * t->cap + toe],
-                               t->soa[SK_AZ * t->cap + toe]);
+                    bone_rot_matrix(t, toe, LM(t, toe), t->soa[SK_AX * t->cap + toe], t->soa[SK_AY * t->cap + toe],
+                                    t->soa[SK_AZ * t->cap + toe]);
                     TransMatrix(LM(t, toe), &tp);
                     PSMTXConcat(PMAT(t, toe), LM(t, toe), MAT(t, toe));
                     Vec tw;
@@ -1402,6 +1440,7 @@ void inverse_kinematics(SkelTable* t)
 // table life
 SkelTable* table_create(cModel* m)
 {
+    read_controls();
     u32 n = 0;
     for (cParts* p = m->pList; PTR_OK(p) && n < 255; p = p->pList) n++;
     if (!n) return 0;
@@ -1423,12 +1462,14 @@ SkelTable* table_create(cModel* m)
     const u32 oHold = off; off = align32(off + sizeof(SkelHist) * SKEL_MAX_HIST);
     const u32 oHslot = off; off = align32(off + cap);
     const u32 oHlist = off; off = align32(off + SKEL_MAX_HIST);
+    const u32 oTrig = off; off = align32(off + sizeof(SkelTrig) * n);
     u8* blk = (u8*) pool_alloc(off);
     if (!blk) return 0;
     SkelTable* t = (SkelTable*) blk;
     t->hold = (SkelHist*) (blk + oHold);
     t->hslot = blk + oHslot;
     t->hlist = blk + oHlist;
+    t->trig = (SkelTrig*) (blk + oTrig);   // zeroed by pool_alloc: no entry valid
     memset(t->hslot, 0xFF, cap);
     t->base = (f32*) pool_alloc(4 * 6 * cap);
     if (t->base)

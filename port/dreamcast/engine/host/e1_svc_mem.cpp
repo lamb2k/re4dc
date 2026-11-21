@@ -246,11 +246,12 @@ void e1_svc_report()
            (unsigned long) c.mat_world_slow, (unsigned long) c.ik_chains);
     // lane eng-svcspd1: the rest of the skeleton's work counters (the account's units)
     e1_log("E1 SKEL2 local %lu xmtrx_loads %lu add_rot %lu hokan_bones %lu blend_bones %lu samp_int %lu samp_frac %lu samp_end %lu "
-           "mk_rows %lu mk_dec %lu mk_miss %lu mk_root_rows %lu mk_root_dec %lu mk_axes %lu hist_moves %lu\n",
+           "mk_rows %lu mk_dec %lu mk_miss %lu mk_root_rows %lu mk_root_dec %lu mk_axes %lu hist_moves %lu trig_hits %lu trig_miss %lu\n",
            (unsigned long) c.mat_local, (unsigned long) c.xmtrx_loads, (unsigned long) c.add_rot, (unsigned long) c.hokan_bones,
            (unsigned long) c.blend_bones, (unsigned long) c.samp_int, (unsigned long) c.samp_frac, (unsigned long) c.samp_end,
            (unsigned long) c.mk_rows, (unsigned long) c.mk_dec, (unsigned long) c.mk_miss, (unsigned long) c.mk_root_rows,
-           (unsigned long) c.mk_root_dec, (unsigned long) c.mk_axes, (unsigned long) c.hist_moves);
+           (unsigned long) c.mk_root_dec, (unsigned long) c.mk_axes, (unsigned long) c.hist_moves, (unsigned long) c.trig_hits,
+           (unsigned long) c.trig_miss);
     e1_log("E1 COL bakes %lu late %lu line %lu sphere %lu nodes %lu tris_line %lu tris_sphere %lu\n", (unsigned long) col_cnt.bakes,
            (unsigned long) col_cnt.late_bakes, (unsigned long) col_cnt.line_queries, (unsigned long) col_cnt.sphere_queries,
            (unsigned long) col_cnt.nodes_tested, (unsigned long) col_cnt.tris_line, (unsigned long) col_cnt.tris_sphere);
