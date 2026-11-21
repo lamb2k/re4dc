@@ -5,10 +5,19 @@ import struct
 import zlib
 from pathlib import Path
 
+def sky_bytes(directory):
+    """The room's R4SK, or for a room the PS2 gives no sky (interiors: r102, r10d, r10e) an empty one: no sky
+    placements and an 8 x 8 black RGB565 picture, so the pack keeps its sky texture row and header (lane eng-bake1)."""
+    path=Path(directory)/"ps2-sky.r4sk"
+    if path.exists():return path.read_bytes()
+    head=b"R4SK"+bytes(4)+struct.pack("<HHI2f",8,8,128,90.0,-90.0)
+    head+=bytes(36-len(head))+struct.pack("<HH",0,48)
+    return head+bytes(48-len(head))+bytes(128)
+
 def whole_world(directory, material):
     mesh=(directory/"ps2-world.re4mesh").read_bytes()
     side=(directory/"ps2-world.r4pw").read_bytes()
-    sky=(directory/"ps2-sky.r4sk").read_bytes()
+    sky=sky_bytes(directory)
     sg_file=directory/"ps2-world.r4sg"
     groups=sg_file.read_bytes() if sg_file.exists() else b""
     def read(fmt,data,at):return struct.unpack_from("<"+fmt,data,at)
