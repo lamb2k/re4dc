@@ -76,6 +76,9 @@ kthread_t* g_main_thread;
 // Per-picture cost (us) and the counters of the report line.
 const unsigned kPics = E1_TICKS;
 uint32_t g_cost[kPics];
+// the picture's split (diagnosis of the worst picture): the audio steps' time, their count and the longest one, and
+// the main thread's (the game's calls, SndWatcher)
+uint16_t g_cost_main[kPics], g_steps[kPics], g_step_max[kPics];
 uint32_t g_voices_peak, g_notes_peak;
 uint32_t g_requests, g_stops, g_dropped;
 uint32_t g_banks, g_banks_missing, g_load_us, g_load_bytes;
@@ -84,6 +87,12 @@ char g_missing[96];
 
 inline unsigned pic_now() { const uint32_t t = e1_tick; return t % kPics; }
 inline void cost_add(uint32_t us) { g_cost[pic_now()] += us; }
+inline void main_add(uint32_t us)
+{
+    const unsigned k = pic_now();
+    g_cost[k] += us;
+    g_cost_main[k] = (uint16_t) (g_cost_main[k] + (us > 65535 ? 65535 : us));
+}
 // A main-thread measurement (the game's call into the driver, the tick's SndWatcher): wall time less what the audio
 // thread took meanwhile (it preempts the main thread; its steps are counted by the step hook).
 struct MainSpan {
@@ -108,7 +117,10 @@ int boot_file(const char* n)
 // One audio step's cost and voices (aica.cpp's thread).
 void step_hook(uint32_t us, uint32_t voices, uint32_t notes)
 {
-    cost_add(us);
+    const unsigned k = pic_now();
+    g_cost[k] += us;
+    if (g_steps[k] < 65535) ++g_steps[k];
+    if (us > g_step_max[k]) g_step_max[k] = (uint16_t) (us > 65535 ? 65535 : us);
     if (voices > g_voices_peak) g_voices_peak = voices;
     if (notes > g_notes_peak) g_notes_peak = notes;
 }
@@ -474,7 +486,7 @@ extern "C" u32 __wrap__Z7SndCallttP3VeciiP5cUnit(u16 blk, u16 no, Vec* pos, int 
     if (!g_on || !g_booted) return 0;
     const MainSpan span;
     const u32 r = __real__Z7SndCallttP3VeciiP5cUnit(blk, no, pos, id, vol, obj);
-    cost_add(span.us());
+    main_add(span.us());
     return r;
 }
 extern "C" int __wrap__Z7SndStopmi(u32 id, int time)
@@ -484,7 +496,7 @@ extern "C" int __wrap__Z7SndStopmi(u32 id, int time)
     if (!g_on || !g_booted) return 0;
     const MainSpan span;
     const int r = __real__Z7SndStopmi(id, time);
-    cost_add(span.us());
+    main_add(span.us());
     return r;
 }
 
@@ -498,7 +510,7 @@ extern "C" void snd_svc_tick(void)
     if (g_on && g_booted) {   // the original main loop's SndWatcher, after Trans
         const MainSpan span;
         SndWatcher();
-        cost_add(span.us());
+        main_add(span.us());
     }
 }
 extern "C" void snd_svc_report(void);
@@ -530,6 +542,10 @@ extern "C" void snd_svc_report(void)
         if (c > worst) { worst = c; wpic = k; }
     }
     const uint32_t mean = n ? (uint32_t) (sum / n) : 0;
+    if (wpic)   // the worst picture's split
+        e1_log("E1 SOUND worst picture %lu: audio steps %u (%lu us, longest %u us), game calls and SndWatcher %u us\n",
+               (unsigned long) wpic, g_steps[wpic], (unsigned long) (g_cost[wpic] - g_cost_main[wpic]), g_step_max[wpic],
+               g_cost_main[wpic]);
     for (unsigned i = 0; i < g_tlog_n; i++) e1_log("%s", g_tlog[i]);
     if (g_tlog_lost) e1_log("E1 SOUND thread log: %u lines not kept\n", g_tlog_lost);
     const AicaStats& s = aica_stats;
@@ -540,9 +556,10 @@ extern "C" void snd_svc_report(void)
            (unsigned long) g_banks_missing);
     const AicaProbe& p = aica_probe_counts;
     e1_log("E1 SOUND PROBE samples %lu keyed %lu audible %lu moving %lu | se-starts %lu unmapped %lu notes %lu keyons %lu "
-           "steps %lu drv-us %lu flush-us %lu aica-bytes %lu blocks-skipped %lu dropped %lu\n",
+           "steps %lu drv-us %lu flush-us %lu aica-bytes %lu blocks-skipped %lu dropped %lu max-frames-a-step %lu "
+           "debt-drops %lu\n",
            (unsigned long) p.samples, (unsigned long) p.keyed, (unsigned long) p.audible, (unsigned long) p.moving,
            (unsigned long) s.se_starts, (unsigned long) s.se_unmapped, (unsigned long) s.note_on, (unsigned long) s.keyons,
            (unsigned long) s.frames, (unsigned long) s.drv_us, (unsigned long) s.flush_us, (unsigned long) s.aica_used,
-           (unsigned long) s.blocks_skipped, (unsigned long) g_dropped);
+           (unsigned long) s.blocks_skipped, (unsigned long) g_dropped, (unsigned long) s.max_ticks, (unsigned long) s.debt_drops);
 }

@@ -29,6 +29,7 @@ struct AicaStats {
     uint32_t active_voices, active_notes, peak_voices, peak_notes;
     uint32_t blocks, blocks_skipped, copy_bytes, aica_used;
     uint32_t str_starts, str_underruns, str_read_bytes, str_reads;
+    uint32_t max_ticks, debt_drops;   // most driver frames run in one step; debts over 64 frames dropped
 };
 extern AicaStats aica_stats;
 

@@ -677,6 +677,7 @@ void flush()
 // game code are guarded with OSDisableInterrupts (snd_svc.cpp: irq_disable), so the thread cannot run inside them,
 // exactly as the interrupt could not.
 u8 g_thread_stack[12 * 1024] __attribute__((aligned(8)));
+const u32 kCatchUp = 2;   // driver frames a step at most
 kthread_t* g_thread;
 int g_started;
 
@@ -687,8 +688,13 @@ void audio_step()
     if (!g_lastTickUs) { g_lastTickUs = now - 5000; g_lastFrameUs = now; }
     u32 ticks = (u32) ((now - g_lastTickUs) / 5000);
     if (ticks == 0) return;
-    if (ticks > 64) { ticks = 64; g_lastTickUs = now; }
-    else g_lastTickUs += ticks * 5000ull;
+    // Frames owed after the thread was held up are paid back at most kCatchUp a step (the debt carries to the next
+    // steps, so the music keeps its tempo and no single picture takes the whole debt); a debt over 64 frames (320 ms)
+    // is dropped, as the old port did.
+    if (ticks > 64) { g_lastTickUs = now - 5000ull * kCatchUp; ticks = kCatchUp; ++S.debt_drops; }
+    if (ticks > kCatchUp) ticks = kCatchUp;
+    if (ticks > S.max_ticks) S.max_ticks = ticks;
+    g_lastTickUs += ticks * 5000ull;
     mutex_lock(&g_lock);
     for (u32 i = 0; i < ticks; i++) {
         snd_pend_run();
