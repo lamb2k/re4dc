@@ -151,6 +151,28 @@ void e1_camera_draw_tick()
     draw_cam[17] = c.ProjMat[2][2];
     draw_cam[18] = c.ProjMat[2][3];
 }
+// Lane eng-e1i: the ammo digits (render/native_scene.h HudAmmo), written here once a tick and read in place by the
+// renderer: the equipped weapon's loaded count split into ones, tens and hundreds, shown as cockpit.cpp
+// BulletInfo::move / dispBulletDigit show them (guns only, not for pl_type 1; the hundreds only when not 0). Not
+// covered: the "EMPTY" sign for an empty gun with no spare rounds, and the no-weapon player states.
+extern "C" {
+typedef struct { uint32_t tick; uint8_t digit[3]; uint8_t shown; } HudAmmo;
+extern HudAmmo* hud_ammo;
+}
+static HudAmmo e1_ammo;
+#include "item.h"
+static int e1_gun_shows_count(unsigned no)
+{
+    if (pG->pl_type == 1) return 0;
+    switch (no) {
+    case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 0xA: case 0xB: case 0xC: case 0xD:
+    case 0xE: case 0xF: case 0x11: case 0x13: case 0x16: case 0x17: case 0x19: case 0x1C: case 0x1D: case 0x1F:
+    case 0x20: case 0x21:
+        return 1;
+    }
+    return 0;
+}
+extern "C" unsigned e1_hud_magazine(void) { return ItemMgr.bulletNum(); }
 void e1_hud_draw_tick()
 {
     if (!draw_hud) return;
@@ -158,6 +180,13 @@ void e1_hud_draw_tick()
     draw_hud[1] = pG->pl_life_max;
     draw_hud[2] = pG->weapon_no;
     draw_hud[3] = (uint32_t) PlGetWeaponNo();
+    unsigned n = ItemMgr.bulletNum();
+    e1_ammo.tick++;
+    e1_ammo.digit[0] = (uint8_t) (n % 10);
+    e1_ammo.digit[1] = (uint8_t) (n / 10 % 10);
+    e1_ammo.digit[2] = (uint8_t) (n / 100 % 10);
+    e1_ammo.shown = e1_gun_shows_count(pG->weapon_no) ? (uint8_t) (e1_ammo.digit[2] ? 7 : 3) : 0;
+    hud_ammo = &e1_ammo;
 }
 static int diag;   // diagnostic boot options: DNOWORLD (no world drawn), DNOMARK (no partner drawn); read at open
 

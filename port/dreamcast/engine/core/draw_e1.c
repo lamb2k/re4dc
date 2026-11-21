@@ -31,7 +31,8 @@ static int open_ok, stills;
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent);
 void e1_light_tables(const NativeScene* s);
-extern int hud_blend_control;   /* render/native_layers.inc: the HUD control (lane eng-e1h) */
+/* render/native_scene.h (included above): hud_blend_control, the HUD control (lane eng-e1h); hud_ammo_drawn (eng-e1i) */
+unsigned e1_hud_magazine(void);   /* services/draw.cpp: the loaded count (lane eng-e1i) */
 #ifdef E2_FIGHT
 /* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
 void e2_draw_open(void);
@@ -356,5 +357,9 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
         m1_state[4] = 0xa5000000 + 2 * (*(volatile uint32_t*) 0xa05f8050 & 0x7ffffc);
         m1_state[2] = m1_frame;
         while (m1_state[3] != m1_state[2]) thd_pass();
+        /* lane eng-e1i: the ammo check's facts for this still (s/hudcheck.py reads the digit cells from the still) */
+        printf("E1 STILL %lu tick %lu magazine %u digits drawn %d %d %d\n", (unsigned long) m1_frame,
+               (unsigned long) e1_tick, e1_hud_magazine(), hud_ammo_drawn[2] == 0xff ? -1 : hud_ammo_drawn[2],
+               hud_ammo_drawn[1] == 0xff ? -1 : hud_ammo_drawn[1], hud_ammo_drawn[0] == 0xff ? -1 : hud_ammo_drawn[0]);
     }
 }

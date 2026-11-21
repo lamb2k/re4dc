@@ -65,6 +65,10 @@ game/rnd *
 # Ruling H-014.4: they stay offenders until they go native through the engine pool (as services/model/pool.h does
 # for cParts, cModelInfo and cSat): pl_sub's cManager<cEm>::createBack and cEmMgr::memClear, pl_npc's cManager<cLight>.
 !game/* cManager<*>::* cEmMgr::memClear* cObjMgr::memClear*
+# Ruling H-015.1 (lane eng-e1i): the object table's template instances in the weapon module (wep02's
+# cManager<cObj>::createBack and ::destroy, cObjMgr::memClear) are the same service code; and, so that no allowed unit
+# carries a manager body unseen, every allowed unit's cManager<...> member and c*Mgr::memClear is an offender.
+!*/* cManager<*>::* c*Mgr::memClear*
 
 # ==== Enemy decisions and room scripts (lane eng-e1f, integrator ruling from ENGINE_PLAN section 3: what an enemy
 # decides and what an event does stays original code). The units are allowed whole, and every function in them that

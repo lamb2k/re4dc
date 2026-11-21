@@ -45,3 +45,25 @@ ENG_POOL_BACK(cEm)
 // release and the table's log are the pool's.
 template <> void cManager<cLight>::destroy(cLight* p) { eng_pool::destroy(this, p); }
 template <> void cManager<cLight>::log(const char* fmt, ...) { e1_stub_hit(fmt, 0); }
+
+// Lane eng-e1i (ruling H-015.1): the object table (cObj: the handgun object wep02's Wep02_init makes with
+// ObjMgr.createBack, objects the scripts make) on the same pool. Before, the default image took cManager<cObj>::
+// createBack and ::destroy and cObjMgr::memClear from wep02's copy of the template. The table's manager is the engine's
+// (services/managers.cpp cObjMgr: construct by ObjInitFunc, move, destroy with the object's push); its records are
+// cleared by cObjMgr::memClear called directly, so the inline body is emitted here, as cEmMgr's above.
+#ifndef E1_MGR_ORIG_COBJ   // control build only (MGR_EXTRA=-DE1_MGR_ORIG_COBJ=1): wep02's original template instances
+#include "obj.h"
+namespace eng_pool {
+template <> struct traits<cObj> {
+    template <class... A> static void log(cManager<cObj>* m, const char* fmt, A... a) { m->log(fmt, a...); }
+    static void clear(cManager<cObj>* m, cObj* p);
+    static void dtor(cObj* p) { p->~cObj(); }
+};
+void traits<cObj>::clear(cManager<cObj>* m, cObj* p)
+{
+    static_cast<cObjMgr*>(m)->cObjMgr::memClear(p, m->size);
+}
+}   // namespace eng_pool
+ENG_POOL(cObj)
+ENG_POOL_BACK(cObj)
+#endif
