@@ -33,7 +33,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-e1i | Step 2 (close E1 for its audit): HUD ammo digits and lens drawn right, with a still pair; the cObj manager template in wep02 native through the engine pool (H-015.1); a still of the laser dot | lane/eng-e1i | Claude Opus | E:\RE4DC-Lanes\eng-e1i |
+| eng-e1i (follow-up) | Step 2 (close E1 for its audit): the HUD digit check and its helpers into the repository; the pack scripts call `bake/hud_fix.py` so a re-bake keeps the HUD fix. No image change | lane/eng-e1i | Claude Opus | E:\RE4DC-Lanes\eng-e1i |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (fded11182, resolved with eng-e2: draw order Ganados, Leon, Ashley; per-model palette check; per-character light records; FIGHT=1 keeps cloth stubs). The fight image now follows the aim-sway ruling, so its trace differs from eng-e2's run from tick 13 (identical for 900 ticks with AIMSWAY_PRESENT=1). Look calls open: Leon's chapter-2 body browner, Ashley's hair opaque, hill props and handgun not drawn.
 
@@ -55,7 +55,7 @@ Older closed lanes (eng-e0, eng-e0b, eng-shell-map, eng-host, eng-host2, eng-loo
 
 ## Run-time lab arms (lab disc v2)
 
-noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca. Engine images: PACETMU (the old timer pacer with automatic flip, to compare input feel and gaps), LATEPIC (control: one held picture). HUDOLD (the HUD with one blend for every widget, as before eng-e1h).
+noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca. Engine images: PACETMU (the old timer pacer with automatic flip, to compare input feel and gaps), LATEPIC (control: one held picture). HUDOLD (the HUD with one blend for every widget, as before eng-e1h). POOLCTL (control: a forced double free in the fight, the scene must be marked failed).
 
 Merged 11-20, finished, unaudited: eng-svc4 (7 of 10 service items native on the PC reference; integrator gate: three images link, 70/70 controls as they must, link check still FAIL 241 / 843 / 471 service functions until eng-e1e wires the services). Next: eng-svc5 (math helpers, garment pose, SDK math and allocator, strict plays-right reader) when a lane slot frees. Parked: wip eng-ref (local only).
 
@@ -71,8 +71,11 @@ Merged 11-20, finished, unaudited: eng-e1g (pictures released on a fixed display
 
 Merged 11-20, finished, unaudited: eng-e1h (default and sendable images link no original service code: link check service functions 6 / 116 / 65 / 6 -> 0 / 109 / 59 / 0; cEm and cLight tables on the engine pool; laser sight drawn by the renderer, 93 lines in the village and 333 lines with 67 dots in the fight, Flycast; shot-and-hit fixture shot-ganado, Ganado 0x14 800 -> 500 on the PC reference and the native build; dying-Ganado squash made native, palette difference 0 on four fixtures; the four control scripts exit 2 on a missing build, fixture or row; integrator gate: four images link, the link control fails on pl_sub createBack, pooltest passes and both its controls fail, svc_controls 77/77, controls.sh 18/18, outcome_controls 28/28, shot and skinning controls fail as they must). **HUD not fixed**: digits garbled, lens dark (lane eng-e1i). Flycast runs not re-run by the integrator. Found by the integrator: wep02 links the cObj manager template (createBack, destroy, memClear) under its unit allowance (H-015.1).
 
+Merged 11-20, finished, unaudited: eng-e1i (HUD: ammo digits read the live magazine, gauge frame and lens laid out as in the old game; causes were in the HUD data and layout: digit pictures cut wrong, rotation read as radians, padded pictures drawn whole, draw order; the lens needs no screen copy; the cObj table on the engine pool, and the allowed list now rejects every manager-template body in an allowed unit: default and sendable 0, fight 109, boss 58; a scene with a pool refusal is marked failed by the selector; integrator gate: four images link, the link control fails with 2 functions, pooltest and its controls, svc_controls 77/77, controls.sh 18/18, outcome_controls 28/28, the digit check re-run on the lane's Flycast stills: fight 23/23 and village plus hill 36/36 read right, the control cut 23/23 wrong). The console disc needs the packs in `E:\RE4DC-Lanes\eng-e1i\packs` (the disc script's defaults). Open: the EMPTY sign and no-weapon HUD states are not drawn; a thin dark line crosses the bullet icon on the hill; the digit check is not in the repository yet (follow-up).
+
 ## Waiting on the owner
 
+- HUD look: the still sheet `E:\RE4DC-Lanes\eng-e1i\ev\hud\hud-sheet.jpg` (old game, before, after) needs the owner's yes.
 - Input feel on the console: the fixed-field pacer adds one picture of delay; the PACETMU arm is the comparison.
 - The console evening: the SD card (step 1).
 - Asset source for step 6 (beyond the PS2 version).
