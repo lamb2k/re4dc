@@ -33,9 +33,7 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| eng-e1g | Steps 1 and 2: pictures paced on the display's field count; engine pad clamp; native aim; SDK math, allocator and float library built and linked; allowed-list rulings; dying-Ganado skinning; HUD fault | lane/eng-e1g | Claude Opus | E:\RE4DC-Lanes\eng-e1g |
-
-Closed: eng-e1d (Opus), handed back 11-20, merged (047589cf0). See the E1 row. Look calls open: Leon's chapter-2 body reads browner than the old game; Ashley's hair drawn opaque; props, ground light pool and handgun not drawn on the hill.
+| eng-e1h | Step 2 (close E1 for its audit): the six service functions left in the default image native (manager templates through the engine pool, laser-sight point and line drawing); HUD compositing fault; dying-Ganado skinning; shot-and-hit fixture; controls that pass with no rows | lane/eng-e1h | Claude Opus | E:\RE4DC-Lanes\eng-e1h |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (fded11182, resolved with eng-e2: draw order Ganados, Leon, Ashley; per-model palette check; per-character light records; FIGHT=1 keeps cloth stubs). The fight image now follows the aim-sway ruling, so its trace differs from eng-e2's run from tick 13 (identical for 900 ticks with AIMSWAY_PRESENT=1). Look calls open: Leon's chapter-2 body browner, Ashley's hair opaque, hill props and handgun not drawn.
 
@@ -51,29 +49,13 @@ Closed: eng-e1b (Opus), handed back 11-19, merged (64b0211ba). Ashley's original
 
 Closed: eng-boss (Opus), handed back 11-19, merged (f6af771dc). El Gigante (village square r119). Bench, full body: MODELLED 19.98 mean / 25.41 worst (characters 9.9, world 5.2, translucent 3.3); Flycast 15.53 / 22.00, no interval over 2 fields. Lighter PS2 body (g50): 18.36 / 22.49 MODELLED, MAE 0.52, sheet sent to the owner. Original boss AI and room script hosted on the E1 shell: attack sequence exact for 8 of 10 changes, motion, state and hp exact to tick 867, hut break on the same tick; hosted rows Flycast behaviour 1.41, services 5.06, publication 0. Effects recorded, not simulated. Discs E:\RE4DC-Lanes\eng-bossuild\BOSS-BENCH-GDEMU and BOSS-HOSTED-GDEMU.
 
-Closed: eng-svc (Opus, PC-only), handed back 11-19, merged (bcc08c170). Native skeleton (SoA per actor, one parent-order pass in SH4ZAM XMTRX) and collision (flattened block tree, hot and cold polygon records) equal to the original units on six fixtures (bones equal as numbers, collision identical, plays-right pass); three controls fail as they must. Behaviour touches only 13 to 22 of Leon's 119 bone records. Skeleton memory accesses down 30 to 42%. Not yet in the E1 image; no SH-4 timing. Doc: SERVICES.md.
-
-Closed: eng-look (Opus), handed back 11-19, merged (26c3746c8). Hair fixed (+1 ms MODELLED from re-skinning), pyre glow approximated, unseen-route visibility down to 1 pixel on 1 picture, light-pick control added. Step 0 MODELLED: cross 17.3 mean / 23.2 worst, hay-fork 19.6 / 22.1. Content steps barely move these two scenes: character levels L3 -0.45 ms (invisible), effect cap E2 -0.04 ms (invisible); world cap W2 -0.4/-1.6 ms and W3 -2.2/-3.1 ms leave visible holes; props as cards and baked lighting gain nothing here. Sheets sent to the owner. Disc E:\RE4DC-Lanes\eng-lookuild\E0-GDEMU-lkg.
-
-Closed: eng-host2 (Opus, PC-only), handed back 11-19, merged (9dd87b9cb). re4ref now hosts Ashley (pl_npc, pl11: 37 KB code) and a Ganado (em10 and 8 files: 293 KB code); per-actor trace lines; 10 controls pass. Agreement with old-game traces (position only, every 4th tick): Ganado within 0.002 units over ticks 185-317 at the bell gate until the room event freezes it; Ashley within 0.018 units over ticks 185-289 at the r11d hill until the room's opening event. Needs two emulator fixtures recorded with full per-actor fields (listed in its hand-back).
-
-Closed: eng-host (Opus, PC-only), handed back 11-19, merged (41c045240). re4ref: PC build of the 20-file player and camera closure; plays_right.py with tolerances and three failing controls (walk speed +2%, one generator call dropped, input one tick late: all fail as they must). Agreement with the old game's door103 walk: 323 ticks within tolerance, discrete fields exact, position bit-identical on 272 ticks. Found a real bug: cAtariInfo::init declared with float arguments first. Doc: PLAYS_RIGHT.md.
-
-Closed: eng-loop (Opus, PC-only), handed back 11-19, merged (907bb1a24). Remote console loader over the DreamPi link: 16/16 host tests through a simulated bad line (loss, corruption, reorder, dead line, sender restart); corrupted or wrong-hash images refused before RUN. Measured uplink 1.36 KB/s; downlink never measured. Estimates at that rate: E0 bench 2.2 min deflated, game image 24 min, room packs 42 min (packs stay on disc). Disc E:\RE4DC-Lanes\eng-loop\disc (KEEP, SD-README). Next: Flycast proof run (queued for the next free emulator slot), then the owner adds it to the SD card once.
-
-Closed: eng-e0b (Opus), handed back 11-19, merged (code 1edab55a8). Console report: one screen line per 600-picture window (mean, p99, worst, count over 14, count over 33.3, presented intervals over 2 fields); raw rows over serial and in memory tables.
-
-Closed: eng-e0 (Opus), handed back 11-19, merged. Survey arms MODELLED (cross / hay-fork): default 13.9 / 15.9; cache-RAM staging 14.2 / 16.1; three short loops in C 15.4 / 18.5. Both arms are boot options on the disc for the console to judge.
-
-Closed: eng-shell-map (Opus), handed back 11-19, merged (lane commit 673a891e9). Console budget rows at the cross, ms a picture: behaviour 1.6, services 15.5, publication 16.3, drawing 17.8, system 3.9. Open: heap census run for the behaviour arena size; worst interval per row.
-
-Closed: lab33 (M0 tool), handed back 11-19. Integrator accepted its one open item: off arms moved quiet-farm logic by 0.13 to 0.17 ms/tick against a 0.125 ms repeat spread (Flycast). The A/A visit read as low, so visit order explains most of it, and the console session brackets every arm. Lake fight preset left out (it lands in the boat-death state).
-
 Closed: disc2-play, handed back 11-19 (lane/disc2-play 0ceab4ea7). Carries: a no-warp play-through tool driven by in-game pad scripts (r200 to r202 to r207 from a cold load, crank and cannon set, locked-door control works) and one open progress item: the r207 sword puzzle timed out, script or logic not yet told apart. 50 of 50 room entries, 8 memory-squeeze cases and the disc race passed on the old line; its rendering, texture and memory findings are recorded as old path, not carried.
+
+Older closed lanes (eng-e0, eng-e0b, eng-shell-map, eng-host, eng-host2, eng-loop, eng-svc, eng-look, lab33): see this file's history.
 
 ## Run-time lab arms (lab disc v2)
 
-noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca.
+noworld, nochars, nofx, nohud, nodraw, aa; std tier adds fix4, all31, charvis2, ps31, leon2, leon3, spawn4, movca. Engine images: PACETMU (the old timer pacer with automatic flip, to compare input feel and gaps), LATEPIC (control: one held picture).
 
 Merged 11-20, finished, unaudited: eng-svc4 (7 of 10 service items native on the PC reference; integrator gate: three images link, 70/70 controls as they must, link check still FAIL 241 / 843 / 471 service functions until eng-e1e wires the services). Next: eng-svc5 (math helpers, garment pose, SDK math and allocator, strict plays-right reader) when a lane slot frees. Parked: wip eng-ref (local only).
 
@@ -85,8 +67,11 @@ Merged 11-20, finished, unaudited: eng-svc5 (strict plays-right reader `outcome.
 
 Merged 11-20, finished, unaudited: eng-e1f (fields between presented pictures in every E1 image and in the selector summary; El Gigante bench pack fixed in the baker; enemy decision units and room scripts in the allowed list with 141 service functions kept out and a name guard; integrator gate: default, FIGHT=1, BOSS=1, SENDABLE=1 link; link check service functions 98 / 204 / 154 / 98, still FAIL; guard control refuses em10FootSe). Flycast controls not re-run by the integrator. Found: the frame pacer is not tied to the display, 3-field gaps with no late picture (Flycast: village 5, hill 3, fight 29 per 600); the PC reference clamps the stick and the engine did not (cause of the village yaw split at tick 424). Not done: native aim (written, not built), shot-and-hit fixture, HUD fault, disc rebuild.
 
+Merged 11-20, finished, unaudited: eng-e1g (pictures released on a fixed display field: intervals over two fields 5 / 3 / 29 -> 0 per 600 in village, hill, fight, Flycast, at the cost of one picture of input delay, about 33 ms; engine pad clamp, village 641/641 ticks against the PC reference; native aim, SDK math and heap linked; float library is the toolchain's, not bit-identical, judged by outcome on 8 fixtures; integrator gate: four images link, link check service functions 6 / 116 / 65 / 6, svc_controls 76/76, sdktest and alloctest pass and their controls fail, laser-sight control 6 -> 8). Flycast runs not re-run by the integrator. Found: `svc_controls.sh` exits 0 with an empty table when the odump build is missing.
+
 ## Waiting on the owner
 
+- Input feel on the console: the fixed-field pacer adds one picture of delay; the PACETMU arm is the comparison.
 - The console evening: the SD card (step 1).
 - Asset source for step 6 (beyond the PS2 version).
 - El Gigante's lighter PS2 body: yes or no.
