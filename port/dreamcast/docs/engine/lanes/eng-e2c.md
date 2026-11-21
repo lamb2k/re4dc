@@ -83,6 +83,30 @@ native build reads nothing (for the integrator: sce_at's InScreenCheck in the fi
   PenClothSet (a logged stub in the boss image), SetChain and the chain object's setChain / setParent / setParent2 (logged
   stubs: the chain object kind is not in the boss image), Ctrl12GetTexRenderEm2b (a stub: none; refused and counted).
 
+## Existing suites (PC, on the merged head 1858344ad: `E:\RE4DC-Lanes\eng-e2c\ev\suites-final\`)
+
+svc_controls 79 rows, camcheck, refctl, controls 18, outcome_controls 35, aim_check (its controls fail), e2check (lane
+eng-e2a's 14 rows) and e2c_check: every row as it must.
+
+## Flycast function check (plain Flycast, slot std2: dynarec on, SH-4 200 MHz by default; no speed claim)
+
+Two test discs with the repository's build_console_disc.sh, scenes BOSS-BENCH and BOSS: B0 from the lane's start
+(ce7fd1a44) and B1 from its head (1858344ad); both deleted after their runs (`cdisc\DELETED.txt`).
+- Both: 2 of 2 scenes OK under the strict selector; BOSS 600 rows, disc in play 0 opens / 0 reads / 0 sectors, camera
+  tracks converted in play 0, `E1 POOL full 0 bad_frees 0`.
+- The BOSS scene's behaviour against the start (engine against itself, `s\cmp_boss.py`, addresses of load buffers
+  masked: the image grew): the 66 effect requests with their ticks, the 112 E2 lines (tasks, room, hidden scroll pieces
+  with their ticks), the 75 stub lines and the pool line identical. Only the Flycast tick figures moved (services p99
+  7.54 to 7.53 ms; behaviour worst at tick 48 vs 76, 0.34 ms both), which are not claims.
+- The boss bench: its four rows identical between B0 and B1 (C0 15.44 / 20.34 / 22.41, Flycast); the bench image does
+  not contain this lane's code.
+- The head's call counts in the 900-tick scene (`runs\e2c-counts-B1.txt`): blow camera 50 (the catch), quakes 11 (all
+  requested), foot landings 10, neck turns 902, blends 117, oba objects 6 made and 5,406 moves, push tests 902 (no other
+  giant: no push), the tree's empty destructor 1, rope chain asked 1 (the stub answers none), screen tests 0, squashes 0,
+  giant released 0 (the giant does not die in the window).
+- Not run: a control for this engine-against-itself comparison (an image whose behaviour moves, for example eng-boss's
+  BOSS_EXTRA=-DE1_CONTROL_SHIFT=1, must make it differ); the PC check is this lane's control-backed evidence.
+
 ## Stubs
 
 None added. The set-ups keep calling the existing logged stubs (PenClothSet, SetChain, cObjChain::setChain, setParent,
