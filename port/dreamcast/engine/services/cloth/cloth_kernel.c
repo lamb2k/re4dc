@@ -270,26 +270,19 @@ void cloth_k_at_ck_parallel(ClothKVec* pos, ClothKVec* up, const ClothKVol* a, u
         cloth_k_cnt.vol_tests++;
         if (a->type == 0) {
             // Lane eng-svcspd1: the early out. The test below moves the pair only when push < rr and (an end lies in
-            // the sphere, or 0 <= dot < lenSq). With dot in that range t lies in [0, 1), so the tested point is
-            // within 1 unit of p1 (nd is a unit vector) and push < rr puts the centre within r + 1 of p1; an end in
-            // the sphere puts it within r of that end. So a centre at least r + 1.5 from p1 and more than r + 0.5
-            // from p0 (each with 0.1% more, for rounding) is never a hit, and the original goes on to the next volume
-            // with nothing changed: so does this. d1 and d0 are the original's own values (same operations, same
-            // order), taken first; d0 only when p1 is out of reach (fewer live values in the common path).
-            // Skirt links test 11 leg spheres four times a tick; few are within reach.
+            // the sphere, or 0 <= dot < lenSq): with dot in that range t lies in [0, 1), so the tested point is within
+            // 1 unit of p1 (nd is a unit vector) and the centre within r + 1 of p1; with an end inside, the centre is
+            // within r + len of p1. So a centre farther than r + len + 1 from p1 (0.1% added for rounding) is never
+            // a hit, and the original goes on to the next volume with nothing changed: so does this. d1 is the
+            // original's own value (same operations, same order), taken first. Skirt links test 11 leg spheres four
+            // times a tick; most are far from most of them.
             const float ex = a->p0.x - p1.x, ey = a->p0.y - p1.y, ez = a->p0.z - p1.z;
             float d1 = ex * ex + ey * ey;
             d1 += ez * ez;
-            const float cut = cloth_k_control_bound ? 40.0f : 0.0f;   // control: the reaches 40 units short
-            const float reach1 = a->r + 1.5f - cut;
-            if (d1 >= reach1 * reach1 * 1.001f) {
-                const float reach0 = a->r + 0.5f - cut;
-                float e0 = (a->p0.x - p0.x) * (a->p0.x - p0.x) + (a->p0.y - p0.y) * (a->p0.y - p0.y);
-                e0 += (a->p0.z - p0.z) * (a->p0.z - p0.z);
-                if (e0 > reach0 * reach0 * 1.001f) {
-                    cloth_k_cnt.vol_skips++;
-                    continue;
-                }
+            const float reach = a->r + len + (cloth_k_control_bound ? -40.0f : 1.0f);   // control: 40 units short
+            if (d1 > reach * reach * 1.001f) {
+                cloth_k_cnt.vol_skips++;
+                continue;
             }
             ClothKVec v;
             const float rr = a->r * a->r;
