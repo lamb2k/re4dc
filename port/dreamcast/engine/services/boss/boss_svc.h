@@ -29,6 +29,9 @@ struct BossSvcCounters {
     u32 cloths;         // em2bClothSet: arm cloths handed to the cloth service
     u32 chains;         // chain objects asked for (rope, arm chains)
     u32 texrender_refused;   // room 224's texture-render manager: none (the renderer has none yet)
+    u32 thunder_draws;  // the thunder's interval draws (the presentation generator)
+    u32 thunders;       // thunders requested (flash effect and sound)
+    u32 thunder_flashes;// hut-light flashes set by the effect tool's callback
 };
 extern BossSvcCounters boss_cnt;
 // Controls (set only by the PC check, hostref svc/e2c_dump.cpp RE4_SVC_CONTROL; each must make the comparison fail):
@@ -36,6 +39,6 @@ extern BossSvcCounters boss_cnt;
 // of 5000; 3 "bossneck": the neck's damping 0.85 instead of 0.9; 4 "bossblend": the blend weight |Blend| / 255;
 // 5 "bossheld": a giant's destructor keeps its third chain object; 6 "bossoba": an oba object's ground clamp 1500
 // instead of 2000 above the parent; 7 "bosspush": giants pushed apart to 2900 instead of 3000; 8 "bossrope": the rope's
-// constraint iterations 99 instead of 100.
+// constraint iterations 99 instead of 100; 9 "bossthunder": the thunder's interval 5 ticks longer.
 extern int boss_control;
 }

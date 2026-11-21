@@ -23,6 +23,15 @@ BOSSVC_SRCS := em2b_pres em2b_skel em2b_life em2b_setup
 ifneq ($(OBA_ORIG),1)
 BOSSVC_SRCS += oba_obj
 endif
+# Lane eng-e2c (integrator ruling 2026-11-21): the room's thunder (services/boss/r119_thunder.cpp). r119.cpp's three
+# thunder functions are static: the hosted unit is compiled with services/boss/r119_weak.h force-included (they become
+# weak symbols, referenced by symbol), and game/r119_split_check.py must pass on the object (no section reference, no
+# copy inlined elsewhere) or the build stops. Control build only: R119_ORIG=1 builds r119 as it was and links no engine
+# thunder (the link check must FAIL on the three). Never a default.
+ifneq ($(R119_ORIG),1)
+BOSSVC_SRCS += r119_thunder
+R119_WEAK := -include $(ENG)/services/boss/r119_weak.h
+endif
 BOSSVC_OBJS := $(addprefix $(OUT)/n/boss_,$(addsuffix .o,$(BOSSVC_SRCS)))
 HOSTED_OBJS := $(BOSSVC_OBJS) $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
 $(OUT)/n/boss_%.o: $(ENG)/services/boss/%.cpp $(wildcard $(ENG)/services/boss/*.h) $(ENG)/services/camera/cam_math.h $(ENG)/host/e1_prelude.h
@@ -43,12 +52,13 @@ $(OUT)/h/em2b/em2b.o: $(ROOT)/src/em2b/em2b.cpp $(ENG)/host/e1_prelude.h $(OUT)/
 	sh-elf-objcopy --redefine-sym __prolog=_em2b_prolog --redefine-sym __epilog=_em2b_epilog \
 		--redefine-sym __unresolved=_em2b_unresolved $$(sed 's/^/--weaken-symbol=/' $(OUT)/n/boss_syms.txt) $@.tmp.o $@
 	rm -f $@.tmp.o
-$(OUT)/h/st1/r119.o: $(ROOT)/src/st1/r119.cpp $(ENG)/host/e1_prelude.h
+$(OUT)/h/st1/r119.o: $(ROOT)/src/st1/r119.cpp $(ENG)/host/e1_prelude.h $(ENG)/services/boss/r119_weak.h $(ENG)/game/r119_split_check.py
 	@mkdir -p $(dir $@)
-	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.tmp.o
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(R119_WEAK) -c $< -o $@.tmp.o
 	sh-elf-objcopy --redefine-sym __prolog=_r119_prolog --redefine-sym __epilog=_r119_epilog \
 		--redefine-sym __unresolved=_r119_unresolved $@.tmp.o $@
 	rm -f $@.tmp.o
+	$(if $(R119_WEAK),python3 $(ENG)/game/r119_split_check.py $@ > $@.split.txt || { cat $@.split.txt; rm -f $@; exit 1; })
 # src/game/game.cpp names the old port's door-phase probe unconditionally: an empty macro here (knob off).
 $(OUT)/h/game/game.o: ORIG_FLAGS += "-DRE4DC_DOORPH(x)="
 # Controls / arms of the boss image: make BOSS=1 BOSS_EXTRA=-DE1_CONTROL_SHIFT=1 (every pad action one frame late).

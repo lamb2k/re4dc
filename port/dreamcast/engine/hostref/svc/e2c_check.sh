@@ -13,7 +13,8 @@
 # in both builds.
 #   exercise   e2cboss on bell-ganado (Leon and four Ganados) and hill-ashley (Leon and Ashley: the partner watched):
 #              must PASS
-#   controls   (native only, on the bell-ganado exercise) bosscam (event cameras' eye 1% further), bossquake (the
+#   controls   (native only, on the bell-ganado exercise; bossthunder on hill-ashley's, the thunder's interval 5 ticks
+#              longer) bosscam (event cameras' eye 1% further), bossquake (the
 #              nearest quake band 4500), bossneck (the neck's damping 0.85), bossblend (the blend weight / 255): must FAIL
 # Exit 0 when every row ends as it must, 1 when one does not, 2 when a build or a run is missing.
 set -u
@@ -73,6 +74,10 @@ for c in bosscam bossquake bossneck bossblend bossheld bossoba bosspush bossrope
     run "$d/ctl-$c" native bell-ganado RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done
+# the thunder's control on hill-ashley (600 ticks: two thunders; bell-ganado's 300 ticks end before the first)
+d=$OUT/ex-hill-ashley
+run "$d/ctl-bossthunder" native hill-ashley RE4_SVC_CONTROL=bossthunder || { missing=1; echo "control bossthunder: run failed"; }
+[ -s "$d/ctl-bossthunder/e2c.txt" ] && row "control bossthunder" FAIL "$d/odump" "$d/ctl-bossthunder"
 [ $missing = 1 ] && { echo "e2c_check: a run or a log is missing"; exit 2; }
 [ $bad = 1 ] && { echo "e2c_check: a row did not end as it must ($MD)"; exit 1; }
 echo "e2c_check: every row as it must ($MD)"

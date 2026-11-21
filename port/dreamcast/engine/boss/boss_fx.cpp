@@ -56,6 +56,8 @@ void e2_report()
            (unsigned) b.pushes);
     e1_log("E2C BOSS set-ups cloths %u chains %u texrender refused %u\n", (unsigned) b.cloths, (unsigned) b.chains,
            (unsigned) b.texrender_refused);
+    e1_log("E2C BOSS thunder draws %u thunders %u flashes %u\n", (unsigned) b.thunder_draws, (unsigned) b.thunders,
+           (unsigned) b.thunder_flashes);
     for (unsigned k = 1; k < FX_KINDS; k++) if (fx_count[k]) e1_log("E2 FX %s count=%u\n", fx_names[k], fx_count[k]);
     for (unsigned i = 0; i < fx_n; i++)
         e1_log("E2 FXEV t=%u %s %08lx %08lx %08lx\n", fx_events[i].tick, fx_names[fx_events[i].kind],

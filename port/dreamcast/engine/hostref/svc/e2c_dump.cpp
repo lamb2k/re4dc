@@ -34,6 +34,7 @@
 #include "TexRender.h"
 #include "pendulum.h"
 #include "pl_cloth.h"
+#include "light.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -661,6 +662,79 @@ void ex_setup(unsigned t)
 }
 }   // namespace
 
+// ---- the room's thunder (r119_ThunderMove and its two light callbacks; native: services/boss/r119_thunder.cpp) ----
+// The task runs as a coroutine from tick 30, resumed once a tick (SceSleep yields back). Its interval draws are answered
+// from this file's own stream in both builds (svc/svc.mk renames the original's Rnd and the engine's eng_pres_u8 to
+// e2c_thunder_rnd in the exercise's copies: in the image the engine draws from the presentation generator, the original
+// drew from the behaviour generator), so the timer's logic is compared, not the generators. Every 7th tick from 33 the
+// callbacks the task registered are called with the effect tool in state 0, 1 or 2, on a planted light table.
+extern "C" {
+void r119_task_orig(void) asm("_ZL16r119_ThunderMovev");
+void e2c_co_start(void (*fn)());   // svc/e2c_co.cpp (PC side)
+void e2c_co_resume();
+void e2c_co_yield();
+}
+namespace {
+unsigned g_th_wake;
+int g_th_started;
+u32 g_th_lcg = 4242u;
+void (*g_th_on)();
+void (*g_th_off)();
+u8 g_tool;
+void ex_thunder(unsigned t)
+{
+    if (!g_th_started) {
+        e2c_co_start(r119_task_orig);
+        g_th_started = 1;
+        g_th_wake = t;
+    }
+    if (t >= g_th_wake) {
+        g_in = 1;
+        e2c_co_resume();
+        g_in = 0;
+    }
+    if (t >= 33 && t % 7 == 5 && g_th_on && g_th_off) {
+        alignas(32) static u8 lights[8 * sizeof(cLight)];
+        __builtin_memset(lights, 0, sizeof(lights));
+        void* const keep_a = LightMgr.pArray;
+        const u32 keep_n = LightMgr.nArray, keep_s = LightMgr.size;
+        LightMgr.pArray = (cLight*) lights, LightMgr.nArray = 8, LightMgr.size = sizeof(cLight);
+        g_tool = (u8) (t % 3);
+        g_in = 1;
+        g_th_on();
+        const f32 a2 = LightMgr.getWorkPtr(2)->Intensity, a6 = LightMgr.getWorkPtr(6)->Intensity;
+        g_th_off();
+        g_in = 0;
+        P(g_f, "%u TL %u %08x %08x %08x %08x\n", t, g_tool, bits(a2), bits(a6), bits(LightMgr.getWorkPtr(2)->Intensity),
+          bits(LightMgr.getWorkPtr(6)->Intensity));
+        LightMgr.pArray = (cLight*) keep_a, LightMgr.nArray = keep_n, LightMgr.size = keep_s;
+    }
+}
+}   // namespace
+extern "C" void SceSleep(int frames)
+{
+    if (g_f) P(g_f, "%u TS %d\n", g_tick, frames);
+    g_th_wake = g_tick + (frames > 0 ? frames : 1);
+    e2c_co_yield();
+}
+extern "C" unsigned char e2c_thunder_rnd()
+{
+    g_th_lcg = g_th_lcg * 1103515245u + 12345u;
+    const unsigned char r = (unsigned char) (g_th_lcg >> 16);
+    if (g_f) P(g_f, "%u TD %u\n", g_tick, r);
+    return r;
+}
+extern "C" void SceSndCallThunder()
+{
+    if (g_f) P(g_f, "%u TN\n", g_tick);
+}
+extern "C" void EffSetToolStateCallBack(int no, void (*on)(), void (*off)())
+{
+    g_th_on = on, g_th_off = off;
+    if (g_f) P(g_f, "%u TC %d %d %d\n", g_tick, no, on != 0, off != 0);
+}
+extern "C" u8 EffGetToolState() { return g_tool; }
+
 extern "C" void e2c_ready()
 {
     const char* e = svc_env("RE4_SVC_EXERCISE");
@@ -677,6 +751,7 @@ extern "C" void e2c_ready()
         if (c && !__builtin_strcmp(c, "bossoba")) boss_control = 6;
         if (c && !__builtin_strcmp(c, "bosspush")) boss_control = 7;
         if (c && !__builtin_strcmp(c, "bossrope")) boss_control = 8;
+        if (c && !__builtin_strcmp(c, "bossthunder")) boss_control = 9;
     }
     g_kind_ok = !ObjInitFunc[kTestKind];
     if (g_kind_ok) ObjInitFunc[kTestKind] = test_obj_init;
@@ -721,6 +796,7 @@ extern "C" void e2c_tick(unsigned t, int begin)
         P(g_f, "# e2cboss set-up %u\n", t);
         ex_setup(t);
     }
+    if (t >= 30) ex_thunder(t);
 }
 extern "C" void e2c_finish()
 {
