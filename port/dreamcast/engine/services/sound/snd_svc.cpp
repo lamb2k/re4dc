@@ -569,6 +569,16 @@ extern "C" void snd_svc_report(void)
            (unsigned long) aica_stats.long_us, (unsigned long) aica_stats.long_frames, (unsigned long) aica_stats.long_drv,
            (unsigned long) aica_stats.long_vox, (unsigned long) aica_stats.long_flush,
            (unsigned long) aica_stats.long_writes, (unsigned long) aica_stats.max_writes);
+    {
+        const AicaStats& f = aica_stats;
+        e1_log("E1 SOUND longest flush %lu us (step %lu): %lu writes (channel starts %lu, key-offs %lu), G2 lock entry %lu us, "
+               "FIFO waits %lu us (longest %lu), writes %lu us (longest %lu us, channel %lu register %02lx), rest %ld us\n",
+               (unsigned long) f.lf_us, (unsigned long) f.lf_step, (unsigned long) f.lf_writes, (unsigned long) f.lf_starts,
+               (unsigned long) f.lf_keyoffs, (unsigned long) f.lf_lock_us, (unsigned long) f.lf_fifo_us,
+               (unsigned long) f.lf_fifo_max, (unsigned long) f.lf_wr_us, (unsigned long) f.lf_wr_max,
+               (unsigned long) (f.lf_wr_where >> 8), (unsigned long) (f.lf_wr_where & 0xFF),
+               (long) f.lf_us - (long) f.lf_lock_us - (long) f.lf_wr_us);
+    }
     e1_log("E1 SOUND frame parts longest: voice manager %lu us (tick %lu), stream player %lu us (tick %lu), sequencer %lu us "
            "(tick %lu)\n", (unsigned long) g_part_max[0], (unsigned long) g_part_max_tick[0], (unsigned long) g_part_max[1],
            (unsigned long) g_part_max_tick[1], (unsigned long) g_part_max[2], (unsigned long) g_part_max_tick[2]);

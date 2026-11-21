@@ -11,11 +11,14 @@ extern "C" {
 #ifdef E2_FIGHT
 // lane eng-e2: the fight image draws the village beside the Ganado module and its motion keys; its behaviour arena
 // peaks under 1 MB (4 Ganados, waves), so the arena is 1.25 MB and the room-pack region 1.5 MB larger.
-#define E1_ARENA_LO 0x8cd80000u
+// lane eng-snd1 (H-025.1, request R1 ruled in): the hosted sound driver's image and the AICA layer's heap need room
+// below the arena, so the arena starts 256 KB (fight) and 512 KB (E1, boss) higher: 1 MB here, 2.25 MB below
+// (peaks measured with this map: fight 844 KB, E1 301 KB, see docs/engine/lanes/eng-snd1.md).
+#define E1_ARENA_LO 0x8cdc0000u
 #else
-#define E1_ARENA_LO 0x8cc00000u
+#define E1_ARENA_LO 0x8cc80000u
 #endif
-#define E1_ARENA_HI 0x8cec0000u   /* 2,883,584 B (lane eng-e1c: the services region follows) */
+#define E1_ARENA_HI 0x8cec0000u   /* 2,359,296 B; fight 1,048,576 B (lane eng-e1c: the services region follows) */
 // Native services region (lane eng-e1c, host/e1_svc_mem.cpp): the skeleton pool (256 KB) and the room's collision
 // tables. Fixed address and size; the KOS kernel stack (64 KB) sits at 0x8cff0000.
 #define E1_SVC_LO 0x8cec0000u

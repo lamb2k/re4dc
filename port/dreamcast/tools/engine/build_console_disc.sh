@@ -172,6 +172,10 @@ put "$HILL_PAK" E1/HILL.PAK; put "$HILL_PAK" E1/FARM.PAK; put "$HILL_VIS" E1/HIL
 for f in st1/r101.arc st1/r11d.arc etc/core.das em/pl00.drs em/wep02.drs em/pl11.drs; do put "$P/$f" "E1/$f"; done
 mots "$P/em/pl11.drs" E1
 mkdir -p "$D/E1H"; : > "$D/E1H/HILL"
+# lane eng-snd1 (H-025.1): the sound the scenes load before play (services/sound/snd_svc.cpp): the rooms' ROOM and FOOT banks
+# (st1/<room>.dar) and the sound system files; the characters' banks are in the archives above. From the game tree.
+SNDSYS="bgm/bio4str.hed bgm/bio4midi.hed bgm/bio4midi.dat bgm/doorse.hed bgm/doorse.dat bgm/bgmtbl.dat"
+for f in st1/r101.dar st1/r11d.dar $SNDSYS; do put "$P/$f" "E1/$f"; done
 # lane eng-e1o: NOTRACE sits in each timing scene's own folder (E1L, E1H), not in E1, so the traced and stills scenes below
 # can run the same files without it
 mkdir -p "$D/E1L"; : > "$D/E1L/NOTRACE"; : > "$D/E1H/NOTRACE"
@@ -182,6 +186,7 @@ for f in st1/r101.arc etc/core.das etc/emleon00.esl em/pl00.drs em/wep02.drs em/
 mots "$P/em/em15.drs" FIGHT
 # lane eng-e1p: NOTRACE in FIGHT's own folder FIGHTL (as E1L, E1H), so FIGHTT can run the same files traced
 mkdir -p "$D/FIGHTL"; : > "$D/FIGHTL/NOTRACE"
+for f in st1/r101.dar $SNDSYS; do put "$P/$f" "FIGHT/$f"; done   # lane eng-snd1: the fight's sound
 # BOSSB: the bench image with El Gigante's pack in both slots (the buffer is sized once)
 put "$BOSS_PAK" BOSSB/CROSS.PAK; put "$BOSS_PAK" BOSSB/FARM.PAK; put "$BOSS_VIS" BOSSB/CROSS.VIS; put "$BOSS_VIS" BOSSB/FARM.VIS
 printf 'c0 cn c0 c0dh\n' > "$D/BOSSB/SCHEDULE.TXT"
@@ -189,6 +194,7 @@ printf 'c0 cn c0 c0dh\n' > "$D/BOSSB/SCHEDULE.TXT"
 put "$BOSS_EMARC" BOSS/EM2B.ARC; put "$BOSS_EMLIST" BOSS/EMLIST.BIN
 for f in st1/r119.arc etc/core.das em/pl08.drs em/wep02.drs em/em2b.drs; do put "$P/$f" "BOSS/$f"; done
 : > "$D/BOSS/HEADLESS"; : > "$D/BOSS/NOTRACE"
+for f in st1/r119.dar $SNDSYS; do put "$P/$f" "BOSS/$f"; done   # lane eng-snd1: the arena's sound
 # SHOT (lane eng-e1k; not in the default scene list): the FIGHT image playing a re4ref fixture file, the shot judged
 # against the PC reference's trace (tools/plays_right/shot_engine.sh). SHOT_FIXTURE overrides the fixture (a control).
 # Its controls, each a scene of its own (every one must FAIL the judgement): SHOTNP the fixture without the press at
@@ -257,7 +263,18 @@ ELOOK_CONTROLS=(
   "CNWHS|CNWH|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(hill)|PROG/E1.BIN|E1H:E1"
   "CNWFS|CNWF|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(fight)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
 )
-for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}"; do
+# Lane eng-snd1 (H-025.1): the sound's controls, same format. CSNDSLOW (1,500 us inside every audio step): the selector
+# must FAIL it ("sound over H-025.1"). CSNDMUTE (every channel at total attenuation, the fight, a run with the audio
+# capture): the scene runs, engine/services/sound/tools/audiocheck.py must FAIL its capture. CSNDDROP (the first request
+# from tick 100 not passed on, the traced village): engine/services/sound/tools/sndreq_check.py must FAIL it against the
+# PC reference. ASNDOFF is not a control but the "off" arm of the cost comparison (no sound started): it must stay OK.
+SND_CONTROLS=(
+  "CSNDSLOW|CSS|SNDSLOW|e1:timing:drawn|Control:_sound_over_its_ceiling|PROG/E1.BIN|E1L:E1"
+  "CSNDMUTE|CSM|SNDMUTE|e1:timing:drawn|Control:_sound_muted_(audiocheck)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+  "CSNDDROP|CSD|SNDDROP|e1:function:drawn|Control:_a_sound_request_dropped_(sndreq_check)|PROG/E1.BIN|E1"
+  "ASNDOFF|ASO|SNDOFF|e1:timing:drawn|Arm:_sound_off_(cost_comparison)|PROG/E1.BIN|E1L:E1"
+)
+for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
 done
@@ -298,9 +315,10 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
     echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1L:E1 rows=compact"
   done
   # lane eng-e1n: the publication and HUD controls (above); lane eng-e1p: the camera track, record and disc read controls
-  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}"; do
+  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
     case $croot in
+      E1) cneed=E1/CROSS.PAK,E1/st1/r101.arc ;;   # lane eng-snd1: a traced village control (no NOTRACE)
       E1H:E1) cneed=E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/st1/r11d.arc ;;
       E1L:E1) cneed=E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc ;;
       *) cneed=FIGHTL/NOTRACE,FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;

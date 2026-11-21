@@ -32,6 +32,11 @@ struct AicaStats {
     uint32_t max_ticks, debt_drops;   // most driver frames run in one step; debts over 64 frames dropped
     uint32_t long_us, long_drv, long_vox, long_flush, long_frames;   // the longest step: driver frames, voices, flush
     uint32_t long_writes, max_writes;   // register writes in the longest step; the most in any step
+    // The longest register flush and what it did (diagnosis of a stalled step): writes, full channel starts (13
+    // writes each) and key-offs, the G2 lock's entry wait (KOS g2_lock suspends G2 DMA and waits for the FIFO), the
+    // FIFO waits (one before every 8 writes) and the longest single write with its channel and register.
+    uint32_t lf_us, lf_writes, lf_starts, lf_keyoffs, lf_lock_us, lf_fifo_us, lf_fifo_max, lf_wr_us, lf_wr_max, lf_wr_where;
+    uint32_t lf_step;   // its step number (frames counter)
 };
 extern AicaStats aica_stats;
 
