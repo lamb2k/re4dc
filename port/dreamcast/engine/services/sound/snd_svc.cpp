@@ -29,9 +29,10 @@
 //  - REQUESTS: every SndCall and SndStop the hosted behaviour makes is a request; in a traced run (no NOTRACE file)
 //    each goes into the trace as an SR line (tick, Frame_cnt, kind, block, number, flags, id, position bits), the same
 //    fields the PC reference logs (hostref/host_stubs.cpp), for services/sound/tools/sndreq_check.py.
-//  - OUTPUT: every 50th audio step the AICA's own channel monitor is read back (aica_probe); the report's E1 SOUND
-//    PROBE line counts the probes that found a channel keyed on, audible (envelope above silence, attenuation below
-//    total) and its sample address moving.
+//  - OUTPUT: every audio step reads back one channel the layer owns through the AICA's own channel monitor (aica.cpp
+//    probe_step: key on, attenuation, envelope level, current sample address); the report's E1 SOUND PROBE line counts
+//    the samples keyed on, audible (envelope above silence, attenuation below total) and moving (the address changed
+//    since that channel's previous sample).
 // Lab arms (boot files read before play; never build switches): SNDOFF (no sound: the driver is not started, the
 // requests are counted and answered 0), SNDMUTE (control of the output check: every channel at total attenuation),
 // SNDSLOW (control of the cost ceiling: 1,500 us busy inside every 5 ms audio step), SNDDROP (control of the request
@@ -489,21 +490,34 @@ extern "C" int __wrap__Z7SndStopmi(u32 id, int time)
 
 // ---------------------------------------------------------------------------
 // The hooks into the engine core (game/sound.mk wraps).
-extern "C" void __wrap__Z12e1_load_roomj(unsigned room)
-{
-    __real__Z12e1_load_roomj(room);
-    room_load(room);
-}
-extern "C" void __wrap__Z14e1_fields_latej(unsigned tick)
+// The service's three entry points (the core reaches them through the wraps below; the integrator may call them
+// directly from the core instead: hand-back request R3).
+extern "C" void snd_svc_room_load(unsigned room) { room_load(room); }
+extern "C" void snd_svc_tick(void)
 {
     if (g_on && g_booted) {   // the original main loop's SndWatcher, after Trans
         const MainSpan span;
         SndWatcher();
         cost_add(span.us());
     }
+}
+extern "C" void snd_svc_report(void);
+extern "C" void __wrap__Z12e1_load_roomj(unsigned room)
+{
+    __real__Z12e1_load_roomj(room);
+    snd_svc_room_load(room);
+}
+extern "C" void __wrap__Z14e1_fields_latej(unsigned tick)
+{
+    snd_svc_tick();
     __real__Z14e1_fields_latej(tick);
 }
 extern "C" void __wrap__Z9e1_reportv(void)
+{
+    snd_svc_report();
+    __real__Z9e1_reportv();
+}
+extern "C" void snd_svc_report(void)
 {
     // the cost per picture over the selector's window (pictures 41-640: rows 41..640, e1_tick 41..640)
     const unsigned ticks = e1_state[2];
@@ -531,5 +545,4 @@ extern "C" void __wrap__Z9e1_reportv(void)
            (unsigned long) s.se_starts, (unsigned long) s.se_unmapped, (unsigned long) s.note_on, (unsigned long) s.keyons,
            (unsigned long) s.frames, (unsigned long) s.drv_us, (unsigned long) s.flush_us, (unsigned long) s.aica_used,
            (unsigned long) s.blocks_skipped, (unsigned long) g_dropped);
-    __real__Z9e1_reportv();
 }
