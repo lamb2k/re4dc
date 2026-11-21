@@ -112,10 +112,21 @@ NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
 # force-included and stands in for services/cloth/pres_rng.h (same four functions, same include guard), drawing from
 # the engine generator of host/e1_wraps.cpp. pendulum.cpp is not linked (host/e1_svc_stubs.cpp: the wind globals, the
 # fallback stubs).
-ifeq ($(BOSS)$(FIGHT),)
-NATIVE_INC += -I$(SVC_DIR)/cloth
-NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o
+# Lane eng-skel1: the cloth and the native chain object (services/cloth/chain.cpp: SetChain, cObjChain, object kind
+# 0x1D) are linked wherever CLOTH_SVC is 1: the default image and the boss image (El Gigante's rope and arm chains, Leon's
+# garments). The fight image's lines are lane eng-e2d's: CLOTH_SVC := 1 in fight.mk, and the SetChain / cObjChain stubs out
+# of fight/fight_gen_stubs.cpp. host/e1_svc_mem.cpp and host/e1_svc_stubs.cpp follow E1_CLOTH_SVC.
+ifneq ($(FIGHT),1)
+CLOTH_SVC := 1
 endif
+ifeq ($(CLOTH_SVC),1)
+NATIVE_INC += -I$(SVC_DIR)/cloth
+NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o $(OUT)/n/chain.o
+ENG_FLAGS += -DE1_CLOTH_SVC=1
+endif
+$(OUT)/n/chain.o: $(SVC_DIR)/cloth/chain.cpp $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
 CLOTH_DEPS := $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/cloth/cloth_kernel.h $(SVC_DIR)/cloth/pres_rng.h $(ENG)/host/e1_pres_rng.h
 $(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(CLOTH_DEPS) $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)

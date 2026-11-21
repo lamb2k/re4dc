@@ -45,6 +45,11 @@ int skel_pose_get(cModel* m, int no, Vec* pos, Vec* ang, Vec* scale) __attribute
 int skel_pose_set(cModel* m, int no, const Vec* pos, const Vec* ang, const Vec* scale) __attribute__((weak));
 int skel_bone_world(cModel* m, int no, Vec* world, Vec* old, Vec* old2) __attribute__((weak));
 int skel_bone_mat(cModel* m, int no, f32 (*out)[4]) __attribute__((weak));
+// the collision service's room release (native build only)
+void col_room_release(void) __attribute__((weak));
+void col_bake_all(void) __attribute__((weak));
+unsigned col_piece_count(void) __attribute__((weak));
+unsigned svc_pool_room_used(void) __attribute__((weak));
 }
 void em10ChainSet(cEm10* em);
 void em10BeltSet(cEm10* em);
@@ -279,17 +284,31 @@ void chains(unsigned t, cEm10* e)
 }
 }   // namespace
 
+// RE4_SVC_EXERCISE=colrel (native build; lane eng-skel1, eng-load1's request R2): at tick 100 the room is left and
+// entered again as a room change does it: col_room_release, then col_bake_all. colrel.txt logs the pieces and the room
+// carve's bytes before, after the release and after the bake: the release must leave 0 and 0, the bake the same as
+// before; the queries go on against the reference (svc_compare.py).
+void colrel(unsigned t)
+{
+    if (t != 100 || !col_room_release) return;
+    P(g_f, "%u before pieces %u room %u\n", t, col_piece_count(), svc_pool_room_used());
+    col_room_release();
+    P(g_f, "%u released pieces %u room %u\n", t, col_piece_count(), svc_pool_room_used());
+    col_bake_all();
+    P(g_f, "%u rebaked pieces %u room %u\n", t, col_piece_count(), svc_pool_room_used());
+}
 extern "C" void skchain_kind_register(void);   // skchain_kind.cpp
 extern "C" void skent_ready()
 {
     skchain_kind_register();
     const char* e = svc_env("RE4_SVC_EXERCISE");
-    g_ex = !e ? 0 : !__builtin_strcmp(e, "skent") ? 1 : !__builtin_strcmp(e, "skchain") ? 2 : 0;
-    if (g_ex) g_f = svc_out_open("skent.txt", "w");
+    g_ex = !e ? 0 : !__builtin_strcmp(e, "skent") ? 1 : !__builtin_strcmp(e, "skchain") ? 2 : !__builtin_strcmp(e, "colrel") ? 3 : 0;
+    if (g_ex) g_f = svc_out_open(g_ex == 3 ? "colrel.txt" : "skent.txt", "w");
 }
 extern "C" void skent_tick(unsigned t, int begin)
 {
     if (!g_f || begin || t < 30) return;
+    if (g_ex == 3) { colrel(t); return; }
     cEm10* e = 0;
     for (cEm* x = EmMgr.pAlive; x; x = (cEm*) x->pNext)
         if (ganado(x)) { e = (cEm10*) x; break; }

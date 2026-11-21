@@ -14,7 +14,7 @@ void ShapeSet(void*, int a, void*, int) { e1_stub_hit("ShapeSet (shape keys: not
 void ShapeEnd(void*) { e1_stub_hit("ShapeEnd (shape keys: not drawn)", 0); }
 extern "C" int ShapeMove(cModelInfo*) { e1_stub_hit("ShapeMove (shape keys: not drawn)", 0); return 0; }
 
-#ifndef E2_BOSS
+#ifdef E1_CLOTH_SVC   // lane eng-skel1: the cloth service linked (game/Makefile CLOTH_SVC: default and boss images)
 // The cloth's wind (pendulum.cpp's globals, set per room by light.cpp's PenWindSet, which is not hosted): engine data at
 // the original's start values (20 units along +z, phase step pi / 3).
 Vec GlobalWind = {0.0f, 0.0f, 20.0f};

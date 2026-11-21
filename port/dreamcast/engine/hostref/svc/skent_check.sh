@@ -16,6 +16,10 @@
 #   controls (native, RE4_SVC_CONTROL): entflag (the flag never set), entpost (r x M), entpose (angles x / z swapped),
 #           enthist (old2 read as old) on skent bell-ganado; chainmid (the hung link at its first offset) on skchain
 #           bell-ganado: each must FAIL
+#   colrel bell-ganado: the reference against native leaving and entering the room's collision at tick 100
+#           (col_room_release, col_bake_all): the release leaves 0 pieces and 0 room bytes, the bake as many as before,
+#           the queries and bones within svc_compare.py's bounds: must PASS; control colkeep (the first piece kept with
+#           its tables): must FAIL
 # Exit 0 when every row ends as it must, 1 when one does not, 2 when a build, a run or a report is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -99,7 +103,40 @@ for c in entflag entpost entpose enthist; do
     run "$d/ctl-$c" native bell-ganado RE4_SVC_EXERCISE=skent RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done
-[ $rows = 9 ] || { echo "skent_check: $rows rows of 9"; missing=1; }
+# the collision room release (eng-load1's R2): the reference without an exercise against native with colrel
+relrow() {   # relrow <name> <must> <ref dir> <test dir>
+    local name=$1 must=$2 a=$3 b=$4
+    rows=$((rows + 1))
+    python3 "$HERE/svc_compare.py" "$a" "$b" --json "$b/compare.json" > "$b/compare.txt" 2>&1
+    local c=$?
+    local r rm
+    [ -s "$b/colrel.txt" ] || { missing=1; echo "| $name | $must | | no colrel.txt | | ERROR |" >> "$MD"; echo "$name: ERROR (no colrel.txt)"; return; }
+    rm=$(python3 - "$b/colrel.txt" <<'PY'
+import sys
+v = {}
+for line in open(sys.argv[1]):
+    f = line.split()
+    if len(f) >= 6: v[f[1]] = (int(f[3]), int(f[5]))
+ok = set(v) == {"before", "released", "rebaked"} and v["released"] == (0, 0) and v["rebaked"] == v["before"] and v["before"][0] > 0
+print(("ok " if ok else "BAD ") + " ".join("%s %d pieces %d B" % (k, *v[k]) for k in ("before", "released", "rebaked") if k in v))
+sys.exit(0 if ok else 1)
+PY
+)
+    r=$?
+    [ $c -gt 1 ] && { missing=1; echo "| $name | $must | ERROR | | | ERROR |" >> "$MD"; echo "$name: ERROR"; return; }
+    local got=PASS
+    [ $c = 0 ] && [ $r = 0 ] || got=FAIL
+    local res="$got (as it must)"
+    [ "$got" != "$must" ] && { res="$got (MUST $must)"; bad=1; }
+    echo "| $name | $must | queries and bones at svc_compare's bounds $([ $c = 0 ] && echo PASS || echo FAIL) | $rm | | $res |" >> "$MD"
+    echo "$name: $res; compare $c; $rm"
+}
+d=$OUT/colrel-bell-ganado
+if run "$d/odump" odump bell-ganado && run "$d/native" native bell-ganado RE4_SVC_EXERCISE=colrel     && run "$d/ctl-colkeep" native bell-ganado RE4_SVC_EXERCISE=colrel RE4_SVC_CONTROL=colkeep; then
+    relrow "colrel bell-ganado" PASS "$d/odump" "$d/native"
+    relrow "control colkeep" FAIL "$d/odump" "$d/ctl-colkeep"
+else missing=1; echo "colrel: run failed"; fi
+[ $rows = 11 ] || { echo "skent_check: $rows rows of 11"; missing=1; }
 [ $missing = 1 ] && { echo "skent_check: a run or a report is missing ($MD)"; exit 2; }
 [ $bad = 1 ] && { echo "skent_check: a row did not end as it must ($MD)"; exit 1; }
 echo "skent_check: every row as it must ($MD)"

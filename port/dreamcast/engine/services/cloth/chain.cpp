@@ -55,8 +55,13 @@ namespace {
 enum { CH_FREE = 0, CH_FADE = 1, CH_LOST = 2, CH_HUNG = 3 };
 
 void chain_init(cObj* p) { new (p) cObjChain(); }
-__attribute__((constructor)) void chain_kind()
+// The object kind is registered by the first SetChain (not at start-up: an image whose behaviour makes no chain does
+// not keep this unit, --gc-sections)
+void chain_kind()
 {
+    static int done;
+    if (done) return;
+    done = 1;
     ObjInitFunc[0x1D] = chain_init;
     const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
     if (c && !__builtin_strcmp(c, "chainmid")) chain_control = 1;
@@ -178,6 +183,7 @@ void hang_on(cObj* o, cModel* parent, int p1, const Vec* ofs1, int p2, const Vec
 // the model cannot be set up. It passes through characters and has the object kind's light record.
 cObjChain* SetChain(void* bin, void* tpl, Vec* pos, Vec* rot)
 {
+    chain_kind();
     cObj* o = ObjMgr.createBack(0x1D);
     if (!o) {
         chain_cnt.refused++;
