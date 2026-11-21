@@ -22,7 +22,6 @@ int eng_GetWepTargetPos(Vec* p0, Vec* p1, int plCheck, int wepNo, cEm** outEm, i
 extern int aim_control;
 }
 
-namespace { extern unsigned vib_skipped; }
 namespace {
 struct {
     int init, use_native;
@@ -37,9 +36,9 @@ void summary()
     void* f = svc_out_open("aim.txt", "w");
     if (!f) return;
     svc_out_printf(f, "aim calls %u same %u ret_diff %u em_diff %u attr_diff %u point_over_1u %u max_point %.4f use %s control %d"
-                   " hit_distance %.0f..%.0f vib_skipped %u\n",
+                   " hit_distance %.0f..%.0f\n",
                    A.calls, A.same, A.ret_diff, A.em_diff, A.attr_diff, A.point_over, (double) A.max_point,
-                   A.use_native ? "native" : "original", aim_control, (double) A.hit_min, (double) A.hit_max, vib_skipped);
+                   A.use_native ? "native" : "original", aim_control, (double) A.hit_min, (double) A.hit_max);
     for (int o = 0; o < 4; o++)
         for (int n = 0; n < 4; n++)
             if (A.by_ret[o][n]) svc_out_printf(f, "ret original %d native %d: %u\n", o, n, A.by_ret[o][n]);
@@ -47,37 +46,42 @@ void summary()
 }
 }   // namespace
 
-// The magazine (svc.mk AIM_MAG_STUBS): RE4_AIM_MAG rounds, never used up (as the engine image's e1_stubs.cpp, 10);
-// unset, 0: the reference's empty magazine.
-namespace {
-int aim_mag()
+// The shot lines (lane eng-e1h): every GetWepTargetList2 call (the handgun's shot, PlWepHitCheck2) to shots.txt: the
+// line, the scenery hit (attribute, point, distance), the enemies the line crossed, and each alive enemy's root position
+// with its distance from the line, so a shot fixture can be aimed at a Ganado and read back.
+struct WepTargetRec { cEm* em; void* part; };
+extern "C" u32 __real_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u32 max, Vec* hit, Vec* nrm, u32* attr,
+                                        int type, int flag, f32 len);
+extern "C" u32 __wrap_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u32 max, Vec* hit, Vec* nrm, u32* attr,
+                                        int type, int flag, f32 len)
 {
-    static int m = -1;
-    if (m < 0) {
-        const char* s = svc_env("RE4_AIM_MAG");
-        m = 0;
-        for (; s && *s >= '0' && *s <= '9'; s++) m = m * 10 + (*s - '0');
+    static void* f;
+    if (!f) f = svc_out_open("shots.txt", "w");
+    const u32 n = __real_GetWepTargetList2(p0, p1, list, max, hit, nrm, attr, type, flag, len);
+    if (!f) return n;
+    const float hx = hit->x - p0->x, hy = hit->y - p0->y, hz = hit->z - p0->z;
+    svc_out_printf(f, "shot frame %u type %d from %.0f %.0f %.0f to %.0f %.0f %.0f attr %08x hit %.0f %.0f %.0f at %.0f enemies %u",
+                   (unsigned) pG->Frame_cnt, type, p0->x, p0->y, p0->z, p1->x, p1->y, p1->z, (unsigned) *attr, hit->x,
+                   hit->y, hit->z, __builtin_sqrtf(hx * hx + hy * hy + hz * hz), (unsigned) n);
+    for (u32 i = 0; i < n; i++) svc_out_printf(f, " [%02x]", (unsigned) list[i].em->id);
+    const float dx = p1->x - p0->x, dy = p1->y - p0->y, dz = p1->z - p0->z;
+    const float dl = __builtin_sqrtf(dx * dx + dy * dy + dz * dz);
+    for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext) {
+        if (e == (cEm*) pPL) continue;
+        const float ex = e->pos.x - p0->x, ey = e->pos.y - p0->y, ez = e->pos.z - p0->z;
+        const float along = (ex * dx + ey * dy + ez * dz) / dl;
+        const float px = ex - dx * along / dl, py = ey - dy * along / dl, pz = ez - dz * along / dl;
+        svc_out_printf(f, " | em %02x set %02x hp %d at %.0f %.0f %.0f along %.0f off %.0f (y %.0f)", (unsigned) e->id,
+                       (unsigned) e->emset_no, (int) e->hp, e->pos.x, e->pos.y, e->pos.z, along,
+                       __builtin_sqrtf(px * px + py * py + pz * pz), py);
     }
-    return m;
+    svc_out_printf(f, "\n");
+    return n;
 }
-}   // namespace
-extern "C" u16 aimchk_bulletNum(void*) __asm__("_ZN8cItemMgr9bulletNumEv");
-extern "C" u32 aimchk_bulletNumCurrent(void*) __asm__("_ZN8cItemMgr16bulletNumCurrentEv");
-extern "C" u16 aimchk_bulletNum(void*) { return (u16) aim_mag(); }
-extern "C" u32 aimchk_bulletNumCurrent(void*) { return (u32) aim_mag(); }
 
-// The shot's rumble (objRuger moveFire: VibSetData on the core archive's table at ofs_1C): on the PC tree that table's
-// offsets read byte-swapped (0x04010000 for 0x104), so the pattern address falls outside the archive and the reference
-// crashes on the first shot. Rumble is presentation: the aimchk build (svc.mk --wrap=VibSetData) skips a pattern whose
-// address is not inside the table's first MiB, counts it (aim.txt), and passes every other call on.
-namespace { unsigned vib_skipped; }
-extern "C" void __real_VibSetData(void* t, u32 no, u32 type);
-extern "C" void __wrap_VibSetData(void* t, u32 no, u32 type)
-{
-    const u32* w = (const u32*) t;   // {num, ofs[num]}
-    if (w && no < w[0] && w[1 + no] >= 0x100000u) { vib_skipped++; return; }
-    __real_VibSetData(t, no, type);
-}
+// Lane eng-e1h: the magazine and the shot's rumble are the reference's own now (host_stubs.cpp: the new game's 10
+// rounds; host_glue.cpp: the core archive's rumble table converted to the PC's order at load), so this build no longer
+// answers the magazine (RE4_AIM_MAG) or skips a rumble pattern (vib_skipped), as lane eng-e1g's did.
 
 extern "C" int __wrap_GetWepTargetPos(Vec* p0, Vec* p1, int plCheck, int wepNo, cEm** outEm, int* outAttr)
 {

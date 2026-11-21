@@ -137,6 +137,11 @@ $(OUT)/n/skel_xm.o: $(SVC_DIR)/skeleton/skel_xm.c $(SVC_DIR)/skeleton/skel_xm.h
 # hosted with every global symbol the native objects define made weak in them (SPLIT_UNITS below), so each call
 # reaches the native body and --gc-sections drops the original's.
 SVC4_SRCS := volumes/volumes collision/col_model routes/routes motion/follow model/model_svc camera/camera_svc input/input
+# lane eng-e1h (H-014.4): the character and light tables on the engine's record pool (services/model/mgr_pool.cpp)
+SVC4_SRCS += model/mgr_pool
+# lane eng-e1h: the Ganado's dissolving-corpse squash on the native skeleton (services/skeleton/em_compress.cpp; the
+# hosted em10's body made weak below)
+SVC4_SRCS += skeleton/em_compress
 SVC4_OBJS := $(addprefix $(OUT)/n/,$(addsuffix .o,$(notdir $(SVC4_SRCS))))
 SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_DIR)/$(d))
 NATIVE_INC += $(SVC4_INC)
@@ -149,6 +154,11 @@ $(foreach s,$(SVC4_SRCS),$(eval $(call SVC4_RULE,$(s))))
 # Control build only (lane eng-e1g): PAD_EXTRA=-DE1_PAD_NOCLAMP=1 takes the pad clamp out of the input service (the
 # village plays-right comparison must then split from the reference at tick 424). Never a default.
 $(OUT)/n/input.o: ORIG_FLAGS += $(PAD_EXTRA)
+# Control build only (lane eng-e1h): MGR_EXTRA=-DE1_MGR_ORIG_CREATEBACK=1 leaves cManager<cEm>::createBack to pl_sub's
+# original template copy (the link check must then FAIL on it). Never a default.
+# -fno-inline: the table's header inlines (cEmMgr::memClear) are emitted in this object, which links before the hosted
+# units, so the table's vtable reaches the engine's copy (services/model/mgr_pool.cpp).
+$(OUT)/n/mgr_pool.o: ORIG_FLAGS += -fno-inline $(MGR_EXTRA)
 # ---- The native weapon-target query (lanes eng-e1f, eng-e1g; services/aim/aim.cpp: GetWepTargetPos, the laser's end,
 # target and surface) in every image. Where em_sub is hosted (FIGHT=1, BOSS=1) its own GetWepTargetPos is made weak
 # (WEAKEN_<unit> in the hosted rule) so the native body is linked and --gc-sections drops the original's.
@@ -157,6 +167,11 @@ $(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
 WEAKEN_game/em_sub := _GetWepTargetPos   # SH-ELF symbol names carry the leading underscore
+# Lane eng-e1h (H-014.3): the laser sight's drawing is the engine's (services/laser.cpp: the setters the renderer's
+# laser pass reads); objWep's GX bodies are made weak so --gc-sections drops them. drawLaserSight stays hosted.
+WEAKEN_game/objWep := _drawPoint _Draw_line3d_local_222 _Draw_line3d_222
+# Lane eng-e1h: em10ScaleCompress's squash is the skeleton service's (services/skeleton/em_compress.cpp)
+WEAKEN_em10/em10 := __Z17em10ScaleCompressP5cEm10
 # ---- Round-5 native services (lane eng-svc5, linked by lane eng-e1g; SERVICES.md sections 32-38) in every image: the
 # math helpers (math_sub, sub2), the garments (pl_cloth's chain set-up and pose), the SDK matrix / vector math and the
 # allocator. Compiled with the hosted units' flags (the original's arithmetic in its order) and linked before the

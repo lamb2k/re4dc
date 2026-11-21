@@ -1110,3 +1110,69 @@ as 65, trigger 0xC0 as 150). The PADCLAMP boot option and the per-route PADClamp
   bit-identical on position, angle, motion frame and state, generator.
 - **Control** (test build only: `PAD_EXTRA=-DE1_PAD_NOCLAMP=1`, disc vnc): diverges at tick 424 (yaw 2.52 degrees),
   position from tick 519.
+
+
+## 41. The character and light tables on the engine pool (lane eng-e1h, ruling H-014.4)
+
+`services/model/pool.h` (the record pools of section 28) gives two more tables their entry points:
+`services/model/mgr_pool.cpp` specializes cManager<cEm> (create, createBack, create at a slot, the count, destroy)
+and cManager<cLight> (destroy, log). Before, the default image took cManager<cEm>::createBack and cEmMgr::memClear from
+pl_sub's copy of the original template and cManager<cLight>::destroy and ::log from pl_npc's.
+
+- **createBack** (`ENG_POOL_BACK`): the last free slot, appended to the alive list (pl_sub's SubCharCtrl creates the
+  partner there).
+- **The pool refuses** a create on a full table (0, `eng_pool_full`) and a destroy of a record that is not alive by
+  the base test `be_flag & 0x201 == 1` (`eng_pool_bad_free`, nothing written). The original marked such a record for the
+  sweep, which raised a dead slot back to "in use" and destroyed it a second time. The engine image reports both
+  counters (`E1 POOL full .. bad_frees ..`).
+- **`traits<T>`**: the pool reaches a manager's log, record clear and destructor through it (default: the manager's
+  virtual functions, as before). The lights have no manager object in the engine images (LightMgr is storage, no
+  vtable): their log goes to the stub log, no destructor runs. The cEm clear calls cEmMgr::memClear directly, and
+  mgr_pool.cpp is compiled `-fno-inline` and linked before the hosted units, so the table's vtable reaches the engine's
+  copy of that header inline.
+- **pooltest** (`make pooltest`, hostref/svc/pooltest.cpp): a test record type in the guest address range; overflow
+  (create, createBack, create at a used slot), order (first free slot / last free slot), double free (flag 0 and flag
+  2, a marked and a swept record), the sweep (destroyed once by the second dieCheck): PASS. Controls
+  `RE4_POOL_CONTROL=1` (the destroy refusal off: 6 checks FAIL, a dead slot raised to 0x200 and destroyed twice) and
+  `=2` (the full-table refusal off: 12 checks FAIL).
+- **Link control**: the test build `MGR_EXTRA=-DE1_MGR_ORIG_CREATEBACK=1` leaves createBack to pl_sub: check_link FAILs
+  on it (416 B).
+
+## 42. The laser sight's drawing (lane eng-e1h, ruling H-014.3)
+
+cObjWep::drawLaserSight stays hosted (where the laser points, the target, the don't-fire flag). Its drawing calls are
+engine setters (`services/laser.cpp`, every image): `EspDrawLaserLine` (the line: red, faded over 12,000 units as the
+effect's), `Draw_line3d_222` / `Draw_line3d_local_222` (the shooting range's line, kept in view space, faded over
+8,000), `drawPoint` (the dot on an enemy, sized by the camera distance as the original). They write `e1_laser`
+(`services/e1_laser.h`) once a tick; the renderer (`core/draw_e1.c e1_laser_pass`) reads it in place and draws, in the
+translucent list and additively, what was set in the tick of its picture: the line as a screen-space band clipped at
+the near plane, the dot as a small glow. objWep's GX bodies are made weak (`WEAKEN_game/objWep`) and dropped. The
+image reports `E1 LASER sets .. lines drawn .. dots drawn ..`. The dot's base size (16 units) is a choice: the effect
+data that sizes it is not hosted.
+
+## 43. The core archive's rumble table (lane eng-e1h)
+
+The disc tree carries core.das's VIB section in the GameCube's byte order (offsets 0x04010000 for 0x104, the first
+pattern's count 0x01000000): the PC reference crashed on the first shot's rumble (objRuger moveFire, VibSetData), and
+the engine image read rumble patterns from a stray address. `services/input/vib_table.h` converts the table and every
+pattern it points at, once, at load: `hostref/host_glue.cpp` (17 patterns) and `core/loader.cpp` (both the compacted
+core archive and the boss image's whole one). A table already in order is left as it is.
+
+## 44. The dissolving Ganado's squash (lane eng-e1h)
+
+Lane eng-svc5 found the dying Ganado's palette differing between the reference and the native build from tick 241
+(bell-ganado-kill) / 204 (bell-ganado-clear) while bones and traces agreed. Cause (a watchpoint on the bone's matrix
+in the reference): em10ScaleCompress, run by cEm10::move right after partsWorldCalc in the Die_Lost routine, squashes
+the corpse vertically by writing every part record's mat (S(1, Compress_y, 1) x mat, translation put back), walking the
+pParts chain without asking for the parts. The native table never saw those writes: its world kept the y axis at
+1.0044 where the reference had 0.976 to 0.72, so the palette, and the corpse the renderer draws, stayed unsquashed. A
+native fault: `skel_compress_y` (services/skeleton/skel.cpp) squashes the table with the original's arithmetic
+(PSMTXConcat) and serves the held records; `services/skeleton/em_compress.cpp` is em10ScaleCompress's decision calling
+it, and em10's own body is made weak (images: `WEAKEN_em10/em10`; re4ref native: svc.mk `weak6/`).
+
+- **Result** (PC, wind off, odump against native): bell-ganado-kill, bell-ganado-clear, bell-ganado and shot-ganado
+  PASS, palette 0 units, outcome PASS.
+- **Control** `RE4_SVC_CONTROL=nocompress`: FAIL from tick 241 / 204, palette 32.06 units at bone 0, the finding
+  exactly; a svc_controls.sh row (77 rows, all as they must).
+- **Not covered**: the other enemies' ScaleCompress (em2b, em2c, em2d, em25) write the records the same way; they are
+  in the boss and later images, not in E1.

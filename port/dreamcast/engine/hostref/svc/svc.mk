@@ -111,6 +111,9 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 SVC5_SRCS := math/math_svc.cpp cloth/garment.cpp math/sdk_math.cpp
 SVC5_UNITS := math_sub sub2 pl_cloth
 SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp              $(SVC5_SRCS)
+# lane eng-e1h: the Ganado's dissolving-corpse squash on the native skeleton (em10ScaleCompress; em10's own made weak in
+# weak6/ below)
+SVC4_SRCS += skeleton/em_compress.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad $(SVC5_UNITS)
 # SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's rail spline,
@@ -150,6 +153,13 @@ SVC4_REPLACED := $(addprefix $(BUILD)/plain/game/,$(addsuffix .o,$(SVC4_ALL)))
 NATIVE_GAME_OBJS := $(SVC4_OBJS) $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED),$(plain_GAME_OBJS)) \
                     $(filter-out $(addprefix $(NAT)/weak/,$(addsuffix .o,$(SVC4_ALL))),$(NAT)/weak/motion.o $(NAT)/weak/model.o $(NAT)/weak/atari.o) \
                     $(NAT)/pen.o $(addprefix $(NAT)/weak4/,$(addsuffix .o,$(SVC4_ALL)))
+# lane eng-e1h: em10 (the Ganado library) linked with em10ScaleCompress weak, so the native squash
+# (services/skeleton/em_compress.cpp, skel_compress_y) is the one reached
+WEAK_em10 := _Z17em10ScaleCompressP5cEm10
+$(NAT)/weak6/em10_em10.o: $(BUILD)/plain/game/em10_em10.o svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy $(foreach s,$(WEAK_em10),--weaken-symbol=$(s)) $< $@
+NATIVE_GAME_OBJS := $(filter-out $(BUILD)/plain/game/em10_em10.o,$(NATIVE_GAME_OBJS)) $(NAT)/weak6/em10_em10.o
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
 	@mkdir -p $(dir $@)
@@ -284,14 +294,9 @@ garmenttest: $(GT)/garmenttest
 # GetWepTargetPos: both answer every call, the answers are compared (aim.txt, aim-diff.txt), and RE4_AIM_USE=native
 # hands the behaviour the native answer. RE4_AIM_CONTROL=grow is the native control (must differ).
 AIM := $(BUILD)/aimchk
-# The reference's item stubs (host_stubs.cpp) give an empty magazine, so A while aiming never fires (the empty-gun
-# branch: reload or the empty click). The aimchk build weakens the two magazine stubs and aimcheck.cpp answers them
-# with RE4_AIM_MAG rounds (default 0, the reference's), so a shot fixture can fire as the engine image does (10 rounds).
-AIM_MAG_STUBS := _ZN8cItemMgr9bulletNumEv _ZN8cItemMgr16bulletNumCurrentEv
-$(AIM)/host_stubs.o: $(BUILD)/svc/host_stubs.o
-	@mkdir -p $(AIM)
-	objcopy $(foreach s,$(AIM_MAG_STUBS),--weaken-symbol=$(s)) $< $@
-AIM_HG_OBJS := $(filter-out $(BUILD)/svc/host_stubs.o,$(SVC_HG_OBJS)) $(AIM)/host_stubs.o
+# (Lane eng-e1h: the reference's magazine is the new game's 10 rounds (host_stubs.cpp) and its rumble table is read in
+# the PC's order (host_glue.cpp), so this build no longer replaces the magazine stubs or wraps VibSetData.)
+AIM_HG_OBJS := $(SVC_HG_OBJS)
 $(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
 	@mkdir -p $(AIM)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -c $< -o $@.raw.o
@@ -305,7 +310,7 @@ $(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJ
                $(AIM)/aim.o $(AIM)/aimcheck.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(AIM_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
-	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=VibSetData -Wl,-Map=$(AIM)/re4ref.map
+	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=GetWepTargetList2 -Wl,-Map=$(AIM)/re4ref.map
 aimchk: $(AIM)/re4ref
 .PHONY: aimchk
 
@@ -345,6 +350,18 @@ $(AT)/alloctest: $(AT)/alloctest.o $(AT)/heap.o $(AT)/OSAlloc.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 alloctest: $(AT)/alloctest
 .PHONY: alloctest
+
+# ---- pooltest (lane eng-e1h): the engine's record pool (services/model/pool.h: create, createBack, create at a slot,
+# destroy, the sweep) on a test record type: full tables and double frees refused, the list intact.
+# RE4_POOL_CONTROL=1|2 turns a refusal off (must FAIL).
+PT := $(BUILD)/pooltest
+$(PT)/pooltest: svc/pooltest.cpp $(SVC_ENG)/model/pool.h $(ROOT)/include/cManager.h
+	@mkdir -p $(PT)
+	$(CXX) $(ARCH) -O1 -g -std=gnu++20 -fpermissive -w -fno-exceptions -fno-rtti -fno-threadsafe-statics \
+	    -isystem /usr/include/x86_64-linux-gnu/c++/13 -I$(ROOT)/include -I$(SVC_ENG)/model -c $< -o $(PT)/pooltest.o
+	$(CC) -m32 -no-pie -o $@ $(PT)/pooltest.o
+pooltest: $(PT)/pooltest
+.PHONY: pooltest
 
 # ---- libmtest (lane eng-svc5): the engine's float math library, the toolchain's newlib 4.6.0 libm (its sources
 # compiled for the PC by svc/newlib_libm.sh into build/ext/nlobj, symbols prefixed nl_), against the game's fdlibm

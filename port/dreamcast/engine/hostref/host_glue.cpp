@@ -7,7 +7,29 @@
 #include "main.h"
 #include "player.h"
 
+#include "../services/input/vib_table.h"
+
 static const char* g_tree;
+void* GetDataExt(void* arc, const char* tag, int no);
+
+// The rumble table (section VIB) in the PC's order (lane eng-e1h; services/input/vib_table.h): the tree carries it
+// big-endian, which made the first shot's rumble (objRuger moveFire, VibSetData) read a pattern outside the archive.
+// Its length: up to the next section of the archive (DataExtHeader: count, three words, offsets).
+static void core_vib_to_host(void* arc)
+{
+    uint8_t* vib = (uint8_t*) GetDataExt(arc, "VIB", 0);
+    if (!vib) return;
+    const uint32_t* h = (const uint32_t*) arc;
+    const uint32_t at = (uint32_t) (vib - (uint8_t*) arc);
+    uint32_t end = 0;
+    for (uint32_t i = 0; i < h[0] && i < 4096; i++) {
+        const uint32_t o = h[4 + i];
+        if (o > at && (!end || o < end)) end = o;
+    }
+    const int n = vib_table::to_host(vib, end ? end - at : 0x2C0);
+    if (n < 0) host_fatal(2, "core archive: the rumble table is not a table");
+    if (n > 0) host_log("core archive: rumble table converted to the host order (%d patterns)\n", n);
+}
 
 bool host_load_core(const char* tree)
 {
@@ -15,6 +37,7 @@ bool host_load_core(const char* tree)
     void* p = host_load_data(tree, "etc/core.das", "core", 0);
     if (!p) return false;
     pG->pArc = (ArcFile*) p;
+    core_vib_to_host(p);
     return true;
 }
 

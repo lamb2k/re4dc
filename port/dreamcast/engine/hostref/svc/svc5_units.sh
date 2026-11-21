@@ -4,8 +4,9 @@
 # code section kept from the original objects of the named units is listed: game units (math_sub, sub2, pl_cloth, ...,
 # from plain/game or native/weak4), the SDK's C math (sdk_mtx, sdk_vec, ... from plain/sdk) and the game's fdlibm (from
 # plain/libm). Default units: svc.mk's SVC5_UNITS. 0 kept = the unit is fully native in re4ref.
-# Fails closed: a missing or unreadable map, a map that names none of the units' objects at all (the link was not
-# made from this build), or no unit to check, each exit 2. Exit 1 when any function is kept.
+# Fails closed: a missing or unreadable map, a map whose binary is missing (a failed or removed link leaves its map;
+# lane eng-e1h), a map that does not name every unit's object (the link was not made from this build),
+# or no unit to check, each exit 2. Exit 1 when any function is kept.
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../../.." && pwd)
 MAP=${MAP:-$ROOT/build/hostref/native/re4ref.map}
@@ -13,6 +14,12 @@ UNITS=${*:-$(make -s -C "$HERE/.." -p -n native 2>/dev/null | sed -n 's/^SVC5_UN
 [ -n "$UNITS" ] || { echo "svc5_units: no unit to check"; exit 2; }
 [ -r "$MAP" ] && [ -s "$MAP" ] || { echo "svc5_units: no map at $MAP"; exit 2; }
 grep -q "^Linker script and memory map" "$MAP" || { echo "svc5_units: $MAP is not a GNU ld map"; exit 2; }
+BIN=${MAP%.map}
+[ -x "$BIN" ] || { echo "svc5_units: no binary $BIN beside the map (the link failed or was removed)"; exit 2; }
+for u in $UNITS; do   # every unit's object, native copy or original, must be in this link
+    grep -qE "/(plain/game|native/weak4?|native/weak5|plain/sdk|plain/libm|svc/ref)/$u\.o" "$MAP" ||
+        { echo "svc5_units: the map names no object of unit $u"; exit 2; }
+done
 L=$(mktemp)
 trap 'rm -f "$L"' EXIT
 echo "## other: every other unit is not checked here" > "$L"

@@ -56,8 +56,10 @@ def re4ref(binary, tree, fixture, out, control=None):
     if control:
         cmd += ['--control', control]
     r = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
-    if r.returncode != 0:
-        sys.exit('re4ref failed (%s): %s' % (out, r.stderr.strip()))
+    t = os.path.join(out, 'trace.txt')
+    if r.returncode != 0 or not os.path.isfile(t) or not os.path.getsize(t):
+        print('re4ref failed (%s): %s' % (out, r.stderr.strip()))
+        sys.exit(2)
     return os.path.join(out, 'trace.txt')
 
 
@@ -65,7 +67,8 @@ def derive_fixture(src, dst, subst):
     s = open(src).read()
     for old, new in subst:
         if old not in s:
-            sys.exit('fixture %s: "%s" not found' % (src, old))
+            print('fixture %s: "%s" not found' % (src, old))
+            sys.exit(2)
         s = s.replace(old, new, 1)
     open(dst, 'w').write(s)
     return dst
@@ -123,8 +126,22 @@ def main():
     tree = os.environ.get('RE4_TREE')
     if not tree:
         sys.exit('set RE4_TREE to the converted data tree (private game data)')
-    if not os.path.isfile(args.bin):
-        sys.exit('no re4ref at %s' % args.bin)
+    # Fails closed (lane eng-e1h): exit 2 without the binary, the tree or a fixture, and when the table does not hold
+    # every planned row (28, or 30 with --engine-log)
+    if not (os.path.isfile(args.bin) and os.access(args.bin, os.X_OK)):
+        print('outcome_controls: no re4ref at %s' % args.bin)
+        sys.exit(2)
+    if not os.path.isdir(tree):
+        print('outcome_controls: no data tree at %s' % tree)
+        sys.exit(2)
+    for f in ('door103-walk', 'bell-ganado-kill', 'bell-ganado-clear', 'hill-ashley'):
+        if not os.path.isfile(os.path.join(FIX, f + '.txt')):
+            print('outcome_controls: no fixture %s' % os.path.join(FIX, f + '.txt'))
+            sys.exit(2)
+    if args.engine_log and not os.path.isfile(args.engine_log.rsplit(':', 2)[0]):
+        print('outcome_controls: no engine log %s' % args.engine_log)
+        sys.exit(2)
+    planned = 28 + (2 if args.engine_log else 0)
     O = args.out
     os.makedirs(O, exist_ok=True)
     rows = []
@@ -254,6 +271,9 @@ def main():
     table = ['| Row | Must [kind] | Got | Problem kinds reported | First problem / result |', '|---|---|---|---|---|'] + rows
     open(os.path.join(O, 'outcome_controls.md'), 'w').write('\n'.join(table) + '\n')
     print('\n'.join(table))
+    if len(rows) != planned:
+        print('outcome_controls: INCOMPLETE: %d of %d rows' % (len(rows), planned))
+        sys.exit(2)
     print('%d rows, %s' % (len(rows), 'all as they must' if status == 0 else 'SOME WRONG'))
     sys.exit(status)
 

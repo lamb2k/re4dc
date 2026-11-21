@@ -87,9 +87,12 @@ void cActionButton::set(int, int, int, int, int, int, int, int) { STUB("cActionB
 int cDmgMgr::hitCheck(Vec*, Vec*) { STUB("cDmgMgr::hitCheck"); return 0; }
 #endif
 #ifndef E2_BOSS   // eng-boss: the boss image keeps a magazine (boss/boss_stubs2.cpp)
-u16 cItemMgr::bulletNum() { return 10; }            // new-game handgun magazine (the route never fires)
-u32 cItemMgr::bulletNumCurrent() { return 10; }
-int cItemMgr::reloadable() { STUB("cItemMgr::reloadable"); return 0; }
+// The armed handgun's magazine (lane eng-e1h; the same rules as the reference's hostref/host_stubs.cpp): the new game's
+// 10 rounds loaded and no ammo carried; trigger spends a loaded round (0 when empty), reload moves carried rounds in.
+static int e1_mag_loaded = 10, e1_mag_spare = 0;
+u16 cItemMgr::bulletNum() { return (u16) e1_mag_loaded; }
+u32 cItemMgr::bulletNumCurrent() { return (u32) e1_mag_loaded; }
+int cItemMgr::reloadable() { return e1_mag_loaded < 10 && e1_mag_spare > 0; }
 #endif
 int cEmWindow::ChkBreakDir(Vec*) { STUB("cEmWindow::ChkBreakDir"); return 0; }
 int cEmWindow::ChkStatus() { STUB("cEmWindow::ChkStatus"); return 0; }
@@ -214,13 +217,25 @@ int emLineCubeCrossCk(Vec*, Vec*, Mtx, f32, f32, f32, Vec*, Vec*) { STUB("emLine
 #ifndef E2_FIGHT   // eng-e2: the native effect service in the fight image
 int EspEstSetSelect(int, int, int, cEsp** out, int) { STUB("EspEstSetSelect"); if (out) *out = 0; return 0; }
 #endif
-void EspDrawLaserLine(Vec, Vec, f32) {}
+// EspDrawLaserLine: the laser line's setter is the engine's (services/laser.cpp, lane eng-e1h)
 cObj* SetObj10(void*, void*, Vec*, Vec*, Vec*, float, float, int, int) { STUB("SetObj10"); return 0; }
 void Obj10SetEst(cObj*, int, int, unsigned long, int, int, int, int, int, int) { STUB("Obj10SetEst"); }
 void ObjMauser_init(cObj*) { STUB("ObjMauser_init"); }
 #ifndef E2_BOSS
-int cItemMgr::reload() { STUB("cItemMgr::reload"); return 0; }
-int cItemMgr::trigger() { STUB("cItemMgr::trigger"); return 0; }
+int cItemMgr::reload()
+{
+    int n = 10 - e1_mag_loaded;
+    if (n > e1_mag_spare) n = e1_mag_spare;
+    e1_mag_loaded += n;
+    e1_mag_spare -= n;
+    return n > 0;
+}
+int cItemMgr::trigger()
+{
+    if (e1_mag_loaded == 0) return 0;
+    e1_mag_loaded--;
+    return 1;
+}
 #endif
 void Draw_cylinderMtx(Mtx, Vec*, f32, f32, u32) {}
 // The GameCube's locked-cache scratch the pendulum cloth collision uses (pendulum.cpp): an engine scratch block.

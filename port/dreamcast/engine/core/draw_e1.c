@@ -10,6 +10,7 @@
 #include <dc/pvr.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 volatile uint32_t m1_frame;
 /* eng-look's run-time content steps (render/content.h), read by the shared actor pass since that lane's merge: the
@@ -30,6 +31,7 @@ static int open_ok, stills;
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent);
 void e1_light_tables(const NativeScene* s);
+extern int hud_blend_control;   /* render/native_layers.inc: the HUD control (lane eng-e1h) */
 #ifdef E2_FIGHT
 /* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
 void e2_draw_open(void);
@@ -64,6 +66,9 @@ int e1_draw_open_c(const char* pack)
     open_ok = 1;
     file_t f = fs_open("/cd/STILLS", O_RDONLY);
     if (f >= 0) { fs_close(f); stills = 1; }
+    /* lane eng-e1h: HUDOLD (run-time lab arm and the HUD control): every HUD widget with the one blend the pack bakes */
+    f = fs_open("/cd/HUDOLD", O_RDONLY);
+    if (f >= 0) { fs_close(f); hud_blend_control = 1; printf("E1 HUDOLD: every HUD widget with blend 0 (control)\n"); }
     m1_state[5] = 3;
     return 1;
 }
@@ -107,6 +112,114 @@ static void e1_partner_pass(const float* c, const E1SkelView* sk)
         }
     }
     partner_marks = n;
+}
+
+/* The weapon's laser sight (lane eng-e1h, H-014.3): the line and the dot cObjWep::drawLaserSight set this tick through
+   the engine's setters (services/laser.cpp), read in place from e1_laser and drawn additive in the translucent list:
+   the line as a screen-space band (1.5 pixels a width unit) from the muzzle, faded to nothing over its fade length and
+   clipped at the near plane; the dot as a small glow (a fan, bright at the centre). Nothing is drawn for a tick in
+   which the behaviour set nothing (no aiming). */
+#include "e1_laser.h"
+extern volatile uint32_t e1_tick;
+#define LASER_NEAR 20.0f
+static uint32_t laser_argb(uint32_t rgb, float k)
+{
+    if (k < 0.0f) k = 0.0f;
+    if (k > 1.0f) k = 1.0f;
+    const uint32_t r = (uint32_t) (((rgb >> 16) & 255) * k), g = (uint32_t) (((rgb >> 8) & 255) * k),
+                   b = (uint32_t) ((rgb & 255) * k);
+    return 0xff000000u | r << 16 | g << 8 | b;
+}
+static void laser_hdr(int ztest)
+{
+    pvr_poly_cxt_t cxt; pvr_poly_hdr_t hdr;
+    pvr_poly_cxt_col(&cxt, PVR_LIST_TR_POLY);
+    cxt.gen.culling = PVR_CULLING_NONE;
+    cxt.blend.src = PVR_BLEND_ONE;
+    cxt.blend.dst = PVR_BLEND_ONE;
+    cxt.depth.write = PVR_DEPTHWRITE_DISABLE;
+    cxt.depth.comparison = ztest ? PVR_DEPTHCMP_GEQUAL : PVR_DEPTHCMP_ALWAYS;
+    pvr_poly_compile(&hdr, &cxt);
+    pvr_prim(&hdr, sizeof(hdr));
+}
+static void laser_vert(float x, float y, float z, uint32_t argb, int eol)
+{
+    pvr_vertex_t v;
+    v.flags = eol ? PVR_CMD_VERTEX_EOL : PVR_CMD_VERTEX;
+    v.x = x; v.y = y; v.z = z; v.u = v.v = 0.0f; v.argb = argb; v.oargb = 0;
+    pvr_prim(&v, sizeof(v));
+}
+static void laser_view(const float* c, const float* p, float* v)
+{
+    v[0] = c[0] * p[0] + c[1] * p[1] + c[2] * p[2] + c[3];
+    v[1] = c[4] * p[0] + c[5] * p[1] + c[6] * p[2] + c[7];
+    v[2] = c[8] * p[0] + c[9] * p[1] + c[10] * p[2] + c[11];
+}
+static void e1_laser_pass(const float* c)
+{
+    E1Laser* l = &e1_laser;
+    const unsigned lines = l->tick == e1_tick ? l->lines : 0;
+    for (unsigned i = 0; i < lines && i < E1_LASER_LINES; i++) {
+        const E1LaserLine* s = &l->line[i];
+        float a[3], b[3];
+        if (s->view) { memcpy(a, s->p[0], 12); memcpy(b, s->p[1], 12); }
+        else { laser_view(c, s->p[0], a); laser_view(c, s->p[1], b); }
+        float d[3] = {b[0] - a[0], b[1] - a[1], b[2] - a[2]};
+        float len = sqrtf(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+        if (len <= 0.0f || s->fade <= 0.0f) continue;
+        if (len > s->fade) {
+            const float k = s->fade / len;
+            for (int j = 0; j < 3; j++) { d[j] *= k; b[j] = a[j] + d[j]; }
+            len = s->fade;
+        }
+        float k0 = 1.0f, k1 = 1.0f - len / s->fade;   /* brightness at the two ends */
+        const float w0 = -a[2], w1 = -b[2];
+        if (w0 < LASER_NEAR && w1 < LASER_NEAR) continue;
+        if (w0 < LASER_NEAR || w1 < LASER_NEAR) {   /* clip at the near plane, the brightness along with it */
+            const float t = (LASER_NEAR - w0) / (w1 - w0);
+            float* q = w0 < LASER_NEAR ? a : b;
+            for (int j = 0; j < 3; j++) q[j] = a[j] + (b[j] - a[j]) * t;
+            const float kt = k0 + (k1 - k0) * t;
+            if (w0 < LASER_NEAR) k0 = kt; else k1 = kt;
+        }
+        const float iw0 = 1.0f / -a[2], iw1 = 1.0f / -b[2];
+        const float x0 = 320.0f + 320.0f * (c[13] * a[0] + c[14] * a[2]) * iw0;
+        const float y0 = 240.0f - 240.0f * (c[15] * a[1] + c[16] * a[2]) * iw0;
+        const float x1 = 320.0f + 320.0f * (c[13] * b[0] + c[14] * b[2]) * iw1;
+        const float y1 = 240.0f - 240.0f * (c[15] * b[1] + c[16] * b[2]) * iw1;
+        const float sx = x1 - x0, sy = y1 - y0, sl = sqrtf(sx * sx + sy * sy);
+        if (sl < 0.5f) continue;
+        const float hw = 0.75f * (s->width > 0.0f ? s->width : 1.0f);
+        const float nx = -sy / sl * hw, ny = sx / sl * hw;
+        const uint32_t c0 = laser_argb(s->rgb, k0), c1 = laser_argb(s->rgb, k1);
+        laser_hdr(s->ztest);
+        laser_vert(x0 + nx, y0 + ny, iw0, c0, 0);
+        laser_vert(x0 - nx, y0 - ny, iw0, c0, 0);
+        laser_vert(x1 + nx, y1 + ny, iw1, c1, 0);
+        laser_vert(x1 - nx, y1 - ny, iw1, c1, 1);
+        l->drawn++;
+    }
+    if (l->dot_tick == e1_tick) {
+        float v[3];
+        laser_view(c, l->dot, v);
+        const float w = -v[2];
+        if (w >= LASER_NEAR) {
+            const float iw = 1.0f / w;
+            const float x = 320.0f + 320.0f * (c[13] * v[0] + c[14] * v[2]) * iw;
+            const float y = 240.0f - 240.0f * (c[15] * v[1] + c[16] * v[2]) * iw;
+            float r = l->dot_r * c[13] * 320.0f * iw;
+            if (r < 1.5f) r = 1.5f;
+            const uint32_t mid = laser_argb(l->dot_rgb, 1.0f), rim = 0xff000000u;
+            laser_hdr(1);
+            for (int k = 0; k < 8; k++) {   /* eight triangles round the centre */
+                const float a0 = (float) k * 0.785398163f, a1 = (float) (k + 1) * 0.785398163f;
+                laser_vert(x, y, iw, mid, 0);
+                laser_vert(x + r * cosf(a0), y + r * sinf(a0), iw, rim, 0);
+                laser_vert(x + r * cosf(a1), y + r * sinf(a1), iw, rim, 1);
+            }
+            l->dots_drawn++;
+        }
+    }
 }
 
 /* One off-screen triangle in a list that may otherwise stay empty (the hill scene has no world: its punch-through
@@ -227,6 +340,7 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
 #ifdef E2_FIGHT
     e2_draw_effects(&scene);
 #endif
+    e1_laser_pass(cam);   /* lane eng-e1h: the laser sight the behaviour set this tick */
     native_hud(&scene);
     pvr_list_finish();
     pvr_scene_finish();

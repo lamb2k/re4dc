@@ -134,8 +134,10 @@ struct SkelCounters {
         palette, serve_bones, pull_bones, entries, poison_bones, parent_mismatch, serve_ancestors, lost_writes,
         samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_dec, mk_miss, mk_root_rows, mk_root_dec, mk_axes,
         mk_rebinds,
-        hist_join, hist_moves, hist_full, hist_late;
+        hist_join, hist_moves, hist_full, hist_late,
+        compress_bones;   // lane eng-e1h: parts squashed by skel_compress_y (a dissolving corpse)
 };
+void skel_compress_y(cModel* m, f32 k);   // a dying body squashed vertically (em10ScaleCompress; lane eng-e1h)
 extern SkelCounters skel_cnt;
 // controls (lane eng-svc: each must make the equivalence check fail)
 extern int skel_control_parent;   // >0: bone skel_control_parent's parent taken one bone too low (wrong by one)
@@ -144,4 +146,5 @@ extern int skel_poison;           // check build: records outside the mailbox ho
 extern int skel_control_mk;       // baked motion keys: 1 the pose row of the next frame (lane eng-svc2 control); 2 the
                                   // root and camera rows of the next frame; 3 s16 steps cut to 8 bits (lane eng-svc3)
 extern int skel_control_hist;     // 1: no bone keeps its history; 2: the history never moves (lane eng-svc2 controls)
+extern int skel_control_compress; // 1: skel_compress_y squashes nothing (the fault lane eng-e1h fixed; the control)
 }
