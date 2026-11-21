@@ -259,9 +259,12 @@ DOOR_CONTROLS=(
 )
 case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
   put "${DOOR_FIXTURE:-$SRC/port/dreamcast/tools/plays_right/fixtures/door-r101-r103.txt}" DOOR/DOOR.TXT
-  put "$LKG/FARM.PAK" DOOR/FARM.PAK; put "$LKG/FARM.VIS" DOOR/FARM.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
+  # the farm's bake as R103.PAK, not FARM.PAK: the renderer sizes its resident block from CROSS.PAK and FARM.PAK (E1's
+  # FARM.PAK is the hill pack's twin); the bench's farm bake there needs 1.88 MB more and put the KOS heap into the
+  # behaviour arena (lane eng-load1, run 2)
+  put "$LKG/FARM.PAK" DOOR/R103.PAK; put "$LKG/FARM.VIS" DOOR/R103.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
   # CDOORPK: its own folder with the fixture and the farm's bake but not its archive (E1 has none either)
-  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$LKG/FARM.PAK" CDP/FARM.PAK; put "$LKG/FARM.VIS" CDP/FARM.VIS
+  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$LKG/FARM.PAK" CDP/R103.PAK; put "$LKG/FARM.VIS" CDP/R103.VIS
   for c in "${DOOR_CONTROLS[@]}"; do IFS='|' read -r cn cdir cfile ctitle <<< "$c"; mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile"; done ;;
 esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
@@ -295,9 +298,9 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "FIGHTS Fight_stills_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHTS/STILLS,FIGHTL/NOTRACE,FIGHT/CROSS.PAK) root=FIGHTS:FIGHTL:FIGHT rows=compact"
   echo "FIGHTT Fight_traced_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHT/CROSS.PAK,FIGHT/st1/r101.arc,FIGHT/em/em15.drs) root=FIGHT rows=compact $TSKIP"
   # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
-  DNEED=DOOR/DOOR.TXT,DOOR/FARM.PAK,DOOR/FARM.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs
+  DNEED=DOOR/DOOR.TXT,DOOR/R103.PAK,DOOR/R103.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs
   echo "DOOR Village_to_farm_and_back_(traced,_function_run) PROG/E1.BIN 300 e1:function:drawn $(need $DNEED) root=DOOR:E1 rows=compact $TSKIP door=2"
-  echo "CDOORPK Control:_farm_archive_absent PROG/E1.BIN 300 e1:function:drawn $(need CDP/DOOR.TXT,CDP/FARM.PAK,E1/CROSS.PAK,E1/st1/r101.arc) root=CDP:E1 rows=compact $TSKIP door=2"
+  echo "CDOORPK Control:_farm_archive_absent PROG/E1.BIN 300 e1:function:drawn $(need CDP/DOOR.TXT,CDP/R103.PAK,E1/CROSS.PAK,E1/st1/r101.arc) root=CDP:E1 rows=compact $TSKIP door=2"
   for c in "${DOOR_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfile ctitle <<< "$c"
     echo "$cn $ctitle PROG/E1.BIN 300 e1:function:drawn $(need $cdir/$cfile,$DNEED) root=$cdir:DOOR:E1 rows=compact $TSKIP door=2"

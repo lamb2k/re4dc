@@ -20,6 +20,7 @@
 #include "room_change.h"         // lane eng-load1: room-to-room loading through a door
 #include "rnd.h"
 unsigned e1_door_seed();
+void e1_load_step(const char* what);   // core/room_change.cpp (lane eng-load1)
 #ifdef E2_BOSS
 #include "boss_e2.h"   // eng-boss: the El Gigante slice
 #endif
@@ -60,6 +61,7 @@ static void room_init(unsigned room, const float* pos, float ang, int first)
     e1_room_heap_create(4);             // the room heap above heap 0, not over it (host/e1_heap.cpp; lane eng-e1e)
     MemSetCurrentHeap(4);
     e1_load_room(room);                 // room archive sections and the core camera data (engine room pack)
+    e1_load_step("setup.archive");      // lane eng-load1: the KOS heap after each step (DOOR scene only)
     if (!first && !pG->pRoom) return;   // lane eng-load1: a missing archive refuses the room (core/room_change.cpp)
     pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points (the partner's follow)
     ReadPlayerData(pG->pl_type, pG->pl_costume);
@@ -68,12 +70,15 @@ static void room_init(unsigned room, const float* pos, float ang, int first)
 #else
     e1_managers_room_init();            // ModInfoMgr, PartsMgr, EmMgr, ObjMgr arrays on the room heap
 #endif
+    e1_load_step("setup.managers");
     e1_collision_room_init();           // SatMgr / EatMgr over the room's SAT / EAT
+    e1_load_step("setup.collision");
     pG->sub_pos.x = pos[0];
     pG->sub_pos.y = pos[1];
     pG->sub_pos.z = pos[2];
     pG->sub_angle = ang;
     EmMgr.create(0, 0);                 // the player: cPlLeon on the actor table (hosted constructor + startUp)
+    e1_load_step("setup.player");
     CameraRoomInit();
     void* cam = GetDataExt(pG->pRoom, "CAM", 0);
     if (cam) CamCtrl.RoomDataRead((CameraDataHeader*) cam);
@@ -95,8 +100,10 @@ static void room_init(unsigned room, const float* pos, float ang, int first)
                (unsigned) pG->room_id, (unsigned long) cuts, (unsigned long) tracks, (unsigned long) refused,
                (unsigned long) bytes, (unsigned long) limit);
     }
+    e1_load_step("setup.camera-tracks");
     CamCtrl.roomInit();
     e1_view_room_init();
+    e1_load_step("setup.camera-view");
 #ifdef E2_BOSS
     e2_room_init();                     // enemy list, the boss module, the room script (R119Init)
 #endif

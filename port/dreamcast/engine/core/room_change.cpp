@@ -247,13 +247,26 @@ void e1_room_tick_done()
 }
 
 // ---- the loading state ----
+// The KOS heap in use after each step of a load (DOOR scene only; loading is not timed): where a round trip's
+// difference is taken or kept (E1 LOADSTEP).
+void e1_load_step(const char* what)
+{
+    if (!e1_door_scene) return;
+    static uint32_t last;
+    const uint32_t u = (uint32_t) mallinfo().uordblks;
+    e1_log("E1 LOADSTEP %s kos-used %lu (%+ld)\n", what, (unsigned long) u, (long) u - (long) last);
+    last = u;
+}
 static unsigned n_loads, n_failed;
 static void* kept_block;
 static const char* room_pack(unsigned room)
 {
     switch (room) {
     case 0x101: return "/cd/CROSS.PAK";   // the village's whole-room bake
-    case 0x103: return "/cd/FARM.PAK";    // the farm's whole-room bake
+    // the farm's whole-room bake, under its own name: /cd/FARM.PAK is one of the two packs the renderer sizes its
+    // resident block from (render/native_scene.inc native_open), and the bench's farm bake needs 1.88 MB more of it than
+    // the E1 image's: staged as FARM.PAK it put the KOS heap 1.47 MB into the behaviour arena (lane eng-load1, run 2)
+    case 0x103: return "/cd/R103.PAK";
     case 0x11d: return "/cd/HILL.PAK";
     default: return 0;
     }
@@ -302,14 +315,18 @@ int e1_room_change_run(unsigned tick)
     const float pos[3] = {pG->NextPos.x, pG->NextPos.y, pG->NextPos.z};
     const float ang = pG->NextY;
     // leave: the first room's memory returned
+    e1_load_step("leave.start");
     const unsigned skels = release_skeletons();
+    e1_load_step("leave.skeletons");
     if (col_room_release) col_room_release();
     else e1_stub_hit("col_room_release (collision tables kept: R2)", (int) col_piece_count());
     if (e1_draw_opened_c()) {
         if (e1_draw_close_c) e1_draw_close_c();
         else e1_stub_hit("e1_draw_close_c (the first room's pack kept: R3)", (int) from);
     }
+    e1_load_step("leave.collision+renderer");
     e1_room_release();
+    e1_load_step("leave.archive");
     if (ctl_memkeep && load == 0) {   // MEMKEEP (control): a block kept across the leave
         kept_block = malloc(4096);
         e1_log("E1 MEMKEEP: 4096 bytes kept at %p\n", kept_block);
@@ -328,7 +345,9 @@ int e1_room_change_run(unsigned tick)
     pG->Rno0 = 1;
     pG->Rno1 = pG->Rno2 = pG->Rno3 = 0;
     // enter: the second room
+    e1_load_step("handoff");
     e1_room_setup(to, pos, ang, 0);
+    e1_load_step("enter.room-setup");
     if (!pG->pRoom) { e1_loading_end(load, tick, (uint32_t) (timer_us_gettime64() - t0)); return load_failed(from, to, "room archive missing"); }
     if (!pPL) { e1_loading_end(load, tick, (uint32_t) (timer_us_gettime64() - t0)); return load_failed(from, to, "player not created"); }
     if (e1_draw_opened_c() || e1_draw_close_c) {
@@ -347,8 +366,10 @@ int e1_room_change_run(unsigned tick)
         readx_fd = fs_open("/cd/em/pl11.drs", O_RDONLY);
         readx_tick = tick + 10;
     }
+    e1_load_step("enter.renderer");
     e1_memmap_sample();      // the memory map after each load (overlaps, the arena, the stack)
     e1_heap_room_checks();   // the heap descriptors' map
+    e1_load_step("enter.memory-map");
     const uint32_t us = (uint32_t) (timer_us_gettime64() - t0);
     n_loads++;
     e1_log("E1 LOAD %u room %03x>%03x at tick %u: skeleton tables released %u, player %d %d %d ang %d/1000, fade %u\n",
