@@ -130,6 +130,22 @@ builds' projections cannot be compared (a request below).
   gatling groups, the merchant's coat and goods and the sack (types the village has not; read against the source only);
   the blast's 0x88 sprites (EspGetEstAddr a stub); every water effect (CheckInWater 0 in the village).
 
+## Flycast function check (plain Flycast, slot std2: dynarec on, 200 MHz by default; function checks, no speed claim)
+
+Test disc A1 from 9d64cca3e (the code of the final head; deleted after its run, note in the lane folder's
+cdisc\DELETED.txt): FIGHT, FIGHTS, FIGHTT, SHOT, SHOTNP, SHOTDMG, SHOTLATE, 7 of 7 OK under the strict selector.
+shot_engine.py: 4 scenes as they must (SHOT the reference's life drop at tick 162, 800 -> 500; SHOTNP, SHOTDMG,
+SHOTLATE FAIL). FIGHT stills against lane eng-e2a's A1 (picdiff.py, the threshold stated before: 0.5% of pixels over 32,
+mean 1.0; prediction written before the run: none may move): 23 pairs, 0 moved, every pair 0.000% of pixels over 32 and
+a mean difference of 0.000. Counters: E1 POOL full 0 bad_frees 0 in every scene; E2 DMG 20 records, 6,204 tests, 0 hits
+(no Ganado dies beside another in these scenes). SetObj12 (the hung-object factory em10SetAccesory calls) is an
+existing stub of the fight image (4 calls at spawn).
+
+## Item 4 (not done): the knock-down on the engine
+bell-ganado-clear on the PC reference registers 13 crash volumes (kind 3, radius 1,500, height 800) and tests them 1,405
+times with 0 hits: no Ganado is knocked over by another's death in that fixture, so it cannot show the damage table on
+the engine. A fixture with two Ganados within 1,500 units when one dies is needed first.
+
 ## Stubs
 None added.
 
