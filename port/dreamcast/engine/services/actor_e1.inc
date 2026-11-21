@@ -54,8 +54,10 @@ unsigned e1_light_miss;   /* pictures a character had no light view (lit by the 
 /* lane eng-e1n (H-017.5): a light-view miss fails the scene (the E1 PUB line, loader/selector.c). LIGHTMISS (boot file,
    lab arm; the control): every character's light view refused, as a miss */
 int e1_light_miss_control;
+static void e1_weapon_open(const NativeScene* s);   /* lane eng-look1: services/weapon_draw.inc, once a pack (below) */
 void e1_light_tables(const NativeScene* s)
 {
+    e1_weapon_open(s);
     const ModelLight* rec = (const void*) s->state[8]; const unsigned n = s->words[8] * 4 / sizeof(ModelLight);
     int leon = -1;
     for (unsigned i = 0; i < n; i++) if (rec[i].role == 0 && leon < 0) leon = rec[i].tev >> 8 & 255;
@@ -119,8 +121,11 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
     return bad == 0;
 }
 
-void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
-                   unsigned translucent)
+/* lane eng-look1: one character or object; 0 when it cannot be drawn at all (no such catalogue model, or a skeleton with
+   fewer bones than the model), 1 when it went through the pass (drawn, or culled by the frustum). frame_setup 0: the
+   picture's frustum, projection and lamp order are already set by the call before it (the weapon after Leon) */
+static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
+                             unsigned translucent, int frame_setup)
 {
     const RtCatalog* cat = s->runtime;
     const float* camera = (const float*) s->state[0];
@@ -128,12 +133,12 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     const unsigned slot = model ? 1 : 0;
     static unsigned bones_slot[E1_SLOTS];
     const float** e1_bone = e1_bone_slot[slot];
-    if (model >= cat->n) return;
-    if (!translucent) { actor_frame_setup(s); ++actor_serial; bones_slot[slot] = e1_gather(e1_bone, (const uint8_t*) model_record, skel); }
+    if (model >= cat->n) return 0;
+    if (!translucent) { if (frame_setup) actor_frame_setup(s); ++actor_serial; bones_slot[slot] = e1_gather(e1_bone, (const uint8_t*) model_record, skel); }
     const unsigned bones = bones_slot[slot];
     const RtModel* m = cat->m + model;
     const unsigned* h = m->h;
-    if (bones < h[0]) return;
+    if (bones < h[0]) return 0;
     if (model < 256 && !e1_pal_ok_model[model]) e1_pal_ok_model[model] = e1_pal_check(m, skel) ? 1 : -1;
     const int e1_pal_ok = model < 256 && e1_pal_ok_model[model] > 0;
     pvr_vertex_t* sq = (pvr_vertex_t*) sq_lock((void*) PVR_TA_INPUT);
@@ -146,7 +151,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         for (unsigned p = 0; p < h[4]; p++)
             if (m->parts[p].src->role == 8 && state[p]) sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
         sq_wait(); sq_unlock();
-        return;
+        return 1;
     }
     /* 1. whole actor */
     unsigned all = 63;
@@ -155,7 +160,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         float c[3] = {wm[3], wm[7], wm[11]}, r = m->bone_radius[b] * column_scale(wm) * 1.02f + 1;
         all &= sphere_planes(c, r, &dummy);
     }
-    if (all) { memset(state, 0, h[4]); sq_wait(); sq_unlock(); return; }
+    if (all) { memset(state, 0, h[4]); sq_wait(); sq_unlock(); return 1; }
     /* 2. bones (lane eng-e1e, E1 audit section 2): none. The skeleton service publishes the palette once a tick in
        this pass's final skinning layout (world x bind, the position quantum 1/16 in the basis, word 12 the sphere
        scale; skel.cpp SKEL_PAL_DRAW); steps 3 and 4 read it in place. No per-actor copy, rescale or bind recompute:
@@ -169,7 +174,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         unsigned st = e1_part_class((const float (*)[4]) frustum, m->spheres + rp->sphere_first, rp->sphere_count, pal);
         state[p] = st; visible += st != 0;
     }
-    if (!visible) { sq_wait(); sq_unlock(); return; }
+    if (!visible) { sq_wait(); sq_unlock(); return 1; }
     /* lane eng-draw3 (E3): Leon's knife part (role 2) is drawn in the knife stance only: out of it, it is not skinned,
        lit or given weight sets either */
     if (!model && !knife_stance(s))
@@ -225,4 +230,14 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
     }
     sq_wait(); sq_unlock();
+    return 1;
+}
+
+/* Lane eng-look1: the weapons Leon holds (services/weapon_draw.inc), drawn after his body in the same opaque list. */
+#include "weapon_draw.inc"
+void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
+                   unsigned translucent)
+{
+    e1_actor_pass_one(s, model_record, skel, model, identity, translucent, 1);
+    if (!model && !translucent) e1_weapon_pass(s);
 }
