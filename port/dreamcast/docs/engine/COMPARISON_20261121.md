@@ -3,7 +3,8 @@
 Copy of `E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` without the stills. Lane note: [lanes/eng-cmp1.md](lanes/eng-cmp1.md).
 
 Lane eng-cmp1, 2026-11-21. Status: **finished, unaudited.** Every number in this file is a **Flycast** number (the
-standard harness Flycast, below) unless a line says "console". Nothing here was measured on a Dreamcast.
+standard harness Flycast, below) unless a line says "console" or "MODELLED" (section 10). Nothing here was measured on a
+Dreamcast.
 
 ## What the owner needs from this page
 
@@ -16,8 +17,12 @@ standard harness Flycast, below) unless a line says "console". Nothing here was 
 - **The engine does less in these scenes** (no sound, no pyre fire, no room objects such as barrels and the crate, no
   item handling, no facial animation, no enemies at all on the village route and the hill; full list in section 5).
   The ratios are therefore not a like-for-like speed-up and must not be sold as one.
-- **The console evening can produce the same table on hardware** for the engine (all three scenes) and for the old port
-  at the cross and the bell fight start spots (not the hill): about 25 minutes with two discs already staged (section 8).
+- **MODELLED (the console build's dynarec at Sh4Clock 70, calibrated on the old port's console numbers, section 10):**
+  old port 15.6 / 11.3 / 16.4 pictures a second, new engine 28.9 / 18.3 / 24.2 (village / hill / fight): 1.85x / 1.62x /
+  1.48x. Neither holds 30 at this clock. A second Flycast build at its own calibrated clock agrees on the old port within
+  2.4% but gives the engine 6 to 10% more, so the model is a band and these figures are its pessimistic end.
+- **Console evening:** the owner will not look at a disc until the replatforming is complete (2026-11-21); section 8
+  keeps what it would take.
 
 ## 1. The table (Flycast, three runs a side, pictures of engine ticks 41 to 640)
 
@@ -193,7 +198,8 @@ console-disc images.
 
 **One sentence that must not be said yet:** "The new engine runs at 30 frames a second on a real Dreamcast" (or any
 "N times faster on Dreamcast"): there is no console number for the engine, and this Flycast is 1.6 to 1.7 times kinder
-than the console to the old port.
+than the console to the old port. The MODELLED figures of section 10 are not Dreamcast figures either and must not be
+quoted as such.
 
 ## 8. For the console evening: the same table on hardware
 
@@ -228,3 +234,108 @@ On the SD card (both already staged with KEEP files; nothing staged by this lane
 - Not checked: fog and colour grading differences beyond what the stills show; the hill camera record's "far 0" line.
 - Runs: engine eng-1, eng-2, eng-3 (`runs\eng-*`), old port `runs\vil-A1..3`, `hill-A1..3`, `fight-A1..3`, `*-B1..3`;
   `ev\table.json` holds every run's figures.
+
+## 10. Flycast calibrated on the old port's console numbers (item 6, owner input 2026-11-21)
+
+Tiers in this section: **Flycast** (as measured), **console** (Test 27.1 means, STATUS.md) and **MODELLED** = the
+console-like Flycast build's dynarec at Sh4Clock 70 (`flycast-console.exe` 8fb534cc in slot fly1, `Dynarec.Enabled = yes`,
+`Sh4Clock = 70`), the clock calibrated on the old port below. Every run's `Sh4Clock` and `Dynarec.Enabled` are in its
+`launch.json` (`cfg`) or `emu.cfg.used` and in `ev\clockfit.json` / `ev\engrows.json`; no run disagrees with its label.
+
+### 10.1 The calibration
+
+Old port: image A on the five console benchmark spots (warp fixtures `s\fixtures\b-*.txt`: cross and farm entry from the
+lab33 / rr-speed positions, bell and hay-fork the lab kit presets, quiet farm the lab33 pose with an assumed height),
+Leon standing, frames 601-1200, pictures a second from the game's own PACE counter (the counter the console speed page
+shows). Interpolated clock at which each build shows the console's pictures a second:
+
+| Spot | Console | Console build, dynarec: fps at 60 / 70 / 100 / 200 MHz | Match | Standard build, dynarec: fps at 60 / 80 / 100 / 130 / 160 / 200 MHz | Match |
+|---|---|---|---:|---|---:|
+| Village cross | 18.4 fps, 56 ms | 13.85 / 16.8 / 28.55 / 29.9 | 74.1 | 9.2 / 12.5 / 16.25 / 24.1 / 29.9 / 29.9 | 108.2 |
+| Bell fight | 16.5 fps, 53-60 ms | 12.8 / 15.0 / 25.35 / 29.9 | 74.3 | 8.4 / 11.5 / 14.55 / 21.2 / 28.05 / 29.9 | 108.8 |
+| Farm entry | 18.4 fps, 44-58 ms | 13.5 / 15.95 / 28.9 / 29.9 | 75.7 | 8.9 / 11.85 / 15.35 / 24.15 / 29.9 / 29.9 | 110.4 |
+| Farm hay-fork view | 10.4 fps, 96 ms | 8.8 / 10.25 / 15.0 / 29.9 | 70.9 | 5.9 / 7.85 / 10.0 / 13.0 / 16.55 / 22.95 | 104.0 |
+| Farm quiet view | 29.3 fps, 34 ms | 20.4 / - / 29.9 / 29.9 | 97.5 | 11.4 / 15.7 / 25.95 / 29.9 / 29.9 / 29.9 | 125.4 |
+
+- **The interpreter ignores Sh4Clock.** The console-like build with `Dynarec.Enabled = no` (its cache model) gave the same
+  figures to the microsecond at 100, 130 and 200 MHz (cross: 29.9 a second, work 27.04 ms, against 18.4 on the console).
+  It cannot be calibrated by clock, so the calibrated tier uses the same build's dynarec.
+- **The two dynarec builds disagree on what a MHz is** (old port's cross work at 200 MHz: 16.8 ms in the console build,
+  24.5 ms in the standard build), so each needs its own clock.
+- **One clock explains the four heavy spots within about 3% in each build** (70.9 to 75.7; 104.0 to 110.4), the hay-fork
+  view included: in this sample the console's extra cost behaves like processor time; nothing shows a missed memory,
+  vertex or graphics-chip cost. **The quiet view needs a higher clock** (97.5; 125.4): on the lightest spot the console
+  loses less than processor scaling predicts, so a heavy-spot clock is pessimistic there (about 10% in pictures a
+  second). Its console figure sits at the 30 cap, where the curve is flat.
+- **Defensive clock: 70 MHz in the console build** (lowest match 70.9; checked directly at 70 MHz: cross 16.8, bell 15.0,
+  farm entry 15.95, hay-fork 10.25, each at or below its console figure). Standard build: about 104 MHz.
+- Image A carries its per-iteration log (0.1 to 0.5 pictures a second in plain Flycast), which nudges the match clock up
+  (less defensive); the console figures are means only.
+
+### 10.2 Old port and new engine on the same three scenes, MODELLED
+
+Both programs in the console build's dynarec at Sh4Clock 70 (slot fly1), the same windows as section 1. Old port: image A
+(work = the game's `remain` summed over the iterations a shown picture covers); engine: the console disc's timing images.
+
+| Scene | Old port, MODELLED | New engine, MODELLED | Engine / old, pictures a second |
+|---|---|---|---:|
+| Village route | **15.56** a second (interval 3.85 fields mean, worst 10); work a picture 62.4 / 142.3 / 166.1 ms; game speed 92.8% | **28.85** a second (47 of 600 over two fields, worst 3); work 34.2 / 40.2 / 44.8 ms; game speed 96% | **1.85** |
+| Hill (Ashley) | **11.27** (5.32 fields mean, worst 8); work 86.6 / 92.3 / 131.1; game speed 75.7% | **18.25** (600 of 600 over two, worst 4); work 55.0 / 61.3 / 63.1; game speed 61% | **1.62** |
+| Fight at the cross | **16.37** (3.66 fields mean, worst 33); work 54.9 / 197.8 / 383.7; game speed 96.9% | **24.15** (287 over two, worst 4); work 37.1 / 51.2 / 53.6; game speed 81% | **1.48** |
+
+- Caveat in the same table: the clock was calibrated on the old port's code, whose cost mix differs from the engine's
+  (SH4ZAM float paths, the native renderer); the scope differences of section 5 hold here too (the engine does less).
+- **Game speed differs from pictures a second.** The old port drops pictures to keep game time (two ticks a picture);
+  the engine draws every tick, so when it is late the game slows: on the hill the engine shows more pictures (18.25
+  against 11.27) but runs the game at 61% speed against the old port's 76%. The engine has no picture skipping yet.
+- Neither side holds 30 a second anywhere at this clock; the engine comes nearest on the village route.
+
+### 10.3 Does the calibration transfer? Second build at its own defensive clock
+
+Standard build, dynarec, Sh4Clock 104 (slot std1), same scenes:
+
+| Scene | Old port: console build 70 / standard 104 | Difference | Engine: console build 70 / standard 104 | Difference |
+|---|---|---:|---|---:|
+| Village route, pictures a second | 15.56 / 15.72 | 1.0% | 28.85 / 29.78 | 3.2% |
+| Hill | 11.27 / 11.52 | 2.2% | 18.25 / 20.16 | 10.5% |
+| Fight | 16.37 / 16.40 | 0.2% | 24.15 / 25.69 | 6.4% |
+| Village route, work a picture ms | 62.4 / 61.6 | 1.3% | 34.2 / 31.0 | 9.3% |
+| Hill, work | 86.6 / 84.6 | 2.4% | 55.0 / 49.7 | 9.5% |
+| Fight, work | 54.9 / 54.8 | 0.1% | 37.1 / 34.3 | 7.4% |
+
+**Plainly: the two builds agree on the old port (within 2.4%) but disagree on the engine (6 to 10%).** The calibration
+does not transfer cleanly to the engine's code: the builds weigh the engine's instructions differently from the old
+port's. Treat the MODELLED engine figures as a band, the console build at 70 MHz being its pessimistic end (the one to
+quote defensively), the standard build at 104 MHz about 10% kinder. The engine's own cost scales with the clock almost
+exactly (village work 11.91 ms at 200 MHz and 34.18 at 70 in the console build: 2.87x for a 2.86x clock), while the old
+port's drawn iteration scales a little less (cross 17.0 to 45.9 ms, 2.70x): the old port has some cost the clock does
+not touch, the engine almost none.
+
+### 10.4 Engine rows at each tier (ms a picture, means; bench windows: world only, mean / p99 / worst)
+
+| Scene / row | Plain Flycast (standard, 200) | Console build dynarec 200 | **MODELLED: console build dynarec 70** | Standard build dynarec 104 |
+|---|---:|---:|---:|---:|
+| LEON work (busy) | 16.07 | 11.91 | **34.18** | 31.01 |
+| LEON drawing | 12.51 | 9.42 | **27.01** | 24.13 |
+| LEON services | 3.43 | 2.40 | **6.91** | 6.62 |
+| LEON behaviour | 0.09 | 0.06 | **0.17** | 0.17 |
+| HILL work | 25.77 | 19.17 | **54.95** | 49.72 |
+| HILL drawing | 16.91 | 12.86 | **36.84** | 32.58 |
+| HILL services | 8.67 | 6.18 | **17.77** | 16.79 |
+| HILL behaviour | 0.14 | 0.09 | **0.27** | 0.27 |
+| FIGHT work | 17.79 | 12.92 | **37.07** | 34.34 |
+| FIGHT drawing | 11.91 | 8.93 | **25.58** | 22.93 |
+| FIGHT services | 5.40 | 3.67 | **10.60** | 10.47 |
+| FIGHT behaviour | 0.43 | 0.28 | **0.81** | 0.84 |
+| Bench, village cross world (C0) | 12.61 / 16.79 / 19.27 | 9.48 / 12.64 / 15.04 | **27.21 / 36.30 / 38.70** | 24.36 / 32.34 / 34.45 |
+| Bench, hay-fork world (F0) | 14.71 / 17.95 / 18.31 | 11.11 / 13.63 / 14.08 | **31.90 / 38.65 / 41.67** | 28.39 / 34.12 / 36.10 |
+| Pictures a second LEON / HILL / FIGHT | 29.97 / 29.97 / 29.97 | 29.97 / 29.97 / 29.97 | **28.85 / 18.25 / 24.15** | 29.78 / 20.16 / 25.69 |
+
+MODELLED drawing alone is over the 14 ms drawing budget in every scene (27 / 37 / 26 ms) and the world-only bench
+windows are 27 and 32 ms. All six console-disc scenes ran OK at every clock; nothing broke at 70 MHz.
+
+### 10.5 Not done
+
+The quiet view at 70 MHz; the interpreter on bell, hay-fork and quiet (it ignores the clock, so they would only repeat
+the "as kind as plain Flycast" result); a hill-height check of the quiet-farm fixture; any cache or graphics-chip timing
+model (neither dynarec build has one).
