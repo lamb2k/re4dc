@@ -62,11 +62,13 @@ done
 [ -n "$OUT" ] || { echo "build_console_disc: --out <dir> is required" >&2; exit 2; }
 
 PRISTINE=${PRISTINE:-/root/work/lanes/eng-bench/.m1/pristine}
-LKG=${LKG:-/root/work/lanes/eng-look/.m1/lkg-data}
+# lane eng-e1i: the packs after bake/hud_fix.py (the HUD widgets made right; docs/engine/SERVICES.md 45). FARM.PAK and
+# the .VIS files are eng-look's unchanged.
+LKG=${LKG:-${LANES:-/mnt/e/RE4DC-Lanes}/eng-e1i/packs/lkg-hud}
 LANES=${LANES:-/mnt/e/RE4DC-Lanes}
-HILL_PAK=${HILL_PAK:-$LANES/eng-e1d/build/packs/hill2.pak}
+HILL_PAK=${HILL_PAK:-$LANES/eng-e1i/packs/hill2-hud.pak}
 HILL_VIS=${HILL_VIS:-$LANES/eng-e1d/build/vis/hill1.vis}
-FIGHT_PAK=${FIGHT_PAK:-$LANES/eng-e2/build/pack/CROSS.PAK}
+FIGHT_PAK=${FIGHT_PAK:-$LANES/eng-e1i/packs/fight-hud.pak}
 FIGHT_FXMAP=${FIGHT_FXMAP:-$LANES/eng-e2/build/pack/FXMAP.BIN}
 # El Gigante's bench pack: lane eng-e1f's re-bake with the engine's bake/boss_pack.py (the effect records' glow header;
 # eng-boss's boss2-full.pak is refused at pack-loader stage 5, the control)

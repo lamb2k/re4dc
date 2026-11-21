@@ -83,7 +83,7 @@ extern "C" void e1_pool_control(void)
         cEm* p = (cEm*) ((u8*) EmMgr.pArray + i * EmMgr.size);
         if ((p->be_flag & 0x201) != 1) {
             e1_log("E1 POOLCTL: destroying the free character record %lu (control)\n", (unsigned long) i);
-            EmMgr.destroy(p);
+            EmMgr.cManager<cEm>::destroy(p);   // the pool itself: the manager's own destroy skips a dead record
             return;
         }
     }

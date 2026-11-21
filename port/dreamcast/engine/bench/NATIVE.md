@@ -13,6 +13,8 @@ The packer takes the private disc directory, capture directory, hexadecimal room
 
 ```sh
 python3 port/dreamcast/engine/bake/native_pack.py "$DISC/dc" "$CAPTURE" 101 "$PRIVATE_PACK_DIR/cross.pak" "$STATIC_TABLES"
+# lane eng-e1i: the HUD widgets made right (padded-picture coordinates, the ten PS2 digit pictures; SERVICES.md 45)
+python3 port/dreamcast/engine/bake/hud_fix.py "$PRIVATE_PACK_DIR/cross.pak" "$PRIVATE_PACK_DIR/cross.pak" "$DISC/dc/tex.pak" "$CAPTURE"/resource-ram-*.raw
 ```
 
 The sample-store observer in model_profile.py takes the path to hwmodel/hwsim.c and an output directory. Set M1_TIMING to the SH-4 ELF address of timing. The optional M1_PHASE_MASK selects function counters for setup/world, characters/volumes, punch-through, translucent/hair, effects, HUD or scene finish in bits zero through six. The simulator still executes the full trace. Subtract the store in timing column six from the store in column seven to obtain the absolute drawing interval in cycles. Divide by 200,000 for milliseconds. timing's row index is zero-based. The retail image alternates rooms and repeats the 300 inputs twice at each load.
