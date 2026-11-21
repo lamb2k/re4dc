@@ -2,6 +2,15 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-020 (2026-11-21): the hold on step 3 is withdrawn
+
+- **From:** the integrator, after the owner asked "Have we really gotten as far as the replatform can go?". Authority: H-013.
+- **Ruling:** H-017 and H-018 said step 3 would not start before the owner had seen E1 on the console. That was stricter than the plan, which says that when the console is not available work moves to things whose value does not depend on timing (ENGINE_PLAN section 7). The hold is withdrawn for such work.
+- **What may run without the console:** native services for the fight and boss images (judged by link check and by outcome against the PC reference); hosting of game systems chapter 1 needs (room loading, doors, items, sound, events); the look items the owner approves from still pairs.
+- **What still waits for the console:** anything about speed (the hill's drawing is over its 14 ms row in Flycast), content cuts, pacing and input feel. No model-only speed round.
+- **Limits unchanged:** at most two lanes; every merge through the integrator's gate; E1 is "finished, unaudited" until its console run and the audit on its logs.
+- **Now:** lane eng-e2a (the fight image's 114 service functions) beside lane eng-cmp1 (measurement).
+
 ## H-019 (2026-11-21): the owner on comparing with the old port
 
 - **From:** the owner, in conversation. **To:** the integrator and lanes.
