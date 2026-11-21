@@ -8,9 +8,9 @@ the timing rows are untouched.
 |---|---|
 | 1. The six service functions left in the default image | default and SENDABLE=1 link 0 (was 6); FIGHT 116 -> 109, BOSS 65 -> 59 as a side effect. cEm and cLight tables on the engine pool, the laser sight drawn by the renderer from engine setters |
 | 2. Controls that pass with no rows | svc_controls.sh, controls.sh, outcome_controls.py, svc5_units.sh fail closed (exit 2); each control exits 2; full runs 77 / 18 / 28 rows, all as they must |
-| 3. Shot and hit | the reference fires from a real magazine and reads the rumble table in order; `shot-ganado`: Leon's shot damages Ganado 0x14 on the PC reference and the native build (outcome PASS, control FAIL on damage); the fight image's shots on Flycast (see the hand-back) |
+| 3. Shot and hit | the reference fires from a real magazine and reads the rumble table in order; `shot-ganado`: Leon's shot damages Ganado 0x14 on the PC reference and the native build (outcome PASS, control FAIL on damage). Engine: the FIGHT=1 image (Flycast): Leon's handgun hits 0x14 five times (800 -> 20, ticks 49 to 288); outcome.py on its log against itself PASS (named as such), with the first hit taken out FAIL on damage |
 | 4. Dying Ganado skinning | cause: em10ScaleCompress writes the part records after the world pass; native `skel_compress_y`; kill / clear PASS, control FAIL at 241 / 204 |
-| 5. HUD compositing | each widget's own blend (blend_type from the capture's shape bits); still pair in the hand-back |
+| 5. HUD compositing | **not fixed.** Each widget now gets its own blend (blend_type from the capture's shape bits; 18% of the gauge's pixels change, up to 58 levels, HUDOLD control), but the still pair shows the visible faults stay: the ammo digits are drawn as garbled cells and the lens is dark. Those are not the blend: the digits' layout / UVs and the lens's frame-buffer draw (id_sys.cpp IdNegativeTrans, trans_type, not captured) are the next suspects |
 | 6. Docs | SERVICES.md sections 41-44, PLAYS_RIGHT.md "Shots, the magazine and controls that fail closed", this note |
 
 ## Link check, SERVICE functions per image
@@ -46,6 +46,17 @@ FAILs on pl_sub's createBack (416 B).
 - `HUDOLD` (E1 images): every HUD widget with blend 0, the look before this lane (the HUD control and the "before"
   still of the pair, from the same image).
 
+## Flycast runs (function checks, test discs from 1e6403c93)
+
+| Scene | Result |
+|---|---|
+| Leon, village | 640 ticks; laser 93 lines drawn (the aim stretch), 0 dots; pool full 0, bad frees 0; rumble table converted (17); intervals > 2 fields 0 |
+| Leon and Ashley, hill | 728 ticks; Ashley made by the pool's createBack; pool full 0, bad frees 0; intervals > 2 fields 0 |
+| Four-Ganado fight (traces on) | 900 ticks; spawn 4, hit 5, kill 0 (Leon's handgun on 0x14); laser 333 lines, 67 dots on a Ganado; the selector marks the scene FAILED only because a traced run has no ROW lines (the control disc dropped NOTRACE) |
+
 ## Not done / not covered
 
-See the hand-back's "Not done".
+- Item 5's visible faults (above).
+- The engine's shot-and-hit is judged against its own log, not against the PC reference: the fight image runs the
+  village fight's own scenario, which no re4ref fixture reproduces.
+- The other enemies' ScaleCompress (em2b, em2c, em2d, em25) write records the same way as em10's did.
