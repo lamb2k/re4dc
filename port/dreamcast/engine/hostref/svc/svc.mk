@@ -346,6 +346,18 @@ $(AT)/alloctest: $(AT)/alloctest.o $(AT)/heap.o $(AT)/OSAlloc.o
 alloctest: $(AT)/alloctest
 .PHONY: alloctest
 
+# ---- pooltest (lane eng-e1h): the engine's record pool (services/model/pool.h: create, createBack, create at a slot,
+# destroy, the sweep) on a test record type: full tables and double frees refused, the list intact.
+# RE4_POOL_CONTROL=1|2 turns a refusal off (must FAIL).
+PT := $(BUILD)/pooltest
+$(PT)/pooltest: svc/pooltest.cpp $(SVC_ENG)/model/pool.h $(ROOT)/include/cManager.h
+	@mkdir -p $(PT)
+	$(CXX) $(ARCH) -O1 -g -std=gnu++20 -fpermissive -w -fno-exceptions -fno-rtti -fno-threadsafe-statics \
+	    -isystem /usr/include/x86_64-linux-gnu/c++/13 -I$(ROOT)/include -I$(SVC_ENG)/model -c $< -o $(PT)/pooltest.o
+	$(CC) -m32 -no-pie -o $@ $(PT)/pooltest.o
+pooltest: $(PT)/pooltest
+.PHONY: pooltest
+
 # ---- libmtest (lane eng-svc5): the engine's float math library, the toolchain's newlib 4.6.0 libm (its sources
 # compiled for the PC by svc/newlib_libm.sh into build/ext/nlobj, symbols prefixed nl_), against the game's fdlibm
 # (src/lib, which re4ref links), bit for bit. LIBMTEST_CONTROL=sinulp (must FAIL).

@@ -214,7 +214,7 @@ int emLineCubeCrossCk(Vec*, Vec*, Mtx, f32, f32, f32, Vec*, Vec*) { STUB("emLine
 #ifndef E2_FIGHT   // eng-e2: the native effect service in the fight image
 int EspEstSetSelect(int, int, int, cEsp** out, int) { STUB("EspEstSetSelect"); if (out) *out = 0; return 0; }
 #endif
-void EspDrawLaserLine(Vec, Vec, f32) {}
+// EspDrawLaserLine: the laser line's setter is the engine's (services/laser.cpp, lane eng-e1h)
 cObj* SetObj10(void*, void*, Vec*, Vec*, Vec*, float, float, int, int) { STUB("SetObj10"); return 0; }
 void Obj10SetEst(cObj*, int, int, unsigned long, int, int, int, int, int, int) { STUB("Obj10SetEst"); }
 void ObjMauser_init(cObj*) { STUB("ObjMauser_init"); }

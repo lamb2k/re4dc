@@ -231,6 +231,8 @@ void e1_fields_finish(unsigned ticks)
 }
 
 extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, boxes, capsules, cubes; } aim_cnt;
+#include "e1_laser.h"
+extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
 void e1_report()
 {
     e1_trace_flush();
@@ -248,6 +250,11 @@ void e1_report()
            (unsigned long) aim_cnt.calls, (unsigned long) aim_cnt.scenery, (unsigned long) aim_cnt.enemy,
            (unsigned long) aim_cnt.enemy_flag40, (unsigned long) aim_cnt.boxes, (unsigned long) aim_cnt.capsules,
            (unsigned long) aim_cnt.cubes);
+    // lane eng-e1h: the laser sight's setters and the renderer's laser pass (services/laser.cpp, core/draw_e1.c); the
+    // record pools' refusals (services/model/pool.h: full tables, destroys of records not alive)
+    e1_log("E1 LASER sets %lu lines drawn %lu dots drawn %lu\n", (unsigned long) e1_laser.sets,
+           (unsigned long) e1_laser.drawn, (unsigned long) e1_laser.dots_drawn);
+    e1_log("E1 POOL full %lu bad_frees %lu\n", (unsigned long) eng_pool_full, (unsigned long) eng_pool_bad_free);
     for (int i = 0; i < 13; i++)
         if (e1_arena.heap_hi[i])
             e1_log("E1 ARENA heap %d %08lx-%08lx used %lu peak %lu fails %lu\n", i, (unsigned long) e1_arena.heap_lo[i],
