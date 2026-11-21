@@ -2,7 +2,8 @@
 // GAPPROBE, a diagnostic lab arm before play (from lane eng-skel1's probe, commit 8daaee5dd).
 // GAPPROBE: (1) a tight loop on a clock lists every gap over 0.2 ms, with the second it fell in, first with interrupts
 // on (with a known 3 to 4 ms spin at 0.5 s: the probe's own control) and then off; it runs on the engine's clock and
-// then on KOS's own conversion (timer_ns_gettime64: the control, which must show the 2.5 ms jump at each whole second);
+// then on KOS's own conversion with interrupts on (timer_ns_gettime64: the control, which must show the 2.5 ms jump at
+// each whole second);
 // (2) 600 display fields (about 10 s): the TMU2 count read once at each field's start, converted both ways, with the
 // span and the shortest and longest field. Judged by tools/engine/clock_check.py on the serial log.
 #include "e1_kos.h"
@@ -111,6 +112,7 @@ extern "C" void e1_clock_boot(void)
     gap_run("engine", "irq-on", eng_ns, 2200000000ull, false, true);
     gap_run("engine", "irq-off", eng_ns, 1200000000ull, true, false);
     gap_run("kos", "irq-on", kos_ns, 2200000000ull, false, true);
-    gap_run("kos", "irq-off", kos_ns, 1200000000ull, true, false);
+    // (no "kos irq-off" arm: on Flycast a run stopped inside it twice, 2026-11-21, runs clkA2-std and clkP-std; the
+    // control needs only the jump, which the irq-on arm shows)
     gap_probe_on = 1;   // the field span follows when the display is open (e1_clock_fields)
 }

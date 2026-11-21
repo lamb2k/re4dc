@@ -9,7 +9,7 @@ Reads the boot file GAPPROBE's lines (core/e1_clock.cpp) from a Flycast or conso
   span     600 display fields (CLOCKSPAN): the span agrees with 600 NTSC fields (1001/60 ms each) within one field, and
            no field reads more than 500 us longer than the shortest
   control  KOS's own conversion (timer_ns_gettime64) on the same probe MUST show the jump: a 2,300-2,700 us gap with
-           interrupts on and off, and a field 2,000 us or more over the shortest
+           interrupts on, and a field 2,000 us or more over the shortest
 --judge kos: judge KOS's lines by the engine's rules (the checker's own control: it must FAIL).
 Exit 0 when every row is as it must."""
 import re
@@ -70,8 +70,8 @@ def main():
         span, mn, mx = e if judge == 'engine' else k
         ok = abs(span - n * FIELD_US) <= FIELD_US and mx - mn <= 500
         row('span', ok, '%s: %d fields span %d us (expected %.0f), field min %d max %d' % (judge, n, span, n * FIELD_US, mn, mx))
-        row('control', k[2] - k[1] >= 2000 and all(judge_jump('kos', t)[0] for t in ('irq-on', 'irq-off')),
-            'kos: field max - min %d us; %s; %s' % (k[2] - k[1], judge_jump('kos', 'irq-on')[1], judge_jump('kos', 'irq-off')[1]))
+        row('control', k[2] - k[1] >= 2000 and judge_jump('kos', 'irq-on')[0],
+            'kos: field max - min %d us; %s' % (k[2] - k[1], judge_jump('kos', 'irq-on')[1]))
     else:
         row('span', False, 'no E1 CLOCKSPAN line')
         row('control', False, 'no E1 CLOCKSPAN line')
