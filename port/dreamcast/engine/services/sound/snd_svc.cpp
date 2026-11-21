@@ -501,6 +501,25 @@ extern "C" int __wrap__Z7SndStopmi(u32 id, int time)
 }
 
 // ---------------------------------------------------------------------------
+// The audio frame's three parts (game/sound.mk wraps): the longest of each, for the report.
+extern "C" {
+void __real_Snd_iss_manager(void);
+void __real_Snd_stream_player(void);
+void __real_Snd_midi_sequencer(void);
+}
+static uint32_t g_part_max[3], g_part_max_tick[3];
+static inline void part_time(int k, void (*f)(void))
+{
+    const uint64_t t0 = timer_us_gettime64();
+    f();
+    const uint32_t us = (uint32_t) (timer_us_gettime64() - t0);
+    if (us > g_part_max[k]) { g_part_max[k] = us; g_part_max_tick[k] = e1_tick; }
+}
+extern "C" void __wrap_Snd_iss_manager(void) { part_time(0, __real_Snd_iss_manager); }
+extern "C" void __wrap_Snd_stream_player(void) { part_time(1, __real_Snd_stream_player); }
+extern "C" void __wrap_Snd_midi_sequencer(void) { part_time(2, __real_Snd_midi_sequencer); }
+
+// ---------------------------------------------------------------------------
 // The hooks into the engine core (game/sound.mk wraps).
 // The service's three entry points (the core reaches them through the wraps below; the integrator may call them
 // directly from the core instead: hand-back request R3).
@@ -549,6 +568,9 @@ extern "C" void snd_svc_report(void)
     e1_log("E1 SOUND longest step %lu us: %lu driver frames %lu us, voices %lu us, register flush %lu us\n",
            (unsigned long) aica_stats.long_us, (unsigned long) aica_stats.long_frames, (unsigned long) aica_stats.long_drv,
            (unsigned long) aica_stats.long_vox, (unsigned long) aica_stats.long_flush);
+    e1_log("E1 SOUND frame parts longest: voice manager %lu us (tick %lu), stream player %lu us (tick %lu), sequencer %lu us "
+           "(tick %lu)\n", (unsigned long) g_part_max[0], (unsigned long) g_part_max_tick[0], (unsigned long) g_part_max[1],
+           (unsigned long) g_part_max_tick[1], (unsigned long) g_part_max[2], (unsigned long) g_part_max_tick[2]);
     for (unsigned i = 0; i < g_tlog_n; i++) e1_log("%s", g_tlog[i]);
     if (g_tlog_lost) e1_log("E1 SOUND thread log: %u lines not kept\n", g_tlog_lost);
     const AicaStats& s = aica_stats;

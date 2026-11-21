@@ -42,6 +42,9 @@ ENG_HDRS += $(wildcard $(SND_DIR)/*.h)
 # lane out of the core files; the hand-back asks for three direct calls instead.
 WRAPS += -Wl,--wrap=_Z12e1_load_roomj -Wl,--wrap=_Z14e1_fields_latej -Wl,--wrap=_Z9e1_reportv \
 	-Wl,--wrap=_Z7SndCallttP3VeciiP5cUnit -Wl,--wrap=_Z7SndStopmi
+# The audio frame's three parts timed (snd_main.cpp cb_audio_frame: the voice manager, the stream player, the MIDI
+# sequencer), for the report's longest-step split.
+WRAPS += -Wl,--wrap=Snd_iss_manager -Wl,--wrap=Snd_stream_player -Wl,--wrap=Snd_midi_sequencer
 
 # The fight and boss images keep generated stubs for some driver entry points (fight/fight_gen_stubs.cpp,
 # fight/fight_stubs.cpp, boss/boss_stubs.cpp: other lanes' files). Until those are removed (hand-back request), the
