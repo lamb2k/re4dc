@@ -68,8 +68,7 @@ namespace {
 
 // ---------------------------------------------------------------------------
 // The audio thread's log lines go to a ring printed with the report (the engine log is the main thread's).
-char g_tlog[24][120];
-unsigned g_tlog_n, g_tlog_lost;   // written with interrupts off
+unsigned g_tlog_lost;   // the audio thread's log lines, counted
 kthread_t* g_main_thread;
 
 // ---------------------------------------------------------------------------
@@ -417,19 +416,17 @@ void room_load(unsigned room)
 
 }  // namespace
 
-// The audio thread's log (aica.cpp): the main thread writes to the engine log; the audio thread to a ring.
+// The AICA layer's log (aica.cpp): the main thread's lines go to the engine log; the audio thread does not format
+// (newlib's formatting can take a lock the main thread holds): its lines are only counted.
 extern "C" void aica_log(const char* fmt, ...)
 {
+    if (g_main_thread && thd_current != g_main_thread) { ++g_tlog_lost; return; }
     char b[120];
     va_list ap;
     va_start(ap, fmt);
     vsnprintf(b, sizeof b, fmt, ap);
     va_end(ap);
-    if (thd_current == g_main_thread || !g_main_thread) { e1_log("%s", b); return; }
-    const int old = irq_disable();
-    if (g_tlog_n < 24) memcpy(g_tlog[g_tlog_n++], b, sizeof b);
-    else ++g_tlog_lost;
-    irq_restore(old);
+    e1_log("%s", b);
 }
 
 // ---------------------------------------------------------------------------
@@ -571,8 +568,7 @@ extern "C" void snd_svc_report(void)
     e1_log("E1 SOUND frame parts longest: voice manager %lu us (tick %lu), stream player %lu us (tick %lu), sequencer %lu us "
            "(tick %lu)\n", (unsigned long) g_part_max[0], (unsigned long) g_part_max_tick[0], (unsigned long) g_part_max[1],
            (unsigned long) g_part_max_tick[1], (unsigned long) g_part_max[2], (unsigned long) g_part_max_tick[2]);
-    for (unsigned i = 0; i < g_tlog_n; i++) e1_log("%s", g_tlog[i]);
-    if (g_tlog_lost) e1_log("E1 SOUND thread log: %u lines not kept\n", g_tlog_lost);
+    if (g_tlog_lost) e1_log("E1 SOUND audio thread: %u log lines not formatted\n", g_tlog_lost);
     const AicaStats& s = aica_stats;
     e1_log("E1 SOUND %s pictures %u cost-us mean %lu worst %lu (picture %lu) voices-peak %lu notes-peak %lu "
            "stream-bytes-per-picture 0 requests %lu stops %lu banks %lu missing %lu\n", g_on ? "on" : "off", n,
