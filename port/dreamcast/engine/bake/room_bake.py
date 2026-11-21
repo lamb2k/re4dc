@@ -94,6 +94,23 @@ def stage_tables(iso=ISO):
         if room not in out: continue
         data = room_smd.decode_das(g.read(rel))
         e = room_smd.archive_endian(data)
+        # more seeds inside the room (one entry door can sit behind a step the walk test refuses: r106): the centre
+        # of every area record (AEV doors, events, cameras; include/sce_at.h SceAtWork, include/area.h AreaData at
+        # +0x04: XZ4 points at +0x14, a cylinder's or eye's x, z at +0x14, +0x18; its floor at +0x08) and every item
+        # position (ITA, SceAtItem pos at +0x5C). Places the game puts the player or his pick-ups.
+        areas = []
+        for magic, ver in ((b"AEV", 0x104), (b"ITA", 0x105)):
+            for w in stage_route.records(data, magic, ver):
+                if magic == b"ITA":
+                    areas.append((*struct.unpack_from(">3f", data, w + 0x5C), "item")); continue
+                atype = data[w + 5]; floor = struct.unpack_from(">f", data, w + 8)[0]
+                if atype == 1:
+                    p = struct.unpack_from(">8f", data, w + 0x14); x, z = sum(p[0::2]) / 4, sum(p[1::2]) / 4
+                elif atype in (2, 3):
+                    x, z = struct.unpack_from(">2f", data, w + 0x14)
+                else: continue
+                areas.append((x, floor, z, "area%d" % data[w + 0x35]))
+        out[room]["areas"] = [a for a in areas if all(abs(v) < 1e6 for v in a[:3])]
         lit = [data[s:t] for tag, s, t in room_smd.tagged_entries(data, e) if tag == b"LIT\0"]
         if not lit: continue
         L = lit[0]; cuts = struct.unpack_from(">H", L, 0)[0]; o = struct.unpack_from(">I", L, 4)[0]
@@ -121,7 +138,7 @@ def inputs(room, disc=DISC, tables=None):
         count, idx = struct.unpack_from("<2I", tex, 12)
         keys = {(a, b) for a, b, _, _ in struct.iter_unpack("<4I", tex[idx:idx + 16 * count])}
         side = (d / "ps2-world.r4pw").read_bytes()
-        parts = struct.unpack_from("<I", side, 8)[0]
+        parts = struct.unpack_from("<I", side, 12)[0]   # R4PW: version 4, placements 8, parts 12
         need = {struct.unpack_from("<2I", side, 32 + 16 * i) for i in range(parts)}
         row["world_keys"] = len(need); row["world_keys_missing"] = len(need - keys)
     if tables is not None:
@@ -302,7 +319,9 @@ def bake_room(room, out, tables, cot, jobs=4, control_seeds=False):
     row = inputs(room, tables=tables); res["inputs"] = row
     if not row["world"]:
         res["failures"].append("no PS2 world sidecars (native/%s/ps2-world.*)" % room); return res
-    entries = (tables.get(room) or {}).get("entries", [])
+    t = tables.get(room) or {}
+    entries = [tuple(e) for e in t.get("entries", [])] + [tuple(a) for a in t.get("areas", [])]   # seeds: entry points, then the room's areas and items
+    res["seeds"] = dict(entries=len(t.get("entries", [])), areas_and_items=len(t.get("areas", [])))
     if control_seeds:   # the seed check's control: every entry point lifted 50 m off the floor and moved 1 km away
         entries = [(x + 1e6, y + 5e4, z + 1e6, s) for x, y, z, s in entries]
     try:
@@ -411,7 +430,7 @@ def table(results):
 
 def chapter1(out, jobs):
     st = out / "stage1-tables.json"
-    if st.exists() and "lights_per_cut" in st.read_text(): tables = json.loads(st.read_text())
+    if st.exists() and "\"areas\"" in st.read_text(): tables = json.loads(st.read_text())
     else: tables = stage_tables(); st.write_text(json.dumps(tables, indent=1))
     cot = template_cot()
     results = []
