@@ -15,6 +15,10 @@ One numbered entry per milestone or blocking question. Newest first. Format: com
   5. **Outcome reader.** Every actor present in the reference must have every tick between its first and last sample; R rows are required when the fixture declares a room; an unrecorded position sentinel fails; yaw is compared with a tolerance. Each with a failing input.
   6. **Console record.** A scene is OK only with drawn mode, 600 distinct picture rows, 600 real flip intervals and zero release-queue drops; stack guards and RAM and VRAM floors are sampled after play, not before. Diagnostic captures (traces, stills) are never taken in a timed run.
   7. **Gate evidence.** The integrator's gate scripts write their comparison tables to files beside the make logs (the auditor could not find g6's hash tables).
+- **Added 11-21 after lanes eng-e1j to eng-e1m:**
+  8. **The PC reference reads routine bytes as the game does** (`RE4DC_STAT_ROUTINE_BYTES`, lane eng-e1m). A reference number recorded before `9451b0a8c` is not cited until it is re-derived. Changing the reference is allowed only with the cause shown in the original source and a control that restores the old behaviour; three such changes landed tonight (em10 presentation callers, the BSpline alias on i386, the routine bytes).
+  9. **Clip distances:** the game's `ZNEAR` and `ZFAR` hold the original's values; the renderer's near and far are engine constants (`ENG_RENDERER_NEAR` 100, `ENG_RENDERER_FAR` 18,750). The near plane fix changes the picture (handgun, body parts, no unclipped slabs): the owner approves it from the still sheet.
+  10. **A loosened comparison is a gate failure** unless the brief asked for it: lane eng-e1j widened every boundary-log field to 0.01 and was sent back.
 - **Not ruled, for the console evening:** physical timing, input feel (fixed release against PACETMU), memory peaks through play, no play-time disc reads, the GDEMU race gate, matched stills and clips against the PS2 original, the owner's look decisions.
 - **Open with the owner:** the HUD look (still sheet); the yes for the WSL disk compaction; a date for the console evening.
 
