@@ -21,6 +21,18 @@ $(BUILD)/svc/svc_cloth_glue.o: svc/svc_cloth_glue.cpp hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_REF_GAME := $(plain_GAME_OBJS) $(BUILD)/svc/ref/pendulum.o
+# lane eng-skel1:
+# The chain object (kind 0x1D): the reference builds (odump, census) link the original game/obj1d.cpp, the native builds
+# services/cloth/chain.cpp; the plain build's generated stubs of its entry points are weak in the svc builds (svc/ copy).
+CHAIN_STUBS := _Z8SetChainPvS_P3VecS1_ _ZN9cObjChain8setChainEP8PenCloth _ZN9cObjChain9setParentEP6cModeliP3Veci
+$(BUILD)/svc/host_actor_stubs.o: $(BUILD)/plain/host/host_actor_stubs.o svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy $(foreach s,$(CHAIN_STUBS),--weaken-symbol=$(s)) $< $@
+SVC_HG_OBJS := $(filter-out $(BUILD)/plain/host/host_actor_stubs.o,$(SVC_HG_OBJS)) $(BUILD)/svc/host_actor_stubs.o
+$(BUILD)/svc/ref/obj1d.o: $(BUILD)/gen/obj1d.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+SVC_REF_GAME += $(BUILD)/svc/ref/obj1d.o
 $(BUILD)/svc/host_stubs.o: $(BUILD)/plain/host/host_stubs.o svc/svc.mk
 	@mkdir -p $(dir $@)
 	objcopy $(foreach s,$(PEN_STUBS),--weaken-symbol=$(s)) $< $@
@@ -256,6 +268,18 @@ $(BUILD)/svc/e2b_dump.o: svc/e2b_dump.cpp hostref.h
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o \
 	$(BUILD)/svc/e2b_dump.o
+# lane eng-skel1: the skeleton's bone entries and the chain object against the original (skent_dump.cpp; skent_check.sh)
+$(BUILD)/svc/skent_dump.o: svc/skent_dump.cpp $(SVC_ENG)/skeleton/skel.h hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+SVC_HOST_OBJS += $(BUILD)/svc/skent_dump.o $(BUILD)/svc/skchain_kind.o
+$(BUILD)/svc/skchain_kind.o: svc/skchain_kind.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+$(NAT)/chain.o: $(SVC_ENG)/cloth/chain.cpp $(SVC_ENG)/skeleton/skel.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
+NATIVE_GAME_OBJS += $(NAT)/chain.o
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	@mkdir -p $(dir $@)
