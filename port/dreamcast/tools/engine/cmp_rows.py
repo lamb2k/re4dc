@@ -72,7 +72,7 @@ def engine(path):
 
 
 def old(path, lo, hi):
-    rem = {}; tot = {}; pics = []; last_f = None; overruns = 0; act = None
+    rem = {}; tot = {}; pics = []; last_f = None; overruns = 0; act = None; bad_pic = 0
     for line in open(path, encoding='latin-1'):
         if line.startswith('[LOG OVERRUN'):
             overruns += 1
@@ -91,7 +91,10 @@ def old(path, lo, hi):
             if r: rem[f] = int(r.group(1))
             if t: tot[f] = int(t.group(1))
         elif line.startswith('PACE pic '):
-            d = {k: int(v) for k, v in (kv.split('=') for kv in line.split()[2:])}
+            m = re.match(r'PACE pic sub=(\d+) tgt=(\d+) flip=(\d+) ticks=(\d+) lat_us=(\d+)\s*$', line)
+            if not m:   # a line cut by another writer (seen in the interpreter build): counted, not guessed
+                bad_pic += 1; continue
+            d = dict(zip(('sub', 'tgt', 'flip', 'ticks', 'lat_us'), map(int, m.groups())))
             d['last_f'] = last_f; pics.append(d)
     offs = collections.Counter(p['last_f'] - p['ticks'] for p in pics if p['last_f'] is not None)
     # Without PT lines (a build without GAME_TICK_LOG): the first warp act line. Its pad frame P is game frame P + 170
@@ -120,7 +123,7 @@ def old(path, lo, hi):
                 pictures_covering_2plus_iterations=sum(1 for p in win if p['iters'] > 1),
                 missing_iterations=missing, tick_offset=off, tick_offset_votes=offs.most_common(3),
                 tick_offset_from_first_act=act_off,
-                pace_pic_lines=len(pics), log_overruns=overruns)
+                pace_pic_lines=len(pics), pace_pic_lines_cut=bad_pic, log_overruns=overruns)
 
 
 def main():
