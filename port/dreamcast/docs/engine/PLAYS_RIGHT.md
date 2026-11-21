@@ -385,3 +385,35 @@ for sparse old-game logs. `controls.sh` adds one control per structure fault (18
 `E:\RE4DC-Lanes\eng-svc5\ev\pr_controls.md`). Its `drop-rng` control moved to bell-ganado: on door103-walk Leon's walk no
 longer draws from the behaviour generator (his eye wander is presentation since eng-e1d), so it dropped nothing and
 **passed**, a stale control found by re-running it.
+
+
+## Shots, the magazine and controls that fail closed (lane eng-e1h, 2026-11-20)
+
+**The reference fires.** Its item stub answered 0 rounds, so A while aiming took the empty-gun branch and no shot ever
+fired (lane eng-e1g's finding). `hostref/host_stubs.cpp` now holds the armed handgun's magazine with item.cpp's rules
+for a type-1 weapon: the new game's 10 rounds loaded, none carried; trigger spends a round (0 when empty), reload and
+reloadable move carried rounds in. The default image's `host/e1_stubs.cpp` follows the same rules (the fight image's
+magazine refills at 3 left, so the two agree for its first 7 shots). The first shot's rumble no longer crashes the
+reference: the core archive's rumble table is converted to the PC's byte order at load (SERVICES.md section 43).
+aimchk no longer replaces the magazine or skips a rumble pattern; it logs every shot line (`shots.txt`:
+GetWepTargetList2's line, scenery hit, enemies crossed, each enemy's distance from the line).
+
+**Fixture `shot-ganado`** (fixtures/shot-ganado.txt): bell-ganado with Leon resumed facing yaw -1.54, aiming from tick
+150 and pressing A at 160 (and 180). The shot at 161 crosses Ganado 0x14 at about 2,430 units: its life drops 800 to
+500 at tick 162; the second shot misses. outcome.py: the reference twice PASS; the native build against the reference
+PASS (321 ticks, 4 actors, positions 0 apart, damage e=14 once); **control** without the press at 160: FAIL, damage
+(and positions from tick 162). Evidence: `E:\RE4DC-Lanes\eng-e1h\ev\shot\shot-pc.txt`.
+
+**Controls that fail closed.** svc_controls.sh exited 0 with an empty table when the odump build was missing (its runs
+exit inside the table's pipeline), and controls.sh exited 0 whatever its rows said (the status was set in the
+pipeline's subshell). Now:
+
+| Script | Exits 2 (incomplete) when | Planned rows | Control (each exits 2) |
+|---|---|---|---|
+| hostref/svc/svc_controls.sh | odump or native build, a fixture or the tree missing; a run fails; a row has no comparison report; fewer rows than planned | 5 a fixture + 47 | `RE4_HOSTREF_BUILD=<empty folder>`; a fixture that does not exist |
+| tools/plays_right/controls.sh | the reference binary, a fixture or the tree missing; a run fails; a comparison exits other than 0 / 1 or writes no report; fewer rows | 18 | the reference binary absent |
+| tools/plays_right/outcome_controls.py | the binary, the tree, a fixture or the engine log missing; a run fails or writes no trace; fewer rows | 28 (30 with --engine-log) | `--bin` absent |
+| hostref/svc/svc5_units.sh | no map, no binary beside the map, a unit whose object the map does not name | - | a map copied without its binary; a unit that does not exist |
+
+A WRONG row still exits 1. Full runs on the lane's final reference: svc_controls 77 rows, controls.sh 18,
+outcome_controls 28, all as they must (`E:\RE4DC-Lanes\eng-e1h\ev\ctl2\`).
