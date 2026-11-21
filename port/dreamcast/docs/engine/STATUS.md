@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-20, evening):** plan version 3 APPROVED by the owner (H-012); technical decisions are the integrator's (H-013, rulings in H-014). Current steps: 1 (console evening, waits for the owner's SD card) and 2 (pass E1). One lane running. The machine stalled for seven hours on 11-20 (WSL disk file at the NTFS fragment limit, H-014): builds go to RAM, C: is checked before every build. Everything is "finished, unaudited" until its audit and console run.
+**State (2026-11-21):** plan version 3; technical decisions are the integrator's (H-013). **No console run until the replatform is complete (the owner, H-021):** nobody asks the owner for a console evening; milestones proceed, and speed is judged by a defensive model (the interpreter Flycast with `Sh4Clock` calibrated on the old port's console numbers, plus cost read from the code). A milestone on the model is "finished, modelled, not on console"; its console run is deferred, not waived. E1's code side has been through four audits (H-011, H-016, H-017, H-018). At most two lanes.
 
 ## Milestones
 
@@ -94,10 +94,7 @@ Merged 11-21, finished, unaudited: eng-e1p (the fourth audit's four items: every
 
 ## Waiting on the owner
 
-- Renderer look: the still sheet `E:\RE4DC-Lanes\eng-e1l\ev\cam\sheet-renderer.jpg` (before and after the near plane fix) needs the owner's yes.
-- HUD look: the still sheet `E:\RE4DC-Lanes\eng-e1i\ev\hud\hud-sheet.jpg` (old game, before, after) needs the owner's yes.
-- Input feel on the console: the fixed-field pacer adds one picture of delay; the PACETMU arm is the comparison.
-- The console evening: the SD card (step 1).
-- Asset source for step 6 (beyond the PS2 version).
-- El Gigante's lighter PS2 body: yes or no.
-- Disk space (H-014): C: and D: are 97% full. The cure for the WSL disk file is a fresh copy, which needs about 420 GB free on one volume or a new drive. No Compact-WSL until then.
+- Look, when the owner chooses to look (still sheets, no disc): the HUD (`E:\RE4DC-Lanes\eng-e1i\ev\hud\hud-sheet.jpg`), the near plane fix (`E:\RE4DC-Lanes\eng-e1l\ev\cam\sheet-renderer.jpg`), the overall picture (`E:\RE4DC-Lanes\eng-e1o\ev\look\sheet-e1.jpg`).
+- The yes for the WSL disk file compaction (H-015.5; an admin step on the machine).
+- Asset source for step 6 (beyond the PS2 version); El Gigante's lighter PS2 body: yes or no.
+- Not asked for: a console evening or the SD card (H-021).

@@ -2,6 +2,32 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-022 (2026-11-21): the rule documents follow H-019 to H-021; E1's milestone audit
+
+- **From:** the integrator. Authority: H-013; the owner asked "do we need to update agent.md etc?" and said "Fix it".
+- **Done:** `AGENTS.md`, the repository `CLAUDE.md`, `CODEX.md`, `ENGINE_PLAN.md` (version 3.1: a dated Amendments section, superseded sentences marked, none deleted) and `LANES.md` now carry the owner's directions of 2026-11-21 and the gate and audit rules of H-014 to H-021. Outside the repository: the workspace `CLAUDE.md`, `OPT-TRACK.md` and the four skills (re4dc-engine, re4dc-engine-lane, re4dc-engine-audit, re4dc-test-rig).
+- **Rulings made while doing it:**
+  1. The half-budget rule stays for uncalibrated figures (plain Flycast, the PC model before it is re-fitted). A calibrated strict-Flycast figure is judged on its worst case against the full row at the defensive clock.
+  2. Step 6 starts when chapter 1 holds the floor on the calibrated model; each enhancement is still the owner's to approve from stills or a clip.
+  3. "Behaviour code itself is not rewritten" is the default; a decision function goes native only where the model shows it hot, with the outcome check, and each case is ruled here.
+  4. A lane that changes a Flycast slot's settings keeps the original, restores it before hand-back, never touches a slot another lane uses, and logs `Dynarec.Enabled` and `Sh4Clock` with every number.
+- **E1's milestone audit** (replaces H-018's "on the console logs"): once the calibration exists (lane eng-cmp1) and the E1 scenes have calibrated figures, one Codex audit judges E1 on the code, the gates and the model. If it passes, E1 is "finished, modelled, not on console".
+
+## H-021 (2026-11-21): the owner: no disc until the replatform is complete; model the console ourselves
+
+- **From:** the owner, in conversation. **To:** the integrator and lanes.
+- **The owner's words:** "I don't want to look at a disc until we've coloelrter the replatforming - you can tell by the code where complexity is. You can also use a stricter emulator build for Flycast look that up so you can do Your own defense modeling."
+- **The integrator's reading:**
+  1. No console evening, SD card or date is asked of the owner while the replatform (plan steps 2 to 5) is under way. A milestone's console run is deferred, not waived; a milestone that has its audit and its model is "finished, modelled, not on console", never "done".
+  2. Speed is judged meanwhile by a **defensive model**, with every number labelled:
+     - **strict Flycast:** the interpreter build (`Dynarec.Enabled = no`; this project's console-like slots `fly1`, `fly2`) with the upstream `Sh4Clock` option (`[config] Sh4Clock`, MHz, default 200; in upstream since v2.2, ours is v2.7-14-g12bb43652). The clock is calibrated on the old port: its five benchmark scenes have real console means (Test 27.1), so the clock at which Flycast reproduces each is measurable. The lowest clock any scene needs is the defensive clock; the spread across scenes says how far one factor can be trusted;
+     - **cost read from the code:** per-picture counts (vertices, bones, queries, draw calls, bytes touched) from the images' own counters and the PC hardware model (the MODELLED tier, known to under-read the console by 1.3 to 2 times: to be re-fitted on the same five scenes);
+     - a figure passes its budget row only with margin: the model's worst case, not its mean, against the row.
+  3. Where the code says the cost is (the hill's drawing, over its 14 ms row in plain Flycast) is where speed work goes, judged on the defensive model. H-020's "speed waits for the console" is replaced by "speed waits for the calibrated model".
+  4. What the model cannot see is listed with every modelled number: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing. Those stay console risks until the deferred run.
+- **Work:** lane eng-cmp1 adds the calibration (the old port's benchmark scenes in the strict Flycast at several clocks, then the engine's scenes at the defensive clock). The one console disc stays on the shelf, rebuilt when a milestone closes on the model.
+- **Unchanged:** the owner still approves look steps (from stills), asset sources, releases and admin steps on the machine.
+
 ## H-020 (2026-11-21): the hold on step 3 is withdrawn
 
 - **From:** the integrator, after the owner asked "Have we really gotten as far as the replatform can go?". Authority: H-013.
