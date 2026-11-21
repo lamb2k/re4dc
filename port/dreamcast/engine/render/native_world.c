@@ -107,6 +107,7 @@ void native_world_frustum(const float* camera,NativeFrustum* world){
    shared between groups are listed once per group), so a picture stages only the selected groups' vertices, once
    each. Strip indices are rewritten in place to the new order. A meshlet whose grouped list would pass 255
    keeps its order and stages whole. */
+int native_world_facing(NativeWorld* w);
 int native_world_runtime(NativeWorld* w){
     const uint8_t* m=w->mesh;unsigned nm=u32(m+24);
     unsigned G=w->group_bytes?u32(w->groups+12):1;
@@ -189,6 +190,65 @@ int native_world_runtime(NativeWorld* w){
         }
     }
     w->rt_vertices=total;w->rt_duplicates=dup;w->rt_full=full;
+    return native_world_facing(w);
+}
+/* lane eng-draw2, step E2: the strips' facing records (native_world.h), made once at room load from the staged
+   coordinates (after the bias above) and the strips as regrouped above. Loading work: no per-picture conversion. */
+const float native_facing_delta[16]={0,1*127/32.f,2*127/32.f,3*127/32.f,4*127/32.f,5*127/32.f,6*127/32.f,7*127/32.f,
+    8*127/32.f,9*127/32.f,10*127/32.f,11*127/32.f,12*127/32.f,13*127/32.f,14*127/32.f,15*127/32.f};
+const float native_facing_rho[16]={0,1*127.f,2*127.f,4*127.f,8*127.f,16*127.f,32*127.f,64*127.f,128*127.f,256*127.f,
+    512*127.f,1024*127.f,2048*127.f,4096*127.f,8192*127.f,16384*127.f};
+static uint32_t facing_record(const int16_t* vtx,const uint16_t* remap,const uint8_t* s,unsigned n){
+    float nx[256],ny[256],nz[256];unsigned t=0;double sx=0,sy=0,sz=0;
+    const int16_t* p0=vtx+6*remap[s[0]];
+    for(unsigned k=2;k<n;k++){
+        const int16_t *a=vtx+6*remap[s[k&1?k-1:k-2]],*b=vtx+6*remap[s[k&1?k-2:k-1]],*c=vtx+6*remap[s[k]];
+        double ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];
+        double cx=uy*vz-uz*vy,cy=uz*vx-ux*vz,cz=ux*vy-uy*vx,l=sqrt(cx*cx+cy*cy+cz*cz);
+        if(l==0)continue;   /* zero area: no pixel whatever the culling */
+        nx[t]=cx/l;ny[t]=cy/l;nz[t]=cz/l;sx+=nx[t];sy+=ny[t];sz+=nz[t];t++;
+    }
+    double sl=sqrt(sx*sx+sy*sy+sz*sz);
+    if(!t||sl<1e-6)return 0;
+    int q[3]={(int)lrint(127*sx/sl),(int)lrint(127*sy/sl),(int)lrint(127*sz/sl)};
+    double delta=0,rho=0;t=0;
+    for(unsigned k=2;k<n;k++){
+        const int16_t *a=vtx+6*remap[s[k&1?k-1:k-2]],*b=vtx+6*remap[s[k&1?k-2:k-1]],*c=vtx+6*remap[s[k]];
+        double ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2];
+        double cx=uy*vz-uz*vy,cy=uz*vx-ux*vz,cz=ux*vy-uy*vx,l=sqrt(cx*cx+cy*cy+cz*cz);
+        if(l==0)continue;
+        double ex=cx/l-q[0]/127.,ey=cy/l-q[1]/127.,ez=cz/l-q[2]/127.,d=sqrt(ex*ex+ey*ey+ez*ez);
+        double r=fabs(cx/l*(a[0]-p0[0])+cy/l*(a[1]-p0[1])+cz/l*(a[2]-p0[2]));
+        if(d>delta)delta=d;if(r>rho)rho=r;
+    }
+    unsigned dq=(unsigned)ceil((delta+0.01)*32),rq=0;
+    double rb=rho+1;while(rq<15 && native_facing_rho[rq]<rb*127)rq++;
+    if(dq>15||native_facing_rho[rq]<rb*127)return 0;
+    return (uint32_t)(uint8_t)q[0]|(uint32_t)(uint8_t)q[1]<<8|(uint32_t)(uint8_t)q[2]<<16|(uint32_t)(dq|rq<<4)<<24;
+}
+int native_world_facing(NativeWorld* w){
+    const uint8_t* m=w->mesh;unsigned nm=u32(m+24),G=w->group_count,strips=0;
+    for(int pass=0;pass<2;pass++){
+        unsigned at=0,on=0;
+        for(unsigned l=0;l<nm;l++){
+            const uint8_t* info=m+u32(m+48)+28*l;
+            unsigned start=u32(info+4),span=u32(info+8),verts=u16(info+12);int indexed=u16(info+14)&32768;
+            const uint8_t* strip=m+u32(m+56)+start;if(indexed)strip+=2*verts;
+            const int16_t* vtx=(const int16_t*)(m+u32(m+52)+12*u32(info));
+            const uint16_t* remap=w->rt_remap+w->rt[l].remap;
+            unsigned before=0;
+            for(unsigned g=0;g<G;g++){
+                unsigned after=w->group_bytes?u16(w->groups+32+16*(l*G+g)+12):span;
+                if(pass)w->rt_gstrip[l*G+g]=at;
+                for(unsigned j=before;j<after;){unsigned n=strip[j];
+                    if(pass){uint32_t r=facing_record(vtx,remap,strip+j+1,n);w->rt_facing[at]=r;on+=r!=0;}
+                    at++;j+=1+n;}
+                before=after;
+            }
+        }
+        if(!pass){strips=at;w->rt_facing=malloc(4*strips+4);w->rt_gstrip=malloc(4*nm*G+4);if(!w->rt_facing||!w->rt_gstrip)return 0;}
+        else{w->rt_strips=strips;w->rt_facing_on=on;}
+    }
     return 1;
 }
 /* Stored mask: a mode byte, then raw bits (0) or runs (1): alternating runs starting with zeros, u8 lengths,
@@ -292,7 +352,7 @@ unsigned native_vis_select(NativeWorld* w,const float* c){
 /* eng-look content step W: clusters whose nearest point is past native_world_lod_dist (mm) take their level
    native_world_lod_shift steps coarser (clamped to the last level). 0 = the projected-size level only (today). */
 unsigned native_world_lod_shift;float native_world_lod_dist;
-void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
+void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt_facing);free(w->rt_gstrip);w->rt_facing=NULL;w->rt_gstrip=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
 int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
     const float* p=camera+12;
     float near=DC_NEAR(p[6]/(p[5]-1));

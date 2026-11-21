@@ -86,13 +86,28 @@ static inline pvr_vertex_t* sq_next(pvr_vertex_t* sq){
 static float walk_xyz[256][3];
 static unsigned dc_wcull,dc_wlist;static uint8_t dc_wmark[256];
 static void census_strip(unsigned n);
+/* lane eng-draw2, step E2: this placement's eye in staged coordinates and the sign under which the current header's
+   culling removes a triangle (+1: removed when the eye is on the negative side of its normal, n . (p - e) > 0; -1 the
+   other side; 0: the header does not cull). Set by load_place and native_world_pass. */
+static float walk_eye[3];static float walk_sign,place_sign;static unsigned walk_cull;
+/* the screen-orientation convention: +1 when a triangle whose normal points away from the eye has the positive screen area
+   (the one culling mode 3 removes) under a view of positive orientation (det R x p1 x p3 > 0) */
+#define WALK_CONVENTION 1.f
 static __attribute__((noinline,optimize("fp-contract=off"))) pvr_vertex_t* walk_strips(pvr_vertex_t* sq,const uint8_t* s,
-        const uint8_t* end,const int16_t* vtx,const uint16_t* remap,const uint32_t* color,const float* uv){
+        const uint8_t* end,const int16_t* vtx,const uint16_t* remap,const uint32_t* color,const float* uv,const uint32_t* face){
     const float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
     const int census=DC_ARM(DL_CENSUS) && !dc_mute;
-    unsigned corners=0,strips=0;
+    const float sg=walk_sign,ex=walk_eye[0],ey=walk_eye[1],ez=walk_eye[2];
+    unsigned corners=0,strips=0,dropped=0;
     while(s<end){
-        unsigned n=*s++;
+        unsigned n=*s++;const uint32_t rec=*face++;
+        if(rec>>24 && sg!=0){   /* E2: every triangle of the strip faces away under the header's culling: not sent */
+            const int16_t* p=vtx+6*remap[*s];
+            float vx=p[0]-ex,vy=p[1]-ey,vz=p[2]-ez;
+            float d=sg*((float)(int8_t)rec*vx+(float)(int8_t)(rec>>8)*vy+(float)(int8_t)(rec>>16)*vz);
+            float l1=fabsf(vx)+fabsf(vy)+fabsf(vz);
+            if(d>native_facing_delta[rec>>24&15]*l1+native_facing_rho[rec>>28]){s+=n;dropped+=n;continue;}
+        }
         corners+=n;strips++;
         for(unsigned k=0;k<n;k++){
             const unsigned j=*s++;const int16_t* v=vtx+6*remap[j];
@@ -109,7 +124,7 @@ static __attribute__((noinline,optimize("fp-contract=off"))) pvr_vertex_t* walk_
         }
         if(census)census_strip(n);
     }
-    if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);}
+    if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);DC_ADD(DC_W_FACEDROP,dropped);}
     return sq;
 }
 /* census of one walked strip (counts only) */
@@ -211,12 +226,13 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
     if(!boundary){   /* lane eng-draw2, step W1: wholly in front, walked without a stage (DL_STAGE2 / DL_COPY2: walked twice) */
         for(unsigned rep=0;rep<1u+!!DC_ARM(DL_STAGE2|DL_COPY2);rep++){
             dc_mute=rep;
-            if(!w->group_bytes){sq=walk_strips(sq,strip,strip+l[2],(const int16_t*)vertices,remap,color,uv);continue;}
+            const uint32_t* face=w->rt_facing;const uint32_t* first=w->rt_gstrip+piece->meshlet*G;
+            if(!w->group_bytes){sq=walk_strips(sq,strip,strip+l[2],(const int16_t*)vertices,remap,color,uv,face+first[0]);continue;}
             const uint16_t* group=(const uint16_t*)(w->groups+32+16*(piece->meshlet*G)+12);
             unsigned before=0;
             for(unsigned g=0;g<G;g++,group+=8){
                 unsigned after=*group;
-                if(sel>>g&1)sq=walk_strips(sq,strip+before,strip+after,(const int16_t*)vertices,remap,color,uv);
+                if(sel>>g&1)sq=walk_strips(sq,strip+before,strip+after,(const int16_t*)vertices,remap,color,uv,face+first[g]);
                 before=after;
             }
         }
@@ -304,8 +320,23 @@ static int prepare_world(const NativeWorld* w,const float* camera,unsigned mater
     for(int i=0;i<n;i++)ordered[offsets[selected[i].header]++]=selected[i];
     return 1;
 }
+static float camera_eye[3],camera_sign;   /* E2: the eye in world coordinates and the view's orientation sign */
+static float place_eye[PLACE_LIMIT][4];
 static void load_place(const NativeWorld* w,unsigned place){
     shz_mat4x4_t* m=place_matrix+place;
+    if(place_stamp[place]!=world_serial){   /* E2: the eye in this placement's staged coordinates (value - 32768) */
+        const float* g=w->places[place].grid;
+        float a=g[0],b=g[1],c=g[2],d=g[4],e=g[5],f=g[6],h=g[8],i=g[9],k=g[10];
+        float A=e*k-f*i,B=f*h-d*k,C=d*i-e*h,det=a*A+b*B+c*C;
+        float x=camera_eye[0]-g[3],y=camera_eye[1]-g[7],z=camera_eye[2]-g[11];
+        float* o=place_eye[place];
+        if(det!=0){float r=1.f/det;
+            o[0]=(A*x+(c*i-b*k)*y+(b*f-c*e)*z)*r-32768.f;o[1]=(B*x+(a*k-c*h)*y+(c*d-a*f)*z)*r-32768.f;
+            o[2]=(C*x+(b*h-a*i)*y+(a*e-b*d)*z)*r-32768.f;o[3]=det>0?camera_sign:-camera_sign;}
+        else o[3]=0;
+    }
+    walk_eye[0]=place_eye[place][0];walk_eye[1]=place_eye[place][1];walk_eye[2]=place_eye[place][2];place_sign=place_eye[place][3];
+    walk_sign=walk_cull==3?place_sign:walk_cull==2?-place_sign:0;
     if(place_stamp[place]!=world_serial){
         const float* g=w->places[place].grid;
         shz_xmtrx_load_4x4(&world_pv);
@@ -325,6 +356,13 @@ void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigne
     dc_wlist=phase;
     unsigned last_place=~0u,last_header=~0u,headers=0,places=0;
     float near=DC_NEAR(camera[18]/(camera[17]-1));
+    {   /* E2: the eye (camera rows R, t: eye = -R^-1 t) and the orientation sign of the view's projection */
+        const float* c=camera;float a=c[0],b=c[1],cc=c[2],d=c[4],e=c[5],f=c[6],h=c[8],i=c[9],k=c[10];
+        float A=e*k-f*i,B=f*h-d*k,C=d*i-e*h,det=a*A+b*B+cc*C,r=det!=0?1.f/det:0,x=-c[3],y=-c[7],z=-c[11];
+        camera_eye[0]=(A*x+(cc*i-b*k)*y+(b*f-cc*e)*z)*r;camera_eye[1]=(B*x+(a*k-cc*h)*y+(cc*d-a*f)*z)*r;
+        camera_eye[2]=(C*x+(b*h-a*i)*y+(a*e-b*d)*z)*r;
+        float o=det*camera[13]*camera[15];camera_sign=o>0?WALK_CONVENTION:o<0?-WALK_CONVENTION:0;
+    }
     pvr_vertex_t *sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
     for(unsigned k=list_offsets[phase];k<list_offsets[phase+1];k++){
         NativePiece* p=ordered+k;
@@ -332,7 +370,8 @@ void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigne
             last_header=p->header;const unsigned* hdr=(const unsigned*)row(&s->header,last_header)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
             advance(&sq);headers++;
-            dc_wcull=hdr[1]>>27&3;   /* census: the header's culling bits (ISP/TSP word) */
+            dc_wcull=walk_cull=hdr[1]>>27&3;   /* the header's culling bits (ISP/TSP word): census and E2 */
+            walk_sign=walk_cull==3?place_sign:walk_cull==2?-place_sign:0;
         }
         if(last_place!=p->placement){last_place=p->placement;load_place(w,last_place);places++;}
         sq=native_piece(sq,w,p,near);
