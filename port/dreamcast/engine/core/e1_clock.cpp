@@ -10,6 +10,7 @@
 #include "e1_clock.h"
 #include <arch/irq.h>
 #include <dc/pvr.h>
+#include <stdio.h>
 
 namespace {
 uint64_t eng_ns() { return e1_clock_ns(); }
@@ -49,6 +50,7 @@ void gap_run(const char* arm, const char* tag, uint64_t (*clk)(), uint64_t len_n
     for (uint32_t i = 0; i < n; i++)
         e1_log("E1 GAPPROBE %s %s gap %lu us at %lu.%06lu s from the start\n", arm, tag, (unsigned long) (gap[i] / 1000),
                (unsigned long) (at[i] / 1000000000ull), (unsigned long) (at[i] / 1000 % 1000000));
+    fflush(stdout);   // each arm's lines out before the next (a diagnostic: where a run stops)
 }
 
 // vid_waitvbl's wait (the display's sync status: in a field's blanking, then out of it), bounded at 100 ms
@@ -90,6 +92,7 @@ extern "C" void e1_clock_fields(void)
            "max %lu (field %lu)\n", (unsigned) kFields, (unsigned long) (e_prev - e_first), (unsigned long) e_min,
            (unsigned long) e_max, (unsigned long) e_maxat, (unsigned long) (k_prev - k_first), (unsigned long) k_min,
            (unsigned long) k_max, (unsigned long) k_maxat);
+    fflush(stdout);
 }
 
 extern "C" void e1_clock_boot(void)
