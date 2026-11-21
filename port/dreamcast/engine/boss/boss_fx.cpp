@@ -15,6 +15,7 @@
 #include "e1_engine.h"
 #include "e1_core.h"
 #include "boss_e2.h"
+#include "boss/boss_svc.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -43,6 +44,12 @@ void e2_fx_move() {}
 void e2_after_tick() {}
 void e2_report()
 {
+    // lane eng-e2c: the boss's native service entry points (services/boss/), call counts
+    const BossSvcCounters& b = boss_cnt;
+    e1_log("E2C BOSS cameras blow %u stamp %u escape %u parasite %u pulls %u quakes %u set %u feet %u screen %u necks %u "
+           "blends %u squashes %u\n", (unsigned) b.cam_moves[0], (unsigned) b.cam_moves[1], (unsigned) b.cam_moves[2],
+           (unsigned) b.cam_moves[3], (unsigned) b.cam_pulls, (unsigned) b.quakes, (unsigned) b.quake_sets,
+           (unsigned) b.feet, (unsigned) b.screen_tests, (unsigned) b.necks, (unsigned) b.blends, (unsigned) b.squashes);
     for (unsigned k = 1; k < FX_KINDS; k++) if (fx_count[k]) e1_log("E2 FX %s count=%u\n", fx_names[k], fx_count[k]);
     for (unsigned i = 0; i < fx_n; i++)
         e1_log("E2 FXEV t=%u %s %08lx %08lx %08lx\n", fx_events[i].tick, fx_names[fx_events[i].kind],

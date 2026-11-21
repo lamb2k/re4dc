@@ -5,6 +5,9 @@
       The file as it is, with the empty scheduling-barrier asm statements' float operands moved from the
       PowerPC/SH-4 "f" register class to SSE ("x"): `asm("" : "+f"(z))` names an x87 stack register on
       x86, which GCC rejects. The statements emit no code on any target, so the arithmetic is unchanged.
+  prep.py copyg <src.cpp> <out.cpp>
+      copy, and the empty barriers' integer operands widened from "r" to "g" (i386 has too few registers for
+      em2b.cpp's keep-alive barriers; lane eng-e2c, the boss exercise builds only).
   prep.py rnd <src/game/rnd.cpp> <out.cpp>
       copy, plus instrumentation that changes no result: Rnd() reports each call to host_rnd_hook (the
       trace's call counts, per caller) and host_rnd_state() reads the generator, for the trace's
@@ -43,6 +46,22 @@ def copy(src, dst):
     with open(dst, 'w') as f:
         f.write(f'#line 1 "{src}"\n')
         f.write(host_text(text))
+
+
+def copyg(src, dst):
+    """copy, and in the empty scheduling-barrier asm statements (asm("" : ...), no code on any target) the integer
+    inputs' class "r" widened to "g" (register, memory or constant): em2b.cpp's keep-alive barriers name up to eight
+    integer registers, which i386 does not have ("impossible constraints"). The statements emit no code, so the
+    arithmetic is unchanged. Lane eng-e2c: the boss units in the PC reference's exercise builds only."""
+    text = host_text(open(src).read())
+    out = []
+    for line in text.split('\n'):
+        if 'asm(""' in line or 'asm volatile(""' in line:
+            line = re.sub(r'"r"\(', '"g"(', line)
+        out.append(line)
+    with open(dst, 'w') as f:
+        f.write(f'#line 1 "{src}"\n')
+        f.write('\n'.join(out))
 
 
 def rnd(src, dst):
@@ -141,6 +160,8 @@ if __name__ == '__main__':
         sys.exit(__doc__)
     if sys.argv[1] == 'copy':
         copy(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == 'copyg':
+        copyg(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'rnd':
         rnd(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == 'extract':
