@@ -221,6 +221,7 @@ static void aim_init()
     if (!A.init) {
         A.init = 1;
         if (is(svc_env("RE4_AIM_CONTROL"), "grow")) aim_control = 1;
+        if (is(svc_env("RE4_AIM_CONTROL"), "truegeom")) aim_control = 2;   // lane eng-e2g: the true-geometry boxes
         A.use_native = is(svc_env("RE4_AIM_USE"), "native");
         A.diff = svc_out_open("aim-diff.txt", "w");
     }
