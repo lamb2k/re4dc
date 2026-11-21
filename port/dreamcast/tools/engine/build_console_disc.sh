@@ -129,7 +129,8 @@ BUILD="cdisc-$SHORT"
 mk() {   # mk <name> <dir> <args...>
   local name=$1 dir=$2; shift 2
   log "build $name"
-  make -C "$dir" -j6 "$@" > "$B/$name-make.log" 2>&1 || { grep -n "error" "$B/$name-make.log" | head -20; tail -5 "$B/$name-make.log"; exit 1; }
+  # -j4: the shared machine's limit (the lanes' common brief)
+  make -C "$dir" -j4 "$@" > "$B/$name-make.log" 2>&1 || { grep -n "error" "$B/$name-make.log" | head -20; tail -5 "$B/$name-make.log"; exit 1; }
 }
 mk selector $ENG/loader OUT="$B/loader" BUILD="$BUILD" selector
 mkdir -p "$B/packdir"; ln -sf "$LKG/CROSS.PAK" "$B/packdir/cross.pak"; ln -sf "$LKG/FARM.PAK" "$B/packdir/hayfork.pak"
