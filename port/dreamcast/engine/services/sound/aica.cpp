@@ -780,7 +780,13 @@ void start_thread()
     a.label = "eng-sound";
     a.create_detached = true;
     g_thread = thd_create_ex(&a, audio_main, nullptr);
-    snd_log("aica: audio thread tid=%d prio=3 period=5ms\n", g_thread ? (int) g_thread->tid : -1);
+    // Priority 0 (thd_create treats 0 as "default", so it is set after): KOS ages a ready thread's priority by how long
+    // it has waited (thread.c thd_calc_prio: prio >> waited / 2^ageing), so a main thread that ran a whole late picture
+    // without yielding came back above priority 3 and took the CPU from a running audio step for a whole timeslice
+    // (one 10 ms step a scene, calibrated and plain Flycast alike). Aged, the main thread's priority 10 only reaches 0,
+    // and the run queue keeps the static priority 0 thread first, so a step is not preempted by it.
+    if (g_thread) thd_set_prio(g_thread, 0);
+    snd_log("aica: audio thread tid=%d prio=0 period=5ms\n", g_thread ? (int) g_thread->tid : -1);
 }
 
 }  // namespace
