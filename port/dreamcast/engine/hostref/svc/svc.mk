@@ -108,7 +108,7 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 # original functions of those units the native link still keeps.
 # lane eng-svc5 (round 5): the math helpers (services/math: math_sub, sub2) and the garments (services/cloth/garment:
 # pl_cloth), linked the same way (SERVICES.md sections 32, 33)
-SVC5_SRCS := math/math_svc.cpp cloth/garment.cpp
+SVC5_SRCS := math/math_svc.cpp cloth/garment.cpp math/sdk_math.cpp
 SVC5_UNITS := math_sub sub2 pl_cloth
 SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp              $(SVC5_SRCS)
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
@@ -137,6 +137,14 @@ $(NAT)/weak4/%.o: $(BUILD)/plain/game/%.o $(NAT)/svc4/syms.txt
 	@mkdir -p $(dir $@)
 	objcopy $$(cat $(NAT)/svc4/syms.txt) $(foreach s,$(WEAK_$*),--weaken-symbol=$(s)) \
 	    $(if $(filter $*,$(SVC4_NOINIT)),$(NOINIT_FLAGS)) $< $@
+# ---- lane eng-svc5: the native SDK math in re4ref native (services/math/sdk_math.cpp): the SDK's C objects and the old
+# port's PS* forwarders (plain/sdk) are linked with every symbol the native objects define made weak (weak5/), as weak4/
+# does for the game units, so every PS* / C_* call reaches the engine body and --gc-sections drops the original's.
+NAT_SDK_OBJS := $(patsubst $(BUILD)/plain/sdk/%,$(NAT)/weak5/%,$(plain_SDK_OBJS))
+$(NAT)/weak5/%.o: $(BUILD)/plain/sdk/%.o $(NAT)/svc4/syms.txt
+	@mkdir -p $(dir $@)
+	objcopy $$(cat $(NAT)/svc4/syms.txt) $< $@
+
 SVC4_REPLACED := $(addprefix $(BUILD)/plain/game/,$(addsuffix .o,$(SVC4_ALL)))
 # the native objects first: a header inline (manager methods, destructors) both define is taken from them
 NATIVE_GAME_OBJS := $(SVC4_OBJS) $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED),$(plain_GAME_OBJS)) \
@@ -188,10 +196,10 @@ $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	@mkdir -p $(dir $@)
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
 	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS)
-$(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
+$(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
-	    $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
+	    $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
 
 odump: $(ODU)/re4ref
 native: $(NAT)/re4ref
@@ -292,11 +300,77 @@ $(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
 $(AIM)/aimcheck.o: svc/aimcheck.cpp hostref.h
 	@mkdir -p $(AIM)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
-$(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
+$(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
                $(AIM)/aim.o $(AIM)/aimcheck.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(AIM_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
-	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
+	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
 	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=VibSetData -Wl,-Map=$(AIM)/re4ref.map
 aimchk: $(AIM)/re4ref
 .PHONY: aimchk
+
+# ---- sdktest (lane eng-svc5): the native SDK math against src/lib mtx.c, mtxvec.c, mtx44.c, vec.c, quat.c (renamed
+# orig_<symbol>) on random inputs, bit for bit. RE4_SVC_CONTROL=sdkconcat sets the native control (must FAIL).
+ST := $(BUILD)/sdktest
+ST_UNITS := sdk_mtx sdk_mtxvec sdk_mtx44 sdk_vec sdk_quat
+$(ST)/orig.syms: $(foreach u,$(ST_UNITS),$(BUILD)/plain/sdk/$(u).o) svc/svc.mk
+	@mkdir -p $(ST)
+	nm -g --defined-only $(foreach u,$(ST_UNITS),$(BUILD)/plain/sdk/$(u).o) | awk 'NF == 3 {print $$3 " orig_" $$3}' | sort -u > $@
+$(ST)/orig_%.o: $(BUILD)/plain/sdk/%.o $(ST)/orig.syms
+	objcopy --redefine-syms=$(ST)/orig.syms $< $@
+$(ST)/sdktest.o: svc/sdktest.c
+	@mkdir -p $(ST)
+	$(CC) $(COMMON) $(FP_plain) -Wall -Wno-unused -c $< -o $@
+$(ST)/sdktest: $(ST)/sdktest.o $(NAT)/svc4/sdk_math.o $(foreach u,$(ST_UNITS),$(ST)/orig_$(u).o) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+sdktest: $(ST)/sdktest
+.PHONY: sdktest
+
+# ---- alloctest (lane eng-svc5): the native heap service (services/memory/heap.cpp) against src/lib/OSAlloc.c (the SDK
+# allocator the image links today; renamed orig_<symbol>) on random sequences. RE4_SVC_CONTROL=heapsplit (must FAIL).
+AT := $(BUILD)/alloctest
+$(AT)/OSAlloc.o: $(BUILD)/gen/sdk_OSAlloc.c
+	@mkdir -p $(AT)
+	$(CC) $(COMMON) $(FP_plain) -w -I$(GAME)/platform/sdk -I$(ROOT)/include -c $< -o $@.raw.o
+	nm -g --defined-only $@.raw.o | awk 'NF == 3 {print $$3 " orig_" $$3}' > $@.syms
+	objcopy --redefine-syms=$@.syms $@.raw.o $@
+	rm -f $@.raw.o
+$(AT)/heap.o: $(SVC_ENG)/memory/heap.cpp $(SVC_ENG)/memory/heap.h
+	@mkdir -p $(AT)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -I$(SVC_ENG)/memory -c $< -o $@
+$(AT)/alloctest.o: svc/alloctest.c
+	@mkdir -p $(AT)
+	$(CC) $(COMMON) $(FP_plain) -Wall -Wno-unused -c $< -o $@
+$(AT)/alloctest: $(AT)/alloctest.o $(AT)/heap.o $(AT)/OSAlloc.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+alloctest: $(AT)/alloctest
+.PHONY: alloctest
+
+# ---- libmtest (lane eng-svc5): the engine's float math library, the toolchain's newlib 4.6.0 libm (its sources
+# compiled for the PC by svc/newlib_libm.sh into build/ext/nlobj, symbols prefixed nl_), against the game's fdlibm
+# (src/lib, which re4ref links), bit for bit. LIBMTEST_CONTROL=sinulp (must FAIL).
+NLOBJ := $(ROOT)/build/ext/nlobj
+LT := $(BUILD)/libmtest
+$(LT)/libmtest.o: svc/libmtest.c
+	@mkdir -p $(LT)
+	$(CC) $(COMMON) $(FP_plain) -Wall -Wno-unused -fno-builtin -c $< -o $@
+$(LT)/libmtest: $(LT)/libmtest.o $(plain_LIBM_OBJS)
+	@test -f $(NLOBJ)/sf_sin.o || { echo "libmtest: run svc/newlib_libm.sh first (newlib's sources into build/ext)"; exit 1; }
+	$(CC) -o $@ $^ $(wildcard $(NLOBJ)/*.o) $(LDFLAGS)
+libmtest: $(LT)/libmtest
+.PHONY: libmtest
+
+# ---- nlnative (lane eng-e1g): the native build with the engine's float library, the toolchain's newlib float functions
+# (svc/newlib_libm.sh's unprefixed objects, build/ext/nlraw) in place of the game's fdlibm. libmtest shows the two are
+# not bit-identical (sinf, cosf, tanf on large arguments, atan2f, asinf); this build judges the swap by outcome on the
+# fixtures (native against nlnative: outcome.py and plays_right.py; svc/nl_outcome.sh).
+NLRAW := $(ROOT)/build/ext/nlraw
+NLN := $(BUILD)/nlnative
+$(NLN)/nl_glue.o: svc/nl_glue.c
+	@mkdir -p $(NLN)
+	$(CC) $(COMMON) $(FP_plain) -c $< -o $@
+$(NLN)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(SVC_HOST_OBJS) $(NLN)/nl_glue.o                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
+	@test -f $(NLRAW)/sf_sin.o || { echo "nlnative: run svc/newlib_libm.sh first"; exit 1; }
+	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o 	    $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(wildcard $(NLRAW)/*.o) $(NLN)/nl_glue.o aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) -Wl,-Map=$(NLN)/re4ref.map
+nlnative: $(NLN)/re4ref
+.PHONY: nlnative
