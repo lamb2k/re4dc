@@ -156,8 +156,16 @@ void state(cEm* e, const char* tag)
         __real_##sym args;                                                                                           \
         if (top()) { P(g_f, "%u", g_tick); log; P(g_f, "\n"); }                                                        \
     }
-WR(u32, _Z7SndCallttP3VeciiP5cUnit, (u16 blk, u16 no, Vec* pos, int id, int vol, cUnit* o), (blk, no, pos, id, vol, o),
-   { P(g_f, " SC %u %x", blk, no); if (pos) pv(pos); else P(g_f, " P-"); P(g_f, " %d %d %u -> %x", id, vol, actor(o), r); })
+// (written out: lane eng-e2c's boss exercise sees every sound call too, through its weak hook, before this log)
+extern "C" void e2c_snd_hook(u16 blk, u16 no, Vec* pos, int id, int vol, cUnit* o) __attribute__((weak));
+extern "C" u32 __real__Z7SndCallttP3VeciiP5cUnit(u16 blk, u16 no, Vec* pos, int id, int vol, cUnit* o);
+extern "C" u32 __wrap__Z7SndCallttP3VeciiP5cUnit(u16 blk, u16 no, Vec* pos, int id, int vol, cUnit* o)
+{
+    if (e2c_snd_hook) e2c_snd_hook(blk, no, pos, id, vol, o);
+    u32 r = __real__Z7SndCallttP3VeciiP5cUnit(blk, no, pos, id, vol, o);
+    if (top()) { P(g_f, "%u", g_tick); P(g_f, " SC %u %x", blk, no); if (pos) pv(pos); else P(g_f, " P-"); P(g_f, " %d %d %u -> %x", id, vol, actor(o), r); P(g_f, "\n"); }
+    return r;
+}
 WR(int, _Z7SndStopmi, (unsigned long id, int t), (id, t), { P(g_f, " SS %lx %d", id, t); })
 WR(u32, _Z11Ctrl11SetSeP5cCtrlP6cModelsti, (cCtrl* c, cModel* m, s16 time, u16 no, int idx), (c, m, time, no, idx),
    { P(g_f, " C11 %u %d %x %d -> %x", actor(m), time, no, idx, r); })
