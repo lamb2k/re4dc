@@ -545,7 +545,7 @@ static void collect(unsigned i) {
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0, run_lines = 0, fields_bad = 0, camrec_ticks = 0;
-    int pool_seen = 0, pub_seen = 0, camrec_seen = 0;
+    int pool_seen = 0, pub_seen = 0, camrec_seen = 0, wep_seen = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -651,6 +651,20 @@ static void collect(unsigned i) {
                     snprintf(e->why, sizeof(e->why), "%sPUB: camera copies %u, light-view misses %u",
                              pub_seen ? "" : "incomplete ", cam, miss);
             }
+            else if (!strncmp(line, "E1 WEP pictures ", 16)) {
+                /* lane eng-look1: Leon's weapon is drawn every picture the hosted code says it is drawn (cObjWep's
+                   be_flag gate, services/weapon_view.h) and never when it says not: visible must equal drawn and
+                   drawn-hidden be 0, or the line incomplete, fails (timing and function runs alike). Control: the NOWEP
+                   boot file (CNOWEP) draws no weapon: drawn 0 against visible */
+                unsigned pics = 0, present = 0, vis = 0, drawn = 0, hidden = 0, nodraw = 0, on = 0, ret = 0, lines = 0, ctl = 0;
+                wep_seen = tmatch(line, "E1 WEP pictures %u present %u visible %u drawn %u drawn-hidden %u not-drawable %u "
+                                        "on-screen %u world-copies-retired %u trace-lines %u control %u", NULL, &pics,
+                                  &present, &vis, &drawn, &hidden, &nodraw, &on, &ret, &lines, &ctl);
+                if ((!wep_seen || vis != drawn || hidden) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "%sweapon: visible %u drawn %u drawn-hidden %u not-drawable %u",
+                             wep_seen ? "" : "incomplete ", vis, drawn, hidden, nodraw);
+                (void)pics; (void)present; (void)on; (void)ret; (void)lines; (void)ctl;
+            }
             else if (!strncmp(line, "E1 CAMTRACK part-frame-decodes ", 31)) {
                 /* lane eng-e1p (H-018.1): camera tracks are converted when the room is loaded; one converted in play is
                    counted ("in-play N") and fails a timing scene */
@@ -689,6 +703,9 @@ static void collect(unsigned i) {
     /* lane eng-e1j (H-016.2): timing and function runs alike must report their conversions (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");
+    /* lane eng-look1: timing and function runs alike report the weapon's draw against the hosted gate (a missing line fails) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !wep_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 WEP line in the report");
     /* lane eng-e1l: timing and function runs alike report the camera record's finite check (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !camrec_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 CAMREC line in the report");

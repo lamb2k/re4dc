@@ -137,6 +137,9 @@ static int e1_hud_magazine_live(unsigned* n)
     *n = hud_freeze ? hud_frozen_count : ItemMgr.bulletNum();
     return e1_gun_shows_count(pG->weapon_no);
 }
+// lane eng-look1: Leon's weapons (services/weapon.cpp): the run's trace choice before play, the record after each picture
+void e1_weapon_boot();
+void e1_weapon_picture_end(unsigned tick);
 static int diag;   // diagnostic boot options: DNOWORLD (no world drawn), DNOMARK (no partner drawn); read at open
 
 static int boot_file(const char* name)
@@ -166,6 +169,7 @@ void e1_draw_open()
         e1_log("E1 HUDFREEZE: the HUD's ammo count frozen at %u (control)\n", hud_frozen_count);
     }
     e1_log("E1 draw: camera from the camera service's record (far %d), HUD read in place\n", (int) eng_cam.zfar);
+    e1_weapon_boot();
 }
 
 void e1_draw_picture(E1Timing& tm)
@@ -180,4 +184,5 @@ void e1_draw_picture(E1Timing& tm)
                       !(diag & 1), pSUB);
     tm.draw_us = draw;
     tm.pvr_us = wait;   // PVR readiness wait (the graphics chip, not CPU work)
+    e1_weapon_picture_end(e1_tick);   // lane eng-look1: the weapon's record, after the drawing span
 }
