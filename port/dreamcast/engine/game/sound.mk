@@ -19,10 +19,17 @@ SND_HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(SND_DRIVER)))
 HOSTED_OBJS += $(SND_HOSTED_OBJS)
 # The driver units include "re4dc_platform.h" (the sound region, the boot log): the service's stand-in, theirs only.
 $(SND_HOSTED_OBJS): ORIG_FLAGS += -I$(SND_DIR)/host
-# The random SE variant (snd.cpp seRandomCheck, inlined into SndCall) is presentation (owner 2026-11-19, "Split it"):
-# SndCall's code goes to the section e1_present, whose generator draws host/e1_wraps.cpp answers from the engine's
-# generator, so a sound never moves the behaviour generator (the PC reference, which plays no sound, draws nothing).
-PRESENT_game/snd := _Z7SndCallttP3VeciiP5cUnit _ZL13seRandomCheckiPt
+# The random SE variant (snd.cpp seRandomCheck, the unit's only Rnd call) is presentation (owner 2026-11-19, "Split
+# it"), and the driver keeps its own generator (H-025.1): snd.o's Rnd is bound to the sound service's own generator
+# (services/sound/snd_host.cpp snd_rnd), so a sound moves neither the behaviour generator nor the engine's shared
+# presentation generator (the effects', cloth's and voices' draws stay as on the PC reference, which plays no sound).
+# snd.o is built by this rule (the hosted pattern rule's flags, then the symbol bound; the fight and boss images'
+# weakened symbols, below, in the same step).
+$(OUT)/h/game/snd.o: $(ROOT)/src/game/snd.cpp $(ENG)/host/e1_prelude.h $(SND_DIR)/host/re4dc_platform.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.tmp.o
+	sh-elf-objcopy --redefine-sym _Rnd=_snd_rnd $(foreach f,$(SND_WEAK_FIGHT),--weaken-symbol=$(f)) $@.tmp.o $@
+	rm -f $@.tmp.o
 
 # The service (compiled by game/Makefile's engine rule).
 SND_OBJS := $(OUT)/e/services/sound/aica.o $(OUT)/e/services/sound/snd_host.o $(OUT)/e/services/sound/snd_svc.o
@@ -42,5 +49,4 @@ WRAPS += -Wl,--wrap=_Z12e1_load_roomj -Wl,--wrap=_Z14e1_fields_latej -Wl,--wrap=
 ifneq ($(BOSS)$(FIGHT),)
 SND_WEAK_FIGHT := __Z10SndBlkStopi __Z13SndAllFadeOutv __Z13SndBgmTblInitv __Z15SndRoomStrStartiii __Z9SndStrReqiiiiif \
 	__Z14SndRoomStrStopi
-WEAKEN_game/snd := $(SND_WEAK_FIGHT)
 endif

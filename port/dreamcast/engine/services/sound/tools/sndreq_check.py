@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """sndreq_check.py: the engine's sound requests against the PC reference's, tick by tick (lane eng-snd1, H-025.1).
 
-    sndreq_check.py <engine serial log> <scene> <reference run log> [--out report.md] [--control drop|move|extra]
+    sndreq_check.py <engine serial log> <scene> <reference run log> --ticks N [--out report.md]
+                    [--control drop|move|extra]
 
 The hosted behaviour asks for sounds through SndCall and SndStop. On the engine every request is written to the trace
 as an SR line by the sound service (services/sound/snd_svc.cpp: "SR t=<tick> f=<Frame_cnt> k=<C|S> b=<block> n=<no>
@@ -9,7 +10,7 @@ v=<flags hex> i=<id> p=<x,y,z float bits | ->"); the PC reference (hostref re4re
 same fields to its run log ("SR f=... k=..."). The scene's SR lines are taken from the serial log between the
 selector's "CDISC RUN <n> <scene>" line and its "CDISC RESULT <n> <scene>" line.
 
-The rule (stated before any run): over the ticks both runs cover (the reference fixture's length), the two request
+The rule (stated before any run): over the ticks both runs cover (1 .. N, N the reference fixture's length), the two request
 lists are equal, in order, tick by tick:
   - every SndCall: same tick (Frame_cnt), block, number, flags and id; position within the plays-right tolerance
     (tools/plays_right/tolerances.json "pos", per axis), or no position on both sides;
@@ -73,6 +74,7 @@ def main():
     ap.add_argument('serial')
     ap.add_argument('scene')
     ap.add_argument('reflog')
+    ap.add_argument('--ticks', type=int, required=True, help="the reference fixture's ticks (its trace's last tick)")
     ap.add_argument('--out')
     ap.add_argument('--control', choices=['drop', 'move', 'extra'])
     a = ap.parse_args()
@@ -109,11 +111,10 @@ def main():
     elif a.control == 'extra':
         eng.insert(1, dict(eng[0], f=eng[0]['f'] + 1))
         eng.sort(key=lambda e: e['f'])
-    # the ticks both cover: the reference's fixture length (its last tick is the end of its trace, not of its requests:
-    # the engine's later requests beyond the reference's last tick are not judged)
-    ref_last = max(e['f'] for e in ref)
+    # the ticks both cover: 1 .. the reference fixture's length (the engine's scene may run longer; its later requests
+    # are not judged)
     lo = 1
-    hi = ref_last
+    hi = a.ticks
     eng_w = [e for e in eng if lo <= e['f'] <= hi]
     ref_w = [e for e in ref if lo <= e['f'] <= hi]
     rows = []

@@ -201,6 +201,17 @@ int snd_strm_advance(u16* a, float samples, float* frac)
 }
 
 // ---------------------------------------------------------------------------
+// The sound driver's own generator (game/sound.mk binds snd.cpp's Rnd here: its random SE variant, seRandomCheck): a
+// 32-bit linear congruential generator of its own, so a sound draws from neither the behaviour generator nor the
+// engine's shared presentation generator. The high byte of each step.
+static uint32_t snd_rnd_state = 0x0D37u;
+extern "C" unsigned char snd_rnd(void)
+{
+    snd_rnd_state = snd_rnd_state * 1664525u + 1013904223u;
+    return (unsigned char) (snd_rnd_state >> 24);
+}
+
+// ---------------------------------------------------------------------------
 // The driver's platform hooks (services/sound/host/re4dc_platform.h).
 struct Re4dcMemLayout { unsigned long arena_lo, arena_hi, dvd, sound, core, option, player, weapon, heap, heap_end; };
 Re4dcMemLayout re4dc_mem;   // sound: unused (the engine boots the driver itself, snd_svc.cpp)
