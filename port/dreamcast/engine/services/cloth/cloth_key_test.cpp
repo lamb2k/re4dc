@@ -57,6 +57,14 @@ int main()
     if (tab[cloth_key_oldest(tab, n)] != &blk[1]) { printf("FAIL: eviction order\n"); bad = 1; }
     blk[0].stamp = 0xFFFFFFF0u; blk[1].stamp = 2; blk[2].stamp = 0xFFFFFFF8u;   // across the counter's wrap
     if (tab[cloth_key_oldest(tab, n)] != &blk[0]) { printf("FAIL: eviction order across the wrap\n"); bad = 1; }
+    // the release of one model's chains (cloth_release_model): A's two chains out, B's kept
+    if (cloth_key_forget_model(tab, n, A) != 2 || n != 1 || step(rope, A) || step(other, A) || step(rope, B) != b) {
+        printf("FAIL: model A's chains not released (or model B's lost)\n");
+        bad = 1;
+    }
+#ifdef CLOTH_RELEASE_CONTROL
+    printf("control build (the release does nothing): ");
+#endif
 #ifdef CLOTH_KEY_CONTROL_OLD
     printf("control build (the old key, the PenCloth alone): ");
 #endif

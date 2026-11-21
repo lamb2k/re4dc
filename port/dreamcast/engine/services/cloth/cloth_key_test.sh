@@ -1,7 +1,8 @@
 #!/bin/bash
 # cloth_key_test.sh <out dir>: the cloth service's chain key, (PenCloth, model) (lane eng-cloth1; cloth_key_test.cpp).
 # Two builds of the test with the host's g++: the service's key (must PASS) and the control CLOTH_KEY_CONTROL_OLD, the
-# old key on the PenCloth alone (must FAIL: the second set-up of a shared PenCloth takes the first model's chain over).
+# old key on the PenCloth alone (must FAIL: the second set-up of a shared PenCloth takes the first model's chain over),
+# and CLOTH_RELEASE_CONTROL, a model's release that releases nothing (must FAIL).
 # Exit 0 when both end as they must, 1 otherwise; the table to stdout and <out dir>/cloth_key_test.md.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -13,9 +14,10 @@ echo 0 > "$OUT/.status"
 {
 echo "| Build | Must | Result | Output |"
 echo "|---|---|---|---|"
-for b in key control; do
+for b in key control release-control; do
     def=; must=PASS
     [ $b = control ] && { def=-DCLOTH_KEY_CONTROL_OLD; must=FAIL; }
+    [ $b = release-control ] && { def=-DCLOTH_RELEASE_CONTROL; must=FAIL; }
     if ! g++ -std=gnu++17 -fpermissive -w $def $INC "$HERE/cloth_key_test.cpp" -o "$OUT/cloth_key_test-$b" > "$OUT/build-$b.log" 2>&1; then
         echo "| $b | $must | ERROR (build: $OUT/build-$b.log) | |"; echo 1 > "$OUT/.status"; continue
     fi

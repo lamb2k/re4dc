@@ -694,5 +694,13 @@ extern "C" void PenClothFixClear(cModel* m, PenCloth* c, int no)
     if (c->pCloth[no] != 0xFF) ch->link[no].fix &= ~1;
 }
 
+extern "C" void cloth_release_all(void)
+{
+    cloth_cnt.released += g_nch;
+    g_nch = 0;
+    g_used = 0;   // the pool's carve stays (svc_pool_carve has no free); its blocks are reused from the start
+}
+extern "C" void cloth_release_model(const cModel* m) { cloth_cnt.released += cloth_key_forget_model(g_ch, g_nch, m); }
+
 extern "C" u32 cloth_chain_count(void) { return g_nch; }
 extern "C" ClothChain* cloth_chain_at(u32 i) { return i < g_nch ? g_ch[i] : 0; }

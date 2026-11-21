@@ -81,7 +81,14 @@ extern "C" {
 struct ClothCounters {
     u32 chains, fallback, moves, links, at_volumes, resets;
     u32 evicted;         // lane eng-cloth1: entries given up when the table was full
+    u32 released;        // lane eng-cloth1: chains given back by cloth_release_model / cloth_release_all
 };
+// Lane eng-cloth1: the room release. cloth_release_all(): every chain given back and the cloth pool emptied (its carve
+// is kept): for the room change, once every owner of a chain is gone (a later PenClothMove of a released chain finds
+// none and takes the fallback). cloth_release_model(m): the chains of one model out of the table (an owner that dies
+// inside a room); their blocks come back with the next cloth_release_all (the pool is bump-allocated).
+extern "C" void cloth_release_all(void);
+extern "C" void cloth_release_model(const cModel* m);
 extern ClothCounters cloth_cnt;
 // controls (lane eng-svc2: each must make the equivalence check fail)
 extern int cloth_control_short;      // the last link of every chain left out (wrong chain length)
@@ -113,6 +120,20 @@ inline void cloth_key_forget(ClothChain** tab, u32& n, const PenCloth* c, const 
 {
     const int i = cloth_key_find(tab, n, c, m);
     if (i >= 0) tab[i] = tab[--n];
+}
+// every chain of model m out of the table (cloth_release_model)
+inline u32 cloth_key_forget_model(ClothChain** tab, u32& n, const cModel* m)
+{
+    u32 k = 0;
+#ifndef CLOTH_RELEASE_CONTROL   // cloth_key_test.cpp's control build only: nothing released
+    for (u32 i = 0; i < n;)
+        if (tab[i]->m == m) {
+            tab[i] = tab[--n];
+            k++;
+        } else
+            i++;
+#endif
+    return k;
 }
 inline int cloth_key_oldest(ClothChain* const* tab, u32 n)
 {
