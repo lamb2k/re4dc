@@ -76,6 +76,54 @@ template <class W, int N, class T> void edges(W& on, W& old, W& trg, W& rel, W& 
     }
 }
 
+// The pad clamp (lane eng-e1g, H-014.2): the engine's pad path clamps stick and trigger as the original game does (the
+// GameCube SDK's PADClamp, which the original PadRead calls right after PADRead and the PC reference links): main
+// stick dead zone 15 inside an octagon of 72 (corner 40), sub stick 15 / 59 / 31, triggers 30 to 180 shifted to 0.
+// Route fixtures stay in raw units (stick 80 reaches the game as 65, trigger 0xC0 as 150). Always on; the unclamped
+// path exists only as a test build (PAD_EXTRA=-DE1_PAD_NOCLAMP=1, the plays-right control).
+void clamp_stick(s8* px, s8* py, int max, int xy, int min)
+{
+    int x = *px, y = *py;
+    const int sx = x < 0 ? -1 : 1, sy = y < 0 ? -1 : 1;
+    x = x < 0 ? -x : x;
+    y = y < 0 ? -y : y;
+    x = x <= min ? 0 : x - min;
+    y = y <= min ? 0 : y - min;
+    if (!x && !y) {
+        *px = *py = 0;
+        return;
+    }
+    const int d = xy * y <= xy * x ? xy * x + (max - xy) * y : xy * y + (max - xy) * x;
+    if (xy * max < d) {
+        x = (s8) (xy * max * x / d);
+        y = (s8) (xy * max * y / d);
+    }
+    *px = (s8) (sx * x);
+    *py = (s8) (sy * y);
+}
+void clamp_trigger(u8* t, int min, int max)
+{
+    if (*t <= min) *t = 0;
+    else {
+        if (*t > max) *t = (u8) max;
+        *t = (u8) (*t - min);
+    }
+}
+void pad_clamp(PADStatus* s)
+{
+#ifndef E1_PAD_NOCLAMP
+    for (int i = 0; i < 4; i++, s++) {
+        if (s->err != PAD_ERR_NONE) continue;
+        clamp_stick(&s->stickX, &s->stickY, 72, 40, 15);
+        clamp_stick(&s->substickX, &s->substickY, 59, 31, 15);
+        clamp_trigger(&s->triggerLeft, 30, 180);
+        clamp_trigger(&s->triggerRight, 30, 180);
+    }
+#else
+    (void) s;
+#endif
+}
+
 }   // namespace
 
 u32 Key_type_tbl[2][64] = {
@@ -104,7 +152,7 @@ void PadRead()
     input_cnt.reads++;
     const f32 on_sq = input_control == 1 ? 81.0f * 81.0f : kStickOn * kStickOn;
     PADRead(pad_data);
-    PADClamp(pad_data);
+    pad_clamp(pad_data);   // the engine's clamp (was the SDK's PADClamp; lane eng-e1g)
     for (int i = 0; i < 4; i++) {
         const u32 chan = PAD_CHAN0_BIT >> i;
         if (pad_data[i].err == PAD_ERR_NONE) ConnectedBits |= chan;

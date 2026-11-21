@@ -54,10 +54,16 @@ game/rnd *
 !game/cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize*
 !game/cam_sys CameraSetOrientationRoll CameraSetOrientationUp
 !game/cam_extra CameraAttachedToMotion::move*
-# Debug and laser drawing (drawing is the engine's renderer).
+# Debug and laser drawing (drawing is the engine's renderer). Integrator ruling H-014.3 (reviewed, lane eng-e1g):
+# cObjWep::drawLaserSight is decision code and stays allowed by the unit line above: it decides where the laser points
+# and what it hits (getMarkerPos, then the native GetWepTargetPos), sets the weapon's target and marker (the aim the
+# shot uses) and the don't-fire flag. Its drawing goes out through drawPoint (the laser dot), Draw_line3d_local_222 /
+# Draw_line3d_222 (the shooting-range line) and EspDrawLaserLine (the effect interface): those stay service code.
 !game/cam_ctrl CameraControl::debugDrawRail*
-!game/objWep cObjWep::drawLaserSight* Draw_line3d_local_222 drawPoint
+!game/objWep Draw_line3d_local_222 Draw_line3d_222 drawPoint
 # Actor and object tables (the engine's): template instances of the original manager that land in behaviour units.
+# Ruling H-014.4: they stay offenders until they go native through the engine pool (as services/model/pool.h does
+# for cParts, cModelInfo and cSat): pl_sub's cManager<cEm>::createBack and cEmMgr::memClear, pl_npc's cManager<cLight>.
 !game/* cManager<*>::* cEmMgr::memClear* cObjMgr::memClear*
 
 # ==== Enemy decisions and room scripts (lane eng-e1f, integrator ruling from ENGINE_PLAN section 3: what an enemy

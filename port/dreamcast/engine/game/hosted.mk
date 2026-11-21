@@ -29,16 +29,8 @@ HOSTED_SRCS := \
 #     rumble (pad). motion.cpp's remaining functions are the skeleton service's (round 3). None of these units is linked.
 # Not linked either: ik.cpp (native), shape.cpp (facial shape keys: the engine draws no shape keys).
 #
-# What is still compiled from src/ under the service boundary (no native service yet: the next services lane;
-# tools/engine/check_link.py lists them as SERVICE):
-#   - the leaf math (math_sub, sub2);
-#   - pl_cloth.cpp: the behaviour's side of the cloth (each chain's links, lengths, wind tables and volumes, then the
-#     PenCloth* calls; Leon's jacket, holster and hair, Ashley's hair, skirt and sweater) and the garment pose
-#     (girlLapelMove). The boss image (BOSS=1) keeps its cloth stubs, as does the fight image (FIGHT=1, lane eng-e2).
-#   - the SDK math and allocator, fdlibm (game/Makefile SDK_UNITS, FD_UNITS).
-ifeq ($(BOSS)$(FIGHT),)
-CLOTH_SRCS := game/pl_cloth
-endif
-SVC_ORIG_SRCS := \
-	game/math_sub game/sub2 \
-	$(CLOTH_SRCS)
+# Round 5 (lane eng-svc5, linked by lane eng-e1g; SERVICES.md sections 32-38): the leaf math (math_sub, sub2:
+# services/math/math_svc), the garments (pl_cloth: services/cloth/garment), the SDK math and allocator
+# (services/math/sdk_math, services/memory/heap) and the float library (the toolchain's newlib, -lm). None of those
+# units, nor src/lib's SDK and fdlibm, is linked: no service unit is compiled from src/ any more.
+SVC_ORIG_SRCS :=

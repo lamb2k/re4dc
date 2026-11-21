@@ -24,8 +24,9 @@ REND_FLAGS := -g -std=gnu11 -Wall -Wdouble-promotion -fno-strict-aliasing -ffast
 	-I$(ENG)/render -I$(SHZ) -DRE4DC_ACTOR_LIGHT_N16=1 -DM1_NATIVE -O2
 
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
-SDK_UNITS := mtx mtxvec mtx44 vec quat OSAlloc
-SDK_OBJS := $(addprefix $(OUT)/sdk/,$(addsuffix .o,$(SDK_UNITS)))
+# Lane eng-e1g (eng-svc5 round 5 linked): the SDK math and allocator are the engine's services (services/math/sdk_math,
+# services/memory/heap, below); the float functions are the toolchain's newlib (-lm). No src/lib unit is linked, and
+# host/e1_math.cpp (the PS* forwarders to the SDK's C bodies) is deleted.
 ENG_CPP := $(wildcard $(ENG)/core/*.cpp $(ENG)/host/*.cpp $(ENG)/services/*.cpp)
 ENG_C := $(wildcard $(ENG)/core/*.c)
 # E2 boss slice (lane eng-boss): BOSS=1 builds the El Gigante arena image (game/boss.mk).
@@ -73,6 +74,7 @@ $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@
 	$(if $(PRESENT_$*),sh-elf-objcopy $(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present) $@)
+	$(if $(WEAKEN_$*),sh-elf-objcopy $(foreach f,$(WEAKEN_$*),--weaken-symbol=$(f)) $@)
 # Presentation functions (lane eng-e1c, owner 2026-11-19: presentation randomness from an engine-owned generator):
 # their code goes to the section e1_present, whose draws host/e1_wraps.cpp answers from the engine generator.
 PRESENT_game/pl_class := _ZN7cPlayer13moveEyeNormalEv
@@ -87,24 +89,8 @@ endif
 PRESENT_game/cam_extra := _ZN11CameraScope4moveEv _ZN12CameraLookAtC2EP6Camera
 PRESENT_wep/objRuger := _ZN9cObjRuger12setCartridgeEv
 PRESENT_game/pl_npc := _ZN8cSubChar8moveFaceEv
-# SDK math (mtx, mtxvec, vec) and OSAlloc (the behaviour arena's allocator), generated from src/lib as the reference
-# build does (CodeWarrior asm stripped) and compiled with its flags; mtx.c with the reference's exact sincos and
-# normalise forms (RE4DC_SINCOS, RE4DC_VEC_NORM_INLINE: bit-identical by construction).
-SDK_STRIP := $(ROOT)/port/dreamcast/game/platform/sdk/strip_cw_asm.py
-SDK_CF := -w -O2 -ffp-contract=off -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks 	-fno-isolate-erroneous-paths-dereference -fschedule-insns -fsched-pressure -ffunction-sections -fdata-sections 	-I$(ROOT)/port/dreamcast/game/platform/sdk -I$(ROOT)/include
-$(OUT)/sdk/%.c: $(ROOT)/src/lib/%.c
-	@mkdir -p $(dir $@)
-	python3 $(SDK_STRIP) $< $@
-$(OUT)/sdk/mtx.o: SDK_CF += -DRE4DC_SINCOS=1 -DRE4DC_VEC_NORM_INLINE=1
-$(OUT)/sdk/%.o: $(OUT)/sdk/%.c
-	kos-cc $(SDK_CF) -c $< -o $@
-# The game's recovered fdlibm (src/lib/fdlibm, newlib 1.8.2), as the reference links it (GAME_FDLIBM=1; its
-# sinf / cosf are game30_trig.c, bit-identical to sf_sin / sf_cos by construction).
-FD_UNITS := ef_acos ef_asin ef_atan2 ef_rem_pio2 ef_sqrt kf_cos kf_rem_pio2 kf_sin kf_tan sf_atan sf_tan sf_sin sf_cos
-FD_OBJS := $(addprefix $(OUT)/fd/,$(addsuffix .o,$(FD_UNITS)))
-$(OUT)/fd/%.o: $(ROOT)/src/lib/fdlibm/%.c
-	@mkdir -p $(dir $@)
-	kos-cc -O1 -ffp-contract=off -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks 		-fno-isolate-erroneous-paths-dereference -fschedule-insns -fsched-pressure -ffunction-sections -fdata-sections 		-I$(ROOT)/include -c $< -o $@
+# (Lane eng-e1g: the src/lib SDK units and the game's fdlibm are no longer built here; services/math/sdk_math.cpp,
+# services/memory/heap.cpp and the toolchain's newlib float functions stand in. SERVICES.md sections 35-38.)
 $(OUT)/e/%.o: $(ENG)/%.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services $(NATIVE_INC) -c $< -o $@
@@ -160,6 +146,31 @@ $(OUT)/n/$(notdir $(1)).o: $(SVC_DIR)/$(1).cpp $(wildcard $(SVC_DIR)/$(dir $(1))
 	kos-c++ $$(ORIG_FLAGS) $$(ORIG_INC) $$(NATIVE_INC) -c $$< -o $$@
 endef
 $(foreach s,$(SVC4_SRCS),$(eval $(call SVC4_RULE,$(s))))
+# Control build only (lane eng-e1g): PAD_EXTRA=-DE1_PAD_NOCLAMP=1 takes the pad clamp out of the input service (the
+# village plays-right comparison must then split from the reference at tick 424). Never a default.
+$(OUT)/n/input.o: ORIG_FLAGS += $(PAD_EXTRA)
+# ---- The native weapon-target query (lanes eng-e1f, eng-e1g; services/aim/aim.cpp: GetWepTargetPos, the laser's end,
+# target and surface) in every image. Where em_sub is hosted (FIGHT=1, BOSS=1) its own GetWepTargetPos is made weak
+# (WEAKEN_<unit> in the hosted rule) so the native body is linked and --gc-sections drops the original's.
+AIM_OBJ := $(OUT)/n/aim.o
+$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
+WEAKEN_game/em_sub := _GetWepTargetPos   # SH-ELF symbol names carry the leading underscore
+# ---- Round-5 native services (lane eng-svc5, linked by lane eng-e1g; SERVICES.md sections 32-38) in every image: the
+# math helpers (math_sub, sub2), the garments (pl_cloth's chain set-up and pose), the SDK matrix / vector math and the
+# allocator. Compiled with the hosted units' flags (the original's arithmetic in its order) and linked before the
+# hosted objects. The garments call the cloth service (PenCloth*): native in the default image, logged stubs in the
+# fight and boss images (host/e1_svc_stubs.cpp).
+SVC5_SRCS := math/math_svc math/sdk_math cloth/garment memory/heap
+SVC5_OBJS := $(addprefix $(OUT)/n/,$(addsuffix .o,$(notdir $(SVC5_SRCS))))
+SVC5_INC := -I$(SVC_DIR)/math -I$(SVC_DIR)/cloth -I$(SVC_DIR)/memory -I$(SHZ)
+define SVC5_RULE
+$(OUT)/n/$(notdir $(1)).o: $(SVC_DIR)/$(1).cpp $(wildcard $(SVC_DIR)/$(dir $(1))*.h) $(ENG)/host/e1_prelude.h
+	@mkdir -p $$(dir $$@)
+	kos-c++ $$(ORIG_FLAGS) $$(ORIG_INC) $$(NATIVE_INC) $$(SVC5_INC) -c $$< -o $$@
+endef
+$(foreach s,$(SVC5_SRCS),$(eval $(call SVC5_RULE,$(s))))
 $(OUT)/n/svc4_syms.txt: $(SVC4_OBJS)
 	sh-elf-nm -g --defined-only $(SVC4_OBJS) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
 SPLIT_UNITS := game/cam_ctrl game/cam_sys game/cam_extra
@@ -192,6 +203,6 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
-$(OUT)/e1.elf: $(SVC4_OBJS) $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
+$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

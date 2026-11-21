@@ -115,7 +115,7 @@ u32 PADRead(PADStatus* status)
     for (int i = 1; i < 4; i++) status[i].err = -1;
     return 0x80000000u;
 }
-void PADClamp(PADStatus*) {}
+// no PADClamp: the input service clamps raw stick and trigger units on the engine's pad path (lane eng-e1g)
 int PADReset(u32) { return 1; }
 int GetSystemVcnt() { return 2; }
 }

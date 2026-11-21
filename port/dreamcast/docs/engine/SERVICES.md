@@ -953,3 +953,160 @@ Control `padstick` (direction bits need 81 units) fails at tick 47 on e1-route.
 - Projected from today's default-image map (a count, not a link result): these services cover 142 of its 241 service
   functions (31,772 of 54,300 bytes); 99 functions (22,528 bytes) remain: math_sub, sub2, pl_cloth, the SDK math and
   allocator, fdlibm, objWep's laser drawing, and manager templates in pl_sub and pl_npc.
+
+
+## 32. Round 5 (lane eng-svc5): math helpers, garments, SDK math, the heap and the float library
+
+Lane eng-svc5 gives the last original service units of the E1 audit's list engine bodies: the math helpers (math_sub,
+sub2), the garments (pl_cloth), the SDK's matrix and vector math, the SDK allocator, and the float library. Same method
+as round 4: an engine body under the original name, the original's arithmetic where the result must be the reference's,
+re4ref's native build linking it (svc.mk `SVC5_*`), the six fixtures compared original against native, a control that
+fails, and `svc5_units.sh` reading the native map. New for round 5: a **differential unit test per service** (mathtest,
+garmenttest, sdktest, alloctest, libmtest): the engine body and the original object (its symbols renamed `orig_*`) in one
+program on random inputs, bit for bit, each with its own control. The unit tests reach what no fixture does; mathtest
+found a fault the fixtures passed (below). Status: finished, unaudited. Every number is PC (re4ref); none is a timing.
+
+| Section | Service | Engine files | Original units retired |
+|---|---|---|---|
+| 33 | Math helpers | `services/math/math_svc.{h,cpp}` | math_sub, sub2 |
+| 34 | Garments | `services/cloth/garment.{h,cpp}` | pl_cloth |
+| 35 | SDK math | `services/math/sdk_math.cpp` | SDK mtx, mtxvec, mtx44, vec, quat; the PS* forwarders (old port platform/mtx.cpp, image host/e1_math.cpp) |
+| 36 | Heap | `services/memory/heap.{h,cpp}` | SDK OSAlloc |
+| 37 | Float library | the toolchain's newlib libm (no engine file) | the game's fdlibm (src/lib) |
+
+`svc5_units.sh [unit...]` is round 5's unit check (round 4's `svc4_units.sh` belongs to lane eng-e1e): it fails closed
+(no map, an empty map, a map naming none of the units' objects: exit 2), and its control is the reference's census map,
+which keeps the originals (math_sub + sub2: 40 functions; pl_cloth: 15).
+
+## 33. Math helpers (math_sub, sub2)
+
+All 55 functions of the two units: orientation matrices from axes, Euler matrices (libm sin / cos) and the game's series
+sin / cos (`SINF`, `COSF`, `LIMIT_ANGLE`), `SQRTF`, Hermite, the B-spline basis, the dense LU inverse, yaw between points,
+the turning steps (`Muku*`), front cones, distances, rotations, screen projection, the line / sphere test, parabola and
+stop distances. Vector arithmetic is SH4ZAM's (`shz_vec3_add`, `_sub`, `_scale`, `_cross`, `_dot`, `_magnitude_sqr`):
+with FIPR off (SH4ZAM's default) these are the SDK C bodies' operations, and addition commutes exactly, so the bits are
+the original's. Matrices go through the SDK interface. Roots are the exact IEEE root (`__builtin_sqrtf`: SSE sqrtss,
+SH-4 FSQRT). The engine's own: the B-spline basis and the inverse take a stack scratch (no heap traffic; heap above 512
+/ 256 floats, counted), no dead work (`MtxRotAxisPosRad`'s first rotation), identities written in place.
+
+- **Fixtures:** svc_controls.sh, six fixtures, every row as it must (ev/ctl-garment.md, 76 rows). Calls reached
+  (reference census, eight fixtures): `TransMatrix` 3.35 M, `SQRTF` 1.94 M, `RotMatrix` 0.85 M, `hermite` 0.67 M,
+  `GetDistance3` 0.48 M, `VecRadLimit` 0.21 M; `SINF` / `COSF` 92,000 series evaluations on the six fixtures.
+- **mathtest** (`make mathtest`): every function on 20,000 random inputs (zeros of both signs, whole half turns,
+  room-size positions, near-parallel vectors, the heap path of the scratch): every output bit-identical
+  (ev/mathtest.txt). It found **Muku3 taking C++'s float `atan2` overload** (SH4ZAM's headers include `<math.h>`): 548 of
+  20,000 one float step off, a fault no fixture showed. Fixed with explicit double arguments.
+- **Controls:** `mathsin` (SINF / COSF without the x^9 term): svc_controls FAIL on e1-route (302 collision queries off,
+  up to 24.5 units, from tick 91; the trace PASSes: the outcome does not move, the service check does), mathtest FAIL;
+  `mathmuku` (turning steps 5% larger): FAIL on bell-ganado (bones from tick 2), mathtest FAIL.
+- **Not covered by fixtures:** `GetScreenPos`, `Get3DPosFrom2D`, `VecToCamVec` (camera and scenery; no fixture calls
+  them, mathtest leaves them out).
+
+## 34. Garments (pl_cloth)
+
+Each garment of Leon (jacket, holster strap, hair), Ashley (hair, skirt, sweater, the alternate costume's ribbon), Luis
+and Ada (dress, hair, ribbon) is one row of an engine table: its chain tables and the constants its set-up writes. One
+`fill` makes a chain work from a row; the per-character Set / Move functions pick the rows a costume wears and dispatch
+to the cloth service (PenClothMove / PenClothMove3). Ashley's skirt's event swing limits equal the normal ones: one table.
+`girlLapelMove` (Ashley's alternate costume) is the lapel pose: each lapel lifted by the angle the chest point rises
+above it, then bent about its frame's Y and Z axes, with the original's arithmetic on the SDK interface. No random draw:
+the chains' wind is the cloth service's, on the presentation generator.
+
+- **Fixtures:** every row as it must (ev/ctl-garment.md). Controls `garmenthair` (Leon's hair not stepped on odd
+  ticks): FAIL on door103-walk, bones from tick 1; `garmentskirt` (Ashley's skirt always as stiff as when carried): FAIL
+  on hill-ashley, bones from tick 6. Both leave the traces PASSing: the garments are presentation.
+- **Exercise `costume`** (svc5_dump.cpp): Leon changes to costume 1 at tick 1 (the holster strap): PASS; its control FAIL.
+- **garmenttest** (`make garmenttest`): every Set and Move of every character and costume (0, 1, 2; events; the
+  carried skirt), with the cloth entry points as logging stubs that hash the full content of the chain work handed in,
+  and the lapel pose on a synthetic 160-part model: 3,000 iterations, every call, work and part identical; controls
+  `garmenthair`, `garmentskirt`, `lapelrate` FAIL (ev/garmenttest.txt).
+- **Not on re4ref:** Ashley's model has 141 parts; the alternate costume's ribbon (parts 144-155) and lapels (0x8D,
+  0x8E) need its own model, which no fixture loads. The lapels are proven on the synthetic model only.
+
+## 35. SDK math (mtx, mtxvec, mtx44, vec, quat)
+
+`services/math/sdk_math.cpp`: the PS* entry points the behaviour calls are the bodies (no forwarder hop), the C_* names
+the same bodies: identity, copy, concat, transpose, inverse, rotations (axis, trig, axis-angle), translate, scale,
+quaternion to matrix, point and direction transforms, the 4x4 transform, look-at, ortho, perspective, quaternion from a
+matrix and slerp, and the ten vector functions. Each result is formed with the SDK C reference code's operations in
+their order, including its `0 +` terms (they turn a -0 sum into +0); vectors on SH4ZAM as in section 33.
+Built and run by lane eng-e1g (eng-svc5 could not build it: the machine stall). **sdktest** (`make sdktest`): every function on up to 100,000 random inputs (98,451 for VECNormalize), bit-identical with src/lib; control `sdkconcat` (PSMTXConcat without a's translation) FAILs. re4ref's native build links it (the SDK objects weakened, `weak5/`); nl_outcome.sh's native arm runs on it.
+
+## 36. Heap (OSAlloc)
+
+`services/memory/heap.{h,cpp}`: OSInitAlloc, OSCreateHeap, OSDestroyHeap, OSSetCurrentHeap, OSAllocFromHeap,
+OSFreeToHeap, OSCheckHeap. Placement is the SDK allocator's (descriptor table at the arena start, 32-byte cells with the
+{prev, next, size} header host/e1_heap.cpp reads, first fit in address order, split at 64 bytes left, merge on free), so
+blocks land where the reference's do. The engine's own: every free is checked (outside the heap, misaligned, or not on
+the heap's allocated list: refused, counted, logged; the SDK walked into it, and the E1 audit's heap 0 / heap 4 alias
+frees a heap-4 block into heap 0's lists); a heap created over a live heap's range is counted and logged (not refused:
+host/e1_heap.cpp does this today, heap 0 over the whole arena; the image lane decides); OSCheckHeap checks both lists.
+re4ref has no OSAlloc (host_memapi.cpp's one heap), so the proof is alloctest (lane eng-e1g): 1,744 heaps, 106,541 allocations and 88,994 frees on random sequences, every handle, block and failure equal with src/lib/OSAlloc.c, every heap sound after every step, the three bad frees (another heap's block, inside a block, twice) refused; control `heapsplit` FAILs. In the image the heap 0 / heap 4 alias had already been fixed by lane eng-e1e (heap 0 is the arena's first 0x1000): E1 HEAPSVC reports the counters after each run.
+
+## 37. Float library (fdlibm)
+
+The engine needs sinf, cosf, tanf, atanf, atan2f, asinf, acosf, sqrtf. The engine's library is the **toolchain's C
+library** (newlib 4.6.0's libm, which the image already links with `-lm`): no engine file and no original object. Its
+float functions (sf_sin, sf_cos, sf_tan, sf_atan, the e_*f cores and kernels, the wf_* wrappers) are fdlibm's lineage,
+as the game's (newlib 1.8.2). The proof that they give the reference's bits: `svc/newlib_libm.sh` fetches the toolchain's
+newlib release (sourceware.org, sha256 6ff27e3b...604ee3; build/ext, not in git) and compiles its float sources for the
+PC with the reference's flags, symbols prefixed nl_; `make libmtest` compares them with the game's fdlibm. **Not bit-identical** (lane eng-e1g, 2,000,000 inputs a function): sinf 10,593, cosf 10,425 and tanf 12,066 differ (large arguments, the range reduction), atan2f 327,431 (pi rounded the other way: 0x40490fdb against 0x40490fda), asinf 150,056; atanf, acosf and sqrtf are equal. So the library is judged by outcome (`svc/nl_outcome.sh`, the `nlnative` build: newlib's objects in place of fdlibm): all eight fixtures PASS against the native build with positions 0 apart; control `mathmuku` FAILs. newlib_libm.sh needed three fixes to build (sf_floor and sf_fabs are in math/ in 4.6, -fno-pie, the asm/errno.h path).
+
+## 38. What the engine image must change for round 5 (done by lane eng-e1g)
+
+- `game/Makefile`: compile `services/math/math_svc.cpp`, `services/math/sdk_math.cpp`, `services/cloth/garment.cpp`,
+  `services/memory/heap.cpp` with the native services' flags, `-I` the SH4ZAM include directory
+  (`port/dreamcast/game/third_party/sh4zam/include`) and `services/{math,cloth,memory}`; link them before the hosted
+  objects. Each compiles for the SH-4 with the image's flags (s/sh4c.sh): math_svc 10,253 B, garment 3,208 B of text.
+- `hosted.mk`: drop `game/math_sub game/sub2` from `SVC_ORIG_SRCS` and `game/pl_cloth` from `CLOTH_SRCS`.
+- `game/Makefile`: drop `SDK_UNITS` (mtx mtxvec mtx44 vec quat OSAlloc) and `FD_OBJS` (the game's fdlibm: the float
+  functions come from `-lm`, newlib); drop `host/e1_math.cpp` (its PS* forwarders are the native bodies now). FIGHT=1 and
+  BOSS=1 keep stubs for PlCloth* in `host/e1_svc_stubs.cpp`; with garment.cpp linked those stubs and the leonHair etc.
+  works there must go (the same names).
+- `host/e1_heap.cpp`: unchanged interface. Two of its faults show in the new counters: heap 0 over the whole arena with
+  heap 4 inside it (`heap_cnt.overlaps`), and `Mem_free_h` freeing a heap-4 block to heap 0 (`heap_cnt.bad_frees`:
+  refused now, where the SDK corrupted heap 0's lists). The fix is the image lane's (E1 audit section 6).
+- New C symbols: `math_cnt`, `math_control`, `garment_cnt`, `garment_control`, `sdk_math_control`, `heap_cnt`,
+  `heap_control`, `__OSCurrHeap`.
+
+Done by lane eng-e1g (game/Makefile SVC5_*, hosted.mk, host/e1_svc_stubs.cpp; host/e1_math.cpp deleted): the four
+files in every image, math_sub, sub2, pl_cloth, the SDK units, OSAlloc and fdlibm out, the fight and boss images'
+PlCloth stubs out (the garment service clears the chains' request bits itself; their cloth stays stubbed). Link check
+SERVICE functions: default 98 -> 8, FIGHT=1 202 -> 118, BOSS=1 152 -> 67 (before the allowed-list rulings below).
+
+## 39. Weapon target query (lanes eng-e1f, eng-e1g)
+
+`services/aim/aim.cpp`: GetWepTargetPos, the laser sight's (and the push target's) query, in every image. The scenery
+through the native collision service; the enemies on the actor table with the original's filters (alive, shown, life
+left, inside the 10,000-unit box ahead of the line and Leon's front half for ordinary enemies); each hit box as an
+oriented box (slab entry) or a capsule (cylinder side and end spheres), limited by the scenery hit's distance. Engine
+form, not the original's arithmetic: the PC check compares answers, not bits. FIGHT=1 and BOSS=1 weaken em_sub's own
+(the SH-ELF name `_GetWepTargetPos`), so the original and emLineAtCk2 leave those images.
+
+- **PC check** (`svc/aim_check.sh`, the `aimchk` build with `svc/aimcheck.cpp`): the original and the native answer
+  every call on the same inputs. e1-route 93 calls, `aim_fixtures/aim-ganado` 435, `aimfire-ganado` 153: return, enemy
+  and surface attribute equal on every call; hit points at most 2.7 units apart where an enemy box is hit. The native
+  arm (the behaviour gets the native answer) PASSes outcome and traces against the original arm. bell-ganado-hit makes
+  no call (its hits are planted).
+- **Control** `RE4_AIM_CONTROL=grow` (boxes and capsules 25% larger): on aim-ganado the return and the enemy differ on
+  one call (4,547 units): the call check FAILs.
+- **Shots in the reference:** its item stub gives an empty magazine, so A while aiming never fired (why eng-e1f's shot
+  fixture changed nothing). The aimchk build answers the magazine with `RE4_AIM_MAG` rounds; the first shot then crashed
+  the reference in VibSetData (the core archive's rumble table reads byte-swapped on the PC), which the build skips
+  (presentation). With shots the outcome moves (`nomag` arm FAILs), but no shot of aimfire-ganado damages a Ganado.
+- **Engine image (Flycast, disc a1):** E1 AIM: village 93 calls, all scenery; fight 333 calls, 67 on a Ganado's boxes;
+  boss 93 calls, 52 on El Gigante's.
+- **Not covered:** a shot that damages through the native query on the PC (no fixture hits yet); cubes (flag 8 boxes:
+  none in these fixtures).
+
+## 40. Pad clamp (lane eng-e1g, ruling H-014.2)
+
+The input service (`services/input/input.cpp`) applies the GameCube SDK's clamp regions to every connected pad right
+after PADRead, as the original PadRead does through PADClamp: main stick dead zone 15 in an octagon of 72 (corner 40),
+sub stick 15 / 59 / 31, triggers 30 to 180 shifted to 0. Route fixtures stay in raw units (stick 80 reaches the game
+as 65, trigger 0xC0 as 150). The PADCLAMP boot option and the per-route PADClamp definitions are gone.
+
+- **Check** (Flycast, disc vtr): the village route's LT trace against re4ref (plain, seed 0): PASS, 641 of 641 ticks
+  bit-identical on position, angle, motion frame and state, generator.
+- **Control** (test build only: `PAD_EXTRA=-DE1_PAD_NOCLAMP=1`, disc vnc): diverges at tick 424 (yaw 2.52 degrees),
+  position from tick 519.

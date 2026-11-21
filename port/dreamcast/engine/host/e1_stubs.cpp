@@ -103,7 +103,7 @@ void EmScenario(cEm*) { STUB("EmScenario"); }
 int LifeDownSet2(cEm*, int, int, int) { STUB("LifeDownSet2"); return 0; }
 u32 GetWepTargetList2(Vec*, Vec*, WepTarget*, u32, Vec*, Vec*, u32*, int, int) { STUB("GetWepTargetList2"); return 0; }
 int GetWepTargetListBomb(Vec*, f32, WepTarget*, int, int, int) { STUB("GetWepTargetListBomb"); return 0; }
-int GetWepTargetPos(Vec*, Vec*, int, int, cEm**, int*) { STUB("GetWepTargetPos"); return 0; }
+// GetWepTargetPos: native since lanes eng-e1f / eng-e1g (services/aim/aim.cpp)
 void GameAddPoint(int type) { if (type) STUB("GameAddPoint"); }
 ScePrim* SceExec(int, TaskFunc, int, u8, int, void*) { STUB("SceExec"); return 0; }
 void TaskSleep(int) { STUB("TaskSleep"); }

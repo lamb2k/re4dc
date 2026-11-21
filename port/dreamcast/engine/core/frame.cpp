@@ -10,6 +10,7 @@
 #include "e1_core.h"
 #include "skel.h"
 #include "e1_kos.h"
+#include "memory/heap.h"
 #include <stdio.h>
 #include <string.h>
 #ifdef E2_BOSS
@@ -127,19 +128,46 @@ void e1_trace_tick(unsigned tick)
 #endif
 }
 
-// ---- pacing: one logic tick a picture at 30 fps (two 60 Hz fields); a late picture runs the next tick at once ----
+// ---- pacing on the display's field count (lane eng-e1g, H-014.1): one logic tick a picture, two 60 Hz fields ----
+// The pacer waits on the vblank handler's field count (core/draw_e1.c), not on a timer: each tick starts on a field
+// boundary, two fields after the last, so a picture that is ready in time is flipped every second field. A picture
+// that finishes late (its target field has already begun) is shown on the next field by the chip; the pacer then adds
+// no wait and the next target is two fields from now. The ROW wait column is this wait: from the end of the picture's
+// submission (after the LATEPIC hold) to the target field, in microseconds; 0 means late.
+// Lab arm PACETMU (boot option, for the console A/B; not a build switch): the earlier pacer, 33,367 us on the timer,
+// whose phase drifts against the display (3-field gaps with no late picture, lane eng-e1f).
+extern "C" uint32_t e1_fields_now_c(void);
+extern "C" void e1_present_next_c(uint32_t field);
+extern "C" unsigned e1_present_drops_c(void);
+static int pace_tmu, pace_manual;
+static uint32_t pace_field;
 static uint64_t next_us;
 void e1_pace_end(E1Timing& tm)
 {
-    uint64_t now = timer_us_gettime64();
-    if (!next_us) next_us = now;
-    next_us += 33367;
-    if (now < next_us) {
-        tm.wait_us = next_us - now;
-        while (timer_us_gettime64() < next_us) thd_pass();
+    const uint64_t now = timer_us_gettime64();
+    if (pace_tmu) {
+        if (!next_us) next_us = now;
+        next_us += 33367;
+        if (now < next_us) {
+            tm.wait_us = next_us - now;
+            while (timer_us_gettime64() < next_us) thd_pass();
+        } else {
+            tm.wait_us = 0;
+            next_us = now;
+        }
+        return;
+    }
+    const uint32_t f = e1_fields_now_c();
+    pace_field += 2;
+    const bool late = (int32_t) (pace_field - f) <= 0;
+    if (late) pace_field = f;
+    e1_present_next_c(pace_field + 1);   // this picture is released when the next tick's second field begins
+    if (!late) {
+        while ((int32_t) (pace_field - e1_fields_now_c()) > 0) thd_pass();
+        const uint64_t w = timer_us_gettime64() - now;
+        tm.wait_us = w ? (uint32_t) w : 1;
     } else {
         tm.wait_us = 0;
-        next_us = now;
     }
 }
 
@@ -152,8 +180,7 @@ void e1_pace_end(E1Timing& tm)
 // frame), so picture 301 (tick 300 when headless) must show as the worst interval, at least five fields. A 40 ms hold
 // gave 3 or 4 fields, which the pacer's own 3-field intervals can equal (lanes/eng-e1f.md).
 extern "C" {
-void e1_fields_start_c(void);
-uint32_t e1_fields_now_c(void);
+int e1_fields_start_c(int manual);
 unsigned e1_fields_finish_c(const volatile uint32_t** field);
 }
 static uint32_t tick_field[E1_TICKS];
@@ -162,7 +189,12 @@ void e1_fields_start()
 {
     file_t f = fs_open("/cd/LATEPIC", O_RDONLY);
     if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 100 ms after its scene (control)\n"); }
-    e1_fields_start_c();
+    f = fs_open("/cd/PACETMU", O_RDONLY);
+    if (f >= 0) { fs_close(f); pace_tmu = 1; }
+    pace_manual = e1_fields_start_c(!pace_tmu);   // returns just after a field boundary
+    pace_field = e1_fields_now_c();               // tick 1's target is two fields from here
+    e1_log("E1 PACE %s, presentation %s\n", pace_tmu ? "tmu 33367 us (lab arm PACETMU)" : "fields 2 (display field count)",
+           pace_manual ? "fixed field (release at the next tick's second field)" : "at render end (automatic flip)");
 }
 void e1_fields_late(unsigned tick)
 {
@@ -193,10 +225,12 @@ void e1_fields_finish(unsigned ticks)
         over += f > 2;
         if (f > worst) { worst = f; wi = i + 1; }
     }
-    e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)\n",
-           presented ? "presented" : "tick", flips, n, counted, over, worst, wi);
+    e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)"
+           "; release queue full %u\n", presented ? "presented" : "tick", flips, n, counted, over, worst, wi,
+           e1_present_drops_c());
 }
 
+extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, boxes, capsules, cubes; } aim_cnt;
 void e1_report()
 {
     e1_trace_flush();
@@ -205,6 +239,15 @@ void e1_report()
     e1_stub_report();
     e1_prof_report();
     e1_svc_report();
+    // lane eng-e1g: the native heap service (services/memory/heap.cpp) under the behaviour arena (host/e1_heap.cpp)
+    e1_log("E1 HEAPSVC creates %lu allocs %lu frees %lu fails %lu bad_frees %lu overlaps %lu\n",
+           (unsigned long) heap_cnt.creates, (unsigned long) heap_cnt.allocs, (unsigned long) heap_cnt.frees,
+           (unsigned long) heap_cnt.fails, (unsigned long) heap_cnt.bad_frees, (unsigned long) heap_cnt.overlaps);
+    // lanes eng-e1f / eng-e1g: the native weapon-target query (services/aim/aim.cpp)
+    e1_log("E1 AIM calls %lu scenery %lu enemy %lu (flag40 %lu) boxes %lu capsules %lu cubes %lu\n",
+           (unsigned long) aim_cnt.calls, (unsigned long) aim_cnt.scenery, (unsigned long) aim_cnt.enemy,
+           (unsigned long) aim_cnt.enemy_flag40, (unsigned long) aim_cnt.boxes, (unsigned long) aim_cnt.capsules,
+           (unsigned long) aim_cnt.cubes);
     for (int i = 0; i < 13; i++)
         if (e1_arena.heap_hi[i])
             e1_log("E1 ARENA heap %d %08lx-%08lx used %lu peak %lu fails %lu\n", i, (unsigned long) e1_arena.heap_lo[i],
