@@ -16,6 +16,9 @@
 #ifdef E2_BOSS
 #include "boss_e2.h"
 #endif
+#ifdef E2_FIGHT
+#include "shot_e2.h"
+#endif
 
 extern "C" unsigned short e1_rnd_state(void);
 extern "C" unsigned e1_rnd_draws;
@@ -100,10 +103,15 @@ void e1_trace_put(const char* line, unsigned n)
     memcpy(trace_buf + trace_len, line, n);
     trace_len += n;
 }
+static int notrace = -1;   // the NOTRACE boot file (lane eng-e1k: read by the run's kind line too)
 void e1_trace_tick(unsigned tick)
 {
-    static int notrace = -1;
-    if (notrace < 0) { file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f); }
+    if (notrace < 0) {
+        file_t f = fs_open("/cd/NOTRACE", O_RDONLY); notrace = f >= 0; if (f >= 0) fs_close(f);
+#ifdef E2_FIGHT
+        if (e2_shot.active) notrace = 0;   // lane eng-e1k: the shot fixture is a traced function run, always
+#endif
+    }
     if (notrace) return;
     if (e1_scene == E1_SCENE_HILL) {   // lane eng-e1b: re4ref trace v2 lines (Leon and every character)
         e1_trace_v2(tick);
@@ -182,12 +190,28 @@ void e1_pace_end(E1Timing& tm)
 extern "C" {
 int e1_fields_start_c(int manual);
 unsigned e1_fields_finish_c(const volatile uint32_t** field);
+int e1_draw_opened_c(void);
+int e1_draw_stills_c(void);
 }
+void e1_memmap_control(unsigned tick);
+void e1_memmap_after();
 static uint32_t tick_field[E1_TICKS];
-static int late_control;
+static int late_control, rowdup_control;
 void e1_fields_start()
 {
-    file_t f = fs_open("/cd/LATEPIC", O_RDONLY);
+    // lane eng-e1k (H-016.6): the run says what it is. Traces formatted inside the pictures, or stills handed over
+    // during play, make it a function run: the selector never reports its rows as timing.
+    {
+        const int traced = notrace == 0, still = e1_draw_stills_c();
+        if (traced || still)
+            e1_log("E1 RUN function (%s%s%s): not a timing run\n", traced ? "traced" : "", traced && still ? ", " : "",
+                   still ? "stills" : "");
+        else
+            e1_log("E1 RUN timing (no trace, no stills)\n");
+    }
+    file_t f = fs_open("/cd/ROWDUP", O_RDONLY);
+    if (f >= 0) { fs_close(f); rowdup_control = 1; e1_log("E1 ROWDUP: the row of picture 300 printed twice (control)\n"); }
+    f = fs_open("/cd/LATEPIC", O_RDONLY);
     if (f >= 0) { fs_close(f); late_control = 1; e1_log("E1 LATEPIC: picture 300 held 100 ms after its scene (control)\n"); }
     f = fs_open("/cd/PACETMU", O_RDONLY);
     if (f >= 0) { fs_close(f); pace_tmu = 1; }
@@ -198,6 +222,7 @@ void e1_fields_start()
 }
 void e1_fields_late(unsigned tick)
 {
+    e1_memmap_control(tick);   // STACKX (lane eng-e1k): the stack guard's control
     if (!late_control || tick != 300) return;
     uint64_t t = timer_us_gettime64();
     while (timer_us_gettime64() - t < 100000) {}
@@ -210,7 +235,9 @@ void e1_fields_finish(unsigned ticks)
     const volatile uint32_t* flip = 0;
     const unsigned flips = e1_fields_finish_c(&flip);
     const unsigned n = ticks < E1_TICKS ? ticks : E1_TICKS;
-    const bool presented = flips > 0;
+    // lane eng-e1k (H-016.6): an image that draws counts presented flips, always: one that showed no picture is a
+    // drawing failure with no intervals (the selector fails it), never a headless run in tick mode as before
+    const bool presented = e1_draw_opened_c() != 0;
     for (unsigned i = 0; i < n; i++) {
         uint32_t f = 0;
         if (i && presented && i < flips) f = flip[i] - flip[i - 1];
@@ -231,6 +258,7 @@ void e1_fields_finish(unsigned ticks)
 }
 
 extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, boxes, capsules, cubes; } aim_cnt;
+extern "C" struct AimListCounters { uint32_t calls, scenery, listed, hit_only, empty; } aim_list_cnt;
 #include "e1_laser.h"
 extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
 void e1_report()
@@ -238,6 +266,7 @@ void e1_report()
     e1_trace_flush();
     e1_log_flush();   // lane eng-e1e: the log lines written during the ticks (core/globals.cpp)
     e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
+    e1_memmap_after();   // lane eng-e1k: the stack guard, heap peak, arena margin and video memory after play
     e1_stub_report();
     e1_prof_report();
     e1_svc_report();
@@ -250,6 +279,10 @@ void e1_report()
            (unsigned long) aim_cnt.calls, (unsigned long) aim_cnt.scenery, (unsigned long) aim_cnt.enemy,
            (unsigned long) aim_cnt.enemy_flag40, (unsigned long) aim_cnt.boxes, (unsigned long) aim_cnt.capsules,
            (unsigned long) aim_cnt.cubes);
+    // lane eng-e1k: the shot's native target list (services/aim/aim.cpp GetWepTargetList2)
+    e1_log("E1 AIM LIST shots %lu scenery %lu enemies listed %lu hit-only %lu empty %lu\n", (unsigned long) aim_list_cnt.calls,
+           (unsigned long) aim_list_cnt.scenery, (unsigned long) aim_list_cnt.listed, (unsigned long) aim_list_cnt.hit_only,
+           (unsigned long) aim_list_cnt.empty);
     // lane eng-e1h: the laser sight's setters and the renderer's laser pass (services/laser.cpp, core/draw_e1.c); the
     // record pools' refusals (services/model/pool.h: full tables, destroys of records not alive)
     e1_log("E1 LASER sets %lu lines drawn %lu dots drawn %lu\n", (unsigned long) e1_laser.sets,
@@ -272,6 +305,7 @@ void e1_report()
                (unsigned long) t.svc_group_us[E1_SVC_MOTION], (unsigned long) t.svc_group_us[E1_SVC_CLOTH],
                (unsigned long) t.svc_group_us[E1_SVC_PARTS], (unsigned long) t.svc_group_us[E1_SVC_COLLISION],
                (unsigned long) t.svc_group_us[E1_SVC_EFFECTS]);
+        if (rowdup_control && i + 1 == 300) { rowdup_control = 0; --i; }   // ROWDUP: this row once more (control)
     }
     e1_log("E1 END\n");
 }

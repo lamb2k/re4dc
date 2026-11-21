@@ -16,6 +16,8 @@ What is compared (the outcome; never tick-exact agreement of the whole state):
     route     Leon's position at the last tick within `pos` units per axis
     position  Leon's and every actor's position within `pos` per axis on every compared tick (--pos all, default), or
               only at the last tick each actor has in both runs (--pos final)
+    yaw       Leon's and every actor's yaw within `ang_deg` degrees (wrapped) on the same ticks as the position (lane
+              eng-e1k; both runs must record it: a run without any yaw for an actor the other run has fails closed)
     kills     which actors' life reaches 0 (from above 0), and when (within `event_ticks`)
     damage    every drop of an actor's (and Leon's, when both runs record it) life: the amounts, exact, in order; the
               ticks within `event_ticks`
@@ -23,21 +25,27 @@ What is compared (the outcome; never tick-exact agreement of the whole state):
               `event_ticks`; and the event word's changes (Stop_flg, when both runs record it), in order
     clears    the room clear: the first tick at which every list enemy that has appeared is dead or gone (or none), within
               `event_ticks`
-Tolerances (tolerances.json): pos (units, PLAYS_RIGHT.md section 5), event_ticks (ticks).
+Tolerances (tolerances.json): pos (units, PLAYS_RIGHT.md section 5), ang_deg (degrees, the plays-right fixtures'
+one degree), event_ticks (ticks).
 
 Fails closed. Each of these is a FAIL whatever the values (kind in brackets, as the report names it):
     [missing-file]    a trace file that does not exist or cannot be read
     [no-records]      a file with no trace record, or of no known format
     [unknown-line]    a record tag the reader does not know; in a trace file, any line that is not a record (serial logs
                       are read with --log, where non-record lines are skipped and counted)
-    [malformed]       a record without a field the outcome needs, or one that does not parse
+    [malformed]       a record without a field the outcome needs, or one that does not parse; a position or angle field
+                      that is present but holds the not-recorded sentinel ('-', '~': lane eng-e1k)
     [non-finite]      a NaN or infinity in a position or angle
     [duplicate]       two player records of one tick, or two records of one actor in one tick
     [short-run]       ticks missing from the expected set (from --expect-ticks, else the H line's ticks=0..N; a logic
-                      trace without --expect-ticks fails: its run length is not known)
+                      trace without --expect-ticks fails: its run length is not known); in a re4ref trace whose H line
+                      declares a room, a T tick without its R line (R lines are required, not only checked when some
+                      are there: lane eng-e1k)
+    [missing-sample]  an actor without a record on a tick between its first and last record (lane eng-e1k: every actor
+                      must be sampled on every tick it is alive in the run; a park and re-queue is not hosted yet)
     [extra-tick]      ticks outside the expected set
     [missing-actor]   an actor named by --actors absent from either run, or an actor of one run never in the other
-Then the outcome checks: [route], [position], [kill], [damage], [trigger], [clear].
+Then the outcome checks: [route], [position], [yaw], [kill], [damage], [trigger], [clear].
 
 Exit status: 0 PASS; 1 FAIL (every problem is listed, the first one first); 2 usage error.
 """
@@ -49,7 +57,7 @@ import re
 import struct
 import sys
 
-DEFAULT_TOL = {'pos': 1.0, 'event_ticks': 3}
+DEFAULT_TOL = {'pos': 1.0, 'ang_deg': 1.0, 'event_ticks': 3}
 
 # the records each format knows; a tag outside these is an unknown line
 RE4REF_TAGS = {'H', 'T', 'A', 'R'}
@@ -87,6 +95,17 @@ def vec(v, n):
     if len(parts) < n:
         raise ValueError('expected %d values' % n)
     return [f32(x) for x in parts[:n]]
+
+
+def need_vec(kv, key, n):
+    """A position or angle field the record carries: absent -> None; present but holding the not-recorded sentinel
+    ('-', '~', empty) -> ValueError (lane eng-e1k: a sentinel is not a value, and a skipped value cannot fail)."""
+    if key not in kv:
+        return None
+    v = vec(kv[key], n)
+    if v is None:
+        raise ValueError('%s=%s: present but not recorded' % (key, kv[key]))
+    return v
 
 
 def kv_of(line):
@@ -209,7 +228,7 @@ def read(path, name, as_log, probs):
                 if p is None:
                     probs.add('malformed', name, t, key, 'line %d: no position' % no)
                     continue
-                rec[t] = {'p': p, 'a': vec(kv['a'], 3), 'hp': int(kv['hp'])}
+                rec[t] = {'p': p, 'a': need_vec(kv, 'a', 3), 'hp': int(kv['hp'])}
             elif tag == 'R':
                 if t in run.rlines:
                     probs.add('duplicate', name, t, 'R', 'line %d' % no)
@@ -224,7 +243,7 @@ def read(path, name, as_log, probs):
                     probs.add('malformed', name, t, 'LT', 'line %d: Leon not recorded (p=~)' % no)
                     continue
                 ev = kv.get('sp')
-                run.player[t] = {'p': p, 'a': vec(kv.get('a'), 3) if kv.get('a') else None, 'hp': None,
+                run.player[t] = {'p': p, 'a': need_vec(kv, 'a', 3), 'hp': None,
                                  'ev': ev if ev and '~' not in ev else None}
             elif tag == 'LL':
                 pr = run.player.setdefault(t, {'p': None, 'a': None, 'hp': None, 'ev': None, '_ll_only': True})
@@ -247,11 +266,15 @@ def read(path, name, as_log, probs):
                     probs.add('duplicate', name, t, key, 'line %d' % no)
                     le_last = None
                     continue
-                rec[t] = {'p': vec(kv['pos'], 3), 'a': None, 'hp': s16(int(kv['hp'], 16) & 0xFFFF)}
+                # lane eng-e1k: the position must be recorded (pos=~ is a malformed record, not a skipped one); the
+                # engine's fight trace carries the yaw in the LE line itself (ay=), the old game's in the LF line
+                ay = need_vec(kv, 'ay', 1)
+                rec[t] = {'p': need_vec(kv, 'pos', 3), 'a': [None, ay[0], None] if ay else None,
+                          'hp': s16(int(kv['hp'], 16) & 0xFFFF)}
                 le_last = (key, t, kv['k'])
             elif tag == 'LF':
                 if le_last and le_last[1] == t and le_last[2] == kv.get('k') and 'ay' in kv:
-                    run.actors[le_last[0]][t]['a'] = [None, f32(kv['ay']), None]
+                    run.actors[le_last[0]][t]['a'] = [None, need_vec(kv, 'ay', 1)[0], None]
             # GE, LP, LD, LA, LSS, LU, LX: known records the outcome does not need (GE events are derived again from
             # the life and the alive list, so the two runs are judged alike)
         except ValueError as e:
@@ -278,9 +301,24 @@ def structure(run, expect, offset, probs):
         probs.add('short-run', run.name, t + offset, 'player', 'tick %d (A numbering %d) missing' % (t + offset, t))
     for t in sorted(have - want):
         probs.add('extra-tick', run.name, t + offset, 'player', 'outside the expected %d..%d' % (min(want), max(want)))
-    if run.fmt == 're4ref' and run.rlines:
-        for t in sorted(set(run.player) - run.rlines):
+    # lane eng-e1k: a re4ref trace whose H line declares a room must carry an R line on every T tick (before, the check
+    # ran only when the trace had some R line, so a trace with every R line removed passed)
+    if run.fmt == 're4ref' and (run.rlines or run.header.get('room')):
+        missing = sorted(set(run.player) - run.rlines)
+        for t in missing[:20]:
             probs.add('short-run', run.name, t, 'R', 'no R line')
+        if len(missing) > 20:
+            probs.add('short-run', run.name, None, 'R', '%d more ticks without an R line' % (len(missing) - 20))
+    # lane eng-e1k: every actor sampled on every tick from its first record to its last (before, positions were compared
+    # only where both runs had a record, so an interior record deleted from a stationary actor passed)
+    for key, rec in sorted(run.actors.items()):
+        if not rec:
+            continue
+        gaps = [t for t in range(min(rec), max(rec) + 1) if t not in rec]
+        for t in gaps[:20]:
+            probs.add('missing-sample', run.name, t, key, 'no record between its first (%d) and last (%d)' % (min(rec), max(rec)))
+        if len(gaps) > 20:
+            probs.add('missing-sample', run.name, None, key, '%d more ticks without a record' % (len(gaps) - 20))
     for t, pr in run.player.items():
         if not finite_list(pr.get('p')) or not finite_list(pr.get('a')):
             probs.add('non-finite', run.name, t, 'Leon', '%s %s' % (pr.get('p'), pr.get('a')))
@@ -383,6 +421,45 @@ def compare(A, B, tol, offset, pos_mode, required, probs, report):
     if nover > 20:
         probs.add('position', 'A/B', None, '...', '%d more ticks over' % (nover - 20))
     report['position'] = {'mode': pos_mode, 'max': worst[0], 'max_at': worst[1], 'max_actor': worst[2], 'over': nover}
+    # yaw (lane eng-e1k): within ang_deg degrees, wrapped, on the position's ticks; a yaw one run records on a tick and
+    # the other does not fails closed; an actor neither run records a yaw for is listed as not compared
+    at = tol['ang_deg']
+    yworst = (0.0, None, None)
+    yover = 0
+    nyaw = []
+    for key in ['Leon'] + report['actors']:
+        if key == 'Leon':
+            pa, pb, ts = A.player, B.player, ticks
+        else:
+            pa, pb = A.actors[key], B.actors[key]
+            ts = sorted(t for t in pa if (t + offset) in pb)
+        if pos_mode == 'final':
+            ts = ts[-1:]
+        seen = 0
+        for t in ts:
+            ya, yb = (pa[t].get('a') or [None, None])[1], (pb[t + offset].get('a') or [None, None])[1]
+            if ya is None and yb is None:
+                continue
+            seen += 1
+            if ya is None or yb is None:
+                yover += 1
+                if yover <= 20:
+                    probs.add('yaw', 'A/B', t, key, 'yaw recorded in %s only' % ('B' if ya is None else 'A'))
+                continue
+            dd = abs(math.degrees(math.remainder(ya - yb, 2.0 * math.pi)))
+            if dd > yworst[0]:
+                yworst = (dd, t, key)
+            if dd > at:
+                yover += 1
+                if yover <= 20:
+                    probs.add('yaw', 'A/B', t, key, '%.3f degrees off (tolerance %g)' % (dd, at))
+        if not seen:
+            nyaw.append(key)
+    if yover > 20:
+        probs.add('yaw', 'A/B', None, '...', '%d more ticks over' % (yover - 20))
+    report['yaw'] = {'max_deg': yworst[0], 'max_at': yworst[1], 'max_actor': yworst[2], 'over': yover}
+    if nyaw:
+        report['not_compared'] = report.get('not_compared', []) + ['yaw of %s (in neither run)' % ', '.join(nyaw)]
 
     def near(ta, tb):
         return ta is not None and tb is not None and abs((tb - offset) - ta) <= et
@@ -507,7 +584,8 @@ def main():
         print('%s  %s vs %s: %s' % (verdict, args.a, args.b, ', '.join('%s %d' % kv for kv in sorted(kinds.items())) or
                                     '%d ticks, %d actors, route %.4f, position max %.4f' % (
                                         report.get('ticks_compared', 0), len(report.get('actors', [])),
-                                        report.get('route', {}).get('diff', 0.0), report.get('position', {}).get('max', 0.0))))
+                                        report.get('route', {}).get('diff', 0.0), report.get('position', {}).get('max', 0.0)) +
+                                    ', yaw max %.4f deg' % report.get('yaw', {}).get('max_deg', 0.0)))
         if probs.items:
             p = probs.items[0]
             print('  first: [%s] %s tick %s %s %s' % (p['kind'], p['trace'], p['tick'], p['what'], p['detail']))

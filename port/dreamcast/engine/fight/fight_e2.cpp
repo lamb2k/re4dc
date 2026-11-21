@@ -30,6 +30,8 @@
 #include "e1_kos.h"
 #include "boss_e2.h"
 #include "fight_e2.h"
+#include "shot_e2.h"
+#include "dmg.h"
 #include "game.h"
 #include "fx.h"
 #include "read.h"
@@ -58,7 +60,9 @@ cSceSys SceSys;
 void e2_room_globals()
 {
     pG->pl_costume = 0;          // chapter 1: Leon with the jacket (em/pl00)
-    pG->Item_find_flg = 0x2000;  // the fixture's warp: find 0x00002000 (the operator's first call already made)
+    // the fixture's warp: find 0x00002000 (the operator's first call already made); not in the shot fixture (lane
+    // eng-e1k: re4ref sets no find flag)
+    if (!e2_shot.active) pG->Item_find_flg = 0x2000;
 }
 void e2_managers_room_init()
 {
@@ -195,6 +199,27 @@ int e2_construct(cEm* p, unsigned id, unsigned guid)
 
 // ---- the enemy table's move (em.cpp cEmMgr::move + emMove, knobs off) ----
 extern "C" void EmYarareDisp(cEm* em);
+// Control SHOTLATE (lane eng-e1k, the shot fixture only): a weapon hit registered on an enemy (cDmgInfo bit 0, set by
+// pl_wep's cDmgInfo::set) is taken off the enemy and given back 30 ticks later, so its damage comes one second late.
+static struct { cEm* em; unsigned due; unsigned char rec[sizeof(cDmgInfo)]; } shot_held[4];
+static void shot_control_hold(cEm* em)
+{
+    if (!e2_shot.ctl_late) return;
+    for (auto& h : shot_held)
+        if (h.em == em && e1_tick >= h.due) { memcpy((void*) &em->dmg, h.rec, sizeof(cDmgInfo)); h.em = 0; return; }
+    for (auto& h : shot_held)
+        if (h.em == em) return;   // held: its hit is not taken yet
+    if (!(em->dmg.m_Flag & 1)) return;
+    for (auto& h : shot_held)
+        if (!h.em) {
+            h.em = em;
+            h.due = e1_tick + 30;
+            memcpy(h.rec, (const void*) &em->dmg, sizeof(cDmgInfo));
+            em->dmg.m_Flag &= ~1;
+            e1_log("E2 SHOT CONTROL: the hit on list entry %02x held from tick %u to %u\n", (unsigned) em->emset_no, e1_tick, h.due);
+            return;
+        }
+}
 u32 SndCall(u16 blk, u16 no, Vec*, int, int, cUnit*);
 static void em_move(cEm* em)
 {
@@ -206,8 +231,11 @@ static void em_move(cEm* em)
     f32 dx = pPL->pos.x - em->pos.x;
     em->plDist2 = dx * dx + dz * dz;
     em->l_sub = 1e16f;
+    shot_control_hold(em);
+    const int hp0 = em->hp;
     em->dmg.move();
     em->move();
+    if (e2_shot.ctl_dmg && em->hp < hp0) em->hp -= 100;   // control SHOTDMG: a wrong damage amount
     if ((em->be_flag & 0x201) != 1) return;
     em->be_flag &= ~0x20000000;
     ShapeMove(em->pModelInfo);
@@ -233,6 +261,7 @@ void e2_em_move()
         em_move(cur);
     }
     e2_watch_hp();
+    if (e2_shot.active) e2_shot_after_em_move(e1_tick);   // lane eng-e1k: the fixture's post creations
 }
 
 // ---- scenario tasks: one KOS thread per task, resumed by the engine once per tick (strict hand-off) ----
@@ -381,8 +410,9 @@ void e2_room_init()
     pSaveData = &save_data;
     save_data.pGlobal = &save_global;
     // a new game's difficulty points (game.cpp GamePointInit(0): 5500, rank 5; the fixture's warp starts a new game):
-    // enemy damage and the AI read the rank
-    GamePointInit(0);
+    // enemy damage and the AI read the rank. Not in the shot fixture (lane eng-e1k): re4ref does not host game.cpp,
+    // so its points and rank stay 0, and the engine starts where the reference does
+    if (!e2_shot.active) GamePointInit(0);
     uint32_t n = 0;
     uint8_t* list = (uint8_t*) e1_file_load("/cd/etc/emleon00.esl", &n, 32);
     if (list && n <= sizeof(pG->Em_list)) { memset(pG->Em_list, 0, sizeof(pG->Em_list)); memcpy(pG->Em_list, list, n); }
@@ -412,6 +442,7 @@ void e2_room_init()
     SceSys.event_start_cnt = 0;
     SceSys.cancelFlagNo = -1;
     SceSys.sndFlag = 1;
+    e2_shot_room_init();   // lane eng-e1k: the shot fixture's resume and seed (nothing without SHOT.TXT)
 }
 
 // The scenario's room start (sce_sys.cpp ScenarioRoomInit: the room script's init, one scheduler pass, the room-entry
@@ -434,6 +465,7 @@ static void scenario_room_init()
 void e2_scenario_move(unsigned tick)
 {
     sce_tick = tick;
+    if (e2_shot.active) return;   // lane eng-e1k: the shot fixture runs no room script (re4ref hosts none)
     if (!scenario_started) {
         if (tick == 0) return;   // room_init's own pass (tick 0): the scenario starts on tick 1
         scenario_started = 1;

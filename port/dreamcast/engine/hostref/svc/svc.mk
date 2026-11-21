@@ -292,7 +292,8 @@ garmenttest: $(GT)/garmenttest
 # ---- aimchk (lane eng-e1g): the native weapon-target query (services/aim/aim.cpp) against the original on the same
 # calls. The native build plus aim.o (GetWepTargetPos renamed eng_GetWepTargetPos) and svc/aimcheck.cpp, which wraps
 # GetWepTargetPos: both answer every call, the answers are compared (aim.txt, aim-diff.txt), and RE4_AIM_USE=native
-# hands the behaviour the native answer. RE4_AIM_CONTROL=grow is the native control (must differ).
+# hands the behaviour the native answer. RE4_AIM_CONTROL=grow is the native control (must differ). Lane eng-e1k: the
+# shot's target list too (GetWepTargetList2 renamed eng_GetWepTargetList2; aimlist.txt, aimlist-diff.txt).
 AIM := $(BUILD)/aimchk
 # (Lane eng-e1h: the reference's magazine is the new game's 10 rounds (host_stubs.cpp) and its rumble table is read in
 # the PC's order (host_glue.cpp), so this build no longer replaces the magazine stubs or wraps VibSetData.)
@@ -300,7 +301,7 @@ AIM_HG_OBJS := $(SVC_HG_OBJS)
 $(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
 	@mkdir -p $(AIM)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -c $< -o $@.raw.o
-	objcopy --redefine-sym GetWepTargetPos=eng_GetWepTargetPos $@.raw.o $@
+	objcopy --redefine-sym GetWepTargetPos=eng_GetWepTargetPos --redefine-sym GetWepTargetList2=eng_GetWepTargetList2 $@.raw.o $@
 	rm -f $@.raw.o
 $(AIM)/aimcheck.o: svc/aimcheck.cpp hostref.h
 	@mkdir -p $(AIM)
