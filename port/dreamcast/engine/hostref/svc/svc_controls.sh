@@ -30,6 +30,8 @@
 #   modelslot RE4_SVC_CONTROL=modelslot: a model's contiguous parts run starts at the second free run (hill-ashley)
 #   camfov   RE4_SVC_CONTROL=camfov: the view frustum built for a field of view 1 degree wider (e1-route)
 #   camroll  RE4_SVC_CONTROL=camroll: the camera's roll orientation 0.01 rad further (door103-walk)
+#   camslope RE4_SVC_CONTROL=camslope: a camera track converted with one key's out-tangent 1.25 times steeper (lane eng-e1n;
+#            e1-route, exercise camtrack)
 #   padstick RE4_SVC_CONTROL=padstick: the stick's direction bits need 81 units (a full push no longer counts; e1-route)
 #   rumblernd RE4_SVC_CONTROL=rumblernd: the random rumble strength from the behaviour generator (bell-ganado, exercise
 #            rumble: the Ganados' decisions move)
@@ -77,7 +79,7 @@ for fx in $FIX door103-walk e1-route bell-ganado bell-ganado-kill hill-ashley sq
 done
 [ -d "$TREE" ] || { echo "svc_controls: no data tree at $TREE"; exit 2; }
 NFIX=$(echo $FIX | wc -w)
-ROWS_PLANNED=$((5 * NFIX + 48))
+ROWS_PLANNED=$((5 * NFIX + 49))   # lane eng-e1n: + the camtrack exercise's camslope control
 mkdir -p "$OUT"
 rm -f "$OUT/.status" "$OUT/.abort"
 ARCS="em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs"
@@ -231,7 +233,7 @@ print()" "$b/compare.json")
         done
     }
     exrow e1-route follow followslow
-    exrow e1-route camtrack camfov camroll
+    exrow e1-route camtrack camfov camroll camslope   # lane eng-e1n: camslope, a converted track's key slope
     exrow bell-ganado rumble rumblernd
     r4ctl e1-route "stick direction bits need 81 units" padstick
     # lane eng-svc5: the round-5 controls

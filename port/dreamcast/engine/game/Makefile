@@ -199,10 +199,26 @@ $(OUT)/n/svc4_syms.txt: $(SVC4_OBJS)
 # lane eng-e1j: cam_qfps is split too (its frame, offset blend, wall probe and offset correction are the camera
 # service's); cam_sys is not hosted at all (every function is the service's: hosted.mk)
 SPLIT_UNITS := game/cam_ctrl game/cam_qfps game/cam_extra
+# Lane eng-e1n (H-017.1): cam_qfps's CameraQuasiFPS::move is the camera service's (services/camera/cam_eval.cpp: it
+# calls the unit's decisions and the service's follow), so the unit's copy is weak like the others. cam_extra's camera
+# bodies keep their decisions (the push-object camera's door and side) and reach their matrix maths through the camera
+# service: the unit's references to the five matrix functions are bound to the service's entry points
+# (CAM_UNIT_MATH_<unit>, objcopy --redefine-sym); the link check refuses the unit referencing the SDK's
+# (allowed_original.txt "-" lines, read from the map's cross reference).
+CAM_UNIT_MATH_game/cam_extra := PSMTXInverse=cam_mtx_inverse PSMTXMultVec=cam_mtx_point PSMTXMultVecSR=cam_mtx_dir \
+	PSMTXIdentity=cam_mtx_identity MtxRotAxisPosRad=cam_mtx_turn_about
+# Control builds only, never a default: CAM_PUSH_ORIG=1 leaves cam_extra calling the SDK's matrix functions (the link
+# check must FAIL on the cross reference); CAM_EXTRA=-DE1_CAM_ORIG_QFPS_MOVE=1 links cam_qfps's own CameraQuasiFPS::move
+# (the link check must FAIL on its size ceiling).
+ifeq ($(CAM_PUSH_ORIG),1)
+CAM_UNIT_MATH_game/cam_extra :=
+endif
+$(OUT)/n/cam_eval.o: ORIG_FLAGS += $(CAM_EXTRA)
 $(addprefix $(OUT)/h/,$(addsuffix .o,$(SPLIT_UNITS))): $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h $(OUT)/n/svc4_syms.txt
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.orig.o
-	sh-elf-objcopy $$(cat $(OUT)/n/svc4_syms.txt) $(if $(PRESENT_$*),$(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present)) $@.orig.o $@
+	sh-elf-objcopy $$(cat $(OUT)/n/svc4_syms.txt) $(if $(PRESENT_$*),$(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present)) \
+		$(foreach r,$(CAM_UNIT_MATH_$*),--redefine-sym _$(subst =,=_,$(r))) $@.orig.o $@
 	rm -f $@.orig.o
 $(OUT)/e/%.o: $(ENG)/%.c $(ENG_HDRS)
 	@mkdir -p $(dir $@)
@@ -229,5 +245,5 @@ include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
 $(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
-	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections -Wl,-z,start-stop-gc \
+	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

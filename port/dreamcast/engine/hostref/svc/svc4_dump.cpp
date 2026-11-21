@@ -50,6 +50,7 @@ extern int model_control __attribute__((weak));
 extern u32 eng_pool_full __attribute__((weak));
 extern CameraCounters cam_cnt __attribute__((weak));
 extern int cam_control __attribute__((weak));
+void cam_track_store_use(u32* now, u32* peak, u32* size) __attribute__((weak));   // lane eng-e1n (native only)
 extern InputCounters input_cnt __attribute__((weak));
 extern int input_control __attribute__((weak));
 // lane eng-e1m: the camera service's diagnosis lines (services/camera/eng_camera.h; the native build only)
@@ -141,6 +142,10 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "camsmooth")) cam_control = 3;
         if (c && !__builtin_strcmp(c, "caminterp")) cam_control = 4;
         if (c && !__builtin_strcmp(c, "camrail")) cam_control = 5;
+        // lane eng-e1n: a converted track's key slope, the shoulder follow's rate, the push camera's inverse
+        if (c && !__builtin_strcmp(c, "camslope")) cam_control = 6;
+        if (c && !__builtin_strcmp(c, "camfollow")) cam_control = 7;
+        if (c && !__builtin_strcmp(c, "caminv")) cam_control = 8;
     }
     g_cam = svc_out_open("cam.txt", "w");
     if (&eng_cam_diag_sink && svc_env("RE4_CAMDIAG")) {   // lane eng-e1m: camdiag.txt, as the image's CAMDIAG trace
@@ -162,8 +167,8 @@ extern "C" void svc4_ready()
 //   camtrack: the keyed camera tracks and the rail spline, which no fixture reaches (cutscene cameras, rail areas):
 //           tick 10 two rail cuts around Leon (5 keys every 30 frames; 5 keys at uneven frames) are exported as camera
 //           motion files (HermiteExport) and a CameraMotion is bound to each (one looping); every tick after, both
-//           tracks move and one track's keys are evaluated directly at a sweeping frame, alternately searching
-//           forwards, backwards and looping. The rail fit and evaluation (Parametrize, BSpline) are not exercised:
+//           tracks move (lane eng-e1n: the direct evaluation of one track's keys at a sweeping frame is gone with
+//           HermiteInterpolation; the native build converts each track to rows). The rail fit and evaluation (Parametrize, BSpline) are not exercised:
 //           their de Boor-Cox basis allocates from the debug heap, which re4ref does not provide.
 namespace {
 int g_exercise = -1;
@@ -175,7 +180,6 @@ CameraCut g_cut[2];
 alignas(8) u8 g_cmfile[2][0x440];
 alignas(8) u8 g_cmobj[2][sizeof(CameraMotion)];
 CameraMotion* g_cm[2];
-u16 g_hist[3];
 void exercise_camtrack(unsigned t)
 {
     if (t == 10) {
@@ -207,15 +211,24 @@ void exercise_camtrack(unsigned t)
     for (int c = 0; c < 2; c++) {
         g_cm[c]->CameraMotion::move();
     }
-    HermitePrm prm;
-    prm.frame = (f32) ((t * 7) % 140);
-    prm.maxFrame = 121.0f;
-    prm.flags = t % 3 == 0 ? 1 : t % 3 == 1 ? 0 : 4;
-    prm.type = 0;
-    prm.key = (u8*) g_cm[0]->m_info.keyTbl[0];   // track 0 (pos), relocated by the binding
-    Vec v;
-    HermiteInterpolation(&prm, &v, g_hist);
+    // (lane eng-e1n: the direct key evaluation at a sweeping frame is gone with the engine's key evaluator: the engine
+    // converts a track to rows when the CameraMotion is made and has no HermiteInterpolation)
 }
+}   // namespace
+// Lane eng-e1n: the reference's facial shape keys (shape.cpp, linked by both builds; not an engine service, the engine
+// draws no shape keys) read their keys through HermiteInterpolation, which the camera service no longer defines. In
+// the native build they are decoded by the skeleton's native decoder (skel_mk_decode: a binary search on the key
+// frames, no history); in the reference build motion.cpp's own wins (this copy is weak, as is motion.cpp's in the
+// native build only: svc.mk WEAK_motion).
+void skel_mk_decode(const u8* keys, u32 type, f32 frame, f32 maxFrame, u32 flags, Vec* out) __attribute__((weak));
+extern "C" __attribute__((weak)) int HermiteInterpolation(HermitePrm* prm, Vec* out, u16* hist)
+{
+    (void) hist;
+    if (!skel_mk_decode) return 1;
+    skel_mk_decode(prm->key, prm->type, prm->frame, prm->maxFrame, prm->flags, out);
+    return 0;
+}
+namespace {
 //   rumble: random-strength rumble (type bit 15), which no fixture starts: rumble switched on (pSys->flags 0x08000000),
 //           then every 40 ticks from tick 20 a 30-tick random-strength rumble and a 12-tick constant one. Its strength
 //           is presentation: the behaviour must not change (control rumblernd draws it from Rnd and must fail).
@@ -280,13 +293,125 @@ void exercise_camrail(unsigned t)
         P(g_cam, "R %u %.9g %.9g %.9g %.9g %.9g %.9g %.9g %.9g %d %d %d %d\n", t, c.param.pos.x, c.param.pos.y, c.param.pos.z,
           c.param.at.x, c.param.at.y, c.param.at.z, c.param.roll, c.param.fovy, g_bs.seg, g_bs.k, g_bs.num, 0);
 }
+// Lane eng-e1n: the push-object camera and the cut writer's refusal (no fixture reaches either):
+//   campush:   the push-object camera (CamCtrl.startPushObject, as pl_push starts it when Leon pushes an object) from
+//              tick 40 to 140 and from 200 to the end, so it runs while Leon stands, turns and walks; the door branch
+//              (a door, wall or window actor, ids 0x41 / 0x44 / 0x46, in front of Leon and within 4000) needs such an
+//              actor: from tick 200 the first actor of the table other than Leon is shown to the camera as a window (id 0x46) placed
+//              1500 ahead and 600 to the right of Leon, turned 90 degrees to him, and restored after each move
+//              (svc4_dump's wrap of CameraPushObject::move: the camera sees it, nothing else does).
+//   camexport: tick 10, a rail cut of 7 keys (more than a camera motion buffer holds: 1,236 bytes against 0x440) is
+//              exported into a buffer between two 64-byte guard patterns, the buffer pre-filled; the line "# camexport"
+//              gives the size returned, whether the buffer and the guards are untouched (the writer must refuse before
+//              writing). Then a CameraMotion is made on the buffer and moved once: it must end at once (a refused
+//              export is not played).
+alignas(8) u8 g_xbuf[64 + 0x440 + 256];   // the trailing guard holds the original's whole overrun (148 bytes)
+Vec g_x_pos[7], g_x_at[7];
+f32 g_x_roll[7], g_x_fovy[7];
+alignas(8) u8 g_xcm[sizeof(CameraMotion)];
+int g_push_on, g_window_ok;
+// the window shown to the push-object camera (campush, from tick 200): the first actor record of the table not Leon's, its id,
+// flags, position and matrix set for the camera's move and restored after it (push_plant(1) / push_plant(0))
+struct Plant {
+    cModel* e;
+    u32 id, be_flag;
+    Vec pos;
+    Mtx mat;
+} g_plant;
+void push_plant(int on)
+{
+    if (on) {
+        g_plant.e = 0;
+        if (g_exercise != 6 || !g_push_on || g_tick < 200 || !pPL) return;
+        for (u32 i = 0; i < EmMgr.nArray && !g_plant.e; i++) {   // not Leon (his record is in the table too)
+            cModel* c = (cModel*) EmMgr.workAt(i);
+            if (c && c != (cModel*) pPL) g_plant.e = c;
+        }
+        cModel* e = g_plant.e;
+        if (!e) return;
+        g_plant.id = e->id, g_plant.be_flag = e->be_flag, g_plant.pos = e->pos;
+        __builtin_memcpy(g_plant.mat, e->mat, sizeof(Mtx));
+        const Mtx& m = pPL->mat;
+        e->id = 0x46;
+        e->be_flag = (e->be_flag & ~0x201u) | 1u;
+        for (int r = 0; r < 3; r++) {
+            (&e->pos.x)[r] = m[r][3] + 1500.0f * m[r][2] + 600.0f * m[r][0];
+            for (int c = 0; c < 3; c++) e->mat[r][c] = m[r][(c + 1) % 3];   // its z axis along Leon's x: 90 degrees turned
+            e->mat[r][3] = (&e->pos.x)[r];
+        }
+        g_window_ok++;
+        if (g_window_ok == 1 && g_f) {   // the first planted move: Leon's frame and the window in his space
+            Mtx inv;
+            Vec local;
+            PSMTXInverse(m, inv);
+            PSMTXMultVec(inv, &e->pos, &local);
+            P(g_f, "# campush: tick %u window %u flags %x at %.1f %.1f %.1f (Leon's space %.1f %.1f %.1f)\n", g_tick, e->id,
+              e->be_flag, e->pos.x, e->pos.y, e->pos.z, local.x, local.y, local.z);
+        }
+    } else if (g_plant.e) {
+        cModel* e = g_plant.e;
+        e->id = g_plant.id, e->be_flag = g_plant.be_flag, e->pos = g_plant.pos;
+        __builtin_memcpy(e->mat, g_plant.mat, sizeof(Mtx));
+        g_plant.e = 0;
+    }
+}
+void exercise_campush(unsigned t)
+{
+    if (t == 40 || t == 200) {
+        CamCtrl.startPushObject();
+        g_push_on = 1;
+    }
+    if (t == 140) {
+        CamCtrl.endPushObject();
+        g_push_on = 0;
+    }
+}
+void exercise_camexport(unsigned t)
+{
+    if (t != 10) return;
+    for (int k = 0; k < 7; k++) {
+        g_x_pos[k] = pPL->pos;
+        g_x_pos[k].x += 500.0f * k;
+        g_x_pos[k].y += 1500.0f;
+        g_x_at[k] = pPL->pos;
+        g_x_roll[k] = 0.0f;
+        g_x_fovy[k] = 45.0f;
+    }
+    CameraCut cut;
+    __builtin_memset(&cut, 0, sizeof cut);
+    cut.num = 7;
+    cut.pos = g_x_pos, cut.at = g_x_at, cut.roll = g_x_roll, cut.fovy = g_x_fovy;
+    for (u32 i = 0; i < sizeof g_xbuf; i++) g_xbuf[i] = (i < 64 || i >= 64 + 0x440) ? 0xA5 : 0x5A;
+    const int r = CamCtrl.HermiteExport(&cut, g_xbuf + 64);
+    int buf_ok = 1, guards_ok = 1;
+    for (u32 i = 0; i < sizeof g_xbuf; i++) {
+        const bool guard = i < 64 || i >= 64 + 0x440;
+        if (g_xbuf[i] != (guard ? 0xA5 : 0x5A)) (guard ? guards_ok : buf_ok) = 0;
+    }
+    int ended = -1;
+    if (buf_ok) {   // the original wrote the buffer: no CameraMotion is made on what it wrote past it
+        CameraMotion* cm = new (g_xcm) CameraMotion(g_xbuf + 64, 0, 0, 0.0f);
+        cm->move();
+        ended = cm->end;
+    }
+    if (g_f) P(g_f, "# camexport: keys 7 returned %d buffer_untouched %d guards_intact %d motion_ended %d\n", r, buf_ok, guards_ok, ended);
+}
 void exercise(unsigned t)
 {
     if (g_exercise < 0) {
         const char* e = svc_env("RE4_SVC_EXERCISE");
         g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2
                    : e && !__builtin_strcmp(e, "rumble") ? 3 : e && !__builtin_strcmp(e, "camblend") ? 4
-                   : e && !__builtin_strcmp(e, "camrail") ? 5 : 0;
+                   : e && !__builtin_strcmp(e, "camrail") ? 5 : e && !__builtin_strcmp(e, "campush") ? 6
+                   : e && !__builtin_strcmp(e, "camexport") ? 7 : 0;
+    }
+    if (g_exercise == 6 || g_exercise == 7) {
+        if (t != g_ex_tick && pPL) {
+            g_ex_tick = t;
+            if (g_exercise == 6) exercise_campush(t);
+            else exercise_camexport(t);
+        }
+        return;
     }
     if (g_exercise == 4 || g_exercise == 5) {
         if (t != g_ex_tick && pPL) {
@@ -371,7 +496,15 @@ extern "C" void svc4_finish()
                "projections %u debug_draws %u blends %u smooths %u areas %u probes %u shoulder %u\n", c.frames, c.frustums,
           c.orients, c.orient_cams, c.tracks, c.keys, c.key_errors, c.attached, c.rails, c.projections, c.debug_draws, c.blends,
           c.smooths, c.areas, c.probes, c.shoulder);
+        // lane eng-e1n: the camera track store (rows converted at load: "keys" above)
+        if (&cam_track_store_use) {
+            u32 now, peak, size;
+            cam_track_store_use(&now, &peak, &size);
+            P(g_f, "# camera tracks: store now %u peak %u of %u bytes\n", now, peak, size);
+            P(g_f, "# camera unit maths: matrix calls %u turns %u\n", c.unit_math, c.unit_turns);
+        }
     }
+    if (g_exercise == 6) P(g_f, "# campush: window shown to the push camera on %d moves\n", g_window_ok);
     if (g_cam) {
         svc_out_close(g_cam);
         g_cam = 0;
@@ -571,7 +704,9 @@ extern "C" void __wrap_CameraMove()
         }
     }
     g_in_cam++;
+    push_plant(1);   // lane eng-e1n: exercise campush's window (nothing unless the exercise runs)
     __real_CameraMove();
+    push_plant(0);
     g_in_cam--;
     if (!top) return;
     P(g_f, "%u CM", g_tick);

@@ -108,9 +108,11 @@ static void submit_hud_header(const Scene* s,unsigned index,unsigned blend_type)
     }
     layer_prim(&header);
 }
-/* lane eng-e1i: the ammo digits (render/native_scene.h). */
-HudAmmo* hud_ammo;
+/* lane eng-e1i: the ammo digits (render/native_scene.h); lane eng-e1n: made here, once a picture, from the live count */
+int (*hud_magazine_live)(unsigned*);
 uint8_t hud_ammo_drawn[3]={0xff,0xff,0xff};
+static int hud_digits_live;            /* this picture: the digit widgets draw the live digits */
+static uint8_t hud_digit[3],hud_digit_shown;
 static void hud_widget(const Scene* a,const Widget* q,float cx,float cy,float angle,float z){
     unsigned anchor=q->shape&15,hdr=q->hdr;
     if(anchor>=1 && anchor<=4){
@@ -120,11 +122,11 @@ static void hud_widget(const Scene* a,const Widget* q,float cx,float cy,float an
         cx+=ca*ox-sa*oy;cy+=sa*ox+ca*oy;
     }
     /* lane eng-e1i: a digit widget (bake/hud_fix.py: mask[1] = the '0' picture's header + 1) draws the live digit */
-    if(q->mask[1] && hud_ammo && !hud_blend_control){
+    if(q->mask[1] && hud_digits_live){
         unsigned mark=(q->identity>>16)&255,cell=mark==0x0B?0:mark==0x0A?1:mark==0x17?2:3;
         if(cell<3){
-            if(!(hud_ammo->shown>>cell&1))return;
-            hdr=q->mask[1]-1+hud_ammo->digit[cell];hud_ammo_drawn[cell]=hud_ammo->digit[cell];
+            if(!(hud_digit_shown>>cell&1))return;
+            hdr=q->mask[1]-1+hud_digit[cell];hud_ammo_drawn[cell]=hud_digit[cell];
         }
     }
     submit_hud_header(a,hdr,hud_blend_control?0:(q->shape>>8)&255);
@@ -145,6 +147,15 @@ void native_hud(NativeScene* s){
     float x[256]={0},y[256]={0},angle[256]={0};
     const float unit=hud_blend_control?1.f:.017453293f;
     hud_ammo_drawn[0]=hud_ammo_drawn[1]=hud_ammo_drawn[2]=0xff;
+    /* lane eng-e1n: the ammo digits from the live magazine count, split here (ones, tens, hundreds; the hundreds only
+       when not 0), for this picture */
+    hud_digits_live=hud_magazine_live && !hud_blend_control;
+    if(hud_digits_live){
+        unsigned n=0;
+        const int shows=hud_magazine_live(&n);
+        hud_digit[0]=(uint8_t)(n%10);hud_digit[1]=(uint8_t)(n/10%10);hud_digit[2]=(uint8_t)(n/100%10);
+        hud_digit_shown=shows?(uint8_t)(hud_digit[2]?7:3):0;
+    }
     /* layout: parents before children */
     for(unsigned lv=0;lv<12;lv++)for(unsigned i=0;i<count;i++){
         const Widget* q=w+i;if(((q->tree>>8)&255)!=lv)continue;

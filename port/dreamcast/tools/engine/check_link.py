@@ -28,6 +28,12 @@ Allowed list format (one entry a line; '#' starts a comment):
                                                a service function allowed by mistake when its name says what it is
                                                (sound, effect, pose, camera, drawing, collision, memory, tables)
     +<unit> <pattern> ...                      reviewed: a decision whose name matches a guard (the guard skips it)
+    =<unit> <pattern> <bytes>                  a size ceiling (lane eng-e1n): a matching function larger than <bytes>
+                                               is NOT allowed (an allowed body that grew; 0: it may not be linked)
+    -<unit> <symbol> ...                       a reference ban (lane eng-e1n): the unit's object may not reference
+                                               the symbols (fnmatch on the name, with or without the leading
+                                               underscore), read from the map's cross reference table (-Wl,--cref);
+                                               a map without the table fails the line
 
 A pattern matches the demangled name, the mangled name, or the base name (the demangled name without its argument
 list and clone suffix: "em10NeckMove" matches "em10NeckMove(cEm10*) [clone .part.0]").
@@ -86,6 +92,8 @@ def parse_map(path):
     cont_re = re.compile(r'^\s+0x([0-9a-fA-F]+)\s+0x([0-9a-fA-F]+)\s+(\S.*)$')
     sym_re = re.compile(r'^\s+0x([0-9a-fA-F]+)\s{8,}(\S.*)$')
     for ln in lines[start:]:
+        if ln.startswith('Cross Reference Table'):
+            break
         m = sec_re.match(ln)
         if m:
             cur = (m.group(1), int(m.group(3), 16), m.group(4).strip())
@@ -118,6 +126,39 @@ def parse_map(path):
             continue
         res.append((u, sec, size, syms))
     return res
+
+
+def parse_cref(path):
+    """-> {unit: set(symbols it references)} from the map's cross reference table (-Wl,--cref), or None when the map
+    has none. A table entry is the symbol and its defining file, then the referencing files (indented)."""
+    with open(path, errors='replace') as f:
+        lines = f.read().splitlines()
+    try:
+        i = next(k for k, ln in enumerate(lines) if ln.startswith('Cross Reference Table'))
+    except StopIteration:
+        return None
+    refs = defaultdict(set)
+    sym = None
+    first = False   # the next file named is the definer
+    for ln in lines[i + 1:]:
+        if not ln.strip() or ln.startswith('Symbol') and 'File' in ln:
+            continue
+        if not ln[0].isspace():
+            parts = ln.split()
+            sym = parts[0]
+            first = True
+            if len(parts) > 1:
+                first = False   # the definer is on this line
+            continue
+        if sym is None:
+            continue
+        if first:
+            first = False
+            continue
+        u = unit_of(ln.strip())
+        if u:
+            refs[u].add(sym)
+    return refs
 
 
 def demangle_all(names):
@@ -172,7 +213,7 @@ def load_list(path):
             s = s.split('#', 1)[0].strip()
             if not s:
                 continue
-            kind = s[0] if s[0] in '!?+' else ''
+            kind = s[0] if s[0] in '!?+=-' else ''
             if kind:
                 s = s[1:].strip()
             parts = s.split()
@@ -200,6 +241,11 @@ def match(rules, f):
         return any(fnmatch.fnmatchcase(n, p) for n in names for p in pats)
     for r in rules:
         if r[0] == '!' and hit(r):
+            return None
+    for r in rules:   # size ceilings: "=<unit> <pattern> <bytes>"
+        if r[0] == '=' and fnmatch.fnmatchcase(f['unit'], r[1]) and \
+                any(fnmatch.fnmatchcase(n, r[2][0]) for n in names) and f['size'] > int(r[2][-1]):
+            f['why'] = 'ceiling %s B' % r[2][-1]
             return None
     for r in rules:
         if r[0] == '' and hit(r):
@@ -242,8 +288,25 @@ def main():
             f['group'] = 'WAIVED'
             waived.append(f)
             continue
-        f['group'] = 'SERVICE(guard)' if f.get('why') == 'guard' else 'SERVICE'
+        why = f.get('why', '')
+        f['group'] = 'SERVICE(guard)' if why == 'guard' else 'SERVICE(%s)' % why if why else 'SERVICE'
         bad.append(f)
+    # reference bans ("-<unit> <symbol>..."): the cross reference table
+    bans = [r for r in rules if r[0] == '-']
+    if bans:
+        cref = parse_cref(a.map)
+        for r in bans:
+            if cref is None:
+                bad.append({'unit': r[1], 'name': '(no cross reference table in the map: -Wl,--cref)', 'size': 0,
+                            'dem': '(no cross reference table in the map: -Wl,--cref)', 'group': 'SERVICE(ref)'})
+                continue
+            for u, syms in sorted(cref.items()):
+                if not fnmatch.fnmatchcase(u, r[1]):
+                    continue
+                for s in sorted(syms):
+                    if any(fnmatch.fnmatchcase(s, p) or fnmatch.fnmatchcase(s.lstrip('_'), p) for p in r[2]):
+                        bad.append({'unit': u, 'name': 'references ' + s, 'dem': 'references ' + s, 'size': 0,
+                                    'group': 'SERVICE(ref)', 'why': 'ref'})
     by_unit = defaultdict(list)
     for f in bad:
         by_unit[f['unit']].append(f)

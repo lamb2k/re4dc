@@ -43,3 +43,17 @@ inline const u16* mk_qrows(const MkClip* k) { return (const u16*) ((const u8*) k
 inline const f32* mk_quant(const MkClip* k) { return (const f32*) ((const u8*) k + k->oQuant); }
 inline const f32* mk_const(const MkClip* k) { return (const f32*) ((const u8*) k + k->oConst); }
 inline const f32* mk_aux(const MkClip* k) { return (const f32*) ((const u8*) k + k->oAux); }
+
+// The evaluator's row rule: the baked row of a frame, or -1 (decode from the keys): an integer frame before the end;
+// the last row at or past the end of a clip that does not loop; a looping clip wraps once first. (Lane eng-e1n: here
+// from skel.cpp, so the camera service reads its converted tracks by the same rule.)
+inline int mk_row_of(const MkClip* k, f32 f, f32 maxFrame, u32 flags)
+{
+    if (maxFrame <= f) {
+        if ((flags & 6) != 4) return k->maxFrame;
+        f -= maxFrame;
+        if (maxFrame <= f) return -1;
+    }
+    const int fi = (int) f;
+    return (f32) fi == f && fi >= 0 ? fi : -1;
+}

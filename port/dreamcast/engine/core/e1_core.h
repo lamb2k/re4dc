@@ -20,7 +20,7 @@ void e1_svc_publish();
 void e1_svc_boot();
 void e1_svc_tick_begin(unsigned t);
 extern int e1_game_seed_option;   // core/globals.cpp, boot option SEED (lane eng-e1e: the hill scene applies it too)
-void e1_hud_draw_tick();      // services/draw.cpp: the ammo digits (lane eng-e1i); the camera has no draw step (eng-e1j)
+// (lane eng-e1n: no HUD draw step either: the renderer makes the ammo digits from the live count when it draws them)
 extern "C" void e1_pool_control(void);   // services/model/mgr_pool.cpp: POOLCTL (lane eng-e1i)
 void e1_svc_room_ready();
 void e1_svc_report();

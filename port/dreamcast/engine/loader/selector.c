@@ -377,11 +377,14 @@ static void collect(unsigned i) {
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
             else if (!strncmp(line, "E1 PUB camera ", 14)) {
-                /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records */
-                unsigned cam = 0, hud = 0, light = 0;
-                pub_seen = sscanf(line + 14, "%u hud %u light-compares %u", &cam, &hud, &light) == 3;
-                if ((!pub_seen || cam || hud || light) && !e->why[0])
-                    snprintf(e->why, sizeof(e->why), "conversions per tick: camera %u, hud %u, light compares %u", cam, hud, light);
+                /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records; lane eng-e1n
+                   (H-017.5): the line counts only what has a producer, the camera copy control and the light-view
+                   misses (a character drawn without its light view); either not 0, or the line incomplete, fails */
+                unsigned cam = 0, miss = 0;
+                pub_seen = sscanf(line + 14, "%u light-view-misses %u", &cam, &miss) == 2;
+                if ((!pub_seen || cam || miss) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "%sPUB: camera copies %u, light-view misses %u",
+                             pub_seen ? "" : "incomplete ", cam, miss);
             }
             else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
                 /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */

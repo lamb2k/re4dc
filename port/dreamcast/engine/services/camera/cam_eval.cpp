@@ -385,10 +385,34 @@ void searchRail(CameraBSpline* bs, CameraCut* cut, Vec* aim, int)
 // frames or at the cut's frames; a key's tangent is the frame-weighted mean of its neighbouring slopes (one-sided at
 // the ends) times the frames since the previous key (so 0 at the first key). Fov in radians; roll and fov repeat on
 // their three axes. Returns the size.
+// Lane eng-e1n (H-017.3): the cut's key count and the file's size are checked before anything is written. The
+// destination is a camera motion buffer of kMotionBuffer bytes (cam_ctrl.cpp's CAMERA_MOTION_BUFFER_SIZE: the only one
+// the controller exports into). Refused: a count outside 1 .. kRailMax (the cut's frame table), or a file larger than
+// the buffer. Nothing is written; the return is the size the file would need (0 for a bad count), which the hosted
+// callers compare with their buffer and log as the original does when it is larger; the camera motion they then make
+// on the buffer is not played (cam_track_export_refused: the track service refuses that buffer's next motion), so the
+// controller leaves the cut at its first move.
+extern "C" void cam_track_export_refused(const u8* buf, int refused);   // camera_svc.cpp
+namespace {
+constexpr int kMotionBuffer = 0x440;
+// header 36 bytes; per track three axes of {count, frames, keys of 12 bytes}, each track padded to 4 bytes
+constexpr int export_size(int n) { return 36 + 4 * (((3 * (2 + 2 * n + 12 * n)) + 3) & ~3); }
+}   // namespace
 int CameraControl::HermiteExport(CameraCut* cut, u8* buf)
 {
     CAM_SVC("CameraControl::HermiteExport");
     cam_cnt.rails++;
+    {
+        const int count = cut->num;
+        const int need = count >= 1 && count <= kRailMax ? export_size(count) : 0;
+        if (need == 0 || need > kMotionBuffer) {
+            cam_cnt.key_errors++;
+            cam_track_export_refused(buf, 1);
+            pLog->err(0, 0, "HermiteExport(): cut of %d keys refused (%d bytes, buffer %d)", count, need, kMotionBuffer);
+            return need;
+        }
+        cam_track_export_refused(buf, 0);
+    }
     struct Out {
         u8* p;
         void u8_(u32 v) { *p++ = (u8) v; }
@@ -668,6 +692,134 @@ extern "C" void offsetCorrection(QfpsOfs* o)
     const v3 eye = V(o->Campos), d = vsub(V(o->campos2), eye);
     const f32 s = (-320.0f - eye.z) / d.z;
     if (s > 1.0f) put(&o->campos2, vadd(eye, vscale(d, s)));
+}
+
+// ---- the shoulder camera's tick (lane eng-e1n, ruling H-017.1) ----
+// The follow: the shoulder camera's eye and target in player space follow the probed camera sideways (their x) at a
+// fixed rate, directly in height and depth (y, z); a reset takes the probed camera as it is. Then both points into the
+// world by the base frame. The service's own state (the original keeps the two points in statics of its move).
+namespace {
+struct ShoulderFollow {
+    v3 eye, target;
+} g_follow;
+constexpr f32 kFollowRate = 0.6f;   // the share of the previous lateral position kept each tick
+}   // namespace
+void cam_shoulder_follow(const Mtx base, const CameraParam* probed, int reset, CameraParam* out)
+{
+    CAM_SVC("cam_shoulder_follow");
+    const f32 keep = cam_control == 7 ? 0.5f : kFollowRate;   // control camfollow
+    const v3 eye = V(probed->pos), target = V(probed->at);
+    if (reset) {
+        g_follow.eye = eye, g_follow.target = target;
+    } else {
+        const f32 take = 1.0f - keep;
+        g_follow.eye = shz_vec3_init(g_follow.eye.x * keep + eye.x * take, eye.y, eye.z);
+        g_follow.target = shz_vec3_init(g_follow.target.x * keep + target.x * take, target.y, target.z);
+    }
+    const Frame f = frame_of(base);
+    put(&out->pos, frame_point(f, g_follow.eye));
+    put(&out->at, frame_point(f, g_follow.target));
+    out->roll = 0.0f;
+    out->fovy = probed->fovy;
+}
+
+// The shoulder camera's tick. The original body (cam_qfps.cpp CameraQuasiFPS::move) holds its decisions and the
+// follow's arithmetic in one function; the hosted unit's copy is made weak (game/Makefile SPLIT_UNITS) and this body
+// is linked. The decisions are the hosted unit's own functions, called here: the camera type and its tables
+// (checkCameraType), the site (checkFBLR) and the look angles (calcDepressionRatio); the debug camera (Debug_flg[1]
+// 0x20000000) holds the site and the angles. The evaluation is the camera service's: the base frame, the offset blend,
+// the wall probe, the follow and the frame. The rest is the record of those decisions: the site's offset tables
+// (sites 0, 1 the ready table, 2, 3 the transition table; the odd sites the second row and the blend-from table's
+// second side), the smoothing's rate while the player moves (status 2, 4, 8: the walking ratio) and its snap on a
+// reset. The debug frustum drawing (debug_mode 0xF) is counted, not drawn.
+#if !defined(E1_CAM_ORIG_QFPS_MOVE)   // control build only (game/Makefile CAM_EXTRA): the hosted body linked instead
+void CameraQuasiFPS::move()
+{
+    checkCameraType();
+    Mtx base;
+    calcBaseMatrix(base);
+    const bool debug_holds = (pG->Debug_flg[1] & 0x20000000) != 0;
+    if (!debug_holds) m_site = checkFBLR();
+    if (m_site <= 3) {
+        const int side = m_site & 1;
+        cur = (m_site < 2 ? blend_src : blend_dst)[2 * side];
+        old = m_site < 2 ? g_readyOfs[15][side] : g_transOfs[6][side];
+    }
+    if (!debug_holds) calcDepressionRatio();
+    QfpsOfs ofs;
+    CameraParam probed;
+    calcOffset(&ofs);
+    hitCheck(base, &ofs, &probed);
+    cam_shoulder_follow(base, &probed, reset, &cam.param);
+    const u32 st = PlGetStatus();
+    if (st == 2 || st == 4 || st == 8) CamSmth.m_ratio = m_walk_ratio;
+    if (reset) CamSmth.m_flag |= 1;
+    if (pG->debug_mode == 0xF) cam_cnt.debug_draws++;
+    reset = 0;
+}
+#endif
+
+// ---- the camera units' matrix work (lane eng-e1n, ruling H-017.1) ----
+// cam_extra's camera bodies (the push-object camera's player-frame inverse, its candidate and offset transforms and its
+// swing about the target; the scope's and the binocular's frames) reach their matrix maths here: game/Makefile binds
+// the unit's PSMTXInverse, PSMTXMultVec, PSMTXMultVecSR, PSMTXIdentity and MtxRotAxisPosRad to these at link
+// (objcopy --redefine-sym on the hosted object), so the bodies keep their decisions (which door, which side) and the
+// evaluation is the camera service's. The engine's forms: the inverse from SH4ZAM's adjugate over the determinant
+// (frame_inverse), points and directions through a frame, the turn about an axis through a point by Rodrigues' form
+// (one sine / cosine pair; the original concatenates a translation, an axis-angle matrix and a translation).
+extern "C" u32 cam_mtx_inverse(const Mtx s, Mtx inv)
+{
+    CAM_SVC("cam_mtx_inverse");
+    cam_cnt.unit_math++;
+    if (cam_control == 8) {   // control caminv: the inverse skipped (the identity)
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 4; c++) inv[r][c] = r == c ? 1.0f : 0.0f;
+        return 1;
+    }
+    const Frame f = frame_of(s);
+    const FrameInverse fi = frame_inverse(f);
+    if (fi.inv_det == 0.0f) return 0;   // singular: inv untouched, as the original
+    Frame r;
+    // the inverse's axes: the adjugate's columns over the determinant (inverse_point's form); its position: the image
+    // of the world origin
+    r.left = vscale(fi.adj.col[0], fi.inv_det);
+    r.up = vscale(fi.adj.col[1], fi.inv_det);
+    r.forward = vscale(fi.adj.col[2], fi.inv_det);
+    r.pos = inverse_point(fi, shz_vec3_init(0.0f, 0.0f, 0.0f));
+    frame_put(inv, r);
+    return 1;
+}
+extern "C" void cam_mtx_point(const Mtx m, const Vec* s, Vec* d)
+{
+    CAM_SVC("cam_mtx_point");
+    cam_cnt.unit_math++;
+    put(d, frame_point(frame_of(m), V(s)));
+}
+extern "C" void cam_mtx_dir(const Mtx m, const Vec* s, Vec* d)
+{
+    CAM_SVC("cam_mtx_dir");
+    cam_cnt.unit_math++;
+    put(d, frame_dir(frame_of(m), V(s)));
+}
+extern "C" void cam_mtx_identity(Mtx m)
+{
+    for (int r = 0; r < 3; r++)
+        for (int c = 0; c < 4; c++) m[r][c] = r == c ? 1.0f : 0.0f;
+}
+// a turn of `rad` about the axis through `pos`: the frame's axes are the turned unit axes, its position pos - R pos
+extern "C" void cam_mtx_turn_about(Mtx m, Vec* axis, Vec* pos, f32 rad)
+{
+    CAM_SVC("cam_mtx_turn_about");
+    cam_cnt.unit_turns++;
+    const v3 a = vunit(V(axis)), o = V(pos);
+    const f32 c = cosf(rad), s = sinf(rad);
+    auto turn = [&](v3 v) { return vadd(vadd(vscale(v, c), vscale(vcross(a, v), s)), vscale(a, vdot(a, v) * (1.0f - c))); };
+    Frame f;
+    f.left = turn(shz_vec3_init(1.0f, 0.0f, 0.0f));
+    f.up = turn(shz_vec3_init(0.0f, 1.0f, 0.0f));
+    f.forward = turn(shz_vec3_init(0.0f, 0.0f, 1.0f));
+    f.pos = vsub(o, turn(o));
+    frame_put(m, f);
 }
 
 // Every default table's first side (its three sites), ready tables 0..13 and transition tables 0..4, at room start.

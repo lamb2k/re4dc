@@ -201,8 +201,15 @@ void e1_svc_report()
            (unsigned long) cam_cnt.probes, (unsigned long) cam_cnt.rails, (unsigned long) cam_cnt.shoulder,
            (unsigned long) cam_cnt.attached, (unsigned long) cam_cnt.tracks, (unsigned long) cam_cnt.orient_cams,
            (unsigned long) cam_cnt.debug_draws);
-    e1_log("E1 PUB camera %lu hud %lu light-compares %lu (light view misses %lu)\n", (unsigned long) eng_pub.camera,
-           (unsigned long) eng_pub.hud, (unsigned long) eng_pub.light_compares, (unsigned long) e1_light_miss);
+    // lane eng-e1n (H-017.5): only what has a producer: the camera copy control (PUBCOPY) and the light-view misses;
+    // the selector fails a scene where either is not 0 or the line is missing
+    e1_log("E1 PUB camera %lu light-view-misses %lu\n", (unsigned long) eng_pub.camera, (unsigned long) e1_light_miss);
+    {   // lane eng-e1n (H-017.2): the camera tracks converted at load (rows), refused, the track store's use
+        u32 now, peak, size;
+        cam_track_store_use(&now, &peak, &size);
+        e1_log("E1 CAMTRACK rows %lu moves %lu not-played %lu store peak %lu of %lu bytes\n", (unsigned long) cam_cnt.keys,
+               (unsigned long) cam_cnt.tracks, (unsigned long) cam_cnt.key_errors, (unsigned long) peak, (unsigned long) size);
+    }
     // lane eng-e1l: the camera record's finite check (every tick; the selector fails a scene with a non-finite tick or
     // without this line) and the renderer's planes the record holds
     e1_log("E1 CAMREC ticks %lu non-finite %lu (first tick %lu word %lu bits %08lx) near %d far %d\n",

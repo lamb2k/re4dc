@@ -51,6 +51,9 @@ extern uint16_t e1_tev_scale_of_group[256];
 void e1_log(const char* fmt, ...);
 extern int e1_pal_control;   /* services/draw.cpp: the PALCTL control */   /* core/globals.cpp: buffered while the ticks run (lane eng-e1e) */
 unsigned e1_light_miss;   /* pictures a character had no light view (lit by the fallback record) */
+/* lane eng-e1n (H-017.5): a light-view miss fails the scene (the E1 PUB line, loader/selector.c). LIGHTMISS (boot file,
+   lab arm; the control): every character's light view refused, as a miss */
+int e1_light_miss_control;
 void e1_light_tables(const NativeScene* s)
 {
     const ModelLight* rec = (const void*) s->state[8]; const unsigned n = s->words[8] * 4 / sizeof(ModelLight);
@@ -172,7 +175,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     E1LightView lv;
     const E1LightView* live = 0;
     if (model) {
-        if (e1_light_view(model_record, &lv)) live = &lv;
+        if (!e1_light_miss_control && e1_light_view(model_record, &lv)) live = &lv;
         else e1_light_miss++;
     } else {
         static const void* leon_scene; static const ModelLight* leon_rec;

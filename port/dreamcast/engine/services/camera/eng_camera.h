@@ -56,12 +56,16 @@ int eng_cam_trace_line(char* buf, unsigned size, uint32_t tick);
 extern void (*eng_cam_diag_sink)(const char* line, unsigned n);
 void eng_cam_diag(const char* tag, const void* words, unsigned n);
 
-/* Conversions of game state into a draw record, counted per scene (the selector fails a scene where one is not 0;
- * the E1 PUB line): the camera, the HUD words, the light inputs' compares. The PUBCOPY lab arm (control) makes the
- * camera service copy its record once a tick and count it. */
-typedef struct EngPubCounters { uint32_t camera, hud, light_compares; } EngPubCounters;
+/* The E1 PUB line (lane eng-e1n, ruling H-017.5): it counts only what has a producer. "camera": copies of the camera
+ * record into a draw stream, made only by the PUBCOPY lab arm (the control: the service copies its record into
+ * eng_pub_stream once a tick and counts each copy); "light-view-misses": pictures a character was drawn without its
+ * light view (services/actor_e1.inc e1_light_miss; LIGHTMISS is that control). The selector fails a scene where either
+ * is not 0 or the line is missing. That nothing else is converted per tick is established by reading producers and
+ * consumers, not by a counter. */
+typedef struct EngPubCounters { uint32_t camera; } EngPubCounters;
 extern EngPubCounters eng_pub;
-extern int eng_pub_copy;   /* PUBCOPY (control) */
+extern int eng_pub_copy;          /* PUBCOPY (control) */
+extern float eng_pub_stream[26];  /* PUBCOPY's destination (a global: the copy is a real store) */
 
 #ifdef __cplusplus
 }
