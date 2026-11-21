@@ -179,3 +179,35 @@ game/game *
 # above; picking up an item with no model is the item event)
 +em10/em10 em10CsawHitCk em10GatlingHitCk
 +game/sce_at sceAtGetItem_NoModel
+
+# ==== The sound driver, waived (lane eng-snd1, integrator ruling H-025.1). The original game's sound driver is
+# original service code, hosted unchanged under the first recorded waiver of "no original service code": it makes the
+# game sound as the GameCube version does, it has its own random generator (snd_main.cpp Snd_rnd; SndCall's random SE
+# variant is moved to the engine generator, game/sound.mk PRESENT_game/snd), and its cost is held under 1.0 ms a
+# picture mean and 2.0 ms worst on the calibrated tier (the selector fails a timing scene over it). Under it the
+# engine's own sound service (services/sound: the AICA layer, the banks loaded with the room, the 5 ms audio thread).
+# Another waiver needs its own ruling.
+
+## sound-driver-waived-H-025.1: the original sound driver (SE resolution and positional volume, the ISS voice manager, the stream player, the MIDI sequencer, the effect requests, their tables), hosted under the waiver H-025.1 with its cost ceiling
+game/snd *
+game/snd_efx *
+game/snd_iss0 *
+game/snd_iss1 *
+game/snd_iss2 *
+game/snd_iss3 *
+game/snd_iss4 *
+game/snd_main *
+game/snd_ram *
+game/snd_seq0 *
+game/snd_seq1 *
+game/snd_seq2 *
+game/snd_seq3 *
+game/snd_str0 *
+game/snd_str1 *
+game/snd_str2 *
+game/snd_str3 *
+game/snd_str4 *
+game/snd_sub0 *
+game/snd_sub1 *
+game/snd_sub2 *
+game/snd_sub3 *
