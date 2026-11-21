@@ -2,6 +2,86 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-028 (2026-11-21): the drawing account is in; the renderer is rebuilt along its pixel-identical path, world and characters as two lanes
+
+- **What lane eng-draw1 found** (its report, at the gate; MODELLED, console-build dynarec at 70 MHz, calibrated on the old
+  port; the tier charges instructions and sees no cache, store queue, graphics chip or bus):
+  - Drawing is 27.5 / 37.4 / 26.0 ms mean on LEON / HILL / FIGHT against the 14 ms row: the world 10.2 to 11.6, selection
+    3.7 to 3.8 on the moving-camera scenes, characters 12.0 / 24.1 / 11.0.
+  - 43 to 47% of the world's corners belong to strips no triangle of which is ever seen: about 5 to 6.6 ms a picture.
+    The near-plane fix costs 3.7 to 5.6 ms, most of it triangles wholly behind the plane sent to the clipper. Every
+    staged vertex is copied about once.
+  - Characters: every header has culling off (57 to 58% of on-screen triangles are back faces); weight sets, lighting
+    and emission cost well over the job.
+  - Its estimate for all pixel-identical steps together: 11.0 mean / 14.9 worst (LEON), 10.2 / 15.6 (FIGHT), 14.4 / 17.8
+    (HILL). So the row is reachable on the mean in two scenes and missed at the worst pictures in all three without look
+    choices. Estimates, not built.
+- **Rulings:**
+  1. **Build the pixel-identical path now**, as two lanes on eng-draw1's head: **eng-draw2** (world: stills repeatable to
+     the pixel first, then the clipper pre-reject, selection, the exact strip cull from baked cones and bounds, the world
+     walked without a stage) and **eng-draw3** (characters: unused positions and normals skipped, the four kernels on
+     SH4ZAM, the per-model fixed cost). Each step lands as the default with the old path removed, with a base re-run in
+     the same session and 0 differing pixels against the previous step.
+  2. **C on SH4ZAM before assembly.** Hand-written SH-4 assembly is a last, separate step with the C form's measured
+     figure and the reason it is not enough (workspace rule of 2026-10-12); this tier cannot rank hand-scheduled code.
+  3. **Look choices are the owner's and stay out of speed steps.** The first one prepared is character back-face culling
+     (estimate -4.0 / -7.4 / -3.6 ms): a lab arm and a still sheet with differing-pixel counts from eng-draw3. World
+     levels, character levels, a light cap and half-rate lighting follow the same way, after the pixel-identical floor
+     is measured, each on its own sheet.
+  4. **Pack sets (the eighth ruling of H-027, written here):** packs a disc build needs by default live in
+     `E:\RE4DC-Lanes\packs\<set>\`, immutable, with a receipt (hashes, the bake script and commit, inputs, the lane);
+     only the integration lane writes them, at the gate, after a clean-checkout rebuild. A default path into a lane
+     folder fails the gate. `PRISTINE` is an input tree, recorded by identity in the gate log.
+  5. **Flycast slots:** the lease is written before a runner touches the slot, and a slot is free only with no lease and
+     no Flycast or runner running from its folder (lane eng-fix1 broke an unleased run of eng-snd1 for two minutes and
+     reported it; the common brief carries the rule).
+  6. **The E1 audit** (Codex) is ordered when the two drawing lanes' pixel-identical floor is measured, not before
+     (H-023's condition "a drawing design that fits its row on the calibrated model" is read as: the floor known, the
+     look choices listed with their sheets).
+- **Corrections (lane eng-fix1, finishing its re-merge before the gate):** ten corrections built in with no way to turn
+  them off, the owner's four choices in `game_settings.mk`, three guards (one counted, 0 in every scene). With the
+  Ganado byte-order correction in, a hit Ganado's routine bytes differ from the first hit (tick 61) and positions
+  from about tick 165 (4.4 to 4.5 units); engine and reference moved together. Quick weapon select is set on and
+  reaches nothing until the sub screen is hosted.
+- **Lanes now:** at the gate eng-look1; queued eng-fix1, eng-draw1; finishing eng-e2c; running eng-draw2, eng-draw3,
+  eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-e2d.
+
+## H-027 (2026-11-21): the plan written down (version 3.2); what the PC reference is and is not; rulings from the first gates
+
+- **Owner:** "okmemoralize that plan and ensure the skill sare up to date". Done: `ENGINE_PLAN.md` version 3.2 ("The plan as of
+  2026-11-21"), `LANES.md`, `COMMON_BRIEF.md`, `INTEGRATION_GATE.md`, the rule files and the four skills (merge 9dfe2ca00).
+- **Owner asked:** "In the PC the ideal reference ?" and "How does el Gigante run in reference?". Answers given, and rulings:
+  1. **The PC reference is the workbench, not the truth.** It is the original code built for a third platform. Four faults
+     in it were found in two days (em10's presentation callers, the BSpline alias, routine bytes, the Ganado's hit voice
+     label), each one a case where engine and reference agreed and both were wrong. From now on a PC fixture counts as a
+     reference only where it is anchored: the same scene run on the released old port in Flycast, agreeing on outcome and
+     on chosen state at chosen ticks. A lane for that anchoring starts when the machine has room (backlog, first in line
+     after the renderer redesign's build lanes).
+  2. **El Gigante has no whole-fight reference.** The PC reference does not host him; lane eng-e2c checked each function on
+     a planted giant. The released old port is his reference: a scripted fight there, the engine judged on outcome. Part of
+     the anchoring lane. His AI and his drawing meet in one scene only after the renderer redesign (his drawing alone is
+     over twice the row on the bench).
+  3. **Gate rule:** a move of `engine` since a lane's merge base passes without a re-merge when the trial merge is clean and
+     every moved file is a document or a tool that no image and no suite uses. `GATE.md` carries it.
+  4. **A hand-back figure that does not match the head** is a lane error the integration lane records with the figure it
+     measured; it fails the gate only if the control itself does not work (eng-e2b: "em10 21" and "8 clones" came from an
+     intermediate build; at the head the controls give em10 11 and 181 problems).
+  5. **Service code hidden by inlining** (eng-e2b's finding: the optimiser had inlined 8 of em10's service functions into
+     decision functions, out of the symbol-based link check's sight). Until lane eng-e2d's general check has run on every
+     image, the link check's counts, the default image's 0 included, are counts of symbols, not proof.
+  6. **The boss room's thunder** is presentation: its interval moves to the presentation generator (the split rule); the
+     three `static` functions may be made replaceable by build means without editing `src/`. The shift of the boss's
+     behaviour stream against old-game traces from tick 1 is the split's accepted consequence.
+  7. **No session links** (owner, by way of the F-Zero session: "We shouldn't put a link to Claude sessions in PRs"): commit
+     and merge messages end with the `Co-Authored-By` line only. History already pushed is not rewritten without the
+     owner's word.
+- **State:** merged through the integration lane today: eng-salv1, eng-e2a, eng-cmp1 (the comparison, MODELLED, with its
+  band). At the gate: eng-e2b (held on one question: do the reference's trace differences after the hit-voice fix touch
+  behaviour state), then eng-look1 (Leon's handgun drawn live; +0.57 ms a picture MODELLED). Handed back, finishing: eng-e2c
+  (boss 26 to 3; the thunder). Running: eng-draw1, eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-fix1, eng-e2d.
+- **Open with the owner:** whether the GameCube original in an emulator is wanted as a third reference for disputes
+  (behaviour only, no assets), or anchoring on the released old port is enough.
+
 ## H-026 (2026-11-21): corrections, not switches; quick weapon select; reworked PS2 art; the F-Zero line's advice
 
 - **From:** the owner (quoted) and the integrator (rulings under H-013).

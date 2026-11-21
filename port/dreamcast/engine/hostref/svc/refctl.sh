@@ -18,6 +18,10 @@
 #   stat      STAT_BYTES=0: the routine bytes read unswapped (before lane eng-e1m). On e1-route (seed 0), hill-follow and
 #             shot-ganado (odump build): camcheck.py fixed against old must FAIL on each (from tick 2, 2 and 3: Leon's
 #             idle creep the old reference's shoulder camera followed).
+#   em10voice EM10_VOICE=0 (lane eng-e2b): em10SetDamageVoice's int-view call left on the generated stub its SH-ELF label
+#             names on the i386 PC (before lane eng-e2b). On bell-ganado-hit (odump build): the fixed reference voices the
+#             living Ganado's hit through ctrl11 (C11s calls > 0); the old one's em10 boundary log (svc/e2b_dump.cpp)
+#             against the fixed must FAIL; the outcome must PASS (the change is presentation only).
 # Positive rows: the fixed reference against itself on each fixture (exact) must PASS, so a FAIL above is the change.
 # A row that cannot be run (a build or a run that fails, a trace missing) is ERROR, never skipped. Exit 0 when every row
 # is as it must, 1 when one is not, 2 when one could not be run.
@@ -132,6 +136,29 @@ SHOTTICKS=$(awk '$1 == "ticks" {print $2; exit}' "$SHOTFX")
             row "routine bytes unswapped (STAT_BYTES=0)" FAIL ERROR "build failed"
         fi
         gone "$CTLB-stat"
+        # ---- em10voice (lane eng-e2b): the hit voice's int-view label left to the generated stub
+        D=$OUT/em10voice
+        HITFX=$PR/fixtures/bell-ganado-hit.txt
+        if run "$B/odump/re4ref" "$HITFX" "$D/ref"; then
+            n=$(grep -c ' C11s ' "$D/ref/e2b.txt" 2>/dev/null)
+            row "bell-ganado-hit, the fixed reference: the living Ganado's hit voice reaches ctrl11 (em10CallVoiceSe)" PASS \
+                "$([ "${n:-0}" -gt 0 ] && echo PASS || echo FAIL)" "C11s calls ${n:-0}"
+        else
+            row "bell-ganado-hit, the fixed reference: the living Ganado's hit voice reaches ctrl11 (em10CallVoiceSe)" PASS ERROR "run failed"
+        fi
+        if build "$CTLB-em10voice" odump EM10_VOICE=0 && run "$CTLB-em10voice/odump/re4ref" "$HITFX" "$D/old" && [ -s "$D/ref/e2b.txt" ]; then
+            n=$(grep -c ' C11s ' "$D/old/e2b.txt" 2>/dev/null)
+            res=$(python3 "$HERE/e2_compare.py" "$D/ref" "$D/old" --log e2b.txt); rc=$?
+            row "hit voice stubbed (EM10_VOICE=0), bell-ganado-hit: em10's boundary log against the fixed reference (C11s calls ${n:-0})" FAIL \
+                "$(verdict $rc PASS FAIL)" "$(echo "$res" | cut -c1-160)"
+            python3 "$PR/outcome.py" "$D/ref/trace.txt" "$D/old/trace.txt" --tolerances "$PR/tolerances.json" > "$D/outcome.txt" 2>&1; rc=$?
+            row "hit voice stubbed, bell-ganado-hit: outcome against the fixed reference (presentation only)" PASS \
+                "$(verdict $rc PASS FAIL)" "$(grep -E '^(PASS|FAIL)' "$D/outcome.txt" | head -1 | cut -c1-120)"
+        else
+            row "hit voice stubbed (EM10_VOICE=0), bell-ganado-hit: em10's boundary log against the fixed reference" FAIL ERROR "build or run failed"
+            row "hit voice stubbed, bell-ganado-hit: outcome against the fixed reference (presentation only)" PASS ERROR "build or run failed"
+        fi
+        gone "$CTLB-em10voice"
     fi
 } | tee "$OUT/refctl.md"
 status=0
