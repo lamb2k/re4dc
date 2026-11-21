@@ -52,7 +52,8 @@ PRESENT_em10/em10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10Ca
 
 # Lane eng-e2b (item 1): em10's service functions are the engine's (services/em10/: em10_pres.cpp the sound numbers,
 # voices, breath, chainsaw tell, footsteps, the weapon's sound set, blood, the kick's mark, water; em10_cam.cpp the cut-in
-# cameras and the on-screen check; docs/engine/lanes/eng-e2b.md). em10's own bodies are made weak (EM10_NATIVE, SH-ELF
+# cameras and the on-screen check; em10_model.cpp the model parts, accessories, the aiming blend and the destructor;
+# docs/engine/lanes/eng-e2b.md). em10's own bodies are made weak (EM10_NATIVE, SH-ELF
 # names without the leading underscore) so the engine's are linked and --gc-sections drops the originals. em10.o is
 # compiled without the interprocedural optimisations that let a caller keep an inlined, cloned or register-assumed copy
 # of a function that is later made weak (EM10_NOIPA: -fipa-ra in particular lets a caller trust the clobbers of the
@@ -60,11 +61,13 @@ PRESENT_em10/em10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10Ca
 # of em10's 40 service functions, or a symbol of the list is not weak.
 # Control builds only, never a default: EM10_ORIG=<name> keeps that original body linked (its engine copy made weak; the
 # link check must FAIL); EM10_IPA=1 compiles em10.o with the interprocedural optimisations (the split check must FAIL).
-EM10SVC_OBJS := $(OUT)/n/em10_pres.o $(OUT)/n/em10_cam.o
+EM10SVC_OBJS := $(OUT)/n/em10_pres.o $(OUT)/n/em10_cam.o $(OUT)/n/em10_model.o
 EM10_NATIVE := Em10SetSeTbl em10CallVoiceSe _Z16em10CallVoiceSe2P5cEm10ii _Z12em10BreathSeP5cEm10 em10CsawSignSe \
 	_Z18em10SetDamageVoiceP5cEm10ii em10BehindSeCk _Z10em10FootSeP5cEm10 em10WepSeEffSet _Z12em10BloodSetP5cEm10i \
 	_Z12em1cBloodSetP5cEm10i _Z15em10KickHitMarkP5cEm10 _Z17em10SetDmWaterEffP5cEm10i _Z15em10SetWaterEffP5cEm10 \
-	em10CamMove _Z12em10CamMove2P5cEm10 em10CamMoveCri em10CamMoveAshley em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk
+	em10CamMove _Z12em10CamMove2P5cEm10 em10CamMoveCri em10CamMoveAshley em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk \
+	em10SetAccesory em10ClothPartsSet em10GoodsPartsSet em10SackSet em10BlendMotSet _Z11em10HandSetP5cEm10i \
+	_Z11em10HeadSetP5cEm10i _Z13em10ModelInitP5cEm10 _ZN5cEm10D0Ev _ZN5cEm10D1Ev _ZN5cEm10D2Ev
 EM10_WEAK := $(addprefix _,$(filter-out $(EM10_ORIG),$(EM10_NATIVE)))
 EM10_NOIPA := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
 	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp

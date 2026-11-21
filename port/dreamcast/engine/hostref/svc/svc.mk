@@ -137,7 +137,7 @@ SVC4_SRCS += volumes/dmg_vol.cpp
 SVC4_SRCS += volumes/area_vol.cpp
 # lane eng-e2b: em10's service functions (services/em10/: the presentation and the cut-in cameras; em10 is linked with
 # their bodies weak in weak6/ below)
-SVC4_SRCS += em10/em10_pres.cpp em10/em10_cam.cpp
+SVC4_SRCS += em10/em10_pres.cpp em10/em10_cam.cpp em10/em10_model.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 # lane eng-e1j: cam_sys is camera maths throughout (the camera service has every function): a replaced unit
 SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion cam_sys motion pad $(SVC5_UNITS) area
@@ -195,7 +195,9 @@ WEAK_em10 := _Z17em10ScaleCompressP5cEm10
 EM10_NATIVE_PC := Em10SetSeTbl em10CallVoiceSe _Z16em10CallVoiceSe2P5cEm10ii _Z12em10BreathSeP5cEm10 em10CsawSignSe \
 	_Z18em10SetDamageVoiceP5cEm10ii em10BehindSeCk _Z10em10FootSeP5cEm10 em10WepSeEffSet _Z12em10BloodSetP5cEm10i \
 	_Z12em1cBloodSetP5cEm10i _Z15em10KickHitMarkP5cEm10 _Z17em10SetDmWaterEffP5cEm10i _Z15em10SetWaterEffP5cEm10 \
-	em10CamMove _Z12em10CamMove2P5cEm10 em10CamMoveCri em10CamMoveAshley em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk
+	em10CamMove _Z12em10CamMove2P5cEm10 em10CamMoveCri em10CamMoveAshley em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk \
+	em10SetAccesory em10ClothPartsSet em10GoodsPartsSet em10SackSet em10BlendMotSet _Z11em10HandSetP5cEm10i \
+	_Z11em10HeadSetP5cEm10i _Z13em10ModelInitP5cEm10 _ZN5cEm10D0Ev _ZN5cEm10D1Ev _ZN5cEm10D2Ev
 WEAK_em10 += $(EM10_NATIVE_PC)
 EM10_NOIPA_PC := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
 	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp

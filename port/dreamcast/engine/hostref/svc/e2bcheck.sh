@@ -12,7 +12,7 @@
 #   fixtures   bell-ganado, bell-ganado-hit, bell-ganado-kill, bell-ganado-clear, shot-ganado, aimfire-ganado: must PASS
 #   exercise   e2b on bell-ganado and shot-ganado: every function on planted inputs (svc/e2b_dump.cpp): must PASS
 #   controls   (native only, on the bell-ganado exercise) voicebank, bloodswap, footpart (services/em10/em10_pres.cpp),
-#              camease, screenhalf (em10_cam.cpp): must FAIL the boundary log
+#              camease, screenhalf (em10_cam.cpp), handgrip, accnone, keepcap (em10_model.cpp): must FAIL the boundary log
 # Exit 0 when every row ends as it must, 1 when one does not, 2 when a build or a run is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -71,12 +71,14 @@ done
 EX="RE4_SVC_EXERCISE=e2b"
 for fx in bell-ganado shot-ganado; do
     d=$OUT/ex-$fx
-    run "$d/odump" odump $fx $EX && run "$d/native" native $fx $EX || { missing=1; echo "ex $fx: run failed"; continue; }
+    # bell-ganado (300 ticks) also runs the accessory and destructor steps (tick 285 and 297)
+    END=; [ $fx = bell-ganado ] && END=RE4_E2B_END=297
+    run "$d/odump" odump $fx $EX $END && run "$d/native" native $fx $EX $END || { missing=1; echo "ex $fx: run failed"; continue; }
     row "exercise e2b $fx" PASS "$d/odump" "$d/native"
 done
 d=$OUT/ex-bell-ganado
-for c in voicebank bloodswap footpart camease screenhalf; do
-    run "$d/ctl-$c" native bell-ganado $EX RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
+for c in voicebank bloodswap footpart camease screenhalf handgrip accnone keepcap; do
+    run "$d/ctl-$c" native bell-ganado $EX RE4_E2B_END=297 RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done
 [ $missing = 1 ] && { echo "e2bcheck: a run or a log is missing"; exit 2; }

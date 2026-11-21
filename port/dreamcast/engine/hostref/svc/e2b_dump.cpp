@@ -17,7 +17,9 @@
 // with and without armour, near and far, each step number for a village, a claw and a flail Ganado, every cut-in shot
 // and region, the take-away, the throw-off eye, the on-screen check) with its outputs logged, and the record is put back.
 // Controls (RE4_SVC_CONTROL, native only): voicebank, bloodswap, footpart (services/em10/em10_pres.cpp), camease,
-// screenhalf (em10_cam.cpp).
+// screenhalf (em10_cam.cpp), handgrip, accnone, keepcap (em10_model.cpp). Each tick also logs the live character and
+// object records (A), and the exercise changes the hands and head on the record as it is (XH, XD: their model infos
+// stay, as when the behaviour changes them) and runs the aiming blend once (tick 300, the record put back).
 #include "hostref.h"
 #include "model.h"
 #include "em.h"
@@ -30,6 +32,7 @@
 #include "snd.h"
 #include "emwep.h"
 #include "global.h"
+#include "motion.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -41,6 +44,7 @@ int svc4_depth(void) __attribute__((weak));
 int svc_e2_depth(void) __attribute__((weak));
 extern int em10p_control __attribute__((weak));
 extern int em10c_control __attribute__((weak));
+extern int em10m_control __attribute__((weak));
 // em10's entry points the exercise calls (the original or the engine's, by the build)
 void Em10SetSeTbl(cEm10* em, int type);
 void em10CallVoiceSe(cEm10* em, u16 no);
@@ -64,6 +68,10 @@ void em10KickHitMark(cEm10* em);
 void em10SetDmWaterEff(cEm10* em, int a);
 void em10SetWaterEff(cEm10* em);
 void em10CamMove2(cEm10* em);
+void em10HandSet(cEm10* em, int type);
+void em10HeadSet(cEm10* em, int no);
+extern "C" void em10BlendMotSet(cEm10* em, void* m0, void* m1, void* m2, int a, int b, int c, int d);
+extern "C" void em10SetAccesory(cEm10* em);
 #define P svc_out_printf
 
 int GetScreenPos(Vec* pos, Vec* scr);
@@ -121,7 +129,10 @@ void state(cEm* e, const char* tag)
     info(w->pHead), info(w->pRHand), info(w->pLHand), info(w->pRobe), info(w->pCloth), info(w->pGoods), info(w->pSack);
     info(w->pHood), info(w->pWhood);
     for (int i = 0; i < 7; i++) info(w->pAccesory[i]);
-    P(g_f, " ob %u %u cam", actor(w->pCap), actor(w->pGlasses));
+    P(g_f, " ob %u %u wp %u %u k%u bl%d,%u", actor(w->pCap), actor(w->pGlasses), actor(w->pWep), actor(w->pWeapon2),
+      w->Cap_type, w->Hokan, w->Frame);
+    len(w->blendRate), len(w->blendMot.blendRate);
+    P(g_f, " %d cam", e->blendMot == &w->blendMot);
     pv(&w->Campos);
     camera(w->Cam);
     extra();
@@ -175,6 +186,7 @@ extern "C" void e2b_est(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f
 // ---- the exercise ----
 namespace {
 int g_ex;
+unsigned g_end;   // RE4_E2B_END: the tick of the destructor step (0: none)
 alignas(16) u8 g_save[0x1000];
 alignas(16) u8 g_wep[0x800];   // a scratch weapon (cEmWep) for em10WepSeEffSet
 void plant_blood(cEm10* e, u8 wep, s16 parts)
@@ -324,6 +336,74 @@ void exercise(unsigned t)
     pSys->region = keep_region;
     CamCtrl.m_pExtraCamera = keep_extra;
     __builtin_memcpy((void*) e, g_save, n);
+    // the model parts, on the record as it is (their effect stays, as when the behaviour changes them): every 4th round
+    // up to the 40th, each hand pose with and without a weapon in hand (each grip kind), and the head (the lost head of
+    // a zealot), a handful of model infos each time
+    if (k % 4 == 0 && k < 40) {
+        cEmWep* keep_wep = w->pWep;
+        const u8 keep_wt = w->Wep_type, keep_class = w->Ganado;
+        static const u8 grips[4] = {0, 1, 4, 6};   // (12, the rocket launcher's hand, is an archive entry this room lacks)
+        w->Wep_type = grips[(k / 4) % 4];
+        w->pWep = (k & 4) ? (cEmWep*) g_wep : 0;
+        w->Hand_type = 0xFF;
+        em10HandSet(e, (int) ((k / 4) % 4));
+        w->pWep = keep_wep;
+        w->Wep_type = keep_wt;
+        state(e, "XH");
+        w->Ganado = (u8) (w->mot[4] && ((k / 8) & 1));   // the bent-neck head only where the room has its model
+        em10HeadSet(e, (int) ((k / 4) & 1));
+        w->Ganado = keep_class;
+        state(e, "XD");
+    }
+    // the aiming blend once, on the motion the Ganado plays, its record put back after
+    if (t == 300) {
+        __builtin_memcpy(g_save, (void*) e, n);
+        void* m = *(void**) MOTION(e);
+        if (m) {
+            w->blendRate = -96.0f;
+            w->Hokan = 3;
+            w->Frame = 5;
+            em10BlendMotSet(e, m, m, m, 0, 0, 0, 4);
+            state(e, "XL");
+            w->blendRate = 64.0f;
+            em10BlendMotSet(e, m, m, m, 0, 0, 0, 4);
+            state(e, "XL");
+        }
+        __builtin_memcpy((void*) e, g_save, n);
+    }
+}
+// Near the end of the run, on the record as it is (the effects stay): the village accessories a hat, a lantern and the
+// glasses ask for (RE4_E2B_END less 12 ticks, the first Ganado), and that Ganado's destructor (at RE4_E2B_END: what it
+// owns goes back to the pools; its class pointer put back so the run goes on). Only where the check asks for it (a few
+// ticks before the fixture's end: the object handed over may be the player's weapon).
+void last(unsigned t)
+{
+    cEm10* first = 0;
+    cEm10* lastg = 0;
+    for (cEm* x = EmMgr.pAlive; x; x = (cEm*) x->pNext)
+        if (ganado(x)) {
+            if (!first) first = (cEm10*) x;
+            lastg = (cEm10*) x;
+        }
+    if (!first) return;
+    P(g_f, "# e2b-last %u\n", t);
+    if (t != g_end) {
+        const u32 keep = first->flag;
+        first->type = 0;
+        first->flag |= 0x00800000 | 0x00400000 | 0x00200000;
+        em10SetAccesory(first);
+        first->flag = keep;
+        state(first, "XY");
+        return;
+    }
+    // the village Ganados of these fixtures own nothing (no weapon, no hung object): the first live object record is
+    // handed to it as its hung object, so the destructor has something to give back (both builds alike)
+    Em10Work* w = EM10_WK(first);
+    if (!w->pCap) w->pCap = ObjMgr.pAlive;
+    void* vptr = *(void**) first;
+    first->~cEm10();
+    *(void**) first = vptr;
+    state(first, "XZ");
 }
 }   // namespace
 
@@ -339,16 +419,30 @@ extern "C" void e2b_ready()
     }
     if (c && &em10c_control && !__builtin_strcmp(c, "camease")) em10c_control = 1;
     if (c && &em10c_control && !__builtin_strcmp(c, "screenhalf")) em10c_control = 2;
+    if (c && &em10m_control) {
+        if (!__builtin_strcmp(c, "handgrip")) em10m_control = 1;
+        if (!__builtin_strcmp(c, "accnone")) em10m_control = 2;
+        if (!__builtin_strcmp(c, "keepcap")) em10m_control = 3;
+    }
     const char* e = svc_env("RE4_SVC_EXERCISE");
     g_ex = e && !__builtin_strcmp(e, "e2b");
+    const char* end = svc_env("RE4_E2B_END");
+    g_end = 0;
+    for (; end && *end >= '0' && *end <= '9'; end++) g_end = g_end * 10 + (unsigned) (*end - '0');
 }
 extern "C" void e2b_tick(unsigned t)
 {
     g_tick = t;
     if (!g_f) return;
-    for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext)
+    u32 ne = 0, no = 0;
+    for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext) {
+        ne++;
         if (ganado(e)) state(e, "G");
+    }
+    for (cObj* o = ObjMgr.pAlive; o; o = (cObj*) o->pNext) no++;
+    P(g_f, "%u A %u %u\n", t, ne, no);   // the live character and object records (what the destructor gives back)
     if (g_ex && t >= 30 && t % 5 == 0) exercise(t);
+    if (g_ex && g_end && (t + 12 == g_end || t == g_end)) last(t);
 }
 extern "C" void e2b_finish()
 {
