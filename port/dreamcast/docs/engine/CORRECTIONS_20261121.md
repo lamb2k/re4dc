@@ -6,7 +6,7 @@ function runs (slot std1: not a timing tier). No console.
 
 - Old port: the Test 27.2 release, source `6e86de745` (`src/`, `include/` identical to `origin/t15/int`), recipe
   `tools/d367/build-r21.sh` plus `tools/d367/test27.2/release-knobs.txt` (Disc 1) and `release-knobs-disc2.txt` (Disc 2).
-- Engine: `origin/engine` 18e3a6f35 merged (lane eng-e2a not merged: link-check baselines FIGHT 114, BOSS 57).
+- Engine: `origin/engine` 505c4da2d merged (lane eng-e2a merged: link-check baselines FIGHT 73, BOSS 26).
 - The old port's `RE4DC_` names are called "the old port's conditionals" here; they are carried as one of three kinds:
   - **corrections:** the original code made right on this CPU (little-endian SH-4) and compiler (GCC). Built in,
     unconditional, in `engine/host/corrections.h` (included by the hosted prelude `engine/host/e1_prelude.h`) and, for
@@ -170,26 +170,29 @@ which holds the build folder's path).
 All four images link with the corrections, guards and settings (objects compiled from the commit's tree; `check_link.py`
 on each map; `evidence/part2/link/`):
 
-| Image | Original functions kept | SERVICE before (origin/engine 18e3a6f35) | SERVICE after |
+| Image | Original functions kept (allowed) before, after | SERVICE before (origin/engine 505c4da2d) | SERVICE after |
 |---|---|---|---|
-| default | allowed 384 (107,044 B to 107,008 B) | 0 | 0 |
-| FIGHT=1 | allowed 796 to 801 | 114 (42,156 B) | 114 (42,156 B) |
-| BOSS=1 | allowed 473 to 479 | 57 (17,192 B) | 57 (17,192 B) |
-| SENDABLE=1 | allowed 384 | 0 | 0 |
+| default | 384 (107,044 B), 384 (107,008 B) | 0 | 0 |
+| FIGHT=1 | 796 (354,712 B), 801 (355,544 B) | 73 (28,500 B) | 73 (28,500 B) |
+| BOSS=1 | 473 (150,368 B), 479 (151,368 B) | 26 (5,936 B) | 26 (5,936 B) |
+| SENDABLE=1 | 384 (107,044 B), 384 (107,008 B) | 0 | 0 |
 
-Lane eng-e2a was not merged: the baselines are 114 and 57, and they are not raised. The added allowed functions are the
-original code the corrections make reachable in already-allowed units.
+Lane eng-e2a is merged: the baselines are 73 and 26, and they are not raised (before the merge, against 18e3a6f35: 114 and
+57, also unchanged). The added allowed functions are original code the corrections make reachable in already-allowed
+units. Maps and lists: `evidence/part2/link-merged/` (and `link/` for the pre-merge check).
 
 ## 8. Suites, and the engine on Flycast against the new reference
 
-Suites on the new reference (`build/hostref`, CORRECTIONS=1): `svc_controls.sh` 79 rows, `camcheck.sh` 21,
-`refctl.sh` 17 (12 + the five above), `tools/plays_right/controls.sh` 18, `outcome_controls.py` 35, `aim_check.sh`
-(5 fixtures x 3 arms): every row as it must, exit 0 (`evidence/part2/suites-new/`). `e2check` is not in the tree
-(lane eng-e2a not merged). `camengine.sh` not run (section 11).
+Suites on the new reference (`build/hostref`, CORRECTIONS=1), after merging origin/engine 505c4da2d: `svc_controls.sh`
+79 rows, `camcheck.sh` 21, `refctl.sh` 17 (12 + the five above), `tools/plays_right/controls.sh` 18,
+`outcome_controls.py` 35, `aim_check.sh` (5 fixtures x 3 arms), `e2check.sh` 14 (lane eng-e2a's): every row as it must,
+exit 0 (`evidence/part2/suites-new2/`; the same suites before the merge: `suites-new/`). The fixture comparison old
+against new reference is the same after the merge (`cmp-corr2.md`). `camengine.sh` not run (section 11).
 
-One Flycast test disc from the commit e591c471a (plain slot std1 by lease; `Dynarec.Enabled` and `Sh4Clock` not set in
-the slot's emu.cfg, the defaults; a function check, never a timing): LEON, HILL, FIGHT, SHOT, SHOTNP, SHOTDMG, SHOTLATE,
-HILLT. **8 of 8 scenes OK** under the selector (`runs/d1/serial.txt`). Every scene's summary has
+One Flycast test disc, run twice: from the commit e591c471a (before merging origin/engine, `runs/d1/`) and from the
+merged head 9e7e3d61d (`runs/d2/`), plain slot std1 by lease (`Dynarec.Enabled` and `Sh4Clock` not set in the slot's
+emu.cfg, the defaults; a function check, never a timing): LEON, HILL, FIGHT, SHOT, SHOTNP, SHOTDMG, SHOTLATE, HILLT.
+**8 of 8 scenes OK** under the selector on both. The judgements below are the same on both runs (figures from d2). Every scene's summary has
 `E1 GUARDS em_must_retry 0; uncounted em_ok_skip r10c_spawn_live r117_beam_null` and the quick weapon select stub
 (`calls=1`).
 
@@ -204,10 +207,10 @@ HILLT. **8 of 8 scenes OK** under the selector (`runs/d1/serial.txt`). Every sce
 | | control: the reference with the presentation split off | FAIL | FAIL: first divergence tick 367 |
 
 Both sides moved together: the same engine run judged against the **old** reference (CORRECTIONS=0) fails SHOT at
-exactly the reference's own difference (`[position] tick 245 e=14 4.516 units`, `runs/d1/shot_engine_oldref.txt`). The
+exactly the reference's own difference (`[position] tick 245 e=14 4.516 units`, `runs/d2/shot_engine_oldref.txt`, and d1 the same). The
 shot's hit, damage and tick did not move on either side (Ganado 0x14, 800 to 500 at trace tick 162).
 
-Guard control (`runs/g2/`): the BOSS scene (timing, headless) with El Gigante's enemy-list entry 0x28 given an unhosted
+Guard control (`runs/g2/`, commit e591c471a: the hooks and the selector rule are unchanged by the merge): the BOSS scene (timing, headless) with El Gigante's enemy-list entry 0x28 given an unhosted
 kind (0x2C for 0x2B, a copy of EMLIST.BIN in RAM, staged through `BOSS_EMLIST`): r119's EM_MUST spawn is refused, the
 guard retries as the release does (23 retries in 900 ticks), the summary reads `E1 GUARDS em_must_retry 23`, and the
 selector fails the scene: **`BOSS FAILED ... why: guard taken: em_must_retry 23`**. A first attempt that dropped the
@@ -224,6 +227,8 @@ archive (`runs/g1/`) is not a clean control: the image refuses to start without 
   correction whether it is a clean candidate; `GAME`, `ROUTE_CH22`, `ROUTE_CH23` and `STAT_ROUTINE_BYTES` need care.
 - Release line (not this lane): em1f's copy of em10.cpp without the Ganado routine-byte correction (section 1).
 - eng-load1 / eng-snd1: the "belongs to an engine service" rows of the table below.
+- eng-snd1: re-check its run c1mute in slot std1 of 11:39-11:42 (this lane's runner removed the slot's disc links while
+  that run held them; hand-back, "Incident").
 
 ## 10. Evidence and how to repeat it
 
