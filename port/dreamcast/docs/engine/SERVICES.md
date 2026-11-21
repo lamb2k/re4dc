@@ -1355,3 +1355,23 @@ Details, numbers and how each body differs from the original: `lanes/eng-e1n.md`
 - **PC checks** (`hostref/svc`): exercise `campush` (the push camera on the door walk, a window planted for its door
   branch), `camexport` (a 7-key cut against a guarded buffer), controls `caminv`, `camfollow`, `camslope`
   (svc_controls.sh's camtrack row).
+
+#### 48d.1 Decision statements re-expressed in engine code (ruling H-017.10)
+
+`CameraQuasiFPS::move` is a hosted function whose body mixes decision statements with inline evaluation (the follow
+filter) and cannot be split at link without editing `src/`, so it is an engine composition
+(`engine/services/camera/cam_eval.cpp`, `CameraQuasiFPS::move`); its own decision calls stay the hosted functions
+(`checkCameraType`, `checkFBLR`, `calcDepressionRatio`). The decision statements it re-expresses, line by line
+(`allowed_original.txt` points here beside its size ceiling of 0):
+
+| `src/game/cam_qfps.cpp` | Statement | `cam_eval.cpp` |
+|---|---|---|
+| 1241 | the debug camera's flag test before `m_site = checkFBLR()` (the call is hosted) | 741-742 |
+| 1262 | the same test before `calcDepressionRatio()` (the call is hosted) | 748 |
+| 1244-1261 | `switch (m_site)`: the site's `cur` / `old` offset tables | 743-747 |
+| 1285-1291 | `switch (PlGetStatus()) case 2, 4, 8: CamSmth.m_ratio = m_walk_ratio` (the smoothing ratio while the player moves) | 754-755 |
+| 1292-1294 | `if (reset) CamSmth.m_flag \|= 1` (the smoothing snapped on a reset) | 756 |
+| 1345 | `reset = 0` | 758 |
+
+None is a function of its own in any hosted unit, so none can be a hosted call; keeping them in original object code
+would mean keeping the whole body, with the follow arithmetic (1268-1282) H-017.1 moves out.

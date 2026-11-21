@@ -91,6 +91,9 @@ typedef struct {
 } scene_t;
 static scene_t g_sc[SEL_MAX];
 static unsigned g_n;
+/* lane eng-e1n: every entry of the schedule, also those past SEL_MAX; a longer schedule is refused (main), so the run
+   never reports "N of N scenes OK" for a plan it cut */
+static unsigned g_listed;
 static uint32_t g_plan_crc;
 
 static uint32_t journal_crc(void) {
@@ -132,12 +135,13 @@ static int read_plan(void) {
     fclose(f);
     text[n] = 0;
     g_plan_crc = cl_crc32(0, text, n);
-    for (char *l = text; l && *l && g_n < SEL_MAX;) {
+    static scene_t over;   /* lane eng-e1n: an entry past SEL_MAX, read only to be counted */
+    for (char *l = text; l && *l;) {
         char *e = strchr(l, '\n');
         if (e) *e = 0;
         char *r = strchr(l, '\r');
         if (r) *r = 0;
-        scene_t *s = &g_sc[g_n];
+        scene_t *s = g_n < SEL_MAX ? &g_sc[g_n] : &over;
         int used = 0;
         if (*l && *l != '#' &&
             sscanf(l, "%15s %47s %39s %u %23s %255s %n", s->name, s->title, s->prog, &s->deadline, s->kind, s->need, &used) >= 6) {
@@ -157,7 +161,8 @@ static int read_plan(void) {
             } else if (strcmp(s->kind, "bench")) {
                 snprintf(s->plan_err, sizeof(s->plan_err), "schedule: unknown kind %.20s", s->kind);
             }
-            ++g_n;
+            ++g_listed;
+            if (s != &over) ++g_n;
         }
         l = e ? e + 1 : NULL;
     }
@@ -664,6 +669,15 @@ int main(int argc, char **argv) {
     if (!planned) {
         line_at(0, RED, "RE4DC CONSOLE DISC: NO /cd/SCENES.TXT");
         printf("CDISC no plan\n");
+        for (;;) thd_sleep(1000);
+    }
+    if (g_listed > SEL_MAX) {   /* lane eng-e1n: more entries than the selector can run: refused, nothing run */
+        printf("CDISC START %s: %u scenes, plan crc %08x\n", LOADER_BUILD, g_listed, (unsigned)g_plan_crc);
+        printf("CDISC SCHEDULE REFUSED: schedule has %u scenes, the selector runs %u\n", g_listed, (unsigned)SEL_MAX);
+        printf("CDISC SUMMARY BEGIN %s run 00000000 boots 1\n", LOADER_BUILD);
+        printf("CDISC SUMMARY END FAILED: schedule has %u scenes, the selector runs %u\n", g_listed, (unsigned)SEL_MAX);
+        vid_clear(0, 0, 0);
+        line_at(0, RED, "FAILED: SCHEDULE HAS %u SCENES, SELECTOR RUNS %u", g_listed, (unsigned)SEL_MAX);
         for (;;) thd_sleep(1000);
     }
     const int jv = J->magic == SEL_MAGIC && J->crc == journal_crc() && J->plan_crc == g_plan_crc && J->n == g_n;

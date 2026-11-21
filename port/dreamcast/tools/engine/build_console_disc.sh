@@ -93,6 +93,15 @@ log() { echo "[cdisc $(date +%H:%M:%S)] $*"; }
 COMMIT=$(git -C "$REPO" rev-parse --verify "$REF^{commit}")
 SHORT=$(git -C "$REPO" rev-parse --short=9 "$COMMIT")
 log "checkout $REF = $COMMIT"
+# lane eng-e1n: the selector runs at most SEL_MAX scenes (engine/loader/selector.c, as REF has it); a longer list is
+# refused here, before anything is built (no disc). The selector refuses such a SCENES.TXT itself too.
+SELMAX=$(git -C "$REPO" show "$COMMIT:port/dreamcast/engine/loader/selector.c" | sed -n 's/^#define SEL_MAX \([0-9][0-9]*\).*/\1/p')
+NSCENES=$(echo "$SCENES" | tr ',' '\n' | grep -c .)
+[ -n "$SELMAX" ] || { echo "build_console_disc: SEL_MAX not found in $REF's engine/loader/selector.c" >&2; exit 1; }
+if [ "$NSCENES" -gt "$SELMAX" ]; then
+  echo "build_console_disc: --scenes names $NSCENES scenes, the selector runs at most $SELMAX (SEL_MAX): refused, no disc" >&2
+  exit 1
+fi
 git -C "$REPO" archive --format=tar "$COMMIT" | tar -x -C "$SRC"
 SZP=port/dreamcast/game/third_party/sh4zam
 SZC=$(git -C "$REPO" ls-tree "$COMMIT" "$SZP" | awk '{print $3}')

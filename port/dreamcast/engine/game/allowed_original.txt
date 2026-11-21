@@ -76,6 +76,8 @@ game/rnd *
 #   round, to which side) and reaches its inverse, transforms and swing through the camera service (game/Makefile
 #   binds cam_extra's matrix calls to the service): its size today is the ceiling, and the unit may not reference the
 #   SDK's matrix functions those calls replaced.
+#   The decision statements CameraQuasiFPS::move's engine body re-expresses (ruling H-017.10): docs/engine/SERVICES.md
+#   48d.1, "decision statements re-expressed in engine code", line by line.
 =game/cam_qfps CameraQuasiFPS::move* 0
 =game/cam_extra CameraPushObject::move* 924
 -game/cam_extra PSMTXInverse PSMTXMultVec PSMTXMultVecSR PSMTXIdentity MtxRotAxisPosRad
