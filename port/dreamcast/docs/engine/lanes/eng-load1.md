@@ -36,3 +36,82 @@ Line numbers are `src/` on `engine` (the same on `t15/int` for these files).
   ruling, as H-017.10 asks): listed at the head of `core/room_change.cpp`.
 - **Not supplied (not hosted in E1):** the fade (effects not drawn), the door sound, `Dvd.ReadCancelAll` (the engine
   has no reads in flight in play), the disc change, the save, the room script and the enemy set of the new room.
+
+## 3. The loading state, memory and the round trip
+
+`CONSOLE_LOOP.md` section 14 (the state and its record), `SERVICES.md` section 50 (what each service returns). Flycast
+(plain build, slot std2, a function check; no timing claim), the DOOR scene, run 4 (`E:\RE4DC-Lanes\eng-load1\ev\run4`):
+
+| Load | At tick | Time | Held fields | Loading disc: opens / reads / drive requests |
+|---|---:|---:|---:|---|
+| village (r101) to farm (r103) | 51 | 304,910 us | 19 | 2 / 7 / 10 |
+| farm to village | 141 | 294,571 us | 18 | 2 / 7 / 10 |
+
+Play's disc counters 0 / 0 / 0; ticks per visit 51, 90, 119. The memory marks when each room is ready:
+
+| Mark | KOS heap in use | Behaviour arena in use | Video memory free | Collision pieces | Skeleton tables |
+|---|---:|---:|---:|---:|---:|
+| village, first (taken before the field counter: see below) | 9,574,000 | 524,192 | 2,639,720 | 2 | 2 |
+| farm | 9,559,944 | 768,736 | 2,639,720 | 3 | 2 |
+| village again | 9,574,024 | 524,192 | 2,639,720 | 3 | 2 |
+
+Every load step returns what its room took (`E1 LOADSTEP`: the KOS heap after each step; village left at 9,574,024, back
+at 9,574,024). What the round trip still shows:
+- **24 B** on the KOS heap: KOS's vblank handler node (`vblank.c` `vblank_handler_add`), registered once when the
+  field counter starts, after the first marks were taken (`E1 KOSGROW tick 1 +24`). The first marks now come after the
+  counter's start, where every later room's are taken (commit 1153bce55; the equality is unchanged). **Run 5 (the final
+  code, `ev/run5`): `E1 ROUNDTRIP rooms 101>103>101 loads 2 failed 0 kos-used 9574024/9574024 arena-used 524192/524192
+  vram-free 2639720/2639720 col-pieces 2/3 skel-tables 2/2: LEAK col-pieces`**: the KOS heap, the behaviour arena and
+  video memory return exactly; the collision pieces do not (R2). Loads 304,924 and 294,585 us, 19 and 18 fields held,
+  2 / 7 / 10 each; play 0 / 0 / 0; plays right 260 of 260 bit-identical again.
+- **Collision pieces 2 to 3**: the collision service has no release entry (R2); the village's pieces stay registered and
+  its tables stay carved.
+- Video memory does not move because the renderer has no pack close / reopen (R3): the farm is drawn with the village's
+  pack (a logged stub). Not exercised.
+
+Three memory faults the DOOR scene found (each failed loudly, none hung):
+1. **The farm's bake beside the village** (run 2): staged as `FARM.PAK`, the bench's farm bake makes the renderer size
+   its resident block 1,883,520 B larger (it sizes from `CROSS.PAK` and `FARM.PAK`); the KOS heap then reached 1,466,368 B
+   into the behaviour arena before any door (199 overlaps in `E1 MEM`; LEON on the same disc: +417,792 B). Now staged as
+   `R103.PAK`; the renderer's sizing is a request (R3).
+2. **The room archive on the KOS heap** (run 3): the farm's compacted archive (598,368 B) could not reuse the village's
+   freed block (353,824 B); sbrk grew 180,224 B past the arena's start and overwrote the new room heap's header (`ARENA
+   alloc FAILED heap 4`, `E1 LOAD FAILED 0 room 101>103: player not created`). Fixed in `core/loader.cpp` as the
+   original does it (`read.cpp decodeData`: the room archive on the room heap): LEON's margin 417,792 -> 774,144 B, the
+   hill's 290,816 B (about 115 KB before, eng-e1p), heap 4 524,192 / 503,744 B of 2.75 MB; LEON and HILL OK.
+3. **The services region** (runs 2 to 4): 1 MB = the skeleton pool (256 KB) and the carve. The village's collision tables
+   take 470,240 B; the farm's two pieces need 271,008 + 599,328 B. Without a release (R2) the second farm piece is refused
+   (`carve refused 599328`); even with it, pool and farm tables (1,132,480 B) are 83,904 B over the region. The farm walk
+   never queried the refused piece (one refusal, no late bake), so play matched the reference; other paths in the farm
+   would lack that collision.
+
+## 4. The read-safety wrappers
+
+`core/disc_safe.c`, `SERVICES.md` section 50. Check CDISCF (runs 2 and 4): the first DMA transfer of the first load
+reported done without the transfer; `E1 DISCSAFE ... not-landed 1 fallbacks 1 latched 1`, the sector read again ("1
+sectors at 514556 read again: ok"), both loads completed (run 4: 0.738 s and 0.597 s with sector reads only, 21 and 23
+drive requests against 10). Every clean scene: `marked` about 1,550 DMA reads, `not-landed 0`, `latched 0`. The
+stale-flag recovery and the not-ready wait are not exercised by any scene (no Flycast input makes KOS refuse a stream
+request or the drive report not ready): console questions.
+
+## 5. The DOOR scene
+
+Fixture `tools/plays_right/fixtures/door-r101-r103.txt` (engine `/cd/DOOR.TXT` and re4ref): the village square's door to
+the farm path (r101 AEV area 2, the action key) and back (r103 area 0). Tolerance stated before running: `tolerances.json`
+unchanged (position 1 unit per axis, angles 1 degree, motion frame and state exact, discrete hash exact, generator exact).
+
+| Check | Run 4 | Control (must fail) |
+|---|---|---|
+| Plays right (`plays_right.py`, p a mf ms ps; rng) against re4ref | **260 of 260 ticks, every field bit-identical** (both doors) | re4ref walk-speed=1.02: diverges tick 12 (1.37 units); shift-input=1: tick 10 (ps) |
+| Door requests against the rooms' areas (`door_check.py`) | 2 of 2 PASS on the engine's trace and on re4ref's | early=20: FAIL (A not pressed); at0: FAIL (front point outside) |
+| Both rooms ran ticks; loads; play disc 0 | 51 / 90 / 119; 2 of 2; 0 / 0 / 0 | CDOORPK (farm archive absent): FAILED "E1 load: missing /cd/st1/r103.arc", exit 1, 11 rows, no hang; CDOORRD (read 10 ticks after the door): FAILED "disc in play: opens 0 reads 1 sectors 1" |
+| Round trip | run 4: LEAK kos-used 24 B (the vblank node, before the marks' fix); run 5: **LEAK col-pieces 2/3** (R2), KOS heap, arena and video memory equal | CDOORLK (4 KiB kept), run 5: FAILED LEAK kos-used, 9,574,024 / 9,578,128 (+4,104 B) |
+
+Run 2 (before fault 2's fix, the archive on the KOS heap) diverged at tick 142: back in the village Leon stayed at y
+3201.47 against 3101.38, because the returning village's collision tables were refused by the full carve.
+
+## 6. Requests, stubs, what is not done
+
+In the hand-back (`E:\RE4DC-Lanes\eng-load1\HANDBACK.md`): R1 the area check in the default image, R2 the collision
+release and the services region's size, R3 the renderer's pack close / reopen and its resident sizing, R4 the farm pack's
+HUD fix. Logged stubs: the planted door request (R1), the collision and renderer entries (R2, R3).

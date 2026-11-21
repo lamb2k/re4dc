@@ -1482,8 +1482,8 @@ Status: finished, unaudited. Lane note: `lanes/eng-load1.md`; the loading state'
 |---|---|---|
 | Skeleton | `cModel::releasePartsList(0)` on each table's model (`services/skeleton`, existing entry) | every skeleton table of the room's actors (`skel_table_count` 0) |
 | Collision | `col_room_release()` (weak; **missing**: request R2 to the collision service's owner) | the room's pieces and their tables (carved from the services region, "never freed in E1") |
-| Renderer | `e1_draw_close_c()` / `e1_draw_reopen_c(pack)` (weak; **missing**: request R3 to the renderer's owner) | the room's pack state and textures in video memory; the next room's pack (`/cd/FARM.PAK` for r103) |
-| Room archive | `e1_room_release()` (`core/loader.cpp`) | the compacted `st1/rNNN.arc` (CAM SAT EAT CNS RTP AEV) |
+| Renderer | `e1_draw_close_c()` / `e1_draw_reopen_c(pack)` (weak; **missing**: request R3 to the renderer's owner) | the room's pack state and textures in video memory; the next room's pack (`/cd/R103.PAK` for r103: not `FARM.PAK`, one of the two packs the renderer sizes its resident block from) |
+| Room archive | `e1_room_release()` (`core/loader.cpp`) | the compacted `st1/rNNN.arc` (CAM SAT EAT CNS RTP AEV), on the room heap as the original places it (`read.cpp decodeData`); on the KOS heap the farm's copy pushed sbrk into the behaviour arena |
 | Room heap | `e1_room_heap_create(4)` (`host/e1_heap.cpp`, existing) | heap 4 made again: every manager array and room record |
 | Camera tracks | `cam_track_room_load` (`services/camera`, existing) | the last room's track store freed when the next is converted (load work) |
 | Core, player, weapon archives | kept (not room data; the core archive is now loaded once, `core/loader.cpp`) | - |
