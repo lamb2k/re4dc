@@ -2,7 +2,7 @@
 
 Only the integrator edits this file. Keep it under 80 lines.
 
-**State (2026-11-20, evening):** plan version 3 APPROVED by the owner (H-012); technical decisions are the integrator's (H-013, rulings in H-014). Current steps: 1 (console evening, waits for the owner's SD card) and 2 (pass E1). One lane running. The machine stalled for seven hours on 11-20 (WSL disk file at the NTFS fragment limit, H-014): builds go to RAM, C: is checked before every build. Everything is "finished, unaudited" until its audit and console run.
+**State (2026-11-21):** plan version 3; technical decisions are the integrator's (H-013). **No console run until the replatform is complete (the owner, H-021):** nobody asks the owner for a console evening; milestones proceed, and speed is judged by a defensive model (the interpreter Flycast with `Sh4Clock` calibrated on the old port's console numbers, plus cost read from the code). A milestone on the model is "finished, modelled, not on console"; its console run is deferred, not waived. E1's code side has been through four audits (H-011, H-016, H-017, H-018). At most two lanes.
 
 ## Milestones
 
@@ -33,7 +33,16 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 | Lane | Work | Branch | Agent | Evidence |
 |---|---|---|---|---|
-| (no lane) | Step 2 waits on the console evening (the owner's SD card and a date). The disc and its run sheet are ready; the next independent audit is on the console logs (H-018). Step 3 does not start before it | - | - | - |
+| eng-e2a | Step 3 (pass E2), work that does not depend on the console (H-020): the fight image's 114 original service functions native (enemy hit geometry, damage volumes, areas, the Ganado's service functions, scene attachments), judged by outcome on the PC reference | lane/eng-e2a | Claude Opus | E:\RE4DC-Lanes\eng-e2a |
+| eng-cmp1 | Measurement only (owner 11-21, H-019): the old port and the new engine on the same three scenes in the same Flycast, measured the same way, with what each side draws and runs; no change to either | lane/eng-cmp1 | Claude Opus | E:\RE4DC-Lanes\eng-cmp1 |
+| eng-draw1 | Drawing first (H-023, H-024): where the 26 to 37 ms of drawing goes, phase by phase, on the calibrated tier, and ranked options to reach the 14 ms row. Measurement and lab arms only; owns counters in `render/`, `bench/` | lane/eng-draw1 | Claude Opus | E:\RE4DC-Lanes\eng-draw1 |
+| eng-svcspd1 | The services row on the calibrated tier (hill 17.8 ms against 9): the account by group, then fixes with play unchanged; owns `services/skeleton`, `collision`, `cloth` | lane/eng-svcspd1 | Claude Opus | E:\RE4DC-Lanes\eng-svcspd1 |
+| eng-look1 | Leon's handgun drawn whenever the old port draws it (still check, still pairs), then the muzzle flash as the first effect on a budget; owns the actor and weapon drawing inputs | lane/eng-look1 | Claude Opus | E:\RE4DC-Lanes\eng-look1 |
+| eng-bake1 | PC only: every chapter 1 room through the engine's bake, failures fixed or listed, and a per-room census for the drawing redesign; owns `bake/` | lane/eng-bake1 | Claude Opus | E:\RE4DC-Lanes\eng-bake1 |
+| eng-snd1 | Sound in the engine (H-025.1): the AICA layer lifted, the original sound driver hosted under a waiver with a cost ceiling, the same sound requests as the reference, cost on the calibrated tier; owns a new `services/sound/` and `game/sound.mk` | lane/eng-snd1 | Claude Opus | E:\RE4DC-Lanes\eng-snd1 |
+| eng-load1 | Room-to-room loading through a door: a loading state, memory returned and reused, disc access only while loading, a DOOR scene judged against the reference; owns `core/loader.cpp`, a new `core/room_change*`, `core/disc_safe*` | lane/eng-load1 | Claude Opus | E:\RE4DC-Lanes\eng-load1 |
+| eng-fix1 | Reading and PC runs: the `RE4DC_` fixes inside `src/` that the release builds on and the engine builds off (148 by the salvage count), classified, with the set to switch on and what it changes on the fixtures. No build change | lane/eng-fix1 | Claude Opus | E:\RE4DC-Lanes\eng-fix1 |
+| eng-int | The integration lane (H-024): gates each handed-back lane to `GATE.md` and is the only one that merges into `engine` | - | Claude Opus | E:\RE4DC-Lanes\eng-int |
 
 Closed: eng-e1d (Opus), handed back 11-20, merged (fded11182, resolved with eng-e2: draw order Ganados, Leon, Ashley; per-model palette check; per-character light records; FIGHT=1 keeps cloth stubs). The fight image now follows the aim-sway ruling, so its trace differs from eng-e2's run from tick 13 (identical for 900 ticks with AIMSWAY_PRESENT=1). Look calls open: Leon's chapter-2 body browner, Ashley's hair opaque, hill props and handgun not drawn.
 
@@ -91,12 +100,13 @@ Merged 11-21, finished, unaudited: eng-e1n (the shoulder camera's follow filter 
 
 Merged 11-21, finished, unaudited: eng-e1p (the fourth audit's four items: every motion cut of a room is exported and converted when the room loads, 21,920 B for the village's 11 cuts and 32,480 B for the hill's 10, a cut switch in play is a lookup and conversions in play fail a scene; the constructor honours a refused export before it reads anything, four cases with guards checked after a move; the selector matches every judged line whole, cross-checks the image's tick and field counts against the rows received, and reads the schedule to its end; disc reads on /cd handles and drive sector requests are counted beside opens, every clean scene 0 / 0 / 0. Integrator gate: four images link, 0 / 114 / 57 / 0, no tolerance changed, svc_controls 79/79, controls.sh 18/18, outcome_controls 35/35, camcheck 21/21, refctl 12/12, and on the lane's Flycast logs against a reference built at the gate: hill, shot, camera with their controls). **Watch on the console:** main memory after play is tighter, the hill ends with about 115 KB of arena margin in Flycast (168 KB before). Not covered: an event camera file opened in play would convert when made (none in E1; it would be counted and fail).
 
+**First calibrated model, 11-21 (lane eng-cmp1, not yet gated): the engine does not hold the floor.** The console build's dynarec at `Sh4Clock` 70 reproduces the old port's console means at the four heavy benchmark spots within about 3% (the interpreter ignores `Sh4Clock`). At that clock, MODELLED (calibrated on the old port): village route 28.9 a second, work 34.2 mean / 44.8 worst ms, drawing 27.0; hill 18.3, work 55.0 / 63.1, drawing 36.8, services 17.8; fight 24.2, work 37.1 / 53.6, drawing 25.6, services 10.6; the bench's world alone 27 to 32. Behaviour 0.2 to 0.8. Drawing is about twice its 14 ms row: a drawing redesign comes before hosting more (ENGINE_PLAN section 7, "over 20 ms"). Caveat: the clock is fitted on the old port's code. Look fault found by the owner: Leon's handgun is drawn in the first picture only.
+
+Merged 11-21, finished, unaudited: eng-salv1 (the old port inventoried for the replatform, 54 rows: REUSE 17, ADAPT 17, NATIVE 11, DROP 9, ALREADY 21; expectations checked: disc loading, the movie player and the memory card layer lift, but sound's driver logic and the save screen are original code; 148 behaviour fixes inside src/ are built off in the engine today and need an audit; data exists for 106 rooms' worlds, 97 rooms' casts and 114 movies, 4 rooms in engine form; revised sizes, all low confidence: step 3 6 to 9 rounds (9 to 15 with a drawing redesign), step 4 22 to 36, step 5 30 to 55. Integration gate: documents only, five cited facts checked against the code by file and line)
+
 ## Waiting on the owner
 
-- Renderer look: the still sheet `E:\RE4DC-Lanes\eng-e1l\ev\cam\sheet-renderer.jpg` (before and after the near plane fix) needs the owner's yes.
-- HUD look: the still sheet `E:\RE4DC-Lanes\eng-e1i\ev\hud\hud-sheet.jpg` (old game, before, after) needs the owner's yes.
-- Input feel on the console: the fixed-field pacer adds one picture of delay; the PACETMU arm is the comparison.
-- The console evening: the SD card (step 1).
-- Asset source for step 6 (beyond the PS2 version).
-- El Gigante's lighter PS2 body: yes or no.
-- Disk space (H-014): C: and D: are 97% full. The cure for the WSL disk file is a fresh copy, which needs about 420 GB free on one volume or a new drive. No Compact-WSL until then.
+- Look, when the owner chooses to look (still sheets, no disc): the HUD (`E:\RE4DC-Lanes\eng-e1i\ev\hud\hud-sheet.jpg`), the near plane fix (`E:\RE4DC-Lanes\eng-e1l\ev\cam\sheet-renderer.jpg`), the overall picture (`E:\RE4DC-Lanes\eng-e1o\ev\look\sheet-e1.jpg`), old port beside engine (`E:\RE4DC-Lanes\eng-cmp1\ev\stills\sheet-cmp1.jpg`).
+- How many code lanes at once (the rule is two; the integrator recommended three).
+- Asset source for step 6 (beyond the PS2 version); El Gigante's lighter PS2 body: yes or no.
+- Not asked for: a console evening or the SD card (H-021). Done 11-21: the WSL disk file compaction (H-023).

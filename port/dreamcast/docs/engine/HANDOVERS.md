@@ -2,6 +2,87 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-025 (2026-11-21): rulings from the salvage inventory and the comparison; three more lanes
+
+- **From:** the integrator. Authority: H-013. Sources (handed back, not yet gated): `E:\RE4DC-Lanes\eng-salv1\SALVAGE.md` (lane/eng-salv1 3e11ed9dd), `E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` (lane/eng-cmp1 68007ec63).
+- **What the salvage inventory says** (54 rows; to be checked by the integration lane): the engine's bake already reads the old port's converted PS2 data (106 rooms, character packages for 97 rooms, 114 cutscene movies), so chapter 1 needs no re-conversion; Dreamcast-written parts carry over with changes (disc fixes, the AICA sound layer, the movie player, memory-card saves and screen, the crash screen, the warp and QA tools); nothing of the old drawing carries over; every room's bake needs a recording of the old game in that room; the inventory screens need 3 MB the Dreamcast does not have spare; 148 released fixes are switches inside `src/` that the engine builds off; the script scheduler is not hosted. Its sizes (low confidence): step 3 9 to 15 lane rounds with the drawing redesign, step 4 22 to 36, step 5 30 to 55.
+- **Rulings:**
+  1. **The sound driver is hosted under a waiver.** `src/game/snd_main.cpp` and its units are the original's sound service. They are hosted on the lifted AICA layer rather than rewritten: they make the game sound as the GameCube version does, they use their own random generator, and they are expected to be cheap. The link check prints them as waived. The waiver holds while sound costs under 1.0 ms a picture mean and 2.0 ms worst on the calibrated tier; over that, a native sequencer is ruled on. This is the first waiver of "no original service code"; another needs its own ruling.
+  2. **The engine keeps game time.** The comparison shows that when a picture is late the engine slows the game (61% of game speed on the hill at the calibrated clock) where the old port drops pictures and keeps game time (76%). The player's test needs game speed held: when work for a picture overruns, the next tick runs without drawing, within a bound. A lane takes this after the drawing options are in, because the two interact; until then every modelled figure states game speed beside pictures a second.
+  3. **The calibration is a band.** The standard build calibrated the same way (104 MHz) agrees with the console build at 70 MHz on the old port within 2.4% but reads the engine 6 to 10% kinder. Quote the console build at 70 as the pessimistic end and say the band.
+  4. **Recordings of the old game are a bake input.** The old port stays buildable and runnable for that purpose (a source of parts, never tuned). Lane eng-bake1 lists which chapter 1 rooms lack one and what a recording must hold; a recording lane follows.
+  5. **The released fixes inside `src/`** are audited by lane eng-fix1 before any are switched on in the engine; the integrator rules on the set.
+  6. **Leon's handgun:** the packs hold no weapon model. Lane eng-look1 owns one new bake script for weapon models and their catalogue entries; lane eng-bake1 owns the rest of the bake; neither changes the pack format.
+- **Can start now, by the inventory:** the scheduler, sound, disc safety, loading and modules, the fix audit, saves, the memory-card screen, the crash screen, room recordings, route-movie decode. **Waits for the renderer redesign:** room bakes in their final form, the weapon model's final form, effects, sky, water, shadows, the menu and inventory renderer, the video-memory layout.
+- **Lanes added:** eng-snd1 (sound), eng-load1 (room-to-room loading through a door), eng-fix1 (the fix switches). Next in the queue: the scheduler, saves and the crash screen, route movies, room recordings, the game-time pacer.
+
+## H-024 (2026-11-21): the owner: as many lanes as possible, with an integration lane, none redundant
+
+- **From:** the owner, in conversation. **The owner's words:** "Run as many as possible with an integration lane as long as they aren't redundant". It replaces the limit of two lanes set after the 11-20 stop.
+- **How it is run (the integrator's rulings):**
+  1. **Ownership instead of a count.** Every lane's brief names the files it owns and the one question it answers. No two lanes own the same files or the same fault. The lanes table in STATUS.md is the register; a lane that finds it overlaps another stops that part and says so.
+  2. **One integration lane** (`eng-int`, standing instructions `E:\RE4DC-Lanes\eng-int\GATE.md`) gates each handed-back lane, one at a time, and is the only one that merges into `engine` and adds the "Merged" note to STATUS.md. It does no lane work, fixes nothing in a lane and rules on nothing: a failed gate comes back to the integrator. The integrator still reads each gate report, rules, briefs and writes the hand-overs.
+  3. **One common brief** for what is the same in every lane (`E:\RE4DC-Lanes\COMMON-BRIEF-20261121.md`): rules, machine, suites, Flycast slots by lease (a `LEASE.txt` in the slot), hand-back.
+  4. **The machine is the limit:** 8 cores shared with two other projects (about 90% busy when this was written), 40 GB for WSL including RAM builds, four Flycast slots. Lanes build with `-j4`, one image at a time; C: under 40 GB or E: under 20 GB stops a lane.
+  5. **The drift guard that replaces the count:** nothing merges without the gate; a lane's summary is still a claim; H-023's "drawing first" stands for what hosting waits on.
+- **Lanes now:** eng-e2a (fight services), eng-cmp1 (comparison and calibration, finishing), eng-salv1 (salvage inventory), and new: eng-draw1 (drawing cost and options), eng-svcspd1 (services cost and fixes), eng-look1 (the handgun, then the muzzle flash), eng-bake1 (chapter 1 rooms through the bake, census), eng-int (integration). Queued until the salvage inventory and the drawing options are in: room-to-room loading and doors, sound, items.
+
+## H-023 (2026-11-21): the disk shrink done; the first calibrated model; the owner on effects and the handgun
+
+- **From:** the integrator and the owner. Authority for the rulings: H-013.
+- **The WSL disk file is compacted** (the owner: "Yes shrink now."; all three sessions parked first). `ext4.vhdx` 414.5 GB to 304.4 GB; NTFS fragments 1,291,166 to 729,202; C: free 25.6 GB to 145.4 GB; Ubuntu up, fsync writes pass, 0 storvsc errors, the repository intact. Script and log: `E:\RE4DC-Lanes\reassess19\relaunch\wsl-compact6.ps1`, `wsl-compact6.log`. The machine rules stay (RAM builds, C: and E: checked before builds): C: fell from 50 GB to 25 GB in about 12 hours and only part of the cause was found (WSL's swap file).
+- **The calibrated model corrects H-021.** The interpreter build ignores `Sh4Clock`, so it is not the strict tier. The calibrated tier is **the console build's dynarec at `Sh4Clock` 70** (fitted by lane eng-cmp1 on the old port's five console benchmark spots: match clocks 70.9 to 75.7 MHz on the four heavy spots, 97.5 on the quiet view; the standard build needs about 104). Tier label: MODELLED (console-build dynarec at 70 MHz, calibrated on the old port).
+- **What it says** (lane's figures, to be gated): the engine holds the floor nowhere fully: village route 28.9 pictures a second, fight 24.2, hill 18.3. Drawing is 26 to 37 ms against a 14 ms row; services 7 to 18 against 9; behaviour under 1. In plain Flycast the old port needs 1.3 to 1.6 times the engine's work on the same scenes, with the engine drawing and running less.
+- **Rulings:**
+  1. **Drawing first.** The plan's own rule for "over 20 ms at the cross" applies: a drawing redesign round before hosting more of the game. Next lane after eng-cmp1: where the drawing time goes, phase by phase, on the calibrated tier (visibility, skinning, transform and light, clipping, submission), then options with their modelled gain. Lanes already running (the fight image's services, the salvage inventory) finish; no new hosting lane starts before the drawing options are in.
+  2. **E1's milestone audit** waits for a drawing design that fits the row on the model; auditing a floor the model says is missed would only confirm it.
+  3. **The handgun.** Leon's handgun is drawn in the first picture and not after (the owner saw it in the side-by-side sheet; the first audit listed it; lane eng-e1o's note that it "is drawn" was wrong and the integrator repeated it). Top of the look fixes, ahead of any effect.
+- **The owner on effects (2026-11-21):** "We should probably be selective with the effect layer if we are getting these gains without them." Read as: effects are not brought over as a layer. Each is added on its own with its modelled cost and a still pair: gameplay feedback first (muzzle flash, hit blood, enemy weapons), then scene-defining ones (the village pyre), then ambient ones only if the budget allows. The owner approves the look from stills.
+- **To correct in the rule documents** (LANES.md section 3, AGENTS.md rule 3, the test-rig skill): "strict Flycast" means the console build's dynarec at the calibrated clock, not the interpreter.
+
+## H-022 (2026-11-21): the rule documents follow H-019 to H-021; E1's milestone audit
+
+- **From:** the integrator. Authority: H-013; the owner asked "do we need to update agent.md etc?" and said "Fix it".
+- **Done:** `AGENTS.md`, the repository `CLAUDE.md`, `CODEX.md`, `ENGINE_PLAN.md` (version 3.1: a dated Amendments section, superseded sentences marked, none deleted) and `LANES.md` now carry the owner's directions of 2026-11-21 and the gate and audit rules of H-014 to H-021. Outside the repository: the workspace `CLAUDE.md`, `OPT-TRACK.md` and the four skills (re4dc-engine, re4dc-engine-lane, re4dc-engine-audit, re4dc-test-rig).
+- **Rulings made while doing it:**
+  1. The half-budget rule stays for uncalibrated figures (plain Flycast, the PC model before it is re-fitted). A calibrated strict-Flycast figure is judged on its worst case against the full row at the defensive clock.
+  2. Step 6 starts when chapter 1 holds the floor on the calibrated model; each enhancement is still the owner's to approve from stills or a clip.
+  3. "Behaviour code itself is not rewritten" is the default; a decision function goes native only where the model shows it hot, with the outcome check, and each case is ruled here.
+  4. A lane that changes a Flycast slot's settings keeps the original, restores it before hand-back, never touches a slot another lane uses, and logs `Dynarec.Enabled` and `Sh4Clock` with every number.
+- **E1's milestone audit** (replaces H-018's "on the console logs"): once the calibration exists (lane eng-cmp1) and the E1 scenes have calibrated figures, one Codex audit judges E1 on the code, the gates and the model. If it passes, E1 is "finished, modelled, not on console".
+
+## H-021 (2026-11-21): the owner: no disc until the replatform is complete; model the console ourselves
+
+- **From:** the owner, in conversation. **To:** the integrator and lanes.
+- **The owner's words:** "I don't want to look at a disc until we've coloelrter the replatforming - you can tell by the code where complexity is. You can also use a stricter emulator build for Flycast look that up so you can do Your own defense modeling."
+- **The integrator's reading:**
+  1. No console evening, SD card or date is asked of the owner while the replatform (plan steps 2 to 5) is under way. A milestone's console run is deferred, not waived; a milestone that has its audit and its model is "finished, modelled, not on console", never "done".
+  2. Speed is judged meanwhile by a **defensive model**, with every number labelled:
+     - **strict Flycast:** the interpreter build (`Dynarec.Enabled = no`; this project's console-like slots `fly1`, `fly2`) with the upstream `Sh4Clock` option (`[config] Sh4Clock`, MHz, default 200; in upstream since v2.2, ours is v2.7-14-g12bb43652). The clock is calibrated on the old port: its five benchmark scenes have real console means (Test 27.1), so the clock at which Flycast reproduces each is measurable. The lowest clock any scene needs is the defensive clock; the spread across scenes says how far one factor can be trusted;
+     - **cost read from the code:** per-picture counts (vertices, bones, queries, draw calls, bytes touched) from the images' own counters and the PC hardware model (the MODELLED tier, known to under-read the console by 1.3 to 2 times: to be re-fitted on the same five scenes);
+     - a figure passes its budget row only with margin: the model's worst case, not its mean, against the row.
+  3. Where the code says the cost is (the hill's drawing, over its 14 ms row in plain Flycast) is where speed work goes, judged on the defensive model. H-020's "speed waits for the console" is replaced by "speed waits for the calibrated model".
+  4. What the model cannot see is listed with every modelled number: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing. Those stay console risks until the deferred run.
+- **Work:** lane eng-cmp1 adds the calibration (the old port's benchmark scenes in the strict Flycast at several clocks, then the engine's scenes at the defensive clock). The one console disc stays on the shelf, rebuilt when a milestone closes on the model.
+- **Unchanged:** the owner still approves look steps (from stills), asset sources, releases and admin steps on the machine.
+
+## H-020 (2026-11-21): the hold on step 3 is withdrawn
+
+- **From:** the integrator, after the owner asked "Have we really gotten as far as the replatform can go?". Authority: H-013.
+- **Ruling:** H-017 and H-018 said step 3 would not start before the owner had seen E1 on the console. That was stricter than the plan, which says that when the console is not available work moves to things whose value does not depend on timing (ENGINE_PLAN section 7). The hold is withdrawn for such work.
+- **What may run without the console:** native services for the fight and boss images (judged by link check and by outcome against the PC reference); hosting of game systems chapter 1 needs (room loading, doors, items, sound, events); the look items the owner approves from still pairs.
+- **What still waits for the console:** anything about speed (the hill's drawing is over its 14 ms row in Flycast), content cuts, pacing and input feel. No model-only speed round.
+- **Limits unchanged:** at most two lanes; every merge through the integrator's gate; E1 is "finished, unaudited" until its console run and the audit on its logs.
+- **Now:** lane eng-e2a (the fight image's 114 service functions) beside lane eng-cmp1 (measurement).
+
+## H-019 (2026-11-21): the owner on comparing with the old port
+
+- **From:** the owner, in conversation. **To:** the integrator and lanes.
+- **The owner's words:** asked "How does the new engine compare to the old engine" and "Why aren't we comparing apples to apples?", then: "We don't want to get stuck in the exact loop and we need a brand new architecture. But customers need to know how much faster the game will run."
+- **What it changes (the integrator's reading):** the 11-19 rule stands: no lane improves, tunes or profiles the old drawing path, and the engine is judged on the absolute budget. Added: the old port may be measured as a baseline beside the engine, on the same scenes, the same machine tier and the same measure, with what each side draws and runs stated beside the number. Nothing chases exact agreement between the two.
+- **Customer-facing speed claims** need a console number and the owner's OK before anything is posted. An emulator ratio is labelled as one.
+- **Work:** lane eng-cmp1 (Flycast, measurement only) now; the console evening measures both on hardware (the lab disc already holds the old game with per-picture intervals).
+
 ## H-018 (2026-11-21): E1 fourth audit (Codex): not passed, four items; integrator rulings; no fifth paper audit
 
 - **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1d\AUDIT-E1D.md` (audited `51405fc87`; the staged disc is built from it).
