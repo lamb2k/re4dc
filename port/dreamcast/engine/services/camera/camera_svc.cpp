@@ -768,10 +768,13 @@ extern "C" {
 u32 cam_track_limit = kRoomStoreMax;   // the room store's ceiling; lab arm CAMSTORE (control): lower
 
 
-// The room's motion cuts (type 6 or 7) of one camera data block (relocated), in file order.
+// The room's motion cuts (type 6 or 7) of one camera data block (relocated), in file order. Only a "B402".."B404" block
+// has cuts in this layout, relocated by calcAddr: anything else (the core's "EMPT" placeholder in the E1 images, an older
+// version calcAddr leaves as offsets) has none to convert (lane eng-e1p: the first runs read the E1 images' core
+// placeholder as cuts and refused its garbage).
 static u32 room_motion_cuts(const void* cam, CameraCut** out, u32 max)
 {
-    if (!cam) return 0;
+    if (!cam || cameraDataVersion((char*) cam) < 2) return 0;
     const CameraDataHeader* h = (const CameraDataHeader*) cam;
     CameraAreaRec* rec = (CameraAreaRec*) (h + 1);
     CameraAreaInfo* area = (CameraAreaInfo*) (rec + h->numArea);
