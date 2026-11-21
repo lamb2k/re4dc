@@ -564,9 +564,11 @@ extern "C" void snd_svc_report(void)
         e1_log("E1 SOUND worst picture %lu: audio steps %u (%lu us, longest %u us), game calls and SndWatcher %u us\n",
                (unsigned long) wpic, g_steps[wpic], (unsigned long) (g_cost[wpic] - g_cost_main[wpic]), g_step_max[wpic],
                g_cost_main[wpic]);
-    e1_log("E1 SOUND longest step %lu us: %lu driver frames %lu us, voices %lu us, register flush %lu us\n",
+    e1_log("E1 SOUND longest step %lu us: %lu driver frames %lu us, voices %lu us, register flush %lu us (%lu register "
+           "writes; most in a step %lu)\n",
            (unsigned long) aica_stats.long_us, (unsigned long) aica_stats.long_frames, (unsigned long) aica_stats.long_drv,
-           (unsigned long) aica_stats.long_vox, (unsigned long) aica_stats.long_flush);
+           (unsigned long) aica_stats.long_vox, (unsigned long) aica_stats.long_flush,
+           (unsigned long) aica_stats.long_writes, (unsigned long) aica_stats.max_writes);
     e1_log("E1 SOUND frame parts longest: voice manager %lu us (tick %lu), stream player %lu us (tick %lu), sequencer %lu us "
            "(tick %lu)\n", (unsigned long) g_part_max[0], (unsigned long) g_part_max_tick[0], (unsigned long) g_part_max[1],
            (unsigned long) g_part_max_tick[1], (unsigned long) g_part_max[2], (unsigned long) g_part_max_tick[2]);

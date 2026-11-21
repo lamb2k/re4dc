@@ -31,6 +31,7 @@ struct AicaStats {
     uint32_t str_starts, str_underruns, str_read_bytes, str_reads;
     uint32_t max_ticks, debt_drops;   // most driver frames run in one step; debts over 64 frames dropped
     uint32_t long_us, long_drv, long_vox, long_flush, long_frames;   // the longest step: driver frames, voices, flush
+    uint32_t long_writes, max_writes;   // register writes in the longest step; the most in any step
 };
 extern AicaStats aica_stats;
 
