@@ -17,6 +17,7 @@ static const uint8_t dc_pick[DC_PC]={DC_W_CORNERS,DC_W_CLIPTRIS,DC_A_CORNERS,DC_
 static uint32_t dc_t[DS_COUNT],dc_have;
 static uint64_t dc_sum[DC_COUNT];
 static uint32_t dc_max[DC_COUNT],dc_maxat[DC_COUNT],dc_pics;
+static unsigned dc_census_seen;   /* the census ran in this window (or scene): only then are its counters printed */
 static unsigned dc_lo=41,dc_hi=640;   /* the E1 selector's pictures; the bench sets 1..600 a window */
 static const char* const dc_phase_name[DC_PH]={"select","begin","sky","preworld","worldOP","actors","worldPT","listgap",
                                               "worldTR","TRextra","hud"};
@@ -98,7 +99,7 @@ static uint32_t dc_arms_for(unsigned idx){
     return dc_lab_bench;
 }
 void dc_window_begin(void){
-    dc_lo=1;dc_hi=600;dc_pics=0;
+    dc_lo=1;dc_hi=600;dc_pics=0;dc_census_seen=0;
     for(unsigned k=0;k<DC_COUNT;k++){dc_sum[k]=0;dc_max[k]=0;dc_maxat[k]=0;}
 }
 static void dc_finish(void){
@@ -121,6 +122,7 @@ void dc_stamp(unsigned k){
     if(k==DS_VIS0){
         for(unsigned j=0;j<DC_COUNT;j++)dc_n[j]=0;
         dc_have=0;dc_arm_now=dc_arms_for(m1_frame-dc_frame_base);
+        if(dc_arm_now&DL_CENSUS)dc_census_seen=1;
     }
     dc_t[k]=now;dc_have|=1u<<k;
     if(k==DS_HUD1)dc_finish();
@@ -135,7 +137,9 @@ static void dc_print(const char* tag){
         printf("%s PHASE %s m%lu p%lu w%lu@%u (us, pictures %u-%u)\n",tag,dc_phase_name[p],(unsigned long)(sum/n),
                (unsigned long)v[n-1-n/100],(unsigned long)worst,at,dc_lo,dc_hi);
     }
-    for(unsigned k=0;k<DC_COUNT;k++)
+    /* the census's counters only when it ran: with them the bench's report (and nearly the fight's) reached the console
+       loop's cap, and a report that does has no end line and its scene FAILS (disc d6's bench) */
+    for(unsigned k=0;k<(dc_census_seen?(unsigned)DC_COUNT:(unsigned)DC_V_W_TRIS);k++)
         printf("%s COUNT %s m%lu w%lu@%lu (sum %lu over %lu pictures)\n",tag,dc_count_name[k],
                (unsigned long)(dc_pics?dc_sum[k]/dc_pics:0),(unsigned long)dc_max[k],(unsigned long)dc_maxat[k],
                (unsigned long)dc_sum[k],(unsigned long)dc_pics);
