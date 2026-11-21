@@ -218,8 +218,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         re4dc_avk_pos_skin_u16(&a);
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
         /* lane eng-draw3 (E3): a boundary part lights only the normals its kept strips use */
-        if (state[p] == 2) light_normals_list(m->nrm, nrm_list, mark_part(m, rp, codes, strip_codes), lit);
-        else light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lit + rp->nrm_first);
+        light_part(m, rp, state[p], codes, strip_codes, lit, 1);
     }
     /* 6. opaque parts (lane eng-e1d: as the bench's pass since eng-look, the hair part, role 7, is opaque with the body
        atlas and the hair run, role 8, is drawn in the translucent call, in the translucent list); Leon's knife part only

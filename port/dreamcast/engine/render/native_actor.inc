@@ -422,18 +422,22 @@ static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtMod
 static uint8_t strip_code_pool[2][ACTOR_STRIP_LIMIT];
 static const uint8_t* cur_strip_codes;
 static uint16_t nrm_list[ACTOR_POS_LIMIT],nrm_stamp[ACTOR_POS_LIMIT],nrm_stamp_now;
+/* Returns how many normals to light, listed in nrm_list, or MARK_ALL when no strip was dropped (light the part's whole
+   range: the common case on close pictures, where listing every corner cost more than it saved: run r1a, hill +0.9 ms).
+   When some strips are dropped, the kept strips' normals are marked with plain stores (no branch a corner) and listed by
+   one branch-free pass over the part's normal range. */
+#define MARK_ALL (~0u)
 static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes,uint8_t* sc){
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
     const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
-    if(!++nrm_stamp_now){memset(nrm_stamp,0,sizeof nrm_stamp);nrm_stamp_now=1;}
-    const unsigned stamp=nrm_stamp_now;unsigned nl=0;
     const uint8_t* sided=m->sided?m->sided+rp->strip_first:NULL;   /* arm CB only */
-    sc+=rp->strip_first;
+    uint8_t* const sc0=sc+rp->strip_first;unsigned dropped=0;
+    sc=sc0;
     while(p<stop){
         unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
         unsigned common=63,combined=0;
         for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
-        if(common&keep){*sc++=STRIP_DROPPED;if(sided)sided++;continue;}
+        if(common&keep){*sc++=STRIP_DROPPED;dropped++;if(sided)sided++;continue;}
         if(sided && *sided++ && !(combined&keep&32)){   /* arm CB: a one-sided strip with no triangle facing the camera */
             unsigned front=0;
             for(unsigned k=2;k<n && !front;k++){
@@ -441,12 +445,29 @@ static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes
                                    *c=cur_projected+v[k].position;
                 front=(b->x-a->x)*(c->y-a->y)-(c->x-a->x)*(b->y-a->y)<0;   /* the census's sign: positive is the far side */
             }
-            if(!front){*sc++=STRIP_DROPPED;continue;}
+            if(!front){*sc++=STRIP_DROPPED;dropped++;continue;}
         }
         *sc++=combined&keep;
-        for(unsigned j=0;j<n;j++){unsigned q=v[j].normal;if(nrm_stamp[q]!=stamp){nrm_stamp[q]=stamp;nrm_list[nl++]=q;}}
     }
+    if(!dropped)return MARK_ALL;
+    if(!++nrm_stamp_now){memset(nrm_stamp,0,sizeof nrm_stamp);nrm_stamp_now=1;}
+    const uint16_t stamp=nrm_stamp_now;
+    p=m->strips+rp->src->at;sc=sc0;
+    while(p<stop){
+        unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
+        if(*sc++&STRIP_DROPPED)continue;
+        for(unsigned j=0;j<n;j++)nrm_stamp[v[j].normal]=stamp;
+    }
+    unsigned nl=0;
+    for(unsigned i=rp->nrm_first,e=i+rp->nrm_count;i<e;i++){nrm_list[nl]=i;nl+=nrm_stamp[i]==stamp;}
     return nl;
+}
+/* the normals of one drawn part: the kept strips' (boundary part with dropped strips) or all of them */
+static inline void light_part(const RtModel* m,const RtPart* rp,unsigned st,const uint8_t* codes,uint8_t* sc,uint32_t* lit,int light){
+    const unsigned nl=st==2?mark_part(m,rp,codes,sc):MARK_ALL;
+    if(!light)return;
+    if(nl==MARK_ALL)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+    else light_normals_list(m->nrm,nrm_list,nl,lit);
 }
 static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
@@ -578,8 +599,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
             if(DC_ARM(DL_SKIN2))re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
             /* lane eng-draw3 (E3): a boundary part's strips are tested here; only its kept strips' normals are lit */
-            if(st_p==2){unsigned nl=mark_part(m,rp,codes,strip_codes);if(!lit_cached)light_normals_list(m->nrm,nrm_list,nl,lit);}
-            else if(!lit_cached)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+            light_part(m,rp,st_p,codes,strip_codes,lit,!lit_cached);
         }
         if(lit_fill){const RtPart* lp=m->parts+h[4]-1;light_normals_source(m->nrm,lp->nrm_first+lp->nrm_count,lit_cached);}
         if(lit_cached)cur_lit=lit_cached;
