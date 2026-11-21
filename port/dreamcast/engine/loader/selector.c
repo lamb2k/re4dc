@@ -337,7 +337,7 @@ static void collect(unsigned i) {
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0;
-    int pool_seen = 0, pub_seen = 0;
+    int pool_seen = 0, pub_seen = 0, camrec_seen = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -383,6 +383,13 @@ static void collect(unsigned i) {
                 if ((!pub_seen || cam || hud || light) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "conversions per tick: camera %u, hud %u, light compares %u", cam, hud, light);
             }
+            else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
+                /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */
+                unsigned ticks = 0, bad = 0, first = 0;
+                camrec_seen = sscanf(line + 16, "%u non-finite %u (first tick %u", &ticks, &bad, &first) == 3;
+                if ((!camrec_seen || bad) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "camera record not finite: %u of %u ticks (first tick %u)", bad, ticks, first);
+            }
         }
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pool_seen && !e->why[0])
@@ -390,6 +397,9 @@ static void collect(unsigned i) {
     /* lane eng-e1j (H-016.2): timing and function runs alike must report their conversions (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");
+    /* lane eng-e1l: timing and function runs alike report the camera record's finite check (a missing line fails) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !camrec_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 CAMREC line in the report");
     /* lane eng-e1k (H-016.6): a timing scene is OK only with a complete record: the run's kind line, 600 picture rows
        once each (41-640), drawn images in presented mode with 600 measured flip intervals (a headless image: 600 tick
        intervals), zero release-queue drops, the after-play memory line (its guard is a refusal line of its own) */

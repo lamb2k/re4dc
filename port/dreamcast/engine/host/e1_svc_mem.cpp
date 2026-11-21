@@ -203,4 +203,10 @@ void e1_svc_report()
            (unsigned long) cam_cnt.debug_draws);
     e1_log("E1 PUB camera %lu hud %lu light-compares %lu (light view misses %lu)\n", (unsigned long) eng_pub.camera,
            (unsigned long) eng_pub.hud, (unsigned long) eng_pub.light_compares, (unsigned long) e1_light_miss);
+    // lane eng-e1l: the camera record's finite check (every tick; the selector fails a scene with a non-finite tick or
+    // without this line) and the renderer's planes the record holds
+    e1_log("E1 CAMREC ticks %lu non-finite %lu (first tick %lu word %lu bits %08lx) near %d far %d\n",
+           (unsigned long) eng_cam_check.ticks, (unsigned long) eng_cam_check.nonfinite_ticks,
+           (unsigned long) eng_cam_check.first_tick, (unsigned long) eng_cam_check.first_word,
+           (unsigned long) eng_cam_check.first_bits, (int) (eng_cam.p23 / (eng_cam.p22 - 1.0f)), (int) eng_cam.zfar);
 }

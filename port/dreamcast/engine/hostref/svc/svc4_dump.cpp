@@ -542,9 +542,19 @@ WV(_ZN4VIEW15initPerspectiveEffff, (VIEW* v, f32 fy, f32 a, f32 zn, f32 zf), (v,
 // the frame's camera and the frustum it leaves (VIEW::move is not wrapped: in the native build CameraMove calls it
 // inside one object, where --wrap does not reach, so the two builds would log it differently)
 extern "C" void __real_CameraMove();
+extern f32 ZNEAR, ZFAR;
+static int g_zclip0 = -1;   // lane eng-e1l: RE4_SVC_CONTROL=zclip0, the game's near and far distances zero (the E1 images before)
 extern "C" void __wrap_CameraMove()
 {
     const bool top = TOP;
+    if (g_zclip0 < 0) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        g_zclip0 = c && !__builtin_strcmp(c, "zclip0");
+        if (g_zclip0) {
+            ZNEAR = ZFAR = 0.0f;
+            View.roomInit();   // the frustum at the zero distances, as the E1 images built it
+        }
+    }
     g_in_cam++;
     __real_CameraMove();
     g_in_cam--;

@@ -8,6 +8,7 @@
 #include "e1_core.h"
 #include "rnd.h"
 #include "e1_kos.h"
+#include "camera/eng_camera.h"   // lane eng-e1l: the renderer's planes and the RNEARFAR control
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -83,11 +84,46 @@ void cLog::verr(int, int, const char* fmt, va_list ap) { logline("LOGERR", fmt, 
 void cLog::vwarn(int, int, const char* fmt, va_list ap) { logline("LOGWARN", fmt, ap); }
 extern "C" void OSReport(const char* fmt, ...) { va_list ap; va_start(ap, fmt); logline("OSREPORT", fmt, ap); va_end(ap); }
 
+// ---- the game's projection constants (main.cpp systemScreenInit, lane eng-e1l) ----
+// Game state the hosted behaviour and the camera service read: the near and far distances (the shoulder camera's wall
+// probe width and near offset, cam_eval.cpp; the water clamp, cam_ctrl.cpp; the view frustum and its bounding sphere,
+// camera_svc.cpp VIEW) and the orthographic bounds. They are the original's values, set where the engine sets up the
+// game's globals. They are not the renderer's planes: those are the camera record's own constants (eng_camera.h
+// ENG_RENDERER_NEAR / ENG_RENDERER_FAR, 18,750, never 1,000,000).
+// Lab arm ZCLIP0 (boot file): ZNEAR and ZFAR stay zero, as every E1 image had them before this lane (control of the
+// camera comparison, hostref/svc/camengine.sh). Not a build switch.
+f32 ZNEAR, ZFAR, ORTHO_T, ORTHO_B, ORTHO_L, ORTHO_R;
+static void projection_init()
+{
+    ZNEAR = 100.0f;
+    ZFAR = 1000000.0f;
+    ORTHO_T = 240.0f;
+    ORTHO_B = -240.0f;
+    ORTHO_L = -320.0f;
+    ORTHO_R = 320.0f;
+    file_t f = fs_open("/cd/ZCLIP0", O_RDONLY);
+    if (f >= 0) {
+        fs_close(f);
+        ZNEAR = ZFAR = 0.0f;
+        e1_log("E1 ZCLIP0: the game's near and far distances left at zero (lab arm, control)\n");
+    }
+    // RNEARFAR (boot file, control of the record's finite check): the renderer's far plane equals its near
+    f = fs_open("/cd/RNEARFAR", O_RDONLY);
+    if (f >= 0) {
+        fs_close(f);
+        eng_cam_nearfar_control = 1;
+        e1_log("E1 RNEARFAR: the renderer's far plane set to its near (control: the record's depth terms not finite)\n");
+    }
+    e1_log("E1 PROJECTION game ZNEAR %d ZFAR %d; renderer near %d far %d (the camera record's)\n", (int) ZNEAR, (int) ZFAR,
+           (int) ENG_RENDERER_NEAR, (int) (eng_cam_nearfar_control ? ENG_RENDERER_NEAR : ENG_RENDERER_FAR));
+}
+
 void e1_globals_init()
 {
     memset(&Global, 0, sizeof(Global));
     memset(&System, 0, sizeof(System));
     pLog.p = &LogWork;
+    projection_init();
 }
 
 // The warp rig's flags (dbgwarp_bridge.cpp start / "flags applied"): room, first-visit flag, and the r101 room

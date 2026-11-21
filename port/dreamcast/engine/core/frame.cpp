@@ -11,6 +11,7 @@
 #include "skel.h"
 #include "e1_kos.h"
 #include "memory/heap.h"
+#include "camera/eng_camera.h"   // lane eng-e1l: the camera record's trace line
 #include <stdio.h>
 #include <string.h>
 #ifdef E2_BOSS
@@ -113,6 +114,10 @@ void e1_trace_tick(unsigned tick)
 #endif
     }
     if (notrace) return;
+    {   // lane eng-e1l: the camera record's eye, target, roll, fov and the controller's decisions (hostref/svc/camengine)
+        if (trace_len + 192 > sizeof(trace_buf)) e1_trace_flush();
+        trace_len += (unsigned) eng_cam_trace_line(trace_buf + trace_len, sizeof(trace_buf) - trace_len, tick);
+    }
     if (e1_scene == E1_SCENE_HILL) {   // lane eng-e1b: re4ref trace v2 lines (Leon and every character)
         e1_trace_v2(tick);
         return;

@@ -50,7 +50,7 @@ STORAGE(debugCamera, CamDbg)
 STORAGE(QuakeWork, Quake)
 
 // ---- main-loop globals defined by unhosted units ----
-f32 ZNEAR, ZFAR, ORTHO_T, ORTHO_B, ORTHO_L, ORTHO_R;
+// (ZNEAR, ZFAR and the ORTHO bounds are game state set by core/globals.cpp since lane eng-e1l, not stubs.)
 const Vec vecZero = {0.0f, 0.0f, 0.0f};
 #ifndef E2_BOSS   // eng-boss: game.cpp (hosted in the boss image) defines them
 u32 g_at2_cnt[20], g_at2_cyc[20], g_at2_total, g_at2_total_cyc;

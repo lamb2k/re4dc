@@ -27,6 +27,29 @@ typedef struct EngCamera {
 
 extern EngCamera eng_cam;
 
+/* The renderer's near and far planes (lane eng-e1l): engine design constants, not the game's ZNEAR / ZFAR (100 and
+ * 1,000,000, core/globals.cpp, which the behaviour and the camera's evaluation read). The record's depth terms (p22,
+ * p23) and its far plane come from these: the renderer reads near = p23 / (p22 - 1) and far = word 25. The near plane
+ * is the original's 100 (the game's own projection clips there); the far plane is the engine's draw distance. */
+#define ENG_RENDERER_NEAR 100.0f
+#define ENG_RENDERER_FAR 18750.0f
+
+/* The record's finite check (lane eng-e1l): at the end of every tick every word of the record (the renderer's 26 and
+ * the evaluated eye, target, roll and fov) is tested for a not-a-number or an infinity by its exponent bits (the
+ * renderer is built -ffast-math, where isfinite() may fold to true). The report's E1 CAMREC line gives the counts; the
+ * selector fails a scene with a non-finite tick or without the line. Lab arm RNEARFAR (boot file, control): the
+ * renderer's far plane equals its near, the depth terms divide by zero, the scene must fail. */
+typedef struct EngCamCheck {
+    uint32_t ticks, nonfinite_ticks, first_tick, first_word, first_bits;
+} EngCamCheck;
+extern EngCamCheck eng_cam_check;
+extern int eng_cam_nearfar_control;   /* RNEARFAR (control) */
+void eng_cam_check_tick(uint32_t tick);
+/* The trace line of the record (trace runs only, core/frame.cpp): "CAMLOG t=<tick> e=<eye> g=<target> r=<roll>
+ * f=<fov> d=<area>,<cut>,<routine>,<blend frames left>", floats as bit patterns (hostref/svc/camengine.py). Returns
+ * its length (0: the record not written yet). */
+int eng_cam_trace_line(char* buf, unsigned size, uint32_t tick);
+
 /* Conversions of game state into a draw record, counted per scene (the selector fails a scene where one is not 0;
  * the E1 PUB line): the camera, the HUD words, the light inputs' compares. The PUBCOPY lab arm (control) makes the
  * camera service copy its record once a tick and count it. */

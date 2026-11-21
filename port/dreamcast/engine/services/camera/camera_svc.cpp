@@ -39,6 +39,7 @@
 #include "main_sub.h"
 #include "native_motion.h"
 #undef fabsf
+#include <stdio.h>   // lane eng-e1l: the record's trace line (snprintf)
 #include "camera_svc.h"
 #include "eng_camera.h"
 #include "cam_math.h"
@@ -62,7 +63,10 @@ namespace {
 
 constexpr f32 kPi = 3.1415927f;
 constexpr f32 kAspect = 1.33333333f;   // the frustum's and the projection's (VIEW_ASPECT)
-constexpr f32 kRendererFar = 18750.0f; // the renderer's far plane when the game has none (ZFAR 0)
+// The renderer's planes (eng_camera.h): the record's depth terms and far plane, the engine's design constants. The
+// game's ZNEAR / ZFAR (100, 1,000,000) are the behaviour's and the evaluation's (the frustum, the wall probe).
+constexpr f32 kRendererNear = ENG_RENDERER_NEAR;
+constexpr f32 kRendererFar = ENG_RENDERER_FAR;
 
 // ---- camera frames ----
 // A camera's axes: right (the matrix's column 0), up (1), look = eye - target (2). The roll turns right and up about
@@ -326,8 +330,12 @@ void CameraRoomInit() { CamDbg.m_move_gain = 1.0f; }
 
 // The record: the view matrix is the inverse of the camera's frame built from eye, up and target (rows right, up,
 // look; translation -R eye); the projection terms of a perspective of the camera's field of view, the screen's aspect
-// and the game's near / far planes (GX's form: x and y scale cot / aspect and cot, depth -n / (f - n) and -f n / (f - n));
-// the renderer's constant words (perspective, the 640 x 480 viewport, its far plane).
+// and the renderer's near / far planes (GX's form: x and y scale cot / aspect and cot, depth -n / (f - n) and
+// -f n / (f - n)); the renderer's constant words (perspective, the 640 x 480 viewport, its far plane). Lane eng-e1l: the
+// planes are the renderer's own constants (before, the game's ZNEAR / ZFAR, both zero in the E1 images, made the depth
+// terms 0 x infinity: not numbers, so the renderer's near plane p23 / (p22 - 1) was not a number either).
+int eng_cam_nearfar_control;   // RNEARFAR (control): far = near
+EngCamCheck eng_cam_check;
 static void record_write(const Camera* cam)
 {
     EngCamera& r = eng_cam;
@@ -340,13 +348,14 @@ static void record_write(const Camera* cam)
         r.view[i][3] = -vdot(row[i], eye);
     }
     const f32 cot = 1.0f / tanf(cam->param.fovy * (kPi / 360.0f));
-    const f32 k = 1.0f / (ZFAR - ZNEAR);
+    const f32 n = kRendererNear, f = eng_cam_nearfar_control ? kRendererNear : kRendererFar;
+    const f32 k = 1.0f / (f - n);
     r.proj_type = 0.0f;
     r.p00 = cot / kAspect, r.p02 = 0.0f, r.p11 = cot, r.p12 = 0.0f;
-    r.p22 = -ZNEAR * k, r.p23 = -(ZFAR * ZNEAR) * k;
+    r.p22 = -n * k, r.p23 = -(f * n) * k;
     r.viewport[0] = 0.0f, r.viewport[1] = 0.0f, r.viewport[2] = 640.0f, r.viewport[3] = 480.0f;
     r.viewport[4] = 0.0f, r.viewport[5] = 1.0f;
-    r.zfar = ZFAR > 0.0f ? ZFAR : kRendererFar;
+    r.zfar = f;
     put((Vec*) r.eye, eye);
     put((Vec*) r.target, V(cam->param.at));
     r.roll = cam->param.roll, r.fovy = cam->param.fovy;
@@ -387,6 +396,42 @@ void CameraMove()
     record_write(cam);
     View.move();
     CameraDebugInformation();
+}
+
+// The record's finite check (eng_camera.h), once at the end of every tick: a word whose exponent bits are all ones is
+// an infinity or not a number. Integer tests on the bits (the renderer and the game are built -ffast-math).
+void eng_cam_check_tick(uint32_t tick)
+{
+    const uint32_t* w = (const uint32_t*) &eng_cam;
+    const unsigned words = (unsigned) (&eng_cam.fovy - (const float*) &eng_cam) + 1;   // the 26 and eye .. fov
+    eng_cam_check.ticks++;
+    for (unsigned i = 0; i < words; i++)
+        if ((w[i] & 0x7F800000u) == 0x7F800000u) {
+            if (!eng_cam_check.nonfinite_ticks++) {
+                eng_cam_check.first_tick = tick;
+                eng_cam_check.first_word = i;
+                eng_cam_check.first_bits = w[i];
+            }
+            return;
+        }
+}
+
+// The record as a trace line (trace runs only): eye, target, roll (radians), fov (degrees) as bit patterns and the
+// controller's decisions (area, camera cut, routine, cut blend frames left), as hostref/svc/svc4_dump.cpp writes them to
+// cam.txt for the PC camera check.
+int eng_cam_trace_line(char* buf, unsigned size, uint32_t tick)
+{
+    if (!eng_cam.tick) return 0;
+    uint32_t b[8];
+    __builtin_memcpy(b, eng_cam.eye, 12);
+    __builtin_memcpy(b + 3, eng_cam.target, 12);
+    __builtin_memcpy(b + 6, &eng_cam.roll, 4);
+    __builtin_memcpy(b + 7, &eng_cam.fovy, 4);
+    return snprintf(buf, size, "CAMLOG t=%lu e=%08lx,%08lx,%08lx g=%08lx,%08lx,%08lx r=%08lx f=%08lx d=%d,%d,%d,%d\n",
+                    (unsigned long) tick, (unsigned long) b[0], (unsigned long) b[1], (unsigned long) b[2],
+                    (unsigned long) b[3], (unsigned long) b[4], (unsigned long) b[5], (unsigned long) b[6],
+                    (unsigned long) b[7], (int) CamCtrl.areaNo, (int) CamCtrl.cameraNo, (int) CamCtrl.r0,
+                    (int) CamCtrl.interp.frame);
 }
 
 // The stick as a world direction: by the camera's frame, or by the previous camera's while the stick is held through a

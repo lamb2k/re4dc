@@ -15,6 +15,7 @@
 #include "e1_engine.h"
 #include "e1_core.h"
 #include "e1_kos.h"
+#include "camera/eng_camera.h"   // lane eng-e1l: the camera record's finite check
 #ifdef E2_BOSS
 #include "boss_e2.h"   // eng-boss: the El Gigante slice
 #endif
@@ -182,6 +183,7 @@ int main()
         e1_partner_tick_end(e1_tick);
         e1_stamp(3);
         uint64_t c = now_us();
+        eng_cam_check_tick(e1_tick);    // lane eng-e1l: the camera record finite (E1 CAMREC; outside the tick's rows)
         e1_trace_tick(e1_tick);
         e1_stamp(4);
         uint64_t d = now_us();
