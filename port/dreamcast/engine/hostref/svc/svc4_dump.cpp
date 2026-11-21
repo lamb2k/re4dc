@@ -146,6 +146,9 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "camslope")) cam_control = 6;
         if (c && !__builtin_strcmp(c, "camfollow")) cam_control = 7;
         if (c && !__builtin_strcmp(c, "caminv")) cam_control = 8;
+        // lane eng-e1p: a refused export's refusal checked after the header is read and the table relocated (the order
+        // before lane eng-e1p): the exercise camrefuse's stale-table case must fail
+        if (c && !__builtin_strcmp(c, "camlate")) cam_control = 9;
     }
     g_cam = svc_out_open("cam.txt", "w");
     if (&eng_cam_diag_sink && svc_env("RE4_CAMDIAG")) {   // lane eng-e1m: camdiag.txt, as the image's CAMDIAG trace
@@ -396,6 +399,63 @@ void exercise_camexport(unsigned t)
     }
     if (g_f) P(g_f, "# camexport: keys 7 returned %d buffer_untouched %d guards_intact %d motion_ended %d\n", r, buf_ok, guards_ok, ended);
 }
+// Lane eng-e1p (H-018.2): camrefuse, a refused export honoured through the whole call chain (native build only: the
+// original writer overruns or reads past a bad count). Tick 10, four cases, each in a buffer between two guard patterns:
+//   oversize  a 7-key cut (1,236 bytes against 0x440), the buffer pre-filled;
+//   count0    a cut of 0 keys, the buffer pre-filled;
+//   count27   a cut of 27 keys (past the rail's 26), the buffer pre-filled;
+//   stale     a 7-key cut over a buffer that holds a valid 5-key export (a stale, valid-looking, unrelocated table).
+// For each the whole guarded buffer is compared with its state before the export: after the export, after a
+// CameraMotion is made on the buffer, and after one move; the motion must end at once. Line "# camrefuse: case ...".
+// Control camlate (RE4_SVC_CONTROL): the constructor checks the refusal after reading the header and relocating the
+// table, as before lane eng-e1p; the stale case must then show the buffer changed by the construction.
+alignas(8) u8 g_rbuf[64 + 0x440 + 256];
+alignas(8) u8 g_rcm[sizeof(CameraMotion)];
+void exercise_camrefuse(unsigned t)
+{
+    if (t != 10) return;
+    static Vec pos[27], at[27];
+    static f32 roll[27], fovy[27];
+    for (int k = 0; k < 27; k++) {
+        pos[k] = pPL->pos;
+        pos[k].x += 400.0f * k;
+        pos[k].y += 1500.0f;
+        at[k] = pPL->pos;
+        roll[k] = 0.0f;
+        fovy[k] = 45.0f + k;
+    }
+    static const struct { const char* name; int keys; bool stale; } cases[4] = {
+        {"oversize", 7, false}, {"count0", 0, false}, {"count27", 27, false}, {"stale", 7, true}};
+    static u8 before[sizeof g_rbuf];
+    for (const auto& c : cases) {
+        for (u32 i = 0; i < sizeof g_rbuf; i++) g_rbuf[i] = (i < 64 || i >= 64 + 0x440) ? 0xA5 : 0x5A;
+        CameraCut cut;
+        __builtin_memset(&cut, 0, sizeof cut);
+        cut.pos = pos, cut.at = at, cut.roll = roll, cut.fovy = fovy;
+        if (c.stale) {   // a valid 5-key file written earlier into the same buffer
+            cut.num = 5;
+            CamCtrl.HermiteExport(&cut, g_rbuf + 64);
+        }
+        __builtin_memcpy(before, g_rbuf, sizeof g_rbuf);
+        cut.num = c.keys;
+        const int r = CamCtrl.HermiteExport(&cut, g_rbuf + 64);
+        auto same = [&](bool guards) {
+            for (u32 i = 0; i < sizeof g_rbuf; i++) {
+                const bool guard = i < 64 || i >= 64 + 0x440;
+                if (guard == guards && g_rbuf[i] != before[i]) return 0;
+            }
+            return 1;
+        };
+        const int after_export = same(false);
+        CameraMotion* cm = new (g_rcm) CameraMotion(g_rbuf + 64, 0, 0, 0.0f);
+        const int after_construct = same(false);
+        cm->move();
+        const int after_move = same(false), guards = same(true), ended = cm->end;
+        if (g_f)
+            P(g_f, "# camrefuse: case %s keys %d returned %d after_export %d after_construct %d after_move %d guards_intact %d "
+                   "motion_ended %d\n", c.name, c.keys, r, after_export, after_construct, after_move, guards, ended);
+    }
+}
 void exercise(unsigned t)
 {
     if (g_exercise < 0) {
@@ -403,13 +463,14 @@ void exercise(unsigned t)
         g_exercise = e && !__builtin_strcmp(e, "follow") ? 1 : e && !__builtin_strcmp(e, "camtrack") ? 2
                    : e && !__builtin_strcmp(e, "rumble") ? 3 : e && !__builtin_strcmp(e, "camblend") ? 4
                    : e && !__builtin_strcmp(e, "camrail") ? 5 : e && !__builtin_strcmp(e, "campush") ? 6
-                   : e && !__builtin_strcmp(e, "camexport") ? 7 : 0;
+                   : e && !__builtin_strcmp(e, "camexport") ? 7 : e && !__builtin_strcmp(e, "camrefuse") ? 8 : 0;
     }
-    if (g_exercise == 6 || g_exercise == 7) {
+    if (g_exercise == 6 || g_exercise == 7 || g_exercise == 8) {
         if (t != g_ex_tick && pPL) {
             g_ex_tick = t;
             if (g_exercise == 6) exercise_campush(t);
-            else exercise_camexport(t);
+            else if (g_exercise == 7) exercise_camexport(t);
+            else exercise_camrefuse(t);
         }
         return;
     }

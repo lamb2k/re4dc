@@ -392,27 +392,54 @@ void searchRail(CameraBSpline* bs, CameraCut* cut, Vec* aim, int)
 // callers compare with their buffer and log as the original does when it is larger; the camera motion they then make
 // on the buffer is not played (cam_track_export_refused: the track service refuses that buffer's next motion), so the
 // controller leaves the cut at its first move.
-extern "C" void cam_track_export_refused(const u8* buf, int refused);   // camera_svc.cpp
+// Lane eng-e1p (H-018.1): every motion cut of the room's camera data is exported and converted when the room is loaded
+// (camera_svc.cpp cam_track_room_load, through cam_cut_export below); at a cut switch in play the writer is a lookup:
+// the room's converted track is handed to the CameraMotion made next on the buffer (cam_track_cut_ready) and nothing is
+// written. A cut without a ready track (a cut the room's data does not hold, or the lab arm CUTCONV) is written as
+// before and converted by the CameraMotion: a conversion in play, counted (the selector fails a timing scene on it).
+extern "C" void cam_track_export_refused(const u8* buf, int refused);    // camera_svc.cpp
+extern "C" int cam_track_cut_ready(const CameraCut* cut, const u8* buf);  // camera_svc.cpp
 namespace {
 constexpr int kMotionBuffer = 0x440;
 // header 36 bytes; per track three axes of {count, frames, keys of 12 bytes}, each track padded to 4 bytes
 constexpr int export_size(int n) { return 36 + 4 * (((3 * (2 + 2 * n + 12 * n)) + 3) & ~3); }
+// the size the cut's file needs, 0 for a count outside 1 .. kRailMax
+int export_need(const CameraCut* cut) { return cut->num >= 1 && cut->num <= kRailMax ? export_size(cut->num) : 0; }
+int export_write(CameraCut* cut, u8* buf);
 }   // namespace
+// The room load's writer (camera_svc.cpp): the cut's file into `buf` (kMotionBuffer bytes), or nothing and the size it
+// would need (0: a bad count) when the writer refuses it.
+extern "C" int cam_cut_export(CameraCut* cut, u8* buf)
+{
+    const int need = export_need(cut);
+    if (need == 0 || need > kMotionBuffer) return need;
+    return export_write(cut, buf);
+}
 int CameraControl::HermiteExport(CameraCut* cut, u8* buf)
 {
     CAM_SVC("CameraControl::HermiteExport");
     cam_cnt.rails++;
-    {
-        const int count = cut->num;
-        const int need = count >= 1 && count <= kRailMax ? export_size(count) : 0;
-        if (need == 0 || need > kMotionBuffer) {
-            cam_cnt.key_errors++;
-            cam_track_export_refused(buf, 1);
-            pLog->err(0, 0, "HermiteExport(): cut of %d keys refused (%d bytes, buffer %d)", count, need, kMotionBuffer);
-            return need;
-        }
-        cam_track_export_refused(buf, 0);
+    const int count = cut->num;
+    const int need = export_need(cut);
+    if (need == 0 || need > kMotionBuffer) {
+        cam_cnt.key_errors++;
+        cam_track_export_refused(buf, 1);
+        pLog->err(0, 0, "HermiteExport(): cut of %d keys refused (%d bytes, buffer %d)", count, need, kMotionBuffer);
+        return need;
     }
+    cam_track_export_refused(buf, 0);
+    const int ready = cam_track_cut_ready(cut, buf);   // the room's track: a lookup, nothing written
+    if (ready < 0) {                                   // a cut the room load refused (its keys): not played
+        cam_cnt.key_errors++;
+        cam_track_export_refused(buf, 1);
+        return need;
+    }
+    if (ready > 0) return ready;
+    return export_write(cut, buf);
+}
+namespace {
+int export_write(CameraCut* cut, u8* buf)
+{
     struct Out {
         u8* p;
         void u8_(u32 v) { *p++ = (u8) v; }
@@ -466,6 +493,7 @@ int CameraControl::HermiteExport(CameraCut* cut, u8* buf)
     buf[0] = (u8) last, buf[1] = (u8) (last >> 8);
     return (int) (o.p - buf);
 }
+}   // namespace
 
 // Debug drawing of the rail: counted, not drawn.
 void CameraControl::debugDrawRail(CameraCut* cut)

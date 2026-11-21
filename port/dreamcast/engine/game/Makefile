@@ -63,8 +63,13 @@ WRAP_SYMS := Rnd fRand1_1 fRand0_1 \
 ifneq ($(FIGHT),1)
 WRAP_SYMS += RouteCkToEm RouteCkToPos RouteCkEscEm RouteCkPosToPosDis
 endif
-# lane eng-e1o (H-017.7): every file open goes through core/play_files.c, which counts the opens during play
-WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc -Wl,--wrap=fs_open
+# lane eng-e1o (H-017.7): every file open goes through core/play_files.c, which counts the opens during play; lane
+# eng-e1p (H-018.4): and the reads on disc-backed handles (fs_read, fs_close drops a handle's mark) and the CD drive's read
+# commands the ISO filesystem issues (cdrom_read_sectors_ex, cdrom_stream_start, cdrom_stream_request; cdrom_read_sectors;
+# the TOC reads through core/boot.c)
+WRAPS := $(foreach s,$(WRAP_SYMS),-Wl,--wrap=$(s)) -Wl,--wrap=cdrom_read_toc -Wl,--wrap=fs_open -Wl,--wrap=fs_read \
+	-Wl,--wrap=fs_close -Wl,--wrap=cdrom_read_sectors -Wl,--wrap=cdrom_read_sectors_ex -Wl,--wrap=cdrom_stream_start \
+	-Wl,--wrap=cdrom_stream_request
 all: $(OUT)/e1.elf
 
 # rnd.cpp with its read-only trace accessor (re4dc_rnd_state: returns the generator state, changes nothing).

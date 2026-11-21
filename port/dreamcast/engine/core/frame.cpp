@@ -12,6 +12,7 @@
 #include "e1_kos.h"
 #include "memory/heap.h"
 #include "camera/eng_camera.h"   // lane eng-e1l: the camera record's trace line
+#include "camera/camera_svc.h"   // lane eng-e1p: the camera tracks' play brackets and controls
 #include <stdio.h>
 #include <string.h>
 #ifdef E2_BOSS
@@ -228,6 +229,24 @@ void e1_lab_boot()
     // lane eng-e1n: the publication and HUD controls (services/draw.cpp acts on them at the renderer's open)
     if ((e1_lab.lightmiss = boot_file("/cd/LIGHTMISS"))) e1_log("E1 LIGHTMISS: every character's light view refused (control)\n");
     if ((e1_lab.hudfreeze = boot_file("/cd/HUDFREEZE"))) e1_log("E1 HUDFREEZE: the HUD's ammo count frozen at the renderer's open (control)\n");
+    // lane eng-e1p (H-018): the camera tracks', the record's and the disc reads' controls
+    if ((e1_lab.cutconv = boot_file("/cd/CUTCONV"))) {
+        cam_track_cut_convert = 1;
+        e1_log("E1 CUTCONV: a cut switch converts its camera track in play, as before lane eng-e1p (control)\n");
+    }
+    if ((e1_lab.camstore = boot_file("/cd/CAMSTORE"))) {
+        cam_track_limit = 1024;
+        e1_log("E1 CAMSTORE: the camera track store limited to 1024 bytes (control: the room must be refused)\n");
+    }
+    if ((e1_lab.memnofree = boot_file("/cd/MEMNOFREE"))) e1_log("E1 MEMNOFREE: the after-play line without mallinfo free (control)\n");
+    if ((e1_lab.ticks1 = boot_file("/cd/TICKS1"))) e1_log("E1 TICKS1: the tick count and the camera ticks reported as 1 (control)\n");
+    if ((e1_lab.rowtoken = boot_file("/cd/ROWTOKEN"))) e1_log("E1 ROWTOKEN: row 300's fields value printed with a trailing token (control)\n");
+    if ((e1_lab.readx = boot_file("/cd/READX"))) {
+        // a disc file opened before play (the hill's partner archive: never read by the village scene, so not cached),
+        // read at picture 100 (core/frame.cpp e1_fields_late)
+        e1_lab.readx_fd = fs_open("/cd/em/pl11.drs", O_RDONLY);
+        e1_log("E1 READX: a disc file opened before play (fd %d), 2048 bytes read at picture 100 (control)\n", e1_lab.readx_fd);
+    }
 }
 void e1_fields_start()
 {
@@ -254,11 +273,17 @@ void e1_fields_start()
     e1_log("E1 PACE %s, presentation %s\n", pace_tmu ? "tmu 33367 us (lab arm PACETMU)" : "fields 2 (display field count)",
            pace_manual ? "fixed field (release at the next tick's second field)" : "at render end (automatic flip)");
     e1_play_files_begin();   // lane eng-e1o: from here to the last picture every file open is counted (E1 FILES)
+    cam_track_in_play(1);    // lane eng-e1p: a camera track converted from here on is a conversion in play (E1 CAMTRACK)
 }
 void e1_fields_late(unsigned tick)
 {
     e1_memmap_control(tick);   // STACKX (lane eng-e1k): the stack guard's control
     if (e1_lab.openx && tick == 100) { file_t f = fs_open("/cd/OPENX", O_RDONLY); if (f >= 0) fs_close(f); }   // OPENX (control)
+    if (e1_lab.readx && tick == 100 && e1_lab.readx_fd >= 0) {   // READX (lane eng-e1p, control): no open, a read
+        static char b[2048];
+        fs_seek(e1_lab.readx_fd, 65536, SEEK_SET);
+        fs_read(e1_lab.readx_fd, b, sizeof b);
+    }
     if (!late_control || tick != 300) return;
     uint64_t t = timer_us_gettime64();
     while (timer_us_gettime64() - t < 100000) {}
@@ -269,6 +294,7 @@ void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fiel
 void e1_fields_finish(unsigned ticks)
 {
     e1_play_files_end();
+    cam_track_in_play(0);
     const volatile uint32_t* flip = 0;
     const unsigned flips = e1_fields_finish_c(&flip);
     const unsigned n = ticks < E1_TICKS ? ticks : E1_TICKS;
@@ -306,7 +332,10 @@ void e1_report()
 {
     e1_trace_flush();
     e1_log_flush();   // lane eng-e1e: the log lines written during the ticks (core/globals.cpp)
-    e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
+    // TICKS1 (lane eng-e1p, control): the tick count and the camera record's checked ticks both 1 (they agree with each
+    // other; the selector must find them against the rows received)
+    if (e1_lab.ticks1) eng_cam_check.ticks = 1;
+    e1_log("E1 DONE ticks=%lu\n", e1_lab.ticks1 ? 1ul : (unsigned long) e1_state[2]);
     e1_memmap_after();   // lane eng-e1k: the stack guard, heap peak, arena margin and video memory after play
     e1_play_files_report();   // lane eng-e1o (H-017.7): the files opened during play (must be 0)
     e1_stub_report();
@@ -339,9 +368,13 @@ void e1_report()
     unsigned n = e1_state[2] < E1_TICKS ? e1_state[2] : E1_TICKS;
     for (unsigned i = 0; i < n; i++) {
         const E1Timing& t = e1_timing[i];
-        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %lu pl %lu obj %lu cam %lu pvr %lu chars %lu smot %lu scloth %lu sparts %lu scol %lu sfx %lu\n", i + 1,
+        // ROWTOKEN (lane eng-e1p, control): row 300's fields value with a trailing token ("2,missing")
+        const char* ffmt = e1_lab.rowtoken && i + 1 == 300 ? "%lu,missing" : "%lu";
+        char fv[24];
+        snprintf(fv, sizeof fv, ffmt, (unsigned long) t.fields);
+        printf("ROW %u in %lu tick %lu svc %lu trace %lu draw %lu wait %lu frame %lu fields %s pl %lu obj %lu cam %lu pvr %lu chars %lu smot %lu scloth %lu sparts %lu scol %lu sfx %lu\n", i + 1,
                (unsigned long) t.input_us, (unsigned long) t.tick_us, (unsigned long) t.services_us, (unsigned long) t.trace_us,
-               (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, (unsigned long) t.fields,
+               (unsigned long) t.draw_us, (unsigned long) t.wait_us, (unsigned long) t.frame_us, fv,
                (unsigned long) t.player_us, (unsigned long) t.obj_us, (unsigned long) t.cam_us, (unsigned long) t.pvr_us,
                (unsigned long) t.chars_us,
                (unsigned long) t.svc_group_us[E1_SVC_MOTION], (unsigned long) t.svc_group_us[E1_SVC_CLOTH],

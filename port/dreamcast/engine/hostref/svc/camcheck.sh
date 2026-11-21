@@ -16,6 +16,7 @@
 # inverse skipped) and camfollow (the shoulder follow's rate) must FAIL / FAIL (they move the camera, so the stick's
 # world direction and the play); the exercise camexport: the engine's cut writer refuses an oversized cut with the
 # buffer and its guards untouched (PASS), the original writer overruns it (FAIL; no trace compared).
+# Lane eng-e1p: the exercise camrefuse (four cases, each PASS) and its control camlate (the stale case FAIL).
 # Exit 0 when every row is as it must, 1 when one is not, 2 when a run or a build is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -100,6 +101,25 @@ row() {   # row <name> <camera must> <trace must> <ref dir> <test dir> [exact]
     }
     xrow "exercise camexport: the engine's writer refuses a 7-key cut before writing" PASS "$OUT/x-camexport/nat"
     xrow "control: the original writer on the same cut (odump)" FAIL "$OUT/x-camexport/ref"
+    # lane eng-e1p (H-018.2): a refused export honoured through the whole chain (exercise camrefuse, native only): the
+    # guarded buffer unchanged after the export, after the CameraMotion is made and after a move, the motion ended, for
+    # an oversize cut, counts 0 and 27, and a stale valid 5-key table; control camlate (the refusal checked after the
+    # header is read and the table relocated, the order before) must FAIL the stale case
+    run native e1-route "$OUT/x-camrefuse/nat" RE4_SVC_EXERCISE=camrefuse
+    run native e1-route "$OUT/c-camlate" RE4_SVC_CONTROL=camlate RE4_SVC_EXERCISE=camrefuse
+    rrow() {   # rrow <name> <must> <dir> <case>
+        local got=FAIL line
+        line=$(grep -h "^# camrefuse: case $4 " "$3/svc4.txt" 2>/dev/null)
+        [ -n "$line" ] || { touch "$OUT/.abort"; line="(no camrefuse line for $4)"; }
+        echo "$line" | grep -q "after_export 1 after_construct 1 after_move 1 guards_intact 1 motion_ended 1$" && got=PASS
+        local ok="$got (as it must)"
+        [ "$got" = "$2" ] || { ok="$got (WRONG: must $2)"; touch "$OUT/.wrong"; }
+        echo "| $1 | $2 / - | $ok | - | ${line#\# } |"
+    }
+    for c in oversize count0 count27 stale; do
+        rrow "exercise camrefuse ($c): the refused buffer untouched by export, construction and a move" PASS "$OUT/x-camrefuse/nat" $c
+    done
+    rrow "control camlate: the refusal checked after the reads (stale table)" FAIL "$OUT/c-camlate" stale
 } | tee "$OUT/camcheck.md"
 status=0
 [ -f "$OUT/.wrong" ] && status=1

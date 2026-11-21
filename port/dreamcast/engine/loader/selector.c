@@ -127,25 +127,90 @@ static int pad_held(uint32_t button) {
 }
 
 /* ---------------------------------------------------------------- the plan */
+/* lane eng-e1p (H-018.3): the schedule is read to its end, whatever its length (up to 1 MiB; a longer file is refused),
+   and every line that is not blank or a comment ('#' first, after any blanks) must parse: six fields, each within its
+   size (name 15, title 47, program 39, kind 23, files 255 characters), the deadline all digits (1 to 100000 s), the rest
+   of the line the arguments (255 characters at most). A line that does not parse refuses the whole schedule (main:
+   "CDISC SCHEDULE REFUSED"); no entry may vanish. Before, 4,095 bytes were read and a line that sscanf could not fill
+   was skipped. */
+static char g_plan_refused[96];
+static int plan_field(char **p, char *out, size_t cap) {   /* the next blank-separated field, or 0 (none, or too long) */
+    while (**p == ' ' || **p == '\t') ++*p;
+    const char *t = *p;
+    while (**p && **p != ' ' && **p != '\t') ++*p;
+    const size_t n = (size_t)(*p - t);
+    if (!n) return 0;
+    if (n >= cap) return -1;
+    memcpy(out, t, n);
+    out[n] = 0;
+    return 1;
+}
 static int read_plan(void) {
     FILE *f = fopen("/cd/SCENES.TXT", "rb");
     if (!f) return 0;
-    static char text[4096];
-    size_t n = fread(text, 1, sizeof(text) - 1, f);
+    size_t cap = 4096, n = 0;
+    char *text = (char *)malloc(cap);
+    for (;;) {
+        if (!text) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: no memory to read it"); fclose(f); return 1; }
+        if (n + 1 >= cap) {
+            if (cap >= (1u << 20)) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: larger than 1 MiB"); fclose(f); return 1; }
+            cap *= 2;
+            text = (char *)realloc(text, cap);
+            continue;
+        }
+        const size_t r = fread(text + n, 1, cap - 1 - n, f);
+        if (!r) break;
+        n += r;
+    }
+    const int bad_read = ferror(f);
     fclose(f);
     text[n] = 0;
     g_plan_crc = cl_crc32(0, text, n);
+    if (bad_read) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: read error after %u bytes", (unsigned)n); return 1; }
+    if (strlen(text) != n) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: a NUL byte at %u", (unsigned)strlen(text)); return 1; }
     static scene_t over;   /* lane eng-e1n: an entry past SEL_MAX, read only to be counted */
+    unsigned lineno = 0;
     for (char *l = text; l && *l;) {
         char *e = strchr(l, '\n');
         if (e) *e = 0;
+        ++lineno;
         char *r = strchr(l, '\r');
         if (r) *r = 0;
         scene_t *s = g_n < SEL_MAX ? &g_sc[g_n] : &over;
-        int used = 0;
-        if (*l && *l != '#' &&
-            sscanf(l, "%15s %47s %39s %u %23s %255s %n", s->name, s->title, s->prog, &s->deadline, s->kind, s->need, &used) >= 6) {
-            snprintf(s->args, sizeof(s->args), "%s", used ? l + used : "");
+        char *p = l;
+        while (*p == ' ' || *p == '\t') ++p;
+        if (*p && *p != '#') {
+            char dl[12];
+            static const char *const what[6] = {"name", "title", "program", "deadline", "kind", "files"};
+            int got[6];
+            got[0] = plan_field(&p, s->name, sizeof(s->name));
+            got[1] = got[0] > 0 ? plan_field(&p, s->title, sizeof(s->title)) : 0;
+            got[2] = got[1] > 0 ? plan_field(&p, s->prog, sizeof(s->prog)) : 0;
+            got[3] = got[2] > 0 ? plan_field(&p, dl, sizeof(dl)) : 0;
+            got[4] = got[3] > 0 ? plan_field(&p, s->kind, sizeof(s->kind)) : 0;
+            got[5] = got[4] > 0 ? plan_field(&p, s->need, sizeof(s->need)) : 0;
+            int k = 0;
+            while (k < 6 && got[k] > 0) ++k;
+            if (k < 6) {
+                snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule line %u: %s %s", lineno, what[k],
+                         got[k] < 0 ? "too long" : "missing (6 fields needed)");
+                return 1;
+            }
+            unsigned long d = 0;
+            int ok = 1;
+            for (const char *c = dl; *c; ++c) ok &= *c >= '0' && *c <= '9';
+            if (ok) d = strtoul(dl, NULL, 10);
+            if (!ok || d < 1 || d > 100000) {
+                snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule line %u: deadline %.11s not 1-100000", lineno, dl);
+                return 1;
+            }
+            s->deadline = (unsigned)d;
+            while (*p == ' ' || *p == '\t') ++p;
+            if (strlen(p) >= sizeof(s->args)) {
+                snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule line %u: arguments too long", lineno);
+                return 1;
+            }
+            snprintf(s->args, sizeof(s->args), "%s", p);
             for (char *t = s->title; *t; ++t) if (*t == '_') *t = ' ';
             s->e1 = !strncmp(s->kind, "e1", 2);
             s->plan_err[0] = 0;
@@ -166,6 +231,7 @@ static int read_plan(void) {
         }
         l = e ? e + 1 : NULL;
     }
+    free(text);
     return (int)g_n;
 }
 
@@ -192,7 +258,7 @@ static void sum_add(sel_entry_t *e, const char *fmt, ...) {
 }
 
 static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "M1 missing pack", "STACK GUARD BROKEN", "E1 draw: renderer refused",
-                                         "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "CRASH event",
+                                         "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "E1 load: camera tracks refused", "CRASH event",
                                          "ABORT", "DEADLINE", "E2 SHOT REFUSED", NULL};
 
 /* the value after the keyword (first match at or after *from) */
@@ -204,30 +270,80 @@ static const char *after(const char *line, const char *key) {
     return p;
 }
 
-/* lane eng-e1o (H-017.6): strict numbers. A field is a number only if it is all digits (an optional '-' first when
-   signed, "0x"-less hex when hex) and ends at a space, the line's end or one of the record's own separators
-   (")", ";", ","): "12x", "none", "" and a missing field are not numbers (atoi read "none" as 0). */
-static int num_end_ok(const char *e) { return !*e || *e == ' ' || *e == ')' || *e == ';' || *e == ',' || *e == '\n'; }
-static int num_l(const char *p, long *v, int is_signed, int base) {
-    if (!p) return 0;
-    const char *d = p + (is_signed && *p == '-');
-    const int digit = base == 16 ? ((*d >= '0' && *d <= '9') || (*d >= 'a' && *d <= 'f') || (*d >= 'A' && *d <= 'F'))
-                                 : (*d >= '0' && *d <= '9');
-    if (!digit) return 0;
-    char *e;
-    const long x = is_signed ? strtol(p, &e, base) : (long)strtoul(p, &e, base);
-    if (e == p || !num_end_ok(e)) return 0;
-    *v = x;
-    return 1;
+/* lane eng-e1o (H-017.6): strict numbers. Lane eng-e1p (H-018.3): each judged line is matched whole against its
+   template (tmatch), so every field ends at its own delimiter and the line is consumed to its end:
+     literal text      must be there, character for character;
+     %u                an unsigned decimal: digits only, at most 4294967295;
+     %d                a signed decimal: an optional '-', digits, within -2147483648 .. 2147483647;
+     %x                hexadecimal digits, at most ffffffff;
+     %w                a word: up to the next blank (at most 15 characters);
+     %s                the rest of the line (the last field).
+   A number stops at its first non-digit, and the template's next character must be the line's next character: "17,"
+   where "%u " is expected, "12x", "none", an empty field, a missing field or a value past 32 bits do not match (before,
+   a number could end at any of " );,", strtoul's overflow was not checked, and the text after a matched keyword was not
+   read). Returns 1 when the whole line matches; otherwise 0 and *at points into the template where matching stopped
+   (the failure reason names that field). */
+static int tmatch(const char *line, const char *tpl, const char **at, ...) {
+    va_list ap;
+    va_start(ap, at);
+    const char *p = line, *t = tpl;
+    int ok = 1;
+    while (*t && ok) {
+        if (*t != '%') {
+            if (*p != *t) { ok = 0; break; }
+            ++p, ++t;
+            continue;
+        }
+        const char f = t[1];
+        if (f == 'u' || f == 'd' || f == 'x') {
+            int neg = 0;
+            if (f == 'd' && *p == '-') neg = 1, ++p;
+            const int base = f == 'x' ? 16 : 10;
+            uint64_t v = 0;
+            const char *d0 = p;
+            for (;; ++p) {
+                int dv;
+                if (*p >= '0' && *p <= '9') dv = *p - '0';
+                else if (base == 16 && *p >= 'a' && *p <= 'f') dv = *p - 'a' + 10;
+                else if (base == 16 && *p >= 'A' && *p <= 'F') dv = *p - 'A' + 10;
+                else break;
+                v = v * (uint64_t)base + (uint64_t)dv;
+                if (v > 0xffffffffull) { ok = 0; break; }
+            }
+            if (!ok || p == d0) { ok = 0; break; }
+            if (f == 'd') {
+                if (v > (neg ? 2147483648ull : 2147483647ull)) { ok = 0; break; }
+                *va_arg(ap, long *) = (long)(neg ? -(int64_t)v : (int64_t)v);
+            } else if (f == 'x') {
+                *va_arg(ap, unsigned long *) = (unsigned long)v;
+            } else {
+                *va_arg(ap, unsigned *) = (unsigned)v;
+            }
+        } else if (f == 'w') {
+            char *o = va_arg(ap, char *);
+            unsigned n = 0;
+            while (*p && *p != ' ' && *p != '\t') { if (n >= 15) { ok = 0; break; } o[n++] = *p++; }
+            o[n] = 0;
+            if (!n) ok = 0;
+            if (!ok) break;
+        } else if (f == 's') {
+            *va_arg(ap, const char **) = p;
+            p += strlen(p);
+        } else {
+            ok = 0;
+            break;
+        }
+        t += 2;
+    }
+    if (ok && *p) ok = 0;   /* text left over: the line is not consumed whole */
+    va_end(ap);
+    if (at) *at = t;
+    return ok;
 }
-/* the strict unsigned number after a keyword; 0 when the keyword is missing or its field is not a number */
-static int key_u(const char *line, const char *key, unsigned *v) {
-    long x;
-    if (!num_l(after(line, key), &x, 0, 10)) return 0;
-    *v = (unsigned)x;
-    return 1;
+/* the template's words where matching stopped (a failure reason): up to 24 characters, field markers shown */
+static void tmatch_where(const char *at, char *out, size_t cap) {
+    snprintf(out, cap, "%.24s", at && *at ? at : "(end of line)");
 }
-static int key_l(const char *line, const char *key, long *v) { return num_l(after(line, key), v, 1, 10); }
 
 /* bench WINDOW line: "WINDOW 0 CROSS arm 0 [novis] [delay5] [hold300] draw mean 12.910 p99 17.800 worst 17.800 (picture ..)
    over14 172 over33.3 0 wait .. flips 600 intervals>2 0 worst 2 fields (picture ..) .. content [L3] counts .." */
@@ -269,20 +385,30 @@ static long g_mem_stack, g_mem_arena, g_mem_vram;
    image's own tick count (E1 DONE); the in-play file opens (E1 FILES, H-017.7) */
 static unsigned g_bad_rows, g_mem_ok, g_mem_guard_broken, g_mem_lost, g_done_ticks, g_done_seen;
 static unsigned g_files_seen, g_files_opens;
-static char g_mem_why[48], g_files_first[48];
+static char g_mem_why[64], g_files_first[48];
+/* lane eng-e1p (H-018.4, H-018.1, H-018.3): the in-play disc reads and drive requests (E1 FILES), the camera tracks
+   converted in play (E1 CAMTRACK); the FIELDS line's own counts, cross-checked against the rows */
+static unsigned g_files_reads, g_files_sectors, g_ctrack_seen, g_ctrack_inplay;
+static unsigned g_fl_counted, g_fl_over, g_fl_worst, g_fl_worst_pic;
 static void e1_row(const char *l) {
     /* compact rows: "ROW n in tick svc trace draw wait frame fields pl obj cam pvr chars ..." as numbers only; every
-       field must be a number (lane eng-e1o: a text field is a malformed row and fails the record, never skipped) */
+       field must be a number (lane eng-e1o: a text field is a malformed row and fails the record, never skipped).
+       Lane eng-e1p (H-018.3): each value is digits only, at most 4294967295, and ends at one blank or the line's end
+       ("17,missing" is not 17); the row is read to its end. */
     unsigned long v[24];
     int k = 0;
     const char *p = l + 4;
-    while (*p) {
-        while (*p == ' ') ++p;
-        if (!*p) break;
-        long x;
-        if (k >= 24 || !num_l(p, &x, 0, 10)) { ++g_bad_rows; return; }
+    for (;;) {
+        if (k >= 24 || *p < '0' || *p > '9') { ++g_bad_rows; return; }
+        uint64_t x = 0;
+        while (*p >= '0' && *p <= '9') {
+            x = x * 10u + (uint64_t)(*p++ - '0');
+            if (x > 0xffffffffull) { ++g_bad_rows; return; }
+        }
         v[k++] = (unsigned long)x;
-        while (*p && *p != ' ') ++p;
+        if (!*p) break;
+        if (*p != ' ' || !p[1]) { ++g_bad_rows; return; }   /* a value ends at one blank before the next, or the end */
+        ++p;
     }
     if (k < 13) { ++g_bad_rows; return; }
     const unsigned n = (unsigned)v[0];
@@ -316,13 +442,16 @@ static void e1_summary(sel_entry_t *e) {
     if (g_function) {   /* lane eng-e1k: a traced or stills run: its rows are not timing */
         sum_add(e, "run: %.44s", g_runkind);   /* "function (traced): not a timing run" */
         sum_add(e, "rows %u of %u ticks: not reported as timing", n, g_last_row);
-        if (g_files_seen) sum_add(e, "files opened in play %u", g_files_opens);
+        if (g_files_seen) sum_add(e, "disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads, g_files_sectors);
+        if (g_ctrack_seen) sum_add(e, "camera tracks converted in play %u", g_ctrack_inplay);
         return;
     }
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
     if (g_mem_after)
         sum_add(e, "after play: stack %ld B, arena margin %ld B, vram free %ld B", g_mem_stack, g_mem_arena, g_mem_vram);
-    if (g_files_seen) sum_add(e, "files opened in play %u", g_files_opens);   /* lane eng-e1o (H-017.7) */
+    if (g_files_seen)   /* lane eng-e1o (H-017.7); lane eng-e1p (H-018.4): reads and drive requests too */
+        sum_add(e, "disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads, g_files_sectors);
+    if (g_ctrack_seen) sum_add(e, "camera tracks converted in play %u", g_ctrack_inplay);   /* lane eng-e1p (H-018.1) */
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {
@@ -397,6 +526,8 @@ static void collect(unsigned i) {
     g_dups = g_drops = g_drops_seen = g_function = g_mem_after = 0;
     g_bad_rows = g_mem_ok = g_mem_guard_broken = g_mem_lost = g_done_ticks = g_done_seen = 0;
     g_files_seen = g_files_opens = 0;
+    g_files_reads = g_files_sectors = g_ctrack_seen = g_ctrack_inplay = 0;
+    g_fl_counted = g_fl_over = g_fl_worst = g_fl_worst_pic = 0;
     g_mem_why[0] = g_files_first[0] = 0;
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
@@ -419,17 +550,21 @@ static void collect(unsigned i) {
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
             else if (!strncmp(line, "E1 draw: headless", 17)) g_headless = 1;
             else if (!strncmp(line, "E1 FIELDS mode ", 15)) {
-                /* lane eng-e1o: every field strict ("E1 FIELDS mode presented|tick flips F of P pictures; pictures
-                   41-640: counted C intervals>2 N worst W (picture K); release queue full D") */
-                unsigned c = 0, iv = 0, w = 0, wp = 0;
+                /* lane eng-e1o: every field strict; lane eng-e1p (H-018.3): the line matched whole, and its counts kept
+                   to be checked against the rows ("E1 FIELDS mode presented|tick flips F of P pictures; pictures 41-640:
+                   counted C intervals>2 N worst W (picture K); release queue full D") */
+                char mode[16];
                 g_fmode[0] = 0;
-                sscanf(line + 15, "%11s", g_fmode);
-                if (strcmp(g_fmode, "presented") && strcmp(g_fmode, "tick")) { g_fmode[0] = 0; ++fields_bad; }
-                if (!key_u(line, " flips ", &g_flips) || !key_u(line, " of ", &g_pictures) || !key_u(line, " counted ", &c) ||
-                    !key_u(line, " intervals>2 ", &iv) || !key_u(line, " worst ", &w) || !key_u(line, "(picture ", &wp))
+                g_drops_seen = 0;
+                if (!tmatch(line, "E1 FIELDS mode %w flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u "
+                                  "worst %u (picture %u); release queue full %u", NULL, mode, &g_flips, &g_pictures,
+                            &g_fl_counted, &g_fl_over, &g_fl_worst, &g_fl_worst_pic, &g_drops))
                     ++fields_bad;
-                g_drops_seen = key_u(line, "release queue full ", &g_drops);
-                if (!g_drops_seen) ++fields_bad;
+                else if (strcmp(mode, "presented") && strcmp(mode, "tick")) ++fields_bad;
+                else {
+                    snprintf(g_fmode, sizeof(g_fmode), "%s", mode);
+                    g_drops_seen = 1;
+                }
             } else if (!strncmp(line, "E1 RUN ", 7)) {
                 snprintf(g_runkind, sizeof(g_runkind), "%.40s", line + 7);
                 ++run_lines;
@@ -437,47 +572,52 @@ static void collect(unsigned i) {
                 else if (!strncmp(line, "E1 RUN function ", 16) && strstr(line, "not a timing run")) g_function = 1;
                 else g_function = 2;   /* a run line that says neither: fails below */
             } else if (!strncmp(line, "E1 MEM after play:", 18)) {
-                /* lane eng-e1o (H-017.6): the line is complete and numeric, or the record fails. "E1 MEM after play: stack
-                   high water H of S guard intact|BROKEN | heap blocks B in use U peak P | sbrk X free to arena A |
-                   mallinfo used M free F | vram free V | lost L". The guard is read from this line. */
-                unsigned hw = 0, of = 0, blocks = 0, use = 0, peak = 0, mu = 0;
-                long sbrk_top = 0;
-                const char *miss = NULL, *g = after(line, " guard ");
+                /* lane eng-e1o (H-017.6): the line is complete and numeric, or the record fails. Lane eng-e1p (H-018.3):
+                   matched whole, clause by clause (mallinfo free included; before, the line was searched by keyword and
+                   mallinfo free was never read). The guard is read from this line. */
+                unsigned hw = 0, of = 0, blocks = 0, use = 0, peak = 0, mu = 0, mf = 0;
+                unsigned long sbrk_top = 0;
+                long arena = 0, vram = 0;
+                char guard[16], where[32];
+                const char *at = NULL;
                 ++g_mem_after;
-                if (!key_l(line, " high water ", &g_mem_stack)) miss = "stack high water";
-                else if (!key_u(line, " high water ", &hw) || !key_u(line, " of ", &of)) miss = "stack size";
-                else if (!g || (strncmp(g, "intact ", 7) && strncmp(g, "BROKEN ", 7))) miss = "guard";
-                else if (!key_u(line, " heap blocks ", &blocks) || !key_u(line, " in use ", &use) || !key_u(line, " peak ", &peak))
-                    miss = "heap";
-                else if (!num_l(after(line, " sbrk "), &sbrk_top, 0, 16)) miss = "sbrk";
-                else if (!key_l(line, " free to arena ", &g_mem_arena)) miss = "arena margin";
-                else if (!key_u(line, " mallinfo used ", &mu)) miss = "mallinfo";
-                else if (!key_l(line, " vram free ", &g_mem_vram)) miss = "vram free";
-                else if (!key_u(line, "| lost ", &g_mem_lost)) miss = "lost";
-                if (miss) snprintf(g_mem_why, sizeof(g_mem_why), "after-play memory line: no %s", miss);
-                else {
+                if (!tmatch(line, "E1 MEM after play:stack high water %u of %u guard %w | heap blocks %u in use %u peak %u "
+                                  "| sbrk %x free to arena %d | mallinfo used %u free %u | vram free %d | lost %u", &at,
+                            &hw, &of, guard, &blocks, &use, &peak, &sbrk_top, &arena, &mu, &mf, &vram, &g_mem_lost)) {
+                    tmatch_where(at, where, sizeof(where));
+                    snprintf(g_mem_why, sizeof(g_mem_why), "after-play memory line: no match at '%s'", where);
+                } else if (strcmp(guard, "intact") && strcmp(guard, "BROKEN")) {
+                    snprintf(g_mem_why, sizeof(g_mem_why), "after-play memory line: guard %s", guard);
+                } else {
                     g_mem_ok = 1;
-                    g_mem_guard_broken = !strncmp(g, "BROKEN ", 7);
+                    g_mem_guard_broken = !strcmp(guard, "BROKEN");
+                    g_mem_stack = (long)hw, g_mem_arena = arena, g_mem_vram = vram;
                 }
-                (void)hw; (void)of; (void)blocks; (void)use; (void)peak; (void)mu; (void)sbrk_top;
+                (void)of; (void)blocks; (void)use; (void)peak; (void)mu; (void)mf; (void)sbrk_top;
             }
             else if (!strncmp(line, "E1 DONE ticks=", 14)) {
-                long t;
-                g_done_seen = num_l(line + 14, &t, 0, 10) && t > 0;
-                g_done_ticks = g_done_seen ? (unsigned)t : 0;
+                unsigned t = 0;
+                g_done_seen = tmatch(line, "E1 DONE ticks=%u", NULL, &t) && t > 0;
+                g_done_ticks = g_done_seen ? t : 0;
             }
             else if (!strncmp(line, "E1 FILES in play: opens ", 24)) {
-                /* lane eng-e1o (H-017.7): files opened between the first and the last picture ("E1 FILES in play: opens
-                   N first tick T name X"); a timing scene needs 0 */
-                g_files_seen = key_u(line, " opens ", &g_files_opens);
-                const char *nm = after(line, " name ");
-                snprintf(g_files_first, sizeof(g_files_first), "%.40s", nm ? nm : "?");
+                /* lane eng-e1o (H-017.7): files opened between the first and the last picture; lane eng-e1p (H-018.4):
+                   and the reads on disc-backed handles and the CD drive's read requests ("E1 FILES in play: opens N reads
+                   R sector-requests S first-open-tick T first-read-tick T first-sector-tick T name X"); a timing scene
+                   needs all three 0 */
+                unsigned t1 = 0, t2 = 0, t3 = 0;
+                const char *nm = NULL;
+                g_files_seen = tmatch(line, "E1 FILES in play: opens %u reads %u sector-requests %u first-open-tick %u "
+                                            "first-read-tick %u first-sector-tick %u name %s", NULL, &g_files_opens,
+                                      &g_files_reads, &g_files_sectors, &t1, &t2, &t3, &nm);
+                snprintf(g_files_first, sizeof(g_files_first), "%.40s", g_files_seen && nm ? nm : "?");
+                (void)t1; (void)t2; (void)t3;
             }
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
             else if (!strncmp(line, "E1 POOL full ", 13)) {
                 /* lane eng-e1i (ruling H-015.3): a record pool's refusal is an engine fault, the scene fails */
                 unsigned full = 0, bad = 0;
-                pool_seen = key_u(line, "E1 POOL full ", &full) && key_u(line, " bad_frees ", &bad);
+                pool_seen = tmatch(line, "E1 POOL full %u bad_frees %u", NULL, &full, &bad);
                 if ((!pool_seen || full || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
@@ -486,20 +626,30 @@ static void collect(unsigned i) {
                    (H-017.5): the line counts only what has a producer, the camera copy control and the light-view
                    misses (a character drawn without its light view); either not 0, or the line incomplete, fails */
                 unsigned cam = 0, miss = 0;
-                /* strict numbers (eng-e1o's key_u): both fields present and all digits, or the line is incomplete */
-                pub_seen = key_u(line, "E1 PUB camera ", &cam) && key_u(line, " light-view-misses ", &miss);
+                pub_seen = tmatch(line, "E1 PUB camera %u light-view-misses %u", NULL, &cam, &miss);
                 if ((!pub_seen || cam || miss) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "%sPUB: camera copies %u, light-view misses %u",
                              pub_seen ? "" : "incomplete ", cam, miss);
             }
+            else if (!strncmp(line, "E1 CAMTRACK part-frame-decodes ", 31)) {
+                /* lane eng-e1p (H-018.1): camera tracks are converted when the room is loaded; one converted in play is
+                   counted ("in-play N") and fails a timing scene */
+                unsigned v[9];
+                g_ctrack_seen = tmatch(line, "E1 CAMTRACK part-frame-decodes %u moves %u not-played %u conversions %u "
+                                             "in-play %u lookups %u room-tracks %u room-bytes %u store-peak %u of %u", NULL,
+                                       &v[0], &v[1], &v[2], &v[3], &g_ctrack_inplay, &v[4], &v[5], &v[6], &v[7], &v[8]);
+            }
             else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
                 /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */
-                unsigned ticks = 0, bad = 0, first = 0;
-                camrec_seen = key_u(line, "E1 CAMREC ticks ", &ticks) && key_u(line, " non-finite ", &bad) &&
-                              key_u(line, "(first tick ", &first);
+                unsigned ticks = 0, bad = 0, first = 0, word = 0;
+                unsigned long bits = 0;
+                long nearp = 0, farp = 0;
+                camrec_seen = tmatch(line, "E1 CAMREC ticks %u non-finite %u (first tick %u word %u bits %x) near %d far %d",
+                                     NULL, &ticks, &bad, &first, &word, &bits, &nearp, &farp);
                 camrec_ticks = ticks;   /* lane eng-e1o: ticks checked, compared with the scene's ticks below */
                 if ((!camrec_seen || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "camera record not finite: %u of %u ticks (first tick %u)", bad, ticks, first);
+                (void)word; (void)bits; (void)nearp; (void)farp;
             }
         }
     }
@@ -531,9 +681,19 @@ static void collect(unsigned i) {
         else if (!g_done_seen) snprintf(e->why, sizeof(e->why), "no E1 DONE tick count (or not a number)");
         else if (camrec_ticks != g_done_ticks)
             snprintf(e->why, sizeof(e->why), "camera record checked %u of %u ticks", camrec_ticks, g_done_ticks);
-        else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "no E1 FILES line (or its count not a number)");
+        /* lane eng-e1p (H-018.3): the image's tick count (and with it the camera ticks) against the rows received */
+        else if (g_done_ticks != g_last_row)
+            snprintf(e->why, sizeof(e->why), "E1 DONE says %u ticks, the rows end at tick %u", g_done_ticks, g_last_row);
+        else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "no E1 FILES line (or a field not a number)");
         else if (s->timing && g_files_opens)
             snprintf(e->why, sizeof(e->why), "files opened in play %u (first %.30s)", g_files_opens, g_files_first);
+        /* lane eng-e1p (H-018.4): reads on disc-backed handles and CD drive requests in play */
+        else if (s->timing && (g_files_reads || g_files_sectors))
+            snprintf(e->why, sizeof(e->why), "disc read in play: reads %u, sector requests %u", g_files_reads, g_files_sectors);
+        /* lane eng-e1p (H-018.1): camera tracks converted at room load, none in play */
+        else if (!g_ctrack_seen) snprintf(e->why, sizeof(e->why), "no E1 CAMTRACK line (or a field not a number)");
+        else if (s->timing && g_ctrack_inplay)
+            snprintf(e->why, sizeof(e->why), "camera tracks converted in play %u", g_ctrack_inplay);
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !e->why[0] && s->timing) {
         unsigned distinct = 0, counted = 0;
@@ -562,6 +722,20 @@ static void collect(unsigned i) {
             snprintf(e->why, sizeof(e->why), g_drops_seen ? "release queue drops %u" : "no release queue count", g_drops);
         else if (counted != E1_COUNT)
             snprintf(e->why, sizeof(e->why), "%s intervals: %u of 600 measured", g_fmode, counted);
+        else {   /* lane eng-e1p (H-018.3): the FIELDS line's own counts recomputed from the rows received */
+            unsigned rc = 0, rover = 0, rworst = 0, rpic = 0;
+            for (unsigned i = 0; i < E1_COUNT; ++i) {
+                if (!g_seen[i] || !g_fields[i]) continue;
+                ++rc;
+                rover += g_fields[i] > 2;
+                if (g_fields[i] > rworst) { rworst = g_fields[i]; rpic = i + E1_FIRST; }
+            }
+            if (g_pictures != g_last_row)
+                snprintf(e->why, sizeof(e->why), "E1 FIELDS says %u pictures, the rows end at %u", g_pictures, g_last_row);
+            else if (rc != g_fl_counted || rover != g_fl_over || rworst != g_fl_worst || rpic != g_fl_worst_pic)
+                snprintf(e->why, sizeof(e->why), "E1 FIELDS %u/%u/%u@%u, rows %u/%u/%u@%u", g_fl_counted, g_fl_over,
+                         g_fl_worst, g_fl_worst_pic, rc, rover, rworst, rpic);
+        }
     }
     if (!e->why[0] && e->exit_code) snprintf(e->why, sizeof(e->why), "exit %d", (int)e->exit_code);   /* after the
                                                                     report: a refusal line says more than its exit code */
@@ -666,6 +840,16 @@ int main(int argc, char **argv) {
     vid_set_mode(DM_640x480, PM_RGB565);
     vid_clear(0, 0, 0);
     const int planned = read_plan();
+    if (g_plan_refused[0]) {   /* lane eng-e1p (H-018.3): a schedule that does not parse whole: refused, nothing run */
+        printf("CDISC START %s: plan crc %08x\n", LOADER_BUILD, (unsigned)g_plan_crc);
+        printf("CDISC SCHEDULE REFUSED: %s\n", g_plan_refused);
+        printf("CDISC SUMMARY BEGIN %s run 00000000 boots 1\n", LOADER_BUILD);
+        printf("CDISC SUMMARY END FAILED: %s\n", g_plan_refused);
+        vid_clear(0, 0, 0);
+        line_at(0, RED, "FAILED: SCHEDULE DOES NOT PARSE");
+        line_at(1, RED, "%.52s", g_plan_refused);
+        for (;;) thd_sleep(1000);
+    }
     if (!planned) {
         line_at(0, RED, "RE4DC CONSOLE DISC: NO /cd/SCENES.TXT");
         printf("CDISC no plan\n");
