@@ -2,6 +2,30 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-024 (2026-11-21): the owner: as many lanes as possible, with an integration lane, none redundant
+
+- **From:** the owner, in conversation. **The owner's words:** "Run as many as possible with an integration lane as long as they aren't redundant". It replaces the limit of two lanes set after the 11-20 stop.
+- **How it is run (the integrator's rulings):**
+  1. **Ownership instead of a count.** Every lane's brief names the files it owns and the one question it answers. No two lanes own the same files or the same fault. The lanes table in STATUS.md is the register; a lane that finds it overlaps another stops that part and says so.
+  2. **One integration lane** (`eng-int`, standing instructions `E:\RE4DC-Lanes\eng-int\GATE.md`) gates each handed-back lane, one at a time, and is the only one that merges into `engine` and adds the "Merged" note to STATUS.md. It does no lane work, fixes nothing in a lane and rules on nothing: a failed gate comes back to the integrator. The integrator still reads each gate report, rules, briefs and writes the hand-overs.
+  3. **One common brief** for what is the same in every lane (`E:\RE4DC-Lanes\COMMON-BRIEF-20261121.md`): rules, machine, suites, Flycast slots by lease (a `LEASE.txt` in the slot), hand-back.
+  4. **The machine is the limit:** 8 cores shared with two other projects (about 90% busy when this was written), 40 GB for WSL including RAM builds, four Flycast slots. Lanes build with `-j4`, one image at a time; C: under 40 GB or E: under 20 GB stops a lane.
+  5. **The drift guard that replaces the count:** nothing merges without the gate; a lane's summary is still a claim; H-023's "drawing first" stands for what hosting waits on.
+- **Lanes now:** eng-e2a (fight services), eng-cmp1 (comparison and calibration, finishing), eng-salv1 (salvage inventory), and new: eng-draw1 (drawing cost and options), eng-svcspd1 (services cost and fixes), eng-look1 (the handgun, then the muzzle flash), eng-bake1 (chapter 1 rooms through the bake, census), eng-int (integration). Queued until the salvage inventory and the drawing options are in: room-to-room loading and doors, sound, items.
+
+## H-023 (2026-11-21): the disk shrink done; the first calibrated model; the owner on effects and the handgun
+
+- **From:** the integrator and the owner. Authority for the rulings: H-013.
+- **The WSL disk file is compacted** (the owner: "Yes shrink now."; all three sessions parked first). `ext4.vhdx` 414.5 GB to 304.4 GB; NTFS fragments 1,291,166 to 729,202; C: free 25.6 GB to 145.4 GB; Ubuntu up, fsync writes pass, 0 storvsc errors, the repository intact. Script and log: `E:\RE4DC-Lanes\reassess19\relaunch\wsl-compact6.ps1`, `wsl-compact6.log`. The machine rules stay (RAM builds, C: and E: checked before builds): C: fell from 50 GB to 25 GB in about 12 hours and only part of the cause was found (WSL's swap file).
+- **The calibrated model corrects H-021.** The interpreter build ignores `Sh4Clock`, so it is not the strict tier. The calibrated tier is **the console build's dynarec at `Sh4Clock` 70** (fitted by lane eng-cmp1 on the old port's five console benchmark spots: match clocks 70.9 to 75.7 MHz on the four heavy spots, 97.5 on the quiet view; the standard build needs about 104). Tier label: MODELLED (console-build dynarec at 70 MHz, calibrated on the old port).
+- **What it says** (lane's figures, to be gated): the engine holds the floor nowhere fully: village route 28.9 pictures a second, fight 24.2, hill 18.3. Drawing is 26 to 37 ms against a 14 ms row; services 7 to 18 against 9; behaviour under 1. In plain Flycast the old port needs 1.3 to 1.6 times the engine's work on the same scenes, with the engine drawing and running less.
+- **Rulings:**
+  1. **Drawing first.** The plan's own rule for "over 20 ms at the cross" applies: a drawing redesign round before hosting more of the game. Next lane after eng-cmp1: where the drawing time goes, phase by phase, on the calibrated tier (visibility, skinning, transform and light, clipping, submission), then options with their modelled gain. Lanes already running (the fight image's services, the salvage inventory) finish; no new hosting lane starts before the drawing options are in.
+  2. **E1's milestone audit** waits for a drawing design that fits the row on the model; auditing a floor the model says is missed would only confirm it.
+  3. **The handgun.** Leon's handgun is drawn in the first picture and not after (the owner saw it in the side-by-side sheet; the first audit listed it; lane eng-e1o's note that it "is drawn" was wrong and the integrator repeated it). Top of the look fixes, ahead of any effect.
+- **The owner on effects (2026-11-21):** "We should probably be selective with the effect layer if we are getting these gains without them." Read as: effects are not brought over as a layer. Each is added on its own with its modelled cost and a still pair: gameplay feedback first (muzzle flash, hit blood, enemy weapons), then scene-defining ones (the village pyre), then ambient ones only if the budget allows. The owner approves the look from stills.
+- **To correct in the rule documents** (LANES.md section 3, AGENTS.md rule 3, the test-rig skill): "strict Flycast" means the console build's dynarec at the calibrated clock, not the interpreter.
+
 ## H-022 (2026-11-21): the rule documents follow H-019 to H-021; E1's milestone audit
 
 - **From:** the integrator. Authority: H-013; the owner asked "do we need to update agent.md etc?" and said "Fix it".

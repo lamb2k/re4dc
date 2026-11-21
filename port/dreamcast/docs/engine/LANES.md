@@ -43,7 +43,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
   | Tier | What it is |
   |---|---|
   | **console** | Real Dreamcast, GDEMU. Deferred until the replatform is complete |
-  | **MODELLED (strict Flycast, calibrated)** | The interpreter build (`Dynarec.Enabled = no`; slots `fly1`, `fly2`) at the calibrated `[config] Sh4Clock` (MHz, default 200; upstream since v2.2, ours v2.7-14-g12bb43652). Judges speed until the deferred console run |
+  | **MODELLED (strict Flycast, calibrated)** | The console-like build in slots `fly1`, `fly2` with its dynarec on (`Dynarec.Enabled = yes`) at the calibrated `[config] Sh4Clock`: 70 MHz as fitted on the old port on 2026-11-21 (H-023; upstream option since v2.2, ours v2.7-14-g12bb43652). The interpreter ignores `Sh4Clock` and is not this tier; the standard build needs its own clock (about 104). Judges speed until the deferred console run |
   | **MODELLED (PC hardware model)** | The PC hardware model, with the images' own per-picture counters (it has under-read the console by 1.3 to 2 times) |
   | **Flycast** | The plain build (slots `std1`, `std2`). Function checks only; no speed claim |
   | **estimate** | No run behind it |

@@ -40,7 +40,7 @@ The maintainers' machine has the skill `re4dc-engine-audit` with this checklist 
 8. **Look.** The still pairs support "same picture except the listed items". Anything missing that is not listed.
 9. **The image itself.** The staged disc is the audited commit, not an older build.
 10. **The defensive model** (replaces the console estimate until the deferred console run):
-   - Speed numbers come from the strict Flycast (the interpreter build, `fly1` or `fly2`, with `[config] Sh4Clock` set), not from plain Flycast.
+   - Speed numbers come from the strict Flycast (the console-like build in `fly1` or `fly2`, dynarec on, `[config] Sh4Clock` at the calibrated clock: 70 as fitted on 2026-11-21, H-023; the interpreter ignores the clock), not from plain Flycast.
    - The calibration is current (see `port/dreamcast/docs/engine/COMPARISON_20261121.md` when it lands) and the clock used is the defensive clock.
    - The model's worst case, not its mean, is set against the budget row.
    - What the model cannot see is listed: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing.
