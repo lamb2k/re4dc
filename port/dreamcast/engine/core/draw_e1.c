@@ -31,6 +31,7 @@ static int open_ok, stills;
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent);
 void e1_light_tables(const NativeScene* s);
+extern int hud_blend_control;   /* render/native_layers.inc: the HUD control (lane eng-e1h) */
 #ifdef E2_FIGHT
 /* lane eng-e2: the fight's Ganados and native effect sprites (engine/fight/fight_draw.inc) */
 void e2_draw_open(void);
@@ -65,6 +66,9 @@ int e1_draw_open_c(const char* pack)
     open_ok = 1;
     file_t f = fs_open("/cd/STILLS", O_RDONLY);
     if (f >= 0) { fs_close(f); stills = 1; }
+    /* lane eng-e1h: HUDOLD (run-time lab arm and the HUD control): every HUD widget with the one blend the pack bakes */
+    f = fs_open("/cd/HUDOLD", O_RDONLY);
+    if (f >= 0) { fs_close(f); hud_blend_control = 1; printf("E1 HUDOLD: every HUD widget with blend 0 (control)\n"); }
     m1_state[5] = 3;
     return 1;
 }

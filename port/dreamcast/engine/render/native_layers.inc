@@ -89,6 +89,25 @@ void native_effects(NativeScene* s){
     fx_glow_draw(s);   /* eng-look: the frame-alpha glow */
 }
 typedef struct {unsigned identity,tree,shape,hidden,hdr,fnv,mask[2];float pos[3],rot[3],w,h,color[4],uv[4];} Widget;
+/* lane eng-e1h: each widget's own blend. The capture keeps the unit's blend_type in shape bits 8-15 (bench/r3_inputs.inc);
+   id_sys.cpp IdCommonTrans sets GXSetBlendMode from its table: 0 (src alpha, 1 - src alpha), 1 (src alpha, one: the
+   additive glows), 2 (one, one), 3 (destination colour, one), 4 (destination colour, zero: the darkening multiply). The
+   pack bakes every widget's header with one blend (phase 5), so the additive gauge rings and the multiplied LCD
+   backdrops were drawn as ordinary alpha blends: the gauge came out dim and the unlit digit segments showed ("10" as
+   "88"). GX and PVR share the factor codes 0-7, so the header's TSP word takes the pair as it is. */
+static const uint8_t hud_blend[5][2]={{4,5},{4,1},{1,1},{2,1},{2,0}};
+/* Control and still pair (run-time lab arm, the E1 images' boot file HUDOLD): every widget with blend 0, the look before
+   this lane, so one image gives both stills of the pair. */
+int hud_blend_control;
+static void submit_hud_header(const Scene* s,unsigned index,unsigned blend_type){
+    pvr_poly_hdr_t header __attribute__((aligned(32)));
+    memcpy(&header,(const unsigned*)row(&s->header,index)+1,32);
+    if(blend_type<5){
+        uint32_t* word=(uint32_t*)&header;   /* word 2: the TSP instruction, source factor bits 31-29, destination 28-26 */
+        word[2]=(word[2]&~(0x3Fu<<26))|((uint32_t)hud_blend[blend_type][0]<<29)|((uint32_t)hud_blend[blend_type][1]<<26);
+    }
+    layer_prim(&header);
+}
 /* The HUD is laid out every picture: its widget state changes every picture in both scenes, so a layout change
    flag (tried in e0s4a: record and compare) cost more than it saved. */
 void native_hud(NativeScene* s){
@@ -122,7 +141,7 @@ void native_hud(NativeScene* s){
             float ca=cosf(angle[id]),sa=sinf(angle[id]);
             cx+=ca*ox-sa*oy;cy+=sa*ox+ca*oy;
         }
-        submit_header(&s->assets,q->hdr);
+        submit_hud_header(&s->assets,q->hdr,hud_blend_control?0:(q->shape>>8)&255);
         rectangle(320+cx,240-cy,z,.5f*q->w,.5f*q->h,-angle[id],q->uv,argb4(q->color));z+=1e-4f;
     }
     const uint32_t* text=s->state[6];unsigned prior=~0u;
