@@ -80,6 +80,8 @@ if __name__ == '__main__':
     a = p.parse_args()
     rep = {}
     data = build(a.disc, a.capture, a.tables, rep, a.hide_smd)
+    import hud_fix
+    rep.update(hud_digits=hud_fix.verify(data))   # lane eng-e1i: never write a pack without the HUD fix
     a.out.write_bytes(data)
     rep.update(bytes=len(data))
     print(json.dumps({k: v for k, v in rep.items() if k != 'ashley'} | {'ashley': {k: v for k, v in rep['ashley'].items() if k != 'slot_joint'}}))

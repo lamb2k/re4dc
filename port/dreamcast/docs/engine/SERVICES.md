@@ -1210,8 +1210,15 @@ unit table in the capture's RAM (`s/idunits.py`; IdNegativeTrans, the screen cop
 - **Live state** (`services/draw.cpp e1_hud_draw_tick`, once a tick): the loaded count (ItemMgr.bulletNum(), the
   engine's magazine) split as cockpit.cpp BulletInfo::move splits it, shown for guns (dispBulletDigit's list, not for
   pl_type 1), the hundreds only when not 0. Not covered: the EMPTY sign, the no-weapon player states.
-- **Check** (`s/hudcheck.py`, lane folder): each still's two digit cells correlated with the ten PS2 glyphs, against the
-  magazine the image prints with the still (`E1 STILL n tick t magazine m digits drawn h t o`, STILLS runs only).
+- **Check** `tools/engine/hudcheck.py <pack> <run> <m1_state address> [--run N]` (reader `tools/engine/hudana.py`):
+  each still's two digit cells correlated with the ten PS2 glyphs, against the magazine the image prints with the
+  still (`E1 STILL n tick t magazine m digits drawn h t o`, STILLS runs only; `--run N`: the scene run of the image's
+  first scene on a multi-scene disc, FIGHT on a LEON, HILL, FIGHT disc is `--run 2`). Control: a pack baked
+  `hud_fix.py --control-cut` (the old 0..1 cut) reads 23 of 23 fight stills wrong; a pack without the fix is refused
+  ("no linked digit widgets").
+- **The bakes keep it**: native_pack.build ends with `hud_fix.fix_capture` (hill_pack.py builds through it);
+  native_pack.py, hill_pack.py and fight/pack_trim.py write no pack that fails `hud_fix.verify` (`hud_fix.py --verify
+  <pack>`: exit 1 when a digit widget is not linked); hud_fix refuses a pack it has fixed already.
 - **Lab arm** HUDOLD (boot file): the renderer's old reading (radians, every parent, deepest level first, the pack's
   frozen digits, blend 0): the "before" look from the same image.
 

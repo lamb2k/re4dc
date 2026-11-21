@@ -186,7 +186,11 @@ def build(disc, capture, room, tables, prior_dir=None):
     data = block(sections)
     print("missing source textures",len(missing),"texture count",len(assets.textures.rows))
     print("room",hex(room),"resident pack",len(data)+20,"sections",list(map(len,sections)))
-    return pack("4s4I",b"NAT3",4,room,len(data),zlib.crc32(data))+data
+    blob=pack("4s4I",b"NAT3",4,room,len(data),zlib.crc32(data))+data
+    # lane eng-e1i: the last step, the HUD widgets made right (bake/hud_fix.py; SERVICES.md 45). hill_pack.py builds
+    # through here too. A pack without it is refused by hud_fix.verify in the writers below.
+    import hud_fix
+    return hud_fix.fix_capture(blob,disc,capture)
 
 if __name__=="__main__":
     p=argparse.ArgumentParser()
@@ -197,4 +201,7 @@ if __name__=="__main__":
     p.add_argument("tables",type=Path)
     p.add_argument("--prior",type=Path,help="folder holding the first capture's eng-bench-<scene>-4 RAM snapshot")
     a=p.parse_args()
-    a.out.write_bytes(build(a.disc,a.capture,a.room,a.tables,a.prior))
+    import hud_fix
+    data=build(a.disc,a.capture,a.room,a.tables,a.prior)
+    hud_fix.verify(data)   # lane eng-e1i: never write a pack without the HUD fix
+    a.out.write_bytes(data)
