@@ -389,13 +389,10 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
                         if(km && !grid_test(&local,km,meshlets+28*l+16,&lm,&z))continue;
                         if(count>=capacity)return -1;
                         unsigned mask=w->rt[l].nonempty;
-                        /* lane eng-draw2, step S1: a strip group is tested only against the near and far planes the
-                           meshlet straddles. A group wholly past a side plane is wholly off the screen (the side planes
-                           are the screen's edges) and draws no pixel, so it is kept rather than tested. */
-                        if((lm&3) && w->group_bytes){
+                        if(lm && w->group_bytes){
                             const uint8_t* group=w->groups+32+16*(l*G);unsigned keep=0;
                             for(unsigned g=0;g<G;g++,group+=16){unsigned gm;
-                                if((mask>>g&1) && grid_test(&local,lm&3,group,&gm,&z))keep|=1u<<g;}
+                                if((mask>>g&1) && grid_test(&local,lm,group,&gm,&z))keep|=1u<<g;}
                             mask=keep;
                             if(!mask)continue;
                         }
