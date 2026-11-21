@@ -262,6 +262,11 @@ float's step is 2^-23 to 2^-24 of its size), so the bound is the same number of 
 the origin the absolute 0.01 governs. At x = 21,069 it is 0.0201. Roll and fov stay within 0.01 degree; the decisions
 equal. `camcheck.py --rel` (default 2^-20), `camcheck.sh` (CAM_REL); the report gives the worst share of the bound used.
 
+Re-run on the merge (`E:\RE4DC-Lanes\eng-e1j\ev\addendum\camcheck.md`), every row as it must: e1-route 2% of its bound,
+hill-ashley 49% (0.0098 against 0.0201), bell-ganado 0%, square-follow 10%, door103-walk 0%, camblend 2%, camrail 20%;
+determinism exact; the controls FAIL as before (smoothing off at tick 1, cut blend off at tick 100, rail parameter at
+tick 10).
+
 ### 7.2 What the service-check table loosened, and the correction
 
 The first hand-back's `svc_controls.sh` gave the reference-against-native rows `svc4_compare.py --tol 0.01`: every line
@@ -270,6 +275,20 @@ of the round-4 boundary log within 0.01, not only the camera's. Bones, queries, 
 lines (the camera kinds CM, VP, OR, OU, CT, HI, CA, HX, BS, PZ, and every line logged while CameraMove runs, its tick
 token marked "c" by `svc4_dump.cpp`: the camera's own probes EH, OH, OB); every other line is compared bit for bit
 again. Control `pos005` (Leon's model 0.005 unit along x at tick 100) in that mode must FAIL.
+
+Result on the merge (`ev\addendum\svc_controls.md`): 78 rows (77 + pos005), every row as it must. e1-route's native row:
+11,590 of 11,590 lines equal, 7,564 of them camera lines, 1,592 equal only within 0.01; every other line bit for bit.
+pos005: FAIL; its first svc4 difference is the AT line of tick 100 (x c5a09ef9 against c5a09eef, 0.005 unit: inside the
+first hand-back's 0.01 loosening, so that mode would have passed it on the boundary log), queries over 0.01 from tick 103;
+bones stay within their unchanged 1-unit bound (0.116), as before.
+
+### 7.2b Re-confirmed on the merge
+
+Link check: default and SENDABLE=1 PASS 0 of 384; FIGHT=1 114 service (42,156 B), BOSS=1 57 (17,192 B) (GetWepTargetList2
+went native with eng-e1k). `svc_controls.sh` 78 rows, `controls.sh` 18, `outcome_controls.py` 35, `camcheck.sh`,
+`aim_check.sh`: every row as it must (`ev\addendum`). Flycast std1, disc k1 (LEON, HILL, FIGHT, timing-run records under
+eng-e1k's stricter selector): 3 of 3 OK, intervals > 2: 0, PUB 0 in each; disc k2 adds FIGHT/PUBCOPY: FIGHT FAILED
+"conversions per tick: camera 900".
 
 ### 7.3 ZNEAR and ZFAR (not changed here; queued by the integrator)
 
