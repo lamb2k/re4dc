@@ -145,7 +145,8 @@ struct SkelCounters {
         mk_rebinds,
         hist_join, hist_moves, hist_full, hist_late,
         compress_bones,   // lane eng-e1h: parts squashed by skel_compress_y (a dissolving corpse)
-        trig_hits, trig_miss;   // lane eng-svcspd1: a bone's angles' sin and cos reused / taken
+        trig_hits, trig_miss,   // lane eng-svcspd1: a bone's angles' sin and cos reused / taken
+        pre_bones;              // lane eng-svcspd1: bones MotionMove's first world pass computes (the IK's reads)
 };
 void skel_compress_y(cModel* m, f32 k);   // a dying body squashed vertically (em10ScaleCompress; lane eng-e1h)
 extern SkelCounters skel_cnt;
@@ -159,4 +160,5 @@ extern int skel_control_hist;     // 1: no bone keeps its history; 2: the histor
 extern int skel_control_compress; // 1: skel_compress_y squashes nothing (the fault lane eng-e1h fixed; the control)
 extern int skel_control_trig;     // 1: a bone's kept sin and cos reused whatever its angles (stale; lane eng-svcspd1's
                                   // control; on the PC reference RE4_SVC_CONTROL=trigstale)
+extern int skel_control_ikclosure; // 1: the first world pass leaves out the IK chains' ancestors (RE4_SVC_CONTROL=ikclosure)
 }

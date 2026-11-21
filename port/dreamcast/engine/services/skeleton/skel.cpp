@@ -59,6 +59,7 @@ int skel_control_mk;
 int skel_control_hist;
 int skel_control_compress;
 int skel_control_trig;
+int skel_control_ikclosure;
 }
 // lane eng-svcspd1: this service's own controls on the PC reference (RE4_SVC_CONTROL, read once; hostref svc_io.cpp)
 extern "C" const char* svc_env(const char* name) __attribute__((weak));
@@ -70,6 +71,7 @@ inline void read_controls()
     g_ctl_read = 1;
     const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
     if (c && !__builtin_strcmp(c, "trigstale")) skel_control_trig = 1;
+    if (c && !__builtin_strcmp(c, "ikclosure")) skel_control_ikclosure = 1;
 }
 }
 
@@ -477,7 +479,9 @@ void mat_calc(SkelTable* t)
 
 // The world pass (cModel::partsWorldCalc): one pass in chain order; parent x local through XMTRX. XMTRX keeps the
 // last bone's world while the next bone is its child, so a parent -> child run loads nothing.
-void world_calc(SkelTable* t, int phase = SP_WORLD_ENTRY)
+// `only` (lane eng-svcspd1): when given, the pass computes only the bones it marks (an ancestor-closed set); every other
+// bone the pass would compute only has its one-shot addRot flag cleared, as the full pass would leave it.
+void world_calc(SkelTable* t, int phase = SP_WORLD_ENTRY, const u8* only = 0)
 {
     SvcProf pr(phase);
     cModel* mdl = t->model;
@@ -488,6 +492,10 @@ void world_calc(SkelTable* t, int phase = SP_WORLD_ENTRY)
     for (u32 b = 0; b < t->n; b++) {
         SkelBone& w = t->world[b];
         if (w.flags & 2) continue;
+        if (only && !only[b]) {
+            w.flags &= ~0x40000000;
+            continue;
+        }
         ParentRef pr = parent_of(t, b);
         Vec tmp;
         tmp.x = t->lmat[b].m[0][3];
@@ -1434,6 +1442,35 @@ void inverse_kinematics(SkelTable* t)
             }
         }
     }
+}
+
+// Lane eng-svcspd1: the bones MotionMove's first world pass must compute. That pass (under the scale-cancelled model
+// matrix) is read by the IK alone: the second pass computes every bone's world again, from the same local matrices but
+// those the IK rewrites, and reads nothing the first pass wrote but the parents it computes itself first. The IK of a
+// chain rooted at p reads the worlds of p .. p + 4 (root, joint, effector, toe; p + 3 is the effector of the flag-0x10
+// chains) and of their parents (PMAT), so the first pass is limited to those bones and all their ancestors (the set is
+// closed under parents, so each marked bone is computed from parents computed in the same pass, as before). Returns the
+// number marked; 0: no chain the IK will run (the pass computes nothing). Control ikclosure: the ancestors left out.
+u32 ik_reads(SkelTable* t, u8* need)
+{
+    memset(need, 0, t->n);
+    u32 k = 0;
+    for (u32 p = 0; p < t->n; p++) {
+        const u32 fp = t->world[p].flags;
+        if (!(fp & 4) || (fp & 0x80) || p + 2 >= t->n) continue;   // the chains inverse_kinematics() runs
+        for (u32 q = p; q <= p + 4 && q < t->n; q++) {
+            if (skel_control_ikclosure) {
+                if (!need[q]) { need[q] = 1; k++; }
+                continue;
+            }
+            for (u32 a = q; a < t->n && !need[a]; a = t->parent[a]) {
+                need[a] = 1;
+                k++;
+            }
+        }
+    }
+    skel_cnt.pre_bones += k;
+    return k;
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -2587,7 +2624,8 @@ extern "C" u16 MotionMove(cModel* m)
         PSMTXConcat(m->mat, tmp, tmp);
         memcpy(m->mat, tmp, sizeof(Mtx));
         m->r_scale = m->scale;
-        world_calc(t, SP_WORLD_PRE);
+        u8 need[256];   // lane eng-svcspd1: the first pass only for the bones the IK reads (ik_reads)
+        world_calc(t, SP_WORLD_PRE, skel_control_no_ik ? 0 : (ik_reads(t, need), need));
         if (!skel_control_no_ik) inverse_kinematics(t);
         memcpy(m->mat, save, sizeof(Mtx));
         m->r_scale = m->scale;
