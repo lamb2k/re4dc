@@ -9,7 +9,7 @@
 # answers the crash volume (kind 3) at 542 and 0x15 is knocked over (routine 0x3b from 544 to 610). The later presses
 # fire at nothing (0x15 is thrown out of the line).
 # Controls: the engine without the damage table's tick (boot file DMGNOTICK: cDmgMgr::move not run) must FAIL the
-# outcome against the reference (tools/plays_right/shot_engine.py --scenes KNOCK:PASS,KNOCKNT:FAIL:any).
+# outcome against the reference (tools/plays_right/shot_engine.py --scenes KNOCK:PASS,KNOCKNT:FAIL:knock).
 room 0x101
 pos -7914 0 -254
 ang 2.9600
