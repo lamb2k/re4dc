@@ -70,7 +70,32 @@ static float column_scale(const float* m){
     float a=m[0]*m[0]+m[4]*m[4]+m[8]*m[8],b=m[1]*m[1]+m[5]*m[5]+m[9]*m[9],c=m[2]*m[2]+m[6]*m[6]+m[10]*m[10];
     return sqrtf(m1_maxf(a,m1_maxf(b,c)));
 }
-static inline unsigned sphere_planes(const float* c,float r,int* inside){return sphere_planes6((const float (*)[4])frustum,c,r,inside);}
+/* Lane eng-draw3 (step 3, the per-model fixed cost): the sphere-against-frustum test of part_cull.h without a branch per
+   plane. The same distance and the same two comparisons per plane, folded into the masks by compare-and-move: one block
+   a sphere where the loop made two conditional branches a plane (the tier ends a block at each and charges the next
+   block's first memory reads again). Used by the whole-character test and the part classes of both passes. */
+static inline unsigned sphere_planes6_flat(const float (*fr)[4],const float* c,float r,int* inside){
+    unsigned out=0;int in=1;const float nr=-r;
+#pragma GCC unroll 6
+    for(unsigned j=0;j<6;j++){
+        const float d=fr[j][0]*c[0]+fr[j][1]*c[1]+fr[j][2]*c[2]+fr[j][3];
+        out|=(unsigned)(d<nr)<<j;
+        in&=!(d<r);
+    }
+    *inside&=in;
+    return out;
+}
+static inline unsigned sphere_planes(const float* c,float r,int* inside){return sphere_planes6_flat((const float (*)[4])frustum,c,r,inside);}
+/* part_class (part_cull.h) on the flat test: the same loop, the same early stop */
+static inline unsigned part_class_flat(const float (*fr)[4],const PartSphere* sp,unsigned n,const float (*rows)[12],const float* scale){
+    unsigned out=63;int inside=1;
+    for(unsigned k=0;k<n && (out||inside);k++,sp++){
+        const float* r=rows[sp->bone];float c[3];
+        for(unsigned a=0;a<3;a++)c[a]=r[4*a]*sp->c[0]+r[4*a+1]*sp->c[1]+r[4*a+2]*sp->c[2]+r[4*a+3];
+        out&=sphere_planes6_flat(fr,c,sp->r*scale[sp->bone],&inside);
+    }
+    return out?0:inside?1:2;
+}
 static unsigned model_lights(const NativeScene* s,const ActorPose* pose,Incident* lamps){
     unsigned used=0;float strength[3]={};
     const NativeLamp* source=(const void*)s->state[2];
@@ -243,6 +268,12 @@ static int actor_hidden(const NativeVis* v,const uint8_t* cubes,const float* lo,
 static unsigned actor_serial;
 static void actor_frame_setup(const NativeScene* s){
     DC_ADD(DC_A_CALLS,1);   /* lane eng-draw1: once per character drawn (E1), once per pass (bench) */
+    /* lane eng-draw3 (step 3): once a picture, not once a character: the frustum, the view-projection and the light
+       order depend only on the picture's camera and room lights (m1_state[1] is the picture number, never the same for
+       two pictures in a row) */
+    static const NativeScene* done_scene;static uint32_t done_picture;
+    if(done_scene==s && done_picture==m1_state[1] && m1_state[1])return;
+    done_scene=s;done_picture=m1_state[1];
     const float* camera=(const float*)s->state[0];
     NativeFrustum f;native_world_frustum(camera,&f);
     for(unsigned j=0;j<6;j++){
@@ -452,7 +483,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         unsigned visible=0;
         for(unsigned p=0;p<h[4];p++){
             const RtPart* rp=m->parts+p;
-            unsigned st=part_class((const float (*)[4])frustum,m->spheres+rp->sphere_first,rp->sphere_count,(const float (*)[12])bone_rows,bone_scale);
+            unsigned st=part_class_flat((const float (*)[4])frustum,m->spheres+rp->sphere_first,rp->sphere_count,(const float (*)[12])bone_rows,bone_scale);
             state[p]=st;visible+=st!=0;
             if(!st)census[1]++;
         }

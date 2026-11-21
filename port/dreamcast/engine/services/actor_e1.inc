@@ -73,7 +73,7 @@ static inline unsigned e1_part_class(const float (*fr)[4], const PartSphere* sp,
     for (unsigned k = 0; k < n && (out || inside); k++, sp++) {
         const float* r = pal + 16 * sp->bone; float c[3];
         for (unsigned a = 0; a < 3; a++) c[a] = r[4 * a] * sp->c[0] + r[4 * a + 1] * sp->c[1] + r[4 * a + 2] * sp->c[2] + r[4 * a + 3];
-        out &= sphere_planes6(fr, c, sp->r * r[12], &inside);
+        out &= sphere_planes6_flat(fr, c, sp->r * r[12], &inside);   /* lane eng-draw3: no branch per plane */
     }
     return out ? 0 : inside ? 1 : 2;
 }

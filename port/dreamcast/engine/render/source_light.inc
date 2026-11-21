@@ -31,8 +31,15 @@ volatile uint32_t m1_light_pick_mismatch,m1_light_pick_checked;   /* engine pick
 static void lamps_frame(const NativeScene* s){
     const NativeLamp* L=(const void*)s->state[2];unsigned n=s->words[2]*4/sizeof(NativeLamp);
     if(n>64)n=64;
-    for(unsigned i=0;i<n;i++){unsigned j=i;while(j && L[lamp_order[j-1]].index>L[i].index){lamp_order[j]=lamp_order[j-1];j--;}lamp_order[j]=i;}
-    lamp_count=n;
+    /* lane eng-draw3 (step 3): only the lights that pass the model-independent tests of source_lights_w (alive, not
+       Type 4, kind switched on, not black) are listed, once a picture; the order of those kept is unchanged */
+    unsigned k=0;
+    for(unsigned i=0;i<n;i++){
+        const NativeLamp* l=L+i;
+        if((l->flags&3)!=3 || l->type==4 || !(l->bits>>24&1) || !(l->rgb[0]|l->rgb[1]|l->rgb[2]))continue;
+        unsigned j=k++;while(j && L[lamp_order[j-1]].index>l->index){lamp_order[j]=lamp_order[j-1];j--;}lamp_order[j]=i;
+    }
+    lamp_count=k;
 }
 static const ModelLight* model_light_ri(const NativeScene* s,unsigned role,unsigned index){
     const ModelLight* m=(const void*)s->state[8];unsigned n=s->words[8]*4/sizeof(ModelLight);
