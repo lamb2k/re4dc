@@ -194,6 +194,13 @@ $(BUILD)/%/game/pl_npc.o: POSTCC = objcopy --rename-section .text._ZN8cSubChar8m
 # lane eng-svc4: rumble is presentation (E1 audit section 3): the random-strength rumble (VibControl) draws from the
 # presentation generator in the reference too, as the native input service does (services/input, eng_pres_u8)
 $(BUILD)/%/game/pad.o: POSTCC = objcopy --rename-section .text.VibControl=re4ref_present $@
+# lane eng-e1k: the Ganado's presentation callers, as the engine's fight image splits them (game/fight.mk PRESENT_em10):
+# its voice, breath and chainsaw sound timers, its blood-effect choice and its camera moves. Without them the reference's
+# Ganado drew its voice timer from the behaviour generator (two draws at tick 135 of shot-ganado) and the engine's did not.
+PRESENT_EM10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10CamMove2P5cEm10 _Z12em1cBloodSetP5cEm10i \
+	_Z16em10CallVoiceSe2P5cEm10ii _Z18em10SetDamageVoiceP5cEm10ii em10CallVoiceSe em10CamMove em10CamMoveAshley \
+	em10CamMoveCri em10CamMoveTakeaway em10CsawSignSe plem10KickCamMove
+$(BUILD)/%/game/em10_em10.o: POSTCC = objcopy $(foreach f,$(PRESENT_EM10),--rename-section .text.$(f)=re4ref_present) $@
 
 # lane eng-svc: the service census build and the native skeleton and collision services (svc/svc.mk)
 include svc/svc.mk
