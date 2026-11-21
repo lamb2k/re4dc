@@ -176,3 +176,64 @@ Both test discs were deleted after their runs (`cdisc\DELETED.txt`).
   start at frame 0 and rise, or that does not fit the 12 KiB store, is not played (none in E1; event cutscene
   cameras of later rooms may need a larger store, sized then). The PC exercise camtrack no longer evaluates keys
   directly at a sweeping frame (the function it called is gone).
+
+## 8. Addendum (after the merge of engine 1ff71b492, lane eng-e1o)
+
+### 8.1 What the merge changed here
+- `hostref/svc/camcheck.sh`: eng-e1o's two musts a row (camera, trace) kept; this lane's rows take theirs: campush
+  PASS / PASS, caminv and camfollow FAIL / FAIL (the camera turns the stick into Leon's direction, so the play moves),
+  camexport has no trace.
+- `loader/selector.c`: the PUB parse is strict through eng-e1o's `key_u` (both fields present and all digits).
+- LIGHTMISS and HUDFREEZE are read by `e1_lab_boot` (core/frame.cpp, `E1Lab`) before play; services/draw.cpp acts on
+  them at the renderer's open. The camera track conversion opens no file (it reads the motion file already in memory).
+- `tools/engine/build_console_disc.sh`: control scenes CPUBCP (PUBCOPY, Leon's scene), CLMISS (LIGHTMISS, the hill),
+  CHUDFZ (HUDFREEZE with STILLS, the fight; a function run the selector passes and hudcheck must fail), staged only when
+  `--scenes` names them.
+
+### 8.2 The shoulder camera's body: what of the original it re-expresses (for the integrator's ruling)
+Yes: the walking-ratio rule and the reset snap are decisions, and they now live in engine code. Every line of
+`src/game/cam_qfps.cpp` `CameraQuasiFPS::move` (1226-1346) and where it went in
+`port/dreamcast/engine/services/camera/cam_eval.cpp` `CameraQuasiFPS::move` (736-759):
+
+| Original lines | What | Engine | Hosted call? |
+|---|---|---|---|
+| 1239 | `checkCameraType()` | 738 | yes, the hosted function |
+| 1240 | `calcBaseMatrix(m)` | 740 | the camera service |
+| 1241-1243 | `if (!(Debug_flg[1] & 0x20000000)) m_site = checkFBLR()` | 741-742 | checkFBLR is hosted; **the debug-flag test is re-expressed** (inline in move) |
+| 1244-1261 | `switch (m_site)`: cur / old offset tables per site | 743-747 | **re-expressed** (an index rule; inline in move, no function holds it) |
+| 1262-1264 | `if (!debug) calcDepressionRatio()` | 748 | the call is hosted; **the flag test re-expressed** (same as 1241) |
+| 1265-1266 | `calcOffset`, `hitCheck` | 751-752 | the camera service |
+| 1267-1284 | the follow filter, the two transforms, roll 0, fov | 753 (`cam_shoulder_follow`) | the camera service (the evaluation H-017.1 moves) |
+| 1285-1291 | `switch (PlGetStatus()) case 2, 4, 8: CamSmth.m_ratio = m_walk_ratio` | 754-755 | **re-expressed: a decision** (which smoothing ratio while the player moves) |
+| 1292-1294 | `if (reset) CamSmth.m_flag \|= 1` | 756 | **re-expressed: a decision** (snap the smoothing on a reset) |
+| 1295-1340 | debug frustum drawing (debug_mode 0xF) | 757 | dropped: counted, not drawn |
+| 1341-1344 | `cam.param = c.param` | 753 | written by the service |
+| 1345 | `reset = 0` | 758 | **re-expressed** (the state step that closes the reset) |
+
+Why none of the re-expressed lines could be reached as a hosted call: each is a statement inside the original
+`CameraQuasiFPS::move`, not a function of its own; no other function of cam_qfps.cpp (or of any hosted unit) holds the
+site's table pair, the walking-ratio rule, the reset snap or the debug-flag tests. The only way to keep them in
+original object code was to keep `CameraQuasiFPS::move` itself linked, and that body also holds the follow filter
+(inline arithmetic at 1268-1282) that H-017.1 moves out; `src/` may not be edited and no link-level split can take
+inline statements out of a compiled function. Not rewritten again, awaiting the ruling.
+
+### 8.3 Re-confirmed on the merge (d37c42382)
+- **Link** (`maps\m1`): default and SENDABLE=1 PASS, 384 allowed (107,044 B), 0 service; FIGHT=1 114 service (42,156 B);
+  BOSS=1 57 (17,192 B). Controls: `CAM_PUSH_ORIG=1` FAIL (5 references), `CAM_EXTRA=-DE1_CAM_ORIG_QFPS_MOVE=1` FAIL
+  (1,256 B over ceiling 0).
+- **PC** (`ev\chk-m1`): svc4_units 0 kept; camcheck.sh every row as it must (camera and trace musts); svc_controls.sh 79
+  rows; controls.sh 18; outcome_controls.py 35; aim_check.sh as before; refctl.sh every row as it must.
+- **Flycast, discs from the repository script** (three discs: the selector reads at most 8 scenes a plan, see below):
+  - m1 (LEON, HILL, FIGHT, LEONT, HILLT, SHOT, SHOTNP, SHOTDMG): 8 of 8 OK, `E1 FILES in play: opens 0` and PUB 0/0 in
+    each. camengine.sh (`CAMENGINE_NAMES=LEON=LEONT,HILL=HILLT`, the old reference built by the script): every row as
+    it must (LEON 10% of the bound, HILL 19%, SHOT 0%; old-reference rows and controls FAIL as they must).
+    hill_engine.py: Leon and Ashley 729/729 PASS, control FAIL at tick 367.
+  - m2 (SHOT, SHOTNP, SHOTDMG, SHOTLATE, LEONS, HILLS, FIGHTS, CHUDFZ): 8 of 8 OK, opens 0. shot_engine.py: SHOT PASS,
+    SHOTNP / SHOTDMG / SHOTLATE FAIL as they must. Stills LEONS, HILLS, FIGHTS against f1: 59 pairs, 0 moved.
+    hudcheck: FIGHTS 23 of 23, village and hill 36 of 36; CHUDFZ (HUDFREEZE) 22 of 23 wrong: FAIL as it must (the
+    selector passes it: its failure is hudcheck's).
+  - m3 (LEON, CPUBCP, CLMISS): LEON OK; CPUBCP FAILED "PUB: camera copies 640, light-view misses 0"; CLMISS FAILED "PUB:
+    camera copies 0, light-view misses 728"; opens 0 in each.
+- **Found:** `loader/selector.c` reads at most `SEL_MAX` (8) scenes from SCENES.TXT and drops the rest without a word
+  (line 135: `g_n < SEL_MAX`; the 15-scene disc ran 8 and reported "8 of 8 scenes OK"), and build_console_disc.sh does
+  not refuse a longer list. Not changed here (not this lane's part of the selector).
