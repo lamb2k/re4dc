@@ -62,8 +62,18 @@ struct ClothChain {      // 64 B header
     u32 serial;
     u32 bytes;
     PresRng rng;         // the chain's presentation stream (pres_rng.h)
-    u32 pad[5];
+    u8 skirt;            // lane eng-cloth1: the chain is Ashley's skirt (48 links, 11 volumes): the look arms' chain
+    u8 phase;            // lane eng-cloth1: ticks since the chain's last full step (look arms c and d)
+    u16 pad16;
+    u32 pad[4];
 };
+// Lane eng-cloth1: the look options, run-time lab arms (boot files, read once at the first set-up; on the PC reference
+// RE4_SVC_CLOTH_ARM=cap|pass2|half|far|far0). Each changes Ashley's skirt only, alone; none is the default (the owner
+// chooses from clips). 0 none, 1 CLOTHCAP (the leg spheres as three capsules), 2 CLOTHPASS2 (two constraint passes
+// instead of four), 3 CLOTHHALF (stepped every other tick, the pose held between), 4 CLOTHFAR (stepped every fourth
+// tick, pose held between, when the skirt is more than 6 m from the camera or behind it), 5 CLOTHFAR0 (the far rule
+// with its distance 0: every fourth tick always; the far arm's control and the far look up close).
+extern "C" int cloth_arm;
 
 extern "C" {
 // counters (svc census and the cost indicator)

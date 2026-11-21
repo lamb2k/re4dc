@@ -69,6 +69,12 @@ typedef struct ClothKSph {
     float x, y, z, r;
 } ClothKSph;
 
+//! A capsule (look arm CLOTHCAP): the segment from a along e, radius r, ie2 = 1 / |e|^2 (0 for a sphere).
+typedef struct ClothKCap {
+    float ax, ay, az, r;
+    float ex, ey, ez, ie2;
+} ClothKCap;
+
 //! One chain's tick.
 typedef struct ClothKStep {
     ClothKLink* link;
@@ -106,6 +112,10 @@ typedef struct ClothKStep {
     const ClothKVol* vol;    //!< 0: none this tick
     uint32_t nVol;
     PresRng* rng;            //!< the chain's presentation stream
+    /* look arm CLOTHCAP (lane eng-cloth1, not the default): when nCap > 0 the volume tests use these capsules
+       (segment a..a+e, radius r; ie2 = 1 / |e|^2) instead of the volume list's spheres */
+    const struct ClothKCap* cap;
+    uint32_t nCap;
     /* filled by the kernel at the start of the tick (lane eng-cloth1) */
     const ClothKSph* sph;    //!< the volumes' centres and radii, in the volume list's order
     uint32_t cylMask;        //!< bit i: volume i is a cylinder (never skipped by the parallel test's bound)
@@ -117,6 +127,10 @@ void cloth_k_step(ClothKStep* s);
 void cloth_k_step_passes(ClothKStep* s);
 //! One tick in one pass (every stage of a link before the next link): measured and rejected (RE4_SVC_CLOTH_PASSES=1).
 void cloth_k_step_onepass(ClothKStep* s);
+//! Look arms CLOTHHALF / CLOTHFAR (lane eng-cloth1, not the default): a tick without a step. Every link is carried by
+//! the root's motion and each bone is turned to look along its link again (the matrix stage without the volumes, the
+//! floor or the speed); the links' speeds are kept for the next step.
+void cloth_k_hold(ClothKStep* s, ClothKVec rootMove);
 
 //! The border volume test, native (the original's pendulum.cpp arithmetic). The plain and the parallel volume tests
 //! are the kernel's own (they read the tick's ClothKSph table).

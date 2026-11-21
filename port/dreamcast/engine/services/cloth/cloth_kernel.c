@@ -156,39 +156,61 @@ static void k_prep(ClothKStep* s) {
 
 // penClothAtCk: a link inside a volume is put back on its surface. The link's length (a square root) is taken at the
 // first hit instead of before the loop: the same value, made only when a hit reads it.
-static int at_ck_plain(const ClothKStep* s, ClothKVec* pos, const ClothKVec* up) {
-    if (!s->vol) return 0;
-    const ClothKSph* a = s->sph;
-    const uint32_t n = s->nVol;
+SHZ_FORCE_INLINE int plain_one(ClothKVec* pos, const ClothKVec* up, const ClothKSph* a, float* len, int hit) {
     float mtx[12];
+    ClothKVec v = k_vec(pos->x - a->x, pos->y - a->y, pos->z - a->z);
+    const float dd = v.x * v.x + v.y * v.y + v.z * v.z;
+    const float rr = a->r * a->r;
+    if (!(dd < rr)) return 0;
+    if (!hit) *len = k_sqrt(k_mag2(k_sub(*up, *pos)));   // GetDistance3(pos, up): pos as the call found it
+    const float L = *len;
+    const ClothKVec c = k_vec(a->x, a->y, a->z);
+    v = k_sub(c, *up);
+    const float d = k_sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    const float ang = k_acos((rr - L * L - d * d) / (L * -2.0f * d));
+    if (ang > 0.01f && ang < K_PI_LIM) {
+        const ClothKVec v2 = k_sub(*pos, *up);
+        k_rot_axis(mtx, k_cross(v, v2), ang);
+        v = k_normalize(v);
+        v = k_scale(v, L);
+        v = k_mul(mtx, v);
+        *pos = k_add(*up, v);
+    } else {
+        v = k_normalize(v);
+        v = k_scale(v, a->r + 1.0f);
+        *pos = k_add(c, v);
+    }
+    cloth_k_cnt.vol_hits++;
+    return 1;
+}
+// look arm CLOTHCAP: the capsule's point nearest (x, y, z), as a sphere of the capsule's radius
+SHZ_FORCE_INLINE void cap_near(ClothKSph* o, const ClothKCap* k, float x, float y, float z) {
+    float t = ((x - k->ax) * k->ex + (y - k->ay) * k->ey + (z - k->az) * k->ez) * k->ie2;
+    t = t < 0.0f ? 0.0f : (t > 1.0f ? 1.0f : t);
+    o->x = k->ax + k->ex * t;
+    o->y = k->ay + k->ey * t;
+    o->z = k->az + k->ez * t;
+    o->r = k->r;
+}
+static __attribute__((noinline)) int at_ck_plain_cap(const ClothKStep* s, ClothKVec* pos, const ClothKVec* up) {
     float len = 0.0f;
     int hit = 0;
-    for (uint32_t i = 0; i < n; i++, a++) {
-        ClothKVec v = k_vec(pos->x - a->x, pos->y - a->y, pos->z - a->z);
-        const float dd = v.x * v.x + v.y * v.y + v.z * v.z;
-        const float rr = a->r * a->r;
-        if (dd < rr) {
-            if (!hit) len = k_sqrt(k_mag2(k_sub(*up, *pos)));   // GetDistance3(pos, up), pos as the loop found it
-            const ClothKVec c = k_vec(a->x, a->y, a->z);
-            v = k_sub(c, *up);
-            const float d = k_sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-            const float ang = k_acos((rr - len * len - d * d) / (len * -2.0f * d));
-            if (ang > 0.01f && ang < K_PI_LIM) {
-                const ClothKVec v2 = k_sub(*pos, *up);
-                k_rot_axis(mtx, k_cross(v, v2), ang);
-                v = k_normalize(v);
-                v = k_scale(v, len);
-                v = k_mul(mtx, v);
-                *pos = k_add(*up, v);
-            } else {
-                v = k_normalize(v);
-                v = k_scale(v, a->r + 1.0f);
-                *pos = k_add(c, v);
-            }
-            hit = 1;
-            cloth_k_cnt.vol_hits++;
-        }
+    ClothKSph a;
+    for (uint32_t i = 0; i < s->nCap; i++) {
+        cap_near(&a, &s->cap[i], pos->x, pos->y, pos->z);
+        hit |= plain_one(pos, up, &a, &len, hit);
     }
+    cloth_k_cnt.vol_tests += s->nCap;
+    return hit;
+}
+static int at_ck_plain(const ClothKStep* s, ClothKVec* pos, const ClothKVec* up) {
+    if (!s->vol) return 0;
+    if (s->nCap) return at_ck_plain_cap(s, pos, up);
+    const ClothKSph* a = s->sph;
+    const uint32_t n = s->nVol;
+    float len = 0.0f;
+    int hit = 0;
+    for (uint32_t i = 0; i < n; i++, a++) hit |= plain_one(pos, up, a, &len, hit);
     cloth_k_cnt.vol_tests += n;
     return hit;
 }
@@ -408,8 +430,45 @@ SHZ_FORCE_INLINE const ClothKSph* k_reach(const ClothKSph* c, const ClothKSph* c
     return c;
 }
 
+// look arm CLOTHCAP: the parallel test against each capsule's point nearest the upper end, as a sphere (par_one)
+static __attribute__((noinline)) void at_ck_parallel_cap(const ClothKStep* s, ClothKVec* pos, ClothKVec* up) {
+    ParSet ps;
+    ClothKVec p1 = *up, p0 = *pos;
+    ps.d.x = p0.x - p1.x;
+    ps.d.y = p0.y - p1.y;
+    ps.d.z = p0.z - p1.z;
+    if (ps.d.x == 0.0f && ps.d.y == 0.0f && ps.d.z == 0.0f) ps.d.y = 1.0f;
+    ps.lenSq = ps.d.x * ps.d.x + ps.d.y * ps.d.y + ps.d.z * ps.d.z;
+    if (ps.lenSq <= 0.00001f) return;
+    const float ra = (1.0f + shz_inv_sqrtf_fsrra(ps.lenSq)) * 1.001f;
+    ClothKVol v;
+    v.type = 0;
+    ClothKSph c;
+    int made = 0;
+    for (uint32_t i = 0; i < s->nCap; i++) {
+        cap_near(&c, &s->cap[i], p1.x, p1.y, p1.z);
+        const float reach = c.r * ra + 3.001f;
+        const float ex = c.x - p1.x, ey = c.y - p1.y, ez = c.z - p1.z;
+        if (ex * ex + ey * ey + ez * ez > reach * reach) continue;
+        if (!made++) {
+            ps.nd = k_normalize(ps.d);
+            ps.invLenSq = 1.0f / ps.lenSq;
+        }
+        v.p0 = k_vec(c.x, c.y, c.z);
+        v.r = c.r;
+        par_one(&p0, &p1, &ps, &v);
+    }
+    cloth_k_cnt.vol_tests += s->nCap;
+    *up = p1;
+    *pos = p0;
+}
+
 static void at_ck_parallel(const ClothKStep* s, ClothKVec* pos, ClothKVec* up) {
     if (!s->vol) return;
+    if (s->nCap) {
+        at_ck_parallel_cap(s, pos, up);
+        return;
+    }
     const uint32_t n = s->nVol;
     ParSet ps;
     ClothKVec p1 = *up, p0 = *pos;
@@ -684,6 +743,37 @@ static void stage_matrix(ClothKStep* s, uint32_t i) {
     m[3] = pw.x;
     m[7] = pw.y;
     m[11] = pw.z;
+}
+
+// Look arms CLOTHHALF / CLOTHFAR (cloth_kernel.h): a tick without a step
+void cloth_k_hold(ClothKStep* s, ClothKVec rootMove) {
+    const uint32_t n = s->n;
+    float mtx[12];
+    for (uint32_t i = 0; i < n; i++) s->link[i].pos = k_add(s->link[i].pos, rootMove);
+    for (uint32_t i = 0; i < n; i++) {
+        ClothKLink* L = &s->link[i];
+        const uint32_t pb = L->bone;
+        if (L->up != CLOTH_K_NONE) wput(s, pb, s->link[L->up].pos);
+        const ClothKVec pw = wget(s, pb);
+        if (!(s->flags & 8)) {   // the link kept at its length from its (moved) upper end, as the matrix stage does
+            ClothKVec v = k_sub(L->pos, pw);
+            v = k_zero(v) ? L->nrm : k_normalize(v);
+            L->pos = k_add(pw, k_scale(v, L->len));
+        }
+        float* m = mat(s, pb);
+        const ClothKVec a = k_mul_sr(m, L->nrm);
+        ClothKVec b = k_sub(L->pos, pw);
+        b = k_zero(b) ? L->nrm : k_normalize(b);
+        const float ang = k_acos(k_dot(a, b));
+        if (ang > 0.01f && ang < K_PI_LIM) {
+            k_rot_axis(mtx, k_cross(a, b), ang);
+            k_concat_into(mtx, m);
+        }
+        m[3] = pw.x;
+        m[7] = pw.y;
+        m[11] = pw.z;
+    }
+    cloth_k_cnt.links += n;
 }
 
 SHZ_FORCE_INLINE int do_angle(const ClothKStep* s) { return !(s->flags & 0x10) && s->pMax; }
