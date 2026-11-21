@@ -84,7 +84,10 @@ SVC4_WRAP += _ZN13CameraControl13HermiteExportEP9CameraCutPh _Z7BSplineP13Camera
 SVC4_WRAP += _Z11ParametrizeP9CameraCutP13CameraBSpline
 SVC4_WRAP += PadRead VibSet KeyStop
 SVC4_WRAP += _ZN10cAtariInfo6getPosEP6cModelP3Vec _ZN10cAtariInfo14getSpeedVectorEP6cModelP3VecS3_ _ZN7cEatMgr10getEffInfoEi
-SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
+# lane eng-e2a: the enemy hit geometry's boundary log (e2_dump.cpp): em_sub.cpp's service entry points and the effect
+# starts made inside them
+E2_WRAP := emLinePolyCrossCk emLineCubeCrossCk emLineCapsuleCrossCk emLineAtCk emSphereAtCk EmGetDmPos EmAtkHitCk2 	EmAtkHitSubCk2 EmAtkHitCk EmAtkLineHitCk EmRackCk CheckInWater EmCatchMotionMove EmYarareDisp EmDmBloodSet2 	EmPlBloodSet2 EmSubBloodSet PlBombHitCk GetWepTargetListBomb EstSet
+SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP) $(E2_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := HermiteInterpolation _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
                MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
                MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
@@ -116,6 +119,8 @@ SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motio
 SVC4_SRCS += skeleton/em_compress.cpp
 # lane eng-e1j (H-016.1): the camera service's evaluation under the controller (services/camera/cam_eval.cpp)
 SVC4_SRCS += camera/cam_eval.cpp
+# lane eng-e2a: the enemy hit geometry (services/aim/em_hit.cpp: em_sub.cpp's service functions; em_sub is split below)
+SVC4_SRCS += aim/em_hit.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 # lane eng-e1j: cam_sys is camera maths throughout (the camera service has every function): a replaced unit
 SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion cam_sys motion pad $(SVC5_UNITS)
@@ -123,6 +128,8 @@ SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera 
 # tests, probe, rail and data relocation, cam_qfps's frame, offsets and wall probe, cam_extra's attached camera;
 # svc4_split.txt names them): the same weak copy, and svc4_units.sh checks only the named functions
 SVC4_SPLIT := cam_ctrl cam_qfps cam_extra
+# lane eng-e2a: em_sub (the enemies' shared helpers): its hit geometry is the engine's (svc4_split.txt names it)
+SVC4_SPLIT += em_sub
 SVC4_ALL := $(SVC4_UNITS) $(SVC4_SPLIT)
 SVC4_INC := $(foreach d,$(sort $(dir $(SVC4_SRCS))),-I$(SVC_ENG)/$(d)) -I$(SHZ)/include
 # SH4ZAM's headers include <math.h>: the C++ wrapper needs the target-neutral c++config.h of the 64-bit tree (as PCFLAGS)
@@ -208,7 +215,10 @@ $(BUILD)/svc/svc4_dump.o: svc/svc4_dump.cpp $(wildcard $(SVC_ENG)/*/*.h) hostref
 $(BUILD)/svc/svc5_dump.o: svc/svc5_dump.cpp $(wildcard $(SVC_ENG)/*/*.h) hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
-SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o
+$(BUILD)/svc/e2_dump.o: svc/e2_dump.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	@mkdir -p $(dir $@)

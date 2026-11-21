@@ -177,6 +177,21 @@ $(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
 WEAKEN_game/em_sub := _GetWepTargetPos _GetWepTargetList2   # SH-ELF symbol names carry the leading underscore
 # (lane eng-e1k: GetWepTargetList2, the shot's target list, is the native one in every image too)
+# Lane eng-e2a: em_sub's hit geometry, attack checks, damage position, blast list, rack and water tests, caught-actor
+# follow, debug boxes and blood placement are the engine's (services/aim/em_hit.cpp)
+EMSUB_NATIVE := emLinePolyCrossCk emLineCubeCrossCk emLineCapsuleCrossCk emLineAtCk emSphereAtCk EmGetDmPos EmAtkHitCk2 \
+	EmAtkHitSubCk2 EmAtkHitCk EmAtkLineHitCk EmRackCk CheckInWater EmCatchMotionMove EmYarareDisp EmDmBloodSet2 \
+	EmPlBloodSet2 EmSubBloodSet PlBombHitCk GetWepTargetListBomb
+# Control build only (EMSUB_ORIG=<name>): that original em_sub function stays linked, the engine's copy made weak (the
+# link check must FAIL on it). Never a default.
+WEAKEN_game/em_sub += $(addprefix _,$(filter-out $(EMSUB_ORIG),$(EMSUB_NATIVE)))
+ifneq ($(BOSS)$(FIGHT),)
+EMHIT_OBJ := $(OUT)/n/em_hit.o
+endif
+$(OUT)/n/em_hit.o: $(SVC_DIR)/aim/em_hit.cpp $(SVC_DIR)/aim/hit_shape.h $(SVC_DIR)/camera/cam_math.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
+	$(if $(EMSUB_ORIG),sh-elf-objcopy $(foreach f,$(EMSUB_ORIG),--weaken-symbol=_$(f)) $@)
 # Lane eng-e1h (H-014.3): the laser sight's drawing is the engine's (services/laser.cpp: the setters the renderer's
 # laser pass reads); objWep's GX bodies are made weak so --gc-sections drops them. drawLaserSight stays hosted.
 WEAKEN_game/objWep := _drawPoint _Draw_line3d_local_222 _Draw_line3d_222
@@ -250,6 +265,6 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
-$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
+$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

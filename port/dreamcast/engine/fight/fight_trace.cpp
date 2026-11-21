@@ -80,10 +80,22 @@ void e2_events_report()
         e1_log("GE t=%u %s e=%02x id=%x a=%d b=%d wep=%x part=%x\n", events[i].tick, kind_name[events[i].kind], events[i].entry,
                events[i].id, events[i].a, events[i].b, events[i].wep, events[i].part);
 }
+// lane eng-e2a: the enemy hit geometry's counters (services/aim/em_hit.cpp)
+extern "C" struct EmHitCounters {
+    unsigned line_tests, line_capsules, line_cubes, cube_mirrored, quads, line_hits;
+    unsigned sphere_tests, sphere_boxes, sphere_hits, dm_pos, atk_sphere, atk_line, atk_hits;
+    unsigned racks, water, catch_moves, bloods, blood_scatter, bomb_lists, bomb_player, debug_draws;
+} emhit_cnt;
 void e2_report()
 {
     e2_events_report();
     fx_report();
+    const EmHitCounters& h = emhit_cnt;
+    e1_log("E2 EMHIT lines %u (capsules %u cubes %u mirrored %u quads %u hits %u) spheres %u (boxes %u hits %u) dmpos %u "
+           "attacks %u lines %u hits %u racks %u water %u catch %u bloods %u scatter %u blasts %u blast-player %u debug-draws %u\n",
+           h.line_tests, h.line_capsules, h.line_cubes, h.cube_mirrored, h.quads, h.line_hits, h.sphere_tests, h.sphere_boxes,
+           h.sphere_hits, h.dm_pos, h.atk_sphere, h.atk_line, h.atk_hits, h.racks, h.water, h.catch_moves, h.bloods,
+           h.blood_scatter, h.bomb_lists, h.bomb_player, h.debug_draws);
 }
 void e2_after_tick() {}
 void e2_fx_room_init() { fx_room_init(); }
