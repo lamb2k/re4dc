@@ -29,6 +29,9 @@
 #   actor-gap       the A line of 0x14 at tick 100 removed (--actor e=14)  must FAIL (missing tick)
 #   lenient         the missing-tick copy with --lenient                  must PASS (the old reader skips it)
 # Exit status 0 when every line ends as it must; the table goes to stdout and <out dir>/controls.md.
+# Fails closed (lane eng-e1h): exit 2 when the reference binary, a fixture or the data tree is missing, when a run
+# fails, when a comparison writes no report (or exits other than 0 / 1), or when the table lacks a planned row. Before
+# this lane a row that ended wrong set the status inside the table's pipeline, so the script exited 0 regardless.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../.." && pwd)
@@ -36,7 +39,13 @@ OUT=${1:-$ROOT/build/hostref/controls}
 BIN=${2:-$ROOT/build/hostref/plain/re4ref}
 TREE=${RE4_TREE:?set RE4_TREE to the converted data tree (private game data)}
 TOL=$HERE/tolerances.json
+[ -x "$BIN" ] || { echo "controls: no re4ref at $BIN"; exit 2; }
+[ -d "$TREE" ] || { echo "controls: no data tree at $TREE"; exit 2; }
+for f in door103-walk bell-ganado bell-ganado-hit square-follow; do
+    [ -f "$HERE/fixtures/$f.txt" ] || { echo "controls: no fixture $HERE/fixtures/$f.txt"; exit 2; }
+done
 mkdir -p "$OUT"
+rm -f "$OUT/.status" "$OUT/.abort"
 run() {   # run <fixture> <name> [control]
     local c=()
     [ -n "${3:-}" ] && c=(--control "$3")
@@ -72,29 +81,44 @@ w('s-cut', [s for s in L if not re.match(r'^[TAR] t=(\d+)', s) or int(re.match(r
 w('s-agap', [s for s in L if not (s.startswith('A t=100 ') and ' e=14 ' in s)])
 EOF
 status=0
+ROWS="determinism:base:base2:PASS: walk-speed:base:walk:FAIL: drop-rng:ganado:drop:FAIL: \
+      shift-input:base:shift:FAIL: \
+      determinism-ganado:ganado:ganado2:PASS:e=14 drop-rng-ganado:ganado:ganado-drop:FAIL:e=14 \
+      determinism-hit:hit:hit2:PASS:e=14 late-hit:hit:hit-late:FAIL:e=14 \
+      determinism-ashley:ashley:ashley2:PASS:id=03 follow-dist:ashley:ashley-far:FAIL:id=03 \
+      missing-tick:ganado:s-gap:FAIL: missing-field:ganado:s-field:FAIL: non-finite:ganado:s-nan:FAIL: \
+      duplicate-tick:ganado:s-dup:FAIL: short-trace:ganado:s-cut:FAIL: count:ganado:ganado2:FAIL::--expect-count=999 \
+      actor-gap:ganado:s-agap:FAIL:e=14 lenient:ganado:s-gap:PASS::--lenient"
+ROWS_PLANNED=$(echo $ROWS | wc -w)
 {
     echo "| Check | Must | Result | First divergence |"
     echo "|---|---|---|---|"
-    for row in "determinism:base:base2:PASS:" "walk-speed:base:walk:FAIL:" "drop-rng:ganado:drop:FAIL:" \
-               "shift-input:base:shift:FAIL:" \
-               "determinism-ganado:ganado:ganado2:PASS:e=14" "drop-rng-ganado:ganado:ganado-drop:FAIL:e=14" \
-               "determinism-hit:hit:hit2:PASS:e=14" "late-hit:hit:hit-late:FAIL:e=14" \
-               "determinism-ashley:ashley:ashley2:PASS:id=03" "follow-dist:ashley:ashley-far:FAIL:id=03" \
-               "missing-tick:ganado:s-gap:FAIL:" "missing-field:ganado:s-field:FAIL:" "non-finite:ganado:s-nan:FAIL:" \
-               "duplicate-tick:ganado:s-dup:FAIL:" "short-trace:ganado:s-cut:FAIL:" "count:ganado:ganado2:FAIL::--expect-count=999" \
-               "actor-gap:ganado:s-agap:FAIL:e=14" "lenient:ganado:s-gap:PASS::--lenient"; do
+    for row in $ROWS; do
         IFS=: read -r name a b must actor opt <<< "$row"
         sel=()
         [ -n "$actor" ] && sel=(--actor "$actor")
         [ -n "${opt:-}" ] && sel+=("$opt")
+        rm -f "$OUT/$name.json"
         python3 "$HERE/plays_right.py" "$OUT/$a.trace" "$OUT/$b.trace" --tolerances "$TOL" "${sel[@]}" \
             --json "$OUT/$name.json" --quiet
         rc=$?
         got=$([ $rc -eq 0 ] && echo PASS || echo FAIL)
+        # a comparison that crashed or wrote no report compared nothing: never "as it must"
+        if [ $rc -gt 1 ] || [ ! -s "$OUT/$name.json" ]; then got=ERROR; echo 2 > "$OUT/.abort"; fi
         first=$(python3 -c "import json,sys; j=json.load(open(sys.argv[1])); d=j.get('first_divergence'); s=j.get('structure') or []; print(('structure: %d problems, first %s' % (j['structure_problems'], ' '.join(str(s[0][k]) for k in ('kind', 'trace', 'tick', 'field', 'detail') if s[0][k] not in (None, ''))) + ('; ' if d else '')) if s else '', end=''); print('-' if not d and not s else ('' if not d else 'tick %d %s: %s vs %s' % (d['tick'], d['field'], d['a'], d['b'])))" "$OUT/$name.json")
         ok=$([ "$got" = "$must" ] && echo "$got (as it must)" || echo "$got (WRONG: must $must)")
-        [ "$got" = "$must" ] || status=1
+        [ "$got" = "$must" ] || echo 1 > "$OUT/.status"   # this block runs in the pipeline's subshell: a file
         echo "| $name | $must | $ok | $first |"
     done
 } | tee "$OUT/controls.md"
+body=${PIPESTATUS[0]}
+[ -f "$OUT/.status" ] && status=1
+rows=$(awk 'NR > 2 && /^\| /' "$OUT/controls.md" | wc -l)
+if [ "$body" -ne 0 ] || [ -f "$OUT/.abort" ] || [ "$rows" -ne "$ROWS_PLANNED" ]; then
+    echo "controls: INCOMPLETE: $rows of $ROWS_PLANNED rows (table exit $body$([ -f "$OUT/.abort" ] && echo ', a comparison failed'))"
+    rm -f "$OUT/.status" "$OUT/.abort"
+    exit 2
+fi
+rm -f "$OUT/.status"
+echo "controls: $rows rows, $([ $status -eq 0 ] && echo 'every row as it must' || echo 'SOME ROWS WRONG')"
 exit $status

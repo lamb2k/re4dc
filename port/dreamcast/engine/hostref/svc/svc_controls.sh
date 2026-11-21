@@ -56,6 +56,10 @@
 # 16-bit rows (an approximation, owner 2026-10-19: every bone but the cloth links within 1 unit / 0.1 degree, the links
 # by cloth_stats.py, collision results exact and points within 1 unit, traces in every field).
 # Exit status 0 when every line ends as it must; the table goes to stdout and <out dir>/svc_controls.md.
+# Fails closed (lane eng-e1h; on 11-20 a missing odump build gave exit 0 and an empty table): exit 2 when a build
+# (odump, native) or a fixture is missing, when a run fails, when a row has no comparison report, or when the table
+# does not hold every row this script plans (5 a fixture + 46). RE4_HOSTREF_BUILD=<dir> reads the builds from another
+# folder (the control: an empty folder must exit 2).
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../../.." && pwd)
@@ -63,10 +67,19 @@ OUT=${1:?out dir}
 shift
 FIX=${*:-door103-walk e1-route bell-ganado bell-ganado-hit hill-ashley square-follow}
 TREE=${RE4_TREE:?set RE4_TREE to the converted data tree (private game data)}
-B=$ROOT/build/hostref
+B=${RE4_HOSTREF_BUILD:-$ROOT/build/hostref}
 PR=$ROOT/port/dreamcast/tools/plays_right
+for bin in odump native; do
+    [ -x "$B/$bin/re4ref" ] || { echo "svc_controls: no $bin build at $B/$bin/re4ref (make $bin)"; exit 2; }
+done
+for fx in $FIX door103-walk e1-route bell-ganado hill-ashley square-follow; do
+    [ -f "$PR/fixtures/$fx.txt" ] || { echo "svc_controls: no fixture $PR/fixtures/$fx.txt"; exit 2; }
+done
+[ -d "$TREE" ] || { echo "svc_controls: no data tree at $TREE"; exit 2; }
+NFIX=$(echo $FIX | wc -w)
+ROWS_PLANNED=$((5 * NFIX + 46))
 mkdir -p "$OUT"
-rm -f "$OUT/.status"
+rm -f "$OUT/.status" "$OUT/.abort"
 ARCS="em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs"
 if [ -z "${RE4_SVC_MK:-}" ]; then
     python3 "$ROOT/port/dreamcast/engine/bake/motion_keys.py" --tree "$TREE" --out "$OUT/motion.mkp" --report "$OUT/motion.tsv" \
@@ -83,7 +96,7 @@ run() {   # run <binary> <fixture> <dir> [env...]
     shift 3
     mkdir -p "$d"
     env RE4_SVC_OUT="$d" "$@" "$bin" --tree "$TREE" --fixture "$PR/fixtures/$fx.txt" --out "$d/trace.txt" --log "$d/run.log" \
-        2> "$d/err.txt" || { echo "re4ref failed: $d"; exit 2; }
+        2> "$d/err.txt" || { echo "re4ref failed: $d"; echo 2 > "$OUT/.abort"; exit 2; }
 }
 actors() {   # the actors of a fixture's A lines, as plays_right --actor selectors
     case $1 in
@@ -124,6 +137,8 @@ row() {   # row <name> <must> <ref dir> <test dir> <fixture> [cloth]: cloth = th
     done
     local got=PASS
     [ $sc -ne 0 ] && got=FAIL
+    # a comparison that wrote no report did not compare: never "as it must", whatever the row must give
+    [ -s "$b/compare.json" ] || { got=ERROR; echo "svc_controls: no comparison report $b/compare.json" >&2; echo 2 > "$OUT/.abort"; }
     local ok="$got (as it must)"
     [ "$got" = "$must" ] || { ok="$got (WRONG: must $must)"; status=1; }
     local first
@@ -224,6 +239,14 @@ print()" "$b/compare.json")
         row "control: cloth wind twice as strong" FAIL "$OUT/$fx/ref" "$OUT/$fx/c-clothwind" "$fx" cloth
     done
 } | tee "$OUT/svc_controls.md"
+body=${PIPESTATUS[0]}
 [ -f "$OUT/.status" ] && status=1
+rows=$(awk 'NR > 2 && /^\| /' "$OUT/svc_controls.md" | wc -l)
+if [ "$body" -ne 0 ] || [ -f "$OUT/.abort" ] || [ "$rows" -ne "$ROWS_PLANNED" ]; then
+    echo "svc_controls: INCOMPLETE: $rows of $ROWS_PLANNED rows (table exit $body$([ -f "$OUT/.abort" ] && echo ', a run or a comparison failed'))"
+    rm -f "$OUT/.status" "$OUT/.abort"
+    exit 2
+fi
 rm -f "$OUT/.status"
+echo "svc_controls: $rows rows, $([ $status -eq 0 ] && echo 'every row as it must' || echo 'SOME ROWS WRONG')"
 exit $status
