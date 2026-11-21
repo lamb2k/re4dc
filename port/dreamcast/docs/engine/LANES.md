@@ -32,6 +32,8 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - Check C: and E: free from Windows before every build and disc stage. Stop and tell the integrator at C: 31 GB or E: 15 GB.
 - A `sleep` keeper per lane while it works. A timeout on every WSL call. WSL work from script files.
 - Test discs are deleted after their runs, with a note.
+- A lane that changes a slot's `emu.cfg` (clock, dynarec) keeps the original beside it, restores it before hand-back, and never changes a slot another lane is using.
+- A lane taking a "strict" or "plain" number first prints the slot's `Dynarec.Enabled` and `Sh4Clock` values into its log.
 - No `fstrim` or compaction by lanes. The nightly backup job is `C:\Game Dev\Emulators\_private_tools\wsl-backup\wsl-backup.sh` (one bundle per repository).
 
 ## 3. Measuring
@@ -56,7 +58,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - **Report the whole picture:** mean, p99, worst interval and count over 33.3 ms, over 600 pictures, against the lane's budget row. The floor is at most two fields between presented pictures.
 - **One model-only round per milestone.** After it, the next step is the console. (Superseded 2026-11-21 by the defensive model above.)
 - **A/B on console is one image:** two arms switched at run time in the same boot, in A/B/A order. Never two builds, never two sessions.
-- **Before a console number exists,** a modelled or emulator figure counts only if it fits in half the budget.
+- **Before a console number exists,** a modelled or emulator figure counts only if it fits in half the budget. (Ruling 2026-11-21: this holds for uncalibrated figures, that is plain Flycast and the PC hardware model before it is re-fitted. A calibrated strict-Flycast figure is judged on its worst case against the full row, less a margin equal to the calibration's spread across the benchmark scenes; it must fit the row at the defensive clock, which is already the slowest clock any scene needs.)
 - **A new measuring tool needs a control** that makes it read wrong on purpose, before its numbers are used.
 - **Speed is the game's own tick and picture counters,** never the display's refresh.
 
