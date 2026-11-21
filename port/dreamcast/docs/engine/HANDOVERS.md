@@ -2,6 +2,17 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-015 (2026-11-20, late): integrator rulings after lane eng-e1h
+
+- **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013.
+- **Rulings:**
+  1. **cObj manager template:** `cManager<cObj>::createBack`, `cManager<cObj>::destroy` and `cObjMgr::memClear` are linked from `wep02/wep02` under that unit's allowance. They are the same service code as the cEm and cLight tables (H-014.4): offenders, native through the engine pool. Lane eng-e1i lists them as exceptions in `allowed_original.txt` and removes them. Until then the default image's "0 service functions" is 0 by the list, not 0 in fact.
+  2. **HUD:** the per-widget blend from eng-e1h stays. The garbled ammo digits and the dark lens are fixed by lane eng-e1i before the E1 audit is ordered.
+  3. **Pool refusals:** a refused double free or a full table is an engine fault, not a behaviour to reproduce. Every scene's log must show `POOL full 0 bad_frees 0`; a non-zero count fails the scene.
+  4. **Shot and hit on the engine** is judged against the engine's own log in the fight image. A scenario shared with the PC reference belongs to step 3 (pass E2).
+  5. **WSL disk file:** corrects H-014's "no compaction until a fresh copy". Compacting only shrinks the file and is the planned next step; about 86 GB was freed inside ext4 on 11-20. Only the integrator runs it (`E:\RE4DC-Lanes\reassess19\relaunch\wsl-compact6.ps1`), with the owner's yes and every session parked. Lanes still run no `fstrim` and no compaction.
+- **Open with the owner:** the yes for the compaction; a date for the console evening.
+
 ## H-014 (2026-11-20): integrator rulings; the machine stall and the rules that follow from it
 
 - **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013.
