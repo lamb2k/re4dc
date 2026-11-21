@@ -270,3 +270,33 @@ $(GT)/garmenttest: $(GT)/garmenttest.o $(NAT)/svc4/garment.o $(NAT)/svc4/math_sv
 	$(CC) -o $@ $^ $(LDFLAGS)
 garmenttest: $(GT)/garmenttest
 .PHONY: garmenttest
+
+# ---- aimchk (lane eng-e1g): the native weapon-target query (services/aim/aim.cpp) against the original on the same
+# calls. The native build plus aim.o (GetWepTargetPos renamed eng_GetWepTargetPos) and svc/aimcheck.cpp, which wraps
+# GetWepTargetPos: both answer every call, the answers are compared (aim.txt, aim-diff.txt), and RE4_AIM_USE=native
+# hands the behaviour the native answer. RE4_AIM_CONTROL=grow is the native control (must differ).
+AIM := $(BUILD)/aimchk
+# The reference's item stubs (host_stubs.cpp) give an empty magazine, so A while aiming never fires (the empty-gun
+# branch: reload or the empty click). The aimchk build weakens the two magazine stubs and aimcheck.cpp answers them
+# with RE4_AIM_MAG rounds (default 0, the reference's), so a shot fixture can fire as the engine image does (10 rounds).
+AIM_MAG_STUBS := _ZN8cItemMgr9bulletNumEv _ZN8cItemMgr16bulletNumCurrentEv
+$(AIM)/host_stubs.o: $(BUILD)/svc/host_stubs.o
+	@mkdir -p $(AIM)
+	objcopy $(foreach s,$(AIM_MAG_STUBS),--weaken-symbol=$(s)) $< $@
+AIM_HG_OBJS := $(filter-out $(BUILD)/svc/host_stubs.o,$(SVC_HG_OBJS)) $(AIM)/host_stubs.o
+$(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
+	@mkdir -p $(AIM)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -c $< -o $@.raw.o
+	objcopy --redefine-sym GetWepTargetPos=eng_GetWepTargetPos $@.raw.o $@
+	rm -f $@.raw.o
+$(AIM)/aimcheck.o: svc/aimcheck.cpp hostref.h
+	@mkdir -p $(AIM)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+$(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
+               $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
+               $(AIM)/aim.o $(AIM)/aimcheck.o aliases.ld
+	$(CC) -o $@ $(plain_PC_OBJS) $(AIM_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
+	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
+	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=VibSetData -Wl,-Map=$(AIM)/re4ref.map
+aimchk: $(AIM)/re4ref
+.PHONY: aimchk

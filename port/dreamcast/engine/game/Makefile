@@ -73,6 +73,7 @@ $(OUT)/h/%.o: $(ROOT)/src/%.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@
 	$(if $(PRESENT_$*),sh-elf-objcopy $(foreach f,$(PRESENT_$*),--rename-section .text.$(f)=e1_present) $@)
+	$(if $(WEAKEN_$*),sh-elf-objcopy $(foreach f,$(WEAKEN_$*),--weaken-symbol=$(f)) $@)
 # Presentation functions (lane eng-e1c, owner 2026-11-19: presentation randomness from an engine-owned generator):
 # their code goes to the section e1_present, whose draws host/e1_wraps.cpp answers from the engine generator.
 PRESENT_game/pl_class := _ZN7cPlayer13moveEyeNormalEv
@@ -163,6 +164,14 @@ $(foreach s,$(SVC4_SRCS),$(eval $(call SVC4_RULE,$(s))))
 # Control build only (lane eng-e1g): PAD_EXTRA=-DE1_PAD_NOCLAMP=1 takes the pad clamp out of the input service (the
 # village plays-right comparison must then split from the reference at tick 424). Never a default.
 $(OUT)/n/input.o: ORIG_FLAGS += $(PAD_EXTRA)
+# ---- The native weapon-target query (lanes eng-e1f, eng-e1g; services/aim/aim.cpp: GetWepTargetPos, the laser's end,
+# target and surface) in every image. Where em_sub is hosted (FIGHT=1, BOSS=1) its own GetWepTargetPos is made weak
+# (WEAKEN_<unit> in the hosted rule) so the native body is linked and --gc-sections drops the original's.
+AIM_OBJ := $(OUT)/n/aim.o
+$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
+WEAKEN_game/em_sub := _GetWepTargetPos   # SH-ELF symbol names carry the leading underscore
 $(OUT)/n/svc4_syms.txt: $(SVC4_OBJS)
 	sh-elf-nm -g --defined-only $(SVC4_OBJS) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
 SPLIT_UNITS := game/cam_ctrl game/cam_sys game/cam_extra
@@ -195,6 +204,6 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
-$(OUT)/e1.elf: $(SVC4_OBJS) $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
+$(OUT)/e1.elf: $(SVC4_OBJS) $(AIM_OBJ) $(HOSTED_OBJS) $(SDK_OBJS) $(FD_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

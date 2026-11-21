@@ -1,0 +1,40 @@
+# aim-ganado (lane eng-e1g, s/mkfx.py): bell-ganado (fixtures/bell-ganado.txt, its header there), 600 ticks. Leon resumes
+# facing yaw -2.0 (0xc0000000), towards where the walking Ganado 0x14 circles, and aims (R) from tick 150 to 590,
+# the stick sweeping the laser across it (left 30 ticks, rest 10, right 30, rest 10). No shot.
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+weapon 2 0
+seed 0x0d37
+esl 0
+god
+resume 0xc5f7504a 0xba800000 0xc37dfdae 0xc0000000 2 # Leon as the old trace has him at t=184
+actor 0x14 1 post
+actor 0x1c 1 post
+actor 0x1e 1 post
+actor 0x1f 1 post
+ticks 600
+pad 0 0x0000 0 0
+pad 150 0x0020 -80 0 0 0 0 192
+pad 180 0x0020 0 0 0 0 0 192
+pad 190 0x0020 80 0 0 0 0 192
+pad 220 0x0020 0 0 0 0 0 192
+pad 230 0x0020 -80 0 0 0 0 192
+pad 260 0x0020 0 0 0 0 0 192
+pad 270 0x0020 80 0 0 0 0 192
+pad 300 0x0020 0 0 0 0 0 192
+pad 310 0x0020 -80 0 0 0 0 192
+pad 340 0x0020 0 0 0 0 0 192
+pad 350 0x0020 80 0 0 0 0 192
+pad 380 0x0020 0 0 0 0 0 192
+pad 390 0x0020 -80 0 0 0 0 192
+pad 420 0x0020 0 0 0 0 0 192
+pad 430 0x0020 80 0 0 0 0 192
+pad 460 0x0020 0 0 0 0 0 192
+pad 470 0x0020 -80 0 0 0 0 192
+pad 500 0x0020 0 0 0 0 0 192
+pad 510 0x0020 80 0 0 0 0 192
+pad 540 0x0020 0 0 0 0 0 192
+pad 550 0x0020 -80 0 0 0 0 192
+pad 580 0x0020 0 0 0 0 0 192
+pad 590 0x0000 0 0

@@ -224,10 +224,12 @@ void e1_fields_finish(unsigned ticks)
         over += f > 2;
         if (f > worst) { worst = f; wi = i + 1; }
     }
-    e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)\n",
-           presented ? "presented" : "tick", flips, n, counted, over, worst, wi);
+    e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)"
+           "; release queue full %u\n", presented ? "presented" : "tick", flips, n, counted, over, worst, wi,
+           e1_present_drops_c());
 }
 
+extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, boxes, capsules, cubes; } aim_cnt;
 void e1_report()
 {
     e1_trace_flush();
@@ -236,6 +238,11 @@ void e1_report()
     e1_stub_report();
     e1_prof_report();
     e1_svc_report();
+    // lanes eng-e1f / eng-e1g: the native weapon-target query (services/aim/aim.cpp)
+    e1_log("E1 AIM calls %lu scenery %lu enemy %lu (flag40 %lu) boxes %lu capsules %lu cubes %lu\n",
+           (unsigned long) aim_cnt.calls, (unsigned long) aim_cnt.scenery, (unsigned long) aim_cnt.enemy,
+           (unsigned long) aim_cnt.enemy_flag40, (unsigned long) aim_cnt.boxes, (unsigned long) aim_cnt.capsules,
+           (unsigned long) aim_cnt.cubes);
     for (int i = 0; i < 13; i++)
         if (e1_arena.heap_hi[i])
             e1_log("E1 ARENA heap %d %08lx-%08lx used %lu peak %lu fails %lu\n", i, (unsigned long) e1_arena.heap_lo[i],
