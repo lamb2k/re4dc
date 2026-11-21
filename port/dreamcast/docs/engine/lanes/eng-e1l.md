@@ -93,9 +93,14 @@ the image and on the PC and finds the first one apart.
 **PC rows (made first, `ev\pc1`):** re4ref with ZNEAR / ZFAR zero (`RE4_SVC_CONTROL=zclip0`, `svc4_dump.cpp`) against the
 reference as it is: e1-route, shot-ganado, bell-ganado, square-follow, door103-walk identical bit for bit; hill-ashley and
 hill-follow FAIL from tick 1 (eye 17.2 units, target equal: the shoulder camera's side probes, 62 units wide at fov 50,
-meet the hill). On the image the zero distances matter more: its native wall probe with zero width hits at the village
-houses where the original's does not (LEON before, ticks 222..391), and on the hill its first-tick eye is 110 units off
-where the reference's zero arm is 17.
+meet the hill). On the image the zero distances matter more: its zero arm changed the camera at the village
+houses (LEON, ticks 222..391) where the reference's zero arm did not (either the native probe treats a zero width
+differently from the original, or the image's drifted camera is nearer the wall there; not separated), and on the hill
+its first-tick eye is 110 units off where the reference's zero arm is 17.
+
+**Final link check at the head** (`E:\RE4DC-Lanes\eng-e1l\logs\f-*.list.txt`; `origin/engine` a84256c07 is in the
+branch, nothing to merge): default PASS, 0 service of 384; SENDABLE=1 PASS, 0 of 384; FIGHT=1 FAIL, 114 service
+(42,156 B) of 910; BOSS=1 FAIL, 57 (17,192 B) of 530: the step-3 lists as on `engine`, unchanged. All four link.
 
 **camengine.sh rows** (`ev\cam-a4\camengine.md`): PC e1-route PASS, hill-follow FAIL, shot PASS (each as it must); after
 LEON, HILL, SHOT FAIL (must PASS: not met, above); before HILL FAIL (the control, as it must), before LEON and SHOT FAIL
