@@ -190,8 +190,16 @@ static __attribute__((noinline)) pvr_vertex_t* clip_strips(pvr_vertex_t* sq,cons
             if(!all)for(unsigned k=0;k<n;k++){Corner c=stage_corner(s[k]);if(c.w<near)c.w=near;emit(&sq,c,k+1==n);}
             s+=n;continue;
         }
-        Corner a=stage_corner(s[0]),b=stage_corner(s[1]);
-        for(unsigned k=2;k<n;k++){Corner c=stage_corner(s[k]);clipped(&sq,k&1?b:a,k&1?a:b,c,near);a=b;b=c;}
+        /* lane eng-draw2, step E1: a triangle whose three corners all lie behind the near plane is rejected here, before
+           the clipper (clipped() emits nothing for it: the output is the same by construction); the others go through
+           the clipper as before, wholly-in-front ones included (their corners keep the clipper's arithmetic) */
+        unsigned na=stage_near[s[0]],nb=stage_near[s[1]];
+        for(unsigned k=2;k<n;k++){
+            unsigned nc=stage_near[s[k]];
+            if(!(na&nb&nc)){unsigned i0=s[k&1?k-1:k-2],i1=s[k&1?k-2:k-1];
+                clipped(&sq,stage_corner(i0),stage_corner(i1),stage_corner(s[k]),near);}
+            na=nb;nb=nc;
+        }
         s+=n;
     }
     return sq;

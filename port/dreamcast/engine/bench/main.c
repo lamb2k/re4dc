@@ -87,7 +87,7 @@ static const uint16_t lab_bits[]={DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN,D
 #define DRAWLAB4_SCHEDULE "c0/Z f0/Z"   /* the census alone (boot file DRAWLAB4) */
 /* lane eng-draw2: the repeat check (boot file DRAWLAB5, with STILLS40): today's default three times a room; every still of
    a window must equal the same picture's still in the room's other windows and in its other lap */
-#define DRAWLAB5_SCHEDULE "c0 c0 c0 f0 f0 f0"
+#define DRAWLAB5_SCHEDULE "c0 c0 c0/D f0 f0 f0/D"   /* the D windows: the 2 ms control, and a timing change that must change no pixel */
 #define DRAWLAB2_SCHEDULE "c0 c0.L0 c0.W2 c0.W3 c0.P3 c0.B3 c0/X c0/V c0/G c0 f0 f0.L0 f0.W2 f0.W3 f0.P3 f0.B3 f0/X f0/V f0/G f0"
 static Window schedule[WINDOWS];
 volatile uint32_t m1_content[CS_COUNT]=CONTENT_DEFAULT_INIT;
