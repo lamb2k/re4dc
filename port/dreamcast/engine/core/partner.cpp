@@ -16,6 +16,7 @@
 //   re4ref --rng-feed), CTRLFOL (the control: Ashley 10% further from Leon while she follows; must fail).
 // - The re4ref trace v2 lines (T, A, R), with the generator draws counted per caller.
 #include "global.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "player.h"
 #include "em.h"
 #include "pl_npc.h"
@@ -189,11 +190,11 @@ void e1_em_move_begin(cEm* em)
     chars_saved = (int) rng_owner;
     const int k = actor_index(em);
     e1_rng_owner(k >= 0 && k < 8 ? 5 + k : 0);
-    chars_t0 = timer_us_gettime64();
+    chars_t0 = e1_clock_us();
 }
 void e1_em_move_end(cEm*)
 {
-    chars_us += timer_us_gettime64() - chars_t0;
+    chars_us += e1_clock_us() - chars_t0;
     e1_rng_owner(chars_saved);
 }
 
