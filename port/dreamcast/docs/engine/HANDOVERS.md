@@ -2,6 +2,50 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-028 (2026-11-21): the drawing account is in; the renderer is rebuilt along its pixel-identical path, world and characters as two lanes
+
+- **What lane eng-draw1 found** (its report, at the gate; MODELLED, console-build dynarec at 70 MHz, calibrated on the old
+  port; the tier charges instructions and sees no cache, store queue, graphics chip or bus):
+  - Drawing is 27.5 / 37.4 / 26.0 ms mean on LEON / HILL / FIGHT against the 14 ms row: the world 10.2 to 11.6, selection
+    3.7 to 3.8 on the moving-camera scenes, characters 12.0 / 24.1 / 11.0.
+  - 43 to 47% of the world's corners belong to strips no triangle of which is ever seen: about 5 to 6.6 ms a picture.
+    The near-plane fix costs 3.7 to 5.6 ms, most of it triangles wholly behind the plane sent to the clipper. Every
+    staged vertex is copied about once.
+  - Characters: every header has culling off (57 to 58% of on-screen triangles are back faces); weight sets, lighting
+    and emission cost well over the job.
+  - Its estimate for all pixel-identical steps together: 11.0 mean / 14.9 worst (LEON), 10.2 / 15.6 (FIGHT), 14.4 / 17.8
+    (HILL). So the row is reachable on the mean in two scenes and missed at the worst pictures in all three without look
+    choices. Estimates, not built.
+- **Rulings:**
+  1. **Build the pixel-identical path now**, as two lanes on eng-draw1's head: **eng-draw2** (world: stills repeatable to
+     the pixel first, then the clipper pre-reject, selection, the exact strip cull from baked cones and bounds, the world
+     walked without a stage) and **eng-draw3** (characters: unused positions and normals skipped, the four kernels on
+     SH4ZAM, the per-model fixed cost). Each step lands as the default with the old path removed, with a base re-run in
+     the same session and 0 differing pixels against the previous step.
+  2. **C on SH4ZAM before assembly.** Hand-written SH-4 assembly is a last, separate step with the C form's measured
+     figure and the reason it is not enough (workspace rule of 2026-10-12); this tier cannot rank hand-scheduled code.
+  3. **Look choices are the owner's and stay out of speed steps.** The first one prepared is character back-face culling
+     (estimate -4.0 / -7.4 / -3.6 ms): a lab arm and a still sheet with differing-pixel counts from eng-draw3. World
+     levels, character levels, a light cap and half-rate lighting follow the same way, after the pixel-identical floor
+     is measured, each on its own sheet.
+  4. **Pack sets (the eighth ruling of H-027, written here):** packs a disc build needs by default live in
+     `E:\RE4DC-Lanes\packs\<set>\`, immutable, with a receipt (hashes, the bake script and commit, inputs, the lane);
+     only the integration lane writes them, at the gate, after a clean-checkout rebuild. A default path into a lane
+     folder fails the gate. `PRISTINE` is an input tree, recorded by identity in the gate log.
+  5. **Flycast slots:** the lease is written before a runner touches the slot, and a slot is free only with no lease and
+     no Flycast or runner running from its folder (lane eng-fix1 broke an unleased run of eng-snd1 for two minutes and
+     reported it; the common brief carries the rule).
+  6. **The E1 audit** (Codex) is ordered when the two drawing lanes' pixel-identical floor is measured, not before
+     (H-023's condition "a drawing design that fits its row on the calibrated model" is read as: the floor known, the
+     look choices listed with their sheets).
+- **Corrections (lane eng-fix1, finishing its re-merge before the gate):** ten corrections built in with no way to turn
+  them off, the owner's four choices in `game_settings.mk`, three guards (one counted, 0 in every scene). With the
+  Ganado byte-order correction in, a hit Ganado's routine bytes differ from the first hit (tick 61) and positions
+  from about tick 165 (4.4 to 4.5 units); engine and reference moved together. Quick weapon select is set on and
+  reaches nothing until the sub screen is hosted.
+- **Lanes now:** at the gate eng-look1; queued eng-fix1, eng-draw1; finishing eng-e2c; running eng-draw2, eng-draw3,
+  eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-e2d.
+
 ## H-027 (2026-11-21): the plan written down (version 3.2); what the PC reference is and is not; rulings from the first gates
 
 - **Owner:** "okmemoralize that plan and ensure the skill sare up to date". Done: `ENGINE_PLAN.md` version 3.2 ("The plan as of
