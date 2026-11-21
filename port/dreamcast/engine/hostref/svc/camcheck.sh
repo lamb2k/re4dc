@@ -6,7 +6,7 @@
 # re4ref odump (the original camera units: camera, view, cam_sys, cam_ctrl, cam_qfps, cam_extra) and native (the
 # engine's camera service: services/camera) run the same inputs, wind off; svc/camcheck.py compares the frame's camera
 # of every tick (cam.txt: eye, target, roll, fov, and the controller's area, cut, routine and blend frames), within
-# 0.01 unit and 0.01 degree (stated before the first run; CAM_POS / CAM_DEG override). plays_right.py compares the
+# max(0.01 unit, 2^-20 of the coordinate) and 0.01 degree (stated before the run; CAM_POS, CAM_REL, CAM_DEG override). plays_right.py compares the
 # traces. Rows that must PASS: five fixtures (the village route, the hill, the bell fight, the square follow, the
 # door walk), determinism (bit for bit), the exercises camblend (cut blends) and camrail (rail fit, search and
 # evaluation: no fixture has either). Controls that must FAIL: smoothing off, cut blend off, rail parameter 0.25 on.
@@ -24,7 +24,7 @@ for bin in odump native; do
 done
 mkdir -p "$OUT"
 rm -f "$OUT/.wrong" "$OUT/.abort"
-TOL="--pos ${CAM_POS:-0.01} --deg ${CAM_DEG:-0.01}"
+TOL="--pos ${CAM_POS:-0.01} --rel ${CAM_REL:-9.5367431640625e-07} --deg ${CAM_DEG:-0.01}"
 run() {   # run <bin> <fixture> <dir> [env...]
     local bin=$1 fx=$2 d=$3
     shift 3
@@ -34,7 +34,7 @@ run() {   # run <bin> <fixture> <dir> [env...]
 }
 row() {   # row <name> <must> <ref dir> <test dir> [exact]
     local name=$1 must=$2 a=$3 b=$4 res got
-    if [ "${5:-}" = exact ]; then res=$(python3 "$CC" "$a" "$b" --pos 0 --deg 0); else res=$(python3 "$CC" "$a" "$b" $TOL --json "$b/cam.json"); fi
+    if [ "${5:-}" = exact ]; then res=$(python3 "$CC" "$a" "$b" --pos 0 --rel 0 --deg 0); else res=$(python3 "$CC" "$a" "$b" $TOL --json "$b/cam.json"); fi
     case $? in 0) got=PASS ;; 1) got=FAIL ;; *) got=ERROR; touch "$OUT/.abort" ;; esac
     python3 "$PR/plays_right.py" "$a/trace.txt" "$b/trace.txt" --tolerances "$PR/tolerances.json" --quiet > /dev/null
     local pr=$?

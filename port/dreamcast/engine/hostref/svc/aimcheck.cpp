@@ -49,15 +49,90 @@ void summary()
 // The shot lines (lane eng-e1h): every GetWepTargetList2 call (the handgun's shot, PlWepHitCheck2) to shots.txt: the
 // line, the scenery hit (attribute, point, distance), the enemies the line crossed, and each alive enemy's root position
 // with its distance from the line, so a shot fixture can be aimed at a Ganado and read back.
-struct WepTargetRec { cEm* em; void* part; };
+struct WepTargetRec { cEm* em; YARARE_INFO* part; };
 extern "C" u32 __real_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u32 max, Vec* hit, Vec* nrm, u32* attr,
                                         int type, int flag, f32 len);
+// lane eng-e1k: the native target list (services/aim/aim.cpp GetWepTargetList2, renamed eng_GetWepTargetList2 here)
+extern "C" u32 eng_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u32 max, Vec* hit, Vec* nrm, u32* attr,
+                                     int type, int flag);
+static void aim_init();
+namespace {
+// The shot's target list, both answers on every call (lane eng-e1k): the count, each entry's enemy and hit box, each
+// box's distance (rad, the squared distance the damage and the order read, compared as its square root), the scenery
+// attribute and hit point. aimlist.txt: the summary (rewritten at every call); aimlist-diff.txt: a line per call that
+// differs. Both bodies write the boxes they list (rad, dist, pos, flag 0x4000), so the one whose answer the behaviour
+// gets runs last: the original, or the native under RE4_AIM_USE=native.
+struct ListAnswer { u32 n, attr; WepTargetRec e[20]; float rad[20]; Vec hit; };
+struct {
+    unsigned calls, same, count_diff, em_diff, part_diff, attr_diff, hit_over, rad_over;
+    float max_hit, max_rad;
+} L;
+void list_summary()
+{
+    void* f = svc_out_open("aimlist.txt", "w");
+    if (!f) return;
+    svc_out_printf(f, "list calls %u same %u count_diff %u em_diff %u part_diff %u attr_diff %u hit_over_1u %u rad_over_1u %u"
+                   " max_hit %.4f max_rad_units %.4f use %s control %d\n", L.calls, L.same, L.count_diff, L.em_diff,
+                   L.part_diff, L.attr_diff, L.hit_over, L.rad_over, (double) L.max_hit, (double) L.max_rad,
+                   A.use_native ? "native" : "original", aim_control);
+    svc_out_close(f);
+}
+void list_take(ListAnswer& r, const WepTargetRec* list, u32 n, const Vec& hit, u32 attr)
+{
+    r.n = n > 20 ? 20 : n;
+    r.attr = attr;
+    r.hit = hit;
+    for (u32 i = 0; i < r.n; i++) { r.e[i] = list[i]; r.rad[i] = list[i].part->rad; }
+}
+void list_compare(const ListAnswer& o, const ListAnswer& w)   // o: the original's answer, w: the native's
+{
+    L.calls++;
+    const bool cd = o.n != w.n, td = o.attr != w.attr;
+    bool ed = false, pd = false;
+    float mr = 0.0f;
+    for (u32 i = 0; i < o.n && i < w.n; i++) {
+        ed |= o.e[i].em != w.e[i].em;
+        pd |= o.e[i].part != w.e[i].part;
+        const float d = __builtin_fabsf(__builtin_sqrtf(o.rad[i]) - __builtin_sqrtf(w.rad[i]));
+        if (d > mr) mr = d;
+    }
+    const float hx = o.hit.x - w.hit.x, hy = o.hit.y - w.hit.y, hz = o.hit.z - w.hit.z;
+    const float hd = __builtin_sqrtf(hx * hx + hy * hy + hz * hz);
+    const bool ho = hd > 1.0f, ro = mr > 1.0f;
+    if (hd > L.max_hit) L.max_hit = hd;
+    if (mr > L.max_rad) L.max_rad = mr;
+    L.count_diff += cd; L.em_diff += ed; L.part_diff += pd; L.attr_diff += td; L.hit_over += ho; L.rad_over += ro;
+    if (!cd && !ed && !pd && !td && !ho && !ro) L.same++;
+    else {
+        static void* fd;
+        if (!fd) fd = svc_out_open("aimlist-diff.txt", "w");
+        if (fd)
+            svc_out_printf(fd, "call %u frame %u count %u/%u attr %08x/%08x first em %p/%p hit %.3f units apart, rad %.3f units apart\n",
+                           L.calls, (unsigned) pG->Frame_cnt, o.n, w.n, (unsigned) o.attr, (unsigned) w.attr,
+                           (void*) (o.n ? o.e[0].em : 0), (void*) (w.n ? w.e[0].em : 0), (double) hd, (double) mr);
+    }
+    list_summary();
+}
+}   // namespace
 extern "C" u32 __wrap_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u32 max, Vec* hit, Vec* nrm, u32* attr,
                                         int type, int flag, f32 len)
 {
+    aim_init();
     static void* f;
     if (!f) f = svc_out_open("shots.txt", "w");
-    const u32 n = __real_GetWepTargetList2(p0, p1, list, max, hit, nrm, attr, type, flag, len);
+    // lane eng-e1k: the other arm's answer first, on copies; then the answer the behaviour gets, last
+    WepTargetRec tmp[20];
+    Vec c0 = *p0, c1 = *p1, th, tn;
+    u32 tattr = 0;
+    ListAnswer first, last;
+    const u32 n1 = A.use_native ? __real_GetWepTargetList2(&c0, &c1, tmp, max, &th, &tn, &tattr, type, flag, len)
+                                : eng_GetWepTargetList2(&c0, &c1, tmp, max, &th, &tn, &tattr, type, flag);
+    list_take(first, tmp, n1, th, tattr);
+    const u32 n = A.use_native ? eng_GetWepTargetList2(p0, p1, list, max, hit, nrm, attr, type, flag)
+                               : __real_GetWepTargetList2(p0, p1, list, max, hit, nrm, attr, type, flag, len);
+    list_take(last, list, n, *hit, *attr);
+    if (A.use_native) list_compare(first, last);
+    else list_compare(last, first);
     if (!f) return n;
     const float hx = hit->x - p0->x, hy = hit->y - p0->y, hz = hit->z - p0->z;
     svc_out_printf(f, "shot frame %u type %d from %.0f %.0f %.0f to %.0f %.0f %.0f attr %08x hit %.0f %.0f %.0f at %.0f enemies %u",
@@ -83,7 +158,7 @@ extern "C" u32 __wrap_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u3
 // rounds; host_glue.cpp: the core archive's rumble table converted to the PC's order at load), so this build no longer
 // answers the magazine (RE4_AIM_MAG) or skips a rumble pattern (vib_skipped), as lane eng-e1g's did.
 
-extern "C" int __wrap_GetWepTargetPos(Vec* p0, Vec* p1, int plCheck, int wepNo, cEm** outEm, int* outAttr)
+static void aim_init()
 {
     if (!A.init) {
         A.init = 1;
@@ -91,6 +166,10 @@ extern "C" int __wrap_GetWepTargetPos(Vec* p0, Vec* p1, int plCheck, int wepNo, 
         A.use_native = is(svc_env("RE4_AIM_USE"), "native");
         A.diff = svc_out_open("aim-diff.txt", "w");
     }
+}
+extern "C" int __wrap_GetWepTargetPos(Vec* p0, Vec* p1, int plCheck, int wepNo, cEm** outEm, int* outAttr)
+{
+    aim_init();
     Vec a1 = *p0, b1 = *p1, a2 = *p0, b2 = *p1;
     cEm *e1 = 0, *e2 = 0;
     int t1 = -1, t2 = -1;

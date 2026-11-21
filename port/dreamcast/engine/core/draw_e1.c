@@ -259,22 +259,27 @@ static volatile uint32_t flip_field[1040];
    at the first field after its render) for the headless image and for the lab arm PACETMU. */
 static int manual_flip;
 static volatile uint32_t pres_q[8], pres_head, pres_tail, pres_drop;
+/* Record controls (lane eng-e1k; boot files, each must make the selector FAIL the scene): NOFLIP the vblank handler
+   records no flip (a drawing image whose pictures never show); QDROP picture 300's release is refused as if the queue
+   were full (one drop) */
+static int ctl_noflip, ctl_qdrop;
 static void on_vblank(uint32_t code, void* data)
 {
     (void) code; (void) data;
     vbl_fields++;
     uint32_t sof = *(volatile uint32_t*) 0xa05f8050;
-    if (sof != last_sof) { last_sof = sof; if (flip_n < 1040) flip_field[flip_n] = vbl_fields; flip_n++; }
+    if (sof != last_sof && !ctl_noflip) { last_sof = sof; if (flip_n < 1040) flip_field[flip_n] = vbl_fields; flip_n++; }
     if (manual_flip && pres_head != pres_tail && (int32_t) (vbl_fields - pres_q[pres_head & 7]) >= 0 &&
         pvr_present_async(true) == 0)
         pres_head++;
 }
 /* The picture just submitted is released at field `field` (shown at field + 1). Queue full (eight pictures behind):
-   counted, released at once. */
+   the release is refused and counted as a drop (lane eng-e1k: before, it overwrote the oldest queued release while
+   the tail advanced past it); the scene's record then fails on the drop. */
 void e1_present_at_c(uint32_t field)
 {
     if (!manual_flip) return;
-    if (pres_tail - pres_head >= 8) { pres_drop++; field = vbl_fields; }
+    if (pres_tail - pres_head >= 8 || (ctl_qdrop && m1_frame == 300)) { pres_drop++; return; }
     pres_q[pres_tail & 7] = field;
     pres_tail++;
 }
@@ -288,6 +293,10 @@ unsigned e1_present_drops_c(void) { return pres_drop; }
 /* manual: 1 for the field pacer's fixed-field presentation (the drawing images), 0 for KOS's automatic flip */
 int e1_fields_start_c(int manual)
 {
+    file_t cf = fs_open("/cd/NOFLIP", O_RDONLY);
+    if (cf >= 0) { fs_close(cf); ctl_noflip = 1; printf("E1 NOFLIP: no flip recorded (control)\n"); }
+    cf = fs_open("/cd/QDROP", O_RDONLY);
+    if (cf >= 0) { fs_close(cf); ctl_qdrop = 1; printf("E1 QDROP: picture 300's release refused (control)\n"); }
     vblank_handler_add(on_vblank, NULL);
     if (open_ok) { pvr_wait_ready(); pvr_wait_render_done(); }
     vid_waitvbl(); vid_waitvbl();
@@ -296,6 +305,10 @@ int e1_fields_start_c(int manual)
     return manual_flip;
 }
 uint32_t e1_fields_now_c(void) { return vbl_fields; }
+/* lane eng-e1k: the record's facts the frame line needs: does this image draw (the renderer opened: its intervals are
+   presented flips, never the tick's), and does it hand over stills (a STILLS run is never a timing run) */
+int e1_draw_opened_c(void) { return open_ok; }
+int e1_draw_stills_c(void) { return stills; }
 unsigned e1_fields_finish_c(const volatile uint32_t** field)
 {
     if (open_ok) { pvr_wait_ready(); pvr_wait_render_done(); }

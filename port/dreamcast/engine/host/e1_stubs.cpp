@@ -104,7 +104,8 @@ int EmRackCk(cEm*, Vec*, f32) { STUB("EmRackCk"); return 0; }
 void EmYarareDisp(cEm*) {}
 void EmScenario(cEm*) { STUB("EmScenario"); }
 int LifeDownSet2(cEm*, int, int, int) { STUB("LifeDownSet2"); return 0; }
-u32 GetWepTargetList2(Vec*, Vec*, WepTarget*, u32, Vec*, Vec*, u32*, int, int) { STUB("GetWepTargetList2"); return 0; }
+// GetWepTargetList2: native since lane eng-e1k (services/aim/aim.cpp; the shot's target list, an empty list by
+// computation when no enemy is on the line)
 int GetWepTargetListBomb(Vec*, f32, WepTarget*, int, int, int) { STUB("GetWepTargetListBomb"); return 0; }
 // GetWepTargetPos: native since lanes eng-e1f / eng-e1g (services/aim/aim.cpp)
 void GameAddPoint(int type) { if (type) STUB("GameAddPoint"); }

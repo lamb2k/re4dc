@@ -250,3 +250,34 @@ Image boot files: CAMSTALE (now freezes the service's record), LIGHTCTL (black m
 camera group, the draw-tick declaration), `loader/selector.c` (the PUB line), `host/e1_stubs.cpp` (scrHitCheck's stub),
 `services/laser.cpp` and `services/math/math_svc.cpp` (the view matrix from the record; outside the brief's list, one
 line each).
+
+## 7. Addendum (after the merge of engine 6f27a2db4, lane eng-e1k)
+
+### 7.1 The camera check's bound, relative to the coordinate (stated before the re-run)
+
+The absolute 0.01 unit is five float steps at x = 21,069 (the hill), where a float's step is 0.00195; in a room further
+from the origin it would be fewer. The new bound, stated before running: each eye and target coordinate within
+**max(0.01 unit, 2^-20 x |the reference's coordinate|)**; 2^-20 is about 9.5e-7, eight float steps at any magnitude (a
+float's step is 2^-23 to 2^-24 of its size), so the bound is the same number of float steps in every room, and near
+the origin the absolute 0.01 governs. At x = 21,069 it is 0.0201. Roll and fov stay within 0.01 degree; the decisions
+equal. `camcheck.py --rel` (default 2^-20), `camcheck.sh` (CAM_REL); the report gives the worst share of the bound used.
+
+### 7.2 What the service-check table loosened, and the correction
+
+The first hand-back's `svc_controls.sh` gave the reference-against-native rows `svc4_compare.py --tol 0.01`: every line
+of the round-4 boundary log within 0.01, not only the camera's. Bones, queries, palette and traces (`svc_compare.py`,
+`plays_right.py`) were not touched. Corrected: those rows now take `--camera-tol 0.01`, which loosens only the camera's
+lines (the camera kinds CM, VP, OR, OU, CT, HI, CA, HX, BS, PZ, and every line logged while CameraMove runs, its tick
+token marked "c" by `svc4_dump.cpp`: the camera's own probes EH, OH, OB); every other line is compared bit for bit
+again. Control `pos005` (Leon's model 0.005 unit along x at tick 100) in that mode must FAIL.
+
+### 7.3 ZNEAR and ZFAR (not changed here; queued by the integrator)
+
+- **Set:** in the E1 images nowhere: `host/e1_stubs.cpp:53` defines them as zero storage. The original sets 100 and
+  1,000,000 in `src/game/main.cpp:663-664` (not linked). The PC reference sets them in
+  `engine/hostref/replay.cpp:95` (ZNEAR 100) and `:238-239` (100, 1,000,000).
+- **Read (image):** `services/camera/camera_svc.cpp:233, 241` (the frustum, `VIEW::init / move`), `:343, 346, 349` (the
+  record's depth terms and far plane; 0 far falls back to the renderer's 18,750); `services/camera/cam_eval.cpp:606, 609`
+  (the shoulder wall probe's side width and near offset); hosted `src/game/cam_ctrl.cpp:1345` (the camera's water
+  clamp; GetWaterHeight is stubbed 0 in E1). The original's `src/game/cam_qfps.cpp:770, 790` and `view.cpp:35, 45` are
+  the same reads in the units the service replaced.

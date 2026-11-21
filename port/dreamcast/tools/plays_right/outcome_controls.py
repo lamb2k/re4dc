@@ -17,6 +17,9 @@ are listed beside it); a row ends as it must only when both hold. One control pe
     short-run       B cut after tick 300 (of 520); and, separately, B without the T line of tick 100
     extra-tick      B with one tick after the last
     missing-actor   B without the Ganado 0x1e; and a required actor (--actors e=55) neither run has
+    missing-sample  B without 0x1e's A line of tick 250 (it stands still, its life unchanged: passed before lane eng-e1k)
+    short-run (R)   B with every R line removed (passed before lane eng-e1k)
+    malformed (pos) the logic form with one LE line's position the not-recorded sentinel pos=~ (passed before)
   outcome (the input is well formed, the play differs):
     route           door103-walk with the walk 2% longer (re4ref --control walk-speed=1.02), --pos final
     position        the same run, every tick
@@ -27,6 +30,8 @@ are listed beside it); a row ends as it must only when both hold. One control pe
     trigger-gone    B with 0x1f's records removed from tick 400 on (it leaves the alive list early)
     trigger-event   the logic form (below) with the event word changed in B from tick 200 on
     clear           bell-ganado-clear with both hits on 0x1c removed (it lives: no room clear)
+    yaw             0x1e, and separately Leon, turned 2 degrees from tick 300 (tolerance ang_deg, 1 degree); the logic
+                    form's LE lines without their yaw in B (fail closed); and 0x1e turned 0.5 degrees (must PASS)
   as they must PASS:
     determinism     each fixture's reference run twice
     logic form      bell-ganado-clear written as logic-trace records (LT, LL, LE) against itself, both as serial logs
@@ -37,8 +42,10 @@ Exit status 0 when every row ends as it must. The table goes to stdout and <out 
 """
 import argparse
 import json
+import math
 import os
 import re
+import struct
 import subprocess
 import sys
 
@@ -141,7 +148,7 @@ def main():
     if args.engine_log and not os.path.isfile(args.engine_log.rsplit(':', 2)[0]):
         print('outcome_controls: no engine log %s' % args.engine_log)
         sys.exit(2)
-    planned = 28 + (2 if args.engine_log else 0)
+    planned = 35 + (2 if args.engine_log else 0)   # lane eng-e1k: 28 + 7
     O = args.out
     os.makedirs(O, exist_ok=True)
     rows = []
@@ -226,6 +233,32 @@ def main():
     row('missing-actor (0x1e gone from B)', 'FAIL', 'missing-actor', K,
         mutate(K, os.path.join(D, 'noact.txt'), lambda L: [s for s in L if not (s.startswith('A ') and ' e=1e ' in s)]))
     row('missing-actor (required e=55)', 'FAIL', 'missing-actor', K, K, ['--actors', 'e=55'])
+    # lane eng-e1k (H-016.5): the reader's remaining false passes, each with its failing input
+    row('missing-sample (an interior A row of 0x1e deleted)', 'FAIL', 'missing-sample', K,
+        mutate(K, os.path.join(D, 'gap1e.txt'), lambda L: [s for s in L if not (s.startswith('A t=250 ') and ' e=1e ' in s)]))
+    row('short-run (every R line removed)', 'FAIL', 'short-run', K,
+        mutate(K, os.path.join(D, 'nor.txt'), lambda L: [s for s in L if not s.startswith('R ')]))
+
+    def turn(L, sel, deg, frm=300):
+        """A or T lines (sel: 'A e=1e' or 'T') from tick frm on with the yaw turned by deg degrees."""
+        out = []
+        for s in L:
+            m = re.match(r'^(A|T) t=(\d+) ', s)
+            if m and int(m.group(2)) >= frm and (sel == 'T' and m.group(1) == 'T' or sel != 'T' and m.group(1) == 'A' and
+                                                  (' e=%s ' % sel[4:]) in s):
+                def fix(mm):
+                    x, y, z = mm.group(1).split(',')
+                    yv = struct.unpack('<f', struct.pack('<I', int(y, 16)))[0] + math.radians(deg)
+                    return ' a=%s,%08x,%s' % (x, struct.unpack('<I', struct.pack('<f', yv))[0], z)
+                s = re.sub(r' a=([0-9a-f]{8},[0-9a-f]{8},[0-9a-f]{8})', fix, s, count=1)
+            out.append(s)
+        return out
+    row('yaw (0x1e turned 2 degrees from tick 300)', 'FAIL', 'yaw', K,
+        mutate(K, os.path.join(D, 'yaw1e.txt'), lambda L: turn(L, 'A e=1e', 2.0)))
+    row('yaw (Leon turned 2 degrees from tick 300)', 'FAIL', 'yaw', K,
+        mutate(K, os.path.join(D, 'yawleon.txt'), lambda L: turn(L, 'T', 2.0)))
+    row('yaw within tolerance (0x1e turned 0.5 degrees)', 'PASS', '', K,
+        mutate(K, os.path.join(D, 'yaw1e-half.txt'), lambda L: turn(L, 'A e=1e', 0.5)))
     # outcome
     W = re4ref(args.bin, tree, fx('door103-walk'), os.path.join(O, 'door103-walk', 'walk'), 'walk-speed=1.02')
     row('route (walk 2% longer)', 'FAIL', 'route', base['door103-walk'], W, ['--pos', 'final'])
@@ -254,6 +287,14 @@ def main():
     row('logic form without --log', 'FAIL', 'unknown-line', la, lb, ['--expect-ticks', '0:520'])
     row('logic form without --expect-ticks', 'FAIL', 'short-run', la, lb, ['--log', 'ab'])
     row('trigger-event (event word from 200)', 'FAIL', 'trigger', la, le, ['--log', 'ab', '--expect-ticks', '0:520'])
+    # lane eng-e1k: a present but unrecorded position (pos=~) on one LE line; and the LE lines without their yaw
+    lpos = mutate(la, os.path.join(D, 'logic-pos.txt'),
+                  lambda L: [re.sub(r' pos=\S+', ' pos=~', s, count=1) if s.startswith('LE t=200 ') and ' e=1e' in s else s
+                             for s in L])
+    row('malformed (LE pos=~ on one line)', 'FAIL', 'malformed', la, lpos, ['--log', 'ab', '--expect-ticks', '0:520'])
+    lnoay = mutate(la, os.path.join(D, 'logic-noay.txt'),
+                   lambda L: [re.sub(r' ay=\S+', '', s) if s.startswith('LE ') else s for s in L])
+    row('yaw (LE lines without their yaw in B)', 'FAIL', 'yaw', la, lnoay, ['--log', 'ab', '--expect-ticks', '0:520'])
     if args.engine_log:
         path, lo, hi = args.engine_log.rsplit(':', 2)
         row('engine log against itself', 'PASS', '', path, path, ['--log', 'ab', '--expect-ticks', '%s:%s' % (lo, hi)])

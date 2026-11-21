@@ -312,3 +312,46 @@ input checks); its pack needs a re-bake with the current packer. Controls: `--dr
 "FAILED missing FIGHT/CROSS.PAK"; with `--no-precheck`, `--drop BENCH/FARM.PAK` gives BENCH "FAILED M1 native pack
 REFUSED" and `--drop E1/st1/r101.arc` gives LEON "FAILED E1 load: missing /cd/st1/r101.arc". Evidence:
 `E:\RE4DC-Lanes\eng-loop2\evidence` (`final-*journal.txt`, `shots\final-*.png`).
+
+## 11. A scene record that proves itself (lane eng-e1k, 2026-11-21)
+
+Status: finished, unaudited. Answers HANDOVERS.md H-016.6 (second E1 audit section 6). Flycast runs are function checks.
+
+**What a timing scene needs to be OK** (`engine/loader/selector.c` `collect`, E1-family scenes), checked in this order
+after the existing refusals, pools, exit and CRC:
+1. the image's run-kind line: `E1 RUN timing (no trace, no stills)`, or `E1 RUN function (traced|stills): not a timing
+   run` (`core/frame.cpp`). A function run (traces formatted inside the pictures, or stills handed over in play) is
+   judged on its end line, refusals and pools only; its summary says "not a timing run" and gives no timing rows;
+2. the after-play memory line `E1 MEM after play:` (below);
+3. the 600 picture rows 41 to 640, each once: a repeated row is counted and fails the scene ("rows: N of 600
+   pictures, D repeated"), never summed twice;
+4. a drawing image in `presented` mode, a headless one in `tick` mode. A drawing image now always counts presented
+   flips (`core/frame.cpp e1_fields_finish`: the mode follows whether the renderer opened, not whether a flip was
+   seen), so a drawing failure shows as 0 intervals, not as a silent fall-back to tick mode;
+5. zero release-queue drops (`E1 FIELDS ... release queue full N`). A full queue now refuses the release and counts it
+   (`core/draw_e1.c e1_present_at_c`); before, it overwrote the oldest queued release while the tail moved past it;
+6. 600 measured intervals (a row whose fields column is 0 has no flip).
+
+**After play** (`core/memmap.cpp e1_memmap_after`, printed by the report before its end line): the stack's paint high
+water (the deepest any tick reached) and its 1 KiB guard (the lowest 256 words of the 64 KiB painted stack must still
+hold the paint; `E1 STACK GUARD BROKEN`, a refusal line, otherwise), the KOS heap's tracked bytes and their peak (kept
+by the malloc wrappers through load and play), the sbrk top and its margin to the behaviour arena (sbrk only grows:
+after play is the worst), mallinfo, and video memory free (sampled before and after play; the renderer takes video
+memory at pack open and no cheap per-tick sample is taken). The selector's summary prints stack, arena margin and video
+memory free.
+
+**Controls** (boot files; Flycast test disc c3 of commit 313d1cd71, one boot, eight scenes,
+`E:\RE4DC-Lanes\eng-e1k\ev\record\c3-summary.txt`):
+
+| Scene | Boot file | Result |
+|---|---|---|
+| LEON, FIGHT, BOSS (headless) | none | OK (600 rows, presented / tick, 600 intervals, 0 drops; after play: stack 9,112 / 9,260 / 8,996 B, arena margin 503,808 / 278,528 / 2,125,824 B, video memory free 2,639,720 B in the drawing images, the same as before play) |
+| CROWDUP | `ROWDUP`: the row of picture 300 printed twice | FAILED "rows: 600 of 600 pictures, 1 repeated" |
+| CNOFLIP | `NOFLIP`: the vblank handler records no flip | FAILED "presented intervals: 0 of 600 measured" (before: tick mode, OK) |
+| CQDROP | `QDROP`: picture 300's release refused as if the queue were full | FAILED "release queue drops 1" (flips 639 of 640) |
+| CSTACK | `STACKX`: one guard word overwritten at tick 300 | FAILED "E1 STACK GUARD BROKEN: 1 of 256 guard words ..." |
+| SHOT | the shot fixture (traced) | OK, "not a timing run", no timing rows |
+
+The test scenes are added by the lane's disc wrapper (`E:\RE4DC-Lanes\eng-e1k\s\cdisc3.sh`, `CTL3=1`); the console
+disc's scene list is unchanged. `build_console_disc.sh` has four new scenes that run only when `--scenes` names them:
+`SHOT`, `SHOTNP`, `SHOTDMG`, `SHOTLATE` (the engine's shot against the PC reference: PLAYS_RIGHT.md, last section).

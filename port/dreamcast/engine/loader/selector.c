@@ -167,7 +167,7 @@ static void sum_add(sel_entry_t *e, const char *fmt, ...) {
 
 static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "M1 missing pack", "STACK GUARD BROKEN", "E1 draw: renderer refused",
                                          "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "CRASH event",
-                                         "ABORT", "DEADLINE", NULL};
+                                         "ABORT", "DEADLINE", "E2 SHOT REFUSED", NULL};
 
 /* the value after the keyword (first match at or after *from) */
 static const char *after(const char *line, const char *key) {
@@ -207,6 +207,13 @@ static uint32_t g_fields[E1_COUNT];
 static unsigned g_rows, g_last_row, g_late, g_headless;
 static char g_fmode[12];   /* the image's E1 FIELDS mode: presented, tick, or "" (an image that does not count) */
 static unsigned g_flips, g_pictures;
+/* lane eng-e1k (H-016.6): the record proves its own completeness. Each picture's row once (a repeated row is counted,
+   never summed twice); the image's release-queue drops; the run's kind (a traced or stills run says "not a timing
+   run"); the after-play memory line (stack guard, arena margin, video memory). */
+static uint8_t g_seen[E1_COUNT];
+static unsigned g_dups, g_drops, g_drops_seen, g_function, g_mem_after;
+static char g_runkind[48];
+static long g_mem_stack, g_mem_arena, g_mem_vram;
 static void e1_row(const char *l) {
     unsigned long v[14];
     int k = 0;
@@ -223,6 +230,8 @@ static void e1_row(const char *l) {
     if (n > g_last_row) g_last_row = n;
     if (n < E1_FIRST || n >= E1_FIRST + E1_COUNT) return;
     const unsigned i = n - E1_FIRST;
+    if (g_seen[i]) { ++g_dups; return; }   /* lane eng-e1k: a repeated picture row fails the record */
+    g_seen[i] = 1;
     const uint32_t tick = (uint32_t)v[2], svc = (uint32_t)v[3], draw = (uint32_t)v[5], wait = (uint32_t)v[6];
     const uint32_t frame = (uint32_t)v[7], pvr = (uint32_t)v[12];
     g_v[0][i] = draw;
@@ -245,7 +254,14 @@ static void e1_summary(sel_entry_t *e) {
     static const uint32_t budget_us[5] = {14000, 33333, 9000, 2000, 0};
     static uint32_t s[E1_COUNT];
     const unsigned n = g_rows;
+    if (g_function) {   /* lane eng-e1k: a traced or stills run: its rows are not timing */
+        sum_add(e, "run: %.44s", g_runkind);   /* "function (traced): not a timing run" */
+        sum_add(e, "rows %u of %u ticks: not reported as timing", n, g_last_row);
+        return;
+    }
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
+    if (g_mem_after)
+        sum_add(e, "after play: stack %ld B, arena margin %ld B, vram free %ld B", g_mem_stack, g_mem_arena, g_mem_vram);
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {
@@ -315,6 +331,11 @@ static void collect(unsigned i) {
     g_rows = g_last_row = g_late = g_headless = 0;
     g_fmode[0] = 0;
     g_flips = g_pictures = 0;
+    memset(g_seen, 0, sizeof(g_seen));
+    memset(g_fields, 0, sizeof(g_fields));
+    g_dups = g_drops = g_drops_seen = g_function = g_mem_after = 0;
+    g_runkind[0] = 0;
+    g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0;
     int pool_seen = 0, pub_seen = 0;
     if (e->report_ok) {
@@ -333,8 +354,20 @@ static void collect(unsigned i) {
             else if (!strncmp(line, "ROW ", 4) && !strcmp(s->kind, "e1")) e1_row(line);
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
             else if (!strncmp(line, "E1 draw: headless", 17)) g_headless = 1;
-            else if (!strncmp(line, "E1 FIELDS mode ", 15))
+            else if (!strncmp(line, "E1 FIELDS mode ", 15)) {
                 sscanf(line + 15, "%11s flips %u of %u", g_fmode, &g_flips, &g_pictures);
+                const char *q = after(line, "release queue full ");
+                if (q) { g_drops = (unsigned)atoi(q); g_drops_seen = 1; }
+            } else if (!strncmp(line, "E1 RUN ", 7)) {
+                snprintf(g_runkind, sizeof(g_runkind), "%.40s", line + 7);
+                g_function = strstr(line, "not a timing run") != NULL;
+            } else if (!strncmp(line, "E1 MEM after play:", 18)) {
+                const char *a = after(line, " high water "), *b = after(line, " free to arena "), *c = after(line, " vram free ");
+                g_mem_after = 1;
+                g_mem_stack = a ? atol(a) : -1;
+                g_mem_arena = b ? atol(b) : -1;
+                g_mem_vram = c ? atol(c) : -1;
+            }
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
             else if (!strncmp(line, "E1 POOL full ", 13)) {
                 /* lane eng-e1i (ruling H-015.3): a record pool's refusal is an engine fault, the scene fails */
@@ -354,13 +387,35 @@ static void collect(unsigned i) {
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pool_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 POOL line in the report");
+    /* lane eng-e1j (H-016.2): timing and function runs alike must report their conversions (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");
+    /* lane eng-e1k (H-016.6): a timing scene is OK only with a complete record: the run's kind line, 600 picture rows
+       once each (41-640), drawn images in presented mode with 600 measured flip intervals (a headless image: 600 tick
+       intervals), zero release-queue drops, the after-play memory line (its guard is a refusal line of its own) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !e->why[0]) {
+        unsigned distinct = 0, counted = 0;
+        for (unsigned i = 0; i < E1_COUNT; ++i) { distinct += g_seen[i]; counted += g_seen[i] && g_fields[i] != 0; }
+        if (!g_runkind[0]) snprintf(e->why, sizeof(e->why), "no E1 RUN line: timing or function run not said");
+        else if (g_function) { /* a function run: judged on its end, refusals and pools only */ }
+        else if (!g_mem_after) snprintf(e->why, sizeof(e->why), "no after-play memory line");
+        else if (g_dups || distinct != E1_COUNT)
+            snprintf(e->why, sizeof(e->why), "rows: %u of 600 pictures, %u repeated", distinct, g_dups);
+        else if (!g_fmode[0]) snprintf(e->why, sizeof(e->why), "no E1 FIELDS line");
+        else if (!g_headless && strcmp(g_fmode, "presented"))
+            snprintf(e->why, sizeof(e->why), "drawn image in %s mode, not presented flips", g_fmode);
+        else if (g_headless && strcmp(g_fmode, "tick"))
+            snprintf(e->why, sizeof(e->why), "headless image in %s mode", g_fmode);
+        else if (!g_drops_seen || g_drops)   /* before the intervals: a dropped release also costs a flip */
+            snprintf(e->why, sizeof(e->why), g_drops_seen ? "release queue drops %u" : "no release queue count", g_drops);
+        else if (counted != E1_COUNT)
+            snprintf(e->why, sizeof(e->why), "%s intervals: %u of 600 measured", g_fmode, counted);
+    }
     if (!e->why[0] && e->exit_code) snprintf(e->why, sizeof(e->why), "exit %d", (int)e->exit_code);   /* after the
                                                                     report: a refusal line says more than its exit code */
     if (!strcmp(s->kind, "e1")) e1_summary(e);
     e->rows = !strcmp(s->kind, "bench") ? windows : g_rows;
-    if (!e->why[0] && !e->rows) snprintf(e->why, sizeof(e->why), "no rows in the report");
+    if (!e->why[0] && !e->rows && !g_function) snprintf(e->why, sizeof(e->why), "no rows in the report");
     if (!e->why[0] && !done) snprintf(e->why, sizeof(e->why), "no end line in the report");
     e->state = e->why[0] ? E_FAILED : E_OK;
 }

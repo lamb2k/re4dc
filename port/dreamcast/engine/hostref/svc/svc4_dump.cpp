@@ -60,6 +60,8 @@ void* g_f;
 void* g_cam;   // lane eng-e1j: cam.txt, the frame's camera once a CameraMove (svc/camcheck.py)
 unsigned g_tick;
 int g_depth;
+// lane eng-e1j: 1 while CameraMove runs; a line logged then has its tick token marked "c" (svc4_compare --camera-tol)
+int g_in_cam;
 u32 bits(f32 f)
 {
     u32 u;
@@ -313,6 +315,14 @@ void exercise(unsigned t)
 extern "C" void svc4_tick(unsigned t)
 {
     g_tick = t;
+    // lane eng-e1j: control pos005 (svc_controls.sh): Leon's model 0.005 unit along x at tick 100, every bone with it;
+    // the reference-against-native rows (camera lines loosened only) must still FAIL on it
+    static int pos005 = -1;
+    if (pos005 < 0) {
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        pos005 = c && !__builtin_strcmp(c, "pos005");
+    }
+    if (pos005 && t == 100 && pPL) pPL->pos.x += 0.005f;
     exercise(t);
 }
 extern "C" void svc4_finish()
@@ -371,7 +381,7 @@ extern "C" void svc4_finish()
     extern "C" ret __wrap_##mangled params                                                                           \
     {                                                                                                                \
         const bool top = TOP;                                                                                        \
-        if (top) { P(g_f, "%u", g_tick); log_in; }                                                                  \
+        if (top) { P(g_f, g_in_cam ? "c%u" : "%u", g_tick); log_in; }                                                                  \
         g_depth++;                                                                                                   \
         ret r = __real_##mangled args;                                                                               \
         g_depth--;                                                                                                   \
@@ -383,7 +393,7 @@ extern "C" void svc4_finish()
     extern "C" void __wrap_##mangled params                                                                          \
     {                                                                                                                \
         const bool top = TOP;                                                                                        \
-        if (top) { P(g_f, "%u", g_tick); log_in; }                                                                  \
+        if (top) { P(g_f, g_in_cam ? "c%u" : "%u", g_tick); log_in; }                                                                  \
         g_depth++;                                                                                                   \
         __real_##mangled args;                                                                                       \
         g_depth--;                                                                                                   \
@@ -531,10 +541,17 @@ WV(_ZN4VIEW15initPerspectiveEffff, (VIEW* v, f32 fy, f32 a, f32 zn, f32 zf), (v,
    { P(g_f, " h%08x h%08x", words(&v->localFull, sizeof(ViewFrustum)), words(&v->sphere, sizeof(ViewSphere))); })
 // the frame's camera and the frustum it leaves (VIEW::move is not wrapped: in the native build CameraMove calls it
 // inside one object, where --wrap does not reach, so the two builds would log it differently)
-WT(CameraMove, (), (), {
-    P(g_f, " CM");
+extern "C" void __real_CameraMove();
+extern "C" void __wrap_CameraMove()
+{
+    const bool top = TOP;
+    g_in_cam++;
+    __real_CameraMove();
+    g_in_cam--;
+    if (!top) return;
+    P(g_f, "%u CM", g_tick);
     campar(&pG->Cam);
-    P(g_f, " h%08x %08x %08x h%08x h%08x h%08x", words(&pG->Cam, sizeof(Camera)), bits(View._fovy), bits(View._zfar),
+    P(g_f, " h%08x %08x %08x h%08x h%08x h%08x\n", words(&pG->Cam, sizeof(Camera)), bits(View._fovy), bits(View._zfar),
       words(&View.worldFull, sizeof(ViewFrustum)), words(&View.world, sizeof(ViewFrustum)), words(&View.sphereWorld, sizeof(ViewSphere)));
     // lane eng-e1j: the camera check's line: tick, eye, target, roll (radians), fov (degrees) as decimal floats, and the
     // controller's decisions (area, camera cut, routine, cut blend frames left)
@@ -544,7 +561,7 @@ WT(CameraMove, (), (), {
           c.param.at.x, c.param.at.y, c.param.at.z, c.param.roll, c.param.fovy, CamCtrl.areaNo, CamCtrl.cameraNo, CamCtrl.r0,
           CamCtrl.interp.frame);
     }
-})
+}
 WV(_ZN12CameraMotion4moveEv, (CameraMotion* c), (c), { P(g_f, " CT %08x", bits(c->m_info.frame)); },
    { campar(c); P(g_f, " %d %u h%08x", c->end, c->m_info.state, words(c->m_info.hist, sizeof(c->m_info.hist))); })
 W(int, HermiteInterpolation, (HermitePrm* prm, Vec* out, u16* hist), (prm, out, hist),

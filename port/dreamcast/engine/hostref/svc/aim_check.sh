@@ -31,15 +31,24 @@ run() {   # run <fixture> <arm> [env...]
         --log "$d/run.log" 2> "$d/err.txt" || { echo "re4ref failed: $d"; return 1; }
 }
 calls() {   # calls <dir>: PASS / FAIL on the per-call comparison
+    [ -f "$1/aim.txt" ] || { echo "no call"; return; }   # lane eng-e1k: a fixture that never aims (bell-ganado-hit)
     awk '/^aim calls/ {for (i = 1; i < NF; i++) v[$i] = $(i + 1);
          print ((v["ret_diff"] + v["em_diff"] + v["attr_diff"]) ? "FAIL" : "PASS") " (calls " v["calls"] ", return differs " v["ret_diff"] ", enemy " v["em_diff"] ", attribute " v["attr_diff"] ", hit point max " v["max_point"] " units)"}' "$1/aim.txt"
 }
-for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado}; do
+# lane eng-e1k: the shot's target list (GetWepTargetList2), both answers on every shot: count, enemies, hit boxes,
+# attribute; the boxes' distances and the scenery hit point within 1 unit. "no shot" when the run fired none.
+lists() {
+    [ -f "$1/aimlist.txt" ] || { echo "no shot"; return; }
+    awk '/^list calls/ {for (i = 1; i < NF; i++) v[$i] = $(i + 1);
+         bad = v["count_diff"] + v["em_diff"] + v["part_diff"] + v["attr_diff"] + v["hit_over_1u"] + v["rad_over_1u"];
+         print (bad ? "FAIL" : "PASS") " (shots " v["calls"] ", count differs " v["count_diff"] ", enemy " v["em_diff"] ", box " v["part_diff"] ", attribute " v["attr_diff"] ", hit point max " v["max_hit"] ", box distance max " v["max_rad_units"] " units)"}' "$1/aimlist.txt"
+}
+for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado shot-ganado}; do
     run "$fx" orig
     run "$fx" native RE4_AIM_USE=native
     run "$fx" ctl RE4_AIM_USE=native RE4_AIM_CONTROL=grow
     arms="native ctl"
-    echo "$fx orig: calls $(calls "$OUT/$fx/orig")"
+    echo "$fx orig: calls $(calls "$OUT/$fx/orig"); shot lists $(lists "$OUT/$fx/orig")"
     for a in $arms; do
         python3 "$PR/outcome.py" "$OUT/$fx/orig/trace.txt" "$OUT/$fx/$a/trace.txt" --tolerances "$PR/tolerances.json" \
             --json "$OUT/$fx/$a/outcome.json" > "$OUT/$fx/$a/outcome.txt" 2>&1
@@ -47,6 +56,6 @@ for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado}; do
         python3 "$PR/plays_right.py" "$OUT/$fx/orig/trace.txt" "$OUT/$fx/$a/trace.txt" --tolerances "$PR/tolerances.json" \
             --quiet > "$OUT/$fx/$a/pr.txt" 2>&1
         pr=$?
-        echo "$fx $a: calls $(calls "$OUT/$fx/$a"); outcome $([ $oc = 0 ] && echo PASS || echo FAIL); traces $([ $pr = 0 ] && echo PASS || echo FAIL)"
+        echo "$fx $a: calls $(calls "$OUT/$fx/$a"); shot lists $(lists "$OUT/$fx/$a"); outcome $([ $oc = 0 ] && echo PASS || echo FAIL); traces $([ $pr = 0 ] && echo PASS || echo FAIL)"
     done
 done

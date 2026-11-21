@@ -169,7 +169,8 @@ AIM_OBJ := $(OUT)/n/aim.o
 $(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
-WEAKEN_game/em_sub := _GetWepTargetPos   # SH-ELF symbol names carry the leading underscore
+WEAKEN_game/em_sub := _GetWepTargetPos _GetWepTargetList2   # SH-ELF symbol names carry the leading underscore
+# (lane eng-e1k: GetWepTargetList2, the shot's target list, is the native one in every image too)
 # Lane eng-e1h (H-014.3): the laser sight's drawing is the engine's (services/laser.cpp: the setters the renderer's
 # laser pass reads); objWep's GX bodies are made weak so --gc-sections drops them. drawLaserSight stays hosted.
 WEAKEN_game/objWep := _drawPoint _Draw_line3d_local_222 _Draw_line3d_222

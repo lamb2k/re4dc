@@ -60,11 +60,26 @@ def load(d):
     return calls, notes
 
 
+# Lane eng-e1j: the camera service is the engine's own arithmetic, not the original's operation order. --camera-tol U
+# compares within U (as --tol, hashes of float state skipped) only the camera's lines: the camera kinds (the frame's
+# camera CM, its frustum VP, frames OR / OU, keyed tracks CT / HI, the attached camera CA, the rail HX / BS / PZ) and
+# every line logged while CameraMove runs (the tick token marked "c": the camera's own probes, EH / OH / OB). Every
+# other line stays bit for bit.
+CAMERA_KINDS = {'CM', 'VP', 'OR', 'OU', 'CT', 'HI', 'CA', 'HX', 'BS', 'PZ'}
+
+
+def is_camera(line):
+    t = line.split()
+    return len(t) > 1 and (t[0].startswith('c') or t[1] in CAMERA_KINDS)
+
+
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    args =[a for a in sys.argv[1:] if not a.startswith('--')]
     js = sys.argv[sys.argv.index('--json') + 1] if '--json' in sys.argv else None
     tol = float(sys.argv[sys.argv.index('--tol') + 1]) if '--tol' in sys.argv else None
-    for v in (js, sys.argv[sys.argv.index('--tol') + 1] if tol is not None else None):
+    ctol = float(sys.argv[sys.argv.index('--camera-tol') + 1]) if '--camera-tol' in sys.argv else None
+    for v in (js, sys.argv[sys.argv.index('--tol') + 1] if tol is not None else None,
+              sys.argv[sys.argv.index('--camera-tol') + 1] if ctol is not None else None):
         if v in args:
             args.remove(v)
     a, b = args[0], args[1]
@@ -76,17 +91,23 @@ def main():
     kinds = Counter(l.split()[1] for l in ca if len(l.split()) > 1)
     first = None
     same = 0
+    cam_lines = cam_near = 0
     for i, (x, y) in enumerate(zip(ca, cb)):
-        if x == y or (tol is not None and near(x, y, tol)):
+        cam = ctol is not None and is_camera(x) and is_camera(y)
+        cam_lines += cam
+        if x == y or (tol is not None and near(x, y, tol)) or (cam and near(x, y, ctol)):
             same += 1
+            cam_near += cam and x != y
         elif first is None:
             first = {'line': i + 1, 'ref': x[:300], 'test': y[:300]}
     ok = first is None and len(ca) == len(cb) and len(ca) > 0
     if first is None and len(ca) != len(cb):
         first = {'line': min(len(ca), len(cb)) + 1, 'ref': 'calls %d' % len(ca), 'test': 'calls %d' % len(cb)}
     rep = {'calls_ref': len(ca), 'calls_test': len(cb), 'identical': same, 'kinds': dict(kinds), 'first': first,
-           'verdict': 'PASS' if ok else 'FAIL', 'counters': nb, 'tol': tol}
-    print('%s  svc4 calls %d/%d identical (%s)%s' % (rep['verdict'], same, len(ca),
+           'verdict': 'PASS' if ok else 'FAIL', 'counters': nb, 'tol': tol, 'camera_tol': ctol,
+           'camera_lines': cam_lines, 'camera_lines_within_tol_not_identical': cam_near}
+    print('%s  svc4 calls %d/%d identical%s (%s)%s' % (rep['verdict'], same, len(ca),
+          '' if ctol is None else ' (camera lines %d, %d of them within %g only)' % (cam_lines, cam_near, ctol),
           ' '.join('%s %d' % kv for kv in sorted(kinds.items())),
           '' if ok else '; first difference at call %d: ref "%s" test "%s"' % (first['line'], first['ref'][:160], first['test'][:160])))
     if js:
