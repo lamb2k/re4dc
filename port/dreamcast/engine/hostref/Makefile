@@ -74,8 +74,16 @@ HOST_GAME := host_memapi.cpp host_globals.cpp host_mgr.cpp host_stubs.cpp host_g
 
 ARCH   := -m32 -msse2 -mfpmath=sse -malign-double -fno-pie -fno-stack-protector
 COMMON := $(ARCH) -O1 -g -fno-strict-aliasing -ffunction-sections -fdata-sections
+# RE4DC_STAT_ROUTINE_BYTES (lane eng-e1m): cModel::stat is the routine bytes r_no_0..3 read as one little-endian word,
+# and the sources' STAT_BE() constants are GameCube big-endian words; re4dc_prelude.h byte-swaps them only with this
+# define. The engine image always swaps (engine/host/e1_prelude.h), as the old game's release recipe did. Before this
+# lane the reference did not: its routine tests read the wrong bytes (player.cpp move: Leon idle and not moved read as
+# moving, so the shoulder camera took his matrix every tick where the game holds it; lanes/eng-e1m.md). STAT_BYTES=0 is
+# the old reference, kept only as the camera check's control (build it in its own BUILD folder).
+STAT_BYTES ?= 1
 GAMEINC := -include $(GAME)/platform/include/re4dc_prelude.h -I$(ROOT)/include -I$(ROOT)/src \
-           -I$(ROOT)/src/game -I$(ROOT)/src/wep -I$(GAME)/platform/include -DRE4DC_GAME
+           -I$(ROOT)/src/game -I$(ROOT)/src/wep -I$(GAME)/platform/include -DRE4DC_GAME \
+           -DRE4DC_STAT_ROUTINE_BYTES=$(STAT_BYTES)
 GAMEFLAGS := -std=gnu++20 -fpermissive -w -fno-exceptions -fno-rtti -fno-threadsafe-statics $(GAMEINC)
 HOSTFLAGS := -std=gnu++20 -fpermissive -Wall -Wno-unused-function -Wno-register -fno-exceptions -fno-rtti \
              -fno-threadsafe-statics $(GAMEINC) -I.

@@ -1298,4 +1298,26 @@ Details and numbers: `lanes/eng-e1l.md`.
   decisions); `hostref/svc/camengine.sh` compares a Flycast serial log with re4ref odump on e1-route (seed 0),
   hill-follow and shot-ganado under camcheck's bound, and `camnearer.py` says, where two arms differ, which is nearer the
   reference. The fix moves the camera onto the reference where it meets a wall (village houses, the hill); a drift common
-  to both arms keeps every scene outside camcheck's bound (not diagnosed; lane doc section 3).
+  to both arms keeps every scene outside camcheck's bound (not diagnosed; lane doc section 3). (Diagnosed and closed by
+  48c, lane eng-e1m: the reference was wrong.)
+
+### 48c. The engine's camera meets the reference: the reference's routine bytes (lane eng-e1m)
+
+Details and numbers: `lanes/eng-e1m.md`.
+- **Cause.** The "drift" of 48b was the PC reference, not the image. hostref compiled the hosted behaviour without
+  `RE4DC_STAT_ROUTINE_BYTES`, so `STAT_BE()` (re4dc_prelude.h) left the sources' GameCube big-endian routine constants
+  unswapped against the little-endian `cModel::stat` word. In `cPlayer::move` (player.cpp) Leon idle and not moved
+  (routine 0/0/1) then read as moving, and the shoulder camera was handed his matrix every tick
+  (`CameraQuasiFPS::setPlayerLocation`) while the idle motion creeps him 0.03 to 0.2 units a tick. The game and the
+  image (`engine/host/e1_prelude.h` always swaps, as the old game's release recipe) keep the stored matrix until he
+  moves, so the camera holds still through the creep. First apart: tick 2, the stored matrix (`m_pl_mat`), on all three
+  scenes; Leon's own position and matrix equal. At the aim starts (LEON 387, SHOT 150) the shoulder offset differed
+  too (603 units in z); with the define those ticks agree as well (which routine test chose it was not isolated).
+- **Fix.** hostref `Makefile`: `STAT_BYTES ?= 1` (`-DRE4DC_STAT_ROUTINE_BYTES`). The image's camera is unchanged (its
+  stills do not move). `camengine.sh` on LEON, HILL and SHOT meets camcheck's bound.
+- **Diagnosis lines.** `CD n=<CameraMove> <tag> <words>` (`eng_camera.h eng_cam_diag`): Leon's position and matrix, the
+  shoulder camera's stored matrix, floor normal and state, the smoothing's state, the state words, and each evaluation
+  step's output; on the image with the CAMDIAG boot file (trace runs), on the PC native build with `RE4_CAMDIAG`.
+- **Controls.** The old reference (`STAT_BYTES=0`, its own BUILD folder): `camengine.sh` rows must FAIL. Lab arm
+  CAMEVERY (boot file): the image hands the shoulder camera Leon's matrix every tick, as the old reference did; it must
+  FAIL against the reference. ZCLIP0 still fails HILL from tick 1.

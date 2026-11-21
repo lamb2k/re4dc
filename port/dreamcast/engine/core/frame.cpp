@@ -105,6 +105,8 @@ void e1_trace_put(const char* line, unsigned n)
     trace_len += n;
 }
 static int notrace = -1;   // the NOTRACE boot file (lane eng-e1k: read by the run's kind line too)
+// lane eng-e1m: the CAMDIAG boot file (trace runs only) sends the camera's diagnosis lines (eng_camera.h) to the trace
+static void cam_diag_put(const char* line, unsigned n) { e1_trace_put(line, n); }
 void e1_trace_tick(unsigned tick)
 {
     if (notrace < 0) {
@@ -112,6 +114,10 @@ void e1_trace_tick(unsigned tick)
 #ifdef E2_FIGHT
         if (e2_shot.active) notrace = 0;   // lane eng-e1k: the shot fixture is a traced function run, always
 #endif
+        if (!notrace) {
+            f = fs_open("/cd/CAMDIAG", O_RDONLY);
+            if (f >= 0) { fs_close(f); eng_cam_diag_sink = cam_diag_put; e1_log("E1 CAMDIAG: the camera's diagnosis lines in the trace\n"); }
+        }
     }
     if (notrace) return;
     {   // lane eng-e1l: the camera record's eye, target, roll, fov and the controller's decisions (hostref/svc/camengine)

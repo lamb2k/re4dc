@@ -52,6 +52,12 @@ extern CameraCounters cam_cnt __attribute__((weak));
 extern int cam_control __attribute__((weak));
 extern InputCounters input_cnt __attribute__((weak));
 extern int input_control __attribute__((weak));
+// lane eng-e1m: the camera service's diagnosis lines (services/camera/eng_camera.h; the native build only)
+extern void (*eng_cam_diag_sink)(const char* line, unsigned n) __attribute__((weak));
+}
+namespace {
+void* g_diag;
+void diag_put(const char* line, unsigned n) { svc_out_printf(g_diag, "%.*s", (int) n, line); }
 }
 #define P svc_out_printf
 
@@ -137,6 +143,10 @@ extern "C" void svc4_ready()
         if (c && !__builtin_strcmp(c, "camrail")) cam_control = 5;
     }
     g_cam = svc_out_open("cam.txt", "w");
+    if (&eng_cam_diag_sink && svc_env("RE4_CAMDIAG")) {   // lane eng-e1m: camdiag.txt, as the image's CAMDIAG trace
+        g_diag = svc_out_open("camdiag.txt", "w");
+        if (g_diag) eng_cam_diag_sink = diag_put;
+    }
     if (&input_control) {
         const char* c = svc_env("RE4_SVC_CONTROL");
         if (c && !__builtin_strcmp(c, "padstick")) input_control = 1;
@@ -365,6 +375,11 @@ extern "C" void svc4_finish()
     if (g_cam) {
         svc_out_close(g_cam);
         g_cam = 0;
+    }
+    if (g_diag) {
+        if (&eng_cam_diag_sink) eng_cam_diag_sink = 0;
+        svc_out_close(g_diag);
+        g_diag = 0;
     }
     if (&input_cnt) {
         const InputCounters& n = input_cnt;

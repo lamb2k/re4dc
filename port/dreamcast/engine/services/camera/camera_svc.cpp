@@ -38,6 +38,7 @@
 #include "quake.h"
 #include "main_sub.h"
 #include "native_motion.h"
+#include "player.h"   // lane eng-e1m: the diagnosis lines read Leon's position and matrix
 #undef fabsf
 #include <stdio.h>   // lane eng-e1l: the record's trace line (snprintf)
 #include "camera_svc.h"
@@ -371,9 +372,11 @@ static void record_write(const Camera* cam)
 // The frame's camera: the hosted controller (CamCtrl) decides it and it becomes pG->Cam while the camera is live and
 // the debug camera does not hold it (an extra camera wins); the quake offset. Then the service: the field of view (0
 // is an error: 50), the distance, the record and the frustum. Stop_flg 0x40000000 freezes the controller.
+static void diag_inputs();
 void CameraMove()
 {
     cam_cnt.frames++;
+    diag_inputs();   // lane eng-e1m: the diagnosis lines (no sink: nothing)
     Camera* cam = &pG->Cam;
     CamCtrl.Check();
     if (!(pG->Stop_flg & 0x40000000)) {
@@ -385,6 +388,7 @@ void CameraMove()
         CamCtrl.m_pExtraCamera = 0;
         if (!(pG->Stop_flg & 0x10000)) QuakeMove();
     }
+    eng_cam_diag("cm", &cam->param, sizeof(CameraParam) / 4);   // lane eng-e1m: the frame's camera chosen
     CamDbg.move(cam, &Joy[1], 0);
     CAM_SVC("CameraMove (record, frustum)");
     if (cam->param.fovy == 0.0f) {
@@ -414,6 +418,61 @@ void eng_cam_check_tick(uint32_t tick)
             }
             return;
         }
+}
+
+// The diagnosis lines (eng_camera.h; lane eng-e1m): nothing unless a sink is set.
+void (*eng_cam_diag_sink)(const char* line, unsigned n);
+void eng_cam_diag(const char* tag, const void* words, unsigned n)
+{
+    if (!eng_cam_diag_sink) return;
+    char b[640];
+    int k = snprintf(b, sizeof b, "CD n=%lu %s", (unsigned long) cam_cnt.frames, tag);
+    const uint32_t* w = (const uint32_t*) words;
+    for (unsigned i = 0; i < n && k < (int) sizeof b - 12; i++)
+        k += snprintf(b + k, sizeof b - k, "%c%08lx", i ? ',' : ' ', (unsigned long) w[i]);
+    b[k++] = '\n';
+    eng_cam_diag_sink(b, (unsigned) k);
+}
+
+// The camera's inputs as the frame's camera starts (the diagnosis lines): Leon's position, previous position and
+// matrix, the shoulder camera's stored player matrix and floor normal, its state words, the smoothing's state.
+static void diag_inputs()
+{
+    if (!eng_cam_diag_sink) return;
+    uint32_t w[64];
+    unsigned n = 0;
+    auto f = [&](f32 v) { __builtin_memcpy(&w[n++], &v, 4); };
+    auto i = [&](uint32_t v) { w[n++] = v; };
+    const CameraQuasiFPS& q = CamCtrl.m_QuasiFPS;
+    if (pPL) {
+        f(pPL->pos.x), f(pPL->pos.y), f(pPL->pos.z);
+        f(pPL->pos_old.x), f(pPL->pos_old.y), f(pPL->pos_old.z);
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 4; c++) f(pPL->mat[r][c]);
+    }
+    eng_cam_diag("pl", w, n);
+    n = 0;
+    for (int r = 0; r < 3; r++)
+        for (int c = 0; c < 4; c++) f(q.m_pl_mat[r][c]);
+    if (q.m_p_floor_norm) f(q.m_p_floor_norm->x), f(q.m_p_floor_norm->y), f(q.m_p_floor_norm->z);
+    else i(0), i(0), i(0);
+    eng_cam_diag("qm", w, n);
+    n = 0;
+    i(q.m_state), i((uint32_t) (int) q.m_search_cnt), i((uint32_t) (int) q.m_search_frame), i(q.reset), i(q.m_site);
+    i((uint32_t) q.m_blend_count), i((uint32_t) q.m_blend_frame);
+    f(q.blend_ratio), f(q.angle_x), f(q.angle_y), f(q.m_floor_ratio), f(q.m_walk_ratio);
+    f(q.m_Aim.x), f(q.m_Aim.y), f(q.m_Aim.z);
+    i(CamSmth.m_flag), f(CamSmth.m_ratio);
+    f(CamSmth.param.pos.x), f(CamSmth.param.pos.y), f(CamSmth.param.pos.z);
+    f(CamSmth.param.at.x), f(CamSmth.param.at.y), f(CamSmth.param.at.z);
+    i((uint32_t) CamCtrl.r0), i((uint32_t) CamCtrl.r1);
+    eng_cam_diag("qs", w, n);
+    n = 0;   // the game's state words the player's move reads (Status_flg, Debug_flg, Stop_flg) and Leon's stat
+    for (int k = 0; k < 4; k++) i(pG->Status_flg[k]);
+    for (int k = 0; k < 4; k++) i(pG->Debug_flg[k]);
+    i(pG->Stop_flg);
+    i(pPL ? pPL->stat : 0);
+    eng_cam_diag("gf", w, n);
 }
 
 // The record as a trace line (trace runs only): eye, target, roll (radians), fov (degrees) as bit patterns and the
