@@ -66,6 +66,13 @@ HOSTED_SRCS += $(FIGHT_SRCS)
 # takes its place; r101 is built without the interprocedural optimisations (the split check requires it of a unit with
 # a replaced function). Control build only: R101_VOICE_ORIG=1 keeps the original (the link check must FAIL, 1 back).
 SPLIT_NOIPA_UNITS += st1/r101
+# Lane eng-e2f item 4: cam_extra is built without inlining in this image (SPLIT_NOINLINE_UNITS, as dmg): the binocular
+# widget's in-class constructor and destructor (IdBinocular, drawing: the widget's stubs, fight/fight_svc_stubs.cpp) were
+# inlined into CameraBinocular's (split problems); out of line, CameraBinocular's calls reach the engine's by symbol.
+# Control build only: CAMX_INLINE=1 inlines again (the split check must FAIL, 2 problems).
+ifneq ($(CAMX_INLINE),1)
+SPLIT_NOINLINE_UNITS += game/cam_extra
+endif
 ifneq ($(R101_VOICE_ORIG),1)
 $(OUT)/h/st1/r101.o: ORIG_FLAGS += -include $(ENG)/fight/r101_weak.h
 $(OUT)/h/st1/r101.o: $(ENG)/fight/r101_weak.h
