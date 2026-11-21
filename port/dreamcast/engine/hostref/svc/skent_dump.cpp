@@ -50,6 +50,8 @@ void col_room_release(void) __attribute__((weak));
 void col_bake_all(void) __attribute__((weak));
 unsigned col_piece_count(void) __attribute__((weak));
 unsigned svc_pool_room_used(void) __attribute__((weak));
+unsigned col_baked_bytes(void) __attribute__((weak));   // lane eng-skel2: the pieces baked in the room archive
+static unsigned room_bytes() { return svc_pool_room_used() + (col_baked_bytes ? col_baked_bytes() : 0); }
 }
 void em10ChainSet(cEm10* em);
 void em10BeltSet(cEm10* em);
@@ -291,11 +293,11 @@ void chains(unsigned t, cEm10* e)
 void colrel(unsigned t)
 {
     if (t != 100 || !col_room_release) return;
-    P(g_f, "%u before pieces %u room %u\n", t, col_piece_count(), svc_pool_room_used());
+    P(g_f, "%u before pieces %u room %u\n", t, col_piece_count(), room_bytes());
     col_room_release();
-    P(g_f, "%u released pieces %u room %u\n", t, col_piece_count(), svc_pool_room_used());
+    P(g_f, "%u released pieces %u room %u\n", t, col_piece_count(), room_bytes());
     col_bake_all();
-    P(g_f, "%u rebaked pieces %u room %u\n", t, col_piece_count(), svc_pool_room_used());
+    P(g_f, "%u rebaked pieces %u room %u\n", t, col_piece_count(), room_bytes());
 }
 extern "C" void skchain_kind_register(void);   // skchain_kind.cpp
 extern "C" void skent_ready()

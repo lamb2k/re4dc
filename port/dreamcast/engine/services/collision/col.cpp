@@ -681,6 +681,13 @@ extern "C" void col_bake_all(void)
     for (int m = 0; m < 2; m++)
         for (u32 i = 0; i < mgr[m]->nArray; i++) {
             cSat* sat = (cSat*) ((u8*) mgr[m]->pArray + mgr[m]->size * i);
+            if (sat->isAlive() && col_is_baked(sat->pFile)) {   // lane eng-skel2: baked: its piece joins the list again
+                const ColPiece* pc = baked_piece(sat->pFile);     // (after col_room_release), no bake
+                u32 k = 0;
+                while (k < g_npiece && g_piece[k] != pc) k++;
+                if (k == g_npiece) col_baked_setup(sat->pFile, sat);
+                continue;
+            }
             if (!sat->isAlive() || !VALID_PTR(sat->block_p)) continue;
             if (col_piece_of(sat)) continue;
             ColPiece* pc = bake(sat, svc_pool_carve_room);
