@@ -19,6 +19,7 @@
       host_wrapped_NAME and adds `void NAME(T* p) { HOOK_begin(p); host_wrapped_NAME(p); HOOK_end(p); }`:
       instrumentation that changes no result (em.cpp emMove: the generator calls each actor makes).
 """
+import os
 import re
 import sys
 
@@ -30,7 +31,10 @@ def host_text(text):
     # integers in separate registers, so the swapped order reaches the same arguments there; i386 passes them on the
     # stack in order, so on the PC t and k arrived swapped (the reference's rail always evaluated at its first key).
     # The host copy names the function with its own argument order: the call the PowerPC makes.
-    text = re.sub(r'\bde_Boor_CoxF\(([^,()]+),([^,()]+),([^,()]+),([^,()]+),', r'de_Boor_Cox(\1,\2,\4,\3,', text)
+    # Lane eng-e1o (H-017.8): PREP_BSPLINE=i386 (hostref Makefile BSPLINE_ALIAS=i386) leaves the alias as it is: the old
+    # reference, built only in its own folder as the control (svc/refctl.sh: its rail stays at its first key).
+    if os.environ.get('PREP_BSPLINE', 'host') != 'i386':
+        text = re.sub(r'\bde_Boor_CoxF\(([^,()]+),([^,()]+),([^,()]+),([^,()]+),', r'de_Boor_Cox(\1,\2,\4,\3,', text)
     return text
 
 

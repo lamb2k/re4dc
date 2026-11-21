@@ -61,6 +61,23 @@ void e1_fields_finish(unsigned ticks);
 // trace and report
 void e1_trace_tick(unsigned tick);
 void e1_report();
+// Boot files before play (lane eng-e1o, H-017.7): the record's controls, each a boot file read once before the first
+// picture (core/frame.cpp e1_lab_boot). Nothing looks a file up inside a picture: core/play_files.c counts every open
+// between the first and the last picture (E1 FILES), the selector fails a timing scene where it is not 0.
+//   CAMREC0  the camera record's finite check skipped on every tick (E1 CAMREC ticks 0)
+//   MEMCUT   the after-play memory line cut after the arena margin
+//   RUNFUNC  the run line says "function" although nothing is traced or captured
+//   NUMTEXT  the FIELDS line's release-queue count printed as text
+//   OPENX    a boot file looked up at picture 100 (a file open inside play)
+//   STACKX   one stack guard word overwritten at tick 300 (lane eng-e1k)
+//   LIGHTMISS every character's light view refused (lane eng-e1n: E1 PUB light-view-misses, the scene fails)
+//   HUDFREEZE the HUD's ammo count frozen at the renderer's open (lane eng-e1n: hudcheck must fail)
+struct E1Lab { int camrec0, memcut, runfunc, numtext, openx, stackx, lightmiss, hudfreeze; };
+extern E1Lab e1_lab;
+void e1_lab_boot();
+extern "C" void e1_play_files_begin(void);
+extern "C" void e1_play_files_end(void);
+extern "C" void e1_play_files_report(void);
 
 // Scenes (lane eng-e1b): the village route (Leon alone, the default) and the hill path (Leon and Ashley, the partner;
 // boot option HILL; core/partner.cpp).

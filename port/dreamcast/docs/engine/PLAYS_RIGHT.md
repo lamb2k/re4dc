@@ -484,3 +484,77 @@ compared field. Controls, each an engine scene of its own on the same disc, judg
 
 Run: `build_console_disc.sh --scenes SHOT,SHOTNP,SHOTDMG,SHOTLATE`, the disc in Flycast, then
 `RE4_TREE=<tree> shot_engine.py <serial.txt> <out>` (it runs the reference itself).
+
+## The reference's changes kept as controls, and the results re-derived on the fixed reference (lane eng-e1o, 2026-11-21)
+
+Status: finished, unaudited. Answers HANDOVERS.md H-017.8 and H-017.9. PC numbers are re4ref (hostref); engine numbers
+are **Flycast** (function checks). The fixed reference: `STAT_BYTES=1` (routine bytes swapped, lane eng-e1m), em10's
+presentation callers split (lane eng-e1k), BSpline through the host alias (lane eng-e1j).
+
+**Each change keeps its old behaviour as a build of its own** (`hostref/Makefile`; a BUILD folder holds one reference
+only, `variant.txt`, and a different switch set on it is refused): `EM10_SPLIT=0`, `BSPLINE_ALIAS=i386` (prep.py leaves
+the floats-first alias), `STAT_BYTES=0`. `hostref/svc/refctl.sh <out>` builds each old reference in its own folder, runs
+its rows and deletes it, one at a time; a row that cannot run is ERROR (exit 2), never skipped.
+
+| Row (`refctl.sh`, `E:\RE4DC-Lanes\eng-e1o\ev\pc-r2\refctl.md`) | Must | Got |
+|---|---|---|
+| shot-ganado: the fixed reference against itself (outcome) | PASS | PASS (321 ticks, 4 actors, 0 apart) |
+| em10 unsplit, shot-ganado: generator calls equal before tick 135, two more at 135 (stated by lane eng-e1k) | PASS | PASS: first tick 135, the reference 0 calls, the old 2 (the Ganado's, `em=0,0,0,2`) |
+| em10 unsplit, shot-ganado: outcome against the fixed reference | FAIL | FAIL: position 3, yaw 21; first tick 151, 0x14 2.617 units off |
+| the fixed reference, e1-route exercise camrail: the rail moves | MOVES | MOVES: 631 rail lines, 57 distinct eye/target |
+| BSpline i386 alias, camrail: the rail stuck at its first key | STUCK | STUCK: 631 rail lines, 1 distinct (the fixed reference's first rail line) |
+| BSpline i386 alias, camrail: camera against the fixed reference | FAIL | FAIL: first tick 33, worst eye 4,900 units |
+| e1-route (seed 0), hill-follow, shot-ganado: the fixed reference against itself, exact | PASS x3 | PASS x3 |
+| routine bytes unswapped, the same three: camera against the fixed reference | FAIL x3 | FAIL x3: first ticks 2, 2, 3; worst eye 82.8, 5.96, 116 |
+
+Script controls: `RE4_TREE` pointing nowhere ends exit 2 with ERROR rows (`ev\selfctl\refctl-notree.out`).
+`camcheck.sh` now counts the plays-right exit: each row states a camera must and a trace must (the rail control's trace
+must is PASS: the exercise's rail is not played); its control `CAMCHECK_RAIL_TRACE_MUST=FAIL` ends exit 1 with that row
+WRONG (`ev\selfctl\camcheck-railtrace.out`). `camengine.sh` builds the old reference when it is missing (an unbuildable
+one is ERROR, exit 2), never skips a requested CAMEVERY scene (ERROR when the control serial lacks one), and requires
+the window to be the fixture's ticks 1..N (`camengine.py --ticks`); its control `CAMENGINE_CONTROL=refcut` (the
+reference's HILL camera cut to 700 ticks) ends exit 2. `nl_outcome.sh` now exits 1 on a wrong row, 2 on a failed run.
+
+**The eight float-library fixtures on the fixed reference** (`nl_outcome.sh`: the `nlnative` build, newlib's float
+functions, against the `native` build, the game's fdlibm; both on the fixed reference; `ev\pc-r4\nl_outcome.md`):
+
+| Fixture | Ticks | Actors | Outcome (outcome.py) | Traces (plays_right) |
+|---|---:|---:|---|---|
+| door103-walk | 349 | 0 | PASS | PASS |
+| e1-route | 641 | 0 | PASS | PASS |
+| bell-ganado | 301 | 4 | PASS | PASS |
+| bell-ganado-hit | 201 | 4 | PASS | PASS |
+| bell-ganado-kill | 321 | 4 | PASS | PASS |
+| bell-ganado-clear | 521 | 4 | PASS | PASS |
+| hill-ashley | 601 | 5 | PASS | PASS |
+| square-follow | 241 | 1 | PASS | PASS |
+| control: bell-ganado, turning steps 5% larger (`mathmuku`) | 301 | 4 | FAIL (as it must): position 21, yaw 21 | PASS |
+
+**The hill's records on the fixed reference** (`tools/plays_right/hill_engine.py`; Flycast test disc runC2 of commit
+359cf78f9, scene HILLT; evidence `E:\RE4DC-Lanes\eng-e1o\ev\hill\hill_engine.md`). What the engine is given: the image's
+hill route, which is the fixture hill-follow's set-up (room r11d, seed 0x0d37, Leon resumed as its resume line, Ashley
+created by SubCharInit and told to follow, 728 ticks, its four pad lines); no generator feed (no `FEED.BIN`) and no hidden
+resume of Ashley (no `RESUMEA`): the script refuses a run whose log names either. Nothing from the reference's run
+reaches the engine. Fields and tolerances are the earlier 729-record comparison's (lanes eng-e1b to eng-e1d,
+`tolerances.json`), every tick 0 to 728 compared.
+
+| Check | Must | Result |
+|---|---|---|
+| Leon, engine against the reference: p, a, mid, mf, ms, r, ps | PASS | PASS: every field 729/729, no divergence |
+| Ashley (id 03), engine against the reference: p, a, mid, mf, ms, r, hp, be, f, aps | PASS | PASS: every field 729/729, no divergence |
+| control: Ashley, the reference with the presentation split off against the reference | FAIL | FAIL: first tick 367, routine (r 548/729, mf 368/729), as lane eng-e1d found |
+| outcome.py, the reference (A) against the engine (B) | reported | PASS: 729 ticks, route 0, position max 0, yaw max 0 |
+
+So the earlier hill result holds on the fixed reference: the three reference changes do not reach the hill's Leon and
+Ashley fields. Run: `build_console_disc.sh --scenes HILLT`, the disc in Flycast, then
+`RE4_TREE=<tree> hill_engine.py <serial.txt> <out>` (it runs the reference itself).
+
+
+**The shot after the fight's module preload** (lane eng-e1o moved the Ganado module's read to room load; Flycast disc
+runD of 359cf78f9, `E:\RE4DC-Lanes\eng-e1o\ev\shot\shot_engine.md`): SHOT PASS (321 ticks, 4 actors, position and yaw
+max 0, the same hit on 0x14 at 162, 800 to 500); SHOTNP, SHOTDMG, SHOTLATE FAIL on damage as they must.
+
+**The PC checks on this lane's head** (`E:\RE4DC-Lanes\eng-e1o\ev\pc-r1`, `pc-r3`, `pc-r4`, `cam`): svc_controls.sh 78
+rows, camcheck.sh 11, controls.sh 18, outcome_controls.py 35, all as they must; aim_check.sh as before (the grow
+control fails the shot's list, 32.8 units); camengine.sh on runC2 (scenes LEONT, HILLT, SHOT) every row as it must,
+worst eye 0.00097 / 0.0039 / 0 units against the reference.

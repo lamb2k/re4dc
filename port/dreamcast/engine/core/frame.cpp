@@ -208,6 +208,27 @@ void e1_memmap_control(unsigned tick);
 void e1_memmap_after();
 static uint32_t tick_field[E1_TICKS];
 static int late_control, rowdup_control;
+// lane eng-e1o (H-017.7): the record's controls, read once before play (core/e1_core.h lists them)
+E1Lab e1_lab;
+static int boot_file(const char* name)
+{
+    file_t f = fs_open(name, O_RDONLY);
+    if (f < 0) return 0;
+    fs_close(f);
+    return 1;
+}
+void e1_lab_boot()
+{
+    if ((e1_lab.camrec0 = boot_file("/cd/CAMREC0"))) e1_log("E1 CAMREC0: the camera record's check skipped every tick (control)\n");
+    if ((e1_lab.memcut = boot_file("/cd/MEMCUT"))) e1_log("E1 MEMCUT: the after-play memory line cut short (control)\n");
+    if ((e1_lab.runfunc = boot_file("/cd/RUNFUNC"))) e1_log("E1 RUNFUNC: the run line says function, nothing traced (control)\n");
+    if ((e1_lab.numtext = boot_file("/cd/NUMTEXT"))) e1_log("E1 NUMTEXT: the release-queue count printed as text (control)\n");
+    if ((e1_lab.openx = boot_file("/cd/OPENX"))) e1_log("E1 OPENX: a boot file looked up at picture 100 (control)\n");
+    if ((e1_lab.stackx = boot_file("/cd/STACKX"))) e1_log("E1 STACKX: a guard word overwritten at tick 300 (control)\n");
+    // lane eng-e1n: the publication and HUD controls (services/draw.cpp acts on them at the renderer's open)
+    if ((e1_lab.lightmiss = boot_file("/cd/LIGHTMISS"))) e1_log("E1 LIGHTMISS: every character's light view refused (control)\n");
+    if ((e1_lab.hudfreeze = boot_file("/cd/HUDFREEZE"))) e1_log("E1 HUDFREEZE: the HUD's ammo count frozen at the renderer's open (control)\n");
+}
 void e1_fields_start()
 {
     // lane eng-e1k (H-016.6): the run says what it is. Traces formatted inside the pictures, or stills handed over
@@ -217,6 +238,8 @@ void e1_fields_start()
         if (traced || still)
             e1_log("E1 RUN function (%s%s%s): not a timing run\n", traced ? "traced" : "", traced && still ? ", " : "",
                    still ? "stills" : "");
+        else if (e1_lab.runfunc)
+            e1_log("E1 RUN function (lab arm RUNFUNC): not a timing run\n");
         else
             e1_log("E1 RUN timing (no trace, no stills)\n");
     }
@@ -230,10 +253,12 @@ void e1_fields_start()
     pace_field = e1_fields_now_c();               // tick 1's target is two fields from here
     e1_log("E1 PACE %s, presentation %s\n", pace_tmu ? "tmu 33367 us (lab arm PACETMU)" : "fields 2 (display field count)",
            pace_manual ? "fixed field (release at the next tick's second field)" : "at render end (automatic flip)");
+    e1_play_files_begin();   // lane eng-e1o: from here to the last picture every file open is counted (E1 FILES)
 }
 void e1_fields_late(unsigned tick)
 {
     e1_memmap_control(tick);   // STACKX (lane eng-e1k): the stack guard's control
+    if (e1_lab.openx && tick == 100) { file_t f = fs_open("/cd/OPENX", O_RDONLY); if (f >= 0) fs_close(f); }   // OPENX (control)
     if (!late_control || tick != 300) return;
     uint64_t t = timer_us_gettime64();
     while (timer_us_gettime64() - t < 100000) {}
@@ -243,6 +268,7 @@ void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fiel
 // "E1 FIELDS mode presented|tick flips F of P pictures; pictures 41-640: intervals>2 N worst W (picture K)".
 void e1_fields_finish(unsigned ticks)
 {
+    e1_play_files_end();
     const volatile uint32_t* flip = 0;
     const unsigned flips = e1_fields_finish_c(&flip);
     const unsigned n = ticks < E1_TICKS ? ticks : E1_TICKS;
@@ -263,9 +289,13 @@ void e1_fields_finish(unsigned ticks)
         over += f > 2;
         if (f > worst) { worst = f; wi = i + 1; }
     }
-    e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)"
-           "; release queue full %u\n", presented ? "presented" : "tick", flips, n, counted, over, worst, wi,
-           e1_present_drops_c());
+    if (e1_lab.numtext)   // NUMTEXT (lane eng-e1o, control): a text field where the drop count belongs
+        e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)"
+               "; release queue full none\n", presented ? "presented" : "tick", flips, n, counted, over, worst, wi);
+    else
+        e1_log("E1 FIELDS mode %s flips %u of %u pictures; pictures 41-640: counted %u intervals>2 %u worst %u (picture %u)"
+               "; release queue full %u\n", presented ? "presented" : "tick", flips, n, counted, over, worst, wi,
+               e1_present_drops_c());
 }
 
 extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, boxes, capsules, cubes; } aim_cnt;
@@ -278,6 +308,7 @@ void e1_report()
     e1_log_flush();   // lane eng-e1e: the log lines written during the ticks (core/globals.cpp)
     e1_log("E1 DONE ticks=%lu\n", (unsigned long) e1_state[2]);
     e1_memmap_after();   // lane eng-e1k: the stack guard, heap peak, arena margin and video memory after play
+    e1_play_files_report();   // lane eng-e1o (H-017.7): the files opened during play (must be 0)
     e1_stub_report();
     e1_prof_report();
     e1_svc_report();

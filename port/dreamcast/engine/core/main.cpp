@@ -152,6 +152,7 @@ int main()
     e1_globals_init();
     e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
+    e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
     {
         file_t f = fs_open("/cd/CAMEVERY", O_RDONLY);
         if (f >= 0) {
@@ -196,7 +197,8 @@ int main()
         e1_partner_tick_end(e1_tick);
         e1_stamp(3);
         uint64_t c = now_us();
-        eng_cam_check_tick(e1_tick);    // lane eng-e1l: the camera record finite (E1 CAMREC; outside the tick's rows)
+        if (!e1_lab.camrec0)            // CAMREC0 (lane eng-e1o, control): no tick checked; the selector must fail it
+            eng_cam_check_tick(e1_tick);    // lane eng-e1l: the camera record finite (E1 CAMREC; outside the tick's rows)
         e1_trace_tick(e1_tick);
         e1_stamp(4);
         uint64_t d = now_us();

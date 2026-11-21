@@ -32,11 +32,13 @@ struct Act { unsigned frame; uint16_t buttons; int8_t sx, sy; unsigned hold; };
 static E1Route route = {0x101, 0x00002000, E2_FIGHT_TICKS, E2_FIGHT_POS, E2_FIGHT_ANG};
 // lane eng-e1k: with the boot file SHOT.TXT (a re4ref fixture; fight/shot_e2.cpp) the route is the fixture's: its
 // placement and length, no warp flags, and its pad lines in place of the fight's actions
+static void feed_boot();   // the FEED boot file (below)
 const E1Route& e1_route()
 {
     static int booted;
     if (!booted) {
         booted = 1;
+        feed_boot();
         e2_shot_boot();
         if (e2_shot.active && !e2_shot.refused)
             route = {e2_shot.room, 0, e2_shot.ticks, {e2_shot.pos[0], e2_shot.pos[1], e2_shot.pos[2]}, e2_shot.ang};
@@ -53,7 +55,19 @@ void RndInit(u16 seed);
 extern "C" void* e1_file_load(const char* path, uint32_t* size, uint32_t align);
 static unsigned short* feed;
 static unsigned feed_n;
-static int feed_open = -1;
+// lane eng-e1o (H-017.7): the boot file is read with the route, before play (it was read on the first tick: an fs_open
+// inside play)
+static void feed_boot()
+{
+    file_t f = fs_open("/cd/FEED.BIN", O_RDONLY);
+    if (f >= 0) {
+        fs_close(f);
+        uint32_t n = 0;
+        feed = (unsigned short*) e1_file_load("/cd/FEED.BIN", &n, 32);
+        feed_n = feed ? n / 2 : 0;
+        e1_log("E2 FEED: the old run's generator state at the start of %u ticks\n", feed_n);
+    }
+}
 
 static E1Pad latched;
 static unsigned next_act, cur_until, pad_frames;
@@ -61,17 +75,6 @@ static int cur_act = -1;
 
 void e1_input_latch(unsigned tick)
 {
-    if (feed_open < 0) {
-        feed_open = 0;
-        file_t f = fs_open("/cd/FEED.BIN", O_RDONLY);
-        if (f >= 0) {
-            fs_close(f);
-            uint32_t n = 0;
-            feed = (unsigned short*) e1_file_load("/cd/FEED.BIN", &n, 32);
-            feed_n = feed ? n / 2 : 0;
-            e1_log("E2 FEED: the old run's generator state at the start of %u ticks\n", feed_n);
-        }
-    }
     if (feed && tick < feed_n) RndInit(feed[tick]);
     if (e2_shot.active) {   // lane eng-e1k: the shot fixture's tick start (re4ref's order), its pad lines as they are
         E1Pad p;

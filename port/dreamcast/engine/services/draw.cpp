@@ -157,10 +157,10 @@ void e1_draw_open()
     if (boot_file("/cd/PALCTL")) { e1_pal_control = 1; e1_log("E1 PALCTL: palette read with a 12-float stride (control)\n"); }
     if (boot_file("/cd/CAMSTALE")) { eng_cam.frozen = 1; e1_log("E1 CAMSTALE: the camera record keeps its next camera (control)\n"); }
     if (boot_file("/cd/PUBCOPY")) { eng_pub_copy = 1; e1_log("E1 PUBCOPY: the camera record copied once a tick (control)\n"); }
-    if (boot_file("/cd/LIGHTMISS")) { e1_light_miss_control = 1; e1_log("E1 LIGHTMISS: every character's light view refused (control)\n"); }
+    e1_light_miss_control = e1_lab.lightmiss;   // LIGHTMISS (control; its boot file read by e1_lab_boot, core/frame.cpp)
     hud_stance_live = e1_hud_stance;
     hud_magazine_live = e1_hud_magazine_live;
-    if (boot_file("/cd/HUDFREEZE")) {
+    if (e1_lab.hudfreeze) {   // HUDFREEZE (control; its boot file read by e1_lab_boot, core/frame.cpp)
         hud_freeze = 1;
         hud_frozen_count = ItemMgr.bulletNum();
         e1_log("E1 HUDFREEZE: the HUD's ammo count frozen at %u (control)\n", hud_frozen_count);
