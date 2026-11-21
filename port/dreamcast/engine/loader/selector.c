@@ -761,12 +761,12 @@ static void collect(unsigned i) {
         else if (g_door_visits != dneed + 1 || g_door_visit_zero)
             snprintf(e->why, sizeof(e->why), "door: %u room visits (%u with no tick), %u needed", g_door_visits,
                      g_door_visit_zero, dneed + 1);
-        else if (!g_door_rt_seen) snprintf(e->why, sizeof(e->why), "door: no E1 ROUNDTRIP line");
-        else if (!g_door_rt_equal) snprintf(e->why, sizeof(e->why), "door: round trip %s", g_door_rt_why);
         else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "door: no E1 FILES line");
         else if (g_files_opens || g_files_reads || g_files_sectors)
             snprintf(e->why, sizeof(e->why), "door: disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads,
                      g_files_sectors);
+        else if (!g_door_rt_seen) snprintf(e->why, sizeof(e->why), "door: no E1 ROUNDTRIP line");
+        else if (!g_door_rt_equal) snprintf(e->why, sizeof(e->why), "door: round trip %s", g_door_rt_why);
     }
     if (!strcmp(s->kind, "e1") && dneed && e->report_ok) {
         sum_add(e, "door: rooms %s, loads %u, round trip %s", g_door_rooms[0] ? g_door_rooms : "-", g_door_loads,
