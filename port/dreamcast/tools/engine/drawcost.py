@@ -21,8 +21,9 @@ from collections import defaultdict
 
 PH = ['select', 'begin', 'sky', 'preworld', 'worldOP', 'actors', 'worldPT', 'listgap', 'worldTR', 'TRextra', 'hud']
 SET_ARMS = {1: (6, {1: 'S stage twice', 2: 'C copy twice', 3: 'Q select twice', 4: 'H HUD twice', 5: 'N near not a number'}),
-            2: (5, {1: 'B weight sets twice', 2: 'L normals lit twice', 3: 'E actor emission twice', 4: 'D 2 ms delay (control)'})}
-BITS = {1: 'S', 2: 'C', 4: 'Q', 8: 'H', 16: 'N', 32: 'B', 64: 'L', 128: 'E', 256: 'D', 512: 'K'}
+            2: (5, {1: 'B weight sets twice', 2: 'L normals lit twice', 3: 'E actor emission twice', 4: 'D 2 ms delay (control)'}),
+            3: (4, {1: 'X world without a stage', 2: 'V world copy v2', 3: 'G world near clamp (no clipping)'})}
+BITS = {1: 'S', 2: 'C', 4: 'Q', 8: 'H', 16: 'N', 32: 'B', 64: 'L', 128: 'E', 256: 'D', 512: 'K', 1024: 'X', 2048: 'V', 4096: 'G'}
 LO, HI = 41, 640
 
 
@@ -111,12 +112,15 @@ def bench_scene(sc):
         m = re.match(r'WINDOW (\d+) (\S+) arm (\S)(.*?) draw mean ([\d.]+) p99 ([\d.]+) worst ([\d.]+)', l)
         if m:
             w = win.setdefault(int(m.group(1)), dict(arms=None, timing={}, phase={}, count={}))
+            c = re.search(r'content \[([^\]]*)\]', l)
             w.update(room=m.group(2), arm=m.group(3), flags=m.group(4).strip(), mean=float(m.group(5)), p99=float(m.group(6)),
-                     worst=float(m.group(7)))
+                     worst=float(m.group(7)), content=c.group(1) if c else '')
     if not win: return None
     res = dict(name=sc['name'], windows=win, arms={}, faults=[])
     for room in sorted({w.get('room') for w in win.values() if w.get('room')}):
-        base = [w for w in win.values() if w.get('room') == room and not w['arms'] and not w.get('flags') and w.get('arm') == '0']
+        # base: no lab arm, no flag, survey arm 0, the content steps of today's defaults (character levels 3, effect cap 2)
+        base = [w for w in win.values() if w.get('room') == room and not w['arms'] and not w.get('flags') and w.get('arm') == '0'
+                and w.get('content') == 'L3E2']
         if not base: continue
         bm = sum(w['mean'] for w in base) / len(base)
         bph = {p: sum(w['phase'].get(p, {}).get('mean', 0) for w in base) / len(base) / 1000 for p in PH}
@@ -124,8 +128,8 @@ def bench_scene(sc):
                                                        phases=bph, counts={k: v['mean'] for k, v in base[0]['count'].items()},
                                                        timing={k: v['mean'] / 1000 for k, v in base[0]['timing'].items()})
         for k, w in sorted(win.items()):
-            if w.get('room') != room or not w['arms']: continue
-            nm = ''.join(BITS.get(b, '?') for b in sorted(BITS) if w['arms'] & b)
+            if w.get('room') != room or w in base or w.get('flags') or w.get('arm') != '0': continue
+            nm = ''.join(BITS.get(b, '?') for b in sorted(BITS) if (w['arms'] or 0) & b) or ('content ' + w.get('content', ''))
             res['arms'][room][nm] = dict(window=k, draw=w['mean'] - bm,
                                          spans={p: w['phase'].get(p, {}).get('mean', 0) / 1000 - bph[p] for p in PH})
     return res
@@ -137,7 +141,10 @@ def main():
     out = []; fail = 0
     for sc in scenes(lines):
         r = bench_scene(sc) if 'BENCH' in sc['prog'] else e1_scene(sc)
-        if not r: continue
+        if not r:
+            if any(l.startswith('ROW ') and ' draw ' in l for l in sc['lines']) and not any(' draw  not drawn' in l for l in sc['lines']):
+                print('==', sc['name']); print('  FAIL drawn scene without DC lines (an image before lane eng-draw1, or the report cut)'); fail = 1
+            continue
         out.append(r)
         print('==', r['name'])
         for f in r['faults']: print('  FAIL', f); fail = 1

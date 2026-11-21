@@ -75,9 +75,13 @@ typedef struct { uint8_t scene,arm,novis,delay,hold,content[CS_COUNT]; uint16_t 
    control: must read +2 ms), K positions skinned twice. The boot file DRAWLAB runs DRAWLAB_SCHEDULE below (in place of
    SCHEDULE.TXT and the default). */
 #include "draw_cost.h"
-static const char lab_letters[]="SCQHNBLEDK";
-static const uint16_t lab_bits[]={DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN,DL_WS2,DL_LIGHT2,DL_EMIT2,DL_DELAY,DL_SKIN2};
+static const char lab_letters[]="SCQHNBLEDKXVG";
+static const uint16_t lab_bits[]={DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN,DL_WS2,DL_LIGHT2,DL_EMIT2,DL_DELAY,DL_SKIN2,
+                                  DL_DIRECT,DL_COPYV2,DL_CLAMP};
 #define DRAWLAB_SCHEDULE "c0 c0/S c0/C c0/Q c0/K c0/B c0/L c0/E c0/H c0/D c0 c0/N f0 f0/S f0/C f0/Q f0/K f0/B f0/L f0/E f0/H f0/N f0"
+/* the options' schedule (boot file DRAWLAB2): eng-look's content steps at their lightest useful steps against today's
+   defaults (L3 E2), character levels off (.L0: as the E1 images draw), and the option arms X, V, G (draw_cost.h) */
+#define DRAWLAB2_SCHEDULE "c0 c0.L0 c0.W2 c0.W3 c0.P3 c0.B3 c0/X c0/V c0/G c0 f0 f0.L0 f0.W2 f0.W3 f0.P3 f0.B3 f0/X f0/V f0/G f0"
 static Window schedule[WINDOWS];
 volatile uint32_t m1_content[CS_COUNT]=CONTENT_DEFAULT_INIT;
 volatile uint32_t m1_content_counts[8];
@@ -230,6 +234,7 @@ int main(void){
         const char* def=exists("/cd/FARM1")?"f0 c0":"c0 f0 ca c0 cb c0 fa f0 fb f0 c0.L3 c0 c0.W3 c0.P3 c0.E3 c0.B3 c0 f0.L3 f0.W3 f0.P3 f0.E3 f0.B3 f0 c0dh";
         if(exists("/cd/DELAY5"))def=exists("/cd/FARM1")?"f0d c0d":"c0d f0d";
         if(exists("/cd/DRAWLAB")){def=DRAWLAB_SCHEDULE;n=0;printf("DRAWLAB: lane eng-draw1 lab schedule %s\n",def);}
+        else if(exists("/cd/DRAWLAB2")){def=DRAWLAB2_SCHEDULE;n=0;printf("DRAWLAB2: lane eng-draw1 options schedule %s\n",def);}
         m1_schedule_n=parse_schedule(n?text:def);
         if(!m1_schedule_n){   /* eng-look: refused, never replaced by the default */
             printf("SCHEDULE REFUSED at character %lu: %s\n",(unsigned long)m1_schedule_error,n?text:def);

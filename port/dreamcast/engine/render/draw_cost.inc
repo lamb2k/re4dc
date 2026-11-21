@@ -28,14 +28,17 @@ static int dc_boot(const char* path){file_t f=fs_open(path,O_RDONLY);if(f<0)retu
 /* E1 images: the boot sets, read once when the pack opens (before play) */
 void dc_lab_open(void){
     static int done;if(done)return;done=1;
-    if(dc_boot("/cd/DLA"))dc_interleave=1;else if(dc_boot("/cd/DLB"))dc_interleave=2;
-    if(dc_interleave)printf("DC LAB set %c: %s\n",'A'+dc_interleave-1,dc_interleave==1?
-        "picture % 6: 1 stage twice, 2 copy twice, 3 select twice, 4 HUD twice, 5 near plane not a number":
-        "picture % 5: 1 weight sets twice, 2 normals lit twice, 3 actor emission twice, 4 2 ms delay in the world OP pass");
+    if(dc_boot("/cd/DLA"))dc_interleave=1;else if(dc_boot("/cd/DLB"))dc_interleave=2;else if(dc_boot("/cd/DLC"))dc_interleave=3;
+    static const char* const sets[3]={
+        "picture % 6: 1 stage twice, 2 copy twice, 3 select twice, 4 HUD twice, 5 near plane not a number",
+        "picture % 5: 1 weight sets twice, 2 normals lit twice, 3 actor emission twice, 4 2 ms delay in the world OP pass",
+        "picture % 4: 1 world without a stage (X), 2 world copy v2 (V), 3 world near clamp instead of clipping (G)"};
+    if(dc_interleave)printf("DC LAB set %c: %s\n",'A'+dc_interleave-1,sets[dc_interleave-1]);
 }
 static uint32_t dc_arms_for(unsigned idx){
     if(dc_interleave==1){static const uint32_t a[6]={0,DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN};return a[idx%6];}
     if(dc_interleave==2){static const uint32_t b[5]={0,DL_WS2,DL_LIGHT2,DL_EMIT2,DL_DELAY};return b[idx%5];}
+    if(dc_interleave==3){static const uint32_t c[4]={0,DL_DIRECT,DL_COPYV2,DL_CLAMP};return c[idx%4];}
     return dc_lab_bench;
 }
 void dc_window_begin(void){

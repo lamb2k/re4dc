@@ -24,7 +24,11 @@ extern uint32_t dc_n[DC_COUNT];
 /* the counter set clipped() charges (DC_W_CLIPTRIS or DC_A_CLIPTRIS; the output corners at +1) */
 extern unsigned dc_clip;
 enum { DL_STAGE2=1, DL_COPY2=2, DL_SELECT2=4, DL_HUD2=8, DL_NAN=16, DL_WS2=32, DL_LIGHT2=64, DL_EMIT2=128, DL_DELAY=256,
-       DL_SKIN2=512 };
+       DL_SKIN2=512,
+       /* option arms (each tries one candidate change; set C, bench tokens X V G): X the world without a stage (each
+          strip corner transformed where it is used), V the world copy with the stage pointer in a register and two
+          corners an iteration, G no near clipping of the world (w raised to the near plane: an approximation) */
+       DL_DIRECT=1024, DL_COPYV2=2048, DL_CLAMP=4096 };
 extern uint32_t dc_arm_now;      /* this picture's arms */
 extern uint32_t dc_lab_bench;    /* the bench window's arms (every picture of the window) */
 extern unsigned dc_interleave;   /* E1 boot sets: 0 none, 1 set A, 2 set B */
