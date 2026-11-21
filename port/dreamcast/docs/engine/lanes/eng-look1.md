@@ -33,4 +33,25 @@ Packs (private, not in git): `E:\RE4DC-Lanes\eng-look1\packs\lkg-wep\CROSS.PAK`,
 (eng-e1i's packs plus the two weapon models; the village and fight packs already held both pictures, the hill pack gains
 two textures and two headers).
 
-RESULTS: see the hand-back (`E:\RE4DC-Lanes\eng-look1\HANDBACK.md`).
+## Results (Flycast; speed MODELLED, console-build dynarec at 70 MHz, calibrated on the old port)
+
+- Selector: LEON 640 of 640 pictures drawn as visible, HILL 728 of 728, FIGHT 778 of 778 (the hosted code hides the gun
+  during the fight's cut, ticks 127-248). Controls CNOWEP, CNOWEPH, CNOWEPF, CNWLS, CNWHS, CNWFS FAIL: "weapon: visible N
+  drawn 0".
+- Trace (LEONT, FIGHTT): `E1 WEP t=1 present 1 bone 10 visible 1 drawn 1 on-screen 1 slot 6`; the fight adds t=127
+  (0/0) and t=249 (1/1).
+- wepcheck (rule in its docstring, stated before the first run): LEONS 17, HILLS 19, FIGHTS 20 stills found, 0 failing,
+  PASS. Controls (the NOWEP stills against themselves, or in place of the scene) FAIL on every still. The first run used
+  the part-sphere box and failed on the 8% in-box share (every differing pixel inside the box); the box became the
+  skinned positions' box, the numbers unchanged.
+- Cost, per picture, with against without the weapon (NOWEP), the renderer span: village +0.57 ms median (p90 +0.64),
+  hill +0.56 (+0.63), fight +0.57 (+0.64). The drawing row (14 ms) was already over in every scene (27 to 37 ms mean).
+  The model cannot see the chip's fill and sort, store-queue submission, bus contention or disc timing.
+- Suites on the final image: camengine, shot_engine, hill_engine: every row as it must.
+
+## The muzzle flash (not done)
+
+The flash is effect owner 0x36, sequence 0, of the wep02 archive's EFF block (`cObjRuger::moveFire`'s EstSet). Its
+textures 30, 33 and 34 are not in FXMAP.BIN and have no header in any pack; 33 and 34 are the EFF block's own TPLs,
+raw GameCube pixels (no PS2 identity). Drawing it needs their PS2 pictures baked into the packs and FXMAP: another
+lane's bake.
