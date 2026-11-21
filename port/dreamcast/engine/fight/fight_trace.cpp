@@ -95,6 +95,12 @@ extern "C" struct AreaCounters { unsigned hit_tests, hits, eye_tests, centres, i
     __attribute__((weak));
 // lane eng-e2f: the screen tests (the GX projection queries' answers, fight_stubs.cpp; em10ScreenInCk, services/em10)
 extern "C" unsigned e2_gx_projections;
+extern "C" unsigned r101_voice_cnt __attribute__((weak));   // weak: the control build R101_VOICE_ORIG=1
+// lane eng-e2f item 2: the scene attachments' services (services/scene/sce_at_svc.cpp)
+extern "C" struct SceSvcCounters {
+    unsigned inits, bad_data, records, areas, hit_tests, eye_tests, item_sights, screen_tests, hit_bits, glows, glow_starts,
+        glow_stops, models, model_misses, zoom_refused, release_none, shadows;
+} scesvc_cnt __attribute__((weak));   // weak: the control build SCEAT_ORIG=1 keeps sce_at's own
 extern "C" struct Em10CamCounters { unsigned shots, shakes, wall_pulls, wall_hits, installs, screen_checks, screen_on; } em10c_cnt;
 void e2_report()
 {
@@ -111,6 +117,14 @@ void e2_report()
            dmg_cnt.debug_draws);
     e1_log("E2 SCREEN projections %u em10-checks %u on-screen %u cut-ins %u\n", e2_gx_projections, em10c_cnt.screen_checks,
            em10c_cnt.screen_on, em10c_cnt.shots);
+    if (&scesvc_cnt) {
+        const SceSvcCounters& c = scesvc_cnt;
+        e1_log("E2 SCENE inits %u bad-data %u records %u areas %u hit-tests %u eye-tests %u item-sights %u screen-tests %u "
+               "hit-bits %u glows %u starts %u stops %u models %u misses %u zoom-refused %u release-none %u shadows %u\n",
+               c.inits, c.bad_data, c.records, c.areas, c.hit_tests, c.eye_tests, c.item_sights, c.screen_tests, c.hit_bits,
+               c.glows, c.glow_starts, c.glow_stops, c.models, c.model_misses, c.zoom_refused, c.release_none, c.shadows);
+    }
+    if (&r101_voice_cnt) e1_log("E2 R101 voices %u\n", r101_voice_cnt);   // lane eng-e2f item 3 (fight/r101_voice.cpp)
     if (&area_cnt) e1_log("E2 AREA hit-tests %u hits %u eye-tests %u centres %u inside-points %u inits %u bad-types %u\n",
            area_cnt.hit_tests, area_cnt.hits, area_cnt.eye_tests, area_cnt.centres, area_cnt.inside_points, area_cnt.inits,
            area_cnt.bad_types);
