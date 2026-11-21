@@ -1176,3 +1176,56 @@ it, and em10's own body is made weak (images: `WEAKEN_em10/em10`; re4ref native:
   exactly; a svc_controls.sh row (77 rows, all as they must).
 - **Not covered**: the other enemies' ScaleCompress (em2b, em2c, em2d, em25) write the records the same way; they are
   in the boss and later images, not in E1.
+
+## 45. The HUD as the source lays it out, and the live ammo digits (lane eng-e1i)
+
+The HUD's faults (the ammo digits as garbled cells, the lens dark and off centre, the gauge frame shrunk) were found
+on the PC from the pack's own widget records and the capture's RAM (lane evidence `ev/hud/work`); a PC drawing of the
+records the renderer's way (`s/hudsim.py`) reproduced the Flycast still. They are four faults, none of them the blend:
+
+1. **Rotation in degrees.** IdSys keeps a unit's rot in degrees (id_sys.cpp converts rot * PI / 180); the renderer read
+   radians, so the lens sphere's light turned to the wrong side (the "dark lens") and the green ring's quarters
+   pointed the wrong way.
+2. **Padded pictures.** The bake's `source` packages are the GameCube pictures padded to powers of two (the 143 x 90
+   gauge frame in a 256 x 128 package), but the widgets keep the GameCube coordinates: the renderer drew the whole
+   padded package, the frame shrunk and off its centre, the bullet icon and the name plates cut.
+3. **Frozen digits.** The capture held the digit widgets with the two pictures it saw, "10" in all 300 pictures. The
+   PS2 digit pictures are 16 x 32 with the GameCube's 16 x 24 glyph at rows 5..28, drawn over the whole canvas (the
+   glyph squeezed, its dark unlit segments over the lens).
+4. **Draw order.** The source draws in IDSystem::unitTrans's order (each visible root's children by unit number, groups
+   recursing, before the unit; the order table draws the queue last-in first), not deepest level first: the name
+   plates lie over the gauge frame.
+
+The lens needs no frame-buffer read: every HUD unit of the capture has trans_type 0 (IdCommonTrans), read from the
+unit table in the capture's RAM (`s/idunits.py`; IdNegativeTrans, the screen copy, is not used by the gauge).
+
+- **Bake** (`bake/hud_fix.py`, run on a NAT3 pack after the bake with tex.pak and the capture's RAM snapshot):
+  widget coordinates scaled to the picture inside its package (the GameCube size of each key from the capture's TPLs,
+  keyed as the capture keys them); the ten PS2 digit pictures (tex.pak's replacements of the ten images of the digit
+  TPL) appended to the texture and header tables; each digit widget (class 0x21, units 0x0B ones, 0x0A tens, 0x17
+  hundreds) gets the '0' picture's header + 1 in record word 7; the digit coordinates cut to the glyph rows
+  (v 5/32..29/32). `--control-cut` keeps the old 0..1 cut (the check's control).
+- **Renderer** (`render/native_layers.inc native_hud`): degrees; a parent's matrix only from a group (type 1, as
+  id_sys.cpp); unitTrans's order; a digit widget draws `hud_ammo`'s digit (read in place).
+- **Live state** (`services/draw.cpp e1_hud_draw_tick`, once a tick): the loaded count (ItemMgr.bulletNum(), the
+  engine's magazine) split as cockpit.cpp BulletInfo::move splits it, shown for guns (dispBulletDigit's list, not for
+  pl_type 1), the hundreds only when not 0. Not covered: the EMPTY sign, the no-weapon player states.
+- **Check** (`s/hudcheck.py`, lane folder): each still's two digit cells correlated with the ten PS2 glyphs, against the
+  magazine the image prints with the still (`E1 STILL n tick t magazine m digits drawn h t o`, STILLS runs only).
+- **Lab arm** HUDOLD (boot file): the renderer's old reading (radians, every parent, deepest level first, the pack's
+  frozen digits, blend 0): the "before" look from the same image.
+
+## 46. The object table on the engine pool (lane eng-e1i, ruling H-015.1)
+
+`services/model/mgr_pool.cpp` gives cManager<cObj> (create, createBack, create at a slot, the count, destroy) to the
+engine pool as cEm's (section 41); the records are cleared by cObjMgr::memClear called directly (its inline body
+emitted in this object). Before, the default image took cManager<cObj>::createBack and cObjMgr::memClear from wep02's
+copy of the template (Wep02_init makes the handgun object with ObjMgr.createBack). `allowed_original.txt` now refuses
+every allowed unit's cManager<...> member and c*Mgr::memClear (`!*/* ...`). Control build
+`MGR_EXTRA=-DE1_MGR_ORIG_COBJ=1`: FAIL, the two wep02 functions (428 B).
+
+## 47. A pool refusal fails the scene (lane eng-e1i, ruling H-015.3)
+
+The scene selector (`loader/selector.c`) marks an E1-family scene FAILED when its report's `E1 POOL full N bad_frees N`
+line has a non-zero count ("pool refused: ...") or is missing. Control: the boot file POOLCTL makes the image destroy
+a free character record after the room's set-up (`e1_pool_control`), which the pool refuses and counts.

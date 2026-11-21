@@ -21,6 +21,7 @@ void e1_svc_tick_begin(unsigned t);
 extern int e1_game_seed_option;   // core/globals.cpp, boot option SEED (lane eng-e1e: the hill scene applies it too)
 void e1_camera_draw_tick();   // services/draw.cpp (lane eng-e1e)
 void e1_hud_draw_tick();
+extern "C" void e1_pool_control(void);   // services/model/mgr_pool.cpp: POOLCTL (lane eng-e1i)
 void e1_svc_room_ready();
 void e1_svc_report();
 void e1_cloth_stat_tick();   // lane eng-e1d: CLOTHSTAT boot option, the cloth chains' shape statistics   // the palette, once a tick after the behaviour (native skeleton), in the services row

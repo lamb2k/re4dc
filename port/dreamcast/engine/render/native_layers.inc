@@ -108,41 +108,91 @@ static void submit_hud_header(const Scene* s,unsigned index,unsigned blend_type)
     }
     layer_prim(&header);
 }
+/* lane eng-e1i: the ammo digits (render/native_scene.h). */
+HudAmmo* hud_ammo;
+uint8_t hud_ammo_drawn[3]={0xff,0xff,0xff};
+static void hud_widget(const Scene* a,const Widget* q,float cx,float cy,float angle,float z){
+    unsigned anchor=q->shape&15,hdr=q->hdr;
+    if(anchor>=1 && anchor<=4){
+        float ox=(anchor==1||anchor==4?.5f:-.5f)*q->w;
+        float oy=(anchor<=2?-.5f:.5f)*q->h;
+        float ca=cosf(angle),sa=sinf(angle);
+        cx+=ca*ox-sa*oy;cy+=sa*ox+ca*oy;
+    }
+    /* lane eng-e1i: a digit widget (bake/hud_fix.py: mask[1] = the '0' picture's header + 1) draws the live digit */
+    if(q->mask[1] && hud_ammo && !hud_blend_control){
+        unsigned mark=(q->identity>>16)&255,cell=mark==0x0B?0:mark==0x0A?1:mark==0x17?2:3;
+        if(cell<3){
+            if(!(hud_ammo->shown>>cell&1))return;
+            hdr=q->mask[1]-1+hud_ammo->digit[cell];hud_ammo_drawn[cell]=hud_ammo->digit[cell];
+        }
+    }
+    submit_hud_header(a,hdr,hud_blend_control?0:(q->shape>>8)&255);
+    rectangle(320+cx,240-cy,z,.5f*q->w,.5f*q->h,-angle,q->uv,argb4(q->color));
+}
 /* The HUD is laid out every picture: its widget state changes every picture in both scenes, so a layout change
-   flag (tried in e0s4a: record and compare) cost more than it saved. */
+   flag (tried in e0s4a: record and compare) cost more than it saved.
+   Lane eng-e1i, as id_sys.cpp does it: a unit's rot is in degrees (IDSystem converts rot * PI / 180; read as radians
+   the lens sphere's light turned to the wrong side and the green ring's quarters pointed the wrong way); a unit takes
+   its parent's matrix only when the parent is a group (type 1); and the draw order is the source's: IDSystem::unitTrans
+   queues each visible root's children (by unit number, groups recursing) before the unit itself, and the order table
+   draws the queue last-in first (so the name plates lie over the gauge frame and the digits over the lens backdrop).
+   HUDOLD (the control and the "before" still) keeps the old reading: radians, every parent, deepest level first. */
 void native_hud(NativeScene* s){
     const Widget* w=(const void*)(s->state[5]+4);
     unsigned count=(s->words[5]-4)*4/sizeof(*w);
-    unsigned char visible[256]={0};
+    unsigned char visible[256]={0},group[256]={0};
     float x[256]={0},y[256]={0},angle[256]={0};
-    /* eng-e0b: layout first (parents before children), then masked backdrops (mask applied at bake: mask[0] = 1),
-       then every other widget, deepest level first so a parent's readouts sit over its children's frames; depth
-       rises with draw order so later widgets are in front. */
-    float z=.98f;
-    for(unsigned pass=0;pass<3;pass++)
+    const float unit=hud_blend_control?1.f:.017453293f;
+    hud_ammo_drawn[0]=hud_ammo_drawn[1]=hud_ammo_drawn[2]=0xff;
+    /* layout: parents before children */
     for(unsigned lv=0;lv<12;lv++)for(unsigned i=0;i<count;i++){
-        /* pass 0 lays out (parents first); passes 1 and 2 draw deepest level first */
-        unsigned level=pass==0?lv:11-lv;
-        const Widget* q=w+i;if(((q->tree>>8)&255)!=level)continue;
+        const Widget* q=w+i;if(((q->tree>>8)&255)!=lv)continue;
         unsigned parent=q->tree&255,id=q->identity&255;
-        if(pass==0){
+        int inherit=parent!=255 && (hud_blend_control || group[parent]);
         visible[id]=(!q->hidden && (q->shape&0x80000) && (parent==255 || visible[parent]));
-        float a=parent==255?0:angle[parent],sn=sinf(a),cs=cosf(a);
-        x[id]=(parent==255?0:x[parent])+cs*q->pos[0]-sn*q->pos[1];
-        y[id]=(parent==255?0:y[parent])+sn*q->pos[0]+cs*q->pos[1];
-        angle[id]=a+q->rot[2];
+        group[id]=(q->tree>>16)==1;
+        float a=inherit?angle[parent]:0,sn=sinf(a),cs=cosf(a);
+        x[id]=(inherit?x[parent]:0)+cs*q->pos[0]-sn*q->pos[1];
+        y[id]=(inherit?y[parent]:0)+sn*q->pos[0]+cs*q->pos[1];
+        angle[id]=a+q->rot[2]*unit;
+    }
+    float z=.98f;
+    if(!hud_blend_control){
+        /* the source's order: post-order from the roots, drawn in reverse (depth rises with draw order) */
+        unsigned char queue[256],slot[256],stack[256],next[256];unsigned n=0;
+        for(unsigned i=0;i<256;i++)slot[i]=255;
+        for(unsigned i=0;i<count;i++)slot[w[i].identity&255]=i;
+        for(unsigned r=0;r<count && n<256;r++){
+            const Widget* root=w+r;
+            if((root->tree&255)!=255 || root->hidden || !(root->shape&0x80000))continue;
+            unsigned depth=0;stack[0]=root->identity&255;next[0]=0;
+            while(depth<255){
+                unsigned u=stack[depth],c=next[depth];
+                /* the next visible child of a group, by unit number */
+                while(c<count && !(group[u] && (w[c].tree&255)==u && !w[c].hidden && (w[c].shape&0x80000)))c++;
+                if(c<count){next[depth]=c+1;stack[++depth]=w[c].identity&255;next[depth]=0;continue;}
+                if(n<256)queue[n++]=u;
+                if(!depth)break;
+                depth--;
+            }
         }
-        if(pass==0 || (q->mask[0]!=0)!=(pass==1))continue;
-        if((q->tree>>16)==1 || !visible[id] || q->hdr==~0u || !(q->color[3]>0))continue;
-        float cx=x[id],cy=y[id];unsigned anchor=q->shape&15;
-        if(anchor>=1 && anchor<=4){
-            float ox=(anchor==1||anchor==4?.5f:-.5f)*q->w;
-            float oy=(anchor<=2?-.5f:.5f)*q->h;
-            float ca=cosf(angle[id]),sa=sinf(angle[id]);
-            cx+=ca*ox-sa*oy;cy+=sa*ox+ca*oy;
+        while(n--){
+            unsigned id=queue[n];if(slot[id]==255)continue;
+            const Widget* q=w+slot[id];
+            if(group[id] || !visible[id] || q->hdr==~0u || !(q->color[3]>0))continue;
+            hud_widget(&s->assets,q,x[id],y[id],angle[id],z);z+=1e-4f;
         }
-        submit_hud_header(&s->assets,q->hdr,hud_blend_control?0:(q->shape>>8)&255);
-        rectangle(320+cx,240-cy,z,.5f*q->w,.5f*q->h,-angle[id],q->uv,argb4(q->color));z+=1e-4f;
+    } else {
+        /* HUDOLD: masked backdrops first, then every other widget deepest level first */
+        for(unsigned pass=1;pass<3;pass++)
+        for(unsigned lv=0;lv<12;lv++)for(unsigned i=0;i<count;i++){
+            const Widget* q=w+i;if(((q->tree>>8)&255)!=11-lv)continue;
+            unsigned id=q->identity&255;
+            if((q->mask[0]!=0)!=(pass==1))continue;
+            if(group[id] || !visible[id] || q->hdr==~0u || !(q->color[3]>0))continue;
+            hud_widget(&s->assets,q,x[id],y[id],angle[id],z);z+=1e-4f;
+        }
     }
     const uint32_t* text=s->state[6];unsigned prior=~0u;
     float pen=0,baseline=0;
