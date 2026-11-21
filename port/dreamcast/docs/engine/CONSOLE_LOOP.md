@@ -477,3 +477,39 @@ PL0, PF0) and fails it now (C2, PL1, PF1):
 The schedule controls PL1 and PF1 ran on 6b1e567bc; `read_plan` is the same at d5c28a62e. Clean scenes (A2, d5c28a62e):
 LEON, HILL, FIGHT, BOSS (timing) and LEONS, HILLS, FIGHTS, FIGHTT (function) all OK, each with opens 0, reads 0, sector
 requests 0 and camera tracks converted in play 0; FIGHT's cut served by lookup (lookups 1, 122 moves).
+
+## 14. The loading state: a room change between two ticks (lane eng-load1, 2026-11-21)
+
+Status: finished, unaudited. Flycast runs are function checks; no timing claim. Services side: `SERVICES.md` section 50.
+
+**When.** After a tick's picture and pace (`core/main.cpp`), if the game asked for a room change (`pG->Rno0 == 4`: its
+door handler's request), the loop enters the loading state (`core/room_change.cpp e1_room_change_run`) before the next
+tick. The tick order and the pacer's timing rows are unchanged: no row is written for the load and no tick runs in it.
+
+**What the state does** (`core/frame.cpp e1_loading_begin / e1_loading_end`):
+- play is not timed: the loop does not tick; the last picture the pacer queued is flipped by the vblank handler at its
+  field and stays on screen (a held picture; E1 draws no fade);
+- disc access is allowed and counted as loading (`core/play_files.c`: opens, reads on disc-backed handles, drive read
+  requests, per transition), never as play's (`E1 FILES in play` stays 0); camera tracks converted now are load work;
+- the log prints as it goes (no tick is timed); the memory map is sampled after the load (`E1 MEM`, `E1 MEMBLK`) and the
+  heap descriptors' map checked;
+- at its end the pacer starts again on the next field boundary, as before tick 1, so the next tick is not "late"; the
+  first picture after the load spans the held fields: that row's fields value is 0 (not a play interval) and the held
+  fields are reported on the load's own line.
+
+**Its record.** Per load: `E1 LOADING room A>B`, `E1 LOAD n room A>B at tick T: skeleton tables released S, player x y z
+ang a, fade f`, `E1 ROOMMARK k room R after a load kos-used U arena-used A vram-free V col-pieces C skel-tables S`, and
+`E1 LOAD n done at tick T: U us, F fields held; loading disc: opens O reads R sector-requests S`. At the end: `E1 ROOM
+visit k room R ticks N first-tick T` per visit, `E1 ROUNDTRIP rooms A>B>A loads L failed F kos-used ../.. arena-used ../..
+vram-free ../.. col-pieces ../.. skel-tables ../..: equal | LEAK <field>`, `E1 DISCSAFE ...`. A failed load prints
+`E1 LOAD FAILED n room A>B: <reason>` and ends the run with its report (no hang).
+
+**The selector** (`loader/selector.c`): a scene with the argument `door=N` is OK only if N loads completed, N + 1 room
+visits each ran ticks, the round trip is `equal`, and play's disc counters are 0, whatever its run kind; `E1 LOAD FAILED`
+and `E1 DISCSAFE READ FAILED` are refusal lines. Its summary shows each load's time, held fields and disc counters.
+
+**The DOOR scene** (`tools/engine/build_console_disc.sh --scenes DOOR,...`): the E1 image with `/cd/DOOR.TXT`, the
+fixture `tools/plays_right/fixtures/door-r101-r103.txt` (the PC reference replays the same file), the farm's archive and
+whole-room bake beside it; a traced function run (`door=2`). Controls: `CDOORPK` (the farm's archive absent), `CDOORRD`
+(a disc read 10 ticks after the first door), `CDOORLK` (a block kept across the first leave); check `CDISCF` (a DMA read
+reported done without its transfer, caught by the read-safety layer).

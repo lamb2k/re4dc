@@ -1470,3 +1470,42 @@ tick (the original over the next two sweeps). The fight image had no table befor
 
 The quad test takes two opposite corner wedges through `camera/area_edge.h` (the camera's edge test, now shared). The
 view check hands its point and direction to the view-cone test, which stays the fight image's generated stub (0).
+
+## 50. Room change and disc read safety (lane eng-load1, 2026-11-21)
+
+Status: finished, unaudited. Lane note: `lanes/eng-load1.md`; the loading state's record: `CONSOLE_LOOP.md` section 14.
+
+**Room change** (`core/room_change.cpp`). The game decides (its door handler, `sce_at.cpp sceAtFunc_door`, sets
+`pG->Rno0 = 4` with the destination); the engine answers between two ticks:
+
+| Step | Engine entry | What returns or is taken |
+|---|---|---|
+| Skeleton | `cModel::releasePartsList(0)` on each table's model (`services/skeleton`, existing entry) | every skeleton table of the room's actors (`skel_table_count` 0) |
+| Collision | `col_room_release()` (weak; **missing**: request R2 to the collision service's owner) | the room's pieces and their tables (carved from the services region, "never freed in E1") |
+| Renderer | `e1_draw_close_c()` / `e1_draw_reopen_c(pack)` (weak; **missing**: request R3 to the renderer's owner) | the room's pack state and textures in video memory; the next room's pack (`/cd/FARM.PAK` for r103) |
+| Room archive | `e1_room_release()` (`core/loader.cpp`) | the compacted `st1/rNNN.arc` (CAM SAT EAT CNS RTP AEV) |
+| Room heap | `e1_room_heap_create(4)` (`host/e1_heap.cpp`, existing) | heap 4 made again: every manager array and room record |
+| Camera tracks | `cam_track_room_load` (`services/camera`, existing) | the last room's track store freed when the next is converted (load work) |
+| Core, player, weapon archives | kept (not room data; the core archive is now loaded once, `core/loader.cpp`) | - |
+
+The handoff statements the engine re-expresses (from `gameDoordemo` and `gameRoomMemInit`) are listed at the head of
+`core/room_change.cpp` for the integrator's ruling. **Round trip:** the marks at each room's ready point (KOS heap in use
+from `mallinfo`, the behaviour arena's bytes in use over all heaps, video memory free, collision pieces, skeleton tables)
+of the last visit must equal the first visit's (`E1 ROUNDTRIP ...: equal`); control `MEMKEEP` (a 4 KiB block kept across
+the first leave) must read `LEAK kos-used`.
+
+**Disc read safety** (`core/disc_safe.c`), lifted from the old port's `game/platform/dvd_read_safe.cpp` with the release's
+set (`DVD_READ_SAFE=1 DISC_READ_FALLBACK=3 DISC_NOTREADY_RETRY=1`) as one fixed path under `core/play_files.c`'s wraps:
+1. a stream request KOS refuses (a stale "DMA in progress") is retried for 10 ms, then the flag is cleared with
+   `cdrom_abort_cmd` under the G1 ATA semaphore and the stream restarted where it stood (the r119 run of the old port:
+   249 texture uploads refused until the end);
+2. every DMA read (stream request, sector read) marks its destination's last 32 bytes through the uncached mirror; a
+   read reported done with the mark still there (DreamShell's ISO loader, issue #28), a failed read or request latches
+   the session to bounded sector reads (DMA, DMA after a drive re-init, PIO) and refuses later stream starts;
+3. a drive that answers "not ready" is waited for 30 s (re-init and the read again each round), then the read fails
+   with its error (the loader refuses the room, the scene FAILS), never a hang (#66 bug 3; not console-proven).
+Not lifted: the release's own bounded GD command loop for latched reads (KOS's `cdrom_read_sectors_ex` with the KOS disc
+fixes stands in) and the `DISC_DMA_WAIT_TIMEOUT` KOS patch (not in `engine/loader/kosfix.mk`): console questions.
+Counters: `E1 DISCSAFE refused R recovered R failed F marked M not-landed N fallbacks B latched L notready-waits W
+read-failed X`. Check `CDISCF` (boot file `DISCFAIL`): the first DMA transfer of the first load reported done without it;
+the scene must stay OK with `not-landed 1 latched 1`.
