@@ -29,12 +29,22 @@ typedef struct {
     uint16_t pos_first,pos_count,nrm_first,nrm_count;
     uint16_t sphere_first,sphere_count,ws_first,ws_count;
     uint16_t strip_first,strip_count;   /* lane eng-draw3: the part's strips in the model's strip order (strip_code) */
+    uint8_t all_sided,pad8;             /* lane eng-draw3 arm CB: every strip of the part one-sided */
 } RtPart;
 typedef struct {
     const unsigned* h; const float* bind; const SkinWeight* w; const uint8_t* strips;
     SourceVector *pos,*nrm; RtPart* parts; PartSphere* spheres; uint16_t* part_ws; float* bone_radius;
     uint16_t* bones_used; unsigned nbones_used;
+    uint8_t* sided;   /* lane eng-draw3 arm CB: per strip (model order), 1 one-sided (closed surface), else 0; NULL arm off */
 } RtModel;
+/* Lane eng-draw3, step 5: character back-face culling, a LOOK ARM (run-time only, never the default). Boot file CBCULL,
+   read when the pack opens (before play). A strip is one-sided when every edge of each of its triangles is shared with
+   another triangle of the model (a closed surface, found at load from the pack's own position indices across all
+   parts), and it is not hair (roles 7 and 8, cards seen from both sides). Under the arm, a one-sided strip none of whose
+   triangles faces the camera is dropped before its normals are lit and before emission, and a part whose strips are
+   all one-sided gets the chip's culling (ISP culling mode 3, the world's) in its header. */
+static int cb_arm=-1;
+static unsigned cb_onesided_strips,cb_strips;
 typedef struct {unsigned n; RtModel m[];} RtCatalog;
 
 #define ACTOR_POS_LIMIT 4096
@@ -123,6 +133,40 @@ static unsigned model_index(const ActorPose* a){
     switch(type){case 3:return 3;case 4:return 4;case 11:return 5;default:return 2;}
 }
 
+/* Arm CB (load time): per strip of the model (parts in order, strips in order), 1 when every edge of every
+   non-degenerate triangle is used by at least two triangles of the model (original position indices) and the part is
+   not hair. Returns NULL when out of memory (the arm then leaves the model as it is). */
+static uint8_t* cb_sides(const unsigned* h,const NativePart* parts,const uint8_t* strips){
+    unsigned tris=0,nstrip=0;
+    for(unsigned p=0;p<h[4];p++){const uint8_t* q=strips+parts[p].at,*end=q+parts[p].size;
+        while(q<end){unsigned n=*(const unsigned*)q;tris+=n-2;nstrip++;q+=4+8*n;}}
+    unsigned size=1024;while(size<6*tris+16)size<<=1;
+    uint32_t* key=malloc(4*size);uint8_t* count=calloc(size,1);uint8_t* out=calloc(nstrip+1,1);
+    if(!key||!count||!out){free(key);free(count);free(out);return NULL;}
+    #define CB_SLOT(a,b) ({uint32_t k_=(a)<(b)?(a)<<16|(b):(b)<<16|(a),i_=(k_*2654435761u)>>8&(size-1); \
+        while(count[i_] && key[i_]!=k_)i_=(i_+1)&(size-1); key[i_]=k_; i_;})
+    for(int pass=0;pass<2;pass++){
+        unsigned s=0;
+        for(unsigned p=0;p<h[4];p++){
+            const uint8_t* q=strips+parts[p].at,*end=q+parts[p].size;const unsigned hair=parts[p].role==7||parts[p].role==8;
+            while(q<end){unsigned n=*(const unsigned*)q;const IndexCorner* c=(const void*)(q+4);q+=4+8*n;
+                unsigned closed=!hair;
+                for(unsigned k=2;k<n;k++){
+                    unsigned a=c[k-2].position,b=c[k-1].position,d=c[k].position;
+                    if(a==b||b==d||a==d)continue;
+                    if(!pass){unsigned i;i=CB_SLOT(a,b);if(count[i]<255)count[i]++;i=CB_SLOT(b,d);if(count[i]<255)count[i]++;
+                              i=CB_SLOT(a,d);if(count[i]<255)count[i]++;}
+                    else closed&=count[CB_SLOT(a,b)]>=2 && count[CB_SLOT(b,d)]>=2 && count[CB_SLOT(a,d)]>=2;
+                }
+                if(pass){out[s]=closed;cb_onesided_strips+=closed;cb_strips++;}
+                s++;
+            }
+        }
+    }
+    #undef CB_SLOT
+    free(key);free(count);
+    return out;
+}
 /* ---- load-time conversion of the pack's model catalogue ---- */
 static int ws_cmp_key(const SourceVector* v){return v->bone;}
 static void sort_by_ws(SourceVector* v,uint16_t* old,unsigned n){
@@ -137,6 +181,7 @@ void native_actor_close(NativeScene* s){
     for(unsigned i=0;i<cat->n;i++){
         RtModel* m=cat->m+i;
         free(m->pos);free(m->nrm);free(m->parts);free(m->spheres);free(m->part_ws);free(m->bone_radius);free(m->bones_used);
+        free(m->sided);
     }
     free(cat);s->runtime=NULL;
 }
@@ -144,6 +189,7 @@ int native_actor_open(NativeScene* s){
     RtCatalog* cat=calloc(1,sizeof(RtCatalog)+s->models.n*sizeof(RtModel));
     if(!cat)return 0;
     cat->n=s->models.n;s->runtime=cat;
+    if(cb_arm<0){file_t f=fs_open("/cd/CBCULL",O_RDONLY);cb_arm=f>=0;if(f>=0){fs_close(f);printf("CBCULL: lane eng-draw3 look arm, character back faces culled\n");}}
     static uint16_t pmap[ACTOR_POS_LIMIT],nmap[ACTOR_POS_LIMIT],old[2*ACTOR_POS_LIMIT];
     static uint8_t seen_ws[ACTOR_WS_LIMIT],seen_bone[ACTOR_WS_LIMIT];
     static float lo[ACTOR_WS_LIMIT][3],hi[ACTOR_WS_LIMIT][3];
@@ -171,6 +217,7 @@ int native_actor_open(NativeScene* s){
                 q=(const uint8_t*)(c+n);}
         }
         if(npos>ACTOR_POS_LIMIT||nnrm>ACTOR_POS_LIMIT)return 0;
+        m->sided=cb_arm>0?cb_sides(h,parts,strips):NULL;   /* lane eng-draw3 arm CB (original position indices) */
         m->pos=malloc(8*npos+16);m->nrm=malloc(8*nnrm+16);m->parts=calloc(h[4],sizeof(RtPart));
         m->spheres=malloc(sizeof(PartSphere)*(nsph+1));m->part_ws=malloc(2*(nws+1));
         m->bone_radius=calloc(h[0],sizeof(float));m->bones_used=malloc(2*h[0]+2);
@@ -232,8 +279,14 @@ int native_actor_open(NativeScene* s){
         }
         m->nbones_used=0;
         for(unsigned b=0;b<h[0];b++)if(m->bone_radius[b]>0)m->bones_used[m->nbones_used++]=b;
+        if(m->sided)for(unsigned p=0;p<h[4];p++){
+            RtPart* rp=m->parts+p;unsigned all=rp->strip_count>0;
+            for(unsigned k=0;k<rp->strip_count;k++)all&=m->sided[rp->strip_first+k];
+            rp->all_sided=all;
+        }
     }
     for(unsigned i=0;i<ACTOR_POS_LIMIT+2;i++)pos_records[i][0]=pos_records[i][1]=i;
+    if(cb_arm>0)printf("CBCULL: %u of %u character strips one-sided (closed), the rest drawn from both sides\n",cb_onesided_strips,cb_strips);
     return 1;
 }
 
@@ -374,12 +427,22 @@ static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes
     const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
     if(!++nrm_stamp_now){memset(nrm_stamp,0,sizeof nrm_stamp);nrm_stamp_now=1;}
     const unsigned stamp=nrm_stamp_now;unsigned nl=0;
+    const uint8_t* sided=m->sided?m->sided+rp->strip_first:NULL;   /* arm CB only */
     sc+=rp->strip_first;
     while(p<stop){
         unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
         unsigned common=63,combined=0;
         for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
-        if(common&keep){*sc++=STRIP_DROPPED;continue;}
+        if(common&keep){*sc++=STRIP_DROPPED;if(sided)sided++;continue;}
+        if(sided && *sided++ && !(combined&keep&32)){   /* arm CB: a one-sided strip with no triangle facing the camera */
+            unsigned front=0;
+            for(unsigned k=2;k<n && !front;k++){
+                const pvr_vertex_t *a=cur_projected+v[k&1?k-1:k-2].position,*b=cur_projected+v[k&1?k-2:k-1].position,
+                                   *c=cur_projected+v[k].position;
+                front=(b->x-a->x)*(c->y-a->y)-(c->x-a->x)*(b->y-a->y)<0;   /* the census's sign: positive is the far side */
+            }
+            if(!front){*sc++=STRIP_DROPPED;continue;}
+        }
         *sc++=combined&keep;
         for(unsigned j=0;j<n;j++){unsigned q=v[j].normal;if(nrm_stamp[q]!=stamp){nrm_stamp[q]=stamp;nrm_list[nl++]=q;}}
     }
@@ -402,6 +465,7 @@ static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const 
         if(!header){
             const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
+            if(rp->all_sided && m->sided)((volatile unsigned*)sq)[1]=hdr[1]|3u<<27;   /* arm CB: the chip culls (mode 3) */
             advance(&sq);header=1;
         }
         if(DC_ARM(DL_CENSUS) && !dc_mute){   /* census (counts only) */
@@ -490,6 +554,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         if(!visible)continue;
         /* lane eng-draw3 (E3): Leon's knife part (role 2), drawn in the knife stance only, is not skinned or lit out of it */
         if(!model && !knife_stance(s))for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==2)state[p]=0;
+        if(m->sided)for(unsigned p=0;p<h[4];p++)if(state[p]==1)state[p]=2;   /* arm CB: every drawn part's strips tested */
         /* 4. weight sets used by visible parts */
         int lit_fill=0;uint32_t* lit_cached=content_lit(s,actor,h[0],model,lod_chosen[ordinal],m,ordinal,
             m1_content[CS_BAKED]==3?actor_px(s,lo,hi):1e9f,&lit_fill);   /* eng-look: step B (baked lighting cache) */

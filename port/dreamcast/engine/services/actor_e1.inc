@@ -174,6 +174,8 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
        lit or given weight sets either */
     if (!model && !knife_stance(s))
         for (unsigned p = 0; p < h[4]; p++) if (m->parts[p].src->role == 2) state[p] = 0;
+    if (m->sided)   /* lane eng-draw3 arm CB (look arm, boot file CBCULL): every drawn part's strips are tested */
+        for (unsigned p = 0; p < h[4]; p++) if (state[p] == 1) state[p] = 2;
     /* 4. lights and weight sets. The light rule reads the model's and its bone 0's matrices in place (no ActorPose
        copies). Leon: the pack's record (looked up once a pack); every other character: its model record in place. */
     const ModelLight* ml = &src_light_fallback;
