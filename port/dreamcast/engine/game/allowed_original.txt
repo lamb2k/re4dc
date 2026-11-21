@@ -188,3 +188,6 @@ game/game *
 # above; picking up an item with no model is the item event)
 +em10/em10 em10CsawHitCk em10GatlingHitCk
 +game/sce_at sceAtGetItem_NoModel
+# reviewed (lane eng-e2d, found by the split check inlined into setEm, SceCkFindPL and r101_Event20): the enemy
+# wrapper's destructor is empty (include/em_wrap.h: "~cEmWrap() {}", a local wrapper's end of scope): no code, no table
++st*/* cEmWrap::~cEmWrap

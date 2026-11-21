@@ -15,6 +15,34 @@ include hosted.mk
 ORIG_FLAGS := -ffunction-sections -fdata-sections -std=gnu++20 -fpermissive -w -O2 -ffp-contract=off -fwrapv -fno-strict-aliasing \
 	-fno-delete-null-pointer-checks -fno-isolate-erroneous-paths-dereference \
 	-fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -fno-rtti
+# Lane eng-e2d (the split check, tools/engine/split_check.py): every object compiled with ORIG_FLAGS writes the
+# compiler's own inlining report beside it (<object>.inl.txt) and records its flags in the object (.GCC.command.line);
+# check_link.py runs the split check on every hosted object of the map and refuses one without its report. Neither
+# option changes the code. ORIG_FLAGS becomes a recursive variable so that $@ is the object being built.
+#   A hosted unit some of whose functions the engine replaces (made weak, so the engine's strong body is linked) is
+# compiled without the interprocedural optimisations (SPLIT_NOIPA: no inlining of non-inline functions, no partial
+# inlining, no clones, and no caller trusting what it saw of a callee: its clobbered registers, purity, memory effects,
+# value ranges). The units: SPLIT_NOIPA_UNITS (here and in fight.mk); the split check refuses a unit with a replaced
+# function that lacks any of these flags (read from its .GCC.command.line), so a unit missing from the list fails.
+SPLIT_REPORT = -fopt-info-inline-optimized=$@.inl.txt -frecord-gcc-switches
+SPLIT_NOIPA := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
+	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp
+# (the camera units and objWep, pl_debug: functions made weak; pl_sub, pl_npc, wep02, em_set, game and the boss image's
+# em2b, emtree, emtorch, obj20: manager members the engine pool defines under the original's names; em_sub, dmg in the
+# fight and boss images; em10, sce_com, sce_at: fight.mk)
+SPLIT_NOIPA_UNITS := game/objWep game/pl_debug game/cam_ctrl game/cam_qfps game/cam_extra game/pl_sub game/pl_npc \
+	wep02/wep02 game/em_sub game/dmg game/em_set game/game em2b/em2b game/emtree game/emtorch game/obj20
+# dmg's cDmg::beginEvent destroys its volume through the manager's destroy, which the shared header declares inline:
+# GCC inlined the original's body there, which the engine's table (services/volumes/dmg_vol.cpp) replaces. dmg is
+# built with no inlining at all, so the call reaches the engine's.
+SPLIT_NOINLINE_UNITS := game/dmg
+ORIG_FLAGS_BASE := $(ORIG_FLAGS)
+SPLIT_UNIT = $(patsubst $(OUT)/h/%.o,%,$@)
+ORIG_FLAGS = $(ORIG_FLAGS_BASE) $(SPLIT_REPORT) \
+	$(if $(filter $(SPLIT_UNIT),$(filter-out $(SPLIT_IPA),$(SPLIT_NOIPA_UNITS))),$(SPLIT_NOIPA)) \
+	$(if $(filter $(SPLIT_UNIT),$(filter-out $(SPLIT_IPA),$(SPLIT_NOINLINE_UNITS))),-fno-inline)
+# Control build only, never a default: SPLIT_IPA=<unit>... compiles those units with the interprocedural optimisations
+# back on (the split check must FAIL on each one that has a replaced function).
 ORIG_INC := -include $(ENG)/host/e1_prelude.h -I$(ROOT)/include -I$(ROOT)/src -I$(ENG)/host
 # Engine C++ (core, host adapters, services): the original headers for the record layouts, warnings on.
 ENG_FLAGS := -ffunction-sections -fdata-sections -std=gnu++20 -fpermissive -O2 -ffp-contract=off -fwrapv -fno-strict-aliasing -Wall -Wno-unused \
