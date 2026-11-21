@@ -220,6 +220,7 @@ int e1_room_change_pending()
 struct RoomMarks { unsigned room; uint32_t kos_used, arena_used, vram_free, col_pieces, skel_tables; };
 static RoomMarks marks[8];
 static unsigned n_marks;
+static uint32_t kos_last;   // the KOS heap in use at the last tick's end or room mark (E1 KOSGROW)
 struct Visit { unsigned room, ticks, first_tick; };
 static Visit visits[8];
 static unsigned n_visits;
@@ -232,6 +233,7 @@ void e1_room_marks_take(const char* when)
     for (int h = 0; h < 13; h++) arena += e1_arena.used[h];
     m.room = pG->room_id;
     m.kos_used = (uint32_t) mi.uordblks;
+    kos_last = m.kos_used;
     m.arena_used = arena;
     m.vram_free = e1_draw_opened_c() ? (uint32_t) pvr_mem_available() : 0xFFFFFFFFu;
     m.col_pieces = col_piece_count();
@@ -244,6 +246,14 @@ void e1_room_marks_take(const char* when)
 void e1_room_tick_done()
 {
     if (n_visits) visits[n_visits - 1].ticks++;
+    // DOOR scene (a function run): the KOS heap's growth in play, by tick (after the tick's rows; diagnostic): play
+    // should take nothing from it, a room change should return what its room took
+    if (!e1_door_scene) return;
+    const uint32_t u = (uint32_t) mallinfo().uordblks;
+    if (kos_last && u != kos_last)
+        e1_log("E1 KOSGROW tick %lu room %03x kos-used %lu (%+ld)\n", (unsigned long) e1_tick, (unsigned) pG->room_id,
+               (unsigned long) u, (long) u - (long) kos_last);
+    kos_last = u;
 }
 
 // ---- the loading state ----

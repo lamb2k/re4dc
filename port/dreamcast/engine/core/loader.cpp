@@ -90,7 +90,15 @@ void* GetDataExt(void* arc, const char* tag, int no)
 // A tagged archive reduced to the listed tags (same header, offsets and tag tables; sections copied in order), read
 // section by section from the file (lane eng-e1b: no whole-archive staging copy in the room pack; r11d's archive is
 // 1.2 MB, of which the hosted code reads 0.2 MB).
-static uint8_t* compact_arc_file(file_t f, const char* const* keep, unsigned nkeep, uint32_t* out_size)
+// Lane eng-load1: room_heap places the copy on the room heap (heap 4, the behaviour arena), as the original places the
+// decoded room archive (read.cpp decodeData: MEM_ALLOC on the current heap, the room heap): it goes with the room heap
+// when a door changes the room. On the KOS heap it did not fit: the farm's 598 KB copy could not reuse the village's
+// freed 354 KB block, sbrk grew 180 KB past the KOS heap's limit into the behaviour arena and overwrote the new room
+// heap's header (Flycast run 3: "ARENA alloc FAILED heap 4", the load refused, "player not created").
+void* mem_alloc(u32 size, const char* file, int line, int flag, int heap);   // host/e1_heap.cpp
+void Mem_free_h(void* p, int heap);
+static int room_arc_on_heap4;
+static uint8_t* compact_arc_file(file_t f, const char* const* keep, unsigned nkeep, uint32_t* out_size, int room_heap = 0)
 {
     const uint32_t size = fs_total(f);
     uint8_t hdr[0x10 + 8 * 64];
@@ -109,7 +117,7 @@ static uint8_t* compact_arc_file(file_t f, const char* const* keep, unsigned nke
         for (unsigned k = 0; k < nkeep; k++) if (!memcmp(tags + 4 * i, keep[k], 3)) take[i] = 1;
         if (take[i]) total += (len[i] + 31) & ~31u;
     }
-    uint8_t* d = (uint8_t*) memalign(32, total);
+    uint8_t* d = room_heap ? (uint8_t*) mem_alloc(total, 0, 0, 1, 4) : (uint8_t*) memalign(32, total);   // 32-aligned both
     if (!d) return NULL;
     memset(d, 0, head);
     memcpy(d, hdr, 0x10);
@@ -182,11 +190,13 @@ void e1_load_room(unsigned room)
     // RTP: the room's route points (route_ck.cpp, the partner's follow; lane eng-e1b). AEV: the room's areas, doors
     // among them (lane eng-load1: the door's destination is read from its record; 4 KB in r101, 2 KB in r103)
     static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP", "AEV"};
-    e1_room_arc = compact_arc_file(f, keep, 6, &e1_resident_bytes[2]);
+    e1_room_arc = compact_arc_file(f, keep, 6, &e1_resident_bytes[2], 1);   // on the room heap (lane eng-load1)
+    room_arc_on_heap4 = 1;
     fs_close(f);
 #endif
     pG->pRoom = e1_room_arc;
-    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP AEV)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
+    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP AEV) on the room heap\n", path, (unsigned long) size,
+           (unsigned long) e1_resident_bytes[2]);
     // core archive: the camera core data and the vibration table. Lane eng-load1: loaded with the first room only; the
     // original loads etc/core.das once at boot (pG->pArc is not room state), and a room change keeps it
     if (e1_core_arc) {
@@ -218,7 +228,10 @@ void e1_load_room(unsigned room)
 // archives are not room data: they stay.
 void e1_room_release()
 {
-    if (e1_room_arc) free(e1_room_arc);
+    if (e1_room_arc) {
+        if (room_arc_on_heap4) Mem_free_h(e1_room_arc, 4);   // (the room heap is made again right after)
+        else free(e1_room_arc);
+    }
     e1_room_arc = 0;
     e1_resident_bytes[2] = 0;
     pG->pRoom = 0;
