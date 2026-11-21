@@ -355,3 +355,67 @@ memory free.
 The test scenes are added by the lane's disc wrapper (`E:\RE4DC-Lanes\eng-e1k\s\cdisc3.sh`, `CTL3=1`); the console
 disc's scene list is unchanged. `build_console_disc.sh` has four new scenes that run only when `--scenes` names them:
 `SHOT`, `SHOTNP`, `SHOTDMG`, `SHOTLATE` (the engine's shot against the PC reference: PLAYS_RIGHT.md, last section).
+
+## 12. No way left to pass incomplete; no file opened in play (lane eng-e1o, 2026-11-21)
+
+Status: finished, unaudited. Answers HANDOVERS.md H-017.6 and H-017.7 (third E1 audit, section 4). Flycast runs are
+function checks.
+
+**The schedule says what a scene is.** `SCENES.TXT`'s kind column is `bench` or `e1:<timing|function>:<drawn|headless>`
+(LEON, HILL, FIGHT `e1:timing:drawn`; BOSS `e1:timing:headless`; the SHOT scenes and the traced and stills scenes
+`e1:function:drawn`). A bare `e1`, or any other spelling, is a schedule error: the scene FAILS without running. The
+image's own lines must agree: its `E1 RUN` line (one, and either `timing` or `function ... not a timing run`) and its
+`E1 draw: headless` line. A function label on a scheduled timing scene fails ("run kind: image says function, schedule
+says timing"), and the other way round; a headless image on a drawn scene fails ("mode: image headless, schedule drawn").
+
+**Every E1-family scene, timing or function**, also needs: the image's tick count (`E1 DONE ticks=N`, strict), the
+camera record checked on every one of those ticks (`E1 CAMREC ticks` equal to N: zero checked no longer passes), and
+the in-play file line `E1 FILES in play: opens N first tick T name X`.
+
+**A timing scene**, in addition to section 11's rules: one complete numeric after-play memory line (stack high water and
+stack size, guard `intact` or `BROKEN` read from the line itself, heap blocks, in use, peak, sbrk, arena margin,
+mallinfo, video memory free, lost; a missing or non-numeric field names itself in the reason); guard intact, no heap
+block untracked, arena margin not negative; video memory free not the headless sentinel -1 on a drawn scene (and exactly
+-1 on a headless one); every ROW field a number (a text field is a malformed row, never skipped); every FIELDS field a
+number; and **0 files opened in play**.
+
+**Strict numbers.** Every number the selector judges is all digits (a '-' first where signed) ending at a space, the end
+or the record's own separator: `12x`, `none` and an empty field are not numbers (`atoi` read `none` as 0). Rows, FIELDS,
+MEM, CAMREC, POOL, DONE and FILES are parsed this way. Not changed here: the PUB line's parse (lane eng-e1n's) and the
+bench's WINDOW display values (they are shown, not judged).
+
+**Boot files before play, file opens counted (H-017.7).** `core/play_files.c` wraps `fs_open` in every E1-family image
+(`-Wl,--wrap=fs_open`, `game/Makefile`; KOS's `fopen` reaches it too; with `SENDABLE=1` it calls the console loop's data
+root, `loader/cl_send.c cl_send_fs_open`). From the end of `e1_fields_start` to the start of `e1_fields_finish` (the
+first to the last picture) each open is counted with the tick and name of the first. Moved out of play: `STACKX` (read on
+the first picture before, `core/memmap.cpp`), the fight's `FEED.BIN` (read on tick 1, `fight/route_fight.cpp`), and the
+fight's Ganado module and its 158 motion-key files (read at the first spawn, tick 1: `fight/fight_e2.cpp` now reads every
+module at room load, as the game reads a room's enemy modules). The record's controls are boot files read once before
+play by `core/frame.cpp e1_lab_boot` (listed in `core/e1_core.h`).
+
+**Disc layout.** `NOTRACE` sits in the timing scenes' own folders (`E1L` for LEON, `E1H` for HILL), so the same files
+run traced or with stills in named function scenes: `LEONT`, `HILLT` (traced; the trace lines go to the serial line and
+are kept out of the report) and `LEONS`, `HILLS`, `FIGHTS` (stills, tick 1 and every 40th). The record's control scenes
+are in `build_console_disc.sh` (`CONTROLS`), staged only when `--scenes` names them; the selector runs at most 8 scenes a
+disc.
+
+**Controls** (Flycast test discs; evidence `E:\RE4DC-Lanes\eng-e1o\ev\ctlA-summary.txt`, `ctlB-summary.txt`, `runC2-summary.txt`):
+
+| Scene (disc) | Boot file (read before play) | Result |
+|---|---|---|
+| LEON (ctlA) | none | OK: 600 rows, presented, 0 drops, after play stack 9,112 B, arena margin 495,616 B, video memory free 2,639,720 B, files opened in play 0 |
+| CCAM0 (ctlA) | `CAMREC0`: the camera record's check skipped every tick | FAILED "camera record checked 0 of 640 ticks" |
+| CMEMCUT (ctlA) | `MEMCUT`: the after-play line cut after the arena margin | FAILED "after-play memory line: no mallinfo" |
+| CRUNFN (ctlA) | `RUNFUNC`: the run line says function, nothing traced | FAILED "run kind: image says function, schedule says timing" |
+| CNUMTXT (ctlA) | `NUMTEXT`: the FIELDS drop count printed as `none` | FAILED "E1 FIELDS line: a field missing or not a number" |
+| COPENX (ctlA) | `OPENX`: the boot file looked up again at picture 100 | FAILED "files opened in play 1 (first /cd/OPENX)" |
+| CHEADM (ctlA) | `HEADLESS` on a scene scheduled drawn | FAILED "mode: image headless, schedule drawn" |
+| CKIND (ctlA) | the schedule's kind a bare `e1` | FAILED "schedule: kind e1 (run and mode not said)", not run |
+| HILL, BOSS (headless), BOSS-BENCH (ctlB) | none | OK; files opened in play 0 |
+| FIGHT (ctlB, before the fix) | none | FAILED "files opened in play 159 (first /cd/em/em15.drs)": the module and its motion keys read at the first spawn, tick 1 (a real in-play disc read, now fixed) |
+| CROWDUP, CNOFLIP, CQDROP, CSTACK (ctlB) | ROWDUP, NOFLIP, QDROP, STACKX (section 11; STACKX now read before play) | FAILED as in section 11: 1 repeated row; 0 of 600 intervals; release queue drops 1; stack guard broken |
+| LEON, FIGHT (runC2, after the fix) | none | OK: files opened in play 0 (FIGHT's arena margin after play 286,720 B, was 274,432 B) |
+| LEONT, HILLT, SHOT, LEONS, HILLS, FIGHTS (runC2) | traced or STILLS, scheduled `e1:function:drawn` | OK as function runs, "not a timing run", files opened in play 0 |
+
+Every clean scene on these discs prints `files opened in play 0` (ctlA, ctlB, runC2: LEON, HILL, BOSS, the function
+scenes and, after the fix, FIGHT); the selector's summary shows the count.

@@ -84,7 +84,7 @@ def main():
             if t and t[0] != 'R':
                 ref_ticks.append(int(t[0]))
     if want is not None and ref_ticks != list(range(1, want + 1)):
-        print('camengine: ERROR the reference window is %d lines (%s..%s), not the fixture's ticks 1..%d' % (
+        print('camengine: ERROR the reference window is %d lines (%s..%s), not the fixture ticks 1..%d' % (
             len(ref_ticks), ref_ticks[0] if ref_ticks else '-', ref_ticks[-1] if ref_ticks else '-', want))
         return 2
     missing = [t for t in ref_ticks if t not in eng]
