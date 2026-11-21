@@ -311,11 +311,13 @@ static void e1_summary(sel_entry_t *e) {
     if (g_function) {   /* lane eng-e1k: a traced or stills run: its rows are not timing */
         sum_add(e, "run: %.44s", g_runkind);   /* "function (traced): not a timing run" */
         sum_add(e, "rows %u of %u ticks: not reported as timing", n, g_last_row);
+        if (g_files_seen) sum_add(e, "files opened in play %u", g_files_opens);
         return;
     }
     sum_add(e, "pictures %u (%u-%u of %u ticks) ms:", n, E1_FIRST, E1_FIRST + n - 1, g_last_row);
     if (g_mem_after)
         sum_add(e, "after play: stack %ld B, arena margin %ld B, vram free %ld B", g_mem_stack, g_mem_arena, g_mem_vram);
+    if (g_files_seen) sum_add(e, "files opened in play %u", g_files_opens);   /* lane eng-e1o (H-017.7) */
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {

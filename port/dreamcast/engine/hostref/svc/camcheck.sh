@@ -10,6 +10,8 @@
 # traces. Rows that must PASS: five fixtures (the village route, the hill, the bell fight, the square follow, the
 # door walk), determinism (bit for bit), the exercises camblend (cut blends) and camrail (rail fit, search and
 # evaluation: no fixture has either). Controls that must FAIL: smoothing off, cut blend off, rail parameter 0.25 on.
+# Each row states two musts, the camera's and the trace's (plays_right.py, lane eng-e1o): smoothing off and cut blend off
+# change the play (trace FAIL); the rail control moves only the exercise's rail lines (trace PASS: the rail is not played).
 # Exit 0 when every row is as it must, 1 when one is not, 2 when a run or a build is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -32,37 +34,46 @@ run() {   # run <bin> <fixture> <dir> [env...]
     env RE4_SVC_OUT="$d" RE4_SVC_CLOTH_WIND=0 "$@" "$B/$bin/re4ref" --tree "$TREE" --fixture "$PR/fixtures/$fx.txt" \
         --out "$d/trace.txt" --log "$d/run.log" 2> "$d/err.txt" || { echo "camcheck: run failed $d" >&2; touch "$OUT/.abort"; }
 }
-row() {   # row <name> <must> <ref dir> <test dir> [exact]
-    local name=$1 must=$2 a=$3 b=$4 res got
-    if [ "${5:-}" = exact ]; then res=$(python3 "$CC" "$a" "$b" --pos 0 --rel 0 --deg 0); else res=$(python3 "$CC" "$a" "$b" $TOL --json "$b/cam.json"); fi
+row() {   # row <name> <camera must> <trace must> <ref dir> <test dir> [exact]
+    # lane eng-e1o (H-017.8): the row is as it must only when the camera AND the trace (plays_right.py's exit) end as
+    # they must; a missing or empty trace is an error, not a FAIL (plays_right.py exits 1 on an unreadable trace too)
+    local name=$1 must=$2 tmust=$3 a=$4 b=$5 res got tgot
+    if [ "${6:-}" = exact ]; then res=$(python3 "$CC" "$a" "$b" --pos 0 --rel 0 --deg 0); else res=$(python3 "$CC" "$a" "$b" $TOL --json "$b/cam.json"); fi
     case $? in 0) got=PASS ;; 1) got=FAIL ;; *) got=ERROR; touch "$OUT/.abort" ;; esac
-    python3 "$PR/plays_right.py" "$a/trace.txt" "$b/trace.txt" --tolerances "$PR/tolerances.json" --quiet > /dev/null
-    local pr=$?
-    local ok="$got (as it must)"
+    if [ -s "$a/trace.txt" ] && [ -s "$b/trace.txt" ]; then
+        python3 "$PR/plays_right.py" "$a/trace.txt" "$b/trace.txt" --tolerances "$PR/tolerances.json" --quiet > /dev/null
+        case $? in 0) tgot=PASS ;; 1) tgot=FAIL ;; *) tgot=ERROR; touch "$OUT/.abort" ;; esac
+    else
+        tgot=ERROR; touch "$OUT/.abort"
+    fi
+    local ok="$got (as it must)" tok="$tgot (as it must)"
     [ "$got" = "$must" ] || { ok="$got (WRONG: must $must)"; touch "$OUT/.wrong"; }
-    echo "| $name | $must | $ok | $([ $pr -eq 0 ] && echo PASS || echo FAIL) | ${res#* } |"
+    [ "$tgot" = "$tmust" ] || { tok="$tgot (WRONG: must $tmust)"; touch "$OUT/.wrong"; }
+    echo "| $name | $must / $tmust | $ok | $tok | ${res#* } |"
 }
 {
-    echo "| Check | Must | Camera | Trace (plays_right) | Detail |"
+    echo "| Check | Must (camera / trace) | Camera | Trace (plays_right) | Detail |"
     echo "|---|---|---|---|---|"
     for fx in e1-route hill-ashley bell-ganado square-follow door103-walk; do
         run odump $fx "$OUT/$fx/ref"
         run native $fx "$OUT/$fx/nat"
-        row "$fx: native camera against the original" PASS "$OUT/$fx/ref" "$OUT/$fx/nat"
+        row "$fx: native camera against the original" PASS PASS "$OUT/$fx/ref" "$OUT/$fx/nat"
     done
     run native e1-route "$OUT/e1-route/nat2"
-    row "e1-route: native against itself (determinism, exact)" PASS "$OUT/e1-route/nat" "$OUT/e1-route/nat2" exact
+    row "e1-route: native against itself (determinism, exact)" PASS PASS "$OUT/e1-route/nat" "$OUT/e1-route/nat2" exact
     for ex in camblend camrail; do
         run odump e1-route "$OUT/x-$ex/ref" RE4_SVC_EXERCISE=$ex
         run native e1-route "$OUT/x-$ex/nat" RE4_SVC_EXERCISE=$ex
-        row "e1-route, exercise $ex: native against the original" PASS "$OUT/x-$ex/ref" "$OUT/x-$ex/nat"
+        row "e1-route, exercise $ex: native against the original" PASS PASS "$OUT/x-$ex/ref" "$OUT/x-$ex/nat"
     done
     run native e1-route "$OUT/c-camsmooth" RE4_SVC_CONTROL=camsmooth
-    row "control: smoothing off (e1-route)" FAIL "$OUT/e1-route/ref" "$OUT/c-camsmooth"
+    row "control: smoothing off (e1-route)" FAIL FAIL "$OUT/e1-route/ref" "$OUT/c-camsmooth"
     run native e1-route "$OUT/c-caminterp" RE4_SVC_CONTROL=caminterp RE4_SVC_EXERCISE=camblend
-    row "control: cut blend off (e1-route, exercise camblend)" FAIL "$OUT/x-camblend/ref" "$OUT/c-caminterp"
+    row "control: cut blend off (e1-route, exercise camblend)" FAIL FAIL "$OUT/x-camblend/ref" "$OUT/c-caminterp"
     run native e1-route "$OUT/c-camrail" RE4_SVC_CONTROL=camrail RE4_SVC_EXERCISE=camrail
-    row "control: rail parameter 0.25 further (e1-route, exercise camrail)" FAIL "$OUT/x-camrail/ref" "$OUT/c-camrail"
+    # CAMCHECK_RAIL_TRACE_MUST=FAIL is the script's own control (lane eng-e1o): the trace column is counted, so the run
+    # must then end exit 1 with this row WRONG (before, the trace's exit was shown and not counted)
+    row "control: rail parameter 0.25 further (e1-route, exercise camrail)" FAIL "${CAMCHECK_RAIL_TRACE_MUST:-PASS}" "$OUT/x-camrail/ref" "$OUT/c-camrail"
 } | tee "$OUT/camcheck.md"
 status=0
 [ -f "$OUT/.wrong" ] && status=1

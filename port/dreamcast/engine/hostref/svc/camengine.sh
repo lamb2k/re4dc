@@ -33,6 +33,14 @@
 # against the old reference is reported (no must: the old reference also differs at the other routine-byte tests).
 # The before arm's LEON row (ZCLIP0) must FAIL since this lane: with the game's distances zero the image's shoulder
 # camera leaves the PC's at the village houses (tick 222; ev\z0 in the lane's evidence), where with them set it agrees.
+# Lane eng-e1o (H-017.8): no requested row is skipped. The old reference is built here when it is not there (make odump
+# STAT_BYTES=0 BUILD=$RE4_HOSTREF_GC_BUILD, deleted after the run unless CAMENGINE_KEEP_GC=1); a build that fails is an
+# error. With a control serial every scene of CAMEVERY_SCENES (default LEON HILL SHOT) must be in it with the arm on and
+# extract, or the row is an error. Every engine window must be the fixture's ticks 1..N (camengine.py --ticks).
+# CAMENGINE_NAMES="LEON=LEONT,HILL=HILLT" reads a scene from a serial under another name (the disc's traced scenes).
+# CAMENGINE_CONTROL=refcut is the window check's control: the reference's HILL camera cut to its first 700 ticks, as a
+# reference run that lost its end would be; the HILL row must then be an ERROR and the script exit 2 (before this lane
+# the engine's window followed the reference's and the row passed on 700 ticks).
 # Exit 0 when every row is as it must, 1 when one is not, 2 when a run, a build or a scene is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -54,6 +62,8 @@ rm -f "$OUT/.wrong" "$OUT/.abort"
 TOL="--pos ${CAM_POS:-0.01} --rel ${CAM_REL:-9.5367431640625e-07} --deg ${CAM_DEG:-0.01}"
 sed 's/^seed .*/seed 0x0000/' "$PR/fixtures/e1-route.txt" > "$OUT/e1-route-s0.txt"
 fixture() { case $1 in LEON) echo "$OUT/e1-route-s0.txt" ;; HILL) echo "$PR/fixtures/hill-follow.txt" ;; SHOT) echo "$PR/fixtures/shot-ganado.txt" ;; esac; }
+fxticks() { awk '$1 == "ticks" {print $2; exit}' "$(fixture "$1")"; }
+runname() { local m; m=$(echo ",${CAMENGINE_NAMES:-}," | grep -o ",$1=[A-Za-z0-9-]*," | head -1 | tr -d ,); echo "${m#*=}${m:+}" | sed "s/^$/$1/"; }
 run() {   # run <fixture file> <dir> [env...]   (RUN_BIN: another odump build)
     local fx=$1 d=$2
     shift 2
@@ -84,7 +94,7 @@ nearer() {   # nearer <name> <must> <ref dir> <A dir> <B dir>
 }
 engine() {   # engine <arm> <serial> <scene> <must>
     local arm=$1 serial=$2 sc=$3 must=$4 d="$OUT/$1/$3"
-    if ! python3 "$CE" "$serial" "$sc" "$OUT/ref/$sc" "$d" > "$OUT/$arm-$sc.camengine.txt" 2>&1; then
+    if ! python3 "$CE" "$serial" "$(runname "$sc")" "$OUT/ref/$sc" "$d" --ticks "$(fxticks "$sc")" > "$OUT/$arm-$sc.camengine.txt" 2>&1; then
         touch "$OUT/.abort"
         echo "| $arm $sc: engine against the reference | $must | ERROR | $(tail -1 "$OUT/$arm-$sc.camengine.txt") |"
         return
@@ -98,10 +108,17 @@ engine() {   # engine <arm> <serial> <scene> <must>
         run "$(fixture $sc)" "$OUT/ref/$sc"
         run "$(fixture $sc)" "$OUT/pc-zclip0/$sc" RE4_SVC_CONTROL=zclip0
     done
+    if [ "${CAMENGINE_CONTROL:-}" = refcut ]; then   # the window check's control (above)
+        head -700 "$OUT/ref/HILL/cam.txt" > "$OUT/ref/HILL/cam.cut" && mv "$OUT/ref/HILL/cam.cut" "$OUT/ref/HILL/cam.txt"
+    fi
     row "PC: e1-route (seed 0), ZNEAR / ZFAR zero against the reference" PASS "$OUT/ref/LEON" "$OUT/pc-zclip0/LEON"
     row "PC: hill-follow, ZNEAR / ZFAR zero against the reference" FAIL "$OUT/ref/HILL" "$OUT/pc-zclip0/HILL"
     row "PC: shot-ganado, ZNEAR / ZFAR zero against the reference" PASS "$OUT/ref/SHOT" "$OUT/pc-zclip0/SHOT"
     for sc in LEON HILL SHOT; do engine after "$AFTER" $sc PASS; done
+    GC_BUILT=0
+    if [ ! -x "$GC/odump/re4ref" ]; then
+        make -C "$HERE/.." -j"${CAMENGINE_J:-3}" BUILD="$GC" STAT_BYTES=0 odump > "$OUT/make-oldref.log" 2>&1 && GC_BUILT=1
+    fi
     if [ -x "$GC/odump/re4ref" ]; then
         for sc in LEON HILL SHOT; do
             RUN_BIN="$GC/odump/re4ref" run "$(fixture $sc)" "$OUT/oldref/$sc"
@@ -109,14 +126,23 @@ engine() {   # engine <arm> <serial> <scene> <must>
             row "control: after $sc against the old reference" FAIL "$OUT/oldref/$sc" "$OUT/after/$sc"
         done
     else
-        echo "| (no old reference build at $GC: its rows not run) | - | - | - |"
+        touch "$OUT/.abort"
+        echo "| the old reference (routine bytes unswapped): build at $GC | FAIL | ERROR (could not be built: $OUT/make-oldref.log) | - |"
     fi
     if [ -n "$CTRL" ]; then
-        for sc in LEON HILL SHOT; do
-            # only the control serial's scenes that ran the arm (their log says "E1 CAMEVERY")
-            awk -v s="$sc" '$0 ~ "^CDISC RUN [0-9]+ " s " " {on = 1; next} $0 ~ "^CDISC RESULT [0-9]+ " s " " {on = 0}
-                on && /E1 CAMEVERY/ {f = 1} END {exit !f}' "$CTRL" || continue
-            python3 "$CE" "$CTRL" "$sc" "$OUT/ref/$sc" "$OUT/ctrl/$sc" > "$OUT/ctrl-$sc.camengine.txt" 2>&1 || continue
+        for sc in ${CAMEVERY_SCENES:-LEON HILL SHOT}; do
+            # every requested scene must have run the arm (its log says "E1 CAMEVERY") and extract: never skipped
+            if ! awk -v s="$sc" '$0 ~ "^CDISC RUN [0-9]+ " s " " {on = 1; next} $0 ~ "^CDISC RESULT [0-9]+ " s " " {on = 0}
+                on && /E1 CAMEVERY/ {f = 1} END {exit !f}' "$CTRL"; then
+                touch "$OUT/.abort"
+                echo "| control CAMEVERY $sc: engine (Flycast) against the reference | FAIL | ERROR (scene not in the control serial, or the arm not on) | - |"
+                continue
+            fi
+            if ! python3 "$CE" "$CTRL" "$sc" "$OUT/ref/$sc" "$OUT/ctrl/$sc" --ticks "$(fxticks "$sc")" > "$OUT/ctrl-$sc.camengine.txt" 2>&1; then
+                touch "$OUT/.abort"
+                echo "| control CAMEVERY $sc: engine (Flycast) against the reference | FAIL | ERROR | $(tail -1 "$OUT/ctrl-$sc.camengine.txt") |"
+                continue
+            fi
             row "control CAMEVERY $sc: engine (Flycast) against the reference" FAIL "$OUT/ref/$sc" "$OUT/ctrl/$sc"
             [ -d "$OUT/oldref/$sc" ] && info "control CAMEVERY $sc: engine against the old reference" "$OUT/oldref/$sc" "$OUT/ctrl/$sc"
         done
@@ -130,6 +156,7 @@ engine() {   # engine <arm> <serial> <scene> <must>
             nearer "control: $sc arms swapped (before nearer than after)" FAIL "$OUT/ref/$sc" "$OUT/after/$sc" "$OUT/before/$sc"
         done
     fi
+    [ "$GC_BUILT" = 1 ] && [ "${CAMENGINE_KEEP_GC:-0}" != 1 ] && rm -rf -- "$GC"
 } | tee "$OUT/camengine.md"
 status=0
 [ -f "$OUT/.wrong" ] && status=1
