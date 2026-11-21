@@ -236,7 +236,7 @@ SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4
 # the same copy with every global symbol the native objects define made weak, so the calls reach the engine bodies and
 # --gc-sections drops the original's. The requests the entry points make (quake, sound, motion set-up) are logged by
 # --wrap; the effect requests through e2_dump.cpp's EstSet wrapper.
-BOSS_SVC_SRCS := boss/em2b_pres.cpp
+BOSS_SVC_SRCS := boss/em2b_pres.cpp boss/em2b_skel.cpp
 BOSS_SVC_OBJS := $(addprefix $(NAT)/boss/,$(notdir $(BOSS_SVC_SRCS:.cpp=.o)))
 $(BUILD)/gen/boss_em2b.cpp: $(ROOT)/src/em2b/em2b.cpp prep.py
 	@mkdir -p $(dir $@)

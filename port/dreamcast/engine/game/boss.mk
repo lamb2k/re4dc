@@ -12,7 +12,7 @@ HOSTED_SRCS += $(BOSS_SRCS)
 # and --gc-sections drops the original's.
 # Control build only (E2C_ORIG=<symbol>, the SH-ELF name, e.g. __Z12em2bNeckMoveP5cEm2b): that original stays linked and
 # the engine's copy is made weak (the link check must FAIL on it). Never a default.
-BOSSVC_SRCS := em2b_pres
+BOSSVC_SRCS := em2b_pres em2b_skel
 BOSSVC_OBJS := $(addprefix $(OUT)/n/boss_,$(addsuffix .o,$(BOSSVC_SRCS)))
 HOSTED_OBJS := $(BOSSVC_OBJS) $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
 $(OUT)/n/boss_%.o: $(ENG)/services/boss/%.cpp $(wildcard $(ENG)/services/boss/*.h) $(ENG)/services/camera/cam_math.h $(ENG)/host/e1_prelude.h

@@ -69,7 +69,7 @@ for fx in bell-ganado hill-ashley; do
     echo "    calls: $(grep -v '^#' "$d/native/e2c.txt" | awk '{print $2}' | sort | uniq -c | awk '{printf "%s %s, ", $2, $1}')"
 done
 d=$OUT/ex-bell-ganado
-for c in bosscam bossquake; do
+for c in bosscam bossquake bossneck bossblend; do
     run "$d/ctl-$c" native bell-ganado RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done
