@@ -31,7 +31,8 @@ static inline uint64_t e1_clock_ns(void)
 #ifdef __cplusplus
 extern "C" {
 #endif
-void e1_clock_boot(void);   /* the reload check (log line E1 CLOCK) and the boot file GAPPROBE */
+void e1_clock_boot(void);     /* the reload check (log line E1 CLOCK) and the boot file GAPPROBE */
+void e1_clock_fields(void);   /* GAPPROBE: 600 display fields, once the display is open (core/main.cpp) */
 #ifdef __cplusplus
 }
 #endif

@@ -9,7 +9,7 @@
 #include "e1_engine.h"
 #include "e1_clock.h"
 #include <arch/irq.h>
-#include <dc/video.h>
+#include <dc/pvr.h>
 
 namespace {
 uint64_t eng_ns() { return e1_clock_ns(); }
@@ -51,14 +51,29 @@ void gap_run(const char* arm, const char* tag, uint64_t (*clk)(), uint64_t len_n
                (unsigned long) (at[i] / 1000000000ull), (unsigned long) (at[i] / 1000 % 1000000));
 }
 
-void field_span()
+// vid_waitvbl's wait (the display's sync status: in a field's blanking, then out of it), bounded at 100 ms
+bool wait_field()
 {
+    const uint64_t t0 = e1_clock_us();
+    while (!(PVR_GET(PVR_SYNC_STATUS) & 0x01ff))
+        if (e1_clock_us() - t0 > 100000) return false;
+    while (PVR_GET(PVR_SYNC_STATUS) & 0x01ff)
+        if (e1_clock_us() - t0 > 100000) return false;
+    return true;
+}
+int gap_probe_on;
+}
+
+// after the display is open (core/main.cpp, before the first tick): 600 fields, the count converted both ways
+extern "C" void e1_clock_fields(void)
+{
+    if (!gap_probe_on) return;
     enum { kFields = 600 };
     uint64_t e_first = 0, k_first = 0, e_prev = 0, k_prev = 0;
     uint32_t e_min = ~0u, e_max = 0, k_min = ~0u, k_max = 0, e_maxat = 0, k_maxat = 0;
-    vid_waitvbl();
+    if (!wait_field()) { e1_log("E1 CLOCKSPAN no display fields (100 ms without one)\n"); return; }
     for (uint32_t i = 0; i <= kFields; i++) {
-        if (i) vid_waitvbl();
+        if (i && !wait_field()) { e1_log("E1 CLOCKSPAN no display fields (100 ms without one)\n"); return; }
         const timer_val_t r = __dreamcast_get_ticks();
         const uint64_t e = (uint64_t) r.secs * 1000000u + (uint32_t) (((uint64_t) r.ticks * E1_CLOCK_US_MUL) >> 32);
         const uint64_t k = (uint64_t) r.secs * 1000000u + (uint64_t) r.ticks * 80u / 1000u;   // KOS's conversion
@@ -75,7 +90,6 @@ void field_span()
            "max %lu (field %lu)\n", (unsigned) kFields, (unsigned long) (e_prev - e_first), (unsigned long) e_min,
            (unsigned long) e_max, (unsigned long) e_maxat, (unsigned long) (k_prev - k_first), (unsigned long) k_min,
            (unsigned long) k_max, (unsigned long) k_maxat);
-}
 }
 
 extern "C" void e1_clock_boot(void)
@@ -95,5 +109,5 @@ extern "C" void e1_clock_boot(void)
     gap_run("engine", "irq-off", eng_ns, 1200000000ull, true, false);
     gap_run("kos", "irq-on", kos_ns, 2200000000ull, false, true);
     gap_run("kos", "irq-off", kos_ns, 1200000000ull, true, false);
-    field_span();
+    gap_probe_on = 1;   // the field span follows when the display is open (e1_clock_fields)
 }

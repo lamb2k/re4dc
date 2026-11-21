@@ -198,6 +198,7 @@ int main()
     const unsigned ticks = e1_route().ticks;
     e1_state[2] = ticks;
     e1_trace_tick(0);
+    e1_clock_fields();                  // lane eng-clock1: GAPPROBE's field span (no-op without the boot file)
     e1_fields_start();                  // presented fields from the hardware's vblank count (lane eng-e1f)
     for (e1_tick = 1; e1_tick <= ticks; e1_tick++) {
         e1_state[1] = e1_tick;
