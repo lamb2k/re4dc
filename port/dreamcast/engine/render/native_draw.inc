@@ -59,7 +59,7 @@ static void stage_range(const uint16_t* vertices,const uint16_t* remap,const uin
                         const float* uv,float near,int boundary){
     pvr_vertex_t* st=stage+first;const uint16_t* r=remap+first;const uint32_t* c=color+first;
     float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
-    count_staged+=n;
+    if(!dc_mute){count_staged+=n;DC_ADD(DC_W_STAGED,n);}
     if(!boundary){
         if(m1_arm==2)stage_blocks(st,r,(const int16_t*)vertices,c,n,uv);
         else m1_stage_world(st,r,(const int16_t*)vertices,c,(n+1)/2,uv);
@@ -97,13 +97,13 @@ static inline pvr_vertex_t* sq_next(pvr_vertex_t* sq){
 /* Strips of one group, all corners in front of the near plane. The stage's flags word is PVR_CMD_VERTEX; the last
    corner of each strip gets the end-of-strip flag. */
 static __attribute__((noinline)) pvr_vertex_t* copy_strips(pvr_vertex_t* sq,const uint8_t* s,const uint8_t* end){
-    unsigned corners=0;
+    unsigned corners=0,strips=0;
     while(s<end){
-        unsigned n=*s++;corners+=n;
+        unsigned n=*s++;corners+=n;strips++;
         for(unsigned k=1;k<n;k++){sq=sq_next(copy_vertex(sq,stage+*s++));}
         copy_vertex(sq,stage+*s++);((uint32_t*)sq)[0]=PVR_CMD_VERTEX_EOL;sq=sq_next(sq);
     }
-    count_corners+=corners;
+    if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);}
     return sq;
 }
 static inline Corner stage_corner(unsigned i){
@@ -113,11 +113,13 @@ static inline Corner stage_corner(unsigned i){
 /* Strips of one group in a meshlet that crosses the near plane: strips wholly in front are copied, the others
    are clipped triangle by triangle. */
 static __attribute__((noinline)) pvr_vertex_t* clip_strips(pvr_vertex_t* sq,const uint8_t* s,const uint8_t* end,float near){
+    dc_clip=DC_W_CLIPTRIS;
     while(s<end){
         unsigned n=*s;unsigned any=0;
         for(unsigned k=1;k<=n;k++)any|=stage_near[s[k]];
         if(!any){sq=copy_strips(sq,s,s+1+n);s+=1+n;continue;}
-        s++;count_clipped++;count_corners+=n;
+        s++;
+        if(!dc_mute){count_clipped++;count_corners+=n;DC_ADD(DC_W_CLIPSTRIPS,1);}   /* w_corners: copied strips only */
         Corner a=stage_corner(s[0]),b=stage_corner(s[1]);
         for(unsigned k=2;k<n;k++){Corner c=stage_corner(s[k]);clipped(&sq,k&1?b:a,k&1?a:b,c,near);a=b;b=c;}
         s+=n;
@@ -137,17 +139,28 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
     unsigned G=w->group_count;const uint8_t* range=w->rt_range+2*G*piece->meshlet;
     int boundary=piece->near_class!=1;
     unsigned sel=piece->groups;
-    if(rt->full)stage_range(vertices,remap,color,0,rt->count,uv,near,boundary);
-    else for(unsigned g=0;g<G;g++)if(sel>>g&1)stage_range(vertices,remap,color,range[2*g],range[2*g+1],uv,near,boundary);
-    if(!w->group_bytes)
-        return boundary?clip_strips(sq,strip,strip+l[2],near):copy_strips(sq,strip,strip+l[2]);
-    const uint16_t* group=(const uint16_t*)(w->groups+32+16*(piece->meshlet*G)+12);
-    unsigned before=0;
-    for(unsigned g=0;g<G;g++,group+=8){
-        unsigned after=*group;
-        if(sel>>g&1)sq=boundary?clip_strips(sq,strip+before,strip+after,near):copy_strips(sq,strip+before,strip+after);
-        before=after;
+    /* lane eng-draw1 lab arms (draw_cost.h): DL_STAGE2 stages the piece twice, DL_COPY2 copies (or clips) it twice */
+    for(unsigned rep=0;rep<1u+!!DC_ARM(DL_STAGE2);rep++){
+        dc_mute=rep;
+        if(rt->full)stage_range(vertices,remap,color,0,rt->count,uv,near,boundary);
+        else for(unsigned g=0;g<G;g++)if(sel>>g&1)stage_range(vertices,remap,color,range[2*g],range[2*g+1],uv,near,boundary);
     }
+    dc_mute=0;
+    for(unsigned rep=0;rep<1u+!!DC_ARM(DL_COPY2);rep++){
+        dc_mute=rep;
+        if(!w->group_bytes){
+            sq=boundary?clip_strips(sq,strip,strip+l[2],near):copy_strips(sq,strip,strip+l[2]);
+            continue;
+        }
+        const uint16_t* group=(const uint16_t*)(w->groups+32+16*(piece->meshlet*G)+12);
+        unsigned before=0;
+        for(unsigned g=0;g<G;g++,group+=8){
+            unsigned after=*group;
+            if(sel>>g&1)sq=boundary?clip_strips(sq,strip+before,strip+after,near):copy_strips(sq,strip+before,strip+after);
+            before=after;
+        }
+    }
+    dc_mute=0;
     return sq;
 }
 #include "content_world.inc"
@@ -155,7 +168,13 @@ static NativePiece selected[8192], ordered[8192];
 static unsigned offsets[1025], list_offsets[4];
 static uint8_t header_list[1024];
 static unsigned lists_for=~0u;
+static int prepare_world(const NativeWorld* w,const float* camera,unsigned materials);
 int native_prepare_world(const NativeWorld* w,const float* camera,unsigned materials){
+    int ok=prepare_world(w,camera,materials);
+    dc_stamp(DS_PREP1);   /* lane eng-draw1: the end of visibility and selection */
+    return ok;
+}
+static int prepare_world(const NativeWorld* w,const float* camera,unsigned materials){
     if(materials>1024 || w->place_count>PLACE_LIMIT)return 0;
     if(lists_for!=m1_room_serial){   /* per room (the scene struct and pack buffer are reused across rooms) */
         memset(header_list,0,sizeof(header_list));
@@ -164,13 +183,16 @@ int native_prepare_world(const NativeWorld* w,const float* camera,unsigned mater
     }
     /* Change flag: an unmoved camera keeps last picture's selection, order and placement matrices. */
     static uint32_t last_camera[26];static unsigned last_room=~0u;
-    if(last_room==m1_room_serial && !memcmp(last_camera,camera,sizeof(last_camera))){
+    /* lane eng-draw1: while an interleaved lab set is on, the selection is made every picture (arm and base alike) */
+    if(last_room==m1_room_serial && !memcmp(last_camera,camera,sizeof(last_camera)) && !dc_interleave){
         count_staged=count_corners=count_clipped=0;m1_world_reused++;
         return 1;
     }
     content_world_setup();   /* eng-look: step W */
     int n=native_world_select(w,camera,2.f,selected,8192);
     if(n<0)return 0;
+    if(DC_ARM(DL_SELECT2)){dc_mute=1;n=native_world_select(w,camera,2.f,selected,8192);dc_mute=0;if(n<0)return 0;}
+    if(!dc_mute)DC_ADD(DC_W_SELECTED,n);
     n=content_world_cap(w,camera,selected,n);
     memcpy(last_camera,camera,sizeof(last_camera));last_room=m1_room_serial;
     static const float identity[]={1,0,0,0,0,1,0,0,0,0,1,0};
@@ -205,20 +227,25 @@ static void load_place(const NativeWorld* w,unsigned place){
     shz_xmtrx_load_4x4(m);
 }
 void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigned phase){
-    unsigned last_place=~0u,last_header=~0u;
-    float near=camera[18]/(camera[17]-1);
+    dc_stamp(DS_W0A+2*(phase<3?phase:2));   /* lane eng-draw1 */
+    unsigned last_place=~0u,last_header=~0u,headers=0,places=0;
+    float near=DC_NEAR(camera[18]/(camera[17]-1));
     pvr_vertex_t *sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
     for(unsigned k=list_offsets[phase];k<list_offsets[phase+1];k++){
         NativePiece* p=ordered+k;
         if(last_header!=p->header){
             last_header=p->header;const unsigned* hdr=(const unsigned*)row(&s->header,last_header)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
-            advance(&sq);
+            advance(&sq);headers++;
         }
-        if(last_place!=p->placement){last_place=p->placement;load_place(w,last_place);}
+        if(last_place!=p->placement){last_place=p->placement;load_place(w,last_place);places++;}
         sq=native_piece(sq,w,p,near);
     }
     sq_wait();sq_unlock();
+    DC_ADD(DC_W_PIECES,list_offsets[phase+1]-list_offsets[phase]);DC_ADD(DC_W_HEADERS,headers);DC_ADD(DC_W_PLACES,places);
+    /* lab arm D (the stamps' control): 2 ms of busy waiting inside the opaque world pass */
+    if(phase==0 && DC_ARM(DL_DELAY)){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<2000){}}
+    dc_stamp(DS_W0B+2*(phase<3?phase:2));
     if(phase==2){
         volatile unsigned* c=m1_world_counts[(m1_state[1]-1)%300];
         c[0]=list_offsets[3];c[1]=count_staged;c[2]=count_corners;c[3]=count_clipped;

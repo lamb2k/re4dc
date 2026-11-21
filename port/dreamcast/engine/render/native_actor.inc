@@ -239,6 +239,7 @@ static int actor_hidden(const NativeVis* v,const uint8_t* cubes,const float* lo,
 
 static unsigned actor_serial;
 static void actor_frame_setup(const NativeScene* s){
+    DC_ADD(DC_A_CALLS,1);   /* lane eng-draw1: once per character drawn (E1), once per pass (bench) */
     const float* camera=(const float*)s->state[0];
     NativeFrustum f;native_world_frustum(camera,&f);
     for(unsigned j=0;j<6;j++){
@@ -251,7 +252,14 @@ static void actor_frame_setup(const NativeScene* s){
     lamps_frame(s);
 }
 /* Blend one weight set, project it for the position kernel and evaluate the model's lights for it. */
+static void build_ws_once(const RtModel* m,unsigned i);
+/* lane eng-draw1: counted; lab arm DL_WS2 builds each weight set twice */
 static void build_ws(const RtModel* m,unsigned i){
+    DC_ADD(DC_A_WS,1);
+    build_ws_once(m,i);
+    if(DC_ARM(DL_WS2))build_ws_once(m,i);
+}
+static void build_ws_once(const RtModel* m,unsigned i){
     const SkinWeight* w=m->w+i;float* out=skin_world[i];
     if(w->count==1 && w->w[0]==1.f)memcpy(out,ws_rows+ws_stride*w->bone[0],48);
     else for(unsigned j=0;j<12;j++){float sum=0;for(unsigned k=0;k<w->count;k++)sum+=w->w[k]*ws_rows[ws_stride*w->bone[k]+j];out[j]=sum;}
@@ -273,30 +281,47 @@ static Corner clip_corner(const IndexCorner* c){
     return (Corner){v->x*mag,v->y*mag,w,c->u*(1.f/32768),c->v*(1.f/32768),cur_lit[c->normal]};
 }
 extern pvr_vertex_t* m1_emit_actor_strip(pvr_vertex_t* sq,const IndexCorner* corners,unsigned n,const pvr_vertex_t* proj,const uint32_t* lit);
+static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts);
+/* lane eng-draw1: counted per part; lab arm DL_EMIT2 emits the part twice; arm N (near not a number) as before lane
+   eng-e1l: no near outcode, no near clipping */
 static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
+    dc_clip=DC_A_CLIPTRIS;
+    if(!dc_mute){DC_ADD(DC_A_PARTS,1);DC_ADD(DC_A_PARTS_BOUND,state==2);DC_ADD(DC_A_POS,rp->pos_count);}
+    sq=emit_part_once(sq,s,m,rp,state,DC_NEAR(near),emitted_parts);
+    if(DC_ARM(DL_EMIT2)){unsigned again=0;dc_mute=1;sq=emit_part_once(sq,s,m,rp,state,near,&again);dc_mute=0;}
+    return sq;
+}
+static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
     int header=0;
     const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;const uint8_t* codes=cur_codes;
+    const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
+    unsigned strips=0,out=0,corners=0,clipstrips=0;
     while(p<stop){
         unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
         unsigned combined=0;
+        strips++;
         if(state==2){
             unsigned common=63;
             for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
-            if(common)continue;
+            common&=keep;combined&=keep;
+            if(common){out++;continue;}
         }
         if(!header){
             const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
             advance(&sq);header=1;
         }
-        if(!(combined&32))sq=m1_emit_actor_strip(sq,v,n,proj,lit);
+        if(!(combined&32)){sq=m1_emit_actor_strip(sq,v,n,proj,lit);corners+=n;}
         else{
+            clipstrips++;
             Corner a=clip_corner(v),b=clip_corner(v+1);
             for(unsigned j=2;j<n;j++){Corner c=clip_corner(v+j);clipped(&sq,j&1?b:a,j&1?a:b,c,near);a=b;b=c;}
         }
     }
     *emitted_parts+=header;
+    if(!dc_mute){DC_ADD(DC_A_STRIPS,strips);DC_ADD(DC_A_STRIPS_OUT,out);DC_ADD(DC_A_CORNERS,corners);
+                 DC_ADD(DC_A_CLIPSTRIPS,clipstrips);DC_ADD(DC_A_HEADERS,header);}
     return sq;
 }
 void native_actor_pass(NativeScene* s,unsigned translucent){
@@ -370,6 +395,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
             PositionPass a={pos_records,n,m->pos+rp->pos_first,dummy_uv,(void*)(proj+rp->pos_first),codes+rp->pos_first,8,
                             skin_project[0].elem,ws_ready,h[1],640,480,near,far,0,0,0,0};
             re4dc_avk_pos_skin_u16(&a);
+            if(DC_ARM(DL_SKIN2))re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
             if(!lit_cached)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
         }

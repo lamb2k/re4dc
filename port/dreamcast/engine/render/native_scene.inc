@@ -167,7 +167,9 @@ void native_close(NativeScene* s){
     native_actor_close(s);native_world_free(&s->world);native_vis_close(&s->vis);free(s->vis_data);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
+#include "draw_cost.h"
 int native_open(NativeScene* s,const char* name){
+    dc_lab_open();   /* lane eng-draw1: the E1 lab sets (boot files DLA, DLB), read once before play */
     m1_load_status[0]=1;m1_room_serial++;
     if(!resident_pack){
         unsigned a=pack_need("/cd/CROSS.PAK"),b=pack_need("/cd/FARM.PAK");

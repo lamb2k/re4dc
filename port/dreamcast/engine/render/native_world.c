@@ -2,6 +2,15 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#ifdef M1_NATIVE
+#include "draw_cost.h"   /* lane eng-draw1: the picture's first stamp, the near-plane lab arm, the meshlet counter */
+#define DC_STAMP(k) dc_stamp(k)
+#else                    /* host tools (bake_vis, host_world): no measurement */
+#define DC_STAMP(k) ((void)0)
+#define DC_NEAR(x) (x)
+#define DC_ADD(k,v) ((void)0)
+#define dc_mute 1
+#endif
 /* The pack is 32-byte aligned and every R4IM / R4SG field is naturally aligned (strides 68, 36, 28, 20, 16, 12, 8):
    direct loads. (memcpy-based reads became a libc call per field, 10,000 a picture.) */
 static inline uint32_t u32(const void* p){return *(const uint32_t*)p;}
@@ -90,7 +99,7 @@ static inline int grid_test(const NativeFrustum* f,unsigned in,const uint8_t* r,
 }
 void native_world_frustum(const float* camera,NativeFrustum* world){
     const float* p=camera+12;
-    float near=p[6]/(p[5]-1),far=camera[25];
+    float near=DC_NEAR(p[6]/(p[5]-1)),far=camera[25];
     NativeFrustum view={{{0,0,-1,-near},{0,0,1,far},{p[1],0,p[2]-1,0},{-p[1],0,-p[2]-1,0},{0,p[3],p[4]-1,0},{0,-p[3],-p[4]-1,0}}};
     compose(world,&view,camera);
 }
@@ -261,6 +270,7 @@ int native_vis_open(NativeVis* v,const void* data,size_t size,const NativeWorld*
 void native_vis_close(NativeVis* v){free(v->ibits);free(v->cbits);v->ibits=v->cbits=NULL;}
 /* The camera's cell and band select this picture's hidden sets; anything the table does not cover draws all. */
 unsigned native_vis_select(NativeWorld* w,const float* c){
+    DC_STAMP(DS_VIS0);   /* lane eng-draw1: the picture's drawing starts here (bench and E1 images) */
     w->vis_inst=w->vis_cubes=NULL;
     NativeVis* v=w->vis;if(!v)return VIS_NONE;
     float x=-(c[0]*c[3]+c[4]*c[7]+c[8]*c[11]),y=-(c[1]*c[3]+c[5]*c[7]+c[9]*c[11]),z=-(c[2]*c[3]+c[6]*c[7]+c[10]*c[11]);
@@ -285,11 +295,11 @@ unsigned native_world_lod_shift;float native_world_lod_dist;
 void native_world_free(NativeWorld* w){free(w->rt_color);w->rt_color=NULL;free(w->rt);free(w->rt_remap);free(w->rt_range);w->rt=NULL;w->rt_remap=NULL;w->rt_range=NULL;}
 int native_world_select(const NativeWorld* w,const float* camera,float pixels,NativePiece* out,unsigned capacity){
     const float* p=camera+12;
-    float near=p[6]/(p[5]-1);
+    float near=DC_NEAR(p[6]/(p[5]-1));
     NativeFrustum world;native_world_frustum(camera,&world);
     const uint8_t* m=w->mesh;
     const uint8_t *meshes=m+u32(m+40),*plod=m+u32(m+88),*clusters=m+u32(m+92),*levels=m+u32(m+96),*meshlets=m+u32(m+48);
-    unsigned count=0,G=w->group_count;
+    unsigned count=0,G=w->group_count,tested=0;
     for(unsigned i=0;i<w->cell_count;i++){
         float z;unsigned cm;const NativeCell* cell=w->cells+i;
         if(!box_test(&world,63,cell->center,cell->half,&cm,&z))continue;
@@ -313,6 +323,7 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
                     while(lev+1<last && f32(levels+12*(lev+1)+8)*lod<=z+near)++lev;
                     if(native_world_lod_shift && z+near>native_world_lod_dist){lev+=native_world_lod_shift;if(lev>=last)lev=last-1;}   /* eng-look */
                     unsigned l=u32(levels+12*lev),stop=l+u32(levels+12*lev+4);
+                    tested+=stop-l;   /* lane eng-draw1: meshlets considered */
                     for(;l<stop;l++){
                         unsigned lm=0;
                         if(km && !grid_test(&local,km,meshlets+28*l+16,&lm,&z))continue;
@@ -331,5 +342,6 @@ int native_world_select(const NativeWorld* w,const float* camera,float pixels,Na
             }
         }
     }
+    if(!dc_mute)DC_ADD(DC_W_MESHLETS,tested);
     return count;
 }

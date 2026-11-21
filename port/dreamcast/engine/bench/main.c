@@ -67,7 +67,17 @@ static const uint8_t calib_events[10]={0x25,0x28,0x0d,0x22,0x24,0x29,0x13,0x0f,0
 static const uint8_t ev1_list[6]={0x28,0x0d,0x22,0x24,0x29,0x13};
 static uint32_t sorted[600];
 static const char *names[]={"CROSS","FARM"};
-typedef struct { uint8_t scene,arm,novis,delay,hold,content[CS_COUNT]; } Window;
+typedef struct { uint8_t scene,arm,novis,delay,hold,content[CS_COUNT]; uint16_t lab; } Window;
+/* lane eng-draw1 (render/draw_cost.h): lab arms as "/X" tokens after a window's room and flags, each repeating one phase of
+   the drawing (or changing its near plane) for every picture of the window: S stage the world twice, C copy (or clip) the
+   world twice, Q select the world twice, H the HUD twice, N near plane not a number (as the E1 images before lane eng-e1l),
+   B weight sets twice, L normals lit twice, E actor emission twice, D 2 ms busy wait in the world's opaque pass (the
+   control: must read +2 ms), K positions skinned twice. The boot file DRAWLAB runs DRAWLAB_SCHEDULE below (in place of
+   SCHEDULE.TXT and the default). */
+#include "draw_cost.h"
+static const char lab_letters[]="SCQHNBLEDK";
+static const uint16_t lab_bits[]={DL_STAGE2,DL_COPY2,DL_SELECT2,DL_HUD2,DL_NAN,DL_WS2,DL_LIGHT2,DL_EMIT2,DL_DELAY,DL_SKIN2};
+#define DRAWLAB_SCHEDULE "c0 c0/S c0/C c0/Q c0/K c0/B c0/L c0/E c0/H c0/D c0 c0/N f0 f0/S f0/C f0/Q f0/K f0/B f0/L f0/E f0/H f0/N f0"
 static Window schedule[WINDOWS];
 volatile uint32_t m1_content[CS_COUNT]=CONTENT_DEFAULT_INIT;
 volatile uint32_t m1_content_counts[8];
@@ -86,9 +96,14 @@ static unsigned parse_schedule(const char* text){
         if(!*s)break;
         const char* token=s;
         if((*s!='c'&&*s!='f')||n==WINDOWS){m1_schedule_error=token-text+1;return 0;}
-        Window w={*s=='f',0,0,0,0,CONTENT_DEFAULT_INIT};s++;
+        Window w={*s=='f',0,0,0,0,CONTENT_DEFAULT_INIT,0};s++;
         for(;*s && *s!=' ' && *s!='\n' && *s!='\r' && *s!='\t';s++){
             if(*s=='0')continue;
+            if(*s=='/'){   /* lane eng-draw1: a lab arm; an unknown letter refuses the schedule */
+                const char* at=s[1]?strchr(lab_letters,s[1]):NULL;
+                if(!at){m1_schedule_error=token-text+1;return 0;}
+                w.lab|=lab_bits[at-lab_letters];s++;continue;
+            }
             else if(*s=='a')w.arm=1;else if(*s=='b')w.arm=2;else if(*s=='n')w.novis=1;else if(*s=='d')w.delay=1;else if(*s=='h')w.hold=1;
             else if(*s=='p')w.content[CS_PICK_CONTROL]=1;
             else if(*s=='.'){
@@ -214,6 +229,7 @@ int main(void){
         if(f){n=fread(text,1,sizeof(text)-1,f);fclose(f);text[n]=0;}
         const char* def=exists("/cd/FARM1")?"f0 c0":"c0 f0 ca c0 cb c0 fa f0 fb f0 c0.L3 c0 c0.W3 c0.P3 c0.E3 c0.B3 c0 f0.L3 f0.W3 f0.P3 f0.E3 f0.B3 f0 c0dh";
         if(exists("/cd/DELAY5"))def=exists("/cd/FARM1")?"f0d c0d":"c0d f0d";
+        if(exists("/cd/DRAWLAB")){def=DRAWLAB_SCHEDULE;n=0;printf("DRAWLAB: lane eng-draw1 lab schedule %s\n",def);}
         m1_schedule_n=parse_schedule(n?text:def);
         if(!m1_schedule_n){   /* eng-look: refused, never replaced by the default */
             printf("SCHEDULE REFUSED at character %lu: %s\n",(unsigned long)m1_schedule_error,n?text:def);
@@ -238,6 +254,7 @@ int main(void){
         m1_state[5]=3;
         pvr_wait_ready();pvr_wait_render_done();vid_waitvbl();vid_waitvbl();
         flip_n=0;
+        dc_frame_base=m1_frame;dc_lab_bench=sw->lab;dc_window_begin();   /* lane eng-draw1 */
         for(unsigned i=0;i<600;i++){
             m1_frame++;m1_state[1]=i+1;uint64_t begin=timer_us_gettime64();
             pvr_wait_ready();uint64_t now=timer_us_gettime64();m1_timing[i][6]=now-begin;
@@ -281,6 +298,14 @@ int main(void){
         for(unsigned i=1;i<600 && i<flips;i++)m1_rows[w][i].fields=flip_field[i]-flip_field[i-1];
         native.world.vis=vis;
         memmap_check();
+        {   /* lane eng-draw1: the bench's own phase clock (m1_timing: world OP, actors, PT, TR, effects, HUD, wait, draw) and
+               the renderer's stamps and counters, this window */
+            static const char* const kn[8]={"world+sky","actors+shadows","PT","TR+hair","effects","hud","wait","draw"};
+            for(unsigned k=0;k<8;k++){uint64_t sum=0;unsigned worst=0;
+                for(unsigned i=0;i<600;i++){unsigned v=m1_timing[i][k];sum+=v;if(v>worst)worst=v;}
+                printf("DCB %u TIMING %s m%lu w%u (us)\n",w,kn[k],(unsigned long)(sum/600),worst);}
+            native_draw_report_window(w);
+        }
         m1_state[6]++;report(w,flips);
     }
     printf("SCHEDULE DONE %lu windows\n",(unsigned long)m1_schedule_n);
