@@ -1,6 +1,6 @@
 # Lane eng-snd1: sound in the engine (H-025.1), finished, unaudited
 
-Branch `lane/eng-snd1` (from `origin/engine` 2c525f3c0, `origin/engine` ba541cdcf merged). Evidence:
+Branch `lane/eng-snd1` (from `origin/engine` 2c525f3c0, `origin/engine` cd8b8762b merged). Evidence:
 `E:\RE4DC-Lanes\eng-snd1` (HANDBACK.md, STATUS.md, REQUESTS.md, runs/, ref/). Design and checks: SERVICES.md section 49.
 
 ## What was built
@@ -20,39 +20,44 @@ Branch `lane/eng-snd1` (from `origin/engine` 2c525f3c0, `origin/engine` ba541cdc
   `audiocheck.py` (Flycast's own audio output, SDL disk driver).
 
 ## Numbers (MODELLED (console-build dynarec at 70 MHz, calibrated on the old port); pictures 41-640)
-Build: lane 4a1f9adec plus the memory-map experiment (request R1, local branch `exp/eng-snd1-memmap`, not for merge).
+Build: lane a7aa905a4 (memory map R1 in), run k6cal (slot fly2); the off arm ASNDOFF and the older off run g2off.
 
 | Scene | sound mean | sound worst | busy mean on / off | busy worst on / off | ceiling |
 |---|---:|---:|---:|---:|---|
-| Village (LEON) | 0.48 ms | 3.02 ms (picture 78) | 34.70 / 34.18 | 43.08 / 42.27 | FAIL (worst) |
-| Hill (HILL) | 0.67 ms | 0.94 ms | 55.72 / 54.94 | 63.96 / 63.11 | holds |
-| Fight (FIGHT) | 0.77 ms | 1.44 ms | 37.85 / 37.08 | 53.98 / 52.14 | holds |
+| Village (LEON) | 0.48 ms | 0.69 ms | 35.26 / 34.72 | 43.49 / 42.83 | holds |
+| Hill (HILL) | 0.68 ms | 0.90 ms | 56.30 / 54.94 (g2off) | 64.62 / 63.11 (g2off) | holds |
+| Fight (FIGHT) | 0.75 ms | 1.66 ms | 37.77 / 37.08 (g2off) | 53.14 / 52.14 (g2off) | holds |
+| Boss (BOSS, headless) | 0.59 ms | 0.82 ms | 10.24 | 18.78 | holds |
 
-The village's worst picture holds one stall of about 2.5 ms (in g1cal inside a register flush, 2,514 us; in the
-mute run on plain Flycast inside a main-thread span, 2,546 us; most runs have none: h1 plain, worst 0.38 ms), cause
-not found (a G2 bus wait suspected: KOS g2_lock waits for the G2 FIFO). Before the step was made atomic, KOS's
-scheduler gave the main thread a whole 10 ms timeslice inside an audio step once or more a scene (10 to 20 ms worst
-in every scene): fixed by running each step with interrupts off. The model cannot see: the graphics chip's fill and
-sort, store-queue submission, bus contention (the G2 bus to the sound chip above all), disc timing.
+A sound step or call of about 2,500 us lands in some runs (village run g1cal, hill run k1cal), always on a whole
+emulated second: KOS's microsecond clock jumps 2.5 ms forward once a second (found by lane eng-skel1), not sound work;
+the worst ceiling is judged with the clock fixed (integrator ruling; lane eng-clock1). Before the step was made
+atomic, KOS's scheduler gave the main thread a whole 10 ms timeslice inside an audio step (fixed by running each step
+with interrupts off). The model cannot see: the graphics chip's fill and sort, store-queue submission, bus contention
+(the G2 bus to the sound chip above all), disc timing.
+
+Memory after play with sound (k6cal): margin to the behaviour arena / arena peak: village 572 KB / 166 KB, hill
+272 KB / 294 KB, fight 152 KB / 825 KB of 1 MB, boss 2,196 KB / 454 KB. Nothing hangs.
 
 ## Checks and their controls
-- Requests (`sndreq_check.py`, Flycast logs against `re4ref`): hill 27 of 27 PASS; village 56 of 56 same ticks, ids
-  and flags, FAIL on position (requests 51-56, ticks 547-569, 1.05 to 1.38 units on the foot and body positions the
-  behaviour passes; the tolerance is 1.0); shot FAIL at tick 163 (two SndStop(0) the reference does not make; the same
-  with sound off, run c5shotoff: an engine-vs-reference behaviour difference, not sound). Controls drop, move, extra
-  and the lab arm SNDDROP fail every scene, as they must.
-- Output (`audiocheck.py` on Flycast's audio): PASS on every sound-on run (80.5% of 100 ms windows above RMS 64 on the
-  final run g1cal); SNDMUTE (run g3mute): RMS 0, FAIL as it must. The image's probe: audible 0 under SNDMUTE.
-- Cost ceiling (selector): SNDSLOW fails the scene (mean 8.71 ms, run c3slow on 865cdbcda; the selector check is
-  unchanged since).
-- Disc in play: opens 0, reads 0, sector requests 0 in every scene; all sound data read before play.
+- Requests (`sndreq_check.py`, run k6fun against `re4ref` rebuilt after the eng-fix1 merge): hill 27 of 27 PASS, shot
+  30 of 30 PASS; village 56 of 56 same ticks, ids and flags, FAIL on position (requests 51-56, ticks 547-569, 1.05 to
+  1.38 units). Cause found (request R9, not sound): the engine's village starts the behaviour generator at 0 while
+  re4ref seeds the fixture's 0x0d37 (`core/partner.cpp` seeds the hill only), so the aim sway from tick 393 differs and
+  Leon's yaw is 0.052 degrees off from tick 485; with re4ref run at seed 0 the route is bit-identical over 641 ticks
+  and all 56 requests pass (runs/footstep). Controls drop, move, extra and the control scene CSNDDROP fail, as they must.
+- Output (`audiocheck.py` on Flycast's audio): PASS on the final run k6cal (62.0% of 100 ms windows above RMS 64);
+  CSNDMUTE (run k6mute): RMS 0, FAIL as it must; the image's probe reads audible 0 under it.
+- Cost ceiling (selector): CSNDSLOW fails the scene (mean 6.24, worst 10.60 ms, run k6cal on the final build).
+- Disc in play: opens 0, reads 0, sector requests 0 in every scene; all sound data read before play. The disc script
+  stages the sound files from the game tree (R4).
 
 ## Not done
 - Disc streams are not heard (the stream player runs and ends without the disc; the AICA ring for `bgm/aica_str.dat`
   is not lifted): no scene of the engine requests a stream today (floor attributes not served, the fight's room-script
   stubs). The streaming path, its own disc reads counted per picture, is designed in SERVICES.md 49, not built.
-- The village's worst picture over the 2.0 ms ceiling (one ~2.5 ms stall), not explained.
 - Room changes: one room per boot; `snd_svc_room_load` reloads the room arena but the driver's `SndNextRoomInit` is
   not called (eng-load1's room change should call both).
 - Door sounds (`DoorSeCall`, block 7), the room's timed sounds (`se_at.cpp`), footstep materials (`FlrAtCheck`).
-- The memory map: hill and fight need request R1 (the numbers above are on the experiment branch).
+- The village's cost re-run once the clock fix (eng-clock1) is in `engine`.
+- The corrections the eng-fix1 table gives to sound (`SND_WALL_ALT`, `RADIO_SUB_RT`): not built.

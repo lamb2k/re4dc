@@ -1573,8 +1573,19 @@ shared presentation generator, so the effects', cloth's and voices' presentation
 **Main RAM.** The image grows 234 KB (the driver's tables 124 KB, of which 100 KB are the SDK's SYN synth structures
 its sequence work embeds; driver code 50 KB; the AICA layer and the service about 45 KB, of which the audio thread's
 stack is 12 KB) and the KOS heap holds about 100 KB of sound data at load. Before sound the KOS heap's margin to the
-behaviour arena was 450 KB (village), 115 KB (hill), 237 KB (fight): the hill and the fight need the memory map changed
-(the lane's hand-back, request R1) before they run with sound.
+behaviour arena was 450 KB (village), 115 KB (hill), 237 KB (fight), so the memory map changed with sound (request R1,
+ruled in): `host/e1_engine.h` starts the behaviour arena at 0x8cc80000 (E1 and boss, 2.25 MB) and 0x8cdc0000 (fight,
+1 MB). After play, with sound (MODELLED tier, run k6cal on lane a7aa905a4): margin to the arena / arena peak village
+572 KB / 166 KB, hill 272 KB / 294 KB, fight 152 KB / 825 KB of 1 MB, boss 2,196 KB / 454 KB.
+
+**The disc.** `tools/engine/build_console_disc.sh` stages each scene's sound from the game tree with its other files
+(`st1/<room>.dar`: the room's ROOM and FOOT banks; `bgm/`: the sound system files) and the sound controls when
+`--scenes` names them: CSNDSLOW (the selector fails it), CSNDMUTE (`audiocheck.py` fails its capture), CSNDDROP (the
+traced village; `sndreq_check.py` fails it), and ASNDOFF, the "off" arm of the cost comparison (stays OK).
+
+**The 2.5 ms spans.** A sound step or call of about 2,500 us, once in some scenes, landing on a whole emulated second:
+KOS's microsecond clock jumps 2.5 ms forward once a second (lane eng-skel1), it is not sound work. The worst ceiling is
+judged with the clock fixed (integrator ruling; the fix is lane eng-clock1's).
 
 **Streams.** The stream player runs, its I/O is completed without the disc and its voices advance in real time, so a
 scenario that waits on a stream goes on; nothing is heard of a stream yet. In the engine's scenes today no stream is
