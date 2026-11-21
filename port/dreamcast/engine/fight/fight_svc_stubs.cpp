@@ -8,11 +8,13 @@
 //     ID screen and a screen filter), reached only through the binocular and scope cameras;
 //   - the save file's storage (game: cGameSave load, save, address and offset fix-ups), reached only by a continue or a
 //     save point (no save service yet);
-//   - the scenario layer's debug print (sce_com SceDebugDisp). sce_com's DebugTrg is the engine's: no debug trigger
-//     (the original's answer when the warp rig is not built, 0), counted.
+//   - sce_com's debug print SceDebugDisp and debug trigger DebugTrg are reached in the fight (Flycast B1: 1,480 and 862
+//     calls): they are the engine's bodies, not stubs: no debug text (the cursor still advances) and no trigger (0, the
+//     original's answer when the warp rig is not built), counted.
 #include "types.h"
 #include "game.h"
 #include "sce.h"
+#include "sce_sys.h"
 #include "e1_engine.h"
 
 // ---- cam_extra: the binocular's widget and the focus blur ----
@@ -41,7 +43,13 @@ void cGameSave::calcAddr(GameSaveData*) { e1_stub_hit("cGameSave::calcAddr", 0);
 int GameSaveSave(cGameSave*, void*, int mode) { e1_stub_hit("cGameSave::save", mode); return 0; }
 
 // ---- sce_com: the debug print and the debug trigger ----
-void SceDebugDisp(const char*, ...) { e1_stub_hit("SceDebugDisp", 0); }
+// The engine's: no debug text is drawn; the text cursor advances as the original's does (the fight reaches it every
+// tick through sce_at's debug display: Flycast B1, 1,480 calls), so nothing that reads it sees a difference.
+void SceDebugDisp(const char*, ...)
+{
+    e1_stub_hit("SceDebugDisp", 0);
+    SceSys.m_debug_disp_y += 0xF;
+}
 int DebugTrg(int no)
 {
     e1_stub_hit("DebugTrg", no);
