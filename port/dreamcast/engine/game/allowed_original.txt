@@ -38,9 +38,11 @@ pl11/pl11 *
 
 ## camera-decisions: the camera's control decisions (which camera, mode changes, rails, areas, scope, look-at targets)
 game/cam_ctrl *
-game/cam_sys *
 game/cam_qfps *
 game/cam_extra *
+# (Lane eng-e1j, ruling H-016.1: game/cam_sys is not allowed any more. Every function in it is camera maths:
+# orientation from eye / target / roll or up, the roll read back, turns about an axis, dolly and distance. Default
+# deny makes the whole unit service code; the camera service has them, services/camera/.)
 
 ## generator: the behaviour generator (owner 11-19: the original generator serves behaviour only)
 game/rnd *
@@ -54,6 +56,23 @@ game/rnd *
 !game/cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize*
 !game/cam_sys CameraSetOrientationRoll CameraSetOrientationUp
 !game/cam_extra CameraAttachedToMotion::move*
+# Lane eng-e1j (ruling H-016.1, second E1 audit section 2): every function the camera units link was read and sorted
+# into a decision (it chooses a mode, a cut, a routine, a target, a table or a state) or a service (it evaluates:
+# interpolation, smoothing, splines and the rail search, containment geometry, line-of-sight probes, frame and matrix
+# building, data relocation). The table is in docs/engine/lanes/eng-e1j.md. These are the services; the camera service
+# (services/camera/) has the engine's own bodies.
+#   cam_ctrl: the cut blend and the smoothing, the area containment tests, the camera's line-of-sight probe, the rail
+#   search, the camera data's relocation and its version read
+!game/cam_ctrl CameraInterpolation::move CameraSmooth::move areaHit area_hit_p3 area_hit_pN cameraHitCheck searchRail
+!game/cam_ctrl CameraControl::calcAddr cameraDataVersion
+#   cam_qfps (the shoulder camera): its base frame, the offset blend, the wall probe and the offsets' correction
+!game/cam_qfps CameraQuasiFPS::calcBaseMatrix CameraQuasiFPS::calcOffset CameraQuasiFPS::hitCheck offsetCorrection
+!game/cam_qfps CameraQuasiFPS::offsetCorrection
+#   cam_extra: the binocular's ID widget and the focus blur are drawing (the ID system and a screen filter), not camera
+#   decisions (FIGHT=1 links them)
+!game/cam_extra IdBinocular::* FocusAnimation::* IDApplication::*
+# Debug ray drawing (pl_debug scrHitCheck: a scenery ray drawn as lines): a logged stub (host/e1_stubs.cpp).
+!game/pl_debug scrHitCheck
 # Debug and laser drawing (drawing is the engine's renderer). Integrator ruling H-014.3 (reviewed, lane eng-e1g):
 # cObjWep::drawLaserSight is decision code and stays allowed by the unit line above: it decides where the laser points
 # and what it hits (getMarkerPos, then the native GetWepTargetPos), sets the weapon's target and marker (the aim the
