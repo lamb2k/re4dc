@@ -43,7 +43,7 @@ lists() {
          bad = v["count_diff"] + v["em_diff"] + v["part_diff"] + v["attr_diff"] + v["hit_over_1u"] + v["rad_over_1u"];
          print (bad ? "FAIL" : "PASS") " (shots " v["calls"] ", count differs " v["count_diff"] ", enemy " v["em_diff"] ", box " v["part_diff"] ", attribute " v["attr_diff"] ", hit point max " v["max_hit"] ", box distance max " v["max_rad_units"] " units)"}' "$1/aimlist.txt"
 }
-for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado shot-ganado}; do
+for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado shot-ganado knock-ganado}; do
     run "$fx" orig
     run "$fx" native RE4_AIM_USE=native
     run "$fx" ctl RE4_AIM_USE=native RE4_AIM_CONTROL=grow
