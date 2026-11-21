@@ -79,6 +79,7 @@ int skel_control_hist;
 int skel_control_compress;
 int skel_control_trig;
 int skel_control_ikclosure;
+int skel_control_mkstale;
 int skel_control_worldfast;
 }
 // lane eng-svcspd1: this service's own controls on the PC reference (RE4_SVC_CONTROL, read once; hostref svc_io.cpp)
@@ -92,6 +93,7 @@ inline void read_controls()
     const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
     if (c && !__builtin_strcmp(c, "trigstale")) skel_control_trig = 1;
     if (c && !__builtin_strcmp(c, "ikclosure")) skel_control_ikclosure = 1;
+    if (c && !__builtin_strcmp(c, "mkstale")) skel_control_mkstale = 1;
     if (c && !__builtin_strcmp(c, "worldfast")) skel_control_worldfast = 1;
 }
 }
@@ -600,6 +602,7 @@ MkBind g_mkb[kMkBind];
 u32 g_mk_used;
 const MkPack* g_mk;
 bool g_mk_init;
+const u32* g_mk_last;   // the last key table bound (control mkstale)
 const u8 kKeyBytes[16] = {12, 8, 6, 0, 10, 6, 4, 0, 9, 5, 3, 0, 0, 0, 0, 4};
 
 // the joints the service serves from a pack: the pose channels (MotionMoveCore), root motion (kind 1 Null_pos,
@@ -668,31 +671,42 @@ const MkBind* mk_bind(const void* mot, const u32* keys)
             return &e;
         }
     }
-    if (svc_census_pause) svc_census_pause(1);
     const u8* c = (const u8*) mot;
     const u32 n = c[2];
-    const u16_un* info = (const u16_un*) (c + 3);
-    u32 ident = fnv_add(2166136261u, c, 3 + 3 * n);
-    bool ok = n != 0;
-    for (u32 i = 0; i < n && ok; i++) {
-        if (!mk_served(info[i])) continue;
-        const u8* p = (const u8*) keys[i];
-        const u32 ks = kKeyBytes[info[i] >> 12];
-        if (!PTR_OK(p) || !ks) {
-            ok = false;
-            break;
+    u32 ident = 0;
+    const MkClip* k = 0;
+    if (g_mk) {
+        // Lane eng-svcspd1: the identity (an FNV-1a over the clip header and every served joint's key block: tens of
+        // KB for a long clip, 1 to 5 ms on the calibrated tier at a clip's first MotionSetCore in play) serves only to
+        // find the clip in the pack. With no pack (the console images link none: svc_mk_pack is the PC reference's)
+        // every clip is decoded from its keys whatever its identity, so it is not computed: the binding is the same.
+        if (svc_census_pause) svc_census_pause(1);
+        const u16_un* info = (const u16_un*) (c + 3);
+        ident = fnv_add(2166136261u, c, 3 + 3 * n);
+        bool ok = n != 0;
+        for (u32 i = 0; i < n && ok; i++) {
+            if (!mk_served(info[i])) continue;
+            const u8* p = (const u8*) keys[i];
+            const u32 ks = kKeyBytes[info[i] >> 12];
+            if (!PTR_OK(p) || !ks) {
+                ok = false;
+                break;
+            }
+            u32 len = 0;
+            for (int a = 0; a < 3; a++) len += 2 + rd16(p + len) * (2 + ks);
+            ident = fnv_add(ident, p, len);
         }
-        u32 len = 0;
-        for (int a = 0; a < 3; a++) len += 2 + rd16(p + len) * (2 + ks);
-        ident = fnv_add(ident, p, len);
+        k = ok ? mk_find(ident) : 0;
+        if (k && (k->maxFrame != rd16(c) || k->n != n)) k = 0;
+        if (svc_census_pause) svc_census_pause(0);
+    } else {
+        skel_cnt.mk_nohash++;
     }
-    const MkClip* k = ok && g_mk ? mk_find(ident) : 0;
-    if (k && (k->maxFrame != rd16(c) || k->n != n)) k = 0;
-    if (svc_census_pause) svc_census_pause(0);
     MkBind& e = g_mkb[h];
     e.mot = mot;
     e.clip = k;
-    e.keys = keys;
+    e.keys = (skel_control_mkstale && !g_mk && g_mk_last) ? g_mk_last : keys;   // control mkstale: the last clip's keys
+    g_mk_last = keys;
     e.head = head;
     g_mk_used++;
     if (k) {

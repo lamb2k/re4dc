@@ -146,7 +146,8 @@ struct SkelCounters {
         hist_join, hist_moves, hist_full, hist_late,
         compress_bones,   // lane eng-e1h: parts squashed by skel_compress_y (a dissolving corpse)
         trig_hits, trig_miss,   // lane eng-svcspd1: a bone's angles' sin and cos reused / taken
-        pre_bones;              // lane eng-svcspd1: bones MotionMove's first world pass computes (the IK's reads)
+        pre_bones,              // lane eng-svcspd1: bones MotionMove's first world pass computes (the IK's reads)
+        mk_nohash;              // lane eng-svcspd1: clips bound without the identity hash (no motion key pack)
 };
 void skel_compress_y(cModel* m, f32 k);   // a dying body squashed vertically (em10ScaleCompress; lane eng-e1h)
 extern SkelCounters skel_cnt;
@@ -160,6 +161,7 @@ extern int skel_control_hist;     // 1: no bone keeps its history; 2: the histor
 extern int skel_control_compress; // 1: skel_compress_y squashes nothing (the fault lane eng-e1h fixed; the control)
 extern int skel_control_trig;     // 1: a bone's kept sin and cos reused whatever its angles (stale; lane eng-svcspd1's
                                   // control; on the PC reference RE4_SVC_CONTROL=trigstale)
+extern int skel_control_mkstale;   // 1: with no motion key pack, a clip bound to the last clip's key table (RE4_SVC_CONTROL=mkstale)
 extern int skel_control_ikclosure; // 1: the first world pass leaves out the IK chains' ancestors (RE4_SVC_CONTROL=ikclosure)
 extern int skel_control_worldfast; // 1: the world pass's inline position product takes its second row from the
                                    // parent's first (a transcription slip; RE4_SVC_CONTROL=worldfast)

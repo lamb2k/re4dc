@@ -656,6 +656,36 @@ extern "C" void col_bake_all(void)
         }
 }
 
+// lane eng-svcspd1 (the account): queries made again in the same tick with the same inputs (the last 8 kept a kind)
+namespace {
+struct QKey {
+    u32 w[8];
+};
+QKey g_qk[2][8];
+u32 g_qn[2], g_qtick[2];
+void count_repeat(int kind, const Vec* a, const Vec* b, u32 x, u32 y)
+{
+    QKey k;
+    memcpy(&k.w[0], a, 12);
+    memcpy(&k.w[3], b, 12);
+    k.w[6] = x;
+    k.w[7] = y;
+    const u32 tick = (u32) pG->Frame_cnt;
+    if (g_qtick[kind] != tick) {
+        g_qtick[kind] = tick;
+        g_qn[kind] = 0;
+    }
+    const u32 n = g_qn[kind] < 8 ? g_qn[kind] : 8;
+    for (u32 i = 0; i < n; i++)
+        if (!__builtin_memcmp(&g_qk[kind][i], &k, sizeof k)) {
+            if (kind) col_cnt.sphere_repeats++;
+            else col_cnt.line_repeats++;
+            return;
+        }
+    g_qk[kind][g_qn[kind]++ & 7] = k;
+}
+}
+
 // ---- the three cores, engine bodies ----
 int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int mask)
 {
@@ -663,6 +693,7 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
     u32 pn = 0;
     int ret = 0;
     SvcProfUnless pr(SP_COL_LINE, SP_COL_FLOOR);   // the account (svc_prof.h): a floor query's line is the floor's
+    count_repeat(0, pos0, pos1, (u32) flag, (u32) mask);
     SEck = seCk;
     cur = *pos1;
     col_cnt.line_queries++;
@@ -703,6 +734,11 @@ int cSatMgr::polySphereCk(Vec* oldPos, Vec* pos, f32 r, int flag, Vec* nrm, int 
 {
     int ret = 0;
     SvcProf pr(SP_COL_SPHERE);
+    {
+        u32 rb;
+        memcpy(&rb, &r, 4);
+        count_repeat(1, oldPos, pos, rb, (u32) flag ^ ((u32) mask << 16));
+    }
     col_cnt.sphere_queries++;
     for (u32 i = 0; i < nArray; i++) {
         cSat* sat = (cSat*) ((u8*) pArray + size * i);

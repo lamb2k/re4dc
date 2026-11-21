@@ -15,6 +15,10 @@
 #               bones the IK reads)
 #   worldfast   skeleton: the world pass's inline position product takes its second row from the parent's first (a
 #               transcription slip; fix 4, the pass's steps inline)
+#   mkstale     skeleton, no motion key pack (RE4_SVC_MK=none, as on the console): a clip bound to the last bound
+#               clip's key table (fix 5, the binding without the identity hash when there is no pack); its PASS row is
+#               the native build with no pack. The play goes wrong enough to hang: a control run that hangs (120 s)
+#               or dies counts as FAIL
 # Exit 0 when every row ends as it must, 1 when one does not, 2 when a build, a run or a comparison is missing; the
 # table goes to stdout and <out dir>/speed_controls.md.
 set -u
@@ -25,7 +29,7 @@ TREE=${RE4_TREE:?set RE4_TREE to the converted data tree (private game data)}
 B=${RE4_HOSTREF_BUILD:-$ROOT/build/hostref}
 SV=$ROOT/port/dreamcast/engine/hostref/svc
 PR=$ROOT/port/dreamcast/tools/plays_right
-CONTROLS=${SPEED_CONTROLS:-"trigstale:door103-walk,hill-ashley,bell-ganado clothbound:hill-ashley ikclosure:door103-walk,hill-ashley,bell-ganado worldfast:door103-walk,hill-ashley,bell-ganado"}
+CONTROLS=${SPEED_CONTROLS:-"trigstale:door103-walk,hill-ashley,bell-ganado clothbound:hill-ashley ikclosure:door103-walk,hill-ashley,bell-ganado worldfast:door103-walk,hill-ashley,bell-ganado mkstale:door103-walk,hill-ashley"}
 for bin in odump native; do
     [ -x "$B/$bin/re4ref" ] || { echo "speed_controls: no $bin build at $B/$bin/re4ref"; exit 2; }
 done
@@ -41,11 +45,25 @@ run() {   # run <binary> <fixture> <dir> [env...]
     local bin=$1 fx=$2 d=$3
     shift 3
     mkdir -p "$d"
-    env RE4_SVC_OUT="$d" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK="$MK" "$@" "$bin" --tree "$TREE" --fixture "$PR/fixtures/$fx.txt" \
+    timeout 900 env RE4_SVC_OUT="$d" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK="$MK" "$@" "$bin" --tree "$TREE" --fixture "$PR/fixtures/$fx.txt" \
         --out "$d/trace.txt" --log "$d/run.log" 2> "$d/err.txt" || { echo "speed_controls: re4ref failed: $d"; echo 2 > "$OUT/.status"; }
+}
+ctlrun() {   # ctlrun <fixture> <dir> [env...]: a control run; one that hangs (120 s) or dies made the play go wrong: FAIL
+    local fx=$1 d=$2
+    shift 2
+    mkdir -p "$d"
+    rm -f "$d/died"
+    timeout 120 env RE4_SVC_OUT="$d" RE4_SVC_CLOTH_WIND=0 RE4_SVC_MK="$MK" "$@" "$B/native/re4ref" --tree "$TREE" \
+        --fixture "$PR/fixtures/$fx.txt" --out "$d/trace.txt" --log "$d/run.log" 2> "$d/err.txt" || echo "exit $?" > "$d/died"
 }
 row() {   # row <fixture> <name> <must> <test dir>
     local fx=$1 name=$2 must=$3 d=$4 got=PASS
+    if [ -f "$d/died" ]; then   # a control run that hung or died
+        local okd="FAIL (as it must)"
+        [ "$must" = FAIL ] || { okd="FAIL (WRONG: must $must)"; echo 1 > "$OUT/.status"; }
+        echo "| $fx | $name | $must | $okd | the run did not finish ($(cat "$d/died"); 124: hung 120 s) |"
+        return
+    fi
     python3 "$SV/svc_compare.py" "$OUT/$fx/ref0" "$d" --json "$d/compare.json" > "$d/compare.txt" || got=FAIL
     [ -s "$d/compare.json" ] || { got=ERROR; echo 2 > "$OUT/.status"; }
     local ok="$got (as it must)"
@@ -65,11 +83,15 @@ print('bones %d/%d bit-identical, max %.3g u %.3g deg; queries %d/%d identical; 
         run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref0"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/native0"
         row "$fx" "native (the fixes in)" PASS "$OUT/$fx/native0"
+        run "$B/native/re4ref" "$fx" "$OUT/$fx/nopack" RE4_SVC_MK=none
+        row "$fx" "native, no motion key pack (as on the console)" PASS "$OUT/$fx/nopack"
     done
     for cf in $CONTROLS; do
         c=${cf%%:*}
         for fx in $(echo "${cf#*:}" | tr ',' ' '); do
-            run "$B/native/re4ref" "$fx" "$OUT/$fx/c-$c" RE4_SVC_CONTROL=$c
+            extra=""
+            [ "$c" = mkstale ] && extra="RE4_SVC_MK=none"
+            ctlrun "$fx" "$OUT/$fx/c-$c" RE4_SVC_CONTROL=$c $extra
             row "$fx" "control: $c" FAIL "$OUT/$fx/c-$c"
         done
     done
