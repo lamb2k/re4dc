@@ -210,7 +210,16 @@ u32 sample_bytes(const WTSAMPLE& s, u32 sh)
 
 bool g_init;
 AXCallback g_axCallback;
-AXVPBView g_vpb[64] __attribute__((aligned(32)));
+// The 64 voice blocks, packed: the driver reads only pb.state and pb.addr of a voice (snd_iss2 / snd_iss4 / snd_str1 /
+// snd_str2) and the layer keeps its VoiceState in the SDK header area, so the blocks overlap with a 112-byte stride:
+// per block, bytes 0-79 VoiceState, 86-101 pb.addr, 102-103 pb.state (offsets 0x1A6 and 0x146 modulo 112), nothing
+// else is touched (no block is ever cleared whole). 7.6 KB instead of the SDK's 64 x 454 B (29 KB).
+const u32 kVpbStride = 112;
+static_assert(sizeof(VoiceState) <= 80, "VoiceState: bytes 0-79 of the stride");
+static_assert(__builtin_offsetof(AXVPBView, addr) % kVpbStride == 86 && sizeof(AXPBADDR) == 16, "pb.addr: bytes 86-101");
+static_assert(__builtin_offsetof(AXVPBView, state) % kVpbStride == 102, "pb.state: bytes 102-103");
+u8 g_vpbmem[63 * kVpbStride + sizeof(AXVPBView)] __attribute__((aligned(32)));
+inline AXVPBView& vpb(int i) { return *(AXVPBView*) (g_vpbmem + i * kVpbStride); }
 u64 g_lastTickUs, g_lastFrameUs;
 u32 g_logStarts;
 u32 g_aicaUsed;   // bytes of AICA RAM held by the layout
@@ -572,7 +581,7 @@ void blk_cut(int t)
     RegWriter w;
     u32 cut = 0;
     for (int i = 0; i < 64; i++) {
-        AXVPBView& p = g_vpb[i];
+        AXVPBView& p = vpb(i);
         VoiceState& v = p.vs;
         if (!v.used || v.ch < 0 || !v.mapped || v.blk != t) continue;
         ch_keyoff(w, v.ch, v.play_cont);
@@ -603,7 +612,7 @@ void flush()
     RegWriter w;
     // AX voices
     for (int i = 0; i < 64; i++) {
-        VoiceState& v = g_vpb[i].vs;
+        VoiceState& v = vpb(i).vs;
         if (!v.used || v.ch < 0) continue;
         if (v.dirty & 8) {
             ch_keyoff(w, v.ch, v.play_cont);
@@ -690,7 +699,7 @@ void audio_step()
     g_lastFrameUs = now;
     u32 active = 0;
     for (int i = 0; i < 64; i++) {
-        AXVPBView& p = g_vpb[i];
+        AXVPBView& p = vpb(i);
         VoiceState& v = p.vs;
         if (!v.used || !v.running) continue;
         ++active;
@@ -733,11 +742,16 @@ void audio_step()
     if (aica_step_hook) aica_step_hook((uint32_t) (t2 - now), active, notes);
 }
 
+void probe_step();
 void* audio_main(void*)
 {
     for (;;) {
         thd_sleep(5);
-        if (g_axCallback && g_started) audio_step();
+        if (!g_axCallback || !g_started) continue;
+        const u64 a = timer_us_gettime64();
+        audio_step();
+        probe_step();   // the output check: a few register reads, outside the step's cost (aica_step_hook)
+        aica_busy_us = aica_busy_us + (uint32_t) (timer_us_gettime64() - a);
     }
     return nullptr;
 }
@@ -900,29 +914,46 @@ void aica_start(void)
 
 int aica_channels_used(void) { return g_chUsed; }
 
-// The output check (lane eng-snd1): the AICA's channel monitor, read back. Reg 0 of each owned channel (KYONB, bit
-// 14: keyed on); then the monitor select (0x280C MSLC, bits 13-8) and its read-outs 0x2810 (EG, bits 12-0: the
-// envelope's attenuation, 0x1FFF silent) and 0x2814 (CA: the current sample address, read twice 2 ms apart).
-void aica_probe(AicaProbe& p)
+// The output check (lane eng-snd1): the AICA's channel monitor, read back, one channel a step. A step reads the
+// channel the previous step selected: reg 0 (KYONB, bit 14: keyed on), reg 0x28 (TL, bits 15-8: attenuation, 255
+// total), the monitor 0x2810 (EG, bits 12-0: the envelope's attenuation, 0x1FFF silent) and 0x2814 (CA: the current
+// sample address, compared with the same channel's previous sample); then it selects the next channel the layer owns
+// (0x280C MSLC, bits 13-8).
+AicaProbe aica_probe_counts;
+volatile uint32_t aica_busy_us;
+namespace {
+int g_probeCh = -1;
+u16 g_lastCa[64];
+u8 g_lastKey[64];
+void probe_step()
 {
-    memset(&p, 0, sizeof(p));
-    for (int ch = 0; ch < 64; ch++) {
-        if (!g_chOwned[ch]) continue;
-        ++p.checked;
+    AicaProbe& p = aica_probe_counts;
+    if (g_probeCh >= 0) {
+        const int ch = g_probeCh;
         const u32 r0 = g2_read_32(kAicaChan + ch * 0x80);
-        if (!(r0 & 0x4000)) continue;
-        ++p.keyed;
-        const u32 tl = (g2_read_32(kAicaChan + ch * 0x80 + 0x28) >> 8) & 0xFF;
-        g2_write_32(0xA070280C, (u32) ch << 8);
-        const u32 eg = g2_read_32(0xA0702810) & 0x1FFF;
-        const u32 ca0 = g2_read_32(0xA0702814) & 0xFFFF;
-        const u64 t = timer_us_gettime64();
-        while (timer_us_gettime64() - t < 2000) {}
-        const u32 ca1 = g2_read_32(0xA0702814) & 0xFFFF;
-        if (eg < 0x1F00 && tl < 255) ++p.sounding;
-        if (ca1 != ca0) ++p.moving;
+        ++p.samples;
+        if (r0 & 0x4000) {
+            ++p.keyed;
+            const u32 tl = (g2_read_32(kAicaChan + ch * 0x80 + 0x28) >> 8) & 0xFF;
+            const u32 eg = g2_read_32(0xA0702810) & 0x1FFF;
+            const u16 ca = (u16) (g2_read_32(0xA0702814) & 0xFFFF);
+            if (eg < 0x1F00 && tl < 255) ++p.audible;
+            if (g_lastKey[ch] && ca != g_lastCa[ch]) ++p.moving;
+            g_lastCa[ch] = ca;
+            g_lastKey[ch] = 1;
+        } else {
+            g_lastKey[ch] = 0;
+        }
     }
+    int next = -1;
+    for (int k = 1; k <= 64; k++) {
+        const int ch = (g_probeCh + k) & 63;
+        if (g_chOwned[ch]) { next = ch; break; }
+    }
+    g_probeCh = next;
+    if (next >= 0) g2_write_32(0xA070280C, (u32) next << 8);
 }
+}  // namespace
 
 // ---------------------------------------------------------------------------
 // The GameCube audio interfaces the hosted driver calls (include/dolphin/ax.h, mix.h, syn.h, seq.h, axfx.h, ai.h).
@@ -950,9 +981,11 @@ void* AXAcquireVoice(u32 prio, void (*cb)(void*), u32 user)
 {
     (void) prio; (void) user;
     for (int i = 0; i < 64; i++) {
-        AXVPBView& p = g_vpb[i];
+        AXVPBView& p = vpb(i);
         if (!p.vs.used) {
-            memset(&p, 0, sizeof(p));
+            memset(&p.vs, 0, sizeof(p.vs));   // the block's own bytes only (the blocks overlap)
+            memset(&p.addr, 0, sizeof(p.addr));
+            p.state = 0;
             p.vs.used = 1;
             p.vs.ch = -1;
             p.vs.blk = -1;

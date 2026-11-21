@@ -51,10 +51,14 @@ extern void (*aica_step_hook)(uint32_t us, uint32_t voices, uint32_t notes);
 extern int aica_mute_all;
 // Lab arm SNDSLOW (control of the cost ceiling): busy-wait this many microseconds inside every audio step.
 extern uint32_t aica_slow_us;
-// The output check: the AICA's own channel monitor, read back for every channel the layer owns (key on, envelope
-// level, current sample address). Fills the counts; returns the number of channels keyed on and sounding.
-struct AicaProbe { uint32_t keyed, sounding, moving, checked; };
-void aica_probe(AicaProbe& p);
+// The output check: the AICA's own channel monitor, read back. One channel a step (the step selects a channel the
+// layer owns; the next step, 5 ms later, reads its key-on bit, attenuation, envelope level and current sample
+// address): no wait inside a step.
+struct AicaProbe { uint32_t samples, keyed, audible, moving; };
+extern AicaProbe aica_probe_counts;
+// Microseconds the audio thread has been busy (every audio step, probe included): the service subtracts what falls
+// inside a main-thread measurement, so a step that preempts the game's sound call is not counted twice.
+extern volatile uint32_t aica_busy_us;
 // Channels the layer owns now.
 int aica_channels_used(void);
 #endif

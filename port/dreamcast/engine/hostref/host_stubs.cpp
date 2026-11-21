@@ -95,8 +95,28 @@ void QuakeInit() { HOST_STUB("QuakeInit"); }
 int BtoX(int bits) { return bits; }   // eprintf.cpp: pad debug page only
 void eprintf(int, int, int, int, const char*, ...) { HOST_STUB("eprintf"); }
 void eprintf2(int, int, int, int, int, int, const char*, ...) { HOST_STUB("eprintf2"); }
-u32 SndCall(u16, u16, Vec*, int, int, cUnit*) { HOST_STUB("SndCall"); return 0; }
-int SndStop(u32, int) { HOST_STUB("SndStop"); return 0; }
+// The sound requests (lane eng-snd1): each SndCall and SndStop the behaviour makes is logged as an SR line, the fields
+// the engine's sound service writes to its trace (services/sound/snd_svc.cpp; compared by
+// services/sound/tools/sndreq_check.py): the frame counter, kind, block, number, flags, id, position bits.
+static u32 sr_bits(f32 f) { u32 u; __builtin_memcpy(&u, &f, 4); return u; }
+u32 SndCall(u16 blk, u16 no, Vec* pos, int id, int vol, cUnit*)
+{
+    HOST_STUB("SndCall");
+    if (pos)
+        host_log("SR f=%lu k=C b=%u n=%u v=%08x i=%d p=%08lx,%08lx,%08lx", (unsigned long) pG->Frame_cnt, blk, no,
+                 (unsigned) vol, id, (unsigned long) sr_bits(pos->x), (unsigned long) sr_bits(pos->y),
+                 (unsigned long) sr_bits(pos->z));
+    else
+        host_log("SR f=%lu k=C b=%u n=%u v=%08x i=%d p=-", (unsigned long) pG->Frame_cnt, blk, no, (unsigned) vol, id);
+    return 0;
+}
+int SndStop(u32 id, int time)
+{
+    HOST_STUB("SndStop");
+    host_log("SR f=%lu k=S b=%u n=%u v=%08x i=%d p=-", (unsigned long) pG->Frame_cnt, (unsigned) (u16) (id >> 16),
+             (unsigned) (u16) id, (unsigned) time, (int) id);
+    return 0;
+}
 
 void cActionButton::set(int, int, int, int, int, int, int, int) { HOST_STUB("cActionButton::set"); }
 // The armed handgun's magazine (lane eng-e1h): the new game's Punisher with its 10 rounds loaded and no ammo carried, as

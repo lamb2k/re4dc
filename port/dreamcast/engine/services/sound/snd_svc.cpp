@@ -77,14 +77,24 @@ const unsigned kPics = E1_TICKS;
 uint32_t g_cost[kPics];
 uint32_t g_voices_peak, g_notes_peak;
 uint32_t g_requests, g_stops, g_dropped;
-uint32_t g_probe_runs, g_probe_out, g_probe_moving, g_probe_max, g_probe_keyed;
 uint32_t g_banks, g_banks_missing, g_load_us, g_load_bytes;
-uint32_t g_step_n;
 int g_on, g_booted, g_trace = -1, g_drop;
 char g_missing[96];
 
 inline unsigned pic_now() { const uint32_t t = e1_tick; return t % kPics; }
 inline void cost_add(uint32_t us) { g_cost[pic_now()] += us; }
+// A main-thread measurement (the game's call into the driver, the tick's SndWatcher): wall time less what the audio
+// thread took meanwhile (it preempts the main thread; its steps are counted by the step hook).
+struct MainSpan {
+    uint64_t t0;
+    uint32_t busy0;
+    MainSpan() : t0(timer_us_gettime64()), busy0(aica_busy_us) {}
+    uint32_t us() const
+    {
+        const uint32_t wall = (uint32_t) (timer_us_gettime64() - t0), other = aica_busy_us - busy0;
+        return wall > other ? wall - other : 0;
+    }
+};
 
 int boot_file(const char* n)
 {
@@ -94,28 +104,20 @@ int boot_file(const char* n)
     return 1;
 }
 
-// CA of every channel at the last probe (the address moving between probes, 250 ms apart).
-uint16_t g_last_ca[64];
+// One audio step's cost and voices (aica.cpp's thread).
 void step_hook(uint32_t us, uint32_t voices, uint32_t notes)
 {
     cost_add(us);
     if (voices > g_voices_peak) g_voices_peak = voices;
     if (notes > g_notes_peak) g_notes_peak = notes;
-    if (++g_step_n % 50) return;
-    AicaProbe p;   // outside the step's timed part (the step's cost is already counted)
-    aica_probe(p);
-    ++g_probe_runs;
-    g_probe_keyed += p.keyed != 0;
-    if (p.sounding) ++g_probe_out;
-    if (p.moving) ++g_probe_moving;
-    if (p.sounding > g_probe_max) g_probe_max = p.sounding;
 }
 
 // ---------------------------------------------------------------------------
 // Loading: a file's sound parts (dvd.cpp readMain's sound cases), read before play.
 struct DvdRec { u32 type, size, dest, ofs, sndType, sndArg, sndNo, x1C; };
 uint8_t* g_mram_owned[14];   // MRAM parts this service allocated (freed when the block is replaced)
-uint8_t g_chunk[16 * 1024] __attribute__((aligned(32)));
+uint8_t* g_chunk;            // 16 KB, allocated for a room load and freed after it
+const u32 kChunk = 16 * 1024;
 
 bool read_at(file_t f, u32 ofs, void* dst, u32 n)
 {
@@ -162,12 +164,14 @@ bool load_aram(file_t f, int t, const DvdRec& r, u32 ofs)
     if (!read_at(f, ofs, &h, sizeof h)) return false;
     bool ok = aica_bank_place(t, SndMem.blk_aram[t], h);
     if (ok) {
-        for (u32 at = 0; at < h.total;) {
-            const u32 n = h.total - at < sizeof g_chunk ? h.total - at : (u32) sizeof g_chunk;
-            if (!read_at(f, ofs + sizeof h + at, g_chunk, (n + 3) & ~3u)) { ok = false; break; }
-            aica_bank_copy(at, g_chunk, n);
+        uint8_t* const buf = g_chunk ? g_chunk : (uint8_t*) memalign(32, kChunk);   // a read outside a room load
+        for (u32 at = 0; buf && at < h.total;) {
+            const u32 n = h.total - at < kChunk ? h.total - at : kChunk;
+            if (!read_at(f, ofs + sizeof h + at, buf, (n + 3) & ~3u)) { ok = false; break; }
+            aica_bank_copy(at, buf, n);
             at += n;
         }
+        if (buf != g_chunk) free(buf);
         aica_bank_done();
         g_load_bytes += sizeof h + h.total;
     }
@@ -180,9 +184,8 @@ bool load_aram(file_t f, int t, const DvdRec& r, u32 ofs)
 // walked, sound parts (type 1 MRAM, type 2 ARAM) loaded; the main data (type 0, 3) is the engine loader's.
 void load_parts(file_t f, u32 base, int depth)
 {
-    static DvdRec hdr[3][32];
-    DvdRec* rec = hdr[depth];
-    if (depth > 2 || !read_at(f, base, rec, sizeof hdr[0])) return;
+    DvdRec rec[32];   // 1 KB of stack (the loading thread is the main thread)
+    if (depth > 2 || !read_at(f, base, rec, sizeof rec)) return;
     int no = -1;   // the enemy / BGM slot of the part pair (SndEmDataReadCheck / SndBgmDataReadCheck)
     for (int i = 1; i < 32; i++) {
         DvdRec& r = rec[i];
@@ -359,6 +362,7 @@ void room_load(unsigned room)
         driver_boot();
     }
     if (!g_on) return;
+    g_chunk = (uint8_t*) memalign(32, kChunk);
     // the room: the room arena emptied, the room's blocks, then the scene's characters' blocks
     aica_room_reset();
     SndReadAddrInit();
@@ -390,6 +394,8 @@ void room_load(unsigned room)
     SndRoomBgmLoad();
     SndRoomBgmStartCheck(0);
     SndRoomStrStartCheck();
+    free(g_chunk);
+    g_chunk = 0;
     g_load_us = (uint32_t) (timer_us_gettime64() - t0);
     e1_log("E1 SOUND load room %03x: banks %u, missing%s, %u bytes read, %u us (before play)\n", room, g_banks,
            g_missing[0] ? g_missing : " none", g_load_bytes, g_load_us);
@@ -418,7 +424,8 @@ extern "C" void aica_log(const char* fmt, ...)
 // they are loading; inside play they would be disc reads in play, counted by core/play_files.c like any other.
 // Weak, with the read queue's object and its poll (the fight image keeps generated stubs of both: theirs win there,
 // and the synchronous read below has already happened when the driver polls).
-__attribute__((weak, aligned(32))) unsigned char snd_Dvd[sizeof(cDvd)] asm("_Dvd");
+// (32 bytes, not the queue's 12.5 KB: nothing in these images reads its members; the poll below ignores it)
+__attribute__((weak, aligned(32))) unsigned char snd_Dvd[32] asm("_Dvd");
 __attribute__((weak)) int cDvd::ReadCheck(int, int*, int*, void**) { return 1; }
 // The DVD file table: only the stream player's two files are named (StrFileTbl: 1 bio4bgm.sbb, 0x5F bio4evt.sbb),
 // as present; it opens them without the disc (snd_host.cpp DVDOpen).
@@ -464,9 +471,9 @@ extern "C" u32 __wrap__Z7SndCallttP3VeciiP5cUnit(u16 blk, u16 no, Vec* pos, int 
     ++g_requests;
     request_line('C', blk, no, pos, id, vol);
     if (!g_on || !g_booted) return 0;
-    const uint64_t t0 = timer_us_gettime64();
+    const MainSpan span;
     const u32 r = __real__Z7SndCallttP3VeciiP5cUnit(blk, no, pos, id, vol, obj);
-    cost_add((uint32_t) (timer_us_gettime64() - t0));
+    cost_add(span.us());
     return r;
 }
 extern "C" int __wrap__Z7SndStopmi(u32 id, int time)
@@ -474,9 +481,9 @@ extern "C" int __wrap__Z7SndStopmi(u32 id, int time)
     ++g_stops;
     request_line('S', (u16) (id >> 16), (u16) id, 0, (int) id, time);
     if (!g_on || !g_booted) return 0;
-    const uint64_t t0 = timer_us_gettime64();
+    const MainSpan span;
     const int r = __real__Z7SndStopmi(id, time);
-    cost_add((uint32_t) (timer_us_gettime64() - t0));
+    cost_add(span.us());
     return r;
 }
 
@@ -490,9 +497,9 @@ extern "C" void __wrap__Z12e1_load_roomj(unsigned room)
 extern "C" void __wrap__Z14e1_fields_latej(unsigned tick)
 {
     if (g_on && g_booted) {   // the original main loop's SndWatcher, after Trans
-        const uint64_t t0 = timer_us_gettime64();
+        const MainSpan span;
         SndWatcher();
-        cost_add((uint32_t) (timer_us_gettime64() - t0));
+        cost_add(span.us());
     }
     __real__Z14e1_fields_latej(tick);
 }
@@ -517,12 +524,12 @@ extern "C" void __wrap__Z9e1_reportv(void)
            (unsigned long) mean, (unsigned long) worst, (unsigned long) wpic, (unsigned long) g_voices_peak,
            (unsigned long) g_notes_peak, (unsigned long) g_requests, (unsigned long) g_stops, (unsigned long) g_banks,
            (unsigned long) g_banks_missing);
-    e1_log("E1 SOUND PROBE runs %lu keyed %lu audible %lu moving %lu max-audible %lu | se-starts %lu unmapped %lu "
-           "notes %lu keyons %lu steps %lu drv-us %lu flush-us %lu aica-bytes %lu blocks-skipped %lu dropped %lu\n",
-           (unsigned long) g_probe_runs, (unsigned long) g_probe_keyed, (unsigned long) g_probe_out,
-           (unsigned long) g_probe_moving, (unsigned long) g_probe_max, (unsigned long) s.se_starts,
-           (unsigned long) s.se_unmapped, (unsigned long) s.note_on, (unsigned long) s.keyons, (unsigned long) s.frames,
-           (unsigned long) s.drv_us, (unsigned long) s.flush_us, (unsigned long) s.aica_used,
+    const AicaProbe& p = aica_probe_counts;
+    e1_log("E1 SOUND PROBE samples %lu keyed %lu audible %lu moving %lu | se-starts %lu unmapped %lu notes %lu keyons %lu "
+           "steps %lu drv-us %lu flush-us %lu aica-bytes %lu blocks-skipped %lu dropped %lu\n",
+           (unsigned long) p.samples, (unsigned long) p.keyed, (unsigned long) p.audible, (unsigned long) p.moving,
+           (unsigned long) s.se_starts, (unsigned long) s.se_unmapped, (unsigned long) s.note_on, (unsigned long) s.keyons,
+           (unsigned long) s.frames, (unsigned long) s.drv_us, (unsigned long) s.flush_us, (unsigned long) s.aica_used,
            (unsigned long) s.blocks_skipped, (unsigned long) g_dropped);
     __real__Z9e1_reportv();
 }
