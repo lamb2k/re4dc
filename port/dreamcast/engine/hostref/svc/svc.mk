@@ -111,6 +111,9 @@ PEN_ORIG := PenClothSet=pen_orig_Set PenClothMove=pen_orig_Move PenClothMove3=pe
 SVC5_SRCS := math/math_svc.cpp cloth/garment.cpp math/sdk_math.cpp
 SVC5_UNITS := math_sub sub2 pl_cloth
 SVC4_SRCS := volumes/volumes.cpp collision/col_model.cpp routes/routes.cpp motion/follow.cpp model/model_svc.cpp camera/camera_svc.cpp input/input.cpp              $(SVC5_SRCS)
+# lane eng-e1h: the Ganado's dissolving-corpse squash on the native skeleton (em10ScaleCompress; em10's own made weak in
+# weak6/ below)
+SVC4_SRCS += skeleton/em_compress.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion motion pad $(SVC5_UNITS)
 # SVC4_SPLIT: behaviour units whose evaluation functions are native (the camera's: cam_ctrl's rail spline,
@@ -150,6 +153,13 @@ SVC4_REPLACED := $(addprefix $(BUILD)/plain/game/,$(addsuffix .o,$(SVC4_ALL)))
 NATIVE_GAME_OBJS := $(SVC4_OBJS) $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED),$(plain_GAME_OBJS)) \
                     $(filter-out $(addprefix $(NAT)/weak/,$(addsuffix .o,$(SVC4_ALL))),$(NAT)/weak/motion.o $(NAT)/weak/model.o $(NAT)/weak/atari.o) \
                     $(NAT)/pen.o $(addprefix $(NAT)/weak4/,$(addsuffix .o,$(SVC4_ALL)))
+# lane eng-e1h: em10 (the Ganado library) linked with em10ScaleCompress weak, so the native squash
+# (services/skeleton/em_compress.cpp, skel_compress_y) is the one reached
+WEAK_em10 := _Z17em10ScaleCompressP5cEm10
+$(NAT)/weak6/em10_em10.o: $(BUILD)/plain/game/em10_em10.o svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy $(foreach s,$(WEAK_em10),--weaken-symbol=$(s)) $< $@
+NATIVE_GAME_OBJS := $(filter-out $(BUILD)/plain/game/em10_em10.o,$(NATIVE_GAME_OBJS)) $(NAT)/weak6/em10_em10.o
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
 	@mkdir -p $(dir $@)

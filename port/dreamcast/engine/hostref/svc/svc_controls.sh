@@ -58,7 +58,7 @@
 # Exit status 0 when every line ends as it must; the table goes to stdout and <out dir>/svc_controls.md.
 # Fails closed (lane eng-e1h; on 11-20 a missing odump build gave exit 0 and an empty table): exit 2 when a build
 # (odump, native) or a fixture is missing, when a run fails, when a row has no comparison report, or when the table
-# does not hold every row this script plans (5 a fixture + 46). RE4_HOSTREF_BUILD=<dir> reads the builds from another
+# does not hold every row this script plans (5 a fixture + 47). RE4_HOSTREF_BUILD=<dir> reads the builds from another
 # folder (the control: an empty folder must exit 2).
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -72,12 +72,12 @@ PR=$ROOT/port/dreamcast/tools/plays_right
 for bin in odump native; do
     [ -x "$B/$bin/re4ref" ] || { echo "svc_controls: no $bin build at $B/$bin/re4ref (make $bin)"; exit 2; }
 done
-for fx in $FIX door103-walk e1-route bell-ganado hill-ashley square-follow; do
+for fx in $FIX door103-walk e1-route bell-ganado bell-ganado-kill hill-ashley square-follow; do
     [ -f "$PR/fixtures/$fx.txt" ] || { echo "svc_controls: no fixture $PR/fixtures/$fx.txt"; exit 2; }
 done
 [ -d "$TREE" ] || { echo "svc_controls: no data tree at $TREE"; exit 2; }
 NFIX=$(echo $FIX | wc -w)
-ROWS_PLANNED=$((5 * NFIX + 46))
+ROWS_PLANNED=$((5 * NFIX + 47))
 mkdir -p "$OUT"
 rm -f "$OUT/.status" "$OUT/.abort"
 ARCS="em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs"
@@ -233,6 +233,8 @@ print()" "$b/compare.json")
     r4ctl door103-walk "Leon's hair not stepped on odd ticks" garmenthair
     r4ctl hill-ashley "Ashley's skirt always stiff" garmentskirt
     exrow door103-walk costume garmenthair
+    # lane eng-e1h: the dying Ganado's squash (em10ScaleCompress on the native skeleton): left out, the palette differs
+    r4ctl bell-ganado-kill "the dying Ganado's squash left out of the table" nocompress
     for fx in e1-route; do   # the wind pushes in proportion to the root speed: the moving fixture
         [ -d "$OUT/$fx/ref" ] || run "$B/odump/re4ref" "$fx" "$OUT/$fx/ref"
         run "$B/native/re4ref" "$fx" "$OUT/$fx/c-clothwind" RE4_SVC_CONTROL=clothwind

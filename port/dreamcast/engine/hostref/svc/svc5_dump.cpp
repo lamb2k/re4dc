@@ -21,6 +21,7 @@ extern MathCounters math_cnt __attribute__((weak));
 extern int math_control __attribute__((weak));
 extern GarmentCounters garment_cnt __attribute__((weak));
 extern int garment_control __attribute__((weak));
+extern int skel_control_compress __attribute__((weak));   // lane eng-e1h: the corpse squash (skel_compress_y)
 }
 
 namespace {
@@ -66,6 +67,8 @@ extern "C" void svc5_ready()
         if (is(c, "garmentskirt")) garment_control = 2;
         if (is(c, "lapelrate")) garment_control = 3;
     }
+    // lane eng-e1h: nocompress (the dying Ganado's squash left out of the table: the fault before that lane)
+    if (&skel_control_compress && is(c, "nocompress")) skel_control_compress = 1;
     const char* e = svc_env("RE4_SVC_EXERCISE");
     g_exercise = is(e, "costume") ? 1 : 0;
     g_f = svc_out_open("svc5.txt", "w");

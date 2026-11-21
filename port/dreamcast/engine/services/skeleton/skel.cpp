@@ -56,6 +56,7 @@ int skel_control_no_ik;
 int skel_poison;
 int skel_control_mk;
 int skel_control_hist;
+int skel_control_compress;
 }
 
 #define PTR_OK(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
@@ -1565,6 +1566,34 @@ extern "C" int skel_parts_bone(cModel* m, int no)
 extern "C" void skel_enter(SkelTable* t)
 {
     Scope sc(t, 0);
+}
+// A dying body squashed vertically (lane eng-e1h; em10.cpp em10ScaleCompress, which the Ganado's move runs right after
+// partsWorldCalc in its dissolving death): every part on the model's pParts chain gets world = S(1, k, 1) x world
+// (PSMTXConcat, the original's arithmetic) with its translation put back to the part's world position. The original
+// wrote the records' mat directly, which the table never saw (the chain is walked without asking for the parts): the
+// palette and the renderer showed the corpse unsquashed (lane eng-svc5's finding: the dying Ganado's palette differed
+// from tick 241 / 204 on bell-ganado-kill / -clear while the bones' positions and angles agreed). Here the table is
+// squashed and the records the behaviour holds are served, as the original leaves them.
+extern "C" void skel_compress_y(cModel* m, f32 k)
+{
+    SkelTable* t = table_for(m);
+    if (!t || skel_control_compress) return;
+    Scope sc(t, SG_WORLD);
+    Mtx s;
+    PSMTXIdentity(s);
+    s[1][1] = k;
+    const u32 c = t->cap;
+    const f32* so = t->soa;
+    for (cModel* p = m->pParts; PTR_OK(p); p = p->pParts) {
+        const int b = skel_record_bone(t, p);
+        if (b < 0) continue;
+        f32 (*w)[4] = t->world[b].m;
+        PSMTXConcat(s, w, w);
+        w[0][3] = so[SK_WX * c + b];
+        w[1][3] = so[SK_WY * c + b];
+        w[2][3] = so[SK_WZ * c + b];
+        skel_cnt.compress_bones++;
+    }
 }
 extern "C" void skel_leave(SkelTable* t, u32 groups)
 {
