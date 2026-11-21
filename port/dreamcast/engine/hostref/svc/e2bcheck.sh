@@ -81,6 +81,10 @@ for c in voicebank bloodswap footpart camease screenhalf handgrip accnone keepca
     run "$d/ctl-$c" native bell-ganado $EX RE4_E2B_END=297 RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done
+# lane eng-e2d: the PC native projection's fix (hostref/host_math.cpp) taken back: every point at the screen's centre,
+# the screen check's XV lines must differ from the original's
+run "$d/ctl-screencentre" native bell-ganado $EX RE4_E2B_END=297 RE4_SCREEN_CENTRE=1 || { missing=1; echo "control screencentre: run failed"; }
+[ -s "$d/ctl-screencentre/e2b.txt" ] && row "control screencentre" FAIL "$d/odump" "$d/ctl-screencentre"
 [ $missing = 1 ] && { echo "e2bcheck: a run or a log is missing"; exit 2; }
 [ $bad = 1 ] && { echo "e2bcheck: a row did not end as it must ($MD)"; exit 1; }
 echo "e2bcheck: every row as it must ($MD)"

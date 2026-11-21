@@ -201,12 +201,14 @@ EM10_NATIVE_PC := Em10SetSeTbl em10CallVoiceSe _Z16em10CallVoiceSe2P5cEm10ii _Z1
 WEAK_em10 += $(EM10_NATIVE_PC)
 EM10_NOIPA_PC := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
 	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp
-$(NAT)/weak6/em10_em10.o: $(BUILD)/gen/em10_em10.cpp svc/svc.mk ../game/em10_split_check.py
+# (lane eng-e2d: the general split check, tools/engine/split_check.py, with the build machine's binutils, replaces
+# game/em10_split_check.py; -frecord-gcc-switches lets it read the flags back from the object)
+$(NAT)/weak6/em10_em10.o: $(BUILD)/gen/em10_em10.cpp svc/svc.mk ../../tools/engine/split_check.py
 	@mkdir -p $(dir $@)
-	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(EM10_NOIPA_PC) -fopt-info-inline-optimized=$@.inl.txt -c $< -o $@.raw.o
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(EM10_NOIPA_PC) -frecord-gcc-switches -fopt-info-inline-optimized=$@.inl.txt -c $< -o $@.raw.o
 	objcopy $(EM10_POSTCC) $(foreach s,$(WEAK_em10),--weaken-symbol=$(s)) $@.raw.o $@
 	rm -f $@.raw.o
-	$(PY) ../game/em10_split_check.py --nm nm --obj $@ --inline $@.inl.txt --weak $(WEAK_em10)
+	$(PY) ../../tools/engine/split_check.py --host --obj $@ --unit em10/em10 --weak $(WEAK_em10)
 NATIVE_GAME_OBJS := $(filter-out $(BUILD)/plain/game/em10_em10.o,$(NATIVE_GAME_OBJS)) $(NAT)/weak6/em10_em10.o
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk

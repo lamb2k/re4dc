@@ -52,7 +52,12 @@ CLONE_RE = re.compile(r'\[clone [^]]*\]|\.(part|constprop|isra|cold|localalias)\
 REPORT_RE = re.compile(r'Inlin(?:ing|ed) (.*?)/\d+ into (.*?)/\d+')
 
 
+HOST_TOOLS = False   # --host: the build machine's binutils (the PC reference's objects), not the SH-4 toolchain's
+
+
 def tool(name):
+    if HOST_TOOLS:
+        return name
     for t in ('sh-elf-' + name, name):
         if shutil.which(t):
             return t
@@ -300,7 +305,10 @@ def main():
     ap.add_argument('--allowed', default=os.path.join(HERE, '..', '..', 'engine', 'game', 'allowed_original.txt'))
     ap.add_argument('--json')
     ap.add_argument('--quiet', action='store_true')
+    ap.add_argument('--host', action='store_true', help="the build machine's binutils (the PC reference's objects)")
     a = ap.parse_args()
+    global HOST_TOOLS
+    HOST_TOOLS = a.host
     rules, _ = cl.load_list(a.allowed)
     if a.map:
         res = check_image(a.map, rules)
