@@ -41,6 +41,7 @@
 #include <arch/cache.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <string.h>
 #include "memmap.h"
 #include "content.h"
@@ -227,6 +228,42 @@ static void report(unsigned w,unsigned n_flips){
     thd_sleep(1500);
 }
 
+/* lane eng-draw2 (eng-load1's request R3): the room round trip. Boot file ROOMTRIP: open the village, release it, open
+   the farm, release it, open the village, release it (native_release: everything the room's pack holds, the resident
+   buffer included). After each release main memory in use (mallinfo) and video memory free must return exactly to their
+   values before the first open, and each open of the same room must hold the same; the largest free video block is
+   reported at every step ("no contiguous block" is a failure of the graphics memory rule). Boot file ROOMKEEP is the
+   control: each release keeps one texture, so the check must fail. On failure the bench stops at stage 95 (the scene
+   FAILS); on success the schedule runs as usual. */
+static unsigned vram_largest(void){   /* the largest block pvr_mem_malloc gives, to 32 bytes */
+    unsigned lo=0,hi=(unsigned)pvr_mem_available()+32;
+    while(hi-lo>32){unsigned mid=((lo+hi)/2)&~31u;if(mid<=lo)break;pvr_ptr_t p=pvr_mem_malloc(mid);if(p){pvr_mem_free(p);lo=mid;}else hi=mid;}
+    return lo;
+}
+static void room_trip(NativeScene* s,int keep){
+    static const char* const steps[3]={"/cd/CROSS.PAK","/cd/FARM.PAK","/cd/CROSS.PAK"};
+    native_release_keep=keep;
+    struct mallinfo m0=mallinfo();unsigned v0=pvr_mem_available(),b0=vram_largest(),used_open[3],vram_open[3],fail=0;
+    printf("ROOMTRIP%s before: main in use %u, video free %u, largest video block %u\n",keep?" (ROOMKEEP control: one texture kept a release)":"",
+           (unsigned)m0.uordblks,v0,b0);
+    for(unsigned k=0;k<3;k++){
+        if(!native_open(s,steps[k])){printf("ROOMTRIP open %s REFUSED\n",steps[k]);fail=1;break;}
+        struct mallinfo m=mallinfo();used_open[k]=m.uordblks;vram_open[k]=pvr_mem_available();
+        printf("ROOMTRIP open %s: main in use %u (+%d), video free %u, largest video block %u\n",steps[k],used_open[k],
+               (int)(used_open[k]-m0.uordblks),vram_open[k],vram_largest());
+        native_release(s);
+        struct mallinfo r=mallinfo();unsigned v=pvr_mem_available(),b=vram_largest();
+        int ok=r.uordblks==m0.uordblks && v==v0;
+        printf("ROOMTRIP release %s: main in use %u (%+d), video free %u (%+d), largest video block %u: %s\n",steps[k],
+               (unsigned)r.uordblks,(int)(r.uordblks-m0.uordblks),v,(int)(v-v0),b,ok?"returned":"NOT RETURNED");
+        fail|=!ok;
+    }
+    if(!fail && (used_open[0]!=used_open[2]||vram_open[0]!=vram_open[2])){printf("ROOMTRIP the village's second open differs from its first\n");fail=1;}
+    native_release_keep=0;
+    printf("ROOMTRIP %s\n",fail?"FAIL":"PASS");
+    if(fail){m1_state[5]=95;for(;;)thd_sleep(100);}
+}
+
 int main(void){
     pvr_init_params_t params={.opb_sizes={PVR_BINSIZE_16,PVR_BINSIZE_8,PVR_BINSIZE_16,0,PVR_BINSIZE_16},.vertex_buf_size=1024*1024,.vbuf_doublebuf_disabled=0};
     memmap_boot();
@@ -256,6 +293,8 @@ int main(void){
     }
     calibrate();
     NativeScene native={0};int open=-1;
+    if(exists("/cd/ROOMTRIP")||exists("/cd/ROOMKEEP"))room_trip(&native,exists("/cd/ROOMKEEP"));   /* lane eng-draw2 (R3) */
+    {static const char* const rooms[]={"/cd/CROSS.PAK","/cd/FARM.PAK"};native_reserve(rooms,2);}
     for(unsigned w=0;w<m1_schedule_n;w++){
         const Window* sw=schedule+w;unsigned scene=sw->scene;
         m1_state[0]=scene;m1_state[5]=2;m1_state[7]=sw->delay;
