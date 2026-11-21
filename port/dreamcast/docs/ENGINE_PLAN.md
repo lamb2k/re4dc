@@ -23,7 +23,7 @@ Start here. This is the current plan in short; the hand-overs (`engine/HANDOVERS
 
 ### 3. Where we are on that model
 
-Lane eng-cmp1's figures (`E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` section 10), handed back and not yet gated or merged. MODELLED (console-build dynarec at 70 MHz, calibrated on the old port); the band is 3 to 10% kinder for the engine.
+Lane eng-cmp1's figures (`E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` section 10), merged. MODELLED (console-build dynarec at 70 MHz, calibrated on the old port); the band is 3 to 10% kinder for the engine.
 
 | Scene | Old port: pictures a second, work a picture (mean) | Engine: pictures a second, work a picture (mean / worst) | Engine drawing / services (row 14 / 9 ms) | Game speed, old port / engine |
 |---|---|---|---|---|
