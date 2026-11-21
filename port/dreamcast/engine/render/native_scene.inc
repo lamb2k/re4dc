@@ -167,6 +167,13 @@ void native_close(NativeScene* s){
     native_actor_close(s);native_world_free(&s->world);native_vis_close(&s->vis);free(s->vis_data);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
+static size_t flip_base;static unsigned scenes_done;
+void native_flip_mark(void){pvr_stats_t st;pvr_get_stats(&st);flip_base=st.frame_count;scenes_done=0;}
+void native_scene_done(void){scenes_done++;}
+int native_wait_shown(void){
+    for(unsigned k=0;k<120;k++){pvr_stats_t st;pvr_get_stats(&st);if(st.frame_count>=flip_base+scenes_done)return 1;vid_waitvbl();}
+    printf("STILL: the picture was not shown after 120 fields\n");return 0;
+}
 #include "draw_cost.h"
 int native_open(NativeScene* s,const char* name){
     dc_lab_open();   /* lane eng-draw1: the E1 lab sets (boot files DLA, DLB), read once before play */

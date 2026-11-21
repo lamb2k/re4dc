@@ -77,7 +77,6 @@ int e1_draw_open_c(const char* pack)
     m1_state[5] = 3;
     return 1;
 }
-
 /* The partner (lane eng-e1b), PLACEHOLDER form, kept for a pack without her body (lane eng-e1d: the hill pack draws
    her mesh, catalogue 6, through the E1 actor pass): the renderer marks each of her bones with a flat square, read in place from her native skeleton table's world
    records (lane eng-e1c; written once a tick by the skeleton service). Nothing is converted or copied per tick; the
@@ -302,6 +301,7 @@ int e1_fields_start_c(int manual)
     vid_waitvbl(); vid_waitvbl();
     if (open_ok && manual) manual_flip = pvr_set_manual_flip(true) == 0;
     flip_n = 0;
+    if (open_ok) native_flip_mark();   /* lane eng-draw2 (step 0): every scene so far is shown */
     return manual_flip;
 }
 uint32_t e1_fields_now_c(void) { return vbl_fields; }
@@ -361,6 +361,7 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
     pvr_list_finish();
     pvr_scene_finish();
     e1_stamp_c(7);
+    native_scene_done();   /* lane eng-draw2 (step 0): counted for the stills' wait */
     uint64_t t2 = timer_us_gettime64();
     *wait_us = (uint32_t) (t1 - t0);
     *draw_us = (uint32_t) (t2 - t1);
@@ -368,7 +369,7 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
         /* fixed-field presentation: release this picture now (behind any queued one), then wait for it to show; the
            pacer then does not queue it again (e1_present_take_c) */
         if (manual_flip) { e1_present_at_c(vbl_fields); stills_queued = 1; vid_waitvbl(); vid_waitvbl(); }
-        pvr_wait_render_done(); vid_waitvbl(); vid_waitvbl();
+        native_wait_shown(); vid_waitvbl();   /* lane eng-draw2 (step 0): this picture is on the screen, never the one before */
         m1_state[4] = 0xa5000000 + 2 * (*(volatile uint32_t*) 0xa05f8050 & 0x7ffffc);
         m1_state[2] = m1_frame;
         while (m1_state[3] != m1_state[2]) thd_pass();

@@ -271,7 +271,7 @@ int main(void){
         memmap_sample(scene);
         m1_state[5]=3;
         pvr_wait_ready();pvr_wait_render_done();vid_waitvbl();vid_waitvbl();
-        flip_n=0;
+        flip_n=0;native_flip_mark();   /* lane eng-draw2: every scene so far is shown */
         dc_frame_base=m1_frame;dc_lab_bench=sw->lab;dc_window_begin();   /* lane eng-draw1 */
         for(unsigned i=0;i<600;i++){
             m1_frame++;m1_state[1]=i+1;uint64_t begin=timer_us_gettime64();
@@ -299,14 +299,14 @@ int main(void){
                 m1_timing[i][k]=timer_us_gettime64()-t;
             }
             if(sw->delay){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<5000){}}
-            pvr_scene_finish();uint64_t end=timer_us_gettime64();m1_timing[i][7]=end-now;
+            pvr_scene_finish();uint64_t end=timer_us_gettime64();native_scene_done();m1_timing[i][7]=end-now;
             perf_cntr_stop(PRFC0);perf_cntr_stop(PRFC1);
             volatile RawRow* r=&m1_rows[w][i];
             r->draw_us=end-now;r->wait_us=now-begin;r->ev0=(uint32_t)perf_cntr_count(PRFC0);r->ev1=(uint32_t)perf_cntr_count(PRFC1);
             r->ev1_id=ev1;r->vis=vs;r->fields=0;
             if(sw->hold && i==299){uint64_t t=timer_us_gettime64();while(timer_us_gettime64()-t<40000){}}
             if((stills && i<300) || (stills50 && i%50==0)){
-                pvr_wait_render_done();vid_waitvbl();vid_waitvbl();
+                native_wait_shown();vid_waitvbl();   /* lane eng-draw2: this picture is on the screen (step 0) */
                 m1_state[4]=0xa5000000+2*(*(volatile uint32_t*)0xa05f8050&0x7ffffc);
                 m1_state[2]=scene*600+i+1;while(m1_state[3]!=m1_state[2])thd_pass();
             }
