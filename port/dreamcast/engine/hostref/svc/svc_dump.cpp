@@ -151,6 +151,10 @@ extern "C" void e2_finish(void) __attribute__((weak));
 extern "C" void e2c_ready(void) __attribute__((weak));
 extern "C" void e2c_tick(unsigned t, int begin) __attribute__((weak));
 extern "C" void e2c_finish(void) __attribute__((weak));
+// lane eng-e2b: em10's service functions' boundary log (e2b_dump.cpp) rides them too.
+extern "C" void e2b_ready(void) __attribute__((weak));
+extern "C" void e2b_tick(unsigned t) __attribute__((weak));
+extern "C" void e2b_finish(void) __attribute__((weak));
 
 extern "C" void host_svc_ready()
 {
@@ -158,6 +162,7 @@ extern "C" void host_svc_ready()
     if (svc5_ready) svc5_ready();
     if (e2_ready) e2_ready();
     if (e2c_ready) e2c_ready();
+    if (e2b_ready) e2b_ready();
     const char* c = svc_env("RE4_SVC_CONTROL");
     if (c && *c) host_log("svc control: %s", c);
     if (col_bake_all) col_bake_all();   // the room's collision tables, baked at room load
@@ -173,6 +178,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
     if (svc5_tick) svc5_tick(t, begin);
     if (e2_tick && begin) e2_tick(t);
     if (e2c_tick) e2c_tick(t, begin);
+    if (e2b_tick && begin) e2b_tick(t);
     if (begin) return;
     if (skel_publish_all) skel_publish_all();
     if (!g_pal) return;
@@ -193,6 +199,7 @@ extern "C" void host_svc_finish()
     if (svc5_finish) svc5_finish();
     if (e2_finish) e2_finish();
     if (e2c_finish) e2c_finish();
+    if (e2b_finish) e2b_finish();
     if (g_pal) fclose(g_pal);
     if (g_col) fclose(g_col);
     if (g_hist) fclose(g_hist);
