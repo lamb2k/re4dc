@@ -16,11 +16,13 @@
 //    SndRoomStartInit; then the room's BGM and stream starts, as the original's room init.
 //  - TICK (once a tick, after drawing, before the pacer's wait: where the original main loop calls it, after Trans):
 //    the driver's game-frame work, SndWatcher.
-//  - THE 5 ms AUDIO FRAME: its own KOS thread (aica.cpp, priority 3, above the main thread). It is not the pacer and
-//    does not touch it: the pacer waits on the display's field count (core/frame.cpp), which the vblank interrupt
-//    keeps; the audio thread runs with interrupts on except inside its G2 register flush, and the hosted driver's
-//    calls from the game run with interrupts off so the thread never runs inside them. What it costs is CPU time
-//    taken from whatever runs then, and that is what this service counts.
+//  - THE 5 ms AUDIO FRAME: its own KOS thread (aica.cpp, priority 3, above the main thread), every 5 ms; each step
+//    (at most two driver frames, the voices' positions, the register flush) runs with interrupts off, so it is one
+//    piece, as the GameCube's audio interrupt was. It is not the pacer and does not touch it: the pacer waits on the
+//    display's field count (core/frame.cpp), which the vblank interrupt keeps; a step delays that interrupt by at
+//    most its own length (the report's "longest step"); the hosted driver's calls from the game run with interrupts
+//    off so a step never runs inside them. What it costs is CPU time taken from whatever runs then, and that is what
+//    this service counts.
 //  - COST (the waiver's ceiling): every microsecond the sound work takes - the audio steps (driver frames and register
 //    flush), the tick's SndWatcher, the game's calls into the driver (SndCall, SndStop) and the loads none (they are
 //    before play) - is added to the picture it falls in (e1_tick). The report's E1 SOUND line gives the mean and the
