@@ -140,6 +140,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     uint8_t* state = part_state[slot];
     const pvr_vertex_t* proj = projected_pool[slot]; uint32_t* lit = colors_pool[slot]; uint8_t* codes = outcode_pool[slot];
     cur_projected = proj; cur_lit = lit; cur_codes = codes; cur_pos = m->pos;
+    uint8_t* strip_codes = strip_code_pool[slot]; cur_strip_codes = strip_codes;
     if (translucent) {
         unsigned emitted = 0;
         for (unsigned p = 0; p < h[4]; p++)
@@ -169,6 +170,10 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
         state[p] = st; visible += st != 0;
     }
     if (!visible) { sq_wait(); sq_unlock(); return; }
+    /* lane eng-draw3 (E3): Leon's knife part (role 2) is drawn in the knife stance only: out of it, it is not skinned,
+       lit or given weight sets either */
+    if (!model && !knife_stance(s))
+        for (unsigned p = 0; p < h[4]; p++) if (m->parts[p].src->role == 2) state[p] = 0;
     /* 4. lights and weight sets. The light rule reads the model's and its bone 0's matrices in place (no ActorPose
        copies). Leon: the pack's record (looked up once a pack); every other character: its model record in place. */
     const ModelLight* ml = &src_light_fallback;
@@ -204,15 +209,16 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
                           skin_project[0].elem, ws_ready, h[1], 640, 480, near, camera[25], 0, 0, 0, 0};
         re4dc_avk_pos_skin_u16(&a);
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
-        light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lit + rp->nrm_first);
+        /* lane eng-draw3 (E3): a boundary part lights only the normals its kept strips use */
+        if (state[p] == 2) light_normals_list(m->nrm, nrm_list, mark_part(m, rp, codes, strip_codes), lit);
+        else light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lit + rp->nrm_first);
     }
     /* 6. opaque parts (lane eng-e1d: as the bench's pass since eng-look, the hair part, role 7, is opaque with the body
        atlas and the hair run, role 8, is drawn in the translucent call, in the translucent list); Leon's knife part only
-       in the knife stance */
+       in the knife stance (its state is 0 otherwise, above) */
     unsigned emitted = 0;
     for (unsigned p = 0; p < h[4]; p++) {
         if (!state[p] || m->parts[p].src->role == 8) continue;
-        if (!model && m->parts[p].src->role == 2 && knife_stance(s) == 0) continue;
         sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
     }
     sq_wait(); sq_unlock();

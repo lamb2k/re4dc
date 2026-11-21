@@ -217,6 +217,27 @@ static void light_normals_source(const SourceVector* v,unsigned n,uint32_t* out)
     light_normals_once(v,n,out);
     if(DC_ARM(DL_LIGHT2))light_normals_once(v,n,out);
 }
+/* lane eng-draw3 (E3): the normals a boundary part's kept strips use (idx: indices into base and out) */
+static void light_normals_list_once(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out);
+static void light_normals_list(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out){
+    DC_ADD(DC_A_NRM,n);DC_ADD(DC_A_NRMLIGHTS,n*cur_lights.n);
+    light_normals_list_once(base,idx,n,out);
+    if(DC_ARM(DL_LIGHT2))light_normals_list_once(base,idx,n,out);
+}
+static void light_normals_list_once(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out){
+    const unsigned nl=cur_lights.n;const float ar=cur_lights.amb[0],ag=cur_lights.amb[1],ab=cur_lights.amb[2];
+    const float kr=cur_lights.k[0],kg=cur_lights.k[1],kb=cur_lights.k[2];
+    for(unsigned i=0;i<n;i++){
+        const unsigned q=idx[i];const SourceVector* v=base+q;
+        const float (*D)[3]=ws_dirs[v->bone];const float (*C)[3]=ws_cols[v->bone];
+        float x=v->xyz[0],y=v->xyz[1],z=v->xyz[2],r=ar,g=ag,b=ab;
+        for(unsigned j=0;j<nl;j++){
+            float d=x*D[j][0]+y*D[j][1]+z*D[j][2];
+            if(d>0){r+=d*C[j][0];g+=d*C[j][1];b+=d*C[j][2];}
+        }
+        out[q]=0xff000000|m1_byte(kr*m1_minf(1.f,r))<<16|m1_byte(kg*m1_minf(1.f,g))<<8|m1_byte(kb*m1_minf(1.f,b));
+    }
+}
 static void light_normals_once(const SourceVector* v,unsigned n,uint32_t* out){
     const unsigned nl=cur_lights.n;const float ar=cur_lights.amb[0],ag=cur_lights.amb[1],ab=cur_lights.amb[2];
     const float kr=cur_lights.k[0],kg=cur_lights.k[1],kb=cur_lights.k[2];

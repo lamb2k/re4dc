@@ -28,6 +28,7 @@ typedef struct {
     const NativePart* src;
     uint16_t pos_first,pos_count,nrm_first,nrm_count;
     uint16_t sphere_first,sphere_count,ws_first,ws_count;
+    uint16_t strip_first,strip_count;   /* lane eng-draw3: the part's strips in the model's strip order (strip_code) */
 } RtPart;
 typedef struct {
     const unsigned* h; const float* bind; const SkinWeight* w; const uint8_t* strips;
@@ -38,6 +39,7 @@ typedef struct {unsigned n; RtModel m[];} RtCatalog;
 
 #define ACTOR_POS_LIMIT 4096
 #define ACTOR_WS_LIMIT 384   /* eng-boss: El Gigante (PS2 cast) has 276 weight sets */
+#define ACTOR_STRIP_LIMIT 8192
 #include "source_light.inc"
 #include "content_actor.inc"
 static uint16_t pos_records[ACTOR_POS_LIMIT+2][4] __attribute__((aligned(32)));
@@ -149,14 +151,14 @@ int native_actor_open(NativeScene* s){
         m->bone_radius=calloc(h[0],sizeof(float));m->bones_used=malloc(2*h[0]+2);
         if(!m->pos||!m->nrm||!m->parts||!m->spheres||!m->part_ws||!m->bone_radius||!m->bones_used)return 0;
         /* pass 2: per-part streams sorted by weight set, corner indices rewritten in place, spheres */
-        npos=nnrm=nsph=nws=0;
+        npos=nnrm=nsph=nws=0;unsigned nstrip=0;
         for(unsigned p=0;p<h[4];p++){
             RtPart* rp=m->parts+p;rp->src=parts+p;
             memset(pmap,0xff,2*h[2]);memset(nmap,0xff,2*h[3]);memset(seen_ws,0,h[1]);memset(seen_bone,0,h[0]);
-            rp->pos_first=npos;rp->nrm_first=nnrm;
+            rp->pos_first=npos;rp->nrm_first=nnrm;rp->strip_first=nstrip;
             uint8_t* q=strips+parts[p].at,*end=q+parts[p].size;
             unsigned pc=0,nc=0;
-            while(q<end){unsigned n=*(const unsigned*)q;const IndexCorner* c=(const void*)(q+4);
+            while(q<end){unsigned n=*(const unsigned*)q;const IndexCorner* c=(const void*)(q+4);nstrip++;
                 for(unsigned j=0;j<n;j++){
                     if(pmap[c[j].position]==0xffff){pmap[c[j].position]=pc;m->pos[npos+pc]=pos[c[j].position];old[pc]=c[j].position;pc++;}
                     if(nmap[c[j].normal]==0xffff){nmap[c[j].normal]=nc;m->nrm[nnrm+nc]=norm[c[j].normal];old[ACTOR_POS_LIMIT+nc]=c[j].normal;nc++;}
@@ -169,7 +171,8 @@ int native_actor_open(NativeScene* s){
             while(q<end){unsigned n=*(const unsigned*)q;IndexCorner* c=(void*)(q+4);
                 for(unsigned j=0;j<n;j++){c[j].position=pmap[c[j].position];c[j].normal=nmap[c[j].normal];}
                 q=(uint8_t*)(c+n);}
-            rp->pos_count=pc;rp->nrm_count=nc;
+            rp->pos_count=pc;rp->nrm_count=nc;rp->strip_count=nstrip-rp->strip_first;
+            if(nstrip>ACTOR_STRIP_LIMIT)return 0;
             /* weight-set list and per-bone model-space boxes of the part's positions */
             rp->ws_first=nws;rp->sphere_first=nsph;
             for(unsigned i=0;i<pc;i++){
@@ -300,21 +303,43 @@ static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtMod
     if(DC_ARM(DL_EMIT2)){unsigned again=0;dc_mute=1;sq=emit_part_once(sq,s,m,rp,state,near,&again);dc_mute=0;}
     return sq;
 }
+/* Lane eng-draw3 (E3): a boundary part's strips are tested once a picture, after its positions are skinned and before
+   any normal is lit: mark_part writes each strip's code (STRIP_DROPPED: every corner outside one plane, never drawn;
+   else the corners' combined outcode, bit 5 = crosses the near plane) and lists the normals the kept strips use, so only
+   those are lit; the emission (opaque and translucent calls) reads the codes instead of testing again. */
+#define STRIP_DROPPED 0x80u
+static uint8_t strip_code_pool[2][ACTOR_STRIP_LIMIT];
+static const uint8_t* cur_strip_codes;
+static uint16_t nrm_list[ACTOR_POS_LIMIT],nrm_stamp[ACTOR_POS_LIMIT],nrm_stamp_now;
+static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes,uint8_t* sc){
+    const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
+    const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
+    if(!++nrm_stamp_now){memset(nrm_stamp,0,sizeof nrm_stamp);nrm_stamp_now=1;}
+    const unsigned stamp=nrm_stamp_now;unsigned nl=0;
+    sc+=rp->strip_first;
+    while(p<stop){
+        unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
+        unsigned common=63,combined=0;
+        for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
+        if(common&keep){*sc++=STRIP_DROPPED;continue;}
+        *sc++=combined&keep;
+        for(unsigned j=0;j<n;j++){unsigned q=v[j].normal;if(nrm_stamp[q]!=stamp){nrm_stamp[q]=stamp;nrm_list[nl++]=q;}}
+    }
+    return nl;
+}
 static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
     int header=0;
-    const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;const uint8_t* codes=cur_codes;
-    const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
+    const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;
+    const uint8_t* sc=cur_strip_codes+rp->strip_first;
     unsigned strips=0,out=0,corners=0,clipstrips=0;
     while(p<stop){
         unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
         unsigned combined=0;
         strips++;
         if(state==2){
-            unsigned common=63;
-            for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
-            common&=keep;combined&=keep;
-            if(common){out++;continue;}
+            combined=*sc++;
+            if(combined&STRIP_DROPPED){out++;continue;}
         }
         if(!header){
             const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
@@ -370,6 +395,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         uint8_t* state=part_state[ordinal];
         const pvr_vertex_t* proj=projected_pool[model!=0];uint32_t* lit=colors_pool[model!=0];uint8_t* codes=outcode_pool[model!=0];
         cur_projected=proj;cur_lit=lit;cur_codes=codes;cur_pos=m->pos;
+        uint8_t* strip_codes=strip_code_pool[model!=0];cur_strip_codes=strip_codes;
         if(translucent){   /* eng-look: Leon's hair layer (role 8) of the model drawn this picture */
             unsigned emitted=0;m=cat->m+lod_chosen[ordinal];h=m->h;cur_pos=m->pos;
             for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==8 && state[p])sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
@@ -404,6 +430,8 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
             if(!st)census[1]++;
         }
         if(!visible)continue;
+        /* lane eng-draw3 (E3): Leon's knife part (role 2), drawn in the knife stance only, is not skinned or lit out of it */
+        if(!model && !knife_stance(s))for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==2)state[p]=0;
         /* 4. weight sets used by visible parts */
         int lit_fill=0;uint32_t* lit_cached=content_lit(s,actor,h[0],model,lod_chosen[ordinal],m,ordinal,
             m1_content[CS_BAKED]==3?actor_px(s,lo,hi):1e9f,&lit_fill);   /* eng-look: step B (baked lighting cache) */
@@ -417,7 +445,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         if(lit_fill)for(unsigned i=0;i<h[1];i++)if(!ws_ready[i])build_ws(m,i);
         /* 5. positions and normals of visible parts */
         for(unsigned p=0;p<h[4];p++){
-            if(!state[p])continue;const RtPart* rp=m->parts+p;
+            if(!state[p])continue;const RtPart* rp=m->parts+p;const unsigned st_p=state[p];
             unsigned n=rp->pos_count;
             pos_records[n][0]=pos_records[n+1][0]=0;
             PositionPass a={pos_records,n,m->pos+rp->pos_first,dummy_uv,(void*)(proj+rp->pos_first),codes+rp->pos_first,8,
@@ -425,7 +453,9 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
             re4dc_avk_pos_skin_u16(&a);
             if(DC_ARM(DL_SKIN2))re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
-            if(!lit_cached)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+            /* lane eng-draw3 (E3): a boundary part's strips are tested here; only its kept strips' normals are lit */
+            if(st_p==2){unsigned nl=mark_part(m,rp,codes,strip_codes);if(!lit_cached)light_normals_list(m->nrm,nrm_list,nl,lit);}
+            else if(!lit_cached)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
         }
         if(lit_fill){const RtPart* lp=m->parts+h[4]-1;light_normals_source(m->nrm,lp->nrm_first+lp->nrm_count,lit_cached);}
         if(lit_cached)cur_lit=lit_cached;
@@ -434,8 +464,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         for(unsigned p=0;p<h[4];p++){
             if(!state[p] || m->parts[p].src->role==8)continue;
             /* Leon's role-2 part is the knife in hand: drawn in the knife stance only (eng-e0b: the recorded stance,
-               PlGetWeaponNo() == 0x10). */
-            if(!model && m->parts[p].src->role==2 && knife_stance(s)==0)continue;
+               PlGetWeaponNo() == 0x10); its state is 0 out of it (above) */
             unsigned before=emitted;sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             if(emitted==before)census[1]++;
         }
