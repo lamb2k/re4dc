@@ -98,7 +98,7 @@ static void e1_weapon_pass(NativeScene* s)
         const int cm = v[i].file_slot == WEP_FILE_SLOT && v[i].arc_slot >= 0 && v[i].arc_slot < 256 ?
                        wep_catalogue[v[i].arc_slot] - 1 : -1;
         if (v[i].visible && !e1_weapon_off && cm >= 0 && v[i].has_skel)
-            drawn = (unsigned) e1_actor_pass_one(s, v[i].model, &v[i].skel, (unsigned) cm, 0, 0);
+            drawn = (unsigned) e1_actor_pass_one(s, v[i].model, &v[i].skel, (unsigned) cm, 0, 0, 0);   /* Leon's set-up */
         if (drawn) {
             int b[4];
             on = (unsigned) e1_weapon_box(s, ((const RtCatalog*) s->runtime)->m + cm, v[i].skel.pal, b);

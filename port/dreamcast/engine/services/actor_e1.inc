@@ -122,9 +122,10 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
 }
 
 /* lane eng-look1: one character or object; 0 when it cannot be drawn at all (no such catalogue model, or a skeleton with
-   fewer bones than the model), 1 when it went through the pass (drawn, or culled by the frustum) */
+   fewer bones than the model), 1 when it went through the pass (drawn, or culled by the frustum). frame_setup 0: the
+   picture's frustum, projection and lamp order are already set by the call before it (the weapon after Leon) */
 static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
-                             unsigned translucent)
+                             unsigned translucent, int frame_setup)
 {
     const RtCatalog* cat = s->runtime;
     const float* camera = (const float*) s->state[0];
@@ -133,7 +134,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
     static unsigned bones_slot[E1_SLOTS];
     const float** e1_bone = e1_bone_slot[slot];
     if (model >= cat->n) return 0;
-    if (!translucent) { actor_frame_setup(s); ++actor_serial; bones_slot[slot] = e1_gather(e1_bone, (const uint8_t*) model_record, skel); }
+    if (!translucent) { if (frame_setup) actor_frame_setup(s); ++actor_serial; bones_slot[slot] = e1_gather(e1_bone, (const uint8_t*) model_record, skel); }
     const unsigned bones = bones_slot[slot];
     const RtModel* m = cat->m + model;
     const unsigned* h = m->h;
@@ -228,6 +229,6 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
 void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* skel, unsigned model, unsigned identity,
                    unsigned translucent)
 {
-    e1_actor_pass_one(s, model_record, skel, model, identity, translucent);
+    e1_actor_pass_one(s, model_record, skel, model, identity, translucent, 1);
     if (!model && !translucent) e1_weapon_pass(s);
 }
