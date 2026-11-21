@@ -4,13 +4,14 @@ Read `AGENTS.md` first: the rules, the goal and the four-file boot set. This fil
 
 ## When Claude is the integrator
 
-**Owns:** the `engine` branch (only merges land there); `port/dreamcast/docs/engine/STATUS.md` and `HANDOVERS.md`; lane briefs; the one console disc (on the shelf, rebuilt when a milestone closes on the model) and the deferred console sessions; hotfixes and releases on the release line; reports to the owner.
+**Owns:** the `engine` branch (only merges land there, made by the integration lane since H-024); `port/dreamcast/docs/engine/STATUS.md` and `HANDOVERS.md`; lane briefs; the one console disc (on the shelf, rebuilt when a milestone closes on the model) and the deferred console sessions; hotfixes and releases on the release line; reports to the owner.
 
 **Never touches:** a lane's branch or build folder; lane work while a lane runs; the SD card, GitHub posts other than a passing release, or files that cannot be rebuilt, without the owner's OK.
 
 ### Before starting a lane
 - The owner has approved the step it belongs to (`STATUS.md` says so).
-- It is in the current milestone, and fewer than two lanes are running.
+- It owns named files and one question that no running lane owns (the lanes table in `STATUS.md` is the register), and the machine has room for it (H-024, H-026.7).
+- The brief is the common brief (`E:\RE4DC-Lanes\COMMON-BRIEF-20261121.md`, copy in `docs/engine/COMMON_BRIEF.md`) plus the lane's own short brief.
 - The lane's work does not depend on timing, or its speed is judged on the calibrated defensive model (`LANES.md` section 3). No console run is booked while the replatform is under way.
 - The brief passes the checklist in `port/dreamcast/docs/engine/LANES.md` section 7:
   - reference hashes named;
@@ -23,8 +24,11 @@ Read `AGENTS.md` first: the rules, the goal and the four-file boot set. This fil
   - the machine section (`LANES.md` section 2).
 - The brief says which original files may be linked (decision code only) and that everything else is native or a logged stub.
 
+### When a lane hands back
+Send it to the integration lane (`eng-int`) to gate, one lane at a time, and read its gate report (PASS or FAIL, one line per step). Only the integration lane merges into `engine` (H-024); a FAIL comes back to you to rule on and re-brief. The steps below are what its gate checks (`docs/engine/INTEGRATION_GATE.md`).
+
 ### Before merging a lane
-Do these yourself. The lane's summary is a claim, not evidence.
+The integration lane does these, not the lane. The lane's summary is a claim, not evidence.
 1. Merge into a scratch worktree. If it conflicts, send the lane back to merge `engine` and resolve.
 2. Every image links: default, `FIGHT=1`, `BOSS=1`.
 3. The link check passes (no original service symbol outside the allowed list).
@@ -37,7 +41,8 @@ Do these yourself. The lane's summary is a claim, not evidence.
 ### Before reporting to the owner
 - Lead with replatform progress: how much of the game is re-platformed (native and playable in the new engine) and what is left. Then what the owner must decide. Audit and tooling detail come after.
 - Status words: "finished, unaudited"; after its audit and its model, "finished, modelled, not on console"; "done" only after the deferred console run.
-- Give the tier with every number. Never set a modelled number beside a console number without saying so.
+- Give the tier with every number, and the band with every modelled speed figure (H-025.3). Never set a modelled number beside a console number without saying so.
+- Say what works in the game. Call them corrections, game settings and guards, never switches (H-026.2).
 - Do not ask for the console, an SD card or a date while the replatform is under way, and do not list it under what the owner must do.
 - Plain words. Send still sheets sized for a phone.
 - Customer-facing speed claims need a console number or an explicitly labelled model figure, and the owner's OK before anything is posted.
@@ -90,7 +95,7 @@ Only when Codex wrote the work. Follow the checklist in `CODEX.md`.
 - Skills on the maintainers' machine: `re4dc-engine` (integrator routine), `re4dc-engine-lane` (lane agent), `re4dc-engine-audit` (auditor), `re4dc-test-rig` (warp rig, QA teleporter, pad scripts, traces, unattended sessions). The older `re4-dreamcast-*` skills were removed on 2026-11-20.
 - Work in WSL Ubuntu-24.04. Worktrees live under `/root/work/lanes/<lane>`; evidence under `E:\RE4DC-Lanes\<lane>`.
 - Run multi-line WSL work from a script file. Inline `bash -c '...$VAR...'` loses variables to the outer shell. A timeout on every WSL call.
-- Build objects in RAM (`/dev/shm`), one image build at a time, folders deleted when checked (WSL's swap file on C: grows with what sits there). Check C: and E: free from Windows before every build and disc stage: stop at C: 31 GB or E: 15 GB. A `sleep` keeper per lane while it works. Test discs deleted after their runs, with a note. No `fstrim` or compaction by lanes. The nightly backup job is `C:\Game Dev\Emulators\_private_tools\wsl-backup\wsl-backup.sh` (one bundle per repository).
-- Flycast runs only from a lane's provisioned slot folders: `std1`, `std2` the plain build for function checks; `fly1`, `fly2` the strict build (`Dynarec.Enabled = no`, `[config] Sh4Clock`) for modelled numbers. Never copy `flycast.exe`. At most two running. Never take window focus or send input to a window.
+- Build objects in RAM (`/dev/shm`), one image build at a time with `make -j4`, folders deleted when checked (WSL's swap file on C: grows with what sits there). Check C: and E: free from Windows before every build and disc stage: stop at C: 40 GB or E: 20 GB (H-024.4). A `sleep` keeper per lane while it works. Test discs deleted after their runs, with a note. No `fstrim` or compaction by lanes. The nightly backup job is `C:\Game Dev\Emulators\_private_tools\wsl-backup\wsl-backup.sh` (one bundle per repository).
+- Flycast runs only from the shared slot folders, by lease (`LANES.md` section 2): `std1`, `std2` the plain build for function checks; `fly1`, `fly2` the console-like build with its dynarec on at `[config] Sh4Clock = 70` for the calibrated tier (H-023); `int1` for the integration lane. Never copy `flycast.exe`. Never take window focus or send input to a window.
 - A staged disc that must survive gets a `KEEP` file: the hourly cleanup deletes disc images untouched for 6 hours.
 - Never pattern-delete across `/root/work`. Delete by literal path, in your own folders. Stop processes by pid.
