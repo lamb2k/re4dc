@@ -22,7 +22,8 @@
 // Controls (empty boot files next to SHOT.TXT; each makes the engine wrong on purpose, so the judgement must FAIL):
 //   SHOTDMG   every life drop of an enemy is 100 more than the game's (the damage amount)
 //   SHOTLATE  a weapon hit registered on an enemy is held 30 ticks (one second) before its damage is taken
-// The trace is always on in this scene (LT, LE, LL lines; NOTRACE is ignored): it is a function run, never a timing run.
+// The trace is always on in this scene (LT, LE, LL lines; NOTRACE is ignored): it is a function run, never a timing run
+// (its "E1 RUN function (traced)" line, core/frame.cpp, tells the selector so).
 #include "global.h"
 #include "player.h"
 #include "em.h"
@@ -141,7 +142,6 @@ void e2_shot_boot()
            (unsigned long) n, s.room, s.ticks, s.seed, s.esl, s.god, s.has_resume, s.nactors, s.npads,
            s.ctl_dmg ? "; CONTROL SHOTDMG: every enemy life drop 100 more" : "",
            s.ctl_late ? "; CONTROL SHOTLATE: weapon hits held 30 ticks" : "", s.refused ? "; REFUSED" : "");
-    e1_log("E1 RUN function (traced): not a timing run\n");
 }
 
 // After Leon is created and the camera set up (the end of the fight image's room init): the resume, then the seed.
