@@ -330,10 +330,13 @@ extern "C" u32 GetWepTargetList2(Vec* p0, Vec* p1, WepTarget* list, u32 max, Vec
             if (list[far].part->rad <= list[j].part->rad) far = j;
         if (list[far].part->rad > part->rad) { list[far].part = part; list[far].em = em; }
     }
-    for (u32 i = 1; i < cnt; i++)   // nearest first (insertion sort: a list of at most 20)
-        for (u32 j = i; j > 0 && list[j - 1].part->rad > list[j].part->rad; j--) {
-            const WepTarget s = list[j]; list[j] = list[j - 1]; list[j - 1] = s;
-        }
+    // nearest first, by the original's exchange sort (em_sub.cpp: swap entry i with any later nearer entry j); lane
+    // eng-e2g: a stable insertion sort put targets at exactly the same distance in another order than the game's
+    for (u32 i = 0; i + 1 < cnt; i++)
+        for (u32 j = i + 1; j < cnt; j++)
+            if (list[i].part->rad > list[j].part->rad) {
+                const WepTarget s = list[i]; list[i] = list[j]; list[j] = s;
+            }
     if (bestPart && (cnt + 1 <= max || cnt == 0)) { list[cnt].part = bestPart; list[cnt].em = bestEm; cnt++; }
     if (cnt) nrm->x = nrm->y = nrm->z = 0.0f;
     aim_list_cnt.listed += cnt;

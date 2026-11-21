@@ -180,7 +180,8 @@ def section_refs(obj, replaced):
         if sec is None or len(p) < 3 or not re.match(r'^[0-9a-f]+$', p[0]):
             continue
         tgt = p[2].split('+')[0].split('-')[0]
-        if tgt in own and tgt != sec:
+        # the function's own sections (its code, its jump tables in .rodata.<symbol>) may name its code
+        if tgt in own and sec.split('.', 2)[-1] != tgt.split('.', 2)[-1]:
             bad.append('section %s refers to %s by its section (%s)' % (sec, own[tgt], tgt))
     return bad
 
