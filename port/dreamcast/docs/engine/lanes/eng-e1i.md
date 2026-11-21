@@ -36,6 +36,14 @@ the bench has no live digits), `core/draw_e1.c`, `core/main.cpp`, `core/e1_core.
 ## Not done / not covered
 
 - The EMPTY sign and the no-weapon player states for the digits.
-- The packs must be re-made with `hud_fix.py` whenever a pack is re-baked (native_pack.py, hill_pack.py and the fight's
-  pack_trim do not call it yet).
 - Hill: a thin dark line crosses the bullet icon (a widget not identified).
+
+## Follow-up (after the merge at 00effae99)
+
+- The digit check is in the repository: `tools/engine/hudcheck.py` (its reader `tools/engine/hudana.py`), usage with
+  `--run N` for a disc with several scenes.
+- The bakes keep the HUD fix: native_pack.build ends with hud_fix.fix_capture (hill_pack.py builds through it);
+  native_pack.py, hill_pack.py and fight/pack_trim.py refuse to write a pack that fails hud_fix.verify. Exercised: a
+  hill re-bake (hill_pack.py) gives the disc's hill pack byte for byte; pack_trim on the fixed village pack passes, on
+  the unfixed one refuses. Not exercised: a village re-bake through native_pack.py's own main (the village capture's
+  leon-bind.bin is not in the capture folder at hand). No image change.

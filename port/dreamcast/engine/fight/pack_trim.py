@@ -83,6 +83,15 @@ def main():
     head[3] = len(body)
     head[4] = zlib.crc32(body) & 0xFFFFFFFF
     out = struct.pack('<5I', *head) + body
+    # lane eng-e1i: the input must be a pack with the HUD fix (bake/hud_fix.py: native_pack.build's last step); the cut
+    # keeps picture 0's HUD rows, so the output must still pass; never write one that does not
+    import os
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'bake'))
+    import hud_fix
+    try:
+        hud_fix.verify(out)
+    except ValueError as e:
+        sys.exit('pack_trim: %s: %s' % (src, e))
     open(dst, 'wb').write(out)
     rest = len(out) - 88 - len(secs[0])
     print('pack %d -> %d B (RAM part %d B), effect map %d sprite pictures' % (len(d), len(out), rest, len(fx)))

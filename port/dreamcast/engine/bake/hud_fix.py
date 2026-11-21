@@ -16,6 +16,11 @@
    glyph rows (measured from the pictures' alpha), where the bake drew the whole canvas (the glyph squeezed to 3/4 of
    the cell, the unlit segments of the PS2 art over the bright lens).
 --control-cut: step 2 without the glyph cut (the old atlas cut, texture coordinates 0..1): the digit check's control.
+
+    hud_fix.py --verify <pack>      exit 0 when every digit widget is linked, 1 when not (the step was not run)
+
+native_pack.build (so hill_pack.py too) runs fix_capture as its last step, and native_pack.py, hill_pack.py and
+fight/pack_trim.py refuse to write a pack that fails verify: a re-bake cannot lose the fix silently.
 """
 import struct, sys, zlib
 from pathlib import Path
@@ -81,6 +86,7 @@ DIGIT_MARKS = (0x0B, 0x0A, 0x17)   # ones, tens, hundreds (cockpit.cpp BulletInf
 def fix(data, texpak, ram, control_cut=False, log=print):
     magic, ver, room, n, crc = struct.unpack_from("<4s4I", data)
     if magic != b"NAT3" or zlib.crc32(data[20:]) != crc: raise ValueError("not a NAT3 pack")
+    if linked_digits(data)[0]: raise ValueError("HUD fix: the pack is fixed already (a second run would scale twice)")
     secs = blocks(data, 20)
     if len(secs) != 15: raise ValueError("pack sections")
     textures, headers, frames = blocks(secs[0]), blocks(secs[1]), blocks(secs[3])
@@ -151,10 +157,39 @@ def fix(data, texpak, ram, control_cut=False, log=print):
         v = list(struct.unpack("<10I", f)); v[6] = ids[row]; new_frames.append(pack("10I", *v))
     secs[0], secs[1], secs[3], secs[4 + 5] = block(textures), block(headers), block(new_frames), block(table)
     body = block(secs)
-    return pack("4s4I", b"NAT3", ver, room, len(body), zlib.crc32(body)) + body
+    out = pack("4s4I", b"NAT3", ver, room, len(body), zlib.crc32(body)) + body
+    verify(out)
+    return out
+
+def linked_digits(data):
+    """(the digit widgets of picture 1 linked to the PS2 digit pictures (record word 7), all digit widgets)"""
+    magic, ver, room, n, crc = struct.unpack_from("<4s4I", data)
+    if magic != b"NAT3" or zlib.crc32(data[20:]) != crc: raise ValueError("not a NAT3 pack")
+    secs = blocks(data, 20)
+    w = apply([], blocks(secs[4 + 5])[struct.unpack_from("<10I", blocks(secs[3])[0])[6]])
+    digits = [at for at in range(4, len(w), 24) if (w[at] >> 8 & 255) == 0x21 and (w[at] >> 16 & 255) in DIGIT_MARKS]
+    return [at for at in digits if w[at + 7]], digits
+
+def verify(data):
+    """refuse a pack whose digit widgets are not linked (the bake ended without this step); -> the linked count"""
+    linked, digits = linked_digits(data)
+    if not digits or len(linked) != len(digits):
+        raise ValueError(f"HUD fix missing: {len(linked)} of {len(digits)} digit widgets linked to the PS2 digit pictures "
+                         "(run bake/hud_fix.py as the bake's last step)")
+    return len(linked)
+
+def fix_capture(data, disc, capture, log=print):
+    """the bake's last step (native_pack.build): tex.pak from the disc tree, the capture's own RAM snapshot"""
+    rams = sorted(Path(capture).glob("resource-ram-*.raw"))
+    if not rams: raise ValueError(f"HUD fix: no resource-ram-*.raw in {capture}")
+    return fix(data, (Path(disc) / "tex.pak").read_bytes(), rams[0].read_bytes(), log=log)
 
 if __name__ == "__main__":
     a = sys.argv[1:]
+    if a[:1] == ["--verify"] and len(a) == 2:   # exit 0 when the step was run, 1 when not
+        try: print(f"{a[1]}: {verify(Path(a[1]).read_bytes())} digit widgets linked: PASS")
+        except ValueError as e: print(f"{a[1]}: {e}: FAIL"); sys.exit(1)
+        sys.exit(0)
     if len(a) < 4: sys.exit(__doc__)
     out = fix(Path(a[0]).read_bytes(), Path(a[2]).read_bytes(), Path(a[3]).read_bytes(), "--control-cut" in a)
     Path(a[1]).write_bytes(out); print("wrote", a[1], len(out))
