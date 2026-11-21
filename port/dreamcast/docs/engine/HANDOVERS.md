@@ -2,6 +2,22 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-016 (2026-11-21): E1 second audit (Codex): not passed; integrator rulings on its list
+
+- **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1b\AUDIT-E1B.md` (audited `d13510243`; staged disc built from `00effae99`).
+- **Verdict:** the code side of E1 is not passed. The console run is still owed separately.
+- **What holds:** the random split on the audited paths; the village route 641 of 641 ticks against the PC reference with no feed; the heap alias fix and its controls; pool refusals failing a scene; the staged disc is the audited code (268 of 268 files hashed in place) and boots six of six scenes in Flycast; the field counter counts real display changes, 600 two-field intervals per drawn scene in Flycast.
+- **What does not hold, and the ruling on each:**
+  1. **Camera evaluation is service code.** `CameraInterpolation::move`, `CameraSmooth::move`, `area_hit_p3`, `area_hit_pN`, camera data relocation and the shoulder camera's base matrix are linked from allowed units as decisions; the rail replacements in `services/camera/camera_svc.cpp` (BSpline and others) follow the original bodies line for line. Ruling: the camera is one native service whose state is the renderer's camera record. Behaviour code chooses the camera mode and targets through thin setters; interpolation, smoothing, rails and area containment are the engine's own code on SH4ZAM types. Same mathematics is expected; a transcription of the original body is not accepted. `scrHitCheck` is debug drawing: a logged stub.
+  2. **Publication.** The per-tick copy of the camera into a draw stream, the four HUD words and the per-character light snapshot go. The renderer reads the camera service's record and the HUD's live state in place; a character's light record is written by the setters that change its inputs, not compared every tick. The skeleton's final palette (scale and column length for every published bone) is service work and stays, charged to services.
+  3. **Shooting.** H-015.4 is withdrawn. The shot fixture runs on the engine with the same inputs as on the PC reference and is judged by `outcome.py` against the reference, in E1. The default image's `GetWepTargetList2` stub is replaced by the native target list.
+  4. **Controlled Ashley.** E1 proves Ashley as the partner. The generic player host with Ashley as the controlled character is proven with her castle section in E4, where the plan's backlog already puts it. The E1 row in ENGINE_PLAN section 7 is corrected to say so. The owner may overturn this.
+  5. **Outcome reader.** Every actor present in the reference must have every tick between its first and last sample; R rows are required when the fixture declares a room; an unrecorded position sentinel fails; yaw is compared with a tolerance. Each with a failing input.
+  6. **Console record.** A scene is OK only with drawn mode, 600 distinct picture rows, 600 real flip intervals and zero release-queue drops; stack guards and RAM and VRAM floors are sampled after play, not before. Diagnostic captures (traces, stills) are never taken in a timed run.
+  7. **Gate evidence.** The integrator's gate scripts write their comparison tables to files beside the make logs (the auditor could not find g6's hash tables).
+- **Not ruled, for the console evening:** physical timing, input feel (fixed release against PACETMU), memory peaks through play, no play-time disc reads, the GDEMU race gate, matched stills and clips against the PS2 original, the owner's look decisions.
+- **Open with the owner:** the HUD look (still sheet); the yes for the WSL disk compaction; a date for the console evening.
+
 ## H-015 (2026-11-20, late): integrator rulings after lane eng-e1h
 
 - **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013.

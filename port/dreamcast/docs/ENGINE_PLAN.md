@@ -145,7 +145,7 @@ The asset decision: the owner's rule is PS2 assets only, and the PS2 set is the 
 | # | Slice |
 |---|---|
 | **E0** | Walkabout: the world drawn from the whole-room bake. Done on the model; console pending |
-| **E1** | Leon and Ashley on the engine: native skeleton, collision and cloth; original player and partner behaviour hosted; HUD, aiming and shooting; the player hosting generic for Ashley's castle section |
+| **E1** | Leon and Ashley on the engine: native skeleton, collision and cloth; original player and partner behaviour hosted; HUD, aiming and shooting. (The player host with Ashley as the controlled character is proven in E4 with her castle section: H-016.4) |
 | **E2** | Fight and boss: four Ganados with original AI on native services and effects; a first Disc 1 boss |
 | **E3** | Chapter 1 end to end, every Disc 1 boss fight, first engine release |
 | **E4** | The rest of the game by chapter |
