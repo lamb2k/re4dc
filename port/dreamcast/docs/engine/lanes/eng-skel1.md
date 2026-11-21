@@ -95,3 +95,16 @@ clips keep being decoded from their keys (correct, slower): the scene's gate row
 freed, `skel_mk_forget` then free both. The bindings are made here, so `MotionSetCore` finds a clip by its address
 (`mk_of`, a hash probe) and computes no identity in play. Memory: the s16 rows (eng-svc3's approximation, every bone
 within 1 unit / 0.1 degree) are about half the float rows; the room's set is the integrator's ruling (main RAM).
+
+## Part B (partial) and the A6 follow-up
+- **The 2-3 ms span is KOS's clock, not work.** `timer_ns_gettime64()` values each TMU2 count at 80 ns while TMU2 reloads
+  every second from 12,468,720 counts (TIMER_PCK / 4): the clock runs 0.25% slow within a second and jumps forward
+  2,502,400 ns at each whole second. The gap probe (boot file GAPPROBE, host/e1_svc_mem.cpp) finds the 2,502 us gap once a
+  second with interrupts off too; its control (a 3-4 ms spin) reads 3,416 us. Every MODELLED worst picture can carry
+  +2.5 ms of this artefact; the fix is a clock that converts at the reload's rate (engine clock wrapper or KOS).
+- A6 option 2 (ruled): census done (one reader outside the services: `src/Sscrn/ss_map.cpp mapPositionCheck`, the map
+  screen, to be served by a native map entry; request to the items / inventory lane for when the sub screen is
+  hosted). Savings with the map's needs: r106 597,992 B, r113 527,916, r103 526,500, r101 301,950; the services region
+  then fits in 512 KB (361,472 B with the SVCPROF arm). Bake step, col_model.cpp, the map entry and the DOOR round trip:
+  not done.
+- Items 5 (one world pass), 6 (line query stamp / memo: design in the hand-back), 7 (approximate maths): not done.
