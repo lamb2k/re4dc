@@ -694,8 +694,9 @@ void audio_step()
     if (ticks > 64) { g_lastTickUs = now - 5000ull * kCatchUp; ticks = kCatchUp; ++S.debt_drops; }
     if (ticks > kCatchUp) ticks = kCatchUp;
     if (ticks > S.max_ticks) S.max_ticks = ticks;
+    // banks being placed by the main thread (a room load, a BGM read): this step's frames wait for the next step
+    if (mutex_trylock(&g_lock)) return;
     g_lastTickUs += ticks * 5000ull;
-    mutex_lock(&g_lock);
     for (u32 i = 0; i < ticks; i++) {
         snd_pend_run();
         g_axCallback();
@@ -763,7 +764,15 @@ void* audio_main(void*)
         thd_sleep(5);
         if (!g_axCallback || !g_started) continue;
         const u64 a = timer_us_gettime64();
+        // The step runs with interrupts off. KOS's scheduler, at its 10 ms tick, hands the CPU to another ready thread
+        // whatever the priorities (thread.c thd_schedule picks from the run queue before the running thread is put back),
+        // so a tick that fell inside a step gave the main thread a whole timeslice in the middle of it (10 to 20 ms
+        // steps, one to several a scene). With interrupts off the step is atomic, as the GameCube's audio interrupt was:
+        // the tick is taken when the step ends, and the main thread gets the CPU then, as it would anyway. The vblank
+        // interrupt (the field count the pacer waits on) waits at most one step; the report gives the longest step.
+        const int irq = irq_disable();
         audio_step();
+        irq_restore(irq);
         probe_step();   // the output check: a few register reads, outside the step's cost (aica_step_hook)
         aica_busy_us = aica_busy_us + (uint32_t) (timer_us_gettime64() - a);
     }
@@ -780,13 +789,8 @@ void start_thread()
     a.label = "eng-sound";
     a.create_detached = true;
     g_thread = thd_create_ex(&a, audio_main, nullptr);
-    // Priority 0 (thd_create treats 0 as "default", so it is set after): KOS ages a ready thread's priority by how long
-    // it has waited (thread.c thd_calc_prio: prio >> waited / 2^ageing), so a main thread that ran a whole late picture
-    // without yielding came back above priority 3 and took the CPU from a running audio step for a whole timeslice
-    // (one 10 ms step a scene, calibrated and plain Flycast alike). Aged, the main thread's priority 10 only reaches 0,
-    // and the run queue keeps the static priority 0 thread first, so a step is not preempted by it.
-    if (g_thread) thd_set_prio(g_thread, 0);
-    snd_log("aica: audio thread tid=%d prio=0 period=5ms\n", g_thread ? (int) g_thread->tid : -1);
+    // (Priority alone does not keep a step whole, priority 0 made it worse: audio_main runs the step with interrupts off.)
+    snd_log("aica: audio thread tid=%d prio=3 period=5ms\n", g_thread ? (int) g_thread->tid : -1);
 }
 
 }  // namespace

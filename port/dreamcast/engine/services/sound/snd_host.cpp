@@ -37,7 +37,10 @@ void cb_aram_dma_end(u32 task);                 // snd_str2.cpp
 extern "C" {
 WEAK int OSDisableInterrupts(void) { return irq_disable(); }
 WEAK int OSRestoreInterrupts(int level) { irq_restore(level); return level; }
-WEAK int OSEnableInterrupts(void) { const int old = irq_disable(); irq_enable(); return old; }
+// The driver's audio frame (snd_main.cpp cb_audio_frame) enables interrupts for its body, as the GameCube's audio
+// interrupt let others nest; here the frame runs inside the audio step with interrupts off (aica.cpp audio_main), and
+// stays so: the previous state is returned and nothing is enabled (the game never calls it).
+WEAK int OSEnableInterrupts(void) { return irq_disable(); }
 WEAK u32 OSGetSoundMode(void) { return 1; }   // stereo
 WEAK void OSSetSoundMode(u32) {}
 WEAK void DCFlushRange(void*, u32) {}
