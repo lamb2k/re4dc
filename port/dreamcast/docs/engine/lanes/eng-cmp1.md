@@ -29,9 +29,21 @@
 - The old port's `setup` stamp (Render_before, pad read, Render) holds its drawing submission: 15.5 to 19.2 ms a tick
   in these scenes in Flycast.
 
+## Item 6 (owner input 2026-11-21): Flycast calibrated on the old port
+
+- The console-like build's interpreter (`Dynarec.Enabled = no`) ignores `Sh4Clock` (identical figures at 100, 130, 200).
+  Both dynarec builds honour it but differ by about 1.45x at 200 MHz on the old port; each needs its own clock.
+- One clock matches the old port's four heavy console spots within about 3% in each build (console build 70.9 to 75.7
+  MHz, standard 104 to 110); the quiet view needs more (97.5 / 125.4). Defensive clock: the console build's dynarec at
+  Sh4Clock 70 (the MODELLED tier).
+- MODELLED, same scenes: old port 15.6 / 11.3 / 16.4 pictures a second, engine 28.9 / 18.3 / 24.2 (village / hill /
+  fight). At their own defensive clocks the two builds agree on the old port within 2.4% and disagree on the engine by 6
+  to 10%: the calibration does not transfer cleanly to the engine's code; quote the console-build figures as the
+  pessimistic end of a band.
+
 ## Not done
 
-- No console run; no MODELLED figure.
+- No console run.
 - The old port on the hill and on the walked routes cannot be measured on a console with the existing discs (the lab
   disc has no hill preset and no route; the warp images log to RAM only).
 - Engine stills are from eng-e1p's function images, not the timed console-disc images.
