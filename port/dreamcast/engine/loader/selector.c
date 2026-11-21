@@ -255,7 +255,7 @@ static void e1_summary(sel_entry_t *e) {
     static uint32_t s[E1_COUNT];
     const unsigned n = g_rows;
     if (g_function) {   /* lane eng-e1k: a traced or stills run: its rows are not timing */
-        sum_add(e, "function run (%.30s): not a timing run", g_runkind);
+        sum_add(e, "run: %.44s", g_runkind);   /* "function (traced): not a timing run" */
         sum_add(e, "rows %u of %u ticks: not reported as timing", n, g_last_row);
         return;
     }

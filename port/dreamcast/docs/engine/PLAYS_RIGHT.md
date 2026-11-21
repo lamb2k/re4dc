@@ -417,3 +417,70 @@ pipeline's subshell). Now:
 
 A WRONG row still exits 1. Full runs on the lane's final reference: svc_controls 77 rows, controls.sh 18,
 outcome_controls 28, all as they must (`E:\RE4DC-Lanes\eng-e1h\ev\ctl2\`).
+
+## The reader's last false passes, and the shot on the engine against the reference (lane eng-e1k, 2026-11-21)
+
+Status: finished, unaudited. PC numbers are re4ref (hostref); engine numbers are **Flycast** (function checks).
+
+**outcome.py, four false passes closed (H-016.5).** Each new control row below passed under the reader before this lane
+(`E:\RE4DC-Lanes\eng-e1k\ev\item1\old-reader.txt`) and now fails as it must:
+
+| Gap | Rule now | Control (outcome_controls.py) |
+|---|---|---|
+| An interior actor sample deleted from a surviving, stationary actor passed (positions were compared only where both runs had a record) | every actor has a record on every tick from its first to its last (`missing-sample`); a park and re-queue is not hosted yet, so a gap always fails | 0x1e's A line of tick 250 removed: FAIL [missing-sample] |
+| Every R line removed skipped the R check (it ran only when some R line was there) | a re4ref trace whose H line declares a room needs an R line on every T tick (`short-run`) | B without any R line: FAIL [short-run] |
+| A present but unrecorded position (`pos=~`) was read as "no value" and skipped | a position or angle field that is present but holds the sentinel (`-`, `~`, empty) is `malformed` | one LE line with `pos=~`: FAIL [malformed] |
+| Yaw was checked for finiteness only | Leon's and every actor's yaw within `ang_deg` (1 degree, the fixtures' value; wrapped) on the position's ticks (`yaw`); a yaw one run records and the other does not fails; the engine's LE `ay=` is read | 0x1e, and Leon, turned 2 degrees from tick 300: FAIL [yaw]; turned 0.5 degrees: PASS; LE lines without `ay=`: FAIL [yaw] |
+
+outcome_controls.py: 35 rows (37 with `--engine-log`), all as they must (`ev\ctl\outcome_controls.md`). No existing fixture
+needed a fix: the village engine run against the PC reference (eng-e1g `f1`), and shot-ganado, door103-walk, hill-ashley,
+hill-follow and bell-ganado-hit native against reference all still PASS (`ev\item1\existing.txt`). The village no-clamp
+run (eng-e1g `vnc`, Flycast) now fails first on yaw at tick 424 (2.52 degrees), before position at 519 (`ev\item1\vnc.txt`).
+
+**The shot's target list is native (H-016.3).** `GetWepTargetList2` (the handgun's shot, pl_wep.cpp PlWepHitCheck2) is
+`services/aim/aim.cpp` in every image: the scenery through the native collision service, the enemies on the actor table
+with the original's rules (hit-only kinds, the line's ground frame, the nearest box each enemy's segment enters, nearest
+first, a full list keeps the nearest, flag 0x4000 on listed boxes). The default image's stub is gone: with no enemy on
+the line the list is empty by computation (the report's `E1 AIM LIST` line counts shots, scenery hits and listed
+enemies). FIGHT=1 and BOSS=1 weaken em_sub's body (FIGHT 109 to 108 service functions, BOSS 58 to 57).
+PC check (hostref aimchk, both lists on every shot; `hostref/svc/aim_check.sh`): shot-ganado 2 of 2 shots and
+aimfire-ganado 10 of 10 the same (count, enemy, box, attribute; box distance within 0.004 unit); the control
+`RE4_AIM_CONTROL=grow` (boxes 25% larger) FAILs the list (box distance 32.8 units apart) (`ev\ctl\aim_check.out`).
+The PC controls after this lane's reference change: svc_controls.sh 77 rows, controls.sh 18, outcome_controls.py 37,
+all as they must (`ev\ctl\`).
+
+**The shot fixture on the engine.** The FIGHT=1 image plays a re4ref fixture file when the boot file `SHOT.TXT` is on the
+disc (`engine/fight/shot_e2.cpp`). What the engine is given: the fixture file, verbatim
+(`tools/plays_right/fixtures/shot-ganado.txt`), and nothing from the reference's run. It plays the keys re4ref reads in
+re4ref's order: room and enemy list (must be the image's: r101, list 0), Leon's placement, weapon (must be 2 0), the seed
+(set after Leon is created and resumed), the resume, `god`, the four list entries created by the original EmSetFromList2
+after the enemy table's move of tick 1 (`post`), and the pad lines as they are. Any other key (`hit`, `sub`, ...) refuses
+the scene (`E2 SHOT REFUSED`): no planted hit. Where the fixture says nothing the engine starts where re4ref does: no
+room script or scenario task, no room-entry spawn, no difficulty points (re4ref does not host game.cpp), no warp flags.
+The scene is always traced and says "not a timing run".
+
+**One reference fix.** The first run differed from tick 135: the reference's Ganado drew its voice timer from the
+behaviour generator, the engine's from the presentation generator (the owner's split, game/fight.mk `PRESENT_em10`).
+The reference now splits em10's presentation callers the same way (`hostref/Makefile PRESENT_EM10`); the engine was not
+changed.
+
+**Result** (`tools/plays_right/shot_engine.py`; Flycast test disc s1 of commit 1543e4780, judged against the reference
+of 313d1cd71; evidence `E:\RE4DC-Lanes\eng-e1k\ev\shot-s1\shot_engine.md`):
+
+| Actor | Reference (re4ref) life drops | Engine (Flycast) life drops |
+|---|---|---|
+| Ganado 0x14 | tick 162, 800 to 500 | tick 162, 800 to 500 |
+| 0x1c, 0x1e, 0x1f | none | none |
+
+321 ticks, 4 actors: route 0, position max 0 units, yaw max 0 degrees, no kill, no clear; the bit patterns agree on every
+compared field. Controls, each an engine scene of its own on the same disc, judged against the same reference:
+
+| Scene | Must | Got |
+|---|---|---|
+| SHOT | PASS | PASS |
+| SHOTNP (the fixture without the press at 160) | FAIL [damage] | FAIL: A amounts [300], B [] |
+| SHOTDMG (boot file: 100 more life taken at each hit) | FAIL [damage] | FAIL: A amounts [300], B [400] |
+| SHOTLATE (boot file: each registered hit held 30 ticks) | FAIL [damage] | FAIL: A at 162, B at 192 |
+
+Run: `build_console_disc.sh --scenes SHOT,SHOTNP,SHOTDMG,SHOTLATE`, the disc in Flycast, then
+`RE4_TREE=<tree> shot_engine.py <serial.txt> <out>` (it runs the reference itself).
