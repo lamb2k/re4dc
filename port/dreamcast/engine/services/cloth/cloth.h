@@ -62,13 +62,15 @@ struct ClothChain {      // 64 B header
     u32 serial;
     u32 bytes;
     PresRng rng;         // the chain's presentation stream (pres_rng.h)
-    u32 pad[5];
+    u32 stamp;           // lane eng-cloth1: the chain's last step (g_step): the table's eviction order
+    u32 pad[4];
 };
 
 extern "C" {
 // counters (svc census and the cost indicator)
 struct ClothCounters {
     u32 chains, fallback, moves, links, at_volumes, resets;
+    u32 evicted;         // lane eng-cloth1: entries given up when the table was full
 };
 extern ClothCounters cloth_cnt;
 // controls (lane eng-svc2: each must make the equivalence check fail)
@@ -79,4 +81,33 @@ extern int cloth_passes;             // 1: the kernel in the original's pass ord
                                      // (measured, rejected); 0: fused (lane eng-svc3)
 u32 cloth_chain_count(void);
 ClothChain* cloth_chain_at(u32 i);
+}
+
+// Lane eng-cloth1: the chain table's key, (PenCloth, model). Inline here so cloth_key_test.cpp checks the same code.
+inline bool cloth_key_eq(const ClothChain* ch, const PenCloth* c, const cModel* m)
+{
+#ifdef CLOTH_KEY_CONTROL_OLD   // cloth_key_test.cpp's control build only: the old key, the PenCloth alone
+    (void) m;
+    return ch->c == c;
+#else
+    return ch->c == c && ch->m == m;
+#endif
+}
+inline int cloth_key_find(ClothChain* const* tab, u32 n, const PenCloth* c, const cModel* m)
+{
+    for (u32 i = 0; i < n; i++)
+        if (cloth_key_eq(tab[i], c, m)) return (int) i;
+    return -1;
+}
+inline void cloth_key_forget(ClothChain** tab, u32& n, const PenCloth* c, const cModel* m)
+{
+    const int i = cloth_key_find(tab, n, c, m);
+    if (i >= 0) tab[i] = tab[--n];
+}
+inline int cloth_key_oldest(ClothChain* const* tab, u32 n)
+{
+    int o = 0;
+    for (u32 i = 1; i < n; i++)
+        if ((int) (tab[i]->stamp - tab[o]->stamp) < 0) o = (int) i;
+    return o;
 }
