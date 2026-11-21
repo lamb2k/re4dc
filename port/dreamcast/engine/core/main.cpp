@@ -5,6 +5,7 @@
 // 3 the game task's hosted subset in gameMainLoop order (player move, object move, camera move) with the services it
 // calls synchronously, 8 engine draw from the engine tables, 9 pacer.
 #include "global.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "player.h"
 #include "obj.h"
 #include "em.h"
@@ -37,7 +38,7 @@ void e1_stamp(unsigned k) { e1_stamp_c(k); }
 volatile uint32_t e1_state[8];   // 0 stage, 1 tick, 2 ticks total, 3 done
 E1Timing e1_timing[E1_TICKS];
 
-static uint64_t now_us() { return timer_us_gettime64(); }
+static uint64_t now_us() { return e1_clock_us(); }
 
 // Room set-up: the subset of gameRoomInit (game.cpp:509) the hosted player and camera need, in its order.
 static void room_init()
@@ -168,6 +169,7 @@ int main()
     e1_arena_init();
     e1_globals_init();
     e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
+    e1_clock_boot();                    // lane eng-clock1: the TMU2 reload check; GAPPROBE (core/e1_clock.cpp)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
     e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
     {
