@@ -317,14 +317,15 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   # lane eng-e1n: the publication and HUD controls (above); lane eng-e1p: the camera track, record and disc read controls
   for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
+    cskip=
     case $croot in
-      E1) cneed=E1/CROSS.PAK,E1/st1/r101.arc ;;   # lane eng-snd1: a traced village control (no NOTRACE)
+      E1) cneed=E1/CROSS.PAK,E1/st1/r101.arc; cskip=" $TSKIP" ;;   # lane eng-snd1: a traced village control, as LEONT
       E1H:E1) cneed=E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/st1/r11d.arc ;;
       E1L:E1) cneed=E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc ;;
       *) cneed=FIGHTL/NOTRACE,FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;
     esac
     cneed=$cdir/${cfiles%%,*},$cneed
-    echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact"
+    echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact$cskip"
   done
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
