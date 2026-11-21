@@ -39,7 +39,7 @@ Line numbers are `src/` on `engine` (the same on `t15/int` for these files).
 
 ## 3. The loading state, memory and the round trip
 
-`CONSOLE_LOOP.md` section 14 (the state and its record), `SERVICES.md` section 50 (what each service returns). Flycast
+`CONSOLE_LOOP.md` section 14 (the state and its record), `SERVICES.md` section 51 (what each service returns). Flycast
 (plain build, slot std2, a function check; no timing claim), the DOOR scene, run 4 (`E:\RE4DC-Lanes\eng-load1\ev\run4`):
 
 | Load | At tick | Time | Held fields | Loading disc: opens / reads / drive requests |
@@ -87,7 +87,7 @@ Three memory faults the DOOR scene found (each failed loudly, none hung):
 
 ## 4. The read-safety wrappers
 
-`core/disc_safe.c`, `SERVICES.md` section 50. Check CDISCF (runs 2 and 4): the first DMA transfer of the first load
+`core/disc_safe.c`, `SERVICES.md` section 51. Check CDISCF (runs 2 and 4): the first DMA transfer of the first load
 reported done without the transfer; `E1 DISCSAFE ... not-landed 1 fallbacks 1 latched 1`, the sector read again ("1
 sectors at 514556 read again: ok"), both loads completed (run 4: 0.738 s and 0.597 s with sector reads only, 21 and 23
 drive requests against 10). Every clean scene: `marked` about 1,550 DMA reads, `not-landed 0`, `latched 0`. The

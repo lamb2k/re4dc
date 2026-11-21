@@ -480,7 +480,7 @@ requests 0 and camera tracks converted in play 0; FIGHT's cut served by lookup (
 
 ## 14. The loading state: a room change between two ticks (lane eng-load1, 2026-11-21)
 
-Status: finished, unaudited. Flycast runs are function checks; no timing claim. Services side: `SERVICES.md` section 50.
+Status: finished, unaudited. Flycast runs are function checks; no timing claim. Services side: `SERVICES.md` section 51.
 
 **When.** After a tick's picture and pace (`core/main.cpp`), if the game asked for a room change (`pG->Rno0 == 4`: its
 door handler's request), the loop enters the loading state (`core/room_change.cpp e1_room_change_run`) before the next

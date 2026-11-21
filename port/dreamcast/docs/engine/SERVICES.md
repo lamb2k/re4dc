@@ -1471,7 +1471,24 @@ tick (the original over the next two sweeps). The fight image had no table befor
 The quad test takes two opposite corner wedges through `camera/area_edge.h` (the camera's edge test, now shared). The
 view check hands its point and direction to the view-cone test, which stays the fight image's generated stub (0).
 
-## 50. Room change and disc read safety (lane eng-load1, 2026-11-21)
+## 50. The Ganado's presentation, cut-in cameras, model parts and lifetime (lane eng-e2b, step 3)
+
+Details, per function how it differs from the original, and the check: `lanes/eng-e2b.md`. Status: finished, unaudited.
+
+| Engine file | em10.cpp functions retired from the fight image |
+|---|---|
+| `services/em10/em10_pres.cpp` | Em10SetSeTbl, em10CallVoiceSe, em10CallVoiceSe2, em10BreathSe, em10CsawSignSe, em10SetDamageVoice, em10BehindSeCk, em10FootSe, em10WepSeEffSet, em10BloodSet, em1cBloodSet, em10KickHitMark, em10SetDmWaterEff, em10SetWaterEff |
+| `services/em10/em10_cam.cpp` | em10CamMove, em10CamMove2, em10CamMoveCri, em10CamMoveAshley, em10CamMoveTakeaway, em10SetCampos2, em10ScreenInCk |
+| `services/em10/em10_model.cpp` | em10ModelInit, em10SetAccesory, em10HandSet, em10HeadSet, em10ClothPartsSet, em10GoodsPartsSet, em10SackSet, em10BlendMotSet, cEm10::~cEm10 |
+
+em10.o is built without interprocedural optimisations and refused by `game/em10_split_check.py` when a clone or an
+inlined copy of one of its 40 service functions is reported (the default -O2 had hidden eight of them inside decision
+functions). Check: `hostref/svc/e2bcheck.sh` (boundary log `e2b.txt` from `svc/e2b_dump.cpp`, with `e2.txt`, outcome and
+traces; controls voicebank, bloodswap, footpart, camease, screenhalf, handgrip, accnone, keepcap). The PC reference's
+em10SetDamageVoice voice is bound as on the console (EM10_VOICE, a refctl row). em10's skeleton and cloth functions
+(9) wait for skeleton and cloth entries (lane eng-svcspd1).
+
+## 51. Room change and disc read safety (lane eng-load1, 2026-11-21)
 
 Status: finished, unaudited. Lane note: `lanes/eng-load1.md`; the loading state's record: `CONSOLE_LOOP.md` section 14.
 
