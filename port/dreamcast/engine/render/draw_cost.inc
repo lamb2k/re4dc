@@ -134,19 +134,19 @@ static void dc_print(const char* tag){
         for(unsigned i=dc_lo;i<=dc_hi && i<=DC_PICS;i++){unsigned x=dc_pic[i-1][p];v[n++]=x;sum+=x;if(x>worst){worst=x;at=i;}}
         if(!n)continue;
         for(unsigned i=1;i<n;i++){uint16_t x=v[i];unsigned j=i;while(j && v[j-1]>x){v[j]=v[j-1];j--;}v[j]=x;}
-        printf("%s PHASE %s m%lu p%lu w%lu@%u (us, pictures %u-%u)\n",tag,dc_phase_name[p],(unsigned long)(sum/n),
-               (unsigned long)v[n-1-n/100],(unsigned long)worst,at,dc_lo,dc_hi);
+        /* us; the pictures are DC BEGIN's (short lines: the fight's report sits near the console loop's cap) */
+        printf("%s PHASE %s m%lu p%lu w%lu@%u\n",tag,dc_phase_name[p],(unsigned long)(sum/n),
+               (unsigned long)v[n-1-n/100],(unsigned long)worst,at);
     }
     /* the census's counters only when it ran: with them the bench's report (and nearly the fight's) reached the console
        loop's cap, and a report that does has no end line and its scene FAILS (disc d6's bench) */
     for(unsigned k=0;k<(dc_census_seen?(unsigned)DC_COUNT:(unsigned)DC_V_W_TRIS);k++)
-        printf("%s COUNT %s m%lu w%lu@%lu (sum %lu over %lu pictures)\n",tag,dc_count_name[k],
-               (unsigned long)(dc_pics?dc_sum[k]/dc_pics:0),(unsigned long)dc_max[k],(unsigned long)dc_maxat[k],
-               (unsigned long)dc_sum[k],(unsigned long)dc_pics);
+        printf("%s COUNT %s m%lu w%lu@%lu\n",tag,dc_count_name[k],
+               (unsigned long)(dc_pics?dc_sum[k]/dc_pics:0),(unsigned long)dc_max[k],(unsigned long)dc_maxat[k]);
 }
 void native_draw_report(void){
-    printf("DC BEGIN set %u pictures %u-%u phases select begin sky preworld worldOP actors worldPT listgap worldTR TRextra hud"
-           " | counters w_corners w_cliptris a_corners a_pos\n",dc_interleave,dc_lo,dc_hi);
+    printf("DC BEGIN set %u pictures %u-%u (T DCP: n, 11 phase spans in us, w_corners w_cliptris a_corners a_pos)\n",
+           dc_interleave,dc_lo,dc_hi);
     dc_print("DC");
     /* per-picture lines carry the trace prefix "T" so the console loop's report leaves them out (skip=T, the default):
        they made the fight's report reach its cap (no end line, the scene FAILED); the serial log keeps them */
