@@ -2,6 +2,20 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-018 (2026-11-21): E1 fourth audit (Codex): not passed, four items; integrator rulings; no fifth paper audit
+
+- **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1d\AUDIT-E1D.md` (audited `51405fc87`; the staged disc is built from it).
+- **Closed by the auditor:** H-017 items 1, 2, 4 (HUD and PUB), 8, 9 and 11; the staged disc and both control discs.
+- **The four open items, and the ruling on each:**
+  1. **Camera tracks converted in play.** The fight's cut is exported and converted when the cut starts. Ruling: every cut in a room's camera data is exported and converted when the room is loaded; a cut switch in play is a lookup. The track store is sized per room at load and a room that does not fit refuses to load, loudly. The `E1 CAMTRACK` line reports conversions in play, and the selector fails a scene where that is not 0.
+  2. **A refused motion export** is honoured first: the constructor checks the refusal before it reads a header, takes a lease or relocates anything. The exercise checks the buffer and its guards again after construction and a move, with an invalid count and with stale contents.
+  3. **Selector.** The whole after-play memory line is consumed (mallinfo free included); the scene's tick count and the fields counted are cross-checked against the rows actually received; each field ends at its own delimiter and is range-checked; the schedule is read whole (no 4,095-byte cut) and a line that does not parse fails the schedule. Each with a control scene or a control schedule built from the repository script.
+  4. **Disc reads in play.** Reads on disc-backed handles and CD sector requests are counted beside opens (`fs_read` on `/cd` handles, `cdrom_read_sectors` and its `_ex` form); the summary prints all three and the selector fails a timing scene where any is not 0. Control: a file opened before play and read at picture 100 fails its scene.
+- **No fifth paper audit.** Four audits in one night have each returned a shorter list; these four items are mechanical and each has a control. The integrator verifies them at the merge gate with the controls re-run on Flycast, and the next independent audit is the one the plan asks for: on the console evening's logs, for the milestone. This returns to "one independent audit per milestone, no review per change".
+- **Order from here:** lane eng-e1p; rebuild and boot the disc; then the console evening. Step 3 does not start before the owner has seen E1 on the console.
+- **Open with the owner:** a date for the console evening; the yes for the WSL disk compaction; three still sheets (HUD, near plane, overall).
+- **Machine note:** the nightly job "RE4 WSL Backup" (`C:\Game Dev\Emulators\_private_tools\wsl-backup\wsl-backup.sh`) wrote 24 GB to `E:\WSL-Backup` on 11-21 because it bundled each repository's unpushed commits once per worktree (three local `wip/*-20261120` branches hold about 100 MB of build output and packs). The script now bundles once per repository; 225 byte-identical duplicates were removed with a map (`E:\RE4DC-Lanes\reassess19\hygiene\DEDUPED-wsl-backup-bundles-20261121.tsv`).
+
 ## H-017 (2026-11-21): E1 third audit (Codex): not passed, list shorter; integrator rulings
 
 - **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1c\AUDIT-E1C.md` (audited `5f490e427`; the staged disc is built from it).
