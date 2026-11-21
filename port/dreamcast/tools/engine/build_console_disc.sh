@@ -280,10 +280,12 @@ case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
   put "${DOOR_FIXTURE:-$SRC/port/dreamcast/tools/plays_right/fixtures/door-r101-r103.txt}" DOOR/DOOR.TXT
   # the farm's bake as R103.PAK, not FARM.PAK: the renderer sizes its resident block from CROSS.PAK and FARM.PAK (E1's
   # FARM.PAK is the hill pack's twin); the bench's farm bake there needs 1.88 MB more and put the KOS heap into the
-  # behaviour arena (lane eng-load1, run 2)
-  put "$LKG/FARM.PAK" DOOR/R103.PAK; put "$LKG/FARM.VIS" DOOR/R103.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
+  # behaviour arena (lane eng-load1, run 2). Default: the farm bake of the shared set ($LKG, never a lane folder);
+  # R103_PAK / R103_VIS override it
+  R103_PAK=${R103_PAK:-$LKG/FARM.PAK}; R103_VIS=${R103_VIS:-$LKG/FARM.VIS}
+  put "$R103_PAK" DOOR/R103.PAK; put "$R103_VIS" DOOR/R103.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
   # CDOORPK: its own folder with the fixture and the farm's bake but not its archive (E1 has none either)
-  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$LKG/FARM.PAK" CDP/R103.PAK; put "$LKG/FARM.VIS" CDP/R103.VIS
+  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$R103_PAK" CDP/R103.PAK; put "$R103_VIS" CDP/R103.VIS
   for c in "${DOOR_CONTROLS[@]}"; do IFS='|' read -r cn cdir cfile ctitle <<< "$c"; mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile"; done ;;
 esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
