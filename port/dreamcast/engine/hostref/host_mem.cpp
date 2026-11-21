@@ -58,6 +58,16 @@ extern "C" void* host_fixed(uint32_t size, const char* why)
     return (void*) (uintptr_t) top;
 }
 
+// Lane eng-load1: a door's room change returns the last room's archive when it is the data region's newest block (the
+// region is a stack; the first room's archive lies under the weapon archive and stays). Returns 1 when returned.
+extern "C" int host_fixed_release(void* p, uint32_t size)
+{
+    const uint32_t a = (uint32_t) (uintptr_t) p;
+    if (a != fixed_top) return 0;
+    fixed_top = (a + size + 31u) & ~31u;
+    return 1;
+}
+
 extern "C" void* host_alloc(uint32_t size, uint32_t align, const char* why)
 {
     (void) align;   // every block is 32-aligned

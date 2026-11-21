@@ -259,7 +259,7 @@ static void sum_add(sel_entry_t *e, const char *fmt, ...) {
 
 static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "M1 missing pack", "STACK GUARD BROKEN", "E1 draw: renderer refused",
                                          "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "E1 load: camera tracks refused", "CRASH event",
-                                         "ABORT", "DEADLINE", "E2 SHOT REFUSED", NULL};
+                                         "ABORT", "DEADLINE", "E2 SHOT REFUSED", "E1 LOAD FAILED", "E1 DISCSAFE READ FAILED", NULL};
 
 /* the value after the keyword (first match at or after *from) */
 static const char *after(const char *line, const char *key) {
@@ -393,6 +393,47 @@ static unsigned g_files_reads, g_files_sectors, g_ctrack_seen, g_ctrack_inplay;
    (always the last rows: the budget only fills), so the image's tick count is the last row received plus these */
 static unsigned g_cl_seen, g_cl_rows_dropped;
 static unsigned g_fl_counted, g_fl_over, g_fl_worst, g_fl_worst_pic;
+/* lane eng-load1: a scene with the argument door=N (the DOOR scene, core/room_change.cpp) changes room N times. OK only
+   if every load completed ("E1 LOAD n done ..."), each visited room ran its ticks ("E1 ROOM visit"), the round trip's
+   memory marks are equal ("E1 ROUNDTRIP ...: equal"), and play's disc counters are 0 (E1 FILES), whatever the run
+   kind; the loading disc counters and times are reported. */
+#define DOOR_MAX 8
+static unsigned g_door_loads, g_door_visits, g_door_visit_zero, g_door_rt_seen, g_door_rt_equal, g_door_bad;
+static unsigned g_door_us[DOOR_MAX], g_door_held[DOOR_MAX], g_door_disc[DOOR_MAX][3];
+static char g_door_rt_why[24], g_door_rooms[24];
+static unsigned door_need(const char *args) {
+    const char *p = strstr(args, "door=");
+    return p && (p == args || p[-1] == ' ') ? (unsigned)strtoul(p + 5, NULL, 10) : 0u;
+}
+static void door_line(const char *line) {
+    unsigned n = 0, tick = 0, held = 0, o = 0, r = 0, sct = 0, ticks = 0, first = 0;
+    unsigned long us = 0, room = 0;
+    if (!strncmp(line, "E1 LOAD ", 8) && strstr(line, " done at tick ")) {
+        unsigned usu = 0;
+        if (!tmatch(line, "E1 LOAD %u done at tick %u: %u us, %u fields held; loading disc: opens %u reads %u sector-requests %u",
+                    NULL, &n, &tick, &usu, &held, &o, &r, &sct)) { ++g_door_bad; return; }
+        us = usu;
+        if (g_door_loads < DOOR_MAX) {
+            g_door_us[g_door_loads] = (unsigned)us, g_door_held[g_door_loads] = held;
+            g_door_disc[g_door_loads][0] = o, g_door_disc[g_door_loads][1] = r, g_door_disc[g_door_loads][2] = sct;
+        }
+        ++g_door_loads;
+    } else if (!strncmp(line, "E1 ROOM visit ", 14)) {
+        if (!tmatch(line, "E1 ROOM visit %u room %x ticks %u first-tick %u", NULL, &n, &room, &ticks, &first)) { ++g_door_bad; return; }
+        ++g_door_visits;
+        g_door_visit_zero += ticks == 0;
+    } else if (!strncmp(line, "E1 ROUNDTRIP rooms ", 19)) {
+        unsigned v[12], loads = 0, failed = 0;
+        long vr0 = 0, vr1 = 0;
+        const char *verdict = NULL;
+        g_door_rt_seen = 1;
+        if (!tmatch(line, "E1 ROUNDTRIP rooms %w loads %u failed %u kos-used %u/%u arena-used %u/%u vram-free %d/%d "
+                          "col-pieces %u/%u skel-tables %u/%u: %s", NULL, g_door_rooms, &loads, &failed, &v[0], &v[1],
+                    &v[2], &v[3], &vr0, &vr1, &v[4], &v[5], &v[6], &v[7], &verdict)) { ++g_door_bad; return; }
+        g_door_rt_equal = verdict && !strcmp(verdict, "equal") && !failed;
+        snprintf(g_door_rt_why, sizeof(g_door_rt_why), "%.23s", verdict ? verdict : "?");
+    }
+}
 static void e1_row(const char *l) {
     /* compact rows: "ROW n in tick svc trace draw wait frame fields pl obj cam pvr chars ..." as numbers only; every
        field must be a number (lane eng-e1o: a text field is a malformed row and fails the record, never skipped).
@@ -537,6 +578,9 @@ static void collect(unsigned i) {
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0, run_lines = 0, fields_bad = 0, camrec_ticks = 0;
     int pool_seen = 0, pub_seen = 0, camrec_seen = 0;
+    const unsigned dneed = door_need(s->args);   /* lane eng-load1 */
+    g_door_loads = g_door_visits = g_door_visit_zero = g_door_rt_seen = g_door_rt_equal = g_door_bad = 0;
+    g_door_rt_why[0] = g_door_rooms[0] = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -549,6 +593,7 @@ static void collect(unsigned i) {
             p = nl ? nl + 1 : end;
             for (const char *const *m = FAIL_MARKS; *m; ++m)
                 if (strstr(line, *m) && !e->why[0]) snprintf(e->why, sizeof(e->why), "%.60s", line);
+            if (dneed) door_line(line);
             if (!strncmp(line, "WINDOW ", 7) && !strcmp(s->kind, "bench")) { bench_window(e, line); ++windows; }
             else if (!strncmp(line, "ROW ", 4) && !strcmp(s->kind, "e1")) e1_row(line);
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
@@ -708,6 +753,27 @@ static void collect(unsigned i) {
         else if (!g_ctrack_seen) snprintf(e->why, sizeof(e->why), "no E1 CAMTRACK line (or a field not a number)");
         else if (s->timing && g_ctrack_inplay)
             snprintf(e->why, sizeof(e->why), "camera tracks converted in play %u", g_ctrack_inplay);
+    }
+    /* lane eng-load1: the DOOR scene's own conditions (door=N in the schedule's arguments), timing or function run */
+    if (!strcmp(s->kind, "e1") && dneed && e->report_ok && done && !e->why[0]) {
+        if (g_door_bad) snprintf(e->why, sizeof(e->why), "door: %u load, visit or round-trip lines not read", g_door_bad);
+        else if (g_door_loads != dneed) snprintf(e->why, sizeof(e->why), "door: %u of %u room loads done", g_door_loads, dneed);
+        else if (g_door_visits != dneed + 1 || g_door_visit_zero)
+            snprintf(e->why, sizeof(e->why), "door: %u room visits (%u with no tick), %u needed", g_door_visits,
+                     g_door_visit_zero, dneed + 1);
+        else if (!g_door_rt_seen) snprintf(e->why, sizeof(e->why), "door: no E1 ROUNDTRIP line");
+        else if (!g_door_rt_equal) snprintf(e->why, sizeof(e->why), "door: round trip %s", g_door_rt_why);
+        else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "door: no E1 FILES line");
+        else if (g_files_opens || g_files_reads || g_files_sectors)
+            snprintf(e->why, sizeof(e->why), "door: disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads,
+                     g_files_sectors);
+    }
+    if (!strcmp(s->kind, "e1") && dneed && e->report_ok) {
+        sum_add(e, "door: rooms %s, loads %u, round trip %s", g_door_rooms[0] ? g_door_rooms : "-", g_door_loads,
+                g_door_rt_why[0] ? g_door_rt_why : "-");
+        for (unsigned k = 0; k < g_door_loads && k < DOOR_MAX; ++k)
+            sum_add(e, "load %u: %u.%03u s, held %u fields, disc opens %u reads %u sectors %u", k, g_door_us[k] / 1000000u,
+                    g_door_us[k] / 1000u % 1000u, g_door_held[k], g_door_disc[k][0], g_door_disc[k][1], g_door_disc[k][2]);
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !e->why[0] && s->timing) {
         unsigned distinct = 0, counted = 0;

@@ -17,6 +17,9 @@
 #include "e1_kos.h"
 #include "camera/eng_camera.h"   // lane eng-e1l: the camera record's finite check
 #include "camera/camera_svc.h"   // lane eng-e1p: the room's camera tracks converted at load
+#include "room_change.h"         // lane eng-load1: room-to-room loading through a door
+#include "rnd.h"
+unsigned e1_door_seed();
 #ifdef E2_BOSS
 #include "boss_e2.h"   // eng-boss: the El Gigante slice
 #endif
@@ -39,18 +42,25 @@ E1Timing e1_timing[E1_TICKS];
 
 static uint64_t now_us() { return timer_us_gettime64(); }
 
-// Room set-up: the subset of gameRoomInit (game.cpp:509) the hosted player and camera need, in its order.
-static void room_init()
+// Room set-up: the subset of gameRoomInit (game.cpp:509) the hosted player and camera need, in its order. Lane eng-load1:
+// the first room (first: the game's start, PlayerInit) and every room a door leads to (core/room_change.cpp: the room,
+// the player's start and angle from the door's request; the room heap made again, so the last room's records go).
+static void room_init(unsigned room, const float* pos, float ang, int first)
 {
-    const E1Route& r = e1_route();
-    e1_room_globals(r);                 // pG room id, flags, PlayerInit (hosted)
+    if (first) {
+        const E1Route& r = e1_route();
+        e1_room_globals(r);             // pG room id, flags, PlayerInit (hosted)
 #ifdef E2_BOSS
-    e2_room_globals();
+        e2_room_globals();
 #endif
-    PlayerInit();
+        PlayerInit();
+    } else {
+        pG->room_id = (u16) room;
+    }
     e1_room_heap_create(4);             // the room heap above heap 0, not over it (host/e1_heap.cpp; lane eng-e1e)
     MemSetCurrentHeap(4);
-    e1_load_room(r.room);               // room archive sections and the core camera data (engine room pack)
+    e1_load_room(room);                 // room archive sections and the core camera data (engine room pack)
+    if (!first && !pG->pRoom) return;   // lane eng-load1: a missing archive refuses the room (core/room_change.cpp)
     pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points (the partner's follow)
     ReadPlayerData(pG->pl_type, pG->pl_costume);
 #ifdef E2_BOSS
@@ -59,10 +69,10 @@ static void room_init()
     e1_managers_room_init();            // ModInfoMgr, PartsMgr, EmMgr, ObjMgr arrays on the room heap
 #endif
     e1_collision_room_init();           // SatMgr / EatMgr over the room's SAT / EAT
-    pG->sub_pos.x = r.pos[0];
-    pG->sub_pos.y = r.pos[1];
-    pG->sub_pos.z = r.pos[2];
-    pG->sub_angle = r.ang;
+    pG->sub_pos.x = pos[0];
+    pG->sub_pos.y = pos[1];
+    pG->sub_pos.z = pos[2];
+    pG->sub_angle = ang;
     EmMgr.create(0, 0);                 // the player: cPlLeon on the actor table (hosted constructor + startUp)
     CameraRoomInit();
     void* cam = GetDataExt(pG->pRoom, "CAM", 0);
@@ -94,6 +104,7 @@ static void room_init()
     pG->Rno1 = 0;
     e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
 }
+void e1_room_setup(unsigned room, const float pos[3], float ang, int first) { room_init(room, pos, ang, first); }
 
 // Lab arm CAMEVERY (boot file; the camera check's control, lane eng-e1m): after Leon's move the shoulder camera is handed
 // his matrix every tick, as the PC reference did before its routine bytes were swapped (it read Leon idle and not moved
@@ -107,6 +118,7 @@ static void game_tick(E1Timing& tm)
     pG->quake_ofs.x = 0.0f;
     pG->quake_ofs.y = 0.0f;
     pG->quake_ofs.z = 0.0f;
+    e1_room_change_tick_begin(e1_tick);   // lane eng-load1: SceAtCheck's place (the DOOR scene's door request; else nothing)
     // gameMainLoop's slow-motion rule (Status_flg[3] bit 27): the player's motion speed, 1.0 on the first tick
     static int preb_slow_flg = 1;
     if (pG->Status_flg[3] & 0x8000000) {
@@ -170,6 +182,8 @@ int main()
     e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
     e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
+    e1_room_change_boot();              // lane eng-load1: the DOOR scene (DOOR.TXT) and its controls, before play
+    if (e1_door_scene) RndInit((u16) e1_door_seed());   // the fixture's generator seed (re4ref RndInit(seed))
     {
         file_t f = fs_open("/cd/CAMEVERY", O_RDONLY);
         if (f >= 0) {
@@ -184,7 +198,10 @@ int main()
     const bool pack_first = e1_scene == E1_SCENE_HILL;
     if (pack_first) e1_draw_open();
     e1_state[0] = 2;
-    room_init();
+    {
+        const E1Route& r = e1_route();
+        room_init(r.room, r.pos, r.ang, 1);
+    }
     e1_state[0] = 3;
     e1_log("E1 engine: room %03x ready, player %p pos %d %d %d\n", (unsigned) pG->room_id, (void*) pPL,
            (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
@@ -192,8 +209,9 @@ int main()
     e1_pool_control();                  // POOLCTL boot file: a forced double free (lane eng-e1i, the selector's control)
     e1_memmap_sample();
     e1_heap_room_checks();              // heap descriptors' map; HEAPCK: the heap-4 exercise (lane eng-e1e)
+    if (e1_door_scene) e1_room_marks_take("first");   // lane eng-load1: the round trip's first marks
     e1_state[0] = 4;
-    const unsigned ticks = e1_route().ticks;
+    unsigned ticks = e1_route().ticks;
     e1_state[2] = ticks;
     e1_trace_tick(0);
     e1_fields_start();                  // presented fields from the hardware's vblank count (lane eng-e1f)
@@ -232,6 +250,14 @@ int main()
         e1_pace_end(tm);                // waits for the target field (core/frame.cpp; lab arm PACETMU: the timer)
         e1_fields_tick(e1_tick);        // the tick's end in fields (the headless images' interval)
         tm.frame_us = now_us() - a;
+        // lane eng-load1: the game asked for a room change (its door handler set the routine to 4): the loading state,
+        // outside the tick's rows (core/room_change.cpp). A failed load ends the run with its report (no hang).
+        e1_room_tick_done();
+        if (e1_room_change_pending() && e1_room_change_run(e1_tick) < 0) {
+            ticks = e1_tick;
+            e1_state[2] = ticks;
+            break;
+        }
     }
     e1_fields_finish(ticks);            // each row's presented-field interval, and the E1 FIELDS line
     e1_state[0] = 5;

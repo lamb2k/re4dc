@@ -179,14 +179,20 @@ void e1_load_room(unsigned room)
     file_t f = fs_open(path, O_RDONLY);
     if (f < 0) { e1_log("E1 load: missing %s\n", path); return; }
     const uint32_t size = fs_total(f);
-    // RTP: the room's route points (route_ck.cpp, the partner's follow; lane eng-e1b)
-    static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP"};
-    e1_room_arc = compact_arc_file(f, keep, 5, &e1_resident_bytes[2]);
+    // RTP: the room's route points (route_ck.cpp, the partner's follow; lane eng-e1b). AEV: the room's areas, doors
+    // among them (lane eng-load1: the door's destination is read from its record; 4 KB in r101, 2 KB in r103)
+    static const char* const keep[] = {"CAM", "SAT", "EAT", "CNS", "RTP", "AEV"};
+    e1_room_arc = compact_arc_file(f, keep, 6, &e1_resident_bytes[2]);
     fs_close(f);
 #endif
     pG->pRoom = e1_room_arc;
-    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
-    // core archive: the camera core data and the vibration table
+    e1_log("E1 load: %s %lu -> %lu B (CAM SAT EAT CNS RTP AEV)\n", path, (unsigned long) size, (unsigned long) e1_resident_bytes[2]);
+    // core archive: the camera core data and the vibration table. Lane eng-load1: loaded with the first room only; the
+    // original loads etc/core.das once at boot (pG->pArc is not room state), and a room change keeps it
+    if (e1_core_arc) {
+        pG->pArc = (ArcFile*) e1_core_arc;
+        return;
+    }
     uint32_t cb = 0;
     uint8_t* core = drs_body("/cd/etc/core.das", &cb);
     if (!core) return;
@@ -206,6 +212,16 @@ void e1_load_room(unsigned room)
     e1_resident_bytes[3] = 0x100 + cam_bytes + vib_bytes;
     free(core);
     pG->pArc = a;
+}
+
+// Lane eng-load1: the room archive returned when its room is left (core/room_change.cpp). The core, player and weapon
+// archives are not room data: they stay.
+void e1_room_release()
+{
+    if (e1_room_arc) free(e1_room_arc);
+    e1_room_arc = 0;
+    e1_resident_bytes[2] = 0;
+    pG->pRoom = 0;
 }
 
 // read.cpp ReadPlayerData, engine form: pl_flag bit 0 asks for the archive; Leon (type 0, costume 0) = em/pl00.drs.

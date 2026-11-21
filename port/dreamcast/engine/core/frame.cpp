@@ -13,6 +13,7 @@
 #include "memory/heap.h"
 #include "camera/eng_camera.h"   // lane eng-e1l: the camera record's trace line
 #include "camera/camera_svc.h"   // lane eng-e1p: the camera tracks' play brackets and controls
+#include "room_change.h"         // lane eng-load1: the loading state's report
 #include <stdio.h>
 #include <string.h>
 #ifdef E2_BOSS
@@ -289,6 +290,57 @@ void e1_fields_late(unsigned tick)
     while (timer_us_gettime64() - t < 100000) {}
 }
 void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fields_now_c(); }
+
+// ---- the loading state (lane eng-load1; core/room_change.cpp, CONSOLE_LOOP.md section 14) ----
+// Between the tick that asked for a room change and the next tick: play is not timed (no row is written, the loop does
+// not tick), the pacer's last queued picture is flipped by the vblank handler and held, disc access is counted as
+// loading (core/play_files.c), camera tracks converted now are load work. At its end the pacer starts again on the next
+// field boundary (as at the first tick), and the interval of the first picture after the load (the held fields) is
+// left out of the window: it is reported on the load's own line, never as a late picture.
+extern "C" void disc_safe_report(void);
+extern "C" void e1_play_files_load_begin(void);
+extern "C" void e1_play_files_load_end(unsigned* opens, unsigned* reads, unsigned* sectors);
+#define E1_LOADS 8
+static unsigned load_tick[E1_LOADS], load_fields[E1_LOADS], n_load_marks;
+static uint32_t load_field0;
+void e1_loading_begin(unsigned n, unsigned from, unsigned to)
+{
+    (void) n;
+    e1_play_files_load_begin();
+    cam_track_in_play(0);
+    load_field0 = e1_fields_now_c();
+    e1_state[0] = 6;   // loading: the log prints as it goes (no tick is timed), the memory map tags its blocks "load"
+    e1_log("E1 LOADING room %03x>%03x: play not timed, the picture held\n", from, to);
+}
+void e1_loading_end(unsigned n, unsigned tick, uint32_t us)
+{
+    unsigned opens = 0, reads = 0, sectors = 0;
+    e1_play_files_load_end(&opens, &reads, &sectors);
+    cam_track_in_play(1);
+    const uint32_t f = e1_fields_now_c();
+    if (n_load_marks < E1_LOADS) {
+        load_tick[n_load_marks] = tick;
+        load_fields[n_load_marks] = f - load_field0;
+        n_load_marks++;
+    }
+    // the pacer: tick + 1 starts two fields from the next field boundary, as tick 1 did (e1_fields_start)
+    if (pace_tmu) next_us = 0;
+    else {
+        const uint32_t f0 = e1_fields_now_c();
+        while (e1_fields_now_c() == f0) thd_pass();
+        pace_field = e1_fields_now_c();
+    }
+    e1_log("E1 LOAD %u done at tick %u: %lu us, %u fields held; loading disc: opens %u reads %u sector-requests %u\n", n, tick,
+           (unsigned long) us, (unsigned) (f - load_field0), opens, reads, sectors);
+    e1_state[0] = 4;
+}
+// the row whose interval spans a load (picture tick + 1, row index tick): left out of the window
+static int after_load(unsigned i)
+{
+    for (unsigned k = 0; k < n_load_marks; k++)
+        if (i == load_tick[k]) return 1;
+    return 0;
+}
 // Fills each row's fields column and prints the window's line (pictures 41 to 640, as the selector and budget.py):
 // "E1 FIELDS mode presented|tick flips F of P pictures; pictures 41-640: intervals>2 N worst W (picture K)".
 void e1_fields_finish(unsigned ticks)
@@ -305,6 +357,7 @@ void e1_fields_finish(unsigned ticks)
         uint32_t f = 0;
         if (i && presented && i < flips) f = flip[i] - flip[i - 1];
         else if (i && !presented) f = tick_field[i] - tick_field[i - 1];
+        if (after_load(i)) f = 0;   // lane eng-load1: the held fields of a load (its E1 LOAD line), not a play interval
         e1_timing[i].fields = f;
     }
     unsigned over = 0, worst = 0, wi = 0, counted = 0;
@@ -338,6 +391,8 @@ void e1_report()
     e1_log("E1 DONE ticks=%lu\n", e1_lab.ticks1 ? 1ul : (unsigned long) e1_state[2]);
     e1_memmap_after();   // lane eng-e1k: the stack guard, heap peak, arena margin and video memory after play
     e1_play_files_report();   // lane eng-e1o (H-017.7): the files opened during play (must be 0)
+    e1_room_change_report();  // lane eng-load1: the DOOR scene's visits and round trip (nothing in other scenes)
+    disc_safe_report();       // lane eng-load1: the read-safety layer's counters (core/disc_safe.c)
     e1_stub_report();
     e1_prof_report();
     e1_svc_report();

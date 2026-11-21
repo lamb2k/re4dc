@@ -242,6 +242,27 @@ for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
 done
+# DOOR (lane eng-load1; only when --scenes names it): the E1 image walking Leon from the village square (r101) to the farm
+# (r103) through the game's door and back, the fixture tools/plays_right/fixtures/door-r101-r103.txt (DOOR_FIXTURE=<file>
+# overrides) as /cd/DOOR.TXT; the farm's archive and whole-room bake (the bench's FARM.PAK and FARM.VIS) beside it. A
+# traced function run: the selector judges the loads, both rooms' ticks, the round trip's memory marks and play's disc
+# counters (door=2); tools/plays_right judges Leon against the PC reference on the serial line's LT lines.
+# Its controls, each a scene of its own (DOOR_CONTROLS): CDOORPK the farm's archive absent (FAILED: "E1 load: missing", no
+# hang), CDOORRD a disc read placed in play after the first door (FAILED: disc in play), CDOORLK one block kept across
+# the first leave (FAILED: round trip LEAK), and CDISCF (must stay OK) the first DMA transfer of the first load reported
+# done without it: the read-safety layer must catch it and read again (E1 DISCSAFE not-landed 1, latched 1).
+DOOR_CONTROLS=(
+  "CDOORRD|CDR|DOORREADX|Control:_disc_read_in_play_after_the_door"
+  "CDOORLK|CDL|MEMKEEP|Control:_a_block_kept_across_the_leave"
+  "CDISCF|CDF|DISCFAIL|Check:_DMA_reported_done_without_the_transfer"
+)
+case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
+  put "${DOOR_FIXTURE:-$SRC/port/dreamcast/tools/plays_right/fixtures/door-r101-r103.txt}" DOOR/DOOR.TXT
+  put "$LKG/FARM.PAK" DOOR/FARM.PAK; put "$LKG/FARM.VIS" DOOR/FARM.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
+  # CDOORPK: its own folder with the fixture and the farm's bake but not its archive (E1 has none either)
+  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$LKG/FARM.PAK" CDP/FARM.PAK; put "$LKG/FARM.VIS" CDP/FARM.VIS
+  for c in "${DOOR_CONTROLS[@]}"; do IFS='|' read -r cn cdir cfile ctitle <<< "$c"; mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile"; done ;;
+esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
 case ",$SCENES," in *,LEONS,*) mkdir -p "$D/E1LS"; : > "$D/E1LS/STILLS" ;; esac
 case ",$SCENES," in *,HILLS,*) mkdir -p "$D/E1HS"; : > "$D/E1HS/STILLS" ;; esac
@@ -272,6 +293,14 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "HILLS Hill_stills_(function_run) PROG/E1.BIN 300 e1:function:drawn $(need E1HS/STILLS,E1H/HILL,E1/HILL.PAK) root=E1HS:E1H:E1 rows=compact"
   echo "FIGHTS Fight_stills_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHTS/STILLS,FIGHTL/NOTRACE,FIGHT/CROSS.PAK) root=FIGHTS:FIGHTL:FIGHT rows=compact"
   echo "FIGHTT Fight_traced_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHT/CROSS.PAK,FIGHT/st1/r101.arc,FIGHT/em/em15.drs) root=FIGHT rows=compact $TSKIP"
+  # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
+  DNEED=DOOR/DOOR.TXT,DOOR/FARM.PAK,DOOR/FARM.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs
+  echo "DOOR Village_to_farm_and_back_(traced,_function_run) PROG/E1.BIN 300 e1:function:drawn $(need $DNEED) root=DOOR:E1 rows=compact $TSKIP door=2"
+  echo "CDOORPK Control:_farm_archive_absent PROG/E1.BIN 300 e1:function:drawn $(need CDP/DOOR.TXT,CDP/FARM.PAK,E1/CROSS.PAK,E1/st1/r101.arc) root=CDP:E1 rows=compact $TSKIP door=2"
+  for c in "${DOOR_CONTROLS[@]}"; do
+    IFS='|' read -r cn cdir cfile ctitle <<< "$c"
+    echo "$cn $ctitle PROG/E1.BIN 300 e1:function:drawn $(need $cdir/$cfile,$DNEED) root=$cdir:DOOR:E1 rows=compact $TSKIP door=2"
+  done
   # the record's controls (lanes eng-e1k, eng-e1o; only when --scenes names them): the Leon scene with one boot file
   # each, every one must FAIL with its reason (CONSOLE_LOOP.md section 12); LEON beside them must stay OK
   for c in "${CONTROLS[@]}"; do
