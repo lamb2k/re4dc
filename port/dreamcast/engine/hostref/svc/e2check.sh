@@ -4,17 +4,19 @@
 #   RE4_TREE=<converted data tree> e2check.sh <out dir>
 #
 # re4ref odump (the original em_sub, dmg and area) and native (services/aim/em_hit.cpp, services/volumes/dmg_vol.cpp,
-# services/volumes/area_vol.cpp) run the
-# same inputs, wind off, motion keys
-# decoded. Per row: e2_compare.py on the
-# boundary log e2.txt (svc/e2_dump.cpp: every call the behaviour makes to those entry points, integers and flags exact,
-# positions and lengths within 0.01 unit, squared distances within 0.01 unit of their root, angles within 0.01 degree;
-# stated in the brief before the runs), outcome.py (kills, damage, ticks within the reader's tolerance, room clear) and
-# plays_right.py (every trace field) on the two traces. Exercise rows also print e2_exact.py (the line tests against
-# their definitions in double precision: a second opinion where the two differ, never a verdict).
+# services/volumes/area_vol.cpp) run the same inputs, wind off, motion keys decoded. Per row: e2_compare.py on the
+# boundary log e2.txt (svc/e2_dump.cpp: every call the behaviour makes to those entry points; integers and flags exact,
+# positions, lengths and the roots of squared distances within max(0.01 unit, 2^-20 of the value), angles within 0.01
+# degree; and, for a line-test hit point only, the rule of the integrator's ruling on item 1: a line outside that bound
+# agrees when the engine is within 0.01 unit of the double-precision answer of the same definition and the reference is
+# farther from it, e2_exact.py's rescue list; both counts are printed), outcome.py (kills, damage, ticks within the
+# reader's tolerance, room clear) and plays_right.py (every trace field) on the two traces. Exercise rows also print
+# e2_exact.py's table and the original's two approximations (the gap from the true geometry, with the line).
 #   fixtures   bell-ganado, bell-ganado-hit, bell-ganado-kill, bell-ganado-clear, shot-ganado, aimfire-ganado: must PASS
 #   exercise   e2geom on bell-ganado and hill-ashley (the partner): every entry point on generated and planted inputs: must PASS
-#   controls   (native only, on the bell-ganado exercise) hitwide, dmposmid, sphereshort; dmgwide (item 2); areawide (item 3): must FAIL
+#   controls   (native only, on the bell-ganado exercise) hitwide, dmposmid, sphereshort; hitnudge (every line-test hit
+#              point 0.03 unit further on: fails the bound and the double-precision rule); dmgwide (item 2); areawide
+#              (item 3): must FAIL
 # Exit 0 when every row ends as it must, 1 when one does not, 2 when a build or a run is missing.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -43,7 +45,8 @@ run() {   # run <dir> <bin> <fixture> [env...]
 }
 row() {   # row <name> <must> <ref dir> <test dir>
     local name=$1 must=$2 a=$3 b=$4
-    python3 "$HERE/e2_compare.py" "$a" "$b" --json "$b/e2cmp.json" > "$b/e2cmp.txt" 2>&1
+    python3 "$HERE/e2_exact.py" "$a" "$b" --json "$b/exact.json" > "$b/exact.txt" 2>&1 || { missing=1; echo "$name: e2_exact failed"; return; }
+    python3 "$HERE/e2_compare.py" "$a" "$b" --rescue "$b/exact.json" --json "$b/e2cmp.json" > "$b/e2cmp.txt" 2>&1
     local e=$?
     python3 "$PR/outcome.py" "$a/trace.txt" "$b/trace.txt" --tolerances "$PR/tolerances.json" --json "$b/outcome.json" > "$b/outcome.txt" 2>&1
     local o=$?
@@ -57,7 +60,7 @@ row() {   # row <name> <must> <ref dir> <test dir>
     # a control must fail its boundary log (the answer changed); the play may or may not move
     if [ "$must" = FAIL ] && [ $e = 0 ]; then res="PASS (MUST FAIL)"; bad=1; fi
     [ "$must" = FAIL ] && [ $e != 0 ] && res="FAIL (as it must)"
-    local es=$(head -1 "$b/e2cmp.txt" | cut -c1-160)
+    local es=$(head -1 "$b/e2cmp.txt" | cut -c1-200)
     echo "| $name | $must | $es | $([ $o = 0 ] && echo PASS || echo FAIL) | $([ $p = 0 ] && echo PASS || echo FAIL) | $res |" >> "$MD"
     echo "$name: $res; e2 $es; outcome $([ $o = 0 ] && echo PASS || echo FAIL); traces $([ $p = 0 ] && echo PASS || echo FAIL)"
 }
@@ -70,10 +73,10 @@ for fx in bell-ganado hill-ashley; do
     d=$OUT/ex-$fx
     run "$d/odump" odump $fx $EX && run "$d/native" native $fx $EX || { missing=1; echo "ex $fx: run failed"; continue; }
     row "exercise e2geom $fx" PASS "$d/odump" "$d/native"
-    python3 "$HERE/e2_exact.py" "$d/odump" "$d/native" --json "$d/exact.json" | sed 's/^/    exact: /'
+    sed 's/^/    exact: /' "$d/native/exact.txt"
 done
 d=$OUT/ex-bell-ganado
-for c in hitwide dmposmid sphereshort dmgwide areawide; do
+for c in hitwide dmposmid sphereshort hitnudge dmgwide areawide; do
     run "$d/ctl-$c" native bell-ganado $EX RE4_SVC_CONTROL=$c || { missing=1; echo "control $c: run failed"; continue; }
     row "control $c" FAIL "$d/odump" "$d/ctl-$c"
 done

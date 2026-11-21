@@ -43,7 +43,9 @@ struct EmHitCounters {
 EmHitCounters emhit_cnt;
 // Controls (set only by the PC check, hostref svc/e2_dump.cpp RE4_SVC_CONTROL): 1 "hitwide": every capsule radius and box
 // extent of the line tests 10% larger; 2 "dmposmid": the damage position at the box's middle, not the near side; 3
-// "sphereshort": the melee sphere 20% smaller. Each must make the PC comparison fail.
+// "sphereshort": the melee sphere 20% smaller; 4 "hitnudge": every line-test hit point 0.03 unit further along its line
+// (it must fail both the position bound and the double-precision answer rule of e2_compare.py). Each must make the PC
+// comparison fail.
 int emhit_control;
 }
 
@@ -176,7 +178,13 @@ f32 cube_in(v3 a, v3 b, const Frame& f, v3 ofs, f32 sx, f32 sy, f32 sz)
     return t_in > 0.0f && t_in < 1.0f ? t_in : -1.0f;
 }
 
-v3 at(v3 a, v3 b, f32 t) { return t == 0.0f ? a : vadd(a, vscale(vsub(b, a), t)); }
+v3 at(v3 a, v3 b, f32 t)
+{
+    if (t == 0.0f) return a;
+    const v3 d = vsub(b, a);
+    if (emhit_control == 4) return vadd(a, vscale(d, t + 0.03f / vlen(d)));   // control hitnudge: 0.03 unit further on
+    return vadd(a, vscale(d, t));
+}
 
 // Where the segment enters one hit box: true with the point in *hit.
 bool box_line(cEm* em, const YARARE_INFO* p, v3 a, v3 b, v3* hit)

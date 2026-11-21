@@ -28,12 +28,14 @@ def cross(a, b): return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a
 def norm(a): return math.sqrt(dot(a, a))
 
 
-def capsule(a, b, top, bot, r):
+def capsule(a, b, top, bot, r, snap=True, game_side=True):
+    """the game's definition (snap: an axis within 0.01 rad of the vertical taken as the vertical; game_side: the side
+    point h back along the segment from the nearest approach); snap=False / game_side=False give the true geometry"""
     rr = r * r
     ax = sub(top, bot)
     ln = norm(ax)
     u = [0.0, 1.0, 0.0] if ln == 0 else mul(ax, 1.0 / ln)
-    if u[1] >= 0.99995 or u[1] <= -0.99995:
+    if snap and (u[1] >= 0.99995 or u[1] <= -0.99995):
         u = [0.0, 1.0, 0.0]
     ra = sub(a, bot)
     sa = dot(ra, u)
@@ -63,7 +65,7 @@ def capsule(a, b, top, bot, r):
     q2 = dot(q, q)
     if not q2 < rr:
         return None
-    back = math.sqrt(rr - q2) / norm(d)
+    back = math.sqrt(rr - q2) / (norm(d) if game_side else math.sqrt(A))
     t = tn - back if tn > 0 else tn + back
     s = sa + t * sd
     return add(a, mul(d, t)) if 0 <= t <= 1 and 0 <= s <= ln else None
@@ -112,14 +114,14 @@ def quad(a, b, q):
     return x
 
 
-def answer(tok):
-    """(definition's point or None, the log's point or None) for one line's tokens"""
+def answer(tok, snap=True, game_side=True):
+    """(definition's point or None, the log's point or None) for one line's tokens; snap / game_side as capsule()"""
     k = tok[1]
     arrow = tok.index('->')
     ins, outs = tok[2:arrow], tok[arrow + 1:]
     if k == 'LC':
         a, b, top, bot = (vec(x) for x in ins[:4])
-        exact = capsule(a, b, top, bot, float(ins[4][1:]))
+        exact = capsule(a, b, top, bot, float(ins[4][1:]), snap, game_side)
         got = vec(outs[1]) if outs[0] == '1' else None
     elif k == 'LB':
         a, b = vec(ins[0]), vec(ins[1])
@@ -137,7 +139,7 @@ def answer(tok):
         if len(g) != 3 or not outs[0].startswith('box') or int(outs[1], 16) & 8:
             return None
         a, b = vec(ins[1]), vec(ins[2])
-        exact = capsule(a, b, vec(g[0]), vec(g[1]), float(g[2][1:]))
+        exact = capsule(a, b, vec(g[0]), vec(g[1]), float(g[2][1:]), snap, game_side)
         got = vec(outs[2])
     else:
         return None
@@ -153,6 +155,8 @@ def main():
     rb = open(args[1] + '/e2.txt').read().split('\n')
     stats = {}
     rows = []
+    rescue = []
+    approx = {}   # the original's approximations: the largest gap between the game's answer and the true geometry
     for i, (x, y) in enumerate(zip(ra, rb)):
         tx, ty = x.split(), y.split()
         if len(tx) < 3 or tx[1] not in ('LC', 'LB', 'LQ', 'LA') or '->' not in tx or '->' not in ty:
@@ -169,6 +173,16 @@ def main():
         s['test_max'] = max(s['test_max'], dt)
         s['ref_over'] += dr > 0.01
         s['test_over'] += dt > 0.01
+        # the integrator's rule (lane eng-e2a item 1): the engine within 0.01 of the definition, the reference farther
+        if dt <= 0.01 and dr > dt:
+            rescue.append(i + 1)
+        if tx[1] in ('LC', 'LA'):
+            for name, kw in (('vertical-snap', {'snap': False}), ('side-point', {'game_side': False})):
+                tr = answer(tx, **kw)
+                if tr and tr[0] is not None:
+                    gap = norm(sub(ex, tr[0]))
+                    if gap > approx.get(name, {'gap': 0.0})['gap']:
+                        approx[name] = {'gap': gap, 'line': i + 1, 'text': x[:400]}
         if dd > 0.01:
             rows.append({'line': i + 1, 'kind': tx[1], 'ref_vs_test': dd, 'ref_from_exact': dr, 'test_from_exact': dt})
     for k, s in sorted(stats.items()):
@@ -177,9 +191,11 @@ def main():
     for r in rows:
         print('  line %(line)d %(kind)s: reference and engine %(ref_vs_test).4g apart; reference %(ref_from_exact).4g, engine '
               '%(test_from_exact).4g from the definition' % r)
+    for name, a in sorted(approx.items()):
+        print('approximation %s: largest gap from the true geometry %.4g unit at line %d' % (name, a['gap'], a['line']))
     if js:
         with open(js, 'w') as f:
-            json.dump({'stats': stats, 'apart': rows}, f, indent=1)
+            json.dump({'stats': stats, 'apart': rows, 'rescue': rescue, 'approximations': approx}, f, indent=1)
 
 
 if __name__ == '__main__':

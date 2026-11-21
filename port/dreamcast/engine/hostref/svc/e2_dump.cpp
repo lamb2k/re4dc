@@ -433,6 +433,7 @@ extern "C" void e2_ready()
         if (c && !__builtin_strcmp(c, "hitwide")) emhit_control = 1;
         if (c && !__builtin_strcmp(c, "dmposmid")) emhit_control = 2;
         if (c && !__builtin_strcmp(c, "sphereshort")) emhit_control = 3;
+        if (c && !__builtin_strcmp(c, "hitnudge")) emhit_control = 4;
     }
     if (&dmg_control) {   // lane eng-e2a item 2: every damage cylinder 10% wider
         const char* c = svc_env("RE4_SVC_CONTROL");
