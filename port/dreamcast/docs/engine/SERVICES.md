@@ -1278,4 +1278,24 @@ differences are in `lanes/eng-e1j.md`.
   once; `E1 SVC <entry> ... group 6` lines), so camera evaluation is no longer in the behaviour's remainder.
 - **Found, not changed:** ZNEAR and ZFAR are zero in the E1 images (the original's main.cpp sets 100 and 1,000,000):
   the shoulder camera's side probes have no width there and the projection's depth terms are not numbers. The record
-  keeps them as they were, so the picture does not move.
+  keeps them as they were, so the picture does not move. (Superseded by 48b, lane eng-e1l.)
+
+### 48b. The game's near and far distances; the renderer's planes; the record finite (lane eng-e1l)
+
+Details and numbers: `lanes/eng-e1l.md`.
+- **Game state.** `core/globals.cpp` sets ZNEAR 100, ZFAR 1,000,000 and the ORTHO bounds (main.cpp systemScreenInit's
+  values) in `e1_globals_init`, every image; no longer zero storage in `host/e1_stubs.cpp`. The view frustum, the
+  shoulder camera's wall probe and the water clamp read them. Lab arm ZCLIP0 (boot file): both zero, as before.
+- **The renderer's planes are its own.** The record's depth terms and far plane come from `ENG_RENDERER_NEAR` 100 and
+  `ENG_RENDERER_FAR` 18,750 (`eng_camera.h`); the draw distance is unchanged and never the game's 1,000,000. Before, the
+  terms were not numbers and so was the renderer's near plane (p23 / (p22 - 1)): no near clipping, triangles through the
+  camera plane drawn unclipped, others dropped, the world's level choice never coarser. The picture moved (48 of 59
+  Flycast stills against the base, the renderer alone): a look change to show the owner.
+- **Finite check.** Every tick's end, every word of the record tested by its exponent bits; report line
+  `E1 CAMREC ticks N non-finite N ...`; the selector fails a scene with a non-finite tick or without the line. Control:
+  boot file RNEARFAR (renderer far = near): FAILED "camera record not finite: 320 of 320 ticks".
+- **The engine's camera against the reference.** Trace runs print `CAMLOG` lines (the record and the controller's
+  decisions); `hostref/svc/camengine.sh` compares a Flycast serial log with re4ref odump on e1-route (seed 0),
+  hill-follow and shot-ganado under camcheck's bound, and `camnearer.py` says, where two arms differ, which is nearer the
+  reference. The fix moves the camera onto the reference where it meets a wall (village houses, the hill); a drift common
+  to both arms keeps every scene outside camcheck's bound (not diagnosed; lane doc section 3).
