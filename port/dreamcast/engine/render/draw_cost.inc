@@ -88,9 +88,11 @@ void native_draw_report(void){
     printf("DC BEGIN set %u pictures %u-%u phases select begin sky preworld worldOP actors worldPT listgap worldTR TRextra hud"
            " | counters w_corners w_cliptris a_corners a_pos\n",dc_interleave,dc_lo,dc_hi);
     dc_print("DC");
+    /* per-picture lines carry the trace prefix "T" so the console loop's report leaves them out (skip=T, the default):
+       they made the fight's report reach its cap (no end line, the scene FAILED); the serial log keeps them */
     for(unsigned i=1;i<=DC_PICS && i<=dc_hi;i++){
         const uint16_t* r=dc_pic[i-1];const uint32_t* c=dc_picn[i-1];
-        printf("DCP %u %u %u %u %u %u %u %u %u %u %u %u %lu %lu %lu %lu\n",i,r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8],r[9],
+        printf("T DCP %u %u %u %u %u %u %u %u %u %u %u %u %lu %lu %lu %lu\n",i,r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7],r[8],r[9],
                r[10],(unsigned long)c[0],(unsigned long)c[1],(unsigned long)c[2],(unsigned long)c[3]);
     }
     printf("DC END\n");

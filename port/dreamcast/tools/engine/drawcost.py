@@ -3,7 +3,7 @@
 
 Reads one console-disc serial log (tools/engine/build_console_disc.sh; the images of lane eng-draw1 and later):
   - E1-family scenes (LEON, HILL, FIGHT): the ROW lines (the drawing row: draw us per picture) and the renderer's DC lines
-    (render/draw_cost.inc: DC PHASE, DC COUNT, one DCP line a picture: the spans between its stamps and four counters);
+    (render/draw_cost.inc: DC PHASE, DC COUNT, one T DCP line a picture (DCP before): the spans between its stamps and four counters);
   - bench scenes: the WINDOW lines (draw mean) and the DCB lines (TIMING, PHASE, COUNT) of each window.
 Prints, per scene, the drawing row (mean, p99, worst over pictures 41-640) split into the stamped phases, the remainder
 (drawing time outside the stamped spans: list and scene finish), and the counters.
@@ -49,8 +49,8 @@ def e1_scene(sc):
     for l in sc['lines']:
         if l.startswith('ROW ') and ' draw ' in l:
             t = l.split(); draw[int(t[1])] = int(t[t.index('draw') + 1])
-        elif l.startswith('DCP '):
-            t = [int(x) for x in l.split()[1:]]; dcp[t[0]] = t[1:]
+        elif l.startswith('DCP ') or l.startswith('T DCP '):   # 'T DCP' since 28a0821ca's successor (kept out of the report)
+            t = [int(x) for x in l.split()[1 if l[0] == 'D' else 2:]]; dcp[t[0]] = t[1:]
         elif l.startswith('DC BEGIN set '):
             lab = int(l.split()[3])
         elif l.startswith('DC PHASE '):
