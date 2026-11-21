@@ -44,8 +44,8 @@
 #
 # Private inputs (never in git; override with the environment): PRISTINE (the little-endian game tree: st1, etc,
 # em, dc/mot), LKG (E0 packs and visibility), HILL_PAK, HILL_VIS, FIGHT_PAK, FIGHT_FXMAP, BOSS_PAK, BOSS_VIS,
-# BOSS_EMLIST, BOSS_EMARC. Defaults: the files the lanes eng-look, eng-e1d, eng-e2 and eng-boss staged their discs
-# with (checked by hash against those discs on 2026-11-20).
+# BOSS_EMLIST, BOSS_EMARC. Defaults: the shared pack sets $LANES/packs/e1-wep-20261121 and e1-base-20261121 (below;
+# built by the integration lane, with a receipt, from the files the lanes staged their discs with).
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 REPO=$(git -C "$here" rev-parse --show-toplevel)
@@ -75,22 +75,26 @@ done
 [ -n "$OUT" ] || { echo "build_console_disc: --out <dir> is required" >&2; exit 2; }
 
 PRISTINE=${PRISTINE:-/root/work/lanes/eng-bench/.m1/pristine}
-# lane eng-e1i: the packs after bake/hud_fix.py (the HUD widgets made right; docs/engine/SERVICES.md 45). FARM.PAK and
-# the .VIS files are eng-look's unchanged.
-# lane eng-look1: the same packs with Leon's PS2 handgun models added to the catalogue (bake/weapon_model.py on
-# eng-e1i's lkg-hud/CROSS.PAK, hill2-hud.pak and fight-hud.pak; FARM.PAK and the .VIS files copied unchanged)
-LKG=${LKG:-${LANES:-/mnt/e/RE4DC-Lanes}/eng-look1/packs/lkg-wep}
+# Default packs live in shared, immutable sets under $LANES/packs/<set>/, written only by the integration lane with a
+# receipt (integrator, 2026-11-21); no default points into a lane folder.
+#   e1-wep-20261121: eng-e1i's packs after bake/hud_fix.py (the HUD widgets made right; SERVICES.md 45) with Leon's PS2
+#     handgun models added by bake/weapon_model.py (lane eng-look1): lkg-wep/ (CROSS.PAK; FARM.PAK and the .VIS files are
+#     eng-look's unchanged), hill2-wep.pak, fight-wep.pak
+#   e1-base-20261121: the other inputs as the lanes staged them (hill visibility eng-e1d, the fight's effect map eng-e2,
+#     El Gigante's bench pack eng-e1f's re-bake with the effect records' glow header (eng-boss's boss2-full.pak is refused
+#     at pack-loader stage 5, the control), its visibility and archives eng-boss)
 LANES=${LANES:-/mnt/e/RE4DC-Lanes}
-HILL_PAK=${HILL_PAK:-$LANES/eng-look1/packs/hill2-wep.pak}
-HILL_VIS=${HILL_VIS:-$LANES/eng-e1d/build/vis/hill1.vis}
-FIGHT_PAK=${FIGHT_PAK:-$LANES/eng-look1/packs/fight-wep.pak}
-FIGHT_FXMAP=${FIGHT_FXMAP:-$LANES/eng-e2/build/pack/FXMAP.BIN}
-# El Gigante's bench pack: lane eng-e1f's re-bake with the engine's bake/boss_pack.py (the effect records' glow header;
-# eng-boss's boss2-full.pak is refused at pack-loader stage 5, the control)
-BOSS_PAK=${BOSS_PAK:-$LANES/eng-e1f/build/packs/boss3-full.pak}
-BOSS_VIS=${BOSS_VIS:-$LANES/eng-boss/build/vis/boss2-full.vis}
-BOSS_EMLIST=${BOSS_EMLIST:-$LANES/eng-boss/build/EMLIST.BIN}
-BOSS_EMARC=${BOSS_EMARC:-$LANES/eng-boss/build/EM2B.ARC}
+WEPSET=$LANES/packs/e1-wep-20261121
+BASESET=$LANES/packs/e1-base-20261121
+LKG=${LKG:-$WEPSET/lkg-wep}
+HILL_PAK=${HILL_PAK:-$WEPSET/hill2-wep.pak}
+HILL_VIS=${HILL_VIS:-$BASESET/hill1.vis}
+FIGHT_PAK=${FIGHT_PAK:-$WEPSET/fight-wep.pak}
+FIGHT_FXMAP=${FIGHT_FXMAP:-$BASESET/FXMAP.BIN}
+BOSS_PAK=${BOSS_PAK:-$BASESET/boss3-full.pak}
+BOSS_VIS=${BOSS_VIS:-$BASESET/boss2-full.vis}
+BOSS_EMLIST=${BOSS_EMLIST:-$BASESET/EMLIST.BIN}
+BOSS_EMARC=${BOSS_EMARC:-$BASESET/EM2B.ARC}
 for f in "$LKG/CROSS.PAK" "$LKG/FARM.PAK" "$LKG/CROSS.VIS" "$LKG/FARM.VIS" "$HILL_PAK" "$HILL_VIS" "$FIGHT_PAK" \
          "$FIGHT_FXMAP" "$BOSS_PAK" "$BOSS_VIS" "$BOSS_EMLIST" "$BOSS_EMARC" "$PRISTINE/etc/core.das"; do
   [ -s "$f" ] || { echo "build_console_disc: private input missing: $f" >&2; exit 1; }
