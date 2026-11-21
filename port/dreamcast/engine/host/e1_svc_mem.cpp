@@ -58,6 +58,7 @@ extern "C" int route_control;
 extern "C" int input_control;
 static int rumble_exercise;
 extern "C" unsigned e1_light_miss;   // services/actor_e1.inc (renderer)
+void e1_weapon_report();             // services/weapon.cpp (lane eng-look1): the E1 WEP line
 #include "camera/eng_camera.h"   // lane eng-e1j: the conversion counters (E1 PUB)
 extern "C" void VibSet(u32 time, u32 level, u16 wait, u16 type);
 void e1_svc_tick_begin(unsigned t)
@@ -204,6 +205,7 @@ void e1_svc_report()
     // lane eng-e1n (H-017.5): only what has a producer: the camera copy control (PUBCOPY) and the light-view misses;
     // the selector fails a scene where either is not 0 or the line is missing
     e1_log("E1 PUB camera %lu light-view-misses %lu\n", (unsigned long) eng_pub.camera, (unsigned long) e1_light_miss);
+    e1_weapon_report();   // lane eng-look1: the weapon drawn as the hosted code says (services/weapon.cpp; the selector)
     {   // lane eng-e1n (H-017.2): the camera tracks' part-frame decodes (one a frame and part converted), moves, tracks
         // not played, the track store's use; lane eng-e1p (H-018.1): tracks converted at room load and in play, cut
         // switches served by lookup, the room's tracks and bytes. The selector fails a timing scene with a conversion in play.

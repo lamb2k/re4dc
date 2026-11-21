@@ -88,9 +88,22 @@ STAT_BYTES ?= 1
 EM10_SPLIT ?= 1
 BSPLINE_ALIAS ?= host
 export PREP_BSPLINE := $(BSPLINE_ALIAS)
+# Lane eng-fix1 (H-026, docs/engine/CORRECTIONS_20261121.md): the reference is built with the corrections and guards the
+# engine's hosted prelude has (../host/corrections.h, force-included) and the game settings its units name
+# (../game/game_settings.mk HOSTREF_SETTINGS), as the released game is. CORRECTIONS=0 is the old reference without
+# them, kept only as svc/refctl.sh's control build (its own BUILD folder).
+CORRECTIONS ?= 1
+include ../game/game_settings.mk
+# Lane eng-e2b (a reference change, its old behaviour kept as EM10_VOICE=0, a refctl.sh row): em10SetDamageVoice calls
+# em10CallVoiceSe through an int-view declaration whose label is the SH-ELF name, asm("_em10CallVoiceSe")
+# (src/em10/em10.cpp 362-367: the non-PowerPC branch; on the console image that label is em10CallVoiceSe itself). On
+# the i386 PC the label names a different symbol, which host_actor_stubs.cpp's generated stub answered: the reference's
+# living Ganado never voiced a hit (the console's does). EM10_VOICE=1 binds the label to em10CallVoiceSe (objcopy
+# --redefine-sym on em10's object, the source unchanged); EM10_VOICE=0 is the old reference, a control build only.
+EM10_VOICE ?= 1
 # A BUILD folder holds one reference only (the host copies and objects do not depend on these switches): a different
 # switch set on an existing folder is refused, so a control build can never land in the reference's folder.
-REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)
+REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)$(if $(filter 0,$(EM10_VOICE)),-em10voice0)-corrections$(CORRECTIONS)
 ifneq ($(filter clean,$(MAKECMDGOALS)),clean)
 REF_VARIANT_HAD := $(shell mkdir -p $(BUILD) && { [ -f $(BUILD)/variant.txt ] || echo $(REF_VARIANT) > $(BUILD)/variant.txt; } && cat $(BUILD)/variant.txt)
 ifneq ($(REF_VARIANT_HAD),$(REF_VARIANT))
@@ -100,6 +113,9 @@ endif
 GAMEINC := -include $(GAME)/platform/include/re4dc_prelude.h -I$(ROOT)/include -I$(ROOT)/src \
            -I$(ROOT)/src/game -I$(ROOT)/src/wep -I$(GAME)/platform/include -DRE4DC_GAME \
            -DRE4DC_STAT_ROUTINE_BYTES=$(STAT_BYTES)
+ifeq ($(CORRECTIONS),1)
+GAMEINC += -include $(ROOT)/port/dreamcast/engine/host/corrections.h $(HOSTREF_SETTINGS)
+endif
 GAMEFLAGS := -std=gnu++20 -fpermissive -w -fno-exceptions -fno-rtti -fno-threadsafe-statics $(GAMEINC)
 HOSTFLAGS := -std=gnu++20 -fpermissive -Wall -Wno-unused-function -Wno-register -fno-exceptions -fno-rtti \
              -fno-threadsafe-statics $(GAMEINC) -I.
@@ -224,9 +240,11 @@ $(BUILD)/%/game/pad.o: POSTCC = objcopy --rename-section .text.VibControl=re4ref
 PRESENT_EM10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10CamMove2P5cEm10 _Z12em1cBloodSetP5cEm10i \
 	_Z16em10CallVoiceSe2P5cEm10ii _Z18em10SetDamageVoiceP5cEm10ii em10CallVoiceSe em10CamMove em10CamMoveAshley \
 	em10CamMoveCri em10CamMoveTakeaway em10CsawSignSe plem10KickCamMove
-ifeq ($(EM10_SPLIT),1)
-$(BUILD)/%/game/em10_em10.o: POSTCC = objcopy $(foreach f,$(PRESENT_EM10),--rename-section .text.$(f)=re4ref_present) $@
-endif
+EM10_POSTCC := $(if $(filter 1,$(EM10_SPLIT)),$(foreach f,$(PRESENT_EM10),--rename-section .text.$(f)=re4ref_present)) \
+	$(if $(filter 1,$(EM10_VOICE)),--redefine-sym _em10CallVoiceSe=em10CallVoiceSe)
+$(BUILD)/%/game/em10_em10.o: POSTCC = $(if $(strip $(EM10_POSTCC)),objcopy $(EM10_POSTCC) $@)
+# (lane eng-e2b: em10's object follows this file, so a folder built before a switch's rule changed is rebuilt)
+$(BUILD)/plain/game/em10_em10.o $(BUILD)/fma/game/em10_em10.o: Makefile
 
 # lane eng-svc: the service census build and the native skeleton and collision services (svc/svc.mk)
 include svc/svc.mk
