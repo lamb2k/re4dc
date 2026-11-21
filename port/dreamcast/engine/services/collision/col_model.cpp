@@ -23,6 +23,7 @@
 #include "../model/pool.h"
 #include "va_ppc.h"
 #include "db_log.h"
+#include "svc_prof.h"
 
 extern "C" {
 ColModelCounters colm_cnt;
@@ -118,6 +119,7 @@ int cSatMgr::checkAir(cModel* m, int flag)
 
 f32 cSatMgr::getFloor(Vec* pos, f32 up, f32 down, u32* attr, int flag)
 {
+    SvcProf pr(SP_COL_FLOOR);
     colm_cnt.floors++;
     if (pG->Debug_flg[1] & 0x10000000) return 0.0f;
     Vec top, bottom, hit;
