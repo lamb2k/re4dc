@@ -158,6 +158,7 @@ int main()
     e1_log("E1 engine: room %03x ready, player %p pos %d %d %d\n", (unsigned) pG->room_id, (void*) pPL,
            (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
     if (!pack_first) e1_draw_open();
+    e1_pool_control();                  // POOLCTL boot file: a forced double free (lane eng-e1i, the selector's control)
     e1_memmap_sample();
     e1_heap_room_checks();              // heap descriptors' map; HEAPCK: the heap-4 exercise (lane eng-e1e)
     e1_state[0] = 4;

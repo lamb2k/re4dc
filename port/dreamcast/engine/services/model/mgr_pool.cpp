@@ -67,3 +67,25 @@ void traits<cObj>::clear(cManager<cObj>* m, cObj* p)
 ENG_POOL(cObj)
 ENG_POOL_BACK(cObj)
 #endif
+
+// Lane eng-e1i (ruling H-015.3): a refused double free or a full table fails the scene (engine/loader/selector.c reads
+// the report's "E1 POOL" line). The control: with the boot file POOLCTL the image destroys a character record that is
+// not alive (the first free slot of the character table, after the room's set-up), which the pool refuses and counts
+// as a bad free; the selector must then mark the scene FAILED.
+#include <kos/fs.h>
+extern cEmMgr EmMgr;
+extern "C" void e1_pool_control(void)
+{
+    file_t f = fs_open("/cd/POOLCTL", O_RDONLY);
+    if (f < 0) return;
+    fs_close(f);
+    for (u32 i = 0; i < EmMgr.nArray; i++) {
+        cEm* p = (cEm*) ((u8*) EmMgr.pArray + i * EmMgr.size);
+        if ((p->be_flag & 0x201) != 1) {
+            e1_log("E1 POOLCTL: destroying the free character record %lu (control)\n", (unsigned long) i);
+            EmMgr.destroy(p);
+            return;
+        }
+    }
+    e1_log("E1 POOLCTL: no free character record\n");
+}
