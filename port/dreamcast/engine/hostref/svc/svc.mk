@@ -312,7 +312,7 @@ $(BUILD)/svc/e2c_co.o: svc/e2c_co.cpp
 	$(CXX) $(COMMON) $(FP_plain) $(PCFLAGS) -c $< -o $@
 E2C_ODU_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BUILD)/plain/boss/em2b.o $(BUILD)/plain/boss/obj20.o $(BUILD)/plain/boss/r119.o
 E2C_NAT_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BOSS_SVC_OBJS) $(NAT)/boss/em2b_weak.o
-E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z7SndCallttP3VeciiP5cUnit -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci
+E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) aliases.ld
 	@mkdir -p $(dir $@)

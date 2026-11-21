@@ -106,15 +106,14 @@ extern "C" void __wrap_QuakeExec(u8 id, u16 delay, s16 time, f32 power, u8 axis)
     }
     __real_QuakeExec(id, delay, time, power, axis);
 }
-extern "C" u32 __real__Z7SndCallttP3VeciiP5cUnit(u16 blk, u16 no, Vec* p, int id, int a, cUnit* o);
-extern "C" u32 __wrap__Z7SndCallttP3VeciiP5cUnit(u16 blk, u16 no, Vec* p, int id, int a, cUnit* o)
+// sound calls: from e2b_dump.cpp's SndCall wrapper (its hook; both lanes log the same entry point)
+extern "C" void e2c_snd_hook(u16 blk, u16 no, Vec* p, int id, int a, cUnit* o)
 {
     if (g_f && g_in) {
         P(g_f, "%u SC %u %u", g_tick, blk, no);
         if (p) pv(p); else P(g_f, " P-");
         P(g_f, " %x %d %u\n", id, a, actor(o));
     }
-    return __real__Z7SndCallttP3VeciiP5cUnit(blk, no, p, id, a, o);
 }
 // effect requests: from e2_dump.cpp's EstSet wrapper (the hook below)
 extern "C" void e2c_est_hook(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g, void* h)
