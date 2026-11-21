@@ -491,6 +491,16 @@ static void at_ck_parallel(const ClothKStep* s, ClothKVec* pos, ClothKVec* up) {
             ps.nd = k_normalize(ps.d);   // (the original's len is read only by its zero test, above)
             ps.invLenSq = 1.0f / ps.lenSq;
         }
+        if (!cyl || !((cyl >> (c - c0)) & 1)) {
+            // the original's first rejection, here without the call: the tested point's distance (push) from the
+            // centre, the same operations in the same order as par_one (most spheres in reach end here)
+            const float rr = c->r * c->r;
+            float dot = (c->x - p1.x) * ps.d.x + (c->y - p1.y) * ps.d.y;
+            dot += (c->z - p1.z) * ps.d.z;
+            const float t = dot * ps.invLenSq;
+            const float vx = ps.nd.x * t + p1.x - c->x, vy = ps.nd.y * t + p1.y - c->y, vz = ps.nd.z * t + p1.z - c->z;
+            if (vx * vx + vy * vy + vz * vz >= rr) continue;
+        }
         par_one(&p0, &p1, &ps, &s->vol[c - c0]);
     }
     cloth_k_cnt.vol_tests += n;
