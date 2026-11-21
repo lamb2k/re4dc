@@ -1,8 +1,8 @@
 # Lane eng-e2c: the boss image's remaining original service code (step 3, pass E2)
 
-Status: **finished, unaudited** for 23 of the 26 functions (6 groups); the room's thunder (3) is not done and needs a
-ruling (below). Branch `lane/eng-e2c` from `lane/eng-e2a` ce7fd1a44, `origin/engine` f161f4184 merged. Every number here
-is the PC reference (hostref) or Flycast (plain build, function checks); none is a timing.
+Status: **finished, unaudited** for all 26 functions (7 groups; the thunder after the integrator's ruling: addendum
+below). BOSS=1 links 0 service functions. Branch `lane/eng-e2c` from `lane/eng-e2a` ce7fd1a44, `origin/engine` ba541cdcf
+merged. Every number here is the PC reference (hostref) or Flycast (plain build, function checks); none is a timing.
 
 ## Link check, service functions per image
 
@@ -113,20 +113,49 @@ None added. The set-ups keep calling the existing logged stubs (PenClothSet, Set
 setParent2, Ctrl12GetTexRenderEm2b, QuakeExec); the image's report gains three `E2C BOSS` lines with every native entry
 point's call count (Flycast counts below).
 
-## Not done: the room's thunder (r119_ThunderMove, r119_ThunderFlagOn, r119_ThunderFlagOff)
+## The room's thunder (r119_ThunderMove, r119_ThunderFlagOn, r119_ThunderFlagOff): addendum, after the integrator's ruling
 
-1. **They cannot be replaced by symbol.** The three are `static` in r119.cpp; R119Init passes the task by its section
-   (`.text._ZL16r119_ThunderMovev`), not by a symbol, so weakening does not redirect it. A way that edits no source: the
-   r119 object compiled with a force-included `asm(".weak __ZL16r119_ThunderMovev")` (and the two callbacks), so the
-   assembler keeps the references symbolic and an engine body takes their place. That is a new build mechanism: it needs
-   the integrator's OK.
-2. **The generator.** ThunderMove draws its interval (240 to 385 ticks) from Rnd, the behaviour generator, in the old port
-   and in this image, from the task's first run (tick 1). Presentation must draw from the engine generator; moving the
-   draws shifts the boss's behaviour stream from tick 1 against the old port's reference. Ruling wanted: move it (and
-   accept the boss's plays-right drift, judged by outcome) or keep the timer as the room script's decision (a "+" reviewed
-   line, its two light callbacks thin setters).
-3. In this image the thunder's effect, sound and tool-state callbacks are already engine stubs (EstSet recorded,
-   SceSndCallThunder and EffSetToolStateCallBack empty): FlagOn / FlagOff are never called.
+Ruling (2026-11-21): (a) the three static functions may be made replaceable by build means, provided the originals'
+bodies are gone by the link check and no copy survives inlined; a ceiling of 0 and a failing link control. (b) The
+thunder is presentation: its interval draws move to the engine's presentation generator.
+
+- **Mechanism** (commit 766c0b6af): `services/boss/r119_weak.h` is force-included into the hosted r119.cpp (game/boss.mk):
+  `.weak` for the three symbols before the file, so the assembler keeps them weak global symbols and every reference to
+  them a reference to the symbol (no source edited, no code changed). `game/r119_split_check.py` runs on the hosted object
+  at build time and stops the build unless (1) the three are weak, (2) no relocation outside debug information names
+  their sections, (3) no other function calls what only the thunder calls (SceSndCallThunder, EffSetToolStateCallBack,
+  EffGetToolState: an inlined copy would show it). `allowed_original.txt`: `=st1/r119 r119_Thunder* 0`.
+  Controls: R119_ORIG=1 (r119 built as before, no engine thunder): link check FAIL with the three back (476 kept, 3
+  service); r119_split_check.py on that object FAIL (rules 1 and 2: the three local, R119Init and the task naming their
+  sections).
+- **Native thunder** (`services/boss/r119_thunder.cpp`): a presentation timer; the interval (240 to 385 ticks in steps of
+  5) from the presentation generator; each thunder the original's two requests (EstSet flash kind 1, the thunder sound);
+  the two hut lights one table of (record, rest, flash in tool state 1 and 2).
+- **PC check** (e2c_check.sh): the task runs as a coroutine on both builds (svc/e2c_co.cpp) with its interval draws
+  answered by the exercise's own stream (the original's Rnd and the engine's eng_pres_u8 renamed to it in the exercise's
+  copies only), and the light callbacks are called on a planted light table in every tool state; hill-ashley (600 ticks)
+  has two thunders and three draws. Both exercises PASS; control bossthunder (interval 5 ticks longer) FAILs on hill-ashley
+  (bell-ganado's 300 ticks end before the first thunder, so the control runs there).
+- **The generator move's consequence, shown on Flycast:** the boss's behaviour stream no longer carries the thunder's
+  draws from tick 1. Against the head before the thunder (B1, 1858344ad) the first 22 effect requests are identical; the
+  first differing request is at tick 246 (B1's thunder flash, drawn from the behaviour generator) / 249 (B3); from there
+  the boss's choices differ (B3 makes a stamp: 22 stamp-camera calls where B1 had none; the stub lines first differ at
+  tick 879). This is the split's known and accepted consequence, as for the Ganado's voices. The PC reference does not
+  host r119, so no reference change follows (no PC fixture runs r119's task).
+
+## Final state (after merging `origin/engine` ba541cdcf, lane eng-e2b)
+
+- Link check on the merged head: default 0, SENDABLE=1 0, FIGHT=1 43, **BOSS=1 0** (473 original functions kept, all
+  allowed).
+- Merge: both lanes' hooks kept in svc_dump.cpp and e2_dump.cpp; both dumps had wrapped SndCall, so e2b_dump.cpp's
+  wrapper now calls a weak hook (e2c_snd_hook) before its own log and e2c_dump.cpp logs through it (6d1e2d802).
+- PC suites on the merged head (`ev\suites-merged2\`): svc_controls 79, camcheck, refctl, controls 18, outcome_controls 35,
+  aim_check, e2check, e2bcheck (16 rows), e2c_check (2 exercises, 9 controls): every row as it must.
+- Flycast (disc B3 from 6d1e2d802, slot std1: dynarec on, 200 MHz default; deleted after the run): BOSS-BENCH and BOSS 2
+  of 2 OK under the strict selector; BOSS 600 rows, disc in play 0 / 0 / 0, POOL 0 / 0; the bench's four rows identical
+  to B0 and B1. Thunder counts: 3 draws, 2 thunders, 0 flashes (the tool-state callback is an engine stub). Comparison tool
+  `tools/engine/boss_selfcmp.py`: B3 against itself IDENTICAL; with `--control` (one request moved a tick) DIFFER; B1
+  against B3 as above.
 
 ## Drawing El Gigante in the hosted scene: what it would need (not done; waits for the renderer redesign)
 
