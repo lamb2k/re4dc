@@ -15,6 +15,7 @@
 #include "e1_core.h"
 #include "e1_kos.h"
 #include <string.h>
+#include "input/vib_table.h"
 
 uint8_t* e1_pl_arc;
 uint8_t* e1_wep_arc;
@@ -169,7 +170,9 @@ void e1_load_room(unsigned room)
         e1_core_arc = core;
         e1_resident_bytes[3] = cb;
         pG->pArc = (ArcFile*) core;
-        e1_log("E1 load: core archive %lu B whole (E2 boss)\n", (unsigned long) cb);
+        void* vib = GetDataExt(core, "VIB", 0);   // lane eng-e1h: the rumble table in the SH-4's order
+        const int vib_n = vib ? vib_table::to_host(vib, 0x2C0) : 0;
+        e1_log("E1 load: core archive %lu B whole (E2 boss), rumble table %d patterns converted\n", (unsigned long) cb, vib_n);
         return;
     }
 #else
@@ -194,6 +197,9 @@ void e1_load_room(unsigned room)
     memset(e1_core_arc, 0, 0x100);
     memcpy(e1_core_arc + 0x100, cam, cam_bytes);
     memcpy(e1_core_arc + 0x100 + cam_bytes, vib, vib_bytes);
+    // lane eng-e1h: the tree carries the rumble table big-endian (services/input/vib_table.h); in the SH-4's order once
+    const int vib_n = vib_table::to_host(e1_core_arc + 0x100 + cam_bytes, vib_bytes);
+    e1_log("E1 load: rumble table %s (%d patterns)\n", vib_n > 0 ? "converted to the SH-4 order" : vib_n == 0 ? "already in order" : "NOT A TABLE", vib_n);
     ArcFile* a = (ArcFile*) e1_core_arc;
     a->ofs_30 = 0x100;
     a->ofs_1C = 0x100 + cam_bytes;

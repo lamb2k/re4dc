@@ -6,13 +6,13 @@
 #
 # Per fixture, the aimchk build runs three arms: orig (the behaviour gets the original's answer; both answers are
 # compared on every call: aim.txt, aim-diff.txt), native (the behaviour gets the native answer) and ctl (native answer
-# under the control RE4_AIM_CONTROL=grow: every enemy box and capsule 25% larger). The shot fixtures (aimfire-*) run
-# with a magazine (RE4_AIM_MAG=10) and add the arm nomag (the reference's empty magazine: no shot fires).
+# under the control RE4_AIM_CONTROL=grow: every enemy box and capsule 25% larger). The shot fixtures (aimfire-*) fire
+# from the reference's own magazine (the new game's 10 rounds, host_stubs.cpp, lane eng-e1h; before that lane they ran
+# with RE4_AIM_MAG=10 and an arm nomag).
 # Verdicts: calls  PASS when every call's return, enemy and surface attribute agree (hit points are reported: the
 #                  native form is the engine's, not the original's arithmetic);
 #           outcome / traces  outcome.py and plays_right.py of each arm against orig.
-# The controls must FAIL: ctl on calls where an enemy box is in the line (aim-ganado, aimfire-ganado), nomag on
-# outcome (the shots change the run).
+# The control must FAIL: ctl on calls where an enemy box is in the line (aim-ganado, aimfire-ganado).
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../../.." && pwd)
@@ -35,13 +35,10 @@ calls() {   # calls <dir>: PASS / FAIL on the per-call comparison
          print ((v["ret_diff"] + v["em_diff"] + v["attr_diff"]) ? "FAIL" : "PASS") " (calls " v["calls"] ", return differs " v["ret_diff"] ", enemy " v["em_diff"] ", attribute " v["attr_diff"] ", hit point max " v["max_point"] " units)"}' "$1/aim.txt"
 }
 for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado}; do
-    mag=0
-    case $fx in aimfire*) mag=10 ;; esac
-    run "$fx" orig RE4_AIM_MAG=$mag
-    run "$fx" native RE4_AIM_USE=native RE4_AIM_MAG=$mag
-    run "$fx" ctl RE4_AIM_USE=native RE4_AIM_CONTROL=grow RE4_AIM_MAG=$mag
+    run "$fx" orig
+    run "$fx" native RE4_AIM_USE=native
+    run "$fx" ctl RE4_AIM_USE=native RE4_AIM_CONTROL=grow
     arms="native ctl"
-    if [ $mag != 0 ]; then run "$fx" nomag; arms="native ctl nomag"; fi
     echo "$fx orig: calls $(calls "$OUT/$fx/orig")"
     for a in $arms; do
         python3 "$PR/outcome.py" "$OUT/$fx/orig/trace.txt" "$OUT/$fx/$a/trace.txt" --tolerances "$PR/tolerances.json" \

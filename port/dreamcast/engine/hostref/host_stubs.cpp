@@ -99,8 +99,14 @@ u32 SndCall(u16, u16, Vec*, int, int, cUnit*) { HOST_STUB("SndCall"); return 0; 
 int SndStop(u32, int) { HOST_STUB("SndStop"); return 0; }
 
 void cActionButton::set(int, int, int, int, int, int, int, int) { HOST_STUB("cActionButton::set"); }
-u16 cItemMgr::bulletNum() { HOST_STUB("cItemMgr::bulletNum"); return 0; }
-u32 cItemMgr::bulletNumCurrent() { HOST_STUB("cItemMgr::bulletNumCurrent"); return 0; }
+// The armed handgun's magazine (lane eng-e1h): the new game's Punisher with its 10 rounds loaded and no ammo carried, as
+// the engine images serve it (host/e1_stubs.cpp; the fight image's fight_stubs.cpp the same for its first 7 shots).
+// Until this lane the reference answered 0, an empty gun: A while aiming took the empty-gun branch and no shot fired.
+// item.cpp's rules for a type-1 weapon: trigger spends a loaded round (0 when empty), reloadable when not full and
+// ammo is carried, reload moves carried rounds in.
+namespace { int g_mag_loaded = 10, g_mag_spare = 0; }
+u16 cItemMgr::bulletNum() { return (u16) g_mag_loaded; }
+u32 cItemMgr::bulletNumCurrent() { return (u32) g_mag_loaded; }
 int cItemMgr::num(int, u8) { HOST_STUB("cItemMgr::num"); return 0; }
 int cLightMgr::update(int, int) { HOST_STUB("cLightMgr::update"); return 0; }
 cLightInfo::cLightInfo() {}
@@ -118,11 +124,23 @@ void cLog::mes(int, int, const char*, ...) { HOST_STUB("cLog::mes"); }
 int cEmRack::adjustRange(u8) { HOST_STUB("cEmRack::adjustRange"); return 0; }
 int cEmWindow::ChkBreakDir(Vec*) { HOST_STUB("cEmWindow::ChkBreakDir"); return 0; }
 int cEmWindow::ChkStatus() { HOST_STUB("cEmWindow::ChkStatus"); return 0; }
-int cItemMgr::reload() { HOST_STUB("cItemMgr::reload"); return 0; }
-int cItemMgr::trigger() { HOST_STUB("cItemMgr::trigger"); return 0; }
+int cItemMgr::reload()
+{
+    int n = 10 - g_mag_loaded;
+    if (n > g_mag_spare) n = g_mag_spare;
+    g_mag_loaded += n;
+    g_mag_spare -= n;
+    return n > 0;
+}
+int cItemMgr::trigger()
+{
+    if (g_mag_loaded == 0) return 0;
+    g_mag_loaded--;
+    return 1;
+}
 cObj* SetObj10(void*, void*, Vec*, Vec*, Vec*, f32, f32, int, int) { HOST_STUB("SetObj10"); return 0; }
 void Obj10SetEst(cObj*, int, int, u32, int, int, int, int, int, int) { HOST_STUB("Obj10SetEst"); }
-int cItemMgr::reloadable() { HOST_STUB("cItemMgr::reloadable"); return 0; }
+int cItemMgr::reloadable() { return g_mag_loaded < 10 && g_mag_spare > 0; }
 void cObjLauncher::grip(int) { HOST_STUB("cObjLauncher::grip"); }
 void cObjLauncher::gripBack() { HOST_STUB("cObjLauncher::gripBack"); }
 void cLog::warn(int, int, const char*, ...) { HOST_STUB("cLog::warn"); }

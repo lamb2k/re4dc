@@ -1,0 +1,27 @@
+# shot-ganado (lane eng-e1h): Leon shoots the walking Ganado 0x14 with the handgun and it takes damage (800 -> 500 at
+# tick 161). From bell-ganado (its header there: the bell gate fixture, the four Ganados created after the characters'
+# first move), 320 ticks. Leon resumes facing yaw -1.54 (0xbfc51eb8), towards where 0x14 walks; R (aim) from tick 150,
+# the stick centred; A held two ticks at 160 (the shot fires at 161 from the reference's magazine: the new game's 10
+# rounds, hostref/host_stubs.cpp). The shot line (aimchk shots.txt) crosses 0x14 at about 2,430 units. A second press at
+# 180 fires at 181 and misses (0x14 has walked on). Control: the same file without the press at 160 (outcome FAIL:
+# damage).
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+weapon 2 0
+seed 0x0d37
+esl 0
+god
+resume 0xc5f7504a 0xba800000 0xc37dfdae 0xbfc51eb8 2   # Leon at bell-ganado's resume point, facing -1.54
+actor 0x14 1 post
+actor 0x1c 1 post
+actor 0x1e 1 post
+actor 0x1f 1 post
+ticks 320
+pad 0 0x0000 0 0
+pad 150 0x0020 0 0 0 0 0 192
+pad 160 0x0120 0 0 0 0 0 192
+pad 162 0x0020 0 0 0 0 0 192
+pad 180 0x0120 0 0 0 0 0 192
+pad 182 0x0020 0 0 0 0 0 192
+pad 300 0x0000 0 0

@@ -284,14 +284,9 @@ garmenttest: $(GT)/garmenttest
 # GetWepTargetPos: both answer every call, the answers are compared (aim.txt, aim-diff.txt), and RE4_AIM_USE=native
 # hands the behaviour the native answer. RE4_AIM_CONTROL=grow is the native control (must differ).
 AIM := $(BUILD)/aimchk
-# The reference's item stubs (host_stubs.cpp) give an empty magazine, so A while aiming never fires (the empty-gun
-# branch: reload or the empty click). The aimchk build weakens the two magazine stubs and aimcheck.cpp answers them
-# with RE4_AIM_MAG rounds (default 0, the reference's), so a shot fixture can fire as the engine image does (10 rounds).
-AIM_MAG_STUBS := _ZN8cItemMgr9bulletNumEv _ZN8cItemMgr16bulletNumCurrentEv
-$(AIM)/host_stubs.o: $(BUILD)/svc/host_stubs.o
-	@mkdir -p $(AIM)
-	objcopy $(foreach s,$(AIM_MAG_STUBS),--weaken-symbol=$(s)) $< $@
-AIM_HG_OBJS := $(filter-out $(BUILD)/svc/host_stubs.o,$(SVC_HG_OBJS)) $(AIM)/host_stubs.o
+# (Lane eng-e1h: the reference's magazine is the new game's 10 rounds (host_stubs.cpp) and its rumble table is read in
+# the PC's order (host_glue.cpp), so this build no longer replaces the magazine stubs or wraps VibSetData.)
+AIM_HG_OBJS := $(SVC_HG_OBJS)
 $(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
 	@mkdir -p $(AIM)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -c $< -o $@.raw.o
@@ -305,7 +300,7 @@ $(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJ
                $(AIM)/aim.o $(AIM)/aimcheck.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(AIM_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
-	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=VibSetData -Wl,-Map=$(AIM)/re4ref.map
+	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=GetWepTargetList2 -Wl,-Map=$(AIM)/re4ref.map
 aimchk: $(AIM)/re4ref
 .PHONY: aimchk
 
