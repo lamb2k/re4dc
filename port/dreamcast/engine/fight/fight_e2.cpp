@@ -163,6 +163,14 @@ void* EmReadSearch(int id, void* addr, u32 size)
     return 0;
 }
 
+// Lane eng-e1o (H-017.7): the fight's modules (archive and motion keys) are read at room load, before the first picture,
+// as the game reads a room's enemy modules when it loads the room. Read at the first spawn they were 159 file opens inside
+// play (tick 1: the scenario's room-entry spawn), which the console disc's record now fails.
+static void e2_modules_preload()
+{
+    for (FightModule& m : mods) EmReadSearch(m.id, 0, 0);
+}
+
 // read.cpp SearchEmModule: the loaded module record (the room script swaps event data through it; the engine plays
 // no event data, so only the archive and its size are given)
 static ReadModule mod_rec;
@@ -442,6 +450,7 @@ void e2_room_init()
     SceSys.event_start_cnt = 0;
     SceSys.cancelFlagNo = -1;
     SceSys.sndFlag = 1;
+    e2_modules_preload();   // lane eng-e1o: no module read inside play
     e2_shot_room_init();   // lane eng-e1k: the shot fixture's resume and seed (nothing without SHOT.TXT)
 }
 
