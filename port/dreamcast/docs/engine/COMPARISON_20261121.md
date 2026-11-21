@@ -20,11 +20,20 @@ Dreamcast.
 - **MODELLED (the console build's dynarec at Sh4Clock 70, calibrated on the old port's console numbers, section 10):**
   old port 15.6 / 11.3 / 16.4 pictures a second, new engine 28.9 / 18.3 / 24.2 (village / hill / fight): 1.85x / 1.62x /
   1.48x. Neither holds 30 at this clock. A second Flycast build at its own calibrated clock agrees on the old port within
-  2.4% but gives the engine 6 to 10% more, so the model is a band and these figures are its pessimistic end.
+  2.4% but reads the engine 3 to 10% faster in pictures a second (7 to 10% less work), so the model is a band and these figures are its pessimistic end.
 - **Console evening:** the owner will not look at a disc until the replatforming is complete (2026-11-21); section 8
   keeps what it would take.
 
-## 1. The table (Flycast, three runs a side, pictures of engine ticks 41 to 640)
+## 1. The table (Flycast, function-check tier; pictures of engine ticks 41 to 640)
+
+**Cited runs, settings recorded** (slot std1, standard Flycast v2.7-14-g12bb43652, `emu.cfg` with no `Sh4Clock` line and
+no `Dynarec.Enabled` line, i.e. Flycast's defaults: 200 MHz, dynarec on; each run's `launch.json` carries `cfg`,
+`settings` and the exe hash, and its log carries a `[cmp1 settings]` line): engine `eng-r1`; old port image A `vil-RA1`,
+`hill-RA1`, `fight-RA1`; image B `vil-RB1`, `hill-RB1`, `fight-RB1` (images rebuilt byte-identical: ELF 1c8f6ae5... and
+a0ae5fd6...). **Every figure below equals the earlier runs' exactly** (`s\rerun_cmp.py`, `ev\rerun_cmp.json`: all window
+figures equal; the only difference is the count of picture lines in the whole log, outside the window, because runs stop
+at different frames). Earlier runs, settings not recorded, figures identical: engine eng-1..3 (std1), old port
+vil|hill|fight-A1..A3 and -B1..B3 (std2), vil-A4std1, try-vil.
 
 | Scene | Side | Pictures in window | Pictures a second shown | Interval between shown pictures, fields: mean / p99 / worst | Intervals over 2 fields | Work a picture, ms: mean / p99 / worst | Work over 33.3 ms |
 |---|---|---:|---:|---|---:|---|---:|
@@ -42,9 +51,8 @@ Dreamcast.
   game's per-iteration stamps). Image A's own intervals, for comparison: 591 / 586 / 575 pictures, 29.54 / 29.27 / 27.81
   pictures a second, worst 6 / 4 / 19 fields: its log costs the old port up to half a picture a second (hill), so the
   interval columns use B.
-- **Run-to-run spread: 0.** The three runs of each side gave identical figures to the last digit (engine: eng-1, eng-2,
-  eng-3, and the integrator's own run of the same disc; old port: A1 to A3 and B1 to B3; one more old-port run in the
-  engine's slot, std1, also identical). Flycast is deterministic in emulated time for these discs, so three runs check the
+- **Run-to-run spread: 0.** Every run of each side gave identical figures to the last digit (engine: eng-1, eng-2,
+  eng-3, eng-r1 and the integrator's own run of the same disc; old port: A1 to A3, B1 to B3, RA1, RB1, in std2 and std1). Flycast is deterministic in emulated time for these discs, so three runs check the
   reading, not timing noise. A console will vary; this table says nothing about how much.
 - Pictures a second = 59.94 / mean interval in fields. "Work over 33.3 ms" counts pictures whose work alone does not fit
   a 30 Hz picture.
@@ -96,7 +104,8 @@ images were built, once each, with switches that already exist and only log:
   removed leave every picture without work; one engine row repeated refuses the scene; one engine row at 3 fields adds
   one interval over two. 5 of 5 move as they must.
 
-**Flycast.** Both sides in the lane slots `E:\RE4DC-Lanes\eng-e1d\std1` (engine) and `std2` (old port): the same
+**Flycast.** The cited runs of both sides in `E:\RE4DC-Lanes\eng-e1d\std1` (the earlier unrecorded old-port runs in
+`std2`, figures identical): the same
 `flycast.exe` (v2.7-14-g12bb43652, sha256 64491C00...), the same `emu.cfg` settings (framebuffer emulation on, vsync
 off, serial console on, region 1, cable 3; the two files differ only in key order). Inactive desktop, no input sent.
 
@@ -187,19 +196,32 @@ console-disc images.
 
 ## 7. What can be said
 
-**Three sentences a customer could be told today, each true as written:**
-1. "In the emulator, on three test scenes from chapters 1 and 2, the new engine needs 16 to 26 milliseconds of processor
-   work per picture on average where the current Dreamcast version needs 26 to 33, and its slowest picture takes 21 to
-   31 milliseconds against 75 to 317."
-2. "In the emulator, the new engine showed all 1,800 measured pictures on time at 30 a second on those three scenes,
-   while the current Dreamcast version showed 27.9 to 29.8 pictures a second with stalls of up to a third of a second."
-3. "The new engine does not yet play sound or draw the burning pyre, barrels and other room objects, and it does not yet
-   handle items; so far it runs three test scenes, not the game."
+By the line's rules no speed statement rests on plain Flycast. These sentences rest on the calibrated tier of section 10
+(the console-like Flycast build's dynarec at Sh4Clock 70, set so the current version's five measured Dreamcast benchmark
+spots come out at or below their console speed), its like-for-like table 10.2 and its band 10.3.
 
-**One sentence that must not be said yet:** "The new engine runs at 30 frames a second on a real Dreamcast" (or any
-"N times faster on Dreamcast"): there is no console number for the engine, and this Flycast is 1.6 to 1.7 times kinder
-than the console to the old port. The MODELLED figures of section 10 are not Dreamcast figures either and must not be
-quoted as such.
+**Three sentences a customer could be told today, each true as written:**
+1. "On our emulator model, set to match the current Dreamcast version's measured speed, the new engine shows 28.9
+   pictures a second on a test walk through the village where the current version shows 15.6, and needs 34 milliseconds
+   of processor work per picture where the current version needs 62; a second emulator model calibrated the same way
+   reads the new engine 3 to 10 percent faster still."
+2. "On the same model, with Ashley following Leon on the hill path the new engine shows 18.3 pictures a second against
+   11.3 (55 against 87 milliseconds of work per picture), and in a fight with four villagers 24.2 against 16.4 (37
+   against 55 milliseconds)."
+3. "The new engine does not yet play sound, draw the burning pyre, barrels and other room objects, or handle items and
+   enemy weapons, and on that model it does not yet hold 30 pictures a second in any of these scenes; so far it runs
+   three test scenes, not the game."
+
+**Caveat to say with them:** when it falls behind, the new engine slows the game down instead of skipping pictures as
+the current version does: on the hill, on the same model, the game runs at 61% of normal speed on the new engine
+against 76% on the current version.
+
+**Must not be said yet:** that the new engine holds 30 pictures a second on a real Dreamcast (or is N times faster on a
+Dreamcast). There is no console number for the engine; the model's figures are not Dreamcast figures and are quoted only
+with the model named.
+
+The plain-Flycast sentences of the first version of this page are in Appendix A, as function-check tier, not for
+quoting.
 
 ## 8. For the console evening: the same table on hardware
 
@@ -303,7 +325,7 @@ Standard build, dynarec, Sh4Clock 104 (slot std1), same scenes:
 | Hill, work | 86.6 / 84.6 | 2.4% | 55.0 / 49.7 | 9.5% |
 | Fight, work | 54.9 / 54.8 | 0.1% | 37.1 / 34.3 | 7.4% |
 
-**Plainly: the two builds agree on the old port (within 2.4%) but disagree on the engine (6 to 10%).** The calibration
+**Plainly: the two builds agree on the old port (within 2.4%) but disagree on the engine (3 to 10% in pictures a second, 7 to 10% in work).** The calibration
 does not transfer cleanly to the engine's code: the builds weigh the engine's instructions differently from the old
 port's. Treat the MODELLED engine figures as a band, the console build at 70 MHz being its pessimistic end (the one to
 quote defensively), the standard build at 104 MHz about 10% kinder. The engine's own cost scales with the clock almost
@@ -339,3 +361,15 @@ windows are 27 and 32 ms. All six console-disc scenes ran OK at every clock; not
 The quiet view at 70 MHz; the interpreter on bell, hay-fork and quiet (it ignores the clock, so they would only repeat
 the "as kind as plain Flycast" result); a hill-height check of the quiet-farm fixture; any cache or graphics-chip timing
 model (neither dynarec build has one).
+
+## Appendix A. Plain-Flycast sentences: function-check tier, not for quoting
+
+Kept as the first version of this page wrote them (standard Flycast at 200 MHz, the tier of section 1); by the line's
+rules they are not speed statements for customers.
+1. "In the emulator, on three test scenes from chapters 1 and 2, the new engine needs 16 to 26 milliseconds of processor
+   work per picture on average where the current Dreamcast version needs 26 to 33, and its slowest picture takes 21 to
+   31 milliseconds against 75 to 317."
+2. "In the emulator, the new engine showed all 1,800 measured pictures on time at 30 a second on those three scenes,
+   while the current Dreamcast version showed 27.9 to 29.8 pictures a second with stalls of up to a third of a second."
+3. "The new engine does not yet play sound or draw the burning pyre, barrels and other room objects, and it does not yet
+   handle items; so far it runs three test scenes, not the game."
