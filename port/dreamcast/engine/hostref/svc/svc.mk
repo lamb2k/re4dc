@@ -91,7 +91,12 @@ E2_WRAP := emLinePolyCrossCk emLineCubeCrossCk emLineCapsuleCrossCk emLineAtCk e
 E2_WRAP += _ZN7cDmgMgr8hitCheckEP3VecS1_ _ZN7cDmgMgr3setEiiP3Vecff _ZN7cDmgMgr3setEiiP3Vecf _ZN7cDmgMgr4moveEv
 # and the scenario areas (area_vol.cpp)
 E2_WRAP += _Z12AreaHitCheckPvP3Vec areaHitCheck_xz4 areaHitCheck_Cylinder AreaViewCheck AreaGetCenterPos AreaGetInsidePos AreaDataInit
-SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP) $(E2_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
+# lane eng-e2b: em10's service functions' boundary log (e2b_dump.cpp): the sound entry points (SndCall, SndStop, the
+# ctrl11 voice slots under both names, the ctrl12 locks) and the effect table lookups the Ganado's presentation calls
+E2B_WRAP := _Z7SndCallttP3VeciiP5cUnit _Z7SndStopmi _Z11Ctrl11SetSeP5cCtrlP6cModelsti _Z12Ctrl11SetSe2P5cCtrlP6cModelstit \
+	Ctrl11SetSe2__FP5cCtrlP6cModelsUsiUs _Z18Ctrl11StopAndSetSeP5cCtrlP6cModelsti _Z8Ctrl12CkP5cCtrli _Z9Ctrl12SetP5cCtrlit \
+	Ctrl12Set__FP5cCtrliUs EspGetEstAddr EspEstSetSelect
+SVC_WRAP_FLAGS := $(foreach s,$(SVC_WRAP_COL) $(SVC4_WRAP) $(E2_WRAP) $(E2B_WRAP),-Wl,--wrap=$(s)) -Wl,--wrap=PenClothSet
 WEAK_motion := HermiteInterpolation _Z13MotionSetCoreP6cModelPvS1_iiii MotionMove MotionMoveCore MotionMoveSub MotionHokan MotionClear PartsWorldPosCalc \
                MotionGetSpeed MotionGetPosition MotionAddSpeed MotionSequenceCtrl MotionBlendOff MotionPause FcvGetMaxFrame \
                MotionGetMaxFrame MotionGetCurrentFrame MotionCheckCrossFrame MotionGetState
@@ -130,6 +135,9 @@ SVC4_SRCS += aim/em_hit.cpp
 SVC4_SRCS += volumes/dmg_vol.cpp
 # lane eng-e2a item 3: the scenario areas (services/volumes/area_vol.cpp: every area query; area is a replaced unit)
 SVC4_SRCS += volumes/area_vol.cpp
+# lane eng-e2b: em10's service functions (services/em10/: the presentation and the cut-in cameras; em10 is linked with
+# their bodies weak in weak6/ below)
+SVC4_SRCS += em10/em10_pres.cpp em10/em10_cam.cpp
 SVC4_OBJS := $(addprefix $(NAT)/svc4/,$(notdir $(SVC4_SRCS:.cpp=.o)))
 # lane eng-e1j: cam_sys is camera maths throughout (the camera service has every function): a replaced unit
 SVC4_UNITS := at_mod at_sub atariInfo atari route_ck cMotBase model view camera cam_motion cam_sys motion pad $(SVC5_UNITS) area
@@ -180,9 +188,23 @@ NATIVE_GAME_OBJS := $(SVC4_OBJS) $(filter-out $(NATIVE_REPLACED) $(SVC4_REPLACED
 # lane eng-e1h: em10 (the Ganado library) linked with em10ScaleCompress weak, so the native squash
 # (services/skeleton/em_compress.cpp, skel_compress_y) is the one reached
 WEAK_em10 := _Z17em10ScaleCompressP5cEm10
-$(NAT)/weak6/em10_em10.o: $(BUILD)/plain/game/em10_em10.o svc/svc.mk
+# lane eng-e2b: and with every em10 service function the engine has (services/em10/) weak, as in the image (game/fight.mk
+# EM10_NATIVE). em10 is compiled again from the same host copy for this build, without the interprocedural optimisations
+# that could keep a copy of a weakened function in a caller (EM10_NOIPA, as the image), and game/em10_split_check.py
+# refuses the object when a clone or an inlined copy of one of em10's service functions is reported.
+EM10_NATIVE_PC := Em10SetSeTbl em10CallVoiceSe _Z16em10CallVoiceSe2P5cEm10ii _Z12em10BreathSeP5cEm10 em10CsawSignSe \
+	_Z18em10SetDamageVoiceP5cEm10ii em10BehindSeCk _Z10em10FootSeP5cEm10 em10WepSeEffSet _Z12em10BloodSetP5cEm10i \
+	_Z12em1cBloodSetP5cEm10i _Z15em10KickHitMarkP5cEm10 _Z17em10SetDmWaterEffP5cEm10i _Z15em10SetWaterEffP5cEm10 \
+	em10CamMove _Z12em10CamMove2P5cEm10 em10CamMoveCri em10CamMoveAshley em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk
+WEAK_em10 += $(EM10_NATIVE_PC)
+EM10_NOIPA_PC := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
+	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp
+$(NAT)/weak6/em10_em10.o: $(BUILD)/gen/em10_em10.cpp svc/svc.mk ../game/em10_split_check.py
 	@mkdir -p $(dir $@)
-	objcopy $(foreach s,$(WEAK_em10),--weaken-symbol=$(s)) $< $@
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(EM10_NOIPA_PC) -fopt-info-inline-optimized=$@.inl.txt -c $< -o $@.raw.o
+	objcopy $(EM10_POSTCC) $(foreach s,$(WEAK_em10),--weaken-symbol=$(s)) $@.raw.o $@
+	rm -f $@.raw.o
+	$(PY) ../game/em10_split_check.py --nm nm --obj $@ --inline $@.inl.txt --weak $(WEAK_em10)
 NATIVE_GAME_OBJS := $(filter-out $(BUILD)/plain/game/em10_em10.o,$(NATIVE_GAME_OBJS)) $(NAT)/weak6/em10_em10.o
 SVC_GAMEFLAGS := $(GAMEFLAGS) -I$(SVC_ENG)/skeleton -I$(SVC_ENG)/collision -I$(SVC_ENG)/cloth
 $(NAT)/pen.o: $(BUILD)/plain/game/pendulum.o svc/svc.mk
@@ -227,7 +249,11 @@ $(BUILD)/svc/svc5_dump.o: svc/svc5_dump.cpp $(wildcard $(SVC_ENG)/*/*.h) hostref
 $(BUILD)/svc/e2_dump.o: svc/e2_dump.cpp hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
-SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o
+$(BUILD)/svc/e2b_dump.o: svc/e2b_dump.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o \
+	$(BUILD)/svc/e2b_dump.o
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	@mkdir -p $(dir $@)

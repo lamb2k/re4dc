@@ -49,3 +49,40 @@ ENG_FLAGS += $(FIGHT_EXTRA)
 PRESENT_em10/em10 := _Z12em10BloodSetP5cEm10i _Z12em10BreathSeP5cEm10 _Z12em10CamMove2P5cEm10 _Z12em1cBloodSetP5cEm10i \
 	_Z16em10CallVoiceSe2P5cEm10ii _Z18em10SetDamageVoiceP5cEm10ii em10CallVoiceSe em10CamMove em10CamMoveAshley \
 	em10CamMoveCri em10CamMoveTakeaway em10CsawSignSe plem10KickCamMove
+
+# Lane eng-e2b (item 1): em10's service functions are the engine's (services/em10/: em10_pres.cpp the sound numbers,
+# voices, breath, chainsaw tell, footsteps, the weapon's sound set, blood, the kick's mark, water; em10_cam.cpp the cut-in
+# cameras and the on-screen check; docs/engine/lanes/eng-e2b.md). em10's own bodies are made weak (EM10_NATIVE, SH-ELF
+# names without the leading underscore) so the engine's are linked and --gc-sections drops the originals. em10.o is
+# compiled without the interprocedural optimisations that let a caller keep an inlined, cloned or register-assumed copy
+# of a function that is later made weak (EM10_NOIPA: -fipa-ra in particular lets a caller trust the clobbers of the
+# body it saw), and game/em10_split_check.py refuses the object when the compiler reports a clone or an inlining of any
+# of em10's 40 service functions, or a symbol of the list is not weak.
+# Control builds only, never a default: EM10_ORIG=<name> keeps that original body linked (its engine copy made weak; the
+# link check must FAIL); EM10_IPA=1 compiles em10.o with the interprocedural optimisations (the split check must FAIL).
+EM10SVC_OBJS := $(OUT)/n/em10_pres.o $(OUT)/n/em10_cam.o
+EM10_NATIVE := Em10SetSeTbl em10CallVoiceSe _Z16em10CallVoiceSe2P5cEm10ii _Z12em10BreathSeP5cEm10 em10CsawSignSe \
+	_Z18em10SetDamageVoiceP5cEm10ii em10BehindSeCk _Z10em10FootSeP5cEm10 em10WepSeEffSet _Z12em10BloodSetP5cEm10i \
+	_Z12em1cBloodSetP5cEm10i _Z15em10KickHitMarkP5cEm10 _Z17em10SetDmWaterEffP5cEm10i _Z15em10SetWaterEffP5cEm10 \
+	em10CamMove _Z12em10CamMove2P5cEm10 em10CamMoveCri em10CamMoveAshley em10CamMoveTakeaway em10SetCampos2 em10ScreenInCk
+EM10_WEAK := $(addprefix _,$(filter-out $(EM10_ORIG),$(EM10_NATIVE)))
+EM10_NOIPA := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
+	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp
+ifeq ($(EM10_IPA),1)
+EM10_NOIPA :=
+endif
+# (WEAKEN_em10/em10, em10ScaleCompress's, is set by game/Makefile after this file is read: the recipe expands it then.)
+$(OUT)/h/em10/em10.o: $(ROOT)/src/em10/em10.cpp $(ENG)/host/e1_prelude.h $(ENG)/game/em10_split_check.py $(ENG)/game/fight.mk
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(EM10_NOIPA) -fopt-info-inline-optimized=$@.inl.txt $(ORIG_INC) -c $< -o $@
+	sh-elf-objcopy $(foreach f,$(PRESENT_em10/em10),--rename-section .text.$(f)=e1_present) \
+		$(foreach f,$(WEAKEN_em10/em10) $(EM10_WEAK),--weaken-symbol=$(f)) $@
+	python3 $(ENG)/game/em10_split_check.py --nm sh-elf-nm --obj $@ --inline $@.inl.txt --weak $(WEAKEN_em10/em10) $(EM10_WEAK)
+# em_sub and dmg have their service functions made weak too (lane eng-e2a, game/Makefile WEAKEN_game/em_sub, the dmg rule):
+# no inlined or cloned copy of those is reported (lane eng-e2b checked both units' -fopt-info), but a caller compiled with
+# -fipa-ra may keep a value in a register the body it saw left alone and the engine's replacement does not: off there.
+$(OUT)/h/game/em_sub.o $(OUT)/h/game/dmg.o: ORIG_FLAGS += -fno-ipa-ra
+$(OUT)/n/em10_%.o: $(ENG)/services/em10/em10_%.cpp $(ENG)/services/camera/cam_math.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(ENG)/services/camera -c $< -o $@
+	$(if $(EM10_ORIG),sh-elf-objcopy $(foreach f,$(EM10_ORIG),--weaken-symbol=_$(f)) $@)
