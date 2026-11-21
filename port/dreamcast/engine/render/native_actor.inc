@@ -262,16 +262,43 @@ static void build_ws(const RtModel* m,unsigned i){
     build_ws_once(m,i);
     if(DC_ARM(DL_WS2))build_ws_once(m,i);
 }
+/* Lane eng-draw3 (C3): the blend unrolled by weight count (one block, no per-element loop: the tier charged each of the
+   12 x count iterations as a block of its own), a single-bone set copied without a memcpy call, the four columns
+   projected without a loop, and the view-projection loaded into XMTRX once per character (ws_begin), not once per set.
+   The sums are the same: each element starts from a zero the compiler cannot fold (ws_zero) and adds w[k] x row[k]
+   in k order, as the loop did. */
+static volatile float ws_zero_store;   /* 0, read through a volatile once per character */
+static float ws_zero;
+static inline void ws_begin(void){ws_zero=ws_zero_store;shz_xmtrx_load_4x4(&view_project);}
 static void build_ws_once(const RtModel* m,unsigned i){
     const SkinWeight* w=m->w+i;float* out=skin_world[i];
-    if(w->count==1 && w->w[0]==1.f)memcpy(out,ws_rows+ws_stride*w->bone[0],48);
-    else for(unsigned j=0;j<12;j++){float sum=0;for(unsigned k=0;k<w->count;k++)sum+=w->w[k]*ws_rows[ws_stride*w->bone[k]+j];out[j]=sum;}
-    shz_xmtrx_load_4x4(&view_project);
-    shz_mat4x4_t* pm=skin_project+i;
-    for(unsigned c=0;c<4;c++){
-        shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[c],out[4+c],out[8+c],c==3?1.f:0.f));
-        pm->elem[4*c]=v.x;pm->elem[4*c+1]=v.y;pm->elem[4*c+2]=v.z;pm->elem[4*c+3]=v.w;
+    const float* r0=ws_rows+ws_stride*w->bone[0];
+    if(w->count==1 && w->w[0]==1.f){
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++)out[j]=r0[j];
+    }else if(w->count==2){
+        const float* r1=ws_rows+ws_stride*w->bone[1];const float w0=w->w[0],w1=w->w[1],z=ws_zero;
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++){float sum=z;sum+=w0*r0[j];sum+=w1*r1[j];out[j]=sum;}
+    }else if(w->count==3){
+        const float* r1=ws_rows+ws_stride*w->bone[1],*r2=ws_rows+ws_stride*w->bone[2];
+        const float w0=w->w[0],w1=w->w[1],w2=w->w[2],z=ws_zero;
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++){float sum=z;sum+=w0*r0[j];sum+=w1*r1[j];sum+=w2*r2[j];out[j]=sum;}
+    }else{
+        const float w0=w->count?w->w[0]:0.f,z=ws_zero;
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++){float sum=z;if(w->count)sum+=w0*r0[j];out[j]=sum;}
     }
+    shz_mat4x4_t* pm=skin_project+i;
+    shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[0],out[4],out[8],0.f));
+    pm->elem[0]=v.x;pm->elem[1]=v.y;pm->elem[2]=v.z;pm->elem[3]=v.w;
+    v=shz_xmtrx_transform_vec4(shz_vec4_init(out[1],out[5],out[9],0.f));
+    pm->elem[4]=v.x;pm->elem[5]=v.y;pm->elem[6]=v.z;pm->elem[7]=v.w;
+    v=shz_xmtrx_transform_vec4(shz_vec4_init(out[2],out[6],out[10],0.f));
+    pm->elem[8]=v.x;pm->elem[9]=v.y;pm->elem[10]=v.z;pm->elem[11]=v.w;
+    v=shz_xmtrx_transform_vec4(shz_vec4_init(out[3],out[7],out[11],1.f));
+    pm->elem[12]=v.x;pm->elem[13]=v.y;pm->elem[14]=v.z;pm->elem[15]=v.w;
     if(!ws_light_off)ws_light(i,out);   /* eng-look: off on a baked-lighting cache hit */
     ws_ready[i]=1;
 }
@@ -438,6 +465,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         ws_light_off=lit_cached && !lit_fill;
         if(!ws_light_off)source_lights(s,actor,h[0],model_light(s,actor),&cur_lights);
         memset(ws_ready,0,h[1]);
+        ws_begin();
         for(unsigned p=0;p<h[4];p++){
             if(!state[p])continue;const RtPart* rp=m->parts+p;
             for(unsigned k=0;k<rp->ws_count;k++){unsigned i=m->part_ws[rp->ws_first+k];if(!ws_ready[i])build_ws(m,i);}

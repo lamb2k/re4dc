@@ -195,6 +195,7 @@ void e1_actor_pass(NativeScene* s, const void* model_record, const E1SkelView* s
     }
     memset(ws_ready, 0, h[1]);
     ws_rows = pal; ws_stride = e1_pal_control ? 12 : 16;   /* build_ws blends the palette rows in place (PALCTL: wrong stride) */
+    ws_begin();
     for (unsigned p = 0; p < h[4]; p++) {
         if (!state[p]) continue; const RtPart* rp = m->parts + p;
         for (unsigned k = 0; k < rp->ws_count; k++) { unsigned i = m->part_ws[rp->ws_first + k]; if (!ws_ready[i]) build_ws(m, i); }

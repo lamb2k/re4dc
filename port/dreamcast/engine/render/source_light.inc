@@ -194,60 +194,61 @@ static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned b
     source_lights_w(s,actor->world,c->world,bones?actor[1].world:actor[0].world,ml,0,out);
 }
 /* Per weight set: each light's direction in the set's model space (scaled for raw s16 normals) and its colour
-   times the attenuation at the set's origin. */
-static float ws_dirs[ACTOR_WS_LIMIT][8][3],ws_cols[ACTOR_WS_LIMIT][8][3];
+   times the attenuation at the set's origin. Lane eng-draw3 (C1): one record a light, in the order the normal kernel
+   reads it (direction, then colour), and the colour stored halved: the kernel adds (d + |d|) x colour / 2, which is
+   d x colour exactly when d > 0 and exactly 0 otherwise, so no light needs a branch (the tier ends a block at every
+   conditional branch and charges the next block's first memory reads again). Same products, same sums, same order. */
+typedef struct { float d[3],hc[3]; } WsLamp;
+static WsLamp ws_lamp[ACTOR_WS_LIMIT][8] __attribute__((aligned(32)));
 static SrcLights cur_lights;
 static void ws_light(unsigned i,const float* m){
     const float inv=1.f/(16384.f*.0625f);
     float o[3]={m[3],m[7],m[11]};
-    for(unsigned j=0;j<cur_lights.n;j++){
+    WsLamp* w=ws_lamp[i];
+    for(unsigned j=0;j<cur_lights.n;j++,w++){
         const SrcLight* g=cur_lights.l+j;
         float L[3]={g->pos[0]-o[0],g->pos[1]-o[1],g->pos[2]-o[2]},d=sqrtf(L[0]*L[0]+L[1]*L[1]+L[2]*L[2]);
         float id=d>0?1.f/d:0;for(unsigned c=0;c<3;c++)L[c]*=id;
         float att=g->br;
         if(g->spot){float cs=-(L[0]*g->axis[0]+L[1]*g->axis[1]+L[2]*g->axis[2]);att*=m1_maxf(0,g->sa0+g->sa1*cs);}
         att/=g->k0+g->k1*d+g->k2*d*d;
-        for(unsigned c=0;c<3;c++){ws_dirs[i][j][c]=(m[c]*L[0]+m[4+c]*L[1]+m[8+c]*L[2])*inv;ws_cols[i][j][c]=g->rgb[c]*att;}
+        w->d[0]=(m[0]*L[0]+m[4]*L[1]+m[8]*L[2])*inv;w->d[1]=(m[1]*L[0]+m[5]*L[1]+m[9]*L[2])*inv;
+        w->d[2]=(m[2]*L[0]+m[6]*L[1]+m[10]*L[2])*inv;
+        const float c0=g->rgb[0]*att,c1=g->rgb[1]*att,c2=g->rgb[2]*att;
+        w->hc[0]=c0*.5f;w->hc[1]=c1*.5f;w->hc[2]=c2*.5f;
     }
 }
-static void light_normals_once(const SourceVector* v,unsigned n,uint32_t* out);
+/* One normal with NL lights (NL a constant after inlining: the light loop unrolls into one block). */
+static inline __attribute__((always_inline)) uint32_t light_one(const SourceVector* v,const unsigned NL){
+    const WsLamp* L=ws_lamp[v->bone];
+    float x=v->xyz[0],y=v->xyz[1],z=v->xyz[2],r=cur_lights.amb[0],g=cur_lights.amb[1],b=cur_lights.amb[2];
+#pragma GCC unroll 8
+    for(unsigned j=0;j<NL;j++){
+        const float d=x*L[j].d[0]+y*L[j].d[1]+z*L[j].d[2],t=d+shz_fabsf(d);
+        r+=t*L[j].hc[0];g+=t*L[j].hc[1];b+=t*L[j].hc[2];
+    }
+    return 0xff000000|m1_byte(cur_lights.k[0]*m1_minf(1.f,r))<<16|m1_byte(cur_lights.k[1]*m1_minf(1.f,g))<<8
+                     |m1_byte(cur_lights.k[2]*m1_minf(1.f,b));
+}
+/* idx NULL: normals base[0..n) into out[0..n); else base[idx[i]] into out[idx[i]] (lane eng-draw3, E3) */
+#define LIGHT_RUN(NL) case NL: \
+    if(idx)for(unsigned i=0;i<n;i++){const unsigned q=idx[i];out[q]=light_one(base+q,NL);} \
+    else for(unsigned i=0;i<n;i++)out[i]=light_one(base+i,NL); \
+    break;
+static void light_normals_run(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out){
+    switch(cur_lights.n){LIGHT_RUN(0) LIGHT_RUN(1) LIGHT_RUN(2) LIGHT_RUN(3) LIGHT_RUN(4) LIGHT_RUN(5) LIGHT_RUN(6)
+                        LIGHT_RUN(7) LIGHT_RUN(8)}
+}
+#undef LIGHT_RUN
 /* lane eng-draw1: counted per call; lab arm DL_LIGHT2 lights the normals twice */
 static void light_normals_source(const SourceVector* v,unsigned n,uint32_t* out){
     DC_ADD(DC_A_NRM,n);DC_ADD(DC_A_NRMLIGHTS,n*cur_lights.n);
-    light_normals_once(v,n,out);
-    if(DC_ARM(DL_LIGHT2))light_normals_once(v,n,out);
+    light_normals_run(v,NULL,n,out);
+    if(DC_ARM(DL_LIGHT2))light_normals_run(v,NULL,n,out);
 }
 /* lane eng-draw3 (E3): the normals a boundary part's kept strips use (idx: indices into base and out) */
-static void light_normals_list_once(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out);
 static void light_normals_list(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out){
     DC_ADD(DC_A_NRM,n);DC_ADD(DC_A_NRMLIGHTS,n*cur_lights.n);
-    light_normals_list_once(base,idx,n,out);
-    if(DC_ARM(DL_LIGHT2))light_normals_list_once(base,idx,n,out);
-}
-static void light_normals_list_once(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out){
-    const unsigned nl=cur_lights.n;const float ar=cur_lights.amb[0],ag=cur_lights.amb[1],ab=cur_lights.amb[2];
-    const float kr=cur_lights.k[0],kg=cur_lights.k[1],kb=cur_lights.k[2];
-    for(unsigned i=0;i<n;i++){
-        const unsigned q=idx[i];const SourceVector* v=base+q;
-        const float (*D)[3]=ws_dirs[v->bone];const float (*C)[3]=ws_cols[v->bone];
-        float x=v->xyz[0],y=v->xyz[1],z=v->xyz[2],r=ar,g=ag,b=ab;
-        for(unsigned j=0;j<nl;j++){
-            float d=x*D[j][0]+y*D[j][1]+z*D[j][2];
-            if(d>0){r+=d*C[j][0];g+=d*C[j][1];b+=d*C[j][2];}
-        }
-        out[q]=0xff000000|m1_byte(kr*m1_minf(1.f,r))<<16|m1_byte(kg*m1_minf(1.f,g))<<8|m1_byte(kb*m1_minf(1.f,b));
-    }
-}
-static void light_normals_once(const SourceVector* v,unsigned n,uint32_t* out){
-    const unsigned nl=cur_lights.n;const float ar=cur_lights.amb[0],ag=cur_lights.amb[1],ab=cur_lights.amb[2];
-    const float kr=cur_lights.k[0],kg=cur_lights.k[1],kb=cur_lights.k[2];
-    for(unsigned i=0;i<n;i++,v++){
-        const float (*D)[3]=ws_dirs[v->bone];const float (*C)[3]=ws_cols[v->bone];
-        float x=v->xyz[0],y=v->xyz[1],z=v->xyz[2],r=ar,g=ag,b=ab;
-        for(unsigned j=0;j<nl;j++){
-            float d=x*D[j][0]+y*D[j][1]+z*D[j][2];
-            if(d>0){r+=d*C[j][0];g+=d*C[j][1];b+=d*C[j][2];}
-        }
-        out[i]=0xff000000|m1_byte(kr*m1_minf(1.f,r))<<16|m1_byte(kg*m1_minf(1.f,g))<<8|m1_byte(kb*m1_minf(1.f,b));
-    }
+    light_normals_run(base,idx,n,out);
+    if(DC_ARM(DL_LIGHT2))light_normals_run(base,idx,n,out);
 }
