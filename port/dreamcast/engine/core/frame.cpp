@@ -10,6 +10,7 @@
 #include "e1_core.h"
 #include "skel.h"
 #include "e1_kos.h"
+#include "memory/heap.h"
 #include <stdio.h>
 #include <string.h>
 #ifdef E2_BOSS
@@ -238,6 +239,10 @@ void e1_report()
     e1_stub_report();
     e1_prof_report();
     e1_svc_report();
+    // lane eng-e1g: the native heap service (services/memory/heap.cpp) under the behaviour arena (host/e1_heap.cpp)
+    e1_log("E1 HEAPSVC creates %lu allocs %lu frees %lu fails %lu bad_frees %lu overlaps %lu\n",
+           (unsigned long) heap_cnt.creates, (unsigned long) heap_cnt.allocs, (unsigned long) heap_cnt.frees,
+           (unsigned long) heap_cnt.fails, (unsigned long) heap_cnt.bad_frees, (unsigned long) heap_cnt.overlaps);
     // lanes eng-e1f / eng-e1g: the native weapon-target query (services/aim/aim.cpp)
     e1_log("E1 AIM calls %lu scenery %lu enemy %lu (flag40 %lu) boxes %lu capsules %lu cubes %lu\n",
            (unsigned long) aim_cnt.calls, (unsigned long) aim_cnt.scenery, (unsigned long) aim_cnt.enemy,

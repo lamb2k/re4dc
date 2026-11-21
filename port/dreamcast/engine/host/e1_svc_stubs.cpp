@@ -26,14 +26,10 @@ extern "C" void pen_orig_Move3(cModel*, PenCloth*) { e1_stub_hit("pen_orig_Move3
 extern "C" void pen_orig_FixSet(cModel*, PenCloth*, int no, Vec*) { e1_stub_hit("pen_orig_FixSet (cloth chain not resolved)", no); }
 extern "C" void pen_orig_FixClear(cModel*, PenCloth*, int no) { e1_stub_hit("pen_orig_FixClear (cloth chain not resolved)", no); }
 #else
-// Boss image: no cloth service linked (lane eng-e1c's stubs). The cloth bones keep their animated pose; a move keeps the
-// cloth's one effect on the actor's state, clearing the chains' reset / warp request bits (be_flag 0x00E00000).
-PlCloth leonHair, leonJacket, leonHolster, girlHair, girlSkirt, girlSweater;
-void PlClothSetLeon(cModel*, PlCloth*, PlCloth*, PlCloth*) { e1_stub_hit("PlClothSetLeon (cloth: no native service)", 0); }
-void PlClothMoveLeon(cModel* pl, PlCloth*, PlCloth*, PlCloth*) { e1_stub_hit("PlClothMoveLeon (cloth: no native service)", 0); pl->be_flag &= ~0x00E00000; }
-void PlClothSetGirl(cModel*, PlCloth*, PlCloth*, PlCloth*, int e) { e1_stub_hit("PlClothSetGirl (cloth: no native service)", e); }
-void PlClothMoveGirl(cModel* pl, PlCloth*, PlCloth*, PlCloth*) { e1_stub_hit("PlClothMoveGirl (cloth: no native service)", 0); pl->be_flag &= ~0x00E00000; }
-// El Gigante's loincloth and ropes (em2b): the cloth bones keep their animated pose.
+// Fight and boss images: no cloth service linked (lane eng-e1c's stubs). The garments (PlCloth*) are the native garment
+// service in every image since lane eng-e1g (services/cloth/garment.cpp: it clears the chains' reset / warp request bits,
+// be_flag 0x00E00000, itself); the chains it sets up and moves reach these logged stubs, so the cloth bones keep their
+// animated pose. El Gigante's loincloth and ropes (em2b) likewise.
 void PenClothSet(cModel*, PenCloth*, f32) { e1_stub_hit("PenClothSet (cloth: no native service)", 0); }
 void PenClothMove(cModel*, PenCloth*) { e1_stub_hit("PenClothMove (cloth: no native service)", 0); }
 void PenClothMove3(cModel*, PenCloth*) { e1_stub_hit("PenClothMove3 (cloth: no native service)", 0); }
