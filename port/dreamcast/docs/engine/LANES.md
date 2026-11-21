@@ -6,8 +6,8 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 | Branch | Purpose | Who merges |
 |---|---|---|
-| `engine` | Integration line for the engine plan | The integrator only |
-| `lane/eng-<topic>` | One lane's work | Its owner pushes; the integrator merges |
+| `engine` | Integration line for the engine plan | The integration lane only (H-024) |
+| `lane/eng-<topic>` | One lane's work | Its owner pushes; the integration lane gates and merges |
 | `t15/int` | Release line, frozen to hotfixes | The integrator, under the release rules |
 
 - A lane pulls `engine` into its branch. It never merges another lane's branch.
@@ -16,7 +16,13 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 
 ## 2. Lane limits
 
-- **One milestone at a time, at most two lanes** (plan version 3, after the 2026-11-20 retrospective). New scope goes to the backlog in `ENGINE_PLAN.md` section 7, not into a new lane. The machine is shared with other projects.
+- **As many lanes as are not redundant and the machine carries** (the owner, 2026-11-21: "Run as many as possible with an integration lane as long as they aren't redundant"; H-024 replaces "at most two lanes"). Each lane's brief names the files it owns and the one question it answers. No two lanes own the same files or the same fault. The lanes table in `STATUS.md` is the ownership register; a lane that finds it overlaps another stops that part and says so. Lanes are added only while the machine has room (H-026.7): as lanes hand back the count drains to what the machine carries. New scope goes to the backlog in `ENGINE_PLAN.md` section 7 unless the integrator briefs it as a lane with its own files.
+- **One integration lane** (`eng-int`) gates each handed-back lane, one at a time, to its standing instructions ([INTEGRATION_GATE.md](INTEGRATION_GATE.md), a copy of `E:\RE4DC-Lanes\eng-int\GATE.md`) with its gate script (`E:\RE4DC-Lanes\eng-int\gate.sh`). It is the only one that merges into `engine`. It does no lane work, fixes nothing in a lane and rules on nothing: a failed gate comes back to the integrator, who reads every gate report.
+- **One common brief** holds what is the same in every lane: rules, machine, suites, slots, hand-back. The source is `E:\RE4DC-Lanes\COMMON-BRIEF-20261121.md`; the repository copy is [COMMON_BRIEF.md](COMMON_BRIEF.md). A lane's own brief adds its files and its question; where the two disagree, the lane's brief wins.
+- **Vocabulary** (H-026.2): **corrections** make the original code right on this CPU and compiler (byte order, compiler and ABI), unconditional in how the engine and the reference build it (`CORRECTIONS=0` only as a control build); **game settings** are the owner's product choices, in one file, each with who decided and when; **guards** are tripwires against the old port's failures, counted in the scene record, expected at 0, a non-zero count fails a timing scene, and a guard that never fires is removed. Do not call any of them switches.
+- **Effects one at a time** (the owner, 2026-11-21: "We should probably be selective with the effect layer if we are getting these gains without them."): each effect is added on its own with its modelled cost and a still pair, gameplay feedback first, then scene-defining, then ambient if the budget allows. A lane brings over effect drawing only when its brief names the effect.
+- **Look rules** (H-026.5, H-026.6): one variable per arm (a speed arm never carries a look change, a look arm never carries a speed change); every still pair carries its count of differing pixels against the base; every baked pack, table or converted file carries a receipt (hashes of its inputs and scripts, and of its output), and baked data whose receipt does not match is a fault. Look treatments go to the owner as still sheets, one variable per sheet, with differing-pixel counts and modelled cost.
+- **Hand back before losing the thread** (H-026.6): after about 250 tool calls, or on noticing a repeated run, finish the item in hand, push, and hand back with what remains.
 - **A lane reports "finished, unaudited".** After its audit and its model a milestone is "finished, modelled, not on console"; "done" only after the console run, which is deferred until the replatform is complete (not waived).
 - **Lanes do not stage console discs.** The integrator keeps one engine disc on the shelf, rebuilt from `engine` when a milestone closes on the model.
 - PC-only lanes may not start an emulator.
@@ -24,12 +30,12 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - A lane uses its own build folder and its own evidence folder. It deletes only inside them, by literal path.
 - Processes are stopped by pid, never by name.
 - A staged disc that is queued for the console gets a `KEEP` file in its folder. The hourly cleanup deletes disc images (`track0*`, `disc.gdi`) untouched for 6 hours unless the folder or a parent has one.
-- Flycast runs only from fixed slot folders that the integrator provisions once per lane (`std1`, `std2` the plain build for function checks; `fly1`, `fly2` the strict build for modelled numbers; see the lane's SLOTS.txt). Copying configs and data inside a slot is fine; a copy of flycast.exe at any other path is not. At most two running. Never take window focus or send input to a window. GDB off unless needed.
+- Flycast runs only from the shared slot folders under `E:\RE4DC-Lanes\eng-e1d\`: `std1`, `std2` the plain build for function checks; `fly1`, `fly2` the console-like build for the calibrated tier; `int1` reserved for the integration lane (H-026.7). Slots are shared by lease (H-024.3, H-026.7): before a run, create `<slot>\LEASE.txt` with the lane name and time; a lease covers only a Flycast process of yours that is running, never a slot reserved ahead or held between runs; delete it the moment the run ends. If a lease under two hours old exists, use another slot of the same kind or wait. The integration lane has priority: on `WANTED-eng-int.txt` in a slot you hold, finish the run in progress, release, and do not retake that slot until eng-int's lease has come and gone. Copying configs and data inside a slot is fine; a copy of flycast.exe at any other path is not. Never take window focus or send input to a window. GDB off unless needed.
 - No lane waits on the console while the replatform is under way: speed is judged on the calibrated model (section 3). A question only the console can answer goes in the hand-back for the deferred console run.
 
-**Machine rules** (H-014, H-015; the machine is shared and stalled once on a full C:):
-- Build objects in RAM (`/dev/shm`). One image build at a time. Delete build folders once checked (WSL's swap file on C: grows with what sits there).
-- Check C: and E: free from Windows before every build and disc stage. Stop and tell the integrator at C: 31 GB or E: 15 GB.
+**Machine rules** (H-014, H-015, H-024.4; the machine is shared and stalled once on a full C:):
+- Build objects in RAM (`/dev/shm`). One image build at a time, `make -j4`. Delete build folders once checked (WSL's swap file on C: grows with what sits there).
+- Check C: and E: free from Windows before every build and disc stage. C: under 40 GB or E: under 20 GB stops a lane: delete your own intermediates, push, and say so.
 - A `sleep` keeper per lane while it works. A timeout on every WSL call. WSL work from script files.
 - Test discs are deleted after their runs, with a note.
 - A lane that changes a slot's `emu.cfg` (clock, dynarec) keeps the original beside it, restores it before hand-back, and never changes a slot another lane is using.
@@ -51,6 +57,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - **The defensive model** (owner 2026-11-21, H-021) replaces "the console decides" until the deferred console run:
   - The clock is calibrated on the old port: its five benchmark scenes have real console means from Test 27.1 (village cross 56 ms, bell fight 53 to 60 ms, farm entry 44 to 58 ms, farm hay-fork view 96 ms, farm quiet view 34 ms). The lowest clock any scene needs is the defensive clock; the spread across scenes says how far one factor can be trusted. The first calibration: see `COMPARISON_20261121.md` in this folder when it lands.
   - A figure passes its budget row on the model's worst case, not its mean.
+  - **The calibration is a band** (H-025.3): the standard build fitted the same way (about 104 MHz) reads the engine 3 to 10% kinder in pictures a second. Quote the console build at 70 MHz as the pessimistic end and say the band with every modelled speed figure. Until the game-time track lands, state game speed beside pictures a second (H-025.2).
   - Cost is also read from the code: the images' own per-picture counters and the PC hardware model.
   - With every modelled number, list what the model cannot see: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing.
   - Speed work goes where the code and the model say the cost is, and is judged on the calibrated model. No speed claim rests on plain Flycast.
@@ -92,7 +99,7 @@ Binding for every agent on the engine line. Plan: [../ENGINE_PLAN.md](../ENGINE_
 - **Changing the PC reference** needs the cause shown in the original source and a switchable build that restores the old behaviour, run as a row (H-016.8, H-017.8; `port/dreamcast/engine/hostref/svc/refctl.sh`).
 - **Checks live in the repository.** Checks, control scenes and control schedules are in the repository (the CONTROLS lists in `port/dreamcast/tools/engine/build_console_disc.sh`, `port/dreamcast/tools/engine/hudcheck.py` and the like), never only in a lane's wrapper (H-017.11). A script that skips a requested row or passes with missing inputs is a fault.
 - **A scene is OK only if its record proves itself:** 600 distinct rows, drawn mode, 600 flip intervals, no drops, a complete memory line, the schedule read whole. [CONSOLE_LOOP.md](CONSOLE_LOOP.md) sections 11 to 13 describe it.
-- **The integrator's merge gate:** the link check passes (no original service symbol outside the allowed list), the lane's controls re-run on logs or discs the integrator builds itself, every image links, cited numbers are re-derived against a reference the integrator builds, the comparators are diffed, and the plan's section 3 rules hold. The gate writes its tables to files beside the make logs (H-016.7). A lane's summary is not evidence.
+- **The merge gate** (run by the integration lane to [INTEGRATION_GATE.md](INTEGRATION_GATE.md) since H-024; the integrator reads each report): the link check passes (no original service symbol outside the allowed list), the lane's controls re-run on logs or discs the integrator builds itself, every image links, cited numbers are re-derived against a reference the integrator builds, the comparators are diffed, and the plan's section 3 rules hold. The gate writes its tables to files beside the make logs (H-016.7). A lane's summary is not evidence.
 - **Plays right is checked by outcome** (a scripted player on the engine and the reference: kills, damage, waves, triggers, time to clear), not tick for tick against the old game.
 
 ## 5. Audits and hand-overs
@@ -121,7 +128,8 @@ Integrator checklist before a brief goes out:
 - the baseline's scope defined (which phases, ticks per picture, what is excluded);
 - the stop rule says which gates it covers;
 - the lane's thresholds match ENGINE_PLAN.md;
-- the step is approved by the owner, belongs to the current milestone, and fewer than two lanes are running;
+- the step is approved by the owner; the lane owns named files and one question that no running lane owns; the machine has room;
+- the brief is the common brief plus the lane's own short brief;
 - the work does not depend on timing, or its speed is judged on the calibrated model (no console run is booked while the replatform is under way);
 - which Flycast slot serves which tier;
 - "never loosen" and "controls in the repository" are in the brief;
@@ -140,8 +148,8 @@ Tiers and slots: fly1/fly2 strict Flycast at Sh4Clock <MHz> for MODELLED numbers
 Merge gate: <checks, each with its failing control>
 Never loosen: no comparison, tolerance or "must" column is loosened unless this brief says so
 Controls: in the repository (<script or list>), never only in a lane wrapper
-Machine: objects in /dev/shm; one image build at a time; C: and E: free checked from Windows
-           before every build and disc stage (stop at C: 31 GB or E: 15 GB); a sleep keeper;
+Machine: objects in /dev/shm; one image build at a time, make -j4; C: and E: free checked from
+           Windows before every build and disc stage (stop at C: 40 GB or E: 20 GB); a sleep keeper;
            a timeout on every WSL call; WSL work from script files; test discs deleted after
            their runs with a note; no fstrim or compaction
 Stop rule: <when to hand back without a result>
