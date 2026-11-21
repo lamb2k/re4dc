@@ -1,0 +1,38 @@
+# knock-ganado (lane eng-e2f): the knock-down. Two Ganados walk up together and one dies within 1,500 units of the other:
+# its death registers the crash volume (em10.cpp: DmgMgr.set kind 3, radius 1,500) and the damage table's point test at
+# the living one answers it, which knocks it over (routine 0x3b, thrown about 5,000 units over 60 ticks).
+# Village square (r101), Leon at the bell-ganado resume point turned to face the pair (yaw -0.76, 0xbf428f5c), god mode;
+# enemy-list entries 0x15 and 0x16 (etc/emleon00.esl: created 2,054 apart, south-east of Leon), each created after the
+# characters' first move (post). From tick 425 they stand about 3,500 in front of Leon, under 1,000 apart. R (aim) from
+# tick 460, A held two ticks at 480, 500, 520, 540, 560 and 580: on the PC reference (re4ref plain) 0x16 takes the hits at
+# 502, 522 and 542 (800 -> 500 -> 200 -> 0) and dies at tick 542 with 0x15 973 units away; the point test at 0x15
+# answers the crash volume (kind 3) at 542 and 0x15 is knocked over (routine 0x3b from 544 to 610). The later presses
+# fire at nothing (0x15 is thrown out of the line).
+# Controls: the engine without the damage table's tick (boot file DMGNOTICK: cDmgMgr::move not run) must FAIL the
+# outcome against the reference (tools/plays_right/shot_engine.py --scenes KNOCK:PASS,KNOCKNT:FAIL:any).
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+weapon 2 0
+seed 0x0d37
+esl 0
+god
+resume 0xc5f7504a 0xba800000 0xc37dfdae 0xbf428f5c 2   # Leon at bell-ganado's resume point, facing -0.76
+actor 0x15 1 post
+actor 0x16 1 post
+ticks 640
+pad 0 0x0000 0 0
+pad 460 0x0020 0 0 0 0 0 192
+pad 480 0x0120 0 0 0 0 0 192
+pad 482 0x0020 0 0 0 0 0 192
+pad 500 0x0120 0 0 0 0 0 192
+pad 502 0x0020 0 0 0 0 0 192
+pad 520 0x0120 0 0 0 0 0 192
+pad 522 0x0020 0 0 0 0 0 192
+pad 540 0x0120 0 0 0 0 0 192
+pad 542 0x0020 0 0 0 0 0 192
+pad 560 0x0120 0 0 0 0 0 192
+pad 562 0x0020 0 0 0 0 0 192
+pad 580 0x0120 0 0 0 0 0 192
+pad 582 0x0020 0 0 0 0 0 192
+pad 620 0x0000 0 0

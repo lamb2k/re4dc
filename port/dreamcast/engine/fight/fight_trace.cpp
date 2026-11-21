@@ -3,6 +3,7 @@
 //   old game's LE lines compare directly (s/fight_pr.py);
 //   GE lines: gameplay events (spawn, gone, hit, kill) with the tick and the list entry, recorded as they happen;
 //   LL line: the player's life and state.
+#include "shot_e2.h"
 #include "global.h"
 #include "player.h"
 #include "em.h"
@@ -131,7 +132,12 @@ void e2_report()
 }
 // lane eng-e2a item 2: the damage volumes' tick (services/volumes/dmg_vol.cpp cDmgMgr::move), after the camera as the
 // game's main loop and the PC reference (hostref replay.cpp) run it
-void e2_after_tick() { DmgMgr.move(); }
+// (lane eng-e2f: the knock-down's control DMGNOTICK, a boot file of the shot fixture, leaves the tick out)
+void e2_after_tick()
+{
+    if (e2_shot.ctl_notick) return;
+    DmgMgr.move();
+}
 void e2_fx_room_init() { fx_room_init(); }
 
 // The Ganados for the picture (fight_draw.inc): each alive enemy-table work of the village square's Ganado kinds, its

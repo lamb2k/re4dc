@@ -58,7 +58,12 @@ def main():
     ap.add_argument('out')
     ap.add_argument('--bin', default=os.path.join(ROOT, 'build/hostref/plain/re4ref'))
     ap.add_argument('--fixture', default=os.path.join(HERE, 'fixtures/shot-ganado.txt'))
+    # lane eng-e2f: another fixture's scenes (the knock-down: --scenes KNOCK:PASS,KNOCKNT:FAIL:any --main KNOCK); a
+    # control's reason "any" accepts any problem (the knock-down's control moves the knocked Ganado, not a damage)
+    ap.add_argument('--scenes', help='NAME:MUST[:WHY],... (default the four SHOT scenes)')
+    ap.add_argument('--main', default='SHOT', help='the scene whose outcome table is printed')
     a = ap.parse_args()
+    scenes = SCENES if not a.scenes else [tuple((x.split(':') + [None])[:3]) for x in a.scenes.split(',')]
     tree = os.environ.get('RE4_TREE')
     for p, what in ((a.serial, 'serial log'), (a.bin, 're4ref'), (a.fixture, 'fixture'), (tree or '', 'RE4_TREE')):
         if not p or not os.path.exists(p):
@@ -74,7 +79,7 @@ def main():
         sys.exit(2)
     serial = open(a.serial, errors='replace').read().replace('\r', '').splitlines()
     rows, status, results = [], 0, {}
-    for name, must, why in SCENES:
+    for name, must, why in scenes:
         seg, res = scene_lines(serial, name)
         if seg is None:
             print('shot_engine: scene %s not in %s' % (name, a.serial))
@@ -90,7 +95,7 @@ def main():
         got = j['verdict']
         dmg = [p for p in j['problems'] if p['kind'] == 'damage']
         ok = got == must and o.returncode in (0, 1)
-        if ok and must == 'FAIL':
+        if ok and must == 'FAIL' and why != 'any':
             # the control must fail on damage, for its own reason: different amounts, or the same amounts at another tick
             ok = bool(dmg) and (dmg[0]['detail'].startswith('A amounts') if why == 'amounts' else dmg[0]['detail'].startswith('A at'))
         if not ok:
@@ -110,9 +115,9 @@ def main():
     # the outcome table: SHOT against the reference
     probs = outcome.Problems()
     A = outcome.read(ref, 'A', False, probs)
-    B = outcome.read(results['SHOT'][0], 'B', True, probs)
-    j = results['SHOT'][1]
-    ot = ['', '## SHOT (engine, Flycast) against the PC reference (re4ref plain), %d ticks' % ticks, '',
+    B = outcome.read(results[a.main][0], 'B', True, probs)
+    j = results[a.main][1]
+    ot = ['', '## %s (engine, Flycast) against the PC reference (re4ref plain), %d ticks' % (a.main, ticks), '',
           '| Actor | Reference: life drops (tick before->after) | Engine: life drops | Spawn tick A / B | Same |', '|---|---|---|---|---|']
     da, db = drops(A), drops(B)
     for k in sorted(set(da) | set(db)):
