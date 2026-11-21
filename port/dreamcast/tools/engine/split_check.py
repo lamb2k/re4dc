@@ -25,13 +25,17 @@ For every hosted object (a unit under <OUT>/h/ that the map loads) this checks, 
   3. no clone of such a function exists in the object;
   4. a unit with a replaced function was compiled without the interprocedural optimisations (game/Makefile
      SPLIT_NOIPA, read from the object's .GCC.command.line, -frecord-gcc-switches): the copies of points 2 and 3 cannot
-     occur and no caller trusts the body it saw.
+     occur and no caller trusts the body it saw;
+  5. no section of the unit refers to a replaced function's own code section (lane eng-e2g, folded in from eng-e2c's
+     game/r119_split_check.py): a static function made weak by a force-included header (services/boss/r119_weak.h,
+     fight/r101_weak.h, services/scene/sce_at_weak.h) is referenced by symbol, but a reference written against the
+     section would keep the original body reached whatever the symbol resolves to.
 A function is REPLACED when this object defines it and the image takes another, non-original object's definition (the
 map's cross reference table names the definer).
 
 check_link.py runs this on every image it checks and counts each problem as a service function (group
 SERVICE(split)), so the link check's count includes what inlining hid. Exit status: 0 PASS, 1 FAIL, 2 usage error.
-The per-object form (--obj) checks points 1 to 3 and, with --weak, point 4 for the listed symbols; the image rule of a
+The per-object form (--obj) checks points 1 to 3 and, with --weak, points 4 and 5 for the listed symbols; the image rule of a
 unit may call it so that a bad object stops the build.
 """
 import argparse
@@ -143,6 +147,44 @@ def symbols(obj):
     return defined, clones
 
 
+def section_refs(obj, replaced):
+    """rule 5 (lane eng-e2g, from eng-e2c's r119_split_check.py): no code or data section refers to a replaced
+    function's own section. A reference by section (a static function's call or address, which the assembler writes
+    against the section when the symbol is local) keeps the original body reached whatever the symbol resolves to.
+    Debug information names every section it describes: not a reference that reaches code."""
+    r = subprocess.run([tool('objdump'), '-r', obj], capture_output=True, text=True)
+    if r.returncode != 0:
+        return ['cannot read the relocations of %s' % obj]
+    secs = set()
+    for s in set(re.findall(r'\.text\.(\S+)', r.stdout)):
+        secs.add(s)
+    names = sorted(secs)
+    if not names:
+        return []
+    # the section suffixes are the functions' symbols: demangled (SH-ELF: the leading "_" first), as base names
+    sh = tool('c++filt').startswith('sh-elf-')   # the SH toolchain's demangler strips the symbol prefix "_" first
+    raw = ['_' + n if sh and n.startswith('_Z') else n for n in names]
+    dem = subprocess.run([tool('c++filt')], input='\n'.join(raw) + '\n', capture_output=True, text=True).stdout.split('\n')
+    own = {}
+    for n, d in zip(names, dem):
+        b = cl.base_name(d.strip())
+        if b in replaced:
+            own['.text.' + n] = b
+    bad, sec = [], None
+    for ln in r.stdout.splitlines():
+        m = re.match(r'RELOCATION RECORDS FOR \[(.*)\]:', ln)
+        if m:
+            sec = None if m.group(1).startswith(('.debug', '.eh_frame', '.comment', '.rela.debug')) else m.group(1)
+            continue
+        p = ln.split()
+        if sec is None or len(p) < 3 or not re.match(r'^[0-9a-f]+$', p[0]):
+            continue
+        tgt = p[2].split('+')[0].split('-')[0]
+        if tgt in own and tgt != sec:
+            bad.append('section %s refers to %s by its section (%s)' % (sec, own[tgt], tgt))
+    return bad
+
+
 def check_unit(obj, unit, rules, replaced, kept=None):
     """-> list of problems (strings) of one hosted object; replaced = the base names of its replaced functions; kept =
     the base names of its functions the image keeps (None: every function counts, the per-object form)"""
@@ -186,6 +228,7 @@ def check_unit(obj, unit, rules, replaced, kept=None):
             # kept clone of a replaced function the list does not refuse is not, and is counted here
             bad.append('clone %s (kept)' % c)
     if replaced:
+        bad += section_refs(obj, replaced)
         opts = flags_of(obj)
         if opts is None:
             bad.append('replaced functions (%s) but no recorded flags (-frecord-gcc-switches)' % ', '.join(sorted(replaced)[:4]))
