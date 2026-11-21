@@ -16,10 +16,12 @@ extern "C" {
 #define E1_ARENA_LO 0x8cc00000u
 #endif
 #define E1_ARENA_HI 0x8cec0000u   /* 2,883,584 B (lane eng-e1c: the services region follows) */
-// Native services region (lane eng-e1c, host/e1_svc_mem.cpp): the skeleton pool (256 KB) and the room's collision
-// tables. Fixed address and size; the KOS kernel stack (64 KB) sits at 0x8cff0000.
-#define E1_SVC_LO 0x8cec0000u
-#define E1_SVC_HI 0x8cfc0000u   /* 1,048,576 B */
+// Native services region (lane eng-e1c, host/e1_svc_mem.cpp): the skeleton pool (256 KB), the boot carve (the cloth
+// pool, the SVCPROF arm's buffers) and the room carve (collision pieces made in play). Fixed address and size; the KOS
+// kernel stack (64 KB) sits at 0x8cff0000. Lane eng-skel2: 512 KB (was 1 MB at 0x8cec0000): the room's collision comes
+// baked in the room archive (services/collision/col.h). [0x8cec0000, 0x8cf40000) is free, not yet given to anything.
+#define E1_SVC_LO 0x8cf40000u
+#define E1_SVC_HI 0x8cfc0000u   /* 524,288 B */
 // Resident behaviour data the original keeps at fixed addresses: player archive body, weapon archive body, room
 // archive (CAM, SAT, EAT, ... sections the hosted code and the services read). Engine room-pack region, loaded at
 // room entry, read in place.

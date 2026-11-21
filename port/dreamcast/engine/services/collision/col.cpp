@@ -193,7 +193,7 @@ void bake_grid(ColPiece* pc, cSat* sat)
     }
 }
 
-ColPiece* bake(cSat* sat)
+ColPiece* bake(cSat* sat, void* (*alloc)(u32 bytes))
 {
     BakeCount c = {0, 0, 0, 0};
     count_tree(sat->block_p, &c);
@@ -211,7 +211,7 @@ ColPiece* bake(cSat* sat)
     const u32 oCold = off; off = align32(off + sizeof(ColCold) * nPoly);
     const u32 oGrid = off; off = align32(off + sizeof(ColGrid) * c.leaves);
     const u32 oMask = off; off = align32(off + sizeof(ColMask) * c.masked);
-    u8* blk = (u8*) svc_pool_carve_room(off);
+    u8* blk = (u8*) alloc(off);
     if (!blk) return 0;
     memset(blk, 0, off);
     ColPiece* pc = (ColPiece*) blk;
@@ -247,12 +247,16 @@ ColPiece* bake(cSat* sat)
     return pc;
 }
 
+// lane eng-skel2: a baked file's piece is its own (col_baked_setup made it when the piece was created)
+inline ColPiece* baked_piece(const cSatFile* f) { return (ColPiece*) ((u8*) f + ((const ColBakedFile*) (f + 1))->oPiece); }
+
 ColPiece* piece_for(cSat* sat)
 {
+    if (col_is_baked(sat->pFile)) return baked_piece(sat->pFile);
     for (u32 i = 0; i < g_npiece; i++)
         if (g_piece[i]->sat == sat && g_piece[i]->file == sat->pFile) return g_piece[i];
     if (g_npiece >= kMaxPieces) return 0;
-    ColPiece* pc = bake(sat);
+    ColPiece* pc = bake(sat, svc_pool_carve_room);
     if (!pc) return 0;
     col_cnt.late_bakes++;
     g_piece[g_npiece++] = pc;
@@ -640,6 +644,7 @@ extern "C" u32 col_file_bytes(const ColPiece* pc)
 
 extern "C" ColPiece* col_piece_of(const cSat* s)
 {
+    if (col_is_baked(s->pFile)) return baked_piece(s->pFile);
     for (u32 i = 0; i < g_npiece; i++)
         if (g_piece[i]->sat == s && g_piece[i]->file == s->pFile) return g_piece[i];
     return 0;
@@ -659,7 +664,7 @@ extern "C" void col_room_release(void)
     if (col_control_keep && g_npiece) {
         // the room carve runs down: the first piece baked is the highest block; keeping it keeps it alone
         ColPiece* keep = g_piece[0];
-        svc_pool_room_reset(keep);
+        svc_pool_room_reset(col_is_baked(keep->file) ? 0 : keep);   // a baked piece is in the room archive, not the carve
         g_npiece = 1;
     } else {
         svc_pool_room_reset(0);
@@ -678,9 +683,145 @@ extern "C" void col_bake_all(void)
             cSat* sat = (cSat*) ((u8*) mgr[m]->pArray + mgr[m]->size * i);
             if (!sat->isAlive() || !VALID_PTR(sat->block_p)) continue;
             if (col_piece_of(sat)) continue;
-            ColPiece* pc = bake(sat);
+            ColPiece* pc = bake(sat, svc_pool_carve_room);
             if (pc && g_npiece < kMaxPieces) g_piece[g_npiece++] = pc;
         }
+}
+
+// ---- lane eng-skel2: the baked form (col.h; the integrator's ruling of 2026-11-21, option 2) ----
+extern "C" int col_is_baked(const cSatFile* f) { return f && f->x8 == COL_BAKED_MAGIC; }
+
+extern "C" ColPiece* col_bake_into(cSat* sat, void* (*alloc)(u32 bytes)) { return bake(sat, alloc); }
+
+namespace {
+// the floor control (RE4_SVC_CONTROL=floor=N) on a baked piece: its floor group raised in place, and the list entries'
+// cells taken again from the raised polygons, as bake() does with the control set (the grids are the unraised
+// polygons', as bake()'s); once a piece
+ColPiece* g_raised[kMaxPieces];
+u32 g_nraised;
+void raise_floor(ColPiece* pc, u32 nFloorPolys)
+{
+    for (u32 i = 0; i < g_nraised; i++)
+        if (g_raised[i] == pc) return;
+    if (g_nraised < kMaxPieces) g_raised[g_nraised++] = pc;
+    const f32 dy = col_control_floor;
+    for (u32 i = 0; i < nFloorPolys && i < pc->nPoly; i++) {
+        pc->hot[i].v0[1] = pc->hot[i].v0[1] + dy;
+        pc->cold[i].v1[1] = pc->cold[i].v1[1] + dy;
+        pc->cold[i].v2[1] = pc->cold[i].v2[1] + dy;
+    }
+    for (u32 k = 0; k < pc->nNode; k++) {
+        const u16 lf = pc->nodeLeaf[k];
+        if (lf == 0xFFFF || pc->grid[lf].mask == COL_NO_MASK) continue;
+        const ColLeaf& L = pc->leaf[lf];
+        const ColGrid& g = pc->grid[lf];
+        for (u32 i = 0; i < (u32) L.nFloor + L.nWall; i++) {
+            const u16 no = pc->idx[L.first + i];
+            const ColHot& h = pc->hot[no];
+            const ColCold& c = pc->cold[no];
+            const f32 xs[3] = {h.v0[0], c.v1[0], c.v2[0]}, ys[3] = {h.v0[1], c.v1[1], c.v2[1]}, zs[3] = {h.v0[2], c.v1[2], c.v2[2]};
+            f32 lx = xs[0], hx = xs[0], ly = ys[0], hy = ys[0], lz = zs[0], hz = zs[0];
+            for (int v = 1; v < 3; v++) {
+                if (xs[v] < lx) lx = xs[v];
+                if (xs[v] > hx) hx = xs[v];
+                if (ys[v] < ly) ly = ys[v];
+                if (ys[v] > hy) hy = ys[v];
+                if (zs[v] < lz) lz = zs[v];
+                if (zs[v] > hz) hz = zs[v];
+            }
+            pc->cmask[g.mask + i] = cells_of(g, lx, ly, lz, hx, hy, hz, 0);
+        }
+    }
+}
+}
+
+// The piece of a baked file: the record's table pointers from the file's offsets (every call: a file may serve more
+// than one piece, as a script's door made twice). No bake. The piece joins the room's list (counts, release).
+extern "C" ColPiece* col_baked_setup(cSatFile* f, cSat* sat)
+{
+    const ColBakedFile* b = (const ColBakedFile*) (f + 1);
+    if (b->version != COL_BAKED_VERSION) return 0;
+    u8* base = (u8*) f + b->oPiece;
+    ColPiece* pc = (ColPiece*) base;
+    pc->sat = sat;
+    pc->file = f;
+    pc->nNode = (u16) b->nNode;
+    pc->nLeaf = (u16) b->nLeaf;
+    pc->nTri = b->nPoly;
+    pc->nIdx = b->nIdx;
+    pc->bytes = b->bytes;
+    pc->nodeMinX = (f32*) (base + b->oMinX);
+    pc->nodeMinZ = (f32*) (base + b->oMinZ);
+    pc->nodeSizeX = (f32*) (base + b->oSzX);
+    pc->nodeSizeZ = (f32*) (base + b->oSzZ);
+    pc->nodeSkip = (u16*) (base + b->oSkip);
+    pc->nodeLeaf = (u16*) (base + b->oLeafN);
+    pc->leaf = (ColLeaf*) (base + b->oLeaf);
+    pc->idx = (u16*) (base + b->oIdx);
+    pc->hot = (ColHot*) (base + b->oHot);
+    pc->cold = (ColCold*) (base + b->oCold);
+    pc->nPoly = b->nPoly;
+    pc->grid = (ColGrid*) (base + b->oGrid);
+    pc->cmask = (ColMask*) (base + b->oMask);
+    pc->nMask = b->nMask;
+    if (col_control_floor != 0.0f) raise_floor(pc, (u32) f->m_nFloor + f->m_nSlope);
+    col_cnt.baked_setups++;
+    u32 i = 0;
+    while (i < g_npiece && g_piece[i] != pc) i++;
+    if (i == g_npiece && g_npiece < kMaxPieces) g_piece[g_npiece++] = pc;
+    return pc;
+}
+
+extern "C" u32 col_baked_bytes(void)
+{
+    u32 n = 0;
+    for (u32 i = 0; i < g_npiece; i++)
+        if (col_is_baked(g_piece[i]->file)) n += g_piece[i]->bytes;
+    return n;
+}
+
+// The map entry (the sub screen's map position, src/Sscrn/ss_map.cpp mapPositionCheck's search on the room's SAT file
+// 0): every floor and slope polygon in the file's order, the line test against the vertical line through the point,
+// the lowest hit (a later polygon on a tie, "hit.y <= best"). The polygons and their vertices are the baked floor
+// group's (hot.v0, cold.v1, cold.v2: the file's vertices). The attribute filter reads SEck as the original's test does.
+extern "C" {
+int col_map_control;
+}
+extern "C" int col_map_floor(const void* sat, const Vec* pos, ColMapHit* out)
+{
+    col_cnt.map_queries++;
+    const cSatHeader* hdr = (const cSatHeader*) sat;
+    const cSatFile* f = hdr->m_Version != 0xFF && (hdr->m_Version & 0x80) ? ((cSatHeader*) hdr)->getSat(0) : (const cSatFile*) sat;
+    ColPiece* pc = 0;
+    if (col_is_baked(f)) pc = baked_piece(f);
+    else
+        for (u32 i = 0; i < g_npiece && !pc; i++)
+            if (g_piece[i]->file == f) pc = g_piece[i];
+    if (!pc) return 0;
+    Vec a = *pos, b = *pos, h;
+    a.y += 100000.0f;
+    b.y -= 100000.0f;
+    f32 best = 100000000.0f;
+    int idx = -1;
+    const u32 cold_line = col_cnt.cold_line;
+    const u32 n = (u32) f->m_nFloor + f->m_nSlope;
+    for (u32 i = 0; i < n; i++)
+        if (line_tri(&pc->hot[i], &pc->cold[i], &h, &a, &b, 0, 0) && h.y <= best) {
+            idx = (int) i;
+            out->hit = h;
+            best = h.y;
+        }
+    col_cnt.cold_line = cold_line;
+    if (idx < 0) return 0;
+    const ColHot& t = pc->hot[idx];
+    const ColCold& c = pc->cold[idx];
+    const f32* v1 = col_map_control ? c.v2 : c.v1;
+    const f32* v2 = col_map_control ? c.v1 : c.v2;
+    out->poly = (u32) idx;
+    out->v[0].x = t.v0[0]; out->v[0].y = t.v0[1]; out->v[0].z = t.v0[2];
+    out->v[1].x = v1[0]; out->v[1].y = v1[1]; out->v[1].z = v1[2];
+    out->v[2].x = v2[0]; out->v[2].y = v2[1]; out->v[2].z = v2[2];
+    return 1;
 }
 
 // lane eng-svcspd1 (the account): queries made again in the same tick with the same inputs (the last 8 kept a kind)

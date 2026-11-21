@@ -280,6 +280,12 @@ $(NAT)/chain.o: $(SVC_ENG)/cloth/chain.cpp $(SVC_ENG)/skeleton/skel.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
 NATIVE_GAME_OBJS += $(NAT)/chain.o
+# lane eng-skel2: the room's collision in the baked form in the native builds (svc/colb_host.cpp: host_room_post; the
+# bake step RE4_COLB_BAKE, svc/colbake.sh; the map entry's check RE4_COLMAP, svc/colmap_check.sh)
+$(NAT)/colb_host.o: svc/colb_host.cpp $(SVC_ENG)/collision/col.h hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) -isystem /usr/include/x86_64-linux-gnu/c++/13 $(HOSTFLAGS) -c $< -o $@
+NATIVE_GAME_OBJS += $(NAT)/colb_host.o
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
 	@mkdir -p $(dir $@)

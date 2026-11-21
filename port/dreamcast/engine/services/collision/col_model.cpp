@@ -20,6 +20,7 @@
 #include "math_sub.h"
 #include "main.h"
 #include "col_model.h"
+#include "col.h"   // lane eng-skel2: the baked form (col_is_baked, col_baked_setup)
 #include "../model/pool.h"
 #include "va_ppc.h"
 #include "db_log.h"
@@ -31,8 +32,14 @@ int colm_control;
 }
 void at_pos_calc(cModel* m, Vec* vec);
 
+extern "C" void* svc_region(u32* bytes) __attribute__((weak));   // the PC reference's services region (hostref/svc)
 namespace {
-inline bool in_arena(const void* p) { return (u32) p >= 0x8C000000 && (u32) p <= 0x8CFFFFFF; }
+// The arena. On the PC reference (svc_region linked) also 0x8E000000-0x8FFFFFFF: its services region and the room's
+// baked collision files its native build makes at room load (hostref/svc/colb_host.cpp, lane eng-skel2).
+inline bool in_arena(const void* p)
+{
+    return ((u32) p >= 0x8C000000 && (u32) p <= 0x8CFFFFFF) || (svc_region && (u32) p >= 0x8E000000 && (u32) p <= 0x8FFFFFFF);
+}
 }
 
 // ==== the managers and their piece pool ====
@@ -321,7 +328,8 @@ void cSat::init(cSatFile* f, Vec* pos, Vec* rot)
     m_Flag = 4;
     *this = f;
     setCoord(pos, rot);
-    blockInit(block_p);
+    if (col_is_baked(f)) col_baked_setup(f, this);   // lane eng-skel2: the baked form: the tables are there, no block tree
+    else blockInit(block_p);
 }
 
 // The file's block tree: child and next links are offsets in the file; turned into pointers once (a block whose
@@ -362,6 +370,14 @@ cSat& cSat::operator=(cSatFile* f)
     Vec* v = f->getVertexPtr();
     pFile = f;
     x5C = 0;
+    if (col_is_baked(f)) {   // lane eng-skel2: only the normal table is kept (the behaviour's pFloor_norm points into it)
+        norm_p = (Vec*) ((u8*) f + ((const ColBakedFile*) v)->oNorm);
+        vtx = 0;
+        edge_p = 0;
+        poly_p = 0;
+        block_p = 0;
+        return *this;
+    }
     vtx = v;
     norm_p = v + vertex_num;
     edge_p = norm_p + normal_num;

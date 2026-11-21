@@ -1,6 +1,6 @@
 // The native services' host side in the E1 image (lane eng-e1c; docs/engine/SERVICES.md section 7, items 2 and 7).
 //
-// Memory: one fixed region of the main RAM map, [E1_SVC_LO, E1_SVC_HI) (host/e1_engine.h, the top 1 MB of the old
+// Memory: one fixed region of the main RAM map, [E1_SVC_LO, E1_SVC_HI) (host/e1_engine.h: 512 KB since lane eng-skel2; the old
 // behaviour arena), independent of the image and of the KOS heap (the hill scene leaves 252 KB of KOS heap free):
 //   - the skeleton pool, 256 KB at E1_SVC_LO (svc_pool_base: tables come and go with the actors);
 //   - the boot carve above it (svc_pool_carve: the cloth pool, the account buffers; never freed) and, from the top
@@ -313,8 +313,12 @@ void e1_svc_room_ready()
     col_bake_all();
     u32 tri = 0;
     for (u32 i = 0; i < col_piece_count(); i++) tri += col_piece_at(i)->nPoly;
-    e1_log("E1 SVCMEM collision pieces %lu polygons %lu tables %lu B (fails %lu)\n", (unsigned long) col_piece_count(),
-           (unsigned long) tri, (unsigned long) room_used, (unsigned long) carve_used, (unsigned long) carve_fails);
+    // lane eng-skel2: the room's own pieces come baked in the room archive (no bake at load: "baked at load" 0); the
+    // room carve holds only pieces made from other data (a door's quad, made in play)
+    e1_log("E1 SVCMEM collision pieces %lu polygons %lu tables %lu B (fails %lu) | baked in the room archive %lu B, set up %lu, "
+           "baked at load %lu\n", (unsigned long) col_piece_count(), (unsigned long) tri, (unsigned long) room_used,
+           (unsigned long) carve_fails, (unsigned long) col_baked_bytes(), (unsigned long) col_cnt.baked_setups,
+           (unsigned long) col_cnt.bakes);
 }
 
 void e1_svc_report()
