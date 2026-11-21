@@ -34,7 +34,7 @@ The rest of this file is the maintainers' working rules. It names folders on the
 ## Read these four files, in this order
 
 1. `AGENTS.md` (this file).
-2. `port/dreamcast/docs/ENGINE_PLAN.md`: the amendments of 2026-11-21 first, then goal, budget, architecture, the path (section 7), gates (section 8), workflow (section 9).
+2. `port/dreamcast/docs/ENGINE_PLAN.md`: "The plan as of 2026-11-21" first, then the amendments of 2026-11-21, then goal, budget, architecture, the path (section 7), gates (section 8), workflow (section 9).
 3. `port/dreamcast/docs/engine/STATUS.md`: milestone state, numbers, running lanes, what waits on the owner.
 4. `port/dreamcast/docs/engine/HANDOVERS.md`: the newest numbered hand-over.
 

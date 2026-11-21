@@ -30,6 +30,7 @@ The maintainers' machine has the skill `re4dc-engine-audit` with this checklist 
    - No comparison, tolerance or "must" column was loosened since the last audit unless the brief asked for it (diff the comparators).
    - A changed PC reference shows its cause in the original source and keeps a switchable build that restores the old behaviour, run as a row (`refctl.sh`).
    - Checks, control scenes and control schedules live in the repository, not only in a lane's wrapper. A script that skips a requested row or passes with missing inputs is a fault.
+   - Corrections are unconditional in how the engine and the reference build the original code (`CORRECTIONS=0` only as a control build); guards are counted in the scene record and expected at 0 (H-026.2).
 6. **Numbers.**
    - Same windows and phases across tiers and lanes.
    - Serial printing and tracing sit outside timed work.
@@ -37,12 +38,13 @@ The maintainers' machine has the skill `re4dc-engine-audit` with this checklist 
    - The sample is representative of the full window.
    - Each scene's record proves itself (600 distinct rows, drawn mode, 600 flip intervals, no drops, complete memory line, schedule read whole: `CONSOLE_LOOP.md` sections 11 to 13).
 7. **Memory.** The maps have no overlap, including between heaps. High-water marks are credible. Stack is measured after play, not before.
-8. **Look.** The still pairs support "same picture except the listed items". Anything missing that is not listed.
+8. **Look.** The still pairs support "same picture except the listed items", each with its count of differing pixels. Anything missing that is not listed. Every baked pack, table or converted file carries a receipt whose input hashes match the inputs used (H-026.6).
 9. **The image itself.** The staged disc is the audited commit, not an older build.
 10. **The defensive model** (replaces the console estimate until the deferred console run):
    - Speed numbers come from the strict Flycast (the console-like build in `fly1` or `fly2`, dynarec on, `[config] Sh4Clock` at the calibrated clock: 70 as fitted on 2026-11-21, H-023; the interpreter ignores the clock), not from plain Flycast.
    - The calibration is current (see `port/dreamcast/docs/engine/COMPARISON_20261121.md` when it lands) and the clock used is the defensive clock.
    - The model's worst case, not its mean, is set against the budget row.
+   - Each modelled speed figure states the band (the standard build fitted the same way reads the engine 3 to 10% kinder; H-025.3).
    - What the model cannot see is listed: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing.
 
 ### The report
