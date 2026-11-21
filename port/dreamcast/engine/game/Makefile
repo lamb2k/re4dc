@@ -32,6 +32,9 @@ SPLIT_NOIPA := -fno-inline-functions -fno-inline-small-functions -fno-partial-in
 # fight and boss images; em10, sce_com, sce_at: fight.mk)
 SPLIT_NOIPA_UNITS := game/objWep game/pl_debug game/cam_ctrl game/cam_qfps game/cam_extra game/pl_sub game/pl_npc \
 	wep02/wep02 game/em_sub game/dmg game/em_set game/game em2b/em2b game/emtree game/emtorch game/obj20
+# (lane eng-e2c's r119: its three thunder functions made weak by services/boss/r119_weak.h, the engine's in
+# services/boss/r119_thunder.cpp; game/r119_split_check.py also runs on the object in boss.mk)
+SPLIT_NOIPA_UNITS += st1/r119
 # dmg's cDmg::beginEvent destroys its volume through the manager's destroy, which the shared header declares inline:
 # GCC inlined the original's body there, which the engine's table (services/volumes/dmg_vol.cpp) replaces. dmg is
 # built with no inlining at all, so the call reaches the engine's.
