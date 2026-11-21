@@ -2,6 +2,14 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-019 (2026-11-21): the owner on comparing with the old port
+
+- **From:** the owner, in conversation. **To:** the integrator and lanes.
+- **The owner's words:** asked "How does the new engine compare to the old engine" and "Why aren't we comparing apples to apples?", then: "We don't want to get stuck in the exact loop and we need a brand new architecture. But customers need to know how much faster the game will run."
+- **What it changes (the integrator's reading):** the 11-19 rule stands: no lane improves, tunes or profiles the old drawing path, and the engine is judged on the absolute budget. Added: the old port may be measured as a baseline beside the engine, on the same scenes, the same machine tier and the same measure, with what each side draws and runs stated beside the number. Nothing chases exact agreement between the two.
+- **Customer-facing speed claims** need a console number and the owner's OK before anything is posted. An emulator ratio is labelled as one.
+- **Work:** lane eng-cmp1 (Flycast, measurement only) now; the console evening measures both on hardware (the lab disc already holds the old game with per-picture intervals).
+
 ## H-018 (2026-11-21): E1 fourth audit (Codex): not passed, four items; integrator rulings; no fifth paper audit
 
 - **From:** the integrator. **To:** lanes and the next integrator. Authority: H-013. Report: `E:\RE4DC-Lanes\audit-e1d\AUDIT-E1D.md` (audited `51405fc87`; the staged disc is built from it).
