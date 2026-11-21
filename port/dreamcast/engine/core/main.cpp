@@ -216,12 +216,15 @@ int main()
     e1_pool_control();                  // POOLCTL boot file: a forced double free (lane eng-e1i, the selector's control)
     e1_memmap_sample();
     e1_heap_room_checks();              // heap descriptors' map; HEAPCK: the heap-4 exercise (lane eng-e1e)
-    if (e1_door_scene) e1_room_marks_take("first");   // lane eng-load1: the round trip's first marks
     e1_state[0] = 4;
     unsigned ticks = e1_route().ticks;
     e1_state[2] = ticks;
     e1_trace_tick(0);
     e1_fields_start();                  // presented fields from the hardware's vblank count (lane eng-e1f)
+    // lane eng-load1: the round trip's first marks, at the point of the loop where every later room's are taken (the room
+    // ready, its first tick next): after the field counter's start, whose vblank handler node (KOS vblank.c
+    // vblank_handler_add, 24 B on the KOS heap, boot lifetime) Flycast run 4 showed in the first mark's difference
+    if (e1_door_scene) e1_room_marks_take("first");
     for (e1_tick = 1; e1_tick <= ticks; e1_tick++) {
         e1_state[1] = e1_tick;
         E1Timing& tm = e1_timing[(e1_tick - 1) % E1_TICKS];
