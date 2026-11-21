@@ -203,6 +203,13 @@ void Draw_pos(Vec*, int) {}
 void Draw_local_pos(Vec*, int, Mtx) {}
 void debugCamera::move(Camera*, JOY*, int) {}
 void CameraDebugInformation() {}
+// lane eng-e1j (ruling H-016.1): pl_debug's debug ray (a scenery query drawn as two lines, only with its debug flag on)
+// is a logged stub; the hosted body is made weak and dropped (game/Makefile WEAKEN_game/pl_debug)
+extern int scr_hit_check;
+void scrHitCheck(cPlayer*)
+{
+    if (scr_hit_check) STUB("scrHitCheck");
+}
 // effect set table: the player's footstep / damage effect sets (E1 draws no effects)
 #ifndef E2_BOSS   // eng-boss: hosted or engine-served in the boss image
 extern "C" void EstSet(int, int, Vec*, Vec*, int c, int d, int, int, u32, void*) { e1_stub_hit("EstSet", c << 8 | d); }

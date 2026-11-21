@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "e1_engine.h"
 #include "e1_laser.h"
+#include "camera/eng_camera.h"   // lane eng-e1j: the view matrix is the camera service's record's
 #include <math.h>
 
 extern "C" E1Laser e1_laser;
@@ -58,7 +59,7 @@ void Draw_line3d_local_222(Vec* p0, Vec* p1, Mtx mtx, u32 color, int blend)
 }
 void Draw_line3d_222(Vec* p0, Vec* p1, u32 color, int blend)
 {
-    Draw_line3d_local_222(p0, p1, pG->Cam.v_mat, color, blend);
+    Draw_line3d_local_222(p0, p1, eng_cam.view, color, blend);
 }
 // The dot on an enemy (objWep.cpp drawPoint: effect 0x50 at p1), scaled with the camera distance as the original:
 // up to 3x (6x in rooms 22C / 228 and with Status_flg[3] 0x02000000). Debug_flg[3] 0x40 hides it.

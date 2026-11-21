@@ -57,6 +57,7 @@ extern int input_control __attribute__((weak));
 
 namespace {
 void* g_f;
+void* g_cam;   // lane eng-e1j: cam.txt, the frame's camera once a CameraMove (svc/camcheck.py)
 unsigned g_tick;
 int g_depth;
 u32 bits(f32 f)
@@ -128,7 +129,12 @@ extern "C" void svc4_ready()
         const char* c = svc_env("RE4_SVC_CONTROL");
         if (c && !__builtin_strcmp(c, "camfov")) cam_control = 1;
         if (c && !__builtin_strcmp(c, "camroll")) cam_control = 2;
+        // lane eng-e1j: the camera check's controls (svc/camcheck.py must fail each)
+        if (c && !__builtin_strcmp(c, "camsmooth")) cam_control = 3;
+        if (c && !__builtin_strcmp(c, "caminterp")) cam_control = 4;
+        if (c && !__builtin_strcmp(c, "camrail")) cam_control = 5;
     }
+    g_cam = svc_out_open("cam.txt", "w");
     if (&input_control) {
         const char* c = svc_env("RE4_SVC_CONTROL");
         if (c && !__builtin_strcmp(c, "padstick")) input_control = 1;
@@ -279,8 +285,13 @@ extern "C" void svc4_finish()
     if (&cam_cnt) {
         const CameraCounters& c = cam_cnt;
         P(g_f, "# camera: frames %u frustums %u orients %u orient_cams %u tracks %u keys %u key_errors %u attached %u rails %u "
-               "projections %u debug_draws %u\n", c.frames, c.frustums, c.orients, c.orient_cams, c.tracks, c.keys, c.key_errors,
-          c.attached, c.rails, c.projections, c.debug_draws);
+               "projections %u debug_draws %u blends %u smooths %u areas %u probes %u shoulder %u\n", c.frames, c.frustums,
+          c.orients, c.orient_cams, c.tracks, c.keys, c.key_errors, c.attached, c.rails, c.projections, c.debug_draws, c.blends,
+          c.smooths, c.areas, c.probes, c.shoulder);
+    }
+    if (g_cam) {
+        svc_out_close(g_cam);
+        g_cam = 0;
     }
     if (&input_cnt) {
         const InputCounters& n = input_cnt;
@@ -462,6 +473,14 @@ WT(CameraMove, (), (), {
     campar(&pG->Cam);
     P(g_f, " %08x %08x %08x %08x %08x %08x", words(&pG->Cam, sizeof(Camera)), bits(View._fovy), bits(View._zfar),
       words(&View.worldFull, sizeof(ViewFrustum)), words(&View.world, sizeof(ViewFrustum)), words(&View.sphereWorld, sizeof(ViewSphere)));
+    // lane eng-e1j: the camera check's line: tick, eye, target, roll (radians), fov (degrees) as decimal floats, and the
+    // controller's decisions (area, camera cut, routine, cut blend frames left)
+    if (g_cam) {
+        const Camera& c = pG->Cam;
+        P(g_cam, "%u %.9g %.9g %.9g %.9g %.9g %.9g %.9g %.9g %d %d %d %d\n", g_tick, c.param.pos.x, c.param.pos.y, c.param.pos.z,
+          c.param.at.x, c.param.at.y, c.param.at.z, c.param.roll, c.param.fovy, CamCtrl.areaNo, CamCtrl.cameraNo, CamCtrl.r0,
+          CamCtrl.interp.frame);
+    }
 })
 WV(_ZN12CameraMotion4moveEv, (CameraMotion* c), (c), { P(g_f, " CT %08x", bits(c->m_info.frame)); },
    { campar(c); P(g_f, " %d %u %08x", c->end, c->m_info.state, words(c->m_info.hist, sizeof(c->m_info.hist))); })

@@ -16,9 +16,15 @@ static int depth;
 static uint64_t svc_t0, svc_acc, svc_grp[E1_SVC_GROUPS];
 // per outermost entry point: total time over the run (the services row split by entry and group)
 struct SvcRow { const char* name; uint64_t us; uint32_t calls; unsigned group; };
-static SvcRow svc_rows[48];
+// lane eng-e1j: 96 rows (the camera service's entry points add 17) and a bound: past it every entry shares the last row
+static SvcRow svc_rows[96];
 static unsigned nsvc, svc_cur;
-static unsigned svc_slot(const char* n, unsigned g) { for (unsigned i = 0; i < nsvc; i++) if (svc_rows[i].name == n) return i; svc_rows[nsvc].name = n; svc_rows[nsvc].group = g; return nsvc++; }
+static unsigned svc_slot(const char* n, unsigned g)
+{
+    for (unsigned i = 0; i < nsvc; i++) if (svc_rows[i].name == n) return i;
+    if (nsvc == 96) return 95;
+    svc_rows[nsvc].name = n; svc_rows[nsvc].group = g; return nsvc++;
+}
 // MODELLED service stamps (lane eng-e1c): a store to word k of e1_svc_stamp when the tick enters a service group k
 // (1 motion, 2 cloth, 3 parts and palette, 4 collision) and to word 0 when it returns to the behaviour. The hardware
 // model's observer (s/model_profile_svc.py) prints each store with its cycle time. A plain store; no other effect.
@@ -173,7 +179,6 @@ WRAP(float, RouteCkPosToPosDis, COL, (void* a, void* b), (a, b))
 // The palette (world x bind) once a tick after the behaviour: native skeleton only (the first form has none; its
 // drawing multiplied world x bind itself). Called by the main loop inside the tick's service accounting.
 extern "C" void skel_publish_all(void) __attribute__((weak));
-void e1_light_service_tick();   // services/draw.cpp (lane eng-e1e)
 void e1_svc_publish()
 {
     static unsigned slot = svc_slot("skel_publish_all", PARTS);
@@ -181,11 +186,8 @@ void e1_svc_publish()
     enter(slot);
     skel_publish_all();
     leave();
-    // lane eng-e1e: the light service's records (services/draw.cpp), rebuilt only when a character's inputs change
-    static unsigned lslot = svc_slot("e1_light_service_tick", PARTS);
-    enter(lslot);
-    e1_light_service_tick();
-    leave();
+    // (lane eng-e1j: the light service's per-tick compares are gone; the renderer reads the characters' light inputs in
+    // place, services/light_view.h)
 }
 
 // ---- behaviour profile (diagnostic): time inside the player's per-tick sub-steps, totals over the run ----

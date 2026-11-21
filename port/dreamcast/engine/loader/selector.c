@@ -316,7 +316,7 @@ static void collect(unsigned i) {
     g_fmode[0] = 0;
     g_flips = g_pictures = 0;
     unsigned windows = 0, done = 0;
-    int pool_seen = 0;
+    int pool_seen = 0, pub_seen = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -343,10 +343,19 @@ static void collect(unsigned i) {
                 if ((!pool_seen || full || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
+            else if (!strncmp(line, "E1 PUB camera ", 14)) {
+                /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records */
+                unsigned cam = 0, hud = 0, light = 0;
+                pub_seen = sscanf(line + 14, "%u hud %u light-compares %u", &cam, &hud, &light) == 3;
+                if ((!pub_seen || cam || hud || light) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "conversions per tick: camera %u, hud %u, light compares %u", cam, hud, light);
+            }
         }
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pool_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 POOL line in the report");
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");
     if (!e->why[0] && e->exit_code) snprintf(e->why, sizeof(e->why), "exit %d", (int)e->exit_code);   /* after the
                                                                     report: a refusal line says more than its exit code */
     if (!strcmp(s->kind, "e1")) e1_summary(e);

@@ -1,5 +1,7 @@
 # svc4_split.txt (lane eng-svc4): the native functions inside behaviour units (svc.mk SVC4_SPLIT), one line a unit:
 # "<unit> <pattern>...", fnmatch on the demangled names; svc4_units.sh fails when the native link keeps any of them.
-cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize* CameraControl::debugDrawRail*
-cam_sys CameraSetOrientationRoll CameraSetOrientationUp
+# Lane eng-e1j (H-016.1): the camera service's whole evaluation (docs/engine/lanes/eng-e1j.md section 1); cam_sys is a
+# replaced unit (svc.mk SVC4_UNITS).
+cam_ctrl CameraControl::HermiteExport* BSpline* Parametrize* CameraControl::debugDrawRail* CameraInterpolation::move* CameraSmooth::move* areaHit(* area_hit_p3* area_hit_pN* cameraHitCheck* searchRail* CameraControl::calcAddr* cameraDataVersion*
+cam_qfps CameraQuasiFPS::calcBaseMatrix* CameraQuasiFPS::calcOffset* CameraQuasiFPS::hitCheck* offsetCorrection* CameraQuasiFPS::offsetCorrection*
 cam_extra CameraAttachedToMotion::move*

@@ -120,8 +120,7 @@ static void game_tick(E1Timing& tm)
     if (!(pG->Stop_flg & 0x4000000)) ObjMgr.move();
     uint64_t t2 = now_us();
     e1_rng_owner(2);
-    CameraMove();
-    e1_camera_draw_tick();              // lane eng-e1e: the camera in the renderer's form, written once a tick
+    CameraMove();                       // lane eng-e1j: the camera service writes the renderer's record itself (eng_camera.h)
     e1_rng_owner(0);
 #ifdef E2_BOSS
     e2_fx_move();                       // effect service, then DmgMgr / collision die checks

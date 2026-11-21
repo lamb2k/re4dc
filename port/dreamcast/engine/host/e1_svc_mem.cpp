@@ -57,8 +57,8 @@ void e1_prnd_seed(unsigned short s);
 extern "C" int route_control;
 extern "C" int input_control;
 static int rumble_exercise;
-extern "C" uint32_t e1_light_checks, e1_light_builds;   // services/draw.cpp
 extern "C" unsigned e1_light_miss;   // services/actor_e1.inc (renderer)
+#include "camera/eng_camera.h"   // lane eng-e1j: the conversion counters (E1 PUB)
 extern "C" void VibSet(u32 time, u32 level, u16 wait, u16 type);
 void e1_svc_tick_begin(unsigned t)
 {
@@ -191,6 +191,16 @@ void e1_svc_report()
            (unsigned long) model_cnt.parts_made, (unsigned long) cam_cnt.frames, (unsigned long) cam_cnt.frustums,
            (unsigned long) cam_cnt.keys, (unsigned long) colm_cnt.checks, (unsigned long) colm_cnt.slides,
            (unsigned long) colm_cnt.floors, (unsigned long) colm_cnt.pieces);
-    e1_log("E1 LIGHTSVC checks %lu builds %lu draw misses %lu\n", (unsigned long) e1_light_checks, (unsigned long) e1_light_builds,
-           (unsigned long) e1_light_miss);
+    // lane eng-e1j: the camera service's evaluation counters, and the conversions of game state into draw records (the
+    // selector fails a scene where one is not 0: ruling H-016.2). Today none exists: the camera is the service's record,
+    // the HUD and the characters' light inputs are read in place; the light view misses are pictures a character had
+    // no view (lit by the fallback record).
+    e1_log("E1 CAMSVC frames %lu records %lu blends %lu smooths %lu areas %lu probes %lu rails %lu shoulder %lu attached %lu "
+           "tracks %lu frames-orient %lu debug %lu\n", (unsigned long) cam_cnt.frames, (unsigned long) eng_cam.tick,
+           (unsigned long) cam_cnt.blends, (unsigned long) cam_cnt.smooths, (unsigned long) cam_cnt.areas,
+           (unsigned long) cam_cnt.probes, (unsigned long) cam_cnt.rails, (unsigned long) cam_cnt.shoulder,
+           (unsigned long) cam_cnt.attached, (unsigned long) cam_cnt.tracks, (unsigned long) cam_cnt.orient_cams,
+           (unsigned long) cam_cnt.debug_draws);
+    e1_log("E1 PUB camera %lu hud %lu light-compares %lu (light view misses %lu)\n", (unsigned long) eng_pub.camera,
+           (unsigned long) eng_pub.hud, (unsigned long) eng_pub.light_compares, (unsigned long) e1_light_miss);
 }

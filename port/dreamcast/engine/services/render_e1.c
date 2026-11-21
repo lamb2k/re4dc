@@ -2,6 +2,7 @@
    plus the E1 actor pass, which draws characters from the engine actor table in place (cModel->mat and the cParts
    chain world matrices written once by the skeleton service). Kept in this new file so the shared render files are
    not edited (lane eng-look works there). */
+#include "light_view.h"   /* lane eng-e1j: characters lit from their model records in place (render/source_light.inc) */
 #include "../render/render.c"
 #include "actor_e1.inc"
 #ifdef E2_FIGHT
