@@ -381,6 +381,7 @@ extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, bo
 extern "C" struct AimListCounters { uint32_t calls, scenery, listed, hit_only, empty; } aim_list_cnt;
 #include "e1_laser.h"
 extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
+extern "C" void e1_guards_report(void);   // lane eng-fix1 (H-026): host/guard_hooks.cpp, the guards' counts
 void e1_report()
 {
     e1_trace_flush();
@@ -394,6 +395,7 @@ void e1_report()
     e1_room_change_report();  // lane eng-load1: the DOOR scene's visits and round trip (nothing in other scenes)
     disc_safe_report();       // lane eng-load1: the read-safety layer's counters (core/disc_safe.c)
     e1_stub_report();
+    e1_guards_report();
     e1_prof_report();
     e1_svc_report();
     // lane eng-e1g: the native heap service (services/memory/heap.cpp) under the behaviour arena (host/e1_heap.cpp)

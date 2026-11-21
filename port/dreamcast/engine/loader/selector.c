@@ -577,7 +577,8 @@ static void collect(unsigned i) {
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0, run_lines = 0, fields_bad = 0, camrec_ticks = 0;
-    int pool_seen = 0, pub_seen = 0, camrec_seen = 0;
+    int pool_seen = 0, pub_seen = 0, camrec_seen = 0, guards_seen = 0, wep_seen = 0;
+    unsigned guard_must = 0;
     const unsigned dneed = door_need(s->args);   /* lane eng-load1 */
     g_door_loads = g_door_visits = g_door_visit_zero = g_door_rt_seen = g_door_rt_equal = g_door_bad = 0;
     g_door_rt_why[0] = g_door_rooms[0] = 0;
@@ -677,6 +678,14 @@ static void collect(unsigned i) {
                 if ((!pool_seen || full || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
+            else if (!strncmp(line, "E1 GUARDS ", 10)) {
+                /* lane eng-fix1 (H-026): the guards against the old port's failures (host/guard_hooks.cpp) are expected
+                   to stay at 0; a count other than 0 fails a timing scene (a function run reports it) */
+                guards_seen = tmatch(line, "E1 GUARDS em_must_retry %u; uncounted em_ok_skip r10c_spawn_live r117_beam_null",
+                                     NULL, &guard_must);
+                if (guards_seen && guard_must && s->timing && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "guard taken: em_must_retry %u", guard_must);
+            }
             else if (!strncmp(line, "E1 PUB camera ", 14)) {
                 /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records; lane eng-e1n
                    (H-017.5): the line counts only what has a producer, the camera copy control and the light-view
@@ -686,6 +695,20 @@ static void collect(unsigned i) {
                 if ((!pub_seen || cam || miss) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "%sPUB: camera copies %u, light-view misses %u",
                              pub_seen ? "" : "incomplete ", cam, miss);
+            }
+            else if (!strncmp(line, "E1 WEP pictures ", 16)) {
+                /* lane eng-look1: Leon's weapon is drawn every picture the hosted code says it is drawn (cObjWep's
+                   be_flag gate, services/weapon_view.h) and never when it says not: visible must equal drawn and
+                   drawn-hidden be 0, or the line incomplete, fails (timing and function runs alike). Control: the NOWEP
+                   boot file (CNOWEP) draws no weapon: drawn 0 against visible */
+                unsigned pics = 0, present = 0, vis = 0, drawn = 0, hidden = 0, nodraw = 0, on = 0, ret = 0, lines = 0, ctl = 0;
+                wep_seen = tmatch(line, "E1 WEP pictures %u present %u visible %u drawn %u drawn-hidden %u not-drawable %u "
+                                        "on-screen %u world-copies-retired %u trace-lines %u control %u", NULL, &pics,
+                                  &present, &vis, &drawn, &hidden, &nodraw, &on, &ret, &lines, &ctl);
+                if ((!wep_seen || vis != drawn || hidden) && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "%sweapon: visible %u drawn %u drawn-hidden %u not-drawable %u",
+                             wep_seen ? "" : "incomplete ", vis, drawn, hidden, nodraw);
+                (void)pics; (void)present; (void)on; (void)ret; (void)lines; (void)ctl;
             }
             else if (!strncmp(line, "E1 CAMTRACK part-frame-decodes ", 31)) {
                 /* lane eng-e1p (H-018.1): camera tracks are converted when the room is loaded; one converted in play is
@@ -711,9 +734,15 @@ static void collect(unsigned i) {
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pool_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 POOL line in the report");
+    /* lane eng-fix1 (H-026): every E1-family image reports its guards (a missing or unreadable line fails) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !guards_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 GUARDS line in the report (or not read)");
     /* lane eng-e1j (H-016.2): timing and function runs alike must report their conversions (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");
+    /* lane eng-look1: timing and function runs alike report the weapon's draw against the hosted gate (a missing line fails) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !wep_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 WEP line in the report");
     /* lane eng-e1l: timing and function runs alike report the camera record's finite check (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !camrec_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 CAMREC line in the report");

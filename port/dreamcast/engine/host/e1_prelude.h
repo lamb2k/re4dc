@@ -1,6 +1,7 @@
 // Force-included ahead of every hosted original unit and every engine C++ unit of the E1 image (lane eng-e1).
 //
-// The hosted units are the original sources built with every RE4DC_ knob off. They declare the few libc functions
+// The hosted units are the original sources built with the corrections, guards and game settings of lane eng-fix1
+// (H-026) and every other of the old port's conditionals off. They declare the few libc functions
 // they use in their own spellings (as the old port's prelude notes); these declarations make them visible to every
 // unit. RE4DC_XM_* (named unconditionally by cam_motion.cpp) are the plain PSMTXMultVec forms (re4dc_xm.h, knob off).
 #ifndef E1_PRELUDE_H
@@ -18,6 +19,9 @@ int strcmp(const char* a, const char* b);
 // (STAT_ROUTINE_BYTES=1 in the release recipe). Measured by s/knobdiff.sh: this swap (7 sites in player, pl_class,
 // pl_sub, pl_wep) is the only code difference between the hosted files and the reference build's beyond hooks.
 #define STAT_BE(x) ((unsigned int) __builtin_bswap32((unsigned int) (x)))
+// Lane eng-fix1 (H-026): the corrections and guards the original code is built with (host/corrections.h; the per-unit
+// ones in game/hosted_corrections.mk, the game settings in game/game_settings.mk).
+#include "corrections.h"
 #ifdef __cplusplus
 #include "re4dc_xm.h"
 #endif
