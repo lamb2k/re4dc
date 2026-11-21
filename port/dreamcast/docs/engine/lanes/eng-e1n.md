@@ -237,3 +237,24 @@ inline statements out of a compiled function. Not rewritten again, awaiting the 
 - **Found:** `loader/selector.c` reads at most `SEL_MAX` (8) scenes from SCENES.TXT and drops the rest without a word
   (line 135: `g_n < SEL_MAX`; the 15-scene disc ran 8 and reported "8 of 8 scenes OK"), and build_console_disc.sh does
   not refuse a longer list. Not changed here (not this lane's part of the selector).
+
+## 9. Second addendum (ruling H-017.10; the scene cap)
+
+- **H-017.10** (the integrator's ruling: the shoulder camera's engine composition accepted as it stands): the table of
+  the decision statements it re-expresses is in SERVICES.md 48d.1 ("decision statements re-expressed in engine code");
+  `allowed_original.txt` points at it beside `CameraQuasiFPS::move`'s ceiling of 0. No code change.
+- **The scene cap is refused, not cut** (commit 793409f56):
+  - `loader/selector.c` counts every schedule entry; with more than `SEL_MAX` (8) it runs none and ends "CDISC SUMMARY
+    END FAILED: schedule has N scenes, the selector runs 8" (before: the entries past 8 were dropped and the run said
+    "8 of 8 scenes OK").
+  - `tools/engine/build_console_disc.sh` reads `SEL_MAX` from the ref's selector.c and refuses a longer `--scenes` list
+    before anything is built (exit 1, no disc).
+  - Controls: the disc script with 9 scenes: exit 1, "--scenes names 9 scenes, the selector runs at most 8 (SEL_MAX):
+    refused, no disc", no disc folder. A test disc (s2) whose staged SCENES.TXT was hand-extended to 9 entries (8 more
+    copies of LEON; a lane-side patch of the script, not in the repository): Flycast std1 "CDISC SCHEDULE REFUSED:
+    schedule has 9 scenes, the selector runs 8", "CDISC SUMMARY END FAILED: schedule has 9 scenes, the selector runs 8",
+    nothing run.
+  - What changes: only the selector program (the disc's 1ST_READ.BIN / LOADER.BIN). The four engine images do not link
+    selector.c: rebuilt, byte-identical to the merge's (`maps\m2` against `maps\m1`), link counts unchanged.
+  - Clean disc s1 (LEON, HILL, FIGHT, the repository script at 793409f56), Flycast std1: **3 of 3 scenes OK**, files
+    opened in play 0 and PUB 0/0 in each.
