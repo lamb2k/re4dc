@@ -7,3 +7,5 @@ cam_qfps CameraQuasiFPS::move* CameraQuasiFPS::calcBaseMatrix* CameraQuasiFPS::c
 cam_extra CameraAttachedToMotion::move*
 # Lane eng-e2a: em_sub's hit geometry (services/aim/em_hit.cpp; docs/engine/lanes/eng-e2a.md)
 em_sub emLinePolyCrossCk* emLineCubeCrossCk* emLineCapsuleCrossCk* emLineAtCk(* emSphereAtCk* EmGetDmPos* EmAtkHitCk* EmAtkHitSubCk2* EmAtkLineHitCk(* EmRackCk* CheckInWater* EmCatchMotionMove* EmYarareDisp* EmDmBloodSet2* EmPlBloodSet2* EmSubBloodSet* PlBombHitCk* GetWepTargetListBomb*
+# Lane eng-e2a: dmg's table, records, tick and point tests (services/volumes/dmg_vol.cpp); set and beginEvent stay hosted
+dmg cManager<cDmg>::* cDmgMgr::cDmgMgr* cDmgMgr::construct* cDmgMgr::move* cDmgMgr::hitCheck* cDmgCyl::* cDmgP4::* cDmgMgr::mem* cDmgMgr::~cDmgMgr* _GLOBAL__sub_I_*

@@ -29,6 +29,7 @@
 #include "obj.h"
 #include "emrack.h"
 #include "math_sub.h"
+#include "dmg.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -38,6 +39,7 @@ const char* svc_env(const char* name);
 int svc_col_depth(void);
 int svc4_depth(void) __attribute__((weak));
 extern int emhit_control __attribute__((weak));
+extern int dmg_control __attribute__((weak));
 }
 #define P svc_out_printf
 
@@ -183,6 +185,29 @@ W(int, GetWepTargetListBomb, (Vec* pos, f32 rr, WepTarget* list, int max, int ty
   { P(g_f, " BL"); pv(pos); len(rr); P(g_f, " %d %x %x", max, type, flag); },
   { P(g_f, " %d", r); for (int i = 0; i < r && i < max; i++) { P(g_f, " em%u", actor(list[i].em)); box(list[i].part); } })
 
+// ---- the damage volumes (dmg.cpp; native in services/volumes/dmg_vol.cpp) ----
+namespace {
+// the table's live records (slot, kind, frames left, the shape's numbers): what the point tests read
+void dmg_table(const cDmgMgr* m)
+{
+    P(g_f, " n%u", m->nArray);
+    for (u32 i = 0; i < m->nArray; i++) {
+        const cDmg* p = (const cDmg*) ((const u8*) m->pArray + m->size * i);
+        if ((p->be_flag & 0x201) != 1) continue;
+        P(g_f, " s%u:%d:%d:%u", i, p->kind, p->m_Time, p->m_Id);
+        if (p->m_Id == 1) for (int k = 0; k < 4; k++) pv(&((const cDmgP4*) p)->m_Pos[k]);
+        else { pv(&((const cDmgCyl*) p)->m_Pos); len(((const cDmgCyl*) p)->m_Radius); len(((const cDmgCyl*) p)->m_Height); }
+    }
+}
+}   // namespace
+W(int, _ZN7cDmgMgr8hitCheckEP3VecS1_, (cDmgMgr* m, Vec* pos, Vec* out), (m, pos, out), { P(g_f, " DH"); pv(pos); P(g_f, " %d", out != 0); },
+  { P(g_f, " %d", r); if (r && out) pv(out); })
+W(int, _ZN7cDmgMgr3setEiiP3Vecff, (cDmgMgr* m, int kind, int time, Vec* pos, f32 rr, f32 h), (m, kind, time, pos, rr, h),
+  { P(g_f, " DS %d %d", kind, time); pv(pos); len(rr); len(h); }, { P(g_f, " %d", r); dmg_table(m); })
+W(int, _ZN7cDmgMgr3setEiiP3Vecf, (cDmgMgr* m, int kind, int time, Vec* pt, f32 h), (m, kind, time, pt, h),
+  { P(g_f, " DQ %d %d", kind, time); for (int k = 0; k < 4; k++) pv(&pt[k]); len(h); }, { P(g_f, " %d", r); dmg_table(m); })
+WV(_ZN7cDmgMgr4moveEv, (cDmgMgr* m), (m), { P(g_f, " DM"); }, { dmg_table(m); })
+
 // Effect starts: logged when made inside an e2 call (the blood placed at a hit), as their own line.
 extern "C" void __real_EstSet(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g, void* h);
 extern "C" void __wrap_EstSet(int a, int b, Vec* p, Vec* r, int c, int d, int e, int f, u32 g, void* h)
@@ -197,6 +222,7 @@ extern "C" void __wrap_EstSet(int a, int b, Vec* p, Vec* r, int c, int d, int e,
 // ---- exercises: the same calls in both builds at fixed ticks ----
 namespace {
 int g_ex = -1;
+Vec g_dmg_c, g_dmg_q;   // the planted damage volumes' centres
 // every live actor's boxes: three lines across each box (through its middle from 600 units off in x, z and a diagonal,
 // to 600 past), a sphere of 150 at its middle moving 200 in x, a still sphere 100 off; and for each damaged box, the
 // damage position of a hit registered 300 units away
@@ -374,6 +400,10 @@ extern "C" void e2_ready()
         if (c && !__builtin_strcmp(c, "dmposmid")) emhit_control = 2;
         if (c && !__builtin_strcmp(c, "sphereshort")) emhit_control = 3;
     }
+    if (&dmg_control) {   // lane eng-e2a item 2: every damage cylinder 10% wider
+        const char* c = svc_env("RE4_SVC_CONTROL");
+        if (c && !__builtin_strcmp(c, "dmgwide")) dmg_control = 1;
+    }
     const char* e = svc_env("RE4_SVC_EXERCISE");
     g_ex = e && !__builtin_strcmp(e, "e2geom") ? 1 : 0;
 }
@@ -404,6 +434,32 @@ extern "C" void e2_tick(unsigned t)
         EmAtkInfo info = {300.0f, 0, 50, 0, 0, 0};
         Vec p = {pPL->pos.x + 100.0f, pPL->pos.y + 1000.0f, pPL->pos.z}, o = {pPL->pos.x + 600.0f, pPL->pos.y + 1000.0f, pPL->pos.z};
         EmAtkHitCk(&info, &p, &o, 0);
+    }
+    // damage volumes (kinds 0x21 and 0x22, which no behaviour reacts to): a cylinder at the first Ganado and a quad
+    // beside Leon, then a grid of point tests around each until both have expired (lifetimes 40 and 25 ticks)
+    if (pPL && t == 33) {
+        P(g_f, "# e2geom dmg-set %u\n", t);
+        Vec c = pPL->pos;
+        for (cEm* e = EmMgr.pAlive; e; e = (cEm*) e->pNext)
+            if (e != (cEm*) pPL && (e->be_flag & 1)) { c = e->pos; break; }
+        g_dmg_c = Vec{c.x + 150.0f, c.y + 20.0f, c.z - 90.0f};
+        DmgMgr.set(0x21, 40, &g_dmg_c, 700.0f, 400.0f);
+        const Vec& l = pPL->pos;
+        Vec q[4] = {{l.x + 300.0f, l.y, l.z - 200.0f}, {l.x + 1100.0f, l.y, l.z - 350.0f}, {l.x + 1250.0f, l.y, l.z + 500.0f},
+                    {l.x + 250.0f, l.y, l.z + 420.0f}};
+        g_dmg_q = Vec{l.x + 700.0f, l.y, l.z + 100.0f};
+        DmgMgr.set(0x22, 25, q, 300.0f);
+    }
+    if (pPL && t >= 33 && t <= 80 && t % 3 == 0) {
+        P(g_f, "# e2geom dmg-probe %u\n", t);
+        for (int k = 0; k < 2; k++) {
+            const Vec& c = k ? g_dmg_q : g_dmg_c;
+            for (int i = -2; i <= 2; i++)
+                for (int j = -2; j <= 2; j++) {
+                    Vec p = {c.x + 330.0f * i, c.y + 190.0f * (i + j), c.z + 310.0f * j}, out;
+                    DmgMgr.hitCheck(&p, (i + j) & 1 ? &out : 0);
+                }
+        }
     }
     if (pPL && t == 270) {
         P(g_f, "# e2geom blast %u\n", t);

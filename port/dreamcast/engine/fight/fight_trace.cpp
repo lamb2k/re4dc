@@ -11,6 +11,7 @@
 #include "boss_e2.h"
 #include "fight_e2.h"
 #include "fx.h"
+#include "dmg.h"
 #include "skel.h"
 #include "e1_skel_view.h"
 #include <string.h>
@@ -86,6 +87,9 @@ extern "C" struct EmHitCounters {
     unsigned sphere_tests, sphere_boxes, sphere_hits, dm_pos, atk_sphere, atk_line, atk_hits;
     unsigned racks, water, catch_moves, bloods, blood_scatter, bomb_lists, bomb_player, debug_draws;
 } emhit_cnt;
+// lane eng-e2a item 2: the damage volumes' counters (services/volumes/dmg_vol.cpp)
+extern "C" struct DmgCounters { unsigned sets_seen, tests, hits, ticks, expired, freed, logs, debug_draws; } dmg_cnt
+    __attribute__((weak));   // weak: the control build DMG_ORIG=1 links dmg.cpp whole
 void e2_report()
 {
     e2_events_report();
@@ -96,8 +100,13 @@ void e2_report()
            h.line_tests, h.line_capsules, h.line_cubes, h.cube_mirrored, h.quads, h.line_hits, h.sphere_tests, h.sphere_boxes,
            h.sphere_hits, h.dm_pos, h.atk_sphere, h.atk_line, h.atk_hits, h.racks, h.water, h.catch_moves, h.bloods,
            h.blood_scatter, h.bomb_lists, h.bomb_player, h.debug_draws);
+    if (&dmg_cnt) e1_log("E2 DMG table %u records, tests %u hits %u ticks %u expired %u freed %u pool-logs %u debug-draws %u\n",
+           (unsigned) DmgMgr.nArray, dmg_cnt.tests, dmg_cnt.hits, dmg_cnt.ticks, dmg_cnt.expired, dmg_cnt.freed, dmg_cnt.logs,
+           dmg_cnt.debug_draws);
 }
-void e2_after_tick() {}
+// lane eng-e2a item 2: the damage volumes' tick (services/volumes/dmg_vol.cpp cDmgMgr::move), after the camera as the
+// game's main loop and the PC reference (hostref replay.cpp) run it
+void e2_after_tick() { DmgMgr.move(); }
 void e2_fx_room_init() { fx_room_init(); }
 
 // The Ganados for the picture (fight_draw.inc): each alive enemy-table work of the village square's Ganado kinds, its

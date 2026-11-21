@@ -187,7 +187,25 @@ EMSUB_NATIVE := emLinePolyCrossCk emLineCubeCrossCk emLineCapsuleCrossCk emLineA
 WEAKEN_game/em_sub += $(addprefix _,$(filter-out $(EMSUB_ORIG),$(EMSUB_NATIVE)))
 ifneq ($(BOSS)$(FIGHT),)
 EMHIT_OBJ := $(OUT)/n/em_hit.o
+# Lane eng-e2a item 2: the damage volumes (services/volumes/dmg_vol.cpp: the table on the engine pool, its tick, the
+# records and the point tests, and DmgMgr itself). dmg.cpp stays hosted for its decisions (set, beginEvent): every
+# global symbol the native object defines is made weak in it and its static initialiser is taken out, so DmgMgr is the
+# engine's and --gc-sections drops the original bodies. Control build only: DMG_ORIG=1 links dmg.cpp whole (the native
+# object left out; the link check must FAIL).
+ifneq ($(DMG_ORIG),1)
+DMGVOL_OBJ := $(OUT)/n/dmg_vol.o
+$(OUT)/h/game/dmg.o: $(ROOT)/src/game/dmg.cpp $(ENG)/host/e1_prelude.h $(DMGVOL_OBJ)
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@.orig.o
+	sh-elf-objcopy $$(sh-elf-nm -g --defined-only $(DMGVOL_OBJ) | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u) \
+		--remove-section=.init_array --remove-section=.rela.init_array --remove-section=.ctors --remove-section=.rela.ctors \
+		$@.orig.o $@
+	rm -f $@.orig.o
 endif
+endif
+$(OUT)/n/dmg_vol.o: $(SVC_DIR)/volumes/dmg_vol.cpp $(SVC_DIR)/model/pool.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
 $(OUT)/n/em_hit.o: $(SVC_DIR)/aim/em_hit.cpp $(SVC_DIR)/aim/hit_shape.h $(SVC_DIR)/camera/cam_math.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
@@ -265,6 +283,6 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
-$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
+$(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^
