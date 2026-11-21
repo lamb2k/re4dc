@@ -2,6 +2,42 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-027 (2026-11-21): the plan written down (version 3.2); what the PC reference is and is not; rulings from the first gates
+
+- **Owner:** "okmemoralize that plan and ensure the skill sare up to date". Done: `ENGINE_PLAN.md` version 3.2 ("The plan as of
+  2026-11-21"), `LANES.md`, `COMMON_BRIEF.md`, `INTEGRATION_GATE.md`, the rule files and the four skills (merge 9dfe2ca00).
+- **Owner asked:** "In the PC the ideal reference ?" and "How does el Gigante run in reference?". Answers given, and rulings:
+  1. **The PC reference is the workbench, not the truth.** It is the original code built for a third platform. Four faults
+     in it were found in two days (em10's presentation callers, the BSpline alias, routine bytes, the Ganado's hit voice
+     label), each one a case where engine and reference agreed and both were wrong. From now on a PC fixture counts as a
+     reference only where it is anchored: the same scene run on the released old port in Flycast, agreeing on outcome and
+     on chosen state at chosen ticks. A lane for that anchoring starts when the machine has room (backlog, first in line
+     after the renderer redesign's build lanes).
+  2. **El Gigante has no whole-fight reference.** The PC reference does not host him; lane eng-e2c checked each function on
+     a planted giant. The released old port is his reference: a scripted fight there, the engine judged on outcome. Part of
+     the anchoring lane. His AI and his drawing meet in one scene only after the renderer redesign (his drawing alone is
+     over twice the row on the bench).
+  3. **Gate rule:** a move of `engine` since a lane's merge base passes without a re-merge when the trial merge is clean and
+     every moved file is a document or a tool that no image and no suite uses. `GATE.md` carries it.
+  4. **A hand-back figure that does not match the head** is a lane error the integration lane records with the figure it
+     measured; it fails the gate only if the control itself does not work (eng-e2b: "em10 21" and "8 clones" came from an
+     intermediate build; at the head the controls give em10 11 and 181 problems).
+  5. **Service code hidden by inlining** (eng-e2b's finding: the optimiser had inlined 8 of em10's service functions into
+     decision functions, out of the symbol-based link check's sight). Until lane eng-e2d's general check has run on every
+     image, the link check's counts, the default image's 0 included, are counts of symbols, not proof.
+  6. **The boss room's thunder** is presentation: its interval moves to the presentation generator (the split rule); the
+     three `static` functions may be made replaceable by build means without editing `src/`. The shift of the boss's
+     behaviour stream against old-game traces from tick 1 is the split's accepted consequence.
+  7. **No session links** (owner, by way of the F-Zero session: "We shouldn't put a link to Claude sessions in PRs"): commit
+     and merge messages end with the `Co-Authored-By` line only. History already pushed is not rewritten without the
+     owner's word.
+- **State:** merged through the integration lane today: eng-salv1, eng-e2a, eng-cmp1 (the comparison, MODELLED, with its
+  band). At the gate: eng-e2b (held on one question: do the reference's trace differences after the hit-voice fix touch
+  behaviour state), then eng-look1 (Leon's handgun drawn live; +0.57 ms a picture MODELLED). Handed back, finishing: eng-e2c
+  (boss 26 to 3; the thunder). Running: eng-draw1, eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-fix1, eng-e2d.
+- **Open with the owner:** whether the GameCube original in an emulator is wanted as a third reference for disputes
+  (behaviour only, no assets), or anchoring on the released old port is enough.
+
 ## H-026 (2026-11-21): corrections, not switches; quick weapon select; reworked PS2 art; the F-Zero line's advice
 
 - **From:** the owner (quoted) and the integrator (rulings under H-013).
