@@ -218,15 +218,7 @@ extern "C" unsigned char snd_rnd(void)
 // The driver's platform hooks (services/sound/host/re4dc_platform.h).
 struct Re4dcMemLayout { unsigned long arena_lo, arena_hi, dvd, sound, core, option, player, weapon, heap, heap_end; };
 Re4dcMemLayout re4dc_mem;   // sound: unused (the engine boots the driver itself, snd_svc.cpp)
-void re4dc_log(const char* fmt, ...)
-{
-    char b[192];
-    va_list ap;
-    va_start(ap, fmt);
-    vsnprintf(b, sizeof b, fmt, ap);
-    va_end(ap);
-    e1_log("E1 SOUND driver: %s", b);
-}
+// re4dc_log (the driver's rare-path log lines) is the engine's: host/guard_hooks.cpp (lane eng-fix1), "E1 RE4DC_LOG".
 void re4dc_watch_set(const void*, unsigned long) {}
 
 // ---------------------------------------------------------------------------

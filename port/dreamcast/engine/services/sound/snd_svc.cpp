@@ -88,21 +88,8 @@ char g_missing[96];
 
 inline unsigned pic_now() { const uint32_t t = e1_tick; return t % kPics; }
 inline void cost_add(uint32_t us) { g_cost[pic_now()] += us; }
-// Every sound span over 1 ms (an audio step or a main-thread call), its tick and when it ended (us since boot): the
-// integrator's check of the village's 2.5 ms stall against a once-a-second event outside sound (lane eng-skel1).
-const unsigned kSlow = 48;
-struct Slow { uint32_t tick, end_us, us; char who; };
-Slow g_slow[kSlow];
-unsigned g_slow_n, g_slow_lost;
-inline void slow_note(uint32_t us, char who)
-{
-    if (us <= 1000) return;
-    if (g_slow_n >= kSlow) { ++g_slow_lost; return; }
-    g_slow[g_slow_n++] = Slow{e1_tick, (uint32_t) timer_us_gettime64(), us, who};
-}
 inline void main_add(uint32_t us)
 {
-    slow_note(us, 'm');
     const unsigned k = pic_now();
     g_cost[k] += us;
     g_cost_main[k] = (uint16_t) (g_cost_main[k] + (us > 65535 ? 65535 : us));
@@ -131,7 +118,6 @@ int boot_file(const char* n)
 // One audio step's cost and voices (aica.cpp's thread).
 void step_hook(uint32_t us, uint32_t voices, uint32_t notes)
 {
-    slow_note(us, 'a');
     const unsigned k = pic_now();
     g_cost[k] += us;
     if (g_steps[k] < 65535) ++g_steps[k];
@@ -583,22 +569,6 @@ extern "C" void snd_svc_report(void)
            (unsigned long) aica_stats.long_us, (unsigned long) aica_stats.long_frames, (unsigned long) aica_stats.long_drv,
            (unsigned long) aica_stats.long_vox, (unsigned long) aica_stats.long_flush,
            (unsigned long) aica_stats.long_writes, (unsigned long) aica_stats.max_writes);
-    {
-        const AicaStats& f = aica_stats;
-        e1_log("E1 SOUND longest flush %lu us (step %lu): %lu writes (channel starts %lu, key-offs %lu), G2 lock entry %lu us, "
-               "FIFO waits %lu us (longest %lu), writes %lu us (longest %lu us, channel %lu register %02lx), rest %ld us\n",
-               (unsigned long) f.lf_us, (unsigned long) f.lf_step, (unsigned long) f.lf_writes, (unsigned long) f.lf_starts,
-               (unsigned long) f.lf_keyoffs, (unsigned long) f.lf_lock_us, (unsigned long) f.lf_fifo_us,
-               (unsigned long) f.lf_fifo_max, (unsigned long) f.lf_wr_us, (unsigned long) f.lf_wr_max,
-               (unsigned long) (f.lf_wr_where >> 8), (unsigned long) (f.lf_wr_where & 0xFF),
-               (long) f.lf_us - (long) f.lf_lock_us - (long) f.lf_wr_us);
-    }
-    for (unsigned i = 0; i < g_slow_n; i++)   // every span over 1 ms, with the time since the one before
-        e1_log("E1 SOUND over 1 ms: %s tick %lu, %lu us, ended at %lu us (%ld us after the one before)\n",
-               g_slow[i].who == 'a' ? "audio step" : "main call", (unsigned long) g_slow[i].tick,
-               (unsigned long) g_slow[i].us, (unsigned long) g_slow[i].end_us,
-               i ? (long) (g_slow[i].end_us - g_slow[i - 1].end_us) : 0L);
-    if (g_slow_lost) e1_log("E1 SOUND over 1 ms: %u more not listed\n", g_slow_lost);
     e1_log("E1 SOUND frame parts longest: voice manager %lu us (tick %lu), stream player %lu us (tick %lu), sequencer %lu us "
            "(tick %lu)\n", (unsigned long) g_part_max[0], (unsigned long) g_part_max_tick[0], (unsigned long) g_part_max[1],
            (unsigned long) g_part_max_tick[1], (unsigned long) g_part_max[2], (unsigned long) g_part_max_tick[2]);

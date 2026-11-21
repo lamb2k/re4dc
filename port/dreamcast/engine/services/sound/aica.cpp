@@ -118,26 +118,11 @@ const u32 kAicaPoolBytes = 1900544;          // KOS snd_mem pool (AICA RAM above
 const u32 kReserveBytes = 64 * 1024;         // AICA RAM kept free (movie audio, the stream ring when it is lifted)
 const int kMaxChannels = 60;                 // of 64: 4 stay free for KOS snd_stream (movies)
 
-// One flush's account (aica_stats.lf_*: the longest flush keeps its own).
-struct FlushDiag {
-    u32 starts, keyoffs, lock_us, fifo_us, fifo_max, wr_us, wr_max, wr_where;
-};
-FlushDiag g_fd;
-
 struct RegWriter {
     u32 n = 0;
     void w(u32 ch, u32 reg, u32 v) {
-        const u64 a = timer_us_gettime64();
-        if ((n++ & 7) == 0) {
-            g2_fifo_wait();
-            const u32 f = (u32) (timer_us_gettime64() - a);
-            g_fd.fifo_us += f;
-            if (f > g_fd.fifo_max) g_fd.fifo_max = f;
-        }
+        if ((n++ & 7) == 0) g2_fifo_wait();
         g2_write_32_raw(kAicaChan + ch * 0x80 + reg, v);
-        const u32 d = (u32) (timer_us_gettime64() - a);
-        g_fd.wr_us += d;
-        if (d > g_fd.wr_max) { g_fd.wr_max = d; g_fd.wr_where = (ch << 8) | reg; }
     }
 };
 
@@ -378,7 +363,6 @@ inline u32 nib_to_sample(u32 nib, u32 start)
 // AICA channel programming (inside one G2 lock).
 void ch_keyoff(RegWriter& w, s8 ch, u32 play_cont)
 {
-    ++g_fd.keyoffs;
     w.w(ch, 0x00, (play_cont & ~0x4000u) | 0x8000u);
 }
 // pcms 2: ADPCM (the loop restores the decoder state saved at LSA).
@@ -389,9 +373,7 @@ void ch_start(RegWriter& w, s8 ch, u32 aica, u32 len, u32 loop, u32 lsa, u16 fre
     if (len < 1) len = 1;
     if (lsa >= len) lsa = 0;
     play_cont = (pcms << 7) | ((aica >> 16) & 0x7F) | (loop ? 0x200u : 0);
-    ++g_fd.starts;
     ch_keyoff(w, ch, play_cont);
-    --g_fd.keyoffs;
     w.w(ch, 0x04, aica & 0xFFFF);
     w.w(ch, 0x08, loop ? lsa : 0);
     w.w(ch, 0x0C, len);
@@ -626,10 +608,7 @@ void blk_cut(int t)
 // ---------------------------------------------------------------------------
 void flush()
 {
-    g_fd = FlushDiag();
-    const u64 l0 = timer_us_gettime64();
     g2_lock_scoped();
-    g_fd.lock_us = (u32) (timer_us_gettime64() - l0);
     RegWriter w;
     // AX voices
     for (int i = 0; i < 64; i++) {
@@ -756,12 +735,6 @@ void audio_step()
     flush();
     const u32 writes = S.regwrites - w0;
     if (writes > S.max_writes) S.max_writes = writes;
-    const u32 fl = (u32) (timer_us_gettime64() - tv);
-    if (fl > S.lf_us) {   // the longest flush and what it did
-        S.lf_us = fl; S.lf_writes = writes; S.lf_starts = g_fd.starts; S.lf_keyoffs = g_fd.keyoffs;
-        S.lf_lock_us = g_fd.lock_us; S.lf_fifo_us = g_fd.fifo_us; S.lf_fifo_max = g_fd.fifo_max;
-        S.lf_wr_us = g_fd.wr_us; S.lf_wr_max = g_fd.wr_max; S.lf_wr_where = g_fd.wr_where; S.lf_step = S.frames;
-    }
     mutex_unlock(&g_lock);
     if (aica_slow_us) {   // SNDSLOW (control): a known delay inside the step, so the cost must read it
         const u64 until = timer_us_gettime64() + aica_slow_us;
