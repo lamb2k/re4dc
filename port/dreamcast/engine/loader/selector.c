@@ -545,7 +545,8 @@ static void collect(unsigned i) {
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0, run_lines = 0, fields_bad = 0, camrec_ticks = 0;
-    int pool_seen = 0, pub_seen = 0, camrec_seen = 0, wep_seen = 0;
+    int pool_seen = 0, pub_seen = 0, camrec_seen = 0, guards_seen = 0, wep_seen = 0;
+    unsigned guard_must = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -641,6 +642,14 @@ static void collect(unsigned i) {
                 if ((!pool_seen || full || bad) && !e->why[0])
                     snprintf(e->why, sizeof(e->why), "pool refused: full %u, bad frees %u", full, bad);
             }
+            else if (!strncmp(line, "E1 GUARDS ", 10)) {
+                /* lane eng-fix1 (H-026): the guards against the old port's failures (host/guard_hooks.cpp) are expected
+                   to stay at 0; a count other than 0 fails a timing scene (a function run reports it) */
+                guards_seen = tmatch(line, "E1 GUARDS em_must_retry %u; uncounted em_ok_skip r10c_spawn_live r117_beam_null",
+                                     NULL, &guard_must);
+                if (guards_seen && guard_must && s->timing && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "guard taken: em_must_retry %u", guard_must);
+            }
             else if (!strncmp(line, "E1 PUB camera ", 14)) {
                 /* lane eng-e1j (ruling H-016.2): no per-tick conversion of game state into draw records; lane eng-e1n
                    (H-017.5): the line counts only what has a producer, the camera copy control and the light-view
@@ -700,6 +709,9 @@ static void collect(unsigned i) {
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pool_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 POOL line in the report");
+    /* lane eng-fix1 (H-026): every E1-family image reports its guards (a missing or unreadable line fails) */
+    if (!strcmp(s->kind, "e1") && e->report_ok && done && !guards_seen && !e->why[0])
+        snprintf(e->why, sizeof(e->why), "no E1 GUARDS line in the report (or not read)");
     /* lane eng-e1j (H-016.2): timing and function runs alike must report their conversions (a missing line fails) */
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !pub_seen && !e->why[0])
         snprintf(e->why, sizeof(e->why), "no E1 PUB line in the report");

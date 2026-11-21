@@ -55,6 +55,8 @@ void GameAddPoint(int) { HOST_STUB("GameAddPoint"); }
 void* SceExec(int, void*, int, u8, int, void*) { HOST_STUB("SceExec"); return 0; }
 int ExeWindowEventTask(void*) asm("ExeWindowEvent__9cEmWindow");
 int ExeWindowEventTask(void*) { HOST_STUB("cEmWindow::ExeWindowEvent"); return 0; }
+// the guard EM_READ_RETRY's EM_MUST retry (em_set.cpp emMustCreate; lane eng-fix1, H-026): no fixture refuses a spawn
+void re4dc_em_sleep(int) { HOST_STUB("re4dc_em_sleep"); }
 // pad rumble, performance counters
 u32 PPCMfpmc1() { return 0; }
 void PPCMtmmcr0(u32) {}
