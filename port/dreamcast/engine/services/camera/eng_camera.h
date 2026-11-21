@@ -49,6 +49,12 @@ void eng_cam_check_tick(uint32_t tick);
  * f=<fov> d=<area>,<cut>,<routine>,<blend frames left>", floats as bit patterns (hostref/svc/camengine.py). Returns
  * its length (0: the record not written yet). */
 int eng_cam_trace_line(char* buf, unsigned size, uint32_t tick);
+/* The camera's diagnosis lines (lane eng-e1m): "CD n=<CameraMove calls> <tag> <words as hex>", the camera's inputs and
+ * each evaluation step's output, written only when a sink is set: the image's trace runs with the CAMDIAG boot file
+ * (core/frame.cpp), the PC reference's native build with RE4_CAMDIAG (hostref/svc/svc4_dump.cpp). The same lines from
+ * the same code on both, so the first quantity apart names where the two cameras part. */
+extern void (*eng_cam_diag_sink)(const char* line, unsigned n);
+void eng_cam_diag(const char* tag, const void* words, unsigned n);
 
 /* Conversions of game state into a draw record, counted per scene (the selector fails a scene where one is not 0;
  * the E1 PUB line): the camera, the HUD words, the light inputs' compares. The PUBCOPY lab arm (control) makes the

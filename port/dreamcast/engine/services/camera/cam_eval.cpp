@@ -35,6 +35,7 @@
 #include "at_mod.h"
 #undef fabsf
 #include "camera_svc.h"
+#include "eng_camera.h"   // lane eng-e1m: the diagnosis lines
 #include "cam_math.h"
 
 using namespace camsvc;
@@ -93,6 +94,7 @@ void CameraSmooth::move(CameraParam* p)
         return;
     }
     cam_cnt.smooths++;
+    eng_cam_diag("si", p, sizeof(CameraParam) / 4);   // lane eng-e1m: the smoothing's target
     const f32 keep = m_ratio, take = 1.0f - m_ratio;
     const v3 q = V(pG->quake_ofs);
     put(&param.pos, vmix(vadd(V(param.pos), q), keep, V(p->pos), take));
@@ -534,6 +536,7 @@ void CameraQuasiFPS::calcBaseMatrix(Mtx m)
         }
     }
     frame_put(m, f);
+    eng_cam_diag("bm", m, 12);   // lane eng-e1m: the base frame
 }
 
 // The tick's shoulder offset: the site's offsets blended from the old table (blend_ratio, counted down over the blend's
@@ -590,6 +593,7 @@ void CameraQuasiFPS::calcOffset(QfpsOfs* out)
     put(&out->target, target);
     out->Roll = mid.Roll;
     out->Fovy = mid.Fovy;
+    eng_cam_diag("of", out, sizeof(QfpsOfs) / 4);   // lane eng-e1m: the offset
 }
 
 // The wall probe, in player space with the base frame m: three probes from the close point toward the camera (the
@@ -652,6 +656,7 @@ void CameraQuasiFPS::hitCheck(Mtx m, QfpsOfs* ofs, CameraParam* out)
     } else if (probe(eye, vsub(eye, side_eye), &hit) || probe(eye, vadd(eye, side_eye), &hit)) {
         put(&out->pos, vadd(eye, near));
     }
+    eng_cam_diag("hc", out, sizeof(CameraParam) / 4);   // lane eng-e1m: the wall probe's camera
 }
 
 // Keeps a site's close point at least 320 behind the player: when the camera-to-close line reaches the plane z = -320
