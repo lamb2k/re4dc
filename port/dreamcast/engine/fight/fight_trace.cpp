@@ -93,6 +93,9 @@ extern "C" struct DmgCounters { unsigned sets_seen, tests, hits, ticks, expired,
 // lane eng-e2a item 3: the scenario areas' counters (services/volumes/area_vol.cpp; weak: the control build AREA_ORIG=1)
 extern "C" struct AreaCounters { unsigned hit_tests, hits, eye_tests, centres, inside_points, inits, bad_types; } area_cnt
     __attribute__((weak));
+// lane eng-e2f: the screen tests (the GX projection queries' answers, fight_stubs.cpp; em10ScreenInCk, services/em10)
+extern "C" unsigned e2_gx_projections;
+extern "C" struct Em10CamCounters { unsigned shots, shakes, wall_pulls, wall_hits, installs, screen_checks, screen_on; } em10c_cnt;
 void e2_report()
 {
     e2_events_report();
@@ -106,6 +109,8 @@ void e2_report()
     if (&dmg_cnt) e1_log("E2 DMG table %u records, tests %u hits %u ticks %u expired %u freed %u pool-logs %u debug-draws %u\n",
            (unsigned) DmgMgr.nArray, dmg_cnt.tests, dmg_cnt.hits, dmg_cnt.ticks, dmg_cnt.expired, dmg_cnt.freed, dmg_cnt.logs,
            dmg_cnt.debug_draws);
+    e1_log("E2 SCREEN projections %u em10-checks %u on-screen %u cut-ins %u\n", e2_gx_projections, em10c_cnt.screen_checks,
+           em10c_cnt.screen_on, em10c_cnt.shots);
     if (&area_cnt) e1_log("E2 AREA hit-tests %u hits %u eye-tests %u centres %u inside-points %u inits %u bad-types %u\n",
            area_cnt.hit_tests, area_cnt.hits, area_cnt.eye_tests, area_cnt.centres, area_cnt.inside_points, area_cnt.inits,
            area_cnt.bad_types);
