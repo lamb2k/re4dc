@@ -158,7 +158,7 @@ static unsigned pack_need(const char* path){
 }
 /* Read n bytes into the CRC only (the recording's frames 1-299 in an engine image). */
 static int skip_crc(file_t f,unsigned n,uint32_t* crc){
-    static uint8_t scratch[65536] __attribute__((aligned(32)));
+    static uint8_t scratch[16384] __attribute__((aligned(32)));
     while(n){unsigned c=n>sizeof(scratch)?sizeof(scratch):n;if(!read_crc(f,scratch,c,crc))return 0;n-=c;}
     return 1;
 }
@@ -311,6 +311,7 @@ int native_wait_shown(void){
 }
 /* The bench opens two rooms by turns with the buffer kept (native_close): it reserves the larger of them once. */
 static unsigned resident_reserved;
+static PackKeep keep_rows;   /* lane eng-mem1: the pack being opened, frame 0's rows (pack_keep_path) */
 void native_reserve(const char* const* names,unsigned n){
     for(unsigned i=0;i<n;i++){unsigned v=pack_need(names[i]);if(v>resident_reserved)resident_reserved=v;}
 }
@@ -321,6 +322,10 @@ int native_open(NativeScene* s,const char* name){
     {   /* lane eng-draw2 (R3): the resident buffer covers the pack being opened (and the bench's reservation); a pack
            larger than the buffer replaces it (nothing of the old room is in it: native_open always follows a close) */
         unsigned need=pack_need(name);
+        /* lane eng-mem1: the sizing pass's rows taken here, before the load opens its file. d2 and d3 read them with a
+           second handle (or seeks on the load's own) in the middle of the load's stream: HILL.PAK and R103.PAK then
+           read wrong bytes (CRC 785f34c6 against 23e79ac3 on HILL.PAK; CROSS.PAK by luck right). */
+        if(need&&recording_frames()==1&&!pack_keep_path(name,&keep_rows)){printf("M1 pack %s: frame-0 rows not found\n",name);return 0;}
         if(!need){printf("M1 pack %s: no size (missing or malformed)\n",name);return 0;}
         if(resident_reserved>need)need=resident_reserved;
         need=(need+31)&~31u;
@@ -349,9 +354,9 @@ int native_open(NativeScene* s,const char* name){
     uint8_t* data=resident_pack+pad;uint32_t* r=(uint32_t*)data;
     unsigned rest=pi.rest;int ok;
     if(recording_frames()==1){   /* lane eng-mem1: frame 0 of the recording kept (pack_keep reads with seeks) */
-        PackKeep k;
+        const PackKeep k=keep_rows;
         unsigned step=1;
-        ok=pack_keep_path(name,&k);   /* tex_offsets is the same file's: pack_info refills it identically */
+        ok=1;
         if(ok)rest=keep_layout(&pi,&k,NULL,NULL);
         if(ok){step=3;ok=pad+68+rest<=resident_capacity;}
         if(ok){step=4;ok=read_rest_keep(f,&pi,&k,data,r,&crc);}
