@@ -110,7 +110,8 @@ ColPiece* col_piece_at(u32 i);
 u32 col_file_bytes(const ColPiece* pc);
 struct ColCounters {
     u32 bakes, late_bakes, line_queries, sphere_queries, nodes_tested, leaves, tris_line, tris_sphere, tri_bytes, cold_line,
-        cold_sphere, tris_skipped, filter_miss, filter_end, sphere_skipped, sphere_filter_miss, sphere_recells, leaves_whole;
+        cold_sphere, tris_skipped, filter_miss, filter_end, sphere_skipped, sphere_filter_miss, sphere_recells, leaves_whole,
+        line_repeats, sphere_repeats;   // lane eng-svcspd1: queries made again in a tick with the same inputs (counted)
 };
 extern ColCounters col_cnt;
 extern f32 col_control_floor;       // control: every floor-group triangle raised by this many units in the queries
