@@ -324,9 +324,19 @@ void exercise(unsigned t)
     em10CamMove2(e);
     state(e, "X2");
     // the on-screen check, judged against its rule on this build's own projection (GetScreenPos is the math service's:
-    // the original sub2.cpp in odump, services/math/math_svc.cpp in native, and the two answer differently here: the
-    // projections go to e2b-diag.txt, which is not compared)
-    {
+    // the original sub2.cpp in odump, services/math/math_svc.cpp in native; lane eng-e2b found they answered differently: the
+    // projections go to e2b-diag.txt, which is not compared; since lane eng-e2d's fix of the PC native projection,
+    // hostref/host_math.cpp, the XV line below compares the check's answer and both projections with the original's)
+    // lane eng-e2d: three placements of the Ganado's root, so the check meets points on the screen as well as off it: where
+    // it stands, at the camera's target (the screen's centre) and half way between the two
+    const Vec keep_pos = e->pos;
+    for (int v = 0; v < 3; v++) {
+        if (v == 1) e->pos = pG->Cam.param.at;
+        if (v == 2) {
+            e->pos.x = (keep_pos.x + pG->Cam.param.at.x) * 0.5f;
+            e->pos.y = (keep_pos.y + pG->Cam.param.at.y) * 0.5f;
+            e->pos.z = (keep_pos.z + pG->Cam.param.at.z) * 0.5f;
+        }
         const int r = em10ScreenInCk(e);
         int expect = 0;
         Vec q[2] = {e->pos, e->getPartsPtr(4)->world}, scr[2];
@@ -337,10 +347,15 @@ void exercise(unsigned t)
         }
         if (r == expect) P(g_f, "%u XI rule-ok\n", g_tick);
         else P(g_f, "%u XI rule-broken %d %d\n", g_tick, r, expect);
-        if (g_diag)
+        // lane eng-e2d: the PC native build's projection answers as the original's (hostref/host_math.cpp), so the check's
+        // answer and both projections are compared between the builds (positions within the camera's bound)
+        P(g_f, "%u XO%d %d front %d %d P%.6f,%.6f P%.6f,%.6f\n", g_tick, v, r, front[0], front[1], (double) scr[0].x,
+          (double) scr[0].y, (double) scr[1].x, (double) scr[1].y);
+        if (g_diag && v == 0)
             P(g_diag, "%u XI %d front %d %d scr %.6g,%.6g %.6g,%.6g\n", g_tick, r, front[0], front[1], (double) scr[0].x,
               (double) scr[0].y, (double) scr[1].x, (double) scr[1].y);
     }
+    e->pos = keep_pos;
     pSys->region = keep_region;
     CamCtrl.m_pExtraCamera = keep_extra;
     __builtin_memcpy((void*) e, g_save, n);
