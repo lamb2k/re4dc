@@ -2,6 +2,15 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-037 (2026-11-22): memory layout: the engine's own where it is better
+
+- **Owner:** "If we have a better memory layout we can implement our own unless we believe it eas pre socially
+  optimized" (read: unless the old layout was already specially optimized). Ruling: the engine's memory map is its
+  own (lane eng-mem1's `MEMORY_MAP.md` stands; nothing in it is to be bent back toward the old port's map). An old
+  layout is kept only where it was tuned on purpose and measured: the sound chip's fixed bank layout (already taken
+  with the AICA layer). The old video-memory map and the per-room resident texture lists are knowledge, not a layout.
+  A lane that replaces a tuned layout shows the measurement. In the plan's section 8.
+
 ## H-036 (2026-11-22): character look choices approved; cost before convenience; what was gold is kept
 
 - **Owner, on lane eng-draw4's two sheets:** "They look fine for the character options" (typed "chatter"; read as the
