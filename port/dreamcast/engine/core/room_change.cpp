@@ -70,6 +70,7 @@ extern "C" void col_room_release(void) __attribute__((weak));             // col
 extern "C" void e1_draw_close_c(void) __attribute__((weak));               // renderer: the room's pack returned
 extern "C" int e1_draw_reopen_c(const char* pack) __attribute__((weak));  // renderer: the next room's pack
 extern "C" int e1_draw_opened_c(void);
+extern "C" volatile uint32_t m1_open_us[6];   // render/native_scene.inc (lane eng-load2): the last pack open's phases
 
 int e1_door_scene;
 static E1Route door_route;
@@ -259,13 +260,20 @@ void e1_room_tick_done()
 // ---- the loading state ----
 // The KOS heap in use after each step of a load (DOOR scene only; loading is not timed): where a round trip's
 // difference is taken or kept (E1 LOADSTEP).
+// Lane eng-load2: and the time each step took (us since the previous step; the first step of a room's set-up counts
+// from the previous line, so the phases of a load are its steps from leave.start to enter.memory-map). The log line is
+// formatted after the step's clock is read: its own cost is not in the next step's time.
 void e1_load_step(const char* what)
 {
     if (!e1_door_scene) return;
     static uint32_t last;
+    static uint64_t t_last;
+    const uint64_t t = timer_us_gettime64();
     const uint32_t u = (uint32_t) mallinfo().uordblks;
-    e1_log("E1 LOADSTEP %s kos-used %lu (%+ld)\n", what, (unsigned long) u, (long) u - (long) last);
+    e1_log("E1 LOADSTEP %s kos-used %lu (%+ld) us %lu\n", what, (unsigned long) u, (long) u - (long) last,
+           (unsigned long) (t_last ? t - t_last : 0));
     last = u;
+    t_last = timer_us_gettime64();
 }
 static unsigned n_loads, n_failed;
 static void* kept_block;
@@ -376,6 +384,10 @@ int e1_room_change_run(unsigned tick)
         readx_fd = fs_open("/cd/em/pl11.drs", O_RDONLY);
         readx_tick = tick + 10;
     }
+    if (e1_draw_reopen_c && e1_door_scene)
+        e1_log("E1 LOADPACK %s bytes %lu sizing %lu textures %lu resident %lu checks %lu vis %lu us\n", room_pack(to),
+               (unsigned long) m1_open_us[5], (unsigned long) m1_open_us[0], (unsigned long) m1_open_us[1],
+               (unsigned long) m1_open_us[2], (unsigned long) m1_open_us[3], (unsigned long) m1_open_us[4]);
     e1_load_step("enter.renderer");
     e1_memmap_sample();      // the memory map after each load (overlaps, the arena, the stack)
     e1_heap_room_checks();   // the heap descriptors' map

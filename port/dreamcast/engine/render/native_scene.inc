@@ -33,6 +33,10 @@ __attribute__((optimize("O2"))) void native_update(NativeScene* s,unsigned frame
 volatile uint32_t m1_ram[8];
 volatile uint32_t m1_room_serial;
 volatile uint32_t m1_load_status[8];
+/* lane eng-load2: the phases of the last native_open, us: [0] sizing (the header passes), [1] the header and textures
+   read and put in video memory, [2] the resident part read, [3] tables checked and bound, the actors opened,
+   [4] visibility; [5] the pack's bytes on disc */
+volatile uint32_t m1_open_us[6];
 static uint8_t* resident_pack;
 static unsigned resident_capacity;
 volatile uint32_t m1_texture_bytes[M1_TEXTURE_LIMIT];   /* VRAM bytes of each uploaded texture (memory map) */
@@ -321,6 +325,9 @@ void native_reserve(const char* const* names,unsigned n){
 int native_open(NativeScene* s,const char* name){
     dc_lab_open();   /* lane eng-draw1: the E1 lab sets (boot files DLA, DLB), read once before play */
     m1_load_status[0]=1;m1_room_serial++;
+    uint64_t ph=timer_us_gettime64();
+#define M1_PHASE(i) do{const uint64_t t_=timer_us_gettime64();m1_open_us[i]=(uint32_t)(t_-ph);ph=t_;}while(0)
+    memset((void*)m1_open_us,0,sizeof(m1_open_us));
     {   /* lane eng-draw2 (R3): the resident buffer covers the pack being opened (and the bench's reservation); a pack
            larger than the buffer replaces it (nothing of the old room is in it: native_open always follows a close) */
         unsigned need=pack_need(name);
@@ -339,6 +346,7 @@ int native_open(NativeScene* s,const char* name){
             resident_capacity=need;
         }
     }
+    M1_PHASE(0);
     file_t f=fs_open(name,O_RDONLY);
     if(f<0){printf("M1 missing pack %s\n",name);return 0;}
     PackInfo pi;uint32_t crc=0;Table root;
@@ -353,6 +361,7 @@ int native_open(NativeScene* s,const char* name){
         unsigned blob=tex_offsets[i+1]-tex_offsets[i];
         if(!read_crc(f,resident_pack,blob,&crc)||!upload_one(i,(const uint32_t*)resident_pack,blob)){fs_close(f);return 0;}
     }
+    M1_PHASE(1);
     uint8_t* data=resident_pack+pad;uint32_t* r=(uint32_t*)data;
     unsigned rest=pi.rest;int ok;
     if(recording_frames()==1){   /* lane eng-mem1: frame 0 of the recording kept (pack_keep reads with seeks) */
@@ -368,7 +377,7 @@ int native_open(NativeScene* s,const char* name){
         r[0]=15;r[1]=0;for(unsigned k=1;k<=15;k++)r[k+1]=pi.root[k+1]-pi.texsize;
         ok=read_crc(f,data+68,pi.rest,&crc);
     }
-    fs_close(f);s->assets.storage=resident_pack;
+    fs_close(f);s->assets.storage=resident_pack;M1_PHASE(2);m1_open_us[5]=size;
     const uint32_t* h=pi.head;
     if(ok&&crc!=h[4])printf("M1 pack %s: CRC %08lx, the header's %08lx\n",name,(unsigned long)crc,(unsigned long)h[4]);
     if(!ok||crc!=h[4]||!table(&root,data,68+rest)||root.n!=15||bytes(&root,0))return 0;
@@ -410,7 +419,7 @@ int native_open(NativeScene* s,const char* name){
         hd[4]|=((uintptr_t)m1_textures[hd[0]]&0x7fffff)>>3 | tex_palette_bits[hd[0]];
     }
     m1_load_status[0]=8;if(!native_actor_open(s))return 0;
-    m1_load_status[0]=9;
+    m1_load_status[0]=9;M1_PHASE(3);
     {   /* baked visibility: <ROOM>.VIS beside the pack, unless /cd/NOVIS (the full-set arm of the pixel check) */
         char vis[32];unsigned n=strlen(name);
         if(n<sizeof(vis)&&n>4){memcpy(vis,name,n-3);memcpy(vis+n-3,"VIS",4);}else vis[0]=0;
@@ -424,7 +433,8 @@ int native_open(NativeScene* s,const char* name){
             s->world.vis=&s->vis;m1_ram[7]=vs;
         }
     }
-    m1_load_status[0]=7;
+    m1_load_status[0]=7;M1_PHASE(4);
+#undef M1_PHASE
     struct mallinfo heap=mallinfo();
     m1_ram[0]=68+rest;   /* lane eng-mem1: the resident part as kept (was size-texsize, the whole recording) */m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
     m1_ram[3]=heap.uordblks;m1_ram[4]=heap.fordblks;m1_ram[5]=pvr_mem_available();m1_ram[6]=resident_capacity;
