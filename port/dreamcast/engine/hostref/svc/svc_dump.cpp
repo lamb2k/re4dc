@@ -147,6 +147,10 @@ extern "C" void svc5_finish(void) __attribute__((weak));
 extern "C" void e2_ready(void) __attribute__((weak));
 extern "C" void e2_tick(unsigned t) __attribute__((weak));
 extern "C" void e2_finish(void) __attribute__((weak));
+// lane eng-e2c: the boss's entry points exercised on planted giants (e2c_dump.cpp) ride them too.
+extern "C" void e2c_ready(void) __attribute__((weak));
+extern "C" void e2c_tick(unsigned t, int begin) __attribute__((weak));
+extern "C" void e2c_finish(void) __attribute__((weak));
 // lane eng-e2b: em10's service functions' boundary log (e2b_dump.cpp) rides them too.
 extern "C" void e2b_ready(void) __attribute__((weak));
 extern "C" void e2b_tick(unsigned t) __attribute__((weak));
@@ -157,6 +161,7 @@ extern "C" void host_svc_ready()
     if (svc4_ready) svc4_ready();
     if (svc5_ready) svc5_ready();
     if (e2_ready) e2_ready();
+    if (e2c_ready) e2c_ready();
     if (e2b_ready) e2b_ready();
     const char* c = svc_env("RE4_SVC_CONTROL");
     if (c && *c) host_log("svc control: %s", c);
@@ -172,6 +177,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
     if (svc4_tick) svc4_tick(t);
     if (svc5_tick) svc5_tick(t, begin);
     if (e2_tick && begin) e2_tick(t);
+    if (e2c_tick) e2c_tick(t, begin);
     if (e2b_tick && begin) e2b_tick(t);
     if (begin) return;
     if (skel_publish_all) skel_publish_all();
@@ -192,6 +198,7 @@ extern "C" void host_svc_finish()
     if (svc4_finish) svc4_finish();
     if (svc5_finish) svc5_finish();
     if (e2_finish) e2_finish();
+    if (e2c_finish) e2c_finish();
     if (e2b_finish) e2b_finish();
     if (g_pal) fclose(g_pal);
     if (g_col) fclose(g_col);
@@ -261,8 +268,11 @@ extern "C" void host_svc_finish()
 // it is set up, in both builds, so the cloth draws no random number and native and original compare bit for bit ----
 #include "pendulum.h"
 extern "C" void __real_PenClothSet(cModel* m, PenCloth* c, f32 len);
+// lane eng-e2c: the boss exercise logs a set-up made on a planted giant and keeps it from the cloth service (1: taken)
+extern "C" int e2c_cloth_hook(cModel* m, PenCloth* c, f32 len) __attribute__((weak));
 extern "C" void __wrap_PenClothSet(cModel* m, PenCloth* c, f32 len)
 {
+    if (e2c_cloth_hook && e2c_cloth_hook(m, c, len)) return;
     const char* w = svc_env("RE4_SVC_CLOTH_WIND");
     if (w && *w == '0') c->Flag |= 0x40;
     __real_PenClothSet(m, c, len);
