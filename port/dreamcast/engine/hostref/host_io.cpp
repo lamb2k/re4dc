@@ -201,6 +201,17 @@ extern "C" int host_parse_fixture(const char* path, HostFixture* fx)
             p.button = (uint16_t) strtoul(b, 0, 0);
             p.sx = (int8_t) sx; p.sy = (int8_t) sy; p.cx = (int8_t) cx; p.cy = (int8_t) cy;
             p.tl = (uint8_t) tl; p.tr = (uint8_t) tr;
+        } else if (!strcmp(key, "door")) {
+            // door <tick> <area no> (lane eng-load1): the room's door area asks for its room change at that tick
+            unsigned t = 0, a = 0;
+            if (sscanf(rest, "%u %i", &t, (int*) &a) < 2 || fx->ndoors >= sizeof fx->doors / sizeof fx->doors[0]) {
+                fprintf(stderr, "re4ref: bad door line: %s\n", line);
+                ok = 0;
+                break;
+            }
+            fx->doors[fx->ndoors].tick = t;
+            fx->doors[fx->ndoors].area = a;
+            fx->ndoors++;
         } else {
             fprintf(stderr, "re4ref: unknown fixture key %s\n", key);
             ok = 0;

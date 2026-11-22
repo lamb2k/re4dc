@@ -6,8 +6,8 @@
 # The serial logs are Flycast (or console) runs of a test disc whose LEON, HILL and SHOT scenes ran traced (no NOTRACE
 # file): each tick the image prints the camera service's record as a CAMLOG line (camengine.py). The reference is re4ref
 # odump (the original camera units: camera, view, cam_sys, cam_ctrl, cam_qfps, cam_extra) on the scene's fixture:
-#   LEON  tools/plays_right/fixtures/e1-route.txt with seed 0x0000 (the image's village route starts the generator at
-#         0, as lane eng-e1g's village comparison did; written to <out>)
+#   LEON  tools/plays_right/fixtures/e1-route.txt (lane eng-snd1, R9: the image's village route seeds the generator
+#         with the fixture's 0x0d37 since; before, it started at 0 and this script ran the fixture with seed 0x0000)
 #   HILL  fixtures/hill-follow.txt (the image's hill scene: the same resume, 728 ticks; hill-ashley is another play)
 #   SHOT  fixtures/shot-ganado.txt (the FIGHT image plays this file itself)
 # camcheck.py compares every tick of the fixture: eye and target within max(0.01 unit, 2^-20 of the coordinate), roll and
@@ -60,8 +60,7 @@ for f in "$AFTER" ${BEFORE:+"$BEFORE"} ${CTRL:+"$CTRL"}; do [ -s "$f" ] || { ech
 mkdir -p "$OUT"
 rm -f "$OUT/.wrong" "$OUT/.abort"
 TOL="--pos ${CAM_POS:-0.01} --rel ${CAM_REL:-9.5367431640625e-07} --deg ${CAM_DEG:-0.01}"
-sed 's/^seed .*/seed 0x0000/' "$PR/fixtures/e1-route.txt" > "$OUT/e1-route-s0.txt"
-fixture() { case $1 in LEON) echo "$OUT/e1-route-s0.txt" ;; HILL) echo "$PR/fixtures/hill-follow.txt" ;; SHOT) echo "$PR/fixtures/shot-ganado.txt" ;; esac; }
+fixture() { case $1 in LEON) echo "$PR/fixtures/e1-route.txt" ;; HILL) echo "$PR/fixtures/hill-follow.txt" ;; SHOT) echo "$PR/fixtures/shot-ganado.txt" ;; esac; }
 fxticks() { awk '$1 == "ticks" {print $2; exit}' "$(fixture "$1")"; }
 runname() { local m; m=$(echo ",${CAMENGINE_NAMES:-}," | grep -o ",$1=[A-Za-z0-9-]*," | head -1 | tr -d ,); echo "${m#*=}${m:+}" | sed "s/^$/$1/"; }
 run() {   # run <fixture file> <dir> [env...]   (RUN_BIN: another odump build)
@@ -111,7 +110,7 @@ engine() {   # engine <arm> <serial> <scene> <must>
     if [ "${CAMENGINE_CONTROL:-}" = refcut ]; then   # the window check's control (above)
         head -700 "$OUT/ref/HILL/cam.txt" > "$OUT/ref/HILL/cam.cut" && mv "$OUT/ref/HILL/cam.cut" "$OUT/ref/HILL/cam.txt"
     fi
-    row "PC: e1-route (seed 0), ZNEAR / ZFAR zero against the reference" PASS "$OUT/ref/LEON" "$OUT/pc-zclip0/LEON"
+    row "PC: e1-route, ZNEAR / ZFAR zero against the reference" PASS "$OUT/ref/LEON" "$OUT/pc-zclip0/LEON"
     row "PC: hill-follow, ZNEAR / ZFAR zero against the reference" FAIL "$OUT/ref/HILL" "$OUT/pc-zclip0/HILL"
     row "PC: shot-ganado, ZNEAR / ZFAR zero against the reference" PASS "$OUT/ref/SHOT" "$OUT/pc-zclip0/SHOT"
     for sc in LEON HILL SHOT; do engine after "$AFTER" $sc PASS; done

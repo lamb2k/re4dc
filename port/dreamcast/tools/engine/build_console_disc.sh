@@ -4,7 +4,7 @@
 #
 #   build_console_disc.sh [--ref <git ref>] [--out <dir>] [--scenes A,B,..] [--drop <disc path>]...
 #                         [--put <disc path>]... [--no-precheck] [--layout standard|legacy] [--title <text>]
-#                         [--plan-control longcomment|fivefield]
+#                         [--plan-control longcomment|fivefield|sectorend] [--r103 <farm pack> <farm visibility>]
 #
 # From a clean checkout of <ref> (default origin/engine: git archive of the commit, plus the SH4ZAM submodule at the
 # commit <ref> records, from the local submodule clone; nothing from the working tree) it builds:
@@ -37,7 +37,8 @@
 # longcomment: the scheduled entries (name eight), then a comment line of 5,000 bytes, then a ninth entry (a copy of the
 # first, named NINTH): the selector must read past 4,096 bytes and refuse nine scenes. fivefield: the scheduled entries,
 # then the last one again with only its first five fields (named <name>5): a line that does not parse refuses the
-# schedule (before, both were run as if the extra entry were not there).
+# schedule (before, both were run as if the extra entry were not there). sectorend (lane eng-mem2): SCENES.TXT padded to
+# 2,045 bytes mod 2,048 by a comment line: the selector must read it and run (not a refusal).
 # --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
 # images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
 # scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
@@ -52,6 +53,7 @@ REPO=$(git -C "$here" rev-parse --show-toplevel)
 REF=origin/engine
 OUT=
 SCENES=BENCH,LEON,HILL,FIGHT,BOSS-BENCH,BOSS
+TIER=plain
 DROPS=()
 PUTS=()
 PRECHECK=1
@@ -63,12 +65,14 @@ while [ $# -gt 0 ]; do
     --ref) REF=$2; shift 2 ;;
     --out) OUT=$2; shift 2 ;;
     --scenes) SCENES=$2; shift 2 ;;
+    --tier) TIER=$2; shift 2 ;;   # lane eng-mem1 (H-031): calibrated | console | plain (default): see TIERCAL below
     --drop) DROPS+=("$2"); shift 2 ;;
     --put) PUTS+=("$2"); shift 2 ;;
     --no-precheck) PRECHECK=0; shift ;;
     --layout) LAYOUT=$2; shift 2 ;;
     --title) TITLE=$2; shift 2 ;;
     --plan-control) PLANCTL=$2; shift 2 ;;
+    --r103) R103_PAK=$2; R103_VIS=$3; shift 3 ;;   # lane eng-mem2: DOOR's farm pack and visibility (default: the shared set's)
     *) echo "build_console_disc: unknown argument $1" >&2; exit 2 ;;
   esac
 done
@@ -135,7 +139,8 @@ BUILD="cdisc-$SHORT"
 mk() {   # mk <name> <dir> <args...>
   local name=$1 dir=$2; shift 2
   log "build $name"
-  make -C "$dir" -j6 "$@" > "$B/$name-make.log" 2>&1 || { grep -n "error" "$B/$name-make.log" | head -20; tail -5 "$B/$name-make.log"; exit 1; }
+  # -j4: the shared machine's limit (the lanes' common brief)
+  make -C "$dir" -j4 "$@" > "$B/$name-make.log" 2>&1 || { grep -n "error" "$B/$name-make.log" | head -20; tail -5 "$B/$name-make.log"; exit 1; }
 }
 mk selector $ENG/loader OUT="$B/loader" BUILD="$BUILD" selector
 mkdir -p "$B/packdir"; ln -sf "$LKG/CROSS.PAK" "$B/packdir/cross.pak"; ln -sf "$LKG/FARM.PAK" "$B/packdir/hayfork.pak"
@@ -158,30 +163,52 @@ bin "$B/fight/e1.elf" "$D/PROG/FIGHT.BIN"
 bin "$B/boss/e1.elf" "$D/PROG/BOSS.BIN"
 P=$PRISTINE
 put() { mkdir -p "$(dirname "$D/$2")"; cp "$1" "$D/$2"; }
+# lane eng-load2: the engine images' packs, version 5 (frame 0 of the recording only; bake/engine_pack.py, converted here
+# from the shared set's whole packs, each with a receipt line in MANIFEST.txt). The bench scenes (BENCH, BOSSB) keep the
+# whole packs: the bench plays the recording and refuses a version 5 pack.
+epack() {   # epack <whole pack> <disc path> [--stream-end]
+  mkdir -p "$(dirname "$D/$2")"
+  python3 "$SRC/port/dreamcast/engine/bake/engine_pack.py" "$1" "$D/$2" --receipt "$WORK/PACKS.txt" ${3:-} > /dev/null ||
+    { echo "build_console_disc: engine_pack refused $1" >&2; exit 1; }
+}
 mots() {   # mots <archive> <scene dir>: the motion clips the archive lists
   python3 "$SRC/port/dreamcast/tools/engine/mot_list.py" "$1" | while read -r m; do put "$P/dc/mot/$m" "$2/dc/mot/$m"; done
 }
 # BENCH: the E0 bench
+# lane eng-mem1 (H-031 ruling 2): the run's tier, declared on the disc. The selector applies H-025.1's sound ceilings only
+# on a disc that declares the calibrated tier (TIERCAL: the console-like Flycast, dynarec on, Sh4Clock 70) or the console
+# (TIERCON); a plain disc prints the sound row "not judged (plain run)".
+case $TIER in
+  calibrated) mkdir -p "$D"; echo "calibrated tier: console-like Flycast, Dynarec.Enabled yes, Sh4Clock 70" > "$D/TIERCAL" ;;
+  console) mkdir -p "$D"; echo "console" > "$D/TIERCON" ;;
+  plain) ;;
+  *) echo "build_console_disc: --tier calibrated|console|plain, not '$TIER'"; exit 2 ;;
+esac
 put "$LKG/CROSS.PAK" BENCH/CROSS.PAK; put "$LKG/FARM.PAK" BENCH/FARM.PAK
 put "$LKG/CROSS.VIS" BENCH/CROSS.VIS; put "$LKG/FARM.VIS" BENCH/FARM.VIS
 printf 'c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh\n' > "$D/BENCH/SCHEDULE.TXT"
 # E1: Leon in the village and (with E1H/HILL in front) Leon and Ashley on the hill. The renderer sizes its pack buffer
 # from CROSS.PAK and FARM.PAK, so FARM.PAK is the hill pack's twin (as lane eng-e1d's disc).
-put "$LKG/CROSS.PAK" E1/CROSS.PAK; put "$LKG/CROSS.VIS" E1/CROSS.VIS
-put "$HILL_PAK" E1/HILL.PAK; put "$HILL_PAK" E1/FARM.PAK; put "$HILL_VIS" E1/HILL.VIS
+epack "$LKG/CROSS.PAK" E1/CROSS.PAK; put "$LKG/CROSS.VIS" E1/CROSS.VIS
+epack "$HILL_PAK" E1/HILL.PAK; put "$D/E1/HILL.PAK" E1/FARM.PAK; put "$HILL_VIS" E1/HILL.VIS
 for f in st1/r101.arc st1/r11d.arc etc/core.das em/pl00.drs em/wep02.drs em/pl11.drs; do put "$P/$f" "E1/$f"; done
 mots "$P/em/pl11.drs" E1
 mkdir -p "$D/E1H"; : > "$D/E1H/HILL"
+# lane eng-snd1 (H-025.1): the sound the scenes load before play (services/sound/snd_svc.cpp): the rooms' ROOM and FOOT banks
+# (st1/<room>.dar) and the sound system files; the characters' banks are in the archives above. From the game tree.
+SNDSYS="bgm/bio4str.hed bgm/bio4midi.hed bgm/bio4midi.dat bgm/doorse.hed bgm/doorse.dat bgm/bgmtbl.dat"
+for f in st1/r101.dar st1/r11d.dar $SNDSYS; do put "$P/$f" "E1/$f"; done
 # lane eng-e1o: NOTRACE sits in each timing scene's own folder (E1L, E1H), not in E1, so the traced and stills scenes below
 # can run the same files without it
 mkdir -p "$D/E1L"; : > "$D/E1L/NOTRACE"; : > "$D/E1H/NOTRACE"
 # FIGHT: the trimmed village pack, its effect map, the Ganado module and motion
-put "$FIGHT_PAK" FIGHT/CROSS.PAK; put "$FIGHT_PAK" FIGHT/FARM.PAK; put "$FIGHT_FXMAP" FIGHT/FXMAP.BIN
+epack "$FIGHT_PAK" FIGHT/CROSS.PAK; put "$D/FIGHT/CROSS.PAK" FIGHT/FARM.PAK; put "$FIGHT_FXMAP" FIGHT/FXMAP.BIN
 put "$LKG/CROSS.VIS" FIGHT/CROSS.VIS
 for f in st1/r101.arc etc/core.das etc/emleon00.esl em/pl00.drs em/wep02.drs em/em15.drs; do put "$P/$f" "FIGHT/$f"; done
 mots "$P/em/em15.drs" FIGHT
 # lane eng-e1p: NOTRACE in FIGHT's own folder FIGHTL (as E1L, E1H), so FIGHTT can run the same files traced
 mkdir -p "$D/FIGHTL"; : > "$D/FIGHTL/NOTRACE"
+for f in st1/r101.dar $SNDSYS; do put "$P/$f" "FIGHT/$f"; done   # lane eng-snd1: the fight's sound
 # BOSSB: the bench image with El Gigante's pack in both slots (the buffer is sized once)
 put "$BOSS_PAK" BOSSB/CROSS.PAK; put "$BOSS_PAK" BOSSB/FARM.PAK; put "$BOSS_VIS" BOSSB/CROSS.VIS; put "$BOSS_VIS" BOSSB/FARM.VIS
 printf 'c0 cn c0 c0dh\n' > "$D/BOSSB/SCHEDULE.TXT"
@@ -189,6 +216,7 @@ printf 'c0 cn c0 c0dh\n' > "$D/BOSSB/SCHEDULE.TXT"
 put "$BOSS_EMARC" BOSS/EM2B.ARC; put "$BOSS_EMLIST" BOSS/EMLIST.BIN
 for f in st1/r119.arc etc/core.das em/pl08.drs em/wep02.drs em/em2b.drs; do put "$P/$f" "BOSS/$f"; done
 : > "$D/BOSS/HEADLESS"; : > "$D/BOSS/NOTRACE"
+for f in st1/r119.dar $SNDSYS; do put "$P/$f" "BOSS/$f"; done   # lane eng-snd1: the arena's sound
 # SHOT (lane eng-e1k; not in the default scene list): the FIGHT image playing a re4ref fixture file, the shot judged
 # against the PC reference's trace (tools/plays_right/shot_engine.sh). SHOT_FIXTURE overrides the fixture (a control).
 # Its controls, each a scene of its own (every one must FAIL the judgement): SHOTNP the fixture without the press at
@@ -265,10 +293,56 @@ ELOOK_CONTROLS=(
   "CNWHS|CNWH|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(hill)|PROG/E1.BIN|E1H:E1"
   "CNWFS|CNWF|NOWEP,STILLS|e1:function:drawn|Control:_weapon_undrawn_stills_(fight)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
 )
-for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}"; do
+# Lane eng-snd1 (H-025.1): the sound's controls, same format. CSNDSLOW (1,500 us inside every audio step): the selector
+# must FAIL it ("sound over H-025.1"). CSNDMUTE (every channel at total attenuation, the fight, a run with the audio
+# capture): the scene runs, engine/services/sound/tools/audiocheck.py must FAIL its capture. CSNDDROP (the first request
+# from tick 100 not passed on, the traced village): engine/services/sound/tools/sndreq_check.py must FAIL it against the
+# PC reference. CSEED0 (the traced village with its behaviour generator left at 0, as before request R9): the same
+# check must FAIL on the footsteps' positions (ticks 547-569). ASNDOFF is not a control but the "off" arm of the cost comparison (no sound started): it must stay OK.
+SND_CONTROLS=(
+  "CSNDSLOW|CSS|SNDSLOW|e1:timing:drawn|Control:_sound_over_its_ceiling|PROG/E1.BIN|E1L:E1"
+  "CSNDMUTE|CSM|SNDMUTE|e1:timing:drawn|Control:_sound_muted_(audiocheck)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+  "CSNDDROP|CSD|SNDDROP|e1:function:drawn|Control:_a_sound_request_dropped_(sndreq_check)|PROG/E1.BIN|E1"
+  "ASNDOFF|ASO|SNDOFF|e1:timing:drawn|Arm:_sound_off_(cost_comparison)|PROG/E1.BIN|E1L:E1"
+  "CSEED0|CS0|SEED0|e1:function:drawn|Control:_village_seed_left_at_0_(sndreq_check)|PROG/E1.BIN|E1"
+)
+for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
 done
+# DOOR (lane eng-load1; only when --scenes names it): the E1 image walking Leon from the village square (r101) to the farm
+# (r103) through the game's door and back, the fixture tools/plays_right/fixtures/door-r101-r103.txt (DOOR_FIXTURE=<file>
+# overrides) as /cd/DOOR.TXT; the farm's archive and whole-room bake (the bench's FARM.PAK and FARM.VIS) beside it. A
+# traced function run: the selector judges the loads, both rooms' ticks, the round trip's memory marks and play's disc
+# counters (door=2); tools/plays_right judges Leon against the PC reference on the serial line's LT lines.
+# Its controls, each a scene of its own (DOOR_CONTROLS): CDOORPK the farm's archive absent (FAILED: "E1 load: missing", no
+# hang), CDOORRD a disc read placed in play after the first door (FAILED: disc in play), CDOORLK one block kept across
+# the first leave (FAILED: round trip LEAK), and CDISCF (must stay OK) the first DMA transfer of the first load reported
+# done without it: the read-safety layer must catch it and read again (E1 DISCSAFE not-landed 1, latched 1).
+DOOR_CONTROLS=(
+  "CDOORRD|CDR|DOORREADX|Control:_disc_read_in_play_after_the_door"
+  "CDOORLK|CDL|MEMKEEP|Control:_a_block_kept_across_the_leave"
+  "CDISCF|CDF|DISCFAIL|Check:_DMA_reported_done_without_the_transfer"
+)
+case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
+  put "${DOOR_FIXTURE:-$SRC/port/dreamcast/tools/plays_right/fixtures/door-r101-r103.txt}" DOOR/DOOR.TXT
+  # the farm's bake as R103.PAK, not FARM.PAK: the renderer sizes its resident block from CROSS.PAK and FARM.PAK (E1's
+  # FARM.PAK is the hill pack's twin); the bench's farm bake there needs 1.88 MB more and put the KOS heap into the
+  # behaviour arena (lane eng-load1, run 2). Default: the farm bake of the shared set ($LKG, never a lane folder);
+  # R103_PAK / R103_VIS override it
+  R103_PAK=${R103_PAK:-$LKG/FARM.PAK}; R103_VIS=${R103_VIS:-$LKG/FARM.VIS}
+  epack "$R103_PAK" DOOR/R103.PAK; put "$R103_VIS" DOOR/R103.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
+  # CDOORPK: its own folder with the fixture and the farm's bake but not its archive (E1 has none either)
+  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$D/DOOR/R103.PAK" CDP/R103.PAK; put "$R103_VIS" CDP/R103.VIS
+  # lane eng-load2: DOORV4 (a lab arm, the load-time comparison's base): the same scene with the whole version 4 packs
+  # (the frame-0 path over the recording, as before this lane). DOORSE: the farm's pack converted with --stream-end (its
+  # size 2,017..2,047 modulo 2,048: its last bytes end the DMA stream through fs_iso9660's 32-byte request), which must
+  # load; its control CDOORSE (boot file DISCNB: that request passed on non-blocking, as KOS makes it) must stop there
+  # (no result: run it last, or on a disc of its own)
+  put "$LKG/CROSS.PAK" DV4/CROSS.PAK; put "$R103_PAK" DV4/R103.PAK
+  epack "$R103_PAK" DSE/R103.PAK --stream-end; put "$D/DSE/R103.PAK" CDSE/R103.PAK; : > "$D/CDSE/DISCNB"
+  for c in "${DOOR_CONTROLS[@]}"; do IFS='|' read -r cn cdir cfile ctitle <<< "$c"; mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile"; done ;;
+esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
 case ",$SCENES," in *,LEONS,*) mkdir -p "$D/E1LS"; : > "$D/E1LS/STILLS" ;; esac
 # Lane eng-sched1: SCHED, the village with its room script (st1/r101) on the hosted scheduler (boot file SCHED, read
@@ -314,6 +388,17 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "CSCHED Control:_scenario_task_stack_guard_overwritten PROG/E1.BIN 300 e1:timing:drawn $(need E1SX/SCHEDX,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SX:E1L:E1 rows=compact"
   echo "TSCHED Control:_200_us_added_at_tick_200 PROG/E1.BIN 300 e1:timing:drawn $(need E1SD/SCHEDD,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SD:E1L:E1 rows=compact"
   echo "FIGHTT Fight_traced_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHT/CROSS.PAK,FIGHT/st1/r101.arc,FIGHT/em/em15.drs) root=FIGHT rows=compact $TSKIP"
+  # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
+  DNEED=DOOR/DOOR.TXT,DOOR/R103.PAK,DOOR/R103.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs
+  echo "DOOR Village_to_farm_and_back_(traced,_function_run) PROG/E1.BIN 300 e1:function:drawn $(need $DNEED) root=DOOR:E1 rows=compact $TSKIP door=2"
+  echo "DOORV4 Lab_arm:_door,_version_4_packs PROG/E1.BIN 300 e1:function:drawn $(need DV4/CROSS.PAK,DV4/R103.PAK,$DNEED) root=DV4:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "DOORSE Door,_farm_pack_ending_the_stream PROG/E1.BIN 300 e1:function:drawn $(need DSE/R103.PAK,$DNEED) root=DSE:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "CDOORSE Control:_stream_end_non-blocking_(stops) PROG/E1.BIN 300 e1:function:drawn $(need CDSE/DISCNB,CDSE/R103.PAK,$DNEED) root=CDSE:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "CDOORPK Control:_farm_archive_absent PROG/E1.BIN 300 e1:function:drawn $(need CDP/DOOR.TXT,CDP/R103.PAK,E1/CROSS.PAK,E1/st1/r101.arc) root=CDP:E1 rows=compact $TSKIP door=2"
+  for c in "${DOOR_CONTROLS[@]}"; do
+    IFS='|' read -r cn cdir cfile ctitle <<< "$c"
+    echo "$cn $ctitle PROG/E1.BIN 300 e1:function:drawn $(need $cdir/$cfile,$DNEED) root=$cdir:DOOR:E1 rows=compact $TSKIP door=2"
+  done
   # the record's controls (lanes eng-e1k, eng-e1o; only when --scenes names them): the Leon scene with one boot file
   # each, every one must FAIL with its reason (CONSOLE_LOOP.md section 12); LEON beside them must stay OK
   for c in "${CONTROLS[@]}"; do
@@ -321,15 +406,17 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
     echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1L:E1 rows=compact"
   done
   # lane eng-e1n: the publication and HUD controls (above); lane eng-e1p: the camera track, record and disc read controls
-  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}"; do
+  for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
+    cskip=
     case $croot in
+      E1) cneed=E1/CROSS.PAK,E1/st1/r101.arc; cskip=" $TSKIP" ;;   # lane eng-snd1: a traced village control, as LEONT
       E1H:E1) cneed=E1H/HILL,E1H/NOTRACE,E1/HILL.PAK,E1/st1/r11d.arc ;;
       E1L:E1) cneed=E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc ;;
       *) cneed=FIGHTL/NOTRACE,FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;
     esac
     cneed=$cdir/${cfiles%%,*},$cneed
-    echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact"
+    echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact$cskip"
   done
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
@@ -344,7 +431,15 @@ case $PLANCTL in
   fivefield)
     grep -v '^#' "$D/SCENES.TXT" | tail -1 | awk '{ print $1 "5", $2, $3, $4, $5 }' >> "$D/SCENES.TXT"
     log "control schedule: a five-field line after the entries" ;;
-  *) echo "build_console_disc: --plan-control $PLANCTL: longcomment or fivefield" >&2; exit 2 ;;
+  sectorend)
+    # lane eng-mem2 (the d6 boot hang): a comment line that brings SCENES.TXT to 2,045 bytes mod 2,048, the size whose
+    # last 29 bytes end fs_iso9660's DMA stream through its 32-byte non-blocking request (engine/loader/selector.c
+    # disc_read). Not a refusal: the selector must read it and run every scene; a selector that reads the schedule in
+    # one aligned call stops at boot (the control: the selector of 8d0fe36e0 or fa2b14aba on this disc)
+    sz=$(stat -c %s "$D/SCENES.TXT"); pad=$(( (2045 - sz % 2048 + 2048) % 2048 )); [ $pad -lt 2 ] && pad=$((pad + 2048))
+    { printf '#'; head -c $((pad - 2)) /dev/zero | tr '\0' 'x'; printf '\n'; } >> "$D/SCENES.TXT"
+    log "control schedule: SCENES.TXT padded to $(stat -c %s "$D/SCENES.TXT") bytes (2045 mod 2048)" ;;
+  *) echo "build_console_disc: --plan-control $PLANCTL: longcomment, fivefield or sectorend" >&2; exit 2 ;;
 esac
 for f in "${PUTS[@]}"; do
   [ -d "$(dirname "$D/$f")" ] || { echo "build_console_disc: --put $f: no such scene folder" >&2; exit 1; }
@@ -375,6 +470,7 @@ cp "$D/SCENES.TXT" "$OUT/"
   echo "## programs"; (cd "$D" && sha256sum LOADER.BIN PROG/*.BIN)
   echo "## private inputs"; sha256sum "$LKG/CROSS.PAK" "$LKG/FARM.PAK" "$LKG/CROSS.VIS" "$LKG/FARM.VIS" "$HILL_PAK" "$HILL_VIS" \
     "$FIGHT_PAK" "$FIGHT_FXMAP" "$BOSS_PAK" "$BOSS_VIS" "$BOSS_EMLIST" "$BOSS_EMARC"
+  echo "## engine packs (bake/engine_pack.py, version 5)"; cat "$WORK/PACKS.txt" 2>/dev/null || echo none
   echo "## disc tree"; (cd "$D" && find . -type f | sort | xargs sha256sum)
 } > "$OUT/MANIFEST.txt"
 echo "KEEP: RE4DC console disc $SHORT ($REF), $(date -u +%F). Queued for the console; remove when superseded." > "$OUT/KEEP"

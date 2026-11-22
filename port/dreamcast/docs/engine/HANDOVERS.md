@@ -2,6 +2,64 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-042 (2026-11-22): the console link: GDEMU, no restarts, no card copying, dc-qalink
+
+- **Owner, in order:** "Does it matter that the system is running a GDEMU?"; "Maybe there is a way to not restart at all
+  entirely and the loader can reboot within the slot it loaded"; "Would it be possible For the loader To push builds so
+  that we don't Need to copy and paste in the GDEMU?"; "One of them is a disc embed the other is a separate control
+  loop"; "I meant shoukd it life in the dc qa link repo or Be presented as a more robust tool now?"; "Yeah let's make
+  the link public more robust while also integrating it into RE4 so that you can push programs and test the outputs".
+- **Design (plan section 9, brief `E:\RE4DC-Lanes\eng-link1\BRIEF.md`):** every exit returns to the loader inside
+  the mounted GDEMU slot through a return stub in the protected top of RAM that reloads the loader with the BIOS's disc
+  calls; a hang with interrupts off trips the SH-4 watchdog (a CPU reset that boots the same slot, a console check);
+  a smart-plug power cycle is the last rung and lands in openMenu. The SD card is written once: builds and room packs
+  come over the link and a small first stage fetches the current loader from the PC. The adapter takes the modem's
+  port. Two parts on one link layer: the in-game library and the control loop.
+- **Where:** the public `lamb2k/dc-qalink` (0.1.0, f40cd8b40, MIT) as its next version, branch `v0.2-bba-loader`;
+  re4dc pins it as a submodule and keeps the RE4 layer. The integrator merges dc-qalink's branch into its main after
+  its host tests and the RE4 gate; a tagged release and its notes go to the owner first. Lane eng-link1 started with
+  `make -j2` (CPU 77 to 93%).
+
+## H-041 (2026-11-22): the console link over the broadband adapter; room loading handed back
+
+(There is no H-040: the kos-net ruling below took that number in a message.)
+
+- **Owner:** "Do we have a lane that can take up building a version of the QA link or Expanding its capabilities to
+  work with the BBA but also push images and restart the Dreamcast?" No lane had it: the console loop runs over the
+  modem only and lists the adapter and a smart plug as next steps. Plan section 9 (the console link) and lane
+  eng-link1 (brief `E:\RE4DC-Lanes\eng-link1\BRIEF.md`): the adapter as a second transport under the loop's
+  protocol and checks, packs served by the PC at load time only, stills and serial lines pulled back, a reset command,
+  the BIOS reboot and a power-cycle hook for a smart plug, proven in Flycast's adapter emulation. Its first console
+  run waits for the owner (H-021). "Push images" is read as programs and room packs to the console, and stills back.
+- **Room loading (lane eng-load2, handed back, queued after the memory train):** MODELLED (console-build dynarec at
+  70 MHz, calibrated on the old port) with the GDEMU disc profile: village to farm 7.13 to 4.80 s, farm to village
+  5.17 to 3.28 s; the old port's village to farm 4.68 s (a measuring stick, different span). Packs on disc without
+  the unused recording (farm 11.3 to 6.3 MB), 32 KiB reads (drive requests 3,992 to 210). DOOR OK: the 16 B was the
+  allocator's slack. **Ruling (sent to the integration lane as H-040):** the round trip is judged on "kos-net"
+  (uordblks less the tracked blocks' slack), with CDOORLK still failing and a lost block list failing. Of the farm's
+  4.80 s, 3.12 s is the renderer re-indexing character vertices at load: lane eng-draw5 is asked to design its layout so
+  that work moves to the bake.
+- **New lane:** eng-rec1, recordings of the ten chapter 1 rooms without one (plan section 8, B5).
+
+## H-039 (2026-11-22): the gate's second report; the scheduler's first pass
+
+- **Merged by the integration lane's second session:** eng-e2d (FIGHT 43 to 30; the allowed destructor has no body in
+  any image), eng-bake1, eng-e2f with eng-e2g as one train (FIGHT 30 to 10; KNOCKNT the expected failure). `engine` code
+  at 78cf37442.
+- **The memory train** (`lane/eng-mem2` 773ccc6b5) passed every step on the disc (LEON, HILL, FIGHT, BOSS OK; DOOR
+  failing by exactly 16 B; its three controls failing for their own reasons) and stopped on the gate's own judge
+  (the door controls' list has no kind field). The third session fixes the judge with a control and merges.
+- **Rulings:** `core/e1_core.h` (eng-snd1's seed) and `tools/engine/pack_keep_check.py` are accepted outside files.
+  The train's calibrated sound run kept no `emu.cfg.used`: accepted from the disc's tier line for the merge, noted as
+  unrecorded, re-recorded at the next calibrated run. eng-draw3's FIGHT ends 12,288 B short on the old map: it is
+  gated again on the train's map, as one unit with eng-draw4, and FIGHT's margin must be positive.
+- **The scheduler (lane eng-sched1, handed back, not at the gate):** on the PC the village's room script runs 600
+  ticks on the hosted scheduler with the reference's 1,806 task steps in order, three controls failing. In Flycast
+  the script restarts the console in its init: the PC harness ran a different path (a zero region) from the engine's.
+  The old thread section was kept under the test of section 8: tasks run at one point of the tick, parked otherwise,
+  no timers; estimate 10 to 25 us a tick against about 1 for an engine task switch, both far under the row. Lane
+  eng-sched2 finishes it: the PC check on the engine's path, the scene and its control, stacks, the cost measured.
+
 ## H-038 (2026-11-22): the skinning routine is not gold
 
 - **Owner:** "I agree with everything except this being golden: the skinning routine". The lifted routine
