@@ -19,30 +19,20 @@ static shz_mat4x4_t projection_grid(const float* camera,const float* grid){
     }
     return m;
 }
-/* The stage: one picture-ready TA vertex per selected vertex of the current meshlet (x/w, y/w, 1/w, u, v, argb),
-   written once and copied to the store queue for every strip corner that uses it. 256 x 32 bytes = 8 KB. */
+/* The stage (pieces that cross the near plane only, lane eng-draw2 step W1): one TA vertex per selected vertex of the
+   current meshlet (x/w, y/w, 1/w, u, v, argb) and its w, read by the clipper and by the copy of the strips wholly in
+   front. Pieces wholly in front are walked without a stage (walk_strips). 256 x 32 bytes = 8 KB. */
 static pvr_vertex_t stage_ram[256] __attribute__((aligned(32)));
 /* Survey arm (a): the stage in operand-cache RAM (8 KB, half the data cache), selected by /cd/ARMA at boot. */
 #include <dc/cache.h>
 __ocram static pvr_vertex_t stage_oc[256];
 static pvr_vertex_t* stage=stage_ram;
-/* 0: one stage loop per vertex (stage_sh4.S); 1: arm (a) OCRAM stage; 2: arm (b) small loops over 32-vertex blocks */
+/* 0: default; 1: arm (a) OCRAM stage; 2: arm (b), once three short loops over 32-vertex blocks of the stage: since step W1
+   the pieces wholly in front have no stage, so arm (b) draws as the default does */
 volatile uint32_t m1_arm;
 void native_select_arm(unsigned arm){
     m1_arm=arm;
     if(arm==1){dcache_toggle_ocram(true);stage=stage_oc;}else stage=stage_ram;
-}
-/* Survey arm (b): three short loops over blocks of 32 vertices (transform; divide; attributes) in place of one. */
-static void stage_blocks(pvr_vertex_t* st,const uint16_t* r,const int16_t* vtx,const uint32_t* c,unsigned n,const float* uv){
-    static shz_vec4_t tmp[32] __attribute__((aligned(32)));
-    float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
-    for(unsigned b=0;b<n;b+=32,st+=32,r+=32,c+=32){
-        unsigned m=n-b<32?n-b:32;
-        for(unsigned i=0;i<m;i++){const int16_t* v=vtx+6*r[i];tmp[i]=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));}
-        for(unsigned i=0;i<m;i++){float iw=m1_rcp_pos(tmp[i].w);st[i].x=tmp[i].x*iw;st[i].y=tmp[i].y*iw;st[i].z=iw;}
-        for(unsigned i=0;i<m;i++){const int16_t* v=vtx+6*r[i];
-            st[i].flags=PVR_CMD_VERTEX;st[i].u=u0+du*v[3];st[i].v=v0+dv*v[4];st[i].argb=c[i];st[i].oargb=0;}
-    }
 }
 static float stage_w[256];
 static uint8_t stage_near[256];
@@ -53,18 +43,11 @@ static unsigned place_stamp[PLACE_LIMIT],world_serial;
 volatile unsigned m1_world_counts[300][4];   /* pieces, staged vertices, corners, clipped strips */
 static unsigned count_staged,count_corners,count_clipped;
 
-/* stage_sh4.S: stages an even count (one vertex of overrun into the next range, which is staged later or unused). */
-extern void m1_stage_world(pvr_vertex_t* out,const uint16_t* remap,const int16_t* vertices,const uint32_t* color,unsigned pairs,const float* uvp);
 static void stage_range(const uint16_t* vertices,const uint16_t* remap,const uint32_t* color,unsigned first,unsigned n,
                         const float* uv,float near,int boundary){
     pvr_vertex_t* st=stage+first;const uint16_t* r=remap+first;const uint32_t* c=color+first;
     float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
     if(!dc_mute){count_staged+=n;DC_ADD(DC_W_STAGED,n);}
-    if(!boundary){
-        if(m1_arm==2)stage_blocks(st,r,(const int16_t*)vertices,c,n,uv);
-        else m1_stage_world(st,r,(const int16_t*)vertices,c,(n+1)/2,uv);
-        return;
-    }
     for(unsigned i=0;i<n;i++,st++){
         const int16_t* v=(const int16_t*)vertices+6*r[i];
         shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));
@@ -94,47 +77,71 @@ static inline pvr_vertex_t* sq_next(pvr_vertex_t* sq){
     __asm__ __volatile__("pref @%1"::"m"(*(const SqLine*)sq),"r"(sq));
     return (pvr_vertex_t*)((uintptr_t)sq^32);
 }
-/* Strips of one group, all corners in front of the near plane. The stage's flags word is PVR_CMD_VERTEX; the last
-   corner of each strip gets the end-of-strip flag. */
-/* lane eng-draw1, option arm V (DL_COPYV2): the same copy with the stage pointer held in a register and two corners an
-   iteration (the default reloads the stage pointer for every corner: the asm's memory clobber) */
-static __attribute__((noinline)) pvr_vertex_t* copy_strips_v2(pvr_vertex_t* sq,const uint8_t* s,const uint8_t* end){
-    const pvr_vertex_t* const st=stage;
-    unsigned corners=0,strips=0;
-    while(s<end){
-        unsigned n=*s++;corners+=n;strips++;
-        const uint8_t* last=s+n-1;
-        if(!(n&1)){sq=sq_next(copy_vertex(sq,st+*s++));}   /* n - 1 corners before the last: an even count */
-        while(s<last){sq=sq_next(copy_vertex(sq,st+s[0]));sq=sq_next(copy_vertex(sq,st+s[1]));s+=2;}
-        copy_vertex(sq,st+*s++);((uint32_t*)sq)[0]=PVR_CMD_VERTEX_EOL;sq=sq_next(sq);
-    }
-    if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);}
-    return sq;
-}
-/* lane eng-draw1, option arm X (DL_DIRECT): no stage; each strip corner is transformed and written to the store queue
-   where it is used (a meshlet's vertices are used about once each: corners per staged vertex near 1) */
-static __attribute__((noinline)) pvr_vertex_t* direct_strips(pvr_vertex_t* sq,const uint8_t* s,const uint8_t* end,const int16_t* vtx,
-                                                              const uint16_t* remap,const uint32_t* color,const float* uv){
+/* lane eng-draw2, step W1: the strips of one group of a piece wholly in front of the near plane, walked without a stage.
+   Each corner is transformed and written to the store queue where it is used (a meshlet's vertex is used about once a
+   picture: eng-draw1's census). The arithmetic is the stage's (stage_sh4.S m1_stage_world, removed): the vertex's int16
+   x, y, z converted, ftrv, 1/w = fsrra(w * w), x and y times 1/w, u = du * U then + u0 (a multiply and an add, never a
+   fused multiply-add: fp-contract off), so every TA vertex is the same word for word. The census (DL_CENSUS) keeps the
+   strip's screen positions in walk_xyz. */
+static float walk_xyz[256][3];
+static unsigned dc_wcull,dc_wlist;static uint8_t dc_wmark[256];
+static void census_strip(unsigned n);
+/* lane eng-draw2, step E2: this placement's eye in staged coordinates and the sign under which the current header's
+   culling removes a triangle (+1: removed when the eye is on the negative side of its normal, n . (p - e) > 0; -1 the
+   other side; 0: the header does not cull). Set by load_place and native_world_pass. */
+static float walk_eye[3];static float walk_sign,place_sign;static unsigned walk_cull;
+/* the screen-orientation convention: +1 when a triangle whose normal points away from the eye has the positive screen area
+   (the one culling mode 3 removes) under a view of positive orientation (det R x p1 x p3 > 0) */
+#define WALK_CONVENTION 1.f
+static __attribute__((noinline,optimize("fp-contract=off"))) pvr_vertex_t* walk_strips(pvr_vertex_t* sq,const uint8_t* s,
+        const uint8_t* end,const int16_t* vtx,const uint16_t* remap,const uint32_t* color,const float* uv,const uint32_t* face){
     const float u0=uv[0],v0=uv[1],du=uv[2],dv=uv[3];
-    unsigned corners=0,strips=0;
+    const int census=DC_ARM(DL_CENSUS) && !dc_mute;
+    const float sg=walk_sign,ex=walk_eye[0],ey=walk_eye[1],ez=walk_eye[2];
+    unsigned corners=0,strips=0,dropped=0;
     while(s<end){
-        unsigned n=*s++;corners+=n;strips++;
+        unsigned n=*s++;const uint32_t rec=*face++;
+        if(rec>>24 && sg!=0){   /* E2: every triangle of the strip faces away under the header's culling: not sent */
+            const int16_t* p=vtx+6*remap[*s];
+            float vx=p[0]-ex,vy=p[1]-ey,vz=p[2]-ez;
+            float d=sg*((float)(int8_t)rec*vx+(float)(int8_t)(rec>>8)*vy+(float)(int8_t)(rec>>16)*vz);
+            float l1=fabsf(vx)+fabsf(vy)+fabsf(vz);
+            if(d>native_facing_delta[rec>>24&15]*l1+native_facing_rho[rec>>28]){s+=n;dropped+=n;continue;}
+        }
+        corners+=n;strips++;
         for(unsigned k=0;k<n;k++){
             const unsigned j=*s++;const int16_t* v=vtx+6*remap[j];
             shz_vec4_t q=shz_xmtrx_transform_vec4(shz_vec4_init(v[0],v[1],v[2],1));
             const float iw=m1_rcp_pos(q.w);
+            float tu=du*(float)v[3],tv=dv*(float)v[4];
+            tu=tu+u0;tv=tv+v0;
             pvr_vertex_t* d=sq;
             d->flags=k+1==n?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
-            d->x=q.x*iw;d->y=q.y*iw;d->z=iw;d->u=u0+du*v[3];d->v=v0+dv*v[4];d->argb=color[j];d->oargb=0;
+            const float x=q.x*iw,y=q.y*iw;
+            d->x=x;d->y=y;d->z=iw;d->u=tu;d->v=tv;d->argb=color[j];d->oargb=0;
+            if(census){walk_xyz[k][0]=x;walk_xyz[k][1]=y;walk_xyz[k][2]=iw;}
             sq=sq_next(sq);
         }
+        if(census)census_strip(n);
     }
-    if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);DC_ADD(DC_W_STAGED,corners);}
+    if(!dc_mute){count_corners+=corners;DC_ADD(DC_W_CORNERS,corners);DC_ADD(DC_W_STRIPS,strips);DC_ADD(DC_W_FACEDROP,dropped);}
     return sq;
 }
-/* lane eng-draw1 census (DL_CENSUS, counts only): each triangle of strips wholly in front, on the stage's screen
-   positions; dc_wmark: per stage slot, bit 1 used by a kept triangle under N, bit 2 under P */
-static unsigned dc_wcull,dc_wlist;static uint8_t dc_wmark[256];
+/* census of one walked strip (counts only) */
+static void census_strip(unsigned n){
+    unsigned any=0;
+    for(unsigned k=2;k<n;k++){
+        const float *a=walk_xyz[k&1?k-1:k-2],*b=walk_xyz[k&1?k-2:k-1],*c=walk_xyz[k];
+        if(dc_wlist==2){dc_census_tr(a[0],a[1],b[0],b[1],c[0],c[1]);continue;}
+        unsigned kept;dc_census_tri(DC_V_W_TRIS,a[0],a[1],a[2],b[0],b[1],b[2],c[0],c[1],c[2],dc_wcull,&kept);any|=kept;
+    }
+    if(dc_wlist!=2){
+        if(!(any&1)){dc_n[DC_V_W_DEADSTRIPS_N]++;dc_n[DC_V_W_DEADCORNERS_N]+=n;}
+        if(!(any&2)){dc_n[DC_V_W_DEADSTRIPS_P]++;dc_n[DC_V_W_DEADCORNERS_P]+=n;}
+    }
+}
+/* lane eng-draw1 census (DL_CENSUS, counts only): each triangle of the strips wholly in front of a crossing piece, on the
+   stage's screen positions; dc_wmark: per stage slot, bit 1 used by a kept triangle under N, bit 2 under P */
 static void census_world(const uint8_t* s,const uint8_t* end){
     while(s<end){
         unsigned n=*s++,any=0;
@@ -154,7 +161,6 @@ static void census_world(const uint8_t* s,const uint8_t* end){
 }
 static __attribute__((noinline)) pvr_vertex_t* copy_strips(pvr_vertex_t* sq,const uint8_t* s,const uint8_t* end){
     if(DC_ARM(DL_CENSUS) && !dc_mute)census_world(s,end);
-    if(DC_ARM(DL_COPYV2))return copy_strips_v2(sq,s,end);
     unsigned corners=0,strips=0;
     while(s<end){
         unsigned n=*s++;corners+=n;strips++;
@@ -190,8 +196,16 @@ static __attribute__((noinline)) pvr_vertex_t* clip_strips(pvr_vertex_t* sq,cons
             if(!all)for(unsigned k=0;k<n;k++){Corner c=stage_corner(s[k]);if(c.w<near)c.w=near;emit(&sq,c,k+1==n);}
             s+=n;continue;
         }
-        Corner a=stage_corner(s[0]),b=stage_corner(s[1]);
-        for(unsigned k=2;k<n;k++){Corner c=stage_corner(s[k]);clipped(&sq,k&1?b:a,k&1?a:b,c,near);a=b;b=c;}
+        /* lane eng-draw2, step E1: a triangle whose three corners all lie behind the near plane is rejected here, before
+           the clipper (clipped() emits nothing for it: the output is the same by construction); the others go through
+           the clipper as before, wholly-in-front ones included (their corners keep the clipper's arithmetic) */
+        unsigned na=stage_near[s[0]],nb=stage_near[s[1]];
+        for(unsigned k=2;k<n;k++){
+            unsigned nc=stage_near[s[k]];
+            if(!(na&nb&nc)){unsigned i0=s[k&1?k-1:k-2],i1=s[k&1?k-2:k-1];
+                clipped(&sq,stage_corner(i0),stage_corner(i1),stage_corner(s[k]),near);}
+            na=nb;nb=nc;
+        }
         s+=n;
     }
     return sq;
@@ -209,22 +223,27 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
     unsigned G=w->group_count;const uint8_t* range=w->rt_range+2*G*piece->meshlet;
     int boundary=piece->near_class!=1;
     unsigned sel=piece->groups;
-    if(!boundary && DC_ARM(DL_DIRECT)){   /* lane eng-draw1, option arm X: direct emission, no stage */
-        if(!w->group_bytes)return direct_strips(sq,strip,strip+l[2],(const int16_t*)vertices,remap,color,uv);
-        const uint16_t* group=(const uint16_t*)(w->groups+32+16*(piece->meshlet*G)+12);
-        unsigned before=0;
-        for(unsigned g=0;g<G;g++,group+=8){
-            unsigned after=*group;
-            if(sel>>g&1)sq=direct_strips(sq,strip+before,strip+after,(const int16_t*)vertices,remap,color,uv);
-            before=after;
+    if(!boundary){   /* lane eng-draw2, step W1: wholly in front, walked without a stage (DL_STAGE2 / DL_COPY2: walked twice) */
+        for(unsigned rep=0;rep<1u+!!DC_ARM(DL_STAGE2|DL_COPY2);rep++){
+            dc_mute=rep;
+            const uint32_t* face=w->rt_facing;const uint32_t* first=w->rt_gstrip+piece->meshlet*G;
+            if(!w->group_bytes){sq=walk_strips(sq,strip,strip+l[2],(const int16_t*)vertices,remap,color,uv,face+first[0]);continue;}
+            const uint16_t* group=(const uint16_t*)(w->groups+32+16*(piece->meshlet*G)+12);
+            unsigned before=0;
+            for(unsigned g=0;g<G;g++,group+=8){
+                unsigned after=*group;
+                if(sel>>g&1)sq=walk_strips(sq,strip+before,strip+after,(const int16_t*)vertices,remap,color,uv,face+first[g]);
+                before=after;
+            }
         }
+        dc_mute=0;
         return sq;
     }
     /* lane eng-draw1 lab arms (draw_cost.h): DL_STAGE2 stages the piece twice, DL_COPY2 copies (or clips) it twice */
     for(unsigned rep=0;rep<1u+!!DC_ARM(DL_STAGE2);rep++){
         dc_mute=rep;
-        if(rt->full)stage_range(vertices,remap,color,0,rt->count,uv,near,boundary);
-        else for(unsigned g=0;g<G;g++)if(sel>>g&1)stage_range(vertices,remap,color,range[2*g],range[2*g+1],uv,near,boundary);
+        if(rt->full)stage_range(vertices,remap,color,0,rt->count,uv,near,1);
+        else for(unsigned g=0;g<G;g++)if(sel>>g&1)stage_range(vertices,remap,color,range[2*g],range[2*g+1],uv,near,1);
     }
     dc_mute=0;
     if(DC_ARM(DL_CENSUS)){   /* census: clear the staged slots' marks */
@@ -234,14 +253,14 @@ static __attribute__((noinline)) pvr_vertex_t* native_piece(pvr_vertex_t* sq,con
     for(unsigned rep=0;rep<1u+!!DC_ARM(DL_COPY2);rep++){
         dc_mute=rep;
         if(!w->group_bytes){
-            sq=boundary?clip_strips(sq,strip,strip+l[2],near):copy_strips(sq,strip,strip+l[2]);
+            sq=clip_strips(sq,strip,strip+l[2],near);
             continue;
         }
         const uint16_t* group=(const uint16_t*)(w->groups+32+16*(piece->meshlet*G)+12);
         unsigned before=0;
         for(unsigned g=0;g<G;g++,group+=8){
             unsigned after=*group;
-            if(sel>>g&1)sq=boundary?clip_strips(sq,strip+before,strip+after,near):copy_strips(sq,strip+before,strip+after);
+            if(sel>>g&1)sq=clip_strips(sq,strip+before,strip+after,near);
             before=after;
         }
     }
@@ -301,8 +320,23 @@ static int prepare_world(const NativeWorld* w,const float* camera,unsigned mater
     for(int i=0;i<n;i++)ordered[offsets[selected[i].header]++]=selected[i];
     return 1;
 }
+static float camera_eye[3],camera_sign;   /* E2: the eye in world coordinates and the view's orientation sign */
+static float place_eye[PLACE_LIMIT][4];
 static void load_place(const NativeWorld* w,unsigned place){
     shz_mat4x4_t* m=place_matrix+place;
+    if(place_stamp[place]!=world_serial){   /* E2: the eye in this placement's staged coordinates (value - 32768) */
+        const float* g=w->places[place].grid;
+        float a=g[0],b=g[1],c=g[2],d=g[4],e=g[5],f=g[6],h=g[8],i=g[9],k=g[10];
+        float A=e*k-f*i,B=f*h-d*k,C=d*i-e*h,det=a*A+b*B+c*C;
+        float x=camera_eye[0]-g[3],y=camera_eye[1]-g[7],z=camera_eye[2]-g[11];
+        float* o=place_eye[place];
+        if(det!=0){float r=1.f/det;
+            o[0]=(A*x+(c*i-b*k)*y+(b*f-c*e)*z)*r-32768.f;o[1]=(B*x+(a*k-c*h)*y+(c*d-a*f)*z)*r-32768.f;
+            o[2]=(C*x+(b*h-a*i)*y+(a*e-b*d)*z)*r-32768.f;o[3]=det>0?camera_sign:-camera_sign;}
+        else o[3]=0;
+    }
+    walk_eye[0]=place_eye[place][0];walk_eye[1]=place_eye[place][1];walk_eye[2]=place_eye[place][2];place_sign=place_eye[place][3];
+    walk_sign=walk_cull==3?place_sign:walk_cull==2?-place_sign:0;
     if(place_stamp[place]!=world_serial){
         const float* g=w->places[place].grid;
         shz_xmtrx_load_4x4(&world_pv);
@@ -322,6 +356,13 @@ void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigne
     dc_wlist=phase;
     unsigned last_place=~0u,last_header=~0u,headers=0,places=0;
     float near=DC_NEAR(camera[18]/(camera[17]-1));
+    {   /* E2: the eye (camera rows R, t: eye = -R^-1 t) and the orientation sign of the view's projection */
+        const float* c=camera;float a=c[0],b=c[1],cc=c[2],d=c[4],e=c[5],f=c[6],h=c[8],i=c[9],k=c[10];
+        float A=e*k-f*i,B=f*h-d*k,C=d*i-e*h,det=a*A+b*B+cc*C,r=det!=0?1.f/det:0,x=-c[3],y=-c[7],z=-c[11];
+        camera_eye[0]=(A*x+(cc*i-b*k)*y+(b*f-cc*e)*z)*r;camera_eye[1]=(B*x+(a*k-cc*h)*y+(cc*d-a*f)*z)*r;
+        camera_eye[2]=(C*x+(b*h-a*i)*y+(a*e-b*d)*z)*r;
+        float o=det*camera[13]*camera[15];camera_sign=o>0?WALK_CONVENTION:o<0?-WALK_CONVENTION:0;
+    }
     pvr_vertex_t *sq=(pvr_vertex_t*)sq_lock((void*)PVR_TA_INPUT);
     for(unsigned k=list_offsets[phase];k<list_offsets[phase+1];k++){
         NativePiece* p=ordered+k;
@@ -329,7 +370,8 @@ void native_world_pass(Scene* s,const NativeWorld* w,const float* camera,unsigne
             last_header=p->header;const unsigned* hdr=(const unsigned*)row(&s->header,last_header)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
             advance(&sq);headers++;
-            dc_wcull=hdr[1]>>27&3;   /* census: the header's culling bits (ISP/TSP word) */
+            dc_wcull=walk_cull=hdr[1]>>27&3;   /* the header's culling bits (ISP/TSP word): census and E2 */
+            walk_sign=walk_cull==3?place_sign:walk_cull==2?-place_sign:0;
         }
         if(last_place!=p->placement){last_place=p->placement;load_place(w,last_place);places++;}
         sq=native_piece(sq,w,p,near);
