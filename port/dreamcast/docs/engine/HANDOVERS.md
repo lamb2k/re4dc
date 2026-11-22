@@ -2,6 +2,19 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-044 (2026-11-22): RE4 paused by the owner
+
+- **Owner** (relayed by the F-Zero coordinator): "Tell the resident evil track to pause its work and create and
+  handover + to give you resources back". Every lane pushed and stopped; bakes, builds and Flycast stopped; RAM stages
+  cleared. Handover: the workspace file `RE4-PAUSE-20261122.md`; gate queue `E:\RE4DC-Lanes\eng-int\RESUME-20261122d.md`.
+- **Merged before the pause** (eng-int, finished, unaudited): the memory train (d4c966846; eng-skel1, eng-skel2,
+  eng-load1, eng-snd1, eng-mem1, eng-mem2) with the shared pack sets `e1-farmwep-20261122` and `e1-colb-20261122`;
+  room loading eng-load2 (1a4335fd7; DOOR passes, judged on kos-net). engine c8642d132.
+- **Rulings on the stop reports, for the resume:** eng-draw6's "shared translucent data" finding withdrawn (only
+  Leon has translucent parts); its detail levels merge only if the stills check holds with the floor applied. The
+  disc script's default tree lacks baked collision: gates use `PRISTINE=pristine-colb` until the script defaults to
+  the shared set (a small lane on resume). CPU sharing with the F-Zero line: over 85%, `make -j2`, bakes 2 workers.
+
 ## H-042 (2026-11-22): the console link: GDEMU, no restarts, no card copying, dc-qalink
 
 - **Owner, in order:** "Does it matter that the system is running a GDEMU?"; "Maybe there is a way to not restart at all

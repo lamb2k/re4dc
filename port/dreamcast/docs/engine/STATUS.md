@@ -31,17 +31,15 @@ p99 and worst interval: never measured on console. The lab disc v2 reports them.
 
 ## Lanes
 
-| Lane | Work | Branch | Agent | Evidence |
-|---|---|---|---|---|
-| eng-int | The integration lane (H-024, H-030): gates each handed-back lane to `GATE.md`, may re-merge an ended lane, is the only one that merges into `engine` | - | Claude Opus | E:\RE4DC-Lanes\eng-int |
-| eng-sched2 | The script scheduler finished (plan section 8, B2; from eng-sched1, whose PC check passes): the village script running in Flycast, its control, stacks, the cost on the calibrated tier; owns `core/os_threads.*`, `host/sched_host.*`, `hostref/svc/sched_check.sh` | lane/eng-sched2 | Claude Opus | E:\RE4DC-Lanes\eng-sched2 |
-| eng-link1 | The console link (plan section 9, H-042): the broadband adapter beside the modem, builds and packs pushed, reports, stills and serial lines pulled, back to the loader without restarting; built in `lamb2k/dc-qalink` (branch `v0.2-bba-loader`) and pinned here; owns `engine/loader/`, `tools/consoleloop/`, `docs/engine/CONSOLE_LOOP.md` | lane/eng-link1 | Claude Opus | E:\RE4DC-Lanes\eng-link1 |
-| eng-draw5 | The characters' drawing: skinning redone the engine's way (H-038), the approved detail levels and staggered lighting landed (H-036), the old port's character cost as a measuring stick, the released lighting as a look sheet; owns `render/actor*`, `render/content_actor*`, `render/stage_sh4.S`, a character bake step | lane/eng-draw5 | Claude Opus | E:\RE4DC-Lanes\eng-draw5 |
-| eng-rec1 | Recordings of the ten chapter 1 rooms without one (plan section 8, B5): the old port as a recorder only, captures baked into game packs with receipts; owns the RECORDINGS table in `bake/room_bake.py`, new `tools/engine/room_capture.sh`, new census rows | lane/eng-rec1 | Claude Opus | E:\RE4DC-Lanes\eng-rec1 |
+**PAUSED 2026-11-22 about 12:20 by the owner** (to free the machine for another project; H-044). No lane is running. Each pushed its work; resume points are in `E:\RE4DC-Lanes\<lane>\STATUS.md` and the workspace file `RE4-PAUSE-20261122.md`.
 
-Room loading (eng-load2, 5dca142f9) handed back and is at the gate after the memory train.
-
-Handed back, at the gate in this order: the memory train (`lane/eng-mem2`: eng-skel1, eng-skel2, eng-load1, eng-snd1, eng-mem1, eng-mem2), eng-draw3, eng-cloth2 (it supersedes eng-cloth1), eng-draw4, eng-crash1. Evidence and hand-backs: `E:\RE4DC-Lanes\<lane>`.
+| Lane | Stopped at | Branch head |
+|---|---|---|
+| eng-int | gate queue: the eng-draw unit (eng-draw3+4+5) phase 1 passed, disc run cut off; then eng-sched2, eng-cloth2, eng-crash1 (`E:\RE4DC-Lanes\eng-int\RESUME-20261122d.md`) | engine c8642d132 |
+| eng-draw6 | detail levels on in code, stills check unfinished (levels go back off if it fails); skinning kernel chosen (assembly); FIGHT margin +544,768 B | lane/eng-draw6 bd5dd878d |
+| eng-sched3 | stub logging out of timed work, stacks at GameCube sizes; calibrated run not made | lane/eng-sched3 f31bb6735 |
+| eng-link1 | loader on the adapter pushes, runs, reports and returns (Flycast); the PC file service not working yet | lane/eng-link1 a8b479187; dc-qalink v0.2-bba-loader be25f17f3 |
+| eng-rec1 | ten rooms captured; chapter bake from final captures not run | lane/eng-rec1 8b89f7111 |
 
 ## Run-time lab arms (lab disc v2)
 
