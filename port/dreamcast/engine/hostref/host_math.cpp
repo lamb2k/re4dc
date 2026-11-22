@@ -7,6 +7,9 @@
 #include "types.h"
 #include "main_sub.h"
 #include "gx.h"
+#include "../services/camera/eng_camera.h"
+extern "C" char* getenv(const char*);
+extern "C" int atoi(const char*);
 
 extern "C" {
 float sinf(float);
@@ -46,7 +49,25 @@ void GXSetProjection(const f32 mtx[4][4], int type)
         g_projection[4] = mtx[1][3];
     }
 }
-void GXGetProjectionv(f32* p) { for (int i = 0; i < 7; i++) p[i] = g_projection[i]; }
+// Lane eng-e2d: on the native build the camera service (services/camera/camera_svc.cpp) loads no GX projection: its
+// CameraSetProjection only notes the type, and the renderer reads the camera record (eng_camera.h: the projection's
+// terms p00 .. p23, GX's compact form). The PC host has no renderer, so its GX query answers the record, as the
+// console images' query answers the camera (fight/fight_stubs.cpp); before, it answered the zeros no one had loaded and
+// GetScreenPos put every point at the screen's centre. The original's build (odump) links no camera record (eng_cam is
+// a weak reference, absent there): its answers are GXSetProjection's, unchanged. RE4_SCREEN_CENTRE=1 (control only,
+// never a default) restores the zeros on the native build: e2bcheck's screen rows must then FAIL.
+extern "C" EngCamera eng_cam __attribute__((weak));
+void GXGetProjectionv(f32* p)
+{
+    static int centre = -1;
+    if (centre < 0) centre = getenv("RE4_SCREEN_CENTRE") && atoi(getenv("RE4_SCREEN_CENTRE")) == 1;
+    if (&eng_cam != 0 && !centre) {
+        const EngCamera& r = eng_cam;
+        p[0] = r.proj_type; p[1] = r.p00; p[2] = r.p02; p[3] = r.p11; p[4] = r.p12; p[5] = r.p22; p[6] = r.p23;
+        return;
+    }
+    for (int i = 0; i < 7; i++) p[i] = g_projection[i];
+}
 void GXProject(f32 x, f32 y, f32 z, const f32 mtx[3][4], const f32* pm, const f32* vp, f32* sx, f32* sy, f32* sz)
 {
     f32 vx = mtx[0][0] * x + mtx[0][1] * y + mtx[0][2] * z + mtx[0][3];

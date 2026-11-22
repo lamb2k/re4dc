@@ -223,3 +223,6 @@ game/snd_sub0 *
 game/snd_sub1 *
 game/snd_sub2 *
 game/snd_sub3 *
+# reviewed (lane eng-e2d, found by the split check inlined into setEm, SceCkFindPL and r101_Event20): the enemy
+# wrapper's destructor is empty (include/em_wrap.h: "~cEmWrap() {}", a local wrapper's end of scope): no code, no table
++st*/* cEmWrap::~cEmWrap
