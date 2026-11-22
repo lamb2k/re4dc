@@ -235,6 +235,19 @@ static void ws_light(unsigned i,const float* m){
         w->hc[0]=c0*.5f;w->hc[1]=c1*.5f;w->hc[2]=c2*.5f;
     }
 }
+/* Lane eng-draw4 (step 3c): the colour byte without a branch. Before: m1_byte(k x min(1, r)), a float compare and two
+   integer compares a channel, nine conditional branches a normal (the tier ends a block at each and charges the next
+   block's first memory reads again). The same value, exactly: k >= 0 (material colour x TEV scale), so
+   k x min(1, r) = min(k, k x r) (k x 1 = k; the product is monotone), truncation is monotone, so the byte is
+   clamp(min(trunc(k), trunc(k x r)), 0, 255) = max(0, min(trunc(k x r), ck)) with ck = min(trunc(k), 255) once a call.
+   When r < 1 the product k x r is the one the old form multiplied; when r >= 1 both give ck. */
+static int lb_ck[3];
+static inline uint32_t light_byte(float kr,int ck){
+    int v=(int)kr;
+    v&=~(v>>31);                  /* below 0: 0 */
+    const int d=ck-v;             /* v >= 0 and ck in 0..255: no overflow */
+    return (uint32_t)(v+(d&(d>>31)));   /* above ck: ck */
+}
 /* One normal with NL lights (NL a constant after inlining: the light loop unrolls into one block). */
 static inline __attribute__((always_inline)) uint32_t light_one(const SourceVector* v,const unsigned NL){
     const WsLamp* L=ws_lamp[v->bone];
@@ -244,8 +257,8 @@ static inline __attribute__((always_inline)) uint32_t light_one(const SourceVect
         const float d=x*L[j].d[0]+y*L[j].d[1]+z*L[j].d[2],t=d+shz_fabsf(d);
         r+=t*L[j].hc[0];g+=t*L[j].hc[1];b+=t*L[j].hc[2];
     }
-    return 0xff000000|m1_byte(cur_lights.k[0]*m1_minf(1.f,r))<<16|m1_byte(cur_lights.k[1]*m1_minf(1.f,g))<<8
-                     |m1_byte(cur_lights.k[2]*m1_minf(1.f,b));
+    return 0xff000000|light_byte(cur_lights.k[0]*r,lb_ck[0])<<16|light_byte(cur_lights.k[1]*g,lb_ck[1])<<8
+                     |light_byte(cur_lights.k[2]*b,lb_ck[2]);
 }
 /* idx NULL: normals base[0..n) into out[0..n); else base[idx[i]] into out[idx[i]] (lane eng-draw3, E3) */
 #define LIGHT_RUN(NL) case NL: \
@@ -253,6 +266,7 @@ static inline __attribute__((always_inline)) uint32_t light_one(const SourceVect
     else for(unsigned i=0;i<n;i++)out[i]=light_one(base+i,NL); \
     break;
 static void light_normals_run(const SourceVector* base,const uint16_t* idx,unsigned n,uint32_t* out){
+    for(unsigned c=0;c<3;c++){const int v=(int)cur_lights.k[c];lb_ck[c]=v>255?255:v;}   /* k >= 0: v >= 0 */
     switch(cur_lights.n){LIGHT_RUN(0) LIGHT_RUN(1) LIGHT_RUN(2) LIGHT_RUN(3) LIGHT_RUN(4) LIGHT_RUN(5) LIGHT_RUN(6)
                         LIGHT_RUN(7) LIGHT_RUN(8)}
 }
