@@ -75,6 +75,36 @@ extern "C" void* sched_stack_alloc(u32 size, const char*, int, int, int)
     return p;
 }
 
+// ---- service functions of the hosted units this image does not run (made weak there; game/Makefile), logged stubs:
+// r101's Ganado voice task (sound: fight/r101_weak.h makes the static weak; the fight image's is fight/r101_voice.cpp),
+// cam_extra's binocular widget and focus blur (drawing). Under their assembler names, as fight/fight_svc_stubs.cpp.
+#define SCHED_STUB_FN(sym, fn, label)     extern "C" void fn(void*, int, void*, void*) asm(sym);     extern "C" void fn(void*, int, void*, void*) { e1_stub_hit(label, 0); }
+SCHED_STUB_FN("__ZL20r101_callGanadoVoicev", sched_r101_voice, "r101_callGanadoVoice")
+SCHED_STUB_FN("__ZN11IdBinocular4initEP6CameraPvS2_", sched_idbino_init, "IdBinocular::init")
+SCHED_STUB_FN("__ZN11IdBinocular4moveEPv", sched_idbino_move, "IdBinocular::move")
+SCHED_STUB_FN("__ZN11IdBinocular4quitEPv", sched_idbino_quit, "IdBinocular::quit")
+SCHED_STUB_FN("__ZN14FocusAnimation4initEi", sched_focus_init, "FocusAnimation::init")
+SCHED_STUB_FN("__ZN14FocusAnimation4moveEi", sched_focus_move, "FocusAnimation::move")
+SCHED_STUB_FN("__ZN14FocusAnimation4quitEv", sched_focus_quit, "FocusAnimation::quit")
+SCHED_STUB_FN("__ZN13IDApplication4initEPv", sched_idapp_init, "IDApplication::init")
+SCHED_STUB_FN("__ZN11IdBinocularD0Ev", sched_idbino_d0, "IdBinocular::~IdBinocular (deleting)")
+SCHED_STUB_FN("__ZN11IdBinocularD1Ev", sched_idbino_d1, "IdBinocular::~IdBinocular")
+SCHED_STUB_FN("__ZN11IdBinocularD2Ev", sched_idbino_d2, "IdBinocular::~IdBinocular (base)")
+// the widget base's and the binocular widget's header inlines, emitted by cam_extra (taken from here by name, as the
+// fight image takes the destructors): only a binocular camera constructs one (r101's binocular event, never in SCHED)
+SCHED_STUB_FN("__ZN11IdBinocularC1Ev", sched_idbino_c1, "IdBinocular::IdBinocular")
+SCHED_STUB_FN("__ZN11IdBinocularC2Ev", sched_idbino_c2, "IdBinocular::IdBinocular (base)")
+SCHED_STUB_FN("__ZN13IDApplicationC1Ev", sched_idapp_c1, "IDApplication::IDApplication")
+SCHED_STUB_FN("__ZN13IDApplicationC2Ev", sched_idapp_c2, "IDApplication::IDApplication (base)")
+SCHED_STUB_FN("__ZN13IDApplicationD0Ev", sched_idapp_d0, "IDApplication::~IDApplication (deleting)")
+SCHED_STUB_FN("__ZN13IDApplicationD1Ev", sched_idapp_d1, "IDApplication::~IDApplication")
+SCHED_STUB_FN("__ZN13IDApplicationD2Ev", sched_idapp_d2, "IDApplication::~IDApplication (base)")
+SCHED_STUB_FN("__ZN13IDApplication4moveEPv", sched_idapp_move, "IDApplication::move")
+SCHED_STUB_FN("__ZN13IDApplication4quitEPv", sched_idapp_quit, "IDApplication::quit")
+SCHED_STUB_FN("__ZN13IDApplicationdlEPvj", sched_idapp_dl, "IDApplication::operator delete")
+// scheduler.cpp's debug page of stack use (debug_mode 6: text through the debug print); the E1 SCHED lines give it
+SCHED_STUB_FN("_stackUsedCheck", sched_stack_page, "stackUsedCheck")
+
 // ---- counters (outside the timed rows: two clock reads a step)
 static int scene, ctl_stackx;
 static unsigned steps, steps_tick, steps_max, ticks_run, init_tasks;

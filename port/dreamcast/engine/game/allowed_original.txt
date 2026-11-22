@@ -131,6 +131,16 @@ game/sce_at *
 game/sce_com *
 game/game *
 
+## scheduler: the game's cooperative task scheduler and the scenario layer's task walk (lane eng-sched1, plan 3.3 section
+## 8 B2): which task runs, in which order, until it sleeps; task slots, sleep counts, kills and chains (scheduler); the
+## scenario tasks' start, sleep, exit and kill, their ordering-table walk, the deferred conditions, the room start and
+## step (sce_sys). Decisions about the scripts' flow, not services: the threads they run on are the engine's
+## (core/os_threads.cpp) and the list container the engine's (services/scene/at_list.cpp)
+game/scheduler *
+game/sce_sys *
+# scheduler: the debug page of stack use (text through the debug print, a logged no-op here) is debug drawing
+!game/scheduler stackUsedCheck
+
 # ---- service code inside the enemy and room-script units (exceptions; ev/enemy-service-functions.md) ----
 # em10: sound, effects, pose / parts / cloth, camera, view, tables
 !em10/em10 Em10SetSeTbl em10BehindSeCk em10BreathSe em10CallVoiceSe em10CallVoiceSe2 em10CsawSignSe em10FootSe em10SetDamageVoice
@@ -191,6 +201,9 @@ game/game *
 # above; picking up an item with no model is the item event)
 +em10/em10 em10CsawHitCk em10GatlingHitCk
 +game/sce_at sceAtGetItem_NoModel
+# reviewed (lane eng-sched1): the scenario task table's walk is a list of tasks (the ordering table names the task order),
+# not drawing
++game/sce_sys scenarioSetOtStart scenarioGetOtAddr
 # reviewed (lane eng-e2d, found by the split check inlined into setEm, SceCkFindPL and r101_Event20): the enemy
 # wrapper's destructor is empty (include/em_wrap.h: "~cEmWrap() {}", a local wrapper's end of scope): no code, no table
 +st*/* cEmWrap::~cEmWrap

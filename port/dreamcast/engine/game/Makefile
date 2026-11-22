@@ -343,10 +343,23 @@ $(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $
 # a request to its owner is to drop them there). The scenario layer's task steps are counted at TaskSchedulerMain.
 ifeq ($(BOSS)$(FIGHT),)
 $(OUT)/h/st1/r101.o: ORIG_FLAGS += -D_prolog=r101_prolog -D_epilog=r101_epilog -D_unresolved=r101_unresolved
+# As the fight image (fight.mk, lanes eng-e2d / eng-e2f): r101's Ganado voice task (sound, a static of the unit) made a
+# weak global by fight/r101_weak.h, its place taken by a logged stub (host/sched_host.cpp: the SCHED scene never arms
+# it, SceAtDataSet_exec is a stub here); r101 without the interprocedural optimisations; the binocular widget and the
+# focus blur in cam_extra (reached through r101's binocular camera) weak, logged stubs in host/sched_host.cpp, and
+# cam_extra without inlining so CameraBinocular reaches them by symbol.
+$(OUT)/h/st1/r101.o: ORIG_FLAGS += -include $(ENG)/fight/r101_weak.h
+$(OUT)/h/st1/r101.o: $(ENG)/fight/r101_weak.h
+SPLIT_NOIPA_UNITS += st1/r101
+SPLIT_NOINLINE_UNITS += game/cam_extra
+WEAKEN_game/cam_extra += __ZN11IdBinocular4initEP6CameraPvS2_ __ZN11IdBinocular4moveEPv __ZN11IdBinocular4quitEPv 	__ZN14FocusAnimation4initEi __ZN14FocusAnimation4moveEi __ZN14FocusAnimation4quitEv
 $(OUT)/h/game/scheduler.o: $(ROOT)/src/game/scheduler.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -I$(ROOT)/port/dreamcast/game/platform/include -c $< -o $@
-	sh-elf-objcopy --redefine-sym __Z9mem_allocmPKciii=_sched_stack_alloc $@
+	sh-elf-objcopy --redefine-sym __Z9mem_allocmPKciii=_sched_stack_alloc --weaken-symbol=_stackUsedCheck $@
+# (stackUsedCheck, the debug page of stack use, is debug drawing: weak, a logged stub in host/sched_host.cpp; the
+# split check needs the unit without the interprocedural optimisations)
+SPLIT_NOIPA_UNITS += game/scheduler
 $(OUT)/e/host/e1_stubs.o: $(ENG)/host/e1_stubs.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services $(NATIVE_INC) -c $< -o $@
