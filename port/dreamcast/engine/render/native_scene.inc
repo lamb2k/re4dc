@@ -101,24 +101,53 @@ static int pack_keep(file_t f,const PackInfo* pi,PackKeep* k){
     }
     return 1;
 }
-/* Bytes of the resident part with only frame 0 kept: sections 1-3, a one-row table a delta section, sections 13-14,
-   each section starting at its file offset modulo 32 (as the whole-recording layout). */
-static unsigned keep_layout(const PackInfo* pi,const PackKeep* k,unsigned* at){
-    unsigned c=0;
-    for(unsigned s=1;s<15;s++){
-        const unsigned want=(pi->root[s+1]-pi->texsize)%32;
-        while(c%32!=want)c+=4;
-        if(at)at[s]=c;
-        c+=s>=4&&s<=12?12+k->row_len[s-4]:pi->root[s+2]-pi->root[s+1];
-    }
+/* Bytes of the resident part with only frame 0 kept: sections 1-3 as in the file, a one-row table a delta section
+   (sections 4-12, packed), sections 13-14 as in the file. Sections are contiguous (the root table has no gaps), so the
+   models (13) keep their file offset modulo 32 through *pad bytes added to the camera row (section 4): repeated
+   writes of words that row already writes, with the same values (read_rest_keep): frame 0's state is unchanged. */
+static unsigned keep_layout(const PackInfo* pi,const PackKeep* k,unsigned* at,unsigned* pad){
+    unsigned c=pi->root[5]-pi->texsize;   /* sections 1-3 at their file offsets */
+    for(unsigned s=1;s<4;s++)if(at)at[s]=pi->root[s+1]-pi->texsize;
+    unsigned sum=0;for(unsigned d=0;d<9;d++)sum+=12+k->row_len[d];
+    const unsigned want=(pi->root[14]-pi->texsize)%32;
+    unsigned g=(want+32-(c+sum)%32)%32;
+    if(g&&g<12)g+=32;   /* 36 or 40: two entries (12+24, 16+24) */
+    if(pad)*pad=g;
+    for(unsigned s=4;s<=12;s++){if(at)at[s]=c;c+=12+k->row_len[s-4]+(s==4?g:0);}
+    for(unsigned s=13;s<15;s++){if(at)at[s]=c;c+=pi->root[s+2]-pi->root[s+1];}
     if(at)at[15]=c;
     return c;
+}
+/* The pad of the camera row: entries of 8+4c bytes, each repeating the first c words of the row's first entry
+   (same start, the lowest c bits of its mask, the same values). Refused (0) if the row's first entry has too few
+   words or a later entry writes one of them (then a repeat could change frame 0's state). */
+static int keep_pad(uint32_t* row,unsigned len,unsigned g){
+    if(!g)return 1;
+    unsigned sizes[2],n=0;
+    if(g<=28)sizes[n++]=g;else{sizes[n++]=g-24;sizes[n++]=24;}
+    const unsigned words=len/4;if(words<3)return 0;
+    const unsigned s0=row[1],b0=row[2];
+    unsigned cmax=0;for(unsigned e=0;e<n;e++){unsigned c=(sizes[e]-8)/4;if(c>cmax)cmax=c;}
+    if((unsigned)__builtin_popcount(b0)<cmax||words<3+cmax)return 0;
+    unsigned sub=0,m=b0;for(unsigned i=0;i<cmax;i++){sub|=m&-m;m&=m-1;}
+    for(unsigned i=3+__builtin_popcount(b0);i+1<words;){   /* the later entries: none may touch the repeated words */
+        const unsigned st=row[i],bi=row[i+1];
+        for(unsigned b=0;b<32;b++)if(bi>>b&1){const unsigned wd=st+b;if(wd>=s0&&wd<s0+32&&(sub>>(wd-s0)&1))return 0;}
+        i+=2+__builtin_popcount(bi);
+    }
+    uint32_t* out=row+words;
+    for(unsigned e=0;e<n;e++){
+        const unsigned c=(sizes[e]-8)/4;unsigned bits=0,mm=b0;
+        for(unsigned i=0;i<c;i++){bits|=mm&-mm;mm&=mm-1;}
+        *out++=s0;*out++=bits;for(unsigned i=0;i<c;i++)*out++=row[3+i];
+    }
+    return 1;
 }
 static unsigned pack_need(const char* path){
     file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
     PackInfo pi;int ok=pack_info(f,&pi,NULL);
     unsigned rest=pi.rest;
-    if(ok&&recording_frames()==1){PackKeep k;ok=pack_keep(f,&pi,&k);if(ok)rest=keep_layout(&pi,&k,NULL);}
+    if(ok&&recording_frames()==1){PackKeep k;ok=pack_keep(f,&pi,&k);if(ok)rest=keep_layout(&pi,&k,NULL,NULL);}
     fs_close(f);if(!ok)return 0;
     unsigned need=31+68+rest;return need>pi.maxblob?need:pi.maxblob;
 }
@@ -131,7 +160,7 @@ static int skip_crc(file_t f,unsigned n,uint32_t* crc){
 /* The rest of the pack (f after the texture section, at file offset 88+texsize) into data+68 with frame 0 kept:
    every byte read in order through the CRC; r (the copied root table) gets the kept layout's offsets. */
 static int read_rest_keep(file_t f,const PackInfo* pi,const PackKeep* k,uint8_t* data,uint32_t* r,uint32_t* crc){
-    unsigned at[16];keep_layout(pi,k,at);
+    unsigned at[16],g;keep_layout(pi,k,at,&g);
     unsigned pos=88+pi->texsize;
     for(unsigned s=1;s<15;s++){
         const unsigned end=88+pi->root[s+2];
@@ -145,7 +174,9 @@ static int read_rest_keep(file_t f,const PackInfo* pi,const PackKeep* k,uint8_t*
         uint32_t* w=(uint32_t*)dst;
         if(!skip_crc(f,k->row_at[d]-pos,crc)||!read_crc(f,dst+12,k->row_len[d],crc))return 0;
         if(!skip_crc(f,end-k->row_at[d]-k->row_len[d],crc))return 0;
-        w[0]=1;w[1]=0;w[2]=k->row_len[d];pos=end;
+        const unsigned extra=d==0?g:0;
+        if(extra&&!keep_pad(w+3,k->row_len[d],extra)){printf("M1 pack: frame 0's camera row cannot carry the %u-byte pad\n",extra);return 0;}
+        w[0]=1;w[1]=0;w[2]=k->row_len[d]+extra;pos=end;
     }
     r[0]=15;r[1]=0;for(unsigned s=1;s<=15;s++)r[s+1]=at[s];
     return 1;
@@ -302,7 +333,7 @@ int native_open(NativeScene* s,const char* name){
     if(recording_frames()==1){   /* lane eng-mem1: frame 0 of the recording kept (pack_keep reads with seeks) */
         PackKeep k;const unsigned here=88+pi.texsize;
         ok=pack_keep(f,&pi,&k)&&fs_seek(f,here,SEEK_SET)==(off_t)here;
-        if(ok)rest=keep_layout(&pi,&k,NULL);
+        if(ok)rest=keep_layout(&pi,&k,NULL,NULL);
         if(ok&&pad+68+rest>resident_capacity)ok=0;
         if(ok)ok=read_rest_keep(f,&pi,&k,data,r,&crc);
     }else{
