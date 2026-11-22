@@ -65,7 +65,7 @@ kthread_t* g_threads[24];
 int g_nthreads;
 
 // ---- the log ring: every byte printed, in front of the serial line (old fault.cpp ringWriteBuffer) ----
-constexpr unsigned kLogSize = 8192;
+constexpr unsigned kLogSize = 2048;   // the screen shows at most 20 rows
 char g_log[kLogSize];
 volatile unsigned long g_log_head;
 dbgio_handler_t* g_prev_dbgio;
@@ -89,7 +89,7 @@ int ring_read(uint8_t* data, int len) { return g_prev_dbgio ? g_prev_dbgio->read
 dbgio_handler_t g_ring = {"e1-ring", ring_detected, ring_init, ring_shutdown, ring_irq, ring_flush, ring_write, ring_read, {NULL}};
 
 // ---- the rows: composed first, then drawn, then copied to the serial line ----
-constexpr int kMaxRows = 40, kLine = 64;
+constexpr int kMaxRows = 24, kLine = 64;   // 20 rows of 24 lines at 480
 char g_row[kMaxRows][kLine];
 unsigned short g_rowc[kMaxRows];
 int g_nrows;
@@ -202,7 +202,7 @@ void show(const char* kind, const char* detail, const irq_context_t* ctx)
         const uintptr_t lo = arch_stack_16m - 64 * 1024;
         uintptr_t a = lo;
         while (a < arch_stack_16m && *(volatile uint32_t*) a == 0x5a5aa5a5u) a += 4;   // core/memmap.cpp's paint
-        row(0xFFFF, "mem end %08lx sbrk %08lx sp %08lx main stack %lu", (unsigned long) (uintptr_t) &e1_image_end,
+        row(0xFFFF, "mem end %08lx sbrk %08lx sp %08lx stk %lu", (unsigned long) (uintptr_t) &e1_image_end,
             (unsigned long) (uintptr_t) sbrk(0), ctx ? (unsigned long) ctx->r[15] : 0ul, (unsigned long) (arch_stack_16m - a));
     }
     // new: the faulting context's return addresses

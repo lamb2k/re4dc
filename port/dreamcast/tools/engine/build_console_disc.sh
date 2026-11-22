@@ -274,7 +274,10 @@ done
 # arm (core/pc_sampler.cpp; boot file PCSAMPLE "[hz N] [spin]"), each a scene of its own staged only when --scenes names
 # it. <name>|<folder>|<boot file>=<its text>|<schedule kind>|<title>|<program>|<the folders behind it>. Every CRASH scene
 # must FAIL in the selector ("CRASHED exc 0e0" or "exc 180", with the planted pc) and tools/engine/crashcheck.py must
-# find the screen's serial copy naming the planted event, pc, address, scene and tick. The PCS scenes are function
+# find the screen's serial copy naming the planted event, pc, address, scene and tick. The address-fault scenes (CRASH?A)
+# need the console: Flycast does not raise a data address error on a misaligned read (the image then prints "the planted
+# fault did not stop the program", the scene runs to its end and crashcheck.py must FAIL it); the illegal-instruction
+# scenes (CRASH?I) run the same handler on Flycast. The PCS scenes are function
 # runs (traced, never a timing scene); tools/engine/pcs_table.py ranks their samples on the map, and on PCSSPIN (its
 # control: 10 ms of every 33 ms spent in e1_pcs_spin) it must find e1_pcs_spin on top.
 CRASH_CONTROLS=(
