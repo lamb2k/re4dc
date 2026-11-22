@@ -25,12 +25,17 @@ BOSSVC_SRCS += oba_obj
 endif
 # Lane eng-e2c (integrator ruling 2026-11-21): the room's thunder (services/boss/r119_thunder.cpp). r119.cpp's three
 # thunder functions are static: the hosted unit is compiled with services/boss/r119_weak.h force-included (they become
-# weak symbols, referenced by symbol), and game/r119_split_check.py must pass on the object (no section reference, no
-# copy inlined elsewhere) or the build stops. Control build only: R119_ORIG=1 builds r119 as it was and links no engine
-# thunder (the link check must FAIL on the three). Never a default.
+# weak symbols, referenced by symbol) and without the interprocedural optimisations (SPLIT_NOIPA_UNITS, lane eng-e2g),
+# and the general split check (tools/engine/split_check.py --obj: the three weak, none inlined or cloned, no section
+# reference to their code) must pass on the object or the build stops; check_link.py checks the image the same way.
+# (Lane eng-e2g folded eng-e2c's game/r119_split_check.py into the general check: its rule 3, a thunder callee called
+# from elsewhere, is the compiler's inlining report there.) Control build only: R119_ORIG=1 builds r119 as it was and
+# links no engine thunder (the link check must FAIL on the three). Never a default.
 ifneq ($(R119_ORIG),1)
 BOSSVC_SRCS += r119_thunder
 R119_WEAK := -include $(ENG)/services/boss/r119_weak.h
+R119_WEAK_SYMS := __ZL16r119_ThunderMovev __ZL18r119_ThunderFlagOnv __ZL19r119_ThunderFlagOffv
+SPLIT_NOIPA_UNITS += st1/r119
 endif
 BOSSVC_OBJS := $(addprefix $(OUT)/n/boss_,$(addsuffix .o,$(BOSSVC_SRCS)))
 HOSTED_OBJS := $(BOSSVC_OBJS) $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
@@ -52,13 +57,13 @@ $(OUT)/h/em2b/em2b.o: $(ROOT)/src/em2b/em2b.cpp $(ENG)/host/e1_prelude.h $(OUT)/
 	sh-elf-objcopy --redefine-sym __prolog=_em2b_prolog --redefine-sym __epilog=_em2b_epilog \
 		--redefine-sym __unresolved=_em2b_unresolved $$(sed 's/^/--weaken-symbol=/' $(OUT)/n/boss_syms.txt) $@.tmp.o $@
 	rm -f $@.tmp.o
-$(OUT)/h/st1/r119.o: $(ROOT)/src/st1/r119.cpp $(ENG)/host/e1_prelude.h $(ENG)/services/boss/r119_weak.h $(ENG)/game/r119_split_check.py
+$(OUT)/h/st1/r119.o: $(ROOT)/src/st1/r119.cpp $(ENG)/host/e1_prelude.h $(ENG)/services/boss/r119_weak.h $(ROOT)/port/dreamcast/tools/engine/split_check.py
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(R119_WEAK) -c $< -o $@.tmp.o
 	sh-elf-objcopy --redefine-sym __prolog=_r119_prolog --redefine-sym __epilog=_r119_epilog \
 		--redefine-sym __unresolved=_r119_unresolved $@.tmp.o $@
 	rm -f $@.tmp.o
-	$(if $(R119_WEAK),python3 $(ENG)/game/r119_split_check.py $@ > $@.split.txt || { cat $@.split.txt; rm -f $@; exit 1; })
+	$(if $(R119_WEAK),python3 $(ROOT)/port/dreamcast/tools/engine/split_check.py --obj $@ --unit st1/r119 --weak $(R119_WEAK_SYMS) > $@.split.txt || { cat $@.split.txt; rm -f $@; exit 1; })
 # src/game/game.cpp names the old port's door-phase probe unconditionally: an empty macro here (knob off).
 $(OUT)/h/game/game.o: ORIG_FLAGS += "-DRE4DC_DOORPH(x)="
 # Controls / arms of the boss image: make BOSS=1 BOSS_EXTRA=-DE1_CONTROL_SHIFT=1 (every pad action one frame late).

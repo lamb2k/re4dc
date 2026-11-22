@@ -32,7 +32,7 @@
 extern "C" {
 unsigned char eng_pres_u8();
 struct Em10CamCounters {
-    u32 shots, shakes, wall_pulls, wall_hits, installs, screen_checks;
+    u32 shots, shakes, wall_pulls, wall_hits, installs, screen_checks, screen_on;   // screen_on: lane eng-e2f
 };
 Em10CamCounters em10c_cnt;
 // Controls (set only by the PC check, hostref svc/e2b_dump.cpp RE4_SVC_CONTROL; each must make e2b.txt differ):
@@ -229,7 +229,10 @@ extern "C" int em10ScreenInCk(cEm10* em)
     const f32 right = em10c_control == 2 ? 256.0f : 512.0f;
     for (int k = 0; k < 2; k++) {
         Vec p = k == 0 ? em->pos : em->getPartsPtr(4)->world, scr;
-        if (GetScreenPos(&p, &scr) && scr.x > 0.0f && scr.x < right && scr.y > 0.0f && scr.y < 448.0f) return 1;
+        if (GetScreenPos(&p, &scr) && scr.x > 0.0f && scr.x < right && scr.y > 0.0f && scr.y < 448.0f) {
+            em10c_cnt.screen_on++;
+            return 1;
+        }
     }
     return 0;
 }
