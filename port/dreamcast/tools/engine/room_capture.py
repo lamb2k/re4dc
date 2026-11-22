@@ -79,8 +79,11 @@ def sha(p):
     return h.hexdigest()
 
 
-def u32(r, a): return struct.unpack_from("<I", r, a)[0]
-def ptr(r, a): return u32(r, a) & 0xffffff
+def u32(r, a): return struct.unpack_from("<I", r, a)[0] if 0 <= a <= len(r) - 4 else 0
+def ptr(r, a):
+    """a main-RAM pointer as an offset into the snapshot, 0 for null or anything outside main RAM"""
+    v = u32(r, a)
+    return v & 0xffffff if 0x8c000000 <= v < 0x8d000000 and (v & 0xffffff) < len(r) - 0x200 else 0
 
 
 def model_ok(r, m):
@@ -95,22 +98,54 @@ def model_ok(r, m):
 
 
 def walk(r, head_at, limit=512):
-    """the live models of a cManager (include/cManager.h: pAlive at +0x10; cUnit: be_flag +0, pNext +4)"""
-    out = []; q = ptr(r, head_at + 0x10)
-    while q and len(out) < limit:
-        out.append(q); q = ptr(r, q + 4)
+    """the live models of a cManager. include/cManager.h gives pAlive at +0x10 and cUnit's be_flag +0, pNext +4 for
+    the GameCube build; in this image both classes start with their vtable pointer, so pAlive is at +0x14 and a
+    unit's be_flag at +4, pNext at +8 (read from the snapshot: EmMgr's head is a Ganado, id 0x15 at +0x100)"""
+    out = []; q = ptr(r, head_at + 0x14)
+    while q and len(out) < limit and q not in out:
+        out.append(q); q = ptr(r, q + 8)
     return out
 
 
+def textures_keyed(r, m):
+    """every part's texture carries the static texture identity (R4NREF + its tex.pak key), as bake/native_extra.py
+    requires: a texture without one is not a converted PS2 picture, and its prop is left out (no GameCube rows)"""
+    p = ptr(r, m + 0x15c); n = 0
+    while p and n < 40:
+        d = ptr(r, p + 12); tpl = ptr(r, p + 16); p = ptr(r, p + 20); n += 1
+        if not d: continue
+        count = struct.unpack_from("<H", r, d + 26)[0]; part = ptr(r, d + 28); desc = ptr(r, tpl + 8) if tpl else 0
+        for _ in range(count):
+            if not part or not desc: return False
+            th = ptr(r, desc + r[part + 12] * 8); pixels = ptr(r, th + 8) if th else 0
+            if not pixels or r[pixels:pixels + 6] != b"R4NREF": return False
+            part = part + 32 + u32(r, part + 24)
+            if part >= len(r) - 64: return False
+    return True
+
+
+def shape(r, m):
+    """what makes two models the same catalogue model: the parts count and the ModelData chain they draw"""
+    out = [r[m + 0x102]]; p = ptr(r, m + 0x15c)
+    while p and len(out) < 41:
+        out.append(ptr(r, p + 12)); p = ptr(r, p + 20)
+    return tuple(out)
+
+
 def props(r, sym):
-    """the room's props: live ObjMgr models, and live EmMgr models other than Leon (id 0) and the Ganados (ids 0x10
-    to 0x20, recorded as actors by bench/r3_inputs.inc), each with its parts chain (cModel +0xF4, nParts +0x102)"""
-    rows = []; extra = []
+    """the room's props: live ObjMgr models that are not SMD scroll objects (cModel kindid +0x12E == 2: the room's
+    scenery, already in the world), and live EmMgr models other than Leon (id 0) and the Ganados (ids 0x10 to 0x20,
+    recorded as actors by bench/r3_inputs.inc), each with its parts chain (cModel +0xF4, nParts +0x102). Instances
+    that draw the same ModelData share one template (the first instance), as collect.py shared its templates."""
+    rows = []; extra = []; templates = {}
     for mgr in ("ObjMgr", "EmMgr"):
         for m in walk(r, sym[mgr] & 0xffffff):
-            bf = u32(r, m); mid, typ, parts = r[m + 0x100], r[m + 0x101], r[m + 0x102]
-            alive = (bf & 0x201) == 1; ok = model_ok(r, m)
-            take = alive and ok and not (mgr == "EmMgr" and (mid == 0 or 0x10 <= mid <= 0x20))
+            bf = u32(r, m + 4); mid, typ, parts = r[m + 0x100], r[m + 0x101], r[m + 0x102]
+            alive = (bf & 0x201) == 1; ok = model_ok(r, m); kindid = r[m + 0x12e]
+            take = alive and ok and not (mgr == "ObjMgr" and kindid == 2) \
+                and not (mgr == "EmMgr" and (mid == 0 or 0x10 <= mid <= 0x20))
+            keyed = textures_keyed(r, m) if ok else False
+            take = take and keyed
             bones = []
             if take:
                 q = ptr(r, m + 0xf4)
@@ -118,8 +153,10 @@ def props(r, sym):
                     if not q: break
                     bones.append(q); q = ptr(r, q + 0xf4)
                 take = len(bones) == parts
-            rows.append(dict(manager=mgr, model=m, id=mid, type=typ, parts=parts, be_flag=bf, drawable=ok, taken=take))
-            if take: extra.append((m, m, bones))
+            t = templates.setdefault(shape(r, m), m) if take else None
+            rows.append(dict(manager=mgr, model=m, id=mid, type=typ, parts=parts, kindid=kindid, be_flag=bf,
+                             drawable=ok, ps2_textures=keyed, taken=take, template=t))
+            if take: extra.append((m, t, bones))
     return extra, rows
 
 
@@ -136,7 +173,7 @@ def main():
     ap.add_argument("--lane", default="eng-rec1")
     a = ap.parse_args()
     slot = SLOTS / a.slot; base = a.base; ev = a.out
-    ev.mkdir(parents=True, exist_ok=False)
+    if ev.exists(): sys.exit(f"{ev} exists")
     meta = json.loads((base / "base.json").read_text())
     sym = {k: int(v, 16) for k, v in (l.split() for l in (base / "symbols.txt").read_text().split("\n") if l.strip())}
     # the lease: written before the slot is touched; refused if another lease under two hours old or a Flycast runs
@@ -148,6 +185,7 @@ def main():
                           capture_output=True, text=True).stdout.strip()
     if busy not in ("", "0"): sys.exit(f"{slot}: a flycast.exe runs from it")
     lease.write_text(f"{a.lane} {time.strftime('%Y-%m-%d %H:%M:%S')} room capture r{a.room:x}\n")
+    ev.mkdir(parents=True)
     handles = None; done = 0; tick1 = None
     try:
         track = bytearray((base / "track01-template.iso").read_bytes())
@@ -168,6 +206,7 @@ def main():
         cfg = (slot / "emu.cfg").read_text(errors="replace")
         dyn = re.findall(r"Dynarec\.Enabled\s*=\s*(\S+)", cfg); clk = re.findall(r"Sh4Clock\s*=\s*(\S+)", cfg)
         handles = launch(slot, f"capture r{a.room:x}"); kernel, user, desktop, pi = handles
+        (slot / "flycast.pid").write_text(str(pi.pid))   # read_pcs.Guest finds the process by it
         (ev / "launch.json").write_text(json.dumps(dict(pid=pi.pid, slot=str(slot), room=hex(a.room), start=a.start,
                                                         dynarec=dyn, sh4clock=clk, desktop="inactive")))
         log = slot / "flycast.log"

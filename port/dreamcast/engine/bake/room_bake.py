@@ -38,7 +38,7 @@ DISC = Path("/root/work/lanes/eng-bench/.m1/pristine/dc")
 TABLES = Path("/root/work/lanes/eng-bench/.m1/native005/static.bin")
 ISO = Path("/root/work/re4-dreamcast/orig/G4BE08/re4_debug_disc1.iso")
 LEON_BIND_CH1 = Path("/mnt/e/RE4DC-Lanes/eng-e0b/runs/cap-cross/leon-bind.bin")
-BIN = Path("/dev/shm/eng-bake1/bin")
+BIN = Path(os.environ.get("BAKE_BIN", "/dev/shm/eng-bake1/bin"))   # eng-rec1: each lane builds the host tools in its own folder
 
 # Chapter 1, the first room to the lake boss, in play order: the stage's chapter ends (src/st1/r106.cpp:419
 # SceSetChapterEnd(0, 3) door 3 -> r104; r105.cpp:650 CHAPTER_1_2; r10b.cpp:359/390 CHAPTER_1_3 door 6 -> r11b) and
@@ -59,6 +59,13 @@ RECORDINGS = {
                 ram="/mnt/e/RE4DC-Lanes/eng-bench/runs/eng-bench-hayfork-4/resource-ram-072.raw"),
     0x11d: dict(capture="/mnt/e/RE4DC-Lanes/eng-e1d/runs/cap-hill", hill=True),
 }
+# Lane eng-rec1: the chapter 1 rooms captured with tools/engine/room_capture.sh / room_capture.py (warp fixtures in
+# the capture's warp.txt, receipt.json per capture). Each capture carries its own RAM snapshot: the props' source
+# models (prior/eng-bench-*-4 links it under the name native_pack.build looks for) and the HUD fix's input.
+REC1 = "/mnt/e/RE4DC-Lanes/eng-rec1/captures"
+REC1_ROOMS = (0x100, 0x106, 0x104, 0x107, 0x105, 0x102, 0x108, 0x109, 0x10a, 0x10b)
+for _rid in REC1_ROOMS:
+    RECORDINGS[_rid] = dict(capture=f"{REC1}/r{_rid:x}", prior=f"{REC1}/r{_rid:x}/prior")
 R120_JUMP = (-109450.0, -515.0, 820.0)   # src/st1/r120.cpp:99, SceAtExecRoomJump(0x100, &pos, ...)
 
 # The visibility recipe of the village and farm tables (eng-e0b vis2c: 2 m camera cells, 27 eyes, margin 60 mm, the
@@ -191,6 +198,21 @@ def textures_of_world(world, assets):
     return tids
 
 
+def capture_receipt(cap, rid, rp=None):
+    """a room_capture.py capture is used only whole and as recorded: its receipt names this room and 300 pictures,
+    and every file it lists still has its size and hash (eng-rec1)"""
+    rp = Path(rp or Path(cap) / "receipt.json")
+    if not rp.exists(): raise ValueError(f"no capture receipt at {rp}")
+    r = json.loads(rp.read_text())
+    if r.get("room") != f"r{rid:x}" or r.get("pictures") != 300:
+        raise ValueError(f"capture {cap} is {r.get('room')} with {r.get('pictures')} pictures, not r{rid:x} with 300")
+    for name, e in r["files"].items():
+        p = Path(cap) / name
+        if not p.exists() or p.stat().st_size != e["bytes"] or sha(p) != e["sha256"]:
+            raise ValueError(f"capture {cap}: {name} does not match its receipt")
+    return r
+
+
 def recorded_pack(rid):
     rec = RECORDINGS[rid]
     cap = Path(rec["capture"])
@@ -199,7 +221,9 @@ def recorded_pack(rid):
         data = hill_pack.build(DISC, cap, TABLES, {})
     else:
         import native_pack
-        data = native_pack.build(DISC, cap, rid, TABLES, Path(rec["prior"]), Path(rec["ram"]))
+        # a capture with its own RAM snapshot (eng-rec1) leaves "ram" out: the HUD fix reads the capture's
+        if rid in REC1_ROOMS: capture_receipt(cap, rid)
+        data = native_pack.build(DISC, cap, rid, TABLES, Path(rec["prior"]), Path(rec["ram"]) if rec.get("ram") else None)
     import hud_fix
     hud_fix.verify(data)
     return data
@@ -496,6 +520,20 @@ def controls(out, jobs):
         (out / "receipt-control.json").write_text(json.dumps(doc))
         row("receipt check", not receipt(out, True, out / "receipt-control.json"), k)
         (out / "receipt-control.json").unlink()
+    # 6. (eng-rec1) a capture from the wrong room: r100 baked from another captured room's pictures must be refused
+    import native_pack
+    wrong = next((r for r in REC1_ROOMS if r != 0x100 and (Path(RECORDINGS[r]["capture"]) / "receipt.json").exists()), None)
+    if wrong is not None:
+        cap = Path(RECORDINGS[wrong]["capture"])
+        try: native_pack.build(DISC, cap, 0x100, TABLES, Path(RECORDINGS[wrong]["prior"]), None); failed = False; d = "accepted"
+        except ValueError as e: failed = True; d = f"r100 from r{wrong:x}: {e}"[:160]
+        row("capture from the wrong room", failed, d)
+        # 7. (eng-rec1) the capture receipt: a copy with one picture's hash changed must be refused
+        doc = json.loads((cap / "receipt.json").read_text()); doc["files"]["picture-150.bin"]["sha256"] = "0" * 64
+        rc = out / "capture-receipt-control.json"; rc.write_text(json.dumps(doc))
+        try: capture_receipt(cap, wrong, rc); failed = False; d = "accepted"
+        except ValueError as e: failed = True; d = str(e)[:160]
+        rc.unlink(); row("capture receipt", failed, d)
     (out / "controls.json").write_text(json.dumps(rows, indent=1))
     return all(r["result"] == "failed as it must" for r in rows)
 
