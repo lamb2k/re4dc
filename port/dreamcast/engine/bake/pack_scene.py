@@ -31,7 +31,8 @@ class Baker:
         self.wcache={};self.acache={};self.frames=[]
         self.ram=None
         self.assets={}
-        sky=(disc/f"native/r{room:x}/ps2-sky.r4sk").read_bytes()
+        from native_world import sky_bytes   # lane eng-bake1: an empty sky for rooms with none
+        sky=sky_bytes(disc/f"native/r{room:x}")
         w,h,n,self.top,self.bottom=unpack("HHI2f",sky,8)
         at=unpack("H",sky,38)[0]
         assert sky[:4]==b"R4SK" and len(sky[at:])==n
