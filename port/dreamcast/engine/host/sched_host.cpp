@@ -13,15 +13,18 @@
 //   2 game_tick = slot 0's gameMainLoop, engine form; its first step is ScenarioMove (game.cpp gameMainLoop: before
 //     EmMgr.move and the player): sched_host_scenario -> sce_sys ScenarioMove -> R101Main, EvtMgr.Run, then
 //     SceSys.scheduler(): scenario tasks 5..17 in ordering order, each run until it sleeps
-//   3 the partner (EmMgr.move), the player, objects, camera                      (gameMainLoop order, engine form)
-//   4 sched_host_tasks -> TaskScheduler(): slots 0..3 (slot 0 is the engine's own loop and stays empty; 1..3 hold
-//     the debug, sub-screen and movie tasks when a hosted unit starts one)
-//   5 draw, pacer. The ISR slot (iTaskScheduler: the background decompression and loading task) is not run: the
+//   2b the partner (EmMgr.move), the player, objects, camera                     (gameMainLoop order, engine form)
+//     then, at the same point, TaskScheduler(): slots 0..3 (slot 0 is the engine's own loop and stays empty; 1..3
+//     hold the debug, sub-screen and movie tasks when a hosted unit starts one). This is the one point of the tick
+//     where any task thread runs: every task is parked off KOS's run queue (core/os_threads.cpp) except while the
+//     main thread waits for it in TaskSchedulerMain's hand-off, the main thread outranks every task, and the layer
+//     has no alarms, so no task runs during services or drawing and nothing wakes one on a timer
+//   3 draw, pacer. The ISR slot (iTaskScheduler: the background decompression and loading task) is not run: the
 //     engine loads nothing in play (core/play_files.c), so no hosted unit may start one (iTaskExec: a logged stub
 //     count would show it).
-// The room script is started only in the lab scene SCHED (boot file /cd/SCHED, read before play): the default
-// village scene hosts no room script yet (that is chapter 1's hosting, a later lane), so its play is unchanged; the
-// scheduler itself runs in every scene (step 4).
+// The task table, the room script and the scheduler run only in the lab scene SCHED (boot file /cd/SCHED, read before
+// play): the default village scene hosts no room script yet (that is chapter 1's hosting, a later lane), so its play
+// is unchanged.
 //
 // Memory (lane eng-mem2 owns the map): the task stacks are the scheduler's own pool, 18 slots of 12 KiB (scheduler.cpp
 // GetStackSize under its RE4DC_GAME correction: 221,184 bytes), on the KOS heap (scheduler.o's mem_alloc is bound to
@@ -64,14 +67,13 @@ u8* cRoomData::getRoomSavePtr(u16) { return room_save; }
 extern "C" int re4dc_io_busy(const void*) { return 0; }
 extern "C" void GXSetCurrentGXThread(void) {}   // the GameCube's graphics FIFO owner: the engine's renderer has none
 void DbMenuRestoreStopFlag() {}                 // the debug menu is not hosted
-// The scheduler's stack pool, on the KOS heap (game/Makefile binds scheduler.o's mem_alloc here).
+// ---- the scheduler's stack pool (TaskSchedulerInit's one MEM_ALLOC; scheduler.o's mem_alloc is bound here by
+// objcopy, game/Makefile): the KOS heap until lane eng-mem2 places it in the map
 extern "C" void* sched_stack_alloc(u32 size, const char*, int, int, int)
 {
-    void* p = memalign(32, size);
-    if (!p) {
-        e1_log("E1 SCHED: the task stacks' %lu bytes refused by the KOS heap\n", (unsigned long) size);
-        e1_stub_hit("sched_stack_alloc(refused)", (int) size);
-    }
+    void* p = memalign(32, (size + 31) & ~31u);
+    if (!p) e1_log("E1 SCHED stack pool: %u bytes refused by the KOS heap
+", (unsigned) size);
     return p;
 }
 
@@ -118,11 +120,11 @@ extern "C" void __wrap_TaskSchedulerMain(TASK* t)
     __real_TaskSchedulerMain(t);
 }
 
+static void sched_host_tasks(unsigned tick);
+
 void sched_host_boot()
 {
     os_threads_boot();
-    TaskSchedulerInit();
-    ScenarioInit();
     file_t f = fs_open("/cd/SCHED", O_RDONLY);
     if (f >= 0) { fs_close(f); scene = 1; }
     f = fs_open("/cd/SCHEDX", O_RDONLY);
@@ -135,6 +137,9 @@ void sched_host_boot()
 void sched_host_room_init()
 {
     if (!scene) return;
+    // the task table and its stack pool (on the KOS heap), then the scenario system and the room's start
+    TaskSchedulerInit();
+    ScenarioInit();
     steps_tick = 0;
     ScenarioRoomInit();
     for (unsigned i = 5; i < TASK_NUM; i++) init_tasks += Task[i].Status != 0;
@@ -153,9 +158,10 @@ void sched_host_scenario(unsigned tick)
     scen_sum += d;
     scen_over += d > 100;
     if (d > scen_max) scen_max = d, scen_max_tick = tick;
+    sched_host_tasks(tick);
 }
 
-void sched_host_tasks(unsigned tick)
+static void sched_host_tasks(unsigned tick)
 {
     const uint64_t a = e1_clock_us();
     TaskScheduler();

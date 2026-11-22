@@ -8,10 +8,9 @@ void sched_host_boot();
 // ScenarioRoomInit: the room script's init and one task pass).
 void sched_host_room_init();
 // The scenario step at gameMainLoop's position (game.cpp: before EmMgr.move and the player): in the SCHED scene sce_sys
-// ScenarioMove (the room's main, the event manager, the scenario tasks 5..17).
+// ScenarioMove (the room's main, the event manager, the scenario tasks 5..17), then TaskScheduler (slots 0..3): the
+// one point of the engine's tick where any task runs.
 void sched_host_scenario(unsigned tick);
-// After the game task's step (main.cpp: TaskScheduler runs slots 0..3 after slot 0's gameMainLoop): every scene.
-void sched_host_tasks(unsigned tick);
 // After play: the E1 SCHED line (task steps, cost a tick, stacks' high-water marks, KOS thread records).
 void sched_host_report();
 #endif

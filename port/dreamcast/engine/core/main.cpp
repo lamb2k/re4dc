@@ -132,7 +132,7 @@ static void game_tick(E1Timing& tm)
         tm.obj_us = now_us() - t;   // reported as the enemy share below
     }
 #else
-    sched_host_scenario(e1_tick);       // lane eng-sched1: ScenarioMove (gameMainLoop order: room main, events, tasks)
+    sched_host_scenario(e1_tick);       // lane eng-sched1: the one point where tasks run (ScenarioMove, then slots 0..3)
     if (e1_scene == E1_SCENE_HILL) e1_partner_chars_move(tm);   // EmMgr.move: the partner (gameMainLoop order)
 #endif
     e1_stamp(1);
@@ -223,9 +223,6 @@ int main()
         e1_stamp(0);
         uint64_t b = now_us();
         game_tick(tm);
-#ifndef E2_BOSS
-        sched_host_tasks(e1_tick);      // lane eng-sched1: TaskScheduler, slots 0..3 (main.cpp: after slot 0's loop)
-#endif
         e1_partner_tick_end(e1_tick);
         e1_stamp(3);
         uint64_t c = now_us();
