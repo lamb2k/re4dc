@@ -355,6 +355,12 @@ case ",$SCENES," in *,CSCHED,*) mkdir -p "$D/E1SX"; : > "$D/E1SX/SCHED"; : > "$D
 # inside the timed scenario step at tick 200); the scene runs OK and its "E1 SCHED cost all" worst must read at least
 # 200 us at tick 200 (hostref/svc/sched/sched_engine.py --delay judges it).
 case ",$SCENES," in *,TSCHED,*) mkdir -p "$D/E1SD"; : > "$D/E1SD/SCHED"; : > "$D/E1SD/SCHEDD" ;; esac
+# Lane eng-sched3: the cost split's lab arms of the SCHED scene, each OK when it runs (timing scenes on the same files):
+# SCHEDO the stub accounting as it was before the lane (STUBOLD: the matched pair of H-043 ruling 1), SCHEDN no room
+# script and three idle scenario tasks (the task switch alone), SCHED0 no room script and no task (the layer alone).
+case ",$SCENES," in *,SCHEDO,*) mkdir -p "$D/E1SO"; : > "$D/E1SO/SCHED"; : > "$D/E1SO/STUBOLD" ;; esac
+case ",$SCENES," in *,SCHEDN,*) mkdir -p "$D/E1SN"; : > "$D/E1SN/SCHED"; : > "$D/E1SN/SCHEDN" ;; esac
+case ",$SCENES," in *,SCHED0,*) mkdir -p "$D/E1S0"; : > "$D/E1S0/SCHED"; : > "$D/E1S0/SCHED0" ;; esac
 case ",$SCENES," in *,HILLS,*) mkdir -p "$D/E1HS"; : > "$D/E1HS/STILLS" ;; esac
 case ",$SCENES," in *,FIGHTS,*) mkdir -p "$D/FIGHTS"; : > "$D/FIGHTS/STILLS" ;; esac
 
@@ -387,6 +393,9 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "SCHED Village_room_script_on_the_scheduler PROG/E1.BIN 300 e1:timing:drawn $(need E1SC/SCHED,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SC:E1L:E1 rows=compact"
   echo "CSCHED Control:_scenario_task_stack_guard_overwritten PROG/E1.BIN 300 e1:timing:drawn $(need E1SX/SCHEDX,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SX:E1L:E1 rows=compact"
   echo "TSCHED Control:_200_us_added_at_tick_200 PROG/E1.BIN 300 e1:timing:drawn $(need E1SD/SCHEDD,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SD:E1L:E1 rows=compact"
+  echo "SCHEDO Lab_arm:_stub_accounting_before_eng-sched3 PROG/E1.BIN 300 e1:timing:drawn $(need E1SO/STUBOLD,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SO:E1L:E1 rows=compact"
+  echo "SCHEDN Lab_arm:_three_idle_tasks,_no_room_script PROG/E1.BIN 300 e1:timing:drawn $(need E1SN/SCHEDN,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SN:E1L:E1 rows=compact"
+  echo "SCHED0 Lab_arm:_no_task,_no_room_script PROG/E1.BIN 300 e1:timing:drawn $(need E1S0/SCHED0,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1S0:E1L:E1 rows=compact"
   echo "FIGHTT Fight_traced_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHT/CROSS.PAK,FIGHT/st1/r101.arc,FIGHT/em/em15.drs) root=FIGHT rows=compact $TSKIP"
   # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
   DNEED=DOOR/DOOR.TXT,DOOR/R103.PAK,DOOR/R103.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs

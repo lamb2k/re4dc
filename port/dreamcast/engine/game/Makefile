@@ -371,9 +371,11 @@ WEAKEN_game/cam_extra += __ZN11IdBinocular4initEP6CameraPvS2_ __ZN11IdBinocular4
 $(OUT)/h/game/scheduler.o: $(ROOT)/src/game/scheduler.cpp $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -I$(ROOT)/port/dreamcast/game/platform/include -c $< -o $@
-	sh-elf-objcopy --redefine-sym __Z9mem_allocmPKciii=_sched_stack_alloc --weaken-symbol=_stackUsedCheck $@
+	sh-elf-objcopy --redefine-sym __Z9mem_allocmPKciii=_sched_stack_alloc --weaken-symbol=_stackUsedCheck \
+		--weaken-symbol=_GetStackSize $@
 # (stackUsedCheck, the debug page of stack use, is debug drawing: weak, a logged stub in host/sched_host.cpp; the
-# split check needs the unit without the interprocedural optimisations)
+# split check needs the unit without the interprocedural optimisations. Lane eng-sched3, H-043 ruling 2: GetStackSize
+# weak too, the engine's table of the GameCube sizes in host/sched_host.cpp takes its place: no 12 KiB floor here)
 SPLIT_NOIPA_UNITS += game/scheduler
 $(OUT)/e/host/e1_stubs.o: $(ENG)/host/e1_stubs.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)

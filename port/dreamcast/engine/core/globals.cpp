@@ -10,6 +10,7 @@
 #include "e1_kos.h"
 #include "camera/eng_camera.h"   // lane eng-e1l: the renderer's planes and the RNEARFAR control
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -49,24 +50,83 @@ extern "C" void e1_log_flush(void)
     log_len = 0;
 }
 
-// ---- stubs into other behaviour: first 4 calls of each logged with the tick, every call counted ----
-struct StubCount { const char* name; unsigned calls; unsigned first_tick; };
-static StubCount stubs[160];
-static unsigned nstubs;
-extern "C" void e1_stub_hit(const char* name, int arg)
+// ---- stubs into other behaviour: every call counted, the first 4 of each with their argument and tick ----
+// Lane eng-sched3 (H-043 ruling 1: stub logging is not timed work). Each stub is indexed once, at its first call, in a
+// table keyed by the name's address (open addressing, STUB_SLOTS slots); a call is a hash, a compare and a count, with
+// no string search and no formatting. Outside the ticks the first four calls of a stub print at once, as before;
+// inside the ticks (e1_state[0] == 4) their argument and tick are kept in the entry and printed after play
+// (e1_stub_report). The same text under two addresses (two units' literals) is two entries, merged by name in the
+// report. e1_stub_calls counts every call (the scheduler's cost split reads it, host/sched_host.cpp).
+// Lab arm STUBOLD (boot file, read before play; the comparison arm of the lane's cost pair, never a default): the
+// accounting as it was before this lane (strcmp along the table on every call, the first four calls of each formatted
+// into the log buffer inside the ticks).
+enum { STUB_SLOTS = 256, STUB_MAX = 200 };
+struct StubCount { const char* name; unsigned calls, first_tick, held; int arg[4]; unsigned tick[4]; };
+static StubCount stubs[STUB_MAX];
+static unsigned short stub_slot[STUB_SLOTS];   // index + 1 into stubs; 0 empty
+static unsigned nstubs, stub_full;
+static int stub_old;
+extern "C" { unsigned e1_stub_calls; }
+static StubCount* stub_new(const char* name)
+{
+    if (nstubs >= STUB_MAX) { stub_full++; return 0; }
+    StubCount* s = &stubs[nstubs++];
+    *s = {};
+    s->name = name;
+    s->first_tick = e1_tick;
+    return s;
+}
+static void stub_hit_old(const char* name, int arg)   // STUBOLD: the search before lane eng-sched3
 {
     unsigned i = 0;
     while (i < nstubs && stubs[i].name != name && strcmp(stubs[i].name, name)) i++;
-    if (i == nstubs && nstubs < 160) stubs[nstubs++] = {name, 0, e1_tick};
-    if (i < 160) {
-        if (stubs[i].calls < 4) e1_log("E1 STUB %s arg=%d tick=%lu\n", name, arg, (unsigned long) e1_tick);
-        stubs[i].calls++;
+    if (i == nstubs && !stub_new(name)) return;
+    if (stubs[i].calls < 4) e1_log("E1 STUB %s arg=%d tick=%lu\n", name, arg, (unsigned long) e1_tick);
+    stubs[i].calls++;
+}
+extern "C" void e1_stub_hit(const char* name, int arg)
+{
+    e1_stub_calls++;
+    if (stub_old) { stub_hit_old(name, arg); return; }
+    unsigned h = ((unsigned) (uintptr_t) name >> 2) * 2654435761u >> 24;   // STUB_SLOTS 256: the top 8 bits
+    StubCount* s;
+    for (;;) {
+        const unsigned k = stub_slot[h];
+        if (!k) {
+            if (!(s = stub_new(name))) return;
+            stub_slot[h] = (unsigned short) nstubs;
+            break;
+        }
+        s = &stubs[k - 1];
+        if (s->name == name) break;
+        h = (h + 1) & (STUB_SLOTS - 1);
     }
+    if (s->calls < 4) {
+        if (e1_state[0] == 4) { s->arg[s->held] = arg; s->tick[s->held] = e1_tick; s->held++; }
+        else e1_log("E1 STUB %s arg=%d tick=%lu\n", name, arg, (unsigned long) e1_tick);
+    }
+    s->calls++;
 }
 extern "C" void e1_stub_report(void)
 {
+    // after play: the first calls kept during the ticks, then one count line a name (entries of the same text merged)
     for (unsigned i = 0; i < nstubs; i++)
-        e1_log("E1 STUBCOUNT %s calls=%u first_tick=%u\n", stubs[i].name, stubs[i].calls, stubs[i].first_tick);
+        for (unsigned j = 0; j < stubs[i].held; j++)
+            e1_log("E1 STUB %s arg=%d tick=%u\n", stubs[i].name, stubs[i].arg[j], stubs[i].tick[j]);
+    for (unsigned i = 0; i < nstubs; i++) {
+        unsigned calls = stubs[i].calls, first = stubs[i].first_tick, dup = 0;
+        for (unsigned j = 0; j < i && !dup; j++) dup = !strcmp(stubs[j].name, stubs[i].name);
+        if (dup) continue;
+        for (unsigned j = i + 1; j < nstubs; j++)
+            if (!strcmp(stubs[j].name, stubs[i].name)) {
+                calls += stubs[j].calls;
+                if (stubs[j].first_tick < first) first = stubs[j].first_tick;
+            }
+        e1_log("E1 STUBCOUNT %s calls=%u first_tick=%u\n", stubs[i].name, calls, first);
+    }
+    e1_log("E1 STUB accounting: %s, %u names indexed, %u calls, %u not counted (table full)\n",
+           stub_old ? "STUBOLD (strcmp search, formatted in the ticks: lab arm)" : "indexed at the first call",
+           nstubs, e1_stub_calls, stub_full);
 }
 
 // ---- debug log (db_log.cpp), engine form: every line to the engine log ----
@@ -124,6 +184,8 @@ void e1_globals_init()
     memset(&System, 0, sizeof(System));
     pLog.p = &LogWork;
     projection_init();
+    file_t f = fs_open("/cd/STUBOLD", O_RDONLY);   // lane eng-sched3: the stub accounting's comparison arm (above)
+    if (f >= 0) { fs_close(f); stub_old = 1; e1_log("E1 STUBOLD: the stub accounting before lane eng-sched3 (lab arm)\n"); }
 }
 
 // The warp rig's flags (dbgwarp_bridge.cpp start / "flags applied"): room, first-visit flag, and the r101 room

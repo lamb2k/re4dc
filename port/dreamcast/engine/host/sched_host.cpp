@@ -26,10 +26,11 @@
 // play): the default village scene hosts no room script yet (that is chapter 1's hosting, a later lane), so its play
 // is unchanged.
 //
-// Memory (lane eng-mem2 owns the map): the task stacks are the scheduler's own pool, 18 slots of 12 KiB (scheduler.cpp
-// GetStackSize under its RE4DC_GAME correction: 221,184 bytes), in the behaviour arena (lane eng-sched2; scheduler.o's mem_alloc is bound to
-// sched_stack_alloc, game/Makefile); each task also takes one KOS thread record (about 1.6 KB of KOS malloc) while
-// it lives. The report prints every stack's high-water mark so the map's owner can size them.
+// Memory (docs/engine/MEMORY_MAP.md, the scheduler's rows): the task stacks are the scheduler's own pool, 18 slots at
+// the GameCube's sizes (lane eng-sched3, H-043 ruling 2: GetStackSize below, 124,928 bytes; it was 18 x 12 KiB =
+// 221,184 under the old port's RE4DC_GAME floor), in the behaviour arena (lane eng-sched2; scheduler.o's mem_alloc is
+// bound to sched_stack_alloc, game/Makefile); each task also takes one KOS thread record (about 1.6 KB of KOS malloc)
+// while it lives. The report prints every stack's high-water mark and names any slot over half its stack.
 #ifndef E2_BOSS
 #include "types.h"
 #include "global.h"
@@ -57,14 +58,24 @@ void R101Main();
 // save record (the flags the script reads and sets through RsfCheck / RsfSet): one record, a first visit.
 cRoomData RoomData;
 alignas(32) static u8 room_save[0x100];
+// Lane eng-sched3: the cost split's lab arms (boot files, read before play) run the scenario layer without the room
+// script: SCHEDN (with three idle scenario tasks, each SceSleep(1) every tick: the task switch alone) and SCHED0 (no
+// task at all); the room's main is then not run.
+static int arm_noscript;
+static uint64_t main_us;   // this tick's R101Main span (stamps around it; the split's "room main")
 void cRoomData::execInitFunc(u16 room)
 {
-    if (room == 0x101) R101Init();
+    if (arm_noscript) e1_stub_hit("cRoomData::execInitFunc(lab arm: no room script)", room);
+    else if (room == 0x101) R101Init();
     else e1_stub_hit("cRoomData::execInitFunc(room not hosted)", room);
 }
 void cRoomData::execMainFunc(u16 room)
 {
-    if (room == 0x101) R101Main();
+    if (room == 0x101 && !arm_noscript) {
+        const uint64_t a = e1_clock_us();
+        R101Main();
+        main_us += e1_clock_us() - a;
+    }
 }
 u8* cRoomData::getRoomSavePtr(u16) { return room_save; }
 
@@ -91,6 +102,20 @@ void DbMenuRestoreStopFlag() {}                 // the debug menu is not hosted
 // village leaves 110,592 B between the heap and the arena) and overwrote the player in heap 4 before the first tick.
 // The arena is where the original put it (TaskSchedulerInit's MEM_ALLOC on the current heap); placing it in the
 // memory map proper stays with the map's owner.
+// Lane eng-sched3 (H-043 ruling 2): the task stacks at the GameCube's sizes, set in the engine's build. scheduler.cpp's
+// GetStackSize gives every slot a 12 KiB floor under RE4DC_GAME (the old port's correction for KOS's disc path, two
+// PATH_MAX arrays, run on a task stack); the engine opens nothing in play, so the reason does not hold here. scheduler.o's
+// GetStackSize is made weak (game/Makefile) and this table, the original's own sizes (its non-RE4DC branch: slot 2 the
+// debug task 12 KiB, slots 0..4 8 KiB, the scenario slots 5..17 6 KiB), takes its place: 124,928 bytes in all instead
+// of 221,184. The PC reference and the release line keep the correction. The guard stays (CSCHED), and the report
+// names any slot whose high-water mark is over half its stack.
+u32 GetStackSize(int no)
+{
+    static_assert(TASK_NUM == 18, "the table holds the original's 18 slots");
+    static const u16 bytes[TASK_NUM] = {0x2000, 0x2000, 0x3000, 0x2000, 0x2000, 0x1800, 0x1800, 0x1800, 0x1800,
+                                        0x1800, 0x1800, 0x1800, 0x1800, 0x1800, 0x1800, 0x1800, 0x1800, 0x1800};
+    return (u32) no < TASK_NUM ? bytes[no] : 0x1800;
+}
 extern "C" void* sched_stack_alloc(u32 size, const char* file, int line, int flag, int heap)
 {
     void* p = mem_alloc(size, file, line, flag, heap);
@@ -151,7 +176,7 @@ cObj* SetObj00(void*, void*, Vec*, Vec*)
 static int scene, ctl_stackx, ctl_delay;
 static unsigned steps, steps_tick, steps_max, ticks_run, init_tasks;
 static uint64_t scen_sum, scen_max, sched_sum, sched_max;
-static unsigned scen_max_tick, sched_max_tick, scen_over;
+static unsigned scen_max_tick, sched_max_tick, scen_over, stubs_at;
 // The task-step record (lane eng-sched2): every TaskSchedulerMain call, as the PC check's trace writes it (tick,
 // slot, status and sleep count before and after, the task's function), kept in a buffer in the behaviour arena (SCHED scene
 // only) and printed after play (E1 SCHEDT lines; hostref/svc/sched/sched_engine.py compares them with the PC's). The
@@ -164,9 +189,14 @@ struct SchedStep {
 enum { STEP_MAX = 4096, TICK_MAX = 1024 };
 static SchedStep* step_rec;
 static unsigned step_n, cur_tick, tick_ran;
-// each tick's scenario step (ScenarioMove and TaskScheduler) in us, and whether a task thread ran in it
-static u16* tick_us;
-static u8* tick_kind;
+// each tick's scenario step (ScenarioMove and TaskScheduler) in us, and whether a task thread ran in it; lane
+// eng-sched3: its split, by stamps around the parts (each stamp one clock read, about 1 us, the boot's "clock read"
+// line): R101Main's span, the task steps' spans (TaskSchedulerMain: the switch into the task, its work until it sleeps
+// and the switch back) and the stub calls made inside the step
+struct TickCost { u16 all, main, task; u8 kind, stubs; };
+static TickCost* tick_cost;
+static uint64_t task_us;   // this tick's task-step spans
+extern "C" unsigned e1_stub_calls;   // core/globals.cpp
 extern "C" void __real_TaskSchedulerMain(TASK* t);
 extern "C" void __wrap_TaskSchedulerMain(TASK* t)
 {
@@ -177,7 +207,9 @@ extern "C" void __wrap_TaskSchedulerMain(TASK* t)
     // a thread runs in this step: a new task, a running one, or a sleeper whose count ends now (scheduler.cpp
     // TaskSchedulerMain); the event and sub-screen holds are left out (no event holds in the SCHED scene)
     const u8 ran = st0 == TASK_EXEC || st0 == TASK_RUN || (st0 == TASK_SLEEP && sl0 == 1);
+    const uint64_t a = e1_clock_us();
     __real_TaskSchedulerMain(t);
+    task_us += e1_clock_us() - a;
     tick_ran |= ran;
     if (step_rec && step_n < STEP_MAX) {
         SchedStep& s = step_rec[step_n];
@@ -204,10 +236,27 @@ void sched_host_boot()
     if (f >= 0) { fs_close(f); ctl_stackx = 1; }
     f = fs_open("/cd/SCHEDD", O_RDONLY);
     if (f >= 0) { fs_close(f); ctl_delay = 1; }
-    e1_log("E1 SCHED boot: scheduler hosted, %u task slots, stacks in the behaviour arena%s%s%s\n", (unsigned) TASK_NUM,
+    f = fs_open("/cd/SCHEDN", O_RDONLY);
+    if (f >= 0) { fs_close(f); arm_noscript = 1; }
+    f = fs_open("/cd/SCHED0", O_RDONLY);
+    if (f >= 0) { fs_close(f); arm_noscript = 2; }
+    e1_log("E1 SCHED boot: scheduler hosted, %u task slots, stacks in the behaviour arena%s%s%s%s\n", (unsigned) TASK_NUM,
            scene ? "; lab scene SCHED: the village's room script (st1/r101) runs" : "",
            ctl_stackx ? "; SCHEDX: a scenario task's stack guard overwritten at tick 300 (control)" : "",
-           ctl_delay ? "; SCHEDD: 200 us added inside the timed scenario step at tick 200 (timing control)" : "");
+           ctl_delay ? "; SCHEDD: 200 us added inside the timed scenario step at tick 200 (timing control)" : "",
+           arm_noscript == 1 ? "; SCHEDN: no room script, three idle scenario tasks (lab arm: the task switch)"
+           : arm_noscript == 2 ? "; SCHED0: no room script, no task (lab arm: the scenario layer alone)" : "");
+    // the stamps' own cost (lane eng-sched3): 1,000 clock reads back to back, before play
+    const uint64_t c0 = e1_clock_ns();
+    volatile uint64_t sink = 0;
+    for (int i = 0; i < 1000; i++) sink += e1_clock_us();
+    e1_log("E1 SCHED clock read: %lu ns each (1,000 reads, before play)\n", (unsigned long) ((e1_clock_ns() - c0) / 1000));
+}
+
+// SCHEDN's idle scenario task: sleeps one tick, every tick (as r101's waiting tasks do, with no work between)
+static void sched_idle_task()
+{
+    for (;;) SceSleep(1);
 }
 
 void sched_host_room_init()
@@ -216,15 +265,19 @@ void sched_host_room_init()
     // the step record and the per-tick cost (lab scene only; the behaviour arena, about 85 KB: the KOS heap has no room
     // for it in the village, see sched_stack_alloc)
     step_rec = (SchedStep*) mem_alloc(STEP_MAX * sizeof(SchedStep), "sched_host step record", 0, 1, MEM_HEAP_CURRENT);
-    tick_us = (u16*) mem_alloc(TICK_MAX * sizeof(u16), "sched_host tick cost", 0, 1, MEM_HEAP_CURRENT);
-    tick_kind = (u8*) mem_alloc(TICK_MAX, "sched_host tick kind", 0, 1, MEM_HEAP_CURRENT);
-    if (!step_rec || !tick_us || !tick_kind) e1_log("E1 SCHED record: refused by the behaviour arena\n");
+    tick_cost = (TickCost*) mem_alloc(TICK_MAX * sizeof(TickCost), "sched_host tick cost", 0, 1, MEM_HEAP_CURRENT);
+    if (!step_rec || !tick_cost) e1_log("E1 SCHED record: refused by the behaviour arena\n");
+    else e1_log("E1 SCHED record: %u bytes in the behaviour arena (steps %u, ticks %u)\n",
+                (unsigned) (STEP_MAX * sizeof(SchedStep) + TICK_MAX * sizeof(TickCost)), (unsigned) (STEP_MAX * sizeof(SchedStep)),
+                (unsigned) (TICK_MAX * sizeof(TickCost)));
     cur_tick = 0;
     // the task table and its stack pool (in the behaviour arena), then the scenario system and the room's start
     TaskSchedulerInit();
     ScenarioInit();
     steps_tick = 0;
     ScenarioRoomInit();
+    if (arm_noscript == 1)   // SCHEDN: as many scenario tasks as r101 starts, each idle
+        for (int i = 0; i < 3; i++) SceExec(0x12, (TaskFunc) sched_idle_task, 0, 0, SCE_PRIO_DEF_2, 0);
     for (unsigned i = 5; i < TASK_NUM; i++) init_tasks += Task[i].Status != 0;
 }
 
@@ -237,6 +290,8 @@ void sched_host_scenario(unsigned tick)
     }
     cur_tick = ticks_run + 1;
     tick_ran = 0;
+    main_us = task_us = 0;
+    stubs_at = e1_stub_calls;
     const uint64_t a = e1_clock_us();
     if (ctl_delay && cur_tick == 200)   // SCHEDD (timing control): a known 200 us inside the timed step
         while (e1_clock_us() - a < 200) {}
@@ -255,18 +310,34 @@ static void sched_host_tasks(unsigned tick, uint64_t scen_d)
     const uint64_t d = e1_clock_us() - a;
     sched_sum += d;
     if (d > sched_max) sched_max = d, sched_max_tick = tick;
-    if (tick_us && ticks_run < TICK_MAX) {
+    if (tick_cost && ticks_run < TICK_MAX) {
         const uint64_t all = scen_d + d;
-        tick_us[ticks_run] = (u16) (all > 0xFFFF ? 0xFFFF : all);
-        tick_kind[ticks_run] = (u8) tick_ran;
+        const unsigned nst = e1_stub_calls - stubs_at;
+        TickCost& c = tick_cost[ticks_run];
+        c.all = (u16) (all > 0xFFFF ? 0xFFFF : all);
+        c.main = (u16) (main_us > 0xFFFF ? 0xFFFF : main_us);
+        c.task = (u16) (task_us > 0xFFFF ? 0xFFFF : task_us);
+        c.kind = (u8) tick_ran;
+        c.stubs = (u8) (nst > 255 ? 255 : nst);
     }
     ticks_run++;
     if (steps_tick > steps_max) steps_max = steps_tick;
     steps_tick = 0;
 }
 
-// mean, p99 (nearest rank) and worst of the scenario step's per-tick cost, over the ticks of one kind
-static void sched_cost_line(const char* what, int kind)
+// mean, p99 (nearest rank) and worst of the scenario step's per-tick cost, over the ticks of one kind; lane eng-sched3:
+// of one part of it (field: 0 the whole step, 1 R101Main, 2 the task steps, 3 the rest, 4 the stub calls, a count)
+static unsigned cost_field(const TickCost& c, int field)
+{
+    switch (field) {
+    case 1: return c.main;
+    case 2: return c.task;
+    case 3: return c.all > c.main + c.task ? c.all - c.main - c.task : 0;
+    case 4: return c.stubs;
+    default: return c.all;
+    }
+}
+static void sched_cost_line(const char* what, int kind, int field = 0)
 {
     static u16 v[TICK_MAX];
     unsigned n = 0, worst_tick = 0;
@@ -274,10 +345,11 @@ static void sched_cost_line(const char* what, int kind)
     const unsigned k = ticks_run < TICK_MAX ? ticks_run : TICK_MAX;
     u16 worst = 0;
     for (unsigned i = 0; i < k; i++) {
-        if (kind >= 0 && tick_kind[i] != kind) continue;
-        v[n++] = tick_us[i];
-        sum += tick_us[i];
-        if (tick_us[i] > worst) worst = tick_us[i], worst_tick = i + 1;
+        if (kind >= 0 && tick_cost[i].kind != kind) continue;
+        const u16 x = (u16) cost_field(tick_cost[i], field);
+        v[n++] = x;
+        sum += x;
+        if (x > worst) worst = x, worst_tick = i + 1;
     }
     for (unsigned i = 1; i < n; i++) {   // insertion sort, after play
         const u16 x = v[i];
@@ -304,15 +376,28 @@ void sched_host_report()
            (unsigned long) (scen_sum / n), (unsigned long) scen_max, scen_max_tick, scen_over,
            (unsigned long) (sched_sum / n), (unsigned long) sched_max, sched_max_tick, created, reaped, pending);
     if (!scene) return;
-    if (tick_us) {
+    if (tick_cost) {
         sched_cost_line("all", -1);
         sched_cost_line("tasks waiting", 0);
         sched_cost_line("tasks running", 1);
+        // lane eng-sched3: the split (stamps around the parts; "rest" is ScenarioMove's own work and TaskScheduler)
+        sched_cost_line("split room main (R101Main)", -1, 1);
+        sched_cost_line("split task steps (switch and task work)", -1, 2);
+        sched_cost_line("split rest (scenario layer)", -1, 3);
+        sched_cost_line("split stub calls (a count, not us)", -1, 4);
+        unsigned w = 0;
+        const unsigned k = ticks_run < TICK_MAX ? ticks_run : TICK_MAX;
+        for (unsigned i = 1; i < k; i++)
+            if (tick_cost[i].all > tick_cost[w].all) w = i;
+        if (k)
+            e1_log("E1 SCHED split at the worst tick %u: all %u us, room main %u us, task steps %u us, rest %u us, stub calls "
+                   "%u; arm %s\n", w + 1, tick_cost[w].all, tick_cost[w].main, tick_cost[w].task, cost_field(tick_cost[w], 3),
+                   tick_cost[w].stubs, arm_noscript == 1 ? "SCHEDN" : arm_noscript == 2 ? "SCHED0" : "SCHED");
     }
     // the stacks' high-water marks, every slot (lane eng-sched2): TaskSchedulerInit paints the pool with 0xB3 once
     // and nothing paints it again, so the untouched words above each slot's guard word give the most the slot used
     // over the whole run, the tasks that ended included
-    unsigned pool = 0, used_all = 0;
+    unsigned pool = 0, used_all = 0, over_half = 0;
     for (unsigned i = 0; i < TASK_NUM; i++) {
         const TASK& t = Task[i];
         if (!t.pStack || !t.StackSize) continue;
@@ -325,8 +410,13 @@ void sched_host_report()
         used_all += used;
         e1_log("E1 SCHED stack slot %u: bytes %u used %u (high water) guard %08x\n", i, (unsigned) t.StackSize, used,
                (unsigned) lo[0]);
+        if (used * 2 > (unsigned) t.StackSize) {   // lane eng-sched3 (ruling 2): a slot over half its stack is reported
+            over_half++;
+            e1_log("E1 SCHED stack slot %u OVER HALF: used %u of %u bytes\n", i, used, (unsigned) t.StackSize);
+        }
     }
-    e1_log("E1 SCHED stacks: pool %u bytes, high water summed %u bytes\n", pool, used_all);
+    e1_log("E1 SCHED stacks: pool %u bytes (the GameCube sizes, engine build), high water summed %u bytes, slots over half "
+           "their stack %u\n", pool, used_all, over_half);
     // the task steps (E1 SCHEDT: tick:slot:status/sleep>status/sleep:function, hex, eight a line)
     if (step_rec) {
         const unsigned k = step_n < STEP_MAX ? step_n : STEP_MAX;
