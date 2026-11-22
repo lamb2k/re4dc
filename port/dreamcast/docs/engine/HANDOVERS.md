@@ -2,6 +2,26 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-032 (2026-11-22): the owner chose skirt option B; borrow the old port's working mechanics
+
+- **Owner:** "Ok option B." Ashley's skirt runs two constraint passes instead of four, as the default with no switch
+  (lane eng-cloth2, from eng-cloth1; it supersedes eng-cloth1 at the gate). MODELLED (console-build dynarec at 70 MHz,
+  calibrated on the old port), hill cloth 5.36 -> 4.21 ms mean, 5.57 -> 4.39 p99, skirt pixels only.
+- **Owner:** "I also appreciate your innovation but we should be borrowing things that work fine at a mechanical level
+  from the old build pre re architecture." Ruling: before a lane writes new engine plumbing it checks the salvage
+  inventory (`SALVAGE_20261121.md`, REUSE and ADAPT rows) and the old port's own Dreamcast code (release line, read
+  only), and lifts what works: disc and loader, door and room-change memory guards, video-memory residency, sound, the
+  movie player, the memory card, the crash screen, proven kernels. It adapts only what the new architecture needs and
+  says in its hand-back what it lifted and from where. Unchanged: no original game service code in the engine (link
+  check); the old drawing path as a whole is not tuned (a proven piece of it may be lifted and measured in the engine's
+  pipeline). Steered by message to eng-mem2 and eng-draw4; in the common brief for every new lane.
+- **Gate rulings since H-031:** eng-draw3's step 1b stays (its one differing pixel is inside the base's own
+  non-repeatability); CBCULL saves about 0.1 ms on this tier and stays a lab arm for the deferred console run (not put
+  to the owner now). eng-mem1 (the map, the farm and village packs kept to frame 0's rows, sound under its ceilings,
+  the hill's handgun drawn again) handed back with DOOR not yet OK and a boot hang: lane eng-mem2 finishes the train.
+  New lane eng-draw4: the characters' emission and skinning kernels and three look sheets (detail levels, a light cap,
+  lighting every other picture).
+
 ## H-031 (2026-11-22): the gate's first four questions; one owner for the main memory map now
 
 - **Merged this morning (integration lane):** eng-clock1 (the engine clock: no 2.5 ms jump at the whole second),

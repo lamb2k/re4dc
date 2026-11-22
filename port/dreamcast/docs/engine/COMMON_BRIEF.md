@@ -104,3 +104,6 @@ before and after if you changed an image; files touched outside your owned list 
 for other lanes; the branch head; what was not done; what you could not verify. Keep
 `E:\RE4DC-Lanes\<lane>\STATUS.md` current as you go. Before handing back: merge `origin/engine`; if you changed an
 image, confirm default, `FIGHT=1`, `BOSS=1` and `SENDABLE=1` link.
+
+## Borrow what works (owner, 2026-11-22, H-032)
+"we should be borrowing things that work fine at a mechanical level from the old build pre re architecture." Before writing new engine plumbing, check `docs/engine/SALVAGE_20261121.md` (REUSE / ADAPT rows) and the old port's own Dreamcast code (release line, read only): disc and loader, door and room-change memory guards, video-memory residency, sound, movies, memory card, crash screen, proven kernels. Lift what works and adapt only what the new architecture needs; say in the hand-back what you lifted and from where. Original game service code stays out (link check); the old drawing path as a whole is not tuned.
