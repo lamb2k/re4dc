@@ -10,9 +10,10 @@
 // enemies on the actor table with the same filters (alive, not hidden, life left, the 10000-unit box ahead of the line
 // and the player's front half for ordinary enemies; the original asks its box test with weapon 0, so no handgun-proof
 // box is skipped here); each hit box
-// tested as an oriented box (flag 8: x -sx..sx, y 0..sy, z -sz..sz about the box centre in the part's frame) by a slab
-// test, or as a capsule (axis ofs -> ofs + height along the part's y, or x / z by flags 2 / 4, radius the part's scale of
-// the width) by the segment's entry point into the infinite cylinder and the two end spheres. The nearest box by the
+// tested as an oriented box (flag 8: x -sx..sx, y 0..sy, z -sz..sz about the box centre in the part's frame) or as a
+// capsule (axis ofs -> ofs + height along the part's y, or x / z by flags 2 / 4, radius the part's scale of the width)
+// by the game's acceptance rule, shared with the enemy hit geometry (hit_shape.h; lane eng-e2g: until then this file
+// took the true geometric entry, and a shot the game gives to the body could land on the head). The nearest box by the
 // XZ distance from p0 wins inside an enemy, the nearest enemy by the 3D distance overall, as the original.
 // include/math_sub.h defines a static fabsf (the SDK header's) that clashes with the C library's, which SH4ZAM's headers
 // declare: the game headers see it under another name (as services/math/math_svc.cpp).
@@ -25,6 +26,7 @@
 #include "atari.h"
 #include "em_sub.h"
 #undef fabsf
+#include "hit_shape.h"
 #include "sh4zam/shz_scalar.h"
 #include "sh4zam/shz_trig.h"
 
@@ -37,7 +39,10 @@ struct AimListCounters { u32 calls, scenery, listed, hit_only, empty; };
 AimListCounters aim_list_cnt;
 // Control (lane eng-e1g; set only by the PC reference's aim check, hostref svc/aimcheck.cpp, RE4_AIM_CONTROL=grow):
 // 1 makes every enemy hit box and capsule 25% larger, which the shadow comparison and the hit fixtures must catch.
+// Lane eng-e2g: 2 (truegeom, set by svc/aimprop.cpp and aimcheck.cpp RE4_AIM_CONTROL=truegeom) answers each box by the
+// true geometric entry, as this file did before: the property check and knock-ganado's shot list must FAIL with it.
 int aim_control;
+f32 aim_part_entry(const Mtx mat, const YARARE_INFO* p, const Vec* pa, const Vec* pb);
 int GetWepTargetPos(Vec* pPos, Vec* pPos2, int plCheck, int wepNo, cEm** outEm, int* outAttr);
 }
 
@@ -130,25 +135,58 @@ f32 capsule_entry(V a, V b, V p, V q, f32 r)
 
 cModel* hit_part(cEm* em, YARARE_INFO* p) { return p->partsNo ? em->getPartsPtr(p->partsNo - 1) : (cModel*) em; }
 
-// Where the segment a -> b enters one hit box (flag 8: the oriented box; otherwise the capsule): t in [0, 1] or -1.
-f32 part_entry(cEm* em, YARARE_INFO* p, V a, V b)
+// Control truegeom only (aim_control 2): the true-geometry entry this file used until lane eng-e2g (the surface entry
+// of the capsule; the oriented box's entry, a start inside counted). The PC property check (aimprop) must FAIL with it.
+f32 part_entry_true(const Mtx mat, const YARARE_INFO* p, V a, V b)
 {
-    cModel* part = hit_part(em, p);
-    aim_cnt.boxes++;
-    const f32 g = aim_control == 1 ? 1.25f : 1.0f;   // the control only
     if (p->flags & 8) {
-        aim_cnt.cubes++;
-        const V e[3] = {axis(part->mat, 0), axis(part->mat, 1), axis(part->mat, 2)};
-        const f32 lo[3] = {-p->width * g, 0.0f, -p->depth * g}, hi[3] = {p->width * g, p->height * g, p->depth * g};
-        return box_entry(a, b, point(part->mat, v(p->ofs)), e, lo, hi);
+        const V e[3] = {axis(mat, 0), axis(mat, 1), axis(mat, 2)};
+        const f32 lo[3] = {-p->width, 0.0f, -p->depth}, hi[3] = {p->width, p->height, p->depth};
+        return box_entry(a, b, point(mat, v(p->ofs)), e, lo, hi);
     }
-    aim_cnt.capsules++;
     V top = v(p->ofs);
     if (p->flags & 6) { if (p->flags & 2) top.x += p->height; else top.z += p->height; }
     else top.y += p->height;
-    const V az = axis(part->mat, 2);
-    return capsule_entry(a, b, point(part->mat, v(p->ofs)), point(part->mat, top), p->width * g * shz_sqrtf(dot(az, az)));
+    const V az = axis(mat, 2);
+    return capsule_entry(a, b, point(mat, v(p->ofs)), point(mat, top), p->width * shz_sqrtf(dot(az, az)));
 }
+
+}  // namespace
+
+// Where the segment a -> b counts as entering one hit box on the part frame `mat` (flag 8: the oriented box; otherwise
+// the capsule): t in [0, 1] or -1. Lane eng-e2g: by the game's acceptance rule (hit_shape.h capsule_in / cube_in, the
+// rule services/aim/em_hit.cpp answers emLineCapsuleCrossCk and emLineCubeCrossCk by), not the true geometry: the
+// capsule's side entry is the game's point along the segment, an end sphere counts only beyond its end plane, a box is
+// entered only from outside (a mirrored part frame: where the segment leaves it). Which part a shot hits decides the
+// damage, so the shot must take the part the game takes. Exported for the PC property check (hostref svc/aimprop.cpp).
+extern "C" f32 aim_part_entry(const Mtx mat, const YARARE_INFO* p, const Vec* pa, const Vec* pb)
+{
+    const V a = v(*pa), b = v(*pb);
+    if (aim_control == 2) return part_entry_true(mat, p, a, b);
+    const f32 g = aim_control == 1 ? 1.25f : 1.0f;   // the control grow only
+    const camsvc::Frame f = camsvc::frame_of(mat);
+    const camsvc::v3 ca = shz_vec3_init(a.x, a.y, a.z), cb = shz_vec3_init(b.x, b.y, b.z);
+    const camsvc::v3 ofs = shz_vec3_init(p->ofs.x, p->ofs.y, p->ofs.z);
+    if (p->flags & 8) return hitsvc::cube_in(ca, cb, f, ofs, p->width * g, p->height * g, p->depth * g);
+    const f32 h = p->height;
+    const camsvc::v3 up = (p->flags & 6) ? ((p->flags & 2) ? shz_vec3_init(h, 0.0f, 0.0f) : shz_vec3_init(0.0f, 0.0f, h))
+                                         : shz_vec3_init(0.0f, h, 0.0f);
+    return hitsvc::capsule_in(ca, cb, camsvc::frame_point(f, ofs), camsvc::frame_point(f, camsvc::vadd(ofs, up)),
+                              p->width * g * camsvc::vlen(f.forward));
+}
+
+namespace {
+
+// Where the segment a -> b counts as entering one hit box of `em`: t in [0, 1] or -1.
+f32 part_entry(cEm* em, YARARE_INFO* p, V a, V b)
+{
+    aim_cnt.boxes++;
+    if (p->flags & 8) aim_cnt.cubes++;
+    else aim_cnt.capsules++;
+    const Vec va = {a.x, a.y, a.z}, vb = {b.x, b.y, b.z};
+    return aim_part_entry(hit_part(em, p)->mat, p, &va, &vb);
+}
+
 
 // The enemy's hit box the line meets nearest to p0 in XZ (squared XZ distance under `limit`); its point in *out.
 YARARE_INFO* enemy_line(cEm* em, V a, V b, f32 limit, V* out, int wep)
@@ -292,10 +330,13 @@ extern "C" u32 GetWepTargetList2(Vec* p0, Vec* p1, WepTarget* list, u32 max, Vec
             if (list[far].part->rad <= list[j].part->rad) far = j;
         if (list[far].part->rad > part->rad) { list[far].part = part; list[far].em = em; }
     }
-    for (u32 i = 1; i < cnt; i++)   // nearest first (insertion sort: a list of at most 20)
-        for (u32 j = i; j > 0 && list[j - 1].part->rad > list[j].part->rad; j--) {
-            const WepTarget s = list[j]; list[j] = list[j - 1]; list[j - 1] = s;
-        }
+    // nearest first, by the original's exchange sort (em_sub.cpp: swap entry i with any later nearer entry j); lane
+    // eng-e2g: a stable insertion sort put targets at exactly the same distance in another order than the game's
+    for (u32 i = 0; i + 1 < cnt; i++)
+        for (u32 j = i + 1; j < cnt; j++)
+            if (list[i].part->rad > list[j].part->rad) {
+                const WepTarget s = list[i]; list[i] = list[j]; list[j] = s;
+            }
     if (bestPart && (cnt + 1 <= max || cnt == 0)) { list[cnt].part = bestPart; list[cnt].em = bestEm; cnt++; }
     if (cnt) nrm->x = nrm->y = nrm->z = 0.0f;
     aim_list_cnt.listed += cnt;

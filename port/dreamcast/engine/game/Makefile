@@ -217,7 +217,7 @@ $(OUT)/n/mgr_pool.o: ORIG_FLAGS += -fno-inline $(MGR_EXTRA)
 # target and surface) in every image. Where em_sub is hosted (FIGHT=1, BOSS=1) its own GetWepTargetPos is made weak
 # (WEAKEN_<unit> in the hosted rule) so the native body is linked and --gc-sections drops the original's.
 AIM_OBJ := $(OUT)/n/aim.o
-$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
+$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(SVC_DIR)/aim/hit_shape.h $(SVC_DIR)/camera/cam_math.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
 WEAKEN_game/em_sub := _GetWepTargetPos _GetWepTargetList2   # SH-ELF symbol names carry the leading underscore

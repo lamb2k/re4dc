@@ -52,6 +52,9 @@ int emhit_control;
 namespace {
 using namespace camsvc;
 using hitsvc::LineFrame;
+using hitsvc::sphere_in;
+using hitsvc::capsule_in;
+using hitsvc::cube_in;
 
 // ---- a hit box in world space ----
 struct HitBox {
@@ -79,104 +82,8 @@ v3 mid(const HitBox& b) { return vscale(vadd(b.base, b.tip), 0.5f); }
 bool dying(cEm* em) { return em->dmg.m_Flag || em->dmg.m_Timer; }
 bool debug_boxes() { return pG->Debug_flg[0] & 0x1000; }
 
-// ---- a segment against the shapes: the parameter t in [0, 1] where a + t (b - a) first enters, or -1 ----
-
-// Into a sphere (centre c, squared radius rr) from outside: the near root of |a + t d - c|^2 = rr, taken from the line's
-// nearest approach to the centre (t0, squared miss e2) as t0 - sqrt(rr - e2) / |d|: no difference of large squares.
-f32 sphere_in(v3 a, v3 d, v3 c, f32 rr)
-{
-    const f32 A = vlen2(d);
-    if (A <= 0.0f) return -1.0f;
-    const v3 m = vsub(a, c);
-    const f32 t0 = -vdot(m, d) / A;
-    const f32 e2 = vlen2(vadd(m, vscale(d, t0)));
-    if (!(e2 < rr)) return -1.0f;
-    const f32 t = t0 - __builtin_sqrtf(rr - e2) / __builtin_sqrtf(A);
-    return t >= 0.0f && t <= 1.0f ? t : -1.0f;
-}
-
-// Into the capsule p0 -> p1 of radius r. A start inside (either end sphere, or the cylinder between the end planes) is
-// t = 0. A segment shorter than sqrt(0.1) meets nothing. Otherwise an end sphere's entry when it lies beyond that end's
-// plane (the p1 end first), else the side's point between the end planes (only when the segment moves more than
-// sqrt(0.1) across the axis: a segment along the axis comes in by an end).
-// The side's point is the game's, not the surface entry: from the segment's nearest approach to the axis (q across it),
-// back toward a by h = sqrt(r^2 - q^2) measured along the segment. For a segment slanted to the axis that point lies
-// inside the cylinder (a true entry would step back h across the axis); the behaviour's box choice (the nearest point)
-// and its effects are built on this point, so the engine answers with it (lanes/eng-e2a.md, item 1).
-f32 capsule_in(v3 a, v3 b, v3 p0, v3 p1, f32 r)
-{
-    const f32 rr = r * r;
-    const v3 ax = vsub(p1, p0);
-    const f32 len = vlen(ax);
-    // The axis's direction for the along / across split. The game takes an axis within 0.01 rad of the vertical (up or
-    // down) as the upward vertical, and a zero axis as upward too; the end spheres stay at the real ends.
-    v3 u = vzero(ax) ? shz_vec3_init(0.0f, 1.0f, 0.0f) : vscale(ax, 1.0f / len);
-    if (u.y >= 0.99995f || u.y <= -0.99995f) u = shz_vec3_init(0.0f, 1.0f, 0.0f);   // cos(0.01 rad) = 0.99995
-    const v3 ra = vsub(a, p0);
-    const f32 sa = vdot(ra, u);
-    const v3 qa = vsub(ra, vscale(u, sa));   // a across the axis
-    if (vlen2(vsub(a, p1)) < rr || vlen2(ra) < rr || (sa > 0.0f && sa < len && vlen2(qa) < rr)) return 0.0f;
-    const v3 d = vsub(b, a);
-    if (vlen2(d) <= 0.1f) return -1.0f;
-    const f32 sd = vdot(d, u);
-    const v3 ends[2] = {p1, p0};
-    for (const v3& c : ends) {
-        const f32 t = sphere_in(a, d, c, rr);
-        if (t < 0.0f) continue;
-        const f32 s = sa + t * sd;
-        if (s < 0.0f || s > len) return t;
-    }
-    const v3 qd = vsub(d, vscale(u, sd));   // the motion across the axis
-    const f32 A = vlen2(qd);
-    if (!(A > 0.1f)) return -1.0f;
-    const f32 tn = -vdot(qa, qd) / A;                          // the nearest approach to the axis
-    const f32 q2 = vlen2(vadd(qa, vscale(qd, tn)));
-    if (!(q2 < rr)) return -1.0f;
-    const f32 back = __builtin_sqrtf(rr - q2) / vlen(d);      // h along the segment, as a parameter
-    const f32 t = tn > 0.0f ? tn - back : tn + back, s = sa + t * sd;
-    return t >= 0.0f && t <= 1.0f && s >= 0.0f && s <= len ? t : -1.0f;
-}
-
-// The oriented box: its centre at `ofs` in the frame, the frame's axes, x in [-sx, sx], y in [0, sy], z in [-sz, sz] about
-// the centre. In the box's own coordinates (the axes' adjugate over the determinant applied to the point less the frame's
-// position, then less ofs: no world-size centre is formed) each axis gives the interval of t inside its slab; the box is
-// their overlap. The faces face out of the box for a frame with a positive determinant: the segment must start outside
-// and enter before b (strictly, as a crossing from one side of a face to the other). A mirrored frame turns every face
-// in: what the original's face rule then finds is where the segment leaves the box (counted).
-f32 cube_in(v3 a, v3 b, const Frame& f, v3 ofs, f32 sx, f32 sy, f32 sz)
-{
-    shz_mat3x3_t axes, adj;
-    axes.col[0] = f.left, axes.col[1] = f.up, axes.col[2] = f.forward;
-    shz_mat3x3_adjugate(&axes, &adj);
-    const f32 det = vdot(f.left, vcross(f.up, f.forward));
-    if (det == 0.0f) return -1.0f;
-    const f32 k = 1.0f / det;
-    auto local = [&](v3 p) {
-        const v3 q = vsub(p, f.pos);
-        return vsub(vscale(vadd(vadd(vscale(adj.col[0], q.x), vscale(adj.col[1], q.y)), vscale(adj.col[2], q.z)), k), ofs);
-    };
-    const v3 la = local(a), lb = local(b);
-    const f32 lo[3] = {-sx, 0.0f, -sz}, hi[3] = {sx, sy, sz};
-    const f32 pa[3] = {la.x, la.y, la.z}, pb[3] = {lb.x, lb.y, lb.z};
-    f32 t_in = -1e30f, t_out = 1e30f;
-    for (int i = 0; i < 3; i++) {
-        const f32 dd = pb[i] - pa[i];
-        if (dd == 0.0f) {
-            if (pa[i] < lo[i] || pa[i] > hi[i]) return -1.0f;
-            continue;
-        }
-        f32 t0 = (lo[i] - pa[i]) / dd, t1 = (hi[i] - pa[i]) / dd;
-        if (t0 > t1) { const f32 s = t0; t0 = t1; t1 = s; }
-        if (t0 > t_in) t_in = t0;
-        if (t1 < t_out) t_out = t1;
-    }
-    if (t_in > t_out) return -1.0f;
-    if (det < 0.0f) {
-        emhit_cnt.cube_mirrored++;
-        return t_out > 0.0f && t_out < 1.0f ? t_out : -1.0f;
-    }
-    return t_in > 0.0f && t_in < 1.0f ? t_in : -1.0f;
-}
+// The shapes (a segment against a sphere, a capsule by the game's rule, an oriented box): hit_shape.h (lane eng-e2g
+// moved them there unchanged so the shot's target list in aim.cpp answers by the same rule).
 
 v3 at(v3 a, v3 b, f32 t)
 {
@@ -195,7 +102,7 @@ bool box_line(cEm* em, const YARARE_INFO* p, v3 a, v3 b, v3* hit)
     f32 t;
     if (p->flags & 8) {
         emhit_cnt.line_cubes++;
-        t = cube_in(a, b, hb.f, V(p->ofs), p->width * g, p->height * g, p->depth * g);
+        t = cube_in(a, b, hb.f, V(p->ofs), p->width * g, p->height * g, p->depth * g, &emhit_cnt.cube_mirrored);
     } else {
         emhit_cnt.line_capsules++;
         t = capsule_in(a, b, hb.base, hb.tip, hb.radius * g);
@@ -257,7 +164,7 @@ extern "C" int emLineCubeCrossCk(Vec* a, Vec* b, Mtx m, f32 sx, f32 sy, f32 sz, 
 {
     emhit_cnt.line_cubes++;
     const Frame f = frame_of(m);
-    const f32 t = cube_in(V(a), V(b), f, V(ofs), sx, sy, sz);
+    const f32 t = cube_in(V(a), V(b), f, V(ofs), sx, sy, sz, &emhit_cnt.cube_mirrored);
     if (t < 0.0f) return 0;
     put(hit, at(V(a), V(b), t));
     return 1;

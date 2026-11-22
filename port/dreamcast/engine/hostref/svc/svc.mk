@@ -356,6 +356,60 @@ $(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJ
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
 
+# ---- lane eng-e2f: sce_at's service functions (services/scene/sce_at_svc.cpp) against sce_at's original bodies ----
+# (svc/e2fcheck.sh). The reference hosts no scenario layer: e2fodump and e2fnative are odump and native with sce_at's
+# object added (compiled here from src/game/sce_at.cpp with the image's force-include, services/scene/sce_at_weak.h, and
+# without the interprocedural optimisations or inlining, so no caller keeps a copy of a replaced body; then every global
+# it defines made weak, so the reference's stubs keep answering the scenario functions they answered), the at-list
+# (libgpu's original, weak, in e2fodump; services/scene/at_list.cpp in e2fnative, with sce_at_svc.cpp) and the boundary
+# log svc/e2f_dump.cpp. The reference's stubs of the two at-list walkers are weak in these builds' copy of
+# host_actor_stubs.o, so sce_at's walkers (e2fodump, linked first) or the engine's answer instead.
+E2F := $(BUILD)/e2f
+E2F_FLAGS := $(EM10_NOIPA_PC) -fno-inline -fno-inline-functions-called-once -frecord-gcc-switches
+# The at-list keeps a bucket's address with the top bit clear and a record's with it set (the console's addresses all
+# have it): sce_at's system record is a static of the program, so these two builds are linked above 0x80000000 (the
+# guest arena is at 0x8C000000, 16 MiB; the program from 0x90000000), where the list's addresses read as on the console.
+E2F_LINK := -Wl,-Ttext-segment=0x90000000
+E2F_WRAP := -Wl,--wrap=EspPullCoreKind -Wl,--wrap=ShdGetObjPtr -Wl,--wrap=itemInfo -Wl,--wrap=EffectEspDelete \
+	-Wl,--wrap=EffectEspgenDelete -Wl,--wrap=EffectEfmDelete
+$(E2F)/sce_at.o: $(ROOT)/src/game/sce_at.cpp $(SVC_ENG)/scene/sce_at_weak.h svc/svc.mk
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(E2F_FLAGS) '-DRE4DC_DOORPH(x)=' -include $(SVC_ENG)/scene/sce_at_weak.h \
+	    -fopt-info-inline-optimized=$@.inl.txt -c $< -o $@.raw.o
+	objcopy $$(nm -g --defined-only $@.raw.o | awk 'NF == 3 {print "--weaken-symbol=" $$3}') $@.raw.o $@
+	rm -f $@.raw.o
+$(E2F)/libgpu.o: $(ROOT)/src/game/libgpu.cpp svc/svc.mk
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@.raw.o
+	objcopy $$(nm -g --defined-only $@.raw.o | awk 'NF == 3 {print "--weaken-symbol=" $$3}') $@.raw.o $@
+	rm -f $@.raw.o
+$(E2F)/host_actor_stubs.o: $(filter %/host_actor_stubs.o,$(SVC_HG_OBJS)) svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy --weaken-symbol=sceAtSetOtStart --weaken-symbol=sceAtGetOtAddr $< $@
+$(E2F)/scene_%.o: $(SVC_ENG)/scene/%.cpp $(wildcard $(SVC_ENG)/scene/*.h) $(SVC_ENG)/camera/cam_math.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -I$(SVC_ENG)/../host -c $< -o $@
+$(BUILD)/svc/e2f_dump.o: svc/e2f_dump.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+E2F_HG := $(filter-out %/host_actor_stubs.o,$(SVC_HG_OBJS)) $(E2F)/host_actor_stubs.o
+E2F_ORIG := $(E2F)/sce_at.o $(E2F)/libgpu.o $(BUILD)/svc/e2f_dump.o
+E2F_NAT := $(E2F)/scene_sce_at_svc.o $(E2F)/scene_at_list.o $(E2F)/sce_at.o $(BUILD)/svc/e2f_dump.o
+$(BUILD)/e2fodump/re4ref: $(E2F_ORIG) $(E2F_HG) $(SVC_HOST_OBJS) $(CENSUS_OBJS) $(plain_PC_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) \
+               $(plain_LIBM_OBJS) aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(E2F_ORIG) $(plain_PC_OBJS) $(E2F_HG) $(SVC_HOST_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
+	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2F_WRAP) $(E2F_LINK) -Wl,-Map=$@.map
+$(BUILD)/e2fnative/re4ref: $(E2F_NAT) $(E2F_HG) $(plain_PC_OBJS) $(plain_LIBM_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(SVC_HOST_OBJS) \
+               $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(E2F_NAT) $(plain_PC_OBJS) $(E2F_HG) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o \
+	    $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) \
+	    $(SVC_WRAP_FLAGS) $(E2F_WRAP) $(E2F_LINK) -Wl,-Map=$@.map
+e2fodump: $(BUILD)/e2fodump/re4ref
+e2fnative: $(BUILD)/e2fnative/re4ref
+.PHONY: e2fodump e2fnative
+
 odump: $(ODU)/re4ref
 native: $(NAT)/re4ref
 .PHONY: odump native
@@ -443,7 +497,7 @@ AIM := $(BUILD)/aimchk
 # (Lane eng-e1h: the reference's magazine is the new game's 10 rounds (host_stubs.cpp) and its rumble table is read in
 # the PC's order (host_glue.cpp), so this build no longer replaces the magazine stubs or wraps VibSetData.)
 AIM_HG_OBJS := $(SVC_HG_OBJS)
-$(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
+$(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp $(SVC_ENG)/aim/hit_shape.h $(SVC_ENG)/camera/cam_math.h
 	@mkdir -p $(AIM)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -c $< -o $@.raw.o
 	objcopy --redefine-sym GetWepTargetPos=eng_GetWepTargetPos --redefine-sym GetWepTargetList2=eng_GetWepTargetList2 $@.raw.o $@
@@ -457,8 +511,21 @@ $(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJ
 	$(CC) -o $@ $(plain_PC_OBJS) $(AIM_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
 	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=GetWepTargetList2 -Wl,-Map=$(AIM)/re4ref.map
-aimchk: $(AIM)/re4ref
+aimchk: $(AIM)/re4ref aimprop
 .PHONY: aimchk
+
+# ---- aimprop (lane eng-e2g): the property check of the shot's per-box test (svc/aimprop.cpp): aim.cpp's
+# aim_part_entry against the plain build's own em_sub.o (emLineCapsuleCrossCk, emLineCubeCrossCk) with sub2.o
+# (LineSphereCrossCk) and math_sub.o (TransMatrix) on generated cases. Nothing else of those objects is reached:
+# --gc-sections drops it. RE4_AIM_CONTROL=truegeom sets the native control (must FAIL).
+$(AIM)/aimprop.o: svc/aimprop.cpp hostref.h
+	@mkdir -p $(AIM)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -isystem /usr/include/x86_64-linux-gnu/c++/13 -c $< -o $@
+$(AIM)/aimprop:$(AIM)/aimprop.o $(AIM)/aim.o $(BUILD)/plain/game/em_sub.o $(BUILD)/plain/game/sub2.o \
+                $(BUILD)/plain/game/math_sub.o $(NAT)/shz_xmtrx_sw.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS) -Wl,-Map=$(AIM)/aimprop.map
+aimprop: $(AIM)/aimprop
+.PHONY: aimprop
 
 # ---- sdktest (lane eng-svc5): the native SDK math against src/lib mtx.c, mtxvec.c, mtx44.c, vec.c, quat.c (renamed
 # orig_<symbol>) on random inputs, bit for bit. RE4_SVC_CONTROL=sdkconcat sets the native control (must FAIL).
