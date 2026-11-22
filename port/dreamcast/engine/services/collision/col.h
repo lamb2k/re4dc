@@ -102,7 +102,41 @@ struct ColPiece {
     u32 nMask;
 };
 
+// Lane eng-skel2 (integrator's ruling 2026-11-21, option 2): the baked form. Every file of a room archive's SAT and
+// EAT tables is baked offline (hostref/svc/colbake.sh, with a receipt) into the bytes below, in the archive's place for
+// that file; the room load sets the piece up from it (col_baked_setup: the table pointers, no bake) and the pieces live
+// in the room archive (KOS heap), given back with it. A baked file:
+//   0x00  the cSatFile header (0x14 B: counts as the original's; x8 = COL_BAKED_MAGIC, 0 in every original file)
+//   0x14  ColBakedFile: the offsets below
+//   ...   the normal table (m_nNormal x 12 B, the original's bytes: pFloor_norm and hitCheck's normal point into it)
+//   ...   the ColPiece record and its tables, exactly as bake() lays them out (offsets from the record)
+// Pieces made in play from other data (a door's quad) are still baked when made (the room carve).
+#define COL_BAKED_MAGIC 0xC0B2u
+#define COL_BAKED_VERSION 1u
+struct ColBakedFile {    // 0x14: offsets from the file's start (oNorm, oPiece; oNorm may point outside the file: the
+    u32 version;         //       PC reference keeps the original's normal table, hostref/svc/colb_host.cpp) or from
+    s32 oNorm;           //       the ColPiece record (the tables)
+    u32 oPiece;
+    u32 bytes;           // the file's bytes (header to the last table)
+    u32 nNode, nLeaf, nIdx, nMask, nPoly;
+    u32 oMinX, oMinZ, oSzX, oSzZ, oSkip, oLeafN, oLeaf, oIdx, oHot, oCold, oGrid, oMask;
+};
+struct ColMapHit {       // col_map_floor: the floor or slope polygon under a point (the sub screen's map position)
+    u32 poly;            // its number in the file (the floor group: [0, floors + slopes))
+    Vec hit;             // where the vertical line meets it
+    Vec v[3];            // its vertices
+};
+
 extern "C" {
+int col_is_baked(const cSatFile* f);
+ColPiece* col_baked_setup(cSatFile* f, cSat* sat);   // the piece's table pointers from a baked file (no bake)
+ColPiece* col_bake_into(cSat* sat, void* (*alloc)(u32 bytes));   // bake() into memory from `alloc` (the offline bake)
+// the room's floor or slope polygon under `pos` (mapPositionCheck's search on the room's SAT file 0: the vertical line
+// pos.y + 100000 to pos.y - 100000, the lowest hit, the later polygon on a tie); 0 when none. `sat` is the room's SAT
+// table (the archive's SAT entry: a cSatHeader or one file).
+int col_map_floor(const void* sat, const Vec* pos, ColMapHit* out);
+extern int col_map_control;          // control (lane eng-skel2): the entry reports v[1] and v[2] swapped
+u32 col_baked_bytes(void);           // the baked files set up for the room's pieces (bytes in the room archive)
 void col_bake_all(void);            // every live piece of SatMgr and EatMgr (room load)
 ColPiece* col_piece_of(const cSat* s);
 void col_room_release(void);        // lane eng-skel1: the room is left: every piece dropped, its tables given back
@@ -113,7 +147,8 @@ struct ColCounters {
     u32 bakes, late_bakes, line_queries, sphere_queries, nodes_tested, leaves, tris_line, tris_sphere, tri_bytes, cold_line,
         cold_sphere, tris_skipped, filter_miss, filter_end, sphere_skipped, sphere_filter_miss, sphere_recells, leaves_whole,
         line_repeats, sphere_repeats,   // lane eng-svcspd1: queries made again in a tick with the same inputs (counted)
-        releases, released;             // lane eng-skel1: col_room_release calls, pieces dropped
+        releases, released,             // lane eng-skel1: col_room_release calls, pieces dropped
+        baked_setups, map_queries;      // lane eng-skel2: pieces set up from a baked file; col_map_floor calls
 };
 extern ColCounters col_cnt;
 extern f32 col_control_floor;       // control: every floor-group triangle raised by this many units in the queries

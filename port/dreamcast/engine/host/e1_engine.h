@@ -11,15 +11,18 @@ extern "C" {
 #ifdef E2_FIGHT
 // lane eng-e2: the fight image draws the village beside the Ganado module and its motion keys; its behaviour arena
 // peaks under 1 MB (4 Ganados, waves), so the arena is 1.25 MB and the room-pack region 1.5 MB larger.
-#define E1_ARENA_LO 0x8cd80000u
+#define E1_ARENA_LO 0x8ce00000u   /* lane eng-skel2: 512 KB up (was 0x8cd80000) */
 #else
-#define E1_ARENA_LO 0x8cc00000u
+#define E1_ARENA_LO 0x8cc80000u   /* lane eng-skel2: 512 KB up (was 0x8cc00000) */
 #endif
-#define E1_ARENA_HI 0x8cec0000u   /* 2,883,584 B (lane eng-e1c: the services region follows) */
-// Native services region (lane eng-e1c, host/e1_svc_mem.cpp): the skeleton pool (256 KB) and the room's collision
-// tables. Fixed address and size; the KOS kernel stack (64 KB) sits at 0x8cff0000.
-#define E1_SVC_LO 0x8cec0000u
-#define E1_SVC_HI 0x8cfc0000u   /* 1,048,576 B */
+#define E1_ARENA_HI 0x8cf40000u   /* 2,883,584 B (lane eng-e1c: the services region follows; lane eng-skel2: 512 KB up) */
+// Native services region (lane eng-e1c, host/e1_svc_mem.cpp): the skeleton pool (256 KB), the boot carve (the cloth
+// pool, the SVCPROF arm's buffers) and the room carve (collision pieces made in play). Fixed address and size; the KOS
+// kernel stack (64 KB) sits at 0x8cff0000. Lane eng-skel2: 512 KB (was 1 MB at 0x8cec0000): the room's collision comes
+// baked in the room archive (services/collision/col.h), which the KOS heap holds: the behaviour arena moved up 512 KB
+// with the region, so the KOS heap (up to E1_ARENA_LO) has 512 KB more; the room archive takes part of it (r101 +168 KB).
+#define E1_SVC_LO 0x8cf40000u
+#define E1_SVC_HI 0x8cfc0000u   /* 524,288 B */
 // Resident behaviour data the original keeps at fixed addresses: player archive body, weapon archive body, room
 // archive (CAM, SAT, EAT, ... sections the hosted code and the services read). Engine room-pack region, loaded at
 // room entry, read in place.

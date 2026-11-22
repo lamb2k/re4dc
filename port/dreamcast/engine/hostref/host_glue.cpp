@@ -53,6 +53,7 @@ bool host_load_player(const char* tree, int type, int costume)
     return true;
 }
 
+extern "C" void host_room_post(void* arc) __attribute__((weak));   // lane eng-skel2 (native builds only)
 bool host_load_room(const char* tree, unsigned room_id)
 {
     static const char hex[] = "0123456789abcdef";
@@ -64,6 +65,7 @@ bool host_load_room(const char* tree, unsigned room_id)
     void* p = host_load_data(tree, name, "room", 0);
     if (!p) return false;
     pG->pRoom = p;
+    if (host_room_post) host_room_post(p);   // lane eng-skel2: the native builds' baked collision (svc/colb_host.cpp)
     return true;
 }
 
