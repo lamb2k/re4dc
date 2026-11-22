@@ -11,6 +11,8 @@
 #include "global.h"
 #include "em.h"
 #include "player.h"
+#include "model.h"
+#include "em_sub.h"
 
 extern "C" {
 void* svc_out_open(const char* name, const char* mode);
@@ -77,6 +79,13 @@ void list_summary()
                    A.use_native ? "native" : "original", aim_control);
     svc_out_close(f);
 }
+int box_index(cEm* em, const YARARE_INFO* b)   // a hit box's place in its enemy's chain (-1: not in it)
+{
+    int k = 0;
+    for (const YARARE_INFO* p = &em->hitInfo; p; p = p->next, k++)
+        if (p == b) return k;
+    return -1;
+}
 void list_take(ListAnswer& r, const WepTargetRec* list, u32 n, const Vec& hit, u32 attr)
 {
     r.n = n > 20 ? 20 : n;
@@ -106,12 +115,60 @@ void list_compare(const ListAnswer& o, const ListAnswer& w)   // o: the original
     else {
         static void* fd;
         if (!fd) fd = svc_out_open("aimlist-diff.txt", "w");
-        if (fd)
+        if (fd) {
             svc_out_printf(fd, "call %u frame %u count %u/%u attr %08x/%08x first em %p/%p hit %.3f units apart, rad %.3f units apart\n",
                            L.calls, (unsigned) pG->Frame_cnt, o.n, w.n, (unsigned) o.attr, (unsigned) w.attr,
                            (void*) (o.n ? o.e[0].em : 0), (void*) (w.n ? w.e[0].em : 0), (double) hd, (double) mr);
+            // lane eng-e2g: the hit box each answer chose (its place in the enemy's chain, flags, part, distance)
+            for (u32 i = 0; i < o.n && i < w.n; i++)
+                svc_out_printf(fd, "  entry %u box original #%d (flags %x part %d, %.3f units) native #%d (flags %x part %d,"
+                               " %.3f units)\n", i, box_index(o.e[i].em, o.e[i].part), o.e[i].part->flags,
+                               o.e[i].part->partsNo, (double) __builtin_sqrtf(o.rad[i]), box_index(w.e[i].em, w.e[i].part),
+                               w.e[i].part->flags, w.e[i].part->partsNo, (double) __builtin_sqrtf(w.rad[i]));
+        }
     }
     list_summary();
+}
+// lane eng-e2g, diagnosis only (RE4_AIM_BOXES=1; the comparison above is unchanged): boxes.txt gets, per shot, the
+// line and every live hit box of the first listed enemy: its place, flags, part, sizes, the capsule's ends and radius
+// in the world (the original's construction, em_sub.cpp emLineAtCk) or the box's part matrix, and the original's own
+// answer for that box alone (emLineCapsuleCrossCk / emLineCubeCrossCk: hit or not, the point, its distance from p0).
+void box_dump(const Vec* p0, const Vec* p1, cEm* em)
+{
+    static void* f;
+    if (!f) f = svc_out_open("boxes.txt", "w");
+    if (!f || !em) return;
+    svc_out_printf(f, "shot frame %u a %.9g %.9g %.9g b %.9g %.9g %.9g em %p\n", (unsigned) pG->Frame_cnt, p0->x, p0->y,
+                   p0->z, p1->x, p1->y, p1->z, (void*) em);
+    int k = 0;
+    for (YARARE_INFO* p = &em->hitInfo; p; p = p->next, k++) {
+        if (!(p->flags & 1)) continue;
+        cModel* part = p->partsNo ? em->getPartsPtr(p->partsNo - 1) : (cModel*) em;
+        Vec a = *p0, b = *p1, hit = {0, 0, 0};
+        int r;
+        svc_out_printf(f, "  box #%d flags %x part %d w %.9g h %.9g d %.9g ofs %.9g %.9g %.9g", k, p->flags, p->partsNo,
+                       p->width, p->height, p->depth, p->ofs.x, p->ofs.y, p->ofs.z);
+        if (p->flags & 8) {
+            r = emLineCubeCrossCk(&a, &b, part->mat, p->width, p->height, p->depth, &p->ofs, &hit);
+            svc_out_printf(f, " M");
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 4; j++) svc_out_printf(f, " %.9g", part->mat[i][j]);
+        } else {
+            Vec top = p->ofs, bot = p->ofs, s = {0.0f, 0.0f, p->width};
+            if (p->flags & 6) { if (p->flags & 2) top.x += p->height; else top.z += p->height; }
+            else top.y += p->height;
+            PSMTXMultVec(part->mat, &top, &top);
+            PSMTXMultVec(part->mat, &bot, &bot);
+            PSMTXMultVecSR(part->mat, &s, &s);
+            const f32 rr = __builtin_sqrtf(s.x * s.x + s.y * s.y + s.z * s.z);
+            r = emLineCapsuleCrossCk(&a, &b, &top, &bot, rr, &hit);
+            svc_out_printf(f, " T %.9g %.9g %.9g B %.9g %.9g %.9g R %.9g", top.x, top.y, top.z, bot.x, bot.y, bot.z, rr);
+        }
+        const f32 dx = hit.x - p0->x, dy = hit.y - p0->y, dz = hit.z - p0->z;
+        svc_out_printf(f, " -> %d", r);
+        if (r) svc_out_printf(f, " at %.9g %.9g %.9g dist %.6g", hit.x, hit.y, hit.z, __builtin_sqrtf(dx * dx + dy * dy + dz * dz));
+        svc_out_printf(f, "\n");
+    }
 }
 }   // namespace
 extern "C" u32 __wrap_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u32 max, Vec* hit, Vec* nrm, u32* attr,
@@ -133,6 +190,7 @@ extern "C" u32 __wrap_GetWepTargetList2(Vec* p0, Vec* p1, WepTargetRec* list, u3
     list_take(last, list, n, *hit, *attr);
     if (A.use_native) list_compare(first, last);
     else list_compare(last, first);
+    if (is(svc_env("RE4_AIM_BOXES"), "1")) box_dump(p0, p1, first.n ? first.e[0].em : (last.n ? last.e[0].em : 0));
     if (!f) return n;
     const float hx = hit->x - p0->x, hy = hit->y - p0->y, hz = hit->z - p0->z;
     svc_out_printf(f, "shot frame %u type %d from %.0f %.0f %.0f to %.0f %.0f %.0f attr %08x hit %.0f %.0f %.0f at %.0f enemies %u",
@@ -163,6 +221,7 @@ static void aim_init()
     if (!A.init) {
         A.init = 1;
         if (is(svc_env("RE4_AIM_CONTROL"), "grow")) aim_control = 1;
+        if (is(svc_env("RE4_AIM_CONTROL"), "truegeom")) aim_control = 2;   // lane eng-e2g: the true-geometry boxes
         A.use_native = is(svc_env("RE4_AIM_USE"), "native");
         A.diff = svc_out_open("aim-diff.txt", "w");
     }

@@ -37,12 +37,48 @@ ENG_CPP_OUT += $(ENG)/services/scene/at_list.cpp
 else
 WEAKEN_game/sce_at += _sceAtSetOtStart _sceAtGetOtAddr
 endif
+# Lane eng-e2f item 2: sce_at's service functions are the engine's (services/scene/sce_at_svc.cpp: the room set-up, the
+# area geometry, the hit, sight and screen tests, the item models and glows, the shadow area's handler; itemZoom and
+# releaseModel logged stubs). sce_at's bodies are made weak; its file statics (the system record SceAtSys and its pointer
+# pS) and the static shadow handler are made weak globals by services/scene/sce_at_weak.h, force-included (no source
+# change, only the symbols' binding): the engine's SceAtInit points pS at the record and its handler takes the table's
+# entry. tools/engine/split_check.py checks the object (SCEAT_WEAK_SYMS weak, no section-relative reference to a
+# replaced body). Control build only: SCEAT_ORIG=1 keeps sce_at's bodies (the link check must FAIL, 17 back).
+SCEAT_NATIVE := _InScreenCheck _SceAtHitCheck _SceAtInit _SceAtItemHitCheck _SceAtItemModelPtr \
+	__Z17SceAtSetItemModelP9SceAtWorkP6cModel _itemZoom _releaseModel _sceAtCheckItemEffectCol _sceAtCheckItemModelParent \
+	_sceAtGetArea _sceAtGetLadderPos _sceAtHitCheck _sceAtItemEffDelete _sceAtItemEffSet _sceAtSetItemModelParent
+ifneq ($(SCEAT_ORIG),1)
+WEAKEN_game/sce_at += $(SCEAT_NATIVE)
+$(OUT)/h/game/sce_at.o: ORIG_FLAGS += -include $(ENG)/services/scene/sce_at_weak.h
+$(OUT)/h/game/sce_at.o: $(ENG)/services/scene/sce_at_weak.h
+else
+ENG_CPP_OUT += $(ENG)/services/scene/sce_at_svc.cpp
+endif
 # lane eng-e2a item 3: the scenario areas are the engine's (services/volumes/area_vol.cpp, game/Makefile AREAVOL_OBJ);
 # game/area is not hosted (AREA_ORIG=1, a control build only, hosts it again)
 ifeq ($(AREA_ORIG),1)
 FIGHT_SRCS += game/area
 endif
 HOSTED_SRCS += $(FIGHT_SRCS)
+# Lane eng-e2f item 3: the village square's Ganado voices before the fight (r101_callGanadoVoice, a static task of the
+# room script) are the engine's presentation loop (fight/r101_voice.cpp): fight/r101_weak.h, force-included into the
+# hosted r101.cpp, makes the static a weak global (no source change, only its binding) and the engine's strong body
+# takes its place; r101 is built without the interprocedural optimisations (the split check requires it of a unit with
+# a replaced function). Control build only: R101_VOICE_ORIG=1 keeps the original (the link check must FAIL, 1 back).
+SPLIT_NOIPA_UNITS += st1/r101
+# Lane eng-e2f item 4: cam_extra is built without inlining in this image (SPLIT_NOINLINE_UNITS, as dmg): the binocular
+# widget's in-class constructor and destructor (IdBinocular, drawing: the widget's stubs, fight/fight_svc_stubs.cpp) were
+# inlined into CameraBinocular's (split problems); out of line, CameraBinocular's calls reach the engine's by symbol.
+# Control build only: CAMX_INLINE=1 inlines again (the split check must FAIL, 2 problems).
+ifneq ($(CAMX_INLINE),1)
+SPLIT_NOINLINE_UNITS += game/cam_extra
+endif
+ifneq ($(R101_VOICE_ORIG),1)
+$(OUT)/h/st1/r101.o: ORIG_FLAGS += -include $(ENG)/fight/r101_weak.h
+$(OUT)/h/st1/r101.o: $(ENG)/fight/r101_weak.h
+else
+ENG_CPP_OUT += $(ENG)/fight/r101_voice.cpp
+endif
 # route_ck: the native routes service (services/routes, lane eng-e1e), not the original unit
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
 ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(filter-out $(ENG_CPP_OUT),$(wildcard $(ENG)/fight/*.cpp)) \
