@@ -98,6 +98,8 @@ static float frustum[6][4];
 static shz_mat4x4_t view_project __attribute__((aligned(32)));
 volatile unsigned m1_part_counts[300][2];
 extern volatile uint32_t m1_state[8];
+#include "actor_light_old.inc"   /* lane eng-draw5 item 4: look arm LOLD (off by default) */
+#include "actor_skin.inc"        /* lane eng-draw5 item 2: speed lab arm SKC, skinning in C on SH4ZAM */
 
 static void multiply34(float* out,const float* a,const float* b){
     for(unsigned i=0;i<3;i++)for(unsigned j=0;j<4;j++)
@@ -411,7 +413,7 @@ static void build_ws_once(const RtModel* m,unsigned i){
     pm->elem[8]=v.x;pm->elem[9]=v.y;pm->elem[10]=v.z;pm->elem[11]=v.w;
     v=shz_xmtrx_transform_vec4(shz_vec4_init(out[3],out[7],out[11],1.f));
     pm->elem[12]=v.x;pm->elem[13]=v.y;pm->elem[14]=v.z;pm->elem[15]=v.w;
-    if(!ws_light_off)ws_light(i,out);   /* eng-look: off on a baked-lighting cache hit */
+    if(!ws_light_off){if(lold_arm)lold_ws(i,out);else ws_light(i,out);}   /* eng-look: off on a baked-lighting cache hit; LOLD arm */
     ws_ready[i]=1;
 }
 static const pvr_vertex_t* cur_projected;static const uint32_t* cur_lit;static const uint8_t* cur_codes;
@@ -493,6 +495,7 @@ static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes
    renderer is built with -ffast-math and the kernel's list loop and range loop are compiled separately, so the same
    normal can come out one step apart (run rh1 against rb1: 29 pixels over 3 FIGHTS stills, all at boundary parts). */
 static inline void light_part(const RtModel* m,const RtPart* rp,unsigned st,const uint8_t* codes,uint8_t* sc,uint32_t* lit,int light){
+    if(lold_arm && light){if(st==2)mark_part(m,rp,codes,sc);lold_light_range(m,rp->nrm_first,rp->nrm_count,lit);return;}   /* LOLD arm */
     if(st!=2){if(light)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);return;}
     const unsigned nl=mark_part(m,rp,codes,sc);
     if(!light)return;

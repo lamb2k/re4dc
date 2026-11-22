@@ -139,6 +139,9 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
    LHALF every character lit on the same picture, which halved the mean but not the worst picture (eng-draw4). Memory: the
    same colour buffers as LHALF (one per character, 4 bytes a normal of its drawn model, from the heap). */
 static int e1_arm_lvl, e1_arm_lhalf, e1_arm_lstag, e1_pix_ctl;
+/* Lane eng-draw5 (item 6), a diagnostic arm: LVLX runs LVL's pick (content_pick, its hysteresis and counters) but draws
+   the base model, so a still that differs under LVLX differs for a reason other than the level drawn. */
+static int e1_arm_lvlx;
 static unsigned e1_lvl_slot[E1_SLOTS];            /* the catalogue model the slot's last opaque call drew */
 static const uint32_t* e1_lit_slot[E1_SLOTS];     /* the colours it emitted from */
 static unsigned e1_arm_n[8], e1_arm_calls;        /* LVL pictures by level 0-3 and rigid [0-4]; LHALF lit, reused, no buffer [5-7] */
@@ -146,12 +149,16 @@ static int e1_arm_boot(const char* p) { file_t f = fs_open(p, O_RDONLY); if (f <
 static void e1_arms_open(void)
 {
     static int done; if (done) return; done = 1;
-    e1_arm_lvl = e1_arm_boot("/cd/LVL"); src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
+    e1_arm_lvl = e1_arm_boot("/cd/LVL"); e1_arm_lvlx = e1_arm_boot("/cd/LVLX"); if (e1_arm_lvlx) e1_arm_lvl = 1; src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
     e1_arm_lstag = e1_arm_boot("/cd/LSTAG"); if (e1_arm_lstag) e1_arm_lhalf = 1;
     if (e1_arm_lvl) { m1_content[CS_LEVELS] = 3; e1_log("E1 ARM LVL: character detail levels by screen size (bench step 3), look arm\n"); }
     if (src_light_cap) e1_log("E1 ARM LCAP: at most %u lights a character (the strongest), look arm\n", src_light_cap);
     if (e1_arm_lhalf) e1_log("E1 ARM LHALF: each character's normals lit every other picture%s, look arm\n",
                              e1_arm_lstag ? " (LSTAG: staggered, half the characters a picture)" : "");
+    lold_arm = e1_arm_boot("/cd/LOLD"); if (lold_arm) src_light_cap = 3;   /* lane eng-draw5 item 4 (render/actor_light_old.inc) */
+    if (lold_arm) e1_log("E1 ARM LOLD: the released game's character lighting (at most 3 lights a character, FTRV kernel, clamp after the scale), look arm\n");
+    skc_arm = e1_arm_boot("/cd/SKC");   /* lane eng-draw5 item 2 (render/actor_skin.inc) */
+    if (skc_arm) e1_log("E1 ARM SKC: skinned positions in C on SH4ZAM (speed lab arm)\n");
     e1_pix_ctl = e1_arm_boot("/cd/PIXCTL");
     if (e1_pix_ctl) e1_log("E1 PIXCTL: control, one blue step flipped on every character colour (the pixel comparison must FAIL)\n");
 }
@@ -178,6 +185,15 @@ static void e1_arms_report(void)
     if (++e1_arm_calls != 640 || !(e1_arm_lvl || src_light_cap || e1_arm_lhalf)) return;
     e1_log("E1 ARM counts over 640 pictures: LVL characters at level 0 %u, 1 %u, 2 %u, 3 %u, rigid %u; LHALF lit %u reused %u no-buffer %u\n",
            e1_arm_n[0], e1_arm_n[1], e1_arm_n[2], e1_arm_n[3], e1_arm_n[4], e1_arm_n[5], e1_arm_n[6], e1_arm_n[7]);
+    /* lane eng-draw5 (item 6): the level content_pick chose per base model (m1_lod_models: pictures at level 0-3, rigid),
+       whether or not that level has its own model (the counts above say only whether another model was drawn) */
+    for (unsigned b = 0; b < CONTENT_MODELS; b++) {
+        const volatile uint32_t* r = m1_lod_models[b];
+        if (r[1] | r[2] | r[3] | r[4] | r[0])
+            e1_log("E1 ARM LVL model %u: picks at level 0 %u, 1 %u, 2 %u, 3 %u, rigid %u; variants %u %u %u %u%s\n", b,
+                   (unsigned) r[0], (unsigned) r[1], (unsigned) r[2], (unsigned) r[3], (unsigned) r[4], lod_variant[b][1],
+                   lod_variant[b][2], lod_variant[b][3], lod_variant[b][4], e1_arm_lvlx ? " (LVLX: base drawn)" : "");
+    }
 }
 
 /* lane eng-look1: one character or object; 0 when it cannot be drawn at all (no such catalogue model, or a skeleton with
@@ -232,7 +248,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         }
         const unsigned key = e1_lvl_key(model_record);
         const unsigned v = content_pick(s, model, lo, hi, key);
-        if (v != model && v < cat->n && cat->m[v].h[0] <= bones) {
+        if (v != model && v < cat->n && cat->m[v].h[0] <= bones && !e1_arm_lvlx) {
             m = cat->m + v; h = m->h; cur_pos = m->pos; drawn = v;
             if (v < 256 && !e1_pal_ok_model[v]) e1_pal_ok_model[v] = e1_pal_check(m, skel) ? 1 : -1;
         }
@@ -296,6 +312,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         /* the light volume's origin: part 1 (bone 0) or the model */
         const unsigned parts = live ? (unsigned) (uint8_t) live->info->parts : ml->info >> 8 & 255;
         source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, live, &cur_lights);
+        if (lold_arm) lold_character(e1_bone[1]);   /* LOLD arm: directions and distance terms once a character */
         if (DC_ARM(DL_PICK2)) source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, live, &cur_lights);   /* lane eng-draw4 arm P */
     }
     memset(ws_ready, 0, h[1]);
@@ -315,8 +332,8 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         pos_records[n][0] = pos_records[n + 1][0] = 0;
         PositionPass a = {pos_records, n, m->pos + rp->pos_first, dummy_uv, (void*) (proj + rp->pos_first), codes + rp->pos_first, 8,
                           skin_project[0].elem, ws_ready, h[1], 640, 480, near, camera[25], 0, 0, 0, 0};
-        m1_avk_pos_skin_xy(&a);   /* lane eng-draw5 (item 2): the released kernel without u, v (native_actor.inc) */
-        if (DC_ARM(DL_SKIN2)) m1_avk_pos_skin_xy(&a);   /* lane eng-draw4 arm K (set E): positions skinned twice */
+        if (skc_arm) m1_skin_pos_c(&a); else m1_avk_pos_skin_xy(&a);   /* lane eng-draw5 (item 2): no u, v; arm SKC: C */
+        if (DC_ARM(DL_SKIN2)) { if (skc_arm) m1_skin_pos_c(&a); else m1_avk_pos_skin_xy(&a); }   /* lane eng-draw4 arm K (set E): positions skinned twice */
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
         /* lane eng-draw3 (E3): a boundary part lights only the normals its kept strips use */
         if (!lc) {
