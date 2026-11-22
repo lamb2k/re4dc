@@ -60,6 +60,26 @@ static const uint16_t dummy_uv[2];
 static shz_mat4x4_t skin_project[ACTOR_WS_LIMIT] __attribute__((aligned(32)));
 static float skin_world[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
 static float bone_rows[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
+/* Lane eng-draw3: the strip codes (one byte a strip, two slots) and the normal marks, sized at pack open to the
+   catalogue's largest model rather than to the limits (32 KB of static arrays before, in an image whose hill heap
+   reaches into the arena: runs rb1/rh1 of 2026-11-22). Grown only, never shrunk. */
+static uint8_t* strip_code_pool[2];static unsigned strip_code_cap,nrm_cap;
+static uint16_t *nrm_list,*nrm_stamp,nrm_stamp_now;
+static int actor_scratch(unsigned strips,unsigned nrms){
+    if(strips>strip_code_cap){
+        free(strip_code_pool[0]);free(strip_code_pool[1]);
+        strip_code_pool[0]=malloc(strips);strip_code_pool[1]=malloc(strips);
+        strip_code_cap=strip_code_pool[0]&&strip_code_pool[1]?strips:0;
+        if(!strip_code_cap)return 0;
+    }
+    if(nrms>nrm_cap){
+        free(nrm_list);free(nrm_stamp);
+        nrm_list=malloc(2*nrms);nrm_stamp=calloc(nrms,2);nrm_stamp_now=0;
+        nrm_cap=nrm_list&&nrm_stamp?nrms:0;
+        if(!nrm_cap)return 0;
+    }
+    return 1;
+}
 static float bone_scale[ACTOR_WS_LIMIT];
 /* The rows build_ws blends (lane eng-e1e): bone_rows (12 floats a bone) by default; the E1 actor pass points them at
    the skeleton service's published palette (16 floats a bone, already in this layout) and reads it in place. */
@@ -282,6 +302,7 @@ int native_actor_open(NativeScene* s){
         }
         m->nbones_used=0;
         for(unsigned b=0;b<h[0];b++)if(m->bone_radius[b]>0)m->bones_used[m->nbones_used++]=b;
+        if(!actor_scratch(nstrip+1,nnrm+1))return 0;   /* lane eng-draw3: strip codes and normal marks for this model */
         if(m->sided)for(unsigned p=0;p<h[4];p++){
             RtPart* rp=m->parts+p;unsigned all=rp->strip_count>0;
             for(unsigned k=0;k<rp->strip_count;k++)all&=m->sided[rp->strip_first+k];
@@ -422,9 +443,7 @@ static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtMod
    else the corners' combined outcode, bit 5 = crosses the near plane) and lists the normals the kept strips use, so only
    those are lit; the emission (opaque and translucent calls) reads the codes instead of testing again. */
 #define STRIP_DROPPED 0x80u
-static uint8_t strip_code_pool[2][ACTOR_STRIP_LIMIT];
 static const uint8_t* cur_strip_codes;
-static uint16_t nrm_list[ACTOR_POS_LIMIT],nrm_stamp[ACTOR_POS_LIMIT],nrm_stamp_now;
 /* Returns how many normals to light, listed in nrm_list, or MARK_ALL when no strip was dropped (light the part's whole
    range: the common case on close pictures, where listing every corner cost more than it saved: run r1a, hill +0.9 ms).
    When some strips are dropped, the kept strips' normals are marked with plain stores (no branch a corner) and listed by
@@ -453,7 +472,7 @@ static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes
         *sc++=combined&keep;
     }
     if(!dropped)return MARK_ALL;
-    if(!++nrm_stamp_now){memset(nrm_stamp,0,sizeof nrm_stamp);nrm_stamp_now=1;}
+    if(!++nrm_stamp_now){memset(nrm_stamp,0,2*nrm_cap);nrm_stamp_now=1;}
     const uint16_t stamp=nrm_stamp_now;
     p=m->strips+rp->src->at;sc=sc0;
     while(p<stop){
