@@ -189,8 +189,13 @@ static unsigned pack_need(const char* path){
 }
 /* Read n bytes into the CRC only (the recording's frames 1-299 in an engine image). */
 static int skip_crc(file_t f,unsigned n,uint32_t* crc){
-    static uint8_t scratch[16384] __attribute__((aligned(32)));
-    while(n){unsigned c=n>sizeof(scratch)?sizeof(scratch):n;if(!read_crc(f,scratch,c,crc))return 0;n-=c;}
+    if(f!=pk.f)return 0;   /* lane eng-load2: through the load's stream buffer, in place (no scratch copy) */
+    while(n){
+        if(pk.at==pk.len){int r=fs_read(pk.f,pk_ring,sizeof(pk_ring));if(r<=0)return 0;pk.len=(unsigned)r;pk.at=0;}
+        unsigned c=pk.len-pk.at;if(c>n)c=n;
+        if(crc)*crc=crc_update(*crc,pk_ring+pk.at,c);
+        pk.at+=c;n-=c;
+    }
     return 1;
 }
 /* The rest of the pack (f after the texture section, at file offset 88+texsize) into data+68 with frame 0 kept:
