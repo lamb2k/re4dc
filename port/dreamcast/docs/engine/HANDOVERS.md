@@ -2,6 +2,27 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-033 (2026-11-22): plan version 3.3: what we take from the old port; gate rulings
+
+- **Owner:** "Integrate into the plan what we should copy or Integrate from the legacy port engine." Done:
+  `ENGINE_PLAN.md` "The plan as of 2026-11-21", new section 8 (version 3.3): the rule (lift and adapt before writing
+  new; every brief names the old-port part, every hand-back says what was lifted), A already taken (disc patches and
+  read safety, sound, the skinning routine, converted assets, spawn rules, corrections), B take next in order (room
+  loading at the old port's speed, the scheduler on the old thread layer, code modules, crash screen and profiler,
+  room recordings and the data inventory, movies, saves, QA and warp tools, release gates, the per-room fix list),
+  C take when the renderer can hold them (proven SH-4 routines measured in the engine's renderer, the sky plane, blob
+  shadows, the released effect selection, rain and flame sets, resident texture lists, picture modes), D not taken (the
+  GameCube drawing emulation and its settings, the disc shim, the movie front end, the inventory memory trick).
+- **Ruling:** the inventory's "drop" for the old port's SH-4 routines other than `avk_sh4.S` is re-opened: lane
+  eng-draw4 measures them inside the engine's renderer beside its own; the faster one with 0 differing pixels stays.
+  The old drawing path as a whole stays out and is not tuned.
+- **Lanes started from section 8:** eng-sched1 (B2) and eng-crash1 (B4). B1 and B3 follow the memory train's merge.
+- **Gate rulings:** KNOCKNT is the knock control; its "pool refused: full 50" follows from the control's own state (the
+  crash volume never expires) and is an expected failure with that reason; the disc script is to list it as a control
+  kind. eng-cloth2: the reference runs the skirt at two passes by the owner's choice (H-032), `SKIRT_PASSES=4` builds
+  the old reference, `--skip-skirt` may be used by the new refctl rows only; the skirt's pass count stays a constant
+  with its note, not a game setting; one start-up still's 6 pixels accepted as noise.
+
 ## H-032 (2026-11-22): the owner chose skirt option B; borrow the old port's working mechanics
 
 - **Owner:** "Ok option B." Ashley's skirt runs two constraint passes instead of four, as the default with no switch
