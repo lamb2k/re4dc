@@ -203,3 +203,7 @@ _m1_emit_actor_run:
         bra     .Lar_bound
         nop
         .size   _m1_emit_actor_run, .-_m1_emit_actor_run
+
+/* Lane eng-draw5 (item 2): the skinned position kernel without texture coordinates, generated from the released
+ * kernel's generator (render/gen/mkavk_xy.py). */
+#include "avk_xy_sh4.inc"

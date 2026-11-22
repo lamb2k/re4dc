@@ -133,7 +133,12 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
            into the character's own colour buffer; the next picture draws from it unchanged (no light pick, no weight-set
            lights, no normals lit) unless a part became visible that was not lit (then it lights again). Skinning and
            emission stay every picture. A character with no buffer (out of memory) is lit every picture, counted. */
-static int e1_arm_lvl, e1_arm_lhalf, e1_pix_ctl;
+/* Lane eng-draw5 (item 5): LSTAG, LHALF staggered (look arm, boot file, off by default): each character lights on the
+   pictures of its own parity (its colour cache slot's index plus the picture number), so half of the characters light
+   on one picture and half on the next, and a character's colours are at most one picture old while it stays drawn. Under
+   LHALF every character lit on the same picture, which halved the mean but not the worst picture (eng-draw4). Memory: the
+   same colour buffers as LHALF (one per character, 4 bytes a normal of its drawn model, from the heap). */
+static int e1_arm_lvl, e1_arm_lhalf, e1_arm_lstag, e1_pix_ctl;
 static unsigned e1_lvl_slot[E1_SLOTS];            /* the catalogue model the slot's last opaque call drew */
 static const uint32_t* e1_lit_slot[E1_SLOTS];     /* the colours it emitted from */
 static unsigned e1_arm_n[8], e1_arm_calls;        /* LVL pictures by level 0-3 and rigid [0-4]; LHALF lit, reused, no buffer [5-7] */
@@ -142,9 +147,11 @@ static void e1_arms_open(void)
 {
     static int done; if (done) return; done = 1;
     e1_arm_lvl = e1_arm_boot("/cd/LVL"); src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
+    e1_arm_lstag = e1_arm_boot("/cd/LSTAG"); if (e1_arm_lstag) e1_arm_lhalf = 1;
     if (e1_arm_lvl) { m1_content[CS_LEVELS] = 3; e1_log("E1 ARM LVL: character detail levels by screen size (bench step 3), look arm\n"); }
     if (src_light_cap) e1_log("E1 ARM LCAP: at most %u lights a character (the strongest), look arm\n", src_light_cap);
-    if (e1_arm_lhalf) e1_log("E1 ARM LHALF: each character's normals lit every other picture, look arm\n");
+    if (e1_arm_lhalf) e1_log("E1 ARM LHALF: each character's normals lit every other picture%s, look arm\n",
+                             e1_arm_lstag ? " (LSTAG: staggered, half the characters a picture)" : "");
     e1_pix_ctl = e1_arm_boot("/cd/PIXCTL");
     if (e1_pix_ctl) e1_log("E1 PIXCTL: control, one blue step flipped on every character colour (the pixel comparison must FAIL)\n");
 }
@@ -280,7 +287,10 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         for (unsigned p = 0; p < h[4]; p++) if (state[p]) vis |= (uint16_t) (1u << p);
         const RtPart* lp = m->parts + h[4] - 1;
         lc = e1_lc_get(model_record, drawn, lp->nrm_first + lp->nrm_count);
-        if (lc) { reuse = lc->fresh && !(vis & ~lc->mask); e1_arm_n[reuse ? 6 : 5]++; } else e1_arm_n[7]++;
+        if (lc && e1_arm_lstag) {   /* LSTAG: the character's own parity; fresh = its buffer holds this model's colours */
+            reuse = lc->fresh && ((m1_state[1] + (unsigned) (lc - e1_lc)) & 1) && !(vis & ~lc->mask);
+            e1_arm_n[reuse ? 6 : 5]++;
+        } else if (lc) { reuse = lc->fresh && !(vis & ~lc->mask); e1_arm_n[reuse ? 6 : 5]++; } else e1_arm_n[7]++;
     }
     if (!reuse) {
         /* the light volume's origin: part 1 (bone 0) or the model */
@@ -305,8 +315,8 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         pos_records[n][0] = pos_records[n + 1][0] = 0;
         PositionPass a = {pos_records, n, m->pos + rp->pos_first, dummy_uv, (void*) (proj + rp->pos_first), codes + rp->pos_first, 8,
                           skin_project[0].elem, ws_ready, h[1], 640, 480, near, camera[25], 0, 0, 0, 0};
-        re4dc_avk_pos_skin_u16(&a);
-        if (DC_ARM(DL_SKIN2)) re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw4 arm K (set E): positions skinned twice */
+        m1_avk_pos_skin_xy(&a);   /* lane eng-draw5 (item 2): the released kernel without u, v (native_actor.inc) */
+        if (DC_ARM(DL_SKIN2)) m1_avk_pos_skin_xy(&a);   /* lane eng-draw4 arm K (set E): positions skinned twice */
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
         /* lane eng-draw3 (E3): a boundary part lights only the normals its kept strips use */
         if (!lc) {
@@ -320,7 +330,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
             if (!reuse) light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lc->buf + rp->nrm_first);
         }
     }
-    if (lc) { cur_lit = lc->buf; lc->fresh = !reuse; if (!reuse) lc->mask = vis; }
+    if (lc) { cur_lit = lc->buf; lc->fresh = e1_arm_lstag ? 1 : !reuse; if (!reuse) lc->mask = vis; }
     e1_lit_slot[slot] = cur_lit;
     if (!model) e1_arms_report();
     /* 6. opaque parts (lane eng-e1d: as the bench's pass since eng-look, the hair part, role 7, is opaque with the body

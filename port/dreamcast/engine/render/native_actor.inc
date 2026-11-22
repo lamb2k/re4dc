@@ -5,7 +5,7 @@
    3. reject or accept each part by its per-bone spheres, before any skinning: a part is out when one frustum
       plane has all its spheres outside, and fully inside when every sphere is inside every plane;
    4. blend, project and light-fold only the weight sets that visible parts use;
-   5. positions on the SH-4 kernel re4dc_avk_pos_skin_u16 (screen x, y, 1/w and outcode per position), normals in
+   5. positions on the SH-4 kernel m1_avk_pos_skin_xy (re4dc_avk_pos_skin_u16 without u, v; screen x, y, 1/w and outcode per position), normals in
       a short ftrv loop, both over per-part streams sorted by weight set (one matrix load per run);
    6. emit strips: inside parts with no tests, boundary parts with per-strip outcodes and near clipping.
    The pack's model catalogue is converted at load (conversion cost is outside the picture). */
@@ -21,6 +21,9 @@ typedef struct {
     float width,height,near_plane,far_plane,au,bu,av,bv;
 } PositionPass;
 extern unsigned re4dc_avk_pos_skin_u16(const PositionPass*);
+/* Lane eng-draw5 (item 2): the same kernel without u, v (render/avk_xy_sh4.inc, from the released generator): the
+   emitter takes u, v from the strip corners, so the entries' u, v words were written and never read. */
+extern unsigned m1_avk_pos_skin_xy(const PositionPass*);
 _Static_assert(sizeof(PositionPass)==72,"AVK ABI");
 
 #include "part_cull.h"
@@ -660,8 +663,8 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
             pos_records[n][0]=pos_records[n+1][0]=0;
             PositionPass a={pos_records,n,m->pos+rp->pos_first,dummy_uv,(void*)(proj+rp->pos_first),codes+rp->pos_first,8,
                             skin_project[0].elem,ws_ready,h[1],640,480,near,far,0,0,0,0};
-            re4dc_avk_pos_skin_u16(&a);
-            if(DC_ARM(DL_SKIN2))re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
+            m1_avk_pos_skin_xy(&a);
+            if(DC_ARM(DL_SKIN2))m1_avk_pos_skin_xy(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
             /* lane eng-draw3 (E3): a boundary part's strips are tested here; only its kept strips' normals are lit */
             light_part(m,rp,st_p,codes,strip_codes,lit,!lit_cached);
