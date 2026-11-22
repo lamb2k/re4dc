@@ -19,11 +19,13 @@
 #include "math_sub.h"
 #include "rnd.h"
 #include "db_log.h"
+#include "svc_prof.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" float sinf(float);
 extern "C" float acosf(float);
 extern "C" void* svc_pool_carve(u32 bytes);   // host: the engine's service memory
+extern "C" const char* svc_env(const char* name) __attribute__((weak));   // the PC reference's environment
 // the original bodies, renamed in the native build (svc/svc.mk): the fallback for chains this service cannot serve
 extern "C" void pen_orig_Set(cModel* m, PenCloth* c, f32 len);
 extern "C" void pen_orig_Move(cModel* m, PenCloth* c);
@@ -119,6 +121,14 @@ int parts_bone(cModel* m, PenCloth* c, SkelTable* t, int no)
 // set-up: resolve the chain once (0: this service cannot serve it)
 ClothChain* build(cModel* m, PenCloth* c)
 {
+    {   // lane eng-svcspd1: its control on the PC reference (RE4_SVC_CONTROL=clothbound; hostref svc_io.cpp's svc_env)
+        static int read;
+        if (!read) {
+            read = 1;
+            const char* e = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
+            if (e && !__builtin_strcmp(e, "clothbound")) cloth_k_control_bound = 1;
+        }
+    }
     SkelTable* t = skel_table_for(m);
     if (!t || c->Num <= 0 || c->Num > 255) return 0;
     const u32 n = (u32) c->Num;
@@ -318,6 +328,7 @@ struct Step {
 };
 void step_begin(ClothChain* ch, Step& s)
 {
+    SvcProf pr(SP_CLOTH_PRE);
     PenCloth* c = ch->c;
     cModel* m = ch->m;
     SkelTable* t = ch->t;
@@ -346,6 +357,7 @@ void step_begin(ClothChain* ch, Step& s)
 // root's history): the records of those that are mailbox bones get them
 void step_end(ClothChain* ch, int wasReset)
 {
+    SvcProf pr(SP_CLOTH_POST);
     if (wasReset) {
         skel_leave(ch->t, 7);
         return;
@@ -357,6 +369,7 @@ void step_end(ClothChain* ch, int wasReset)
 f32 g_windAng[256];
 void kernel_step(ClothChain* ch, const Step& s, int variant, const Vec& move, f32 spdLen, const Vec& mpos)
 {
+    SvcProf pr(SP_CLOTH_KERNEL);
     PenCloth* c = ch->c;
     SkelTable* t = ch->t;
     const u32 cap = t->cap;
