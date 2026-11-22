@@ -4,7 +4,7 @@ One owner for main RAM (16 MiB, 0x8c000000-0x8d000000): `engine/host/e1_engine.h
 `render/native_scene.inc` (the renderer's resident pack buffer, its sizing), `core/loader*` (the loader's allocations).
 Every figure below is **Flycast** (plain build, slot std1/std2: a function run, no timing claim), read from the scene's
 own serial lines (`E1 MEM image`, `E1 MEM after play`, `E1 ARENA heap 4`, `E1 SVCMEM region`, `E1 MEMBLK`) on the test
-discs d4 and d6 (head 8d0fe36e0 / fa2b14aba; images built with SENDABLE=1 as every disc's are). Memory figures do not
+disc d4 (head 8d0fe36e0; images built with SENDABLE=1 as every disc's are). Memory figures do not
 depend on the tier; a console run must still confirm them (the console's KOS and disc driver allocate the same, but
 nothing here was measured on one).
 
@@ -25,7 +25,7 @@ Largest image bss objects (E1): the projected pool 262,144, the draw lists `sele
 trace buffer 196,608, the sound driver's `Snd_seq_work` 103,520, `e1_timing` 81,920; FIGHT adds `smd_obj` 251,904 and
 `fx_sprites` 84,484.
 
-## Measured peaks and margins after play (Flycast plain, d4; DOOR from d6)
+## Measured peaks and margins after play (Flycast plain, d4)
 
 | Scene (image, room) | KOS heap in use, peak | KOS margin to the arena ("free to arena") | Arena heap 4 peak | Arena margin | Services pool tables / carve | Stack high water | VRAM free |
 |---|---:|---:|---:|---:|---|---:|---:|
@@ -67,7 +67,10 @@ heap and 199,936 B of arena.
 
 ## DOOR (village > farm > village)
 
-Filled from d6: see `docs/engine/lanes/eng-mem1.md`.
+On d4 (8d0fe36e0) both loads complete; the round trip returns the arena (692,704 B), video memory (2,639,720 B), the
+collision pieces (2) and the skeleton tables (2); the KOS heap came back 200 B larger (the renderer's lit caches,
+given back at a room change since fa2b14aba: not yet re-run) and the farm's pack had no weapon models. The farm's arena
+heap 4 peak is 1,077,984 B. Detail and what is open: `docs/engine/lanes/eng-mem1.md`.
 
 ## Checks
 
