@@ -282,3 +282,34 @@ Budgets from the engine's proposed map (`SHELL_MAP.md:243-265`): room pack 4,096
   the playable path. The fix belongs in `bench/bake_vis.c` (a floor search limited to the seeds' height band), which
   this lane does not own.
 - Nothing here is a timing. No emulator or console run was made.
+
+## 8. The ten rooms captured (lane eng-rec1, 2026-11-22)
+
+Every chapter 1 room with a world now has a recording of the old game: `tools/engine/room_capture.sh` (image and
+disc) and `tools/engine/room_capture.py` (one run a room, Flycast plain, slots std1/std2 by lease, about a minute
+each). Captures in `E:\RE4DC-Lanes\eng-rec1\captures\<room>` (private, not in git), each with `receipt.json`. Image
+`41ab22340a9e...6eee6b63` (t15 recipe + `M1_FRAME_CAPTURE=3` + `DBG_WARP=1`, built from the sources of `13a801bf6`; its `tree-commit.txt` says c604cf211, the base the build's working tree
+had before that commit),
+first recorded tick 466 in every room (300 pictures of warm-up, then 300 recorded), Leon with the handgun and the
+HUD on screen in picture 1, `god` and `inv default` in every warp.
+
+| Room | Reached | Warp (entry) | Pictures | Capture MB | Receipt sha256 (first 12) | Props taken / catalogue templates | Live models left out: SMD scenery / GameCube or unkeyed textures |
+|---|---|---|---:|---:|---|---|---|
+| r100 (the first house) | yes | preset r100-post-radio | 300 | 46.0 | 7750bc36951f | 15 / 13 | 184 / 24 |
+| r106 | yes | preset r106-entry (r103 door) | 300 | 58.2 | 6ab265d9974d | 22 / 20 | 182 / 23 |
+| r104 | yes | preset r104-entry-noevt (r106 door) | 300 | 35.3 | 695bbf14f5d7 | 21 / 14 | 443 / 17 |
+| r107 (pool) | yes | preset r107-entry (r104 door) | 300 | 47.9 | 184419de4c48 | 21 / 18 | 496 / 24 |
+| r105 | yes | preset r105-entry (r107 door) | 300 | 44.8 | a3852f3c2084 | 17 / 16 | 246 / 17 |
+| r102 | yes | r101 door, dstPos (-19691, 0, -19088), 0.988 | 300 | 34.8 | 3ee182d0dbc4 | 17 / 17 | 46 / 6 |
+| r108 (river) | yes | r102 door, (-43905, -38, -14737), 2.01 | 300 | 40.5 | 796af39858a5 | 21 / 14 | 395 / 15 |
+| r109 (the cabin) | yes | preset r109-entry (r108 door) | 300 | 36.5 | 44be80369f62 | 19 / 15 | 180 / 19 |
+| r10a | yes | r109 door, (-58327, 7346, 69786), 1.387 | 300 | 41.9 | e4183a91e1dd | 16 / 15 | 238 / 16 |
+| r10b (lake) | yes, the shore path | r10a door, (-72513, 2890, -23603), 1.604 | 300 | 62.6 | 99715ef6d60e | 15 / 14 | 212 / 18 |
+
+- Warps without a preset (r102, r108, r10a, r10b) use the door that delivers Leon in play (the source room's AEV
+  door: dstPos, angle), with fresh state: the 1-3 rooms are entered without chapter 1-2's flags.
+- Props now: the room's whole live set less scenery, Leon and the Ganados, keeping only models whose every texture is
+  keyed to a PS2 tex.pak package; the village and farm recordings took only what picture 1 drew. Left out as GameCube
+  or unkeyed: the doors, windows, boxes and racks (EmMgr 0x41-0x46, the village's STATIC_OBJ_BAKE objects) and the
+  animals (0x23, 0x29, 0x2a, 0x2e) in most rooms. They need PS2 conversions before a room can draw them.
+- The lake was captured on the shore path at its entry, not on the dock or the boat.
