@@ -46,6 +46,12 @@ function must fail it).
 
 --list: print every original function the image keeps, by unit, with its size, the group that allows it or
 "SERVICE" (not allowed). Exit status: 0 PASS, 1 FAIL (an original function outside the list), 2 usage error.
+
+The split check (lane eng-e2d, split_check.py) runs on every image this checks, with no option to skip it: every
+hosted object the map loads must carry the compiler's inlining report, no function this list refuses (or the engine
+replaces) may be inlined into a kept function of its unit or survive as a clone, and a unit with a replaced function
+must be compiled without the interprocedural optimisations. Each problem counts as a SERVICE function
+("SERVICE(split)"). Not run with --orig-pattern (another build's layout).
 """
 import argparse
 import fnmatch
@@ -307,6 +313,18 @@ def main():
                     if any(fnmatch.fnmatchcase(s, p) or fnmatch.fnmatchcase(s.lstrip('_'), p) for p in r[2]):
                         bad.append({'unit': u, 'name': 'references ' + s, 'dem': 'references ' + s, 'size': 0,
                                     'group': 'SERVICE(ref)', 'why': 'ref'})
+    # lane eng-e2d: the split check (split_check.py) on every hosted object the map loads: a service function's copy
+    # inlined into a kept function, a clone, or a unit with a replaced function compiled with the interprocedural
+    # optimisations on. Each problem counts as a service function (SERVICE(split)). Not run on another build's layout
+    # (--orig-pattern), which has no hosted objects of this build.
+    nsplit = 0
+    if not a.orig_pattern:
+        import split_check
+        for u, (o, probs, rep) in sorted(split_check.check_image(a.map, rules).items()):
+            for p in probs:
+                bad.append({'unit': u, 'name': 'split: ' + p, 'dem': 'split: ' + p, 'size': 0,
+                            'group': 'SERVICE(split)', 'why': 'split'})
+                nsplit += 1
     by_unit = defaultdict(list)
     for f in bad:
         by_unit[f['unit']].append(f)
@@ -319,6 +337,7 @@ def main():
               f'({sum(f["size"] for f in allowed)} B), waived {len(waived)} ({sum(f["size"] for f in waived)} B), '
               f'SERVICE {len(bad)} ({sum(f["size"] for f in bad)} B'
               + (f', {sum(1 for f in bad if f.get("why") == "guard")} by the name guard' if any(f.get('why') == 'guard' for f in bad) else '')
+              + (f', {nsplit} by the split check' if nsplit else '')
               + f'): {verdict}')
         for u in sorted(by_unit, key=lambda u: -sum(f['size'] for f in by_unit[u])):
             fl = by_unit[u]
@@ -335,6 +354,7 @@ def main():
                'functions': len(fns), 'allowed': len(allowed), 'waived': len(waived), 'service': len(bad),
                'service_bytes': sum(f['size'] for f in bad),
                'service_by_guard': sorted(f['dem'] for f in bad if f.get('why') == 'guard'),
+               'service_by_split': sorted(f['unit'] + ': ' + f['dem'] for f in bad if f.get('why') == 'split'),
                'by_unit': {u: {'functions': len(fl), 'bytes': sum(f['size'] for f in fl),
                                'names': sorted(f['dem'] for f in fl), 'mangled': sorted(f['name'] for f in fl)}
                            for u, fl in sorted(by_unit.items())},
