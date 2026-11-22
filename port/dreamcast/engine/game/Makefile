@@ -35,6 +35,9 @@ SPLIT_NOIPA_UNITS := game/objWep game/pl_debug game/cam_ctrl game/cam_qfps game/
 # (lane eng-e2c's r119: its three thunder functions made weak by services/boss/r119_weak.h, the engine's in
 # services/boss/r119_thunder.cpp; game/r119_split_check.py also runs on the object in boss.mk)
 SPLIT_NOIPA_UNITS += st1/r119
+# (lane eng-mem1: the waived sound driver's game/snd, whose SndRoomStrStop, SndStop and the fade calls the fight and boss
+# images' sound stubs replace: the split check found them inlined, H-025.1's group)
+SPLIT_NOIPA_UNITS += game/snd
 # dmg's cDmg::beginEvent destroys its volume through the manager's destroy, which the shared header declares inline:
 # GCC inlined the original's body there, which the engine's table (services/volumes/dmg_vol.cpp) replaces. dmg is
 # built with no inlining at all, so the call reaches the engine's.
@@ -143,10 +146,21 @@ NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
 # force-included and stands in for services/cloth/pres_rng.h (same four functions, same include guard), drawing from
 # the engine generator of host/e1_wraps.cpp. pendulum.cpp is not linked (host/e1_svc_stubs.cpp: the wind globals, the
 # fallback stubs).
-ifeq ($(BOSS)$(FIGHT),)
-NATIVE_INC += -I$(SVC_DIR)/cloth
-NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o
+# Lane eng-skel1: the cloth and the native chain object (services/cloth/chain.cpp: SetChain, cObjChain, object kind
+# 0x1D) are linked wherever CLOTH_SVC is 1: the default image and the boss image (El Gigante's rope and arm chains, Leon's
+# garments). The fight image's lines are lane eng-e2d's: CLOTH_SVC := 1 in fight.mk, and the SetChain / cObjChain stubs out
+# of fight/fight_gen_stubs.cpp. host/e1_svc_mem.cpp and host/e1_svc_stubs.cpp follow E1_CLOTH_SVC.
+ifneq ($(FIGHT),1)
+CLOTH_SVC := 1
 endif
+ifeq ($(CLOTH_SVC),1)
+NATIVE_INC += -I$(SVC_DIR)/cloth
+NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o $(OUT)/n/chain.o
+ENG_FLAGS += -DE1_CLOTH_SVC=1
+endif
+$(OUT)/n/chain.o: $(SVC_DIR)/cloth/chain.cpp $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
 CLOTH_DEPS := $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/cloth/cloth_kernel.h $(SVC_DIR)/cloth/pres_rng.h $(ENG)/host/e1_pres_rng.h
 $(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(CLOTH_DEPS) $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
@@ -203,7 +217,7 @@ $(OUT)/n/mgr_pool.o: ORIG_FLAGS += -fno-inline $(MGR_EXTRA)
 # target and surface) in every image. Where em_sub is hosted (FIGHT=1, BOSS=1) its own GetWepTargetPos is made weak
 # (WEAKEN_<unit> in the hosted rule) so the native body is linked and --gc-sections drops the original's.
 AIM_OBJ := $(OUT)/n/aim.o
-$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
+$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(SVC_DIR)/aim/hit_shape.h $(SVC_DIR)/camera/cam_math.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
 WEAKEN_game/em_sub := _GetWepTargetPos _GetWepTargetList2   # SH-ELF symbol names carry the leading underscore
@@ -326,6 +340,7 @@ include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
 include $(ENG)/game/hosted_corrections.mk $(ENG)/game/game_settings.mk   # lane eng-fix1 (H-026): corrections, settings
+include sound.mk
 $(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(AREAVOL_OBJ) $(EM10SVC_OBJS) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^

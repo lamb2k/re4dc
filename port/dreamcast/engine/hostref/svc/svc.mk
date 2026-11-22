@@ -21,6 +21,18 @@ $(BUILD)/svc/svc_cloth_glue.o: svc/svc_cloth_glue.cpp hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_REF_GAME := $(plain_GAME_OBJS) $(BUILD)/svc/ref/pendulum.o
+# lane eng-skel1:
+# The chain object (kind 0x1D): the reference builds (odump, census) link the original game/obj1d.cpp, the native builds
+# services/cloth/chain.cpp; the plain build's generated stubs of its entry points are weak in the svc builds (svc/ copy).
+CHAIN_STUBS := _Z8SetChainPvS_P3VecS1_ _ZN9cObjChain8setChainEP8PenCloth _ZN9cObjChain9setParentEP6cModeliP3Veci
+$(BUILD)/svc/host_actor_stubs.o: $(BUILD)/plain/host/host_actor_stubs.o svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy $(foreach s,$(CHAIN_STUBS),--weaken-symbol=$(s)) $< $@
+SVC_HG_OBJS := $(filter-out $(BUILD)/plain/host/host_actor_stubs.o,$(SVC_HG_OBJS)) $(BUILD)/svc/host_actor_stubs.o
+$(BUILD)/svc/ref/obj1d.o: $(BUILD)/gen/obj1d.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+SVC_REF_GAME += $(BUILD)/svc/ref/obj1d.o
 $(BUILD)/svc/host_stubs.o: $(BUILD)/plain/host/host_stubs.o svc/svc.mk
 	@mkdir -p $(dir $@)
 	objcopy $(foreach s,$(PEN_STUBS),--weaken-symbol=$(s)) $< $@
@@ -258,6 +270,24 @@ $(BUILD)/svc/e2b_dump.o: svc/e2b_dump.cpp hostref.h
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o \
 	$(BUILD)/svc/e2b_dump.o
+# lane eng-skel1: the skeleton's bone entries and the chain object against the original (skent_dump.cpp; skent_check.sh)
+$(BUILD)/svc/skent_dump.o: svc/skent_dump.cpp $(SVC_ENG)/skeleton/skel.h hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+SVC_HOST_OBJS += $(BUILD)/svc/skent_dump.o $(BUILD)/svc/skchain_kind.o
+$(BUILD)/svc/skchain_kind.o: svc/skchain_kind.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+$(NAT)/chain.o: $(SVC_ENG)/cloth/chain.cpp $(SVC_ENG)/skeleton/skel.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
+NATIVE_GAME_OBJS += $(NAT)/chain.o
+# lane eng-skel2: the room's collision in the baked form in the native builds (svc/colb_host.cpp: host_room_post; the
+# bake step RE4_COLB_BAKE, svc/colbake.sh; the map entry's check RE4_COLMAP, svc/colmap_check.sh)
+$(NAT)/colb_host.o: svc/colb_host.cpp $(SVC_ENG)/collision/col.h hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) -isystem /usr/include/x86_64-linux-gnu/c++/13 $(HOSTFLAGS) -c $< -o $@
+NATIVE_GAME_OBJS += $(NAT)/colb_host.o
 
 # ---- lane eng-e2c: the boss's service entry points (services/boss/) against the original (src/em2b) in odump and native.
 # The reference's fixtures do not host El Gigante: its unit is linked into these two builds only for the exercise e2cboss
@@ -314,7 +344,8 @@ $(BUILD)/svc/e2c_co.o: svc/e2c_co.cpp
 	$(CXX) $(COMMON) $(FP_plain) $(PCFLAGS) -c $< -o $@
 E2C_ODU_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BUILD)/plain/boss/em2b.o $(BUILD)/plain/boss/obj20.o $(BUILD)/plain/boss/r119.o
 E2C_NAT_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BOSS_SVC_OBJS) $(NAT)/boss/em2b_weak.o
-E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci
+E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci \
+	-Wl,--wrap=_ZN9cObjChain10setParent2EP6cModeliP3VeciS3_i
 
 $(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) aliases.ld
 	@mkdir -p $(dir $@)
@@ -324,6 +355,60 @@ $(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJ
                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
+
+# ---- lane eng-e2f: sce_at's service functions (services/scene/sce_at_svc.cpp) against sce_at's original bodies ----
+# (svc/e2fcheck.sh). The reference hosts no scenario layer: e2fodump and e2fnative are odump and native with sce_at's
+# object added (compiled here from src/game/sce_at.cpp with the image's force-include, services/scene/sce_at_weak.h, and
+# without the interprocedural optimisations or inlining, so no caller keeps a copy of a replaced body; then every global
+# it defines made weak, so the reference's stubs keep answering the scenario functions they answered), the at-list
+# (libgpu's original, weak, in e2fodump; services/scene/at_list.cpp in e2fnative, with sce_at_svc.cpp) and the boundary
+# log svc/e2f_dump.cpp. The reference's stubs of the two at-list walkers are weak in these builds' copy of
+# host_actor_stubs.o, so sce_at's walkers (e2fodump, linked first) or the engine's answer instead.
+E2F := $(BUILD)/e2f
+E2F_FLAGS := $(EM10_NOIPA_PC) -fno-inline -fno-inline-functions-called-once -frecord-gcc-switches
+# The at-list keeps a bucket's address with the top bit clear and a record's with it set (the console's addresses all
+# have it): sce_at's system record is a static of the program, so these two builds are linked above 0x80000000 (the
+# guest arena is at 0x8C000000, 16 MiB; the program from 0x90000000), where the list's addresses read as on the console.
+E2F_LINK := -Wl,-Ttext-segment=0x90000000
+E2F_WRAP := -Wl,--wrap=EspPullCoreKind -Wl,--wrap=ShdGetObjPtr -Wl,--wrap=itemInfo -Wl,--wrap=EffectEspDelete \
+	-Wl,--wrap=EffectEspgenDelete -Wl,--wrap=EffectEfmDelete
+$(E2F)/sce_at.o: $(ROOT)/src/game/sce_at.cpp $(SVC_ENG)/scene/sce_at_weak.h svc/svc.mk
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(E2F_FLAGS) '-DRE4DC_DOORPH(x)=' -include $(SVC_ENG)/scene/sce_at_weak.h \
+	    -fopt-info-inline-optimized=$@.inl.txt -c $< -o $@.raw.o
+	objcopy $$(nm -g --defined-only $@.raw.o | awk 'NF == 3 {print "--weaken-symbol=" $$3}') $@.raw.o $@
+	rm -f $@.raw.o
+$(E2F)/libgpu.o: $(ROOT)/src/game/libgpu.cpp svc/svc.mk
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@.raw.o
+	objcopy $$(nm -g --defined-only $@.raw.o | awk 'NF == 3 {print "--weaken-symbol=" $$3}') $@.raw.o $@
+	rm -f $@.raw.o
+$(E2F)/host_actor_stubs.o: $(filter %/host_actor_stubs.o,$(SVC_HG_OBJS)) svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy --weaken-symbol=sceAtSetOtStart --weaken-symbol=sceAtGetOtAddr $< $@
+$(E2F)/scene_%.o: $(SVC_ENG)/scene/%.cpp $(wildcard $(SVC_ENG)/scene/*.h) $(SVC_ENG)/camera/cam_math.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -I$(SVC_ENG)/../host -c $< -o $@
+$(BUILD)/svc/e2f_dump.o: svc/e2f_dump.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+E2F_HG := $(filter-out %/host_actor_stubs.o,$(SVC_HG_OBJS)) $(E2F)/host_actor_stubs.o
+E2F_ORIG := $(E2F)/sce_at.o $(E2F)/libgpu.o $(BUILD)/svc/e2f_dump.o
+E2F_NAT := $(E2F)/scene_sce_at_svc.o $(E2F)/scene_at_list.o $(E2F)/sce_at.o $(BUILD)/svc/e2f_dump.o
+$(BUILD)/e2fodump/re4ref: $(E2F_ORIG) $(E2F_HG) $(SVC_HOST_OBJS) $(CENSUS_OBJS) $(plain_PC_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) \
+               $(plain_LIBM_OBJS) aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(E2F_ORIG) $(plain_PC_OBJS) $(E2F_HG) $(SVC_HOST_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
+	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2F_WRAP) $(E2F_LINK) -Wl,-Map=$@.map
+$(BUILD)/e2fnative/re4ref: $(E2F_NAT) $(E2F_HG) $(plain_PC_OBJS) $(plain_LIBM_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(SVC_HOST_OBJS) \
+               $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(E2F_NAT) $(plain_PC_OBJS) $(E2F_HG) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o \
+	    $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) \
+	    $(SVC_WRAP_FLAGS) $(E2F_WRAP) $(E2F_LINK) -Wl,-Map=$@.map
+e2fodump: $(BUILD)/e2fodump/re4ref
+e2fnative: $(BUILD)/e2fnative/re4ref
+.PHONY: e2fodump e2fnative
 
 odump: $(ODU)/re4ref
 native: $(NAT)/re4ref
@@ -412,7 +497,7 @@ AIM := $(BUILD)/aimchk
 # (Lane eng-e1h: the reference's magazine is the new game's 10 rounds (host_stubs.cpp) and its rumble table is read in
 # the PC's order (host_glue.cpp), so this build no longer replaces the magazine stubs or wraps VibSetData.)
 AIM_HG_OBJS := $(SVC_HG_OBJS)
-$(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp
+$(AIM)/aim.o: $(SVC_ENG)/aim/aim.cpp $(SVC_ENG)/aim/hit_shape.h $(SVC_ENG)/camera/cam_math.h
 	@mkdir -p $(AIM)
 	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -c $< -o $@.raw.o
 	objcopy --redefine-sym GetWepTargetPos=eng_GetWepTargetPos --redefine-sym GetWepTargetList2=eng_GetWepTargetList2 $@.raw.o $@
@@ -426,8 +511,21 @@ $(AIM)/re4ref: $(plain_PC_OBJS) $(AIM_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJ
 	$(CC) -o $@ $(plain_PC_OBJS) $(AIM_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
 	    $(AIM)/aim.o $(AIM)/aimcheck.o $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) \
 	    -Wl,--wrap=GetWepTargetPos -Wl,--wrap=GetWepTargetList2 -Wl,-Map=$(AIM)/re4ref.map
-aimchk: $(AIM)/re4ref
+aimchk: $(AIM)/re4ref aimprop
 .PHONY: aimchk
+
+# ---- aimprop (lane eng-e2g): the property check of the shot's per-box test (svc/aimprop.cpp): aim.cpp's
+# aim_part_entry against the plain build's own em_sub.o (emLineCapsuleCrossCk, emLineCubeCrossCk) with sub2.o
+# (LineSphereCrossCk) and math_sub.o (TransMatrix) on generated cases. Nothing else of those objects is reached:
+# --gc-sections drops it. RE4_AIM_CONTROL=truegeom sets the native control (must FAIL).
+$(AIM)/aimprop.o: svc/aimprop.cpp hostref.h
+	@mkdir -p $(AIM)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -isystem /usr/include/x86_64-linux-gnu/c++/13 -c $< -o $@
+$(AIM)/aimprop:$(AIM)/aimprop.o $(AIM)/aim.o $(BUILD)/plain/game/em_sub.o $(BUILD)/plain/game/sub2.o \
+                $(BUILD)/plain/game/math_sub.o $(NAT)/shz_xmtrx_sw.o $(plain_SDK_OBJS) $(plain_LIBM_OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS) -Wl,-Map=$(AIM)/aimprop.map
+aimprop: $(AIM)/aimprop
+.PHONY: aimprop
 
 # ---- sdktest (lane eng-svc5): the native SDK math against src/lib mtx.c, mtxvec.c, mtx44.c, vec.c, quat.c (renamed
 # orig_<symbol>) on random inputs, bit for bit. RE4_SVC_CONTROL=sdkconcat sets the native control (must FAIL).

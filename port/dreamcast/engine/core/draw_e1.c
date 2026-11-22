@@ -10,6 +10,7 @@
 #include "camera/eng_camera.h"
 #include <kos.h>
 #include <dc/pvr.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
@@ -60,7 +61,11 @@ int e1_draw_open_c(const char* pack)
     if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
     native_update(&scene, 0);
     /* lane eng-e1j (H-016.2): the scene's camera stream is the camera service's record, read in place by every pass
-       (services/camera/eng_camera.h: its first 26 words are the stream's layout); the pack's recorded camera is not used */
+       (services/camera/eng_camera.h: its first 26 words are the stream's layout); the pack's recorded camera is not used.
+       lane eng-mem2: the recorded camera's own block (native_open's calloc) is given back here, and the slot is emptied
+       before native_release (e1_draw_close_c): before, the block was lost at every open (104 B on the KOS heap a room:
+       DOOR's round trip +200 B) and native_close passed the camera record, a static object, to free(). */
+    free(scene.state[0]);
     scene.state[0] = (uint32_t*) &eng_cam;
     e1_light_tables(&scene);   /* lane eng-e1e: each TEV group's scale, once a pack (services/actor_e1.inc) */
     /* Ashley's body is catalogue 6 of the hill pack only (other packs hold props there) */
@@ -88,6 +93,7 @@ void e1_draw_close_c(void)
 {
     if (!open_ok) return;
     pvr_wait_ready(); pvr_wait_render_done();
+    scene.state[0] = NULL;   /* lane eng-mem2: the camera service's record, not the renderer's block (e1_draw_open_c) */
     native_release(&scene);
     open_ok = 0;
 }
@@ -96,6 +102,7 @@ int e1_draw_reopen_c(const char* pack)
     if (open_ok) e1_draw_close_c();
     if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused on reopen (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
     native_update(&scene, 0);
+    free(scene.state[0]);   /* lane eng-mem2: as e1_draw_open_c */
     scene.state[0] = (uint32_t*) &eng_cam;
     e1_light_tables(&scene);
     partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;

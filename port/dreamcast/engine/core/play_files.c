@@ -33,8 +33,12 @@ int __real_cdrom_stream_start(int sector, int cnt, bool dma);
 int __real_cdrom_stream_request(void* buffer, size_t size, bool block);
 file_t cl_send_fs_open(const char* fn, int mode) __attribute__((weak));
 
+/* Lane eng-load1: a third state, loading (core/frame.cpp e1_loading_begin / _end, a room change between two ticks): its
+   opens, reads and drive requests are counted apart, per transition, and never as play's. */
 static volatile int in_play;
+static int in_load;
 static unsigned opens, open_tick, reads, read_tick, sectors, sector_tick;
+static unsigned l_opens, l_reads, l_sectors;
 static char first_name[40];
 #define DISC_FDS 1024   /* KOS's FD_SETSIZE */
 static uint32_t disc_fd[DISC_FDS / 32];   /* handles opened under /cd */
@@ -43,7 +47,8 @@ static int disc_backed(file_t fd) { return fd >= 0 && fd < DISC_FDS && (disc_fd[
 
 file_t __wrap_fs_open(const char* fn, int mode)
 {
-    if (in_play) {
+    if (in_load) l_opens++;
+    else if (in_play) {
         if (!opens++) {
             open_tick = e1_tick;
             snprintf(first_name, sizeof(first_name), "%s", fn ? fn : "?");
@@ -59,7 +64,8 @@ file_t __wrap_fs_open(const char* fn, int mode)
 
 ssize_t __wrap_fs_read(file_t fd, void* buf, size_t n)
 {
-    if (in_play && disc_backed(fd) && !reads++) read_tick = e1_tick;
+    if (in_load) l_reads += disc_backed(fd);
+    else if (in_play && disc_backed(fd) && !reads++) read_tick = e1_tick;
     return __real_fs_read(fd, buf, n);
 }
 
@@ -71,8 +77,14 @@ int __wrap_fs_close(file_t fd)
 
 void e1_play_disc_request(void)   /* one CD drive read command (here, and core/boot.c's TOC read) */
 {
-    if (in_play && !sectors++) sector_tick = e1_tick;
+    if (in_load) l_sectors++;
+    else if (in_play && !sectors++) sector_tick = e1_tick;
 }
+/* Lane eng-load1: the drive's read commands go on to the read-safety layer (core/disc_safe.c: the old port's
+   dvd_read_safe wrappers, lifted), which calls KOS. */
+int disc_safe_read_sectors_ex(void* buffer, uint32_t sector, size_t cnt, bool dma);
+int disc_safe_stream_start(int sector, int cnt, bool dma);
+int disc_safe_stream_request(void* buffer, size_t size, bool block);
 int __wrap_cdrom_read_sectors(void* buffer, uint32_t sector, size_t cnt)
 {
     e1_play_disc_request();
@@ -81,21 +93,27 @@ int __wrap_cdrom_read_sectors(void* buffer, uint32_t sector, size_t cnt)
 int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_t cnt, bool dma)
 {
     e1_play_disc_request();
-    return __real_cdrom_read_sectors_ex(buffer, sector, cnt, dma);
+    return disc_safe_read_sectors_ex(buffer, sector, cnt, dma);
 }
 int __wrap_cdrom_stream_start(int sector, int cnt, bool dma)
 {
     e1_play_disc_request();
-    return __real_cdrom_stream_start(sector, cnt, dma);
+    return disc_safe_stream_start(sector, cnt, dma);
 }
 int __wrap_cdrom_stream_request(void* buffer, size_t size, bool block)
 {
     e1_play_disc_request();
-    return __real_cdrom_stream_request(buffer, size, block);
+    return disc_safe_stream_request(buffer, size, block);
 }
 
 void e1_play_files_begin(void) { in_play = 1; }
 void e1_play_files_end(void) { in_play = 0; }
+void e1_play_files_load_begin(void) { l_opens = l_reads = l_sectors = 0; in_load = 1; }
+void e1_play_files_load_end(unsigned* o, unsigned* r, unsigned* s)
+{
+    in_load = 0;
+    *o = l_opens; *r = l_reads; *s = l_sectors;
+}
 void e1_play_files_report(void)
 {
     e1_log("E1 FILES in play: opens %u reads %u sector-requests %u first-open-tick %u first-read-tick %u "

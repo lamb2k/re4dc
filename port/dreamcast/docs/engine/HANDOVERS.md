@@ -2,6 +2,132 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-041 (2026-11-22): the console link over the broadband adapter; room loading handed back
+
+(There is no H-040: the kos-net ruling below took that number in a message.)
+
+- **Owner:** "Do we have a lane that can take up building a version of the QA link or Expanding its capabilities to
+  work with the BBA but also push images and restart the Dreamcast?" No lane had it: the console loop runs over the
+  modem only and lists the adapter and a smart plug as next steps. Plan section 9 (the console link) and lane
+  eng-link1 (brief `E:\RE4DC-Lanes\eng-link1\BRIEF.md`): the adapter as a second transport under the loop's
+  protocol and checks, packs served by the PC at load time only, stills and serial lines pulled back, a reset command,
+  the BIOS reboot and a power-cycle hook for a smart plug, proven in Flycast's adapter emulation. Its first console
+  run waits for the owner (H-021). "Push images" is read as programs and room packs to the console, and stills back.
+- **Room loading (lane eng-load2, handed back, queued after the memory train):** MODELLED (console-build dynarec at
+  70 MHz, calibrated on the old port) with the GDEMU disc profile: village to farm 7.13 to 4.80 s, farm to village
+  5.17 to 3.28 s; the old port's village to farm 4.68 s (a measuring stick, different span). Packs on disc without
+  the unused recording (farm 11.3 to 6.3 MB), 32 KiB reads (drive requests 3,992 to 210). DOOR OK: the 16 B was the
+  allocator's slack. **Ruling (sent to the integration lane as H-040):** the round trip is judged on "kos-net"
+  (uordblks less the tracked blocks' slack), with CDOORLK still failing and a lost block list failing. Of the farm's
+  4.80 s, 3.12 s is the renderer re-indexing character vertices at load: lane eng-draw5 is asked to design its layout so
+  that work moves to the bake.
+- **New lane:** eng-rec1, recordings of the ten chapter 1 rooms without one (plan section 8, B5).
+
+## H-039 (2026-11-22): the gate's second report; the scheduler's first pass
+
+- **Merged by the integration lane's second session:** eng-e2d (FIGHT 43 to 30; the allowed destructor has no body in
+  any image), eng-bake1, eng-e2f with eng-e2g as one train (FIGHT 30 to 10; KNOCKNT the expected failure). `engine` code
+  at 78cf37442.
+- **The memory train** (`lane/eng-mem2` 773ccc6b5) passed every step on the disc (LEON, HILL, FIGHT, BOSS OK; DOOR
+  failing by exactly 16 B; its three controls failing for their own reasons) and stopped on the gate's own judge
+  (the door controls' list has no kind field). The third session fixes the judge with a control and merges.
+- **Rulings:** `core/e1_core.h` (eng-snd1's seed) and `tools/engine/pack_keep_check.py` are accepted outside files.
+  The train's calibrated sound run kept no `emu.cfg.used`: accepted from the disc's tier line for the merge, noted as
+  unrecorded, re-recorded at the next calibrated run. eng-draw3's FIGHT ends 12,288 B short on the old map: it is
+  gated again on the train's map, as one unit with eng-draw4, and FIGHT's margin must be positive.
+- **The scheduler (lane eng-sched1, handed back, not at the gate):** on the PC the village's room script runs 600
+  ticks on the hosted scheduler with the reference's 1,806 task steps in order, three controls failing. In Flycast
+  the script restarts the console in its init: the PC harness ran a different path (a zero region) from the engine's.
+  The old thread section was kept under the test of section 8: tasks run at one point of the tick, parked otherwise,
+  no timers; estimate 10 to 25 us a tick against about 1 for an engine task switch, both far under the row. Lane
+  eng-sched2 finishes it: the PC check on the engine's path, the scene and its control, stacks, the cost measured.
+
+## H-038 (2026-11-22): the skinning routine is not gold
+
+- **Owner:** "I agree with everything except this being golden: the skinning routine". The lifted routine
+  (`avk_sh4.S`) leaves the plan's "Kept as they are" list. It stays in use until something better is measured, and it
+  is open to be redone the engine's way: positions (normals only where lighting needs them), no outputs nobody reads,
+  a vertex and weight layout that suits the engine's packs, on SH4ZAM where it has the piece. Lane eng-draw5 takes it
+  ahead of its other items (skinning is 2.2 / 4.1 / 1.9 ms a picture mean on LEON / HILL / FIGHT, MODELLED,
+  console-build dynarec at 70 MHz, calibrated on the old port). The rest of the list stands as the owner agreed.
+
+## H-037 (2026-11-22): memory layout: the engine's own where it is better
+
+- **Owner:** "If we have a better memory layout we can implement our own unless we believe it eas pre socially
+  optimized" (read: unless the old layout was already specially optimized). Ruling: the engine's memory map is its
+  own (lane eng-mem1's `MEMORY_MAP.md` stands; nothing in it is to be bent back toward the old port's map). An old
+  layout is kept only where it was tuned on purpose and measured: the sound chip's fixed bank layout (already taken
+  with the AICA layer). The old video-memory map and the per-room resident texture lists are knowledge, not a layout.
+  A lane that replaces a tuned layout shows the measurement. In the plan's section 8.
+
+## H-036 (2026-11-22): character look choices approved; cost before convenience; what was gold is kept
+
+- **Owner, on lane eng-draw4's two sheets:** "They look fine for the character options" (typed "chatter"; read as the
+  character options: detail levels by screen size, LVL, and lighting every other picture, LHALF). Both are approved as
+  looks. Lane eng-draw5 lands LVL as the default once the Ganado difference under it is explained, and the staggered
+  LHALF (characters alternate pictures) as the default if it helps the worst pictures, fits the fight's memory and its
+  stills are no further from today's than the approved sheet; otherwise it stays an arm and a new sheet goes to the
+  owner. Each is recorded as a design choice with its sheet (the approximation rule's engine-line form).
+- **Owner:** "I don't want to borrow costly things because they're convenient - I also don't want to redo things that
+  were gold previous implementations". With H-032 and H-035 this is one rule, now in the plan's section 8 and the
+  common brief:
+  1. Cost decides, never convenience: a part is taken only if it is cheap inside the engine on the console's terms
+     (time a picture, memory, load seconds, disc reads). This binds the engine's own shortcuts too (a pack that carries
+     299 unused recorded frames; a whole-file check at every door).
+  2. What was gold is kept as it is: an implementation proven on the console, cheap and right is not rewritten for the
+     sake of being new; it is changed only for a measured gain. The plan lists them (section 8, "Kept as they are").
+  3. The engine's design wins every doubt (H-035).
+- Sent by message to the running lanes eng-draw5, eng-load2 and eng-sched1.
+
+## H-035 (2026-11-22): borrow only what makes sense; the engine's design wins; gate rulings on the memory train
+
+(There is no H-034.)
+
+- **Owner:** "We should only borrow from the old port thing that make sense I don't want to Compromise the new engine".
+  This narrows H-032 and the plan's section 8, which had made lifting the default. The rule is now a test (plan section
+  8, common brief): a part is taken only if it sits at the engine's edge or is a self-contained routine, fits the
+  engine as the engine is (no per-picture conversion, no old layout or control flow, no switches, no disc access in
+  play), and measures at least as good inside the engine. Otherwise the idea is taken and written the engine's way, or
+  the part is left. Section 8's lists are candidates, not orders. When in doubt the engine's design wins.
+- **Applied to the running lanes by message:** eng-draw5 does not import the old character layout or emitter (the old
+  port's cost is measured as evidence; a baked vertex order may be taken as an idea in the engine's own pack format;
+  the old light kernels are a look sheet only); eng-load2 lifts the disc driver's blocking 32-byte request and takes
+  only ideas from the old room read path (no read queue, no archive loaders, nothing read in play); eng-sched1 keeps
+  the engine's tick order: the old thread section only as the mechanism under the hosted scheduler, run at one point of
+  the tick with no pre-emption and no timer wake-ups in play, or else the engine's own cooperative task switch.
+- **Already taken and kept under the test:** disc read safety, the AICA sound layer, the skinning routine, the crash
+  screen and profiler (lane eng-crash1: edge parts, no cost per picture, one fixed path each).
+- **Merged since H-033:** eng-e2f and eng-e2g as one train (FIGHT 30 to 10 service functions; the knock-down shown).
+- **Gate rulings:** the memory train (`lane/eng-mem2`, covering eng-skel1, eng-skel2, eng-load1, eng-snd1, eng-mem1,
+  eng-mem2) is gated as one; DOOR is an expected failure with the exact reason "round trip LEAK kos-used" of +16 B
+  (lane eng-load2 closes it); the selector's sound ceiling applies on a disc that declares the calibrated or console
+  tier; `skel.cpp`'s identity start for a failed inverse is an engine fix. eng-draw4's kernel step is judged against
+  the stills' own run-to-run variation (two base runs); its look arms stay off. eng-crash1's address-fault scenes are
+  expected failures in Flycast ("planted fault did not stop the program"): the deferred console run checks them.
+- **Look sheets with the owner:** character detail levels (LVL) and lighting every other picture (LHALF), lane
+  eng-draw4. Nothing lands before their answer.
+
+## H-033 (2026-11-22): plan version 3.3: what we take from the old port; gate rulings
+
+- **Owner:** "Integrate into the plan what we should copy or Integrate from the legacy port engine." Done:
+  `ENGINE_PLAN.md` "The plan as of 2026-11-21", new section 8 (version 3.3): the rule (lift and adapt before writing
+  new; every brief names the old-port part, every hand-back says what was lifted), A already taken (disc patches and
+  read safety, sound, the skinning routine, converted assets, spawn rules, corrections), B take next in order (room
+  loading at the old port's speed, the scheduler on the old thread layer, code modules, crash screen and profiler,
+  room recordings and the data inventory, movies, saves, QA and warp tools, release gates, the per-room fix list),
+  C take when the renderer can hold them (proven SH-4 routines measured in the engine's renderer, the sky plane, blob
+  shadows, the released effect selection, rain and flame sets, resident texture lists, picture modes), D not taken (the
+  GameCube drawing emulation and its settings, the disc shim, the movie front end, the inventory memory trick).
+- **Ruling:** the inventory's "drop" for the old port's SH-4 routines other than `avk_sh4.S` is re-opened: lane
+  eng-draw4 measures them inside the engine's renderer beside its own; the faster one with 0 differing pixels stays.
+  The old drawing path as a whole stays out and is not tuned.
+- **Lanes started from section 8:** eng-sched1 (B2) and eng-crash1 (B4). B1 and B3 follow the memory train's merge.
+- **Gate rulings:** KNOCKNT is the knock control; its "pool refused: full 50" follows from the control's own state (the
+  crash volume never expires) and is an expected failure with that reason; the disc script is to list it as a control
+  kind. eng-cloth2: the reference runs the skirt at two passes by the owner's choice (H-032), `SKIRT_PASSES=4` builds
+  the old reference, `--skip-skirt` may be used by the new refctl rows only; the skirt's pass count stays a constant
+  with its note, not a game setting; one start-up still's 6 pixels accepted as noise.
+
 ## H-032 (2026-11-22): the owner chose skirt option B; borrow the old port's working mechanics
 
 - **Owner:** "Ok option B." Ashley's skirt runs two constraint passes instead of four, as the default with no switch

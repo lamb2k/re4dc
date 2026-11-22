@@ -19,6 +19,7 @@ struct E2Shot {
     E2ShotPad pads[E2_SHOT_PADS];
     unsigned npads;
     int ctl_dmg, ctl_late;        // controls SHOTDMG, SHOTLATE
+    int ctl_notick;               // control DMGNOTICK (lane eng-e2f): the damage table's tick not run
 };
 extern E2Shot e2_shot;
 void e2_shot_boot();                                   // reads /cd/SHOT.TXT (and the control files), once

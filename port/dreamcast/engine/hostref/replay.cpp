@@ -23,6 +23,8 @@
 #include "view.h"
 #include "cons.h"
 #include "rnd.h"
+#include "sce_at.h"
+#include <string.h>
 
 void* GetDataExt(void* arc, const char* tag, int no);
 extern "C" void PlayerInit();   // player.cpp (C linkage)
@@ -98,12 +100,15 @@ void UpdateNearClipDist()
 }
 
 // ---- the parts of gameRoomInit (game.cpp) that set up what the player and camera read ----
-static bool room_init(const char* tree)
+// Lane eng-load1: also the room a door leads to (first == false: the core and player archives and the enemy list stay;
+// the player's start is the door's, already in sub_pos / sub_angle).
+static bool room_setup(const char* tree, unsigned room, bool first)
 {
-    if (!host_load_core(tree) || !host_load_player(tree, 0, 0) || !host_load_room(tree, g_fx.room)) return false;
+    if (first && (!host_load_core(tree) || !host_load_player(tree, 0, 0))) return false;
+    if (!host_load_room(tree, room)) return false;
     // StageSet's readEmList (before gameRoomInit): the room's enemy list, when the fixture names one
-    host_actors_tree(tree);
-    if (g_fx.esl >= 0 && !host_load_esl(g_fx.esl)) return false;
+    if (first) host_actors_tree(tree);
+    if (first && g_fx.esl >= 0 && !host_load_esl(g_fx.esl)) return false;
     pG->Rtp = GetDataExt(pG->pRoom, "RTP", 0);   // read.cpp ReadAreaData: the room's route points
     ConsInitRoom((ConsRoom*) GetDataExt(pG->pRoom, "CNS", 0));
     ModInfoMgr.roomInit();
@@ -132,10 +137,12 @@ static bool room_init(const char* tree)
         EatMgr.initEffInfo();
     }
     // The player: EmMgr.create(0, 0) (game.cpp, after the collision and event set-up, before the camera).
-    pG->sub_pos.x = g_fx.pos[0];
-    pG->sub_pos.y = g_fx.pos[1];
-    pG->sub_pos.z = g_fx.pos[2];
-    pG->sub_angle = g_fx.ang;
+    if (first) {
+        pG->sub_pos.x = g_fx.pos[0];
+        pG->sub_pos.y = g_fx.pos[1];
+        pG->sub_pos.z = g_fx.pos[2];
+        pG->sub_angle = g_fx.ang;
+    }
     host_stub_tick_reset();
     if (!EmMgr.create(0, 0) || !pPL) host_fatal(3, "the player was not created");
     CameraRoomInit();
@@ -146,6 +153,66 @@ static bool room_init(const char* tree)
     EmSetRoomInit();   // game.cpp, after the camera: the list's "set" bits cleared for the new room
     CamCtrl.roomInit();
     View.roomInit();
+    return true;
+}
+static bool room_init(const char* tree) { return room_setup(tree, g_fx.room, true); }
+
+// ---- doors (lane eng-load1; the engine's core/room_change.cpp does the same on the same fixture) ----
+// The request: at the fixture's tick, before the tick's moves (gameMainLoop's SceAtCheck place), the stores the door
+// handler makes from the room's AEV record (sce_at.cpp sceAtFunc_door 1038-1085). The reference does not host the area
+// check either (its closure has no scenario); tools/plays_right/door_check.py checks the plant against the record's area
+// on the reference's own trace (Leon's front point inside the door's area at that tick).
+static int door_plant(unsigned t)
+{
+    int planted = 0;
+    for (unsigned i = 0; i < g_fx.ndoors; i++) {
+        if (g_fx.doors[i].tick != t) continue;
+        const u8* aev = (const u8*) GetDataExt(pG->pRoom, "AEV", 0);
+        const unsigned num = aev ? *(const u16*) (aev + 6) : 0;
+        const SceAtWork* w = 0;
+        for (unsigned k = 0; k < num; k++) {
+            const SceAtWork* r = (const SceAtWork*) (aev + 0x10 + k * sizeof(SceAtWork));
+            if (r->no == g_fx.doors[i].area) w = r;
+        }
+        if (!w || w->type != 1 || w->doorFunc) host_fatal(3, "door request: no door area %u in the room", g_fx.doors[i].area);
+        pG->Stop_flg = 0xFFFFFFFFu;
+        pG->NextPos = w->dstPos;
+        pG->NextY = w->dstAngle;
+        pG->room_id_prev = pG->room_id;
+        pG->Part_old = pG->Part;
+        pG->next_stage = w->dstStage;
+        pG->next_room_no = w->dstRoom;
+        pG->next_point = w->dstPart;
+        pG->door_no = w->doorNo;
+        pG->Rno0 = 4;
+        pG->Rno1 = pG->Rno2 = pG->Rno3 = 0;
+        pG->r_continue_cnt = 0;
+        pG->System_flg &= ~0x40u;
+        host_log("door request tick %u room %03x area %u -> r%x%02x pos %.1f %.1f %.1f ang %.4f", t, (unsigned) pG->room_id,
+                 g_fx.doors[i].area, (unsigned) w->dstStage, (unsigned) w->dstRoom, w->dstPos.x, w->dstPos.y, w->dstPos.z,
+                 w->dstAngle);
+        planted = 1;
+    }
+    return planted;
+}
+// The room change after the tick (gameDoordemo's handoff, gameRoomMemInit's clears, then the room set-up).
+static bool door_room_change(const char* tree, unsigned t)
+{
+    const unsigned from = pG->room_id, to = pG->next_room;
+    if (to != (unsigned) (pG->next_stage << 8 | pG->next_room_no)) host_fatal(3, "door: next_room and its bytes disagree");
+    pG->sub_pos = pG->NextPos;
+    pG->sub_angle = pG->NextY;
+    pG->room_id = (u16) to;
+    pG->Part = pG->next_point;
+    if ((s32) pG->Debug_flg[2] >= 0 && !(pG->System_flg & 0x80000)) pG->JumpPoint = 0;
+    memset((u8*) pG + 0x16C, 0, 0x4E00);   // gameRoomMemInit: the room part of the global work (pad_16C)
+    pG->Debug_flg[0] = pG->Debug_flg[1] = 0;
+    pG->Status_flg[0] = pG->Status_flg[1] = pG->Status_flg[2] = 0;
+    if (!room_setup(tree, to, false)) return false;
+    pG->Rno0 = 3;
+    pG->Rno1 = 0;
+    host_log("room change after tick %u: %03x -> %03x, player at %.1f %.1f %.1f ang %.4f", t, from, to, pPL->pos.x,
+             pPL->pos.y, pPL->pos.z, pPL->ang.y);
     return true;
 }
 
@@ -345,6 +412,7 @@ int main(int argc, char** argv)
         pG->Frame_cnt++;
         // gameMainLoop (game.cpp), the hosted part, in its order
         UpdateNearClipDist();
+        if (g_fx.ndoors) door_plant(t);   // lane eng-load1: SceAtCheck's place (fixtures with doors only)
         EmMgr.move();   // the characters: partner and enemies (the player's own move is below)
         EmListWaitDelete();
         pG->Status_flg[1] &= ~0x20000000;
@@ -381,6 +449,8 @@ int main(int argc, char** argv)
         if (host_svc_tick) host_svc_tick(t, 0);
         trace_tick(t, g_pad);
         host_trace_actors(t);
+        // lane eng-load1: the door asked for a room change (pG->Rno0 == 4): the next room before the next tick
+        if (g_fx.ndoors && pG->Rno0 == 4 && !door_room_change(g_opt.tree, t)) return 2;
     }
     if (host_svc_finish) host_svc_finish();
     if (g_opt.control == HOST_CTL_DROP_RNG && !rng_dropped)

@@ -34,6 +34,26 @@ ENG_STUB_FN("__ZN13IDApplication4initEPv", eng_idapp_init, "IDApplication::init"
 ENG_STUB_FN("__ZN11IdBinocularD0Ev", eng_idbino_d0, "IdBinocular::~IdBinocular (deleting)")
 ENG_STUB_FN("__ZN11IdBinocularD1Ev", eng_idbino_d1, "IdBinocular::~IdBinocular")
 ENG_STUB_FN("__ZN11IdBinocularD2Ev", eng_idbino_d2, "IdBinocular::~IdBinocular (base)")
+// Lane eng-e2f item 4: cam_extra is built without inlining in this image (game/fight.mk), so the widget's in-class members
+// that GCC had inlined into CameraBinocular's constructor and destructor (split problems) are functions of their own: the
+// widget's, taken from here the same way. The two constructors set the record's table pointer as the implicit ones do
+// (the base's, then the widget's: the vtables stay cam_extra's, reached by name); the rest have empty bodies, as the
+// header's. Counted: the binocular camera is not reached in the fight (0 calls).
+extern "C" void* eng_vt_idbino[] asm("__ZTV11IdBinocular");
+extern "C" void* eng_vt_idapp[] asm("__ZTV13IDApplication");
+#define ENG_CTOR_FN(sym, fn, vt, label) \
+    extern "C" void fn(void*) asm(sym); \
+    extern "C" void fn(void* self) { e1_stub_hit(label, 0); *(void***) self = vt + 2; }
+ENG_CTOR_FN("__ZN11IdBinocularC1Ev", eng_idbino_c1, eng_vt_idbino, "IdBinocular::IdBinocular")
+ENG_CTOR_FN("__ZN11IdBinocularC2Ev", eng_idbino_c2, eng_vt_idbino, "IdBinocular::IdBinocular (base)")
+ENG_CTOR_FN("__ZN13IDApplicationC1Ev", eng_idapp_c1, eng_vt_idapp, "IDApplication::IDApplication")
+ENG_CTOR_FN("__ZN13IDApplicationC2Ev", eng_idapp_c2, eng_vt_idapp, "IDApplication::IDApplication (base)")
+ENG_STUB_FN("__ZN13IDApplicationD0Ev", eng_idapp_d0, "IDApplication::~IDApplication (deleting)")
+ENG_STUB_FN("__ZN13IDApplicationD1Ev", eng_idapp_d1, "IDApplication::~IDApplication")
+ENG_STUB_FN("__ZN13IDApplicationD2Ev", eng_idapp_d2, "IDApplication::~IDApplication (base)")
+ENG_STUB_FN("__ZN13IDApplication4moveEPv", eng_idapp_move, "IDApplication::move")
+ENG_STUB_FN("__ZN13IDApplication4quitEPv", eng_idapp_quit, "IDApplication::quit")
+ENG_STUB_FN("__ZN13IDApplicationdlEPvj", eng_idapp_delete, "IDApplication::operator delete")
 
 // ---- game: the save file's storage ----
 int cGameSave::load(void*) { e1_stub_hit("cGameSave::load", 0); return 0; }

@@ -47,6 +47,8 @@ The maintainers' machine has the skill `re4dc-engine-audit` with this checklist 
    - Each modelled speed figure states the band (the standard build fitted the same way reads the engine 3 to 10% kinder; H-025.3).
    - What the model cannot see is listed: the graphics chip's fill and sort time, vertex submission through the store queues, memory bus contention, real disc timing.
 
+11. **Borrowed parts** (owner 2026-11-22; `ENGINE_PLAN.md` section 8 of the plan as of 2026-11-21). For each part taken from the old port since the last audit: it sits at the engine's edge or is a self-contained routine; it brought no per-picture conversion, old data layout, old control flow, switch or disc access in play; its cost inside the engine is measured and stated; its head names the old file and commit. Anything on the plan's "Kept as they are" list that was rewritten without a measured gain. Anything written new where an old part existed, without a reason in the hand-back.
+
 ### The report
 - Lead with the verdict: passed or not passed, in one line.
 - Then a verdict per checklist item, with evidence.
