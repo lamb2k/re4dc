@@ -1,6 +1,6 @@
-# RE4 Dreamcast engine plan, version 3.2 (2026-11-20, amended 2026-11-21)
+# RE4 Dreamcast engine plan, version 3.3 (2026-11-20, amended 2026-11-21 and 2026-11-22)
 
-Status: **approved by the owner on 2026-11-20** ("Ok update plan and get to work"), with "beyond the PS2 version" added as a goal and as step 6. Version 3 keeps version 2's budget, architecture and rules; its path is section 7, written after the retrospective ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). Version 3.1 adds the amendments below. Version 3.2 adds "The plan as of 2026-11-21", which the owner asked to have written down ("ok memoralize that plan and ensure the skill sare up to date").
+Status: **approved by the owner on 2026-11-20** ("Ok update plan and get to work"), with "beyond the PS2 version" added as a goal and as step 6. Version 3 keeps version 2's budget, architecture and rules; its path is section 7, written after the retrospective ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). Version 3.1 adds the amendments below. Version 3.2 adds "The plan as of 2026-11-21", which the owner asked to have written down ("ok memoralize that plan and ensure the skill sare up to date"). Version 3.3 (2026-11-22) adds its section 8, "What we take from the old port", at the owner's word ("Integrate into the plan what we should copy or Integrate from the legacy port engine").
 
 ## The plan as of 2026-11-21 (version 3.2)
 
@@ -46,7 +46,7 @@ States are from `engine/STATUS.md`. "Done when" is on the calibrated model.
 | Game time | When work for a picture overruns, the next tick runs without drawing, within a bound (H-025.2) | Game speed held in the benchmark scenes | Queued, after the drawing design |
 | Native services | The fight image and the boss image to 0 original service functions | Link check 0 for FIGHT and BOSS | eng-e2a merged (fight 114 to 73, boss 57 to 26); lanes eng-e2b (fight) and eng-e2c (boss) running |
 | Corrections, game settings, guards (H-026.2) | Built in now; then written into the engine line's copy of the original source, the old port's conditionals deleted by a pass proven by byte-identical objects | Corrections unconditional, settings in one file, guards counted at 0 | Lane eng-fix1 running; the source pass is its own lane after it |
-| Chapter 1's systems | From the salvage inventory (`engine/SALVAGE_20261121.md`): sound (the original driver hosted under the H-025.1 waiver with its cost ceiling), room-to-room loading and doors, the script scheduler, saves and the memory-card screen, the crash screen, route movies, items and the inventory (the 3 MB problem), old-game room recordings as a bake input | Each system working in the engine, judged by outcome against the reference | Lanes eng-snd1 and eng-load1 running; the scheduler, saves and crash screen, route movies, room recordings queued (H-025); items not started |
+| Chapter 1's systems | Lifted from the old port in the order of section 8 (B). From the salvage inventory (`engine/SALVAGE_20261121.md`): sound (the original driver hosted under the H-025.1 waiver with its cost ceiling), room-to-room loading and doors, the script scheduler, saves and the memory-card screen, the crash screen, route movies, items and the inventory (the 3 MB problem), old-game room recordings as a bake input | Each system working in the engine, judged by outcome against the reference | Lanes eng-snd1 and eng-load1 running; the scheduler, saves and crash screen, route movies, room recordings queued (H-025); items not started |
 | Rooms | Every chapter 1 room through the bake, with a census; then the rest of the game by chapter | Every chapter 1 room baked, failures fixed or listed | Lane eng-bake1 running |
 | The look | Leon's handgun; effects one at a time on a budget (gameplay feedback, then scene-defining, then ambient; the owner: "We should probably be selective with the effect layer if we are getting these gains without them."); Dreamcast look treatments for one room and for Leon chosen by the owner from still sheets (one variable per sheet, differing-pixel counts, modelled cost); enhancements that cost frame time (shadow volumes, bump mapping, anti-aliasing) only once the floor holds on the model | The owner's choices from stills | Lane eng-look1 running (the handgun, then the muzzle flash); the treatment sheets are next |
 | Milestones and audits | One independent audit per milestone. E1's waits for a drawing design that fits its row on the model (H-023.2, H-022). The console run of every milestone is deferred to the end | Audit passed and model held: "finished, modelled, not on console" | E1 audit waiting on the drawing design |
@@ -74,6 +74,74 @@ From `engine/STATUS.md`:
 - The release line: a hotfix candidate (Disc 2 builds module em1f's copy of em10 without the Ganado byte-order correction).
 - El Gigante's lighter PS2 body: yes or no.
 - Not asked: a console evening or the SD card.
+
+### 8. What we take from the old port (version 3.3, 2026-11-22)
+
+The owner, 2026-11-22: "I also appreciate your innovation but we should be borrowing things that work fine at a mechanical level from the old build pre re architecture." Then: "Integrate into the plan what we should copy or Integrate from the legacy port engine." (H-032, H-033.)
+
+**The rule.** The old port (release line `t15/int`, read only) is the first place a lane looks. A part of it that works at a mechanical level is lifted and adapted, not written again. The inventory is [engine/SALVAGE_20261121.md](engine/SALVAGE_20261121.md) (54 rows); the row numbers below are its rows.
+
+- **What "lift" means:** the old file is copied into the engine under the engine's name, with the form the Test 27.2 release shipped as one fixed path. Its build switches, debug hooks and old-renderer hooks (`re4dc_` calls) are removed. The head of the file names the old file, the commit and the release settings it carries. Nothing lands switched off.
+- **Every lane brief** names the old-port part for its job, or says there is none. Every hand-back says what was lifted and from where, and gives a reason for anything written new where an old part existed.
+- **Judged like everything else:** the gate, the calibrated model, the look from stills. A lifted part that is slower or wrong inside the engine is fixed or replaced, with the measurement.
+- **What does not change:**
+  - The original game's service code (skeleton, collision, effects, camera and the like) stays out of the engine image; the link check holds. The recorded waiver is the sound driver (H-025.1).
+  - The old drawing path as a whole is not carried over and is not tuned. One proven routine from it may be lifted and measured inside the engine's renderer.
+  - The old port stays buildable to the end of step 5: it is the bake's input, the recorder of rooms and the reference for outcomes.
+
+**A. Already taken** (in `engine`, or handed back and at the gate)
+
+| Part | Old port source | Row | State |
+|---|---|---|---|
+| Toolchain, KOS base and disc patches, disc table-of-contents fix | `kos-env.sh`, `patches/`, `gdrom_mount.cpp` | 1, 2 | In `engine` |
+| Disc read safety (stuck transfer retry, sector-read fallback, drive-not-ready retry) | `platform/dvd_read_safe.cpp` | 3 | Lifted as `core/disc_safe.c`; at the gate with the memory train |
+| Sound: Capcom's driver hosted, the AICA backend, the converted sound data | `src/game/snd*.cpp`, `platform/audio_aica.cpp`, `bgm/aica_str.dat`, banks | 20, 21, 22 | Lifted as `services/sound/`; at the gate with the memory train |
+| The skinning routine | `platform/avk_sh4.S` | 9 | In `engine` |
+| Converted PS2 assets as bake input: textures with mip maps, character packages, motion, sky, worlds | `tex.pak`, cast packages, `em/*.drs`, sky and world sidecars | 10, 12, 14, 17, 48 | In `engine` (the bake reads them) |
+| Enemy spawn rules and the cap of 4 | `src/game/em_set.cpp`, room scripts | 38 | In the fight image; every other room as it is hosted |
+| The released game's fixes inside the original code | 148 release settings in `src/` | 39 | In `engine` as corrections, game settings and guards (lane eng-fix1) |
+| Disc building, the Flycast harness, the PC reference | `tools/d367/mkgdi.sh`, harness, `Makefile.host` | 51, 53 | In `engine` |
+
+**B. Take next: none of these waits for the renderer.** In this order; each is one lane unless noted.
+
+| # | Part | Old port source | Row | What changes on the way in |
+|---|---|---|---|---|
+| 1 | Room loading at the old port's speed | the old room read path in `platform/dvd.cpp`, `src/game/read.cpp` as reference; packs trimmed at bake | 4, 50 | A door load takes about 60 s in Flycast today because the whole pack, the recording included, is read and checked. The bake drops the recording rows; reads follow the old port's pattern (one pass, streamed). No GameCube queue |
+| 2 | The script scheduler on the old thread layer | `platform/os.cpp` (thread section), `src/game/scheduler.cpp` hosted | 6 | Threads, queues and alarms only; the arena, font and reset parts stay behind. Room scripts and events wait on it (133 sites) |
+| 3 | Room, enemy and weapon code modules | `platform/modules.cpp`, `tools/gen_modules.py` | 7 | Each module linked in the image with its starting data restored on a fresh link; sizes go into the memory map |
+| 4 | The crash screen and the sampling profiler | `platform/crash_screen.cpp`, `pc_sampler.cpp` | 44, 45 | Needs only KOS. The only way to read a console fault without a cable: in before the deferred console run |
+| 5 | Old-game recordings of every chapter 1 room; one hashed inventory of the converted data | the old port run by the warp rig; `/root/re4data/private` | 50, 54 | Ten chapter 1 rooms have no recording (lane eng-bake1). A function run of the old port, never tuned |
+| 6 | The movie player and the PS2 route movies | `platform/native_movie.cpp`, `native_movie_stream.c`, `route_movie_bridge.cpp`, the call sites in `src/` | 23, 24 | One full-screen quad from the engine's renderer; the 86 old memory hooks removed. 45 movies cover chapter 1's story scenes, so fewer real-time events to host |
+| 7 | Memory-card saves and the controller-screen display | `platform/card.cpp`, `vmu_store.cpp`, `vmu_dialog*`, `vmu_context.cpp`, `vmu_render.cpp`, `vmu_lcd.cpp` | 28, 29, 30 | The original save screen stays hosted over the old virtual card; the dialog is drawn by the engine |
+| 8 | The QA menu, teleporter, QA link, warp rig and pad scripts | `qa_menu.cpp`, `qa_link.cpp`, `dbgwarp_bridge.cpp`, `tools/d367/warp.py`, `fullplay/`, `route/` | 42, 43 | Presets and fixture format carry; the hooks move to the engine's hosted room entry |
+| 9 | The release gates | `fullplay/gdemu_gate.sh`, `kos_squeeze.sh`, `gc_port23`, `kit-check.sh`, `build-public.sh` | 52 | Disc race, memory squeeze, no-GameCube-asset count, contributor kit. Before the first engine release |
+| 10 | The per-room fix list, as bake inputs and hosted-code settings | `CH-FIXES-CARRY.md` rows 1-5, 14, 16, 17, 19, 21, 23, 27-30 | 40 | Applied to each room as it is hosted or baked |
+
+**C. Take when the renderer can hold them** (after the drawing row is met on the model, or as the named lane reaches them)
+
+| Part | Old port source | Row | Note |
+|---|---|---|---|
+| Proven SH-4 routines, measured inside the engine's renderer beside the engine's own | `mtx_sh4.S`, `pwc_sh4.S`, `lnk*_sh4.S`, `lnw*_sh4.S`, `sk1_sh4.S`, `backface_sh4.S`, `pmc*_sh4.S` | 9 | Lane eng-draw4 now. The faster one with 0 differing pixels stays. This re-opens the inventory's "drop" for these files (H-033) |
+| The sky as the graphics chip's background plane | `platform/native_sky.cpp` | 17 | Costs no geometry |
+| Blob shadows under characters | `game/blob_shadow.cpp` | effects 7 | The cheap released method first; shadow volumes are step 6 |
+| The released effect selection ("Essential") | `esp_sub.cpp` keep and cut table, `recipe.conf` | 16 | The order for effects one at a time: feedback, then scene-defining; glows, haze and mist stay out |
+| Rain, the PS2 fire and flame sets, the halo cut | `RAIN_DC`, PS2 flame sets, `PS2_FIRE_HALO_CUT` | effects 8, 9, 11 | As each family is brought across |
+| Each room's list of resident textures and the video-memory map as knowledge | `vram/resident/rXXX.tsv`, `VRAM-MAP-20261014.md` | 11 | The engine's renderer owns video memory; the lists say what a room needs |
+| The button map and prompt pictures | `platform/pad.cpp` | 26 | With the menu and text renderer |
+| Picture modes: anti-aliasing, 240-line modes, VGA | `platform/res_mode.cpp`, `vi.cpp` | 47 | Step 6 |
+| The water and lake drawing | `native_water_ps2.inc`, `native_lake.cpp` | 19 | Reference only: the engine's water is new; the old look is the target |
+
+**D. Not taken, and why**
+
+| Part | Why |
+|---|---|
+| The GameCube drawing emulation, its caches and its 1,201 speed settings (`gx_stub.cpp`, `native_static.cpp`, `native_actor_fast.cpp`, `coarse_*`, link-order scripts) | It converts drawing calls each picture; it is the 34 to 96 ms a picture the replatform exists to leave (row 8) |
+| The GameCube disc API shim and read queue | The engine's loader opens nothing in play (row 4); only its read pattern is a reference (B1) |
+| The original movie front end | It parks 5 MiB in memory the Dreamcast does not have (row 25) |
+| The inventory screens' memory trick (3 MiB packed into video memory) | Tied to the old renderer's video memory; the memory map's owner places those bytes (rows 35, 41). The screens' logic stays hosted |
+| The old quality options, the call profiler, knob-off identity and STRICT | They tune or check the old renderer (rows 37, 45, 52) |
+
+**Lanes this starts.** B2 (scheduler) and B4 (crash screen and profiler) start now: their files are new and overlap no running lane. B1 and B3 follow the memory train's merge (the same files). B5 to B8 start as the machine has room, B5 first (recordings are the long pole for bakes). The lanes table in `engine/STATUS.md` is the register.
 
 Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC hardware model), **Flycast**, **emulator** (another project's emulator), or **estimate**. (amended 2026-11-21, see Amendments: the tiers are now those in D below.)
 
