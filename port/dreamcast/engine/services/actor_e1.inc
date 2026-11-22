@@ -232,7 +232,10 @@ static void e1_lvl_box(unsigned model, unsigned drawn, unsigned asked, const RtM
     }
     const unsigned base = model < 256 ? lod_base_of[model] : model, ld = drawn < 256 ? lod_level_of[drawn] : 0;
     if (x1 < x0) { x0 = y0 = 0; x1 = y1 = -1; }
-    e1_log("E1 LVLBOX f %u c %u base %u asked %u drawn %u model %u box %d %d %d %d\n", (unsigned) f, index++, base, asked, ld,
+    /* straight to the serial line, not the tick-time log buffer: in FIGHT that buffer overflows (the room carve's
+       refusal lines, from the memory map, 1,600 lines dropped) and these lines were lost. A still picture already waits
+       for the host to read the frame buffer; a STILLS run is never a timing run. */
+    printf("E1 LVLBOX f %u c %u base %u asked %u drawn %u model %u box %d %d %d %d\n", (unsigned) f, index++, base, asked, ld,
            drawn, (int) floorf(x0), (int) floorf(y0), (int) ceilf(x1), (int) ceilf(y1));
 }
 
