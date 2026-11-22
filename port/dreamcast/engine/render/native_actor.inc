@@ -64,7 +64,7 @@ static float bone_rows[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
    catalogue's largest model rather than to the limits (32 KB of static arrays before, in an image whose hill heap
    reaches into the arena: runs rb1/rh1 of 2026-11-22). Grown only, never shrunk. */
 static uint8_t* strip_code_pool[2];static unsigned strip_code_cap,nrm_cap;
-static uint16_t *nrm_list,*nrm_stamp,nrm_stamp_now;
+static uint16_t *nrm_list,*nrm_stamp,*nrm_ident,nrm_stamp_now;   /* nrm_ident[i] = i */
 static int actor_scratch(unsigned strips,unsigned nrms){
     if(strips>strip_code_cap){
         free(strip_code_pool[0]);free(strip_code_pool[1]);
@@ -73,10 +73,11 @@ static int actor_scratch(unsigned strips,unsigned nrms){
         if(!strip_code_cap)return 0;
     }
     if(nrms>nrm_cap){
-        free(nrm_list);free(nrm_stamp);
-        nrm_list=malloc(2*nrms);nrm_stamp=calloc(nrms,2);nrm_stamp_now=0;
-        nrm_cap=nrm_list&&nrm_stamp?nrms:0;
+        free(nrm_list);free(nrm_stamp);free(nrm_ident);
+        nrm_list=malloc(2*nrms);nrm_stamp=calloc(nrms,2);nrm_ident=malloc(2*nrms);nrm_stamp_now=0;
+        nrm_cap=nrm_list&&nrm_stamp&&nrm_ident?nrms:0;
         if(!nrm_cap)return 0;
+        for(unsigned i=0;i<nrms;i++)nrm_ident[i]=i;
     }
     return 1;
 }
@@ -484,11 +485,15 @@ static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes
     for(unsigned i=rp->nrm_first,e=i+rp->nrm_count;i<e;i++){nrm_list[nl]=i;nl+=nrm_stamp[i]==stamp;}
     return nl;
 }
-/* the normals of one drawn part: the kept strips' (boundary part with dropped strips) or all of them */
+/* the normals of one drawn part: the kept strips' (boundary part with dropped strips) or all of them. A boundary part
+   with no dropped strip lights its whole range through the list loop with the identity list, as before step 1b: the
+   renderer is built with -ffast-math and the kernel's list loop and range loop are compiled separately, so the same
+   normal can come out one step apart (run rh1 against rb1: 29 pixels over 3 FIGHTS stills, all at boundary parts). */
 static inline void light_part(const RtModel* m,const RtPart* rp,unsigned st,const uint8_t* codes,uint8_t* sc,uint32_t* lit,int light){
-    const unsigned nl=st==2?mark_part(m,rp,codes,sc):MARK_ALL;
+    if(st!=2){if(light)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);return;}
+    const unsigned nl=mark_part(m,rp,codes,sc);
     if(!light)return;
-    if(nl==MARK_ALL)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+    if(nl==MARK_ALL)light_normals_list(m->nrm,nrm_ident+rp->nrm_first,rp->nrm_count,lit);
     else light_normals_list(m->nrm,nrm_list,nl,lit);
 }
 static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
