@@ -22,11 +22,7 @@ first run (2026-11-21), per still of SCENE with the reference still of the same 
   3. not visible: at most 0.05% of the picture's pixels differ from the reference (nothing drawn where nothing should be).
 At least 3 stills must pass rule 2, else the verdict is "nothing to check" (exit 2). Any still failing 1, 2 or 3 fails.
 The controls: the reference checked against itself (SCENE = REFSCENE: no weapon pixels, rule 1 fails on drawn 0), and the
-NOWEP scene put in place of SCENE (the same).
-The pixel rule's own control (lane eng-draw3, the gate's note): boot file WEPSHIFT (services/weapon_draw.inc) draws the
-weapon from its palette moved 400 mm along world x while the box it reports stays the true one; the weapon is drawn and
-counted as drawn (rule 1 holds), so rule 2 must fail on every still where it is on screen. Disc:
-build_console_disc.sh --scenes LEONS,CNWLS --put E1LS/WEPSHIFT; check: wepcheck.py <run> <addr> LEONS:0 <run> CNWLS:1 (both scenes run the E1 image: k 0 and 1)."""
+NOWEP scene put in place of SCENE (the same)."""
 import re, sys
 from pathlib import Path
 import numpy as np
