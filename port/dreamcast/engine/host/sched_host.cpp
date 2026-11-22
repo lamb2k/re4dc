@@ -415,8 +415,10 @@ void sched_host_report()
             e1_log("E1 SCHED stack slot %u OVER HALF: used %u of %u bytes\n", i, used, (unsigned) t.StackSize);
         }
     }
-    e1_log("E1 SCHED stacks: pool %u bytes (the GameCube sizes, engine build), high water summed %u bytes, slots over half "
-           "their stack %u\n", pool, used_all, over_half);
+    unsigned want = 0;   // lane eng-sched3: the pool against the engine's table (a fold of the original's sizes shows)
+    for (unsigned i = 0; i < TASK_NUM; i++) want += GetStackSize((int) i);
+    e1_log("E1 SCHED stacks: pool %u bytes (the engine's GameCube sizes %u: %s), high water summed %u bytes, slots over "
+           "half their stack %u\n", pool, want, pool == want ? "same" : "DIFFERS", used_all, over_half);
     // the task steps (E1 SCHEDT: tick:slot:status/sleep>status/sleep:function, hex, eight a line)
     if (step_rec) {
         const unsigned k = step_n < STEP_MAX ? step_n : STEP_MAX;

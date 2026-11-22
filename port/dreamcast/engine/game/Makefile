@@ -377,6 +377,9 @@ $(OUT)/h/game/scheduler.o: $(ROOT)/src/game/scheduler.cpp $(ENG)/host/e1_prelude
 # split check needs the unit without the interprocedural optimisations. Lane eng-sched3, H-043 ruling 2: GetStackSize
 # weak too, the engine's table of the GameCube sizes in host/sched_host.cpp takes its place: no 12 KiB floor here)
 SPLIT_NOIPA_UNITS += game/scheduler
+# Lane eng-sched3: and without any inlining. GCC folded the RE4DC_GAME GetStackSize (a constant) into TaskSchedulerInit
+# even under SPLIT_NOIPA (the first d1 run's pool read 221,184 B), so the engine's sizes never reached the pool.
+SPLIT_NOINLINE_UNITS += game/scheduler
 $(OUT)/e/host/e1_stubs.o: $(ENG)/host/e1_stubs.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services $(NATIVE_INC) -c $< -o $@
