@@ -4,7 +4,7 @@
 #
 #   build_console_disc.sh [--ref <git ref>] [--out <dir>] [--scenes A,B,..] [--drop <disc path>]...
 #                         [--put <disc path>]... [--no-precheck] [--layout standard|legacy] [--title <text>]
-#                         [--plan-control longcomment|fivefield]
+#                         [--plan-control longcomment|fivefield|sectorend] [--r103 <farm pack> <farm visibility>]
 #
 # From a clean checkout of <ref> (default origin/engine: git archive of the commit, plus the SH4ZAM submodule at the
 # commit <ref> records, from the local submodule clone; nothing from the working tree) it builds:
@@ -37,7 +37,8 @@
 # longcomment: the scheduled entries (name eight), then a comment line of 5,000 bytes, then a ninth entry (a copy of the
 # first, named NINTH): the selector must read past 4,096 bytes and refuse nine scenes. fivefield: the scheduled entries,
 # then the last one again with only its first five fields (named <name>5): a line that does not parse refuses the
-# schedule (before, both were run as if the extra entry were not there).
+# schedule (before, both were run as if the extra entry were not there). sectorend (lane eng-mem2): SCENES.TXT padded to
+# 2,045 bytes mod 2,048 by a comment line: the selector must read it and run (not a refusal).
 # --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
 # images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
 # scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
@@ -71,6 +72,7 @@ while [ $# -gt 0 ]; do
     --layout) LAYOUT=$2; shift 2 ;;
     --title) TITLE=$2; shift 2 ;;
     --plan-control) PLANCTL=$2; shift 2 ;;
+    --r103) R103_PAK=$2; R103_VIS=$3; shift 3 ;;   # lane eng-mem2: DOOR's farm pack and visibility (default: the shared set's)
     *) echo "build_console_disc: unknown argument $1" >&2; exit 2 ;;
   esac
 done
@@ -388,7 +390,15 @@ case $PLANCTL in
   fivefield)
     grep -v '^#' "$D/SCENES.TXT" | tail -1 | awk '{ print $1 "5", $2, $3, $4, $5 }' >> "$D/SCENES.TXT"
     log "control schedule: a five-field line after the entries" ;;
-  *) echo "build_console_disc: --plan-control $PLANCTL: longcomment or fivefield" >&2; exit 2 ;;
+  sectorend)
+    # lane eng-mem2 (the d6 boot hang): a comment line that brings SCENES.TXT to 2,045 bytes mod 2,048, the size whose
+    # last 29 bytes end fs_iso9660's DMA stream through its 32-byte non-blocking request (engine/loader/selector.c
+    # disc_read). Not a refusal: the selector must read it and run every scene; a selector that reads the schedule in
+    # one aligned call stops at boot (the control: the selector of 8d0fe36e0 or fa2b14aba on this disc)
+    sz=$(stat -c %s "$D/SCENES.TXT"); pad=$(( (2045 - sz % 2048 + 2048) % 2048 )); [ $pad -lt 2 ] && pad=$((pad + 2048))
+    { printf '#'; head -c $((pad - 2)) /dev/zero | tr '\0' 'x'; printf '\n'; } >> "$D/SCENES.TXT"
+    log "control schedule: SCENES.TXT padded to $(stat -c %s "$D/SCENES.TXT") bytes (2045 mod 2048)" ;;
+  *) echo "build_console_disc: --plan-control $PLANCTL: longcomment, fivefield or sectorend" >&2; exit 2 ;;
 esac
 for f in "${PUTS[@]}"; do
   [ -d "$(dirname "$D/$f")" ] || { echo "build_console_disc: --put $f: no such scene folder" >&2; exit 1; }

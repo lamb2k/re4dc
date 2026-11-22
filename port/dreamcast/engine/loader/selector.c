@@ -145,25 +145,52 @@ static int plan_field(char **p, char *out, size_t cap) {   /* the next blank-sep
     out[n] = 0;
     return 1;
 }
-static int read_plan(void) {
-    FILE *f = fopen("/cd/SCENES.TXT", "rb");
-    if (!f) return 0;
-    size_t cap = 4096, n = 0;
-    char *text = (char *)malloc(cap);
-    for (;;) {
-        if (!text) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: no memory to read it"); fclose(f); return 1; }
-        if (n + 1 >= cap) {
-            if (cap >= (1u << 20)) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: larger than 1 MiB"); fclose(f); return 1; }
-            cap *= 2;
-            text = (char *)realloc(text, cap);
-            continue;
-        }
-        const size_t r = fread(text + n, 1, cap - 1 - n, f);
-        if (!r) break;
-        n += r;
+/* lane eng-mem2 (the d6 boot hang): a whole disc file read so that fs_iso9660's DMA stream never runs to its last byte.
+   Read in one call into a 32-byte aligned buffer, a file is streamed (cdrom_stream_start for all its sectors) and its
+   last bytes below 32 come through the driver's one non-blocking 32-byte stream request, polled to the stream's end
+   and then stopped. When that request ends the stream (the file's size mod 2048 between 2017 and 2047), the plain
+   Flycast build never comes back from it: d6's SCENES.TXT (2,045 B, the CDOORRD line) hung at boot every time (d6 on
+   std1 twice and std2 once; eng-mem2's two splits on std1, with and without eng-mem1's R103.PAK); the same disc with
+   CSNDSLOW in CDOORRD's place (1,887 B: the stream stopped with 160 bytes still in it, by the close) boots. The disc
+   control: build_console_disc.sh --plan-control sectorend (SCENES.TXT padded to 2,045 B mod 2,048). The old port met the same request on the
+   console and made it blocking (t15/int game/platform/dvd_read_safe.cpp, DISC_READ_VERIFY: "fs_iso9660's 32-byte
+   request polls for completion right after"); here the request is not made at all: every whole sector but the last
+   is read by the stream (which then stops with a sector still in it, at the close), the last sector through the
+   driver's sector cache (an odd destination address takes iso_read's cached path, never the stream).
+   Returns the file's size, -1 when it is missing, -2 when it is larger than cap, -3 on a read error. */
+static long disc_read(const char *path, uint8_t *dst, size_t cap) {
+    file_t f = fs_open(path, O_RDONLY);
+    if (f < 0) return -1;
+    const size_t n = fs_total(f);
+    if (n > cap) { fs_close(f); return -2; }
+    size_t head = n & ~(size_t)2047;
+    if (head && head == n) head -= 2048;          /* whole sectors: the last one through the cache too */
+    if (head && fs_read(f, dst, head) != (ssize_t)head) { fs_close(f); return -3; }
+    fs_close(f);                                  /* the stream stops here, a sector not handed out */
+    if (n > head) {
+        static uint8_t bounce[2048 + 1];
+        f = fs_open(path, O_RDONLY);
+        if (f < 0) return -3;
+        const size_t tail = n - head;
+        const int ok = fs_seek(f, (off_t)head, SEEK_SET) == (off_t)head && fs_read(f, bounce + 1, tail) == (ssize_t)tail;
+        fs_close(f);
+        if (!ok) return -3;
+        memcpy(dst + head, bounce + 1, tail);
     }
-    const int bad_read = ferror(f);
-    fclose(f);
+    return (long)n;
+}
+
+static int read_plan(void) {
+    file_t pf = fs_open("/cd/SCENES.TXT", O_RDONLY);
+    if (pf < 0) return 0;
+    const size_t total = fs_total(pf);
+    fs_close(pf);
+    if (total >= (1u << 20)) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: larger than 1 MiB"); return 1; }
+    char *text = (char *)memalign(32, total + 1);
+    if (!text) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: no memory to read it"); return 1; }
+    const long got = disc_read("/cd/SCENES.TXT", (uint8_t *)text, total);
+    const int bad_read = got != (long)total;
+    const size_t n = got > 0 ? (size_t)got : 0;
     text[n] = 0;
     g_plan_crc = cl_crc32(0, text, n);
     if (bad_read) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: read error after %u bytes", (unsigned)n); return 1; }
@@ -922,19 +949,17 @@ static void launch(unsigned i) {
     const scene_t *s = &g_sc[i];
     char path[96];
     snprintf(path, sizeof(path), "/cd/%s", s->prog);
-    FILE *f = fopen(path, "rb");
-    if (!f) { fail(i, "program %s missing", s->prog); return; }
-    fseek(f, 0, SEEK_END);
-    const long n = ftell(f);
-    fseek(f, 0, SEEK_SET);
+    file_t pf = fs_open(path, O_RDONLY);
+    if (pf < 0) { fail(i, "program %s missing", s->prog); return; }
+    const long n = (long)fs_total(pf);
+    fs_close(pf);
     const uint32_t max = CL_HANDOFF_ADDR - 0x11000u - CL_LOAD_ADDR;
     uint8_t *img = n > 0 && (uint32_t)n <= max ? (uint8_t *)memalign(32, (size_t)n + 4) : NULL;
-    if (!img || (uintptr_t)img + (size_t)n + 4 > CL_HANDOFF_ADDR - 0x11000u || fread(img, 1, (size_t)n, f) != (size_t)n) {
-        fclose(f);
+    /* lane eng-mem2: disc_read (above), so a program whose size ends a sector the stream's way cannot stop the run */
+    if (!img || (uintptr_t)img + (size_t)n + 4 > CL_HANDOFF_ADDR - 0x11000u || disc_read(path, img, (size_t)n) != n) {
         fail(i, "program %s unreadable (%ld bytes)", s->prog, n);
         return;
     }
-    fclose(f);
     memset(img + n, 0, 4);
     /* the hand-off area, as the loader writes it on RUN; the report cap keeps the client below the journal */
     cl_handoff_hdr_t *h = &H->h;
