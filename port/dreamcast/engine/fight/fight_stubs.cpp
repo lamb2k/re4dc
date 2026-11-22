@@ -28,6 +28,7 @@
 #include "obj00.h"
 #include "e1_engine.h"
 #include "e1_core.h"
+#include "camera/eng_camera.h"
 #include <string.h>
 #include <new>
 #include <math.h>
@@ -100,15 +101,18 @@ int cItemMgr::reloadable() { return 0; }
 int cItemMgr::reload() { STUB("cItemMgr::reload"); return 0; }
 int cItemMgr::num(int) { STUB("cItemMgr::num"); return 0; }
 
-// ---- GX projection queries: the camera's perspective and a 640x480 view (the screen tests some AI makes) ----
+// ---- GX projection queries (the screen tests some AI makes: GetScreenPos, em10ScreenInCk) ----
+// Lane eng-e2d: the game's screen (main_sub.cpp: the viewport is Screen, 512 x 448) and the camera record's projection
+// terms (services/camera/eng_camera.h: the camera service's perspective, x scale cot / (4/3) and y scale cot, as the
+// original's C_MTXPerspective of pG->Cam.ProjMat). Before, a 640 x 480 view and a 640 / 448 aspect, against which the
+// screen rules' 512 x 448 bounds tested other points than the original's. The PC reference's native build answers the
+// same record (hostref/host_math.cpp), where e2bcheck compares the screen check with the original's.
 extern "C" {
-void GXGetViewportv(f32* vp) { vp[0] = 0; vp[1] = 0; vp[2] = 640; vp[3] = 480; vp[4] = 0; vp[5] = 1; }
+void GXGetViewportv(f32* vp) { vp[0] = 0; vp[1] = 0; vp[2] = 512; vp[3] = 448; vp[4] = 0; vp[5] = 1; }
 void GXGetProjectionv(f32* p)
 {
-    const f32 fovy = pG->Cam.param.fovy > 0 ? pG->Cam.param.fovy : 45.0f;
-    const f32 t = 1.0f / tanf(fovy * 0.5f * 0.017453292f), aspect = 640.0f / 448.0f;
-    const f32 n = 10.0f, f = 100000.0f;
-    p[0] = 0; p[1] = t / aspect; p[2] = 0; p[3] = t; p[4] = 0; p[5] = -n / (f - n); p[6] = -(f * n) / (f - n);
+    const EngCamera& r = eng_cam;
+    p[0] = r.proj_type; p[1] = r.p00; p[2] = r.p02; p[3] = r.p11; p[4] = r.p12; p[5] = r.p22; p[6] = r.p23;
 }
 void GXProject(f32 x, f32 y, f32 z, const f32 mtx[3][4], const f32* pm, const f32* vp, f32* sx, f32* sy, f32* sz)
 {
