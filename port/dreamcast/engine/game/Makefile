@@ -35,6 +35,9 @@ SPLIT_NOIPA_UNITS := game/objWep game/pl_debug game/cam_ctrl game/cam_qfps game/
 # (lane eng-e2c's r119: its three thunder functions made weak by services/boss/r119_weak.h, the engine's in
 # services/boss/r119_thunder.cpp; game/r119_split_check.py also runs on the object in boss.mk)
 SPLIT_NOIPA_UNITS += st1/r119
+# (lane eng-mem1: the waived sound driver's game/snd, whose SndRoomStrStop, SndStop and the fade calls the fight and boss
+# images' sound stubs replace: the split check found them inlined, H-025.1's group)
+SPLIT_NOIPA_UNITS += game/snd
 # dmg's cDmg::beginEvent destroys its volume through the manager's destroy, which the shared header declares inline:
 # GCC inlined the original's body there, which the engine's table (services/volumes/dmg_vol.cpp) replaces. dmg is
 # built with no inlining at all, so the call reaches the engine's.
