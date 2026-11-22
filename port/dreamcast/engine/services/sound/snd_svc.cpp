@@ -52,6 +52,7 @@
 #define SND_SDK_NO_GX
 #define SND_DRV_GAME_API
 #include "snd.h"
+#include "../../core/e1_clock.h"   // lane eng-mem1: the engine clock for the sound spans (not KOS's)
 #include "snd_drv.h"
 #include "dvd.h"
 #include "e1_engine.h"
@@ -99,10 +100,10 @@ inline void main_add(uint32_t us)
 struct MainSpan {
     uint64_t t0;
     uint32_t busy0;
-    MainSpan() : t0(timer_us_gettime64()), busy0(aica_busy_us) {}
+    MainSpan() : t0(e1_clock_us()), busy0(aica_busy_us) {}
     uint32_t us() const
     {
-        const uint32_t wall = (uint32_t) (timer_us_gettime64() - t0), other = aica_busy_us - busy0;
+        const uint32_t wall = (uint32_t) (e1_clock_us() - t0), other = aica_busy_us - busy0;
         return wall > other ? wall - other : 0;
     }
 };
@@ -358,7 +359,7 @@ void driver_boot()
 
 void room_load(unsigned room)
 {
-    const uint64_t t0 = timer_us_gettime64();
+    const uint64_t t0 = e1_clock_us();
     if (!g_booted) {
         g_main_thread = thd_current;
         aica_step_hook = step_hook;
@@ -410,7 +411,7 @@ void room_load(unsigned room)
     SndRoomStrStartCheck();
     free(g_chunk);
     g_chunk = 0;
-    g_load_us = (uint32_t) (timer_us_gettime64() - t0);
+    g_load_us = (uint32_t) (e1_clock_us() - t0);
     e1_log("E1 SOUND load room %03x: banks %u, missing%s, %u bytes read, %u us (before play)\n", room, g_banks,
            g_missing[0] ? g_missing : " none", g_load_bytes, g_load_us);
     aica_start();
@@ -509,9 +510,9 @@ void __real_Snd_midi_sequencer(void);
 static uint32_t g_part_max[3], g_part_max_tick[3];
 static inline void part_time(int k, void (*f)(void))
 {
-    const uint64_t t0 = timer_us_gettime64();
+    const uint64_t t0 = e1_clock_us();
     f();
-    const uint32_t us = (uint32_t) (timer_us_gettime64() - t0);
+    const uint32_t us = (uint32_t) (e1_clock_us() - t0);
     if (us > g_part_max[k]) { g_part_max[k] = us; g_part_max_tick[k] = e1_tick; }
 }
 extern "C" void __wrap_Snd_iss_manager(void) { part_time(0, __real_Snd_iss_manager); }

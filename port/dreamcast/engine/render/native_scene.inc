@@ -81,7 +81,7 @@ static int pack_info(file_t f,PackInfo* pi,uint32_t* crc){
    checked; the dropped rows pass through a small scratch buffer. */
 extern unsigned native_recording_frames __attribute__((weak));
 static unsigned recording_frames(void){return &native_recording_frames && native_recording_frames==1 ? 1 : 300;}
-typedef struct { unsigned sec[16], row_at[9], row_len[9], hdr[9]; } PackKeep;   /* frame-0 rows of the delta tables */
+typedef struct { unsigned sec[16], row_at[9], row_len[9], hdr[9], ref[9]; } PackKeep;   /* frame-0 rows of the delta tables */
 static int fs_at(file_t f,unsigned at,void* dst,unsigned n){
     if(fs_seek(f,at,SEEK_SET)!=(off_t)at)return 0;return fs_read(f,dst,n)==(int)n;
 }
@@ -96,7 +96,7 @@ static int pack_keep(file_t f,const PackInfo* pi,PackKeep* k){
     for(unsigned d=0;d<9;d++){
         const unsigned at=k->sec[4+d];uint32_t m,o[2];
         if(!fs_at(f,at,&m,4)||refs[d+1]>=m||!fs_at(f,at+4+4*refs[d+1],o,8)||o[1]<o[0]||(o[1]-o[0])%4)return 0;
-        k->hdr[d]=8+4*m;k->row_at[d]=at+k->hdr[d]+o[0];k->row_len[d]=o[1]-o[0];
+        k->hdr[d]=8+4*m;k->ref[d]=refs[d+1];k->row_at[d]=at+k->hdr[d]+o[0];k->row_len[d]=o[1]-o[0];
         if(k->row_at[d]+k->row_len[d]>k->sec[5+d])return 0;
     }
     return 1;
@@ -143,6 +143,11 @@ static int keep_pad(uint32_t* row,unsigned len,unsigned g){
     }
     return 1;
 }
+/* The sizing pass's rows from a file of its own (the load then reads its file in order, never seeking). */
+static int pack_keep_path(const char* path,PackKeep* k){
+    file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
+    PackInfo pi;int ok=pack_info(f,&pi,NULL)&&pack_keep(f,&pi,k);fs_close(f);return ok;
+}
 static unsigned pack_need(const char* path){
     file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
     PackInfo pi;int ok=pack_info(f,&pi,NULL);
@@ -153,7 +158,7 @@ static unsigned pack_need(const char* path){
 }
 /* Read n bytes into the CRC only (the recording's frames 1-299 in an engine image). */
 static int skip_crc(file_t f,unsigned n,uint32_t* crc){
-    static uint8_t scratch[16384] __attribute__((aligned(32)));
+    static uint8_t scratch[65536] __attribute__((aligned(32)));
     while(n){unsigned c=n>sizeof(scratch)?sizeof(scratch):n;if(!read_crc(f,scratch,c,crc))return 0;n-=c;}
     return 1;
 }
@@ -166,14 +171,27 @@ static int read_rest_keep(file_t f,const PackInfo* pi,const PackKeep* k,uint8_t*
         const unsigned end=88+pi->root[s+2];
         uint8_t* dst=data+68+at[s];
         if(s<4||s>12){
-            if(!read_crc(f,dst,end-pos,crc))return 0;
+            if(!read_crc(f,dst,end-pos,crc)){printf("M1 pack: section %u unread\n",s);return 0;}
             if(s==3){uint32_t* f0=(uint32_t*)(dst+8+4*300);for(unsigned d=1;d<=9;d++)f0[d]=0;}   /* frame 0: row 0 of each kept table */
             pos=end;continue;
         }
         const unsigned d=s-4;
         uint32_t* w=(uint32_t*)dst;
-        if(!skip_crc(f,k->row_at[d]-pos,crc)||!read_crc(f,dst+12,k->row_len[d],crc))return 0;
-        if(!skip_crc(f,end-k->row_at[d]-k->row_len[d],crc))return 0;
+        {   /* the table's own header, read in order, must place frame 0's row where the sizing pass found it */
+            static uint32_t hdr[302];uint32_t n=0;
+            if(!read_crc(f,(uint8_t*)&n,4,crc)||n>300){printf("M1 pack: delta %u header n %lu\n",d,(unsigned long)n);return 0;}
+            if(!read_crc(f,(uint8_t*)hdr,4*(n+1),crc)){printf("M1 pack: delta %u offsets unread\n",d);return 0;}
+            const uint32_t* fr=(const uint32_t*)(data+68+at[3]+8+4*300);   /* frame 0's refs (patched below: read first) */
+            const unsigned ref=k->ref[d];(void)fr;
+            const unsigned row_at=pos+8+4*n+hdr[ref],row_len=hdr[ref+1]-hdr[ref];
+            if(ref>=n||row_at!=k->row_at[d]||row_len!=k->row_len[d]){
+                printf("M1 pack: delta %u row %u at %u len %u, sizing pass %u / %u\n",d,ref,row_at,row_len,k->row_at[d],k->row_len[d]);
+                return 0;
+            }
+            pos+=8+4*n;
+        }
+        if(!skip_crc(f,k->row_at[d]-pos,crc)||!read_crc(f,dst+12,k->row_len[d],crc)){printf("M1 pack: delta %u row unread\n",d);return 0;}
+        if(!skip_crc(f,end-k->row_at[d]-k->row_len[d],crc)){printf("M1 pack: delta %u tail unread\n",d);return 0;}
         const unsigned extra=d==0?g:0;
         if(extra&&!keep_pad(w+3,k->row_len[d],extra)){printf("M1 pack: frame 0's camera row cannot carry the %u-byte pad\n",extra);return 0;}
         w[0]=1;w[1]=0;w[2]=k->row_len[d]+extra;pos=end;
@@ -331,17 +349,21 @@ int native_open(NativeScene* s,const char* name){
     uint8_t* data=resident_pack+pad;uint32_t* r=(uint32_t*)data;
     unsigned rest=pi.rest;int ok;
     if(recording_frames()==1){   /* lane eng-mem1: frame 0 of the recording kept (pack_keep reads with seeks) */
-        PackKeep k;const unsigned here=88+pi.texsize;
-        ok=pack_keep(f,&pi,&k)&&fs_seek(f,here,SEEK_SET)==(off_t)here;
+        PackKeep k;
+        unsigned step=1;
+        ok=pack_keep_path(name,&k);   /* tex_offsets is the same file's: pack_info refills it identically */
         if(ok)rest=keep_layout(&pi,&k,NULL,NULL);
-        if(ok&&pad+68+rest>resident_capacity)ok=0;
-        if(ok)ok=read_rest_keep(f,&pi,&k,data,r,&crc);
+        if(ok){step=3;ok=pad+68+rest<=resident_capacity;}
+        if(ok){step=4;ok=read_rest_keep(f,&pi,&k,data,r,&crc);}
+        if(!ok)printf("M1 pack %s: frame-0 load refused at step %u (1 rows, 3 size %u of %u, 4 read)\n",name,step,
+                      pad+68+rest,resident_capacity);
     }else{
         r[0]=15;r[1]=0;for(unsigned k=1;k<=15;k++)r[k+1]=pi.root[k+1]-pi.texsize;
         ok=read_crc(f,data+68,pi.rest,&crc);
     }
     fs_close(f);s->assets.storage=resident_pack;
     const uint32_t* h=pi.head;
+    if(ok&&crc!=h[4])printf("M1 pack %s: CRC %08lx, the header's %08lx\n",name,(unsigned long)crc,(unsigned long)h[4]);
     if(!ok||crc!=h[4]||!table(&root,data,68+rest)||root.n!=15||bytes(&root,0))return 0;
     m1_load_status[0]=3;
     if(bytes(&root,14)<8)return 0;

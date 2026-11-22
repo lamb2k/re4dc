@@ -31,6 +31,7 @@
 #include <math.h>
 #include <string.h>
 #include "aica.h"
+#include "../../core/e1_clock.h"   // lane eng-mem1: the engine clock (KOS's jumps 2.5 ms once a second: the hill's 2.77 ms worst)
 
 // The main thread's lines go to the engine log, the audio thread's to a ring printed with the report (snd_svc.cpp).
 extern "C" void aica_log(const char* fmt, ...);
@@ -683,7 +684,7 @@ int g_started;
 
 void audio_step()
 {
-    u64 now = timer_us_gettime64();
+    u64 now = e1_clock_us();
     g_nowMs = (u32) (now / 1000);
     if (!g_lastTickUs) { g_lastTickUs = now - 5000; g_lastFrameUs = now; }
     u32 ticks = (u32) ((now - g_lastTickUs) / 5000);
@@ -701,7 +702,7 @@ void audio_step()
         snd_pend_run();
         g_axCallback();
     }
-    u64 t1 = timer_us_gettime64();
+    u64 t1 = e1_clock_us();
     f32 dt = (f32) (now - g_lastFrameUs) * 1e-6f;
     g_lastFrameUs = now;
     u32 active = 0;
@@ -730,17 +731,17 @@ void audio_step()
     }
     u32 notes = 0;
     for (int i = 0; i < kNotes; i++) notes += g_notes[i].used;
-    const u64 tv = timer_us_gettime64();
+    const u64 tv = e1_clock_us();
     const u32 w0 = S.regwrites;
     flush();
     const u32 writes = S.regwrites - w0;
     if (writes > S.max_writes) S.max_writes = writes;
     mutex_unlock(&g_lock);
     if (aica_slow_us) {   // SNDSLOW (control): a known delay inside the step, so the cost must read it
-        const u64 until = timer_us_gettime64() + aica_slow_us;
-        while (timer_us_gettime64() < until) {}
+        const u64 until = e1_clock_us() + aica_slow_us;
+        while (e1_clock_us() < until) {}
     }
-    u64 t2 = timer_us_gettime64();
+    u64 t2 = e1_clock_us();
     ++S.frames;
     S.ticks += ticks;
     u32 d = (u32) (t1 - now), f = (u32) (t2 - t1);
@@ -767,7 +768,7 @@ void* audio_main(void*)
     for (;;) {
         thd_sleep(5);
         if (!g_axCallback || !g_started) continue;
-        const u64 a = timer_us_gettime64();
+        const u64 a = e1_clock_us();
         // The step runs with interrupts off. KOS's scheduler, at its 10 ms tick, hands the CPU to another ready thread
         // whatever the priorities (thread.c thd_schedule picks from the run queue before the running thread is put back),
         // so a tick that fell inside a step gave the main thread a whole timeslice in the middle of it (10 to 20 ms
@@ -778,7 +779,7 @@ void* audio_main(void*)
         audio_step();
         irq_restore(irq);
         probe_step();   // the output check: a few register reads, outside the step's cost (aica_step_hook)
-        aica_busy_us = aica_busy_us + (uint32_t) (timer_us_gettime64() - a);
+        aica_busy_us = aica_busy_us + (uint32_t) (e1_clock_us() - a);
     }
     return nullptr;
 }
