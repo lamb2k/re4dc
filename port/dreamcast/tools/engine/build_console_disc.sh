@@ -219,6 +219,14 @@ case ",$SCENES," in *,SHOT*)
   grep -v -E '^pad 16[02] ' "$D/SHOT/SHOT.TXT" > "$D/SHOTNP/SHOT.TXT"
   : > "$D/SHOTD/SHOTDMG"; : > "$D/SHOTL/SHOTLATE" ;;
 esac
+# KNOCK (lane eng-e2f; only when --scenes names it): the FIGHT image playing tools/plays_right/fixtures/knock-ganado.txt
+# (the knock-down: one Ganado dies beside another), judged against the PC reference by tools/plays_right/shot_engine.py
+# --fixture <that file> --scenes KNOCK:PASS,KNOCKNT:FAIL:knock --main KNOCK. Its control KNOCKNT, a scene of its own, runs
+# without the damage table's tick (boot file DMGNOTICK) and must FAIL.
+case ",$SCENES," in *,KNOCK*)
+  put "$SRC/port/dreamcast/tools/plays_right/fixtures/knock-ganado.txt" KNOCK/SHOT.TXT
+  mkdir -p "$D/KNOCKN"; : > "$D/KNOCKN/DMGNOTICK" ;;
+esac
 
 # The record's controls (lane eng-e1k: CROWDUP to CSTACK; lane eng-e1o, H-017.6 and H-017.7: CCAM0 to CKIND), each the
 # Leon scene (E1 image, village route) run from its own folder with one boot file (core/e1_core.h lists them), staged
@@ -340,6 +348,8 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "SHOTNP Shot_control:_no_press PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOTNP/SHOT.TXT,$SHOTNEED) root=SHOTNP:FIGHT rows=compact skip=T,LT,LE,LL"
   echo "SHOTDMG Shot_control:_wrong_damage PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOTD/SHOTDMG,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTD:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
   echo "SHOTLATE Shot_control:_hit_1_s_late PROG/FIGHT.BIN 300 e1:function:drawn $(need SHOTL/SHOTLATE,SHOT/SHOT.TXT,$SHOTNEED) root=SHOTL:SHOT:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "KNOCK Knock-down_fixture_(traced,_not_timing) PROG/FIGHT.BIN 300 e1:function:drawn $(need KNOCK/SHOT.TXT,$SHOTNEED) root=KNOCK:FIGHT rows=compact skip=T,LT,LE,LL"
+  echo "KNOCKNT Knock-down_control:_no_damage_tick PROG/FIGHT.BIN 300 e1:function:drawn $(need KNOCKN/DMGNOTICK,KNOCK/SHOT.TXT,$SHOTNEED) root=KNOCKN:KNOCK:FIGHT rows=compact skip=T,LT,LE,LL"
   # lane eng-e1o: function runs of the same images (only when --scenes names them; never timing): LEONT and HILLT traced
   # (no NOTRACE: the trace lines go to the serial line, kept out of the report), LEONS, HILLS and FIGHTS hand over stills
   # (STILLS: tick 1 and every 40th; the Flycast runner reads them)
