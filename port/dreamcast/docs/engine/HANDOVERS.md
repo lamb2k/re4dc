@@ -2,6 +2,27 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-041 (2026-11-22): the console link over the broadband adapter; room loading handed back
+
+(There is no H-040: the kos-net ruling below took that number in a message.)
+
+- **Owner:** "Do we have a lane that can take up building a version of the QA link or Expanding its capabilities to
+  work with the BBA but also push images and restart the Dreamcast?" No lane had it: the console loop runs over the
+  modem only and lists the adapter and a smart plug as next steps. Plan section 9 (the console link) and lane
+  eng-link1 (brief `E:\RE4DC-Lanes\eng-link1\BRIEF.md`): the adapter as a second transport under the loop's
+  protocol and checks, packs served by the PC at load time only, stills and serial lines pulled back, a reset command,
+  the BIOS reboot and a power-cycle hook for a smart plug, proven in Flycast's adapter emulation. Its first console
+  run waits for the owner (H-021). "Push images" is read as programs and room packs to the console, and stills back.
+- **Room loading (lane eng-load2, handed back, queued after the memory train):** MODELLED (console-build dynarec at
+  70 MHz, calibrated on the old port) with the GDEMU disc profile: village to farm 7.13 to 4.80 s, farm to village
+  5.17 to 3.28 s; the old port's village to farm 4.68 s (a measuring stick, different span). Packs on disc without
+  the unused recording (farm 11.3 to 6.3 MB), 32 KiB reads (drive requests 3,992 to 210). DOOR OK: the 16 B was the
+  allocator's slack. **Ruling (sent to the integration lane as H-040):** the round trip is judged on "kos-net"
+  (uordblks less the tracked blocks' slack), with CDOORLK still failing and a lost block list failing. Of the farm's
+  4.80 s, 3.12 s is the renderer re-indexing character vertices at load: lane eng-draw5 is asked to design its layout so
+  that work moves to the bake.
+- **New lane:** eng-rec1, recordings of the ten chapter 1 rooms without one (plan section 8, B5).
+
 ## H-039 (2026-11-22): the gate's second report; the scheduler's first pass
 
 - **Merged by the integration lane's second session:** eng-e2d (FIGHT 43 to 30; the allowed destructor has no body in
