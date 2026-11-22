@@ -216,29 +216,19 @@ decltype(SceAtItemFlgCk(hr_v<int>())) hs_42(...) { HS("SceAtItemFlgCk(int)"); re
 // SearchEmModule(int)   // not declared in the headers: int
 extern "C" int hs_43(...) asm("__Z14SearchEmModulei");
 int hs_43(...) { HS("SearchEmModule(int)"); return hr_z<int>::get(); }
-// SndRoomStrStop(int)
-extern "C" decltype(SndRoomStrStop(hr_v<int>())) hs_44(...) asm("__Z14SndRoomStrStopi");
-decltype(SndRoomStrStop(hr_v<int>())) hs_44(...) { HS("SndRoomStrStop(int)"); return hr_z<decltype(SndRoomStrStop(hr_v<int>()))>::get(); }
-// SndEventStrStop(int)
-extern "C" decltype(SndEventStrStop(hr_v<int>())) hs_45(...) asm("__Z15SndEventStrStopi");
-decltype(SndEventStrStop(hr_v<int>())) hs_45(...) { HS("SndEventStrStop(int)"); return hr_z<decltype(SndEventStrStop(hr_v<int>()))>::get(); }
-// SndRoomStrStart(int, int, int)
-extern "C" decltype(SndRoomStrStart(hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_46(...) asm("__Z15SndRoomStrStartiii");
-decltype(SndRoomStrStart(hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_46(...) { HS("SndRoomStrStart(int, int, int)"); return hr_z<decltype(SndRoomStrStart(hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // setEm(short, signed char, int, int, int)
 extern "C" decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_47(...) asm("__Z5setEmsaiii");
 decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>())) hs_47(...) { HS("setEm(short, signed char, int, int, int)"); return hr_z<decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_v<int>()))>::get(); }
 // DebugTrg(int)
 extern "C" decltype(DebugTrg(hr_v<int>())) hs_48(...) asm("__Z8DebugTrgi");
 decltype(DebugTrg(hr_v<int>())) hs_48(...) { HS("DebugTrg(int)"); return hr_z<decltype(DebugTrg(hr_v<int>()))>::get(); }
+// SndRoomStrStop, SndEventStrStop, SndRoomStrStart, SndStrReq: taken out of the generated set at the merge of
+// origin/engine (lane eng-sched2): the hosted sound driver (game/snd, waiver H-025.1) defines them
 // SetObj00(void*, void*, Vec*, Vec*): taken out of the generated set (lane eng-sched2): R101Init's region path calls
 // a virtual of the object it returns, so host/sched_host.cpp gives it a logged stub object (sched_host.h)
 // SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)
 extern "C" decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_50(...) asm("__Z8SetObj01PvS_P3VecS1_S1_ffii");
 decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_50(...) { HS("SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)"); return hr_z<decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>()))>::get(); }
-// SndStrReq(int, int, int, int, int, float)
-extern "C" decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>())) hs_51(...) asm("__Z9SndStrReqiiiiif");
-decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>())) hs_51(...) { HS("SndStrReq(int, int, int, int, int, float)"); return hr_z<decltype(SndStrReq(hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<int>(), hr_v<float>()))>::get(); }
 // cObjLadder::setOn()   // not declared in the headers: int
 extern "C" int hs_52(...) asm("__ZN10cObjLadder5setOnEv");
 int hs_52(...) { HS("cObjLadder::setOn()"); return hr_z<int>::get(); }
