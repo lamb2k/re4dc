@@ -34,7 +34,7 @@ The rest of this file is the maintainers' working rules. It names folders on the
 ## Read these four files, in this order
 
 1. `AGENTS.md` (this file).
-2. `port/dreamcast/docs/ENGINE_PLAN.md`: the amendments of 2026-11-21 first, then goal, budget, architecture, the path (section 7), gates (section 8), workflow (section 9).
+2. `port/dreamcast/docs/ENGINE_PLAN.md`: "The plan as of 2026-11-21" first, then the amendments of 2026-11-21, then goal, budget, architecture, the path (section 7), gates (section 8), workflow (section 9).
 3. `port/dreamcast/docs/engine/STATUS.md`: milestone state, numbers, running lanes, what waits on the owner.
 4. `port/dreamcast/docs/engine/HANDOVERS.md`: the newest numbered hand-over.
 
@@ -47,9 +47,10 @@ Everything else under `port/dreamcast/docs` is history or reference. Read a hist
 - All of the game in a new native Dreamcast engine, playable on a real console, from PS2 assets.
 - **30 fps is the floor:** at most two 60 Hz fields between presented pictures, judged on the worst interval.
 - **Correct means it plays right and looks right.** Bit-exact results are not a goal.
+- **The look (owner 2026-11-21):** "i want the raw stenghts of the syustem to stand out on a ps3 3d asseet foundation with native dreamcast code" (read: on a PS2 3D asset foundation). The PS2 version sets the shapes; the Dreamcast's own strengths are what the picture is built to show: the graphics chip's per-pixel hidden-surface removal and sorted transparency, modifier-volume shadows, 8 MB of video memory with compressed mip-mapped textures, a sharp 480p VGA picture, per-vertex highlights and bump mapping, and the SH-4's vector maths through SH4ZAM. The art may be reworked for it; no GameCube assets.
 - **The player's test:** it plays like the GameCube version and runs as fast, at 30 fps (owner 2026-11-21: "People that have played the GameCube version shouldn't have to think about game play choices it should just run as fast.").
 - **Never changed:** behaviour (collision results, event order, game state, AI decisions), enemy cap 4, no GameCube assets.
-- **Known departures from the GameCube version** (a short list, kept short): the enemy cap of 4 (owner 2026-10-17; revisited when the model shows headroom, the owner's call); one picture of input delay from the fixed-field pacer.
+- **Known departures from the GameCube version** (a short list, kept short): the enemy cap of 4 (owner 2026-10-17; revisited when the model shows headroom, the owner's call); quick weapon select (owner 2026-11-21); one picture of input delay from the fixed-field pacer. The PS2 art may be reworked, retouched and repainted for this console (owner 2026-11-21); no GameCube assets.
 
 ## How the engine is built
 

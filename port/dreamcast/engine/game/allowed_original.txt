@@ -148,6 +148,15 @@ game/game *
 !game/em_sub EmAtkHitCk EmAtkHitCk2 EmAtkHitSubCk2 EmAtkLineHitCk PlBombHitCk EmRackCk EmGetDmPos CheckInWater
 !game/em_sub GetWepTargetPos GetWepTargetList2 GetWepTargetListBomb
 !game/em_sub EmDmBloodSet2 EmPlBloodSet2 EmSubBloodSet EmYarareDisp EmCatchMotionMove
+# Lane eng-e2a (H-017.10, integrator ruling on item 1): the attack and blast compositions in services/aim/em_hit.cpp
+# re-express decision statements of these functions (docs/engine/SERVICES.md 49.2, line by line); nothing of the
+# originals' bodies stays linked (ceiling 0). Lane eng-e2a item 2: the damage table's tick is the engine's too.
+=game/em_sub EmAtkHitCk* 0
+=game/em_sub EmAtkHitSubCk2* 0
+=game/em_sub EmAtkLineHitCk* 0
+=game/em_sub PlBombHitCk* 0
+=game/em_sub GetWepTargetListBomb* 0
+=game/dmg cDmgMgr::move* 0
 # dmg: the damage areas' collision tests, memory and manager
 !game/dmg *::hitCheck cDmgMgr::memAlloc cDmgMgr::memClear cDmgMgr::memFree cDmgMgr::construct *::~* startup._GLOBAL__sub_I_*
 # destructors of the thrown objects (actor tables)
@@ -156,6 +165,9 @@ game/game *
 # room scripts: the Ganado voice pick (sound), the arena's lightning (effects)
 !st1/r101 r101_callGanadoVoice
 !st1/r119 r119_ThunderMove r119_ThunderFlagOn r119_ThunderFlagOff
+# Lane eng-e2c (integrator ruling 2026-11-21): the thunder is the engine's (services/boss/r119_thunder.cpp; the three are
+# made weak in the hosted object by services/boss/r119_weak.h); nothing of the originals' bodies may be linked.
+=st1/r119 r119_Thunder* 0
 # sce_at: hit and screen tests, area geometry, the at-list container, item effects, item models and their loading, shadow drawing
 !game/sce_at SceAtHitCheck sceAtHitCheck SceAtItemHitCheck* InScreenCheck sceAtGetArea sceAtGetLadderPos
 !game/sce_at SceAtInit sceAtGetOtAddr sceAtSetOtStart sceAtItemEffSet sceAtItemEffDelete* sceAtFunc_shd_disp

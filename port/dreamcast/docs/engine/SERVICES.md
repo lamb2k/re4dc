@@ -1398,3 +1398,92 @@ filter) and cannot be split at link without editing `src/`, so it is an engine c
 
 None is a function of its own in any hosted unit, so none can be a hosted call; keeping them in original object code
 would mean keeping the whole body, with the follow arithmetic (1268-1282) H-017.1 moves out.
+
+## 49. The fight image's enemy hit geometry, damage volumes and areas (lane eng-e2a, step 3)
+
+Details, numbers and how each body differs from the original: `lanes/eng-e2a.md`. Status: finished, unaudited.
+
+| Section | Service | Engine file | Original functions retired from the fight (and boss) image |
+|---|---|---|---|
+| 49.1 | Enemy hit geometry | `services/aim/em_hit.cpp`, `hit_shape.h` | em_sub's 19: line / sphere / capsule / box / quad tests, attack checks, damage position, blast list, rack and water tests, caught-actor follow, debug boxes, blood placement |
+| 49.4 | Damage volumes | `services/volumes/dmg_vol.cpp` | dmg's 15: the cManager<cDmg> template, records, memory hooks, DmgMgr's construction, the tick, the point tests |
+| 49.5 | Scenario areas | `services/volumes/area_vol.cpp`, `camera/area_edge.h` | area's 7 (the unit is no longer hosted in the fight image) |
+
+**Check** (`hostref/svc/e2check.sh`): odump against native, the boundary log `e2.txt` (`svc/e2_dump.cpp`) compared by
+`svc/e2_compare.py` (integers exact; positions, lengths and roots of squared distances within max(0.01 unit, 2^-20 of the
+value); angles 0.01 degree) with the double-precision rule for line-test hit points (`svc/e2_exact.py`, integrator ruling
+on item 1: a line outside the bound agrees when the engine is within 0.01 of the double-precision answer of the same
+definition and the reference farther from it), outcome.py and plays_right.py; the six fight fixtures and the exercise
+`e2geom` (bell-ganado, hill-ashley), every row as it must; controls hitwide, dmposmid, sphereshort, hitnudge, dmgwide,
+areawide fail. While an e2 call runs, svc4_dump.cpp's round-4 log skips the calls inside it (they are compared at the e2
+boundary).
+
+### 49.1 The original's approximations kept on purpose (integrator ruling on item 1)
+
+The engine answers with the game's definition of a capsule hit, not the true surface entry, because play must equal the
+GameCube version. `svc/e2_exact.py` prints the largest gap between the game's answer and the true geometry per
+approximation (the e2geom exercise on bell-ganado, odump log lines):
+
+| Approximation | Original (`src/game/em_sub.cpp`) | Engine (`services/aim/em_hit.cpp capsule_in`) | Where it shows |
+|---|---|---|---|
+| The side point: from the segment's nearest approach to the axis, back by h = sqrt(r^2 - q^2) measured along the segment (`PSVECScale(&d, &d, h / PSVECMag(&d))`), so for a slanted segment the point lies inside the cylinder | 845-848 | `back = sqrt(rr - q2) / vlen(d)` | line 3237, `20 LC P-7765.75,-281.41,399.65 P-7153.61,-724.47,-180.43 ... R271.23 -> 1 P-7263.63,-644.84,-76.17`: 454.5 units from the true entry (a segment nearly along the axis) |
+| An axis within 0.01 rad of the vertical (up or down) is taken as the upward vertical (`if (ang > 0.01f && ang < PI - 0.01f)`, else no rotation) | 787-792 | `if (u.y >= 0.99995f \|\| u.y <= -0.99995f) u = (0, 1, 0)` | line 25583, `275 LA 4 ... -> box4.0 1 P5710.03,4909.08,-15454.18`: 0.537 unit from the answer without the snap |
+
+### 49.2 Decision statements re-expressed in engine code (H-017.10; integrator ruling on item 1)
+
+The attack and blast compositions call the behaviour's own decisions (LifeDownSet2, PlSetDamage, cDmgInfo::set,
+VibSetData stay hosted calls). The statements below sit inline in em_sub's service functions, which are not functions
+of their own in any hosted unit, so none can be a hosted call; `allowed_original.txt` holds each original at a size
+ceiling of 0.
+
+| Original (`src/game/em_sub.cpp`) | Statement | `em_hit.cpp` |
+|---|---|---|
+| EmAtkHitCk 2237-2241 | the info's flag bit 2 is LifeDownSet2's keep argument (the call is hosted) | 426 |
+| EmAtkHitCk 2242-2244 | `if (info->flag & 8) pG->pl_life = 0` | 427 |
+| EmAtkHitCk 2245 | the reaction handed to PlSetDamage is the class less one (the call is hosted) | 428 |
+| EmAtkHitCk 2248-2255 | the partner is tested unless noSub; her hit sets bit 1 (cDmgInfo::set is hosted) | 430-435 |
+| EmAtkHitCk2 2273-2278 | no hit on a player with no life or dying | 393 |
+| EmAtkHitCk2 2287-2288 | the touched box's flag 0x4000 cleared and made the player's damaged box | 397-398 |
+| EmAtkHitCk2 2289-2305 | the reaction class: front or back by his facing, low (under 800), middle (under 1300) or high | 221-229, 399-403 |
+| EmAtkHitSubCk2 2493-2501, 2510 | no partner, no life, dying: no hit; the box's flag 0x4000 cleared | 412, 415 |
+| EmAtkLineHitCk 2334-2345, 2371 | the player alive, shown, with life, not dying; the box marked 0x4000 | 455, 459 |
+| PlBombHitCk 1682-1697 | no life or dying; beyond 6000 or r + 300: no hit | 601-604 |
+| PlBombHitCk 1698-1706 | the inner radius by weapon class (0x0D02: 1500, else 2500); beyond it the knock-down (PlSetDamage 9, hosted) | 605-608 |
+| PlBombHitCk 1710-1712 | inside it: 1200 damage kept above 1 when life is 501 or more, reaction 8, rumble 7 (the calls are hosted) | 611-613 |
+| GetWepTargetListBomb 1519-1525 | the grenades (0xD, 0x12, 0x13) test the player first | 626 |
+| GetWepTargetListBomb 1538-1558 | which actors count: live, shown, enemies (and partners 3 / 4 unless flag bit 0), life left, not dying, 0x4F not for weapon 0xE | 635-636 |
+| GetWepTargetListBomb 1559-1596 | the partners' reach held to 2500 / 1500; the grenade kinds' height reach to 2000 | 637-638 |
+| GetWepTargetListBomb 1627-1640 | the scenery test skipped for flag 0x80 boxes and middles within 0.3 of the reach (always for the partners and 0x39) | 642-647 |
+
+### 49.3 Not covered on the PC
+
+The fixtures' own play reaches only CheckInWater, EmYarareDisp, EmDmBloodSet2 (rnd 0) and the damage volumes; every other
+entry point is reached by the exercise. No fixture has a rack, a grab, a grenade or a cube hit box on a Ganado.
+
+### 49.4 Damage volumes
+
+The table on the engine pool (`pool.h ENG_POOL`), 20 records at room load; the tick frees released records in the same
+tick (the original over the next two sweeps). The fight image had no table before this lane (every registration refused);
+`fight/fight_e2.cpp` makes it, `fight/fight_trace.cpp` ticks it after the camera as the reference does.
+
+### 49.5 Scenario areas
+
+The quad test takes two opposite corner wedges through `camera/area_edge.h` (the camera's edge test, now shared). The
+view check hands its point and direction to the view-cone test, which stays the fight image's generated stub (0).
+
+## 50. The Ganado's presentation, cut-in cameras, model parts and lifetime (lane eng-e2b, step 3)
+
+Details, per function how it differs from the original, and the check: `lanes/eng-e2b.md`. Status: finished, unaudited.
+
+| Engine file | em10.cpp functions retired from the fight image |
+|---|---|
+| `services/em10/em10_pres.cpp` | Em10SetSeTbl, em10CallVoiceSe, em10CallVoiceSe2, em10BreathSe, em10CsawSignSe, em10SetDamageVoice, em10BehindSeCk, em10FootSe, em10WepSeEffSet, em10BloodSet, em1cBloodSet, em10KickHitMark, em10SetDmWaterEff, em10SetWaterEff |
+| `services/em10/em10_cam.cpp` | em10CamMove, em10CamMove2, em10CamMoveCri, em10CamMoveAshley, em10CamMoveTakeaway, em10SetCampos2, em10ScreenInCk |
+| `services/em10/em10_model.cpp` | em10ModelInit, em10SetAccesory, em10HandSet, em10HeadSet, em10ClothPartsSet, em10GoodsPartsSet, em10SackSet, em10BlendMotSet, cEm10::~cEm10 |
+
+em10.o is built without interprocedural optimisations and refused by `game/em10_split_check.py` when a clone or an
+inlined copy of one of its 40 service functions is reported (the default -O2 had hidden eight of them inside decision
+functions). Check: `hostref/svc/e2bcheck.sh` (boundary log `e2b.txt` from `svc/e2b_dump.cpp`, with `e2.txt`, outcome and
+traces; controls voicebank, bloodswap, footpart, camease, screenhalf, handgrip, accnone, keepcap). The PC reference's
+em10SetDamageVoice voice is bound as on the console (EM10_VOICE, a refctl row). em10's skeleton and cloth functions
+(9) wait for skeleton and cloth entries (lane eng-svcspd1).

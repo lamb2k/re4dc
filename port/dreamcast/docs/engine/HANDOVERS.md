@@ -2,6 +2,197 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-030 (2026-11-22): resume after every lane stopped at its tool limit; re-merges and trains at the gate
+
+- **State at resume (04:00):** `engine` a68a57094. Every lane agent of 11-21 had stopped (tool-call limits, the
+  integrator's session ended about 15:20); nothing ran, no slot held a lease. Pushed by the integrator after the
+  public-repository blob check: `lane/eng-skel2` e590e4b2e (never pushed before: collision baked offline, contains
+  eng-clock1 and eng-skel1) and `lane/eng-draw3` 0e0f156bd (steps 1b and 2b).
+- **Gate queue, in order:** eng-clock1 (pending at its Flycast step), eng-draw1, eng-draw2, eng-skel1 (c60a0cd4c),
+  eng-skel2, eng-load1, eng-e2d, eng-e2f with eng-e2g, eng-snd1. The integration lane restarted with
+  `E:\RE4DC-Lanes\eng-int\RESUME-20261122.md`.
+- **Restarted to finish their briefs:** eng-draw3 (calibrated slot fly1), eng-cloth1 (fly2), eng-bake1 (PC only).
+- **Rulings:**
+  1. **Re-merges for ended lanes.** When `engine` has moved by code past an ended lane's merge base, the integration
+     lane may merge `engine` into that lane's branch itself, in the lane's worktree, when every conflict is mechanical
+     (both sides kept, no choice of design, value or rule); its gate report lists the conflicted hunks. A conflict that
+     needs a choice comes to the integrator with both sides quoted.
+  2. **The main memory map** (`host/e1_engine.h`): eng-snd1's R1 and eng-skel2's arena move both shift the behaviour
+     arena; whichever lands second comes to the integrator with both maps and both lanes' measured margins.
+  3. **Trains:** up to three queued lanes gated as one when their trial merges are clean in order and their owned
+     files do not overlap; steps 1 to 4 and each lane's controls per lane, images, suites and one clean disc once on
+     the train's tree; a failure drops the lane it points at. Each lane keeps its own merge commit and STATUS note.
+  4. **eng-draw2's ROOMTRIP check:** video-memory free after a release is 24 B under the figure before the first open
+     (the allocator's first-use bookkeeping, constant over three releases). The baseline is to be taken after the first
+     release and any growth across releases fails; that change goes to eng-draw2's successor. Until then ROOMTRIP is an
+     expected failure with that exact reason (as DOOR under H-029.7).
+  5. **eng-e2f's knock-down scene** fails on the shot's capsule rule, which eng-e2g fixed (its KNOCK passes): the two
+     are gated as one train.
+
+## H-029 (2026-11-21): a day of hand-backs: sound, a door, the boss at zero, hidden service code, the clock; rulings
+
+- **Merged through the integration lane today:** eng-salv1, eng-e2a, eng-cmp1, eng-e2b (fight 73 to 43), eng-look1 (Leon's
+  handgun drawn live), eng-fix1 (corrections, game settings, guards: from cd8b8762b the corrected reference is the
+  baseline; refctl 20 rows).
+- **Queued at the gate, in order:** eng-draw1 (the drawing account), eng-clock1 (the clock fix, below), eng-e2c (boss image
+  26 to 0), eng-e2d (the general split check; fight 43 to 30), eng-svcspd1 (five exact speed fixes), eng-skel1 Part A at
+  45da184a9 (skeleton entries, chain object, collision release), eng-load1 at f7f6e9a48 (room-to-room loading; its DOOR
+  scene fails by design on a collision leak until the release entry is in). eng-snd1 (sound) joins when its items close.
+- **Running:** eng-draw2 (world drawing), eng-draw3 (characters' drawing), eng-cloth1, eng-skel2 (clock, baked collision,
+  skeleton cost), eng-e2f (fight to 0, knock-down, area check hosted), eng-bake1, eng-snd1.
+- **Findings that change how earlier figures are read:**
+  1. **The clock (lane eng-skel1).** KOS's nanosecond clock jumps 2,502,400 ns forward once per emulated second (TMU2
+     reloads from 12,468,720 counts a second, `(199499520 / 4) / 4`, while each count is valued at 80 ns). Every MODELLED
+     worst picture measured before the fix may carry +2.5 ms in one picture a second; means read 0.25% low. The fix
+     goes into the engine's clock wrapper (`lane/eng-clock1`), not into KOS. Reporting it to KOS upstream needs the
+     owner's OK (offered, not asked again).
+  2. **The link check's zero was a count of symbols (lane eng-e2d).** The default image carried original drawing code
+     (objWep's `Draw_line3d_222`) inlined into two kept functions; FIGHT had 42 hidden cases and BOSS 18.
+     `tools/engine/split_check.py` now runs inside `check_link.py` on every map; units with a replaced function are
+     built without the interprocedural optimisations.
+  3. **The PC native build's `GetScreenPos`** answered the screen centre for every point (no GX projection is loaded on
+     the native build): fixed in `hostref/host_math.cpp` as a tool fix; the original's answers are unchanged.
+- **Rulings:**
+  1. **Collision is baked offline** (lane eng-skel1's option 2): the SAT/EAT tables are replaced in the room archive by
+     the form the service queries; header and normal table kept; pieces in the room heap; the services region goes
+     to 512 KB; no bake at load. r106 needs 924,864 B of baked collision against 751,616 B of room space today, so
+     this is not only the farm. The map screen's `mapPositionCheck` reads the SAT by hand: it becomes a native
+     floor-polygon entry of the collision service, called when the sub screen is hosted.
+  2. **Sound's memory:** `E1_ARENA_LO` 0x8cc00000 to 0x8cc80000 and the fight's 0x8cd80000 to 0x8cdc0000, applied in
+     lane eng-snd1's own branch (the driver adds about 0.33 MB). The driver's own generator for the sound variant is
+     accepted. The waiver's ceilings stand (1.0 ms mean, 2.0 worst); the village's one over-ceiling picture is the
+     clock artefact and is re-judged with the clock fixed. The request check's 1.0 position bound is not widened:
+     six village footsteps 1.05 to 1.38 units off are a finding to explain.
+  3. **One owner for the main memory map** is to be briefed when eng-load1 has merged (three pressures arrived in one
+     day: sound, the farm's collision, the renderer's resident sizing).
+  4. **Engine composition for loading** (`core/room_change.cpp`: the hand-off statements of `gameDoordemo` and
+     `gameRoomMemInit`) is accepted under H-017.10 with the statement list kept at the head of the file.
+  5. **The area check is hosted, not planted:** lane eng-e2f hosts `sce_at` and `act_btn` in the default image so a door is
+     noticed by the game's own code.
+  6. **Approximate FSCA/FIPR maths** in the skeleton is allowed only with every fixture's outcome unchanged (the owner
+     approved approximations as a class); it ranks below the memory fix.
+  7. **Gate rules added:** shared pack sets are real copies with receipts; a hand-back figure that does not match the
+     head is recorded with the measured figure; DOOR is an expected failure with an exact reason until its
+     dependencies land; a lane's Part can be gated at a named commit (`--head`) while the lane carries on.
+- **Look choices being prepared for the owner (nothing lands before they see it):** character back-face culling (still
+  sheet with pixel counts, eng-draw3); Ashley's skirt options (clips, eng-cloth1: the skirt is 6.8 ms a picture on the
+  hill, MODELLED).
+- **Open with the owner:** the GameCube original as a third reference for disputes, or anchoring on the old port only;
+  the release-line hotfix candidate (Disc 2's em1f copy of em10 lacks the Ganado byte-order correction); a KOS
+  upstream report for the clock.
+
+## H-028 (2026-11-21): the drawing account is in; the renderer is rebuilt along its pixel-identical path, world and characters as two lanes
+
+- **What lane eng-draw1 found** (its report, at the gate; MODELLED, console-build dynarec at 70 MHz, calibrated on the old
+  port; the tier charges instructions and sees no cache, store queue, graphics chip or bus):
+  - Drawing is 27.5 / 37.4 / 26.0 ms mean on LEON / HILL / FIGHT against the 14 ms row: the world 10.2 to 11.6, selection
+    3.7 to 3.8 on the moving-camera scenes, characters 12.0 / 24.1 / 11.0.
+  - 43 to 47% of the world's corners belong to strips no triangle of which is ever seen: about 5 to 6.6 ms a picture.
+    The near-plane fix costs 3.7 to 5.6 ms, most of it triangles wholly behind the plane sent to the clipper. Every
+    staged vertex is copied about once.
+  - Characters: every header has culling off (57 to 58% of on-screen triangles are back faces); weight sets, lighting
+    and emission cost well over the job.
+  - Its estimate for all pixel-identical steps together: 11.0 mean / 14.9 worst (LEON), 10.2 / 15.6 (FIGHT), 14.4 / 17.8
+    (HILL). So the row is reachable on the mean in two scenes and missed at the worst pictures in all three without look
+    choices. Estimates, not built.
+- **Rulings:**
+  1. **Build the pixel-identical path now**, as two lanes on eng-draw1's head: **eng-draw2** (world: stills repeatable to
+     the pixel first, then the clipper pre-reject, selection, the exact strip cull from baked cones and bounds, the world
+     walked without a stage) and **eng-draw3** (characters: unused positions and normals skipped, the four kernels on
+     SH4ZAM, the per-model fixed cost). Each step lands as the default with the old path removed, with a base re-run in
+     the same session and 0 differing pixels against the previous step.
+  2. **C on SH4ZAM before assembly.** Hand-written SH-4 assembly is a last, separate step with the C form's measured
+     figure and the reason it is not enough (workspace rule of 2026-10-12); this tier cannot rank hand-scheduled code.
+  3. **Look choices are the owner's and stay out of speed steps.** The first one prepared is character back-face culling
+     (estimate -4.0 / -7.4 / -3.6 ms): a lab arm and a still sheet with differing-pixel counts from eng-draw3. World
+     levels, character levels, a light cap and half-rate lighting follow the same way, after the pixel-identical floor
+     is measured, each on its own sheet.
+  4. **Pack sets (the eighth ruling of H-027, written here):** packs a disc build needs by default live in
+     `E:\RE4DC-Lanes\packs\<set>\`, immutable, with a receipt (hashes, the bake script and commit, inputs, the lane);
+     only the integration lane writes them, at the gate, after a clean-checkout rebuild. A default path into a lane
+     folder fails the gate. `PRISTINE` is an input tree, recorded by identity in the gate log.
+  5. **Flycast slots:** the lease is written before a runner touches the slot, and a slot is free only with no lease and
+     no Flycast or runner running from its folder (lane eng-fix1 broke an unleased run of eng-snd1 for two minutes and
+     reported it; the common brief carries the rule).
+  6. **The E1 audit** (Codex) is ordered when the two drawing lanes' pixel-identical floor is measured, not before
+     (H-023's condition "a drawing design that fits its row on the calibrated model" is read as: the floor known, the
+     look choices listed with their sheets).
+- **Corrections (lane eng-fix1, finishing its re-merge before the gate):** ten corrections built in with no way to turn
+  them off, the owner's four choices in `game_settings.mk`, three guards (one counted, 0 in every scene). With the
+  Ganado byte-order correction in, a hit Ganado's routine bytes differ from the first hit (tick 61) and positions
+  from about tick 165 (4.4 to 4.5 units); engine and reference moved together. Quick weapon select is set on and
+  reaches nothing until the sub screen is hosted.
+- **Lanes now:** at the gate eng-look1; queued eng-fix1, eng-draw1; finishing eng-e2c; running eng-draw2, eng-draw3,
+  eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-e2d.
+
+## H-027 (2026-11-21): the plan written down (version 3.2); what the PC reference is and is not; rulings from the first gates
+
+- **Owner:** "okmemoralize that plan and ensure the skill sare up to date". Done: `ENGINE_PLAN.md` version 3.2 ("The plan as of
+  2026-11-21"), `LANES.md`, `COMMON_BRIEF.md`, `INTEGRATION_GATE.md`, the rule files and the four skills (merge 9dfe2ca00).
+- **Owner asked:** "In the PC the ideal reference ?" and "How does el Gigante run in reference?". Answers given, and rulings:
+  1. **The PC reference is the workbench, not the truth.** It is the original code built for a third platform. Four faults
+     in it were found in two days (em10's presentation callers, the BSpline alias, routine bytes, the Ganado's hit voice
+     label), each one a case where engine and reference agreed and both were wrong. From now on a PC fixture counts as a
+     reference only where it is anchored: the same scene run on the released old port in Flycast, agreeing on outcome and
+     on chosen state at chosen ticks. A lane for that anchoring starts when the machine has room (backlog, first in line
+     after the renderer redesign's build lanes).
+  2. **El Gigante has no whole-fight reference.** The PC reference does not host him; lane eng-e2c checked each function on
+     a planted giant. The released old port is his reference: a scripted fight there, the engine judged on outcome. Part of
+     the anchoring lane. His AI and his drawing meet in one scene only after the renderer redesign (his drawing alone is
+     over twice the row on the bench).
+  3. **Gate rule:** a move of `engine` since a lane's merge base passes without a re-merge when the trial merge is clean and
+     every moved file is a document or a tool that no image and no suite uses. `GATE.md` carries it.
+  4. **A hand-back figure that does not match the head** is a lane error the integration lane records with the figure it
+     measured; it fails the gate only if the control itself does not work (eng-e2b: "em10 21" and "8 clones" came from an
+     intermediate build; at the head the controls give em10 11 and 181 problems).
+  5. **Service code hidden by inlining** (eng-e2b's finding: the optimiser had inlined 8 of em10's service functions into
+     decision functions, out of the symbol-based link check's sight). Until lane eng-e2d's general check has run on every
+     image, the link check's counts, the default image's 0 included, are counts of symbols, not proof.
+  6. **The boss room's thunder** is presentation: its interval moves to the presentation generator (the split rule); the
+     three `static` functions may be made replaceable by build means without editing `src/`. The shift of the boss's
+     behaviour stream against old-game traces from tick 1 is the split's accepted consequence.
+  7. **No session links** (owner, by way of the F-Zero session: "We shouldn't put a link to Claude sessions in PRs"): commit
+     and merge messages end with the `Co-Authored-By` line only. History already pushed is not rewritten without the
+     owner's word.
+- **State:** merged through the integration lane today: eng-salv1, eng-e2a, eng-cmp1 (the comparison, MODELLED, with its
+  band). At the gate: eng-e2b (held on one question: do the reference's trace differences after the hit-voice fix touch
+  behaviour state), then eng-look1 (Leon's handgun drawn live; +0.57 ms a picture MODELLED). Handed back, finishing: eng-e2c
+  (boss 26 to 3; the thunder). Running: eng-draw1, eng-svcspd1, eng-bake1, eng-snd1, eng-load1, eng-fix1, eng-e2d.
+- **Open with the owner:** whether the GameCube original in an emulator is wanted as a third reference for disputes
+  (behaviour only, no assets), or anchoring on the released old port is enough.
+
+## H-026 (2026-11-21): corrections, not switches; quick weapon select; reworked PS2 art; the F-Zero line's advice
+
+- **From:** the owner (quoted) and the integrator (rulings under H-013).
+- **1. What lane eng-fix1 found:** the released game carries its fixes as the old port's `RE4DC_` conditionals inside the original code; read per unit, 33 are behaviour fixes, of which the engine built 11 and the PC reference 2. With the Ganado byte-order one missing, all 32 of a Ganado's routine tests read the wrong bytes in both the engine and the reference: they agreed with each other and both differed from the released game (on the reference: Ganado reactions change from the first hit in the bell fight; kills, damage and room clear the same). The same class of fault as H-016.8.
+- **2. The owner on how to carry them:** "wouldn't implementing the switches just be a workaround?", "would it make sense to rethink the switches as proper replatforming?", "we should stop calling them switches". Ruling and vocabulary, for every document and report:
+  - **corrections:** what makes the original code right on this CPU and compiler (byte order; compiler and ABI). Unconditional in how the engine and the reference build the original code; the reference keeps `CORRECTIONS=0` only as a control build.
+  - **game settings:** the owner's product choices (the enemy cap and its rules, the PS2 spawn rules, quick weapon select), in one file, each with who decided and when.
+  - **guards:** tripwires against failures the old port had (a refused spawn, a refused effect). Counted in the scene record, expected at 0, a non-zero count fails a timing scene; a guard that never fires is removed.
+  - The mechanism is "the old port's conditionals". Next, as its own lane after eng-fix1 lands: the corrections are written into the engine line's copy of the original source and the conditionals deleted by a mechanical pass proven by byte-identical objects (old-drawing-path branches removed). The engine line's source then differs from the release line's; a release hotfix is applied to both by hand.
+- **3. Quick weapon select stays** (the owner: "i want to keep quiock weapon switch"). It is a game setting and an owner-chosen departure from the GameCube version. The known departures are now: the enemy cap of 4, quick weapon select, one picture of input delay from the fixed-field pacer. Where the old port added a convenience, ask the owner before dropping it.
+- **4. Release line:** lane eng-fix1 found that Disc 2 builds module em1f's copy of em10 without the Ganado byte-order correction. A hotfix candidate; the owner decides; nothing on the release line was touched.
+- **5. A Dreamcast look, from reworked PS2 art.** The owner asked whether rooms can be baked and made "dreamcastt optimzied", and characters given an aesthetic, "where we can stand out from the gamecube version", and then answered the open asset question: "sure the ps2 aart can be rewporedm, tetouched, reatpined etc." (read: the PS2 art may be reworked, retouched, repainted and the like). So: the PS2 version stays the only source (the no-GameCube-assets rule stands), and its art may be upscaled, retouched, repainted, re-lit and rebuilt for this console. The owner added: "ps2 was primarily to establish hthe baseline geometric shapes etc.": the PS2 version is the baseline for shapes (rooms, models, layout); textures, lighting, materials and the overall look are ours to rework. Geometry may be rebuilt for the console (distance levels, meshlets) as long as the shapes stay the PS2's (the integrator's reading). How it is run:
+  - what makes the picture both cheaper and better goes into the renderer redesign itself (rooms lit offline, meshes and distance levels built for the console, clean transparency);
+  - what costs frame time (shadow volumes, bump mapping, anti-aliasing) waits until the floor holds on the calibrated model;
+  - the owner chooses the look from still sheets: two or three treatments of one room and of Leon, one variable per sheet, each with its count of differing pixels and its modelled cost; the chosen treatment becomes the bake recipe.
+- **6. The F-Zero line's advice, adopted** (their integrator, asked at the owner's request): look for invisible work before cutting content (their drawing win was an exact, pixel-identical cull); never mix a look change into a speed arm; every still pair carries its differing-pixel count; every baked pack carries a receipt of its inputs; lanes hand back before they lose the thread (about 250 tool calls); a speed claim needs its base re-run in the same session. These are in the common brief. Their cautions, noted: twelve lanes on a saturated machine mostly queue (they run two to four); the calibration was fitted on the old port's work and may not transfer to the new renderer (a small console bench of the renderer alone would anchor it: the owner's call, not asked for).
+- **7. The machine:** CPU at 98% with three projects on it. One emulator slot was added and reserved for the integration lane (`eng-e1d\int1`; the owner: "more slots is ok adjust based on computer utilization"). Lanes are not added while the CPU is saturated: as lanes hand back the count drains to what the machine carries, and a successor starts only when there is room. A lease covers only a running emulator; the integration lane has priority.
+
+## H-025 (2026-11-21): rulings from the salvage inventory and the comparison; three more lanes
+
+- **From:** the integrator. Authority: H-013. Sources (handed back, not yet gated): `E:\RE4DC-Lanes\eng-salv1\SALVAGE.md` (lane/eng-salv1 3e11ed9dd), `E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` (lane/eng-cmp1 68007ec63).
+- **What the salvage inventory says** (54 rows; to be checked by the integration lane): the engine's bake already reads the old port's converted PS2 data (106 rooms, character packages for 97 rooms, 114 cutscene movies), so chapter 1 needs no re-conversion; Dreamcast-written parts carry over with changes (disc fixes, the AICA sound layer, the movie player, memory-card saves and screen, the crash screen, the warp and QA tools); nothing of the old drawing carries over; every room's bake needs a recording of the old game in that room; the inventory screens need 3 MB the Dreamcast does not have spare; 148 released fixes are switches inside `src/` that the engine builds off; the script scheduler is not hosted. Its sizes (low confidence): step 3 9 to 15 lane rounds with the drawing redesign, step 4 22 to 36, step 5 30 to 55.
+- **Rulings:**
+  1. **The sound driver is hosted under a waiver.** `src/game/snd_main.cpp` and its units are the original's sound service. They are hosted on the lifted AICA layer rather than rewritten: they make the game sound as the GameCube version does, they use their own random generator, and they are expected to be cheap. The link check prints them as waived. The waiver holds while sound costs under 1.0 ms a picture mean and 2.0 ms worst on the calibrated tier; over that, a native sequencer is ruled on. This is the first waiver of "no original service code"; another needs its own ruling.
+  2. **The engine keeps game time.** The comparison shows that when a picture is late the engine slows the game (61% of game speed on the hill at the calibrated clock) where the old port drops pictures and keeps game time (76%). The player's test needs game speed held: when work for a picture overruns, the next tick runs without drawing, within a bound. A lane takes this after the drawing options are in, because the two interact; until then every modelled figure states game speed beside pictures a second.
+  3. **The calibration is a band.** The standard build calibrated the same way (104 MHz) agrees with the console build at 70 MHz on the old port within 2.4% but reads the engine 6 to 10% kinder. Quote the console build at 70 as the pessimistic end and say the band.
+  4. **Recordings of the old game are a bake input.** The old port stays buildable and runnable for that purpose (a source of parts, never tuned). Lane eng-bake1 lists which chapter 1 rooms lack one and what a recording must hold; a recording lane follows.
+  5. **The released fixes inside `src/`** are audited by lane eng-fix1 before any are switched on in the engine; the integrator rules on the set.
+  6. **Leon's handgun:** the packs hold no weapon model. Lane eng-look1 owns one new bake script for weapon models and their catalogue entries; lane eng-bake1 owns the rest of the bake; neither changes the pack format.
+- **Can start now, by the inventory:** the scheduler, sound, disc safety, loading and modules, the fix audit, saves, the memory-card screen, the crash screen, room recordings, route-movie decode. **Waits for the renderer redesign:** room bakes in their final form, the weapon model's final form, effects, sky, water, shadows, the menu and inventory renderer, the video-memory layout.
+- **Lanes added:** eng-snd1 (sound), eng-load1 (room-to-room loading through a door), eng-fix1 (the fix switches). Next in the queue: the scheduler, saves and the crash screen, route movies, room recordings, the game-time pacer.
+
 ## H-024 (2026-11-21): the owner: as many lanes as possible, with an integration lane, none redundant
 
 - **From:** the owner, in conversation. **The owner's words:** "Run as many as possible with an integration lane as long as they aren't redundant". It replaces the limit of two lanes set after the 11-20 stop.
