@@ -2,6 +2,62 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-031 (2026-11-22): the gate's first four questions; one owner for the main memory map now
+
+- **Merged this morning (integration lane):** eng-clock1 (the engine clock: no 2.5 ms jump at the whole second),
+  eng-draw1 (the drawing account), eng-draw2 (world: clipper pre-reject, the walk without a stage, strips facing away
+  not sent; MODELLED, console-build dynarec at 70 MHz, calibrated on the old port: LEON drawing about 1.3 + 0.5 + 0.5 ms
+  less by its steps). `engine` 1219ea9da. Finished, unaudited.
+- **Stopped at the gate on one point, four lanes:** eng-skel1 (the native PC reference does not link: `cObjChain::
+  setParent2` in services/cloth/chain.cpp and in eng-e2c's logging stand-in hostref/svc/e2c_dump.cpp), eng-load1
+  (DOOR: the farm's reopen asks for a resident buffer of 8,526,624 B since eng-draw2's per-pack sizing), eng-snd1 (FIGHT
+  ends 32 KB short of its arena under R1; HILL sound worst 2.77 ms on a plain run), eng-skel2 (contains skel1; moves the
+  arena 512 KB).
+- **Rulings:**
+  1. **One owner for the main memory map now** (H-029.3 brought forward): lane eng-mem1 merges skel1, skel2, load1 and
+     snd1 into one branch, owns `host/e1_engine.h`, every arena and heap placement, the resident pack buffer's sizing
+     and the loader's memory calls, writes `docs/engine/MEMORY_MAP.md`, and hands back one train for the gate.
+  2. **setParent2:** the service's definition stands; the logging stand-in yields to it (weak, or only in the build
+     without the chain service).
+  3. **Sound ceilings (H-025.1)** are judged on the calibrated tier, as the waiver says; the selector judges them on a
+     run that declares that tier and prints them otherwise. HILL's 2.77 ms worst must be explained or gone on that tier.
+  4. **eng-e2d's allowed line `cEmWrap::~cEmWrap`** is accepted where the body in the map is a bare return; the gate
+     checks its size.
+  5. **eng-bake1's bake/ files** not listed in its hand-back are inside its owned `bake/`: accepted, recorded.
+- **Look choice sent to the owner:** Ashley's skirt options (lane eng-cloth1, sheet and clips; B, two constraint
+  passes, recommended: 1.15 ms on mean and p99, MODELLED). Nothing visible lands before their answer.
+- **From eng-bake1:** all 12 chapter 1 rooms with a world bake; 10 need old-game captures for props, lights and
+  effects (backlog: room recordings); the cabin and the pool stage about 2.0x and 1.7x the village's vertices; the
+  farm has 85 KiB of its room block left before collision; the visibility bake misreads the river and the cabin
+  (fix in bench/bake_vis.c, to the next drawing lane).
+
+## H-030 (2026-11-22): resume after every lane stopped at its tool limit; re-merges and trains at the gate
+
+- **State at resume (04:00):** `engine` a68a57094. Every lane agent of 11-21 had stopped (tool-call limits, the
+  integrator's session ended about 15:20); nothing ran, no slot held a lease. Pushed by the integrator after the
+  public-repository blob check: `lane/eng-skel2` e590e4b2e (never pushed before: collision baked offline, contains
+  eng-clock1 and eng-skel1) and `lane/eng-draw3` 0e0f156bd (steps 1b and 2b).
+- **Gate queue, in order:** eng-clock1 (pending at its Flycast step), eng-draw1, eng-draw2, eng-skel1 (c60a0cd4c),
+  eng-skel2, eng-load1, eng-e2d, eng-e2f with eng-e2g, eng-snd1. The integration lane restarted with
+  `E:\RE4DC-Lanes\eng-int\RESUME-20261122.md`.
+- **Restarted to finish their briefs:** eng-draw3 (calibrated slot fly1), eng-cloth1 (fly2), eng-bake1 (PC only).
+- **Rulings:**
+  1. **Re-merges for ended lanes.** When `engine` has moved by code past an ended lane's merge base, the integration
+     lane may merge `engine` into that lane's branch itself, in the lane's worktree, when every conflict is mechanical
+     (both sides kept, no choice of design, value or rule); its gate report lists the conflicted hunks. A conflict that
+     needs a choice comes to the integrator with both sides quoted.
+  2. **The main memory map** (`host/e1_engine.h`): eng-snd1's R1 and eng-skel2's arena move both shift the behaviour
+     arena; whichever lands second comes to the integrator with both maps and both lanes' measured margins.
+  3. **Trains:** up to three queued lanes gated as one when their trial merges are clean in order and their owned
+     files do not overlap; steps 1 to 4 and each lane's controls per lane, images, suites and one clean disc once on
+     the train's tree; a failure drops the lane it points at. Each lane keeps its own merge commit and STATUS note.
+  4. **eng-draw2's ROOMTRIP check:** video-memory free after a release is 24 B under the figure before the first open
+     (the allocator's first-use bookkeeping, constant over three releases). The baseline is to be taken after the first
+     release and any growth across releases fails; that change goes to eng-draw2's successor. Until then ROOMTRIP is an
+     expected failure with that exact reason (as DOOR under H-029.7).
+  5. **eng-e2f's knock-down scene** fails on the shot's capsule rule, which eng-e2g fixed (its KNOCK passes): the two
+     are gated as one train.
+
 ## H-029 (2026-11-21): a day of hand-backs: sound, a door, the boss at zero, hidden service code, the clock; rulings
 
 - **Merged through the integration lane today:** eng-salv1, eng-e2a, eng-cmp1, eng-e2b (fight 73 to 43), eng-look1 (Leon's
