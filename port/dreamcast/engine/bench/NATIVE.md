@@ -80,4 +80,13 @@ The sample-store observer in model_profile.py takes the path to hwmodel/hwsim.c 
   `room_bake.py --control-seeds <room>`, every seed moved off the floor, must fail); for rooms with a recording, the
   world pack's table grown from the entry points alone must hold at least 95% of the recorded cameras in baked cells
   inside their bands; `census_world` opens the pack, the world and the table against each other (exit 2, 3, 4 when not).
+  The seeds are the entry points plus the centre of every AEV area and ITA item of the room archive.
+- `room_bake.py --controls` runs each check's failing input after `--chapter1` (seeds off the floor, the village pack
+  against the farm's table, the village cameras against the lake's table, a world pack through the HUD verify, a
+  tampered receipt) and writes `controls.json`; every row must read "failed as it must". The seed coverage check tests
+  that cameras sit in baked cells, not which room baked them: the farm's and the hill's tables pass the village's
+  cameras because those rooms share its world coordinates.
+- Receipt: `BAKE_COMMIT=<commit> room_bake.py --receipt` writes `receipt.json` (per room the hashes of the room's
+  converted data, its recording, the common inputs, the bake scripts as committed at the bake's commit, and the pack and
+  table it wrote); `--check-receipt` re-hashes and exits 1 on any mismatch.
 - Host tools are built into `/dev/shm/eng-bake1/bin`.

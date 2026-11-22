@@ -336,7 +336,7 @@ def bake_room(room, out, tables, cot, jobs=4, control_seeds=False):
     path.write_bytes(data); res.update(kind=kind, pack=str(path), pack_bytes=len(data))
     # check 1: the HUD fix (game packs must pass; world packs must fail, so they can never reach a disc)
     import hud_fix
-    try: hud_fix.verify(data); hv = "PASS"
+    try: hv = "PASS"; res["hud_digit_widgets_linked"] = hud_fix.verify(data)   # the HUD fix receipt (native_pack.build runs the fix)
     except ValueError as e: hv = "FAIL"
     res["checks"]["hud_verify"] = hv + (" (expected: world pack)" if kind == "world" else "")
     if (kind == "game") != (hv == "PASS"): res["failures"].append("hud_fix.verify gave %s on a %s pack" % (hv, kind))
@@ -479,20 +479,89 @@ def controls(out, jobs):
     _, census_world = tools()
     c = subprocess.run([str(census_world), str(out / "r101.pak"), str(out / "r103.vis"), "%.6f" % cot], capture_output=True, text=True)
     row("census_world table/pack match", c.returncode == 4, f"exit {c.returncode}")
-    # 3. offline seed coverage: the village recording's cameras against the farm's world-pack table
-    cov = route_coverage(out / "r103.world.vis", Path(RECORDINGS[0x101]["capture"]))
+    # 3. offline seed coverage: the village recording's cameras against the lake's world-pack table. (Not the farm's
+    # or the hill's: those rooms share the village's world coordinates and their tables bake cells under the village
+    # cameras, so they pass; the check tests that the cameras sit in baked cells, not which room baked them.)
+    cov = route_coverage(out / "r10b.world.vis", Path(RECORDINGS[0x101]["capture"]))
     row("offline_seeds_cover_recording", cov["in_band"] < 0.95 * cov["pictures"], cov)
     # 4. HUD verify on a world pack (must refuse it)
     import hud_fix
     try: hud_fix.verify((out / "r10b.world.pak").read_bytes()); failed = False; d = "accepted"
     except ValueError as e: failed = True; d = str(e)[:120]
     row("hud_verify on a world pack", failed, d)
+    # 5. receipt: a copy of receipt.json with the village pack's hash changed must mismatch
+    if (out / "receipt.json").exists():
+        doc = json.loads((out / "receipt.json").read_text()); o = doc["rooms"]["r101"]["outputs"]
+        k = next(iter(o)); o[k] = "0" * 64
+        (out / "receipt-control.json").write_text(json.dumps(doc))
+        row("receipt check", not receipt(out, True, out / "receipt-control.json"), k)
+        (out / "receipt-control.json").unlink()
     (out / "controls.json").write_text(json.dumps(rows, indent=1))
     return all(r["result"] == "failed as it must" for r in rows)
 
 
+def sha(p):
+    import hashlib
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""): h.update(chunk)
+    return h.hexdigest()
+
+
+def receipt(out, check=False, path=None):
+    """receipt.json: per room the hashes of its inputs, of the bake scripts and of its outputs (pack, table).
+    With check, re-hash and list every room whose receipt no longer matches (exit 1 on any). Its control:
+    --controls compares against a copy with one pack hash changed (receipt-control.json), which must mismatch."""
+    import hashlib
+    results = json.loads((out / "census.json").read_text())
+    path = path or out / "receipt.json"
+    # the scripts are hashed as committed at the bake's commit (the packs record which: bake_commit), so a later
+    # change to report-only code does not void a receipt and a change to the bake does
+    commit = json.loads(path.read_text())["bake_commit"] if check else os.environ.get("BAKE_COMMIT", "HEAD")
+    root = Path(subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=HERE, capture_output=True, text=True, check=True).stdout.strip())
+    commit = subprocess.run(["git", "rev-parse", commit], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
+    rel = sorted(str(p.relative_to(root)) for p in [*HERE.glob("*.py"), HERE / "census_world.c", ENGINE / "bench" / "bake_vis.c",
+                                                      ENGINE / "render" / "native_world.c", TOOLS / "d367" / "stage_route.py"])
+    common = {}
+    for r_ in rel:
+        b = subprocess.run(["git", "show", f"{commit}:{r_}"], cwd=root, capture_output=True)
+        if b.returncode == 0: common["git:" + r_] = hashlib.sha256(b.stdout).hexdigest()
+    common.update({str(p): sha(p) for p in [DISC / "tex.pak", TABLES, LEON_BIND_CH1, ISO] if p.exists()})
+    rooms = {}
+    for r in results:
+        room = r["room"]; rid = int(room[1:], 16); ins = {}
+        d = DISC / "native" / room
+        if d.exists():
+            ins.update({str(p): sha(p) for p in sorted(d.iterdir()) if p.is_file()})
+        rec = RECORDINGS.get(rid)
+        if rec:
+            for p in sorted(Path(rec["capture"]).glob("*")):
+                if p.is_file() and (p.suffix in (".bin", ".raw", ".json")): ins[str(p)] = sha(p)
+            if rec.get("ram"): ins[rec["ram"]] = sha(rec["ram"])
+        outs = {}
+        for name in ([r["pack"], str(Path(r["pack"]).with_suffix(".vis"))] if r.get("pack") else []) + \
+                    ([str(out / f"{room}.world.pak"), str(out / f"{room}.world.vis")] if r.get("kind") == "game" else []):
+            if Path(name).exists(): outs[name] = sha(name)
+        rooms[room] = dict(inputs=ins, outputs=outs)
+    doc = dict(bake_commit=commit, common=common, rooms=rooms)
+    if not check:
+        path.write_text(json.dumps(doc, indent=1)); log("wrote", path, len(rooms), "rooms"); return True
+    old = json.loads(path.read_text()); bad = []
+    for k, v in old["common"].items():
+        if doc["common"].get(k) != v: bad.append(("common", k))
+    for room, e in old["rooms"].items():
+        now = rooms.get(room, {})
+        for part in ("inputs", "outputs"):
+            for k, v in e[part].items():
+                if now.get(part, {}).get(k) != v: bad.append((room, k))
+    for b in bad: log("receipt mismatch", *b)
+    log("receipt", "OK" if not bad else "MISMATCH %d" % len(bad)); return not bad
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--receipt", action="store_true", help="write receipt.json (input, script and output hashes) after --chapter1")
+    ap.add_argument("--check-receipt", action="store_true", help="re-hash and compare with receipt.json (exit 1 on a mismatch)")
     ap.add_argument("room", nargs="?"); ap.add_argument("--out", type=Path, default=Path("/mnt/e/RE4DC-Lanes/eng-bake1/packs"))
     ap.add_argument("--chapter1", action="store_true"); ap.add_argument("--inputs", action="store_true")
     ap.add_argument("--control-seeds", action="store_true"); ap.add_argument("--jobs", type=int, default=4)
@@ -502,6 +571,8 @@ def main():
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     if a.controls:
         sys.exit(0 if controls(a.out, a.jobs) else 1)
+    if a.receipt or a.check_receipt:
+        sys.exit(0 if receipt(a.out, a.check_receipt) else 1)
     if a.recensus:
         recensus(a.out); return
     if a.table:
