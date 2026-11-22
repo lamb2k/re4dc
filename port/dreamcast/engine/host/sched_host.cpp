@@ -72,8 +72,7 @@ void DbMenuRestoreStopFlag() {}                 // the debug menu is not hosted
 extern "C" void* sched_stack_alloc(u32 size, const char*, int, int, int)
 {
     void* p = memalign(32, (size + 31) & ~31u);
-    if (!p) e1_log("E1 SCHED stack pool: %u bytes refused by the KOS heap
-", (unsigned) size);
+    if (!p) e1_log("E1 SCHED stack pool: %u bytes refused by the KOS heap\n", (unsigned) size);
     return p;
 }
 
