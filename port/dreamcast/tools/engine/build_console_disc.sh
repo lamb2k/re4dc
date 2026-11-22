@@ -163,6 +163,14 @@ bin "$B/fight/e1.elf" "$D/PROG/FIGHT.BIN"
 bin "$B/boss/e1.elf" "$D/PROG/BOSS.BIN"
 P=$PRISTINE
 put() { mkdir -p "$(dirname "$D/$2")"; cp "$1" "$D/$2"; }
+# lane eng-load2: the engine images' packs, version 5 (frame 0 of the recording only; bake/engine_pack.py, converted here
+# from the shared set's whole packs, each with a receipt line in MANIFEST.txt). The bench scenes (BENCH, BOSSB) keep the
+# whole packs: the bench plays the recording and refuses a version 5 pack.
+epack() {   # epack <whole pack> <disc path> [--stream-end]
+  mkdir -p "$(dirname "$D/$2")"
+  python3 "$SRC/port/dreamcast/engine/bake/engine_pack.py" "$1" "$D/$2" --receipt "$WORK/PACKS.txt" $3 > /dev/null ||
+    { echo "build_console_disc: engine_pack refused $1" >&2; exit 1; }
+}
 mots() {   # mots <archive> <scene dir>: the motion clips the archive lists
   python3 "$SRC/port/dreamcast/tools/engine/mot_list.py" "$1" | while read -r m; do put "$P/dc/mot/$m" "$2/dc/mot/$m"; done
 }
@@ -181,8 +189,8 @@ put "$LKG/CROSS.VIS" BENCH/CROSS.VIS; put "$LKG/FARM.VIS" BENCH/FARM.VIS
 printf 'c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh\n' > "$D/BENCH/SCHEDULE.TXT"
 # E1: Leon in the village and (with E1H/HILL in front) Leon and Ashley on the hill. The renderer sizes its pack buffer
 # from CROSS.PAK and FARM.PAK, so FARM.PAK is the hill pack's twin (as lane eng-e1d's disc).
-put "$LKG/CROSS.PAK" E1/CROSS.PAK; put "$LKG/CROSS.VIS" E1/CROSS.VIS
-put "$HILL_PAK" E1/HILL.PAK; put "$HILL_PAK" E1/FARM.PAK; put "$HILL_VIS" E1/HILL.VIS
+epack "$LKG/CROSS.PAK" E1/CROSS.PAK; put "$LKG/CROSS.VIS" E1/CROSS.VIS
+epack "$HILL_PAK" E1/HILL.PAK; put "$D/E1/HILL.PAK" E1/FARM.PAK; put "$HILL_VIS" E1/HILL.VIS
 for f in st1/r101.arc st1/r11d.arc etc/core.das em/pl00.drs em/wep02.drs em/pl11.drs; do put "$P/$f" "E1/$f"; done
 mots "$P/em/pl11.drs" E1
 mkdir -p "$D/E1H"; : > "$D/E1H/HILL"
@@ -194,7 +202,7 @@ for f in st1/r101.dar st1/r11d.dar $SNDSYS; do put "$P/$f" "E1/$f"; done
 # can run the same files without it
 mkdir -p "$D/E1L"; : > "$D/E1L/NOTRACE"; : > "$D/E1H/NOTRACE"
 # FIGHT: the trimmed village pack, its effect map, the Ganado module and motion
-put "$FIGHT_PAK" FIGHT/CROSS.PAK; put "$FIGHT_PAK" FIGHT/FARM.PAK; put "$FIGHT_FXMAP" FIGHT/FXMAP.BIN
+epack "$FIGHT_PAK" FIGHT/CROSS.PAK; put "$D/FIGHT/CROSS.PAK" FIGHT/FARM.PAK; put "$FIGHT_FXMAP" FIGHT/FXMAP.BIN
 put "$LKG/CROSS.VIS" FIGHT/CROSS.VIS
 for f in st1/r101.arc etc/core.das etc/emleon00.esl em/pl00.drs em/wep02.drs em/em15.drs; do put "$P/$f" "FIGHT/$f"; done
 mots "$P/em/em15.drs" FIGHT
@@ -315,9 +323,16 @@ case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
   # behaviour arena (lane eng-load1, run 2). Default: the farm bake of the shared set ($LKG, never a lane folder);
   # R103_PAK / R103_VIS override it
   R103_PAK=${R103_PAK:-$LKG/FARM.PAK}; R103_VIS=${R103_VIS:-$LKG/FARM.VIS}
-  put "$R103_PAK" DOOR/R103.PAK; put "$R103_VIS" DOOR/R103.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
+  epack "$R103_PAK" DOOR/R103.PAK; put "$R103_VIS" DOOR/R103.VIS; put "$P/st1/r103.arc" DOOR/st1/r103.arc
   # CDOORPK: its own folder with the fixture and the farm's bake but not its archive (E1 has none either)
-  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$R103_PAK" CDP/R103.PAK; put "$R103_VIS" CDP/R103.VIS
+  put "$D/DOOR/DOOR.TXT" CDP/DOOR.TXT; put "$D/DOOR/R103.PAK" CDP/R103.PAK; put "$R103_VIS" CDP/R103.VIS
+  # lane eng-load2: DOORV4 (a lab arm, the load-time comparison's base): the same scene with the whole version 4 packs
+  # (the frame-0 path over the recording, as before this lane). DOORSE: the farm's pack converted with --stream-end (its
+  # size 2,017..2,047 modulo 2,048: its last bytes end the DMA stream through fs_iso9660's 32-byte request), which must
+  # load; its control CDOORSE (boot file DISCNB: that request passed on non-blocking, as KOS makes it) must stop there
+  # (no result: run it last, or on a disc of its own)
+  put "$LKG/CROSS.PAK" DV4/CROSS.PAK; put "$R103_PAK" DV4/R103.PAK
+  epack "$R103_PAK" DSE/R103.PAK --stream-end; put "$D/DSE/R103.PAK" CDSE/R103.PAK; : > "$D/CDSE/DISCNB"
   for c in "${DOOR_CONTROLS[@]}"; do IFS='|' read -r cn cdir cfile ctitle <<< "$c"; mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile"; done ;;
 esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
@@ -353,6 +368,9 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
   DNEED=DOOR/DOOR.TXT,DOOR/R103.PAK,DOOR/R103.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs
   echo "DOOR Village_to_farm_and_back_(traced,_function_run) PROG/E1.BIN 300 e1:function:drawn $(need $DNEED) root=DOOR:E1 rows=compact $TSKIP door=2"
+  echo "DOORV4 Lab_arm:_the_door_with_the_version_4_packs PROG/E1.BIN 300 e1:function:drawn $(need DV4/CROSS.PAK,DV4/R103.PAK,$DNEED) root=DV4:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "DOORSE The_door,_the_farm_pack_ending_the_stream PROG/E1.BIN 300 e1:function:drawn $(need DSE/R103.PAK,$DNEED) root=DSE:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "CDOORSE Control:_stream_end_request_non-blocking_(stops) PROG/E1.BIN 300 e1:function:drawn $(need CDSE/DISCNB,CDSE/R103.PAK,$DNEED) root=CDSE:DOOR:E1 rows=compact $TSKIP door=2"
   echo "CDOORPK Control:_farm_archive_absent PROG/E1.BIN 300 e1:function:drawn $(need CDP/DOOR.TXT,CDP/R103.PAK,E1/CROSS.PAK,E1/st1/r101.arc) root=CDP:E1 rows=compact $TSKIP door=2"
   for c in "${DOOR_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfile ctitle <<< "$c"
@@ -429,6 +447,7 @@ cp "$D/SCENES.TXT" "$OUT/"
   echo "## programs"; (cd "$D" && sha256sum LOADER.BIN PROG/*.BIN)
   echo "## private inputs"; sha256sum "$LKG/CROSS.PAK" "$LKG/FARM.PAK" "$LKG/CROSS.VIS" "$LKG/FARM.VIS" "$HILL_PAK" "$HILL_VIS" \
     "$FIGHT_PAK" "$FIGHT_FXMAP" "$BOSS_PAK" "$BOSS_VIS" "$BOSS_EMLIST" "$BOSS_EMARC"
+  echo "## engine packs (bake/engine_pack.py, version 5)"; cat "$WORK/PACKS.txt" 2>/dev/null || echo none
   echo "## disc tree"; (cd "$D" && find . -type f | sort | xargs sha256sum)
 } > "$OUT/MANIFEST.txt"
 echo "KEEP: RE4DC console disc $SHORT ($REF), $(date -u +%F). Queued for the console; remove when superseded." > "$OUT/KEEP"

@@ -29,6 +29,20 @@ void* __wrap_memalign(size_t a,size_t n){void* p=__real_memalign(a,n);mm_add(p,n
 void* __wrap_realloc(void* q,size_t n){void* p=__real_realloc(q,n);if(p||!n){mm_del(q);mm_add(p,n);}return p;}
 void __wrap_free(void* p){mm_del(p);__real_free(p);}
 }
+/* Lane eng-load2 (the DOOR round trip): the tracked blocks' ledger: their number, the bytes they asked for, and the
+   allocator's slack on them (usable size less the size asked for: the bytes a chunk keeps when its remainder is too
+   small to split, which depends on where the block was placed). lost: blocks the list could not hold (then the ledger
+   is incomplete). */
+extern "C" void e1_mm_ledger(uint32_t* n, uint32_t* asked, uint32_t* slack, uint32_t* lost)
+{
+    uint32_t a = 0, k = 0;
+    for (unsigned i = 0; i < mm_n; i++) {
+        const uint32_t sz = (uint32_t) (mm_live[i].hi - mm_live[i].lo);
+        a += sz;
+        k += (uint32_t) malloc_usable_size((void*) mm_live[i].lo) - sz;
+    }
+    *n = mm_n; *asked = a; *slack = k; *lost = mm_lost;
+}
 #define STACK_PAINT 0x5a5aa5a5u
 static uintptr_t stack_lo, stack_hi;
 void e1_memmap_boot()
