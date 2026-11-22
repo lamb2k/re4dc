@@ -27,7 +27,7 @@
 // is unchanged.
 //
 // Memory (lane eng-mem2 owns the map): the task stacks are the scheduler's own pool, 18 slots of 12 KiB (scheduler.cpp
-// GetStackSize under its RE4DC_GAME correction: 221,184 bytes), on the KOS heap (scheduler.o's mem_alloc is bound to
+// GetStackSize under its RE4DC_GAME correction: 221,184 bytes), in the behaviour arena (lane eng-sched2; scheduler.o's mem_alloc is bound to
 // sched_stack_alloc, game/Makefile); each task also takes one KOS thread record (about 1.6 KB of KOS malloc) while
 // it lives. The report prints every stack's high-water mark so the map's owner can size them.
 #ifndef E2_BOSS
@@ -38,6 +38,7 @@
 #include "room_data.h"
 #include "datactrl.h"
 #include "obj00.h"
+#include "main_mem.h"
 #include "e1_engine.h"
 #include "e1_clock.h"
 #include "os_threads.h"
@@ -84,11 +85,17 @@ extern "C" int re4dc_io_busy(const void*) { return 0; }
 extern "C" void GXSetCurrentGXThread(void) {}   // the GameCube's graphics FIFO owner: the engine's renderer has none
 void DbMenuRestoreStopFlag() {}                 // the debug menu is not hosted
 // ---- the scheduler's stack pool (TaskSchedulerInit's one MEM_ALLOC; scheduler.o's mem_alloc is bound here by
-// objcopy, game/Makefile): the KOS heap until lane eng-mem2 places it in the map
-extern "C" void* sched_stack_alloc(u32 size, const char*, int, int, int)
+// objcopy, game/Makefile): the behaviour arena until the map owner places it
+// Lane eng-sched2: the behaviour arena (the hosted units' heap API, host/e1_heap.cpp), not the KOS heap. On the KOS
+// heap the pool ran the heap 200,704 B past its end into the arena (E1 MEM "free to arena -200704, overlaps 3": the
+// village leaves 110,592 B between the heap and the arena) and overwrote the player in heap 4 before the first tick.
+// The arena is where the original put it (TaskSchedulerInit's MEM_ALLOC on the current heap); placing it in the
+// memory map proper stays with the map's owner.
+extern "C" void* sched_stack_alloc(u32 size, const char* file, int line, int flag, int heap)
 {
-    void* p = memalign(32, (size + 31) & ~31u);
-    if (!p) e1_log("E1 SCHED stack pool: %u bytes refused by the KOS heap\n", (unsigned) size);
+    void* p = mem_alloc(size, file, line, flag, heap);
+    if (!p) e1_log("E1 SCHED stack pool: %u bytes refused by the behaviour arena\n", (unsigned) size);
+    else e1_log("E1 SCHED stack pool: %u bytes in the behaviour arena at %p\n", (unsigned) size, p);
     return p;
 }
 
@@ -146,7 +153,7 @@ static unsigned steps, steps_tick, steps_max, ticks_run, init_tasks;
 static uint64_t scen_sum, scen_max, sched_sum, sched_max;
 static unsigned scen_max_tick, sched_max_tick, scen_over;
 // The task-step record (lane eng-sched2): every TaskSchedulerMain call, as the PC check's trace writes it (tick,
-// slot, status and sleep count before and after, the task's function), kept in a buffer on the KOS heap (SCHED scene
+// slot, status and sleep count before and after, the task's function), kept in a buffer in the behaviour arena (SCHED scene
 // only) and printed after play (E1 SCHEDT lines; hostref/svc/sched/sched_engine.py compares them with the PC's). The
 // tick is the scenario tick: 0 the room start, then 1, 2, ... (the PC harness's numbering).
 struct SchedStep {
@@ -197,7 +204,7 @@ void sched_host_boot()
     if (f >= 0) { fs_close(f); ctl_stackx = 1; }
     f = fs_open("/cd/SCHEDD", O_RDONLY);
     if (f >= 0) { fs_close(f); ctl_delay = 1; }
-    e1_log("E1 SCHED boot: scheduler hosted, %u task slots on the KOS heap%s%s%s\n", (unsigned) TASK_NUM,
+    e1_log("E1 SCHED boot: scheduler hosted, %u task slots, stacks in the behaviour arena%s%s%s\n", (unsigned) TASK_NUM,
            scene ? "; lab scene SCHED: the village's room script (st1/r101) runs" : "",
            ctl_stackx ? "; SCHEDX: a scenario task's stack guard overwritten at tick 300 (control)" : "",
            ctl_delay ? "; SCHEDD: 200 us added inside the timed scenario step at tick 200 (timing control)" : "");
@@ -206,13 +213,14 @@ void sched_host_boot()
 void sched_host_room_init()
 {
     if (!scene) return;
-    // the step record and the per-tick cost (lab scene only; KOS heap, about 90 KB)
-    step_rec = (SchedStep*) malloc(STEP_MAX * sizeof(SchedStep));
-    tick_us = (u16*) malloc(TICK_MAX * sizeof(u16));
-    tick_kind = (u8*) malloc(TICK_MAX);
-    if (!step_rec || !tick_us || !tick_kind) e1_log("E1 SCHED record: refused by the KOS heap\n");
+    // the step record and the per-tick cost (lab scene only; the behaviour arena, about 85 KB: the KOS heap has no room
+    // for it in the village, see sched_stack_alloc)
+    step_rec = (SchedStep*) mem_alloc(STEP_MAX * sizeof(SchedStep), "sched_host step record", 0, 1, MEM_HEAP_CURRENT);
+    tick_us = (u16*) mem_alloc(TICK_MAX * sizeof(u16), "sched_host tick cost", 0, 1, MEM_HEAP_CURRENT);
+    tick_kind = (u8*) mem_alloc(TICK_MAX, "sched_host tick kind", 0, 1, MEM_HEAP_CURRENT);
+    if (!step_rec || !tick_us || !tick_kind) e1_log("E1 SCHED record: refused by the behaviour arena\n");
     cur_tick = 0;
-    // the task table and its stack pool (on the KOS heap), then the scenario system and the room's start
+    // the task table and its stack pool (in the behaviour arena), then the scenario system and the room's start
     TaskSchedulerInit();
     ScenarioInit();
     steps_tick = 0;
