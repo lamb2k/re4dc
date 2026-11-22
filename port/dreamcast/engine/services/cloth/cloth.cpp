@@ -20,18 +20,12 @@
 #include "rnd.h"
 #include "db_log.h"
 #include "svc_prof.h"
-#include "../camera/eng_camera.h"
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" float sinf(float);
 extern "C" float acosf(float);
 extern "C" void* svc_pool_carve(u32 bytes);   // host: the engine's service memory
 extern "C" const char* svc_env(const char* name) __attribute__((weak));   // the PC reference's environment
-// lane eng-cloth1: the look arms' boot files (KOS on the console; absent on the PC reference) and the camera record
-extern "C" int fs_open(const char* fn, int mode) __attribute__((weak));
-extern "C" int fs_close(int fd) __attribute__((weak));
-extern "C" int printf(const char* fmt, ...);
-extern "C" EngCamera eng_cam __attribute__((weak));
 // the original bodies, renamed in the native build (svc/svc.mk): the fallback for chains this service cannot serve
 extern "C" void pen_orig_Set(cModel* m, PenCloth* c, f32 len);
 extern "C" void pen_orig_Move(cModel* m, PenCloth* c);
@@ -45,7 +39,7 @@ int cloth_control_short;
 int cloth_control_nogravity;
 int cloth_control_wind;
 int cloth_passes;
-int cloth_arm;
+int cloth_control_skirt4;
 }
 
 namespace {
@@ -129,24 +123,6 @@ ClothChain* build(cModel* m, PenCloth* c)
             read = 1;
             const char* e = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
             if (e && !__builtin_strcmp(e, "clothbound")) cloth_k_control_bound = 1;
-            // lane eng-cloth1: the look arms (cloth.h), read before play: boot files on the console, the environment
-            // on the PC reference
-            static const char* const kArm[6] = {"", "CLOTHCAP", "CLOTHPASS2", "CLOTHHALF", "CLOTHFAR", "CLOTHFAR0"};
-            static const char* const kArmPc[6] = {"", "cap", "pass2", "half", "far", "far0"};
-            const char* a = svc_env ? svc_env("RE4_SVC_CLOTH_ARM") : 0;
-            for (int k = 1; k < 6; k++) {
-                if (a && !__builtin_strcmp(a, kArmPc[k])) cloth_arm = k;
-                if (fs_open && fs_close) {
-                    char name[24] = "/cd/";
-                    for (int j = 0; kArm[k][j]; j++) name[4 + j] = kArm[k][j], name[5 + j] = 0;
-                    const int f = fs_open(name, 0);
-                    if (f >= 0) {
-                        fs_close(f);
-                        cloth_arm = k;
-                    }
-                }
-            }
-            if (cloth_arm) printf("E1 CLOTHARM %s: look arm on Ashley's skirt (lab arm, not the default)\n", kArm[cloth_arm]);
         }
     }
     SkelTable* t = skel_table_for(m);
@@ -234,8 +210,7 @@ ClothChain* build(cModel* m, PenCloth* c)
     ch->tAt = ta;
     ch->n = (u16) n;
     ch->nAt = (u16) nAt;
-    ch->skirt = n == 48 && nAt == 11 && c->pLeft && !c->pRight;   // Ashley's skirt (garment.cpp GIRL_SKIRT)
-    ch->phase = 0;
+    ch->skirt = CLOTH_IS_SKIRT(c) ? 1 : 0;   // Ashley's skirt: two constraint passes (cloth.h)
     for (u32 i = 0; i < n; i++) {
         ClothLink& L = ch->link[i];
         L.bone = bone[i];
@@ -447,36 +422,8 @@ void kernel_step(ClothChain* ch, const Step& s, int variant, const Vec& move, f3
     k.vol = s.at ? (const ClothKVol*) s.at->pAt : 0;
     k.nVol = s.at ? (u32) s.at->num : 0;
     k.rng = &ch->rng;
-    k.cap = 0;
-    k.nCap = 0;
-    if (ch->skirt && cloth_arm == 2 && k.bundle > 2) k.bundle = 2;   // look arm CLOTHPASS2
-    static ClothKCap caps[16];
-    if (ch->skirt && cloth_arm == 1 && s.at) {   // look arm CLOTHCAP: runs of spheres on the same bones -> capsules
-        const CLOTH_AT_SET* at = c->pAtset;
-        const PenAt* v = s.at->pAt;
-        u32 nc = 0;
-        for (int i = 0; i < s.at->num && nc < 16;) {
-            int j = i;
-            while (j + 1 < s.at->num && at[j + 1].Type == 0 && at[i].Type == 0 && at[j + 1].P1 == at[i].P1 &&
-                   at[j + 1].P2 == at[i].P2 && at[j + 1].Weight == at[i].Weight)
-                j++;
-            ClothKCap& q = caps[nc++];
-            q.ax = v[i].p0.x;
-            q.ay = v[i].p0.y;
-            q.az = v[i].p0.z;
-            q.ex = v[j].p0.x - v[i].p0.x;
-            q.ey = v[j].p0.y - v[i].p0.y;
-            q.ez = v[j].p0.z - v[i].p0.z;
-            const f32 e2 = q.ex * q.ex + q.ey * q.ey + q.ez * q.ez;
-            q.ie2 = e2 > 0.0f ? 1.0f / e2 : 0.0f;
-            q.r = v[i].r;
-            for (int m = i + 1; m <= j; m++)
-                if (v[m].r > q.r) q.r = v[m].r;
-            i = j + 1;
-        }
-        k.cap = caps;
-        k.nCap = nc;
-    }
+    // Ashley's skirt: two constraint passes, the owner's look choice (cloth.h CLOTH_SKIRT_PASSES)
+    if (ch->skirt && !cloth_control_skirt4 && k.bundle > CLOTH_SKIRT_PASSES) k.bundle = CLOTH_SKIRT_PASSES;
     if (cloth_passes == 1) cloth_k_step_passes(&k);
     else if (cloth_passes == 2) cloth_k_step_onepass(&k);
     else cloth_k_step(&k);
@@ -512,57 +459,6 @@ void move1(ClothChain* ch)
     step_end(ch, s.reset);
 }
 
-// Look arms CLOTHHALF / CLOTHFAR: whether this tick of the skirt is a held one (cloth_kernel.h cloth_k_hold)
-bool hold_tick(ClothChain* ch)
-{
-    if (!ch->skirt || cloth_arm < 3 || (ch->m->be_flag & 0x00200000)) {
-        ch->phase = 0;
-        return false;
-    }
-    u32 every = 2;
-    if (cloth_arm == 5) every = 4;   // CLOTHFAR0: the far rule with its distance 0 (its control)
-    if (cloth_arm == 4) {   // far (over 6 m from the camera) or behind it: every fourth tick; else every tick
-        every = 1;
-        if (&eng_cam && eng_cam.tick) {
-            const Vec r = wget(ch->t, 0);
-            const f32 dx = r.x - eng_cam.eye[0], dy = r.y - eng_cam.eye[1], dz = r.z - eng_cam.eye[2];
-            const f32 fx = eng_cam.target[0] - eng_cam.eye[0], fy = eng_cam.target[1] - eng_cam.eye[1],
-                      fz = eng_cam.target[2] - eng_cam.eye[2];
-            if (dx * dx + dy * dy + dz * dz > 6000.0f * 6000.0f || dx * fx + dy * fy + dz * fz < 0.0f) every = 4;
-        }
-    }
-    if (++ch->phase >= every) {
-        ch->phase = 0;
-        return false;
-    }
-    return true;
-}
-void hold(ClothChain* ch)
-{
-    SvcProf pr(SP_CLOTH_KERNEL);
-    SkelTable* t = ch->t;
-    skel_enter(t);
-    const Vec rw = wget(t, 0);
-    const SkelHist* h = skel_history(t, 0);
-    ClothKVec mv;
-    mv.x = rw.x - h->old[0];
-    mv.y = rw.y - h->old[1];
-    mv.z = rw.z - h->old[2];
-    const u32 cap = t->cap;
-    ClothKStep k;
-    memset(&k, 0, sizeof k);
-    k.link = (ClothKLink*) ch->link;
-    k.cold = (const ClothKCold*) ch->cold;
-    k.n = ch->n;
-    k.flags = ch->c->Flag;
-    k.wx = t->soa + SK_WX * cap;
-    k.wy = t->soa + SK_WY * cap;
-    k.wz = t->soa + SK_WZ * cap;
-    k.boneMat = &t->world[0].m[0][0];
-    cloth_k_hold(&k, mv);
-    step_end(ch, 0);
-}
-
 // PenClothMove3
 void move3(ClothChain* ch)
 {
@@ -570,10 +466,6 @@ void move3(ClothChain* ch)
     cModel* m = ch->m;
     SkelTable* t = ch->t;
     Step s;
-    if (hold_tick(ch)) {
-        hold(ch);
-        return;
-    }
     Vec a = {0.0f, 0.0f, 0.0f};
     step_begin(ch, s);
     if (!(c->Flag & 0x20)) {

@@ -109,6 +109,7 @@ extern "C" int col_grid_off __attribute__((weak));
 extern "C" int cloth_control_nogravity __attribute__((weak));
 extern "C" int cloth_control_wind __attribute__((weak));
 extern "C" int cloth_passes __attribute__((weak));
+extern "C" int cloth_control_skirt4 __attribute__((weak));
 extern "C" int col_sphere_grid_off __attribute__((weak));
 extern "C" unsigned col_mask_min __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
@@ -126,6 +127,8 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "colgrid", 7) && &col_control_grid) col_control_grid = 1;
         if (!strncmp(c, "clothnograv", 11) && &cloth_control_nogravity) cloth_control_nogravity = 1;
         if (!strncmp(c, "clothwind", 9) && &cloth_control_wind) cloth_control_wind = 1;
+        // lane eng-cloth2: the native skirt at the original's four constraint passes (services/cloth/cloth.h)
+        if (!strncmp(c, "skirtpass4", 10) && &cloth_control_skirt4) cloth_control_skirt4 = 1;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
     uint32_t all;

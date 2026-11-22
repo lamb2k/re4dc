@@ -31,6 +31,15 @@ struct SkelTable;
 
 #define CLOTH_NONE 0xFF
 
+// Ashley's skirt (garment.cpp GIRL_SKIRT: 48 links, 11 collision volumes, left neighbours and no right ones) runs two
+// constraint passes where the original runs four (PenCloth::Bundle_num). The owner's look choice, 2026-11-22 ("Ok
+// option B", H-032), from lane eng-cloth1's clips: the default, with no switch. Every other chain keeps its passes.
+// The PC reference runs the skirt the same way (hostref/svc/ref_skirt.cpp; SKIRT_PASSES=4 restores the original's,
+// a refctl.sh row). On the PC reference RE4_SVC_CONTROL=skirtpass4 gives the native skirt its four passes again
+// (cloth_control_skirt4, the control: the check against the fixed reference must fail).
+#define CLOTH_IS_SKIRT(c) ((c)->Num == 48 && (c)->pAtset && (c)->At_num == 11 && (c)->pLeft && !(c)->pRight)
+#define CLOTH_SKIRT_PASSES 2u
+
 struct ClothLink {       // 64 B
     Vec pos;             // 0x00 link end (PenParts::pos)
     Vec oldPos;          // 0x0C
@@ -62,19 +71,14 @@ struct ClothChain {      // 64 B header
     u32 serial;
     u32 bytes;
     PresRng rng;         // the chain's presentation stream (pres_rng.h)
-    u8 skirt;            // lane eng-cloth1: the chain is Ashley's skirt (48 links, 11 volumes): the look arms' chain
-    u8 phase;            // lane eng-cloth1: ticks since the chain's last full step (look arms c and d)
+    u8 skirt;            // the chain is Ashley's skirt (CLOTH_IS_SKIRT): CLOTH_SKIRT_PASSES constraint passes
+    u8 pad8;
     u16 pad16;
     u32 stamp;           // lane eng-cloth1: the chain's last step (g_step): the table's eviction order
     u32 pad[3];
 };
-// Lane eng-cloth1: the look options, run-time lab arms (boot files, read once at the first set-up; on the PC reference
-// RE4_SVC_CLOTH_ARM=cap|pass2|half|far|far0). Each changes Ashley's skirt only, alone; none is the default (the owner
-// chooses from clips). 0 none, 1 CLOTHCAP (the leg spheres as three capsules), 2 CLOTHPASS2 (two constraint passes
-// instead of four), 3 CLOTHHALF (stepped every other tick, the pose held between), 4 CLOTHFAR (stepped every fourth
-// tick, pose held between, when the skirt is more than 6 m from the camera or behind it), 5 CLOTHFAR0 (the far rule
-// with its distance 0: every fourth tick always; the far arm's control and the far look up close).
-extern "C" int cloth_arm;
+// (Lane eng-cloth1's look arms CLOTHCAP, CLOTHHALF, CLOTHFAR and CLOTHFAR0 were removed by lane eng-cloth2 when the
+// owner chose CLOTHPASS2, now the skirt's default above; their figures: docs/engine/lanes/eng-cloth1.md.)
 
 extern "C" {
 // counters (svc census and the cost indicator)
@@ -93,6 +97,7 @@ extern ClothCounters cloth_cnt;
 // controls (lane eng-svc2: each must make the equivalence check fail)
 extern int cloth_control_short;      // the last link of every chain left out (wrong chain length)
 extern int cloth_control_nogravity;  // gravity off
+extern int cloth_control_skirt4;     // lane eng-cloth2: Ashley's skirt at the original's four passes (CLOTH_SKIRT_PASSES)
 extern int cloth_control_wind;       // the wind's push twice as strong (the statistics check must fail)
 extern int cloth_passes;             // 1: the kernel in the original's pass order (the exactness proof); 2: in one pass
                                      // (measured, rejected); 0: fused (lane eng-svc3)
