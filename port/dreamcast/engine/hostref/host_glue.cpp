@@ -11,6 +11,7 @@
 
 static const char* g_tree;
 void* GetDataExt(void* arc, const char* tag, int no);
+extern "C" int host_fixed_release(void* p, uint32_t size);   // host_mem.cpp (lane eng-load1)
 
 // The rumble table (section VIB) in the PC's order (lane eng-e1h; services/input/vib_table.h): the tree carries it
 // big-endian, which made the first shot's rumble (objRuger moveFire, VibSetData) read a pattern outside the archive.
@@ -62,7 +63,12 @@ bool host_load_room(const char* tree, unsigned room_id)
     name[5] = hex[(room_id >> 8) & 0xF];
     name[6] = hex[(room_id >> 4) & 0xF];
     name[7] = hex[room_id & 0xF];
-    void* p = host_load_data(tree, name, "room", 0);
+    // lane eng-load1: a door's next room returns the last room's archive first when it is the data region's newest
+    // block (the first room's lies under the weapon archive and stays)
+    static uint32_t room_bytes;
+    if (pG->pRoom && room_bytes && host_fixed_release(pG->pRoom, room_bytes))
+        host_log("data: room archive %08x returned (%u bytes)", (unsigned) (uintptr_t) pG->pRoom, room_bytes);
+    void* p = host_load_data(tree, name, "room", &room_bytes);
     if (!p) return false;
     pG->pRoom = p;
     if (host_room_post) host_room_post(p);   // lane eng-skel2: the native builds' baked collision (svc/colb_host.cpp)
