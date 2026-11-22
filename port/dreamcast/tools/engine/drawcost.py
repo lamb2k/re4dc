@@ -22,8 +22,11 @@ from collections import defaultdict
 PH = ['select', 'begin', 'sky', 'preworld', 'worldOP', 'actors', 'worldPT', 'listgap', 'worldTR', 'TRextra', 'hud']
 SET_ARMS = {1: (6, {1: 'S stage twice', 2: 'C copy twice', 3: 'Q select twice', 4: 'H HUD twice', 5: 'N near not a number'}),
             2: (5, {1: 'B weight sets twice', 2: 'L normals lit twice', 3: 'E actor emission twice', 4: 'D 2 ms delay (control)'}),
-            3: (4, {1: 'X world without a stage', 2: 'V world copy v2', 3: 'G world near clamp (no clipping)'})}
-BITS = {1: 'S', 2: 'C', 4: 'Q', 8: 'H', 16: 'N', 32: 'B', 64: 'L', 128: 'E', 256: 'D', 512: 'K', 1024: 'X', 2048: 'V', 4096: 'G', 8192: 'Z'}
+            3: (4, {1: 'X world without a stage', 2: 'V world copy v2', 3: 'G world near clamp (no clipping)'}),
+            # lane eng-draw4: set E (boot file DLE)
+            5: (5, {1: 'K positions skinned twice', 2: 'P light pick twice', 3: 'C part classes twice', 4: 'D 2 ms delay (control)'})}
+BITS = {1: 'S', 2: 'C', 4: 'Q', 8: 'H', 16: 'N', 32: 'B', 64: 'L', 128: 'E', 256: 'D', 512: 'K', 1024: 'X', 2048: 'V', 4096: 'G', 8192: 'Z',
+        16384: 'P', 32768: 'A'}
 LO, HI = 41, 640
 
 
@@ -204,7 +207,7 @@ def main():
         elif r['set'] == 4:
             print('  census:', json.dumps(r['census']))
         elif r['set']:
-            print('  set %c, base pictures draw mean %.2f' % ('ABCV'[r['set'] - 1], r['base_draw']['mean']))
+            print('  set %c, base pictures draw mean %.2f' % ('ABCVE'[r['set'] - 1], r['base_draw']['mean']))
             for nm, a in r['arms'].items():
                 big = sorted(a['spans'].items(), key=lambda x: -abs(x[1]))[:2]
                 print('    %-26s %3d pictures: draw %+.3f ms (p99 %+.3f) (%s) counters %s' % (nm, a['pictures'], a['draw']['mean'], a['draw']['p99'],

@@ -174,6 +174,17 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         unsigned st = e1_part_class((const float (*)[4]) frustum, m->spheres + rp->sphere_first, rp->sphere_count, pal);
         state[p] = st; visible += st != 0;
     }
+    if (DC_ARM(DL_CLASS2)) {   /* lane eng-draw4 lab arm C (set E): the whole-character test and the part classes again */
+        static volatile unsigned sink; unsigned again = 63;
+        for (unsigned i = 0; i < m->nbones_used; i++) {
+            unsigned b = m->bones_used[i]; const float* wm = e1_bone[b + 1]; int dummy = 1;
+            float c[3] = {wm[3], wm[7], wm[11]}, r = m->bone_radius[b] * column_scale(wm) * 1.02f + 1;
+            again &= sphere_planes(c, r, &dummy);
+        }
+        for (unsigned p = 0; p < h[4]; p++)
+            again += e1_part_class((const float (*)[4]) frustum, m->spheres + m->parts[p].sphere_first, m->parts[p].sphere_count, pal);
+        sink = again;
+    }
     if (!visible) { sq_wait(); sq_unlock(); return 1; }
     /* lane eng-draw3 (E3): Leon's knife part (role 2) is drawn in the knife stance only: out of it, it is not skinned,
        lit or given weight sets either */
@@ -197,6 +208,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         /* the light volume's origin: part 1 (bone 0) or the model */
         const unsigned parts = live ? (unsigned) (uint8_t) live->info->parts : ml->info >> 8 & 255;
         source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, live, &cur_lights);
+        if (DC_ARM(DL_PICK2)) source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, live, &cur_lights);   /* lane eng-draw4 arm P */
     }
     memset(ws_ready, 0, h[1]);
     ws_rows = pal; ws_stride = e1_pal_control ? 12 : 16;   /* build_ws blends the palette rows in place (PALCTL: wrong stride) */
@@ -214,6 +226,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         PositionPass a = {pos_records, n, m->pos + rp->pos_first, dummy_uv, (void*) (proj + rp->pos_first), codes + rp->pos_first, 8,
                           skin_project[0].elem, ws_ready, h[1], 640, 480, near, camera[25], 0, 0, 0, 0};
         re4dc_avk_pos_skin_u16(&a);
+        if (DC_ARM(DL_SKIN2)) re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw4 arm K (set E): positions skinned twice */
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
         /* lane eng-draw3 (E3): a boundary part lights only the normals its kept strips use */
         light_part(m, rp, state[p], codes, strip_codes, lit, 1);
