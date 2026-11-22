@@ -2,6 +2,37 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-044 (2026-11-22): RE4 paused by the owner
+
+- **Owner** (relayed by the F-Zero coordinator): "Tell the resident evil track to pause its work and create and
+  handover + to give you resources back". Every lane pushed and stopped; bakes, builds and Flycast stopped; RAM stages
+  cleared. Handover: the workspace file `RE4-PAUSE-20261122.md`; gate queue `E:\RE4DC-Lanes\eng-int\RESUME-20261122d.md`.
+- **Merged before the pause** (eng-int, finished, unaudited): the memory train (d4c966846; eng-skel1, eng-skel2,
+  eng-load1, eng-snd1, eng-mem1, eng-mem2) with the shared pack sets `e1-farmwep-20261122` and `e1-colb-20261122`;
+  room loading eng-load2 (1a4335fd7; DOOR passes, judged on kos-net). engine c8642d132.
+- **Rulings on the stop reports, for the resume:** eng-draw6's "shared translucent data" finding withdrawn (only
+  Leon has translucent parts); its detail levels merge only if the stills check holds with the floor applied. The
+  disc script's default tree lacks baked collision: gates use `PRISTINE=pristine-colb` until the script defaults to
+  the shared set (a small lane on resume). CPU sharing with the F-Zero line: over 85%, `make -j2`, bakes 2 workers.
+
+## H-042 (2026-11-22): the console link: GDEMU, no restarts, no card copying, dc-qalink
+
+- **Owner, in order:** "Does it matter that the system is running a GDEMU?"; "Maybe there is a way to not restart at all
+  entirely and the loader can reboot within the slot it loaded"; "Would it be possible For the loader To push builds so
+  that we don't Need to copy and paste in the GDEMU?"; "One of them is a disc embed the other is a separate control
+  loop"; "I meant shoukd it life in the dc qa link repo or Be presented as a more robust tool now?"; "Yeah let's make
+  the link public more robust while also integrating it into RE4 so that you can push programs and test the outputs".
+- **Design (plan section 9, brief `E:\RE4DC-Lanes\eng-link1\BRIEF.md`):** every exit returns to the loader inside
+  the mounted GDEMU slot through a return stub in the protected top of RAM that reloads the loader with the BIOS's disc
+  calls; a hang with interrupts off trips the SH-4 watchdog (a CPU reset that boots the same slot, a console check);
+  a smart-plug power cycle is the last rung and lands in openMenu. The SD card is written once: builds and room packs
+  come over the link and a small first stage fetches the current loader from the PC. The adapter takes the modem's
+  port. Two parts on one link layer: the in-game library and the control loop.
+- **Where:** the public `lamb2k/dc-qalink` (0.1.0, f40cd8b40, MIT) as its next version, branch `v0.2-bba-loader`;
+  re4dc pins it as a submodule and keeps the RE4 layer. The integrator merges dc-qalink's branch into its main after
+  its host tests and the RE4 gate; a tagged release and its notes go to the owner first. Lane eng-link1 started with
+  `make -j2` (CPU 77 to 93%).
+
 ## H-041 (2026-11-22): the console link over the broadband adapter; room loading handed back
 
 (There is no H-040: the kos-net ruling below took that number in a message.)
