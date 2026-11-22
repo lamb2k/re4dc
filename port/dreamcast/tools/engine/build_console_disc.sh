@@ -368,9 +368,9 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
   DNEED=DOOR/DOOR.TXT,DOOR/R103.PAK,DOOR/R103.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs
   echo "DOOR Village_to_farm_and_back_(traced,_function_run) PROG/E1.BIN 300 e1:function:drawn $(need $DNEED) root=DOOR:E1 rows=compact $TSKIP door=2"
-  echo "DOORV4 Lab_arm:_the_door_with_the_version_4_packs PROG/E1.BIN 300 e1:function:drawn $(need DV4/CROSS.PAK,DV4/R103.PAK,$DNEED) root=DV4:DOOR:E1 rows=compact $TSKIP door=2"
-  echo "DOORSE The_door,_the_farm_pack_ending_the_stream PROG/E1.BIN 300 e1:function:drawn $(need DSE/R103.PAK,$DNEED) root=DSE:DOOR:E1 rows=compact $TSKIP door=2"
-  echo "CDOORSE Control:_stream_end_request_non-blocking_(stops) PROG/E1.BIN 300 e1:function:drawn $(need CDSE/DISCNB,CDSE/R103.PAK,$DNEED) root=CDSE:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "DOORV4 Lab_arm:_door,_version_4_packs PROG/E1.BIN 300 e1:function:drawn $(need DV4/CROSS.PAK,DV4/R103.PAK,$DNEED) root=DV4:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "DOORSE Door,_farm_pack_ending_the_stream PROG/E1.BIN 300 e1:function:drawn $(need DSE/R103.PAK,$DNEED) root=DSE:DOOR:E1 rows=compact $TSKIP door=2"
+  echo "CDOORSE Control:_stream_end_non-blocking_(stops) PROG/E1.BIN 300 e1:function:drawn $(need CDSE/DISCNB,CDSE/R103.PAK,$DNEED) root=CDSE:DOOR:E1 rows=compact $TSKIP door=2"
   echo "CDOORPK Control:_farm_archive_absent PROG/E1.BIN 300 e1:function:drawn $(need CDP/DOOR.TXT,CDP/R103.PAK,E1/CROSS.PAK,E1/st1/r101.arc) root=CDP:E1 rows=compact $TSKIP door=2"
   for c in "${DOOR_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfile ctitle <<< "$c"
