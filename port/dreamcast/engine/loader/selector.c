@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cl_core.h"
+#include "cl_arm.h"   /* dc-qalink 0.2 (lane eng-link1): the return stub, armed before every jump */
 
 #ifndef LOADER_BUILD
 #define LOADER_BUILD "dev"
@@ -944,6 +945,35 @@ static void print_entry(unsigned i) {
     }
 }
 
+/* ---------------------------------------------------------------- the disc's LINK.TXT (lane eng-link1) */
+static struct { int bba; uint32_t host, port, lport; } g_link;
+static uint32_t link_ip(const char *s) {
+    unsigned a[4];
+    if (sscanf(s, "%u.%u.%u.%u", &a[0], &a[1], &a[2], &a[3]) != 4) return 0;
+    const uint8_t b[4] = {(uint8_t)a[0], (uint8_t)a[1], (uint8_t)a[2], (uint8_t)a[3]};
+    uint32_t v;
+    memcpy(&v, b, 4);
+    return v;
+}
+static void read_link(void) {
+    static char t[1024];
+    const long n = disc_read("/cd/LINK.TXT", (uint8_t *)t, sizeof(t) - 1);
+    if (n <= 0) return;
+    t[n] = 0;
+    g_link.port = 52060;
+    g_link.lport = 52060;
+    for (char *l = strtok(t, "\n"); l; l = strtok(NULL, "\n")) {
+        char k[16], v[64];
+        if (l[0] == '#' || sscanf(l, "%15s %63s", k, v) != 2) continue;
+        if (!strcmp(k, "net")) g_link.bba = !strcmp(v, "bba");
+        else if (!strcmp(k, "host")) g_link.host = link_ip(v);
+        else if (!strcmp(k, "port")) g_link.port = (uint32_t)atoi(v);
+        else if (!strcmp(k, "lport")) g_link.lport = (uint32_t)atoi(v);
+    }
+    if (!g_link.host) g_link.bba = 0;
+    printf("CDISC LINK %s\n", g_link.bba ? "adapter: programs send lines, stills and /pc reads to the PC" : "none");
+}
+
 /* ---------------------------------------------------------------- run one scene (does not return) */
 static void launch(unsigned i) {
     const scene_t *s = &g_sc[i];
@@ -972,7 +1002,18 @@ static void launch(unsigned i) {
     h->deadline_s = s->deadline;
     snprintf(h->args, sizeof(h->args), "%s", s->args);
     h->report_cap = SEL_REPORT_CAP;
+    /* lane eng-link1: the disc's LINK.TXT "net bba": the program brings the adapter up itself (DHCP) and sends its
+       lines, stills and /pc reads to the PC named there (dcql_loop.py serve); no LINK.TXT, no link */
+    if (g_link.bba) {
+        h->net_kind = CL_NET_BBA;
+        h->link_host = g_link.host;
+        h->link_port = g_link.port;
+        h->link_lport = g_link.lport;
+    }
     cl_handoff_seal(H);
+    /* lane eng-link1: the way back is the return stub (dc-qalink loader/stub.c), which reads /LOADER.BIN (this program)
+       with the BIOS's own disc calls, checks its SHA-256 and jumps: a program that wrecked KallistiOS still comes back */
+    cl_arm_stub(H);
     J->running = i + 1;
     journal_seal();
     printf("CDISC RUN %u %s %s deadline %u s args \"%s\" (%ld bytes)\n", i + 1, s->name, s->prog, s->deadline, s->args, n);
@@ -1011,6 +1052,12 @@ int main(int argc, char **argv) {
     vid_set_mode(DM_640x480, PM_RGB565);
     vid_clear(0, 0, 0);
     const int planned = read_plan();
+    /* lane eng-link1: the way back for every program (dc-qalink's return stub) and the disc's link settings */
+    const int arm = cl_arm_find();
+    if (arm) printf("CDISC STUB none: /LOADER.BIN %d (programs return by KallistiOS's trampoline)\n", arm);
+    else printf("CDISC STUB %u bytes, /LOADER.BIN sector %u, %u bytes\n", (unsigned)cl_arm_stub_bytes(),
+                (unsigned)cl_arm_lba(), (unsigned)cl_arm_len());
+    read_link();
     if (g_plan_refused[0]) {   /* lane eng-e1p (H-018.3): a schedule that does not parse whole: refused, nothing run */
         printf("CDISC START %s: plan crc %08x\n", LOADER_BUILD, (unsigned)g_plan_crc);
         printf("CDISC SCHEDULE REFUSED: %s\n", g_plan_refused);
