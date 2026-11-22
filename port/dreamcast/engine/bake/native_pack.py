@@ -36,7 +36,7 @@ def effect_glow_header(assets,material_cache,data,offset):
         material_cache[tag]=assets.header(ck,4,blend=(4,1),fog=False)
     return material_cache[tag]
 
-def build(disc, capture, room, tables, prior_dir=None):
+def build(disc, capture, room, tables, prior_dir=None, ram=None):
     assets = Baker(disc, capture, room)
     def world_material(key, phase, cull):
         return assets.header(key, (0,2,3)[phase], cull, world=True, fog=True)
@@ -190,6 +190,8 @@ def build(disc, capture, room, tables, prior_dir=None):
     # lane eng-e1i: the last step, the HUD widgets made right (bake/hud_fix.py; SERVICES.md 45). hill_pack.py builds
     # through here too. A pack without it is refused by hud_fix.verify in the writers below.
     import hud_fix
+    if ram is not None:   # lane eng-bake1: a capture without its own RAM snapshot (the village's) names one
+        return hud_fix.fix(blob,(Path(disc)/"tex.pak").read_bytes(),Path(ram).read_bytes())
     return hud_fix.fix_capture(blob,disc,capture)
 
 if __name__=="__main__":
@@ -200,8 +202,9 @@ if __name__=="__main__":
     p.add_argument("out",type=Path)
     p.add_argument("tables",type=Path)
     p.add_argument("--prior",type=Path,help="folder holding the first capture's eng-bench-<scene>-4 RAM snapshot")
+    p.add_argument("--ram",type=Path,help="RAM snapshot for the HUD fix when the capture has none (lane eng-bake1)")
     a=p.parse_args()
     import hud_fix
-    data=build(a.disc,a.capture,a.room,a.tables,a.prior)
+    data=build(a.disc,a.capture,a.room,a.tables,a.prior,a.ram)
     hud_fix.verify(data)   # lane eng-e1i: never write a pack without the HUD fix
     a.out.write_bytes(data)
