@@ -329,6 +329,7 @@ extern "C" struct AimListCounters { uint32_t calls, scenery, listed, hit_only, e
 #include "e1_laser.h"
 extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
 extern "C" void native_draw_report(void) __attribute__((weak));   // lane eng-draw1: render/draw_cost.inc
+extern "C" void e1_guards_report(void);   // lane eng-fix1 (H-026): host/guard_hooks.cpp, the guards' counts
 void e1_report()
 {
     e1_trace_flush();
@@ -340,6 +341,7 @@ void e1_report()
     e1_memmap_after();   // lane eng-e1k: the stack guard, heap peak, arena margin and video memory after play
     e1_play_files_report();   // lane eng-e1o (H-017.7): the files opened during play (must be 0)
     e1_stub_report();
+    e1_guards_report();
     e1_prof_report();
     e1_svc_report();
     // lane eng-e1g: the native heap service (services/memory/heap.cpp) under the behaviour arena (host/e1_heap.cpp)

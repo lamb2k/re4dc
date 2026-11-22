@@ -25,6 +25,8 @@
 //   mlist   [cap]   1 B   the mailbox bones, in the order they joined
 //   handed  [cap]   1 B   the bones handed out since the last entry
 //   ik      [nIk]  96 B   IK chains (IkParts of the root: plane matrix, axis, direction)
+//   trig    [n]    40 B   sin and cos of the pose angles with the angles' bits (lane eng-svcspd1: reused while the
+//                         angles do not change)
 //
 // The cParts records stay (the behaviour holds pointers to them and walks pList); a record is the mailbox of its
 // bone only once code outside the service has asked for it (getPartsPtr / GetPartsAddr, setParent).
@@ -74,6 +76,12 @@ struct SkelHist {      // 32 B: a history bone's world_old and world_old2
     f32 old2[3];
     u32 pad[2];
 };
+struct SkelTrig {      // 40 B (lane eng-svcspd1): sin and cos of a bone's three pose angles, with the angles' bits they
+    u32 key[3];        // were taken from; a bone whose angles have not changed reuses them (the same values exactly:
+    u32 valid;         // sinf and cosf are functions of their argument's bits)
+    f32 s[3];
+    f32 c[3];
+};
 
 struct SkelTable {
     // header: 128 B
@@ -106,6 +114,7 @@ struct SkelTable {
     u32 nOld;             // updateOldPos calls so far (a history bone that joins later starts unknown)
     f32* base;            // until the first updateOldPos: every bone's world_old and world_old2 (6 rows x cap), so a
                           // bone that joins the history set during set-up starts with the original's values
+    SkelTrig* trig;       // [n] the pose angles' sin and cos (lane eng-svcspd1)
 
     f32* row(int r) { return soa + r * cap; }
 };
@@ -135,7 +144,10 @@ struct SkelCounters {
         samp_int, samp_frac, samp_end, mk_bound, mk_unbound, mk_rows, mk_dec, mk_miss, mk_root_rows, mk_root_dec, mk_axes,
         mk_rebinds,
         hist_join, hist_moves, hist_full, hist_late,
-        compress_bones;   // lane eng-e1h: parts squashed by skel_compress_y (a dissolving corpse)
+        compress_bones,   // lane eng-e1h: parts squashed by skel_compress_y (a dissolving corpse)
+        trig_hits, trig_miss,   // lane eng-svcspd1: a bone's angles' sin and cos reused / taken
+        pre_bones,              // lane eng-svcspd1: bones MotionMove's first world pass computes (the IK's reads)
+        mk_nohash;              // lane eng-svcspd1: clips bound without the identity hash (no motion key pack)
 };
 void skel_compress_y(cModel* m, f32 k);   // a dying body squashed vertically (em10ScaleCompress; lane eng-e1h)
 extern SkelCounters skel_cnt;
@@ -147,4 +159,10 @@ extern int skel_control_mk;       // baked motion keys: 1 the pose row of the ne
                                   // root and camera rows of the next frame; 3 s16 steps cut to 8 bits (lane eng-svc3)
 extern int skel_control_hist;     // 1: no bone keeps its history; 2: the history never moves (lane eng-svc2 controls)
 extern int skel_control_compress; // 1: skel_compress_y squashes nothing (the fault lane eng-e1h fixed; the control)
+extern int skel_control_trig;     // 1: a bone's kept sin and cos reused whatever its angles (stale; lane eng-svcspd1's
+                                  // control; on the PC reference RE4_SVC_CONTROL=trigstale)
+extern int skel_control_mkstale;   // 1: with no motion key pack, a clip bound to the last clip's key table (RE4_SVC_CONTROL=mkstale)
+extern int skel_control_ikclosure; // 1: the first world pass leaves out the IK chains' ancestors (RE4_SVC_CONTROL=ikclosure)
+extern int skel_control_worldfast; // 1: the world pass's inline position product takes its second row from the
+                                   // parent's first (a transcription slip; RE4_SVC_CONTROL=worldfast)
 }

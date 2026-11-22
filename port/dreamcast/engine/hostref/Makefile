@@ -88,6 +88,12 @@ STAT_BYTES ?= 1
 EM10_SPLIT ?= 1
 BSPLINE_ALIAS ?= host
 export PREP_BSPLINE := $(BSPLINE_ALIAS)
+# Lane eng-fix1 (H-026, docs/engine/CORRECTIONS_20261121.md): the reference is built with the corrections and guards the
+# engine's hosted prelude has (../host/corrections.h, force-included) and the game settings its units name
+# (../game/game_settings.mk HOSTREF_SETTINGS), as the released game is. CORRECTIONS=0 is the old reference without
+# them, kept only as svc/refctl.sh's control build (its own BUILD folder).
+CORRECTIONS ?= 1
+include ../game/game_settings.mk
 # Lane eng-e2b (a reference change, its old behaviour kept as EM10_VOICE=0, a refctl.sh row): em10SetDamageVoice calls
 # em10CallVoiceSe through an int-view declaration whose label is the SH-ELF name, asm("_em10CallVoiceSe")
 # (src/em10/em10.cpp 362-367: the non-PowerPC branch; on the console image that label is em10CallVoiceSe itself). On
@@ -97,7 +103,7 @@ export PREP_BSPLINE := $(BSPLINE_ALIAS)
 EM10_VOICE ?= 1
 # A BUILD folder holds one reference only (the host copies and objects do not depend on these switches): a different
 # switch set on an existing folder is refused, so a control build can never land in the reference's folder.
-REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)$(if $(filter 0,$(EM10_VOICE)),-em10voice0)
+REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)$(if $(filter 0,$(EM10_VOICE)),-em10voice0)-corrections$(CORRECTIONS)
 ifneq ($(filter clean,$(MAKECMDGOALS)),clean)
 REF_VARIANT_HAD := $(shell mkdir -p $(BUILD) && { [ -f $(BUILD)/variant.txt ] || echo $(REF_VARIANT) > $(BUILD)/variant.txt; } && cat $(BUILD)/variant.txt)
 ifneq ($(REF_VARIANT_HAD),$(REF_VARIANT))
@@ -107,6 +113,9 @@ endif
 GAMEINC := -include $(GAME)/platform/include/re4dc_prelude.h -I$(ROOT)/include -I$(ROOT)/src \
            -I$(ROOT)/src/game -I$(ROOT)/src/wep -I$(GAME)/platform/include -DRE4DC_GAME \
            -DRE4DC_STAT_ROUTINE_BYTES=$(STAT_BYTES)
+ifeq ($(CORRECTIONS),1)
+GAMEINC += -include $(ROOT)/port/dreamcast/engine/host/corrections.h $(HOSTREF_SETTINGS)
+endif
 GAMEFLAGS := -std=gnu++20 -fpermissive -w -fno-exceptions -fno-rtti -fno-threadsafe-statics $(GAMEINC)
 HOSTFLAGS := -std=gnu++20 -fpermissive -Wall -Wno-unused-function -Wno-register -fno-exceptions -fno-rtti \
              -fno-threadsafe-statics $(GAMEINC) -I.
