@@ -8,7 +8,8 @@ import sys
 src, err, fb = sys.argv[1], sys.argv[2], sys.argv[3]
 lines = open(src).read().split('\n')
 names = set(x for x in fb.split(',') if x)
-for m in re.finditer(r'sched_stubs\.cpp:(\d+):\d+: error', open(err, errors='replace').read()):
+base = re.escape(src.rsplit('/', 1)[-1])
+for m in re.finditer(base + r':(\d+):\d+: error', open(err, errors='replace').read()):
     i = int(m.group(1)) - 1
     while i >= 0:
         a = re.search(r'asm\("([^"]+)"\)', lines[i])

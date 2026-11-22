@@ -36,6 +36,9 @@ typedef s32 OSPriority;
 
 extern "C" void re4dc_log(const char* fmt, ...);
 extern "C" void re4dc_halt(const char* file, int line);
+// The engine's log buffers the lines written during play (core/globals.cpp); a panic prints them first, so the reason
+// reaches the serial line before the halt. Weak: the PC check has no such buffer.
+extern "C" void e1_log_flush(void) __attribute__((weak));
 
 struct OSThreadQueue {
     struct OSThread* head;
@@ -88,6 +91,7 @@ void OSPanic(const char* file, int line, const char* msg, ...)
     vsnprintf(text, sizeof(text), msg, ap);
     va_end(ap);
     re4dc_log("OSPanic %s:%d: %s\n", file, line, text);
+    if (e1_log_flush) e1_log_flush();
     re4dc_halt(file, line);
 }
 

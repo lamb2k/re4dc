@@ -68,6 +68,11 @@ endif
 ifeq ($(FIGHT),1)
 include fight.mk
 endif
+# Lane eng-sched1: the scheduler's hosting (host/sched_host.cpp) needs the scenario layer's list container in the
+# default image too: the engine's (services/scene/at_list.cpp), not libgpu. (The fight image takes it with services/scene.)
+ifeq ($(BOSS)$(FIGHT),)
+ENG_CPP += $(ENG)/services/scene/at_list.cpp
+endif
 ENG_OBJS := $(patsubst $(ENG)/%.cpp,$(OUT)/e/%.o,$(ENG_CPP)) $(patsubst $(ENG)/%.c,$(OUT)/e/%.o,$(ENG_C))
 REND_OBJS := $(OUT)/r/render_e1.o $(OUT)/r/replay_pack.o $(OUT)/r/native_world.o $(OUT)/r/avk_sh4.o $(OUT)/r/stage_sh4.o
 ENG_HDRS := $(wildcard $(ENG)/host/*.h $(ENG)/core/*.h $(ENG)/services/*.h)
@@ -329,3 +334,22 @@ include $(ENG)/game/hosted_corrections.mk $(ENG)/game/game_settings.mk   # lane 
 $(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(AREAVOL_OBJ) $(EM10SVC_OBJS) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^
+
+# ---- Lane eng-sched1 (plan 3.3 section 8 B2): the game's script scheduler in the default image (game/hosted.mk
+# SCHED_SRCS; host/sched_host.cpp). The village's room script is the REL module st1/r101: its entry under its own name,
+# as fight.mk links it. scheduler.o's stack pool (TaskSchedulerInit's mem_alloc) is bound to the engine's
+# sched_stack_alloc: the KOS heap until lane eng-mem2 places it (objcopy --redefine-sym, the source unchanged). The
+# logged stubs of host/e1_stubs.cpp for SceExec and TaskSleep give way to the hosted bodies (made weak in that object:
+# a request to its owner is to drop them there). The scenario layer's task steps are counted at TaskSchedulerMain.
+ifeq ($(BOSS)$(FIGHT),)
+$(OUT)/h/st1/r101.o: ORIG_FLAGS += -D_prolog=r101_prolog -D_epilog=r101_epilog -D_unresolved=r101_unresolved
+$(OUT)/h/game/scheduler.o: $(ROOT)/src/game/scheduler.cpp $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -I$(ROOT)/port/dreamcast/game/platform/include -c $< -o $@
+	sh-elf-objcopy --redefine-sym __Z9mem_allocmPKciii=_sched_stack_alloc $@
+$(OUT)/e/host/e1_stubs.o: $(ENG)/host/e1_stubs.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services $(NATIVE_INC) -c $< -o $@
+	sh-elf-objcopy --weaken-symbol=__Z9TaskSleepi --weaken-symbol=_SceExec $@
+$(OUT)/e1.elf: WRAPS += -Wl,--wrap=TaskSchedulerMain
+endif

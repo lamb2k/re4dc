@@ -20,6 +20,8 @@
 #include "camera/camera_svc.h"   // lane eng-e1p: the room's camera tracks converted at load
 #ifdef E2_BOSS
 #include "boss_e2.h"   // eng-boss: the El Gigante slice
+#else
+#include "sched_host.h"   // lane eng-sched1: the game's script scheduler (host/sched_host.cpp)
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -94,6 +96,9 @@ static void room_init()
     pG->Rno0 = 3;
     pG->Rno1 = 0;
     e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
+#ifndef E2_BOSS
+    sched_host_room_init();             // lane eng-sched1: the scenario's room start (lab scene SCHED: R101Init)
+#endif
 }
 
 // Lab arm CAMEVERY (boot file; the camera check's control, lane eng-e1m): after Leon's move the shoulder camera is handed
@@ -127,6 +132,7 @@ static void game_tick(E1Timing& tm)
         tm.obj_us = now_us() - t;   // reported as the enemy share below
     }
 #else
+    sched_host_scenario(e1_tick);       // lane eng-sched1: ScenarioMove (gameMainLoop order: room main, events, tasks)
     if (e1_scene == E1_SCENE_HILL) e1_partner_chars_move(tm);   // EmMgr.move: the partner (gameMainLoop order)
 #endif
     e1_stamp(1);
@@ -172,6 +178,9 @@ int main()
     e1_clock_boot();                    // lane eng-clock1: the TMU2 reload check; GAPPROBE (core/e1_clock.cpp)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
     e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
+#ifndef E2_BOSS
+    sched_host_boot();                  // lane eng-sched1: the OS layer, the task table and stacks; boot files SCHED*
+#endif
     {
         file_t f = fs_open("/cd/CAMEVERY", O_RDONLY);
         if (f >= 0) {
@@ -214,6 +223,9 @@ int main()
         e1_stamp(0);
         uint64_t b = now_us();
         game_tick(tm);
+#ifndef E2_BOSS
+        sched_host_tasks(e1_tick);      // lane eng-sched1: TaskScheduler, slots 0..3 (main.cpp: after slot 0's loop)
+#endif
         e1_partner_tick_end(e1_tick);
         e1_stamp(3);
         uint64_t c = now_us();
@@ -239,6 +251,9 @@ int main()
     e1_fields_finish(ticks);            // each row's presented-field interval, and the E1 FIELDS line
     e1_state[0] = 5;
     e1_report();
+#ifndef E2_BOSS
+    sched_host_report();                // lane eng-sched1: the E1 SCHED lines (after the report: printed at once)
+#endif
 #ifdef E2_BOSS
     e2_report();
 #endif
