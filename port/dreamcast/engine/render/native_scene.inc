@@ -295,7 +295,9 @@ void native_close(NativeScene* s){
    visibility, actors, logic state) and the resident pack buffer itself; the next native_open sizes the buffer for the
    pack it opens. native_release_keep (the bench's ROOMKEEP control) keeps one texture in video memory. */
 unsigned native_release_keep;
+void content_lit_release(void);   /* render/content_actor.inc (lane eng-mem1) */
 void native_release(NativeScene* s){
+    content_lit_release();
     pvr_ptr_t kept=NULL;
     if(native_release_keep){for(unsigned i=0;i<M1_TEXTURE_LIMIT;i++)if(m1_textures[i]){kept=m1_textures[i];m1_textures[i]=NULL;break;}}
     native_close(s);
