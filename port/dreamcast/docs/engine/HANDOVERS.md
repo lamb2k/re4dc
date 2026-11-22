@@ -2,6 +2,15 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-038 (2026-11-22): the skinning routine is not gold
+
+- **Owner:** "I agree with everything except this being golden: the skinning routine". The lifted routine
+  (`avk_sh4.S`) leaves the plan's "Kept as they are" list. It stays in use until something better is measured, and it
+  is open to be redone the engine's way: positions (normals only where lighting needs them), no outputs nobody reads,
+  a vertex and weight layout that suits the engine's packs, on SH4ZAM where it has the piece. Lane eng-draw5 takes it
+  ahead of its other items (skinning is 2.2 / 4.1 / 1.9 ms a picture mean on LEON / HILL / FIGHT, MODELLED,
+  console-build dynarec at 70 MHz, calibrated on the old port). The rest of the list stands as the owner agreed.
+
 ## H-037 (2026-11-22): memory layout: the engine's own where it is better
 
 - **Owner:** "If we have a better memory layout we can implement our own unless we believe it eas pre socially
