@@ -24,6 +24,9 @@
 // carry the original's bits; XMTRX on the SW back-end forms each element as the C matrix library does (addition
 // commutes exactly). On the SH-4, FTRV rounds differently: the PC proof covers the layout and the data flow, the
 // SH-4 build's tolerance is the plays-right tolerance.
+#if defined(__sh__)
+#define fabsf skel_game_fabsf   // include/math_sub.h's static fabsf clashes with the C library's SH4ZAM declares
+#endif
 #include "skel.h"
 #include "model.h"
 #include "motion.h"
@@ -36,6 +39,23 @@
 #include "skel_xm.h"
 #include "skel_mk.h"
 #include "native_motion.h"
+#include "svc_prof.h"
+// Lane eng-svcspd1: the world pass's XMTRX steps. On the SH-4 SH4ZAM's inline forms, the very instructions skel_xm.c
+// wraps (FTRV and the column scales), without a call a step; elsewhere (the PC reference: SH4ZAM's SW back-end linked
+// as its own object) through skel_xm.c as before.
+#if defined(__sh__)
+#undef fabsf
+#include "sh4zam/shz_xmtrx.h"
+#define XM_LOAD(m) shz_xmtrx_load_transpose_3x4((const shz_mat3x4_t*) (m))
+#define XM_APPLY(m) shz_xmtrx_apply_transpose_3x4((const shz_mat3x4_t*) (m))
+#define XM_SCALE(x, y, z) shz_xmtrx_apply_scale((x), (y), (z))
+#define XM_STORE(m) shz_xmtrx_store_transpose_3x4((shz_mat3x4_t*) (m))
+#else
+#define XM_LOAD(m) skel_xm_load_3x4(m)
+#define XM_APPLY(m) skel_xm_apply_3x4(m)
+#define XM_SCALE(x, y, z) skel_xm_apply_scale((x), (y), (z))
+#define XM_STORE(m) skel_xm_store_3x4(m)
+#endif
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
@@ -57,6 +77,25 @@ int skel_poison;
 int skel_control_mk;
 int skel_control_hist;
 int skel_control_compress;
+int skel_control_trig;
+int skel_control_ikclosure;
+int skel_control_mkstale;
+int skel_control_worldfast;
+}
+// lane eng-svcspd1: this service's own controls on the PC reference (RE4_SVC_CONTROL, read once; hostref svc_io.cpp)
+extern "C" const char* svc_env(const char* name) __attribute__((weak));
+namespace {
+int g_ctl_read;
+inline void read_controls()
+{
+    if (g_ctl_read) return;
+    g_ctl_read = 1;
+    const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
+    if (c && !__builtin_strcmp(c, "trigstale")) skel_control_trig = 1;
+    if (c && !__builtin_strcmp(c, "ikclosure")) skel_control_ikclosure = 1;
+    if (c && !__builtin_strcmp(c, "mkstale")) skel_control_mkstale = 1;
+    if (c && !__builtin_strcmp(c, "worldfast")) skel_control_worldfast = 1;
+}
 }
 
 #define PTR_OK(p) ((u32) (p) >= RE4_MEM_LO && (u32) (p) <= RE4_MEM_HI)
@@ -306,6 +345,7 @@ struct Scope {
     {
         skel_cnt.entries++;
         if (!t) return;
+        SvcProf pr(SP_MAILBOX);
         refresh_roots(t);
         for (u32 i = 0; i < t->nHanded; i++) {
             const u32 b = t->handed[i];
@@ -324,6 +364,7 @@ struct Scope {
     ~Scope()
     {
         if (!t || !mask) return;
+        SvcProf pr(SP_MAILBOX);
         for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], mask);
     }
 };
@@ -370,7 +411,7 @@ struct ParentRef {
     const f32* rs;
     int bone;   // -1: not a bone of this table
 };
-ParentRef parent_of(SkelTable* t, u32 b)
+inline __attribute__((always_inline)) ParentRef parent_of(SkelTable* t, u32 b)
 {
     ParentRef r;
     u32 p = t->parent[b];
@@ -394,10 +435,9 @@ ParentRef parent_of(SkelTable* t, u32 b)
 
 // ---------------------------------------------------------------------------------------------------------------
 // kernels (original arithmetic, original order)
-inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp RotMatrix
+// RotMatrix's body on the sines and cosines of the three angles
+inline void rot_matrix_sc(f32 (*m)[4], f32 sx, f32 sy, f32 sz, f32 cx, f32 cy, f32 cz)
 {
-    f32 sx = sinf(ax), sy = sinf(ay), sz = sinf(az);
-    f32 cx = cosf(ax), cy = cosf(ay), cz = cosf(az);
     f32 szcx = sz * cx, szsx = sz * sx, czsx = cz * sx, czcx = cz * cx;
     m[0][0] = cz * cy;
     m[0][1] = czsx * sy - szcx;
@@ -412,15 +452,42 @@ inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp Ro
     m[2][2] = cy * cx;
     m[2][3] = 0.0f;
 }
+inline void rot_matrix(f32 (*m)[4], f32 ax, f32 ay, f32 az)   // math_sub.cpp RotMatrix
+{
+    rot_matrix_sc(m, sinf(ax), sinf(ay), sinf(az), cosf(ax), cosf(ay), cosf(az));
+}
+// RotMatrix of bone b's pose angles (lane eng-svcspd1): the six sines and cosines are kept with the angles' bits and
+// reused while the angles do not change. sinf and cosf are functions of their argument's bits, so a reuse gives the same
+// values a call would: the matrix is the same, bit for bit. Most bones a clip does not key (cloth links, face, fingers)
+// keep their angles from tick to tick; newlib's sinf / cosf are 60 to 250 instructions each.
+inline void bone_rot_matrix(SkelTable* t, u32 b, f32 (*m)[4], f32 ax, f32 ay, f32 az)
+{
+    SkelTrig& e = t->trig[b];
+    u32 kx, ky, kz;
+    memcpy(&kx, &ax, 4);
+    memcpy(&ky, &ay, 4);
+    memcpy(&kz, &az, 4);
+    if (!e.valid || (!skel_control_trig && (e.key[0] != kx || e.key[1] != ky || e.key[2] != kz))) {
+        e.s[0] = sinf(ax); e.s[1] = sinf(ay); e.s[2] = sinf(az);
+        e.c[0] = cosf(ax); e.c[1] = cosf(ay); e.c[2] = cosf(az);
+        e.key[0] = kx; e.key[1] = ky; e.key[2] = kz;
+        e.valid = 1;
+        skel_cnt.trig_miss++;
+    } else {
+        skel_cnt.trig_hits++;
+    }
+    rot_matrix_sc(m, e.s[0], e.s[1], e.s[2], e.c[0], e.c[1], e.c[2]);
+}
 
 // partsMatCalc: l_mat = R(ang) T(pos) S(scale), copied to mat
 void mat_calc(SkelTable* t)
 {
+    SvcProf pr(SP_MATCALC);
     const u32 c = t->cap;
     f32* s = t->soa;
     for (u32 b = 0; b < t->n; b++) {
         f32 (*m)[4] = t->lmat[b].m;
-        rot_matrix(m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
+        bone_rot_matrix(t, b, m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
         m[0][3] = s[SK_PX * c + b];
         m[1][3] = s[SK_PY * c + b];
         m[2][3] = s[SK_PZ * c + b];
@@ -435,8 +502,11 @@ void mat_calc(SkelTable* t)
 
 // The world pass (cModel::partsWorldCalc): one pass in chain order; parent x local through XMTRX. XMTRX keeps the
 // last bone's world while the next bone is its child, so a parent -> child run loads nothing.
-void world_calc(SkelTable* t)
+// `only` (lane eng-svcspd1): when given, the pass computes only the bones it marks (an ancestor-closed set); every other
+// bone the pass would compute only has its one-shot addRot flag cleared, as the full pass would leave it.
+void world_calc(SkelTable* t, int phase = SP_WORLD_ENTRY, const u8* only = 0)
 {
+    SvcProf pr(phase);
     cModel* mdl = t->model;
     mdl->r_scale = mdl->scale;
     const u32 c = t->cap;
@@ -445,41 +515,51 @@ void world_calc(SkelTable* t)
     for (u32 b = 0; b < t->n; b++) {
         SkelBone& w = t->world[b];
         if (w.flags & 2) continue;
-        ParentRef pr = parent_of(t, b);
-        Vec tmp;
-        tmp.x = t->lmat[b].m[0][3];
-        tmp.y = t->lmat[b].m[1][3];
-        tmp.z = t->lmat[b].m[2][3];
+        if (only && !only[b]) {
+            w.flags &= ~0x40000000;
+            continue;
+        }
+        // lane eng-svcspd1: the parent, the world position and the XMTRX steps inline (XM_* below: on the SH-4 the
+        // same SH4ZAM instructions skel_xm.c wraps, without the calls); the position is the C library's product
+        // (PSMTXMultVec's operations in its order). Control worldfast: a slip in that product.
+        const ParentRef pr = parent_of(t, b);
+        const f32* L = &t->lmat[b].m[0][0];
+        const f32 lx = L[3], ly = L[7], lz = L[11];
+        const f32 (*P)[4] = pr.m;
         Vec wp;
-        PSMTXMultVec(pr.m, &tmp, &wp);
-        if (pr.rs[0] != pr.rs[1] || pr.rs[1] != pr.rs[2]) {
+        wp.x = P[0][3] + ((P[0][2] * lz) + ((P[0][0] * lx) + (P[0][1] * ly)));
+        wp.y = P[1][3] + ((P[1][2] * lz) + ((P[1][0] * lx) + (P[1][1] * ly)));
+        wp.z = P[2][3] + ((P[2][2] * lz) + ((P[2][0] * lx) + (P[2][1] * ly)));
+        const f32 r0 = pr.rs[0], r1 = pr.rs[1], r2 = pr.rs[2];
+        if (r0 != r1 || r1 != r2) {
             // a non-uniform parent scale: P S^-1 L S (the original's two scale concatenations, as column scales
             // of XMTRX). Blended poses make r_scale's three components differ by rounding, so most bones of a
             // blended pose come here. XMTRX's translation is then not the world position: the next bone reloads.
-            Vec sc;
-            sc.x = (pr.rs[0] != 0.0f) ? 1.0f / pr.rs[0] : 0.0f;
-            sc.y = (pr.rs[1] != 0.0f) ? 1.0f / pr.rs[1] : 0.0f;
-            sc.z = (pr.rs[2] != 0.0f) ? 1.0f / pr.rs[2] : 0.0f;
+            const f32 sx = (r0 != 0.0f) ? 1.0f / r0 : 0.0f;
+            const f32 sy = (r1 != 0.0f) ? 1.0f / r1 : 0.0f;
+            const f32 sz = (r2 != 0.0f) ? 1.0f / r2 : 0.0f;
             if (pr.bone < 0 || pr.bone != inX) {
-                skel_xm_load_3x4(&pr.m[0][0]);
+                XM_LOAD(&P[0][0]);
                 skel_cnt.xmtrx_loads++;
             }
-            skel_xm_apply_scale(sc.x, sc.y, sc.z);
-            skel_xm_apply_3x4(&t->lmat[b].m[0][0]);
-            skel_xm_apply_scale(pr.rs[0], pr.rs[1], pr.rs[2]);
-            skel_xm_store_3x4(&w.m[0][0]);
+            XM_SCALE(sx, sy, sz);
+            XM_APPLY(L);
+            XM_SCALE(r0, r1, r2);
+            XM_STORE(&w.m[0][0]);
             skel_cnt.mat_world_slow++;
             inX = -2;
         } else {
             if (pr.bone < 0 || pr.bone != inX) {
-                skel_xm_load_3x4(&pr.m[0][0]);
+                XM_LOAD(&P[0][0]);
                 skel_cnt.xmtrx_loads++;
             }
-            skel_xm_apply_3x4(&t->lmat[b].m[0][0]);
-            skel_xm_store_3x4(&w.m[0][0]);
+            XM_APPLY(L);
+            XM_STORE(&w.m[0][0]);
             skel_cnt.mat_world++;
             inX = (int) b;
         }
+        if (skel_control_worldfast)   // control: a transcription slip (the second row from the parent's first)
+            wp.y = P[0][3] + ((P[0][2] * lz) + ((P[0][0] * lx) + (P[0][1] * ly)));
         if (w.flags & 0x40000000) {
             Mtx m2;
             w.flags &= ~0x40000000;
@@ -522,6 +602,7 @@ MkBind g_mkb[kMkBind];
 u32 g_mk_used;
 const MkPack* g_mk;
 bool g_mk_init;
+const u32* g_mk_last;   // the last key table bound (control mkstale)
 const u8 kKeyBytes[16] = {12, 8, 6, 0, 10, 6, 4, 0, 9, 5, 3, 0, 0, 0, 0, 4};
 
 // the joints the service serves from a pack: the pose channels (MotionMoveCore), root motion (kind 1 Null_pos,
@@ -590,31 +671,42 @@ const MkBind* mk_bind(const void* mot, const u32* keys)
             return &e;
         }
     }
-    if (svc_census_pause) svc_census_pause(1);
     const u8* c = (const u8*) mot;
     const u32 n = c[2];
-    const u16_un* info = (const u16_un*) (c + 3);
-    u32 ident = fnv_add(2166136261u, c, 3 + 3 * n);
-    bool ok = n != 0;
-    for (u32 i = 0; i < n && ok; i++) {
-        if (!mk_served(info[i])) continue;
-        const u8* p = (const u8*) keys[i];
-        const u32 ks = kKeyBytes[info[i] >> 12];
-        if (!PTR_OK(p) || !ks) {
-            ok = false;
-            break;
+    u32 ident = 0;
+    const MkClip* k = 0;
+    if (g_mk) {
+        // Lane eng-svcspd1: the identity (an FNV-1a over the clip header and every served joint's key block: tens of
+        // KB for a long clip, 1 to 5 ms on the calibrated tier at a clip's first MotionSetCore in play) serves only to
+        // find the clip in the pack. With no pack (the console images link none: svc_mk_pack is the PC reference's)
+        // every clip is decoded from its keys whatever its identity, so it is not computed: the binding is the same.
+        if (svc_census_pause) svc_census_pause(1);
+        const u16_un* info = (const u16_un*) (c + 3);
+        ident = fnv_add(2166136261u, c, 3 + 3 * n);
+        bool ok = n != 0;
+        for (u32 i = 0; i < n && ok; i++) {
+            if (!mk_served(info[i])) continue;
+            const u8* p = (const u8*) keys[i];
+            const u32 ks = kKeyBytes[info[i] >> 12];
+            if (!PTR_OK(p) || !ks) {
+                ok = false;
+                break;
+            }
+            u32 len = 0;
+            for (int a = 0; a < 3; a++) len += 2 + rd16(p + len) * (2 + ks);
+            ident = fnv_add(ident, p, len);
         }
-        u32 len = 0;
-        for (int a = 0; a < 3; a++) len += 2 + rd16(p + len) * (2 + ks);
-        ident = fnv_add(ident, p, len);
+        k = ok ? mk_find(ident) : 0;
+        if (k && (k->maxFrame != rd16(c) || k->n != n)) k = 0;
+        if (svc_census_pause) svc_census_pause(0);
+    } else {
+        skel_cnt.mk_nohash++;
     }
-    const MkClip* k = ok && g_mk ? mk_find(ident) : 0;
-    if (k && (k->maxFrame != rd16(c) || k->n != n)) k = 0;
-    if (svc_census_pause) svc_census_pause(0);
     MkBind& e = g_mkb[h];
     e.mot = mot;
     e.clip = k;
-    e.keys = keys;
+    e.keys = (skel_control_mkstale && !g_mk && g_mk_last) ? g_mk_last : keys;   // control mkstale: the last clip's keys
+    g_mk_last = keys;
     e.head = head;
     g_mk_used++;
     if (k) {
@@ -742,6 +834,7 @@ bool mk_sample(const MkBind* b, u32 i, f32 frame, f32 maxFrame, u32 flags, Vec* 
 // motion.cpp MotionMoveCore: the pose at the current sequence frame, into the table
 void move_core(SkelTable* t, MotionWork* w)
 {
+    SvcProf pr(SP_SAMPLE);
     cModel* m = t->model;
     AttachCamera* cam;
     u16* flipTbl = MOTION(m)->flip;
@@ -852,6 +945,7 @@ void hokan(SkelTable* t, MotionWork* w)
     Quaternion q0, q1, q2;
     Mtx m0, m1;
     f32 tt, u, s0, s1, s2, n0, n1, n2, sx, sz, sy;
+    SvcProf pr(SP_HOKAN);
 
     w->Hokan_cnt--;
     tt = (f32) (w->Hokan_frame - w->Hokan_cnt);
@@ -948,6 +1042,7 @@ void hokan(SkelTable* t, MotionWork* w)
 // model.cpp cModel::matBlend on the table
 void mat_blend(SkelTable* t, f32 rate)
 {
+    SvcProf pr(SP_BLEND);
     const u32 c = t->cap;
     f32* s = t->soa;
     Mtx m;
@@ -983,7 +1078,7 @@ void mat_blend(SkelTable* t, f32 rate)
         pos.z = s[SK_PZ * c + b] * rate + wm[2][3] * inv;
         s[SK_PX * c + b] = pos.x; s[SK_PY * c + b] = pos.y; s[SK_PZ * c + b] = pos.z;
         PSMTXIdentity(m);
-        rot_matrix(m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
+        bone_rot_matrix(t, b, m, s[SK_AX * c + b], s[SK_AY * c + b], s[SK_AZ * c + b]);
         C_QUATMtx(&q0, m);
         C_QUATMtx(&q1, wm);
         C_QUATSlerp(&q0, &q1, &q2, inv);
@@ -1219,6 +1314,7 @@ void twist_apply(SkelTable* t, u32 q, int col, f32 ang, f32 rate)
 
 void inverse_kinematics(SkelTable* t)
 {
+    SvcProf pr(SP_IK);
     cModel* m = t->model;
     cEm* em = (cEm*) m;
     MotionWork* blend = MOTION(m)->blend;
@@ -1309,8 +1405,8 @@ void inverse_kinematics(SkelTable* t)
                 if (toe < t->n) {
                     Vec tp;
                     get_p(t, toe, &tp);
-                    rot_matrix(LM(t, toe), t->soa[SK_AX * t->cap + toe], t->soa[SK_AY * t->cap + toe],
-                               t->soa[SK_AZ * t->cap + toe]);
+                    bone_rot_matrix(t, toe, LM(t, toe), t->soa[SK_AX * t->cap + toe], t->soa[SK_AY * t->cap + toe],
+                                    t->soa[SK_AZ * t->cap + toe]);
                     TransMatrix(LM(t, toe), &tp);
                     PSMTXConcat(PMAT(t, toe), LM(t, toe), MAT(t, toe));
                     Vec tw;
@@ -1389,10 +1485,40 @@ void inverse_kinematics(SkelTable* t)
     }
 }
 
+// Lane eng-svcspd1: the bones MotionMove's first world pass must compute. That pass (under the scale-cancelled model
+// matrix) is read by the IK alone: the second pass computes every bone's world again, from the same local matrices but
+// those the IK rewrites, and reads nothing the first pass wrote but the parents it computes itself first. The IK of a
+// chain rooted at p reads the worlds of p .. p + 4 (root, joint, effector, toe; p + 3 is the effector of the flag-0x10
+// chains) and of their parents (PMAT), so the first pass is limited to those bones and all their ancestors (the set is
+// closed under parents, so each marked bone is computed from parents computed in the same pass, as before). Returns the
+// number marked; 0: no chain the IK will run (the pass computes nothing). Control ikclosure: the ancestors left out.
+u32 ik_reads(SkelTable* t, u8* need)
+{
+    memset(need, 0, t->n);
+    u32 k = 0;
+    for (u32 p = 0; p < t->n; p++) {
+        const u32 fp = t->world[p].flags;
+        if (!(fp & 4) || (fp & 0x80) || p + 2 >= t->n) continue;   // the chains inverse_kinematics() runs
+        for (u32 q = p; q <= p + 4 && q < t->n; q++) {
+            if (skel_control_ikclosure) {
+                if (!need[q]) { need[q] = 1; k++; }
+                continue;
+            }
+            for (u32 a = q; a < t->n && !need[a]; a = t->parent[a]) {
+                need[a] = 1;
+                k++;
+            }
+        }
+    }
+    skel_cnt.pre_bones += k;
+    return k;
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // table life
 SkelTable* table_create(cModel* m)
 {
+    read_controls();
     u32 n = 0;
     for (cParts* p = m->pList; PTR_OK(p) && n < 255; p = p->pList) n++;
     if (!n) return 0;
@@ -1414,12 +1540,14 @@ SkelTable* table_create(cModel* m)
     const u32 oHold = off; off = align32(off + sizeof(SkelHist) * SKEL_MAX_HIST);
     const u32 oHslot = off; off = align32(off + cap);
     const u32 oHlist = off; off = align32(off + SKEL_MAX_HIST);
+    const u32 oTrig = off; off = align32(off + sizeof(SkelTrig) * n);
     u8* blk = (u8*) pool_alloc(off);
     if (!blk) return 0;
     SkelTable* t = (SkelTable*) blk;
     t->hold = (SkelHist*) (blk + oHold);
     t->hslot = blk + oHslot;
     t->hlist = blk + oHlist;
+    t->trig = (SkelTrig*) (blk + oTrig);   // zeroed by pool_alloc: no entry valid
     memset(t->hslot, 0xFF, cap);
     t->base = (f32*) pool_alloc(4 * 6 * cap);
     if (t->base)
@@ -1616,6 +1744,7 @@ extern "C" SkelTable* skel_table_at(u32 i) { return i < g_ntab ? g_tab[i] : 0; }
 // bone's world, the bind translation goes through it as a point. Once a tick, after the behaviour.
 extern "C" void skel_publish(SkelTable* t)
 {
+    SvcProf pr(SP_PUBLISH);
     if (skel_poison) {
         for (u32 b = 0; b < t->n; b++) {
             const u8 p = t->parent[b];
@@ -1664,6 +1793,12 @@ extern "C" void skel_publish(SkelTable* t)
 extern "C" void skel_publish_all(void)
 {
     for (u32 i = 0; i < g_ntab; i++) skel_publish(g_tab[i]);
+    if (svc_prof_ctl_us && svc_prof_clock) {   // the account's control: a known wait read as SP_PUBLISH
+        SvcProf pr(SP_PUBLISH);
+        const unsigned long long t0 = svc_prof_clock();
+        while (svc_prof_clock() - t0 < 1000ull * svc_prof_ctl_us) {
+        }
+    }
 }
 
 // =================================================================================================================
@@ -1740,7 +1875,7 @@ void cModel::partsWorldCalc()
     SkelTable* t = table_for(this);
     if (!t) return;
     Scope sc(t, SG_WORLD);
-    world_calc(t);
+    world_calc(t, SP_WORLD_ENTRY);
 }
 
 void cModel::matBlend(f32 rate)
@@ -1790,6 +1925,7 @@ void cModel::updateOldPos()
 
 void cModel::setPos(Vec* p)
 {
+    SvcProf pr(SP_TRANSLATE);
     Vec d;
     PSVECSubtract(p, &this->pos, &d);
     SkelTable* t = table_for(this);
@@ -1952,6 +2088,7 @@ void cModel::releasePartsList(int no)
 // motion.cpp -----------------------------------------------------------------------------------------------------
 extern "C" void PartsWorldPosCalc(cModel* m)
 {
+    SvcProf pr(SP_TRANSLATE);
     Vec d;
     PSVECSubtract(&m->pos, &MOTION(m)->Pos_world, &d);
     m->mat[0][3] += d.x;
@@ -2032,6 +2169,7 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
     AttachCamera* cam;
     int f;
     int i;
+    SvcProf pr(SP_MOTION_REST);
     SkelTable* t = table_for(m);
     Scope sc(t, SG_ALL);
 
@@ -2438,6 +2576,7 @@ extern "C" u16 MotionMove(cModel* m)
     static int new_add = 1;
     Vec spd, rot, spd2, rot2;
     f32 rate, inv;
+    SvcProf pr(SP_MOTION_REST);
     SkelTable* t = table_for(m);
     Scope sc(t, SG_LOCAL | SG_WORLD);
     MotionWork* W = MOTION(m);
@@ -2526,18 +2665,20 @@ extern "C" u16 MotionMove(cModel* m)
         PSMTXConcat(m->mat, tmp, tmp);
         memcpy(m->mat, tmp, sizeof(Mtx));
         m->r_scale = m->scale;
-        world_calc(t);
+        u8 need[256];   // lane eng-svcspd1: the first pass only for the bones the IK reads (ik_reads)
+        world_calc(t, SP_WORLD_PRE, skel_control_no_ik ? 0 : (ik_reads(t, need), need));
         if (!skel_control_no_ik) inverse_kinematics(t);
         memcpy(m->mat, save, sizeof(Mtx));
         m->r_scale = m->scale;
-        world_calc(t);
+        world_calc(t, SP_WORLD_POST);
     }
     if (W->Hokan_cnt != 0) {
         hokan(t, W);
         m->r_scale = m->scale;
-        world_calc(t);
+        world_calc(t, SP_WORLD_HOKAN);
     }
     if (W->blendTbl != 0) {
+        SvcProf pb(SP_BLENDTBL);
         int nb = *(s32*) W->blendTbl;
         u16* tb = W->blendTbl + 2;
         Mtx m0, m1, mq, inv2;
@@ -2608,6 +2749,7 @@ extern "C" void InverseKinematics(cModel* m, int flag)
 // (the collision unit's only write to the bones; it walked the parts records)
 void at_pos_calc(cModel* m, Vec* vec)
 {
+    SvcProf pr(SP_TRANSLATE);
     if (PSVECMag(vec) != 0.0f) {
         PSVECAdd(&m->pos, vec, &m->pos);
         SkelTable* t = table_for(m);

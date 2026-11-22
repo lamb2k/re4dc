@@ -1,5 +1,6 @@
 // E1 frame services (lane eng-e1): room init of the engine tables, the per-tick trace, pacing and the report.
 #include "global.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "player.h"
 #include "em.h"
 #include "obj.h"
@@ -164,13 +165,13 @@ static uint32_t pace_field;
 static uint64_t next_us;
 void e1_pace_end(E1Timing& tm)
 {
-    const uint64_t now = timer_us_gettime64();
+    const uint64_t now = e1_clock_us();
     if (pace_tmu) {
         if (!next_us) next_us = now;
         next_us += 33367;
         if (now < next_us) {
             tm.wait_us = next_us - now;
-            while (timer_us_gettime64() < next_us) thd_pass();
+            while (e1_clock_us() < next_us) thd_pass();
         } else {
             tm.wait_us = 0;
             next_us = now;
@@ -184,7 +185,7 @@ void e1_pace_end(E1Timing& tm)
     e1_present_next_c(pace_field + 1);   // this picture is released when the next tick's second field begins
     if (!late) {
         while ((int32_t) (pace_field - e1_fields_now_c()) > 0) thd_pass();
-        const uint64_t w = timer_us_gettime64() - now;
+        const uint64_t w = e1_clock_us() - now;
         tm.wait_us = w ? (uint32_t) w : 1;
     } else {
         tm.wait_us = 0;
@@ -285,8 +286,8 @@ void e1_fields_late(unsigned tick)
         fs_read(e1_lab.readx_fd, b, sizeof b);
     }
     if (!late_control || tick != 300) return;
-    uint64_t t = timer_us_gettime64();
-    while (timer_us_gettime64() - t < 100000) {}
+    uint64_t t = e1_clock_us();
+    while (e1_clock_us() - t < 100000) {}
 }
 void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fields_now_c(); }
 // Fills each row's fields column and prints the window's line (pictures 41 to 640, as the selector and budget.py):

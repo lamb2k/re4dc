@@ -88,6 +88,9 @@ flycast-console f06da2d8 (the slots run 8fb534cc, the commit before it, which on
 - **Instrumentation cost**: LEON 27.48 / 35.02 ms (mean / worst) against eng-cmp1's 27.01 / 34.94 on the same tier and
   scene, HILL 37.35 / 43.72 against 36.84 / 42.74, FIGHT 26.01 / 36.14 against 25.58 / 35.82: about +0.45 ms mean.
 - **Per-picture regression** (600 pictures, `s\regress.py`): world spans against world corners and clipped triangles.
+- **The clock (H-029):** the worst-picture figures in this document were measured before the clock fix and may carry
+  +2.5 ms in one picture a second (KOS's nanosecond clock jumped 2.5 ms forward each emulated second); means and
+  per-unit costs are affected by no more than 0.25%.
 
 ## 3. The account (MODELLED, ms a picture: mean / p99 / worst over pictures 41-640)
 

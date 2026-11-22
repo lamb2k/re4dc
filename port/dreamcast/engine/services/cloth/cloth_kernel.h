@@ -117,8 +117,11 @@ void cloth_k_at_ck_parallel(ClothKVec* pos, ClothKVec* up, const ClothKVol* vol,
 //! Counters of the kernel (test and cost indicator).
 typedef struct ClothKCounters {
     uint32_t links, passes, normalize, sqrt, acos, rotations, vol_tests, vol_hits;
+    uint32_t vol_skips;      //!< lane eng-svcspd1: parallel sphere tests ended by the early out (counted in vol_tests)
 } ClothKCounters;
 extern ClothKCounters cloth_k_cnt;
+//! Lane eng-svcspd1's control: the parallel sphere test's early-out bound 40 units short (must change the links).
+extern int cloth_k_control_bound;
 
 #ifdef __cplusplus
 }

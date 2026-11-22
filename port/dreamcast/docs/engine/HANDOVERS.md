@@ -2,6 +2,33 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-030 (2026-11-22): resume after every lane stopped at its tool limit; re-merges and trains at the gate
+
+- **State at resume (04:00):** `engine` a68a57094. Every lane agent of 11-21 had stopped (tool-call limits, the
+  integrator's session ended about 15:20); nothing ran, no slot held a lease. Pushed by the integrator after the
+  public-repository blob check: `lane/eng-skel2` e590e4b2e (never pushed before: collision baked offline, contains
+  eng-clock1 and eng-skel1) and `lane/eng-draw3` 0e0f156bd (steps 1b and 2b).
+- **Gate queue, in order:** eng-clock1 (pending at its Flycast step), eng-draw1, eng-draw2, eng-skel1 (c60a0cd4c),
+  eng-skel2, eng-load1, eng-e2d, eng-e2f with eng-e2g, eng-snd1. The integration lane restarted with
+  `E:\RE4DC-Lanes\eng-int\RESUME-20261122.md`.
+- **Restarted to finish their briefs:** eng-draw3 (calibrated slot fly1), eng-cloth1 (fly2), eng-bake1 (PC only).
+- **Rulings:**
+  1. **Re-merges for ended lanes.** When `engine` has moved by code past an ended lane's merge base, the integration
+     lane may merge `engine` into that lane's branch itself, in the lane's worktree, when every conflict is mechanical
+     (both sides kept, no choice of design, value or rule); its gate report lists the conflicted hunks. A conflict that
+     needs a choice comes to the integrator with both sides quoted.
+  2. **The main memory map** (`host/e1_engine.h`): eng-snd1's R1 and eng-skel2's arena move both shift the behaviour
+     arena; whichever lands second comes to the integrator with both maps and both lanes' measured margins.
+  3. **Trains:** up to three queued lanes gated as one when their trial merges are clean in order and their owned
+     files do not overlap; steps 1 to 4 and each lane's controls per lane, images, suites and one clean disc once on
+     the train's tree; a failure drops the lane it points at. Each lane keeps its own merge commit and STATUS note.
+  4. **eng-draw2's ROOMTRIP check:** video-memory free after a release is 24 B under the figure before the first open
+     (the allocator's first-use bookkeeping, constant over three releases). The baseline is to be taken after the first
+     release and any growth across releases fails; that change goes to eng-draw2's successor. Until then ROOMTRIP is an
+     expected failure with that exact reason (as DOOR under H-029.7).
+  5. **eng-e2f's knock-down scene** fails on the shot's capsule rule, which eng-e2g fixed (its KNOCK passes): the two
+     are gated as one train.
+
 ## H-029 (2026-11-21): a day of hand-backs: sound, a door, the boss at zero, hidden service code, the clock; rulings
 
 - **Merged through the integration lane today:** eng-salv1, eng-e2a, eng-cmp1, eng-e2b (fight 73 to 43), eng-look1 (Leon's

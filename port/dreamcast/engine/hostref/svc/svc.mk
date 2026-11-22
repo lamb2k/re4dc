@@ -257,14 +257,71 @@ $(BUILD)/svc/e2b_dump.o: svc/e2b_dump.cpp hostref.h
 SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o \
 	$(BUILD)/svc/e2b_dump.o
 
-$(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) aliases.ld
+# ---- lane eng-e2c: the boss's service entry points (services/boss/) against the original (src/em2b) in odump and native.
+# The reference's fixtures do not host El Gigante: its unit is linked into these two builds only for the exercise e2cboss
+# (svc/e2c_dump.cpp, run by svc/e2c_check.sh), which calls the entry points at fixed ticks on planted giants; without the
+# exercise nothing reaches it and a fixture's run is unchanged. odump links the host copy of em2b.cpp (prep.py copyg); native
+# the same copy with every global symbol the native objects define made weak, so the calls reach the engine bodies and
+# --gc-sections drops the original's. The requests the entry points make (quake, sound, motion set-up) are logged by
+# --wrap; the effect requests through e2_dump.cpp's EstSet wrapper.
+# The oba objects (game/obj20.cpp): odump links the original; native does not link it at all (services/boss/oba_obj.cpp
+# has the whole unit, as in the boss image).
+BOSS_SVC_SRCS := boss/em2b_pres.cpp boss/em2b_skel.cpp boss/em2b_life.cpp boss/oba_obj.cpp boss/em2b_setup.cpp boss/r119_thunder.cpp
+BOSS_SVC_OBJS := $(addprefix $(NAT)/boss/,$(notdir $(BOSS_SVC_SRCS:.cpp=.o)))
+$(BUILD)/gen/boss_em2b.cpp: $(ROOT)/src/em2b/em2b.cpp prep.py
 	@mkdir -p $(dir $@)
-	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
-	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS)
-$(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) \
+	$(PY) prep.py copyg $< $@
+$(BUILD)/plain/boss/em2b.o: $(BUILD)/gen/boss_em2b.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(call modname,em2b) -c $< -o $@
+$(BUILD)/gen/boss_obj20.cpp: $(ROOT)/src/game/obj20.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/plain/boss/obj20.o: $(BUILD)/gen/boss_obj20.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+# The giant's virtual table is not under test (the destructor only stores its address) and its entries would pull the
+# whole of em2b's behaviour into the link (the move routines, the room-224 and chained forms, the event objects), which
+# the reference does not host: svc/e2c_dump.cpp defines the table's symbol as a strong empty table, which every copy (the
+# original's, and the engine's: the destructor is the class's key function; both weak) gives way to.
+$(NAT)/boss/%.o: $(SVC_ENG)/boss/%.cpp $(wildcard $(SVC_ENG)/boss/*.h) $(SVC_ENG)/camera/cam_math.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) $(SVC4_INC) -I$(SVC_ENG)/boss -c $< -o $@
+	$(if $(filter r119_thunder,$*),objcopy --redefine-sym eng_pres_u8=e2c_thunder_rnd $@)
+$(NAT)/boss/syms.txt: $(BOSS_SVC_OBJS)
+	nm -g --defined-only $^ | awk 'NF == 3 {print "--weaken-symbol=" $$3}' | sort -u > $@
+$(NAT)/boss/em2b_weak.o: $(BUILD)/plain/boss/em2b.o $(NAT)/boss/syms.txt
+	objcopy $$(cat $(NAT)/boss/syms.txt) $< $@
+$(BUILD)/svc/e2c_dump.o: svc/e2c_dump.cpp hostref.h $(wildcard $(SVC_ENG)/boss/*.h)
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+# The room's thunder (lane eng-e2c, integrator ruling): odump links r119.cpp's host copy with services/boss/r119_weak.h
+# force-included (its three static thunder functions callable by symbol, as in the boss image); the interval draws of
+# both builds' exercise copies (the original's Rnd, the engine's eng_pres_u8) are renamed to the exercise's own stream
+# e2c_thunder_rnd (svc/e2c_dump.cpp), so the timer is compared, not the generators. svc/e2c_co.cpp runs the task.
+$(BUILD)/gen/boss_r119.cpp: $(ROOT)/src/st1/r119.cpp prep.py
+	@mkdir -p $(dir $@)
+	$(PY) prep.py copy $< $@
+$(BUILD)/plain/boss/r119.o: $(BUILD)/gen/boss_r119.cpp $(SVC_ENG)/boss/r119_weak.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) $(call modname,r119) -include $(SVC_ENG)/boss/r119_weak.h -c $< -o $@.raw.o
+	objcopy --redefine-sym Rnd=e2c_thunder_rnd $@.raw.o $@
+	rm -f $@.raw.o
+$(BUILD)/svc/e2c_co.o: svc/e2c_co.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(PCFLAGS) -c $< -o $@
+E2C_ODU_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BUILD)/plain/boss/em2b.o $(BUILD)/plain/boss/obj20.o $(BUILD)/plain/boss/r119.o
+E2C_NAT_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BOSS_SVC_OBJS) $(NAT)/boss/em2b_weak.o
+E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci
+
+$(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
+	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS)
+$(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) \
                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
-	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
-	    $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
+	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \
+	    $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS) -Wl,-Map=$(NAT)/re4ref.map
 
 odump: $(ODU)/re4ref
 native: $(NAT)/re4ref

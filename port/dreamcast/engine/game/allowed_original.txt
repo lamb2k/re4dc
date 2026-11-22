@@ -165,6 +165,9 @@ game/game *
 # room scripts: the Ganado voice pick (sound), the arena's lightning (effects)
 !st1/r101 r101_callGanadoVoice
 !st1/r119 r119_ThunderMove r119_ThunderFlagOn r119_ThunderFlagOff
+# Lane eng-e2c (integrator ruling 2026-11-21): the thunder is the engine's (services/boss/r119_thunder.cpp; the three are
+# made weak in the hosted object by services/boss/r119_weak.h); nothing of the originals' bodies may be linked.
+=st1/r119 r119_Thunder* 0
 # sce_at: hit and screen tests, area geometry, the at-list container, item effects, item models and their loading, shadow drawing
 !game/sce_at SceAtHitCheck sceAtHitCheck SceAtItemHitCheck* InScreenCheck sceAtGetArea sceAtGetLadderPos
 !game/sce_at SceAtInit sceAtGetOtAddr sceAtSetOtStart sceAtItemEffSet sceAtItemEffDelete* sceAtFunc_shd_disp
