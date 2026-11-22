@@ -58,8 +58,9 @@ def main():
     ap.add_argument('out')
     ap.add_argument('--bin', default=os.path.join(ROOT, 'build/hostref/plain/re4ref'))
     ap.add_argument('--fixture', default=os.path.join(HERE, 'fixtures/shot-ganado.txt'))
-    # lane eng-e2f: another fixture's scenes (the knock-down: --scenes KNOCK:PASS,KNOCKNT:FAIL:any --main KNOCK); a
-    # control's reason "any" accepts any problem (the knock-down's control moves the knocked Ganado, not a damage)
+    # lane eng-e2f: another fixture's scenes (the knock-down: --scenes KNOCK:PASS,KNOCKNT:FAIL:knock --main KNOCK); a
+    # control's reason "any" accepts any problem; "knock" (lane eng-e2g) only the knock-down's: the same hits and kills,
+    # a body moved otherwise after the first kill
     ap.add_argument('--scenes', help='NAME:MUST[:WHY],... (default the four SHOT scenes)')
     ap.add_argument('--main', default='SHOT', help='the scene whose outcome table is printed')
     a = ap.parse_args()
@@ -95,7 +96,13 @@ def main():
         got = j['verdict']
         dmg = [p for p in j['problems'] if p['kind'] == 'damage']
         ok = got == must and o.returncode in (0, 1)
-        if ok and must == 'FAIL' and why != 'any':
+        if ok and must == 'FAIL' and why == 'knock':
+            # lane eng-e2g: the knock-down's control must fail for its own reason: every hit, amount and kill as the
+            # reference's (no damage or kill problem) and a body moved otherwise after the first kill (the knock-down)
+            kills = [k.get('A') for k in j.get('kills', []) if k.get('A') is not None]
+            k0 = min(kills) if kills else 0
+            ok = not dmg and not any(p['kind'] == 'kill' for p in j['problems']) and                 any(p['kind'] == 'position' and p['tick'] is not None and p['tick'] >= k0 for p in j['problems'])
+        elif ok and must == 'FAIL' and why != 'any':
             # the control must fail on damage, for its own reason: different amounts, or the same amounts at another tick
             ok = bool(dmg) and (dmg[0]['detail'].startswith('A amounts') if why == 'amounts' else dmg[0]['detail'].startswith('A at'))
         if not ok:

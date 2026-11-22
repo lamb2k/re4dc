@@ -201,7 +201,7 @@ case ",$SCENES," in *,SHOT*)
 esac
 # KNOCK (lane eng-e2f; only when --scenes names it): the FIGHT image playing tools/plays_right/fixtures/knock-ganado.txt
 # (the knock-down: one Ganado dies beside another), judged against the PC reference by tools/plays_right/shot_engine.py
-# --fixture <that file> --scenes KNOCK:PASS,KNOCKNT:FAIL:any --main KNOCK. Its control KNOCKNT, a scene of its own, runs
+# --fixture <that file> --scenes KNOCK:PASS,KNOCKNT:FAIL:knock --main KNOCK. Its control KNOCKNT, a scene of its own, runs
 # without the damage table's tick (boot file DMGNOTICK) and must FAIL.
 case ",$SCENES," in *,KNOCK*)
   put "$SRC/port/dreamcast/tools/plays_right/fixtures/knock-ganado.txt" KNOCK/SHOT.TXT
