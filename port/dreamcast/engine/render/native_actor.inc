@@ -40,9 +40,12 @@ typedef struct {
 /* Lane eng-draw3, step 5: character back-face culling, a LOOK ARM (run-time only, never the default). Boot file CBCULL,
    read when the pack opens (before play). A strip is one-sided when every edge of each of its triangles is shared with
    another triangle of the model (a closed surface, found at load from the pack's own position indices across all
-   parts), and it is not hair (roles 7 and 8, cards seen from both sides). Under the arm, a one-sided strip none of whose
-   triangles faces the camera is dropped before its normals are lit and before emission, and a part whose strips are
-   all one-sided gets the chip's culling (ISP culling mode 3, the world's) in its header. */
+   parts), and it is not hair (roles 7 and 8, cards seen from both sides). Under the arm, a part whose strips are all
+   one-sided gets the chip's culling (ISP culling mode 3, the world's) in its header, and in a boundary part (the one
+   whose strips are tested anyway) a one-sided strip none of whose triangles faces the camera is dropped before its
+   normals are lit and before emission. Run rcb (2026-11-21) also forced every fully-inside part through the strip test:
+   that cost +1.3 / +2.1 / +0.7 ms (LEON / HILL / FIGHT characters, MODELLED) for the few whole strips it dropped
+   (strips are long and mixed), so fully-inside parts keep their fast path and leave the back faces to the chip. */
 static int cb_arm=-1;
 static unsigned cb_onesided_strips,cb_strips;
 typedef struct {unsigned n; RtModel m[];} RtCatalog;
@@ -575,7 +578,6 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         if(!visible)continue;
         /* lane eng-draw3 (E3): Leon's knife part (role 2), drawn in the knife stance only, is not skinned or lit out of it */
         if(!model && !knife_stance(s))for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==2)state[p]=0;
-        if(m->sided)for(unsigned p=0;p<h[4];p++)if(state[p]==1)state[p]=2;   /* arm CB: every drawn part's strips tested */
         /* 4. weight sets used by visible parts */
         int lit_fill=0;uint32_t* lit_cached=content_lit(s,actor,h[0],model,lod_chosen[ordinal],m,ordinal,
             m1_content[CS_BAKED]==3?actor_px(s,lo,hi):1e9f,&lit_fill);   /* eng-look: step B (baked lighting cache) */

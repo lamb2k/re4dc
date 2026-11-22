@@ -20,9 +20,10 @@ static int16_t wep_catalogue[256];   /* archive slot of em/wep02 -> catalogue mo
 /* WEPSHIFT (lane eng-draw3, the control of wepcheck.py's pixel rule; boot file read at open, a lab arm): the weapon is
    drawn from a copy of its palette moved 400 mm along world x, while the box it reports stays the true one. It is drawn
    and counted as drawn (rule 1 holds), so rule 2's "90% of the differing pixels in the box" must fail on every still
-   where the weapon is on screen. */
+   where the weapon is on screen. The shifted palette is allocated only when the boot file is there (no static memory
+   in the default image: the hill's arena margin is negative). */
 static int e1_weapon_shift;
-static float wep_shift_pal[E1_BONES * 16] __attribute__((aligned(32)));
+static float* wep_shift_pal;
 #define WEP_TAG 0x5745u
 #define WEP_FILE_SLOT 2u
 static const struct { uint16_t index; float center[3], size[3]; } wep_world_copies[] = {
@@ -54,6 +55,14 @@ static void e1_weapon_open(const NativeScene* s)
     e1_weapon_world_retired = retired;
     file_t f = fs_open("/cd/NOWEP", O_RDONLY);
     if (f >= 0) { fs_close(f); e1_weapon_off = 1; printf("E1 NOWEP: no weapon drawn (control)\n"); }
+    f = fs_open("/cd/WEPSHIFT", O_RDONLY);
+    if (f >= 0) {
+        fs_close(f);
+        if (!wep_shift_pal) wep_shift_pal = (float*) malloc(E1_BONES * 16 * sizeof(float));
+        e1_weapon_shift = wep_shift_pal != NULL;
+        printf("E1 WEPSHIFT: weapon drawn 400 mm along world x, its box reported unmoved (control) %s\n",
+               e1_weapon_shift ? "on" : "FAILED (no memory)");
+    }
     printf("E1 WEP open: %u weapon models in the catalogue (Punisher %d, upgraded %d), %u world copies retired\n", mapped,
            wep_catalogue[6] - 1, wep_catalogue[7] - 1, retired);
 }
