@@ -2825,6 +2825,14 @@ extern "C" u16 MotionMove(cModel* m)
         int nb = *(s32*) W->blendTbl;
         u16* tb = W->blendTbl + 2;
         Mtx m0, m1, mq, inv2;
+        // lane eng-mem2 (skent shot-ganado): PSMTXInverse leaves inv2 as it was when the parent's world is singular (a
+        // parent at scale 0: since eng-fix1's routine-byte correction the shot Ganado's routine 0x10 reaches this with
+        // bones 6 and 12 under a zero-scaled parent). The original (motion.cpp MotionMove, `Mtx inv` declared once for
+        // the loop) then reads the previous entry's inverse, or an indeterminate matrix on the first: on the PC
+        // reference finite stack bytes, here NaN (bone and palette NaN at ticks 164, 258, 276, 316). inv2 starts as
+        // the identity: the previous entry's inverse is kept as in the original, and the first entry reads a finite
+        // matrix. Under a parent whose rotation part is zero the world pass's result does not depend on which.
+        PSMTXIdentity(inv2);
         Quaternion q0, q1, q2;
         for (int i = 0; i < nb; i++) {
             u32 dst = *tb++;
