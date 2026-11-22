@@ -168,7 +168,7 @@ put() { mkdir -p "$(dirname "$D/$2")"; cp "$1" "$D/$2"; }
 # whole packs: the bench plays the recording and refuses a version 5 pack.
 epack() {   # epack <whole pack> <disc path> [--stream-end]
   mkdir -p "$(dirname "$D/$2")"
-  python3 "$SRC/port/dreamcast/engine/bake/engine_pack.py" "$1" "$D/$2" --receipt "$WORK/PACKS.txt" $3 > /dev/null ||
+  python3 "$SRC/port/dreamcast/engine/bake/engine_pack.py" "$1" "$D/$2" --receipt "$WORK/PACKS.txt" ${3:-} > /dev/null ||
     { echo "build_console_disc: engine_pack refused $1" >&2; exit 1; }
 }
 mots() {   # mots <archive> <scene dir>: the motion clips the archive lists
