@@ -2,6 +2,25 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-039 (2026-11-22): the gate's second report; the scheduler's first pass
+
+- **Merged by the integration lane's second session:** eng-e2d (FIGHT 43 to 30; the allowed destructor has no body in
+  any image), eng-bake1, eng-e2f with eng-e2g as one train (FIGHT 30 to 10; KNOCKNT the expected failure). `engine` code
+  at 78cf37442.
+- **The memory train** (`lane/eng-mem2` 773ccc6b5) passed every step on the disc (LEON, HILL, FIGHT, BOSS OK; DOOR
+  failing by exactly 16 B; its three controls failing for their own reasons) and stopped on the gate's own judge
+  (the door controls' list has no kind field). The third session fixes the judge with a control and merges.
+- **Rulings:** `core/e1_core.h` (eng-snd1's seed) and `tools/engine/pack_keep_check.py` are accepted outside files.
+  The train's calibrated sound run kept no `emu.cfg.used`: accepted from the disc's tier line for the merge, noted as
+  unrecorded, re-recorded at the next calibrated run. eng-draw3's FIGHT ends 12,288 B short on the old map: it is
+  gated again on the train's map, as one unit with eng-draw4, and FIGHT's margin must be positive.
+- **The scheduler (lane eng-sched1, handed back, not at the gate):** on the PC the village's room script runs 600
+  ticks on the hosted scheduler with the reference's 1,806 task steps in order, three controls failing. In Flycast
+  the script restarts the console in its init: the PC harness ran a different path (a zero region) from the engine's.
+  The old thread section was kept under the test of section 8: tasks run at one point of the tick, parked otherwise,
+  no timers; estimate 10 to 25 us a tick against about 1 for an engine task switch, both far under the row. Lane
+  eng-sched2 finishes it: the PC check on the engine's path, the scene and its control, stacks, the cost measured.
+
 ## H-038 (2026-11-22): the skinning routine is not gold
 
 - **Owner:** "I agree with everything except this being golden: the skinning routine". The lifted routine
