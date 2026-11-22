@@ -33,6 +33,10 @@ struct E1Pad { uint16_t buttons; int8_t sx, sy; uint8_t trig_r; };
 struct E1Route {
     unsigned room, find, ticks;
     float pos[3], ang;
+    // lane eng-snd1 (R9): the behaviour generator's seed, part of the start state: the reference fixture's `seed` line,
+    // set by core/main.cpp room_init where re4ref sets it (hostref/replay.cpp: before PlayerInit). -1: the image's own
+    // start sets it (the fight image: fight/shot_e2.cpp with SHOT.TXT; the boss image: not seeded).
+    int seed = -1;
 };
 const E1Route& e1_route();
 void e1_input_latch(unsigned tick);

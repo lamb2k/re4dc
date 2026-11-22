@@ -48,6 +48,10 @@ struct HostFixture {
     unsigned nsub;            // partner placement after creation (resume-like): position and yaw
     float sub_pos[3];
     float sub_ang;
+    // lane eng-load1: door requests (door <tick> <area no>): at that tick the room's door area asks for its room change
+    // with the stores the door handler makes (replay.cpp; the engine's DOOR scene plants the same request)
+    unsigned ndoors;
+    struct { unsigned tick, area; } doors[8];
 };
 enum HostControl { HOST_CTL_NONE = 0, HOST_CTL_WALK_SPEED = 1, HOST_CTL_DROP_RNG = 2, HOST_CTL_SHIFT_INPUT = 3,
                    HOST_CTL_DROP_RNG_ACTOR = 4, HOST_CTL_FOLLOW_DIST = 5, HOST_CTL_LATE_HIT = 6 };

@@ -42,11 +42,7 @@ extern "C" cObj* SetObj16(void*, void*, cModel*, cModel*, int, u8, Vec*, Vec*) {
 extern "C" void MotSetObj16(cObj*, void*, int, int) { STUB("MotSetObj16"); }
 void cObj16::clearLostWait() { STUB("cObj16::clearLostWait"); }
 void cObj16::setScale(Vec*) { STUB("cObj16::setScale"); }
-// ---- chains and rocks (the chained form, r11e) ----
-cObjChain* SetChain(void*, void*, Vec*, Vec*) { STUB("SetChain"); return 0; }
-void cObjChain::setChain(PenCloth*) { STUB("cObjChain::setChain"); }
-void cObjChain::setParent(cModel*, int, Vec*, int) { STUB("cObjChain::setParent"); }
-void cObjChain::setParent2(cModel*, int, Vec*, int, Vec*, int) { STUB("cObjChain::setParent2"); }
+// ---- rocks (the chained form, r11e); the chains are the native chain object (services/cloth/chain.cpp, lane eng-skel1) ----
 cEmRock* SetRock(void*, void*, Vec*, Vec*, u8) { STUB("SetRock"); return 0; }
 void cEmRock::setSeFall(u8, u8, u8) { STUB("cEmRock::setSeFall"); }
 void cEmRock::setEffFall(u8, u8) { STUB("cEmRock::setEffFall"); }

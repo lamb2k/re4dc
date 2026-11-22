@@ -145,25 +145,52 @@ static int plan_field(char **p, char *out, size_t cap) {   /* the next blank-sep
     out[n] = 0;
     return 1;
 }
-static int read_plan(void) {
-    FILE *f = fopen("/cd/SCENES.TXT", "rb");
-    if (!f) return 0;
-    size_t cap = 4096, n = 0;
-    char *text = (char *)malloc(cap);
-    for (;;) {
-        if (!text) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: no memory to read it"); fclose(f); return 1; }
-        if (n + 1 >= cap) {
-            if (cap >= (1u << 20)) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: larger than 1 MiB"); fclose(f); return 1; }
-            cap *= 2;
-            text = (char *)realloc(text, cap);
-            continue;
-        }
-        const size_t r = fread(text + n, 1, cap - 1 - n, f);
-        if (!r) break;
-        n += r;
+/* lane eng-mem2 (the d6 boot hang): a whole disc file read so that fs_iso9660's DMA stream never runs to its last byte.
+   Read in one call into a 32-byte aligned buffer, a file is streamed (cdrom_stream_start for all its sectors) and its
+   last bytes below 32 come through the driver's one non-blocking 32-byte stream request, polled to the stream's end
+   and then stopped. When that request ends the stream (the file's size mod 2048 between 2017 and 2047), the plain
+   Flycast build never comes back from it: d6's SCENES.TXT (2,045 B, the CDOORRD line) hung at boot every time (d6 on
+   std1 twice and std2 once; eng-mem2's two splits on std1, with and without eng-mem1's R103.PAK); the same disc with
+   CSNDSLOW in CDOORRD's place (1,887 B: the stream stopped with 160 bytes still in it, by the close) boots. The disc
+   control: build_console_disc.sh --plan-control sectorend (SCENES.TXT padded to 2,045 B mod 2,048). The old port met the same request on the
+   console and made it blocking (t15/int game/platform/dvd_read_safe.cpp, DISC_READ_VERIFY: "fs_iso9660's 32-byte
+   request polls for completion right after"); here the request is not made at all: every whole sector but the last
+   is read by the stream (which then stops with a sector still in it, at the close), the last sector through the
+   driver's sector cache (an odd destination address takes iso_read's cached path, never the stream).
+   Returns the file's size, -1 when it is missing, -2 when it is larger than cap, -3 on a read error. */
+static long disc_read(const char *path, uint8_t *dst, size_t cap) {
+    file_t f = fs_open(path, O_RDONLY);
+    if (f < 0) return -1;
+    const size_t n = fs_total(f);
+    if (n > cap) { fs_close(f); return -2; }
+    size_t head = n & ~(size_t)2047;
+    if (head && head == n) head -= 2048;          /* whole sectors: the last one through the cache too */
+    if (head && fs_read(f, dst, head) != (ssize_t)head) { fs_close(f); return -3; }
+    fs_close(f);                                  /* the stream stops here, a sector not handed out */
+    if (n > head) {
+        static uint8_t bounce[2048 + 1];
+        f = fs_open(path, O_RDONLY);
+        if (f < 0) return -3;
+        const size_t tail = n - head;
+        const int ok = fs_seek(f, (off_t)head, SEEK_SET) == (off_t)head && fs_read(f, bounce + 1, tail) == (ssize_t)tail;
+        fs_close(f);
+        if (!ok) return -3;
+        memcpy(dst + head, bounce + 1, tail);
     }
-    const int bad_read = ferror(f);
-    fclose(f);
+    return (long)n;
+}
+
+static int read_plan(void) {
+    file_t pf = fs_open("/cd/SCENES.TXT", O_RDONLY);
+    if (pf < 0) return 0;
+    const size_t total = fs_total(pf);
+    fs_close(pf);
+    if (total >= (1u << 20)) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: larger than 1 MiB"); return 1; }
+    char *text = (char *)memalign(32, total + 1);
+    if (!text) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: no memory to read it"); return 1; }
+    const long got = disc_read("/cd/SCENES.TXT", (uint8_t *)text, total);
+    const int bad_read = got != (long)total;
+    const size_t n = got > 0 ? (size_t)got : 0;
     text[n] = 0;
     g_plan_crc = cl_crc32(0, text, n);
     if (bad_read) { snprintf(g_plan_refused, sizeof(g_plan_refused), "schedule: read error after %u bytes", (unsigned)n); return 1; }
@@ -244,6 +271,16 @@ static int file_exists(const char *rel) {
     return 1;
 }
 
+/* lane eng-mem1 (H-031 ruling 2): H-025.1's sound ceilings (1.0 ms mean, 2.0 ms worst) are the waiver's own scope: the
+   calibrated tier (and the console). A disc built for such a run declares it with the file TIERCAL or TIERCON at the
+   disc root (tools/engine/build_console_disc.sh --tier calibrated|console); on any other run (plain Flycast: function
+   checks) the sound line is printed with "not judged (plain run)" and the ceiling is not applied. Read once. */
+static int g_tier_judged = -1;
+static int tier_judged(void) {
+    if (g_tier_judged < 0) g_tier_judged = file_exists("TIERCAL") || file_exists("TIERCON");
+    return g_tier_judged;
+}
+
 /* ---------------------------------------------------------------- summaries from the report */
 static void sum_add(sel_entry_t *e, const char *fmt, ...) {
     size_t len = strlen(e->sum);
@@ -259,7 +296,7 @@ static void sum_add(sel_entry_t *e, const char *fmt, ...) {
 
 static const char *const FAIL_MARKS[] = {"SCHEDULE REFUSED", "M1 native pack REFUSED", "M1 missing pack", "STACK GUARD BROKEN", "E1 draw: renderer refused",
                                          "E1 load: missing", "E1 load: read failed", "E1 load: bad DRS", "E1 load: camera tracks refused", "CRASH event",
-                                         "ABORT", "DEADLINE", "E2 SHOT REFUSED", NULL};
+                                         "ABORT", "DEADLINE", "E2 SHOT REFUSED", "E1 LOAD FAILED", "E1 DISCSAFE READ FAILED", NULL};
 
 /* the value after the keyword (first match at or after *from) */
 static const char *after(const char *line, const char *key) {
@@ -393,6 +430,51 @@ static unsigned g_files_reads, g_files_sectors, g_ctrack_seen, g_ctrack_inplay;
    (always the last rows: the budget only fills), so the image's tick count is the last row received plus these */
 static unsigned g_cl_seen, g_cl_rows_dropped;
 static unsigned g_fl_counted, g_fl_over, g_fl_worst, g_fl_worst_pic;
+/* lane eng-load1: a scene with the argument door=N (the DOOR scene, core/room_change.cpp) changes room N times. OK only
+   if every load completed ("E1 LOAD n done ..."), each visited room ran its ticks ("E1 ROOM visit"), the round trip's
+   memory marks are equal ("E1 ROUNDTRIP ...: equal"), and play's disc counters are 0 (E1 FILES), whatever the run
+   kind; the loading disc counters and times are reported. */
+#define DOOR_MAX 8
+static unsigned g_door_loads, g_door_visits, g_door_visit_zero, g_door_rt_seen, g_door_rt_equal, g_door_bad;
+static unsigned g_door_us[DOOR_MAX], g_door_held[DOOR_MAX], g_door_disc[DOOR_MAX][3];
+static char g_door_rt_why[24], g_door_rooms[24];
+static unsigned door_need(const char *args) {
+    const char *p = strstr(args, "door=");
+    return p && (p == args || p[-1] == ' ') ? (unsigned)strtoul(p + 5, NULL, 10) : 0u;
+}
+static void door_line(const char *line) {
+    unsigned n = 0, tick = 0, held = 0, o = 0, r = 0, sct = 0, ticks = 0, first = 0;
+    unsigned long us = 0, room = 0;
+    if (!strncmp(line, "E1 LOAD ", 8) && strstr(line, " done at tick ")) {
+        unsigned usu = 0;
+        if (!tmatch(line, "E1 LOAD %u done at tick %u: %u us, %u fields held; loading disc: opens %u reads %u sector-requests %u",
+                    NULL, &n, &tick, &usu, &held, &o, &r, &sct)) { ++g_door_bad; return; }
+        us = usu;
+        if (g_door_loads < DOOR_MAX) {
+            g_door_us[g_door_loads] = (unsigned)us, g_door_held[g_door_loads] = held;
+            g_door_disc[g_door_loads][0] = o, g_door_disc[g_door_loads][1] = r, g_door_disc[g_door_loads][2] = sct;
+        }
+        ++g_door_loads;
+    } else if (!strncmp(line, "E1 ROOM visit ", 14)) {
+        if (!tmatch(line, "E1 ROOM visit %u room %x ticks %u first-tick %u", NULL, &n, &room, &ticks, &first)) { ++g_door_bad; return; }
+        ++g_door_visits;
+        g_door_visit_zero += ticks == 0;
+    } else if (!strncmp(line, "E1 ROUNDTRIP rooms ", 19)) {
+        unsigned v[12], loads = 0, failed = 0;
+        long vr0 = 0, vr1 = 0;
+        const char *verdict = NULL;
+        g_door_rt_seen = 1;
+        if (!tmatch(line, "E1 ROUNDTRIP rooms %w loads %u failed %u kos-used %u/%u arena-used %u/%u vram-free %d/%d "
+                          "col-pieces %u/%u skel-tables %u/%u: %s", NULL, g_door_rooms, &loads, &failed, &v[0], &v[1],
+                    &v[2], &v[3], &vr0, &vr1, &v[4], &v[5], &v[6], &v[7], &verdict)) { ++g_door_bad; return; }
+        g_door_rt_equal = verdict && !strcmp(verdict, "equal") && !failed;
+        snprintf(g_door_rt_why, sizeof(g_door_rt_why), "%.23s", verdict ? verdict : "?");
+    }
+}
+/* lane eng-snd1 (H-025.1): the sound line ("E1 SOUND on|off pictures N cost-us mean M worst W (picture K) voices-peak V
+   notes-peak X stream-bytes-per-picture S requests R stops T banks B missing Z"): the sound's CPU time per picture,
+   which the waiver holds under 1.0 ms mean and 2.0 ms worst on a timing scene */
+static unsigned g_snd_seen, g_snd_on, g_snd_mean, g_snd_worst, g_snd_wpic, g_snd_voices, g_snd_stream;
 static void e1_row(const char *l) {
     /* compact rows: "ROW n in tick svc trace draw wait frame fields pl obj cam pvr chars ..." as numbers only; every
        field must be a number (lane eng-e1o: a text field is a malformed row and fails the record, never skipped).
@@ -455,6 +537,10 @@ static void e1_summary(sel_entry_t *e) {
     if (g_files_seen)   /* lane eng-e1o (H-017.7); lane eng-e1p (H-018.4): reads and drive requests too */
         sum_add(e, "disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads, g_files_sectors);
     if (g_ctrack_seen) sum_add(e, "camera tracks converted in play %u", g_ctrack_inplay);   /* lane eng-e1p (H-018.1) */
+    if (g_snd_seen)   /* lane eng-snd1 (H-025.1): the sound's CPU time per picture, its voices and its stream bytes */
+        sum_add(e, "sound %s m%u.%02u w%u.%02u@%u >1.0/2.0 %s, voices %u, stream %u B/pic", g_snd_on ? "on" : "OFF",
+                g_snd_mean / 1000, g_snd_mean % 1000 / 10, g_snd_worst / 1000, g_snd_worst % 1000 / 10, g_snd_wpic,
+                tier_judged() ? "judged (calibrated tier)" : "not judged (plain run)", g_snd_voices, g_snd_stream);
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {
@@ -532,12 +618,16 @@ static void collect(unsigned i) {
     g_files_reads = g_files_sectors = g_ctrack_seen = g_ctrack_inplay = 0;
     g_cl_seen = g_cl_rows_dropped = 0;
     g_fl_counted = g_fl_over = g_fl_worst = g_fl_worst_pic = 0;
+    g_snd_seen = g_snd_on = g_snd_mean = g_snd_worst = g_snd_wpic = g_snd_voices = g_snd_stream = 0;
     g_mem_why[0] = g_files_first[0] = 0;
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
     unsigned windows = 0, done = 0, run_lines = 0, fields_bad = 0, camrec_ticks = 0;
     int pool_seen = 0, pub_seen = 0, camrec_seen = 0, guards_seen = 0, wep_seen = 0;
     unsigned guard_must = 0;
+    const unsigned dneed = door_need(s->args);   /* lane eng-load1 */
+    g_door_loads = g_door_visits = g_door_visit_zero = g_door_rt_seen = g_door_rt_equal = g_door_bad = 0;
+    g_door_rt_why[0] = g_door_rooms[0] = 0;
     if (e->report_ok) {
         static char line[400];
         const char *p = (const char *)H->report, *end = p + e->report_len;
@@ -550,6 +640,7 @@ static void collect(unsigned i) {
             p = nl ? nl + 1 : end;
             for (const char *const *m = FAIL_MARKS; *m; ++m)
                 if (strstr(line, *m) && !e->why[0]) snprintf(e->why, sizeof(e->why), "%.60s", line);
+            if (dneed) door_line(line);
             if (!strncmp(line, "WINDOW ", 7) && !strcmp(s->kind, "bench")) { bench_window(e, line); ++windows; }
             else if (!strncmp(line, "ROW ", 4) && !strcmp(s->kind, "e1")) e1_row(line);
             else if (!strncmp(line, "SCHEDULE DONE", 13) || !strncmp(line, "E1 END", 6)) done = 1;
@@ -673,6 +764,17 @@ static void collect(unsigned i) {
                                              "in-play %u lookups %u room-tracks %u room-bytes %u store-peak %u of %u", NULL,
                                        &v[0], &v[1], &v[2], &v[3], &g_ctrack_inplay, &v[4], &v[5], &v[6], &v[7], &v[8]);
             }
+            else if (!strncmp(line, "E1 SOUND on ", 12) || !strncmp(line, "E1 SOUND off ", 13)) {
+                /* lane eng-snd1 (H-025.1): matched whole; a line that does not parse is not a sound line (the scene
+                   then has none and fails below) */
+                char st[16];
+                unsigned v[6];
+                g_snd_seen = tmatch(line, "E1 SOUND %w pictures %u cost-us mean %u worst %u (picture %u) voices-peak %u "
+                                          "notes-peak %u stream-bytes-per-picture %u requests %u stops %u banks %u "
+                                          "missing %u", NULL, st, &v[0], &g_snd_mean, &g_snd_worst, &g_snd_wpic,
+                                     &g_snd_voices, &v[1], &g_snd_stream, &v[2], &v[3], &v[4], &v[5]);
+                g_snd_on = g_snd_seen && !strcmp(st, "on");
+            }
             else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
                 /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */
                 unsigned ticks = 0, bad = 0, first = 0, word = 0;
@@ -737,6 +839,33 @@ static void collect(unsigned i) {
         else if (!g_ctrack_seen) snprintf(e->why, sizeof(e->why), "no E1 CAMTRACK line (or a field not a number)");
         else if (s->timing && g_ctrack_inplay)
             snprintf(e->why, sizeof(e->why), "camera tracks converted in play %u", g_ctrack_inplay);
+        /* lane eng-snd1 (H-025.1): every E1-family scene reports its sound; a timing scene with sound on fails over the
+           waiver's ceiling, 1.0 ms a picture mean or 2.0 ms worst (pictures 41-640) */
+        else if (!g_snd_seen) snprintf(e->why, sizeof(e->why), "no E1 SOUND line (or a field not a number)");
+        else if (s->timing && g_snd_on && tier_judged() && (g_snd_mean > 1000 || g_snd_worst > 2000))
+            snprintf(e->why, sizeof(e->why), "sound over H-025.1: mean %u.%02u worst %u.%02u ms (pic %u)",
+                     g_snd_mean / 1000, g_snd_mean % 1000 / 10, g_snd_worst / 1000, g_snd_worst % 1000 / 10, g_snd_wpic);
+    }
+    /* lane eng-load1: the DOOR scene's own conditions (door=N in the schedule's arguments), timing or function run */
+    if (!strcmp(s->kind, "e1") && dneed && e->report_ok && done && !e->why[0]) {
+        if (g_door_bad) snprintf(e->why, sizeof(e->why), "door: %u load, visit or round-trip lines not read", g_door_bad);
+        else if (g_door_loads != dneed) snprintf(e->why, sizeof(e->why), "door: %u of %u room loads done", g_door_loads, dneed);
+        else if (g_door_visits != dneed + 1 || g_door_visit_zero)
+            snprintf(e->why, sizeof(e->why), "door: %u room visits (%u with no tick), %u needed", g_door_visits,
+                     g_door_visit_zero, dneed + 1);
+        else if (!g_files_seen) snprintf(e->why, sizeof(e->why), "door: no E1 FILES line");
+        else if (g_files_opens || g_files_reads || g_files_sectors)
+            snprintf(e->why, sizeof(e->why), "door: disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads,
+                     g_files_sectors);
+        else if (!g_door_rt_seen) snprintf(e->why, sizeof(e->why), "door: no E1 ROUNDTRIP line");
+        else if (!g_door_rt_equal) snprintf(e->why, sizeof(e->why), "door: round trip %s", g_door_rt_why);
+    }
+    if (!strcmp(s->kind, "e1") && dneed && e->report_ok) {
+        sum_add(e, "door: rooms %s, loads %u, round trip %s", g_door_rooms[0] ? g_door_rooms : "-", g_door_loads,
+                g_door_rt_why[0] ? g_door_rt_why : "-");
+        for (unsigned k = 0; k < g_door_loads && k < DOOR_MAX; ++k)
+            sum_add(e, "load %u: %u.%03u s, held %u fields, disc opens %u reads %u sectors %u", k, g_door_us[k] / 1000000u,
+                    g_door_us[k] / 1000u % 1000u, g_door_held[k], g_door_disc[k][0], g_door_disc[k][1], g_door_disc[k][2]);
     }
     if (!strcmp(s->kind, "e1") && e->report_ok && done && !e->why[0] && s->timing) {
         unsigned distinct = 0, counted = 0;
@@ -820,19 +949,17 @@ static void launch(unsigned i) {
     const scene_t *s = &g_sc[i];
     char path[96];
     snprintf(path, sizeof(path), "/cd/%s", s->prog);
-    FILE *f = fopen(path, "rb");
-    if (!f) { fail(i, "program %s missing", s->prog); return; }
-    fseek(f, 0, SEEK_END);
-    const long n = ftell(f);
-    fseek(f, 0, SEEK_SET);
+    file_t pf = fs_open(path, O_RDONLY);
+    if (pf < 0) { fail(i, "program %s missing", s->prog); return; }
+    const long n = (long)fs_total(pf);
+    fs_close(pf);
     const uint32_t max = CL_HANDOFF_ADDR - 0x11000u - CL_LOAD_ADDR;
     uint8_t *img = n > 0 && (uint32_t)n <= max ? (uint8_t *)memalign(32, (size_t)n + 4) : NULL;
-    if (!img || (uintptr_t)img + (size_t)n + 4 > CL_HANDOFF_ADDR - 0x11000u || fread(img, 1, (size_t)n, f) != (size_t)n) {
-        fclose(f);
+    /* lane eng-mem2: disc_read (above), so a program whose size ends a sector the stream's way cannot stop the run */
+    if (!img || (uintptr_t)img + (size_t)n + 4 > CL_HANDOFF_ADDR - 0x11000u || disc_read(path, img, (size_t)n) != n) {
         fail(i, "program %s unreadable (%ld bytes)", s->prog, n);
         return;
     }
-    fclose(f);
     memset(img + n, 0, 4);
     /* the hand-off area, as the loader writes it on RUN; the report cap keeps the client below the journal */
     cl_handoff_hdr_t *h = &H->h;
