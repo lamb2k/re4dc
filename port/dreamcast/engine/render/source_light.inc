@@ -27,6 +27,7 @@ typedef struct {
 typedef struct { unsigned n; SrcLight l[8]; float amb[3],k[3]; } SrcLights;
 static uint8_t lamp_order[64];static unsigned lamp_count;   /* this picture's lights in array order */
 volatile uint32_t m1_light_pick_mismatch,m1_light_pick_checked;   /* engine pick vs the game's own (test) */
+static unsigned src_light_cap;   /* lane eng-draw4 look arm LCAP (E1 boot file): 0 no cap (the default) */
 
 static void lamps_frame(const NativeScene* s){
     const NativeLamp* L=(const void*)s->state[2];unsigned n=s->words[2]*4/sizeof(NativeLamp);
@@ -185,6 +186,15 @@ static void source_lights_w(const NativeScene* s,const float* w0,const float* cw
             for(unsigned c=0;c<3;c++)g->pos[c]=obj_pos[c]+v[c];
             g->br=m1_maxf(0,br);
         }else g->br=m1_maxf(0,br);
+    }
+    if(src_light_cap && out->n>src_light_cap){   /* lane eng-draw4 look arm LCAP: the strongest at the object, in order */
+        float st[8];unsigned keep=0;
+        for(unsigned i=0;i<out->n;i++){const SrcLight* g=out->l+i;const float d=dist3(obj_pos,g->pos);
+            st[i]=(g->rgb[0]+g->rgb[1]+g->rgb[2])*g->br/(g->k0+g->k1*d+g->k2*d*d);}
+        for(unsigned i=0;i<out->n;i++){unsigned rank=0;
+            for(unsigned j=0;j<out->n;j++)rank+=st[j]>st[i]||(st[j]==st[i]&&j<i);
+            if(rank<src_light_cap)out->l[keep++]=out->l[i];}
+        out->n=keep;
     }
     for(unsigned c=0;c<3;c++)amb[c]=m1_maxf(amb[c],ea[c]);
     if(flags&2){const unsigned aa=LI_ADDAMB(ml,lv);amb[0]+=aa&255;amb[1]+=aa>>8&255;amb[2]+=aa>>16&255;}

@@ -55,9 +55,11 @@ unsigned e1_light_miss;   /* pictures a character had no light view (lit by the 
    lab arm; the control): every character's light view refused, as a miss */
 int e1_light_miss_control;
 static void e1_weapon_open(const NativeScene* s);   /* lane eng-look1: services/weapon_draw.inc, once a pack (below) */
+static void e1_arms_open(void);   /* lane eng-draw4: the look arms' boot files (below) */
 void e1_light_tables(const NativeScene* s)
 {
     e1_weapon_open(s);
+    e1_arms_open();
     const ModelLight* rec = (const void*) s->state[8]; const unsigned n = s->words[8] * 4 / sizeof(ModelLight);
     int leon = -1;
     for (unsigned i = 0; i < n; i++) if (rec[i].role == 0 && leon < 0) leon = rec[i].tev >> 8 & 255;
@@ -121,6 +123,56 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
     return bad == 0;
 }
 
+/* Lane eng-draw4, step 4: three LOOK ARMS for the owner (run-time only, never the default; one variable each), each a
+   boot file read once when the pack opens (e1_light_tables, before play):
+     LVL   character detail levels by screen size: the pack's PS2 levels and rigid far variants ('LODV' rows, already in
+           every E1 pack), picked as the bench's owner-approved step 3 (render/content_actor.inc content_pick: level 1
+           under 480 px, 2 under 160, 3 under 70, the rigid variant under 100, 10% hysteresis per character);
+     LCAP  at most 3 lights a character: the strongest at the character's position (render/source_light.inc);
+     LHALF each character's normals lit every other picture: a lit picture lights every normal of its visible parts
+           into the character's own colour buffer; the next picture draws from it unchanged (no light pick, no weight-set
+           lights, no normals lit) unless a part became visible that was not lit (then it lights again). Skinning and
+           emission stay every picture. A character with no buffer (out of memory) is lit every picture, counted. */
+static int e1_arm_lvl, e1_arm_lhalf, e1_pix_ctl;
+static unsigned e1_lvl_slot[E1_SLOTS];            /* the catalogue model the slot's last opaque call drew */
+static const uint32_t* e1_lit_slot[E1_SLOTS];     /* the colours it emitted from */
+static unsigned e1_arm_n[8], e1_arm_calls;        /* LVL pictures by level 0-3 and rigid [0-4]; LHALF lit, reused, no buffer [5-7] */
+static int e1_arm_boot(const char* p) { file_t f = fs_open(p, O_RDONLY); if (f < 0) return 0; fs_close(f); return 1; }
+static void e1_arms_open(void)
+{
+    static int done; if (done) return; done = 1;
+    e1_arm_lvl = e1_arm_boot("/cd/LVL"); src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
+    if (e1_arm_lvl) { m1_content[CS_LEVELS] = 3; e1_log("E1 ARM LVL: character detail levels by screen size (bench step 3), look arm\n"); }
+    if (src_light_cap) e1_log("E1 ARM LCAP: at most %u lights a character (the strongest), look arm\n", src_light_cap);
+    if (e1_arm_lhalf) e1_log("E1 ARM LHALF: each character's normals lit every other picture, look arm\n");
+    e1_pix_ctl = e1_arm_boot("/cd/PIXCTL");
+    if (e1_pix_ctl) e1_log("E1 PIXCTL: control, one blue step flipped on every character colour (the pixel comparison must FAIL)\n");
+}
+static unsigned e1_lvl_key(const void* rec)   /* a content_pick ordinal (64..127) per character record */
+{
+    static const void* keys[63];
+    for (unsigned i = 0; i < 63; i++) { if (keys[i] == rec) return 64 + i; if (!keys[i]) { keys[i] = rec; return 64 + i; } }
+    return 127;
+}
+typedef struct { const void* rec; unsigned model, cap; uint32_t* buf; uint16_t mask; uint8_t fresh; } E1LitCache;
+static E1LitCache e1_lc[16];
+static E1LitCache* e1_lc_get(const void* rec, unsigned model, unsigned nrm)
+{
+    E1LitCache* c = 0;
+    for (unsigned i = 0; i < 16 && !c; i++) if (e1_lc[i].rec == rec) c = e1_lc + i;
+    for (unsigned i = 0; i < 16 && !c; i++) if (!e1_lc[i].rec) { c = e1_lc + i; c->rec = rec; }
+    if (!c) return 0;
+    if (c->model != model) { c->model = model; c->fresh = 0; }
+    if (c->cap < nrm) { free(c->buf); c->buf = memalign(32, 4 * nrm + 32); c->cap = c->buf ? nrm : 0; c->fresh = 0; }
+    return c->buf ? c : 0;
+}
+static void e1_arms_report(void)
+{
+    if (++e1_arm_calls != 640 || !(e1_arm_lvl || src_light_cap || e1_arm_lhalf)) return;
+    e1_log("E1 ARM counts over 640 pictures: LVL characters at level 0 %u, 1 %u, 2 %u, 3 %u, rigid %u; LHALF lit %u reused %u no-buffer %u\n",
+           e1_arm_n[0], e1_arm_n[1], e1_arm_n[2], e1_arm_n[3], e1_arm_n[4], e1_arm_n[5], e1_arm_n[6], e1_arm_n[7]);
+}
+
 /* lane eng-look1: one character or object; 0 when it cannot be drawn at all (no such catalogue model, or a skeleton with
    fewer bones than the model), 1 when it went through the pass (drawn, or culled by the frustum). frame_setup 0: the
    picture's frustum, projection and lamp order are already set by the call before it (the weapon after Leon) */
@@ -148,6 +200,8 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
     uint8_t* strip_codes = strip_code_pool[slot]; cur_strip_codes = strip_codes;
     if (translucent) {
         unsigned emitted = 0;
+        if (e1_arm_lvl) { m = cat->m + e1_lvl_slot[slot]; h = m->h; cur_pos = m->pos; }   /* arm LVL: the model drawn */
+        if (e1_arm_lhalf && e1_lit_slot[slot]) cur_lit = e1_lit_slot[slot];               /* arm LHALF: its colours */
         for (unsigned p = 0; p < h[4]; p++)
             if (m->parts[p].src->role == 8 && state[p]) sq = emit_part(sq, s, m, m->parts + p, state[p], near, &emitted);
         sq_wait(); sq_unlock();
@@ -160,7 +214,24 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         float c[3] = {wm[3], wm[7], wm[11]}, r = m->bone_radius[b] * column_scale(wm) * 1.02f + 1;
         all &= sphere_planes(c, r, &dummy);
     }
-    if (all) { memset(state, 0, h[4]); sq_wait(); sq_unlock(); return 1; }
+    if (all) { memset(state, 0, h[4]); e1_lvl_slot[slot] = model; sq_wait(); sq_unlock(); return 1; }
+    unsigned drawn = model;
+    if (e1_arm_lvl) {   /* arm LVL: the level by the projected size of the bone-sphere box (content_pick) */
+        float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
+        for (unsigned i = 0; i < m->nbones_used; i++) {
+            unsigned b = m->bones_used[i]; const float* wm = e1_bone[b + 1];
+            float r = m->bone_radius[b] * column_scale(wm) * 1.02f + 1, c[3] = {wm[3], wm[7], wm[11]};
+            for (unsigned a = 0; a < 3; a++) { lo[a] = m1_minf(lo[a], c[a] - r); hi[a] = m1_maxf(hi[a], c[a] + r); }
+        }
+        const unsigned key = e1_lvl_key(model_record);
+        const unsigned v = content_pick(s, model, lo, hi, key);
+        if (v != model && v < cat->n && cat->m[v].h[0] <= bones) {
+            m = cat->m + v; h = m->h; cur_pos = m->pos; drawn = v;
+            if (v < 256 && !e1_pal_ok_model[v]) e1_pal_ok_model[v] = e1_pal_check(m, skel) ? 1 : -1;
+        }
+        e1_arm_n[model < CONTENT_MODELS && drawn == lod_variant[model][4] && drawn != model ? 4 : drawn == model ? 0 : lod_last[key] & 3]++;
+    }
+    e1_lvl_slot[slot] = drawn;
     /* 2. bones (lane eng-e1e, E1 audit section 2): none. The skeleton service publishes the palette once a tick in
        this pass's final skinning layout (world x bind, the position quantum 1/16 in the basis, word 12 the sphere
        scale; skel.cpp SKEL_PAL_DRAW); steps 3 and 4 read it in place. No per-actor copy, rescale or bind recompute:
@@ -204,7 +275,14 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         e1_light_check(s, model_record, leon_rec);
         if (leon_rec) ml = leon_rec;
     }
-    {
+    E1LitCache* lc = 0; int reuse = 0; uint16_t vis = 0;
+    if (e1_arm_lhalf) {   /* arm LHALF: this picture lights, or draws from the colours of the last */
+        for (unsigned p = 0; p < h[4]; p++) if (state[p]) vis |= (uint16_t) (1u << p);
+        const RtPart* lp = m->parts + h[4] - 1;
+        lc = e1_lc_get(model_record, drawn, lp->nrm_first + lp->nrm_count);
+        if (lc) { reuse = lc->fresh && !(vis & ~lc->mask); e1_arm_n[reuse ? 6 : 5]++; } else e1_arm_n[7]++;
+    }
+    if (!reuse) {
         /* the light volume's origin: part 1 (bone 0) or the model */
         const unsigned parts = live ? (unsigned) (uint8_t) live->info->parts : ml->info >> 8 & 255;
         source_lights_w(s, e1_bone[0], parts == 1 ? e1_bone[1] : e1_bone[0], e1_bone[1], ml, live, &cur_lights);
@@ -213,10 +291,12 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
     memset(ws_ready, 0, h[1]);
     ws_rows = pal; ws_stride = e1_pal_control ? 12 : 16;   /* build_ws blends the palette rows in place (PALCTL: wrong stride) */
     ws_begin();
+    ws_light_off = reuse;   /* arm LHALF: no weight-set lights on a reused picture */
     for (unsigned p = 0; p < h[4]; p++) {
         if (!state[p]) continue; const RtPart* rp = m->parts + p;
         for (unsigned k = 0; k < rp->ws_count; k++) { unsigned i = m->part_ws[rp->ws_first + k]; if (!ws_ready[i]) build_ws(m, i); }
     }
+    ws_light_off = 0;
     ws_rows = &bone_rows[0][0]; ws_stride = 12;
     /* 5. positions and normals */
     for (unsigned p = 0; p < h[4]; p++) {
@@ -229,8 +309,20 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         if (DC_ARM(DL_SKIN2)) re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw4 arm K (set E): positions skinned twice */
         pos_records[n][0] = n; pos_records[n + 1][0] = n + 1;
         /* lane eng-draw3 (E3): a boundary part lights only the normals its kept strips use */
-        light_part(m, rp, state[p], codes, strip_codes, lit, 1);
+        if (!lc) {
+            light_part(m, rp, state[p], codes, strip_codes, lit, 1);
+            /* lane eng-draw4, the pixel comparison's control PIXCTL (boot file): one step of blue in RGB565 (8 of 255)
+               flipped on every lit colour of the part: the exact-step comparison (cmp.py) must find differing pixels */
+            if (e1_pix_ctl) for (unsigned i = rp->nrm_first; i < (unsigned) rp->nrm_first + rp->nrm_count; i++) lit[i] ^= 8;
+        }
+        else {   /* arm LHALF: strip codes as usual; a lit picture lights the part's whole normal range into the buffer */
+            light_part(m, rp, state[p], codes, strip_codes, lc->buf, 0);
+            if (!reuse) light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lc->buf + rp->nrm_first);
+        }
     }
+    if (lc) { cur_lit = lc->buf; lc->fresh = !reuse; if (!reuse) lc->mask = vis; }
+    e1_lit_slot[slot] = cur_lit;
+    if (!model) e1_arms_report();
     /* 6. opaque parts (lane eng-e1d: as the bench's pass since eng-look, the hair part, role 7, is opaque with the body
        atlas and the hair run, role 8, is drawn in the translucent call, in the translucent list); Leon's knife part only
        in the knife stance (its state is 0 otherwise, above) */
