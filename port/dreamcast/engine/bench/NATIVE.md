@@ -61,3 +61,32 @@ The sample-store observer in model_profile.py takes the path to hwmodel/hwsim.c 
   Counter calibration at boot in `m1_calib` (`CALIB` lines). Memory map per room in `m1_mem` (`MEM`, `VRAM`,
   `MEMBLK` lines; `memmap.h`: malloc wrappers, stack paint and guard).
 - Tests: `bench/test_part_clip.c` (near-plane part class; `-DM1_PART_LOOP_E0` is the failing control).
+
+## Room bake, one command per room (lane eng-bake1)
+
+- `python3 bake/room_bake.py <room>` (for example `10b`) bakes one room into `E:\RE4DC-Lanes\eng-bake1\packs` (`--out`),
+  then its visibility (`bench/bake_vis.c`), its checks and its census (`bake/census_world.c`); `--chapter1` does every
+  chapter 1 room and writes `census.json` and `census.md`; `--inputs` lists each room's inputs, present or missing.
+- A room with a recording of the old game (`RECORDINGS` in `room_bake.py`: village, farm, hill) gets a **game pack**
+  (`<room>.pak`) through `native_pack.build` / `hill_pack.build`, HUD fix included. The village's recording has no
+  RAM snapshot of its own: `native_pack.py --ram` names the one the HUD fix reads.
+- A room without one gets a **world pack** (`<room>.world.pak`), same NAT3 format: world, materials, textures, sky,
+  the actor catalogue and its distance variants, all from offline data; its logic streams hold only the room's entry
+  points as cameras (door destinations from the room archives, `tools/d367/stage_route.py`), which seed
+  `bake_vis`. No lights, environment, HUD, props or effects: `hud_fix.py --verify` fails on it by design, so no pack
+  writer or disc script accepts it. It is for the census and the visibility table, not for an image.
+- A room the PS2 gives no sky (r102) gets an empty one (`native_world.sky_bytes`).
+- Checks per room: the HUD verify (game packs pass, world packs fail); the reachable floor is seeded (control:
+  `room_bake.py --control-seeds <room>`, every seed moved off the floor, must fail); for rooms with a recording, the
+  world pack's table grown from the entry points alone must hold at least 95% of the recorded cameras in baked cells
+  inside their bands; `census_world` opens the pack, the world and the table against each other (exit 2, 3, 4 when not).
+  The seeds are the entry points plus the centre of every AEV area and ITA item of the room archive.
+- `room_bake.py --controls` runs each check's failing input after `--chapter1` (seeds off the floor, the village pack
+  against the farm's table, the village cameras against the lake's table, a world pack through the HUD verify, a
+  tampered receipt) and writes `controls.json`; every row must read "failed as it must". The seed coverage check tests
+  that cameras sit in baked cells, not which room baked them: the farm's and the hill's tables pass the village's
+  cameras because those rooms share its world coordinates.
+- Receipt: `BAKE_COMMIT=<commit> room_bake.py --receipt` writes `receipt.json` (per room the hashes of the room's
+  converted data, its recording, the common inputs, the bake scripts as committed at the bake's commit, and the pack and
+  table it wrote); `--check-receipt` re-hashes and exits 1 on any mismatch.
+- Host tools are built into `/dev/shm/eng-bake1/bin`.
