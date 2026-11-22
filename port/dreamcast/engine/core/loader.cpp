@@ -22,6 +22,9 @@ uint8_t* e1_wep_arc;
 uint8_t* e1_room_arc;
 uint8_t* e1_core_arc;
 uint32_t e1_resident_bytes[4];   // player, weapon, room, core
+// lane eng-mem1 (H-031): the engine images keep frame 0 of a pack's recording resident, not its 300 frames
+// (render/native_scene.inc recording_frames: the bench, which plays the recording, does not link this file).
+extern "C" { unsigned native_recording_frames = 1; }
 
 extern "C" void* e1_file_load(const char* path, uint32_t* size, uint32_t align)
 {

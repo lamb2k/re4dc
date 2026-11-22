@@ -52,6 +52,7 @@ REPO=$(git -C "$here" rev-parse --show-toplevel)
 REF=origin/engine
 OUT=
 SCENES=BENCH,LEON,HILL,FIGHT,BOSS-BENCH,BOSS
+TIER=plain
 DROPS=()
 PUTS=()
 PRECHECK=1
@@ -63,6 +64,7 @@ while [ $# -gt 0 ]; do
     --ref) REF=$2; shift 2 ;;
     --out) OUT=$2; shift 2 ;;
     --scenes) SCENES=$2; shift 2 ;;
+    --tier) TIER=$2; shift 2 ;;   # lane eng-mem1 (H-031): calibrated | console | plain (default): see TIERCAL below
     --drop) DROPS+=("$2"); shift 2 ;;
     --put) PUTS+=("$2"); shift 2 ;;
     --no-precheck) PRECHECK=0; shift ;;
@@ -163,6 +165,15 @@ mots() {   # mots <archive> <scene dir>: the motion clips the archive lists
   python3 "$SRC/port/dreamcast/tools/engine/mot_list.py" "$1" | while read -r m; do put "$P/dc/mot/$m" "$2/dc/mot/$m"; done
 }
 # BENCH: the E0 bench
+# lane eng-mem1 (H-031 ruling 2): the run's tier, declared on the disc. The selector applies H-025.1's sound ceilings only
+# on a disc that declares the calibrated tier (TIERCAL: the console-like Flycast, dynarec on, Sh4Clock 70) or the console
+# (TIERCON); a plain disc prints the sound row "not judged (plain run)".
+case $TIER in
+  calibrated) mkdir -p "$D"; echo "calibrated tier: console-like Flycast, Dynarec.Enabled yes, Sh4Clock 70" > "$D/TIERCAL" ;;
+  console) mkdir -p "$D"; echo "console" > "$D/TIERCON" ;;
+  plain) ;;
+  *) echo "build_console_disc: --tier calibrated|console|plain, not '$TIER'"; exit 2 ;;
+esac
 put "$LKG/CROSS.PAK" BENCH/CROSS.PAK; put "$LKG/FARM.PAK" BENCH/FARM.PAK
 put "$LKG/CROSS.VIS" BENCH/CROSS.VIS; put "$LKG/FARM.VIS" BENCH/FARM.VIS
 printf 'c0 f0 ca c0 cb c0 fa f0 fb f0 c0dh\n' > "$D/BENCH/SCHEDULE.TXT"

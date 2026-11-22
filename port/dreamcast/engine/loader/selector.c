@@ -244,6 +244,16 @@ static int file_exists(const char *rel) {
     return 1;
 }
 
+/* lane eng-mem1 (H-031 ruling 2): H-025.1's sound ceilings (1.0 ms mean, 2.0 ms worst) are the waiver's own scope: the
+   calibrated tier (and the console). A disc built for such a run declares it with the file TIERCAL or TIERCON at the
+   disc root (tools/engine/build_console_disc.sh --tier calibrated|console); on any other run (plain Flycast: function
+   checks) the sound line is printed with "not judged (plain run)" and the ceiling is not applied. Read once. */
+static int g_tier_judged = -1;
+static int tier_judged(void) {
+    if (g_tier_judged < 0) g_tier_judged = file_exists("TIERCAL") || file_exists("TIERCON");
+    return g_tier_judged;
+}
+
 /* ---------------------------------------------------------------- summaries from the report */
 static void sum_add(sel_entry_t *e, const char *fmt, ...) {
     size_t len = strlen(e->sum);
@@ -501,9 +511,9 @@ static void e1_summary(sel_entry_t *e) {
         sum_add(e, "disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads, g_files_sectors);
     if (g_ctrack_seen) sum_add(e, "camera tracks converted in play %u", g_ctrack_inplay);   /* lane eng-e1p (H-018.1) */
     if (g_snd_seen)   /* lane eng-snd1 (H-025.1): the sound's CPU time per picture, its voices and its stream bytes */
-        sum_add(e, "sound %s m%u.%02u w%u.%02u@%u >1.0/2.0, voices %u, stream %u B/pic", g_snd_on ? "on" : "OFF",
+        sum_add(e, "sound %s m%u.%02u w%u.%02u@%u >1.0/2.0 %s, voices %u, stream %u B/pic", g_snd_on ? "on" : "OFF",
                 g_snd_mean / 1000, g_snd_mean % 1000 / 10, g_snd_worst / 1000, g_snd_worst % 1000 / 10, g_snd_wpic,
-                g_snd_voices, g_snd_stream);
+                tier_judged() ? "judged (calibrated tier)" : "not judged (plain run)", g_snd_voices, g_snd_stream);
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {
@@ -805,7 +815,7 @@ static void collect(unsigned i) {
         /* lane eng-snd1 (H-025.1): every E1-family scene reports its sound; a timing scene with sound on fails over the
            waiver's ceiling, 1.0 ms a picture mean or 2.0 ms worst (pictures 41-640) */
         else if (!g_snd_seen) snprintf(e->why, sizeof(e->why), "no E1 SOUND line (or a field not a number)");
-        else if (s->timing && g_snd_on && (g_snd_mean > 1000 || g_snd_worst > 2000))
+        else if (s->timing && g_snd_on && tier_judged() && (g_snd_mean > 1000 || g_snd_worst > 2000))
             snprintf(e->why, sizeof(e->why), "sound over H-025.1: mean %u.%02u worst %u.%02u ms (pic %u)",
                      g_snd_mean / 1000, g_snd_mean % 1000 / 10, g_snd_worst / 1000, g_snd_worst % 1000 / 10, g_snd_wpic);
     }
