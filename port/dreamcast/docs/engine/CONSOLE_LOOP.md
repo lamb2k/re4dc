@@ -513,3 +513,52 @@ fixture `tools/plays_right/fixtures/door-r101-r103.txt` (the PC reference replay
 whole-room bake beside it; a traced function run (`door=2`). Controls: `CDOORPK` (the farm's archive absent), `CDOORRD`
 (a disc read 10 ticks after the first door), `CDOORLK` (a block kept across the first leave); check `CDISCF` (a DMA read
 reported done without its transfer, caught by the read-safety layer).
+
+## 15. The broadband adapter, files from the PC, the way back without a restart (lanes eng-link1, ql-core, 2026-11-22)
+
+All of it lives in dc-qalink 0.2 (section 16); RE4 keeps its scene runner and its records. Flycast numbers below are
+function checks on the plain build (slot std1, its broadband adapter emulation), never console timings.
+
+- **Transports:** the loader and the client speak one protocol (`include/dcql_loop.h`, protocol 2) over the modem (as
+  before, byte for byte) or the broadband adapter, the adapter first when one is fitted. `LINK.TXT`: `net bba|modem`,
+  `host <PC>` (or `peer`), `port`, `lport`; the adapter asks DHCP first; `ip`/`mask`/`gw` are the fallback when no DHCP
+  server answers (`dhcp no`: those alone). A program the loader starts asks DHCP for the loader's own address (KOS's
+  `net_init(ip)` way); in Flycast a program that set the address without DHCP received nothing (eng-link1 f4) or lost
+  datagrams (ql-core d3: 1 MiB in 9.6 s against 3.4 s), so the static path is the fallback only.
+- **Files from the PC at load time:** the client's `/pc/...` (`cl_send.c`: a scene with `src=pc` opens `/cd/<path>` as
+  `/pc/<root>/<path>` first). One read-ahead block of 8 KiB per round trip. Flycast: 1 MiB in 3.36 s and 8 MiB in
+  26.8 s (about 310 KB/s), SHA-256 equal to the file's. Nothing reads the network in play: the E1 images count every
+  open in play (section 12) whatever its source, and the control `CPCOPEN` (section 16) must FAIL.
+- **Stills:** `cl_still` hands a 640x480 RGB565 picture to the PC as PNG: 10 of 10 in 7.2 s (Flycast); the screen
+  itself (video memory) the same way, 0.70 s each.
+- **The way back:** the loader arms a 2,120-byte return stub in the hand-off area before each run. Normal exit,
+  deadline, exception, `abort`/`assert` and RESET jump there; it quiets the hardware, reads `LOADER.BIN` from the
+  mounted disc with the BIOS's disc calls, checks its SHA-256 and starts it: no BIOS reboot, the GDEMU slot kept.
+  Flycast: plain exit 9.8 s round trip; crash 14.8 s; a wrecked heap then a crash 14.0 s; RESET from the PC back in
+  7.4 s. Fixed on the way (ql-core): the stub jumped through a banked register after loading the BIOS's SR (RB = 1),
+  so a program that entered it from a handler restarted the stub for ever.
+- **The rest of the ladder:** a program with interrupts off for ever does not answer RESET; with `wdt=1` the SH-4
+  watchdog (reset mode, fed from the vertical blank, 20.97 ms) should reset the CPU; Flycast does not emulate it (no
+  return in 85 s), so in Flycast the ladder ends "power cycle needed" (exit 6) with or without it. The longest gap
+  between vertical blanks measured by the client in these runs: 19.2 to 19.5 ms (Flycast), close to the watchdog's
+  20.97 ms: a console check before any image arms it.
+- **The loader updates itself:** `run --loader LOADER.BIN` pushes a newer loader (308 KB in 1.2 s, beaconing 7.5 s
+  later, Flycast); it serves that run; the return stub brings back the disc's loader, so the next `--loader` run pushes
+  it again. A broken first stage or a new return stub still needs the card.
+- **Controls:** a corrupted image is refused (`sha256`) and its RUN refused; a program that ignores RESET ends at "power
+  cycle needed"; `CPCOPEN` (a file read from the PC in play) must FAIL the scene.
+- **Flycast's own fault:** stock desktop Flycast changes the SH-4's interrupt state from its network thread without a
+  lock (found on the Halo line); under heavy adapter traffic an emulated program panicked ("spurious RESET exception")
+  or the loader hung mid-push, about one run in five here. The console has no such thread. Keep Flycast link runs short.
+
+## 16. dc-qalink as the home of the link (lane ql-core, 2026-11-22)
+
+The loader, return stub, client library, transports, protocol header, PC tool and host tests are dc-qalink's
+(`port/dreamcast/engine/loader/dc-qalink`, a submodule pinned like SH4ZAM; public, MIT, game-neutral). RE4 keeps:
+`engine/loader/selector.c` (the console disc's scene runner), `cl_send.c` and `sendable.mk` (the images' report, rows,
+`src=pc`, stills), `kosfix.mk`, and `tools/consoleloop/consoleloop.py`, now a thin wrapper that runs dc-qalink's
+`pc/dcql_loop.py` with the same arguments. `tools/engine/build_console_disc.sh` archives dc-qalink at the commit the ref
+records (as SH4ZAM), writes `LINK.TXT` with `--link <PC address>`, and stages `CPCOPEN` (the Leon scene with `src=pc` and
+the `OPENX` boot file; needs `--link`). The old RE4 copies (`link.c`, `main.c`, `cl_core.*`, `client.c`, `host.c`,
+`cl_proto.h`, `cl_handoff.h`, `testprog.c`, the old host tests) are gone; their tests run in dc-qalink
+(`tests/test_loop.py`, `tests/test_link.py`).

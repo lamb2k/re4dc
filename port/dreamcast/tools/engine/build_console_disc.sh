@@ -39,6 +39,11 @@
 # then the last one again with only its first five fields (named <name>5): a line that does not parse refuses the
 # schedule (before, both were run as if the extra entry were not there). sectorend (lane eng-mem2): SCENES.TXT padded to
 # 2,045 bytes mod 2,048 by a comment line: the selector must read it and run (not a refusal).
+# --link <PC address> (lane ql-core): writes the disc's LINK.TXT (net bba, DHCP, host <PC address>, port 52060): each image the selector starts brings the broadband adapter up and sends its lines, stills and
+# /pc reads to dc-qalink's PC tool (consoleloop.py serve --files <packs>); a scene with src=pc reads its files from the
+# PC at load time. Without --link the disc has no LINK.TXT and no image touches the network (as before). Its control
+# CPCOPEN (only when --scenes names it): the Leon scene with src=pc and the OPENX boot file (a file opened at picture
+# 100, from the PC when the link is up): a read from the PC in play must FAIL the scene as a disc read in play does.
 # --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
 # images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
 # scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
@@ -60,6 +65,7 @@ PRECHECK=1
 LAYOUT=standard
 TITLE='RE4DC ENGINE CONSOLE DISC'
 PLANCTL=
+LINKHOST=
 while [ $# -gt 0 ]; do
   case $1 in
     --ref) REF=$2; shift 2 ;;
@@ -73,6 +79,7 @@ while [ $# -gt 0 ]; do
     --title) TITLE=$2; shift 2 ;;
     --plan-control) PLANCTL=$2; shift 2 ;;
     --r103) R103_PAK=$2; R103_VIS=$3; shift 3 ;;   # lane eng-mem2: DOOR's farm pack and visibility (default: the shared set's)
+    --link) LINKHOST=$2; shift 2 ;;   # lane ql-core: LINK.TXT on the disc (above)
     *) echo "build_console_disc: unknown argument $1" >&2; exit 2 ;;
   esac
 done
@@ -129,6 +136,13 @@ SZC=$(git -C "$REPO" ls-tree "$COMMIT" "$SZP" | awk '{print $3}')
 git -C "$REPO/$SZP" cat-file -e "$SZC^{commit}" 2>/dev/null ||
   { echo "build_console_disc: SH4ZAM commit $SZC is not in $REPO/$SZP (git -C $SZP fetch)" >&2; exit 1; }
 mkdir -p "$SRC/$SZP"; git -C "$REPO/$SZP" archive --format=tar "$SZC" | tar -x -C "$SRC/$SZP"
+# lane ql-core: dc-qalink (the loader's protocol, return stub and the images' client), the same way at its recorded commit
+QLP=port/dreamcast/engine/loader/dc-qalink
+QLC=$(git -C "$REPO" ls-tree "$COMMIT" "$QLP" | awk '{print $3}')
+[ -n "$QLC" ] || { echo "build_console_disc: $REF records no dc-qalink commit" >&2; exit 1; }
+git -C "$REPO/$QLP" cat-file -e "$QLC^{commit}" 2>/dev/null ||
+  { echo "build_console_disc: dc-qalink commit $QLC is not in $REPO/$QLP (git -C $QLP fetch)" >&2; exit 1; }
+mkdir -p "$SRC/$QLP"; git -C "$REPO/$QLP" archive --format=tar "$QLC" | tar -x -C "$SRC/$QLP"
 
 # ---- build (KOS d367, the release toolchain)
 export RE4DC_KOS_BASE=${RE4DC_KOS_BASE:-/root/work/kos-re4dc-d367}
@@ -344,6 +358,15 @@ case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
   for c in "${DOOR_CONTROLS[@]}"; do IFS='|' read -r cn cdir cfile ctitle <<< "$c"; mkdir -p "$D/$cdir"; : > "$D/$cdir/$cfile"; done ;;
 esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
+# lane ql-core: the disc's LINK.TXT (--link) and the PC-read-in-play control's folder (CPCOPEN: OPENX, as COPENX)
+if [ -n "$LINKHOST" ]; then
+  printf '# RE4DC console disc: the broadband adapter (DHCP), dc-qalink PC tool on %s\nnet bba\nhost %s\nport 52060\n' \
+    "$LINKHOST" "$LINKHOST" > "$D/LINK.TXT"
+  log "LINK.TXT: net bba, host $LINKHOST"
+fi
+case ",$SCENES," in *,CPCOPEN,*)
+  [ -n "$LINKHOST" ] || { echo "build_console_disc: CPCOPEN needs --link (a read from the PC in play)" >&2; exit 1; }
+  mkdir -p "$D/CPX"; : > "$D/CPX/OPENX" ;; esac
 case ",$SCENES," in *,LEONS,*) mkdir -p "$D/E1LS"; : > "$D/E1LS/STILLS" ;; esac
 case ",$SCENES," in *,HILLS,*) mkdir -p "$D/E1HS"; : > "$D/E1HS/STILLS" ;; esac
 case ",$SCENES," in *,FIGHTS,*) mkdir -p "$D/FIGHTS"; : > "$D/FIGHTS/STILLS" ;; esac
@@ -392,6 +415,9 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
     IFS='|' read -r cn cdir cfile ckind ctitle <<< "$c"
     echo "$cn $ctitle PROG/E1.BIN 300 $ckind $(need $cdir/$cfile,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=$cdir:E1L:E1 rows=compact"
   done
+  # lane ql-core: the PC read in play (needs --link): files from the PC (src=pc) and one opened at picture 100; must FAIL
+  # with the in-play open counted ("files opened in play"), as COPENX does for the disc
+  echo "CPCOPEN Control:_file_read_from_the_PC_in_play PROG/E1.BIN 300 e1:timing:drawn $(need CPX/OPENX,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=CPX:E1L:E1 rows=compact src=pc"
   # lane eng-e1n: the publication and HUD controls (above); lane eng-e1p: the camera track, record and disc read controls
   for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND_CONTROLS[@]}"; do
     IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
