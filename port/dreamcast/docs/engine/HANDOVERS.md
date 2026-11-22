@@ -2,6 +2,85 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-030 (2026-11-22): resume after every lane stopped at its tool limit; re-merges and trains at the gate
+
+- **State at resume (04:00):** `engine` a68a57094. Every lane agent of 11-21 had stopped (tool-call limits, the
+  integrator's session ended about 15:20); nothing ran, no slot held a lease. Pushed by the integrator after the
+  public-repository blob check: `lane/eng-skel2` e590e4b2e (never pushed before: collision baked offline, contains
+  eng-clock1 and eng-skel1) and `lane/eng-draw3` 0e0f156bd (steps 1b and 2b).
+- **Gate queue, in order:** eng-clock1 (pending at its Flycast step), eng-draw1, eng-draw2, eng-skel1 (c60a0cd4c),
+  eng-skel2, eng-load1, eng-e2d, eng-e2f with eng-e2g, eng-snd1. The integration lane restarted with
+  `E:\RE4DC-Lanes\eng-int\RESUME-20261122.md`.
+- **Restarted to finish their briefs:** eng-draw3 (calibrated slot fly1), eng-cloth1 (fly2), eng-bake1 (PC only).
+- **Rulings:**
+  1. **Re-merges for ended lanes.** When `engine` has moved by code past an ended lane's merge base, the integration
+     lane may merge `engine` into that lane's branch itself, in the lane's worktree, when every conflict is mechanical
+     (both sides kept, no choice of design, value or rule); its gate report lists the conflicted hunks. A conflict that
+     needs a choice comes to the integrator with both sides quoted.
+  2. **The main memory map** (`host/e1_engine.h`): eng-snd1's R1 and eng-skel2's arena move both shift the behaviour
+     arena; whichever lands second comes to the integrator with both maps and both lanes' measured margins.
+  3. **Trains:** up to three queued lanes gated as one when their trial merges are clean in order and their owned
+     files do not overlap; steps 1 to 4 and each lane's controls per lane, images, suites and one clean disc once on
+     the train's tree; a failure drops the lane it points at. Each lane keeps its own merge commit and STATUS note.
+  4. **eng-draw2's ROOMTRIP check:** video-memory free after a release is 24 B under the figure before the first open
+     (the allocator's first-use bookkeeping, constant over three releases). The baseline is to be taken after the first
+     release and any growth across releases fails; that change goes to eng-draw2's successor. Until then ROOMTRIP is an
+     expected failure with that exact reason (as DOOR under H-029.7).
+  5. **eng-e2f's knock-down scene** fails on the shot's capsule rule, which eng-e2g fixed (its KNOCK passes): the two
+     are gated as one train.
+
+## H-029 (2026-11-21): a day of hand-backs: sound, a door, the boss at zero, hidden service code, the clock; rulings
+
+- **Merged through the integration lane today:** eng-salv1, eng-e2a, eng-cmp1, eng-e2b (fight 73 to 43), eng-look1 (Leon's
+  handgun drawn live), eng-fix1 (corrections, game settings, guards: from cd8b8762b the corrected reference is the
+  baseline; refctl 20 rows).
+- **Queued at the gate, in order:** eng-draw1 (the drawing account), eng-clock1 (the clock fix, below), eng-e2c (boss image
+  26 to 0), eng-e2d (the general split check; fight 43 to 30), eng-svcspd1 (five exact speed fixes), eng-skel1 Part A at
+  45da184a9 (skeleton entries, chain object, collision release), eng-load1 at f7f6e9a48 (room-to-room loading; its DOOR
+  scene fails by design on a collision leak until the release entry is in). eng-snd1 (sound) joins when its items close.
+- **Running:** eng-draw2 (world drawing), eng-draw3 (characters' drawing), eng-cloth1, eng-skel2 (clock, baked collision,
+  skeleton cost), eng-e2f (fight to 0, knock-down, area check hosted), eng-bake1, eng-snd1.
+- **Findings that change how earlier figures are read:**
+  1. **The clock (lane eng-skel1).** KOS's nanosecond clock jumps 2,502,400 ns forward once per emulated second (TMU2
+     reloads from 12,468,720 counts a second, `(199499520 / 4) / 4`, while each count is valued at 80 ns). Every MODELLED
+     worst picture measured before the fix may carry +2.5 ms in one picture a second; means read 0.25% low. The fix
+     goes into the engine's clock wrapper (`lane/eng-clock1`), not into KOS. Reporting it to KOS upstream needs the
+     owner's OK (offered, not asked again).
+  2. **The link check's zero was a count of symbols (lane eng-e2d).** The default image carried original drawing code
+     (objWep's `Draw_line3d_222`) inlined into two kept functions; FIGHT had 42 hidden cases and BOSS 18.
+     `tools/engine/split_check.py` now runs inside `check_link.py` on every map; units with a replaced function are
+     built without the interprocedural optimisations.
+  3. **The PC native build's `GetScreenPos`** answered the screen centre for every point (no GX projection is loaded on
+     the native build): fixed in `hostref/host_math.cpp` as a tool fix; the original's answers are unchanged.
+- **Rulings:**
+  1. **Collision is baked offline** (lane eng-skel1's option 2): the SAT/EAT tables are replaced in the room archive by
+     the form the service queries; header and normal table kept; pieces in the room heap; the services region goes
+     to 512 KB; no bake at load. r106 needs 924,864 B of baked collision against 751,616 B of room space today, so
+     this is not only the farm. The map screen's `mapPositionCheck` reads the SAT by hand: it becomes a native
+     floor-polygon entry of the collision service, called when the sub screen is hosted.
+  2. **Sound's memory:** `E1_ARENA_LO` 0x8cc00000 to 0x8cc80000 and the fight's 0x8cd80000 to 0x8cdc0000, applied in
+     lane eng-snd1's own branch (the driver adds about 0.33 MB). The driver's own generator for the sound variant is
+     accepted. The waiver's ceilings stand (1.0 ms mean, 2.0 worst); the village's one over-ceiling picture is the
+     clock artefact and is re-judged with the clock fixed. The request check's 1.0 position bound is not widened:
+     six village footsteps 1.05 to 1.38 units off are a finding to explain.
+  3. **One owner for the main memory map** is to be briefed when eng-load1 has merged (three pressures arrived in one
+     day: sound, the farm's collision, the renderer's resident sizing).
+  4. **Engine composition for loading** (`core/room_change.cpp`: the hand-off statements of `gameDoordemo` and
+     `gameRoomMemInit`) is accepted under H-017.10 with the statement list kept at the head of the file.
+  5. **The area check is hosted, not planted:** lane eng-e2f hosts `sce_at` and `act_btn` in the default image so a door is
+     noticed by the game's own code.
+  6. **Approximate FSCA/FIPR maths** in the skeleton is allowed only with every fixture's outcome unchanged (the owner
+     approved approximations as a class); it ranks below the memory fix.
+  7. **Gate rules added:** shared pack sets are real copies with receipts; a hand-back figure that does not match the
+     head is recorded with the measured figure; DOOR is an expected failure with an exact reason until its
+     dependencies land; a lane's Part can be gated at a named commit (`--head`) while the lane carries on.
+- **Look choices being prepared for the owner (nothing lands before they see it):** character back-face culling (still
+  sheet with pixel counts, eng-draw3); Ashley's skirt options (clips, eng-cloth1: the skirt is 6.8 ms a picture on the
+  hill, MODELLED).
+- **Open with the owner:** the GameCube original as a third reference for disputes, or anchoring on the old port only;
+  the release-line hotfix candidate (Disc 2's em1f copy of em10 lacks the Ganado byte-order correction); a KOS
+  upstream report for the clock.
+
 ## H-028 (2026-11-21): the drawing account is in; the renderer is rebuilt along its pixel-identical path, world and characters as two lanes
 
 - **What lane eng-draw1 found** (its report, at the gate; MODELLED, console-build dynarec at 70 MHz, calibrated on the old

@@ -4,6 +4,7 @@
 // Lane eng-e1c: each entry point has a group (motion, cloth, parts and palette, collision: the services row split),
 // timed per tick, with a MODELLED stamp at each group boundary.
 #include "e1_kos.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "e1_engine.h"
 #include "e1_core.h"
 
@@ -29,8 +30,8 @@ static unsigned svc_slot(const char* n, unsigned g)
 // (1 motion, 2 cloth, 3 parts and palette, 4 collision) and to word 0 when it returns to the behaviour. The hardware
 // model's observer (s/model_profile_svc.py) prints each store with its cycle time. A plain store; no other effect.
 volatile uint32_t e1_svc_stamp[8] __attribute__((aligned(32)));
-static inline void enter(unsigned slot) { if (depth++ == 0) { svc_cur = slot; e1_svc_stamp[svc_rows[slot].group] = 1; svc_t0 = timer_us_gettime64(); } }
-static inline void leave() { if (--depth == 0) { uint64_t d = timer_us_gettime64() - svc_t0; svc_acc += d; svc_rows[svc_cur].us += d; svc_rows[svc_cur].calls++; svc_grp[svc_rows[svc_cur].group] += d; e1_svc_stamp[0] = 1; } }
+static inline void enter(unsigned slot) { if (depth++ == 0) { svc_cur = slot; e1_svc_stamp[svc_rows[slot].group] = 1; svc_t0 = e1_clock_us(); } }
+static inline void leave() { if (--depth == 0) { uint64_t d = e1_clock_us() - svc_t0; svc_acc += d; svc_rows[svc_cur].us += d; svc_rows[svc_cur].calls++; svc_grp[svc_rows[svc_cur].group] += d; e1_svc_stamp[0] = 1; } }
 }
 void e1_svc_begin() { svc_acc = 0; depth = 0; for (unsigned g = 0; g < E1_SVC_GROUPS; g++) svc_grp[g] = 0; }
 // lane eng-e2: the same accounting for service entry points wrapped outside this file (the fight image's Ganado paths
@@ -200,9 +201,9 @@ static unsigned prof_slot(const char* n) { for (unsigned i = 0; i < nprof; i++) 
     extern "C" void __wrap_##mangled(void* t)                                 \
     {                                                                         \
         static unsigned slot = prof_slot(#mangled);                           \
-        uint64_t a = timer_us_gettime64();                                    \
+        uint64_t a = e1_clock_us();                                    \
         __real_##mangled(t);                                                  \
-        prof[slot].us += timer_us_gettime64() - a; prof[slot].calls++;        \
+        prof[slot].us += e1_clock_us() - a; prof[slot].calls++;        \
     }
 PROF(_ZN7cPlNeck4moveEv)
 PROF(_ZN7cPlBody4moveEv)

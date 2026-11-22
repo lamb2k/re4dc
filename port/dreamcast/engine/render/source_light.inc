@@ -185,6 +185,7 @@ static void source_lights_w(const NativeScene* s,const float* w0,const float* cw
     unsigned group=tev&255,cs=tev>>8&255;
     float S=group<=1?(cs==1?2.f:cs==2?4.f:1.f):group==5?2.f:group==6?4.f:1.f;
     for(unsigned c=0;c<3;c++){out->amb[c]=amb[c]*(1.f/255);out->k[c]=color[c]*(1.f/255)*S*255.f;}
+    DC_ADD(DC_A_LIGHTS,out->n);   /* lane eng-draw1: lights per character, summed */
 }
 /* The ActorPose form (E0 bench, content and native passes): the same rule on the records' matrices. */
 static void source_lights(const NativeScene* s,const ActorPose* actor,unsigned bones,const ModelLight* ml,SrcLights* out){
@@ -209,7 +210,14 @@ static void ws_light(unsigned i,const float* m){
         for(unsigned c=0;c<3;c++){ws_dirs[i][j][c]=(m[c]*L[0]+m[4+c]*L[1]+m[8+c]*L[2])*inv;ws_cols[i][j][c]=g->rgb[c]*att;}
     }
 }
+static void light_normals_once(const SourceVector* v,unsigned n,uint32_t* out);
+/* lane eng-draw1: counted per call; lab arm DL_LIGHT2 lights the normals twice */
 static void light_normals_source(const SourceVector* v,unsigned n,uint32_t* out){
+    DC_ADD(DC_A_NRM,n);DC_ADD(DC_A_NRMLIGHTS,n*cur_lights.n);
+    light_normals_once(v,n,out);
+    if(DC_ARM(DL_LIGHT2))light_normals_once(v,n,out);
+}
+static void light_normals_once(const SourceVector* v,unsigned n,uint32_t* out){
     const unsigned nl=cur_lights.n;const float ar=cur_lights.amb[0],ag=cur_lights.amb[1],ab=cur_lights.amb[2];
     const float kr=cur_lights.k[0],kg=cur_lights.k[1],kb=cur_lights.k[2];
     for(unsigned i=0;i<n;i++,v++){

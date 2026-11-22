@@ -304,6 +304,7 @@ ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
+include $(ENG)/game/hosted_corrections.mk $(ENG)/game/game_settings.mk   # lane eng-fix1 (H-026): corrections, settings
 $(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(AREAVOL_OBJ) $(EM10SVC_OBJS) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^
