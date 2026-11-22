@@ -499,23 +499,40 @@ static inline void light_part(const RtModel* m,const RtPart* rp,unsigned st,cons
 /* Lane eng-draw4 (step 3, emission): the general strip walk below (census, clipped strips, dropped strips) stays for
    the census arm and boundary parts; a part inside the frustum walks its strips in a loop with no test a strip (no
    codes, no clipping, no census) and one header. The same corners reach the store queues in the same order. */
+/* Step 3b: the strip walk is the kernel's (render/stage_sh4.S m1_emit_actor_run): inside parts in one call; boundary
+   parts with their strip codes (dropped strips skipped in the kernel), back to C only for a strip that crosses the near
+   plane (clipped here, as in the general walk). */
+typedef struct { const uint8_t *p,*stop; const pvr_vertex_t* proj; const uint32_t* lit; const uint8_t* sc; unsigned corners; } EmitRun;
+_Static_assert(sizeof(EmitRun)==24,"stage_sh4.S m1_emit_actor_run");
+extern pvr_vertex_t* m1_emit_actor_run(pvr_vertex_t* sq,EmitRun* run);
 static pvr_vertex_t* emit_part_general(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts);
 static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
-    if(state==2 || (DC_ARM(DL_CENSUS) && !dc_mute))return emit_part_general(sq,s,m,rp,state,near,emitted_parts);
+    if(DC_ARM(DL_CENSUS) && !dc_mute)return emit_part_general(sq,s,m,rp,state,near,emitted_parts);
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
     if(p>=stop)return sq;
+    const uint8_t* sc=NULL;unsigned out=0;
+    if(state==2){   /* boundary: no header when every strip is dropped (as the general walk) */
+        sc=cur_strip_codes+rp->strip_first;
+        for(unsigned k=0;k<rp->strip_count;k++)out+=sc[k]>>7;
+        if(out==rp->strip_count){if(!dc_mute){DC_ADD(DC_A_STRIPS,out);DC_ADD(DC_A_STRIPS_OUT,out);}return sq;}
+    }
     const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
     for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
     if(rp->all_sided && m->sided)((volatile unsigned*)sq)[1]=hdr[1]|3u<<27;   /* arm CB: the chip culls (mode 3) */
     advance(&sq);
-    const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;
-    unsigned corners=0;
-    do{
-        const unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
-        sq=m1_emit_actor_strip(sq,v,n,proj,lit);corners+=n;
-    }while(p<stop);
+    EmitRun run={p,stop,cur_projected,cur_lit,sc,0};unsigned clipstrips=0;
+    for(;;){
+        sq=m1_emit_actor_run(sq,&run);
+        if(run.p>=stop)break;
+        /* a strip that crosses the near plane */
+        const unsigned n=*(const unsigned*)run.p;const IndexCorner* v=(const void*)(run.p+4);run.p=(const uint8_t*)(v+n);run.sc++;
+        clipstrips++;
+        Corner a=clip_corner(v),b=clip_corner(v+1);
+        for(unsigned j=2;j<n;j++){Corner c=clip_corner(v+j);clipped(&sq,j&1?b:a,j&1?a:b,c,near);a=b;b=c;}
+    }
     *emitted_parts+=1;
-    if(!dc_mute){DC_ADD(DC_A_STRIPS,rp->strip_count);DC_ADD(DC_A_CORNERS,corners);DC_ADD(DC_A_HEADERS,1);}
+    if(!dc_mute){DC_ADD(DC_A_STRIPS,rp->strip_count);DC_ADD(DC_A_STRIPS_OUT,out);DC_ADD(DC_A_CORNERS,run.corners);
+                 DC_ADD(DC_A_CLIPSTRIPS,clipstrips);DC_ADD(DC_A_HEADERS,1);}
     return sq;
 }
 static pvr_vertex_t* emit_part_general(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
