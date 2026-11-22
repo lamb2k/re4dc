@@ -18,7 +18,9 @@
 
 extern "C" void* memset(void* dst, int c, unsigned int n);
 extern "C" void* memcpy(void* dst, const void* src, unsigned int n);
-extern "C" void* svc_pool_carve(u32 bytes);
+extern "C" void* svc_pool_carve_room(u32 bytes);   // host: the room carve (lane eng-skel1: given back when the room is left)
+extern "C" u32 svc_pool_room_reset(void* keep);
+extern "C" const char* svc_env(const char* name) __attribute__((weak));
 extern "C" void host_log(const char* fmt, ...) __attribute__((weak));   // host: room-lifetime engine memory (the skeleton pool's sibling)
 f32 GetDistance(Vec* v0, Vec* v1);
 void InterVectorXYZ(Vec* out, Vec* a, Vec* b, f32 t);
@@ -209,7 +211,7 @@ ColPiece* bake(cSat* sat)
     const u32 oCold = off; off = align32(off + sizeof(ColCold) * nPoly);
     const u32 oGrid = off; off = align32(off + sizeof(ColGrid) * c.leaves);
     const u32 oMask = off; off = align32(off + sizeof(ColMask) * c.masked);
-    u8* blk = (u8*) svc_pool_carve(off);
+    u8* blk = (u8*) svc_pool_carve_room(off);
     if (!blk) return 0;
     memset(blk, 0, off);
     ColPiece* pc = (ColPiece*) blk;
@@ -639,8 +641,33 @@ extern "C" u32 col_file_bytes(const ColPiece* pc)
 extern "C" ColPiece* col_piece_of(const cSat* s)
 {
     for (u32 i = 0; i < g_npiece; i++)
-        if (g_piece[i]->sat == s) return g_piece[i];
+        if (g_piece[i]->sat == s && g_piece[i]->file == s->pFile) return g_piece[i];
     return 0;
+}
+
+// Lane eng-skel1 (eng-load1's request R2): the room is left. Every piece is dropped and the room carve their tables took
+// is given back (pieces are baked into the room carve only, so nothing else is in it). The next room's col_bake_all bakes
+// its own pieces, whatever addresses its cSat records have. Control colkeep (RE4_SVC_CONTROL on the PC reference, or
+// col_control_keep = 1): the first piece baked stays, with its tables (a piece kept: the round trip must fail).
+extern "C" int col_control_keep;
+int col_control_keep;
+extern "C" void col_room_release(void)
+{
+    const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
+    if (c && !__builtin_strcmp(c, "colkeep")) col_control_keep = 1;
+    const u32 dropped = g_npiece;
+    if (col_control_keep && g_npiece) {
+        // the room carve runs down: the first piece baked is the highest block; keeping it keeps it alone
+        ColPiece* keep = g_piece[0];
+        svc_pool_room_reset(keep);
+        g_npiece = 1;
+    } else {
+        svc_pool_room_reset(0);
+        g_npiece = 0;
+    }
+    g_bypass = 0;
+    col_cnt.releases++;
+    col_cnt.released += dropped - g_npiece;
 }
 
 extern "C" void col_bake_all(void)

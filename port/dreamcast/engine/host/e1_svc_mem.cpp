@@ -3,7 +3,8 @@
 // Memory: one fixed region of the main RAM map, [E1_SVC_LO, E1_SVC_HI) (host/e1_engine.h, the top 1 MB of the old
 // behaviour arena), independent of the image and of the KOS heap (the hill scene leaves 252 KB of KOS heap free):
 //   - the skeleton pool, 256 KB at E1_SVC_LO (svc_pool_base: tables come and go with the actors);
-//   - the room's collision tables above it (svc_pool_carve: room lifetime, carved upward, never freed in E1).
+//   - the boot carve above it (svc_pool_carve: the cloth pool, the account buffers; never freed) and, from the top
+//     down, the room carve (svc_pool_carve_room: the collision tables, given back when the room is left; lane eng-skel1).
 // The motion key lease of the old port (native_motion.h) is not used: the engine loads every clip in place at room
 // entry, so the key decoder reads pHermite_data as the original does (re4dc_motion_acquire answers "not leased").
 // Check build: the boot option SKELCHECK sets skel_poison (records outside the mailbox hold NaN, lost writes and
@@ -27,6 +28,12 @@
 static const uint32_t kPoolBytes = 256 * 1024;
 static uint8_t* carve_next;
 static uint32_t carve_used, carve_fails;
+// Lane eng-skel1 (eng-load1's request R2): the region's other end is the room's. The room carve takes from the top down
+// (svc_pool_carve_room: the collision tables) and is given back when the room is left (svc_pool_room_reset), so a room's
+// tables do not outlive it. The boot carve (the cloth pool, the account's buffers) grows up from the skeleton pool; each
+// is refused (and counted) where it would cross the other.
+static uint8_t* room_top = (uint8_t*) E1_SVC_HI;
+static uint32_t room_used, room_peak;
 
 extern "C" void* svc_pool_base(u32* bytes)
 {
@@ -39,9 +46,10 @@ extern "C" void* svc_pool_carve(u32 bytes)
 {
     if (!carve_next) carve_next = (uint8_t*) E1_SVC_LO + kPoolBytes;
     bytes = (bytes + 31u) & ~31u;
-    if ((uint32_t) carve_next + bytes > E1_SVC_HI) {
+    if (carve_next + bytes > room_top) {
         carve_fails++;
-        e1_log("E1 SVCMEM carve refused %lu bytes (used %lu)\n", (unsigned long) bytes, (unsigned long) carve_used);
+        e1_log("E1 SVCMEM carve refused %lu bytes (used %lu, room %lu)\n", (unsigned long) bytes, (unsigned long) carve_used,
+               (unsigned long) room_used);
         return 0;
     }
     void* p = carve_next;
@@ -49,6 +57,33 @@ extern "C" void* svc_pool_carve(u32 bytes)
     carve_used += bytes;
     return p;
 }
+extern "C" void* svc_pool_carve_room(u32 bytes)
+{
+    if (!carve_next) carve_next = (uint8_t*) E1_SVC_LO + kPoolBytes;
+    bytes = (bytes + 31u) & ~31u;
+    if ((u32) (room_top - carve_next) < bytes) {
+        carve_fails++;
+        e1_log("E1 SVCMEM room carve refused %lu bytes (room %lu, boot %lu)\n", (unsigned long) bytes, (unsigned long) room_used,
+               (unsigned long) carve_used);
+        return 0;
+    }
+    room_top -= bytes;
+    room_used += bytes;
+    if (room_used > room_peak) room_peak = room_used;
+    return room_top;
+}
+// The room carve given back down to `keep` (NULL: all of it; a block of the room carve: it and every block carved before
+// it stay). Returns the bytes given back.
+extern "C" u32 svc_pool_room_reset(void* keep)
+{
+    uint8_t* to = keep ? (uint8_t*) keep : (uint8_t*) E1_SVC_HI;
+    if (to < room_top || to > (uint8_t*) E1_SVC_HI) return 0;
+    const u32 back = (u32) (to - room_top);
+    room_top = to;
+    room_used -= back;
+    return back;
+}
+extern "C" u32 svc_pool_room_used(void) { return room_used; }
 
 extern "C" int re4dc_motion_acquire(const void*, unsigned**) { return 0; }
 extern "C" void re4dc_motion_release(int) {}
@@ -75,7 +110,7 @@ void e1_svc_tick_begin(unsigned t)
 // (x, y, z), from the skeleton tables after the tick. s/clothcmp.py compares them with re4ref's original cloth (odump
 // build, wind on) on the same fixture: radius within 0.4 unit, link means within 2 units (the round-2 bounds).
 static int cloth_stat = -1;
-#ifndef E2_BOSS
+#ifdef E1_CLOTH_SVC   // lane eng-skel1: wherever the cloth service is linked (game/Makefile CLOTH_SVC)
 #include "model.h"
 #include "../services/cloth/cloth.h"   // the native cloth service (an original cloth.h is on the include path)
 #include "../services/cloth/cloth_kernel.h"
@@ -185,9 +220,57 @@ void e1_cloth_stat_tick()
     cloth_stat_tick();
     svc_prof_tick();
 }
+// ---- lane eng-skel1, Part B item 8: the gap probe (boot file GAPPROBE, a diagnostic lab arm before play). The ~2.5 ms
+// span seen once per emulated second in every phase and in drawing: a tight loop reads the engine clock for a while
+// and lists every gap over 0.2 ms with the second it fell in and how far into that second (KOS's TMU2 count), first
+// with interrupts on (with a known 3 ms spin at 0.5 s: the probe's control), then with interrupts off. A gap that stays
+// with interrupts off is not a handler or a thread. ----
+static void gap_run(const char* tag, uint64_t len_ns, bool irq_off, bool control)
+{
+    irq_mask_t old = 0;
+    if (irq_off) old = irq_disable();
+    uint64_t t0 = timer_ns_gettime64(), prev = t0;
+    uint32_t n = 0, iters = 0;
+    uint64_t at[16], gap[16];
+    bool spun = false;
+    for (;;) {
+        const uint64_t t = timer_ns_gettime64();
+        iters++;
+        if (t - prev > 200000 && n < 16) {
+            at[n] = prev - t0;
+            gap[n] = t - prev;
+            n++;
+        }
+        prev = t;
+        if (control && !spun && t - t0 > 500000000ull) {
+            spun = true;
+            const uint64_t m0 = timer_ms_gettime64();   // a 3 ms spin on the millisecond clock between two reads
+            while (timer_ms_gettime64() - m0 < 4) {
+            }
+        }
+        if (t - t0 >= len_ns) break;
+    }
+    if (irq_off) irq_restore(old);
+    e1_log("E1 GAPPROBE %s: %lu ms, %lu reads, %lu gaps over 0.2 ms\n", tag, (unsigned long) (len_ns / 1000000),
+           (unsigned long) iters, (unsigned long) n);
+    for (uint32_t i = 0; i < n; i++)
+        e1_log("E1 GAPPROBE %s gap %lu us at %lu.%06lu s from the start\n", tag, (unsigned long) (gap[i] / 1000),
+               (unsigned long) (at[i] / 1000000000ull), (unsigned long) (at[i] / 1000 % 1000000));
+}
+static void gap_probe()
+{
+    uint32_t s0 = 0, ms0 = 0;
+    timer_ms_gettime(&s0, &ms0);
+    e1_log("E1 GAPPROBE start at %lu.%03lu s of KOS time\n", (unsigned long) s0, (unsigned long) ms0);
+    gap_run("irq-on", 3200000000ull, false, true);
+    gap_run("irq-off", 1500000000ull, true, false);
+    gap_run("irq-off2", 1500000000ull, true, false);
+}
 void e1_svc_boot()
 {
-    file_t f = fs_open("/cd/SVCPROF", O_RDONLY);
+    file_t f = fs_open("/cd/GAPPROBE", O_RDONLY);
+    if (f >= 0) { fs_close(f); gap_probe(); }
+    f = fs_open("/cd/SVCPROF", O_RDONLY);
     if (f >= 0) {
         fs_close(f);
         sp_buf = (uint16_t*) svc_pool_carve(kSpTicks * SP_N * 2);
@@ -218,7 +301,7 @@ void e1_svc_boot()
     if (f >= 0) { fs_close(f); input_control = 2; e1_log("E1 RUMBLERND: rumble strength from Rnd (control)\n"); }
     f = fs_open("/cd/RUMBLEX", O_RDONLY);
     if (f >= 0) { fs_close(f); rumble_exercise = 1; e1_log("E1 RUMBLEX: random-strength rumble exercise\n"); }
-#ifndef E2_BOSS
+#ifdef E1_CLOTH_SVC   // lane eng-skel1: wherever the cloth service is linked (game/Makefile CLOTH_SVC)
     // CLOTHCTL: the cloth statistics' control (must fail s/clothcmp.py): the native cloth with gravity off
     f = fs_open("/cd/CLOTHCTL", O_RDONLY);
     if (f >= 0) { fs_close(f); cloth_control_nogravity = 1; e1_log("E1 CLOTHCTL: cloth gravity off (control)\n"); }
@@ -231,7 +314,7 @@ void e1_svc_room_ready()
     u32 tri = 0;
     for (u32 i = 0; i < col_piece_count(); i++) tri += col_piece_at(i)->nPoly;
     e1_log("E1 SVCMEM collision pieces %lu polygons %lu tables %lu B (fails %lu)\n", (unsigned long) col_piece_count(),
-           (unsigned long) tri, (unsigned long) carve_used, (unsigned long) carve_fails);
+           (unsigned long) tri, (unsigned long) room_used, (unsigned long) carve_used, (unsigned long) carve_fails);
 }
 
 void e1_svc_report()
@@ -248,7 +331,7 @@ void e1_svc_report()
     }
     e1_log("E1 SVCMEM region %08lx-%08lx pool %lu (tables %lu B in %lu) carve %lu fails %lu\n", (unsigned long) E1_SVC_LO,
            (unsigned long) E1_SVC_HI, (unsigned long) kPoolBytes, (unsigned long) bytes, (unsigned long) skel_table_count(),
-           (unsigned long) carve_used, (unsigned long) carve_fails);
+           (unsigned long) carve_used, (unsigned long) room_used, (unsigned long) room_peak, (unsigned long) carve_fails);
     const SkelCounters& c = skel_cnt;
     e1_log("E1 SKEL poison %d entries %lu serve %lu pull %lu ancestors %lu poisoned %lu lost_writes %lu parent_mismatch %lu "
            "palette %lu samples %lu world %lu slow %lu ik %lu\n", skel_poison, (unsigned long) c.entries, (unsigned long) c.serve_bones,

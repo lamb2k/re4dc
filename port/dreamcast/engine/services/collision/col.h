@@ -6,7 +6,7 @@
 //
 // One ColPiece per collision piece (cSat), one 32-byte aligned block:
 //
-//   header             64 B   counts, the piece, its file
+//   header             80 B   counts, the piece, its file (96 B with the alignment)
 //   node SoA  [nNode]  20 B   the block tree flattened in the walk's order: box min x / z, size x / z (f32 rows),
 //                             skip (u16: the node after this one's subtree, where a failed test continues) and
 //                             leaf (u16: leaf number, 0xFFFF for an inner node)
@@ -105,13 +105,15 @@ struct ColPiece {
 extern "C" {
 void col_bake_all(void);            // every live piece of SatMgr and EatMgr (room load)
 ColPiece* col_piece_of(const cSat* s);
+void col_room_release(void);        // lane eng-skel1: the room is left: every piece dropped, its tables given back
 u32 col_piece_count(void);
 ColPiece* col_piece_at(u32 i);
 u32 col_file_bytes(const ColPiece* pc);
 struct ColCounters {
     u32 bakes, late_bakes, line_queries, sphere_queries, nodes_tested, leaves, tris_line, tris_sphere, tri_bytes, cold_line,
         cold_sphere, tris_skipped, filter_miss, filter_end, sphere_skipped, sphere_filter_miss, sphere_recells, leaves_whole,
-        line_repeats, sphere_repeats;   // lane eng-svcspd1: queries made again in a tick with the same inputs (counted)
+        line_repeats, sphere_repeats,   // lane eng-svcspd1: queries made again in a tick with the same inputs (counted)
+        releases, released;             // lane eng-skel1: col_room_release calls, pieces dropped
 };
 extern ColCounters col_cnt;
 extern f32 col_control_floor;       // control: every floor-group triangle raised by this many units in the queries

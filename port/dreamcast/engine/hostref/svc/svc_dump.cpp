@@ -155,6 +155,10 @@ extern "C" void e2c_finish(void) __attribute__((weak));
 extern "C" void e2b_ready(void) __attribute__((weak));
 extern "C" void e2b_tick(unsigned t) __attribute__((weak));
 extern "C" void e2b_finish(void) __attribute__((weak));
+// lane eng-skel1: the skeleton's bone entries and the chain object (skent_dump.cpp) ride them too.
+extern "C" void skent_ready(void) __attribute__((weak));
+extern "C" void skent_tick(unsigned t, int begin) __attribute__((weak));
+extern "C" void skent_finish(void) __attribute__((weak));
 
 extern "C" void host_svc_ready()
 {
@@ -163,6 +167,7 @@ extern "C" void host_svc_ready()
     if (e2_ready) e2_ready();
     if (e2c_ready) e2c_ready();
     if (e2b_ready) e2b_ready();
+    if (skent_ready) skent_ready();
     const char* c = svc_env("RE4_SVC_CONTROL");
     if (c && *c) host_log("svc control: %s", c);
     if (col_bake_all) col_bake_all();   // the room's collision tables, baked at room load
@@ -179,6 +184,7 @@ extern "C" void host_svc_tick(unsigned t, int begin)
     if (e2_tick && begin) e2_tick(t);
     if (e2c_tick) e2c_tick(t, begin);
     if (e2b_tick && begin) e2b_tick(t);
+    if (skent_tick) skent_tick(t, begin);
     if (begin) return;
     if (skel_publish_all) skel_publish_all();
     if (!g_pal) return;
@@ -200,6 +206,7 @@ extern "C" void host_svc_finish()
     if (e2_finish) e2_finish();
     if (e2c_finish) e2c_finish();
     if (e2b_finish) e2b_finish();
+    if (skent_finish) skent_finish();
     if (g_pal) fclose(g_pal);
     if (g_col) fclose(g_col);
     if (g_hist) fclose(g_hist);
