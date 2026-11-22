@@ -27,6 +27,9 @@ typedef struct {
     unsigned cell_count,place_count,group_bytes;
     unsigned group_count,rt_vertices,rt_duplicates,rt_full;
     NativeMeshletRt* rt; uint16_t* rt_remap; uint8_t* rt_range; uint32_t* rt_color; unsigned rt_flag_conflicts;
+    /* lane eng-draw2, step E2: one facing record a strip (native_world_facing), and per meshlet and group the ordinal
+       of the group's first strip in that array */
+    uint32_t* rt_facing; uint32_t* rt_gstrip; unsigned rt_strips,rt_facing_on;
     NativeVis* vis; const uint8_t *vis_inst,*vis_cubes;   /* this picture's hidden sets, or NULL */
 } NativeWorld;
 typedef struct { unsigned placement,part,meshlet,header,near_class,groups; } NativePiece;
@@ -40,6 +43,14 @@ int native_world_open(NativeWorld*,const void*,size_t);
 int native_world_select(const NativeWorld*,const float*,float,NativePiece*,unsigned);
 void native_world_frustum(const float* camera,NativeFrustum* world);
 int native_world_runtime(NativeWorld*);
+/* The facing record of a strip (lane eng-draw2, step E2): bytes 0-2 a direction q (int8 x, y, z; n = q / 127), byte 3 a
+   code (0: never dropped; else bits 0-3 dq, bits 4-7 rq). For every triangle i of the strip in its drawing order, with unit
+   normal n_i (corner 1 - corner 0 cross corner 2 - corner 0, staged coordinates) and first corner p_i, and the strip's
+   first corner p0: |n_i - n| <= native_facing_delta[dq] / 127 and |n_i . (p_i - p0)| <= native_facing_rho[rq] / 127. So
+   for an eye e, with v = p0 - e: n_i . (p_i - e) >= (q . v - delta[dq] |v|_1 - rho[rq]) / 127, and the strip lies wholly on
+   the positive side of every one of its triangles when q . v > delta[dq] |v|_1 + rho[rq]. Both bounds carry a margin
+   (0.01 in the normal, 1 unit in the offset) beyond the exact maxima. */
+extern const float native_facing_delta[16],native_facing_rho[16];
 int native_vis_open(NativeVis*,const void*,size_t,const NativeWorld*);
 void native_vis_close(NativeVis*);
 unsigned native_vis_select(NativeWorld*,const float* camera);

@@ -167,15 +167,47 @@ void native_close(NativeScene* s){
     native_actor_close(s);native_world_free(&s->world);native_vis_close(&s->vis);free(s->vis_data);
     s->assets.storage=NULL;close_scene(&s->assets);memset(s,0,sizeof(*s));
 }
+/* lane eng-draw2 (eng-load1's request R3): a room change. native_release gives back everything the renderer holds for the
+   room's pack: the scene's tables and runtime (native_close: textures in video memory, palette banks, world runtime,
+   visibility, actors, logic state) and the resident pack buffer itself; the next native_open sizes the buffer for the
+   pack it opens. native_release_keep (the bench's ROOMKEEP control) keeps one texture in video memory. */
+unsigned native_release_keep;
+void native_release(NativeScene* s){
+    pvr_ptr_t kept=NULL;
+    if(native_release_keep){for(unsigned i=0;i<M1_TEXTURE_LIMIT;i++)if(m1_textures[i]){kept=m1_textures[i];m1_textures[i]=NULL;break;}}
+    native_close(s);
+    free(resident_pack);resident_pack=NULL;resident_capacity=0;
+    (void)kept;   /* the control's texture stays allocated: the check must see it */
+}
+static size_t flip_base;static unsigned scenes_done;
+void native_flip_mark(void){pvr_stats_t st;pvr_get_stats(&st);flip_base=st.frame_count;scenes_done=0;}
+void native_scene_done(void){scenes_done++;}
+int native_wait_shown(void){
+    for(unsigned k=0;k<120;k++){pvr_stats_t st;pvr_get_stats(&st);if(st.frame_count>=flip_base+scenes_done)return 1;vid_waitvbl();}
+    printf("STILL: the picture was not shown after 120 fields\n");return 0;
+}
+/* The bench opens two rooms by turns with the buffer kept (native_close): it reserves the larger of them once. */
+static unsigned resident_reserved;
+void native_reserve(const char* const* names,unsigned n){
+    for(unsigned i=0;i<n;i++){unsigned v=pack_need(names[i]);if(v>resident_reserved)resident_reserved=v;}
+}
+#include "draw_cost.h"
 int native_open(NativeScene* s,const char* name){
+    dc_lab_open();   /* lane eng-draw1: the E1 lab sets (boot files DLA, DLB), read once before play */
     m1_load_status[0]=1;m1_room_serial++;
-    if(!resident_pack){
-        unsigned a=pack_need("/cd/CROSS.PAK"),b=pack_need("/cd/FARM.PAK");
-        if(!a||!b)return 0;
-        resident_capacity=(a>b?a:b)+31&~31u;
-        if(resident_capacity>=13*1024*1024)return 0;
-        resident_pack=memalign(32,resident_capacity);
-        if(!resident_pack)return 0;
+    {   /* lane eng-draw2 (R3): the resident buffer covers the pack being opened (and the bench's reservation); a pack
+           larger than the buffer replaces it (nothing of the old room is in it: native_open always follows a close) */
+        unsigned need=pack_need(name);
+        if(!need){printf("M1 pack %s: no size (missing or malformed)\n",name);return 0;}
+        if(resident_reserved>need)need=resident_reserved;
+        need=(need+31)&~31u;
+        if(resident_pack && resident_capacity<need){free(resident_pack);resident_pack=NULL;resident_capacity=0;}
+        if(!resident_pack){
+            if(need>=13*1024*1024)return 0;
+            resident_pack=memalign(32,need);
+            if(!resident_pack){printf("M1 pack %s: resident buffer of %u bytes refused\n",name,need);return 0;}
+            resident_capacity=need;
+        }
     }
     file_t f=fs_open(name,O_RDONLY);
     if(f<0){printf("M1 missing pack %s\n",name);return 0;}

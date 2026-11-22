@@ -1,5 +1,6 @@
 // E1 frame services (lane eng-e1): room init of the engine tables, the per-tick trace, pacing and the report.
 #include "global.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "player.h"
 #include "em.h"
 #include "obj.h"
@@ -165,13 +166,13 @@ static uint32_t pace_field;
 static uint64_t next_us;
 void e1_pace_end(E1Timing& tm)
 {
-    const uint64_t now = timer_us_gettime64();
+    const uint64_t now = e1_clock_us();
     if (pace_tmu) {
         if (!next_us) next_us = now;
         next_us += 33367;
         if (now < next_us) {
             tm.wait_us = next_us - now;
-            while (timer_us_gettime64() < next_us) thd_pass();
+            while (e1_clock_us() < next_us) thd_pass();
         } else {
             tm.wait_us = 0;
             next_us = now;
@@ -185,7 +186,7 @@ void e1_pace_end(E1Timing& tm)
     e1_present_next_c(pace_field + 1);   // this picture is released when the next tick's second field begins
     if (!late) {
         while ((int32_t) (pace_field - e1_fields_now_c()) > 0) thd_pass();
-        const uint64_t w = timer_us_gettime64() - now;
+        const uint64_t w = e1_clock_us() - now;
         tm.wait_us = w ? (uint32_t) w : 1;
     } else {
         tm.wait_us = 0;
@@ -286,8 +287,8 @@ void e1_fields_late(unsigned tick)
         fs_read(e1_lab.readx_fd, b, sizeof b);
     }
     if (!late_control || tick != 300) return;
-    uint64_t t = timer_us_gettime64();
-    while (timer_us_gettime64() - t < 100000) {}
+    uint64_t t = e1_clock_us();
+    while (e1_clock_us() - t < 100000) {}
 }
 void e1_fields_tick(unsigned tick) { tick_field[(tick - 1) % E1_TICKS] = e1_fields_now_c(); }
 
@@ -381,6 +382,7 @@ extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, bo
 extern "C" struct AimListCounters { uint32_t calls, scenery, listed, hit_only, empty; } aim_list_cnt;
 #include "e1_laser.h"
 extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
+extern "C" void native_draw_report(void) __attribute__((weak));   // lane eng-draw1: render/draw_cost.inc
 extern "C" void e1_guards_report(void);   // lane eng-fix1 (H-026): host/guard_hooks.cpp, the guards' counts
 void e1_report()
 {
@@ -439,5 +441,6 @@ void e1_report()
                (unsigned long) t.svc_group_us[E1_SVC_EFFECTS]);
         if (rowdup_control && i + 1 == 300) { rowdup_control = 0; --i; }   // ROWDUP: this row once more (control)
     }
+    if (native_draw_report && e1_draw_opened_c()) native_draw_report();   // lane eng-draw1: drawing cost summary (DC lines)
     e1_log("E1 END\n");
 }

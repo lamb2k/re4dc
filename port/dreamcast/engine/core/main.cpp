@@ -5,6 +5,7 @@
 // 3 the game task's hosted subset in gameMainLoop order (player move, object move, camera move) with the services it
 // calls synchronously, 8 engine draw from the engine tables, 9 pacer.
 #include "global.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "player.h"
 #include "obj.h"
 #include "em.h"
@@ -41,7 +42,7 @@ void e1_stamp(unsigned k) { e1_stamp_c(k); }
 volatile uint32_t e1_state[8];   // 0 stage, 1 tick, 2 ticks total, 3 done
 E1Timing e1_timing[E1_TICKS];
 
-static uint64_t now_us() { return timer_us_gettime64(); }
+static uint64_t now_us() { return e1_clock_us(); }
 
 // Room set-up: the subset of gameRoomInit (game.cpp:509) the hosted player and camera need, in its order. Lane eng-load1:
 // the first room (first: the game's start, PlayerInit) and every room a door leads to (core/room_change.cpp: the room,
@@ -187,6 +188,7 @@ int main()
     e1_arena_init();
     e1_globals_init();
     e1_partner_boot();                  // scene and comparison boot options (HILL, FEED, CTRLFOL)
+    e1_clock_boot();                    // lane eng-clock1: the TMU2 reload check; GAPPROBE (core/e1_clock.cpp)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
     e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
     e1_room_change_boot();              // lane eng-load1: the DOOR scene (DOOR.TXT) and its controls, before play
@@ -220,6 +222,7 @@ int main()
     unsigned ticks = e1_route().ticks;
     e1_state[2] = ticks;
     e1_trace_tick(0);
+    e1_clock_fields();                  // lane eng-clock1: GAPPROBE's field span (no-op without the boot file)
     e1_fields_start();                  // presented fields from the hardware's vblank count (lane eng-e1f)
     // lane eng-load1: the round trip's first marks, at the point of the loop where every later room's are taken (the room
     // ready, its first tick next): after the field counter's start, whose vblank handler node (KOS vblank.c
