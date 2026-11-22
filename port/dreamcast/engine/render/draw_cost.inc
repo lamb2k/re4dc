@@ -22,7 +22,7 @@ static unsigned dc_lo=41,dc_hi=640;   /* the E1 selector's pictures; the bench s
 static const char* const dc_phase_name[DC_PH]={"select","begin","sky","preworld","worldOP","actors","worldPT","listgap",
                                               "worldTR","TRextra","hud"};
 static const char* const dc_count_name[DC_COUNT]={"w_pieces","w_places","w_headers","w_staged","w_strips","w_corners",
-    "w_clipstrips","w_cliptris","w_clipout","w_meshlets","w_selected","a_calls","a_parts","a_parts_bound","a_ws","a_pos",
+    "w_clipstrips","w_cliptris","w_clipout","w_meshlets","w_selected","w_facedrop","a_calls","a_parts","a_parts_bound","a_ws","a_pos",
     "a_nrm","a_nrmlights","a_lights","a_headers","a_strips","a_strips_out","a_corners","a_clipstrips","a_cliptris",
     "a_clipout","h_rects",
     "v_w_tris","v_w_off","v_w_nocull","v_w_neg","v_w_pos","v_w_area_nocull","v_w_area_neg","v_w_area_pos",

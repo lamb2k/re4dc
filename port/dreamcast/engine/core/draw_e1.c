@@ -78,6 +78,31 @@ int e1_draw_open_c(const char* pack)
     m1_state[5] = 3;
     return 1;
 }
+/* lane eng-draw2 (eng-load1's request R3, the integrator's assignment): a room change. e1_draw_close_c waits for the
+   graphics chip to finish with the last picture, then gives back everything the renderer holds for the room's pack
+   (render/native_scene.inc native_release: textures in video memory, palette banks, the world's runtime and visibility,
+   the actors' runtime, the logic state and the resident pack buffer). e1_draw_reopen_c opens the next room's pack (the
+   resident buffer sized for that pack) and sets it up as e1_draw_open_c does, without starting the graphics chip again.
+   Not here: the FIGHT image's e2_draw_open (the fight scene never changes room). */
+void e1_draw_close_c(void)
+{
+    if (!open_ok) return;
+    pvr_wait_ready(); pvr_wait_render_done();
+    native_release(&scene);
+    open_ok = 0;
+}
+int e1_draw_reopen_c(const char* pack)
+{
+    if (open_ok) e1_draw_close_c();
+    if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused on reopen (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
+    native_update(&scene, 0);
+    scene.state[0] = (uint32_t*) &eng_cam;
+    e1_light_tables(&scene);
+    partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
+    printf("E1 draw: reopened pack %s, %u catalogue models\n", pack, scene.models.n);
+    open_ok = 1;
+    return 1;
+}
 
 /* The partner (lane eng-e1b), PLACEHOLDER form, kept for a pack without her body (lane eng-e1d: the hill pack draws
    her mesh, catalogue 6, through the E1 actor pass): the renderer marks each of her bones with a flat square, read in place from her native skeleton table's world
@@ -303,6 +328,7 @@ int e1_fields_start_c(int manual)
     vid_waitvbl(); vid_waitvbl();
     if (open_ok && manual) manual_flip = pvr_set_manual_flip(true) == 0;
     flip_n = 0;
+    if (open_ok) native_flip_mark();   /* lane eng-draw2 (step 0): every scene so far is shown */
     return manual_flip;
 }
 uint32_t e1_fields_now_c(void) { return vbl_fields; }
@@ -362,6 +388,7 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
     pvr_list_finish();
     pvr_scene_finish();
     e1_stamp_c(7);
+    native_scene_done();   /* lane eng-draw2 (step 0): counted for the stills' wait */
     uint64_t t2 = e1_clock_us();
     *wait_us = (uint32_t) (t1 - t0);
     *draw_us = (uint32_t) (t2 - t1);
@@ -369,7 +396,7 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
         /* fixed-field presentation: release this picture now (behind any queued one), then wait for it to show; the
            pacer then does not queue it again (e1_present_take_c) */
         if (manual_flip) { e1_present_at_c(vbl_fields); stills_queued = 1; vid_waitvbl(); vid_waitvbl(); }
-        pvr_wait_render_done(); vid_waitvbl(); vid_waitvbl();
+        native_wait_shown(); vid_waitvbl();   /* lane eng-draw2 (step 0): this picture is on the screen, never the one before */
         m1_state[4] = 0xa5000000 + 2 * (*(volatile uint32_t*) 0xa05f8050 & 0x7ffffc);
         m1_state[2] = m1_frame;
         while (m1_state[3] != m1_state[2]) thd_pass();

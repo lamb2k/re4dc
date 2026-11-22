@@ -4,6 +4,19 @@
 typedef struct { Scene assets; float sky_top,sky_bottom; NativeWorld world; Table models,frames,delta[9]; uint32_t *state[9]; unsigned words[9]; void* runtime; NativeVis vis; void* vis_data; } NativeScene;
 int native_open(NativeScene*,const char*);
 void native_close(NativeScene*);
+/* lane eng-draw2 (R3): a room change gives back everything the room's pack holds, the resident buffer included; the next
+   native_open sizes the buffer for its own pack. native_reserve: the bench's two rooms opened by turns share one buffer. */
+void native_release(NativeScene*);
+/* lane eng-draw2 (step 0, the stills made repeatable): a still must show its own picture. pvr_wait_render_done returns
+   at once while the picture's render has not started (KOS starts it only after the previous picture is flipped), so a
+   still could show the picture before it. native_flip_mark: every scene finished so far is shown (call when settled);
+   native_scene_done after each pvr_scene_finish; native_wait_shown waits, field by field, until the chip has flipped
+   to every finished scene (at most 120 fields; 0 when it never did). */
+void native_flip_mark(void);
+void native_scene_done(void);
+int native_wait_shown(void);
+void native_reserve(const char* const* names,unsigned n);
+extern unsigned native_release_keep;   /* control: native_release keeps one texture in video memory */
 void native_reset(NativeScene*);
 void native_update(NativeScene*,unsigned);
 int native_prepare_world(const NativeWorld*,const float*,unsigned);
