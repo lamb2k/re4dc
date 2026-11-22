@@ -2,6 +2,25 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-036 (2026-11-22): character look choices approved; cost before convenience; what was gold is kept
+
+- **Owner, on lane eng-draw4's two sheets:** "They look fine for the character options" (typed "chatter"; read as the
+  character options: detail levels by screen size, LVL, and lighting every other picture, LHALF). Both are approved as
+  looks. Lane eng-draw5 lands LVL as the default once the Ganado difference under it is explained, and the staggered
+  LHALF (characters alternate pictures) as the default if it helps the worst pictures, fits the fight's memory and its
+  stills are no further from today's than the approved sheet; otherwise it stays an arm and a new sheet goes to the
+  owner. Each is recorded as a design choice with its sheet (the approximation rule's engine-line form).
+- **Owner:** "I don't want to borrow costly things because they're convenient - I also don't want to redo things that
+  were gold previous implementations". With H-032 and H-035 this is one rule, now in the plan's section 8 and the
+  common brief:
+  1. Cost decides, never convenience: a part is taken only if it is cheap inside the engine on the console's terms
+     (time a picture, memory, load seconds, disc reads). This binds the engine's own shortcuts too (a pack that carries
+     299 unused recorded frames; a whole-file check at every door).
+  2. What was gold is kept as it is: an implementation proven on the console, cheap and right is not rewritten for the
+     sake of being new; it is changed only for a measured gain. The plan lists them (section 8, "Kept as they are").
+  3. The engine's design wins every doubt (H-035).
+- Sent by message to the running lanes eng-draw5, eng-load2 and eng-sched1.
+
 ## H-035 (2026-11-22): borrow only what makes sense; the engine's design wins; gate rulings on the memory train
 
 (There is no H-034.)
