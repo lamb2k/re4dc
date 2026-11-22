@@ -231,9 +231,8 @@ decltype(setEm(hr_v<short>(), hr_v<signed char>(), hr_v<int>(), hr_v<int>(), hr_
 // DebugTrg(int)
 extern "C" decltype(DebugTrg(hr_v<int>())) hs_48(...) asm("__Z8DebugTrgi");
 decltype(DebugTrg(hr_v<int>())) hs_48(...) { HS("DebugTrg(int)"); return hr_z<decltype(DebugTrg(hr_v<int>()))>::get(); }
-// SetObj00(void*, void*, Vec*, Vec*)   // not declared in the headers: int
-extern "C" int hs_49(...) asm("__Z8SetObj00PvS_P3VecS1_");
-int hs_49(...) { HS("SetObj00(void*, void*, Vec*, Vec*)"); return hr_z<int>::get(); }
+// SetObj00(void*, void*, Vec*, Vec*): taken out of the generated set (lane eng-sched2): R101Init's region path calls
+// a virtual of the object it returns, so host/sched_host.cpp gives it a logged stub object (sched_host.h)
 // SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)
 extern "C" decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_50(...) asm("__Z8SetObj01PvS_P3VecS1_S1_ffii");
 decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>())) hs_50(...) { HS("SetObj01(void*, void*, Vec*, Vec*, Vec*, float, float, int, int)"); return hr_z<decltype(SetObj01(hr_v<void*>(), hr_v<void*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<Vec*>(), hr_v<float>(), hr_v<float>(), hr_v<int>(), hr_v<int>()))>::get(); }

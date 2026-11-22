@@ -21,6 +21,8 @@
 #include "player.h"
 #include "pl_npc.h"
 #include "datactrl.h"
+#include "obj00.h"
+#include "sched_host.h"   // sched_stub_object: SetObj00's logged object, the same as the engine's
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -117,6 +119,23 @@ cDataUnit* cDataCtrl::setData(char* name)
     return g_nunits < 32 ? (cDataUnit*) g_units[g_nunits++] : (cDataUnit*) g_units[31];
 }
 
+// SetObj00's object (lane eng-sched2): R101Init's region path keeps it and calls its setNoSuspend; a logged stub
+// object (engine/host/sched_host.h), as host/sched_host.cpp gives it on the engine
+alignas(32) static unsigned char g_stub_obj[4][sizeof(cObj)];
+static void* g_stub_obj_table[SCHED_STUB_OBJ_SLOTS + 2];
+static unsigned g_stub_objs;
+static int stub_obj_virtual(void*)
+{
+    host_stub_hit("SetObj00 object: a virtual call");
+    return 0;
+}
+cObj* SetObj00(void*, void*, Vec*, Vec*)
+{
+    host_stub_hit("SetObj00(void*, void*, Vec*, Vec*)");
+    void* p = g_stub_obj[g_stub_objs < 4 ? g_stub_objs++ : 3];
+    return (cObj*) sched_stub_object(p, sizeof(cObj), g_stub_obj_table, (void*) stub_obj_virtual);
+}
+
 // ---- the OS layer's boot (gc_os.cpp or os_threads.cpp)
 extern "C" void sched_os_boot(void);
 extern "C" void sched_os_report(char* out, unsigned n);
@@ -169,6 +188,18 @@ int main(int argc, char** argv)
     fprintf(g_out, "# sched_main %s ticks %u control %s\n", SCHED_LAYER, ticks, ctl ? ctl : "none");
     sched_os_boot();
     pG->room_id = 0x101;
+    // the engine's room globals (engine/core/globals.cpp e1_room_globals, village route of core/route.cpp), so the
+    // script takes the path the engine takes (lane eng-sched2): R101Init reads pSys->region (r101.cpp:269, the
+    // SetObj00 path when it is not 0)
+    pSys->region = 1;
+    pG->Item_find_flg |= 0x00002000;
+    pG->game_mode = 5;
+    pG->mot_speed = 1.0f;
+    pG->System_flg |= 0x800;
+    // the room archive (the engine's is st1/r101.arc, core/loader.cpp): a zeroed header here, the PC check loads no
+    // room data; the region path reads two of its offsets for SetObj00's arguments, which the stubs on both sides ignore
+    alignas(32) static unsigned char room_arc[0x1000];
+    pG->pRoom = room_arc;
     TaskSchedulerInit();
     ScenarioInit();
     g_tick = 0;

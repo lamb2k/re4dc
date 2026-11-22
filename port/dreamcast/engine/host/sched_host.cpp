@@ -37,12 +37,16 @@
 #include "sce_sys.h"
 #include "room_data.h"
 #include "datactrl.h"
+#include "obj00.h"
 #include "e1_engine.h"
 #include "e1_clock.h"
 #include "os_threads.h"
 #include "sched_host.h"
 #include <kos.h>
 #include <malloc.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void R101Init();
@@ -118,20 +122,71 @@ SCHED_STUB_FN("__ZN13IDApplicationdlEPvj", sched_idapp_dl, "IDApplication::opera
 // scheduler.cpp's debug page of stack use (debug_mode 6: text through the debug print); the E1 SCHED lines give it
 SCHED_STUB_FN("_stackUsedCheck", sched_stack_page, "stackUsedCheck")
 
-// ---- counters (outside the timed rows: two clock reads a step)
-static int scene, ctl_stackx;
+// ---- SetObj00's object (lane eng-sched2): R101Init's region path (pSys->region != 0, as the engine sets it:
+// core/globals.cpp e1_room_globals) keeps the object and calls its setNoSuspend; a logged stub object (sched_host.h),
+// the same as the PC check's harness gives
+alignas(32) static u8 stub_obj[4][sizeof(cObj)];
+static void* stub_obj_table[SCHED_STUB_OBJ_SLOTS + 2];
+static unsigned stub_objs;
+static int sched_stub_obj_virtual(void*)
+{
+    e1_stub_hit("SetObj00 object: a virtual call", 0);
+    return 0;
+}
+cObj* SetObj00(void*, void*, Vec*, Vec*)
+{
+    e1_stub_hit("SetObj00 (a logged stub object)", (int) stub_objs);
+    void* p = stub_obj[stub_objs < 4 ? stub_objs++ : 3];
+    return (cObj*) sched_stub_object(p, sizeof(cObj), stub_obj_table, (void*) sched_stub_obj_virtual);
+}
+
+// ---- counters (outside the timed rows: two clock reads a tick around the scenario step)
+static int scene, ctl_stackx, ctl_delay;
 static unsigned steps, steps_tick, steps_max, ticks_run, init_tasks;
 static uint64_t scen_sum, scen_max, sched_sum, sched_max;
 static unsigned scen_max_tick, sched_max_tick, scen_over;
+// The task-step record (lane eng-sched2): every TaskSchedulerMain call, as the PC check's trace writes it (tick,
+// slot, status and sleep count before and after, the task's function), kept in a buffer on the KOS heap (SCHED scene
+// only) and printed after play (E1 SCHEDT lines; hostref/svc/sched/sched_engine.py compares them with the PC's). The
+// tick is the scenario tick: 0 the room start, then 1, 2, ... (the PC harness's numbering).
+struct SchedStep {
+    u16 tick;
+    u8 slot, st0, st, ran, pad[2];
+    u32 sl0, sl, func;
+};
+enum { STEP_MAX = 4096, TICK_MAX = 1024 };
+static SchedStep* step_rec;
+static unsigned step_n, cur_tick, tick_ran;
+// each tick's scenario step (ScenarioMove and TaskScheduler) in us, and whether a task thread ran in it
+static u16* tick_us;
+static u8* tick_kind;
 extern "C" void __real_TaskSchedulerMain(TASK* t);
 extern "C" void __wrap_TaskSchedulerMain(TASK* t)
 {
     steps++;
     steps_tick++;
+    const u8 st0 = (u8) t->Status;
+    const u32 sl0 = (u32) t->SleepCtr;
+    // a thread runs in this step: a new task, a running one, or a sleeper whose count ends now (scheduler.cpp
+    // TaskSchedulerMain); the event and sub-screen holds are left out (no event holds in the SCHED scene)
+    const u8 ran = st0 == TASK_EXEC || st0 == TASK_RUN || (st0 == TASK_SLEEP && sl0 == 1);
     __real_TaskSchedulerMain(t);
+    tick_ran |= ran;
+    if (step_rec && step_n < STEP_MAX) {
+        SchedStep& s = step_rec[step_n];
+        s.tick = (u16) cur_tick;
+        s.slot = (u8) (t - Task);
+        s.st0 = st0;
+        s.st = (u8) t->Status;
+        s.ran = ran;
+        s.sl0 = sl0;
+        s.sl = (u32) t->SleepCtr;
+        s.func = (u32) (uintptr_t) t->pFunc;
+    }
+    step_n++;
 }
 
-static void sched_host_tasks(unsigned tick);
+static void sched_host_tasks(unsigned tick, uint64_t scen_d);
 
 void sched_host_boot()
 {
@@ -140,14 +195,23 @@ void sched_host_boot()
     if (f >= 0) { fs_close(f); scene = 1; }
     f = fs_open("/cd/SCHEDX", O_RDONLY);
     if (f >= 0) { fs_close(f); ctl_stackx = 1; }
-    e1_log("E1 SCHED boot: scheduler hosted, %u task slots on the KOS heap%s%s\n", (unsigned) TASK_NUM,
+    f = fs_open("/cd/SCHEDD", O_RDONLY);
+    if (f >= 0) { fs_close(f); ctl_delay = 1; }
+    e1_log("E1 SCHED boot: scheduler hosted, %u task slots on the KOS heap%s%s%s\n", (unsigned) TASK_NUM,
            scene ? "; lab scene SCHED: the village's room script (st1/r101) runs" : "",
-           ctl_stackx ? "; SCHEDX: a scenario task's stack guard overwritten at tick 300 (control)" : "");
+           ctl_stackx ? "; SCHEDX: a scenario task's stack guard overwritten at tick 300 (control)" : "",
+           ctl_delay ? "; SCHEDD: 200 us added inside the timed scenario step at tick 200 (timing control)" : "");
 }
 
 void sched_host_room_init()
 {
     if (!scene) return;
+    // the step record and the per-tick cost (lab scene only; KOS heap, about 90 KB)
+    step_rec = (SchedStep*) malloc(STEP_MAX * sizeof(SchedStep));
+    tick_us = (u16*) malloc(TICK_MAX * sizeof(u16));
+    tick_kind = (u8*) malloc(TICK_MAX);
+    if (!step_rec || !tick_us || !tick_kind) e1_log("E1 SCHED record: refused by the KOS heap\n");
+    cur_tick = 0;
     // the task table and its stack pool (on the KOS heap), then the scenario system and the room's start
     TaskSchedulerInit();
     ScenarioInit();
@@ -163,25 +227,60 @@ void sched_host_scenario(unsigned tick)
         for (unsigned i = 5; i < TASK_NUM; i++)
             if (Task[i].Status) { *(u32*) (Task[i].pStack - Task[i].StackSize) = 0; break; }
     }
+    cur_tick = ticks_run + 1;
+    tick_ran = 0;
     const uint64_t a = e1_clock_us();
+    if (ctl_delay && cur_tick == 200)   // SCHEDD (timing control): a known 200 us inside the timed step
+        while (e1_clock_us() - a < 200) {}
     ScenarioMove();
     const uint64_t d = e1_clock_us() - a;
     scen_sum += d;
     scen_over += d > 100;
     if (d > scen_max) scen_max = d, scen_max_tick = tick;
-    sched_host_tasks(tick);
+    sched_host_tasks(tick, d);
 }
 
-static void sched_host_tasks(unsigned tick)
+static void sched_host_tasks(unsigned tick, uint64_t scen_d)
 {
     const uint64_t a = e1_clock_us();
     TaskScheduler();
     const uint64_t d = e1_clock_us() - a;
     sched_sum += d;
     if (d > sched_max) sched_max = d, sched_max_tick = tick;
+    if (tick_us && ticks_run < TICK_MAX) {
+        const uint64_t all = scen_d + d;
+        tick_us[ticks_run] = (u16) (all > 0xFFFF ? 0xFFFF : all);
+        tick_kind[ticks_run] = (u8) tick_ran;
+    }
     ticks_run++;
     if (steps_tick > steps_max) steps_max = steps_tick;
     steps_tick = 0;
+}
+
+// mean, p99 (nearest rank) and worst of the scenario step's per-tick cost, over the ticks of one kind
+static void sched_cost_line(const char* what, int kind)
+{
+    static u16 v[TICK_MAX];
+    unsigned n = 0, worst_tick = 0;
+    uint64_t sum = 0;
+    const unsigned k = ticks_run < TICK_MAX ? ticks_run : TICK_MAX;
+    u16 worst = 0;
+    for (unsigned i = 0; i < k; i++) {
+        if (kind >= 0 && tick_kind[i] != kind) continue;
+        v[n++] = tick_us[i];
+        sum += tick_us[i];
+        if (tick_us[i] > worst) worst = tick_us[i], worst_tick = i + 1;
+    }
+    for (unsigned i = 1; i < n; i++) {   // insertion sort, after play
+        const u16 x = v[i];
+        unsigned j = i;
+        for (; j && v[j - 1] > x; j--) v[j] = v[j - 1];
+        v[j] = x;
+    }
+    const unsigned r = n ? (99 * n + 99) / 100 : 0;   // nearest rank: ceil(0.99 n)
+    e1_log("E1 SCHED cost %s: ticks %u mean %lu us p99 %u us worst %u us (tick %u), over 100 us %u\n", what, n,
+           (unsigned long) (n ? sum / n : 0), (unsigned) (n ? v[r - 1] : 0), (unsigned) worst, worst_tick,
+           [&] { unsigned c = 0; for (unsigned i = 0; i < n; i++) c += v[i] > 100; return c; }());
 }
 
 void sched_host_report()
@@ -196,15 +295,44 @@ void sched_host_report()
            scene ? "village-script" : "default", ticks_run, init_tasks, live, steps, steps_max,
            (unsigned long) (scen_sum / n), (unsigned long) scen_max, scen_max_tick, scen_over,
            (unsigned long) (sched_sum / n), (unsigned long) sched_max, sched_max_tick, created, reaped, pending);
-    OsStackMark m[32];
-    const unsigned k = os_threads_stacks(m, 32);
-    for (unsigned i = 0; i < k; i++) {
-        const TASK* t = 0;
-        for (unsigned j = 0; j < TASK_NUM; j++)
-            if ((const void*) &Task[j].Thread == m[i].thread) t = &Task[j];
-        e1_log("E1 SCHED stack slot %d: bytes %u used %u (high water) guard %08x\n", t ? (int) t->Task_no : -1, m[i].bytes,
-               m[i].bytes - m[i].untouched - 4, m[i].guard);
+    if (!scene) return;
+    if (tick_us) {
+        sched_cost_line("all", -1);
+        sched_cost_line("tasks waiting", 0);
+        sched_cost_line("tasks running", 1);
     }
-    if (!k) e1_log("E1 SCHED stacks: no task ran\n");
+    // the stacks' high-water marks, every slot (lane eng-sched2): TaskSchedulerInit paints the pool with 0xB3 once
+    // and nothing paints it again, so the untouched words above each slot's guard word give the most the slot used
+    // over the whole run, the tasks that ended included
+    unsigned pool = 0, used_all = 0;
+    for (unsigned i = 0; i < TASK_NUM; i++) {
+        const TASK& t = Task[i];
+        if (!t.pStack || !t.StackSize) continue;
+        const u32* lo = (const u32*) (t.pStack - t.StackSize);
+        const u32* p = lo + 1;
+        while ((const u8*) p < t.pStack && *p == 0xB3B3B3B3u) ++p;
+        const unsigned untouched = (unsigned) ((const u8*) p - (const u8*) (lo + 1));
+        const unsigned used = (unsigned) t.StackSize - 4 - untouched;
+        pool += (unsigned) t.StackSize;
+        used_all += used;
+        e1_log("E1 SCHED stack slot %u: bytes %u used %u (high water) guard %08x\n", i, (unsigned) t.StackSize, used,
+               (unsigned) lo[0]);
+    }
+    e1_log("E1 SCHED stacks: pool %u bytes, high water summed %u bytes\n", pool, used_all);
+    // the task steps (E1 SCHEDT: tick:slot:status/sleep>status/sleep:function, hex, eight a line)
+    if (step_rec) {
+        const unsigned k = step_n < STEP_MAX ? step_n : STEP_MAX;
+        char line[400];
+        for (unsigned i = 0; i < k; i += 8) {
+            int o = snprintf(line, sizeof line, "E1 SCHEDT");
+            for (unsigned j = i; j < k && j < i + 8; j++) {
+                const SchedStep& s = step_rec[j];
+                o += snprintf(line + o, sizeof line - o, " %x:%x:%x/%lx>%x/%lx:%lx", s.tick, s.slot, s.st0,
+                              (unsigned long) s.sl0, s.st, (unsigned long) s.sl, (unsigned long) s.func);
+            }
+            e1_log("%s\n", line);
+        }
+        e1_log("E1 SCHEDT END steps %u recorded %u\n", step_n, k);
+    }
 }
 #endif
