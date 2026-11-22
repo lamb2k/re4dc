@@ -12,6 +12,9 @@ void texture_image_key(const void* pixels, const void* palette,unsigned width,un
     if(image_key(img,k)){out[0]=k.crc;out[1]=k.fnv;}
 }
 static unsigned room_id,warmup,number,presents;
+/* the rooms a capture may record: the stage 1 rooms (lane eng-rec1: chapter 1, r100 to r10b, besides r101, r103,
+   r119 and r11d before it). The bake refuses a capture whose LOG3 room is not the room it bakes. */
+static bool m1r3_room(unsigned room){return (room>>8)==1 && (room&0xff)<0x20;}
 void append(Kind kind,const void* ptr,unsigned size){
     if(!recording)return;
     auto& c=m1r3_control;
@@ -23,7 +26,7 @@ void append(Kind kind,const void* ptr,unsigned size){
 void begin(unsigned room,unsigned tick){
     if(room!=room_id){warmup=number=0;room_id=room;}
     recording=false;presents=0;
-    if((room!=0x101 && room!=0x103 && room!=0x119 && room!=0x11d) || number>=300)return;   /* eng-boss: + r119 (El Gigante); eng-e1d: + r11d (the hill path) */
+    if(!m1r3_room(room) || number>=300)return;   /* eng-boss: + r119 (El Gigante); eng-e1d: + r11d (the hill path); eng-rec1: stage 1 */
     if(warmup<300 || !m1r3_control.mode)return;
     if(m1r3_control.start && tick<m1r3_control.start)return;   /* eng-boss: the host may fix the first tick */
     auto& c=m1r3_control;
@@ -37,7 +40,7 @@ void begin(unsigned room,unsigned tick){
 }
 void present(){++presents;}
 void finish(){
-    if((room_id!=0x101 && room_id!=0x103 && room_id!=0x119 && room_id!=0x11d) || number>=300)return;
+    if(!m1r3_room(room_id) || number>=300)return;
     if(warmup<300){warmup+=presents!=0;return;}
     if(!recording)return;
     auto& c=m1r3_control;
