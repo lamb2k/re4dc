@@ -1,6 +1,7 @@
 # Lane eng-rec1: the ten chapter 1 rooms captured and baked into game packs (2026-11-22)
 
-**Status: finished, unaudited** (see "Not done" for the rooms whose bake had not finished at hand-back).
+**Status: stopped by the owner's pause (2026-11-22), partial, unaudited.** All ten rooms are captured; their chapter
+bake was stopped before any room finished from the final captures. Resume point: `E:\RE4DC-Lanes\eng-rec1\STATUS.md`.
 Tier of everything here: **Flycast plain** (function runs of the old game as a recorder, slots std1/std2) and
 **counts** from the baked data. No timing.
 
