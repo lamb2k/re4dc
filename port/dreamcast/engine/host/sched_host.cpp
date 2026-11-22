@@ -36,6 +36,7 @@
 #include "scheduler.h"
 #include "sce_sys.h"
 #include "room_data.h"
+#include "datactrl.h"
 #include "e1_engine.h"
 #include "e1_clock.h"
 #include "os_threads.h"
@@ -61,6 +62,17 @@ void cRoomData::execMainFunc(u16 room)
     if (room == 0x101) R101Main();
 }
 u8* cRoomData::getRoomSavePtr(u16) { return room_save; }
+
+// The data controller's units (the room's motion and model data sets, loaded by the original's datactrl, not hosted):
+// the room script keeps the unit it is given and writes commands into it (R101Init: R101_SIZE), so a null return
+// stops the console; zeroed units, as the PC check's harness (hostref/svc/sched/sched_main.cpp)
+alignas(32) static u8 data_units[32][sizeof(cDataUnit)];
+static unsigned data_units_used;
+cDataUnit* cDataCtrl::setData(char*)
+{
+    e1_stub_hit("cDataCtrl::setData (a zeroed unit)", (int) data_units_used);
+    return (cDataUnit*) data_units[data_units_used < 32 ? data_units_used++ : 31];
+}
 
 // ---- what scheduler.cpp asks of the platform
 // No disc call can be in progress inside a task: the engine opens and reads nothing in play.

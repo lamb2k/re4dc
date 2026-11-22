@@ -339,9 +339,7 @@ decltype(hr_v<cItemMgr&>().num(hr_v<int>())) hs_83(...) { HS("cItemMgr::num(int)
 // cItemMgr::check(unsigned short)
 extern "C" decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>())) hs_84(...) asm("__ZN8cItemMgr5checkEt");
 decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>())) hs_84(...) { HS("cItemMgr::check(unsigned short)"); return hr_z<decltype(hr_v<cItemMgr&>().check(hr_v<unsigned short>()))>::get(); }
-// cDataCtrl::setData(char*)
-extern "C" decltype(hr_v<cDataCtrl&>().setData(hr_v<char*>())) hs_85(...) asm("__ZN9cDataCtrl7setDataEPc");
-decltype(hr_v<cDataCtrl&>().setData(hr_v<char*>())) hs_85(...) { HS("cDataCtrl::setData(char*)"); return hr_z<decltype(hr_v<cDataCtrl&>().setData(hr_v<char*>()))>::get(); }
+// cDataCtrl::setData(char*): defined in host/sched_host.cpp (the room script uses the unit it returns)
 // cDataUnit::setCommand(int, unsigned long, unsigned char)
 extern "C" decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>())) hs_86(...) asm("__ZN9cDataUnit10setCommandEimh");
 decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>())) hs_86(...) { HS("cDataUnit::setCommand(int, unsigned long, unsigned char)"); return hr_z<decltype(hr_v<cDataUnit&>().setCommand(hr_v<int>(), hr_v<unsigned long>(), hr_v<unsigned char>()))>::get(); }
