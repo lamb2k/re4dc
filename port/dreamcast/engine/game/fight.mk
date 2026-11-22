@@ -14,7 +14,29 @@
 # stays off (render, platform and old-port hooks compile out).
 .DEFAULT_GOAL := all
 FIGHT_SRCS := em10/em10 em15/em15_set game/em_set game/em_sub game/dmg game/em_dm_val st1/r101 \
-	game/sce_com game/sce_at game/game game/libgpu st/em_wrap
+	game/sce_com game/sce_at game/game st/em_wrap
+# lane eng-e2d item 3: game/libgpu is not hosted: the three calls the image used (ClearOTagR, AddPrim, DelPrim) are the
+# scene attachments' list, the engine's (services/scene/at_list.cpp), with sce_at's two walkers. Control build only:
+# ATLIST_ORIG=1 hosts libgpu and keeps sce_at's walkers (the engine's copies left out; the link check must FAIL).
+# Lane eng-e2d item 3: the logged stubs of engine/fight/fight_svc_stubs.cpp (the binocular's widget and the focus blur,
+# the save file's storage, the scenario debug print; DebugTrg the engine's 0): the hosted bodies made weak. (The header
+# inlines IDApplication::init and IdBinocular's destructors are taken from the engine's by name.) Control build only:
+# FIGHT_STUBS_ORIG=1 keeps them all original (the link check must FAIL).
+ifneq ($(FIGHT_STUBS_ORIG),1)
+WEAKEN_game/cam_extra += __ZN11IdBinocular4initEP6CameraPvS2_ __ZN11IdBinocular4moveEPv __ZN11IdBinocular4quitEPv \
+	__ZN14FocusAnimation4initEi __ZN14FocusAnimation4moveEi __ZN14FocusAnimation4quitEv
+WEAKEN_game/game += __ZN9cGameSave4loadEPv __ZN9cGameSave9checkAddrEP12GameSaveData \
+	__ZN9cGameSave10calcOffsetEP12GameSaveDataPv __ZN9cGameSave8calcAddrEP12GameSaveData save__9cGameSavePv
+WEAKEN_game/sce_com += _SceDebugDisp __Z8DebugTrgi
+else
+ENG_CPP_OUT += $(ENG)/fight/fight_svc_stubs.cpp
+endif
+ifeq ($(ATLIST_ORIG),1)
+FIGHT_SRCS += game/libgpu
+ENG_CPP_OUT += $(ENG)/services/scene/at_list.cpp
+else
+WEAKEN_game/sce_at += _sceAtSetOtStart _sceAtGetOtAddr
+endif
 # lane eng-e2a item 3: the scenario areas are the engine's (services/volumes/area_vol.cpp, game/Makefile AREAVOL_OBJ);
 # game/area is not hosted (AREA_ORIG=1, a control build only, hosts it again)
 ifeq ($(AREA_ORIG),1)
@@ -23,8 +45,14 @@ endif
 HOSTED_SRCS += $(FIGHT_SRCS)
 # route_ck: the native routes service (services/routes, lane eng-e1e), not the original unit
 HOSTED_OBJS := $(addprefix $(OUT)/h/,$(addsuffix .o,$(HOSTED_SRCS) $(SVC_ORIG_SRCS)))
-ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(wildcard $(ENG)/fight/*.cpp) $(wildcard $(ENG)/services/effects/*.cpp)
+ENG_CPP := $(filter-out $(ENG)/core/route.cpp,$(ENG_CPP)) $(filter-out $(ENG_CPP_OUT),$(wildcard $(ENG)/fight/*.cpp)) \
+	$(wildcard $(ENG)/services/effects/*.cpp)
 ENG_HDRS += $(wildcard $(ENG)/fight/*.h) $(wildcard $(ENG)/services/effects/*.h)
+# Lane eng-e2d: the scenario layer's services (services/scene/: the event walk over the record tables, sce_at's
+# service functions); sce_com and sce_at are SPLIT_NOIPA_UNITS (their calls reach the engine's bodies)
+ENG_CPP += $(filter-out $(ENG_CPP_OUT),$(wildcard $(ENG)/services/scene/*.cpp))
+ENG_HDRS += $(wildcard $(ENG)/services/scene/*.h)
+SPLIT_NOIPA_UNITS += game/sce_com game/sce_at
 ENG_FLAGS += -DE2_BOSS=1 -DE2_FIGHT=1 -I$(ENG)/fight -I$(ENG)/boss -I$(ENG)/services/effects
 REND_FLAGS += -DE2_BOSS=1 -DE2_FIGHT=1 -I$(ENG)/services/effects -I$(ENG)/fight
 REND_DEPS += $(wildcard $(ENG)/fight/*.inc) $(ENG)/services/effects/fx.h
@@ -69,22 +97,22 @@ EM10_NATIVE := Em10SetSeTbl em10CallVoiceSe _Z16em10CallVoiceSe2P5cEm10ii _Z12em
 	em10SetAccesory em10ClothPartsSet em10GoodsPartsSet em10SackSet em10BlendMotSet _Z11em10HandSetP5cEm10i \
 	_Z11em10HeadSetP5cEm10i _Z13em10ModelInitP5cEm10 _ZN5cEm10D0Ev _ZN5cEm10D1Ev _ZN5cEm10D2Ev
 EM10_WEAK := $(addprefix _,$(filter-out $(EM10_ORIG),$(EM10_NATIVE)))
-EM10_NOIPA := -fno-inline-functions -fno-inline-small-functions -fno-partial-inlining -fno-ipa-cp -fno-ipa-sra \
-	-fno-ipa-icf -fno-ipa-ra -fno-ipa-pure-const -fno-ipa-modref -fno-ipa-reference -fno-ipa-vrp -fno-ipa-bit-cp
+# Lane eng-e2d: em10.o is one of game/Makefile's SPLIT_NOIPA_UNITS (the interprocedural optimisations off, as lane
+# eng-e2b's EM10_NOIPA was) and the general split check (tools/engine/split_check.py, per object here and per image in
+# check_link.py) replaces game/em10_split_check.py. EM10_IPA=1 (control only) is SPLIT_IPA=em10/em10.
+SPLIT_NOIPA_UNITS += em10/em10
 ifeq ($(EM10_IPA),1)
-EM10_NOIPA :=
+SPLIT_IPA += em10/em10
 endif
 # (WEAKEN_em10/em10, em10ScaleCompress's, is set by game/Makefile after this file is read: the recipe expands it then.)
-$(OUT)/h/em10/em10.o: $(ROOT)/src/em10/em10.cpp $(ENG)/host/e1_prelude.h $(ENG)/game/em10_split_check.py $(ENG)/game/fight.mk
+$(OUT)/h/em10/em10.o: $(ROOT)/src/em10/em10.cpp $(ENG)/host/e1_prelude.h $(ROOT)/port/dreamcast/tools/engine/split_check.py $(ENG)/game/fight.mk
 	@mkdir -p $(dir $@)
-	kos-c++ $(ORIG_FLAGS) $(EM10_NOIPA) -fopt-info-inline-optimized=$@.inl.txt $(ORIG_INC) -c $< -o $@
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -c $< -o $@
 	sh-elf-objcopy $(foreach f,$(PRESENT_em10/em10),--rename-section .text.$(f)=e1_present) \
 		$(foreach f,$(WEAKEN_em10/em10) $(EM10_WEAK),--weaken-symbol=$(f)) $@
-	python3 $(ENG)/game/em10_split_check.py --nm sh-elf-nm --obj $@ --inline $@.inl.txt --weak $(WEAKEN_em10/em10) $(EM10_WEAK)
-# em_sub and dmg have their service functions made weak too (lane eng-e2a, game/Makefile WEAKEN_game/em_sub, the dmg rule):
-# no inlined or cloned copy of those is reported (lane eng-e2b checked both units' -fopt-info), but a caller compiled with
-# -fipa-ra may keep a value in a register the body it saw left alone and the engine's replacement does not: off there.
-$(OUT)/h/game/em_sub.o $(OUT)/h/game/dmg.o: ORIG_FLAGS += -fno-ipa-ra
+	python3 $(ROOT)/port/dreamcast/tools/engine/split_check.py --obj $@ --unit em10/em10 --weak $(WEAKEN_em10/em10) $(EM10_WEAK)
+# (em_sub and dmg, whose service functions lane eng-e2a made weak, are SPLIT_NOIPA_UNITS in game/Makefile: lane eng-e2b's
+# -fno-ipa-ra there is part of that set.)
 $(OUT)/n/em10_%.o: $(ENG)/services/em10/em10_%.cpp $(ENG)/services/camera/cam_math.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(ENG)/services/camera -c $< -o $@
