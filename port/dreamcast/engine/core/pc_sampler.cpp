@@ -227,7 +227,7 @@ extern "C" void e1_pcs_boot(void)
            "scene)\n", g_hz, (unsigned long) kRecords, (unsigned long) (kRecords * 8), (void*) g.rec,
            g_spin ? ", spin control: 10 ms of every 33 ms in e1_pcs_spin" : "");
     kthread_attr_t a = {};
-    a.stack_size = 8192;
+    a.stack_size = 4096;
     a.prio = PRIO_DEFAULT - 1;
     a.label = "e1pcs";
     a.create_detached = true;

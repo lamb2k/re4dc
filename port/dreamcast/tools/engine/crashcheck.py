@@ -42,41 +42,41 @@ results = {}
 for l in lines:
     m = re.match(r'CDISC RESULT \d+ (\S+) (OK|FAILED) state (\S+).*?(?: why: (.*))?$', l)
     if m: results[m.group(1)] = (m.group(2), m.group(3), m.group(4) or '')
-# the armed lines and the screens, in order; a screen belongs to the armed line before it
-arms = []
-for i, l in enumerate(lines):
-    m = re.search(r'E1 CRASHCTL armed: .* at tick (\d+), expect code (\w+) pc (\w+) addr (\S+)', l)
-    if m:
-        arms.append(dict(line=i, tick=int(m.group(1)), code=m.group(2), pc=m.group(3), addr=m.group(4)))
-screens = [i for i, l in enumerate(lines) if l.startswith('CRASHSCREEN FAULT ')]
+# each scene's part of the log: from its "CDISC RUN <n> <name>" line to the next scene's; the armed line and the screen
+# are looked for inside it
+starts = [(i, re.match(r'CDISC RUN \d+ (\S+) ', l).group(1)) for i, l in enumerate(lines) if re.match(r'CDISC RUN \d+ (\S+) ', l)]
+part = {}
+for k, (i, name) in enumerate(starts):
+    if name not in part: part[name] = (i, starts[k + 1][0] if k + 1 < len(starts) else len(lines))
 ok = True
 crash = [s for s in a.crash.split(',') if s]
 clean = [s for s in a.clean.split(',') if s]
-if len(arms) != len(crash):
-    print(f'armed lines {len(arms)}, crash scenes named {len(crash)}: WRONG'); ok = False
-for k, name in enumerate(crash):
+for name in crash:
     bad = []
-    if k >= len(arms):
-        print(f'{name}: no armed line: WRONG'); ok = False; continue
-    arm = arms[k]
-    nxt = arms[k + 1]['line'] if k + 1 < len(arms) else len(lines)
-    sc = [i for i in screens if arm['line'] < i < nxt]
+    lo, hi = part.get(name, (0, 0))
+    seg = lines[lo:hi]
+    arm = None
+    for l in seg:
+        m = re.search(r'E1 CRASHCTL armed: .* at tick (\d+), expect code (\w+) pc (\w+) addr (\S+)', l)
+        if m: arm = dict(tick=int(m.group(1)), code=m.group(2), pc=m.group(3), addr=m.group(4)); break
+    if not arm:
+        print(f'{name}: no armed line in its part of the log: WRONG'); ok = False; continue
+    sc = [i for i, l in enumerate(seg) if l.startswith('CRASHSCREEN FAULT ')]
     if not sc:
-        bad.append('no crash screen')
+        bad.append('no crash screen' + (' (the planted fault did not stop the program)' if any('did not stop' in l for l in seg) else ''))
     else:
         i = sc[0]
-        m = re.match(r'CRASHSCREEN FAULT code (\w+) pc (\w+) pr (\w+) addr (\w+)', lines[i])
+        m = re.match(r'CRASHSCREEN FAULT code (\w+) pc (\w+) pr (\w+) addr (\w+)', seg[i])
         if not m: bad.append('fault row does not parse')
         else:
             if m.group(1) != arm['code']: bad.append(f"code {m.group(1)} planted {arm['code']}")
             if m.group(2) != arm['pc']: bad.append(f"pc {m.group(2)} planted {arm['pc']}")
             if arm['addr'] != '-' and m.group(4) != arm['addr']: bad.append(f"addr {m.group(4)} planted {arm['addr']}")
-        seg = lines[i:nxt]
-        t = [re.match(r'CRASHSCREEN (\w+) scene (\w+) room (\w+) tick (\d+)', l) for l in seg]
+        t = [re.match(r'CRASHSCREEN (\w+) scene (\w+) room (\w+) tick (\d+)', l) for l in seg[i:]]
         t = [x for x in t if x]
         if not t: bad.append('no scene row')
         elif int(t[0].group(4)) != arm['tick']: bad.append(f"tick {t[0].group(4)} planted {arm['tick']}")
-        if not any(l.startswith('CRASHSCREEN END rows') for l in seg): bad.append('no END row')
+        if not any(l.startswith('CRASHSCREEN END rows') for l in seg[i:]): bad.append('no END row')
     r = results.get(name)
     if not r: bad.append('no selector result')
     else:
@@ -91,7 +91,9 @@ for k, name in enumerate(crash):
     ok &= not bad
 for name in clean:
     r = results.get(name)
-    tag = 'ok' if r and r[0] == 'OK' else f'WRONG: {r}'
+    lo, hi = part.get(name, (0, 0))
+    screen = any(l.startswith('CRASHSCREEN') for l in lines[lo:hi])
+    tag = 'ok' if r and r[0] == 'OK' and not screen else f'WRONG: {r}' + (' with a crash screen' if screen else '')
     print(f'{name} (clean): selector {r[0] if r else "-"}: {tag}')
     ok &= tag == 'ok'
 print('CRASHCHECK', 'PASS' if ok else 'FAIL', f'(control {a.control})' if a.control else '')

@@ -389,7 +389,7 @@ extern "C" void e1_crash_boot(void)
            (unsigned long) (uintptr_t) (g_ctl_kind == 1 ? e1_crash_plant_ld : e1_crash_plant_ill),
            g_ctl_kind == 1 ? "8c0abcd1" : "-");
     kthread_attr_t a = {};
-    a.stack_size = 8192;
+    a.stack_size = 4096;
     a.prio = PRIO_DEFAULT - 1;   // above the main thread: it runs as soon as its tick is reached
     a.label = "e1crashctl";
     a.create_detached = true;
