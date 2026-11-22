@@ -90,16 +90,32 @@ static float bone_scale[ACTOR_WS_LIMIT];
 static const float* ws_rows=&bone_rows[0][0];
 static unsigned ws_stride=12;
 static uint8_t ws_ready[ACTOR_WS_LIMIT];
-static pvr_vertex_t projected_pool[2][ACTOR_POS_LIMIT] __attribute__((aligned(32)));
-static uint32_t colors_pool[2][ACTOR_POS_LIMIT] __attribute__((aligned(32)));
-static uint8_t outcode_pool[2][ACTOR_POS_LIMIT];
+/* Lane eng-draw6 (item 1): the two slots' projected positions, colours and outcodes, sized at pack open to the
+   catalogue's need (slot 0: Leon, catalogue 0, and his distance levels; slot 1: every other model) instead of
+   2 x 4096 entries in the image (303,104 B of .bss: FIGHT ended play 28,672 B into its arena on run r3). Allocated after
+   the models in native_actor_open, given back in native_actor_close (a room change). A model larger than its slot is
+   refused when drawn (guard actor_pool_refused, expected 0). Only Leon has translucent (role 8) parts in every pack
+   (bake/native_models.py gives the hair run's translucent header to Leon's models only); the open counts the models
+   outside slot 0 that have one (guard actor_trans_other, expected 0): their translucent parts would read slot 1's
+   buffers after a later character's opaque call, so the translucent call is Leon's alone. */
+static pvr_vertex_t* projected_pool[2];
+static uint32_t* colors_pool[2];
+static uint8_t* outcode_pool[2];
+static unsigned pool_pos_cap[2],pool_nrm_cap[2];
+unsigned actor_pool_refused,actor_trans_other,actor_pool_bytes[2];
+static inline unsigned rt_npos(const RtModel* m){if(!m->h[4])return 0;const RtPart* p=m->parts+m->h[4]-1;return p->pos_first+p->pos_count;}
+static inline unsigned rt_nnrm(const RtModel* m){if(!m->h[4])return 0;const RtPart* p=m->parts+m->h[4]-1;return p->nrm_first+p->nrm_count;}
+/* 1 when the model's positions and normals fit the slot's buffers; 0 counted (not drawn) */
+static inline int actor_pool_fits(unsigned slot,const RtModel* m){
+    if(rt_npos(m)<=pool_pos_cap[slot] && rt_nnrm(m)<=pool_nrm_cap[slot])return 1;
+    actor_pool_refused++;return 0;
+}
 static uint8_t part_state[128][16];       /* per actor ordinal: 0 out, 1 inside, 2 boundary */
 static float frustum[6][4];
 static shz_mat4x4_t view_project __attribute__((aligned(32)));
 volatile unsigned m1_part_counts[300][2];
 extern volatile uint32_t m1_state[8];
 #include "actor_light_old.inc"   /* lane eng-draw5 item 4: look arm LOLD (off by default) */
-#include "actor_skin.inc"        /* lane eng-draw5 item 2: speed lab arm SKC, skinning in C on SH4ZAM */
 
 static void multiply34(float* out,const float* a,const float* b){
     for(unsigned i=0;i<3;i++)for(unsigned j=0;j<4;j++)
@@ -213,6 +229,33 @@ void native_actor_close(NativeScene* s){
         free(m->sided);
     }
     free(cat);s->runtime=NULL;
+    for(unsigned k=0;k<2;k++){   /* lane eng-draw6: the slots' buffers go with the catalogue they were sized for */
+        free(projected_pool[k]);free(colors_pool[k]);free(outcode_pool[k]);
+        projected_pool[k]=NULL;colors_pool[k]=NULL;outcode_pool[k]=NULL;pool_pos_cap[k]=pool_nrm_cap[k]=0;actor_pool_bytes[k]=0;
+    }
+}
+/* lane eng-draw6: slot 0 holds catalogue 0 and its distance levels, slot 1 every other model */
+static int actor_pools_open(const RtCatalog* cat){
+    unsigned pos[2]={0,0},nrm[2]={0,0};actor_trans_other=0;
+    for(unsigned mi=0;mi<cat->n;mi++){
+        const RtModel* m=cat->m+mi;unsigned slot=mi!=0,trans=0;
+        for(unsigned k=1;k<5;k++)if(lod_variant[0][k]==mi)slot=0;
+        for(unsigned p=0;p<m->h[4];p++)trans|=m->parts[p].src->role==8;
+        if(slot && trans)actor_trans_other++;
+        if(rt_npos(m)>pos[slot])pos[slot]=rt_npos(m);
+        if(rt_nnrm(m)>nrm[slot])nrm[slot]=rt_nnrm(m);
+    }
+    for(unsigned k=0;k<2;k++){
+        free(projected_pool[k]);free(colors_pool[k]);free(outcode_pool[k]);
+        const unsigned np=(pos[k]+7)&~7u,nn=(nrm[k]+7)&~7u;
+        projected_pool[k]=memalign(32,32*np+32);colors_pool[k]=memalign(32,4*nn+32);outcode_pool[k]=malloc(np+8);
+        if(!projected_pool[k]||!colors_pool[k]||!outcode_pool[k])return 0;
+        pool_pos_cap[k]=np;pool_nrm_cap[k]=nn;actor_pool_bytes[k]=32*np+32+4*nn+32+np+8;
+    }
+    printf("ACTOR POOLS: slot 0 %u positions %u normals, slot 1 %u positions %u normals, %u B (was 303104 B in the image); "
+           "models outside slot 0 with translucent parts %u (guard, expected 0)\n",pool_pos_cap[0],pool_nrm_cap[0],pool_pos_cap[1],
+           pool_nrm_cap[1],actor_pool_bytes[0]+actor_pool_bytes[1],actor_trans_other);
+    return 1;
 }
 int native_actor_open(NativeScene* s){
     RtCatalog* cat=calloc(1,sizeof(RtCatalog)+s->models.n*sizeof(RtModel));
@@ -316,6 +359,7 @@ int native_actor_open(NativeScene* s){
         }
     }
     for(unsigned i=0;i<ACTOR_POS_LIMIT+2;i++)pos_records[i][0]=pos_records[i][1]=i;
+    if(!actor_pools_open(cat))return 0;   /* lane eng-draw6 */
     if(cb_arm>0)printf("CBCULL: %u of %u character strips one-sided (closed), the rest drawn from both sides\n",cb_onesided_strips,cb_strips);
     return 1;
 }
@@ -629,6 +673,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         if(all){memset(state,0,16);census[1]+=considered;lod_chosen[ordinal]=model;continue;}
         if(content_card(s,actor,h[0],model,ordinal,m1_content[CS_CARDS]?actor_px(s,lo,hi):1e9f,s->assets.header.n)){memset(state,0,16);lod_chosen[ordinal]=model;continue;}
         {unsigned v=content_pick(s,model,lo,hi,ordinal);if(v!=model){m=cat->m+v;h=m->h;cur_pos=m->pos;}}   /* eng-look */
+        if(!actor_pool_fits(model!=0,m)){memset(state,0,16);continue;}   /* lane eng-draw6: the slot's buffers (guard) */
         /* 2. bones: pose x inverse bind x quantum */
         for(unsigned i=0;i<m->nbones_used;i++){
             unsigned b=m->bones_used[i];float* r=bone_rows[b];

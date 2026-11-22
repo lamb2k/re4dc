@@ -24,8 +24,17 @@ void content_lit_release(void){
 static uint16_t lod_chosen[128];static uint8_t card_last[128];                 /* per actor ordinal: the model drawn this picture */
 volatile uint32_t m1_lod_variants;
 volatile uint32_t m1_lod_models[CONTENT_MODELS][6];   /* per base model and window: pictures drawn at level 0-3, rigid, card */
+/* Lane eng-draw6 (item 1): each catalogue model's base and level (0 base, 1-3 PS2 levels, 4 rigid), from the 'LODV'
+   rows; and, per model, the picture (m1_state[1]) on which a caller's content_pick last returned it and the level that
+   pick asked for: the E1 actor pass draws a model its caller picked (the fight's Ganados) as it is, picks the others
+   itself (Leon, the partner), and counts the level asked against the level drawn. */
+static uint8_t lod_base_of[256],lod_level_of[256],lod_asked[256];
+static uint16_t lod_stamp[256];
+static int lod_mark_on=1;   /* 0 while the E1 actor pass makes its own pick (not a caller's) */
+static void lod_mark(unsigned v,unsigned asked){if(lod_mark_on && v<256){lod_stamp[v]=(uint16_t)m1_state[1];lod_asked[v]=(uint8_t)asked;}}
 int content_variants_open(const uint8_t* p,unsigned n,unsigned models){
     for(unsigned i=0;i<CONTENT_MODELS;i++){lod_variant[i][0]=i;for(unsigned k=1;k<5;k++)lod_variant[i][k]=0xffff;}
+    for(unsigned i=0;i<256;i++){lod_base_of[i]=(uint8_t)i;lod_level_of[i]=0;lod_stamp[i]=0;}
     m1_lod_variants=0;
     if(n){
         if(n<8||memcmp(p,"LODV",4))return 0;
@@ -35,6 +44,7 @@ int content_variants_open(const uint8_t* p,unsigned n,unsigned models){
         for(unsigned i=0;i<rows;i++,r+=4){
             if(r[0]>=CONTENT_MODELS||r[0]>=models||r[1]<1||r[1]>4||r[2]>=models||r[3])return 0;
             lod_variant[r[0]][r[1]]=r[2];
+            if(r[2]<256){lod_base_of[r[2]]=(uint8_t)r[0];lod_level_of[r[2]]=(uint8_t)r[1];}
         }
         m1_lod_variants=rows;
         if(!content_cards_open(p+8+8*rows,n-8-8*rows,models))return 0;
@@ -52,7 +62,7 @@ static void content_actor_frame(void){
 /* The model to draw for an actor whose whole-actor box (bone spheres, world space) is lo..hi. */
 static unsigned content_pick(const NativeScene* s,unsigned base,const float* lo,const float* hi,unsigned ordinal){
     unsigned step=m1_content[CS_LEVELS];
-    if(!step||base>=CONTENT_MODELS){lod_chosen[ordinal]=base;return base;}
+    if(!step||base>=CONTENT_MODELS){lod_chosen[ordinal]=base;lod_mark(base,0);return base;}
     const float* c=(const float*)s->state[0];
     float cx=.5f*(lo[0]+hi[0]),cy=.5f*(lo[1]+hi[1]),cz=.5f*(lo[2]+hi[2]);
     float dx=hi[0]-lo[0],dy=hi[1]-lo[1],dz=hi[2]-lo[2],r=.5f*sqrtf(dx*dx+dy*dy+dz*dz);
@@ -62,8 +72,10 @@ static unsigned content_pick(const NativeScene* s,unsigned base,const float* lo,
     for(unsigned k=0;k<3;k++)if(t[k]>0 && px<t[k]*(lod_last[ordinal]>k?1.1f:.9f))level=k+1;
     lod_last[ordinal]=level;
     unsigned v=lod_variant[base][level];
-    if(step==3 && lod_variant[base][4]!=0xffff && px<100.f*(lod_chosen[ordinal]==lod_variant[base][4]?1.1f:.9f)){v=lod_variant[base][4];m1_content_counts[4]++;}
+    unsigned asked=level;
+    if(step==3 && lod_variant[base][4]!=0xffff && px<100.f*(lod_chosen[ordinal]==lod_variant[base][4]?1.1f:.9f)){v=lod_variant[base][4];m1_content_counts[4]++;asked=4;}
     else m1_content_counts[level]++;
+    lod_mark(v,asked);
     m1_lod_models[base][v==lod_variant[base][4]&&step==3&&lod_variant[base][4]!=0xffff?4:level]++;
     lod_chosen[ordinal]=v;
     return v;
