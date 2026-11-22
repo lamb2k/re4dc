@@ -87,6 +87,18 @@ heap 4 peak is 1,077,984 B. Detail and what is open: `docs/engine/lanes/eng-mem1
   5,736,836 B, 315 / 315 blocks, 5,735,576 / 5,735,576 B asked. kos-used still reads 5,738,088 / 5,738,104: 16 B of
   slack on the same blocks (a debug build's block log, eng-load2 dbg1).
 
+## The script scheduler (lanes eng-sched2, eng-sched3; default image only)
+
+| Block | Where | Bytes | Sized by |
+|---|---|---:|---|
+| Task stacks, 18 slots (scheduler.cpp TaskSchedulerInit's one allocation) | behaviour arena, the current heap (`host/sched_host.cpp sched_stack_alloc`) | 124,928 | the engine's table of the GameCube sizes (`host/sched_host.cpp GetStackSize`, H-043 ruling 2): slot 2 12 KiB, slots 0, 1, 3, 4 8 KiB, slots 5-17 6 KiB; was 221,184 under the old port's 12 KiB floor |
+| KOS thread record per live task | KOS heap | about 1,600 each (3 in r101's script) | KOS `thd_create_ex` |
+| Lab record (SCHED scenes only: the task steps and each tick's cost split) | behaviour arena | 90,112 (steps 81,920, ticks 8,192) | `STEP_MAX` 4,096, `TICK_MAX` 1,024 |
+
+High water (Flycast, the SCHED scene's 640 ticks): see `docs/engine/lanes/eng-sched3.md`; every slot is under half its
+stack, and the report names any slot over half (`E1 SCHED stack slot <n> OVER HALF`). The stack guard stays: scene
+CSCHED must FAIL ("Stack overflow in Thread 14"). The default village scene runs no room script and allocates neither.
+
 ## Checks
 
 - `tools/engine/pack_keep_check.py <pack>...`: the kept layout against the whole pack (sections 1-3, 13, 14 identical
