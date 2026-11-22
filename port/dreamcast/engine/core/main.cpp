@@ -47,10 +47,20 @@ static uint64_t now_us() { return e1_clock_us(); }
 // Room set-up: the subset of gameRoomInit (game.cpp:509) the hosted player and camera need, in its order. Lane eng-load1:
 // the first room (first: the game's start, PlayerInit) and every room a door leads to (core/room_change.cpp: the room,
 // the player's start and angle from the door's request; the room heap made again, so the last room's records go).
+void RndInit(u16 seed);
 static void room_init(unsigned room, const float* pos, float ang, int first)
 {
     if (first) {
         const E1Route& r = e1_route();
+        // lane eng-snd1 (R9): the behaviour generator starts from the scene's seed (the fixture's), first, as re4ref seeds
+        // before PlayerInit; the SEED boot option (core/globals.cpp, the game-seed control) puts 0x5A5A in its place.
+        // Control SEED0 (boot file): the seed left at 0, as before R9; the village's request check must fail on its footsteps.
+        if (r.seed >= 0) {
+            file_t f0 = fs_open("/cd/SEED0", O_RDONLY);
+            const int seed0 = f0 >= 0;
+            if (seed0) { fs_close(f0); e1_log("E1 CONTROL SEED0: the behaviour generator left at 0\n"); }
+            if (!seed0) RndInit(e1_game_seed_option ? 0x5A5A : (u16) r.seed);
+        }
         e1_room_globals(r);             // pG room id, flags, PlayerInit (hosted)
 #ifdef E2_BOSS
         e2_room_globals();

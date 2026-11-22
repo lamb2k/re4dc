@@ -1526,3 +1526,108 @@ fixes stands in) and the `DISC_DMA_WAIT_TIMEOUT` KOS patch (not in `engine/loade
 Counters: `E1 DISCSAFE refused R recovered R failed F marked M not-landed N fallbacks B latched L notready-waits W
 read-failed X`. Check `CDISCF` (boot file `DISCFAIL`): the first DMA transfer of the first load reported done without it;
 the scene must stay OK with `not-landed 1 latched 1`.
+## 49. Sound: the AICA layer, and the original sound driver hosted under the waiver H-025.1 (lane eng-snd1)
+
+**The waiver.** The original game's sound driver (`src/game/snd*.cpp`, 22 units: SE resolution and positional volume,
+the ISS voice manager, the stream player, the MIDI sequencer, the effect requests) is original service code. It is
+hosted unchanged under integrator ruling H-025.1, the first waiver of "no original service code": it makes the game
+sound as the GameCube version does, it keeps its own random generator, and its cost is held under **1.0 ms a picture
+mean and 2.0 ms worst on the calibrated tier**. The link check allows its units in their own group
+(`allowed_original.txt`: `sound-driver-waived-H-025.1`); the selector fails a timing scene over the ceiling. Over it, a
+native sequencer is ruled on.
+
+**Layers** (`engine/services/sound/`, built by `game/sound.mk`, one include line in `game/Makefile`):
+- `aica.cpp`: the old port's Dreamcast backend (`t15/int port/dreamcast/game/platform/audio_aica.cpp`, the release's
+  `AICA_LAYOUT_RECOVER=1 AICA_SPILL=1 AICA_TAIL_FIRST=1` form) lifted and adapted: the GameCube AX voice, MIX, SYN
+  (a minimal GM synth), AXFX / AXART / AI / SEQ interfaces on the AICA; converted banks ("AIC1") in a fixed AICA
+  layout (one slot per resident block, one room arena); voices on AICA channels written over G2 and flushed once a
+  step. Not lifted: the old port's run-time re-encoding of GameCube-format banks (every bank the engine's rooms use is
+  converted on the disc tree; one that is not is refused and silent), the cabin, Leon-hand, GC-ASSET, fallback-audit
+  and movie hooks, the disc-stream ring (no scene requests a stream yet, below). The 64 AX voice blocks overlap with a
+  112-byte stride (the driver reads only `pb.state` and `pb.addr`): 7.6 KB instead of 29 KB.
+- `snd_host.cpp`: what the driver needs below it: interrupt guards (`OSDisableInterrupts` = `irq_disable`), the ARAM
+  allocator's addresses (no transfer), the stream player's disc and DMA I/O completed at the next audio frame without
+  touching the disc (scenario waits on a stream still end), the driver's own generator (`snd_rnd`, below), and logged
+  stubs (weak) for what the engine does not serve yet: `FlrAtCheck`, `AreaHitCheck`, `SeAtCheck` / `SeAtInit`,
+  `EspFootCall`, `EspPlWaterCall`, and the room save record.
+- `snd_svc.cpp`: the service. **Boot** (before play): the four sound system files (`bgm/bio4str.hed`, `bio4midi.hed`,
+  `doorse.hed`, `bgmtbl.dat`) read, the driver's work set up and `SndDriverInit` run (the engine's composition of
+  `SndInit` / `SndInit2`; no 128 KB of GameCube stream buffers). **Room load** (with the room, before play): every
+  sound block the scene uses read part by part as the original read queue does (`dvd.cpp` readMain's sound cases):
+  CORE (`etc/core.das`), PL (`em/pl00.drs` or `pl08`), WEP (`em/wep02.drs`), ROOM and FOOT (`st<n>/r<room>.dar`), the
+  fight's Ganados (`em/em15.drs`), the hill's Ashley (`em/pl11.drs`), El Gigante (`em/em2b.drs`), and the room's BGM
+  through the driver's own `SndRoomBgmLoad` (`bgm/bio4midi.dat`); each MRAM part to a block of its own, each ARAM part's
+  converted image (not its GameCube padding) to the sound chip, then `SndBlkInit`. The room's sound header (STB) is
+  read from the room archive into a one-entry archive the driver's `SndRoomStartInit` reads; then the room's BGM and
+  stream starts as `gameRoomInit` makes them. **Tick**: the driver's `SndWatcher` once a tick, after drawing and before
+  the pacer's wait (where the original main loop calls it, after `Trans`). **Audio frame**: its own KOS thread,
+  priority 3 (above the main thread), every 5 ms, each step with interrupts off (below); frames owed after a hold-up
+  are paid back at most 2 a step.
+- **Hooks into the core**: `game/sound.mk` wraps `e1_load_room` (then `snd_svc_room_load`), `e1_fields_late` (before
+  it `snd_svc_tick`) and `e1_report` (before it `snd_svc_report`), so this lane changes no core file; three direct calls
+  would do the same.
+
+**Why the audio thread cannot disturb the pacer.** The pacer (`core/frame.cpp e1_pace_end`) waits on the display's
+field count, which the vblank interrupt keeps; the audio thread never touches the pacer's state. Each audio step runs
+with interrupts off (at most two driver frames, the voices' positions, the register flush), so it is one piece, as the
+GameCube's audio interrupt was: a step delays the vblank interrupt by at most its own length (the report's longest
+step), and the driver's calls from game code also run with interrupts off, so a step never runs inside them. Why off:
+KOS's scheduler, at its 10 ms tick, picks the next thread from the run queue before it puts the running one back, so a
+ready main thread took the CPU in the middle of a step for a whole timeslice whatever the priorities (10 to 20 ms
+steps, one to several a scene, calibrated and plain Flycast alike; priority 0 made it more frequent). What the sound
+costs is CPU time taken from whatever runs then; the service counts it (below), and it shows in the picture's busy time
+like any work.
+
+**The random split.** The driver's own sequencer generator is untouched (`Snd_rnd`, `snd_main.cpp`). The one call to
+the game's `Rnd` (`snd.cpp` seRandomCheck, the random SE variant) is bound to `snd_rnd`, a generator of its own
+(`objcopy --redefine-sym _Rnd=_snd_rnd` on `snd.o`): a sound moves neither the behaviour generator nor the engine's
+shared presentation generator, so the effects', cloth's and voices' presentation draws stay as on the PC reference
+(which plays no sound).
+
+**What it reports** (`E1 SOUND` lines, every E1-family scene):
+- `E1 SOUND on|off pictures N cost-us mean M worst W (picture K) voices-peak V notes-peak X stream-bytes-per-picture S
+  requests R stops T banks B missing Z`: the sound's CPU time per picture over pictures 41-640 (the selector's
+  window): every audio step's time, and the main thread's time in the game's calls (SndCall, SndStop) and SndWatcher,
+  net of the audio thread's steps that preempted them. The selector prints it in the scene's summary and fails a
+  timing scene with sound on over 1.0 ms mean or 2.0 ms worst, and any E1-family scene with no such line.
+- `E1 SOUND worst picture K: audio steps ...`: the worst picture's split.
+- `E1 SOUND PROBE samples N keyed K audible A moving M | ...`: the output probe (below) and the layer's counters.
+- In a traced run (no `NOTRACE`), every SndCall and SndStop of the hosted behaviour as an `SR` line in the trace.
+
+**Checks, each with a control that fails** (tools in `engine/services/sound/tools/`):
+- Requests: `sndreq_check.py <serial> <scene> <reference log> --ticks N`: the engine's SR lines against the PC
+  reference's (`hostref/host_stubs.cpp` logs the same fields), tick by tick, ids and flags exact, positions within the
+  plays-right tolerance. Controls: `--control drop|move|extra` on the same inputs, and the lab arm `SNDDROP` (the first
+  request from tick 100 not passed on): each must fail.
+- Output: `audiocheck.py <capture>` on Flycast's own audio output (SDL's disk audio driver: `emu.cfg [audio] backend =
+  sdl2`, `SDL_AUDIODRIVER=disk`): at least 10% of the 100 ms windows after the first second above RMS 64, over at least
+  10 s. Control: the lab arm `SNDMUTE` (every channel at total attenuation) must fail. The image's probe reads one owned
+  channel a step back through the AICA's channel monitor (key on, TL, EG, CA).
+- Cost ceiling: the selector check; control `SNDSLOW` (1,500 us inside every 5 ms audio step) must fail the scene.
+
+**Lab arms** (boot files read before play): `SNDOFF` (no sound: the driver is not started, requests answered 0; the
+"off" side of the cost comparison), `SNDMUTE`, `SNDSLOW`, `SNDDROP`.
+
+**Main RAM.** The image grows 234 KB (the driver's tables 124 KB, of which 100 KB are the SDK's SYN synth structures
+its sequence work embeds; driver code 50 KB; the AICA layer and the service about 45 KB, of which the audio thread's
+stack is 12 KB) and the KOS heap holds about 100 KB of sound data at load. Before sound the KOS heap's margin to the
+behaviour arena was 450 KB (village), 115 KB (hill), 237 KB (fight), so the memory map changed with sound (request R1,
+ruled in): `host/e1_engine.h` starts the behaviour arena at 0x8cc80000 (E1 and boss, 2.25 MB) and 0x8cdc0000 (fight,
+1 MB). After play, with sound (MODELLED tier, run k6cal on lane a7aa905a4): margin to the arena / arena peak village
+572 KB / 166 KB, hill 272 KB / 294 KB, fight 152 KB / 825 KB of 1 MB, boss 2,196 KB / 454 KB.
+
+**The disc.** `tools/engine/build_console_disc.sh` stages each scene's sound from the game tree with its other files
+(`st1/<room>.dar`: the room's ROOM and FOOT banks; `bgm/`: the sound system files) and the sound controls when
+`--scenes` names them: CSNDSLOW (the selector fails it), CSNDMUTE (`audiocheck.py` fails its capture), CSNDDROP (the
+traced village; `sndreq_check.py` fails it), and ASNDOFF, the "off" arm of the cost comparison (stays OK).
+
+**The 2.5 ms spans.** A sound step or call of about 2,500 us, once in some scenes, landing on a whole emulated second:
+KOS's microsecond clock jumps 2.5 ms forward once a second (lane eng-skel1), it is not sound work. The worst ceiling is
+judged with the clock fixed (integrator ruling; the fix is lane eng-clock1's).
+
+**Streams.** The stream player runs, its I/O is completed without the disc and its voices advance in real time, so a
+scenario that waits on a stream goes on; nothing is heard of a stream yet. In the engine's scenes today no stream is
+requested: the village's and the hill's ambient streams come from floor attributes (`FlrAtCheck`, not served) and
+room scripts (the fight image's generated stubs). The old port's ring (`bgm/aica_str.dat`, read in play by a thread)
+is not lifted; when it is, its reads must go through a path of their own, counted as streaming per picture, outside
+`core/play_files.c`'s in-play disc counters.

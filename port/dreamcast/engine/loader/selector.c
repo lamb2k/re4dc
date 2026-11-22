@@ -434,6 +434,10 @@ static void door_line(const char *line) {
         snprintf(g_door_rt_why, sizeof(g_door_rt_why), "%.23s", verdict ? verdict : "?");
     }
 }
+/* lane eng-snd1 (H-025.1): the sound line ("E1 SOUND on|off pictures N cost-us mean M worst W (picture K) voices-peak V
+   notes-peak X stream-bytes-per-picture S requests R stops T banks B missing Z"): the sound's CPU time per picture,
+   which the waiver holds under 1.0 ms mean and 2.0 ms worst on a timing scene */
+static unsigned g_snd_seen, g_snd_on, g_snd_mean, g_snd_worst, g_snd_wpic, g_snd_voices, g_snd_stream;
 static void e1_row(const char *l) {
     /* compact rows: "ROW n in tick svc trace draw wait frame fields pl obj cam pvr chars ..." as numbers only; every
        field must be a number (lane eng-e1o: a text field is a malformed row and fails the record, never skipped).
@@ -496,6 +500,10 @@ static void e1_summary(sel_entry_t *e) {
     if (g_files_seen)   /* lane eng-e1o (H-017.7); lane eng-e1p (H-018.4): reads and drive requests too */
         sum_add(e, "disc in play: opens %u reads %u sectors %u", g_files_opens, g_files_reads, g_files_sectors);
     if (g_ctrack_seen) sum_add(e, "camera tracks converted in play %u", g_ctrack_inplay);   /* lane eng-e1p (H-018.1) */
+    if (g_snd_seen)   /* lane eng-snd1 (H-025.1): the sound's CPU time per picture, its voices and its stream bytes */
+        sum_add(e, "sound %s m%u.%02u w%u.%02u@%u >1.0/2.0, voices %u, stream %u B/pic", g_snd_on ? "on" : "OFF",
+                g_snd_mean / 1000, g_snd_mean % 1000 / 10, g_snd_worst / 1000, g_snd_worst % 1000 / 10, g_snd_wpic,
+                g_snd_voices, g_snd_stream);
     if (!n) return;
     if (!g_headless) sum_add(e, "draw = renderer span (stamps 5-7): drawing row");
     for (unsigned r = 0; r < 5; ++r) {
@@ -573,6 +581,7 @@ static void collect(unsigned i) {
     g_files_reads = g_files_sectors = g_ctrack_seen = g_ctrack_inplay = 0;
     g_cl_seen = g_cl_rows_dropped = 0;
     g_fl_counted = g_fl_over = g_fl_worst = g_fl_worst_pic = 0;
+    g_snd_seen = g_snd_on = g_snd_mean = g_snd_worst = g_snd_wpic = g_snd_voices = g_snd_stream = 0;
     g_mem_why[0] = g_files_first[0] = 0;
     g_runkind[0] = 0;
     g_mem_stack = g_mem_arena = g_mem_vram = -1;
@@ -718,6 +727,17 @@ static void collect(unsigned i) {
                                              "in-play %u lookups %u room-tracks %u room-bytes %u store-peak %u of %u", NULL,
                                        &v[0], &v[1], &v[2], &v[3], &g_ctrack_inplay, &v[4], &v[5], &v[6], &v[7], &v[8]);
             }
+            else if (!strncmp(line, "E1 SOUND on ", 12) || !strncmp(line, "E1 SOUND off ", 13)) {
+                /* lane eng-snd1 (H-025.1): matched whole; a line that does not parse is not a sound line (the scene
+                   then has none and fails below) */
+                char st[16];
+                unsigned v[6];
+                g_snd_seen = tmatch(line, "E1 SOUND %w pictures %u cost-us mean %u worst %u (picture %u) voices-peak %u "
+                                          "notes-peak %u stream-bytes-per-picture %u requests %u stops %u banks %u "
+                                          "missing %u", NULL, st, &v[0], &g_snd_mean, &g_snd_worst, &g_snd_wpic,
+                                     &g_snd_voices, &v[1], &g_snd_stream, &v[2], &v[3], &v[4], &v[5]);
+                g_snd_on = g_snd_seen && !strcmp(st, "on");
+            }
             else if (!strncmp(line, "E1 CAMREC ticks ", 16)) {
                 /* lane eng-e1l: no word of the camera record may be an infinity or not a number at a tick's end */
                 unsigned ticks = 0, bad = 0, first = 0, word = 0;
@@ -782,6 +802,12 @@ static void collect(unsigned i) {
         else if (!g_ctrack_seen) snprintf(e->why, sizeof(e->why), "no E1 CAMTRACK line (or a field not a number)");
         else if (s->timing && g_ctrack_inplay)
             snprintf(e->why, sizeof(e->why), "camera tracks converted in play %u", g_ctrack_inplay);
+        /* lane eng-snd1 (H-025.1): every E1-family scene reports its sound; a timing scene with sound on fails over the
+           waiver's ceiling, 1.0 ms a picture mean or 2.0 ms worst (pictures 41-640) */
+        else if (!g_snd_seen) snprintf(e->why, sizeof(e->why), "no E1 SOUND line (or a field not a number)");
+        else if (s->timing && g_snd_on && (g_snd_mean > 1000 || g_snd_worst > 2000))
+            snprintf(e->why, sizeof(e->why), "sound over H-025.1: mean %u.%02u worst %u.%02u ms (pic %u)",
+                     g_snd_mean / 1000, g_snd_mean % 1000 / 10, g_snd_worst / 1000, g_snd_worst % 1000 / 10, g_snd_wpic);
     }
     /* lane eng-load1: the DOOR scene's own conditions (door=N in the schedule's arguments), timing or function run */
     if (!strcmp(s->kind, "e1") && dneed && e->report_ok && done && !e->why[0]) {
