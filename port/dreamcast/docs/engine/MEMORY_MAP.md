@@ -72,6 +72,21 @@ collision pieces (2) and the skeleton tables (2); the KOS heap came back 200 B l
 given back at a room change since fa2b14aba: not yet re-run) and the farm's pack had no weapon models. The farm's arena
 heap 4 peak is 1,077,984 B. Detail and what is open: `docs/engine/lanes/eng-mem1.md`.
 
+## Lane eng-load2 (2026-11-22): the pack read, the engine packs, the round trip
+
+- **The image** gains the pack stream buffer (`render/native_scene.inc pk_ring`, 32,768 B bss, every image and the
+  bench) and loses the frame-0 path's 16,384 B scratch (caf28a835). Measured at c7774aebe (ring and scratch both,
+  d3, Flycast on the console-like slot): image end E1 0x8c27e650, FIGHT 0x8c336990, BOSS 0x8c2dae90; KOS margin to the
+  arena after play LEON 4,751,360, HILL 4,902,912, FIGHT **262,144**, BOSS 1,961,984 B (each 28,672 to 32,768 B less
+  than the d4 row above). At the lane's head (5e3a80386, merged with origin/engine; d5, Flycast plain std1): LEON
+  4,759,552, HILL 4,911,104, FIGHT **278,528**, BOSS 1,978,368 B.
+- **The engine images' packs are version 5** (`bake/engine_pack.py`, converted by the disc script with a receipt): on
+  disc village 8,988,784 -> 4,914,096 B, farm R103 11,314,244 -> 6,247,556 B, hill 7,782,672 -> 3,645,232 B, fight
+  4,914,076 -> 4,914,108 B. Resident in memory: unchanged (the kept layout, byte for byte: RESCRC on d4).
+- **The DOOR round trip** is judged on kos-net (uordblks less the tracked blocks' allocator slack): 5,736,836 /
+  5,736,836 B, 315 / 315 blocks, 5,735,576 / 5,735,576 B asked. kos-used still reads 5,738,088 / 5,738,104: 16 B of
+  slack on the same blocks (a debug build's block log, eng-load2 dbg1).
+
 ## Checks
 
 - `tools/engine/pack_keep_check.py <pack>...`: the kept layout against the whole pack (sections 1-3, 13, 14 identical

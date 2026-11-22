@@ -173,8 +173,22 @@ int disc_safe_stream_start(int sector, int cnt, bool dma)
     return __real_cdrom_stream_start(sector, cnt, dma);
 }
 
+/* Lane eng-load2: the stream's end (plan 3.3 section 8 B1; eng-mem2's request 1). fs_iso9660 reads a file's last bytes
+   under 32 through one non-blocking 32-byte request and then polls the drive's DMA status with thd_poll, no timeout.
+   When those 32 bytes end the stream (the file's size modulo 2,048 is 2,017 to 2,047), plain Flycast never reports the
+   transfer done and the poll never returns (the d6 boot hang, in the selector, eng-mem2). The old port met it on the
+   console (t15/int a5aca9cf9 game/platform/dvd_read_safe.cpp, DISC_READ_VERIFY: "fs_iso9660's one non-blocking request
+   (32 bytes) is made blocking to get the same wait"; DISC_READ_FALLBACK=3 makes it blocking too, the form the Test 27.2
+   release shipped): a blocking request returns through KOS's own DMA-done wait, and KOS then ends the command
+   (cdrom_poll ERR_NO_ACTIVE: cmd_hnd 0), so fs_iso9660's poll returns at once. Here it is blocking for every DMA stream,
+   the 32-byte request included (check below); the game images read every pack, room archive and model file through it.
+   Control (boot file DISCNB, the DOORSE scene's control CDOORSE): the 32-byte request passed on as fs_iso9660 makes it
+   (non-blocking, unchecked); with the farm's pack ending at 2,020 bytes modulo 2,048 the load must stop there. */
+static int g_nb;   /* DISCNB (control) */
+void disc_safe_nb_arm(void) { g_nb = 1; }
 int disc_safe_stream_request(void* buffer, size_t size, bool block)
 {
+    if (g_nb && !block && size == 32) return __real_cdrom_stream_request(buffer, size, block);   /* DISCNB: as KOS */
     /* fs_iso9660's one non-blocking request (32 bytes) polls for completion right after: blocking here is the same */
     const bool check = s_dma && markable(buffer, size);
     if (check) {
