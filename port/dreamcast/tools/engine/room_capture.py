@@ -107,9 +107,26 @@ def walk(r, head_at, limit=512):
     return out
 
 
+TEXPAK = Path(r"\\wsl.localhost\Ubuntu-24.04\root\work\lanes\eng-bench\.m1\pristine\dc\tex.pak")
+_PACKAGES = None
+
+
+def package_names(path=TEXPAK):
+    """tex.pak: {key: package name}; the bake's census counts names 'source' and 'source-pair' as GameCube rows"""
+    global _PACKAGES
+    if _PACKAGES is None:
+        t = Path(path).read_bytes(); count, idx = struct.unpack_from("<2I", t, 12); _PACKAGES = {}
+        for a, b, off, size in struct.iter_unpack("<4I", t[idx:idx + 16 * count]):
+            at = struct.unpack_from("<I", t, off + 24)[0]
+            _PACKAGES[(a, b)] = t[off + at:off + at + 64].split(b"\0")[0].decode("latin-1")
+    return _PACKAGES
+
+
 def textures_keyed(r, m):
     """every part's texture carries the static texture identity (R4NREF + its tex.pak key), as bake/native_extra.py
-    requires: a texture without one is not a converted PS2 picture, and its prop is left out (no GameCube rows)"""
+    requires, and the key's tex.pak package is a PS2 one: a texture without a key, or keyed to a GameCube package
+    ('source', 'source-pair'), leaves its prop out (no GameCube rows added; the rule of 2026-10-23)"""
+    names = package_names()
     p = ptr(r, m + 0x15c); n = 0
     while p and n < 40:
         d = ptr(r, p + 12); tpl = ptr(r, p + 16); p = ptr(r, p + 20); n += 1
@@ -119,6 +136,7 @@ def textures_keyed(r, m):
             if not part or not desc: return False
             th = ptr(r, desc + r[part + 12] * 8); pixels = ptr(r, th + 8) if th else 0
             if not pixels or r[pixels:pixels + 6] != b"R4NREF": return False
+            if names.get(struct.unpack_from("<2I", r, pixels + 8), "source") in ("source", "source-pair"): return False
             part = part + 32 + u32(r, part + 24)
             if part >= len(r) - 64: return False
     return True
