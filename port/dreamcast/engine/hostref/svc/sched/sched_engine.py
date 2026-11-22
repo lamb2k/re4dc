@@ -13,7 +13,9 @@
       The timing control of the cost lines: the scene's "E1 SCHED cost all" worst must read at least --us at tick
       --tick (TSCHED: SCHEDD adds a known 200 us there). On the clean SCHED scene it must FAIL.
 Exit 0 PASS, 1 FAIL, 2 input missing. The serial holds several scenes: a scene's part runs from the previous
-"CDISC RESULT" line (or the start) to its own "CDISC RESULT <n> <SCENE> " line."""
+"CDISC RESULT" line (or the start) to its own first "CDISC RESULT <n> <SCENE> " line (the summary at the end repeats
+them). Run the PC check for the scene's tick count (sched_check.sh <out> 640 for the village route) so every engine
+tick is compared."""
 import argparse
 import re
 import subprocess
@@ -25,7 +27,7 @@ def scene_part(serial, scene):
     for line in open(serial, errors='replace'):
         m = re.match(r'CDISC RESULT \d+ (\S+) ', line)
         if m:
-            if m.group(1) == scene:
+            if m.group(1) == scene and part is None:   # the first: the summary repeats the result lines at the end
                 part = cur
             cur = []
             continue
@@ -98,6 +100,10 @@ def cmd_steps(a):
                                                                                          len(ref)))
     if last < a.min_ticks:
         print('fewer than %d ticks compared' % a.min_ticks)
+        ok = False
+    if eng and ref and ref[-1][0] < eng[-1][0]:
+        print('the PC trace ends at tick %d, the engine ran to tick %d: run the PC check for the scene\'s ticks'
+              % (ref[-1][0], eng[-1][0]))
         ok = False
     diff = None
     for i in range(max(len(e), len(r))):
