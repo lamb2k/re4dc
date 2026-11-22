@@ -159,6 +159,14 @@ static void e1_weapon_pass(NativeScene* s)
             }
             drawn = (unsigned) e1_actor_pass_one(s, v[i].model, &sv, (unsigned) cm, 0, 0, 0);   /* Leon's set-up */
         }
+        static int told;
+        if (v[i].visible && !drawn && !told) {   /* once a run: why a visible weapon was not drawn (lane eng-draw3) */
+            const RtCatalog* c = s->runtime;
+            told = 1;
+            printf("E1 WEP refused: file %d arc %d model %d of %u, has_skel %d, skeleton bones %u, model bones %u, off %d\n",
+                   (int) v[i].file_slot, (int) v[i].arc_slot, cm, c->n, (int) v[i].has_skel, (unsigned) v[i].skel.n,
+                   cm >= 0 && (unsigned) cm < c->n ? c->m[cm].h[0] : 0u, e1_weapon_off);
+        }
         if (drawn) {
             int b[4];
             const RtModel* wm = ((const RtCatalog*) s->runtime)->m + cm;
