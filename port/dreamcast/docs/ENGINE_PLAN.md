@@ -2,9 +2,9 @@
 
 Status: **approved by the owner on 2026-11-20** ("Ok update plan and get to work"), with "beyond the PS2 version" added as a goal and as step 6. Version 3 keeps version 2's budget, architecture and rules; its path is section 7, written after the retrospective ([engine/RETRO_20261120.md](engine/RETRO_20261120.md)). Version 3.1 adds the amendments below. Version 3.2 adds "The plan as of 2026-11-21", which the owner asked to have written down ("ok memoralize that plan and ensure the skill sare up to date"). Version 3.3 (2026-11-22) adds its section 8, "What we take from the old port", at the owner's word ("Integrate into the plan what we should copy or Integrate from the legacy port engine").
 
-## The plan as of 2026-11-21 (version 3.2)
+## The plan as of 2026-11-21 (version 3.3; state brought up to 2026-11-22)
 
-Start here. This is the current plan in short; the hand-overs (`engine/HANDOVERS.md`, H-019 to H-026) hold the detail and the owner's exact words. Where this section and an older section below disagree, this section wins.
+Start here. This is the current plan in short; the hand-overs (`engine/HANDOVERS.md`, H-019 to H-038) hold the detail and the owner's exact words. Where this section and an older section below disagree, this section wins.
 
 ### 1. What we are building
 
@@ -35,21 +35,28 @@ Lane eng-cmp1's figures (`E:\RE4DC-Lanes\eng-cmp1\COMPARISON.md` section 10), me
 - When a picture is late the engine slows the game; the old port drops pictures and keeps game time (hill: 61% against 76%).
 - The engine does not yet play sound, draw the burning pyre, barrels and other room objects, or handle items and enemy weapons; Leon's handgun is drawn in the first picture only. It runs three test scenes, not the game.
 
+**State on 2026-11-22** (lane figures, MODELLED (console-build dynarec at 70 MHz, calibrated on the old port); the band is 3 to 10% kinder; not re-measured as one build):
+
+- What works in the engine now: Leon walks the village route and the hill with Ashley, fights four Ganados at the cross with the knock-down shown and shots landing on the right body part, and El Gigante's fight runs with none of the original's service code. Leon's handgun is drawn live. The engine clock no longer jumps 2.5 ms once a second.
+- Handed back and at the gate, not merged: sound in every scene (0.46 to 0.72 ms mean, 1.60 worst, inside its 1.0 / 2.0 ceilings), a door from the village to the farm and back (both loads work; 16 B of main memory are not returned; a load takes about a minute in plain Flycast), collision baked offline, one memory map, the crash screen, Ashley's skirt at the owner's option B, the characters' drawing steps.
+- Drawing with those steps: 25.5 / 35.0 / 23.0 ms mean and 30.7 / 40.4 / 30.3 worst on the village route, the hill and the fight, against the 14 ms row. Services: village 5.7 mean / 10.1 worst, hill 12.6 / 16.1 (9 ms row). The floor is not held.
+- Not in the engine yet: room objects and the pyre, items and the inventory, enemy weapons, effects beyond sprites, the script scheduler (lane running), movies, saves, every room but the village, the farm, the hill and El Gigante's square.
+
 ### 4. The tracks
 
 States are from `engine/STATUS.md`. "Done when" is on the calibrated model.
 
-| Track | What | Done when | State |
+| Track | What | Done when | State (2026-11-22) |
 |---|---|---|---|
-| Drawing | The account first, phase by phase. Invisible work first, pixel-identical options before picture-changing ones. Then rooms prepared for the console: lit offline, meshes and distance levels built for it, clean transparency, every pack with a receipt (H-023.1, H-026.5, H-026.6) | Drawing inside its 14 ms row on the worst picture | Lane eng-draw1 running |
-| Services | The account by group, then fixes with play unchanged | Services inside the 9 ms row on the worst picture | Lane eng-svcspd1 running |
+| Drawing | The account first, phase by phase. Invisible work first, pixel-identical options before picture-changing ones. Then rooms prepared for the console: lit offline, meshes and distance levels built for it, clean transparency, every pack with a receipt (H-023.1, H-026.5, H-026.6) | Drawing inside its 14 ms row on the worst picture | Merged: the account (eng-draw1), the world steps (eng-draw2, about 2.3 ms off the village's mean). At the gate: the characters' steps (eng-draw3, eng-draw4: characters 11.7 / 23.2 / 10.0 ms mean). Running: eng-draw5 (skinning redone the engine's way, H-038; the two approved character looks landed, H-036; the old port's character cost as a measuring stick). Still about twice the row. Not started: rooms prepared for the console, the world's selection, the visibility bake fix for the river and the cabin |
+| Services | The account by group, then fixes with play unchanged | Services inside the 9 ms row on the worst picture | Merged: eng-svcspd1 (hill 17.8 to 15.4 mean). At the gate: the skirt at option B (eng-cloth2: hill 12.6 mean / 16.1 worst). The rest on the hill is the skeleton: a motion key pack is not started |
 | Game time | When work for a picture overruns, the next tick runs without drawing, within a bound (H-025.2) | Game speed held in the benchmark scenes | Queued, after the drawing design |
-| Native services | The fight image and the boss image to 0 original service functions | Link check 0 for FIGHT and BOSS | eng-e2a merged (fight 114 to 73, boss 57 to 26); lanes eng-e2b (fight) and eng-e2c (boss) running |
-| Corrections, game settings, guards (H-026.2) | Built in now; then written into the engine line's copy of the original source, the old port's conditionals deleted by a pass proven by byte-identical objects | Corrections unconditional, settings in one file, guards counted at 0 | Lane eng-fix1 running; the source pass is its own lane after it |
-| Chapter 1's systems | Lifted from the old port in the order of section 8 (B). From the salvage inventory (`engine/SALVAGE_20261121.md`): sound (the original driver hosted under the H-025.1 waiver with its cost ceiling), room-to-room loading and doors, the script scheduler, saves and the memory-card screen, the crash screen, route movies, items and the inventory (the 3 MB problem), old-game room recordings as a bake input | Each system working in the engine, judged by outcome against the reference | Lanes eng-snd1 and eng-load1 running; the scheduler, saves and crash screen, route movies, room recordings queued (H-025); items not started |
-| Rooms | Every chapter 1 room through the bake, with a census; then the rest of the game by chapter | Every chapter 1 room baked, failures fixed or listed | Lane eng-bake1 running |
-| The look | Leon's handgun; effects one at a time on a budget (gameplay feedback, then scene-defining, then ambient; the owner: "We should probably be selective with the effect layer if we are getting these gains without them."); Dreamcast look treatments for one room and for Leon chosen by the owner from still sheets (one variable per sheet, differing-pixel counts, modelled cost); enhancements that cost frame time (shadow volumes, bump mapping, anti-aliasing) only once the floor holds on the model | The owner's choices from stills | Lane eng-look1 running (the handgun, then the muzzle flash); the treatment sheets are next |
-| Milestones and audits | One independent audit per milestone. E1's waits for a drawing design that fits its row on the model (H-023.2, H-022). The console run of every milestone is deferred to the end | Audit passed and model held: "finished, modelled, not on console" | E1 audit waiting on the drawing design |
+| Native services | The fight image and the boss image to 0 original service functions | Link check 0 for FIGHT and BOSS | Default 0, BOSS 0, SENDABLE 0, FIGHT 10 (em10's cloth and skeleton functions; their entries are in the memory train). The check also catches code hidden by inlining (eng-e2d) |
+| Corrections, game settings, guards (H-026.2) | Built in now; then written into the engine line's copy of the original source, the old port's conditionals deleted by a pass proven by byte-identical objects | Corrections unconditional, settings in one file, guards counted at 0 | Merged (eng-fix1): built in, the corrected PC reference is the baseline. The source pass is not started |
+| Chapter 1's systems | Candidates from the old port in the order of section 8 (B), each under its test. From the salvage inventory (`engine/SALVAGE_20261121.md`): sound (the original driver hosted under the H-025.1 waiver with its cost ceiling), room-to-room loading and doors, the script scheduler, saves and the memory-card screen, the crash screen, route movies, items and the inventory (the 3 MB problem), old-game room recordings as a bake input | Each system working in the engine, judged by outcome against the reference | At the gate as one train (lanes eng-skel1, eng-skel2, eng-load1, eng-snd1, eng-mem1, eng-mem2): sound, the door, baked collision, skeleton and chain entries, one memory map (`engine/MEMORY_MAP.md`); DOOR an expected failure by 16 B. At the gate: the crash screen and profiler (eng-crash1). Running: the scheduler (eng-sched1), room loading at a fair speed and the last 16 B (eng-load2). Not started: code modules, movies, saves, QA and warp tools, items and the inventory, room recordings |
+| Rooms | Every chapter 1 room through the bake, with a census; then the rest of the game by chapter | Every chapter 1 room baked, failures fixed or listed | Merged (eng-bake1): 12 of 12 chapter 1 worlds bake, each with a receipt; 3 carry a recording (village, farm, hill); 10 need an old-game capture for props, lights and effects. Census: the cabin stages 2.0 times the village's vertices, the pool 1.7, the farm 1.4 |
+| The look | Leon's handgun; effects one at a time on a budget (gameplay feedback, then scene-defining, then ambient; the owner: "We should probably be selective with the effect layer if we are getting these gains without them."); Dreamcast look treatments for one room and for Leon chosen by the owner from still sheets (one variable per sheet, differing-pixel counts, modelled cost); enhancements that cost frame time (shadow volumes, bump mapping, anti-aliasing) only once the floor holds on the model | The owner's choices from stills | Merged: the handgun (eng-look1). Chosen by the owner on 11-22: the skirt at two passes (at the gate), character detail levels by screen size and character lighting every other picture (eng-draw5 lands them). Not started: the muzzle flash, the treatment sheets |
+| Milestones and audits | One independent audit per milestone. E1's waits for the drawing lanes' pixel-identical floor (H-028.6, H-022). The console run of every milestone is deferred to the end | Audit passed and model held: "finished, modelled, not on console" | E1 audit waiting on the drawing floor; everything merged is "finished, unaudited" |
 
 ### 5. How the work is run
 
@@ -69,10 +76,13 @@ From the salvage inventory, in lane rounds (one briefed lane to its hand-back), 
 
 ### 7. Open with the owner
 
-From `engine/STATUS.md`:
-- Look, from still sheets when the owner chooses: the HUD, the near plane fix, the overall picture, old port beside engine; next, the Dreamcast look treatments for one room and for Leon.
+From `engine/STATUS.md` (2026-11-22):
+- Answered on 11-22: Ashley's skirt at option B; character detail levels and character lighting every other picture ("They look fine"); what is taken from the old port and how (section 8); the engine's own memory layout; the skinning routine is not gold.
+- Coming as still sheets: the released game's character lighting beside the engine's (lane eng-draw5); the staggered lighting only if it looks different from the approved sheet; later, the Dreamcast look treatments for one room and for Leon.
 - The release line: a hotfix candidate (Disc 2 builds module em1f's copy of em10 without the Ganado byte-order correction).
 - El Gigante's lighter PS2 body: yes or no.
+- The GameCube original as a third reference for disputes, or the old port only.
+- A report to the KOS project about its clock's 2.5 ms jump (needs the owner's OK).
 - Not asked: a console evening or the SD card.
 
 ### 8. What we take from the old port (version 3.3, 2026-11-22)
@@ -428,11 +438,19 @@ The asset decision: the owner's rule is PS2 assets only, and the PS2 set is the 
 | 11-21 | "i want the raw stenghts of the syustem to stand out on a ps3 3d asseet foundation with native dreamcast code" | Read as a PS2 3D asset foundation; the look built to show the Dreamcast's strengths (AGENTS.md) |
 | 11-21 | "more slots is ok adjust based on computer utilization" | Slot `int1` for the integration lane; lanes by machine load (H-026.7) |
 | 11-21 | "ok memoralize that plan and ensure the skill sare up to date" | The plan as of 2026-11-21 (version 3.2) |
+| 11-22 | "Ok option B." | Ashley's skirt runs two constraint passes, the default with no switch (H-032) |
+| 11-22 | "I also appreciate your innovation but we should be borrowing things that work fine at a mechanical level from the old build pre re architecture." | Consider the old port before writing plumbing (H-032; section 8 of the plan as of 2026-11-21) |
+| 11-22 | "Integrate into the plan what we should copy or Integrate from the legacy port engine." | Version 3.3: section 8, "What we take from the old port" (H-033) |
+| 11-22 | "We should only borrow from the old port thing that make sense I don't want to Compromise the new engine" | Borrowing is a test, not the default; the engine's design wins every doubt (H-035) |
+| 11-22 | "They look fine for the chatter options. I don't want to borrow costly things because they're convenient - I also don't want to redo things that were gold previous implementations" | Read "chatter" as character: detail levels and lighting every other picture approved. Cost decides, never convenience; what was gold is kept (H-036) |
+| 11-22 | "If we have a better memory layout we can implement our own unless we believe it eas pre socially optimized" | Read as: unless the old layout was already specially optimized. The engine's memory map is its own; a tuned old layout is kept only with its measurement (H-037) |
+| 11-22 | "I agree with everything except this being golden: the skinning routine" | The skinning routine is open to be redone the engine's way (H-038) |
+| 11-22 | "Ensure the plan and project documents are up to date" | This state of the plan, STATUS.md, the rule files and the skills |
 
 ## 12. Decisions needed from the owner
 
 1. **The console evening:** when the SD card can go in. It is step 1, and nothing is done until it has run on the console. (amended 2026-11-21, see Amendments: not asked while the replatform is under way)
-2. **Asset source for step 6:** keep PS2-only (five of the six enhancements still apply), allow reworked or upscaled PS2 art, or allow GameCube originals for textures and models.
+2. **Asset source for step 6:** keep PS2-only (five of the six enhancements still apply), allow reworked or upscaled PS2 art, or allow GameCube originals for textures and models. (answered 2026-11-21: PS2 art may be reworked; no GameCube assets, H-026.5)
 3. **El Gigante's lighter PS2 body** (sheet sent 11-19): yes or no.
 4. **Hardware for an automatic console loop:** a Dreamcast broadband adapter or serial cable, and a smart plug, if you have them. (amended 2026-11-21, see Amendments: deferred to the end of the replatform)
 
