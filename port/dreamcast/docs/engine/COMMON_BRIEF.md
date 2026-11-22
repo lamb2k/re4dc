@@ -105,5 +105,9 @@ for other lanes; the branch head; what was not done; what you could not verify. 
 `E:\RE4DC-Lanes\<lane>\STATUS.md` current as you go. Before handing back: merge `origin/engine`; if you changed an
 image, confirm default, `FIGHT=1`, `BOSS=1` and `SENDABLE=1` link.
 
-## Borrow what works (owner, 2026-11-22, H-032)
-"we should be borrowing things that work fine at a mechanical level from the old build pre re architecture." Before writing new engine plumbing, check `docs/engine/SALVAGE_20261121.md` (REUSE / ADAPT rows) and the old port's own Dreamcast code (release line, read only): disc and loader, door and room-change memory guards, video-memory residency, sound, movies, memory card, crash screen, proven kernels. Lift what works and adapt only what the new architecture needs; say in the hand-back what you lifted and from where. Original game service code stays out (link check); the old drawing path as a whole is not tuned.
+## Borrow what makes sense, never at the engine's expense (owner, 2026-11-22, H-032, H-035)
+The owner: "we should be borrowing things that work fine at a mechanical level from the old build pre re architecture", then "We should only borrow from the old port thing that make sense I don't want to Compromise the new engine". One rule: consider the old port before writing plumbing, and take a part only when it passes all three tests.
+1. **Where it sits:** the engine's edge (disc, sound chip, memory card, movies, the crash screen, tools, converted data) or a self-contained routine. Never the core: the main loop and tick order, the memory map, the renderer's design, the data layout, the services.
+2. **It fits the engine as the engine is:** no conversion each picture, no old data layout or control flow brought in, no switches, no hooks, no disc access in play. If fitting it would bend the engine, take the idea and write it the engine's way, or leave it.
+3. **It measures at least as good inside the engine:** speed on the calibrated tier, look from stills.
+When in doubt the engine's design wins. The old port is read from `origin/t15/int` (read only), with `docs/engine/SALVAGE_20261121.md` as the index. In the hand-back, for each old-port part considered: taken, taken as an idea, or left, and why. Original game service code stays out (link check); the old drawing path as a whole is not carried over and not tuned.

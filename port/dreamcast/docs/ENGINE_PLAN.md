@@ -77,16 +77,20 @@ From `engine/STATUS.md`:
 
 ### 8. What we take from the old port (version 3.3, 2026-11-22)
 
-The owner, 2026-11-22: "I also appreciate your innovation but we should be borrowing things that work fine at a mechanical level from the old build pre re architecture." Then: "Integrate into the plan what we should copy or Integrate from the legacy port engine." (H-032, H-033.)
+The owner, 2026-11-22: "I also appreciate your innovation but we should be borrowing things that work fine at a mechanical level from the old build pre re architecture." Then: "Integrate into the plan what we should copy or Integrate from the legacy port engine." Then, the same day: "We should only borrow from the old port thing that make sense I don't want to Compromise the new engine". (H-032, H-033, H-035.)
 
-**The rule.** The old port (release line `t15/int`, read only) is the first place a lane looks. A part of it that works at a mechanical level is lifted and adapted, not written again. The inventory is [engine/SALVAGE_20261121.md](engine/SALVAGE_20261121.md) (54 rows); the row numbers below are its rows.
+**The rule.** The old port (release line `t15/int`, read only) is considered before a lane writes plumbing, and a part of it is taken only when it makes sense for the new engine. The engine's design wins every doubt. The inventory is [engine/SALVAGE_20261121.md](engine/SALVAGE_20261121.md) (54 rows); the row numbers below are its rows.
 
-- **What "lift" means:** the old file is copied into the engine under the engine's name, with the form the Test 27.2 release shipped as one fixed path. Its build switches, debug hooks and old-renderer hooks (`re4dc_` calls) are removed. The head of the file names the old file, the commit and the release settings it carries. Nothing lands switched off.
-- **Every lane brief** names the old-port part for its job, or says there is none. Every hand-back says what was lifted and from where, and gives a reason for anything written new where an old part existed.
-- **Judged like everything else:** the gate, the calibrated model, the look from stills. A lifted part that is slower or wrong inside the engine is fixed or replaced, with the measurement.
+- **The test, all three:**
+  1. *Where it sits:* the engine's edge (disc, sound chip, memory card, movies, the crash screen, tools, converted data) or a self-contained routine. Never the core: the main loop and tick order, the memory map, the renderer's design, the data layout, the services.
+  2. *It fits the engine as the engine is:* no conversion each picture, no old data layout or control flow brought in, no switches, no hooks, no disc access in play. If fitting it would bend the engine, the idea is taken and written the engine's way, or the part is left.
+  3. *It measures at least as good inside the engine:* speed on the calibrated model, look from stills.
+- **What "taken" means:** the old file is copied into the engine under the engine's name, in the form the Test 27.2 release shipped, as one fixed path. Its build switches, debug hooks and old-renderer hooks (`re4dc_` calls) are removed. The head of the file names the old file, the commit and the release settings it carries. Nothing lands switched off.
+- **Every lane brief** names the old-port part for its job, or says there is none. Every hand-back says, for each part considered: taken, taken as an idea, or left, and why.
+- **The lists below are candidates, not orders.** Each row passes the test in its lane or is dropped there, with the reason recorded.
 - **What does not change:**
   - The original game's service code (skeleton, collision, effects, camera and the like) stays out of the engine image; the link check holds. The recorded waiver is the sound driver (H-025.1).
-  - The old drawing path as a whole is not carried over and is not tuned. One proven routine from it may be lifted and measured inside the engine's renderer.
+  - The old drawing path as a whole is not carried over and is not tuned.
   - The old port stays buildable to the end of step 5: it is the bake's input, the recorder of rooms and the reference for outcomes.
 
 **A. Already taken** (in `engine`, or handed back and at the gate)
@@ -102,12 +106,12 @@ The owner, 2026-11-22: "I also appreciate your innovation but we should be borro
 | The released game's fixes inside the original code | 148 release settings in `src/` | 39 | In `engine` as corrections, game settings and guards (lane eng-fix1) |
 | Disc building, the Flycast harness, the PC reference | `tools/d367/mkgdi.sh`, harness, `Makefile.host` | 51, 53 | In `engine` |
 
-**B. Take next: none of these waits for the renderer.** In this order; each is one lane unless noted.
+**B. Candidates to take next: none of these waits for the renderer.** In this order; each is one lane unless noted, and each passes the test in its lane or is dropped there.
 
 | # | Part | Old port source | Row | What changes on the way in |
 |---|---|---|---|---|
-| 1 | Room loading at the old port's speed | the old room read path in `platform/dvd.cpp`, `src/game/read.cpp` as reference; packs trimmed at bake | 4, 50 | A door load takes about 60 s in Flycast today because the whole pack, the recording included, is read and checked. The bake drops the recording rows; reads follow the old port's pattern (one pass, streamed). No GameCube queue |
-| 2 | The script scheduler on the old thread layer | `platform/os.cpp` (thread section), `src/game/scheduler.cpp` hosted | 6 | Threads, queues and alarms only; the arena, font and reset parts stay behind. Room scripts and events wait on it (133 sites) |
+| 1 | Room loading at the old port's speed | the disc driver's blocking 32-byte request from `platform/dvd_read_safe.cpp` (taken); the old room read path as ideas only | 4, 50 | A door load takes about 60 s in Flycast today because the whole pack, the recording included, is read and checked. The bake drops the recording rows; one pass over the file. No read queue, no archive loaders, nothing read in play |
+| 2 | The script scheduler | `platform/os.cpp` (thread section) as the mechanism, or the engine's own cooperative task switch; `src/game/scheduler.cpp` hosted | 6 | The engine keeps its tick order: tasks run at one point of the tick, no pre-emption, no timer wake-ups in play. Room scripts and events wait on it (133 sites) |
 | 3 | Room, enemy and weapon code modules | `platform/modules.cpp`, `tools/gen_modules.py` | 7 | Each module linked in the image with its starting data restored on a fresh link; sizes go into the memory map |
 | 4 | The crash screen and the sampling profiler | `platform/crash_screen.cpp`, `pc_sampler.cpp` | 44, 45 | Needs only KOS. The only way to read a console fault without a cable: in before the deferred console run |
 | 5 | Old-game recordings of every chapter 1 room; one hashed inventory of the converted data | the old port run by the warp rig; `/root/re4data/private` | 50, 54 | Ten chapter 1 rooms have no recording (lane eng-bake1). A function run of the old port, never tuned |
@@ -117,11 +121,11 @@ The owner, 2026-11-22: "I also appreciate your innovation but we should be borro
 | 9 | The release gates | `fullplay/gdemu_gate.sh`, `kos_squeeze.sh`, `gc_port23`, `kit-check.sh`, `build-public.sh` | 52 | Disc race, memory squeeze, no-GameCube-asset count, contributor kit. Before the first engine release |
 | 10 | The per-room fix list, as bake inputs and hosted-code settings | `CH-FIXES-CARRY.md` rows 1-5, 14, 16, 17, 19, 21, 23, 27-30 | 40 | Applied to each room as it is hosted or baked |
 
-**C. Take when the renderer can hold them** (after the drawing row is met on the model, or as the named lane reaches them)
+**C. Candidates for when the renderer can hold them** (after the drawing row is met on the model, or as the named lane reaches them)
 
 | Part | Old port source | Row | Note |
 |---|---|---|---|
-| Proven SH-4 routines, measured inside the engine's renderer beside the engine's own | `mtx_sh4.S`, `pwc_sh4.S`, `lnk*_sh4.S`, `lnw*_sh4.S`, `sk1_sh4.S`, `backface_sh4.S`, `pmc*_sh4.S` | 9 | Lane eng-draw4 now. The faster one with 0 differing pixels stays. This re-opens the inventory's "drop" for these files (H-033) |
+| Self-contained SH-4 routines, measured inside the engine's renderer beside the engine's own | `mtx_sh4.S`, `pwc_sh4.S`, `lnk*_sh4.S`, `lnw*_sh4.S`, `sk1_sh4.S`, `backface_sh4.S`, `pmc*_sh4.S` | 9 | Lane eng-draw5. A routine only: the old character layout and emitter are not imported; a baked vertex order may be taken as an idea in the engine's own pack format. The old light kernels are a look sheet for the owner, not the engine's lighting |
 | The sky as the graphics chip's background plane | `platform/native_sky.cpp` | 17 | Costs no geometry |
 | Blob shadows under characters | `game/blob_shadow.cpp` | effects 7 | The cheap released method first; shadow volumes are step 6 |
 | The released effect selection ("Essential") | `esp_sub.cpp` keep and cut table, `recipe.conf` | 16 | The order for effects one at a time: feedback, then scene-defining; glows, haze and mist stay out |
@@ -141,7 +145,7 @@ The owner, 2026-11-22: "I also appreciate your innovation but we should be borro
 | The inventory screens' memory trick (3 MiB packed into video memory) | Tied to the old renderer's video memory; the memory map's owner places those bytes (rows 35, 41). The screens' logic stays hosted |
 | The old quality options, the call profiler, knob-off identity and STRICT | They tune or check the old renderer (rows 37, 45, 52) |
 
-**Lanes this starts.** B2 (scheduler) and B4 (crash screen and profiler) start now: their files are new and overlap no running lane. B1 and B3 follow the memory train's merge (the same files). B5 to B8 start as the machine has room, B5 first (recordings are the long pole for bakes). The lanes table in `engine/STATUS.md` is the register.
+**Lanes this started.** B2 (lane eng-sched1), B4 (eng-crash1, handed back: taken, an edge part with no cost per picture) and B1 (eng-load2). B3 follows the memory train's merge. B5 to B8 start as the machine has room, B5 first (recordings are the long pole for bakes). The lanes table in `engine/STATUS.md` is the register.
 
 Every number is labelled: **console** (real Dreamcast, GDEMU), **MODELLED** (PC hardware model), **Flycast**, **emulator** (another project's emulator), or **estimate**. (amended 2026-11-21, see Amendments: the tiers are now those in D below.)
 

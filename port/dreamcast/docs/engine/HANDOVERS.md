@@ -2,6 +2,34 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-035 (2026-11-22): borrow only what makes sense; the engine's design wins; gate rulings on the memory train
+
+(There is no H-034.)
+
+- **Owner:** "We should only borrow from the old port thing that make sense I don't want to Compromise the new engine".
+  This narrows H-032 and the plan's section 8, which had made lifting the default. The rule is now a test (plan section
+  8, common brief): a part is taken only if it sits at the engine's edge or is a self-contained routine, fits the
+  engine as the engine is (no per-picture conversion, no old layout or control flow, no switches, no disc access in
+  play), and measures at least as good inside the engine. Otherwise the idea is taken and written the engine's way, or
+  the part is left. Section 8's lists are candidates, not orders. When in doubt the engine's design wins.
+- **Applied to the running lanes by message:** eng-draw5 does not import the old character layout or emitter (the old
+  port's cost is measured as evidence; a baked vertex order may be taken as an idea in the engine's own pack format;
+  the old light kernels are a look sheet only); eng-load2 lifts the disc driver's blocking 32-byte request and takes
+  only ideas from the old room read path (no read queue, no archive loaders, nothing read in play); eng-sched1 keeps
+  the engine's tick order: the old thread section only as the mechanism under the hosted scheduler, run at one point of
+  the tick with no pre-emption and no timer wake-ups in play, or else the engine's own cooperative task switch.
+- **Already taken and kept under the test:** disc read safety, the AICA sound layer, the skinning routine, the crash
+  screen and profiler (lane eng-crash1: edge parts, no cost per picture, one fixed path each).
+- **Merged since H-033:** eng-e2f and eng-e2g as one train (FIGHT 30 to 10 service functions; the knock-down shown).
+- **Gate rulings:** the memory train (`lane/eng-mem2`, covering eng-skel1, eng-skel2, eng-load1, eng-snd1, eng-mem1,
+  eng-mem2) is gated as one; DOOR is an expected failure with the exact reason "round trip LEAK kos-used" of +16 B
+  (lane eng-load2 closes it); the selector's sound ceiling applies on a disc that declares the calibrated or console
+  tier; `skel.cpp`'s identity start for a failed inverse is an engine fix. eng-draw4's kernel step is judged against
+  the stills' own run-to-run variation (two base runs); its look arms stay off. eng-crash1's address-fault scenes are
+  expected failures in Flycast ("planted fault did not stop the program"): the deferred console run checks them.
+- **Look sheets with the owner:** character detail levels (LVL) and lighting every other picture (LHALF), lane
+  eng-draw4. Nothing lands before their answer.
+
 ## H-033 (2026-11-22): plan version 3.3: what we take from the old port; gate rulings
 
 - **Owner:** "Integrate into the plan what we should copy or Integrate from the legacy port engine." Done:
