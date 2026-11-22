@@ -68,6 +68,20 @@ What was found:
 Controls (`ev\split-ctl`): `SPLIT_IPA=game/objWep` on the default image: link check FAIL, 3 split problems (the two
 inlined Draw_line3d_222 copies and the flags); `FIGHT=1 EM10_IPA=1`: em10.o's build stops, 179 problems.
 
+### After lane eng-e2c merged (gate round 2, `E:\RE4DC-Lanes\eng-e2d\ev\split-gate2`)
+
+eng-e2c made r119's three thunder functions weak (services/boss/r119_weak.h) with the unit still built with the
+interprocedural optimisations: the split check refused it (BOSS: 1 split problem). `st1/r119` is now in
+SPLIT_NOIPA_UNITS (game/Makefile); eng-e2c's `game/r119_split_check.py` still runs in boss.mk's r119.o rule and passes.
+Result: default 0 / 0 split problems, SENDABLE=1 0 / 0, BOSS=1 0 / 0, FIGHT=1 30 (28 + 2). Control `R119_ORIG=1`: BOSS
+3, FAIL.
+
+The empty `cEmWrap` destructor (`include/em_wrap.h:22`, `~cEmWrap() {}`, in the class): no object carries it as a
+symbol (`st/em_wrap.o` and `st1/r101.o`: 0), and it has no instructions to show; GCC's inlining report names it inlined
+into setEm and SceCkFindPL (em_wrap.o) and r101_Event20 and r101_capInit (r101.o). Without the reviewed line
+`+st*/* cEmWrap::~cEmWrap` the split check refuses those 4 inlinings (the name guard `?st*/* *::~*`), so the line is
+needed by the split check, not by the link check's sections (`cemwrap.txt`).
+
 ## Item 2: GetScreenPos on the PC native build
 
 Cause: on the native build the camera service loads no GX projection (`CameraSetProjection` notes the type; the

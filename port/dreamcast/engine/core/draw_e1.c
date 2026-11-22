@@ -4,6 +4,7 @@
    (stream 8), the environment (fog, ambient) and the HUD widget layout; the HUD's life and weapon words are the
    live ones. Not drawn in E1: effects, foot shadows (recorded inputs), the handgun model (not in the pack). */
 #include "replay.h"
+#include "e1_clock.h"   // lane eng-clock1: the engine's clock (TMU2 counts at the reload's rate)
 #include "native_scene.h"
 #include "e1_skel_view.h"
 #include "camera/eng_camera.h"
@@ -23,7 +24,7 @@ volatile uint32_t m1_content_counts[8];
 /* phase stamps for the hardware model (core/e1_core.h e1_stamp) */
 volatile uint32_t m1_timing[600][8];
 unsigned e1_stamp_pic;
-void e1_stamp_c(unsigned k) { m1_timing[e1_stamp_pic % 600][k & 7] = (uint32_t) timer_us_gettime64(); }
+void e1_stamp_c(unsigned k) { m1_timing[e1_stamp_pic % 600][k & 7] = (uint32_t) e1_clock_us(); }
 volatile uint32_t m1_state[8];
 static NativeScene scene;
 static int open_ok, stills;
@@ -75,6 +76,31 @@ int e1_draw_open_c(const char* pack)
     f = fs_open("/cd/HUDOLD", O_RDONLY);
     if (f >= 0) { fs_close(f); hud_blend_control = 1; printf("E1 HUDOLD: every HUD widget with blend 0 (control)\n"); }
     m1_state[5] = 3;
+    return 1;
+}
+/* lane eng-draw2 (eng-load1's request R3, the integrator's assignment): a room change. e1_draw_close_c waits for the
+   graphics chip to finish with the last picture, then gives back everything the renderer holds for the room's pack
+   (render/native_scene.inc native_release: textures in video memory, palette banks, the world's runtime and visibility,
+   the actors' runtime, the logic state and the resident pack buffer). e1_draw_reopen_c opens the next room's pack (the
+   resident buffer sized for that pack) and sets it up as e1_draw_open_c does, without starting the graphics chip again.
+   Not here: the FIGHT image's e2_draw_open (the fight scene never changes room). */
+void e1_draw_close_c(void)
+{
+    if (!open_ok) return;
+    pvr_wait_ready(); pvr_wait_render_done();
+    native_release(&scene);
+    open_ok = 0;
+}
+int e1_draw_reopen_c(const char* pack)
+{
+    if (open_ok) e1_draw_close_c();
+    if (!native_open(&scene, pack)) { printf("E1 draw: pack %s refused on reopen (stage %lu)\n", pack, (unsigned long) m1_load_status[0]); return 0; }
+    native_update(&scene, 0);
+    scene.state[0] = (uint32_t*) &eng_cam;
+    e1_light_tables(&scene);
+    partner_model = strstr(pack, "HILL") && scene.models.n > E1_ASHLEY_MODEL ? E1_ASHLEY_MODEL : 0;
+    printf("E1 draw: reopened pack %s, %u catalogue models\n", pack, scene.models.n);
+    open_ok = 1;
     return 1;
 }
 
@@ -302,6 +328,7 @@ int e1_fields_start_c(int manual)
     vid_waitvbl(); vid_waitvbl();
     if (open_ok && manual) manual_flip = pvr_set_manual_flip(true) == 0;
     flip_n = 0;
+    if (open_ok) native_flip_mark();   /* lane eng-draw2 (step 0): every scene so far is shown */
     return manual_flip;
 }
 uint32_t e1_fields_now_c(void) { return vbl_fields; }
@@ -328,10 +355,10 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
     if (!open_ok) { *wait_us = *draw_us = 0; return; }
     m1_frame++;
     m1_state[1] = (m1_state[1] % 300) + 1;
-    uint64_t t0 = timer_us_gettime64();
+    uint64_t t0 = e1_clock_us();
     pvr_wait_ready();
     e1_stamp_c(5);
-    uint64_t t1 = timer_us_gettime64();
+    uint64_t t1 = e1_clock_us();
     const float* cam = (const float*) scene.state[0];
     native_vis_select(&scene.world, cam);   /* also the frame's view state the actor pass and the HUD read */
     native_prepare_world(&scene.world, cam, scene.assets.header.n);
@@ -361,14 +388,15 @@ void e1_draw_picture_c(const void* leon, const E1SkelView* leon_skel, unsigned i
     pvr_list_finish();
     pvr_scene_finish();
     e1_stamp_c(7);
-    uint64_t t2 = timer_us_gettime64();
+    native_scene_done();   /* lane eng-draw2 (step 0): counted for the stills' wait */
+    uint64_t t2 = e1_clock_us();
     *wait_us = (uint32_t) (t1 - t0);
     *draw_us = (uint32_t) (t2 - t1);
     if (stills && (m1_frame == 1 || m1_frame % 40 == 0)) {
         /* fixed-field presentation: release this picture now (behind any queued one), then wait for it to show; the
            pacer then does not queue it again (e1_present_take_c) */
         if (manual_flip) { e1_present_at_c(vbl_fields); stills_queued = 1; vid_waitvbl(); vid_waitvbl(); }
-        pvr_wait_render_done(); vid_waitvbl(); vid_waitvbl();
+        native_wait_shown(); vid_waitvbl();   /* lane eng-draw2 (step 0): this picture is on the screen, never the one before */
         m1_state[4] = 0xa5000000 + 2 * (*(volatile uint32_t*) 0xa05f8050 & 0x7ffffc);
         m1_state[2] = m1_frame;
         while (m1_state[3] != m1_state[2]) thd_pass();
