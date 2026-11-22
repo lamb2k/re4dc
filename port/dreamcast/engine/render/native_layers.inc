@@ -17,6 +17,7 @@ static uint32_t argb4(const float* c){
     return v;
 }
 static void rectangle(float x,float y,float z,float dx,float dy,float angle,const float uv[4],unsigned color){
+    if(!dc_mute)DC_ADD(DC_H_RECTS,1);   /* lane eng-draw1: HUD, text and effect rectangles */
     pvr_vertex_t p __attribute__((aligned(32)))={0};
     float sn=sinf(angle),cs=cosf(angle);
     for(unsigned j=0;j<4;j++){
@@ -26,7 +27,9 @@ static void rectangle(float x,float y,float z,float dx,float dy,float angle,cons
         p.u=uv[j&1?2:0];p.v=uv[j&2?3:1];p.argb=color;layer_prim(&p);
     }
 }
-void native_sky(NativeScene* s){
+static void sky_once(NativeScene* s);
+void native_sky(NativeScene* s){dc_stamp(DS_SKY0);sky_once(s);dc_stamp(DS_SKY1);}   /* lane eng-draw1: stamps */
+static void sky_once(NativeScene* s){
     const float* c=(const float*)s->state[0];
     const float* env=(const float*)s->state[7];
     const uint8_t* rgba=(const uint8_t*)(env+6);
@@ -140,7 +143,15 @@ static void hud_widget(const Scene* a,const Widget* q,float cx,float cy,float an
    queues each visible root's children (by unit number, groups recursing) before the unit itself, and the order table
    draws the queue last-in first (so the name plates lie over the gauge frame and the digits over the lens backdrop).
    HUDOLD (the control and the "before" still) keeps the old reading: radians, every parent, deepest level first. */
+static void hud_once(NativeScene* s);
+/* lane eng-draw1: stamps (the picture's last), lab arm DL_HUD2 lays out and submits the HUD twice */
 void native_hud(NativeScene* s){
+    dc_stamp(DS_HUD0);
+    hud_once(s);
+    if(DC_ARM(DL_HUD2)){dc_mute=1;hud_once(s);dc_mute=0;}
+    dc_stamp(DS_HUD1);
+}
+static void hud_once(NativeScene* s){
     const Widget* w=(const void*)(s->state[5]+4);
     unsigned count=(s->words[5]-4)*4/sizeof(*w);
     unsigned char visible[256]={0},group[256]={0};

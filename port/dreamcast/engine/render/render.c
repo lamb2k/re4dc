@@ -5,6 +5,9 @@
 #include <math.h>
 #include <string.h>
 typedef struct {float x,y,w,u,v; unsigned color;} Corner;
+#ifdef M1_NATIVE
+#include "draw_cost.inc"   /* lane eng-draw1: counters, phase stamps, lab arms (measurement only) */
+#endif
 #ifndef M1_NATIVE /* the M1 recorded-draw path; the native bench keeps only the shared emit and clip helpers */
 
 typedef struct {
@@ -148,6 +151,9 @@ static void clipped(pvr_vertex_t **sq,Corner a,Corner b,Corner c,float near){
         if(p!=q)out[n++]=intersect(prev,cur,near);
         if(q)out[n++]=cur;
     }
+#ifdef M1_NATIVE
+    if(!dc_mute){dc_n[dc_clip]++;dc_n[dc_clip+1]+=n<3?0:n;}   /* lane eng-draw1: triangles reaching the clipper, corners out */
+#endif
     if(n<3)return;
     emit(sq,out[0],0);emit(sq,out[1],0);
     if(n==4){emit(sq,out[3],0);emit(sq,out[2],1);}else emit(sq,out[2],1);

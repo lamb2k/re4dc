@@ -329,6 +329,7 @@ extern "C" struct AimCounters { uint32_t calls, scenery, enemy, enemy_flag40, bo
 extern "C" struct AimListCounters { uint32_t calls, scenery, listed, hit_only, empty; } aim_list_cnt;
 #include "e1_laser.h"
 extern "C" uint32_t eng_pool_full, eng_pool_bad_free;
+extern "C" void native_draw_report(void) __attribute__((weak));   // lane eng-draw1: render/draw_cost.inc
 extern "C" void e1_guards_report(void);   // lane eng-fix1 (H-026): host/guard_hooks.cpp, the guards' counts
 void e1_report()
 {
@@ -385,5 +386,6 @@ void e1_report()
                (unsigned long) t.svc_group_us[E1_SVC_EFFECTS]);
         if (rowdup_control && i + 1 == 300) { rowdup_control = 0; --i; }   // ROWDUP: this row once more (control)
     }
+    if (native_draw_report && e1_draw_opened_c()) native_draw_report();   // lane eng-draw1: drawing cost summary (DC lines)
     e1_log("E1 END\n");
 }
