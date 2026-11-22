@@ -31,7 +31,7 @@ PC suites on e7bd1403e, run in `E:\RE4DC-Lanes\eng-cloth2\ev\pc-m1`, with a fres
 
 | Suite | Rows | Result | New rows |
 |---|---|---|---|
-| `refctl.sh` | 26 | every row as it must | five skirt rows (below) |
+| `refctl.sh` | 25 | every row as it must | five skirt rows (below) |
 | `svc_controls.sh` | 80 | every row as it must | control `skirtpass4` on hill-ashley: FAIL as it must, 211459/240000 bones bit-identical |
 
 The hill-ashley rows of `svc_controls.sh` compare native with the reference bit for bit, the skirt included:
