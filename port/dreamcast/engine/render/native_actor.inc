@@ -5,7 +5,7 @@
    3. reject or accept each part by its per-bone spheres, before any skinning: a part is out when one frustum
       plane has all its spheres outside, and fully inside when every sphere is inside every plane;
    4. blend, project and light-fold only the weight sets that visible parts use;
-   5. positions on the SH-4 kernel re4dc_avk_pos_skin_u16 (screen x, y, 1/w and outcode per position), normals in
+   5. positions on the SH-4 kernel m1_avk_pos_skin_xy (re4dc_avk_pos_skin_u16 without u, v; screen x, y, 1/w and outcode per position), normals in
       a short ftrv loop, both over per-part streams sorted by weight set (one matrix load per run);
    6. emit strips: inside parts with no tests, boundary parts with per-strip outcodes and near clipping.
    The pack's model catalogue is converted at load (conversion cost is outside the picture). */
@@ -21,6 +21,9 @@ typedef struct {
     float width,height,near_plane,far_plane,au,bu,av,bv;
 } PositionPass;
 extern unsigned re4dc_avk_pos_skin_u16(const PositionPass*);
+/* Lane eng-draw5 (item 2): the same kernel without u, v (render/avk_xy_sh4.inc, from the released generator): the
+   emitter takes u, v from the strip corners, so the entries' u, v words were written and never read. */
+extern unsigned m1_avk_pos_skin_xy(const PositionPass*);
 _Static_assert(sizeof(PositionPass)==72,"AVK ABI");
 
 #include "part_cull.h"
@@ -28,16 +31,31 @@ typedef struct {
     const NativePart* src;
     uint16_t pos_first,pos_count,nrm_first,nrm_count;
     uint16_t sphere_first,sphere_count,ws_first,ws_count;
+    uint16_t strip_first,strip_count;   /* lane eng-draw3: the part's strips in the model's strip order (strip_code) */
+    uint8_t all_sided,pad8;             /* lane eng-draw3 arm CB: every strip of the part one-sided */
 } RtPart;
 typedef struct {
     const unsigned* h; const float* bind; const SkinWeight* w; const uint8_t* strips;
     SourceVector *pos,*nrm; RtPart* parts; PartSphere* spheres; uint16_t* part_ws; float* bone_radius;
     uint16_t* bones_used; unsigned nbones_used;
+    uint8_t* sided;   /* lane eng-draw3 arm CB: per strip (model order), 1 one-sided (closed surface), else 0; NULL arm off */
 } RtModel;
+/* Lane eng-draw3, step 5: character back-face culling, a LOOK ARM (run-time only, never the default). Boot file CBCULL,
+   read when the pack opens (before play). A strip is one-sided when every edge of each of its triangles is shared with
+   another triangle of the model (a closed surface, found at load from the pack's own position indices across all
+   parts), and it is not hair (roles 7 and 8, cards seen from both sides). Under the arm, a part whose strips are all
+   one-sided gets the chip's culling (ISP culling mode 3, the world's) in its header, and in a boundary part (the one
+   whose strips are tested anyway) a one-sided strip none of whose triangles faces the camera is dropped before its
+   normals are lit and before emission. Run rcb (2026-11-21) also forced every fully-inside part through the strip test:
+   that cost +1.3 / +2.1 / +0.7 ms (LEON / HILL / FIGHT characters, MODELLED) for the few whole strips it dropped
+   (strips are long and mixed), so fully-inside parts keep their fast path and leave the back faces to the chip. */
+static int cb_arm=-1;
+static unsigned cb_onesided_strips,cb_strips;
 typedef struct {unsigned n; RtModel m[];} RtCatalog;
 
 #define ACTOR_POS_LIMIT 4096
 #define ACTOR_WS_LIMIT 384   /* eng-boss: El Gigante (PS2 cast) has 276 weight sets */
+#define ACTOR_STRIP_LIMIT 8192
 #include "source_light.inc"
 #include "content_actor.inc"
 static uint16_t pos_records[ACTOR_POS_LIMIT+2][4] __attribute__((aligned(32)));
@@ -45,6 +63,27 @@ static const uint16_t dummy_uv[2];
 static shz_mat4x4_t skin_project[ACTOR_WS_LIMIT] __attribute__((aligned(32)));
 static float skin_world[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
 static float bone_rows[ACTOR_WS_LIMIT][12] __attribute__((aligned(32)));
+/* Lane eng-draw3: the strip codes (one byte a strip, two slots) and the normal marks, sized at pack open to the
+   catalogue's largest model rather than to the limits (32 KB of static arrays before, in an image whose hill heap
+   reaches into the arena: runs rb1/rh1 of 2026-11-22). Grown only, never shrunk. */
+static uint8_t* strip_code_pool[2];static unsigned strip_code_cap,nrm_cap;
+static uint16_t *nrm_list,*nrm_stamp,*nrm_ident,nrm_stamp_now;   /* nrm_ident[i] = i */
+static int actor_scratch(unsigned strips,unsigned nrms){
+    if(strips>strip_code_cap){
+        free(strip_code_pool[0]);free(strip_code_pool[1]);
+        strip_code_pool[0]=malloc(strips);strip_code_pool[1]=malloc(strips);
+        strip_code_cap=strip_code_pool[0]&&strip_code_pool[1]?strips:0;
+        if(!strip_code_cap)return 0;
+    }
+    if(nrms>nrm_cap){
+        free(nrm_list);free(nrm_stamp);free(nrm_ident);
+        nrm_list=malloc(2*nrms);nrm_stamp=calloc(nrms,2);nrm_ident=malloc(2*nrms);nrm_stamp_now=0;
+        nrm_cap=nrm_list&&nrm_stamp&&nrm_ident?nrms:0;
+        if(!nrm_cap)return 0;
+        for(unsigned i=0;i<nrms;i++)nrm_ident[i]=i;
+    }
+    return 1;
+}
 static float bone_scale[ACTOR_WS_LIMIT];
 /* The rows build_ws blends (lane eng-e1e): bone_rows (12 floats a bone) by default; the E1 actor pass points them at
    the skeleton service's published palette (16 floats a bone, already in this layout) and reads it in place. */
@@ -59,6 +98,8 @@ static float frustum[6][4];
 static shz_mat4x4_t view_project __attribute__((aligned(32)));
 volatile unsigned m1_part_counts[300][2];
 extern volatile uint32_t m1_state[8];
+#include "actor_light_old.inc"   /* lane eng-draw5 item 4: look arm LOLD (off by default) */
+#include "actor_skin.inc"        /* lane eng-draw5 item 2: speed lab arm SKC, skinning in C on SH4ZAM */
 
 static void multiply34(float* out,const float* a,const float* b){
     for(unsigned i=0;i<3;i++)for(unsigned j=0;j<4;j++)
@@ -68,7 +109,32 @@ static float column_scale(const float* m){
     float a=m[0]*m[0]+m[4]*m[4]+m[8]*m[8],b=m[1]*m[1]+m[5]*m[5]+m[9]*m[9],c=m[2]*m[2]+m[6]*m[6]+m[10]*m[10];
     return sqrtf(m1_maxf(a,m1_maxf(b,c)));
 }
-static inline unsigned sphere_planes(const float* c,float r,int* inside){return sphere_planes6((const float (*)[4])frustum,c,r,inside);}
+/* Lane eng-draw3 (step 3, the per-model fixed cost): the sphere-against-frustum test of part_cull.h without a branch per
+   plane. The same distance and the same two comparisons per plane, folded into the masks by compare-and-move: one block
+   a sphere where the loop made two conditional branches a plane (the tier ends a block at each and charges the next
+   block's first memory reads again). Used by the whole-character test and the part classes of both passes. */
+static inline unsigned sphere_planes6_flat(const float (*fr)[4],const float* c,float r,int* inside){
+    unsigned out=0;int in=1;const float nr=-r;
+#pragma GCC unroll 6
+    for(unsigned j=0;j<6;j++){
+        const float d=fr[j][0]*c[0]+fr[j][1]*c[1]+fr[j][2]*c[2]+fr[j][3];
+        out|=(unsigned)(d<nr)<<j;
+        in&=!(d<r);
+    }
+    *inside&=in;
+    return out;
+}
+static inline unsigned sphere_planes(const float* c,float r,int* inside){return sphere_planes6_flat((const float (*)[4])frustum,c,r,inside);}
+/* part_class (part_cull.h) on the flat test: the same loop, the same early stop */
+static inline unsigned part_class_flat(const float (*fr)[4],const PartSphere* sp,unsigned n,const float (*rows)[12],const float* scale){
+    unsigned out=63;int inside=1;
+    for(unsigned k=0;k<n && (out||inside);k++,sp++){
+        const float* r=rows[sp->bone];float c[3];
+        for(unsigned a=0;a<3;a++)c[a]=r[4*a]*sp->c[0]+r[4*a+1]*sp->c[1]+r[4*a+2]*sp->c[2]+r[4*a+3];
+        out&=sphere_planes6_flat(fr,c,sp->r*scale[sp->bone],&inside);
+    }
+    return out?0:inside?1:2;
+}
 static unsigned model_lights(const NativeScene* s,const ActorPose* pose,Incident* lamps){
     unsigned used=0;float strength[3]={};
     const NativeLamp* source=(const void*)s->state[2];
@@ -96,6 +162,40 @@ static unsigned model_index(const ActorPose* a){
     switch(type){case 3:return 3;case 4:return 4;case 11:return 5;default:return 2;}
 }
 
+/* Arm CB (load time): per strip of the model (parts in order, strips in order), 1 when every edge of every
+   non-degenerate triangle is used by at least two triangles of the model (original position indices) and the part is
+   not hair. Returns NULL when out of memory (the arm then leaves the model as it is). */
+static uint8_t* cb_sides(const unsigned* h,const NativePart* parts,const uint8_t* strips){
+    unsigned tris=0,nstrip=0;
+    for(unsigned p=0;p<h[4];p++){const uint8_t* q=strips+parts[p].at,*end=q+parts[p].size;
+        while(q<end){unsigned n=*(const unsigned*)q;tris+=n-2;nstrip++;q+=4+8*n;}}
+    unsigned size=1024;while(size<6*tris+16)size<<=1;
+    uint32_t* key=malloc(4*size);uint8_t* count=calloc(size,1);uint8_t* out=calloc(nstrip+1,1);
+    if(!key||!count||!out){free(key);free(count);free(out);return NULL;}
+    #define CB_SLOT(a,b) ({uint32_t k_=(a)<(b)?(a)<<16|(b):(b)<<16|(a),i_=(k_*2654435761u)>>8&(size-1); \
+        while(count[i_] && key[i_]!=k_)i_=(i_+1)&(size-1); key[i_]=k_; i_;})
+    for(int pass=0;pass<2;pass++){
+        unsigned s=0;
+        for(unsigned p=0;p<h[4];p++){
+            const uint8_t* q=strips+parts[p].at,*end=q+parts[p].size;const unsigned hair=parts[p].role==7||parts[p].role==8;
+            while(q<end){unsigned n=*(const unsigned*)q;const IndexCorner* c=(const void*)(q+4);q+=4+8*n;
+                unsigned closed=!hair;
+                for(unsigned k=2;k<n;k++){
+                    unsigned a=c[k-2].position,b=c[k-1].position,d=c[k].position;
+                    if(a==b||b==d||a==d)continue;
+                    if(!pass){unsigned i;i=CB_SLOT(a,b);if(count[i]<255)count[i]++;i=CB_SLOT(b,d);if(count[i]<255)count[i]++;
+                              i=CB_SLOT(a,d);if(count[i]<255)count[i]++;}
+                    else closed&=count[CB_SLOT(a,b)]>=2 && count[CB_SLOT(b,d)]>=2 && count[CB_SLOT(a,d)]>=2;
+                }
+                if(pass){out[s]=closed;cb_onesided_strips+=closed;cb_strips++;}
+                s++;
+            }
+        }
+    }
+    #undef CB_SLOT
+    free(key);free(count);
+    return out;
+}
 /* ---- load-time conversion of the pack's model catalogue ---- */
 static int ws_cmp_key(const SourceVector* v){return v->bone;}
 static void sort_by_ws(SourceVector* v,uint16_t* old,unsigned n){
@@ -110,6 +210,7 @@ void native_actor_close(NativeScene* s){
     for(unsigned i=0;i<cat->n;i++){
         RtModel* m=cat->m+i;
         free(m->pos);free(m->nrm);free(m->parts);free(m->spheres);free(m->part_ws);free(m->bone_radius);free(m->bones_used);
+        free(m->sided);
     }
     free(cat);s->runtime=NULL;
 }
@@ -117,6 +218,7 @@ int native_actor_open(NativeScene* s){
     RtCatalog* cat=calloc(1,sizeof(RtCatalog)+s->models.n*sizeof(RtModel));
     if(!cat)return 0;
     cat->n=s->models.n;s->runtime=cat;
+    if(cb_arm<0){file_t f=fs_open("/cd/CBCULL",O_RDONLY);cb_arm=f>=0;if(f>=0){fs_close(f);printf("CBCULL: lane eng-draw3 look arm, character back faces culled\n");}}
     static uint16_t pmap[ACTOR_POS_LIMIT],nmap[ACTOR_POS_LIMIT],old[2*ACTOR_POS_LIMIT];
     static uint8_t seen_ws[ACTOR_WS_LIMIT],seen_bone[ACTOR_WS_LIMIT];
     static float lo[ACTOR_WS_LIMIT][3],hi[ACTOR_WS_LIMIT][3];
@@ -144,19 +246,20 @@ int native_actor_open(NativeScene* s){
                 q=(const uint8_t*)(c+n);}
         }
         if(npos>ACTOR_POS_LIMIT||nnrm>ACTOR_POS_LIMIT)return 0;
+        m->sided=cb_arm>0?cb_sides(h,parts,strips):NULL;   /* lane eng-draw3 arm CB (original position indices) */
         m->pos=malloc(8*npos+16);m->nrm=malloc(8*nnrm+16);m->parts=calloc(h[4],sizeof(RtPart));
         m->spheres=malloc(sizeof(PartSphere)*(nsph+1));m->part_ws=malloc(2*(nws+1));
         m->bone_radius=calloc(h[0],sizeof(float));m->bones_used=malloc(2*h[0]+2);
         if(!m->pos||!m->nrm||!m->parts||!m->spheres||!m->part_ws||!m->bone_radius||!m->bones_used)return 0;
         /* pass 2: per-part streams sorted by weight set, corner indices rewritten in place, spheres */
-        npos=nnrm=nsph=nws=0;
+        npos=nnrm=nsph=nws=0;unsigned nstrip=0;
         for(unsigned p=0;p<h[4];p++){
             RtPart* rp=m->parts+p;rp->src=parts+p;
             memset(pmap,0xff,2*h[2]);memset(nmap,0xff,2*h[3]);memset(seen_ws,0,h[1]);memset(seen_bone,0,h[0]);
-            rp->pos_first=npos;rp->nrm_first=nnrm;
+            rp->pos_first=npos;rp->nrm_first=nnrm;rp->strip_first=nstrip;
             uint8_t* q=strips+parts[p].at,*end=q+parts[p].size;
             unsigned pc=0,nc=0;
-            while(q<end){unsigned n=*(const unsigned*)q;const IndexCorner* c=(const void*)(q+4);
+            while(q<end){unsigned n=*(const unsigned*)q;const IndexCorner* c=(const void*)(q+4);nstrip++;
                 for(unsigned j=0;j<n;j++){
                     if(pmap[c[j].position]==0xffff){pmap[c[j].position]=pc;m->pos[npos+pc]=pos[c[j].position];old[pc]=c[j].position;pc++;}
                     if(nmap[c[j].normal]==0xffff){nmap[c[j].normal]=nc;m->nrm[nnrm+nc]=norm[c[j].normal];old[ACTOR_POS_LIMIT+nc]=c[j].normal;nc++;}
@@ -169,7 +272,8 @@ int native_actor_open(NativeScene* s){
             while(q<end){unsigned n=*(const unsigned*)q;IndexCorner* c=(void*)(q+4);
                 for(unsigned j=0;j<n;j++){c[j].position=pmap[c[j].position];c[j].normal=nmap[c[j].normal];}
                 q=(uint8_t*)(c+n);}
-            rp->pos_count=pc;rp->nrm_count=nc;
+            rp->pos_count=pc;rp->nrm_count=nc;rp->strip_count=nstrip-rp->strip_first;
+            if(nstrip>ACTOR_STRIP_LIMIT)return 0;
             /* weight-set list and per-bone model-space boxes of the part's positions */
             rp->ws_first=nws;rp->sphere_first=nsph;
             for(unsigned i=0;i<pc;i++){
@@ -204,8 +308,15 @@ int native_actor_open(NativeScene* s){
         }
         m->nbones_used=0;
         for(unsigned b=0;b<h[0];b++)if(m->bone_radius[b]>0)m->bones_used[m->nbones_used++]=b;
+        if(!actor_scratch(nstrip+1,nnrm+1))return 0;   /* lane eng-draw3: strip codes and normal marks for this model */
+        if(m->sided)for(unsigned p=0;p<h[4];p++){
+            RtPart* rp=m->parts+p;unsigned all=rp->strip_count>0;
+            for(unsigned k=0;k<rp->strip_count;k++)all&=m->sided[rp->strip_first+k];
+            rp->all_sided=all;
+        }
     }
     for(unsigned i=0;i<ACTOR_POS_LIMIT+2;i++)pos_records[i][0]=pos_records[i][1]=i;
+    if(cb_arm>0)printf("CBCULL: %u of %u character strips one-sided (closed), the rest drawn from both sides\n",cb_onesided_strips,cb_strips);
     return 1;
 }
 
@@ -240,6 +351,12 @@ static int actor_hidden(const NativeVis* v,const uint8_t* cubes,const float* lo,
 static unsigned actor_serial;
 static void actor_frame_setup(const NativeScene* s){
     DC_ADD(DC_A_CALLS,1);   /* lane eng-draw1: once per character drawn (E1), once per pass (bench) */
+    /* lane eng-draw3 (step 3): once a picture, not once a character: the frustum, the view-projection and the light
+       order depend only on the picture's camera and room lights (m1_state[1] is the picture number, never the same for
+       two pictures in a row) */
+    static const NativeScene* done_scene;static uint32_t done_picture;
+    if(done_scene==s && done_picture==m1_state[1] && m1_state[1])return;
+    done_scene=s;done_picture=m1_state[1];
     const float* camera=(const float*)s->state[0];
     NativeFrustum f;native_world_frustum(camera,&f);
     for(unsigned j=0;j<6;j++){
@@ -259,17 +376,44 @@ static void build_ws(const RtModel* m,unsigned i){
     build_ws_once(m,i);
     if(DC_ARM(DL_WS2))build_ws_once(m,i);
 }
+/* Lane eng-draw3 (C3): the blend unrolled by weight count (one block, no per-element loop: the tier charged each of the
+   12 x count iterations as a block of its own), a single-bone set copied without a memcpy call, the four columns
+   projected without a loop, and the view-projection loaded into XMTRX once per character (ws_begin), not once per set.
+   The sums are the same: each element starts from a zero the compiler cannot fold (ws_zero) and adds w[k] x row[k]
+   in k order, as the loop did. */
+static volatile float ws_zero_store;   /* 0, read through a volatile once per character */
+static float ws_zero;
+static inline void ws_begin(void){ws_zero=ws_zero_store;shz_xmtrx_load_4x4(&view_project);}
 static void build_ws_once(const RtModel* m,unsigned i){
     const SkinWeight* w=m->w+i;float* out=skin_world[i];
-    if(w->count==1 && w->w[0]==1.f)memcpy(out,ws_rows+ws_stride*w->bone[0],48);
-    else for(unsigned j=0;j<12;j++){float sum=0;for(unsigned k=0;k<w->count;k++)sum+=w->w[k]*ws_rows[ws_stride*w->bone[k]+j];out[j]=sum;}
-    shz_xmtrx_load_4x4(&view_project);
-    shz_mat4x4_t* pm=skin_project+i;
-    for(unsigned c=0;c<4;c++){
-        shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[c],out[4+c],out[8+c],c==3?1.f:0.f));
-        pm->elem[4*c]=v.x;pm->elem[4*c+1]=v.y;pm->elem[4*c+2]=v.z;pm->elem[4*c+3]=v.w;
+    const float* r0=ws_rows+ws_stride*w->bone[0];
+    if(w->count==1 && w->w[0]==1.f){
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++)out[j]=r0[j];
+    }else if(w->count==2){
+        const float* r1=ws_rows+ws_stride*w->bone[1];const float w0=w->w[0],w1=w->w[1],z=ws_zero;
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++){float sum=z;sum+=w0*r0[j];sum+=w1*r1[j];out[j]=sum;}
+    }else if(w->count==3){
+        const float* r1=ws_rows+ws_stride*w->bone[1],*r2=ws_rows+ws_stride*w->bone[2];
+        const float w0=w->w[0],w1=w->w[1],w2=w->w[2],z=ws_zero;
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++){float sum=z;sum+=w0*r0[j];sum+=w1*r1[j];sum+=w2*r2[j];out[j]=sum;}
+    }else{
+        const float w0=w->count?w->w[0]:0.f,z=ws_zero;
+#pragma GCC unroll 12
+        for(unsigned j=0;j<12;j++){float sum=z;if(w->count)sum+=w0*r0[j];out[j]=sum;}
     }
-    if(!ws_light_off)ws_light(i,out);   /* eng-look: off on a baked-lighting cache hit */
+    shz_mat4x4_t* pm=skin_project+i;
+    shz_vec4_t v=shz_xmtrx_transform_vec4(shz_vec4_init(out[0],out[4],out[8],0.f));
+    pm->elem[0]=v.x;pm->elem[1]=v.y;pm->elem[2]=v.z;pm->elem[3]=v.w;
+    v=shz_xmtrx_transform_vec4(shz_vec4_init(out[1],out[5],out[9],0.f));
+    pm->elem[4]=v.x;pm->elem[5]=v.y;pm->elem[6]=v.z;pm->elem[7]=v.w;
+    v=shz_xmtrx_transform_vec4(shz_vec4_init(out[2],out[6],out[10],0.f));
+    pm->elem[8]=v.x;pm->elem[9]=v.y;pm->elem[10]=v.z;pm->elem[11]=v.w;
+    v=shz_xmtrx_transform_vec4(shz_vec4_init(out[3],out[7],out[11],1.f));
+    pm->elem[12]=v.x;pm->elem[13]=v.y;pm->elem[14]=v.z;pm->elem[15]=v.w;
+    if(!ws_light_off){if(lold_arm)lold_ws(i,out);else ws_light(i,out);}   /* eng-look: off on a baked-lighting cache hit; LOLD arm */
     ws_ready[i]=1;
 }
 static const pvr_vertex_t* cur_projected;static const uint32_t* cur_lit;static const uint8_t* cur_codes;
@@ -300,25 +444,121 @@ static pvr_vertex_t* emit_part(pvr_vertex_t* sq,const NativeScene* s,const RtMod
     if(DC_ARM(DL_EMIT2)){unsigned again=0;dc_mute=1;sq=emit_part_once(sq,s,m,rp,state,near,&again);dc_mute=0;}
     return sq;
 }
+/* Lane eng-draw3 (E3): a boundary part's strips are tested once a picture, after its positions are skinned and before
+   any normal is lit: mark_part writes each strip's code (STRIP_DROPPED: every corner outside one plane, never drawn;
+   else the corners' combined outcode, bit 5 = crosses the near plane) and lists the normals the kept strips use, so only
+   those are lit; the emission (opaque and translucent calls) reads the codes instead of testing again. */
+#define STRIP_DROPPED 0x80u
+static const uint8_t* cur_strip_codes;
+/* Returns how many normals to light, listed in nrm_list, or MARK_ALL when no strip was dropped (light the part's whole
+   range: the common case on close pictures, where listing every corner cost more than it saved: run r1a, hill +0.9 ms).
+   When some strips are dropped, the kept strips' normals are marked with plain stores (no branch a corner) and listed by
+   one branch-free pass over the part's normal range. */
+#define MARK_ALL (~0u)
+static unsigned mark_part(const RtModel* m,const RtPart* rp,const uint8_t* codes,uint8_t* sc){
+    const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
+    const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
+    const uint8_t* sided=m->sided?m->sided+rp->strip_first:NULL;   /* arm CB only */
+    uint8_t* const sc0=sc+rp->strip_first;unsigned dropped=0;
+    sc=sc0;
+    while(p<stop){
+        unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
+        unsigned common=63,combined=0;
+        for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
+        if(common&keep){*sc++=STRIP_DROPPED;dropped++;if(sided)sided++;continue;}
+        if(sided && *sided++ && !(combined&keep&32)){   /* arm CB: a one-sided strip with no triangle facing the camera */
+            unsigned front=0;
+            for(unsigned k=2;k<n && !front;k++){
+                const pvr_vertex_t *a=cur_projected+v[k&1?k-1:k-2].position,*b=cur_projected+v[k&1?k-2:k-1].position,
+                                   *c=cur_projected+v[k].position;
+                front=(b->x-a->x)*(c->y-a->y)-(c->x-a->x)*(b->y-a->y)<0;   /* the census's sign: positive is the far side */
+            }
+            if(!front){*sc++=STRIP_DROPPED;dropped++;continue;}
+        }
+        *sc++=combined&keep;
+    }
+    if(!dropped)return MARK_ALL;
+    if(!++nrm_stamp_now){memset(nrm_stamp,0,2*nrm_cap);nrm_stamp_now=1;}
+    const uint16_t stamp=nrm_stamp_now;
+    p=m->strips+rp->src->at;sc=sc0;
+    while(p<stop){
+        unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
+        if(*sc++&STRIP_DROPPED)continue;
+        for(unsigned j=0;j<n;j++)nrm_stamp[v[j].normal]=stamp;
+    }
+    unsigned nl=0;
+    for(unsigned i=rp->nrm_first,e=i+rp->nrm_count;i<e;i++){nrm_list[nl]=i;nl+=nrm_stamp[i]==stamp;}
+    return nl;
+}
+/* the normals of one drawn part: the kept strips' (boundary part with dropped strips) or all of them. A boundary part
+   with no dropped strip lights its whole range through the list loop with the identity list, as before step 1b: the
+   renderer is built with -ffast-math and the kernel's list loop and range loop are compiled separately, so the same
+   normal can come out one step apart (run rh1 against rb1: 29 pixels over 3 FIGHTS stills, all at boundary parts). */
+static inline void light_part(const RtModel* m,const RtPart* rp,unsigned st,const uint8_t* codes,uint8_t* sc,uint32_t* lit,int light){
+    if(lold_arm && light){if(st==2)mark_part(m,rp,codes,sc);lold_light_range(m,rp->nrm_first,rp->nrm_count,lit);return;}   /* LOLD arm */
+    if(st!=2){if(light)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);return;}
+    const unsigned nl=mark_part(m,rp,codes,sc);
+    if(!light)return;
+    if(nl==MARK_ALL)light_normals_list(m->nrm,nrm_ident+rp->nrm_first,rp->nrm_count,lit);
+    else light_normals_list(m->nrm,nrm_list,nl,lit);
+}
+/* Lane eng-draw4 (step 3, emission): the general strip walk below (census, clipped strips, dropped strips) stays for
+   the census arm and boundary parts; a part inside the frustum walks its strips in a loop with no test a strip (no
+   codes, no clipping, no census) and one header. The same corners reach the store queues in the same order. */
+/* Step 3b: the strip walk is the kernel's (render/stage_sh4.S m1_emit_actor_run): inside parts in one call; boundary
+   parts with their strip codes (dropped strips skipped in the kernel), back to C only for a strip that crosses the near
+   plane (clipped here, as in the general walk). */
+typedef struct { const uint8_t *p,*stop; const pvr_vertex_t* proj; const uint32_t* lit; const uint8_t* sc; unsigned corners; } EmitRun;
+_Static_assert(sizeof(EmitRun)==24,"stage_sh4.S m1_emit_actor_run");
+extern pvr_vertex_t* m1_emit_actor_run(pvr_vertex_t* sq,EmitRun* run);
+static pvr_vertex_t* emit_part_general(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts);
 static pvr_vertex_t* emit_part_once(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
+    if(DC_ARM(DL_CENSUS) && !dc_mute)return emit_part_general(sq,s,m,rp,state,near,emitted_parts);
+    const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
+    if(p>=stop)return sq;
+    const uint8_t* sc=NULL;unsigned out=0;
+    if(state==2){   /* boundary: no header when every strip is dropped (as the general walk) */
+        sc=cur_strip_codes+rp->strip_first;
+        for(unsigned k=0;k<rp->strip_count;k++)out+=sc[k]>>7;
+        if(out==rp->strip_count){if(!dc_mute){DC_ADD(DC_A_STRIPS,out);DC_ADD(DC_A_STRIPS_OUT,out);}return sq;}
+    }
+    const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
+    for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
+    if(rp->all_sided && m->sided)((volatile unsigned*)sq)[1]=hdr[1]|3u<<27;   /* arm CB: the chip culls (mode 3) */
+    advance(&sq);
+    EmitRun run={p,stop,cur_projected,cur_lit,sc,0};unsigned clipstrips=0;
+    for(;;){
+        sq=m1_emit_actor_run(sq,&run);
+        if(run.p>=stop)break;
+        /* a strip that crosses the near plane */
+        const unsigned n=*(const unsigned*)run.p;const IndexCorner* v=(const void*)(run.p+4);run.p=(const uint8_t*)(v+n);run.sc++;
+        clipstrips++;
+        Corner a=clip_corner(v),b=clip_corner(v+1);
+        for(unsigned j=2;j<n;j++){Corner c=clip_corner(v+j);clipped(&sq,j&1?b:a,j&1?a:b,c,near);a=b;b=c;}
+    }
+    *emitted_parts+=1;
+    if(!dc_mute){DC_ADD(DC_A_STRIPS,rp->strip_count);DC_ADD(DC_A_STRIPS_OUT,out);DC_ADD(DC_A_CORNERS,run.corners);
+                 DC_ADD(DC_A_CLIPSTRIPS,clipstrips);DC_ADD(DC_A_HEADERS,1);}
+    return sq;
+}
+static pvr_vertex_t* emit_part_general(pvr_vertex_t* sq,const NativeScene* s,const RtModel* m,const RtPart* rp,unsigned state,float near,unsigned* emitted_parts){
     const uint8_t* p=m->strips+rp->src->at,*stop=p+rp->src->size;
     int header=0;
-    const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;const uint8_t* codes=cur_codes;
-    const unsigned keep=DC_ARM(DL_NAN)?31u:63u;
+    const pvr_vertex_t* proj=cur_projected;const uint32_t* lit=cur_lit;
+    const uint8_t* sc=cur_strip_codes+rp->strip_first;
     unsigned strips=0,out=0,corners=0,clipstrips=0;
     while(p<stop){
         unsigned n=*(const unsigned*)p;const IndexCorner* v=(const void*)(p+4);p=(const uint8_t*)(v+n);
         unsigned combined=0;
         strips++;
         if(state==2){
-            unsigned common=63;
-            for(unsigned j=0;j<n;j++){unsigned code=codes[v[j].position];common&=code;combined|=code;}
-            common&=keep;combined&=keep;
-            if(common){out++;continue;}
+            combined=*sc++;
+            if(combined&STRIP_DROPPED){out++;continue;}
         }
         if(!header){
             const unsigned* hdr=(const unsigned*)row(&s->assets.header,rp->src->hdr)+1;
             for(unsigned j=0;j<8;j++)((volatile unsigned*)sq)[j]=hdr[j];
+            if(rp->all_sided && m->sided)((volatile unsigned*)sq)[1]=hdr[1]|3u<<27;   /* arm CB: the chip culls (mode 3) */
             advance(&sq);header=1;
         }
         if(DC_ARM(DL_CENSUS) && !dc_mute){   /* census (counts only) */
@@ -370,6 +610,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         uint8_t* state=part_state[ordinal];
         const pvr_vertex_t* proj=projected_pool[model!=0];uint32_t* lit=colors_pool[model!=0];uint8_t* codes=outcode_pool[model!=0];
         cur_projected=proj;cur_lit=lit;cur_codes=codes;cur_pos=m->pos;
+        uint8_t* strip_codes=strip_code_pool[model!=0];cur_strip_codes=strip_codes;
         if(translucent){   /* eng-look: Leon's hair layer (role 8) of the model drawn this picture */
             unsigned emitted=0;m=cat->m+lod_chosen[ordinal];h=m->h;cur_pos=m->pos;
             for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==8 && state[p])sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
@@ -399,17 +640,20 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         unsigned visible=0;
         for(unsigned p=0;p<h[4];p++){
             const RtPart* rp=m->parts+p;
-            unsigned st=part_class((const float (*)[4])frustum,m->spheres+rp->sphere_first,rp->sphere_count,(const float (*)[12])bone_rows,bone_scale);
+            unsigned st=part_class_flat((const float (*)[4])frustum,m->spheres+rp->sphere_first,rp->sphere_count,(const float (*)[12])bone_rows,bone_scale);
             state[p]=st;visible+=st!=0;
             if(!st)census[1]++;
         }
         if(!visible)continue;
+        /* lane eng-draw3 (E3): Leon's knife part (role 2), drawn in the knife stance only, is not skinned or lit out of it */
+        if(!model && !knife_stance(s))for(unsigned p=0;p<h[4];p++)if(m->parts[p].src->role==2)state[p]=0;
         /* 4. weight sets used by visible parts */
         int lit_fill=0;uint32_t* lit_cached=content_lit(s,actor,h[0],model,lod_chosen[ordinal],m,ordinal,
             m1_content[CS_BAKED]==3?actor_px(s,lo,hi):1e9f,&lit_fill);   /* eng-look: step B (baked lighting cache) */
         ws_light_off=lit_cached && !lit_fill;
         if(!ws_light_off)source_lights(s,actor,h[0],model_light(s,actor),&cur_lights);
         memset(ws_ready,0,h[1]);
+        ws_begin();
         for(unsigned p=0;p<h[4];p++){
             if(!state[p])continue;const RtPart* rp=m->parts+p;
             for(unsigned k=0;k<rp->ws_count;k++){unsigned i=m->part_ws[rp->ws_first+k];if(!ws_ready[i])build_ws(m,i);}
@@ -417,15 +661,16 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         if(lit_fill)for(unsigned i=0;i<h[1];i++)if(!ws_ready[i])build_ws(m,i);
         /* 5. positions and normals of visible parts */
         for(unsigned p=0;p<h[4];p++){
-            if(!state[p])continue;const RtPart* rp=m->parts+p;
+            if(!state[p])continue;const RtPart* rp=m->parts+p;const unsigned st_p=state[p];
             unsigned n=rp->pos_count;
             pos_records[n][0]=pos_records[n+1][0]=0;
             PositionPass a={pos_records,n,m->pos+rp->pos_first,dummy_uv,(void*)(proj+rp->pos_first),codes+rp->pos_first,8,
                             skin_project[0].elem,ws_ready,h[1],640,480,near,far,0,0,0,0};
-            re4dc_avk_pos_skin_u16(&a);
-            if(DC_ARM(DL_SKIN2))re4dc_avk_pos_skin_u16(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
+            m1_avk_pos_skin_xy(&a);
+            if(DC_ARM(DL_SKIN2))m1_avk_pos_skin_xy(&a);   /* lane eng-draw1 lab arm (bench): positions skinned twice */
             pos_records[n][0]=n;pos_records[n+1][0]=n+1;
-            if(!lit_cached)light_normals_source(m->nrm+rp->nrm_first,rp->nrm_count,lit+rp->nrm_first);
+            /* lane eng-draw3 (E3): a boundary part's strips are tested here; only its kept strips' normals are lit */
+            light_part(m,rp,st_p,codes,strip_codes,lit,!lit_cached);
         }
         if(lit_fill){const RtPart* lp=m->parts+h[4]-1;light_normals_source(m->nrm,lp->nrm_first+lp->nrm_count,lit_cached);}
         if(lit_cached)cur_lit=lit_cached;
@@ -434,8 +679,7 @@ void native_actor_pass(NativeScene* s,unsigned translucent){
         for(unsigned p=0;p<h[4];p++){
             if(!state[p] || m->parts[p].src->role==8)continue;
             /* Leon's role-2 part is the knife in hand: drawn in the knife stance only (eng-e0b: the recorded stance,
-               PlGetWeaponNo() == 0x10). */
-            if(!model && m->parts[p].src->role==2 && knife_stance(s)==0)continue;
+               PlGetWeaponNo() == 0x10); its state is 0 out of it (above) */
             unsigned before=emitted;sq=emit_part(sq,s,m,m->parts+p,state[p],near,&emitted);
             if(emitted==before)census[1]++;
         }
