@@ -462,10 +462,12 @@ int e1_ql_picture(const E1Timing& tm)
                (unsigned long) e1_tick, got);
     }
     if (g_crash) {   // the way back's exception path (dc-qalink's client reports the registers)
+        g_crash = 0;
         e1_log("E1 QL forced crash at tick %lu\n", (unsigned long) e1_tick);
         e1_log_flush();
-        volatile uint32_t* bad = (volatile uint32_t*) 0x00000001u;   // an unaligned read: address error
-        (void) *bad;
+        // a trap instruction (an unhandled exception on this CPU and in Flycast; an unaligned read was not raised by
+        // Flycast in run r2: the program went on)
+        __builtin_trap();
     }
     // the in-game menu: the console's pad (combo) or the PC's option menu=N
     if (g_menu_secs > 0) {

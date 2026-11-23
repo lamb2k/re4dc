@@ -261,24 +261,21 @@ def run():
         r = p.end_state(rid)
         p.step('run 1 ended', r.get('state') == 'done', state=r.get('state'), times=r.get('times'))
         return 0
-    for i in range(1, 4 if a.plan == 'full' else 2):
-        p.grab('%d' % i)
-        time.sleep(2)
     if a.plan == 'increment':
+        p.grab('1')
         return 0
-    # the menu: opened by the PC for 6 s, a grab while it is open, then the rows must move on again
+    # (plan full: the screen grabs come last, in run 3: in Flycast run r1 a failing grab stopped the program's link)
+    # the menu: opened by the PC for 6 s, then the rows must move on again
     n_before = (br.get('/v0/status').get('n') or 0)
     p.cmd({'cmd': 'option', 'name': 'menu', 'value': 6}, 'menu open (6 s)')
     time.sleep(2.5)
     held = br.get('/v0/status').get('n') or 0
-    p.grab('menu open')
-    time.sleep(1.5)
+    time.sleep(2.0)
     held2 = br.get('/v0/status').get('n') or 0
     p.step('menu holds the game', held2 == held, picture_before=n_before, picture_held=held, picture_held_later=held2)
     s = p.rows_after(held2, 30)
     p.step('menu closed, play resumed', bool(s), picture=(s or {}).get('n'))
     warp_and_land(p, 'farm', 0x103)
-    p.grab('farm')
     warp_and_land(p, 'village', 0x101)
     # RESET from the PC: back to the loader
     t = time.time()
@@ -302,6 +299,13 @@ def run():
     rid3 = p.push_and_link(a.push, a.args, a.deadline, 'run 3 (no disc change)')
     s = p.rows_after(0, 60)
     time.sleep(3)
+    for i in range(1, 4):
+        p.grab('%d' % i)
+        time.sleep(2)
+    p.cmd({'cmd': 'option', 'name': 'menu', 'value': 8}, 'menu open for the grab (8 s)')
+    time.sleep(2)
+    p.grab('menu open')
+    time.sleep(8)
     p.cmd({'cmd': 'option', 'name': 'end', 'value': 1}, 'end the run')
     r3 = p.end_state(rid3, 180)
     p.step('run 3 ended', r3.get('state') == 'done' and bool(s), state=r3.get('state'), times=r3.get('times'))

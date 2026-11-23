@@ -562,3 +562,45 @@ records (as SH4ZAM), writes `LINK.TXT` with `--link <PC address>`, and stages `C
 the `OPENX` boot file; needs `--link`). The old RE4 copies (`link.c`, `main.c`, `cl_core.*`, `client.c`, `host.c`,
 `cl_proto.h`, `cl_handoff.h`, `testprog.c`, the old host tests) are gone; their tests run in dc-qalink
 (`tests/test_loop.py`, `tests/test_link.py`).
+
+## 17. RE4 on QA Link 0.2: live data, the menu, warps, increments from the network disc (lane eng-link2, 2026-11-23)
+
+A QA or test image (`SENDABLE=1`; `DCQL_ENABLE` defaults to it, game/qalink.mk) carries the RE4 layer
+`engine/qalink/e1_qalink.cpp` on dc-qalink 0.2 (the pinned submodule; RE4 keeps no copy of its code). A release image
+(the default, `FIGHT=1`, `BOSS=1` builds without `SENDABLE`) links none of it: no `dcql_`, `cl_` or `e1_ql_` symbol in its
+map. `SENDABLE=1 DCQL_ENABLE=0` keeps the loop's client (report, way back, lines) without the layer: the link-off
+control image.
+
+- **Where it runs:** `core/main.cpp` calls it three times under `#ifdef E1_QALINK`: first thing in `main` (the network
+  disc mounted before any `/cd` read, the live declaration, the menu's pages), before the first tick (`ticks=N` from
+  the PC's arguments: a run as long as a session needs, at most 54,000), and after each picture, after its frame time
+  is taken and before the room-change check (outside every ROW column, as the loading state is).
+- **Live data:** one record a picture copied into dc-qalink's fixed ring (`dcql_live_frame`): phases in, behaviour
+  (tick less services), services (row 9 ms), drawing (row 14 ms), PVR wait, pacer wait, picture (33.3 ms, total);
+  room; Leon's position; counters enemies alive (actor id 0x10 and up), room loads, menu opens, the guards "disc opens
+  in play" and "disc reads in play" (`core/play_files.c` `e1_play_files_counts`), pictures over 33.3 ms. Trace lanes
+  Loads and Menu; log lines `load: ...` with each room-entry time.
+- **Commands from the PC** (run at the end of a picture, inside `dcql_live_frame`): `warp <preset>` plants the door
+  handler's stores toward the preset (as the DOOR scene's planted request does) and the loop's own loading state
+  answers it (`e1_room_change_run`); presets village (r101 route start), square (r101), farm (r103 entry), gate (r101
+  by the farm gate), hill (r11d, Leon alone). Refused in the one-room images (FIGHT, BOSS) and in the hill scene.
+  Options: `menu=N` (open for N seconds), `end=1`, `crash=1` (an address error: the way back's exception path),
+  `readx=1` (CONTROL: a 4 KiB read of the room's pack inside play). A `pad` command is refused: the engine's pad is its
+  scene script.
+- **The menu** (dc-qalink's `dcql_menu`, way (b): drawn into the displayed frame buffer while the game is held between
+  pictures): opened by LT + RT + START on the console's pad, or `option menu=N` from the PC. RE4 pages Scene (image,
+  room, Leon, enemies, tick, room loads, disc mode, files in play), Timing (last, mean, worst picture and drawing, over
+  33.3 ms), Warp (the presets); dc-qalink's Link (with the files-in-play row), Log and Snapshot (room, Leon, worst).
+- **The network disc** (owner 2026-11-23: "I want to run increments of re4 from the network drive"): the main mode is
+  the whole RE4 disc served by the PC: `tools/engine/build_console_disc.sh --folder --out <dir>` stages `<dir>/disc` (the
+  scene folders with packs, archives, sound; the village folder E1 also holds the farm's pack and archive for the
+  warps) and `<dir>/push` (e1.elf, fight.elf, boss.elf); the bridge serves it with `--disc <dir>/disc --whole` and reads
+  it again at every push. Only the QA Link loader is on the SD card; an increment is build, stage, push, run:
+  `tools/consoleloop/re4_increment.py` (Windows; the build in WSL; only changed files copied into the served folder).
+  Secondary mode (disc timing): `--loader-disc --link <PC>` makes a GDI that boots dc-qalink's loader with the same
+  RE4 data on it; push with `disc=gd` for the GDEMU disc alone, or serve an overlay of changed files over it.
+- **Checks** (`tools/consoleloop/`): `re4_bridge_proof.py <bridge> <out> --push <elf> --plan full|readx|plain|increment`
+  drives a run through the bridge as QA Link Cloud does; `re4_link_check.py <out>` judges it (rows with room and
+  position, guards 0 in every record and in the report's E1 FILES line, steps, and for plan full: 4 grabs, the menu's
+  open and close, the farm then the village reached, room-entry times). Controls: plan readx must FAIL on guards; the
+  link-off image under plan plain must FAIL on rows.
