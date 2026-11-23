@@ -23,20 +23,22 @@ import argparse, glob, json, os, re, sys
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('proof')
+    ap.add_argument('proof', nargs='+', help='one proof folder, or the halves of plan full (--part 1, --part 2)')
     ap.add_argument('--expect', choices=['full', 'rows'])
     a = ap.parse_args()
-    pj = json.load(open(os.path.join(a.proof, 'proof.json'), encoding='utf-8'))
+    pjs = [json.load(open(os.path.join(d, 'proof.json'), encoding='utf-8')) for d in a.proof]
+    pj = dict(pjs[0], steps=[s for x in pjs for s in x.get('steps', [])])
     expect = a.expect or ('full' if pj.get('plan') == 'full' else 'rows')
-    recs = []
-    for f in sorted(glob.glob(os.path.join(a.proof, 'sessions', '*.jsonl'))):
-        for line in open(f, encoding='utf-8', errors='replace'):
-            try:
-                recs.append(json.loads(line))
-            except ValueError:
-                pass
-    reports = {os.path.basename(f)[7:-4]: open(f, encoding='utf-8', errors='replace').read()
-               for f in glob.glob(os.path.join(a.proof, 'sessions', 'report-*.txt'))}
+    recs, reports = [], {}
+    for d in a.proof:
+        for f in sorted(glob.glob(os.path.join(d, 'sessions', '*.jsonl'))):
+            for line in open(f, encoding='utf-8', errors='replace'):
+                try:
+                    recs.append(json.loads(line))
+                except ValueError:
+                    pass
+        reports.update({os.path.basename(f)[7:-4]: open(f, encoding='utf-8', errors='replace').read()
+                        for f in glob.glob(os.path.join(d, 'sessions', 'report-*.txt'))})
     rows_out = []
 
     def row(name, ok, seen):
@@ -75,8 +77,8 @@ def main():
         row('loads', len(loads) >= 3, '; '.join(loads))
     ok = all(o for _, o, _ in rows_out)
     print('VERDICT %s (%s, plan %s, tier %s)' % ('PASS' if ok else 'FAIL', expect, pj.get('plan'), pj.get('tier')))
-    json.dump({'verdict': ok, 'rows': [{'row': n, 'ok': o, 'seen': s} for n, o, s in rows_out]},
-              open(os.path.join(a.proof, 'check.json'), 'w'), indent=1)
+    json.dump({'verdict': ok, 'proofs': a.proof, 'rows': [{'row': n, 'ok': o, 'seen': s} for n, o, s in rows_out]},
+              open(os.path.join(a.proof[0], 'check.json'), 'w'), indent=1)
     return 0 if ok else 1
 
 

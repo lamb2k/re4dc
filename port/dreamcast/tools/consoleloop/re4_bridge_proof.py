@@ -220,6 +220,7 @@ def run():
     ap.add_argument('--args', default='root=E1 ticks=9000 rows=skip')
     ap.add_argument('--plan', default='full', choices=['full', 'readx', 'plain', 'increment', 'loads'])
     ap.add_argument('--deadline', type=int, default=600)
+    ap.add_argument('--part', type=int, default=0, choices=[0, 1, 2], help='plan full: both halves (0) or one')
     a = ap.parse_args()
     br = Bridge(a.bridge)
     p = PROOF = Proof(br, a.out)
@@ -265,6 +266,10 @@ def run():
         p.grab('1')
         return 0
     # (plan full: the screen grabs come last, in run 3: in Flycast run r1 a failing grab stopped the program's link)
+    # --part 2: only the second half (crash, third push, grabs): stock Flycast's adapter thread can stop the emulator
+    # ("SH4 exception when blocked", runs r2 and r3), so a Flycast session may carry the halves one at a time
+    if a.part == 2:
+        return part2(p, a, rid)
     # the menu: opened by the PC for 6 s, then the rows must move on again
     n_before = (br.get('/v0/status').get('n') or 0)
     p.cmd({'cmd': 'option', 'name': 'menu', 'value': 6}, 'menu open (6 s)')
@@ -284,6 +289,17 @@ def run():
     back = p.loader_idle(120)
     p.step('RESET back to the loader', code == 200 and bool(back), rung=j.get('rung'), way_back=j.get('way_back'),
            state=r.get('state'), seconds=round(time.time() - t, 2))
+    if a.part == 1:
+        return 0
+    return part2(p, a, None)
+
+
+def part2(p, a, rid0):
+    br = p.br
+    if rid0:   # part 2 alone: the first run is ended (exit 0) before the crash run
+        p.cmd({'cmd': 'option', 'name': 'end', 'value': 1}, 'end run 1')
+        r = p.end_state(rid0, 180)
+        p.step('run 1 ended', r.get('state') == 'done' and bool(p.loader_idle(120)), state=r.get('state'))
     # push again, crash: back with its report
     rid2 = p.push_and_link(a.push, a.args, a.deadline, 'run 2 (crash)')
     p.rows_after(0, 60)

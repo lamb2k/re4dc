@@ -276,6 +276,14 @@ static const dcql_menu_row_t WARP[] = {
     DCQL_MENU_ACTION("Village: farm gate", "r101", m_warp, (void*) 3),
     DCQL_MENU_ACTION("Hill path (Leon alone)", "r11d", m_warp, (void*) 4),
 };
+// the owner's interactive checks (console session): the way back from a crash and from a normal end
+static int m_crash(const dcql_menu_row_t*, int, void*) { g_crash = 1; return 1; }
+static int m_end(const dcql_menu_row_t*, int, void*) { g_end = 1; return 1; }
+static const dcql_menu_row_t TESTS[] = {
+    DCQL_MENU_HEAD("Way back to the loader"),
+    DCQL_MENU_ACTION("End the run (normal exit)", "exit 0", m_end, 0),
+    DCQL_MENU_ACTION("Forced crash (trap)", "crash", m_crash, 0),
+};
 static const dcql_menu_row_t SNAP[] = {
     DCQL_MENU_INFO("room", i_room, 0),
     DCQL_MENU_INFO("leon", i_leon, 0),
@@ -347,6 +355,7 @@ void e1_ql_early()
     dcql_menu_add_page("Scene", SCENE, sizeof(SCENE) / sizeof(SCENE[0]));
     dcql_menu_add_page("Timing", TIMING, sizeof(TIMING) / sizeof(TIMING[0]));
     dcql_menu_add_page("Warp", WARP, sizeof(WARP) / sizeof(WARP[0]));
+    dcql_menu_add_page("Tests", TESTS, sizeof(TESTS) / sizeof(TESTS[0]));
     e1_log("E1 QL layer on: live data, menu (LT+RT+START), %u warp presets, args \"%s\"\n", NPRESETS, a);
 }
 
