@@ -2,6 +2,48 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-045 (2026-11-23): RE4 resumed; QA Link first; the drawing unit merged; rulings
+
+- **Owner, in order:** "we should start it so we have a good testing canddiate" (lane eng-link2: RE4 on dc-qalink
+  0.2); "I want to run increments of re4 from the network drive" and "gdemu should perform better for loads and reads -
+  but for regular graphics and bug testing this should be ideal" (each increment runs with the whole disc served from
+  the PC by the network disc; load and read timing is judged on GDEMU only, at milestones and releases); "At least the
+  RE work" (RE4 resumed after H-044); "clearly finish the RE4 on QA link work with drawing work being a good test
+  candidate once it's ready" (order: eng-link2 and the drawing work first, then the owner's console test build).
+- **Merged (eng-int, finished, unaudited):** the eng-draw unit (eng-draw3 + eng-draw4 + eng-draw5, lane/eng-draw5
+  412722200): merge c7f134e5b, engine 8932e105b. 59 of 59 stills identical against two base runs; characters' drawing
+  mean LEON 11.73 -> 11.24 ms, HILL 23.16 -> 22.31 ms (MODELLED, console-build dynarec at 70 MHz, fly1). No scene meets
+  the 14 ms drawing row. FIGHT KOS heap to the arena after play +221,184 B (plain count).
+- **eng-draw6 (ed48059f1, at the gate next):** detail levels failed the stills check against the two-run floor (22 px
+  outside the changed boxes on FIGHTS 240 and 360, where the base runs agree) and were removed from the build (no
+  default-off arm). Kept: slot pools sized at pack open, assembly skinning (C deleted). The released-lighting look sheet
+  `E:\RE4DC-Lanes\eng-draw6\sheets\LOLD-vs-engine.jpg` was sent to the owner on 2026-11-23; no answer yet.
+- **eng-link2 (a12ae7c30, gated after its re-pin to dc-qalink v0.2.0):** rulings: its three hooks outside its owned
+  files (core/main.cpp E1_QALINK calls, core/play_files.c accessor, game/Makefile include) accepted as the QA build's
+  link hooks; FIGHT SENDABLE builds with `DCQL_ENABLE=0` until the memory map's owner rules on its ~32 KB heap margin.
+- **Ruling, the stills floor:** a third base run of the same disc differs from a two-run floor on about 1 FIGHTS still
+  in 10 (single colour steps). Gates now build the floor from three base runs (a still where any base run differs from
+  the first is left out, whole picture, no tolerance). This adds base runs and loosens no comparison.
+- **Open, for their owners:** FIGHT's room carve is refused every tick (SVCMEM 8cf40000-8cfc0000, carve fails at
+  174,592) and floods the tick log, so FIGHT's timing record fails with "no E1 FIELDS line" (memory map owner);
+  CS_LEVELS is not set in E1 (core/draw_e1.c owner).
+- **Incident:** a housekeeping lane (ws-scratch) deleted six files from `eng-skel2-data/pristine-colb` during a gate;
+  restored byte-exact from `eng-bench/.m1/base003` against `pristine.json` (E:\RE4DC-Lanes\ws-scratch\RESTORED-*.tsv),
+  verified by eng-int before its disc run. Cleanup briefs now fence game-data trees by file type.
+
+## H-044 (2026-11-22): RE4 paused by the owner
+
+- **Owner** (relayed by the F-Zero coordinator): "Tell the resident evil track to pause its work and create and
+  handover + to give you resources back". Every lane pushed and stopped; bakes, builds and Flycast stopped; RAM stages
+  cleared. Handover: the workspace file `RE4-PAUSE-20261122.md`; gate queue `E:\RE4DC-Lanes\eng-int\RESUME-20261122d.md`.
+- **Merged before the pause** (eng-int, finished, unaudited): the memory train (d4c966846; eng-skel1, eng-skel2,
+  eng-load1, eng-snd1, eng-mem1, eng-mem2) with the shared pack sets `e1-farmwep-20261122` and `e1-colb-20261122`;
+  room loading eng-load2 (1a4335fd7; DOOR passes, judged on kos-net). engine c8642d132.
+- **Rulings on the stop reports, for the resume:** eng-draw6's "shared translucent data" finding withdrawn (only
+  Leon has translucent parts); its detail levels merge only if the stills check holds with the floor applied. The
+  disc script's default tree lacks baked collision: gates use `PRISTINE=pristine-colb` until the script defaults to
+  the shared set (a small lane on resume). CPU sharing with the F-Zero line: over 85%, `make -j2`, bakes 2 workers.
+
 ## H-042 (2026-11-22): the console link: GDEMU, no restarts, no card copying, dc-qalink
 
 - **Owner, in order:** "Does it matter that the system is running a GDEMU?"; "Maybe there is a way to not restart at all
