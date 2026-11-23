@@ -49,7 +49,7 @@
 #   (qalink_bridge.py --disc <out>/disc --whole; the owner's main mode: only the QA Link loader on the SD card, each
 #   increment built, staged and pushed), <out>/push holds the images to push (e1.elf, fight.elf, boss.elf; SENDABLE=1 with
 #   the RE4 layer), MANIFEST.txt and SHA256SUMS. The village folder E1 also gets the farm's pack and archive (the warp
-#   presets' rooms). tools/consoleloop/re4_increment.sh builds, stages and pushes in one command.
+#   presets' rooms). tools/consoleloop/re4_increment.py builds, stages and pushes in one command.
 # --loader-disc: a GDI whose first program and LOADER.BIN are dc-qalink's loader (engine/loader `loader`), with the
 #   same RE4 data on it: the secondary mode (the GDEMU disc as the network disc's base; disc-timing runs) and the
 #   Flycast comparison of room-entry times. Needs --link; --link-port <PC port> <console port> for Flycast's port pair.
