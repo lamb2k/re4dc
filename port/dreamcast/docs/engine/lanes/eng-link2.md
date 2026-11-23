@@ -1,7 +1,7 @@
 # eng-link2 hand-back (2026-11-23): RE4 on QA Link 0.2, a testing candidate
 
-**Status: finished, unaudited.** Branch `lane/eng-link2`. dc-qalink pinned at `origin/v0.2` 2bb1087af (re-pin to the
-v0.2.0 tag when it exists). Design: CONSOLE_LOOP.md section 17. Full hand-back with evidence paths:
+**Status: finished, unaudited.** Branch `lane/eng-link2`. dc-qalink pinned at the v0.2.0 tag (88d9379c1). FIGHT, BOSS and E1
+pushes carry the layer (FIGHT SENDABLE ruled in 2026-11-23, about 300 KB heap left). Design: CONSOLE_LOOP.md section 17. Full hand-back with evidence paths:
 `E:\RE4DC-Lanes\eng-link2\HANDBACK.md`. Every time here is **Flycast** (a function check, never a console figure).
 
 ## What RE4 has now

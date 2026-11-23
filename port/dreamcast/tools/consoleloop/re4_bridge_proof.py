@@ -218,7 +218,7 @@ def run():
     ap.add_argument('out')
     ap.add_argument('--push', required=True)
     ap.add_argument('--args', default='root=E1 ticks=9000 rows=skip')
-    ap.add_argument('--plan', default='full', choices=['full', 'readx', 'plain', 'increment', 'loads'])
+    ap.add_argument('--plan', default='full', choices=['full', 'readx', 'plain', 'increment', 'loads', 'smoke'])
     ap.add_argument('--deadline', type=int, default=600)
     ap.add_argument('--part', type=int, default=0, choices=[0, 1, 2], help='plan full: both halves (0) or one')
     a = ap.parse_args()
@@ -264,6 +264,16 @@ def run():
         return 0
     if a.plan == 'increment':
         p.grab('1')
+        return 0
+    if a.plan == 'smoke':   # a re-pin smoke: push, live rows, one grab, RESET back to the loader
+        time.sleep(3)
+        p.grab('1')
+        t = time.time()
+        code, j = br.post('/v0/command', {'cmd': 'reset', 'level': 'return'}, timeout=120)
+        r = p.end_state(rid, 120)
+        back = p.loader_idle(120)
+        p.step('RESET back to the loader', code == 200 and bool(back), rung=j.get('rung'), way_back=j.get('way_back'),
+               state=r.get('state'), seconds=round(time.time() - t, 2))
         return 0
     # (plan full: the screen grabs come last, in run 3: in Flycast run r1 a failing grab stopped the program's link)
     # --part 2: only the second half (crash, third push, grabs): stock Flycast's adapter thread can stop the emulator
