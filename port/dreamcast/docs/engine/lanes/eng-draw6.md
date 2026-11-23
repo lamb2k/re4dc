@@ -2,12 +2,14 @@
 
 **Status: finished, unaudited.** Branch `lane/eng-draw6` (from `lane/eng-draw5` bd77d8edd), head: the commit that carries this document, origin/engine
 8b68c925d merged. Lane document: `port/dreamcast/docs/engine/lanes/eng-draw6.md` (this text). Evidence:
-`E:\RE4DC-Lanes\eng-draw6\` runs\ (rA1 rL timing, rV census, sA1 sL1 sA2 sP2 stills; sP1-killed is the interrupted
-first control), s\ (scripts), sheets\LOLD-vs-engine.jpg, STATUS.md, DELETED.txt.
+`E:\RE4DC-Lanes\eng-draw6\` runs\ (rA1 rL timing, rV census, sA1 sA2 sA3 base, sL1 levels, sP2 control, sN1 the
+image after the removal: stills; sP1-killed is the interrupted first control), s\ (scripts), sheets\LOLD-vs-engine.jpg, STATUS.md, DELETED.txt.
 
-**Headline: character detail levels are NOT the default.** Their stills check failed with the floor applied, so the
-levels went back to the lab arm `LVL` (boot file), off, as the brief's rule says (commit 09fea1973). The look sheet
-LOLD-vs-engine.jpg waits for the owner; the look is unchanged.
+**Headline: character detail levels are out of the build.** Their stills check failed, first with one floor run and
+then (integrator's ruling 2026-11-23) against the gate's two-base-run floor. So, as ruled, the level code came out of
+the default build entirely, with no arm left that is off (commit bd02b883a). The image with that change draws the same
+stills as the base on 49 of 50 judged stills (the 50th is 1 px, one colour step). The look sheet LOLD-vs-engine.jpg
+waits for the owner; the look is unchanged.
 
 Tier of every speed number: **MODELLED (console-build dynarec at 70 MHz, calibrated on the old port)**, fly2,
 `Sh4Clock = 70`, `Dynarec.Enabled = yes` (each run's `emu.cfg.used`). Counts and stills without a tier are plain
@@ -28,7 +30,8 @@ submission time, cache and bus contention, disc timing. Budget row: drawing 14 m
 - FIGHT arena margin after play: **+544,768 B** (rA1, rL; was -28,672 B on eng-draw5's r3/rlv/rsk/rlo). LEON
   4,853,760 B, HILL 4,911,104 B. (Plain counts from the serial `CDISC SUM` line, on the fly2 runs.)
 - Counter (asked vs drawn), rL: LEON 0>0 1,099, 1>1 180; HILL 0>0 1,335, 1>1 583; asked level not drawn 0, pool guard 0.
-  FIGHT's line is lost to the tick-log overflow (below).
+  FIGHT's line is lost to the tick-log overflow (below). The counter came out with the level code (bd02b883a); the
+  pool guards stay as the "E1 POOL guards" line (sN1: 0 and 0).
 
 ## Item 2: skinning kernel
 
@@ -36,7 +39,7 @@ The generated assembly stays; the C arm SKC is deleted (f3ddc7c32). r3 vs rsk (e
 session), MODELLED: C slower by 0.45 / 0.86 / 0.39 ms mean and 0.45 / 0.84 / 0.54 ms p99 (LEON / HILL / FIGHT), and
 worse on the worst picture in all three.
 
-## Item 3: detail levels (LVL) - stills check FAILED, levels back off
+## Item 3: detail levels (LVL) - stills check FAILED, level code removed
 
 Speed pair, MODELLED, characters' drawing mean / p99 / worst ms, rA1 (levels off) -> rL (levels on), f3ddc7c32:
 
@@ -53,8 +56,39 @@ drawn at another level 194,840 differing pixels; **outside 23 on 3 stills: FAIL*
 step (largest difference 4, 8, 9 on 0-255), scattered over world pixels across the screen. Base against base (sA1 vs
 sA2) shows the same kind of difference on 10 stills (1 to 54 px, largest 9). Reading: most likely run-to-run noise the
 single floor run did not catch, not a level fault; but the rule was "fails with the floor applied: levels off", and the
-lane did not loosen the check. For the integrator to rule: a wider floor (two or three base runs, or a per-pixel floor),
-then re-run; if it then passes, flipping `e1_levels` back is one line in `e1_arms_open` (services/actor_e1.inc).
+lane did not loosen the check; levels went back to an off arm (09fea1973) pending a ruling.
+
+**Integrator's ruling (2026-11-23) and its result.** A third base run sA3 of the same build (bd5dd878d, LVL0; disc sA
+rebuilt with that commit's own disc script, the same m1_state addresses as sA1) gave the gate's two-base-run floor
+(`eng-int\s\stillsfloor.py` rule: a picture where the two base runs differ is not judged; no tolerance). `lvlcheck.py`
+now takes several base runs for the floor. Results (plain counts):
+
+| check | floor stills | compared | outside the changed boxes | verdict |
+|---|---|---|---|---|
+| lvlcheck sA2 sL1 sA3 (base sA2, floor sA3) | 9 | 50 | 22 px: FIGHTS 240 (2), FIGHTS 360 (20) | FAIL |
+| lvlcheck sA1 sL1 sA2 sA3 (floor: any base differs) | 14 | 45 | 22 px, the same two stills | FAIL |
+| control lvlcheck sA2 sP2 sA3 (PIXCTL) | 9 | 50 | 371,958 px | FAIL, as it must |
+| control lvlcheck sA1 sP2 sA2 sA3 | 14 | 45 | 319,487 px | FAIL, as it must |
+
+The base runs sA2 and sA3 agree to the pixel on FIGHTS 240 and 360, and the levels run differs there outside the
+changed characters' boxes. FIGHTS 360 has no character at another level at all. So the outside pixels are not within
+the two-run floor, and under ruling 2 the level code came out (bd02b883a). Removed: the LVL boot file, the E1 pass's
+own pick, the asked/drawn counter, the LVLBOX lines, and content_actor.inc's caller marks (back to bd77d8edd's file).
+Kept: the slot pools sized at pack open and their two guards (one "E1 POOL guards" line). Every character draws its
+base model, as the LVL0 arm did. Why they fail is not found: FIGHTS 360's 20 pixels are one-step world pixels spread
+over the screen, on a still with no character at another level, so something from the levels persists past the
+character's own pixels. The lane did not chase it further because the ruling takes the code out; a later level design
+should start from this still.
+
+A note on the floor itself: by the gate's own tool, the base run sA1 fails against the pair sA2/sA3 (`stillsfloor.py
+sA1 sA2 sA3`: 5 judged FIGHTS stills differ, 2 to 37 px, each one colour step). Three runs of one disc are not
+pixel-stable on FIGHTS in this tier, so a two-run floor rejects about 1 in 10 FIGHTS stills of a same-disc run. That
+is for the gate's owner; it does not change this lane's outcome, which fails on stills where the base runs agree.
+
+**The image after the removal** (disc sN, head bd02b883a with origin/engine merged, run sN1 on fly2):
+`stillsfloor.py sN1 sA2 sA3`: LEONS 17/17 identical, HILLS 15/15 identical (4 on the floor), FIGHTS 17 of 18 identical
+(5 on the floor), 1 still differs by 1 px (FIGHTS 520, pixel 637,379, one red step 123 to 131): the gate's exit 1, the
+same one-step kind as sA1 against sA2/sA3. All three scenes OK, disc in play 0 reads, POOL guards 0 and 0.
 
 Control (disc sP: base plus PIXCTL, one blue step on every character colour, levels off), run sP2 on fly2:
 both checks FAIL as they must. `lvlcheck.py sA1 sP2 sA2`: 49 compared, 0 with a level change, 349,923 pixels outside
@@ -83,17 +117,23 @@ and TSP 100 Mpx/s at 100 MHz. **Estimate from the code**, not a measurement:
 The graphics chip works in parallel with the CPU on the previous picture, so this is a separate row from the CPU's
 drawing time; it fits a 33 ms picture with room on all three.
 
-## Images (merged tree, make -j2)
+## Images (head bd02b883a and later, origin/engine 8b68c925d merged, make -j2)
 
 default PASS (615 allowed, 0 SERVICE); SENDABLE PASS (615, 0); BOSS PASS (709, 0); FIGHT links, check_link FAIL
 with SERVICE 10 (4,476 B, em10's ten functions), the same as origin/engine's gate base-c8642d132 (not risen).
+Text sizes after the removal: default 711,596 B (was 714,796), FIGHT 995,208 B (was 997,912).
 
 ## Requests for other owners
 
 - Memory map owner: FIGHT's room carve is refused every tick (SVCMEM region 8cf40000-8cfc0000, carve fails 174,592)
   and floods the tick log (about 1,596 lines dropped), so FIGHT's timing record fails "no E1 FIELDS line". Same on the
   integration lane's base-c8642d132 FIGHTS; not this lane's.
-- core/draw_e1.c owner: CS_LEVELS starts at 0 in E1 images; LVL sets 3 at pack open.
+- core/draw_e1.c owner: CS_LEVELS starts at 0 in E1 images and nothing in E1 sets it now; the fight's own Ganado pick
+  (fight_draw.inc content_pick) and the bench's level steps stay in their images, inert at step 0 in E1/FIGHT.
+
+- Integration gate owner (stillsfloor.py): on FIGHTS in this tier a third run of the same disc fails the two-run
+  floor (sA1 against sA2/sA3: 5 stills, 2 to 37 px, each one colour step); the new head's sN1 fails it by 1 px. A
+  same-disc run fails the rule about 1 still in 10 on FIGHTS.
 
 ## Old-port parts considered
 
@@ -105,4 +145,4 @@ with SERVICE 10 (4,476 B, em10's ten functions), the same as origin/engine's gat
 
 - Commits f3ddc7c32 and bd5dd878d (pushed 2026-11-22) carry the author "eng-draw6 <noreply@anthropic.com>", not
   lamb2k; left as they are (no force push). Commits from 09fea1973 on are authored lamb2k.
-- Test discs deleted after use: see DELETED.txt. No Flycast, lease or keeper of this lane left running.
+- Test discs deleted after use (sA, sN on 2026-11-23 too): see DELETED.txt. No Flycast, lease or keeper of this lane left running.
