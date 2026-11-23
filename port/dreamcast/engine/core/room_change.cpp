@@ -70,6 +70,7 @@ extern "C" void col_room_release(void) __attribute__((weak));             // col
 extern "C" void e1_draw_close_c(void) __attribute__((weak));               // renderer: the room's pack returned
 extern "C" int e1_draw_reopen_c(const char* pack) __attribute__((weak));  // renderer: the next room's pack
 extern "C" int e1_draw_opened_c(void);
+extern "C" volatile uint32_t m1_open_us[10];   // render/native_scene.inc (lane eng-load2): the last pack open's phases
 
 int e1_door_scene;
 static E1Route door_route;
@@ -81,6 +82,7 @@ static DoorReq door_reqs[8];
 static unsigned n_reqs, door_seed;
 static int ctl_memkeep, ctl_readx, ctl_discfail;
 extern "C" void disc_safe_fail_arm(void);   // core/disc_safe.c (DISCFAIL)
+extern "C" void disc_safe_nb_arm(void);     // core/disc_safe.c (DISCNB, lane eng-load2)
 static file_t readx_fd = -1;
 static unsigned readx_tick;
 
@@ -145,6 +147,8 @@ void e1_room_change_boot()
     if (c >= 0) { fs_close(c); ctl_readx = 1; e1_log("E1 DOORREADX: a disc file opened in the first load, read 10 ticks after it (control)\n"); }
     c = fs_open("/cd/DISCFAIL", O_RDONLY);
     if (c >= 0) { fs_close(c); ctl_discfail = 1; e1_log("E1 DISCFAIL: the first DMA transfer of the first load reported done without it (control)\n"); }
+    c = fs_open("/cd/DISCNB", O_RDONLY);   // lane eng-load2 (control): the stream's last 32 bytes requested as KOS does
+    if (c >= 0) { fs_close(c); disc_safe_nb_arm(); e1_log("E1 DISCNB: fs_iso9660's 32-byte stream request passed on non-blocking (control)\n"); }
     e1_log("E1 DOOR: room %03x pos %d %d %d ang %d/1000 ticks %u pads %u doors %u seed %04x\n", door_route.room,
            (int) door_route.pos[0], (int) door_route.pos[1], (int) door_route.pos[2], (int) (door_route.ang * 1000.0f),
            door_route.ticks, n_pads, n_reqs, door_seed);
@@ -217,7 +221,15 @@ int e1_room_change_pending()
 }
 
 // ---- memory marks and the round trip ----
-struct RoomMarks { unsigned room; uint32_t kos_used, arena_used, vram_free, col_pieces, skel_tables; };
+// Lane eng-load2: the KOS heap is judged on kos-net, the heap in use less the allocator's slack on the tracked blocks
+// (core/memmap.cpp e1_mm_ledger). kos-used (mallinfo's uordblks) also counts the bytes a chunk keeps when its remainder
+// is too small to split, which depend on where a block lands: on the DOOR scene the second village visit held the same
+// 315 blocks, same sizes and same callers, as the first, and uordblks read 16 B more (a 256,212 B block placed with 16 B
+// of slack, small blocks in reused chunks; Flycast run dbg1, a debug build). kos-net counts every block's bytes and
+// header, tracked or not (a block KOS or newlib takes for itself is in uordblks and not in the slack), and does not
+// depend on where the blocks land. kos-used is still printed. A ledger that lost blocks (list full) fails the check.
+struct RoomMarks { unsigned room; uint32_t kos_used, kos_net, blocks, asked, lost, arena_used, vram_free, col_pieces, skel_tables; };
+extern "C" void e1_mm_ledger(uint32_t* n, uint32_t* asked, uint32_t* slack, uint32_t* lost);   // core/memmap.cpp
 static RoomMarks marks[8];
 static unsigned n_marks;
 static uint32_t kos_last;   // the KOS heap in use at the last tick's end or room mark (E1 KOSGROW)
@@ -233,13 +245,17 @@ void e1_room_marks_take(const char* when)
     for (int h = 0; h < 13; h++) arena += e1_arena.used[h];
     m.room = pG->room_id;
     m.kos_used = (uint32_t) mi.uordblks;
+    uint32_t slack = 0;
+    e1_mm_ledger(&m.blocks, &m.asked, &slack, &m.lost);
+    m.kos_net = m.kos_used - slack;
     kos_last = m.kos_used;
     m.arena_used = arena;
     m.vram_free = e1_draw_opened_c() ? (uint32_t) pvr_mem_available() : 0xFFFFFFFFu;
     m.col_pieces = col_piece_count();
     m.skel_tables = skel_table_count();
-    e1_log("E1 ROOMMARK %u room %03x %s kos-used %lu arena-used %lu vram-free %ld col-pieces %lu skel-tables %lu\n",
-           n_marks - 1, m.room, when, (unsigned long) m.kos_used, (unsigned long) m.arena_used,
+    e1_log("E1 ROOMMARK %u room %03x %s kos-used %lu kos-net %lu blocks %lu asked %lu lost %lu arena-used %lu vram-free %ld "
+           "col-pieces %lu skel-tables %lu\n", n_marks - 1, m.room, when, (unsigned long) m.kos_used, (unsigned long) m.kos_net,
+           (unsigned long) m.blocks, (unsigned long) m.asked, (unsigned long) m.lost, (unsigned long) m.arena_used,
            m.vram_free == 0xFFFFFFFFu ? -1l : (long) m.vram_free, (unsigned long) m.col_pieces, (unsigned long) m.skel_tables);
     if (n_visits < 8) visits[n_visits++] = {m.room, 0, e1_tick + 1};
 }
@@ -259,13 +275,20 @@ void e1_room_tick_done()
 // ---- the loading state ----
 // The KOS heap in use after each step of a load (DOOR scene only; loading is not timed): where a round trip's
 // difference is taken or kept (E1 LOADSTEP).
+// Lane eng-load2: and the time each step took (us since the previous step; the first step of a room's set-up counts
+// from the previous line, so the phases of a load are its steps from leave.start to enter.memory-map). The log line is
+// formatted after the step's clock is read: its own cost is not in the next step's time.
 void e1_load_step(const char* what)
 {
     if (!e1_door_scene) return;
     static uint32_t last;
+    static uint64_t t_last;
+    const uint64_t t = timer_us_gettime64();
     const uint32_t u = (uint32_t) mallinfo().uordblks;
-    e1_log("E1 LOADSTEP %s kos-used %lu (%+ld)\n", what, (unsigned long) u, (long) u - (long) last);
+    e1_log("E1 LOADSTEP %s kos-used %lu (%+ld) us %lu\n", what, (unsigned long) u, (long) u - (long) last,
+           (unsigned long) (t_last ? t - t_last : 0));
     last = u;
+    t_last = timer_us_gettime64();
 }
 static unsigned n_loads, n_failed;
 static void* kept_block;
@@ -376,6 +399,12 @@ int e1_room_change_run(unsigned tick)
         readx_fd = fs_open("/cd/em/pl11.drs", O_RDONLY);
         readx_tick = tick + 10;
     }
+    if (e1_draw_reopen_c && e1_door_scene)
+        e1_log("E1 LOADPACK %s bytes %lu header %lu textures %lu resident %lu world %lu runtime %lu models %lu frame0 %lu "
+               "bind+actors %lu vis %lu us\n", room_pack(to), (unsigned long) m1_open_us[9], (unsigned long) m1_open_us[0],
+               (unsigned long) m1_open_us[1], (unsigned long) m1_open_us[2], (unsigned long) m1_open_us[3],
+               (unsigned long) m1_open_us[4], (unsigned long) m1_open_us[5], (unsigned long) m1_open_us[6],
+               (unsigned long) m1_open_us[7], (unsigned long) m1_open_us[8]);
     e1_load_step("enter.renderer");
     e1_memmap_sample();      // the memory map after each load (overlaps, the arena, the stack)
     e1_heap_room_checks();   // the heap descriptors' map
@@ -405,7 +434,8 @@ void e1_room_change_report()
         b = n_marks - 1;
         const RoomMarks &x = marks[a], &y = marks[b];
         if (x.room != y.room) bad = "the last room is not the first";
-        else if (x.kos_used != y.kos_used) bad = "kos-used";
+        else if (x.lost || y.lost) bad = "kos ledger incomplete";
+        else if (x.kos_net != y.kos_net) bad = "kos-net";
         else if (x.arena_used != y.arena_used) bad = "arena-used";
         else if (x.vram_free != y.vram_free) bad = "vram-free";
         else if (x.col_pieces != y.col_pieces) bad = "col-pieces";
@@ -416,8 +446,12 @@ void e1_room_change_report()
         const size_t l = strlen(rooms);
         snprintf(rooms + l, sizeof rooms - l, "%s%03x", i ? ">" : "", marks[i].room);
     }
-    const RoomMarks z = {0, 0, 0, 0, 0, 0};
+    const RoomMarks z = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     const RoomMarks &x = n_marks ? marks[a] : z, &y = n_marks ? marks[b] : z;
+    // the selector reads this line's format (loader/selector.c): the ledger goes on a line of its own before it
+    e1_log("E1 ROUNDTRIP-LEDGER kos-net %lu/%lu blocks %lu/%lu asked %lu/%lu lost %lu/%lu (the KOS heap is judged on kos-net)\n",
+           (unsigned long) x.kos_net, (unsigned long) y.kos_net, (unsigned long) x.blocks, (unsigned long) y.blocks,
+           (unsigned long) x.asked, (unsigned long) y.asked, (unsigned long) x.lost, (unsigned long) y.lost);
     e1_log("E1 ROUNDTRIP rooms %s loads %u failed %u kos-used %lu/%lu arena-used %lu/%lu vram-free %ld/%ld col-pieces %lu/%lu "
            "skel-tables %lu/%lu: %s%s\n", rooms[0] ? rooms : "-", n_loads, n_failed, (unsigned long) x.kos_used,
            (unsigned long) y.kos_used, (unsigned long) x.arena_used, (unsigned long) y.arena_used,
