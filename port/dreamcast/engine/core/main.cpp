@@ -19,6 +19,9 @@
 #include "camera/eng_camera.h"   // lane eng-e1l: the camera record's finite check
 #include "camera/camera_svc.h"   // lane eng-e1p: the room's camera tracks converted at load
 #include "room_change.h"         // lane eng-load1: room-to-room loading through a door
+#ifdef E1_QALINK
+#include "e1_qalink.h"           // lane eng-link2: the RE4 layer on dc-qalink (QA/test builds only, game/qalink.mk)
+#endif
 #include "rnd.h"
 unsigned e1_door_seed();
 void e1_load_step(const char* what);   // core/room_change.cpp (lane eng-load1)
@@ -193,6 +196,9 @@ static void game_tick(E1Timing& tm)
 int main()
 {
     e1_log("E1 engine: boot\n");
+#ifdef E1_QALINK
+    e1_ql_early();                      // lane eng-link2 (QA/test builds): network disc, live data, menu (qalink/)
+#endif
     e1_memmap_boot();
     e1_state[0] = 1;
     e1_arena_init();
@@ -230,6 +236,9 @@ int main()
     e1_heap_room_checks();              // heap descriptors' map; HEAPCK: the heap-4 exercise (lane eng-e1e)
     e1_state[0] = 4;
     unsigned ticks = e1_route().ticks;
+#ifdef E1_QALINK
+    ticks = e1_ql_ticks(ticks);         // lane eng-link2: the run's length from the PC's arguments (ticks=N)
+#endif
     e1_state[2] = ticks;
     e1_trace_tick(0);
     e1_clock_fields();                  // lane eng-clock1: GAPPROBE's field span (no-op without the boot file)
@@ -276,6 +285,15 @@ int main()
         // lane eng-load1: the game asked for a room change (its door handler set the routine to 4): the loading state,
         // outside the tick's rows (core/room_change.cpp). A failed load ends the run with its report (no hang).
         e1_room_tick_done();
+#ifdef E1_QALINK
+        // lane eng-link2: the picture's live record, the PC's commands (a warp plants the room-change request answered
+        // just below), the in-game menu; outside the tick's rows like the loading state
+        if (e1_ql_picture(tm)) {
+            ticks = e1_tick;
+            e1_state[2] = ticks;
+            break;
+        }
+#endif
         if (e1_room_change_pending() && e1_room_change_run(e1_tick) < 0) {
             ticks = e1_tick;
             e1_state[2] = ticks;

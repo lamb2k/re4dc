@@ -106,6 +106,8 @@ int __wrap_cdrom_stream_request(void* buffer, size_t size, bool block)
     return disc_safe_stream_request(buffer, size, block);
 }
 
+/* lane eng-link2: the live record's guards (engine/qalink/e1_qalink.cpp), opens and reads in play so far */
+void e1_play_files_counts(unsigned* o, unsigned* r) { *o = opens; *r = reads; }
 void e1_play_files_begin(void) { in_play = 1; }
 void e1_play_files_end(void) { in_play = 0; }
 void e1_play_files_load_begin(void) { l_opens = l_reads = l_sectors = 0; in_load = 1; }

@@ -44,6 +44,15 @@
 # PC at load time. Without --link the disc has no LINK.TXT and no image touches the network (as before). Its control
 # CPCOPEN (only when --scenes names it): the Leon scene with src=pc and the OPENX boot file (a file opened at picture
 # 100, from the PC when the link is up): a read from the PC in play must FAIL the scene as a disc read in play does.
+# Lane eng-link2 (2026-11-23), testing on dc-qalink 0.2 (CONSOLE_LOOP.md section 17):
+# --folder: no GDI. <out>/disc is the RE4 disc folder that dc-qalink's bridge serves whole as the network disc
+#   (qalink_bridge.py --disc <out>/disc --whole; the owner's main mode: only the QA Link loader on the SD card, each
+#   increment built, staged and pushed), <out>/push holds the images to push (e1.elf, fight.elf, boss.elf; SENDABLE=1 with
+#   the RE4 layer), MANIFEST.txt and SHA256SUMS. The village folder E1 also gets the farm's pack and archive (the warp
+#   presets' rooms). tools/consoleloop/re4_increment.sh builds, stages and pushes in one command.
+# --loader-disc: a GDI whose first program and LOADER.BIN are dc-qalink's loader (engine/loader `loader`), with the
+#   same RE4 data on it: the secondary mode (the GDEMU disc as the network disc's base; disc-timing runs) and the
+#   Flycast comparison of room-entry times. Needs --link; --link-port <PC port> <console port> for Flycast's port pair.
 # --put <disc path> adds an empty boot-option file (lane eng-e1f), for example the late-picture control of the E1
 # images: --put E1/LATEPIC --put FIGHT/LATEPIC --put BOSS/LATEPIC (picture or tick 300 held 100 ms: every E1-family
 # scene must then show its worst interval, at least five fields, at picture 301, or at tick 300 when headless).
@@ -66,6 +75,10 @@ LAYOUT=standard
 TITLE='RE4DC ENGINE CONSOLE DISC'
 PLANCTL=
 LINKHOST=
+LINKPORT=52060
+LINKLPORT=
+QLMODE=
+JOBS=${CDISC_JOBS:-4}   # lane eng-link2: make jobs (2 when the machine is shared)
 while [ $# -gt 0 ]; do
   case $1 in
     --ref) REF=$2; shift 2 ;;
@@ -80,6 +93,9 @@ while [ $# -gt 0 ]; do
     --plan-control) PLANCTL=$2; shift 2 ;;
     --r103) R103_PAK=$2; R103_VIS=$3; shift 3 ;;   # lane eng-mem2: DOOR's farm pack and visibility (default: the shared set's)
     --link) LINKHOST=$2; shift 2 ;;   # lane ql-core: LINK.TXT on the disc (above)
+    --link-port) LINKPORT=$2; LINKLPORT=$3; shift 3 ;;   # lane eng-link2: the PC's port and the console's (Flycast: a pair)
+    --folder) QLMODE=folder; shift ;;            # lane eng-link2: the RE4 disc folder for dc-qalink's network disc
+    --loader-disc) QLMODE=loader; shift ;;       # lane eng-link2: a GDI booting the dc-qalink loader, RE4 data on it
     *) echo "build_console_disc: unknown argument $1" >&2; exit 2 ;;
   esac
 done
@@ -154,9 +170,13 @@ mk() {   # mk <name> <dir> <args...>
   local name=$1 dir=$2; shift 2
   log "build $name"
   # -j4: the shared machine's limit (the lanes' common brief)
-  make -C "$dir" -j4 "$@" > "$B/$name-make.log" 2>&1 || { grep -n "error" "$B/$name-make.log" | head -20; tail -5 "$B/$name-make.log"; exit 1; }
+  make -C "$dir" -j"$JOBS" "$@" > "$B/$name-make.log" 2>&1 || { grep -n "error" "$B/$name-make.log" | head -20; tail -5 "$B/$name-make.log"; exit 1; }
 }
 mk selector $ENG/loader OUT="$B/loader" BUILD="$BUILD" selector
+if [ "$QLMODE" = loader ]; then
+  [ -n "$LINKHOST" ] || { echo "build_console_disc: --loader-disc needs --link <PC address>" >&2; exit 2; }
+  mk qlloader $ENG/loader OUT="$B/ql" BUILD="$BUILD" loader
+fi
 mkdir -p "$B/packdir"; ln -sf "$LKG/CROSS.PAK" "$B/packdir/cross.pak"; ln -sf "$LKG/FARM.PAK" "$B/packdir/hayfork.pak"
 mk bench $ENG/bench OUT="$B/bench" PRIVATE_PACK_DIR="$B/packdir" SENDABLE=1 native
 mk e1 $ENG/game OUT="$B/e1" SENDABLE=1
@@ -207,6 +227,10 @@ epack "$LKG/CROSS.PAK" E1/CROSS.PAK; put "$LKG/CROSS.VIS" E1/CROSS.VIS
 epack "$HILL_PAK" E1/HILL.PAK; put "$D/E1/HILL.PAK" E1/FARM.PAK; put "$HILL_VIS" E1/HILL.VIS
 for f in st1/r101.arc st1/r11d.arc etc/core.das em/pl00.drs em/wep02.drs em/pl11.drs; do put "$P/$f" "E1/$f"; done
 mots "$P/em/pl11.drs" E1
+if [ -n "$QLMODE" ]; then   # lane eng-link2: the warp presets' farm room beside the village (core/room_change.cpp room_pack)
+  R103_PAK=${R103_PAK:-$LKG/FARM.PAK}; R103_VIS=${R103_VIS:-$LKG/FARM.VIS}
+  epack "$R103_PAK" E1/R103.PAK; put "$R103_VIS" E1/R103.VIS; put "$P/st1/r103.arc" E1/st1/r103.arc
+fi
 mkdir -p "$D/E1H"; : > "$D/E1H/HILL"
 # lane eng-snd1 (H-025.1): the sound the scenes load before play (services/sound/snd_svc.cpp): the rooms' ROOM and FOOT banks
 # (st1/<room>.dar) and the sound system files; the characters' banks are in the archives above. From the game tree.
@@ -360,8 +384,9 @@ esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
 # lane ql-core: the disc's LINK.TXT (--link) and the PC-read-in-play control's folder (CPCOPEN: OPENX, as COPENX)
 if [ -n "$LINKHOST" ]; then
-  printf '# RE4DC console disc: the broadband adapter (DHCP), dc-qalink PC tool on %s\nnet bba\nhost %s\nport 52060\n' \
-    "$LINKHOST" "$LINKHOST" > "$D/LINK.TXT"
+  printf '# RE4DC console disc: the broadband adapter (DHCP), dc-qalink PC tool on %s\nnet bba\nhost %s\nport %s\n' \
+    "$LINKHOST" "$LINKHOST" "$LINKPORT" > "$D/LINK.TXT"
+  [ -n "$LINKLPORT" ] && echo "lport $LINKLPORT" >> "$D/LINK.TXT"
   log "LINK.TXT: net bba, host $LINKHOST"
 fi
 case ",$SCENES," in *,CPCOPEN,*)
@@ -463,12 +488,39 @@ for f in "${DROPS[@]}"; do
   rm -f "$D/$f"; log "control: dropped $f"
 done
 
+manifest() {   # manifest <file>
+  {
+    echo "RE4DC ${QLMODE:-console} disc: $REF = $COMMIT (build \"$BUILD\"), staged $(date -u +%FT%TZ)"
+    echo "dc-qalink $QLC"
+    echo "## private inputs"; sha256sum "$LKG/CROSS.PAK" "$LKG/FARM.PAK" "$LKG/CROSS.VIS" "$LKG/FARM.VIS" "$HILL_PAK" "$HILL_VIS" \
+      "$FIGHT_PAK" "$FIGHT_FXMAP" "$BOSS_PAK" "$BOSS_VIS" "$BOSS_EMLIST" "$BOSS_EMARC"
+    echo "## engine packs (bake/engine_pack.py, version 5)"; cat "$WORK/PACKS.txt" 2>/dev/null || echo none
+    echo "## disc tree"; (cd "$D" && find . -type f | sort | xargs sha256sum)
+  } > "$1"
+}
+# lane eng-link2: --folder ends here: the folder the bridge serves whole, and the images to push
+if [ "$QLMODE" = folder ]; then
+  rm -rf "$OUT"; mkdir -p "$OUT/push"
+  cp -a "$D" "$OUT/disc"
+  cp "$B/e1/e1.elf" "$OUT/push/e1.elf"; cp "$B/fight/e1.elf" "$OUT/push/fight.elf"; cp "$B/boss/e1.elf" "$OUT/push/boss.elf"
+  manifest "$OUT/MANIFEST.txt"
+  (cd "$OUT" && find disc push -type f | sort | xargs sha256sum > SHA256SUMS && sha256sum -c --quiet SHA256SUMS)
+  echo "$COMMIT" > "$OUT/COMMIT"
+  rm -rf "$WORK/data" "$SRC"
+  log "done: $OUT (disc folder $(du -sh "$OUT/disc" | cut -f1), push $(ls "$OUT/push" | tr '\n' ' '))"
+  exit 0
+fi
+BOOTELF="$B/loader/selector.elf"
+if [ "$QLMODE" = loader ]; then   # the dc-qalink loader boots, and is the way back's LOADER.BIN
+  cp "$B/ql/LOADER.BIN" "$D/LOADER.BIN"; BOOTELF="$B/ql/loader.elf"
+fi
+
 # ---- the disc
 log "disc ($LAYOUT)"
 rm -rf "$OUT"; mkdir -p "$OUT"
 SECTOR=2352; [ "$LAYOUT" = legacy ] && SECTOR=2048
 TMPDIR="$WORK" TITLE="$TITLE" LAYOUT=$LAYOUT SECTOR=$SECTOR PAD_1ST=1 \
-  bash "$SRC/port/dreamcast/tools/d367/mkgdi.sh" "$B/loader/selector.elf" "$D" "$WORK/disc" > "$OUT/mkgdi.log" 2>&1 ||
+  bash "$SRC/port/dreamcast/tools/d367/mkgdi.sh" "$BOOTELF" "$D" "$WORK/disc" > "$OUT/mkgdi.log" 2>&1 ||
   { tail -20 "$OUT/mkgdi.log"; exit 1; }
 cp "$WORK/disc/disc.gdi" "$WORK"/disc/track0* "$OUT/"
 cp "$WORK/disc/layout.txt" "$WORK/disc/disc_lint.txt" "$OUT/" 2>/dev/null || true
