@@ -16,6 +16,8 @@
 #include "e1_engine.h"
 #include "e1_core.h"
 #include "e1_kos.h"
+#include "crash_screen.h"   // lane eng-crash1: the crash screen (core/crash_screen.cpp)
+#include "pc_sampler.h"     // lane eng-crash1: the sampling profiler, lab arm PCSAMPLE (core/pc_sampler.cpp)
 #include "camera/eng_camera.h"   // lane eng-e1l: the camera record's finite check
 #include "camera/camera_svc.h"   // lane eng-e1p: the room's camera tracks converted at load
 #include "room_change.h"         // lane eng-load1: room-to-room loading through a door
@@ -213,6 +215,8 @@ int main()
     e1_clock_boot();                    // lane eng-clock1: the TMU2 reload check; GAPPROBE (core/e1_clock.cpp)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
     e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
+    e1_crash_boot();                    // lane eng-crash1: the crash screen, once (fault handlers, log ring, CRASHCTL)
+    e1_pcs_boot();                      // lane eng-crash1: PCSAMPLE only (lab arm): the TMU1 sampler over play
 #ifndef E2_BOSS
     sched_host_boot();                  // lane eng-sched1: the OS layer, the task table and stacks; boot files SCHED*
 #endif
