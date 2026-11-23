@@ -334,7 +334,21 @@ void e1_ql_early()
     // the whole RE4 disc served by the PC (the bridge's --disc <staged folder> --whole); with an overlay over the GDEMU
     // disc it is the secondary mode (disc timing); args disc=gd: the GDEMU disc alone
     if (!strstr(a, "disc=gd") && !strstr(a, "net=0")) {
-        g_disc = dcql_disc_mount(NULL);
+        // one network-disc request's time limit. dc-qalink's default (3000 ms) cancels a request that waits longer and
+        // the read comes back short: in Flycast (2026-11-23, run bf4688bb) one CROSS.PAK request waited past 3 s while
+        // the emulated adapter stalled, the pack loader's texture read failed (stage 6) and the run went headless. All
+        // network-disc reads here are loading work (none in play: the guards), so a long wait costs load time only;
+        // 20 s, and args disctmo=<ms> for the control (disctmo=100 must refuse the pack).
+        dcql_disc_config_t dc;
+        memset(&dc, 0, sizeof dc);
+        dc.timeout_ms = 20000;
+        if (const char* t = strstr(a, "disctmo=")) {
+            const int v = atoi(t + 8);
+            if (v >= 20 && v <= 60000) dc.timeout_ms = (unsigned) v;
+        }
+        g_disc = dcql_disc_mount(&dc);
+        if (g_disc == 0) atexit(dcql_disc_report);   // requests, resends and timeouts in the run's report
+        e1_log("E1 QL network disc: request time limit %u ms\n", dc.timeout_ms);
         dcql_disc_stats_t s;
         dcql_disc_stats(&s);
         g_disc_whole = g_disc == 0 && (s.table_flags & DCQL_DT_WHOLE);
