@@ -50,7 +50,10 @@ enum { DL_STAGE2=1, DL_COPY2=2, DL_SELECT2=4, DL_HUD2=8, DL_NAN=16, DL_WS2=32, D
        /* lane eng-draw2, step W1: the world in front of the near plane is walked without a stage by default, so X and V
           no longer change anything (their bits and tokens stay so old schedules still parse) */
        DL_DIRECT=1024, DL_COPYV2=2048, DL_CLAMP=4096,
-       DL_CENSUS=8192 };   /* the census (counts only; its timing is never used) */
+       DL_CENSUS=8192,     /* the census (counts only; its timing is never used) */
+       /* lane eng-draw4 (set E, boot file DLE): the characters' light pick and per-character set-up twice (P), the
+          whole-character and part classes twice (C); with K (positions skinned twice) and the 2 ms control */
+       DL_PICK2=16384, DL_CLASS2=32768 };
 /* census helpers (draw_cost.inc) */
 void dc_census_tri(unsigned base,float x0,float y0,float z0,float x1,float y1,float z1,float x2,float y2,float z2,
                    unsigned cull,unsigned* kept);   /* base: DC_V_W_TRIS or DC_V_A_TRIS; kept: bit 1 kept under N, 2 under P */

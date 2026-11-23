@@ -114,8 +114,10 @@ void GXGetProjectionv(f32* p)
     const EngCamera& r = eng_cam;
     p[0] = r.proj_type; p[1] = r.p00; p[2] = r.p02; p[3] = r.p11; p[4] = r.p12; p[5] = r.p22; p[6] = r.p23;
 }
+unsigned e2_gx_projections;   // lane eng-e2f: the screen tests' projections (fight_trace.cpp prints the count)
 void GXProject(f32 x, f32 y, f32 z, const f32 mtx[3][4], const f32* pm, const f32* vp, f32* sx, f32* sy, f32* sz)
 {
+    e2_gx_projections++;
     f32 px = mtx[0][0] * x + mtx[0][1] * y + mtx[0][2] * z + mtx[0][3];
     f32 py = mtx[1][0] * x + mtx[1][1] * y + mtx[1][2] * z + mtx[1][3];
     f32 pz = mtx[2][0] * x + mtx[2][1] * y + mtx[2][2] * z + mtx[2][3];

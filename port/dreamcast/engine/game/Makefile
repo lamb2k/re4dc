@@ -35,6 +35,9 @@ SPLIT_NOIPA_UNITS := game/objWep game/pl_debug game/cam_ctrl game/cam_qfps game/
 # (lane eng-e2c's r119: its three thunder functions made weak by services/boss/r119_weak.h, the engine's in
 # services/boss/r119_thunder.cpp; game/r119_split_check.py also runs on the object in boss.mk)
 SPLIT_NOIPA_UNITS += st1/r119
+# (lane eng-mem1: the waived sound driver's game/snd, whose SndRoomStrStop, SndStop and the fade calls the fight and boss
+# images' sound stubs replace: the split check found them inlined, H-025.1's group)
+SPLIT_NOIPA_UNITS += game/snd
 # dmg's cDmg::beginEvent destroys its volume through the manager's destroy, which the shared header declares inline:
 # GCC inlined the original's body there, which the engine's table (services/volumes/dmg_vol.cpp) replaces. dmg is
 # built with no inlining at all, so the call reaches the engine's.
@@ -67,6 +70,11 @@ endif
 # E2 fight slice (lane eng-e2): FIGHT=1 builds the village square fight image (game/fight.mk).
 ifeq ($(FIGHT),1)
 include fight.mk
+endif
+# Lane eng-sched1: the scheduler's hosting (host/sched_host.cpp) needs the scenario layer's list container in the
+# default image too: the engine's (services/scene/at_list.cpp), not libgpu. (The fight image takes it with services/scene.)
+ifeq ($(BOSS)$(FIGHT),)
+ENG_CPP += $(ENG)/services/scene/at_list.cpp
 endif
 ENG_OBJS := $(patsubst $(ENG)/%.cpp,$(OUT)/e/%.o,$(ENG_CPP)) $(patsubst $(ENG)/%.c,$(OUT)/e/%.o,$(ENG_C))
 REND_OBJS := $(OUT)/r/render_e1.o $(OUT)/r/replay_pack.o $(OUT)/r/native_world.o $(OUT)/r/avk_sh4.o $(OUT)/r/stage_sh4.o
@@ -143,10 +151,21 @@ NATIVE_OBJS := $(OUT)/n/skel.o $(OUT)/n/skel_xm.o $(OUT)/n/col.o
 # force-included and stands in for services/cloth/pres_rng.h (same four functions, same include guard), drawing from
 # the engine generator of host/e1_wraps.cpp. pendulum.cpp is not linked (host/e1_svc_stubs.cpp: the wind globals, the
 # fallback stubs).
-ifeq ($(BOSS)$(FIGHT),)
-NATIVE_INC += -I$(SVC_DIR)/cloth
-NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o
+# Lane eng-skel1: the cloth and the native chain object (services/cloth/chain.cpp: SetChain, cObjChain, object kind
+# 0x1D) are linked wherever CLOTH_SVC is 1: the default image and the boss image (El Gigante's rope and arm chains, Leon's
+# garments). The fight image's lines are lane eng-e2d's: CLOTH_SVC := 1 in fight.mk, and the SetChain / cObjChain stubs out
+# of fight/fight_gen_stubs.cpp. host/e1_svc_mem.cpp and host/e1_svc_stubs.cpp follow E1_CLOTH_SVC.
+ifneq ($(FIGHT),1)
+CLOTH_SVC := 1
 endif
+ifeq ($(CLOTH_SVC),1)
+NATIVE_INC += -I$(SVC_DIR)/cloth
+NATIVE_OBJS += $(OUT)/n/cloth.o $(OUT)/n/cloth_kernel.o $(OUT)/n/chain.o
+ENG_FLAGS += -DE1_CLOTH_SVC=1
+endif
+$(OUT)/n/chain.o: $(SVC_DIR)/cloth/chain.cpp $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -c $< -o $@
 CLOTH_DEPS := $(SVC_DIR)/cloth/cloth.h $(SVC_DIR)/cloth/cloth_kernel.h $(SVC_DIR)/cloth/pres_rng.h $(ENG)/host/e1_pres_rng.h
 $(OUT)/n/cloth.o: $(SVC_DIR)/cloth/cloth.cpp $(CLOTH_DEPS) $(SVC_DIR)/skeleton/skel.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
@@ -203,7 +222,7 @@ $(OUT)/n/mgr_pool.o: ORIG_FLAGS += -fno-inline $(MGR_EXTRA)
 # target and surface) in every image. Where em_sub is hosted (FIGHT=1, BOSS=1) its own GetWepTargetPos is made weak
 # (WEAKEN_<unit> in the hosted rule) so the native body is linked and --gc-sections drops the original's.
 AIM_OBJ := $(OUT)/n/aim.o
-$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(ENG)/host/e1_prelude.h
+$(AIM_OBJ): $(SVC_DIR)/aim/aim.cpp $(SVC_DIR)/aim/hit_shape.h $(SVC_DIR)/camera/cam_math.h $(ENG)/host/e1_prelude.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) $(NATIVE_INC) -I$(SHZ) -c $< -o $@
 WEAKEN_game/em_sub := _GetWepTargetPos _GetWepTargetList2   # SH-ELF symbol names carry the leading underscore
@@ -326,6 +345,39 @@ include $(ENG)/loader/sendable.mk
 .DEFAULT_GOAL := all
 endif
 include $(ENG)/game/hosted_corrections.mk $(ENG)/game/game_settings.mk   # lane eng-fix1 (H-026): corrections, settings
+include sound.mk
 $(OUT)/e1.elf: $(SVC4_OBJS) $(SVC5_OBJS) $(AIM_OBJ) $(EMHIT_OBJ) $(DMGVOL_OBJ) $(AREAVOL_OBJ) $(EM10SVC_OBJS) $(HOSTED_OBJS) $(ENG_OBJS) $(REND_OBJS) $(NATIVE_OBJS) $(CL_SEND_OBJS)
 	bash link.sh $@ -g -Wl,-Map=$(OUT)/e1.map -Wl,--cref -Wl,--gc-sections -Wl,-z,start-stop-gc \
 		-Wl,--wrap=malloc,--wrap=calloc,--wrap=memalign,--wrap=realloc,--wrap=free $(WRAPS) $(CL_SEND_LDFLAGS) -lm -- $^
+
+# ---- Lane eng-sched1 (plan 3.3 section 8 B2): the game's script scheduler in the default image (game/hosted.mk
+# SCHED_SRCS; host/sched_host.cpp). The village's room script is the REL module st1/r101: its entry under its own name,
+# as fight.mk links it. scheduler.o's stack pool (TaskSchedulerInit's mem_alloc) is bound to the engine's
+# sched_stack_alloc: the KOS heap until lane eng-mem2 places it (objcopy --redefine-sym, the source unchanged). The
+# logged stubs of host/e1_stubs.cpp for SceExec and TaskSleep give way to the hosted bodies (made weak in that object:
+# a request to its owner is to drop them there). The scenario layer's task steps are counted at TaskSchedulerMain.
+ifeq ($(BOSS)$(FIGHT),)
+$(OUT)/h/st1/r101.o: ORIG_FLAGS += -D_prolog=r101_prolog -D_epilog=r101_epilog -D_unresolved=r101_unresolved
+# As the fight image (fight.mk, lanes eng-e2d / eng-e2f): r101's Ganado voice task (sound, a static of the unit) made a
+# weak global by fight/r101_weak.h, its place taken by a logged stub (host/sched_host.cpp: the SCHED scene never arms
+# it, SceAtDataSet_exec is a stub here); r101 without the interprocedural optimisations; the binocular widget and the
+# focus blur in cam_extra (reached through r101's binocular camera) weak, logged stubs in host/sched_host.cpp, and
+# cam_extra without inlining so CameraBinocular reaches them by symbol.
+$(OUT)/h/st1/r101.o: ORIG_FLAGS += -include $(ENG)/fight/r101_weak.h
+$(OUT)/h/st1/r101.o: $(ENG)/fight/r101_weak.h
+SPLIT_NOIPA_UNITS += st1/r101
+SPLIT_NOINLINE_UNITS += game/cam_extra
+WEAKEN_game/cam_extra += __ZN11IdBinocular4initEP6CameraPvS2_ __ZN11IdBinocular4moveEPv __ZN11IdBinocular4quitEPv 	__ZN14FocusAnimation4initEi __ZN14FocusAnimation4moveEi __ZN14FocusAnimation4quitEv
+$(OUT)/h/game/scheduler.o: $(ROOT)/src/game/scheduler.cpp $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ORIG_FLAGS) $(ORIG_INC) -I$(ROOT)/port/dreamcast/game/platform/include -c $< -o $@
+	sh-elf-objcopy --redefine-sym __Z9mem_allocmPKciii=_sched_stack_alloc --weaken-symbol=_stackUsedCheck $@
+# (stackUsedCheck, the debug page of stack use, is debug drawing: weak, a logged stub in host/sched_host.cpp; the
+# split check needs the unit without the interprocedural optimisations)
+SPLIT_NOIPA_UNITS += game/scheduler
+$(OUT)/e/host/e1_stubs.o: $(ENG)/host/e1_stubs.cpp $(ENG_HDRS) $(ENG)/host/e1_prelude.h
+	@mkdir -p $(dir $@)
+	kos-c++ $(ENG_FLAGS) $(ORIG_INC) -I$(ENG)/render -I$(ENG)/core -I$(ENG)/services $(NATIVE_INC) -c $< -o $@
+	sh-elf-objcopy --weaken-symbol=__Z9TaskSleepi --weaken-symbol=_SceExec $@
+$(OUT)/e1.elf: WRAPS += -Wl,--wrap=TaskSchedulerMain
+endif

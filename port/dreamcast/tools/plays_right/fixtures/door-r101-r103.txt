@@ -1,0 +1,31 @@
+# door-r101-r103 (lane eng-load1): the village square (r101) to the farm (r103) through the game's door and back.
+# The DOOR scene of the console disc (engine image, /cd/DOOR.TXT) and the PC reference (re4ref) replay this file.
+# Leon starts where the old game's door103 fixture placed him (the farm path door, after the bell; no resume, no event),
+# walks into the door's area (r101 AEV area 2: type 1 door to r103, action-button trigger, front-point test) and
+# presses A at tick 50; the area check fires at tick 51 (the key's status is set by the player's move at 50 and read
+# by the next tick's area check). In the farm he turns about (B and the stick back, tick 70), walks into area 0 (the
+# door to r101) and presses A at 140; that door fires at 141. Back in the square he walks for 20 ticks.
+# "door <tick> <area no>": the room's door area asks for its room change at that tick (the request the door handler
+# stores, sce_at.cpp sceAtFunc_door). Neither the engine's default image nor re4ref hosts the area check itself:
+# tools/plays_right/door_check.py checks each request against the room's own area record on the reference's trace.
+room 0x101
+pos 39372 3201 -26667
+ang 1.6378
+weapon 2 0
+seed 0x0d37
+ticks 260
+pad 0 0x0000 0 0
+pad 10 0x0000 0 80            # walk to the door (r101 area 2)
+pad 35 0x0000 0 0
+pad 50 0x0100 0 0             # A
+pad 54 0x0000 0 0
+door 51 2                     # r101 area 2 -> r103
+pad 70 0x0200 0 -80           # quick turn (B, stick back)
+pad 73 0x0000 0 0
+pad 100 0x0000 0 80           # walk to the door (r103 area 0)
+pad 125 0x0000 0 0
+pad 140 0x0100 0 0            # A
+pad 144 0x0000 0 0
+door 141 0                    # r103 area 0 -> r101
+pad 170 0x0000 0 80           # walk in the square after the return
+pad 190 0x0000 0 0

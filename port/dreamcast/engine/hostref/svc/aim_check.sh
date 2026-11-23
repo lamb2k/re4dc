@@ -13,6 +13,10 @@
 #                  native form is the engine's, not the original's arithmetic);
 #           outcome / traces  outcome.py and plays_right.py of each arm against orig.
 # The control must FAIL: ctl on calls where an enemy box is in the line (aim-ganado, aimfire-ganado).
+# Lane eng-e2g: knock-ganado joins the fixtures (its tick-521 shot passes a head capsule the game refuses); and the
+# property row: svc/aimprop.cpp (`make aimprop`), the shot's per-box test against the original's emLineCapsuleCrossCk
+# and emLineCubeCrossCk on 40,000 generated segments and 10,000 groups of boxes per seed (20261121, 1, 777): same hit or miss,
+# same box, distance within 1 unit. Its control RE4_AIM_CONTROL=truegeom (the true-geometry boxes) must FAIL.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(cd "$HERE/../../../../.." && pwd)
@@ -43,7 +47,7 @@ lists() {
          bad = v["count_diff"] + v["em_diff"] + v["part_diff"] + v["attr_diff"] + v["hit_over_1u"] + v["rad_over_1u"];
          print (bad ? "FAIL" : "PASS") " (shots " v["calls"] ", count differs " v["count_diff"] ", enemy " v["em_diff"] ", box " v["part_diff"] ", attribute " v["attr_diff"] ", hit point max " v["max_hit"] ", box distance max " v["max_rad_units"] " units)"}' "$1/aimlist.txt"
 }
-for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado shot-ganado}; do
+for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado shot-ganado knock-ganado}; do
     run "$fx" orig
     run "$fx" native RE4_AIM_USE=native
     run "$fx" ctl RE4_AIM_USE=native RE4_AIM_CONTROL=grow
@@ -59,3 +63,15 @@ for fx in ${*:-e1-route bell-ganado-hit aim-ganado aimfire-ganado shot-ganado}; 
         echo "$fx $a: calls $(calls "$OUT/$fx/$a"); shot lists $(lists "$OUT/$fx/$a"); outcome $([ $oc = 0 ] && echo PASS || echo FAIL); traces $([ $pr = 0 ] && echo PASS || echo FAIL)"
     done
 done
+# lane eng-e2g: the property row (three seeds, 120,000 segments and 30,000 groups) and its control
+P=$ROOT/build/hostref/aimchk/aimprop
+pn=0; pr=
+for sd in 20261121 1 777; do
+    mkdir -p "$OUT/aimprop/native-$sd"
+    "$P" "$OUT/aimprop/native-$sd" $sd > /dev/null || pn=1
+    pr="$pr; $(tail -1 "$OUT/aimprop/native-$sd/aimprop.txt" | sed 's/ control none: [A-Z]*$//')"
+done
+mkdir -p "$OUT/aimprop/truegeom"
+RE4_AIM_CONTROL=truegeom "$P" "$OUT/aimprop/truegeom" > /dev/null; pc=$?
+echo "aimprop native: $([ $pn = 0 ] && echo PASS || echo FAIL) (${pr#; })"
+echo "aimprop control truegeom (must FAIL): $([ $pc = 0 ] && echo PASS || echo FAIL) ($(grep -v '^aimprop' "$OUT/aimprop/truegeom/aimprop.txt" | grep -c 'differs [1-9]\|over 1 unit [1-9]') of 8 rows differ; $(tail -1 "$OUT/aimprop/truegeom/aimprop.txt" | grep -o 'box differs [0-9]*'))"

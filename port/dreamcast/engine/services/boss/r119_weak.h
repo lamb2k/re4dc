@@ -4,7 +4,8 @@
 // here, before the file, the assembler keeps them as weak global symbols and every reference to them (R119Init's task,
 // the task's two callbacks) as a reference to the symbol: services/boss/r119_thunder.cpp's strong bodies are linked and
 // --gc-sections drops the original's. No source is edited and no code changes: only the symbols' binding.
-// game/r119_split_check.py checks the hosted object (weak, referenced by symbol only, no copy inlined elsewhere).
+// tools/engine/split_check.py checks the hosted object (weak, referenced by symbol only, no copy inlined elsewhere;
+// lane eng-e2g folded game/r119_split_check.py into it).
 #pragma once
 #define R119W_STR2(x) #x
 #define R119W_STR(x) R119W_STR2(x)

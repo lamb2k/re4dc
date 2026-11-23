@@ -152,9 +152,8 @@ void AddSandPower(Vec*, f32) {}
 void QuakeInit() {}
 void QuakeMove() {}
 
-// ---- sound (E1 plays none; calls are counted) ----
-u32 SndCall(u16 blk, u16 no, Vec*, int, int, cUnit*) { e1_stub_hit("SndCall", blk << 16 | no); return 0; }
-int SndStop(u32 id, int) { e1_stub_hit("SndStop", id); return 0; }
+// ---- sound: the hosted sound driver (src/game/snd*.cpp, waived by H-025.1) and the engine's sound service
+// (services/sound, lane eng-snd1) since lane eng-snd1; SndCall and SndStop are no longer stubs ----
 
 // ---- lights (E1 draws with the room's baked light set) ----
 cLightInfo::cLightInfo() { memset(this, 0, sizeof(*this)); }

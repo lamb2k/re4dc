@@ -38,12 +38,12 @@ static const Act acts[] = {
     {530, 0x0000, 0, 80, 30},    // walk
     {570, 0x0000, 0, -80, 20},   // back step
 };
-static const E1Route route = {0x101, 0x00002000, E1_ROUTE_TICKS, {-7914.0f, 0.0f, 2000.0f}, 1.5708f};
+static const E1Route route = {0x101, 0x00002000, E1_ROUTE_TICKS, {-7914.0f, 0.0f, 2000.0f}, 1.5708f, 0x0d37};   // e1-route.txt
 
 // The hill scene (lane eng-e1b; boot option HILL): Ashley follows Leon on the r11d hill path, the re4ref fixture
 // tools/plays_right/fixtures/hill-follow.txt (tick n = the old game's t 372 + n in the full-field fixture fx-hill-1).
 // Pads are re4ref's: from that tick on (stick forward 80 for 60 ticks from tick 28, again from tick 148).
-static const E1Route hill = {0x11d, 0x00100000, 728, {20214.0f, 0.0f, 13952.0f}, -1.8170f};
+static const E1Route hill = {0x11d, 0x00100000, 728, {20214.0f, 0.0f, 13952.0f}, -1.8170f, 0x0d37};   // hill-follow.txt
 struct TickPad { unsigned tick; E1Pad pad; };
 static const TickPad hill_pads[] = {
     {0, {0x0000, 0, 0, 0}},
@@ -52,7 +52,14 @@ static const TickPad hill_pads[] = {
     {148, {0x0000, 0, 80, 0}},
     {208, {0x0000, 0, 0, 0}},
 };
-const E1Route& e1_route() { return e1_scene == E1_SCENE_HILL ? hill : route; }
+// Lane eng-load1: the DOOR scene's start and pads come from its fixture (core/room_change.cpp, DOOR.TXT).
+const E1Route* e1_door_route();
+int e1_door_pad(unsigned tick, E1Pad* out);
+const E1Route& e1_route()
+{
+    if (const E1Route* d = e1_door_route()) return *d;
+    return e1_scene == E1_SCENE_HILL ? hill : route;
+}
 
 static E1Pad latched;
 static unsigned next_act, cur_until;
@@ -60,6 +67,13 @@ static int cur_act = -1;
 
 void e1_input_latch(unsigned tick)
 {
+    E1Pad door;
+    if (e1_door_pad(tick, &door)) {   // lane eng-load1: the DOOR scene (a held R also gives the trigger, as below)
+        if ((door.buttons & 0x0020) && !door.trig_r) door.trig_r = 0xC0;
+        latched = door;
+        e1_pad_now = door;
+        return;
+    }
     if (e1_scene == E1_SCENE_HILL) {
         E1Pad p = {0, 0, 0, 0};
         for (const TickPad& tp : hill_pads)

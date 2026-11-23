@@ -33,6 +33,11 @@ __attribute__((optimize("O2"))) void native_update(NativeScene* s,unsigned frame
 volatile uint32_t m1_ram[8];
 volatile uint32_t m1_room_serial;
 volatile uint32_t m1_load_status[8];
+/* lane eng-load2: the phases of the last native_open, us: [0] the header and sizing, [1] textures read and put in video
+   memory, [2] the resident part read and its CRC, [3] the tables and the world opened, [4] the world's runtime,
+   [5] the models checked, [6] the recording's patches checked and frame 0 applied, [7] materials bound and the actors
+   opened, [8] visibility; [9] the pack's bytes on disc */
+volatile uint32_t m1_open_us[10];
 static uint8_t* resident_pack;
 static unsigned resident_capacity;
 volatile uint32_t m1_texture_bytes[M1_TEXTURE_LIMIT];   /* VRAM bytes of each uploaded texture (memory map) */
@@ -47,18 +52,44 @@ static uint32_t crc_update(uint32_t c,const uint8_t* p,unsigned n){
     if(!crc_lut[1])for(unsigned i=0;i<256;i++){unsigned v=i;for(int k=0;k<8;k++)v=(v>>1)^((0-(v&1))&0xedb88320);crc_lut[i]=v;}
     c=~c;while(n--)c=(c>>8)^crc_lut[(c^*p++)&255];return ~c;
 }
+/* lane eng-load2 (plan 3.3 section 8 B1, the old port's read pattern: one pass, streamed): the pack being opened is read
+   front to back in 32 KiB requests at 32 KiB file offsets into one aligned buffer and handed out by copies. fs_iso9660
+   then streams the whole file by DMA, one stream, every request sector-aligned. Before, the reads followed the
+   sections, whose sizes are multiples of 4 bytes, not 32: every read that started off a 32-byte file offset went
+   through the ISO block cache one sector at a time (the farm's door load: 3,995 drive requests for 9.0 MB, 54.7 to
+   67.7 s on plain Flycast). The sizing passes (pack_need, pack_keep_path) open their own handle and read a few
+   sectors with seeks, before the load's stream starts. */
+static uint8_t pk_ring[32768] __attribute__((aligned(32)));
+static struct { file_t f; unsigned len, at; } pk = { -1, 0, 0 };
+static void pk_begin(file_t f){pk.f=f;pk.len=pk.at=0;}
+static int pk_close(file_t f){if(f==pk.f)pk.f=-1;return fs_close(f);}
+static int pk_read(uint8_t* dst,unsigned n){
+    while(n){
+        if(pk.at==pk.len){int r=fs_read(pk.f,pk_ring,sizeof(pk_ring));if(r<=0)return 0;pk.len=(unsigned)r;pk.at=0;}
+        unsigned c=pk.len-pk.at;if(c>n)c=n;
+        memcpy(dst,pk_ring+pk.at,c);pk.at+=c;dst+=c;n-=c;
+    }
+    return 1;
+}
 static int read_crc(file_t f,uint8_t* dst,unsigned n,uint32_t* crc){
-    unsigned got=0;
-    while(got<n){int r=fs_read(f,dst+got,n-got>65536?65536:n-got);if(r<=0)return 0;got+=r;}
+    if(f>=0&&f==pk.f){if(!pk_read(dst,n))return 0;}
+    else{unsigned got=0;
+        while(got<n){int r=fs_read(f,dst+got,n-got>65536?65536:n-got);if(r<=0)return 0;got+=r;}}
     if(crc)*crc=crc_update(*crc,dst,n);
     return 1;
 }
-typedef struct { uint32_t head[5],root[17],size,texsize,tn,maxblob,rest; } PackInfo;
+/* lane eng-load2: version 5, the engine images' pack (bake/engine_pack.py): the resident part as the frame-0 load builds
+   it (frame 0's rows only), read straight; version 4 the whole pack with the recording (the bench's; the engine images
+   still take it, through the frame-0 path below). */
+typedef struct { uint32_t head[5],root[17],size,texsize,tn,maxblob,rest,ver; } PackInfo;
+static unsigned recording_frames(void);
 static uint32_t tex_offsets[M1_TEXTURE_LIMIT+2];
 /* Header, root table and texture table of a pack (f positioned at 0); leaves f after the texture table. */
 static int pack_info(file_t f,PackInfo* pi,uint32_t* crc){
     pi->size=fs_total(f);
-    if(pi->size<20+68+8||!read_crc(f,(uint8_t*)pi->head,20,NULL)||memcmp(pi->head,"NAT3",4)||pi->head[1]!=4||pi->head[3]!=pi->size-20)return 0;
+    if(pi->size<20+68+8||!read_crc(f,(uint8_t*)pi->head,20,NULL)||memcmp(pi->head,"NAT3",4)||(pi->head[1]!=4&&pi->head[1]!=5)||pi->head[3]!=pi->size-20)return 0;
+    pi->ver=pi->head[1];
+    if(pi->ver==5&&recording_frames()!=1){printf("M1 pack: version 5 (frame 0 only) refused: this program plays the recording\n");return 0;}
     if(!read_crc(f,(uint8_t*)pi->root,68,crc)||pi->root[0]!=15||pi->root[1]!=0)return 0;
     for(unsigned k=1;k<=15;k++)if(pi->root[k+1]<pi->root[k]||pi->root[k+1]%4)return 0;
     if(pi->root[16]!=pi->size-88)return 0;
@@ -72,10 +103,137 @@ static int pack_info(file_t f,PackInfo* pi,uint32_t* crc){
     pi->rest=pi->size-88-pi->texsize;
     return 1;
 }
+/* lane eng-mem1 (H-031, the resident buffer's sizing): a pack's sections 4 to 12 are the old game's recording, a delta
+   table a section with a row for each of 300 frames. The bench plays the recording; an engine image (game/: E1, FIGHT,
+   BOSS, SENDABLE) applies frame 0 once at open and draws from its services after that, so it keeps only frame 0's row
+   of each delta table: the village's resident part 6,658,951 -> about 2.6 MB, the farm's 8,526,603 -> about 3.4 MB
+   (eng-bake1's census "room content only"). core/loader.cpp defines native_recording_frames = 1 in the engine images;
+   the bench does not define it (weak: 300, the whole recording, as before). The whole file is still read and its CRC
+   checked; the dropped rows pass through a small scratch buffer. */
+extern unsigned native_recording_frames __attribute__((weak));
+static unsigned recording_frames(void){return &native_recording_frames && native_recording_frames==1 ? 1 : 300;}
+typedef struct { unsigned sec[16], row_at[9], row_len[9], hdr[9], ref[9]; } PackKeep;   /* frame-0 rows of the delta tables */
+static int fs_at(file_t f,unsigned at,void* dst,unsigned n){
+    if(fs_seek(f,at,SEEK_SET)!=(off_t)at)return 0;return fs_read(f,dst,n)==(int)n;
+}
+/* The frame-0 row of each delta table (file offsets): read with seeks, no CRC (pack_need's sizing pass). */
+static int pack_keep(file_t f,const PackInfo* pi,PackKeep* k){
+    const unsigned base=88;   /* the root table's offsets count from the end of the root table */
+    for(unsigned s=0;s<16;s++)k->sec[s]=base+pi->root[s+1];
+    uint32_t n,refs[10];
+    if(!fs_at(f,k->sec[3],&n,4)||n!=300)return 0;
+    uint32_t r0[2];if(!fs_at(f,k->sec[3]+4,r0,8)||r0[0]!=0||r0[1]!=40)return 0;
+    if(!fs_at(f,k->sec[3]+8+4*n,refs,40))return 0;
+    for(unsigned d=0;d<9;d++){
+        const unsigned at=k->sec[4+d];uint32_t m,o[2];
+        if(!fs_at(f,at,&m,4)||refs[d+1]>=m||!fs_at(f,at+4+4*refs[d+1],o,8)||o[1]<o[0]||(o[1]-o[0])%4)return 0;
+        k->hdr[d]=8+4*m;k->ref[d]=refs[d+1];k->row_at[d]=at+k->hdr[d]+o[0];k->row_len[d]=o[1]-o[0];
+        if(k->row_at[d]+k->row_len[d]>k->sec[5+d])return 0;
+    }
+    return 1;
+}
+/* Bytes of the resident part with only frame 0 kept: sections 1-3 as in the file, a one-row table a delta section
+   (sections 4-12, packed), sections 13-14 as in the file. Sections are contiguous (the root table has no gaps), so the
+   models (13) keep their file offset modulo 32 through *pad bytes added to the camera row (section 4): repeated
+   writes of words that row already writes, with the same values (read_rest_keep): frame 0's state is unchanged. */
+static unsigned keep_layout(const PackInfo* pi,const PackKeep* k,unsigned* at,unsigned* pad){
+    unsigned c=pi->root[5]-pi->texsize;   /* sections 1-3 at their file offsets */
+    for(unsigned s=1;s<4;s++)if(at)at[s]=pi->root[s+1]-pi->texsize;
+    unsigned sum=0;for(unsigned d=0;d<9;d++)sum+=12+k->row_len[d];
+    const unsigned want=(pi->root[14]-pi->texsize)%32;
+    unsigned g=(want+32-(c+sum)%32)%32;
+    if(g&&g<12)g+=32;   /* 36 or 40: two entries (12+24, 16+24) */
+    if(pad)*pad=g;
+    for(unsigned s=4;s<=12;s++){if(at)at[s]=c;c+=12+k->row_len[s-4]+(s==4?g:0);}
+    for(unsigned s=13;s<15;s++){if(at)at[s]=c;c+=pi->root[s+2]-pi->root[s+1];}
+    if(at)at[15]=c;
+    return c;
+}
+/* The pad of the camera row: entries of 8+4c bytes, each repeating the first c words of the row's first entry
+   (same start, the lowest c bits of its mask, the same values). Refused (0) if the row's first entry has too few
+   words or a later entry writes one of them (then a repeat could change frame 0's state). */
+static int keep_pad(uint32_t* row,unsigned len,unsigned g){
+    if(!g)return 1;
+    unsigned sizes[2],n=0;
+    if(g<=28)sizes[n++]=g;else{sizes[n++]=g-24;sizes[n++]=24;}
+    const unsigned words=len/4;if(words<3)return 0;
+    const unsigned s0=row[1],b0=row[2];
+    unsigned cmax=0;for(unsigned e=0;e<n;e++){unsigned c=(sizes[e]-8)/4;if(c>cmax)cmax=c;}
+    if((unsigned)__builtin_popcount(b0)<cmax||words<3+cmax)return 0;
+    unsigned sub=0,m=b0;for(unsigned i=0;i<cmax;i++){sub|=m&-m;m&=m-1;}
+    for(unsigned i=3+__builtin_popcount(b0);i+1<words;){   /* the later entries: none may touch the repeated words */
+        const unsigned st=row[i],bi=row[i+1];
+        for(unsigned b=0;b<32;b++)if(bi>>b&1){const unsigned wd=st+b;if(wd>=s0&&wd<s0+32&&(sub>>(wd-s0)&1))return 0;}
+        i+=2+__builtin_popcount(bi);
+    }
+    uint32_t* out=row+words;
+    for(unsigned e=0;e<n;e++){
+        const unsigned c=(sizes[e]-8)/4;unsigned bits=0,mm=b0;
+        for(unsigned i=0;i<c;i++){bits|=mm&-mm;mm&=mm-1;}
+        *out++=s0;*out++=bits;for(unsigned i=0;i<c;i++)*out++=row[3+i];
+    }
+    return 1;
+}
+/* The sizing pass's rows from a file of its own (the load then reads its file in order, never seeking). */
+static int pack_keep_path(const char* path,PackKeep* k){
+    file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
+    PackInfo pi;int ok=pack_info(f,&pi,NULL)&&pack_keep(f,&pi,k);pk_close(f);return ok;
+}
 static unsigned pack_need(const char* path){
     file_t f=fs_open(path,O_RDONLY);if(f<0)return 0;
-    PackInfo pi;int ok=pack_info(f,&pi,NULL);fs_close(f);if(!ok)return 0;
-    unsigned need=31+68+pi.rest;return need>pi.maxblob?need:pi.maxblob;
+    PackInfo pi;int ok=pack_info(f,&pi,NULL);
+    unsigned rest=pi.rest;
+    if(ok&&recording_frames()==1&&pi.ver==4){PackKeep k;ok=pack_keep(f,&pi,&k);if(ok)rest=keep_layout(&pi,&k,NULL,NULL);}
+    fs_close(f);if(!ok)return 0;
+    unsigned need=31+68+rest;return need>pi.maxblob?need:pi.maxblob;
+}
+/* Read n bytes into the CRC only (the recording's frames 1-299 in an engine image). */
+static int skip_crc(file_t f,unsigned n,uint32_t* crc){
+    if(f!=pk.f)return 0;   /* lane eng-load2: through the load's stream buffer, in place (no scratch copy) */
+    while(n){
+        if(pk.at==pk.len){int r=fs_read(pk.f,pk_ring,sizeof(pk_ring));if(r<=0)return 0;pk.len=(unsigned)r;pk.at=0;}
+        unsigned c=pk.len-pk.at;if(c>n)c=n;
+        if(crc)*crc=crc_update(*crc,pk_ring+pk.at,c);
+        pk.at+=c;n-=c;
+    }
+    return 1;
+}
+/* The rest of the pack (f after the texture section, at file offset 88+texsize) into data+68 with frame 0 kept:
+   every byte read in order through the CRC; r (the copied root table) gets the kept layout's offsets. */
+static int read_rest_keep(file_t f,const PackInfo* pi,const PackKeep* k,uint8_t* data,uint32_t* r,uint32_t* crc){
+    unsigned at[16],g;keep_layout(pi,k,at,&g);
+    unsigned pos=88+pi->texsize;
+    for(unsigned s=1;s<15;s++){
+        const unsigned end=88+pi->root[s+2];
+        uint8_t* dst=data+68+at[s];
+        if(s<4||s>12){
+            if(!read_crc(f,dst,end-pos,crc)){printf("M1 pack: section %u unread\n",s);return 0;}
+            if(s==3){uint32_t* f0=(uint32_t*)(dst+8+4*300);for(unsigned d=1;d<=9;d++)f0[d]=0;}   /* frame 0: row 0 of each kept table */
+            pos=end;continue;
+        }
+        const unsigned d=s-4;
+        uint32_t* w=(uint32_t*)dst;
+        {   /* the table's own header, read in order, must place frame 0's row where the sizing pass found it */
+            static uint32_t hdr[302];uint32_t n=0;
+            if(!read_crc(f,(uint8_t*)&n,4,crc)||n>300){printf("M1 pack: delta %u header n %lu\n",d,(unsigned long)n);return 0;}
+            if(!read_crc(f,(uint8_t*)hdr,4*(n+1),crc)){printf("M1 pack: delta %u offsets unread\n",d);return 0;}
+            const uint32_t* fr=(const uint32_t*)(data+68+at[3]+8+4*300);   /* frame 0's refs (patched below: read first) */
+            const unsigned ref=k->ref[d];(void)fr;
+            const unsigned row_at=pos+8+4*n+hdr[ref],row_len=hdr[ref+1]-hdr[ref];
+            if(ref>=n||row_at!=k->row_at[d]||row_len!=k->row_len[d]){
+                printf("M1 pack: delta %u row %u at %u len %u, sizing pass %u / %u\n",d,ref,row_at,row_len,k->row_at[d],k->row_len[d]);
+                return 0;
+            }
+            pos+=8+4*n;
+        }
+        if(!skip_crc(f,k->row_at[d]-pos,crc)||!read_crc(f,dst+12,k->row_len[d],crc)){printf("M1 pack: delta %u row unread\n",d);return 0;}
+        if(!skip_crc(f,end-k->row_at[d]-k->row_len[d],crc)){printf("M1 pack: delta %u tail unread\n",d);return 0;}
+        const unsigned extra=d==0?g:0;
+        if(extra&&!keep_pad(w+3,k->row_len[d],extra)){printf("M1 pack: frame 0's camera row cannot carry the %u-byte pad\n",extra);return 0;}
+        w[0]=1;w[1]=0;w[2]=k->row_len[d]+extra;pos=end;
+    }
+    r[0]=15;r[1]=0;for(unsigned s=1;s<=15;s++)r[s+1]=at[s];
+    return 1;
 }
 static unsigned tex_palette_bits[M1_TEXTURE_LIMIT];
 /* One texture blob (the format of uploads()) into VRAM. */
@@ -137,7 +295,8 @@ static int valid_model(const Table* tab,unsigned id,unsigned headers){
     return 1;
 }
 static int valid_inputs(NativeScene* s){
-    for(unsigned frame=0;frame<300;frame++){
+    const unsigned frames=recording_frames();   /* lane eng-mem1: 1 in an engine image (frame 0 only resident) */
+    for(unsigned frame=0;frame<frames;frame++){
         native_update(s,frame);
         if(s->words[0]!=26||s->words[1]%16||s->words[2]%18||s->words[3]%38||
            s->words[4]%5||s->words[5]<4||(s->words[5]-4)%24||s->words[6]%15||s->words[7]!=7||s->words[8]%17)return 0;
@@ -172,7 +331,9 @@ void native_close(NativeScene* s){
    visibility, actors, logic state) and the resident pack buffer itself; the next native_open sizes the buffer for the
    pack it opens. native_release_keep (the bench's ROOMKEEP control) keeps one texture in video memory. */
 unsigned native_release_keep;
+void content_lit_release(void);   /* render/content_actor.inc (lane eng-mem1) */
 void native_release(NativeScene* s){
+    content_lit_release();
     pvr_ptr_t kept=NULL;
     if(native_release_keep){for(unsigned i=0;i<M1_TEXTURE_LIMIT;i++)if(m1_textures[i]){kept=m1_textures[i];m1_textures[i]=NULL;break;}}
     native_close(s);
@@ -188,6 +349,7 @@ int native_wait_shown(void){
 }
 /* The bench opens two rooms by turns with the buffer kept (native_close): it reserves the larger of them once. */
 static unsigned resident_reserved;
+static PackKeep keep_rows;   /* lane eng-mem1: the pack being opened, frame 0's rows (pack_keep_path) */
 void native_reserve(const char* const* names,unsigned n){
     for(unsigned i=0;i<n;i++){unsigned v=pack_need(names[i]);if(v>resident_reserved)resident_reserved=v;}
 }
@@ -195,40 +357,82 @@ void native_reserve(const char* const* names,unsigned n){
 int native_open(NativeScene* s,const char* name){
     dc_lab_open();   /* lane eng-draw1: the E1 lab sets (boot files DLA, DLB), read once before play */
     m1_load_status[0]=1;m1_room_serial++;
-    {   /* lane eng-draw2 (R3): the resident buffer covers the pack being opened (and the bench's reservation); a pack
-           larger than the buffer replaces it (nothing of the old room is in it: native_open always follows a close) */
-        unsigned need=pack_need(name);
-        if(!need){printf("M1 pack %s: no size (missing or malformed)\n",name);return 0;}
-        if(resident_reserved>need)need=resident_reserved;
-        need=(need+31)&~31u;
-        if(resident_pack && resident_capacity<need){free(resident_pack);resident_pack=NULL;resident_capacity=0;}
-        if(!resident_pack){
-            if(need>=13*1024*1024)return 0;
-            resident_pack=memalign(32,need);
-            if(!resident_pack){printf("M1 pack %s: resident buffer of %u bytes refused\n",name,need);return 0;}
-            resident_capacity=need;
-        }
-    }
+    uint64_t ph=timer_us_gettime64();
+#define M1_PHASE(i) do{const uint64_t t_=timer_us_gettime64();m1_open_us[i]=(uint32_t)(t_-ph);ph=t_;}while(0)
+    memset((void*)m1_open_us,0,sizeof(m1_open_us));
+    /* lane eng-load2: one open, one pass. The header, root table and texture table come through the load's own stream
+       first, and a version 5 pack is sized from them. A version 4 pack in an engine image needs its frame-0 rows found
+       by seeks first (pack_keep_path, eng-mem1): the stream is closed, the sizing passes run on their own handles, and
+       the load opens the file again (the path before this lane, two more opens). */
     file_t f=fs_open(name,O_RDONLY);
     if(f<0){printf("M1 missing pack %s\n",name);return 0;}
     PackInfo pi;uint32_t crc=0;Table root;
     m1_load_status[0]=2;
-    if(!pack_info(f,&pi,&crc)){fs_close(f);return 0;}
+    pk_begin(f);
+    if(!pack_info(f,&pi,&crc)){pk_close(f);printf("M1 pack %s: no size (malformed)\n",name);return 0;}
+    {   /* lane eng-draw2 (R3): the resident buffer covers the pack being opened (and the bench's reservation); a pack
+           larger than the buffer replaces it (nothing of the old room is in it: native_open always follows a close) */
+        unsigned need;
+        if(pi.ver==5){need=31+68+pi.rest;if(need<pi.maxblob)need=pi.maxblob;}
+        else{
+            pk_close(f);
+            need=pack_need(name);
+            /* lane eng-mem1: the sizing pass's rows taken here, before the load opens its file. d2 and d3 read them with
+               a second handle (or seeks on the load's own) in the middle of the load's stream: HILL.PAK and R103.PAK then
+               read wrong bytes (CRC 785f34c6 against 23e79ac3 on HILL.PAK; CROSS.PAK by luck right). */
+            if(need&&recording_frames()==1&&!pack_keep_path(name,&keep_rows)){printf("M1 pack %s: frame-0 rows not found\n",name);return 0;}
+            if(!need){printf("M1 pack %s: no size (missing or malformed)\n",name);return 0;}
+            f=fs_open(name,O_RDONLY);
+            if(f<0){printf("M1 missing pack %s\n",name);return 0;}
+            crc=0;pk_begin(f);
+            if(!pack_info(f,&pi,&crc)){pk_close(f);return 0;}
+        }
+        if(resident_reserved>need)need=resident_reserved;
+        need=(need+31)&~31u;
+        if(resident_pack && resident_capacity<need){free(resident_pack);resident_pack=NULL;resident_capacity=0;}
+        if(!resident_pack){
+            if(need>=13*1024*1024){pk_close(f);return 0;}
+            resident_pack=memalign(32,need);
+            if(!resident_pack){pk_close(f);printf("M1 pack %s: resident buffer of %u bytes refused\n",name,need);return 0;}
+            resident_capacity=need;
+        }
+    }
+    M1_PHASE(0);
     unsigned size=pi.size,tn=pi.tn,pad=(20+pi.texsize)&31;   /* keeps every section's offset modulo 32 */
     m1_load_status[1]=size;m1_load_status[2]=pi.texsize;
-    if(pi.maxblob>resident_capacity||pad+68+pi.rest>resident_capacity){fs_close(f);return 0;}
+    const int frame0=recording_frames()==1&&pi.ver==4;   /* the frame-0 path over a whole pack (lane eng-mem1) */
+    if(pi.maxblob>resident_capacity||(!frame0&&pad+68+pi.rest>resident_capacity)){pk_close(f);return 0;}
     m1_load_status[0]=6;
     pvr_set_pal_format(PVR_PAL_ARGB8888);
     for(unsigned i=0;i<tn;i++){
         unsigned blob=tex_offsets[i+1]-tex_offsets[i];
-        if(!read_crc(f,resident_pack,blob,&crc)||!upload_one(i,(const uint32_t*)resident_pack,blob)){fs_close(f);return 0;}
+        if(!read_crc(f,resident_pack,blob,&crc)||!upload_one(i,(const uint32_t*)resident_pack,blob)){pk_close(f);return 0;}
     }
+    M1_PHASE(1);
     uint8_t* data=resident_pack+pad;uint32_t* r=(uint32_t*)data;
-    r[0]=15;r[1]=0;for(unsigned k=1;k<=15;k++)r[k+1]=pi.root[k+1]-pi.texsize;
-    int ok=read_crc(f,data+68,pi.rest,&crc);
-    fs_close(f);s->assets.storage=resident_pack;
+    unsigned rest=pi.rest;int ok;
+    if(frame0){   /* lane eng-mem1: frame 0 of the recording kept (pack_keep reads with seeks) */
+        const PackKeep k=keep_rows;
+        unsigned step=1;
+        ok=1;
+        if(ok)rest=keep_layout(&pi,&k,NULL,NULL);
+        if(ok){step=3;ok=pad+68+rest<=resident_capacity;}
+        if(ok){step=4;ok=read_rest_keep(f,&pi,&k,data,r,&crc);}
+        if(!ok)printf("M1 pack %s: frame-0 load refused at step %u (1 rows, 3 size %u of %u, 4 read)\n",name,step,
+                      pad+68+rest,resident_capacity);
+    }else{
+        r[0]=15;r[1]=0;for(unsigned k=1;k<=15;k++)r[k+1]=pi.root[k+1]-pi.texsize;
+        ok=read_crc(f,data+68,pi.rest,&crc);
+    }
+    pk_close(f);s->assets.storage=resident_pack;M1_PHASE(2);m1_open_us[9]=size;
     const uint32_t* h=pi.head;
-    if(!ok||crc!=h[4]||!table(&root,data,68+pi.rest)||root.n!=15||bytes(&root,0))return 0;
+    if(ok&&crc!=h[4])printf("M1 pack %s: CRC %08lx, the header's %08lx\n",name,(unsigned long)crc,(unsigned long)h[4]);
+    if(!ok||crc!=h[4]||!table(&root,data,68+rest)||root.n!=15||bytes(&root,0))return 0;
+    {   /* lane eng-load2, lab boot file RESCRC: the resident part's CRC as loaded (a version 5 pack must give the same
+           bytes as the frame-0 path over its version 4 source) */
+        file_t c=fs_open("/cd/RESCRC",O_RDONLY);
+        if(c>=0){fs_close(c);printf("M1 pack %s: version %lu resident %u B crc %08lx\n",name,(unsigned long)pi.ver,68+rest,(unsigned long)crc_update(0,data,68+rest));}
+    }
     m1_load_status[0]=3;
     if(bytes(&root,14)<8)return 0;
     memcpy(&s->sky_top,row(&root,14),8);
@@ -239,11 +443,14 @@ int native_open(NativeScene* s,const char* name){
     unsigned ids[]={1,3};
     for(unsigned i=0;i<2;i++)if(!table(assets[i],row(&root,ids[i]),bytes(&root,ids[i])))return 0;
     if(!native_world_open(&s->world,row(&root,2),bytes(&root,2))||s->frames.n!=300)return 0;
+    M1_PHASE(3);
     if(!native_world_runtime(&s->world))return 0;
+    M1_PHASE(4);
     for(unsigned i=0;i<((const unsigned*)s->world.mesh)[5];i++)
         if(s->world.materials[i].header>=s->assets.header.n||s->world.materials[i].phase>=3)return 0;
     m1_load_status[0]=4;
     for(unsigned j=0;j<s->models.n;j++)if(!valid_model(&s->models,j,s->assets.header.n))return 0;
+    M1_PHASE(5);
     unsigned logic_bytes=0;
     for(unsigned k=0;k<9;k++){
         Table* tab=s->delta+k;unsigned maximum=0;
@@ -251,7 +458,7 @@ int native_open(NativeScene* s,const char* name){
         for(unsigned i=0;i<tab->n;i++)if(!validate_patch(row(tab,i),bytes(tab,i)/4,&maximum))return 0;
         logic_bytes+=maximum*4;s->state[k]=calloc(maximum?maximum:1,4);if(!s->state[k])return 0;
     }
-    for(unsigned i=0;i<300;i++){
+    for(unsigned i=0;i<recording_frames();i++){   /* lane eng-mem1: frame 0 only in an engine image */
         const uint32_t* refs=row(&s->frames,i);
         if(bytes(&s->frames,i)!=40)return 0;
         for(unsigned k=0;k<9;k++)if(refs[k+1]>=s->delta[k].n)return 0;
@@ -259,6 +466,7 @@ int native_open(NativeScene* s,const char* name){
         if(camera[0]!=26)return 0;
     }
     m1_load_status[0]=5;if(!valid_inputs(s))return 0;
+    M1_PHASE(6);
     m1_load_status[0]=6;
     for(unsigned i=0;i<s->assets.header.n;i++){   /* bind each material header to its texture in VRAM */
         if(bytes(&s->assets.header,i)!=36)return 0;
@@ -267,7 +475,7 @@ int native_open(NativeScene* s,const char* name){
         hd[4]|=((uintptr_t)m1_textures[hd[0]]&0x7fffff)>>3 | tex_palette_bits[hd[0]];
     }
     m1_load_status[0]=8;if(!native_actor_open(s))return 0;
-    m1_load_status[0]=9;
+    m1_load_status[0]=9;M1_PHASE(7);
     {   /* baked visibility: <ROOM>.VIS beside the pack, unless /cd/NOVIS (the full-set arm of the pixel check) */
         char vis[32];unsigned n=strlen(name);
         if(n<sizeof(vis)&&n>4){memcpy(vis,name,n-3);memcpy(vis+n-3,"VIS",4);}else vis[0]=0;
@@ -281,9 +489,10 @@ int native_open(NativeScene* s,const char* name){
             s->world.vis=&s->vis;m1_ram[7]=vs;
         }
     }
-    m1_load_status[0]=7;
+    m1_load_status[0]=7;M1_PHASE(8);
+#undef M1_PHASE
     struct mallinfo heap=mallinfo();
-    m1_ram[0]=size-pi.texsize;m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
+    m1_ram[0]=68+rest;   /* lane eng-mem1: the resident part as kept (was size-texsize, the whole recording) */m1_ram[1]=logic_bytes;m1_ram[2]=(uintptr_t)end-0x8c010000;
     m1_ram[3]=heap.uordblks;m1_ram[4]=heap.fordblks;m1_ram[5]=pvr_mem_available();m1_ram[6]=resident_capacity;
     return 1;
 }

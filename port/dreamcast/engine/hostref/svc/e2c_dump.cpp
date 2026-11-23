@@ -585,15 +585,24 @@ extern "C" void __wrap__ZN9cObjChain9setParentEP6cModeliP3Veci(cObjChain* o, cMo
     pv(ofs);
     P(g_f, " %d\n", flag);
 }
-// not in the reference at all (the boss's rope only): a logging body in both builds
-void cObjChain::setParent2(cModel* m, int p1, Vec* o1, int p2, Vec* o2, int flag)
+// setParent2 (the boss's rope). Lane eng-mem1 (H-031 ruling 1): the native build links the chain service's body
+// (services/cloth/chain.cpp), the reference build game/obj1d.cpp's; this weak empty body only stands in for a build
+// that has neither, and gives way to either. The CA2 line is logged by the --wrap (E2C_WRAP_FLAGS), the same
+// in both builds, before the body runs: e2c_check still sees the rope's set-up on both sides.
+__attribute__((weak)) void cObjChain::setParent2(cModel*, int, Vec*, int, Vec*, int) {}
+extern "C" void __real__ZN9cObjChain10setParent2EP6cModeliP3VeciS3_i(cObjChain* o, cModel* m, int p1, Vec* o1, int p2, Vec* o2, int flag);
+extern "C" void __wrap__ZN9cObjChain10setParent2EP6cModeliP3VeciS3_i(cObjChain* o, cModel* m, int p1, Vec* o1, int p2, Vec* o2, int flag)
 {
-    if (!(g_f && g_in)) return;
-    P(g_f, "%u CA2 %d %u %x", g_tick, this != 0, actor(m), p1);
-    pv(o1);
-    P(g_f, " %x", p2);
-    pv(o2);
-    P(g_f, " %d\n", flag);
+    if (g_f && g_in) {
+        P(g_f, "%u CA2 %d %u %x", g_tick, o != 0, actor(m), p1);
+        pv(o1);
+        P(g_f, " %x", p2);
+        pv(o2);
+        P(g_f, " %d\n", flag);
+    }
+    // the exercise plants giants without their chain objects (o is 0 there, as the logging body allowed): the body runs
+    // only on a real object, the same in both builds (odump links game/obj1d.cpp's, native the chain service's)
+    if (o) __real__ZN9cObjChain10setParent2EP6cModeliP3VeciS3_i(o, m, p1, o1, p2, o2, flag);
 }
 TexRenderMng* Ctrl12GetTexRenderEm2b(cCtrl* c)
 {

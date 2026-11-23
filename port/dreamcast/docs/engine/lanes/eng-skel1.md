@@ -1,0 +1,110 @@
+# Lane eng-skel1: the skeleton service's entries, the chain object, the cloth in the boss image
+
+Status: in progress (Part A). Branch `lane/eng-skel1`.
+
+## How to call (the bone entries; `services/skeleton/skel.h`)
+
+For native behaviour code that today writes or reads a parts record after `getPartsPtr(no)`. Name the bone as the
+behaviour does: the model and the parts number (`no`, 0 and up). Each entry returns 0, or -1 when the model has no such
+bone (nothing is done and the outputs are left as they were; the original would have crashed or read garbage there).
+The entry works on the skeleton's table and serves what it changed to every record the behaviour still holds, so hosted
+code that keeps reading records sees the change. No entry makes the bone a mailbox bone: prefer them to `getPartsPtr`
+in native code (a mailbox bone is served after every skeleton entry for the rest of the model's life).
+
+| Original statement after `p = m->getPartsPtr(no)` | Entry |
+|---|---|
+| `PARTS_FLAGS(p) \|= 0x40000000; PARTS_ROT_OFS(p) = r;` (em10NeckMove part 3, em10WaistMove parts 1, 2) | `skel_addrot_set(m, no, &r, 1)` |
+| `PARTS_FLAGS(p) &= ~0x40000000` | `skel_addrot_set(m, no, 0, 0)` (rot NULL: kept) |
+| read `PARTS_ROT_OFS(p)` and the flag | `int on = skel_addrot_get(m, no, &r)` (1 set, 0 clear, -1 no bone) |
+| `PSMTXRotRad(R, 'z', a); PSMTXConcat(p->l_mat, R, p->l_mat);` (em10NeckMove part 13) | `skel_local_post(m, no, R)` |
+| `PSMTXConcat(p->mat, R, p->mat);` (em10BombNeckMove parts 0x24, 0x1B) | `skel_world_post(m, no, R)` |
+| `p->ang = a; p->pos = q; p->scale = s;` (MouthPartsReset, GatlingRollMove, ClawMove, BowgunMove, BombNeckMove) | `skel_pose_set(m, no, &q, &a, &s)` (any NULL: kept) |
+| read `p->pos`, `p->ang`, `p->scale` | `skel_pose_get(m, no, &q, &a, &s)` (any NULL: not read) |
+| read `p->world`, `p->world_old`, `p->world_old2` (BombNeckMove) | `skel_bone_world(m, no, &w, &o, &o2)` |
+| read `p->mat` (NeckMove: the player's head, `pPL->getPartsPtr(4)->mat`) | `Mtx M; skel_bone_mat(m, no, M)` (a copy) |
+
+Notes:
+- **When.** The entries have the record's timing: an added rotation is applied once by the next world pass and its
+  flag cleared there (MotionMove's first pass for the IK's bones, `partsWorldCalc`); a local post-multiply lasts until
+  the next matrix pass; a world post-multiply until the next world pass (so call it after the model's last world pass of
+  the tick, as em10BombNeckMove runs after the move); a pose write is read by the next matrix pass and is overwritten
+  by the motion for the bones the clip keys. A Ganado function that read-modify-writes (`ang.x += d`, the claw steps)
+  does `pose_get`, the arithmetic, `pose_set`.
+- **History.** `old` / `old2` of a bone are kept from its first ask (this entry or `getPartsPtr`): ask once at set-up
+  (or one tick before) when the first values matter, as the original's record had them from the start. Bone 0's
+  history is always kept.
+- **A rotation.** Build it with the math service as the original does (`PSMTXRotRad(R, axis, angle)`); the entries
+  take any 3x4 (rotation, scale).
+- **Another model's parts** (the weapon: `w->pWep` in BowgunMove) work the same: pass that model.
+- **Cost.** One parts-number walk (`no` steps, as `getPartsPtr`) and the mailbox's take-back of records handed out since
+  the last entry; no per-bone serve unless the bone is a mailbox bone.
+
+### The chain object (`services/cloth/chain.cpp`)
+
+`SetChain`, `cObjChain::setChain`, `setParent`, `setParent2` keep their original names and arguments (`pl_cloth.h`):
+em10ChainSet / em10BeltSet / em2bShortRopeSet / em2bChainSet call them as they are. The object is a record of the
+engine's object pool (kind 0x1D), moved by the pool each tick; it dies with its parent; its pendulum chain is stepped
+by the cloth service after its pose. `chain_cnt` counts made / refused / moves / hung / steps / orphans / lost.
+**Give each chain object its own PenCloth**: the cloth service keeps one chain a PenCloth (see Findings).
+
+### The cloth set-up (Em1fClothSet)
+
+`PenClothSet(m, (PenCloth*) c, 100.0f)` is the cloth service's entry in every image that links it: a native
+Em1fClothSet fills the PlCloth's description (its parts, up and down tables, limits, volume) and calls it, and its move
+calls `PenClothMove(m, c)` and clears `be_flag` 0x00E00000.
+
+## PC check (`hostref/svc/skent_check.sh`, 9 rows)
+
+`RE4_TREE=<tree> skent_check.sh <out>` with `make odump native` built. odump runs the original statements on the
+records (and links `game/obj1d.cpp`), native the entries (and `services/cloth/chain.cpp`), same fixture, same exercise
+(`svc/skent_dump.cpp`), wind off, motion keys decoded:
+
+| Row | Must | What |
+|---|---|---|
+| skent bell-ganado, skent shot-ganado | PASS | from tick 30, every tick on the first Ganado: the ten functions' statements on planted values (added rotation with the flag on and off, local and world post-multiply, pose angles / position / scale writes and reads, world position and history, the player's head matrix), with world and matrix passes between them; every bone equal every tick, every value read back identical |
+| skchain bell-ganado | PASS | em10ChainSet (tick 40) and em10BeltSet (41) on the original em10 code, hung from a part, then between two parts (setParent2, tick 60) and from another part (tick 80); every bone of the Ganado and of both chain objects (their cloth links included) equal every tick; the objects' state, position and matrix identical |
+| effect | FAIL | the reference with the exercise against the reference without it (the exercise moves the bones) |
+| controls entflag, entpost, entpose, enthist, chainmid | FAIL | the flag never set; r x M; pose angles x / z swapped; old2 read as old; the hung chain at its first offset |
+
+## Findings
+- The native cloth keeps **one chain per PenCloth** (`cloth.cpp find(c)`); the original keeps a chain's state in the
+  model's parts records, so one description can drive two models. El Gigante's chained form does that (em2bChainSet:
+  the second and third arm chains share `rope[1]`): in the engine the second set-up takes the first chain over. Request
+  to the cloth's owner (eng-cloth1): key a chain by (PenCloth, model), and give a chain back when its model goes.
+
+## Design: binding an archive's clips to its key pack at load (eng-load1's request; not built in Part A)
+
+Today the console images link no motion key pack (`svc_mk_pack` is the PC reference's), so every pose sample is decoded
+from the clip's keys (0.6 to 1.0 ms a picture, MODELLED, eng-svcspd1). The pack the PC uses is one file for a fixture's
+whole set, found by a per-clip identity hash (FNV-1a over the clip header and every key block: 1 to 5 ms a clip on the
+calibrated tier), which is why the console never computes it. Proposed entry, in `skel.h`, called by the loader:
+
+```
+// The clips of one loaded archive bound to that archive's key pack (bake/motion_keys.py --per-archive): pack[i] names
+// clip i by its offset in the archive; each is checked by its header (max frame, joint count) and the pack's receipt
+// (the archive's size and FNV-1a of its motion headers, computed by the baker). Returns the clips bound, or
+// SKEL_MK_REFUSED_FORMAT (-1), SKEL_MK_REFUSED_RECEIPT (-2: the pack was baked from another archive), SKEL_MK_FULL (-3).
+int skel_mk_attach(const void* arc, u32 arcBytes, const void* pack, u32 packBytes);
+// already there: skel_mk_forget(arc, arcBytes) drops the bindings when the archive is freed (and the pack with it)
+```
+
+How to call: in the loader, right after an archive with motion clips is loaded (the room archive, a character's
+archive, the core archive), read its `.mkp` beside it in the same load (no read in play), place it in the same heap as
+the archive (same lifetime), and call `skel_mk_attach`. A refusal is logged and counted (`skel_cnt.mk_refused`), and the
+clips keep being decoded from their keys (correct, slower): the scene's gate row reads the count. When the archive is
+freed, `skel_mk_forget` then free both. The bindings are made here, so `MotionSetCore` finds a clip by its address
+(`mk_of`, a hash probe) and computes no identity in play. Memory: the s16 rows (eng-svc3's approximation, every bone
+within 1 unit / 0.1 degree) are about half the float rows; the room's set is the integrator's ruling (main RAM).
+
+## Part B (partial) and the A6 follow-up
+- **The 2-3 ms span is KOS's clock, not work.** `timer_ns_gettime64()` values each TMU2 count at 80 ns while TMU2 reloads
+  every second from 12,468,720 counts (TIMER_PCK / 4): the clock runs 0.25% slow within a second and jumps forward
+  2,502,400 ns at each whole second. The gap probe (boot file GAPPROBE, host/e1_svc_mem.cpp) finds the 2,502 us gap once a
+  second with interrupts off too; its control (a 3-4 ms spin) reads 3,416 us. Every MODELLED worst picture can carry
+  +2.5 ms of this artefact; the fix is a clock that converts at the reload's rate (engine clock wrapper or KOS).
+- A6 option 2 (ruled): census done (one reader outside the services: `src/Sscrn/ss_map.cpp mapPositionCheck`, the map
+  screen, to be served by a native map entry; request to the items / inventory lane for when the sub screen is
+  hosted). Savings with the map's needs: r106 597,992 B, r113 527,916, r103 526,500, r101 301,950; the services region
+  then fits in 512 KB (361,472 B with the SVCPROF arm). Bake step, col_model.cpp, the map entry and the DOOR round trip:
+  not done.
+- Items 5 (one world pass), 6 (line query stamp / memo: design in the hand-back), 7 (approximate maths): not done.
