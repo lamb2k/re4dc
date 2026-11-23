@@ -109,6 +109,10 @@ static void *line_thread(void *arg) {
 }
 
 static void keep(const char *s, unsigned n) {
+    /* lane eng-link2 (eng-int gate, 2026-11-23): once the client has sealed the run (state no longer RUNNING: its way out
+       has computed the report's CRC), the lines it prints on the way out ("cl: way out: ...") stay off the report;
+       appending them changed report_len after the CRC and every report read "report CRC bad" on the selector disc */
+    if (H->h.state != CL_RUN_RUNNING) { live(s, n); return; }
     cl_report_bytes(s, n);
     live(s, n);
     ++g_kept;
