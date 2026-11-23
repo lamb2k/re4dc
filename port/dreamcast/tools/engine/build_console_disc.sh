@@ -310,6 +310,31 @@ for c in "${E1N_CONTROLS[@]}" "${E1P_CONTROLS[@]}" "${ELOOK_CONTROLS[@]}" "${SND
   IFS='|' read -r cn cdir cfiles ckind ctitle cprog croot <<< "$c"
   case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; for f in ${cfiles//,/ }; do : > "$D/$cdir/$f"; done ;; esac
 done
+# Lane eng-crash1: the crash screen's controls (core/crash_screen.cpp; boot file CRASHCTL "<kind> <tick>": addr, a data
+# address error reading 8c0abcd1, or ill, the illegal instruction fffd) in each image, and the sampling profiler's lab
+# arm (core/pc_sampler.cpp; boot file PCSAMPLE "[hz N] [spin]"), each a scene of its own staged only when --scenes names
+# it. <name>|<folder>|<boot file>=<its text>|<schedule kind>|<title>|<program>|<the folders behind it>. Every CRASH scene
+# must FAIL in the selector ("CRASHED exc 0e0" or "exc 180", with the planted pc) and tools/engine/crashcheck.py must
+# find the screen's serial copy naming the planted event, pc, address, scene and tick. The address-fault scenes (CRASH?A)
+# need the console: Flycast does not raise a data address error on a misaligned read (the image then prints "the planted
+# fault did not stop the program", the scene runs to its end and crashcheck.py must FAIL it); the illegal-instruction
+# scenes (CRASH?I) run the same handler on Flycast. The PCS scenes are function
+# runs (traced, never a timing scene); tools/engine/pcs_table.py ranks their samples on the map, and on PCSSPIN (its
+# control: 10 ms of every 33 ms spent in e1_pcs_spin) it must find e1_pcs_spin on top.
+CRASH_CONTROLS=(
+  "CRASHLA|CRLA|CRASHCTL=addr 300|e1:timing:drawn|Crash:_address_fault_(Leon)|PROG/E1.BIN|E1L:E1"
+  "CRASHLI|CRLI|CRASHCTL=ill 200|e1:timing:drawn|Crash:_illegal_instruction_(Leon)|PROG/E1.BIN|E1L:E1"
+  "CRASHFA|CRFA|CRASHCTL=addr 300|e1:timing:drawn|Crash:_address_fault_(fight)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+  "CRASHFI|CRFI|CRASHCTL=ill 200|e1:timing:drawn|Crash:_illegal_instruction_(fight)|PROG/FIGHT.BIN|FIGHTL:FIGHT"
+  "CRASHBA|CRBA|CRASHCTL=addr 300|e1:timing:headless|Crash:_address_fault_(boss)|PROG/BOSS.BIN|BOSS"
+  "CRASHBI|CRBI|CRASHCTL=ill 200|e1:timing:headless|Crash:_illegal_instruction_(boss)|PROG/BOSS.BIN|BOSS"
+  "PCSLEON|PCSL|PCSAMPLE=hz 200|e1:function:drawn|Lab:_PC_sampler_(Leon)|PROG/E1.BIN|E1"
+  "PCSSPIN|PCSS|PCSAMPLE=hz 200 spin|e1:function:drawn|Control:_PC_sampler_10_ms_spin|PROG/E1.BIN|E1"
+)
+for c in "${CRASH_CONTROLS[@]}"; do
+  IFS='|' read -r cn cdir cfile ckind ctitle cprog croot <<< "$c"
+  case ",$SCENES," in *,$cn,*) mkdir -p "$D/$cdir"; printf '%s\n' "${cfile#*=}" > "$D/$cdir/${cfile%%=*}" ;; esac
+done
 # DOOR (lane eng-load1; only when --scenes names it): the E1 image walking Leon from the village square (r101) to the farm
 # (r103) through the game's door and back, the fixture tools/plays_right/fixtures/door-r101-r103.txt (DOOR_FIXTURE=<file>
 # overrides) as /cd/DOOR.TXT; the farm's archive and whole-room bake (the bench's FARM.PAK and FARM.VIS) beside it. A
@@ -417,6 +442,18 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
     esac
     cneed=$cdir/${cfiles%%,*},$cneed
     echo "$cn $ctitle $cprog 300 $ckind $(need $cneed) root=$cdir:$croot rows=compact$cskip"
+  done
+  # lane eng-crash1: the crash screen's controls and the sampler's lab arm (above)
+  for c in "${CRASH_CONTROLS[@]}"; do
+    IFS='|' read -r cn cdir cfile ckind ctitle cprog croot <<< "$c"
+    cextra=
+    case $croot in
+      E1L:E1) cneed=E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc ;;
+      FIGHTL:FIGHT) cneed=FIGHTL/NOTRACE,FIGHT/CROSS.PAK,FIGHT/FXMAP.BIN,FIGHT/st1/r101.arc ;;
+      BOSS) cneed=BOSS/EM2B.ARC,BOSS/EMLIST.BIN,BOSS/st1/r119.arc,BOSS/HEADLESS,BOSS/NOTRACE ;;
+      *) cneed=E1/CROSS.PAK,E1/st1/r101.arc; cextra=" $TSKIP" ;;
+    esac
+    echo "$cn $ctitle $cprog 300 $ckind $(need $cdir/${cfile%%=*},$cneed) root=$cdir:$croot rows=compact$cextra"
   done
 } > "$WORK/SCENES.all"
 ( grep '^#' "$WORK/SCENES.all"; IFS=, ; for s in $SCENES; do grep "^$s " "$WORK/SCENES.all" || { echo "unknown scene $s" >&2; exit 1; }; done ) > "$D/SCENES.TXT"
