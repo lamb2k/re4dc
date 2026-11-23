@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""lvlcheck.py <base run> <levels run> [<base run 2>] [--pad N]: a still of the levels run may differ from the same
+"""lvlcheck.py <base run> <levels run> [<base run 2> ...] [--pad N]: a still of the levels run may differ from the same
 still of the base run only inside the screen box of a character drawn at another level (lane eng-draw6, item 3).
 
 Each run folder holds serial.txt, m1_state.txt and the stills pic-<m1_state address>-s<k>-<picture>.png that
@@ -9,10 +9,13 @@ the E1 actor pass logs one line a drawn character (services/actor_e1.inc e1_lvl_
 Characters of the two runs are matched by base model and order among that base model's lines in the picture. A
 character "changed level" when its drawn level differs from its match's (or is not 0 without a match). The allowed
 region of a still is the union of the changed characters' boxes in both runs, grown by --pad pixels (default 2: the
-box is the projected positions, a strip's edge pixels lie up to a pixel outside it). With a second base run, stills
-where the two base runs differ (the run-to-run floor) are left out and counted.
+box is the projected positions, a strip's edge pixels lie up to a pixel outside it). With more base runs of the same
+disc, stills where any of them differs from the first base run (the run-to-run floor, the integration gate's
+two-base-run rule of eng-int s/stillsfloor.py: a whole picture, no tolerance) are left out and counted.
 PASS: every compared still has 0 differing pixels outside its allowed region (any of R, G, B; the RGB565 frame widened).
 Exit 1 on FAIL, also when a run has no LVLBOX lines or no still is compared.
+The level code and its LVLBOX lines came out of the engine on 2026-11-23 (lane eng-draw6, the integrator's ruling:
+this check failed beyond the two-base-run floor); the tool stays for a later level design, which logs the same lines.
 Control: a base disc with PIXCTL (one blue step on every character colour, levels off) against the base must FAIL
 (no character changed level, every character's pixels differ)."""
 import re, sys, collections
@@ -71,16 +74,18 @@ def matched(a, b):
 
 
 B, L = stills(args[0]), stills(args[1])
-B2 = stills(args[2]) if len(args) > 2 else None
+B2s = [stills(r) for r in args[2:]]
 BB, LB = boxes(args[0]), boxes(args[1])
 fail = 0
 if not BB or not LB:
     print('FAIL: no LVLBOX lines in', 'base' if not BB else 'levels', 'run'); fail = 1
-keys = sorted(set(B) & set(L) & (set(B2) if B2 is not None else set(B)))
+keys = set(B) & set(L)
+for b2 in B2s: keys &= set(b2)
+keys = sorted(keys)
 floor = compared = changed_stills = 0; total_in = total_out = 0; worst = (0, None)
 for k in keys:
     a, b = px(B[k]), px(L[k])
-    if B2 is not None and (np.abs(a - px(B2[k])).max(axis=2) > 0).any(): floor += 1; continue
+    if any((np.abs(a - px(b2[k])).max(axis=2) > 0).any() for b2 in B2s): floor += 1; continue
     compared += 1
     diff = np.abs(a - b).max(axis=2) > 0
     allow = np.zeros(diff.shape, bool); h, w = diff.shape; nchanged = 0

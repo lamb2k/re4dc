@@ -138,26 +138,20 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
    on one picture and half on the next, and a character's colours are at most one picture old while it stays drawn. Under
    LHALF every character lit on the same picture, which halved the mean but not the worst picture (eng-draw4). Memory: the
    same colour buffers as LHALF (one per character, 4 bytes a normal of its drawn model, from the heap). */
-/* Lane eng-draw6 (item 3): character detail levels by screen size (eng-draw4's LVL, approved by the owner from its
-   sheet) stay a lab arm, off: their stills check (tools/engine/lvlcheck.py, base run-to-run floor applied) failed on
-   3 of 49 stills (23 pixels outside the boxes of characters drawn at another level), so they are not the default. One pick per character: the fight's Ganados are picked by their caller (fight/fight_draw.inc,
-   content_pick, step 3: CS_LEVELS, which the E1 images start at 0 and this open sets to 3), every other character
-   (Leon, the partner, a held weapon) by this pass (content_pick on its bone-sphere box). The level asked and the level
-   drawn are counted (e1_lvl_n; a variant whose bone count exceeds the skeleton's is refused and drawn at the base).
-   LVL (boot file, lab arm): levels on; without it the base model always (the image before this lane). */
-static int e1_levels, e1_arm_lhalf, e1_arm_lstag, e1_pix_ctl;
+/* Lane eng-draw6 (item 3, the integrator's ruling 2026-11-23): character detail levels by screen size (eng-draw4's LVL)
+   are not in this pass. Their stills check (tools/engine/lvlcheck.py) found pixels changed outside the boxes of the
+   characters drawn at another level, beyond the two-base-run floor (FIGHTS pictures 240 and 360, 2 and 20 pixels), so
+   the level code came out of the build rather than stay as an arm that is off. Every character draws its base model. */
+static int e1_arm_lhalf, e1_arm_lstag, e1_pix_ctl;
 static unsigned e1_lvl_slot[E1_SLOTS];            /* the catalogue model the slot's last opaque call drew */
 static const uint32_t* e1_lit_slot[E1_SLOTS];     /* the colours it emitted from */
 static unsigned e1_arm_n[8], e1_arm_calls;        /* LHALF lit, reused, no buffer [5-7] */
-static unsigned e1_lvl_n[5][5];                   /* characters a picture by level asked (0-3, 4 rigid) and level drawn */
 static int e1_arm_boot(const char* p) { file_t f = fs_open(p, O_RDONLY); if (f < 0) return 0; fs_close(f); return 1; }
 static void e1_arms_open(void)
 {
     static int done; if (done) return; done = 1;
-    e1_levels = e1_arm_boot("/cd/LVL"); src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
+    src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
     e1_arm_lstag = e1_arm_boot("/cd/LSTAG"); if (e1_arm_lstag) e1_arm_lhalf = 1;
-    m1_content[CS_LEVELS] = e1_levels ? 3 : 0;
-    e1_log("E1 LVL: character detail levels by screen size %s\n", e1_levels ? "(step 3, LVL lab arm)" : "off (the default)");
     if (src_light_cap) e1_log("E1 ARM LCAP: at most %u lights a character (the strongest), look arm\n", src_light_cap);
     if (e1_arm_lhalf) e1_log("E1 ARM LHALF: each character's normals lit every other picture%s, look arm\n",
                              e1_arm_lstag ? " (LSTAG: staggered, half the characters a picture)" : "");
@@ -165,12 +159,6 @@ static void e1_arms_open(void)
     if (lold_arm) e1_log("E1 ARM LOLD: the released game's character lighting (at most 3 lights a character, FTRV kernel, clamp after the scale), look arm\n");
     e1_pix_ctl = e1_arm_boot("/cd/PIXCTL");
     if (e1_pix_ctl) e1_log("E1 PIXCTL: control, one blue step flipped on every character colour (the pixel comparison must FAIL)\n");
-}
-static unsigned e1_lvl_key(const void* rec)   /* a content_pick ordinal (64..127) per character record */
-{
-    static const void* keys[63];
-    for (unsigned i = 0; i < 63; i++) { if (keys[i] == rec) return 64 + i; if (!keys[i]) { keys[i] = rec; return 64 + i; } }
-    return 127;
 }
 typedef struct { const void* rec; unsigned model, cap; uint32_t* buf; uint16_t mask; uint8_t fresh; } E1LitCache;
 static E1LitCache e1_lc[16];
@@ -189,55 +177,8 @@ static void e1_arms_report(void)
     if (++e1_arm_calls != 640) return;
     if (src_light_cap || e1_arm_lhalf)
         e1_log("E1 ARM counts over 640 pictures: LHALF lit %u reused %u no-buffer %u\n", e1_arm_n[5], e1_arm_n[6], e1_arm_n[7]);
-    /* lane eng-draw6 (item 1): eng-draw4's "no Ganado changed level" counter counted the model drawn against the model
-       the pass was given, which for a Ganado is already the fight's pick: it now counts the level asked (the caller's
-       pick or this pass's) against the level of the model drawn */
-    char line[400]; unsigned at = 0, changed = 0, refused = 0;
-    for (unsigned a = 0; a < 5; a++)
-        for (unsigned d = 0; d < 5; d++) {
-            if (!e1_lvl_n[a][d]) continue;
-            if (d) changed += e1_lvl_n[a][d];
-            if (a != d) refused += e1_lvl_n[a][d];
-            if (at < sizeof line - 32) at += (unsigned) snprintf(line + at, sizeof line - at, " %u>%u %u", a, d, e1_lvl_n[a][d]);
-        }
-    line[at] = 0;
-    e1_log("E1 LVL counts over 640 pictures (asked>drawn, 4 rigid):%s; drawn at another level %u, asked level not drawn %u, pool guard %u, "
-           "translucent models outside slot 0 %u\n", line, changed, refused, actor_pool_refused, actor_trans_other);
-    for (unsigned b = 0; b < CONTENT_MODELS; b++) {
-        const volatile uint32_t* r = m1_lod_models[b];
-        if ((r[1] | r[2] | r[3] | r[4] | r[0]) && lod_base_of[b] == b)
-            e1_log("E1 LVL model %u: picks at level 0 %u, 1 %u, 2 %u, 3 %u, rigid %u; variants %u %u %u %u\n", b,
-                   (unsigned) r[0], (unsigned) r[1], (unsigned) r[2], (unsigned) r[3], (unsigned) r[4], lod_variant[b][1],
-                   lod_variant[b][2], lod_variant[b][3], lod_variant[b][4]);
-    }
-}
-/* Lane eng-draw6 (item 3): on a still picture of a STILLS run (never a timing run), each character's screen box (the
-   projected positions of its drawn parts) with its base model and the levels asked and drawn, for the stills check
-   tools/engine/lvlcheck.py (a still may differ from the base only inside the box of a character drawn at another level). */
-extern volatile uint32_t m1_frame;
-int e1_draw_stills_c(void);
-static void e1_lvl_box(unsigned model, unsigned drawn, unsigned asked, const RtModel* m, const uint8_t* state, const pvr_vertex_t* proj)
-{
-    static uint32_t frame; static unsigned index;
-    const uint32_t f = m1_frame;
-    if (!(f == 1 || f % 40 == 0) || !e1_draw_stills_c()) return;
-    if (frame != f) { frame = f; index = 0; }
-    float x0 = 1e9f, y0 = 1e9f, x1 = -1e9f, y1 = -1e9f;
-    for (unsigned p = 0; p < m->h[4]; p++) {
-        if (!state[p]) continue; const RtPart* rp = m->parts + p;
-        for (unsigned i = rp->pos_first; i < (unsigned) rp->pos_first + rp->pos_count; i++) {
-            const pvr_vertex_t* v = proj + i;
-            if (!(v->z > 0)) continue;
-            x0 = m1_minf(x0, v->x); y0 = m1_minf(y0, v->y); x1 = m1_maxf(x1, v->x); y1 = m1_maxf(y1, v->y);
-        }
-    }
-    const unsigned base = model < 256 ? lod_base_of[model] : model, ld = drawn < 256 ? lod_level_of[drawn] : 0;
-    if (x1 < x0) { x0 = y0 = 0; x1 = y1 = -1; }
-    /* straight to the serial line, not the tick-time log buffer: in FIGHT that buffer overflows (the room carve's
-       refusal lines, from the memory map, 1,600 lines dropped) and these lines were lost. A still picture already waits
-       for the host to read the frame buffer; a STILLS run is never a timing run. */
-    printf("E1 LVLBOX f %u c %u base %u asked %u drawn %u model %u box %d %d %d %d\n", (unsigned) f, index++, base, asked, ld,
-           drawn, (int) floorf(x0), (int) floorf(y0), (int) ceilf(x1), (int) ceilf(y1));
+    e1_log("E1 POOL guards over 640 pictures: models refused by their slot %u, translucent models outside slot 0 %u\n",
+           actor_pool_refused, actor_trans_other);   /* lane eng-draw6 (item 1) */
 }
 
 /* lane eng-look1: one character or object; 0 when it cannot be drawn at all (no such catalogue model, or a skeleton with
@@ -282,32 +223,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
         all &= sphere_planes(c, r, &dummy);
     }
     if (all) { memset(state, 0, h[4]); e1_lvl_slot[slot] = model; sq_wait(); sq_unlock(); return 1; }
-    unsigned drawn = model, asked = model < 256 ? lod_level_of[model] : 0;
-    if (e1_levels) {
-        /* a model its caller picked this picture (the fight's Ganados) is drawn as given; any other character with
-           levels is picked here by the projected size of its bone-sphere box (content_pick) */
-        const int caller = model < 256 && lod_stamp[model] == (uint16_t) m1_state[1];
-        if (caller) asked = lod_asked[model];
-        else if (model < CONTENT_MODELS && (lod_variant[model][1] != model || lod_variant[model][4] != 0xffff)) {
-            float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
-            for (unsigned i = 0; i < m->nbones_used; i++) {
-                unsigned b = m->bones_used[i]; const float* wm = e1_bone[b + 1];
-                float r = m->bone_radius[b] * column_scale(wm) * 1.02f + 1, c[3] = {wm[3], wm[7], wm[11]};
-                for (unsigned a = 0; a < 3; a++) { lo[a] = m1_minf(lo[a], c[a] - r); hi[a] = m1_maxf(hi[a], c[a] + r); }
-            }
-            const unsigned key = e1_lvl_key(model_record);
-            lod_mark_on = 0;
-            const unsigned v = content_pick(s, model, lo, hi, key);
-            lod_mark_on = 1;
-            asked = v == lod_variant[model][4] && v != model ? 4 : lod_last[key] & 3;
-            if (v != model && v < cat->n && cat->m[v].h[0] <= bones) {
-                m = cat->m + v; h = m->h; cur_pos = m->pos; drawn = v;
-                if (v < 256 && !e1_pal_ok_model[v]) e1_pal_ok_model[v] = e1_pal_check(m, skel) ? 1 : -1;
-            }
-        }
-        e1_lvl_n[asked > 4 ? 4 : asked][drawn < 256 ? lod_level_of[drawn] : 0]++;
-    }
-    e1_lvl_slot[slot] = drawn;
+    e1_lvl_slot[slot] = model;
     if (!actor_pool_fits(slot, m)) { memset(state, 0, h[4]); e1_lvl_slot[slot] = model; sq_wait(); sq_unlock(); return 0; }   /* lane eng-draw6 */
     /* 2. bones (lane eng-e1e, E1 audit section 2): none. The skeleton service publishes the palette once a tick in
        this pass's final skinning layout (world x bind, the position quantum 1/16 in the basis, word 12 the sphere
@@ -356,7 +272,7 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
     if (e1_arm_lhalf) {   /* arm LHALF: this picture lights, or draws from the colours of the last */
         for (unsigned p = 0; p < h[4]; p++) if (state[p]) vis |= (uint16_t) (1u << p);
         const RtPart* lp = m->parts + h[4] - 1;
-        lc = e1_lc_get(model_record, drawn, lp->nrm_first + lp->nrm_count);
+        lc = e1_lc_get(model_record, model, lp->nrm_first + lp->nrm_count);
         if (lc && e1_arm_lstag) {   /* LSTAG: the character's own parity; fresh = its buffer holds this model's colours */
             reuse = lc->fresh && ((m1_state[1] + (unsigned) (lc - e1_lc)) & 1) && !(vis & ~lc->mask);
             e1_arm_n[reuse ? 6 : 5]++;
@@ -401,7 +317,6 @@ static int e1_actor_pass_one(NativeScene* s, const void* model_record, const E1S
             if (!reuse) light_normals_source(m->nrm + rp->nrm_first, rp->nrm_count, lc->buf + rp->nrm_first);
         }
     }
-    e1_lvl_box(model, drawn, asked, m, state, proj);   /* lane eng-draw6: still pictures of a STILLS run only */
     if (lc) { cur_lit = lc->buf; lc->fresh = e1_arm_lstag ? 1 : !reuse; if (!reuse) lc->mask = vis; }
     e1_lit_slot[slot] = cur_lit;
     if (!model) e1_arms_report();
