@@ -69,7 +69,7 @@ static const char DEF[] =
     "ctr menu 0 Scene Menu opens\n"
     "ctr discopen 1 Guards Disc opens in play\n"
     "ctr discread 1 Guards Disc reads in play\n"
-    "ctr over 0 Timing Pictures over 33.3 ms\n"
+    "ctr over 0 Timing Pictures over two fields (36.7 ms)\n"
     "lane 1 Loads\n"
     "lane 2 Menu\n"
     "preset village Village Route start (r101)\n"
@@ -261,7 +261,7 @@ static const dcql_menu_row_t TIMING[] = {
     DCQL_MENU_INFO("Last", i_last, 0),
     DCQL_MENU_INFO("Mean", i_mean, 0),
     DCQL_MENU_INFO("Worst", i_worst, 0),
-    DCQL_MENU_INFO("Over 33.3 ms", i_over, 0),
+    DCQL_MENU_INFO("Over two fields", i_over, 0),
     DCQL_MENU_GAP,
     DCQL_MENU_HEAD("Drawing (row 14 ms)"),
     DCQL_MENU_INFO("Last", i_dlast, 0),
@@ -306,6 +306,16 @@ static uint32_t menu_pad(void*)
     return b;
 }
 
+// The declaration and the command handler are set before KallistiOS's constructors bring the link up (cl_send.c's
+// cl_send_start runs at the default priority, after this one): the PC subscribes as soon as the program's link is up,
+// and dc-qalink sends the declaration only then (Flycast run r1: declared in main, the PC got an empty one: rows
+// without phase names). Storing two pointers; nothing is sent or started here.
+__attribute__((constructor(200))) static void e1_ql_declare()
+{
+    dcql_live_declare(DEF);
+    dcql_live_on_command(on_command, 0);
+}
+
 void e1_ql_early()
 {
     if (!cl_active()) return;   // booted from its own disc: nothing
@@ -325,8 +335,6 @@ void e1_ql_early()
                g_disc == -1 ? "no link" : g_disc == -2 ? "the PC did not answer" : g_disc == -3 ? "the PC serves no disc" :
                "refused", (unsigned long) s.files);
     }
-    dcql_live_declare(DEF);
-    dcql_live_on_command(on_command, 0);
     dcql_menu_config_t mc;
     memset(&mc, 0, sizeof mc);
     mc.combo = DCQL_MENU_LT | DCQL_MENU_RT | DCQL_MENU_START;
@@ -405,7 +413,9 @@ int e1_ql_picture(const E1Timing& tm)
     t_draw_last = tm.draw_us;
     if (t_last > t_worst) t_worst = t_last;
     if (t_draw_last > t_draw_worst) t_draw_worst = t_draw_last;
-    if (t_last > 33400) g_over++;
+    // a paced picture is two fields (33.37 ms) and its frame time reads a little over it: count a picture that took
+    // more than two fields plus 10% (36.7 ms) as over
+    if (t_last > 36700) g_over++;
     t_sum += t_last;
     t_draw_sum += t_draw_last;
     t_n++;

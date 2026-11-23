@@ -502,6 +502,7 @@ manifest() {   # manifest <file>
 if [ "$QLMODE" = folder ]; then
   rm -rf "$OUT"; mkdir -p "$OUT/push"
   cp -a "$D" "$OUT/disc"
+  rm -rf "$OUT/disc/PROG" "$OUT/disc/LOADER.BIN" "$OUT/disc/SCENES.TXT"   # the selector's: the images are pushed instead
   cp "$B/e1/e1.elf" "$OUT/push/e1.elf"; cp "$B/fight/e1.elf" "$OUT/push/fight.elf"; cp "$B/boss/e1.elf" "$OUT/push/boss.elf"
   manifest "$OUT/MANIFEST.txt"
   (cd "$OUT" && find disc push -type f | sort | xargs sha256sum > SHA256SUMS && sha256sum -c --quiet SHA256SUMS)

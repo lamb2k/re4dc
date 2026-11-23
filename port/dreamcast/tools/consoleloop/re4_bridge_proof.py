@@ -149,9 +149,18 @@ class Proof:
 
     def grab(self, label):
         t = time.time()
-        code, j = self.br.post('/v0/stills', {'timeout_s': 20}, timeout=40)
-        return self.step('grab %s' % label, code == 200 and j.get('crc_ok'), code=code, id=j.get('id'),
-                         picture=j.get('picture'), seconds=round(time.time() - t, 2))
+        try:
+            code, j = self.br.post('/v0/stills', {'timeout_s': 20}, timeout=45)
+        except OSError as e:   # the bridge did not answer (Flycast run r1: 12 CRC rounds, then no answer)
+            code, j = None, {'error': str(e)[:100]}
+        ok = self.step('grab %s' % label, code == 200 and j.get('crc_ok'), code=code, id=j.get('id'),
+                       picture=j.get('picture'), error=j.get('error'), seconds=round(time.time() - t, 2))
+        if not ok:   # a failed grab may leave the program paused (bridge 0.2.0): resume it so the plan goes on
+            try:
+                self.br.post('/v0/command', {'cmd': 'resume'}, timeout=20)
+            except OSError:
+                pass
+        return ok
 
     def cmd(self, body, label):
         t = time.time()
@@ -209,7 +218,7 @@ def run():
     ap.add_argument('out')
     ap.add_argument('--push', required=True)
     ap.add_argument('--args', default='root=E1 ticks=9000 rows=skip')
-    ap.add_argument('--plan', default='full', choices=['full', 'readx', 'plain', 'increment'])
+    ap.add_argument('--plan', default='full', choices=['full', 'readx', 'plain', 'increment', 'loads'])
     ap.add_argument('--deadline', type=int, default=600)
     a = ap.parse_args()
     br = Bridge(a.bridge)
@@ -231,6 +240,15 @@ def run():
     p.step('live rows', bool(s), picture=(s or {}).get('n'))
     if a.plan == 'plain':
         time.sleep(20)
+        p.cmd({'cmd': 'option', 'name': 'end', 'value': 1}, 'end the run')
+        r = p.end_state(rid)
+        p.step('run 1 ended', r.get('state') == 'done', state=r.get('state'), times=r.get('times'))
+        return 0
+    if a.plan == 'loads':   # room-entry times: the first room, then farm and village warps, then end
+        time.sleep(3)
+        warp_and_land(p, 'farm', 0x103)
+        warp_and_land(p, 'village', 0x101)
+        time.sleep(2)
         p.cmd({'cmd': 'option', 'name': 'end', 'value': 1}, 'end the run')
         r = p.end_state(rid)
         p.step('run 1 ended', r.get('state') == 'done', state=r.get('state'), times=r.get('times'))
