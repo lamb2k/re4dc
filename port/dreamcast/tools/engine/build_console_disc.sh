@@ -345,6 +345,16 @@ case ",$SCENES," in *,DOOR*|*,CDOOR*|*,CDISCF,*)
 esac
 case ",$SCENES," in *,HILLT,*) mkdir -p "$D/E1HT"; : > "$D/E1HT/HILL" ;; esac
 case ",$SCENES," in *,LEONS,*) mkdir -p "$D/E1LS"; : > "$D/E1LS/STILLS" ;; esac
+# Lane eng-sched1: SCHED, the village with its room script (st1/r101) on the hosted scheduler (boot file SCHED, read
+# before play; host/sched_host.cpp), a timing scene on the Leon scene's files that must be OK; its control CSCHED (SCHED
+# and SCHEDX: a scenario task's stack guard word overwritten at tick 300, so the original's own check stops the run,
+# "OSPanic ... End of biohazard4" on the serial line) must FAIL. Staged only when --scenes names them.
+case ",$SCENES," in *,SCHED,*) mkdir -p "$D/E1SC"; : > "$D/E1SC/SCHED" ;; esac
+case ",$SCENES," in *,CSCHED,*) mkdir -p "$D/E1SX"; : > "$D/E1SX/SCHED"; : > "$D/E1SX/SCHEDX" ;; esac
+# Lane eng-sched2: TSCHED, the timing control of the SCHED scene's cost lines (SCHED and SCHEDD: a known 200 us added
+# inside the timed scenario step at tick 200); the scene runs OK and its "E1 SCHED cost all" worst must read at least
+# 200 us at tick 200 (hostref/svc/sched/sched_engine.py --delay judges it).
+case ",$SCENES," in *,TSCHED,*) mkdir -p "$D/E1SD"; : > "$D/E1SD/SCHED"; : > "$D/E1SD/SCHEDD" ;; esac
 case ",$SCENES," in *,HILLS,*) mkdir -p "$D/E1HS"; : > "$D/E1HS/STILLS" ;; esac
 case ",$SCENES," in *,FIGHTS,*) mkdir -p "$D/FIGHTS"; : > "$D/FIGHTS/STILLS" ;; esac
 
@@ -374,6 +384,9 @@ need() { [ "$PRECHECK" = 1 ] && echo "$1" || echo -; }
   echo "LEONS Leon_stills_(function_run) PROG/E1.BIN 300 e1:function:drawn $(need E1LS/STILLS,E1L/NOTRACE,E1/CROSS.PAK) root=E1LS:E1L:E1 rows=compact"
   echo "HILLS Hill_stills_(function_run) PROG/E1.BIN 300 e1:function:drawn $(need E1HS/STILLS,E1H/HILL,E1/HILL.PAK) root=E1HS:E1H:E1 rows=compact"
   echo "FIGHTS Fight_stills_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHTS/STILLS,FIGHTL/NOTRACE,FIGHT/CROSS.PAK) root=FIGHTS:FIGHTL:FIGHT rows=compact"
+  echo "SCHED Village_room_script_on_the_scheduler PROG/E1.BIN 300 e1:timing:drawn $(need E1SC/SCHED,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SC:E1L:E1 rows=compact"
+  echo "CSCHED Control:_scenario_task_stack_guard_overwritten PROG/E1.BIN 300 e1:timing:drawn $(need E1SX/SCHEDX,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SX:E1L:E1 rows=compact"
+  echo "TSCHED Control:_200_us_added_at_tick_200 PROG/E1.BIN 300 e1:timing:drawn $(need E1SD/SCHEDD,E1L/NOTRACE,E1/CROSS.PAK,E1/st1/r101.arc) root=E1SD:E1L:E1 rows=compact"
   echo "FIGHTT Fight_traced_(function_run) PROG/FIGHT.BIN 300 e1:function:drawn $(need FIGHT/CROSS.PAK,FIGHT/st1/r101.arc,FIGHT/em/em15.drs) root=FIGHT rows=compact $TSKIP"
   # lane eng-load1: the DOOR scene and its controls (door=2: two room loads, three visits, the round trip)
   DNEED=DOOR/DOOR.TXT,DOOR/R103.PAK,DOOR/R103.VIS,DOOR/st1/r103.arc,E1/CROSS.PAK,E1/FARM.PAK,E1/st1/r101.arc,E1/etc/core.das,E1/em/pl00.drs,E1/em/wep02.drs

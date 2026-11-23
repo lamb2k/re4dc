@@ -24,6 +24,8 @@ unsigned e1_door_seed();
 void e1_load_step(const char* what);   // core/room_change.cpp (lane eng-load1)
 #ifdef E2_BOSS
 #include "boss_e2.h"   // eng-boss: the El Gigante slice
+#else
+#include "sched_host.h"   // lane eng-sched1: the game's script scheduler (host/sched_host.cpp)
 #endif
 #include <stdio.h>
 #include <string.h>
@@ -121,6 +123,9 @@ static void room_init(unsigned room, const float* pos, float ang, int first)
     pG->Rno0 = 3;
     pG->Rno1 = 0;
     e1_partner_room_init();             // the hill scene: Leon resumed, Ashley created (core/partner.cpp)
+#ifndef E2_BOSS
+    sched_host_room_init();             // lane eng-sched1: the scenario's room start (lab scene SCHED: R101Init)
+#endif
 }
 void e1_room_setup(unsigned room, const float pos[3], float ang, int first) { room_init(room, pos, ang, first); }
 
@@ -156,6 +161,7 @@ static void game_tick(E1Timing& tm)
         tm.obj_us = now_us() - t;   // reported as the enemy share below
     }
 #else
+    sched_host_scenario(e1_tick);       // lane eng-sched1: the one point where tasks run (ScenarioMove, then slots 0..3)
     if (e1_scene == E1_SCENE_HILL) e1_partner_chars_move(tm);   // EmMgr.move: the partner (gameMainLoop order)
 #endif
     e1_stamp(1);
@@ -201,6 +207,9 @@ int main()
     e1_clock_boot();                    // lane eng-clock1: the TMU2 reload check; GAPPROBE (core/e1_clock.cpp)
     e1_svc_boot();                      // the native services' check build (SKELCHECK)
     e1_lab_boot();                      // lane eng-e1o: the record's controls, read before play (core/e1_core.h)
+#ifndef E2_BOSS
+    sched_host_boot();                  // lane eng-sched1: the OS layer, the task table and stacks; boot files SCHED*
+#endif
     e1_room_change_boot();              // lane eng-load1: the DOOR scene (DOOR.TXT) and its controls, before play
     if (e1_door_scene) RndInit((u16) e1_door_seed());   // the fixture's generator seed (re4ref RndInit(seed))
     {
@@ -285,6 +294,9 @@ int main()
     e1_fields_finish(ticks);            // each row's presented-field interval, and the E1 FIELDS line
     e1_state[0] = 5;
     e1_report();
+#ifndef E2_BOSS
+    sched_host_report();                // lane eng-sched1: the E1 SCHED lines (after the report: printed at once)
+#endif
 #ifdef E2_BOSS
     e2_report();
 #endif
