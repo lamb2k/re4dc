@@ -1721,6 +1721,149 @@ extern "C" void skel_compress_y(cModel* m, f32 k)
         skel_cnt.compress_bones++;
     }
 }
+// ---- bone entries for native behaviour code (lane eng-skel1; skel.h). What each stands for in the original: a
+// getPartsPtr followed by a write of the record's fields (addRot and its flag 0x40000000, pos / ang / scale, l_mat or
+// mat post-multiplied) or a read of them (world, world_old, world_old2, mat). Here the table is the bone's state: the
+// Scope takes back the records handed out since the last entry, the entry works on the table, and the Scope serves the
+// group it changed to every mailbox record. The bone does not join the mailbox (no record is served for it each entry).
+extern "C" int skel_control_ent;
+int skel_control_ent;
+namespace {
+inline void read_ent_control()
+{
+    static int done;
+    if (done) return;
+    done = 1;
+    const char* c = svc_env ? svc_env("RE4_SVC_CONTROL") : 0;
+    if (!c) return;
+    if (!__builtin_strcmp(c, "entflag")) skel_control_ent = 1;
+    if (!__builtin_strcmp(c, "entpost")) skel_control_ent = 2;
+    if (!__builtin_strcmp(c, "entpose")) skel_control_ent = 3;
+    if (!__builtin_strcmp(c, "enthist")) skel_control_ent = 4;
+}
+// the table and bone of (model, parts number), the table made on first use; -1: none
+inline int ent_bone(cModel* m, int no, SkelTable** tt)
+{
+    read_ent_control();
+    if (!m || no < 0) return -1;
+    SkelTable* t = table_for(m);
+    if (!t) return -1;
+    const int b = skel_parts_bone(m, no);
+    if (b < 0 || b >= (int) t->n) return -1;
+    *tt = t;
+    return b;
+}
+inline void vget(const f32* s, u32 c, u32 row, u32 b, Vec* v)
+{
+    v->x = s[row * c + b];
+    v->y = s[(row + 1) * c + b];
+    v->z = s[(row + 2) * c + b];
+}
+inline void vset(f32* s, u32 c, u32 row, u32 b, const Vec* v)
+{
+    s[row * c + b] = v->x;
+    s[(row + 1) * c + b] = v->y;
+    s[(row + 2) * c + b] = v->z;
+}
+}   // namespace
+extern "C" int skel_addrot_get(cModel* m, int no, Vec* rot)
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, 0);
+    if (rot) vget(t->soa, t->cap, SK_RX, b, rot);
+    return (t->world[b].flags & 0x40000000) ? 1 : 0;
+}
+extern "C" int skel_addrot_set(cModel* m, int no, const Vec* rot, int on)
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, SG_LOCAL);
+    if (rot) vset(t->soa, t->cap, SK_RX, b, rot);
+    if (on && skel_control_ent != 1) t->world[b].flags |= 0x40000000;
+    else if (!on) t->world[b].flags &= ~0x40000000;
+    return 0;
+}
+extern "C" int skel_local_post(cModel* m, int no, const f32 (*r)[4])
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, SG_LOCAL);
+    f32 (*l)[4] = t->lmat[b].m;
+    if (skel_control_ent == 2) PSMTXConcat(r, l, l);
+    else PSMTXConcat(l, r, l);
+    return 0;
+}
+extern "C" int skel_world_post(cModel* m, int no, const f32 (*r)[4])
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, SG_WORLD);
+    f32 (*w)[4] = t->world[b].m;
+    if (skel_control_ent == 2) PSMTXConcat(r, w, w);
+    else PSMTXConcat(w, r, w);
+    return 0;
+}
+extern "C" int skel_pose_get(cModel* m, int no, Vec* pos, Vec* ang, Vec* scale)
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, 0);
+    if (pos) vget(t->soa, t->cap, SK_PX, b, pos);
+    if (ang) vget(t->soa, t->cap, SK_AX, b, ang);
+    if (scale) vget(t->soa, t->cap, SK_SX, b, scale);
+    return 0;
+}
+extern "C" int skel_pose_set(cModel* m, int no, const Vec* pos, const Vec* ang, const Vec* scale)
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, SG_LOCAL);
+    if (pos) vset(t->soa, t->cap, SK_PX, b, pos);
+    if (ang) {
+        const Vec a = skel_control_ent == 3 ? Vec{ang->z, ang->y, ang->x} : *ang;
+        vset(t->soa, t->cap, SK_AX, b, &a);
+    }
+    if (scale) vset(t->soa, t->cap, SK_SX, b, scale);
+    return 0;
+}
+extern "C" int skel_bone_world(cModel* m, int no, Vec* world, Vec* old, Vec* old2)
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, 0);
+    if (world) vget(t->soa, t->cap, SK_WX, b, world);
+    if (old || old2) {
+        hist_add(t, (u32) b);   // as getPartsPtr does: the bone keeps its history from its first ask
+        const SkelHist* h = skel_history(t, (u32) b);
+        if (h) {
+            if (old) { old->x = h->old[0]; old->y = h->old[1]; old->z = h->old[2]; }
+            const f32* o2 = skel_control_ent == 4 ? h->old : h->old2;
+            if (old2) { old2->x = o2[0]; old2->y = o2[1]; old2->z = o2[2]; }
+        } else {   // history set full (counted): the world position stands in
+            if (old) vget(t->soa, t->cap, SK_WX, b, old);
+            if (old2) vget(t->soa, t->cap, SK_WX, b, old2);
+        }
+    }
+    return 0;
+}
+extern "C" int skel_bone_mat(cModel* m, int no, f32 (*out)[4])
+{
+    SkelTable* t;
+    const int b = ent_bone(m, no, &t);
+    if (b < 0) return -1;
+    Scope sc(t, 0);
+    memcpy(out, t->world[b].m, 48);
+    return 0;
+}
+
 extern "C" void skel_leave(SkelTable* t, u32 groups)
 {
     for (u32 i = 0; i < t->nMbox; i++) serve(t, t->mlist[i], groups);
@@ -2682,6 +2825,14 @@ extern "C" u16 MotionMove(cModel* m)
         int nb = *(s32*) W->blendTbl;
         u16* tb = W->blendTbl + 2;
         Mtx m0, m1, mq, inv2;
+        // lane eng-mem2 (skent shot-ganado): PSMTXInverse leaves inv2 as it was when the parent's world is singular (a
+        // parent at scale 0: since eng-fix1's routine-byte correction the shot Ganado's routine 0x10 reaches this with
+        // bones 6 and 12 under a zero-scaled parent). The original (motion.cpp MotionMove, `Mtx inv` declared once for
+        // the loop) then reads the previous entry's inverse, or an indeterminate matrix on the first: on the PC
+        // reference finite stack bytes, here NaN (bone and palette NaN at ticks 164, 258, 276, 316). inv2 starts as
+        // the identity: the previous entry's inverse is kept as in the original, and the first entry reads a finite
+        // matrix. Under a parent whose rotation part is zero the world pass's result does not depend on which.
+        PSMTXIdentity(inv2);
         Quaternion q0, q1, q2;
         for (int i = 0; i < nb; i++) {
             u32 dst = *tb++;

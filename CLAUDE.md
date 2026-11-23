@@ -23,6 +23,7 @@ Read `AGENTS.md` first: the rules, the goal and the four-file boot set. This fil
   - controls in the repository, not in a lane wrapper;
   - the machine section (`LANES.md` section 2).
 - The brief says which original files may be linked (decision code only) and that everything else is native or a logged stub.
+- The brief names the old-port part considered for the job and what the plan's section 8 test says about it (owner 2026-11-22: borrow only what makes sense; cost before convenience; what was gold is kept; the engine's design wins), or says there is none.
 
 ### When a lane hands back
 Send it to the integration lane (`eng-int`) to gate, one lane at a time, and read its gate report (PASS or FAIL, one line per step). Only the integration lane merges into `engine` (H-024); a FAIL comes back to you to rule on and re-brief. The steps below are what its gate checks (`docs/engine/INTEGRATION_GATE.md`).

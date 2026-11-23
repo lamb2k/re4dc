@@ -21,6 +21,18 @@ $(BUILD)/svc/svc_cloth_glue.o: svc/svc_cloth_glue.cpp hostref.h
 	@mkdir -p $(dir $@)
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_REF_GAME := $(plain_GAME_OBJS) $(BUILD)/svc/ref/pendulum.o
+# lane eng-skel1:
+# The chain object (kind 0x1D): the reference builds (odump, census) link the original game/obj1d.cpp, the native builds
+# services/cloth/chain.cpp; the plain build's generated stubs of its entry points are weak in the svc builds (svc/ copy).
+CHAIN_STUBS := _Z8SetChainPvS_P3VecS1_ _ZN9cObjChain8setChainEP8PenCloth _ZN9cObjChain9setParentEP6cModeliP3Veci
+$(BUILD)/svc/host_actor_stubs.o: $(BUILD)/plain/host/host_actor_stubs.o svc/svc.mk
+	@mkdir -p $(dir $@)
+	objcopy $(foreach s,$(CHAIN_STUBS),--weaken-symbol=$(s)) $< $@
+SVC_HG_OBJS := $(filter-out $(BUILD)/plain/host/host_actor_stubs.o,$(SVC_HG_OBJS)) $(BUILD)/svc/host_actor_stubs.o
+$(BUILD)/svc/ref/obj1d.o: $(BUILD)/gen/obj1d.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+SVC_REF_GAME += $(BUILD)/svc/ref/obj1d.o
 $(BUILD)/svc/host_stubs.o: $(BUILD)/plain/host/host_stubs.o svc/svc.mk
 	@mkdir -p $(dir $@)
 	objcopy $(foreach s,$(PEN_STUBS),--weaken-symbol=$(s)) $< $@
@@ -258,6 +270,24 @@ $(BUILD)/svc/e2b_dump.o: svc/e2b_dump.cpp hostref.h
 	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
 SVC_HOST_OBJS := $(BUILD)/svc/svc_dump.o $(BUILD)/svc/svc_io.o $(BUILD)/svc/svc4_dump.o $(BUILD)/svc/svc5_dump.o $(BUILD)/svc/e2_dump.o \
 	$(BUILD)/svc/e2b_dump.o
+# lane eng-skel1: the skeleton's bone entries and the chain object against the original (skent_dump.cpp; skent_check.sh)
+$(BUILD)/svc/skent_dump.o: svc/skent_dump.cpp $(SVC_ENG)/skeleton/skel.h hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+SVC_HOST_OBJS += $(BUILD)/svc/skent_dump.o $(BUILD)/svc/skchain_kind.o
+$(BUILD)/svc/skchain_kind.o: svc/skchain_kind.cpp hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(GAMEFLAGS) -c $< -o $@
+$(NAT)/chain.o: $(SVC_ENG)/cloth/chain.cpp $(SVC_ENG)/skeleton/skel.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) $(SVC_GAMEFLAGS) -c $< -o $@
+NATIVE_GAME_OBJS += $(NAT)/chain.o
+# lane eng-skel2: the room's collision in the baked form in the native builds (svc/colb_host.cpp: host_room_post; the
+# bake step RE4_COLB_BAKE, svc/colbake.sh; the map entry's check RE4_COLMAP, svc/colmap_check.sh)
+$(NAT)/colb_host.o: svc/colb_host.cpp $(SVC_ENG)/collision/col.h hostref.h
+	@mkdir -p $(dir $@)
+	$(CXX) $(COMMON) $(FP_plain) -isystem /usr/include/x86_64-linux-gnu/c++/13 $(HOSTFLAGS) -c $< -o $@
+NATIVE_GAME_OBJS += $(NAT)/colb_host.o
 
 # ---- lane eng-e2c: the boss's service entry points (services/boss/) against the original (src/em2b) in odump and native.
 # The reference's fixtures do not host El Gigante: its unit is linked into these two builds only for the exercise e2cboss
@@ -314,12 +344,23 @@ $(BUILD)/svc/e2c_co.o: svc/e2c_co.cpp
 	$(CXX) $(COMMON) $(FP_plain) $(PCFLAGS) -c $< -o $@
 E2C_ODU_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BUILD)/plain/boss/em2b.o $(BUILD)/plain/boss/obj20.o $(BUILD)/plain/boss/r119.o
 E2C_NAT_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BOSS_SVC_OBJS) $(NAT)/boss/em2b_weak.o
-E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci
+E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci \
+	-Wl,--wrap=_ZN9cObjChain10setParent2EP6cModeliP3VeciS3_i
 
-$(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) aliases.ld
+# lane eng-cloth2 (a reference change, its old behaviour kept as SKIRT_PASSES=4, a refctl.sh row): Ashley's skirt at
+# two constraint passes, as the engine runs it (the owner's look choice, H-032; svc/ref_skirt.cpp). SKIRT_PASSES=2
+# links the wrappers of PenClothMove / PenClothMove3 into odump; 4 is the old reference (the original's four passes).
+ifeq ($(SKIRT_PASSES),2)
+ODU_SKIRT_OBJS := $(BUILD)/svc/ref_skirt.o
+ODU_SKIRT_WRAP := -Wl,--wrap=PenClothMove -Wl,--wrap=PenClothMove3
+endif
+$(BUILD)/svc/ref_skirt.o: svc/ref_skirt.cpp $(SVC_ENG)/cloth/cloth.h hostref.h
 	@mkdir -p $(dir $@)
-	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
-	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+$(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(ODU_SKIRT_OBJS) aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(ODU_SKIRT_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
+	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS) $(ODU_SKIRT_WRAP)
 $(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) \
                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \

@@ -17,6 +17,13 @@ extern volatile uint32_t m1_frame;   /* core/draw_e1.c: the picture number */
 extern volatile uint32_t e1_tick;
 int e1_draw_stills_c(void);
 static int16_t wep_catalogue[256];   /* archive slot of em/wep02 -> catalogue model + 1 (0: the pack holds none) */
+/* WEPSHIFT (lane eng-draw3, the control of wepcheck.py's pixel rule; boot file read at open, a lab arm): the weapon is
+   drawn from a copy of its palette moved 400 mm along world x, while the box it reports stays the true one. It is drawn
+   and counted as drawn (rule 1 holds), so rule 2's "90% of the differing pixels in the box" must fail on every still
+   where the weapon is on screen. The shifted palette is allocated only when the boot file is there (no static memory
+   in the default image: the hill's arena margin is negative). */
+static int e1_weapon_shift;
+static float* wep_shift_pal;
 #define WEP_TAG 0x5745u
 #define WEP_FILE_SLOT 2u
 static const struct { uint16_t index; float center[3], size[3]; } wep_world_copies[] = {
@@ -48,6 +55,14 @@ static void e1_weapon_open(const NativeScene* s)
     e1_weapon_world_retired = retired;
     file_t f = fs_open("/cd/NOWEP", O_RDONLY);
     if (f >= 0) { fs_close(f); e1_weapon_off = 1; printf("E1 NOWEP: no weapon drawn (control)\n"); }
+    f = fs_open("/cd/WEPSHIFT", O_RDONLY);
+    if (f >= 0) {
+        fs_close(f);
+        if (!wep_shift_pal) wep_shift_pal = (float*) malloc(E1_BONES * 16 * sizeof(float));
+        e1_weapon_shift = wep_shift_pal != NULL;
+        printf("E1 WEPSHIFT: weapon drawn 400 mm along world x, its box reported unmoved (control) %s\n",
+               e1_weapon_shift ? "on" : "FAILED (no memory)");
+    }
     printf("E1 WEP open: %u weapon models in the catalogue (Punisher %d, upgraded %d), %u world copies retired\n", mapped,
            wep_catalogue[6] - 1, wep_catalogue[7] - 1, retired);
 }
@@ -135,8 +150,23 @@ static void e1_weapon_pass(NativeScene* s)
         unsigned drawn = 0, on = 0;
         const int cm = v[i].file_slot == WEP_FILE_SLOT && v[i].arc_slot >= 0 && v[i].arc_slot < 256 ?
                        wep_catalogue[v[i].arc_slot] - 1 : -1;
-        if (v[i].visible && !e1_weapon_off && cm >= 0 && v[i].has_skel)
-            drawn = (unsigned) e1_actor_pass_one(s, v[i].model, &v[i].skel, (unsigned) cm, 0, 0, 0);   /* Leon's set-up */
+        if (v[i].visible && !e1_weapon_off && cm >= 0 && v[i].has_skel) {
+            E1SkelView sv = v[i].skel;
+            if (e1_weapon_shift && sv.n <= E1_BONES) {   /* the control only */
+                memcpy(wep_shift_pal, sv.pal, 64 * sv.n);
+                for (unsigned b = 0; b < sv.n; b++) wep_shift_pal[16 * b + 3] += 400.f;
+                sv.pal = wep_shift_pal;
+            }
+            drawn = (unsigned) e1_actor_pass_one(s, v[i].model, &sv, (unsigned) cm, 0, 0, 0);   /* Leon's set-up */
+        }
+        static int told;
+        if (v[i].visible && !drawn && !told) {   /* once a run: why a visible weapon was not drawn (lane eng-draw3) */
+            const RtCatalog* c = s->runtime;
+            told = 1;
+            printf("E1 WEP refused: file %d arc %d model %d of %u, has_skel %d, skeleton bones %u, model bones %u, off %d\n",
+                   (int) v[i].file_slot, (int) v[i].arc_slot, cm, c->n, (int) v[i].has_skel, (unsigned) v[i].skel.n,
+                   cm >= 0 && (unsigned) cm < c->n ? c->m[cm].h[0] : 0u, e1_weapon_off);
+        }
         if (drawn) {
             int b[4];
             const RtModel* wm = ((const RtCatalog*) s->runtime)->m + cm;

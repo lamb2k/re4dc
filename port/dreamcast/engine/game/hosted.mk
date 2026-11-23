@@ -34,3 +34,13 @@ HOSTED_SRCS := \
 # (services/math/sdk_math, services/memory/heap) and the float library (the toolchain's newlib, -lm). None of those
 # units, nor src/lib's SDK and fdlibm, is linked: no service unit is compiled from src/ any more.
 SVC_ORIG_SRCS :=
+
+# Lane eng-sched1 (plan 3.3 section 8 B2; SALVAGE_20261121.md row 6): the game's script scheduler in the default image,
+# hosted unchanged on the engine's lifted OS layer (core/os_threads.cpp): scheduler.cpp (the task slots, each run until
+# it sleeps), sce_sys.cpp (the scenario layer: the task table's walk, SceExec / SceSleep / SceExit / SceKill, the
+# conditions, the room start and step) and the village's room script st1/r101 (run in the lab scene SCHED only;
+# host/sched_host.cpp). The fight and boss images keep their own task layer (engine/fight, engine/boss).
+ifeq ($(BOSS)$(FIGHT),)
+SCHED_SRCS := game/scheduler game/sce_sys st1/r101
+HOSTED_SRCS += $(SCHED_SRCS)
+endif

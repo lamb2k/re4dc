@@ -133,7 +133,8 @@ Integrator checklist before a brief goes out:
 - the work does not depend on timing, or its speed is judged on the calibrated model (no console run is booked while the replatform is under way);
 - which Flycast slot serves which tier;
 - "never loosen" and "controls in the repository" are in the brief;
-- the machine section is in the brief.
+- the machine section is in the brief;
+- the old-port part for the job is named with what the plan's section 8 test says about it, or the brief says there is none (owner 2026-11-22).
 
 ```
 Lane: eng-<topic>            Branch: lane/eng-<topic> from engine <sha>
@@ -146,6 +147,7 @@ Original code allowed: <decision files only>; everything else native or a logged
 Tiers and slots: fly1/fly2 strict Flycast at Sh4Clock <MHz> for MODELLED numbers;
            std1/std2 plain Flycast for function checks only
 Merge gate: <checks, each with its failing control>
+Old port: <the part considered for this job and the test's verdict (taken, as an idea, left), or none>
 Never loosen: no comparison, tolerance or "must" column is loosened unless this brief says so
 Controls: in the repository (<script or list>), never only in a lane wrapper
 Machine: objects in /dev/shm; one image build at a time, make -j4; C: and E: free checked from

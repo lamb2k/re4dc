@@ -42,6 +42,8 @@
 #   mathmuku RE4_SVC_CONTROL=mathmuku: every turning step (Muku, Muku2, Muku3) 5% larger (bell-ganado: the Ganados turn faster)
 #   garmenthair RE4_SVC_CONTROL=garmenthair: Leon's hair chain not stepped on odd ticks (door103-walk)
 #   garmentskirt RE4_SVC_CONTROL=garmentskirt: Ashley's skirt always as stiff as when carried (hill-ashley)
+#   skirtpass4 RE4_SVC_CONTROL=skirtpass4 (lane eng-cloth2): the native skirt at the original's four constraint passes,
+#            against the reference's two (the owner's look choice, svc/ref_skirt.cpp; refctl.sh's skirt rows) (hill-ashley)
 # and the exercise costume (svc5_dump.cpp: Leon changes to costume 1 at tick 1, the holster strap instead of the jacket).
 # and the fixtures bell-ganado-kill and bell-ganado-clear (handgun hits to a kill and to the room clear) when named.
 # The svc builds host the original cloth (game/pendulum.cpp) in the reference; the native build runs services/cloth.
@@ -79,7 +81,7 @@ for fx in $FIX door103-walk e1-route bell-ganado bell-ganado-kill hill-ashley sq
 done
 [ -d "$TREE" ] || { echo "svc_controls: no data tree at $TREE"; exit 2; }
 NFIX=$(echo $FIX | wc -w)
-ROWS_PLANNED=$((5 * NFIX + 49))   # lane eng-e1n: + the camtrack exercise's camslope control
+ROWS_PLANNED=$((5 * NFIX + 50))   # lane eng-e1n: + the camtrack exercise's camslope control; eng-cloth2: + skirtpass4
 mkdir -p "$OUT"
 rm -f "$OUT/.status" "$OUT/.abort"
 ARCS="em/pl00.drs em/pl0e.drs em/pl0f.drs em/wep02.drs em/pl11.drs em/em15.drs em/em16.drs em/em12.drs"
@@ -241,6 +243,9 @@ print()" "$b/compare.json")
     r4ctl bell-ganado "turning steps 5% larger" mathmuku
     r4ctl door103-walk "Leon's hair not stepped on odd ticks" garmenthair
     r4ctl hill-ashley "Ashley's skirt always stiff" garmentskirt
+    # lane eng-cloth2: the skirt's two constraint passes (the owner's look choice; the reference runs them too,
+    # svc/ref_skirt.cpp): the native skirt at the original's four must FAIL against the reference
+    r4ctl hill-ashley "Ashley's skirt at the original's four constraint passes" skirtpass4
     exrow door103-walk costume garmenthair
     # lane eng-e1h: the dying Ganado's squash (em10ScaleCompress on the native skeleton): left out, the palette differs
     r4ctl bell-ganado-kill "the dying Ganado's squash left out of the table" nocompress

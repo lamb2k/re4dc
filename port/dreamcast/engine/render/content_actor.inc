@@ -15,6 +15,12 @@ static int content_cards_open(const uint8_t* p,unsigned n,unsigned models);
 static uint16_t lod_variant[CONTENT_MODELS][5];   /* [base][0 base, 1-3 PS2 levels, 4 rigid] (0xffff: none) */
 static uint8_t lod_last[128];                    /* per actor ordinal: the level last picked */
 static uint32_t* lit_cache[128];static unsigned lit_cap[128],lit_key[128],lit_age[128];static uint16_t lit_model[128];
+/* lane eng-mem1: the lit caches are kept between pictures and grow to the largest model a slot has lit; a room change
+   gives them back (render/native_scene.inc native_release), so a round trip ends with the KOS heap it started with
+   (DOOR d4: +200 B after village > farm > village with them kept). */
+void content_lit_release(void){
+    for(unsigned i=0;i<128;i++){free(lit_cache[i]);lit_cache[i]=NULL;lit_cap[i]=0;lit_model[i]=0xffff;}
+}
 static uint16_t lod_chosen[128];static uint8_t card_last[128];                 /* per actor ordinal: the model drawn this picture */
 volatile uint32_t m1_lod_variants;
 volatile uint32_t m1_lod_models[CONTENT_MODELS][6];   /* per base model and window: pictures drawn at level 0-3, rigid, card */

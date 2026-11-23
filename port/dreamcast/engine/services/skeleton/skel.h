@@ -150,6 +150,25 @@ struct SkelCounters {
         mk_nohash;              // lane eng-svcspd1: clips bound without the identity hash (no motion key pack)
 };
 void skel_compress_y(cModel* m, f32 k);   // a dying body squashed vertically (em10ScaleCompress; lane eng-e1h)
+// ---- bone entries for native behaviour code (lane eng-skel1; how to call: docs/engine/lanes/eng-skel1.md "How to
+// call"). A bone is named as the behaviour names it, model and parts number (getPartsPtr's `no`, 0 and up); the entry
+// works on the table and serves the groups it changes to the records the behaviour holds, so hosted code that still
+// reads a record sees the change. Nothing here makes the bone a mailbox bone. Each returns 0, or -1 when the model has
+// no such bone (nothing done, outputs untouched). Vec / matrix arguments may be NULL where marked.
+int skel_addrot_get(cModel* m, int no, Vec* rot);                   // the added rotation; returns 1 when its flag is set
+int skel_addrot_set(cModel* m, int no, const Vec* rot, int on);     // rot (NULL: kept), flag set (on) or cleared; the
+                                                                    // next world pass applies it once and clears the flag
+int skel_local_post(cModel* m, int no, const f32 (*r)[4]);          // local matrix = local x r (PSMTXConcat(l_mat, r, l_mat))
+int skel_world_post(cModel* m, int no, const f32 (*r)[4]);          // world matrix = world x r (PSMTXConcat(mat, r, mat));
+                                                                    // the world position is not changed (as the original)
+int skel_pose_get(cModel* m, int no, Vec* pos, Vec* ang, Vec* scale);           // pose position, angles, scale (each may be NULL)
+int skel_pose_set(cModel* m, int no, const Vec* pos, const Vec* ang, const Vec* scale);   // NULL: that one kept
+int skel_bone_world(cModel* m, int no, Vec* world, Vec* old, Vec* old2);        // world position, last tick's, the one
+                                                                    // before (old / old2 keep the bone's history from now)
+int skel_bone_mat(cModel* m, int no, f32 (*out)[4]);                // a copy of the world matrix (3x4)
+extern int skel_control_ent;   // lane eng-skel1's controls (RE4_SVC_CONTROL): 1 entflag (addrot_set never sets the flag),
+                               // 2 entpost (both posts multiply r x M), 3 entpose (pose_set writes angles x and z swapped),
+                               // 4 enthist (bone_world's old2 is old)
 extern SkelCounters skel_cnt;
 // controls (lane eng-svc: each must make the equivalence check fail)
 extern int skel_control_parent;   // >0: bone skel_control_parent's parent taken one bone too low (wrong by one)

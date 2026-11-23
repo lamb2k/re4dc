@@ -94,6 +94,34 @@ extern "C" void* svc_pool_carve(uint32_t bytes)
     g_carve_left -= bytes;
     return p;
 }
+// lane eng-skel1: the room carve (the collision tables), from the carve's top down, given back when the room is left
+// (col_room_release), as in the engine image (host/e1_svc_mem.cpp)
+static uint8_t* g_room_hi;
+static uint8_t* g_room_top;
+extern "C" void* svc_pool_carve_room(uint32_t bytes)
+{
+    if (!g_carve) {
+        uint32_t b;
+        svc_pool_base(&b);
+    }
+    if (!g_room_hi) g_room_hi = g_room_top = g_carve + g_carve_left;
+    bytes = (bytes + 31u) & ~31u;
+    if (bytes > g_carve_left) return 0;
+    g_room_top -= bytes;
+    g_carve_left -= bytes;
+    return g_room_top;
+}
+extern "C" uint32_t svc_pool_room_reset(void* keep)
+{
+    if (!g_room_hi) return 0;
+    uint8_t* to = keep ? (uint8_t*) keep : g_room_hi;
+    if (to < g_room_top || to > g_room_hi) return 0;
+    const uint32_t back = (uint32_t) (to - g_room_top);
+    g_room_top = to;
+    g_carve_left += back;
+    return back;
+}
+extern "C" uint32_t svc_pool_room_used(void) { return g_room_hi ? (uint32_t) (g_room_hi - g_room_top) : 0; }
 // Controls (RE4_SVC_CONTROL) and the check build's poison (RE4_SVC_POISON=0 turns it off), before the room is set
 // up: the tables are made while the player is constructed.
 extern "C" int skel_control_parent __attribute__((weak));
@@ -109,6 +137,7 @@ extern "C" int col_grid_off __attribute__((weak));
 extern "C" int cloth_control_nogravity __attribute__((weak));
 extern "C" int cloth_control_wind __attribute__((weak));
 extern "C" int cloth_passes __attribute__((weak));
+extern "C" int cloth_control_skirt4 __attribute__((weak));
 extern "C" int col_sphere_grid_off __attribute__((weak));
 extern "C" unsigned col_mask_min __attribute__((weak));
 __attribute__((constructor)) static void svc_options()
@@ -126,6 +155,8 @@ __attribute__((constructor)) static void svc_options()
         if (!strncmp(c, "colgrid", 7) && &col_control_grid) col_control_grid = 1;
         if (!strncmp(c, "clothnograv", 11) && &cloth_control_nogravity) cloth_control_nogravity = 1;
         if (!strncmp(c, "clothwind", 9) && &cloth_control_wind) cloth_control_wind = 1;
+        // lane eng-cloth2: the native skirt at the original's four constraint passes (services/cloth/cloth.h)
+        if (!strncmp(c, "skirtpass4", 10) && &cloth_control_skirt4) cloth_control_skirt4 = 1;
         if (!strncmp(c, "floor=", 6) && &col_control_floor) col_control_floor = (float) atof(c + 6);
     }
     uint32_t all;
