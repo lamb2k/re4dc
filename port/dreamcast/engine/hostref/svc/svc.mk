@@ -347,10 +347,20 @@ E2C_NAT_OBJS := $(BUILD)/svc/e2c_dump.o $(BUILD)/svc/e2c_co.o $(BOSS_SVC_OBJS) $
 E2C_WRAP_FLAGS := -Wl,--wrap=QuakeExec -Wl,--wrap=GetScreenPos -Wl,--wrap=_Z13MotionSetCoreP6cModelPvS1_iiii 	-Wl,--wrap=_Z8SetChainPvS_P3VecS1_ -Wl,--wrap=_ZN9cObjChain8setChainEP8PenCloth -Wl,--wrap=_ZN9cObjChain9setParentEP6cModeliP3Veci \
 	-Wl,--wrap=_ZN9cObjChain10setParent2EP6cModeliP3VeciS3_i
 
-$(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) aliases.ld
+# lane eng-cloth2 (a reference change, its old behaviour kept as SKIRT_PASSES=4, a refctl.sh row): Ashley's skirt at
+# two constraint passes, as the engine runs it (the owner's look choice, H-032; svc/ref_skirt.cpp). SKIRT_PASSES=2
+# links the wrappers of PenClothMove / PenClothMove3 into odump; 4 is the old reference (the original's four passes).
+ifeq ($(SKIRT_PASSES),2)
+ODU_SKIRT_OBJS := $(BUILD)/svc/ref_skirt.o
+ODU_SKIRT_WRAP := -Wl,--wrap=PenClothMove -Wl,--wrap=PenClothMove3
+endif
+$(BUILD)/svc/ref_skirt.o: svc/ref_skirt.cpp $(SVC_ENG)/cloth/cloth.h hostref.h
 	@mkdir -p $(dir $@)
-	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
-	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS)
+	$(CXX) $(COMMON) $(FP_plain) $(HOSTFLAGS) -c $< -o $@
+$(ODU)/re4ref: $(CENSUS_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(ODU_SKIRT_OBJS) aliases.ld
+	@mkdir -p $(dir $@)
+	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_ODU_OBJS) $(ODU_SKIRT_OBJS) $(SVC_REF_GAME) $(plain_SDK_OBJS) $(plain_LIBM_OBJS) \
+	    aliases.ld $(LDFLAGS) $(SVC_WRAP_FLAGS) $(E2C_WRAP_FLAGS) $(ODU_SKIRT_WRAP)
 $(NAT)/re4ref: $(plain_PC_OBJS) $(SVC_HG_OBJS) $(NATIVE_GAME_OBJS) $(NAT_SDK_OBJS) $(plain_LIBM_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) \
                $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o aliases.ld
 	$(CC) -o $@ $(plain_PC_OBJS) $(SVC_HG_OBJS) $(SVC_HOST_OBJS) $(E2C_NAT_OBJS) $(NAT)/skel.o $(NAT)/skel_xm.o $(NAT)/col.o $(NAT)/cloth.o $(NAT)/cloth_kernel.o $(NAT)/shz_xmtrx_sw.o \

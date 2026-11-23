@@ -39,6 +39,7 @@ int cloth_control_short;
 int cloth_control_nogravity;
 int cloth_control_wind;
 int cloth_passes;
+int cloth_control_skirt4;
 }
 
 namespace {
@@ -75,20 +76,15 @@ void* alloc(u32 bytes)
     return p;
 }
 
-ClothChain* find(const PenCloth* c)
+// A chain is keyed by its PenCloth and its model (lane eng-cloth1): El Gigante's chained form sets one PenCloth up on
+// two chain objects (em2bChainSet, rope[1]); keyed on the PenCloth alone the second set-up took the first chain over.
+ClothChain* find(const PenCloth* c, const cModel* m)
 {
-    for (u32 i = 0; i < g_nch; i++)
-        if (g_ch[i]->c == c) return g_ch[i];
-    return 0;
+    const int i = cloth_key_find(g_ch, g_nch, c, m);
+    return i < 0 ? 0 : g_ch[i];
 }
-void forget(const PenCloth* c)
-{
-    for (u32 i = 0; i < g_nch; i++)
-        if (g_ch[i]->c == c) {
-            g_ch[i] = g_ch[--g_nch];
-            return;
-        }
-}
+void forget(const PenCloth* c, const cModel* m) { cloth_key_forget(g_ch, g_nch, c, m); }
+u32 g_step;   // chain steps so far: a chain's stamp is its last step's (the table's eviction order)
 
 // ---------------------------------------------------------------------------------------------------------------
 // bones
@@ -183,12 +179,21 @@ ClothChain* build(cModel* m, PenCloth* c)
     }
     const int root = skel_parts_bone(m, 0);
     if (root != 0 || !skel_history(t, 0)) return 0;   // the root's world_old: the skeleton keeps bone 0's
-    ClothChain* ch = find(c);
+    ClothChain* ch = find(c, m);
     const u32 bytes = 64 + 64 * n + 48 * n + ((2 * nAt + 31u) & ~31u);
-    if (!ch || ch->bytes != bytes || ch->m != m) {
-        forget(c);
-        if (g_nch >= kMaxChains) return 0;
-        u8* blk = (u8*) alloc(bytes);
+    if (!ch || ch->bytes != bytes) {
+        forget(c, m);
+        u8* blk = 0;
+        if (g_nch >= kMaxChains) {
+            // the table full (a chain's owner may have died: nothing tells the service): the chain stepped least
+            // recently gives up its entry, and its block when the size matches
+            const int v = cloth_key_oldest(g_ch, g_nch);
+            if (g_ch[v]->bytes == bytes) blk = (u8*) g_ch[v];
+            g_ch[v] = g_ch[--g_nch];
+            cloth_cnt.evicted++;
+            if (blk) memset(blk, 0, bytes);
+        }
+        if (!blk) blk = (u8*) alloc(bytes);
         if (!blk) return 0;
         ch = (ClothChain*) blk;
         ch->bytes = bytes;
@@ -205,6 +210,7 @@ ClothChain* build(cModel* m, PenCloth* c)
     ch->tAt = ta;
     ch->n = (u16) n;
     ch->nAt = (u16) nAt;
+    ch->skirt = CLOTH_IS_SKIRT(c) ? 1 : 0;   // Ashley's skirt: two constraint passes (cloth.h)
     for (u32 i = 0; i < n; i++) {
         ClothLink& L = ch->link[i];
         L.bone = bone[i];
@@ -350,6 +356,7 @@ void step_begin(ClothChain* ch, Step& s)
     }
     for (u32 i = 0; i < s.n; i++) ch->link[i].hit = 0;
     cloth_cnt.moves++;
+    ch->stamp = ++g_step;
     cloth_cnt.links += s.n;
 }
 
@@ -415,6 +422,8 @@ void kernel_step(ClothChain* ch, const Step& s, int variant, const Vec& move, f3
     k.vol = s.at ? (const ClothKVol*) s.at->pAt : 0;
     k.nVol = s.at ? (u32) s.at->num : 0;
     k.rng = &ch->rng;
+    // Ashley's skirt: two constraint passes, the owner's look choice (cloth.h CLOTH_SKIRT_PASSES)
+    if (ch->skirt && !cloth_control_skirt4 && k.bundle > CLOTH_SKIRT_PASSES) k.bundle = CLOTH_SKIRT_PASSES;
     if (cloth_passes == 1) cloth_k_step_passes(&k);
     else if (cloth_passes == 2) cloth_k_step_onepass(&k);
     else cloth_k_step(&k);
@@ -480,7 +489,7 @@ extern "C" void PenClothSet(cModel* m, PenCloth* c, f32 len)
     if (c->Num == 0) return;
     ClothChain* ch = build(m, c);
     if (!ch) {
-        forget(c);
+        forget(c, m);
         cloth_cnt.fallback++;
         pen_orig_Set(m, c, len);
         return;
@@ -535,8 +544,8 @@ extern "C" void PenClothSet(cModel* m, PenCloth* c, f32 len)
 extern "C" void PenClothMove(cModel* m, PenCloth* c)
 {
     if (c->Num == 0) return;
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_Move(m, c);
         return;
     }
@@ -546,8 +555,8 @@ extern "C" void PenClothMove(cModel* m, PenCloth* c)
 extern "C" void PenClothMove3(cModel* m, PenCloth* c)
 {
     if (c->Num == 0) return;
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_Move3(m, c);
         return;
     }
@@ -556,8 +565,8 @@ extern "C" void PenClothMove3(cModel* m, PenCloth* c)
 
 extern "C" void PenClothFixSet(cModel* m, PenCloth* c, int no, Vec* pos)
 {
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_FixSet(m, c, no, pos);
         return;
     }
@@ -569,13 +578,21 @@ extern "C" void PenClothFixSet(cModel* m, PenCloth* c, int no, Vec* pos)
 
 extern "C" void PenClothFixClear(cModel* m, PenCloth* c, int no)
 {
-    ClothChain* ch = find(c);
-    if (!ch || ch->m != m) {
+    ClothChain* ch = find(c, m);
+    if (!ch) {
         pen_orig_FixClear(m, c, no);
         return;
     }
     if (c->pCloth[no] != 0xFF) ch->link[no].fix &= ~1;
 }
+
+extern "C" void cloth_release_all(void)
+{
+    cloth_cnt.released += g_nch;
+    g_nch = 0;
+    g_used = 0;   // the pool's carve stays (svc_pool_carve has no free); its blocks are reused from the start
+}
+extern "C" void cloth_release_model(const cModel* m) { cloth_cnt.released += cloth_key_forget_model(g_ch, g_nch, m); }
 
 extern "C" u32 cloth_chain_count(void) { return g_nch; }
 extern "C" ClothChain* cloth_chain_at(u32 i) { return i < g_nch ? g_ch[i] : 0; }

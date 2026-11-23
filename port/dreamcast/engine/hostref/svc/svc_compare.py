@@ -220,6 +220,18 @@ def main():
             opt[k] = float(sys.argv[sys.argv.index(k) + 1])
     js = sys.argv[sys.argv.index("--json") + 1] if "--json" in sys.argv else None
     skip = None
+    if "--skip-skirt" in sys.argv:
+        # lane eng-cloth2 (refctl.sh's skirt rows only): the link bones of Ashley's skirt alone (the 48-link chain of
+        # <native dir>/svc.txt's "chain" lines) left out; every other bone compared as without the option
+        skip = {}
+        for line in open(sys.argv[sys.argv.index("--skip-skirt") + 1] + "/svc.txt"):
+            if line.startswith("chain "):
+                w = line.split()
+                if len(w) - 5 == 48:
+                    skip.setdefault(int(w[3]), []).extend(int(x) for x in w[5:])
+        if not skip:
+            print("ERROR  --skip-skirt: no 48-link chain in the native svc.txt")
+            sys.exit(2)
     if "--skip-cloth" in sys.argv:
         skip = {}
         for line in open(b + "/svc.txt"):

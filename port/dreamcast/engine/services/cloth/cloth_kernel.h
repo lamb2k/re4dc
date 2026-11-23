@@ -63,6 +63,12 @@ typedef struct ClothKVol {
     float r, len;
 } ClothKVol;
 
+//! A volume as the link tests read it (lane eng-cloth1): its centre and radius, 16 B, made once a tick from the
+//! ClothKVol list (whose 0x84-byte stride puts the two fields a test reads on two cache lines).
+typedef struct ClothKSph {
+    float x, y, z, r;
+} ClothKSph;
+
 //! One chain's tick.
 typedef struct ClothKStep {
     ClothKLink* link;
@@ -100,6 +106,9 @@ typedef struct ClothKStep {
     const ClothKVol* vol;    //!< 0: none this tick
     uint32_t nVol;
     PresRng* rng;            //!< the chain's presentation stream
+    /* filled by the kernel at the start of the tick (lane eng-cloth1) */
+    const ClothKSph* sph;    //!< the volumes' centres and radii, in the volume list's order
+    uint32_t cylMask;        //!< bit i: volume i is a cylinder (never skipped by the parallel test's bound)
 } ClothKStep;
 
 //! One tick, the service's default: the original's stages with passes fused where the order allows it (exact).
@@ -109,18 +118,17 @@ void cloth_k_step_passes(ClothKStep* s);
 //! One tick in one pass (every stage of a link before the next link): measured and rejected (RE4_SVC_CLOTH_PASSES=1).
 void cloth_k_step_onepass(ClothKStep* s);
 
-//! The volume tests, native (the original's pendulum.cpp arithmetic).
-int cloth_k_at_ck(ClothKVec* pos, const ClothKVec* up, const ClothKVol* vol, uint32_t n);
+//! The border volume test, native (the original's pendulum.cpp arithmetic). The plain and the parallel volume tests
+//! are the kernel's own (they read the tick's ClothKSph table).
 int cloth_k_at_ck_border(ClothKVec* pos, const ClothKVec* up, const ClothKVol* vol, uint32_t n);
-void cloth_k_at_ck_parallel(ClothKVec* pos, ClothKVec* up, const ClothKVol* vol, uint32_t n);
 
 //! Counters of the kernel (test and cost indicator).
 typedef struct ClothKCounters {
     uint32_t links, passes, normalize, sqrt, acos, rotations, vol_tests, vol_hits;
-    uint32_t vol_skips;      //!< lane eng-svcspd1: parallel sphere tests ended by the early out (counted in vol_tests)
+    uint32_t vol_skips;      //!< parallel sphere tests ended by the reach bound (counted in vol_tests)
 } ClothKCounters;
 extern ClothKCounters cloth_k_cnt;
-//! Lane eng-svcspd1's control: the parallel sphere test's early-out bound 40 units short (must change the links).
+//! The control of the parallel test's reach bound: the bound 40 units short (must change the links).
 extern int cloth_k_control_bound;
 
 #ifdef __cplusplus
