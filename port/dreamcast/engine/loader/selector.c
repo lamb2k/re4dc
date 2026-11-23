@@ -1013,7 +1013,7 @@ static void launch(unsigned i) {
     cl_handoff_seal(H);
     /* lane eng-link1: the way back is the return stub (dc-qalink loader/stub.c), which reads /LOADER.BIN (this program)
        with the BIOS's own disc calls, checks its SHA-256 and jumps: a program that wrecked KallistiOS still comes back */
-    cl_arm_stub(H);
+    if (g_link.bba) cl_arm_stub(H);   /* lane eng-link2: only with LINK.TXT (above) */
     J->running = i + 1;
     journal_seal();
     printf("CDISC RUN %u %s %s deadline %u s args \"%s\" (%ld bytes)\n", i + 1, s->name, s->prog, s->deadline, s->args, n);
@@ -1053,11 +1053,15 @@ int main(int argc, char **argv) {
     vid_clear(0, 0, 0);
     const int planned = read_plan();
     /* lane eng-link1: the way back for every program (dc-qalink's return stub) and the disc's link settings */
-    const int arm = cl_arm_find();
-    if (arm) printf("CDISC STUB none: /LOADER.BIN %d (programs return by KallistiOS's trampoline)\n", arm);
-    else printf("CDISC STUB %u bytes, /LOADER.BIN sector %u, %u bytes\n", (unsigned)cl_arm_stub_bytes(),
-                (unsigned)cl_arm_lba(), (unsigned)cl_arm_len());
+    /* lane eng-link2 (eng-int gate, 2026-11-23): only a disc with LINK.TXT ("net bba") arms the stub; a plain disc
+       runs exactly as before (no STUB line, the hand-off and every report as before; control: plain disc, 4 of 4 OK) */
     read_link();
+    if (g_link.bba) {
+        const int arm = cl_arm_find();
+        if (arm) printf("CDISC STUB none: /LOADER.BIN %d (programs return by KallistiOS's trampoline)\n", arm);
+        else printf("CDISC STUB %u bytes, /LOADER.BIN sector %u, %u bytes\n", (unsigned)cl_arm_stub_bytes(),
+                    (unsigned)cl_arm_lba(), (unsigned)cl_arm_len());
+    }
     if (g_plan_refused[0]) {   /* lane eng-e1p (H-018.3): a schedule that does not parse whole: refused, nothing run */
         printf("CDISC START %s: plan crc %08x\n", LOADER_BUILD, (unsigned)g_plan_crc);
         printf("CDISC SCHEDULE REFUSED: %s\n", g_plan_refused);

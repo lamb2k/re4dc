@@ -347,7 +347,6 @@ void e1_ql_early()
             if (v >= 20 && v <= 60000) dc.timeout_ms = (unsigned) v;
         }
         g_disc = dcql_disc_mount(&dc);
-        if (g_disc == 0) atexit(dcql_disc_report);   // requests, resends and timeouts in the run's report
         e1_log("E1 QL network disc: request time limit %u ms\n", dc.timeout_ms);
         dcql_disc_stats_t s;
         dcql_disc_stats(&s);
@@ -431,6 +430,12 @@ int e1_ql_picture(const E1Timing& tm)
             dcql_live_trace(1, 0, l);
         }
         g_last_room = pG->room_id;
+        if (g_disc == 0) {   // the network disc's requests so far: a long wait shows here (time limit above)
+            dcql_disc_stats_t s;
+            dcql_disc_stats(&s);
+            e1_log("E1 QL network disc after the load: requests %u resends %u timeouts %u, request worst %u us\n",
+                   (unsigned) s.requests, (unsigned) s.resends, (unsigned) s.timeouts, (unsigned) s.req_us_worst);
+        }
     }
     t_last = tm.frame_us;
     t_draw_last = tm.draw_us;
