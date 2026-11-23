@@ -31,6 +31,15 @@ struct SkelTable;
 
 #define CLOTH_NONE 0xFF
 
+// Ashley's skirt (garment.cpp GIRL_SKIRT: 48 links, 11 collision volumes, left neighbours and no right ones) runs two
+// constraint passes where the original runs four (PenCloth::Bundle_num). The owner's look choice, 2026-11-22 ("Ok
+// option B", H-032), from lane eng-cloth1's clips: the default, with no switch. Every other chain keeps its passes.
+// The PC reference runs the skirt the same way (hostref/svc/ref_skirt.cpp; SKIRT_PASSES=4 restores the original's,
+// a refctl.sh row). On the PC reference RE4_SVC_CONTROL=skirtpass4 gives the native skirt its four passes again
+// (cloth_control_skirt4, the control: the check against the fixed reference must fail).
+#define CLOTH_IS_SKIRT(c) ((c)->Num == 48 && (c)->pAtset && (c)->At_num == 11 && (c)->pLeft && !(c)->pRight)
+#define CLOTH_SKIRT_PASSES 2u
+
 struct ClothLink {       // 64 B
     Vec pos;             // 0x00 link end (PenParts::pos)
     Vec oldPos;          // 0x0C
@@ -62,21 +71,79 @@ struct ClothChain {      // 64 B header
     u32 serial;
     u32 bytes;
     PresRng rng;         // the chain's presentation stream (pres_rng.h)
-    u32 pad[5];
+    u8 skirt;            // the chain is Ashley's skirt (CLOTH_IS_SKIRT): CLOTH_SKIRT_PASSES constraint passes
+    u8 pad8;
+    u16 pad16;
+    u32 stamp;           // lane eng-cloth1: the chain's last step (g_step): the table's eviction order
+    u32 pad[3];
 };
+// (Lane eng-cloth1's look arms CLOTHCAP, CLOTHHALF, CLOTHFAR and CLOTHFAR0 were removed by lane eng-cloth2 when the
+// owner chose CLOTHPASS2, now the skirt's default above; their figures: docs/engine/lanes/eng-cloth1.md.)
 
 extern "C" {
 // counters (svc census and the cost indicator)
 struct ClothCounters {
     u32 chains, fallback, moves, links, at_volumes, resets;
+    u32 evicted;         // lane eng-cloth1: entries given up when the table was full
+    u32 released;        // lane eng-cloth1: chains given back by cloth_release_model / cloth_release_all
 };
+// Lane eng-cloth1: the room release. cloth_release_all(): every chain given back and the cloth pool emptied (its carve
+// is kept): for the room change, once every owner of a chain is gone (a later PenClothMove of a released chain finds
+// none and takes the fallback). cloth_release_model(m): the chains of one model out of the table (an owner that dies
+// inside a room); their blocks come back with the next cloth_release_all (the pool is bump-allocated).
+extern "C" void cloth_release_all(void);
+extern "C" void cloth_release_model(const cModel* m);
 extern ClothCounters cloth_cnt;
 // controls (lane eng-svc2: each must make the equivalence check fail)
 extern int cloth_control_short;      // the last link of every chain left out (wrong chain length)
 extern int cloth_control_nogravity;  // gravity off
+extern int cloth_control_skirt4;     // lane eng-cloth2: Ashley's skirt at the original's four passes (CLOTH_SKIRT_PASSES)
 extern int cloth_control_wind;       // the wind's push twice as strong (the statistics check must fail)
 extern int cloth_passes;             // 1: the kernel in the original's pass order (the exactness proof); 2: in one pass
                                      // (measured, rejected); 0: fused (lane eng-svc3)
 u32 cloth_chain_count(void);
 ClothChain* cloth_chain_at(u32 i);
+}
+
+// Lane eng-cloth1: the chain table's key, (PenCloth, model). Inline here so cloth_key_test.cpp checks the same code.
+inline bool cloth_key_eq(const ClothChain* ch, const PenCloth* c, const cModel* m)
+{
+#ifdef CLOTH_KEY_CONTROL_OLD   // cloth_key_test.cpp's control build only: the old key, the PenCloth alone
+    (void) m;
+    return ch->c == c;
+#else
+    return ch->c == c && ch->m == m;
+#endif
+}
+inline int cloth_key_find(ClothChain* const* tab, u32 n, const PenCloth* c, const cModel* m)
+{
+    for (u32 i = 0; i < n; i++)
+        if (cloth_key_eq(tab[i], c, m)) return (int) i;
+    return -1;
+}
+inline void cloth_key_forget(ClothChain** tab, u32& n, const PenCloth* c, const cModel* m)
+{
+    const int i = cloth_key_find(tab, n, c, m);
+    if (i >= 0) tab[i] = tab[--n];
+}
+// every chain of model m out of the table (cloth_release_model)
+inline u32 cloth_key_forget_model(ClothChain** tab, u32& n, const cModel* m)
+{
+    u32 k = 0;
+#ifndef CLOTH_RELEASE_CONTROL   // cloth_key_test.cpp's control build only: nothing released
+    for (u32 i = 0; i < n;)
+        if (tab[i]->m == m) {
+            tab[i] = tab[--n];
+            k++;
+        } else
+            i++;
+#endif
+    return k;
+}
+inline int cloth_key_oldest(ClothChain* const* tab, u32 n)
+{
+    int o = 0;
+    for (u32 i = 1; i < n; i++)
+        if ((int) (tab[i]->stamp - tab[o]->stamp) < 0) o = (int) i;
+    return o;
 }

@@ -28,6 +28,12 @@
 #             fixed 01100000, old 010d0000; shot-ganado: Ganado 0x1f at tick 163, fixed 01100000, old 01150001), and
 #             outcome.py with the fixed reference as A must FAIL. bell-ganado-hit: the fixed reference against itself
 #             (outcome) must PASS (determinism; shot-ganado's is the em10 block's first row).
+#   skirt     SKIRT_PASSES=4 (lane eng-cloth2): Ashley's skirt at the original's four constraint passes (before the owner's
+#             look choice of 2026-11-22, H-032; svc/ref_skirt.cpp). On hill-ashley (odump and native, wind off): native
+#             against the fixed reference bit for bit must PASS; the old reference's bones against the fixed must FAIL;
+#             every bone but the skirt's 48 links (svc_compare.py --skip-skirt) must PASS and the trace be byte-identical
+#             (the skirt is presentation); the native skirt at four passes (RE4_SVC_CONTROL=skirtpass4) against the old
+#             reference bit for bit must PASS (the passes are the whole difference).
 # Positive rows: the fixed reference against itself on each fixture (exact) must PASS, so a FAIL above is the change.
 # A row that cannot be run (a build or a run that fails, a trace missing) is ERROR, never skipped. Exit 0 when every row
 # is as it must, 1 when one is not, 2 when one could not be run.
@@ -221,6 +227,42 @@ PY
             fi
         done
         gone "$CTLB-corrections"
+        # ---- skirt (lane eng-cloth2): Ashley's skirt at the original's four constraint passes (SKIRT_PASSES=4)
+        D=$OUT/skirt
+        HFX=$PR/fixtures/hill-ashley.txt
+        # exact <name> <must> <ref dir> <test dir> [svc_compare option...]: every bone bit-identical, the collision
+        # queries as svc_compare.py judges them (its 0.01-unit point bound: the camera service's probes, svc_controls.sh)
+        exact() {
+            local nm=$1 must=$2 a=$3 b=$4 res rc
+            shift 4
+            res=$(python3 "$HERE/svc_compare.py" "$a" "$b" --json "$b/exact.json" "$@" > "$b/exact.txt" 2>&1; python3 -c "
+import json,sys
+j=json.load(open(sys.argv[1])); b=j['bones']; c=j['collision']
+ok=b['bit_identical_bones']==b['bones'] and b['bones']>0 and b['missing']==0 and c['over']==0 and c['compared']==c['queries_ref']
+print('%s bones %d/%d bit-identical, max %.3g u %.3g deg; queries %d/%d identical; first %s'%('PASS' if ok else 'FAIL',b['bit_identical_bones'],b['bones'],max(b['max_pos'],b['max_pal_pos']),max(b['max_deg'],b['max_pal_deg']),c['identical'],c['compared'],json.dumps(b.get('first'))))
+sys.exit(0 if ok else 1)" "$b/exact.json" 2>/dev/null); rc=$?
+            [ -s "$b/exact.json" ] || rc=2
+            row "$nm" "$must" "$(verdict $rc PASS FAIL)" "${res#* }"
+        }
+        okn=1
+        { build "$B" native && run "$B/odump/re4ref" "$HFX" "$D/ref" && run "$B/native/re4ref" "$HFX" "$D/native"; } || okn=0
+        if [ $okn = 1 ]; then
+            exact "hill-ashley: native against the fixed reference (the skirt at two passes in both)" PASS "$D/ref" "$D/native"
+        else
+            row "hill-ashley: native against the fixed reference (the skirt at two passes in both)" PASS ERROR "build or run failed"
+        fi
+        if [ $okn = 1 ] && build "$CTLB-skirt4" odump SKIRT_PASSES=4 && run "$CTLB-skirt4/odump/re4ref" "$HFX" "$D/old" &&
+           run "$B/native/re4ref" "$HFX" "$D/n4" RE4_SVC_CONTROL=skirtpass4; then
+            exact "skirt at four passes (SKIRT_PASSES=4, the old reference), hill-ashley: bones against the fixed reference" FAIL "$D/ref" "$D/old"
+            mkdir -p "$D/old-noskirt"; cp "$D/old/pal.bin" "$D/old/col.txt" "$D/old-noskirt/"; cp "$D/old/hist.bin" "$D/old-noskirt/" 2>/dev/null
+            exact "skirt at four passes, the old reference: every bone but the skirt's 48 links against the fixed reference" PASS "$D/ref" "$D/old-noskirt" --skip-skirt "$D/native"
+            row "skirt at four passes, the old reference: the behaviour trace against the fixed reference (byte for byte)" PASS \
+                "$(cmp -s "$D/ref/trace.txt" "$D/old/trace.txt" && echo PASS || echo FAIL)" "$(wc -l < "$D/ref/trace.txt") lines"
+            exact "native with the skirt at four passes (control skirtpass4) against the old reference" PASS "$D/old" "$D/n4"
+        else
+            row "skirt at four passes (SKIRT_PASSES=4, the old reference), hill-ashley" FAIL ERROR "build or run failed"
+        fi
+        gone "$CTLB-skirt4"
     fi
 } | tee "$OUT/refctl.md"
 status=0

@@ -101,9 +101,17 @@ include ../game/game_settings.mk
 # living Ganado never voiced a hit (the console's does). EM10_VOICE=1 binds the label to em10CallVoiceSe (objcopy
 # --redefine-sym on em10's object, the source unchanged); EM10_VOICE=0 is the old reference, a control build only.
 EM10_VOICE ?= 1
+# Lane eng-cloth2 (a reference change, its old behaviour kept as SKIRT_PASSES=4, a refctl.sh row): Ashley's skirt at two
+# constraint passes in the odump build, as the engine runs it (the owner's look choice of 2026-11-22, H-032; the
+# original's four are PenCloth::Bundle_num, src/game/pl_cloth.cpp, read by pendulum.cpp's constraint loops). The wrap
+# of PenClothMove / PenClothMove3 is in svc/svc.mk, the wrappers in svc/ref_skirt.cpp; the source is unchanged.
+SKIRT_PASSES ?= 2
+ifeq ($(filter 2 4,$(SKIRT_PASSES)),)
+$(error hostref: SKIRT_PASSES is 2 (the reference) or 4 (the old reference))
+endif
 # A BUILD folder holds one reference only (the host copies and objects do not depend on these switches): a different
 # switch set on an existing folder is refused, so a control build can never land in the reference's folder.
-REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)$(if $(filter 0,$(EM10_VOICE)),-em10voice0)-corrections$(CORRECTIONS)
+REF_VARIANT := stat$(STAT_BYTES)-em10split$(EM10_SPLIT)-bspline_$(BSPLINE_ALIAS)$(if $(filter 0,$(EM10_VOICE)),-em10voice0)-corrections$(CORRECTIONS)-skirt$(SKIRT_PASSES)
 ifneq ($(filter clean,$(MAKECMDGOALS)),clean)
 REF_VARIANT_HAD := $(shell mkdir -p $(BUILD) && { [ -f $(BUILD)/variant.txt ] || echo $(REF_VARIANT) > $(BUILD)/variant.txt; } && cat $(BUILD)/variant.txt)
 ifneq ($(REF_VARIANT_HAD),$(REF_VARIANT))
