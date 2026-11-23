@@ -139,11 +139,12 @@ static int e1_pal_check(const RtModel* m, const E1SkelView* sk)
    LHALF every character lit on the same picture, which halved the mean but not the worst picture (eng-draw4). Memory: the
    same colour buffers as LHALF (one per character, 4 bytes a normal of its drawn model, from the heap). */
 /* Lane eng-draw6 (item 3): character detail levels by screen size (eng-draw4's LVL, approved by the owner from its
-   sheet) are the default. One pick per character: the fight's Ganados are picked by their caller (fight/fight_draw.inc,
+   sheet) stay a lab arm, off: their stills check (tools/engine/lvlcheck.py, base run-to-run floor applied) failed on
+   3 of 49 stills (23 pixels outside the boxes of characters drawn at another level), so they are not the default. One pick per character: the fight's Ganados are picked by their caller (fight/fight_draw.inc,
    content_pick, step 3: CS_LEVELS, which the E1 images start at 0 and this open sets to 3), every other character
    (Leon, the partner, a held weapon) by this pass (content_pick on its bone-sphere box). The level asked and the level
    drawn are counted (e1_lvl_n; a variant whose bone count exceeds the skeleton's is refused and drawn at the base).
-   LVL0 (boot file, comparison lab arm): levels off, the base model always (the image before this lane). */
+   LVL (boot file, lab arm): levels on; without it the base model always (the image before this lane). */
 static int e1_levels, e1_arm_lhalf, e1_arm_lstag, e1_pix_ctl;
 static unsigned e1_lvl_slot[E1_SLOTS];            /* the catalogue model the slot's last opaque call drew */
 static const uint32_t* e1_lit_slot[E1_SLOTS];     /* the colours it emitted from */
@@ -153,10 +154,10 @@ static int e1_arm_boot(const char* p) { file_t f = fs_open(p, O_RDONLY); if (f <
 static void e1_arms_open(void)
 {
     static int done; if (done) return; done = 1;
-    e1_levels = !e1_arm_boot("/cd/LVL0"); src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
+    e1_levels = e1_arm_boot("/cd/LVL"); src_light_cap = e1_arm_boot("/cd/LCAP") ? 3 : 0; e1_arm_lhalf = e1_arm_boot("/cd/LHALF");
     e1_arm_lstag = e1_arm_boot("/cd/LSTAG"); if (e1_arm_lstag) e1_arm_lhalf = 1;
     m1_content[CS_LEVELS] = e1_levels ? 3 : 0;
-    e1_log("E1 LVL: character detail levels by screen size %s\n", e1_levels ? "(step 3, the default)" : "off (LVL0, comparison lab arm)");
+    e1_log("E1 LVL: character detail levels by screen size %s\n", e1_levels ? "(step 3, LVL lab arm)" : "off (the default)");
     if (src_light_cap) e1_log("E1 ARM LCAP: at most %u lights a character (the strongest), look arm\n", src_light_cap);
     if (e1_arm_lhalf) e1_log("E1 ARM LHALF: each character's normals lit every other picture%s, look arm\n",
                              e1_arm_lstag ? " (LSTAG: staggered, half the characters a picture)" : "");
