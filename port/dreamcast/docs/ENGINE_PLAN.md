@@ -370,6 +370,20 @@ A lane round is one briefed lane to its hand-back; they took one to three hours 
 
 The asset decision: the owner's rule is PS2 assets only, and the PS2 set is the lower-detail one. Sharper textures and models need either reworked or upscaled PS2 art, or the GameCube originals that the rule forbids today. The other five rows need no asset change.
 
+**Step 6 backlog from the SH4DER-PVR scan (2026-11-23).** Ideas only, from JiltedValkyrie/SH4DER-PVR (scan: `E:\RE4DC-Lanes\scan-sh4der\REPORT.md`); reusing its code would need a credits line in the shipped game (an owner item). The owner acknowledged the list on 2026-11-23 ("ok"). Every row still needs a still pair approved by the owner, and none starts before chapter 1 holds the floor. Ranked; the cost tier as the report states it:
+1. Baked crease darkening (ambient occlusion in the room bake): 0 ms a picture, no video memory, bake time only (est.).
+2. Per-room colour grade, vignette and damage flash through screen layers and the clamp registers (no read-back): CPU about 0, about 1 to 3 ms of graphics-chip fill for each full-screen layer (est.; the model cannot see fill); risk of 16-bit banding.
+3. Soft foot shadows: one quad a foot, a 32 x 32 texture; under 0.1 ms for about 12 characters, 2 KB of video memory (est.).
+4. Floor light pools under lamps, braziers, candles and the pyre: 11 to 18 vertices each, negligible CPU, the fill of their area; can be baked; must not cross walls (est.).
+5. Gunfire sparks and tracers (fills the muzzle-flash item): 24 additive quads, a minimum on-screen width, a PS2-art atlas, the engine's random numbers; up to 96 vertices, 1.3 KB of RAM, 3 KB of video memory (repo count).
+6. Screen bloom from bright lights, only after the floor holds and with a console number: 80 x 60 read-back, a 128 x 64 bright map, 2 to 3 layers; 0.5 to 1.5 ms CPU, 17 KB of video memory (est.; video memory read speed unknown).
+7. Ground mist banks (swamp, lake shore, graveyard): 8 to 12 sheets, an 8 KB texture; fill unmeasured (est.).
+8. Lake surface with waves, Fresnel and texture wobble, no mirror pass: about 0.2 to 0.4 ms for about 1,000 vertices (est.); the gameplay water height unchanged (the lake fight is a benchmark scene).
+
+Renderer notes from the same scan: keep "true shadow volumes" on the cheap single-volume modifier mode (two-volume modifier polygons failed on a real console in the author's tests: console, author's game); check on the console that zero-area triangles (drawn as bright lines on hardware) and all-zero polygon headers (which end a list early) never reach the chip; emulators hide both.
+
+Left for now: the character self-shadow (4.5 ms for 6 characters on a console, author's game; the CPU row is already over; revisit for close-ups and cutscenes); planar reflection (a second world draw); the repo's bump mapping (use the chip's own bump format instead); render-to-texture effects (heat haze, fringing, TAA, motion trail: a second scene, 160 to 640 KB of video memory). Next after the eight: embers and dust, storm lightning, light through ears and leaves.
+
 **Milestone contents** (unchanged from version 2):
 
 | # | Slice |

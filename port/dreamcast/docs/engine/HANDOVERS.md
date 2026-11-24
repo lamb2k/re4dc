@@ -30,6 +30,8 @@ One numbered entry per milestone or blocking question. Newest first. Format: com
 - **Incident:** a housekeeping lane (ws-scratch) deleted six files from `eng-skel2-data/pristine-colb` during a gate;
   restored byte-exact from `eng-bench/.m1/base003` against `pristine.json` (E:\RE4DC-Lanes\ws-scratch\RESTORED-*.tsv),
   verified by eng-int before its disc run. Cleanup briefs now fence game-data trees by file type.
+- **Step 6 backlog from the SH4DER-PVR scan (2026-11-23):** eight ranked look rows, two renderer notes and a "left for now" line added to ENGINE_PLAN.md section 7, below the step 6 candidates (source JiltedValkyrie/SH4DER-PVR, ideas only; scan `E:\RE4DC-Lanes\scan-sh4der\REPORT.md`); the owner acknowledged the list ("ok"); each row needs an owner-approved still pair and starts only once chapter 1 holds the floor.
+- **eng-link2's report room (integrator's ruling, 2026-11-23):** dc-qalink 0.2.0's hand-off layout stays (the report after the return stub's area, so the selector's report cap is smaller than before); the lane fixes it on the RE4 side (a smaller journal and/or leaner rows, 10% headroom for every scene) with a loud guard and its control instead of silent truncation (the gate of a91c15f33 failed on FIGHT "rows: 598 of 600 pictures", report 84,235 B).
 
 ## H-044 (2026-11-22): RE4 paused by the owner
 
