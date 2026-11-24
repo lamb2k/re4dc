@@ -134,6 +134,11 @@ static void line_done(void) {
         else if (match_list(l, CL_SEND_FAIL)) g_end = 1;
         if (g_end >= 0) sem_signal(&g_end_sem);   /* wakes the ender (it sleeps until then: no polling) */
     }
+    // The scheduler checker reads these task steps from serial. Keep the scheduler summaries in the report.
+    if (starts(l, "E1 SCHEDT ")) {
+        ++g_dropped_skip;
+        return;
+    }
     for (unsigned i = 0; i < g_nskip; ++i)
         if (g_skip[i][0] && starts(l, g_skip[i]) && l[strlen(g_skip[i])] == ' ') { ++g_dropped_skip; return; }
     const uint32_t used = H->h.report_len;

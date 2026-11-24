@@ -262,6 +262,7 @@ everything stays off. Started by the loader or the console disc's selector, a co
 - **the report:** a dbgio handler in front of the serial one copies the image's own text lines into the hand-off
   report and passes everything on (serial unchanged). Arguments: `rows=skip|compact|keep` for `ROW` lines (compact
   drops the field names), `skip=<prefix>,..` for other lines (the console disc skips the bench's `MEMBLK` lines);
+  detailed `E1 SCHEDT` task steps go to serial only, with the scheduler summaries in the report;
 - **the end:** the image's last line (`SCHEDULE DONE`, `E1 END`) hands in `DONE`, exit 0, once the image has printed
   nothing for 1.5 s (the fight and boss images print their event lists after `E1 END`); a refusal line
   (`SCHEDULE REFUSED`, `M1 native pack REFUSED`, `STACK GUARD BROKEN`, `E1 draw: renderer refused`,
