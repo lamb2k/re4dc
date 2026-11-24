@@ -57,12 +57,18 @@ int __wrap_cdrom_read_toc(cd_toc_t *toc, bool hd) {
 }
 
 #define H ((cl_handoff_t *)CL_HANDOFF_ADDR)
-#define SEL_JOURNAL_SIZE (24u * 1024u)
+/* lane eng-link2 (2026-11-23): 8 KiB (was 24): dc-qalink 0.2's report area is 12 KiB smaller; the journal holds 8 entries
+   of 1,000 B (summary 896 B; the longest seen is 577 B), so the report cap is 110,592 B */
+#define SEL_JOURNAL_SIZE (8u * 1024u)
 #define SEL_JOURNAL_ADDR (CL_HANDOFF_ADDR + CL_HANDOFF_SIZE - SEL_JOURNAL_SIZE)
+#ifdef SEL_REPORT_CAP_FORCE   /* the guard's control only (build_console_disc SEL_DEFS): a smaller cap must fail a scene */
+#define SEL_REPORT_CAP (SEL_REPORT_CAP_FORCE)
+#else
 #define SEL_REPORT_CAP (CL_REPORT_MAX - SEL_JOURNAL_SIZE)
+#endif
 #define SEL_MAGIC 0x314c4553u   /* "SEL1" */
 #define SEL_MAX 8
-#define SEL_SUM 2560
+#define SEL_SUM 896
 
 enum { E_PENDING = 0, E_OK = 1, E_FAILED = 2 };
 typedef struct {
@@ -711,6 +717,13 @@ static void collect(unsigned i) {
                 (void)t1; (void)t2; (void)t3;
             }
             else if (!strncmp(line, "cl-send: pack loader stage", 26) && e->why[0]) sum_add(e, "%.50s", line + 9);
+            else if (!strncmp(line, "cl-send: report cap ", 20)) {
+                /* lane eng-link2: the report's bytes refused for the cap: a scene whose report does not fit fails */
+                unsigned cap = 0, used = 0, over = 0, lines = 0;
+                if (tmatch(line, "cl-send: report cap %u used %u over-cap bytes %u lines %u", NULL, &cap, &used, &over, &lines)
+                    && over && !e->why[0])
+                    snprintf(e->why, sizeof(e->why), "report over the cap: %u B more than %u (%u lines)", over, cap, lines);
+            }
             else if (!strncmp(line, "cl-send: lines ", 15)) {
                 unsigned nl = 0, kept = 0, skipped = 0, full = 0, cut = 0;
                 long code = 0;

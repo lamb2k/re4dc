@@ -34,7 +34,7 @@ ql-objs:
 $(SEL_QL): ql-objs
 $(AOUT)/selector.o: selector.c $(QL)/include/dcql_loop.h $(QL)/loader/cl_core.h $(QL)/loader/cl_arm.h
 	@mkdir -p $(dir $@)
-	kos-cc $(CFLAGS_L) -c $< -o $@
+	kos-cc $(CFLAGS_L) $(SEL_DEFS) -c $< -o $@
 $(AOUT)/selector.elf: $(SEL_OBJS) ql-objs
 	kos-cc $(CFLAGS_L) $(SEL_OBJS) -Wl,--wrap=cdrom_read_toc -o $@
 $(AOUT)/SELECTOR.BIN: $(AOUT)/selector.elf

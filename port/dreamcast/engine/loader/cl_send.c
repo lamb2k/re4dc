@@ -48,6 +48,13 @@
 #define H ((cl_handoff_t *)CL_HANDOFF_ADDR)
 #define CL_CAP CL_REPORT_CAP(&H->h)
 #define CL_ROW_BUDGET (CL_CAP - 20u * 1024u)
+/* lane eng-link2 (2026-11-23, eng-int gate of a91c15f33): dc-qalink 0.2's hand-off puts the report after the return-stub
+   area, so the report is 12 KiB smaller than engine's old hand-off gave. The report keeps the rows the selector reads
+   (pictures 41-640) and none past CL_ROW_LAST (the later rows are counted as dropped, as the selector expects: the last
+   rows); args rowlast=N (0: all). Every byte refused for the cap is counted and named on a closing line
+   ("cl-send: report cap ..."), which the selector turns into a FAILED scene: never cut silently. */
+#define CL_ROW_LAST 640u
+static unsigned g_row_last = CL_ROW_LAST, g_over_bytes, g_over_lines;
 
 static dbgio_handler_t *g_prev;
 static char g_line[320];
@@ -131,7 +138,9 @@ static void line_done(void) {
         if (g_skip[i][0] && starts(l, g_skip[i]) && l[strlen(g_skip[i])] == ' ') { ++g_dropped_skip; return; }
     const uint32_t used = H->h.report_len;
     if (starts(l, "ROW ")) {
-        if (g_rows == 0 || used + g_len > CL_ROW_BUDGET) { ++g_dropped_rows; return; }
+        if (g_rows == 0) { ++g_dropped_rows; return; }
+        if (g_row_last && strtoul(l + 4, NULL, 10) > g_row_last) { ++g_dropped_rows; return; }   /* past the window */
+        if (used + g_len > CL_ROW_BUDGET) { ++g_dropped_rows; g_over_bytes += g_len; ++g_over_lines; return; }
         if (g_rows == 1) {   /* compact: drop the purely alphabetic tokens (the field names) */
             char c[sizeof(g_line)];
             unsigned n = 0;
@@ -154,7 +163,7 @@ static void line_done(void) {
             return;
         }
     }
-    if (used + g_len > CL_CAP - 256u) { ++g_dropped_full; return; }   /* room for the closing line */
+    if (used + g_len > CL_CAP - 512u) { ++g_dropped_full; g_over_bytes += g_len; ++g_over_lines; return; }   /* room for the closing lines */
     keep(l, g_len);
 }
 
@@ -230,6 +239,7 @@ static void parse_args(const char *a) {
         else if (!strcmp(t, "rows=skip")) g_rows = 0;
         else if (!strcmp(t, "rows=compact")) g_rows = 1;
         else if (!strcmp(t, "rows=keep")) g_rows = 2;
+        else if (starts(t, "rowlast=")) g_row_last = (unsigned)strtoul(t + 8, NULL, 10);
         else if (starts(t, "skip=")) {
             g_nskip = 0;
             for (char *r = t + 5; *r && g_nskip < 8;) {
@@ -275,6 +285,11 @@ static void *ender(void *arg) {
     if (m1_load_status)
         cl_report("cl-send: pack loader stage %u size %u textures %u\n", (unsigned)m1_load_status[0],
                   (unsigned)m1_load_status[1], (unsigned)m1_load_status[2]);
+    cl_report("cl-send: report cap %u used %u over-cap bytes %u lines %u\n", (unsigned)CL_CAP, (unsigned)H->h.report_len,
+              g_over_bytes, g_over_lines);
+    if (g_over_bytes)
+        dbgio_printf("cl-send: REPORT OVER THE CAP: %u bytes (%u lines) did not fit under the cap of %u bytes\n",
+                     g_over_bytes, g_over_lines, (unsigned)CL_CAP);
     cl_report("cl-send: lines %u kept %u rows dropped %u skipped %u dropped when full %u cut long %u, end code %d\n",
               g_lines, g_kept, g_dropped_rows, g_dropped_skip, g_dropped_full, g_truncated, g_end);
     if (cl_link_up()) {
