@@ -1,3 +1,7 @@
 [submodule "port/dreamcast/game/third_party/sh4zam"]
 	path = port/dreamcast/game/third_party/sh4zam
 	url = https://github.com/gyrovorbis/sh4zam.git
+[submodule "port/dreamcast/engine/loader/dc-qalink"]
+	path = port/dreamcast/engine/loader/dc-qalink
+	url = https://github.com/lamb2k/dc-qalink.git
+	branch = v0.2-bba-loader

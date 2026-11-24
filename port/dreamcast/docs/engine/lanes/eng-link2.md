@@ -1,0 +1,32 @@
+# eng-link2 hand-back (2026-11-23): RE4 on QA Link 0.2, a testing candidate
+
+**Status: finished, unaudited.** Branch `lane/eng-link2`. dc-qalink pinned at `origin/v0.2` 2bb1087af (re-pin to the
+v0.2.0 tag when it exists). Design: CONSOLE_LOOP.md section 17. Full hand-back with evidence paths:
+`E:\RE4DC-Lanes\eng-link2\HANDBACK.md`. Every time here is **Flycast** (a function check, never a console figure).
+
+## What RE4 has now
+- `engine/qalink/e1_qalink.cpp` (QA/test images only: `game/qalink.mk`, `DCQL_ENABLE` defaults to `SENDABLE`): live
+  record per picture (ROW phases, room, Leon, enemies, play-file guards), PC commands (warp presets through the loop's
+  room change; options menu, end, crash, readx), RE4 menu pages (Scene, Timing, Warp, Tests), the network disc mounted
+  at boot (the whole RE4 disc from the PC, or an overlay over GDEMU), room-entry times.
+- `core/main.cpp`: three calls under `#ifdef E1_QALINK`; `core/play_files.c`: `e1_play_files_counts`.
+- `tools/engine/build_console_disc.sh --folder` (the disc folder the bridge serves, and the push images) and
+  `--loader-disc` (dc-qalink's loader booting with the RE4 data on the GDI); `CDISC_JOBS`.
+- `tools/consoleloop/re4_bridge_proof.py`, `re4_link_check.py` (with its controls), `re4_increment.py` (build, stage,
+  push in one command).
+
+## Old-port parts considered
+- QA teleporter (`game/qa_menu.cpp` presets from warp-rig fixtures, story state through the old room loader): taken as
+  an idea (presets grouped by place, landing judged by the room id, a state page with room and enemies), written the
+  engine's way through `e1_room_change_run`; its fixtures and the warp rig's control flow left (old core).
+- Old QA link protocol and commands (`tools/qalink/`, modem): left; dc-qalink 0.2 replaces them.
+- Pad scripts and remote driving (`PAD`/`GOTO`/`SCRIPT`): left for now; the engine's pad is its scene script (a PC
+  `pad` command is refused with that reason). A later lane can map dcql's pad command onto `e1_input_latch`.
+
+## Round 4 fixes (2026-11-23)
+- Network disc: the RE4 layer mounts with a 20 s request limit (dc-qalink's default 3 s cancelled a stalled CROSS.PAK
+  request and the pack loader refused the pack at stage 6, headless). Args `disctmo=<ms>`; disc stats after each load.
+  Reproduction: the bridge suspended 12 s during CROSS.PAK's load refuses the pack on the old build, not on this one.
+- Selector: dc-qalink's return stub is armed only on a disc with LINK.TXT.
+- cl_send.c: the client's way-out lines stay off a sealed report (every plain selector-disc report read "CRC bad").
+  Control: plain disc LEON, HILL, FIGHT, BOSS 4 of 4 OK, no STUB line.

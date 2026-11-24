@@ -342,6 +342,7 @@ $(OUT)/r/stage_sh4.o: $(ENG)/render/stage_sh4.S
 # lane eng-loop2: SENDABLE=1 links the console loop's client (loader/sendable.mk) for the console disc and the loader
 ifeq ($(SENDABLE),1)
 include $(ENG)/loader/sendable.mk
+include $(ENG)/game/qalink.mk   # lane eng-link2: the RE4 layer on dc-qalink (DCQL_ENABLE, default SENDABLE)
 .DEFAULT_GOAL := all
 endif
 include $(ENG)/game/hosted_corrections.mk $(ENG)/game/game_settings.mk   # lane eng-fix1 (H-026): corrections, settings
