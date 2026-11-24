@@ -2,6 +2,12 @@
 
 One numbered entry per milestone or blocking question. Newest first. Format: commit, image hashes, numbers with tiers, evidence path, what was not done.
 
+## H-046 (2026-11-23) RE4 QA Link integration and scheduler reports
+
+- Engine commit `15d0ffc23e5069acd7f0aa8bbaee5841b05086ad`. The QA build pins DC QA Link v0.2.0. Village, hill, fight, boss and scheduler all passed the selector in plain Flycast. The integration checks also exercised the network-disc bridge and report-overflow control.
+- The earlier gate rejected SCHED after 7,970 bytes overflowed the 110,592-byte report cap. The QA Link capture now leaves detailed `E1 SCHEDT` task steps on serial. The gated SCHED report contains 71,825 bytes and 600 frame rows. The scheduler checker consumes serial.
+- The scheduler lane can use the same serial record for its already queued scheduler work. Physical RE4 testing still uses the owner's broadband adapter and the staged QA Link loader.
+
 ## H-045 (2026-11-23): RE4 resumed; QA Link first; the drawing unit merged; rulings
 
 - **Owner, in order:** "we should start it so we have a good testing canddiate" (lane eng-link2: RE4 on dc-qalink
